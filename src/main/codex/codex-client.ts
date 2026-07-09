@@ -121,8 +121,8 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     return this.request<ThreadResumeResponse>('thread/resume', {
       threadId,
-      approvalPolicy: 'on-request',
-      sandbox: 'workspace-write',
+      approvalPolicy: 'never',
+      sandbox: 'danger-full-access',
       developerInstructions: buildGuidance()
     })
   }
@@ -158,7 +158,7 @@ export class CodexClient extends EventEmitter {
           value: buildGuidance()
         }
       },
-      approvalPolicy: 'on-request'
+      approvalPolicy: 'never'
     })
 
     return { ...response, threadId: activeThreadId }
@@ -166,35 +166,7 @@ export class CodexClient extends EventEmitter {
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
     await this.ensureStarted()
-    this.cancelPendingApprovals(threadId)
     return this.request('turn/interrupt', { threadId, turnId })
-  }
-
-  setAutoApprove(enabled: boolean): void {
-    this.autoApprove = enabled
-
-    if (!enabled) {
-      return
-    }
-
-    // Flipping auto-approve on resolves anything already waiting on the user.
-    for (const [id, approval] of this.pendingApprovals) {
-      this.pendingApprovals.delete(id)
-      this.respond(id, this.approvalResponse(approval, 'accept'))
-      this.emit('event', { type: 'approvalResolved', requestId: id } satisfies CodexEvent)
-    }
-  }
-
-  respondToApproval(requestId: string | number, decision: CodexApprovalDecision): void {
-    const approval = this.pendingApprovals.get(requestId)
-
-    if (!approval) {
-      return
-    }
-
-    this.pendingApprovals.delete(requestId)
-    this.respond(requestId, this.approvalResponse(approval, decision))
-    this.emit('event', { type: 'approvalResolved', requestId } satisfies CodexEvent)
   }
 
   dispose(): void {
