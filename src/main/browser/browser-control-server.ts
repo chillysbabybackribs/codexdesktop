@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { existsSync, unlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { BrowserAgentController } from './browser-agent.js'
 import type { TabManager } from './tab-manager.js'
 
 // A localhost control surface for the Codex agent, bound to a Unix domain
@@ -42,28 +43,6 @@ function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload)
   res.writeHead(status, { 'content-type': 'application/json' })
   res.end(body)
-}
-
-// Run arbitrary JS in the target tab's page and return whatever it evaluates to.
-// executeJavaScript(code, true) runs with a user gesture and awaits a returned
-// promise, so the agent can do the whole operation — fill+submit+read-back — in
-// one call and get the resulting state in the same response.
-async function handleEval(tabs: TabManager, tabId: string | null, code: string): Promise<unknown> {
-  const wc = tabs.resolveWebContents(tabId)
-  if (!wc) {
-    return { ok: false, error: tabId ? `no tab with id ${tabId}` : 'no active tab' }
-  }
-  try {
-    // Wrap in an async IIFE so the agent can write a full program with top-level
-    // `return` and `await` (as the guidance documents) — executeJavaScript
-    // otherwise evaluates the string as a bare expression, where `return` is a
-    // syntax error. The IIFE returns a promise, which executeJavaScript awaits.
-    const wrapped = `(async () => { ${code}\n})()`
-    const result = await wc.executeJavaScript(wrapped, true)
-    return { ok: true, result }
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : String(error) }
-  }
 }
 
 // Forward a raw Chrome DevTools Protocol command to the tab. This is the escape
@@ -133,7 +112,12 @@ function pathOf(req: IncomingMessage): string {
   return new URL(req.url ?? '/', 'http://x').pathname
 }
 
-async function route(getTabs: TabsGetter, req: IncomingMessage, res: ServerResponse): Promise<void> {
+async function route(
+  getTabs: TabsGetter,
+  browserAgent: BrowserAgentController,
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<void> {
   const path = pathOf(req)
 
   const tabs = getTabs()
@@ -144,7 +128,7 @@ async function route(getTabs: TabsGetter, req: IncomingMessage, res: ServerRespo
 
   try {
     if (req.method === 'GET' && path === '/tabs') {
-      sendJson(res, 200, { ok: true, tabs: tabs.listTabs() })
+      sendJson(res, 200, { ok: true, tabs: browserAgent.listTabs() })
       return
     }
 
@@ -154,7 +138,7 @@ async function route(getTabs: TabsGetter, req: IncomingMessage, res: ServerRespo
         sendJson(res, 400, { ok: false, error: 'empty body; POST JS as the request body' })
         return
       }
-      sendJson(res, 200, await handleEval(tabs, tabParam(req), code))
+      sendJson(res, 200, await browserAgent.run(code, { tabId: tabParam(req) }))
       return
     }
 
@@ -186,7 +170,10 @@ async function route(getTabs: TabsGetter, req: IncomingMessage, res: ServerRespo
   }
 }
 
-export function startBrowserControlServer(getTabs: TabsGetter): Promise<BrowserControlServer> {
+export function startBrowserControlServer(
+  getTabs: TabsGetter,
+  browserAgent = new BrowserAgentController(getTabs)
+): Promise<BrowserControlServer> {
   const path = socketPath()
 
   // A stale socket file from a hard crash would make listen() fail with EADDRINUSE.
@@ -199,7 +186,7 @@ export function startBrowserControlServer(getTabs: TabsGetter): Promise<BrowserC
   }
 
   const server: Server = createServer((req, res) => {
-    void route(getTabs, req, res)
+    void route(getTabs, browserAgent, req, res)
   })
 
   return new Promise((resolve, reject) => {
