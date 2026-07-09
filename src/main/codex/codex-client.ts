@@ -43,14 +43,40 @@ type PendingApproval = {
   params: unknown
 }
 
-const reasoningGuidance = [
+const taskShapingGuidance = [
   'Codex Desktop task-shaping guidance:',
   '- Start by organizing the task in the visible reasoning or plan stream before tool use when the task benefits from planning.',
   '- Decide whether a formal plan is necessary. For trivial tasks, briefly note the direct path and proceed.',
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
   '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
-].join('\n')
+]
+
+// The visible embedded browser is exposed to you as a local Unix-socket HTTP
+// endpoint you drive from the shell — not a fixed tool set. You write whatever
+// JS the task needs and run it IN the live page, getting structured JSON back in
+// the same call. This block is only included when the socket is up.
+function browserControlGuidance(): string[] {
+  const sock = process.env.CODEX_BROWSER_SOCK
+  if (!sock) {
+    return []
+  }
+  return [
+    'Embedded browser control (the browser pane the user is watching):',
+    `- It is a local HTTP server on the Unix socket at ${sock}. Drive it from your shell; there are no browser tools to call.`,
+    '- Run arbitrary JS in the ACTIVE tab and get its return value as JSON (one call can fill+submit+read-back a whole form):',
+    `    curl -s --unix-socket "${sock}" http://x/eval --data-binary 'const f=document.forms[0]; f.q.value="hello"; f.submit(); return {url:location.href};'`,
+    '  The body IS the JS. `return` a value; returned promises are awaited, so do the whole operation in one program and read the resulting state back.',
+    '- Discover tabs: `curl -s --unix-socket "$SOCK" http://x/tabs`. Target a specific tab: add `?tab=<id>` to /eval, or `{"tab":"<id>"}` to /cdp.',
+    '- Tab control: POST JSON to http://x/tabs with {"action":"create"|"close"|"activate"|"navigate", url|input, tab}.',
+    '- For what page JS cannot do (trusted input events, network intercept, real load-idle waits, screenshots): POST {"method","params","tab"} to http://x/cdp to send a raw Chrome DevTools Protocol command.',
+    '- Prefer expressing the whole task as one page program over many small round-trips. Read the DOM once, act once, verify in the same return.'
+  ]
+}
+
+function buildGuidance(): string {
+  return [...taskShapingGuidance, ...browserControlGuidance()].join('\n')
+}
 
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
