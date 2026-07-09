@@ -1,7 +1,12 @@
 import { BrowserWindow, WebContentsView, shell } from 'electron'
 import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
+import type { SavedBrowserState, SavedBrowserTab } from './browser-state-store.js'
+import { MAX_SAVED_BROWSER_TABS } from './browser-state-store.js'
 import { normalizeNavigationInput } from './url-utils.js'
+
+const browserPartition = 'persist:codex-browser'
+const defaultTabUrl = 'https://www.google.com'
 
 type BrowserStateListener = (state: BrowserState) => void
 
@@ -25,6 +30,7 @@ export class TabManager {
   // an overlay is open, the same trick used during a divider drag.
   private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
+  private persistListener: (() => void) | null = null
 
   constructor(private readonly window: BrowserWindow) {}
 
@@ -33,19 +39,65 @@ export class TabManager {
     this.pushState()
   }
 
-  createInitialTab(): void {
-    this.createTab('https://www.google.com')
+  onPersist(listener: () => void): void {
+    this.persistListener = listener
   }
 
-  createTab(url = 'https://www.google.com'): string {
+  createInitialTab(): void {
+    this.createTab(defaultTabUrl)
+  }
+
+  async restoreFromSnapshot(state: SavedBrowserState): Promise<void> {
+    const savedTabs = state.tabs.slice(0, MAX_SAVED_BROWSER_TABS)
+
+    for (const savedTab of savedTabs) {
+      await this.createTabFromSaved(savedTab)
+    }
+
+    const tabIds = Array.from(this.tabs.keys())
+    const activeTabId = tabIds[Math.min(Math.max(state.activeTabIndex, 0), tabIds.length - 1)]
+
+    if (activeTabId) {
+      this.activateTab(activeTabId)
+    }
+
+    this.pushState()
+  }
+
+  captureSnapshot(): SavedBrowserState | null {
+    if (this.tabs.size === 0) {
+      return null
+    }
+
+    const tabIds = Array.from(this.tabs.keys())
+    const tabs = tabIds
+      .map((id) => this.tabs.get(id))
+      .filter((tab): tab is BrowserTab => tab !== undefined)
+      .map((tab) => {
+        const history = tab.view.webContents.navigationHistory
+        const entries = history.getAllEntries()
+        const activeIndex = clampIndex(history.getActiveIndex(), entries.length)
+
+        return {
+          title: tab.title,
+          url: tab.view.webContents.getURL() || tab.url,
+          entries,
+          activeIndex
+        } satisfies SavedBrowserTab
+      })
+
+    const activeTabIndex = this.activeTabId ? tabIds.indexOf(this.activeTabId) : 0
+
+    return {
+      version: 1,
+      activeTabIndex: clampIndex(activeTabIndex, tabs.length),
+      tabs
+    }
+  }
+
+  createTab(url = defaultTabUrl): string {
     const id = crypto.randomUUID()
-    const view = new WebContentsView({
-      webPreferences: {
-        contextIsolation: true,
-        nodeIntegration: false,
-        sandbox: true
-      }
-    })
+    const view = this.createView()
 
     view.setBorderRadius?.(12)
     view.setBounds(this.activeTabId ? hiddenBounds : this.bounds)
@@ -62,9 +114,71 @@ export class TabManager {
     this.tabs.set(id, tab)
     this.attachEvents(tab)
     this.activateTab(id)
-    void view.webContents.loadURL(url)
+    void view.webContents.loadURL(normalizeNavigationInput(url))
     this.pushState()
     return id
+  }
+
+  private async createTabFromSaved(saved: SavedBrowserTab): Promise<string> {
+    const id = crypto.randomUUID()
+    const view = this.createView()
+
+    view.setBorderRadius?.(12)
+    view.setBounds(hiddenBounds)
+    this.window.contentView.addChildView(view)
+
+    const tab: BrowserTab = {
+      id,
+      view,
+      title: saved.title || 'New Tab',
+      url: saved.url,
+      isLoading: true
+    }
+
+    this.tabs.set(id, tab)
+    this.attachEvents(tab)
+
+    try {
+      const safeEntries = saved.entries.filter((entry) => isSafeNavigationUrl(entry.url))
+
+      if (safeEntries.length > 0) {
+        const activeIndex = clampIndex(saved.activeIndex, safeEntries.length)
+        await view.webContents.navigationHistory.restore({
+          entries: safeEntries,
+          index: activeIndex
+        })
+        tab.url = view.webContents.getURL() || safeEntries[activeIndex]?.url || saved.url
+        tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
+      } else if (isSafeNavigationUrl(saved.url)) {
+        await view.webContents.loadURL(saved.url)
+        tab.url = view.webContents.getURL() || saved.url
+        tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
+      } else {
+        await view.webContents.loadURL(defaultTabUrl)
+        tab.url = defaultTabUrl
+        tab.title = 'New Tab'
+      }
+    } catch {
+      const fallbackUrl = isSafeNavigationUrl(saved.url) ? saved.url : defaultTabUrl
+      await view.webContents.loadURL(fallbackUrl)
+      tab.url = view.webContents.getURL() || fallbackUrl
+      tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
+    } finally {
+      tab.isLoading = false
+    }
+
+    return id
+  }
+
+  private createView(): WebContentsView {
+    return new WebContentsView({
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        sandbox: true,
+        partition: browserPartition
+      }
+    })
   }
 
   closeTab(id: string): void {
