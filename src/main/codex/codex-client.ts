@@ -217,14 +217,12 @@ export class CodexClient extends EventEmitter {
       const message = `codex app-server exited (${code ?? signal ?? 'unknown'})`
       this.emitStatus('exited', message)
       this.rejectPending(new Error(message))
-      this.dropPendingApprovals()
     })
 
     child.on('error', (error) => {
       this.child = null
       this.emitStatus('error', error.message)
       this.rejectPending(error)
-      this.dropPendingApprovals()
     })
 
     const lines = createInterface({ input: child.stdout })
