@@ -16,6 +16,7 @@ import type {
   CodexEvent
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
+import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import { summarizeTurnDiff } from './diff'
@@ -1701,7 +1702,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): J
   )
 }
 
-function upsertMany(current: ChatItem[], nextItems: ThreadItem[]): ChatItem[] {
+function upsertMany(current: ChatItem[], nextItems: ChatItem[]): ChatItem[] {
   const next = [...current]
 
   for (const item of nextItems) {
