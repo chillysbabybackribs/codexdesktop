@@ -146,6 +146,23 @@ function dirOf(path: string): string {
   return index > 0 ? clean.slice(0, index) : ''
 }
 
+// Directory label for file cards: relative to the workspace when inside it
+// (Cursor-style), absolute otherwise. Empty at the workspace root.
+function displayDir(path: string, workspace: string | null): string {
+  const dir = dirOf(path)
+  if (!dir || !workspace) {
+    return dir
+  }
+  const root = workspace.replace(/\/+$/, '')
+  if (dir === root) {
+    return ''
+  }
+  if (dir.startsWith(`${root}/`)) {
+    return dir.slice(root.length + 1)
+  }
+  return dir
+}
+
 function truncate(text: string, max: number): string {
   const flat = text.replace(/\s+/g, ' ').trim()
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
@@ -600,21 +617,26 @@ function DiffCard({
   path,
   kind,
   diff,
-  status
+  status,
+  workspace
 }: {
   path: string
   kind: FileChangeItem['changes'][number]['kind']
   diff: string
   status: BlockStatus
+  workspace: string | null
 }): JSX.Element {
   const [showAll, setShowAll] = useState(false)
-  const parsed = useMemo(() => parseUnifiedDiff(diff), [diff])
+  const parsed = useMemo(
+    () => parseUnifiedDiff(diff, kind.type === 'add' ? 'add' : kind.type === 'delete' ? 'del' : undefined),
+    [diff, kind.type]
+  )
   const running = status === 'running'
 
   const kindBadge =
     kind.type === 'add' ? 'new' : kind.type === 'delete' ? 'deleted' : kind.move_path ? 'renamed' : null
 
-  const dir = dirOf(path)
+  const dir = displayDir(path, workspace)
   const overflow = !running && !showAll ? Math.max(0, parsed.lines.length - collapsedDiffLines) : 0
   const shownLines = overflow > 0 ? parsed.lines.slice(0, collapsedDiffLines) : parsed.lines
 
