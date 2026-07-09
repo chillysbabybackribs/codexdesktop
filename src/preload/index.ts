@@ -35,6 +35,7 @@ const api = {
   },
   codex: {
     getAuthStatus: () => ipcRenderer.invoke(ipcChannels.codexGetAuthStatus),
+    listModels: () => ipcRenderer.invoke(ipcChannels.codexListModels),
     listThreads: (params?: CodexListThreadsParams) =>
       ipcRenderer.invoke(ipcChannels.codexListThreads, params),
     startThread: (cwd?: string | null) => ipcRenderer.invoke(ipcChannels.codexStartThread, cwd),

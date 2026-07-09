@@ -15,6 +15,7 @@ export function registerCodexIpc(
   })
 
   ipcMain.handle(ipcChannels.codexGetAuthStatus, () => client.getAuthStatus())
+  ipcMain.handle(ipcChannels.codexListModels, () => client.listModels())
   ipcMain.handle(ipcChannels.codexListThreads, (_event, params?: CodexListThreadsParams) =>
     client.listThreads(params)
   )
@@ -22,7 +23,7 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexResumeThread, (_event, threadId: string) => client.resumeThread(threadId))
   ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
-    client.sendMessage(params.threadId, params.text, params.cwd)
+    client.sendMessage(params.threadId, params.text, params.cwd, params.model)
   )
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
