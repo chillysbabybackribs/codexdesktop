@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
+import { BrowserAgentController } from './browser/browser-agent.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
@@ -34,6 +35,7 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
+const browserAgent = new BrowserAgentController(() => tabManager)
 const browserStateStore = new BrowserStateStore()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -160,7 +162,7 @@ function bootstrap(): void {
     // first message, so setting it here is always in time. Bound to a getter so
     // it survives window close/reopen swapping the TabManager instance.
     try {
-      browserControl = await startBrowserControlServer(() => tabManager)
+      browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
     } catch (error) {
@@ -191,7 +193,7 @@ async function restoreBrowserTabs(): Promise<void> {
 }
 
 function registerIpc(): void {
-  codexClient = registerCodexIpc(() => mainWindow)
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent)
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
   ipcMain.handle(ipcChannels.windowToggleMaximize, () => {

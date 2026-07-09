@@ -1,10 +1,14 @@
 import { ipcMain, type BrowserWindow } from 'electron'
 import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
+import type { BrowserAgentController } from '../browser/browser-agent.js'
 import { CodexClient } from './codex-client.js'
 
-export function registerCodexIpc(getWindow: () => BrowserWindow | null): CodexClient {
-  const client = new CodexClient(getWindow)
+export function registerCodexIpc(
+  getWindow: () => BrowserWindow | null,
+  browserAgent: BrowserAgentController
+): CodexClient {
+  const client = new CodexClient(getWindow, browserAgent)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)
