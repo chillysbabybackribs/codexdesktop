@@ -19,6 +19,7 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import {
   TurnTail,
@@ -455,6 +456,11 @@ export default function App(): JSX.Element {
 
   const hasThreadContent = items.length > 0
 
+  function isRelevantThread(incomingThreadId: string): boolean {
+    const watched = watchThreadIdRef.current ?? activeThreadIdRef.current
+    return watched !== null && incomingThreadId === watched
+  }
+
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
 
@@ -667,16 +673,18 @@ export default function App(): JSX.Element {
     }
   }
 
-  function hydrateThread(thread: Thread): void {
+  function hydrateThread(thread: Thread, fallbackTurns?: Turn[]): void {
+    const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
+
     setActiveThreadId(thread.id)
     setActiveThreadTitle(threadTitle(thread))
-    setActiveTurnId(thread.turns.find((turn) => turn.status === 'inProgress')?.id ?? null)
+    setActiveTurnId(turns.find((turn) => turn.status === 'inProgress')?.id ?? null)
 
     const nextItems: ChatItem[] = []
     const nextItemMeta: Record<string, ItemMeta> = {}
     const nextTurnMeta: Record<string, TurnMeta> = {}
 
-    for (const turn of thread.turns) {
+    for (const turn of turns) {
       nextTurnMeta[turn.id] = {
         status: turn.status,
         startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
@@ -1686,8 +1694,12 @@ function upsertMany(current: ChatItem[], nextItems: ChatItem[]): ChatItem[] {
   return next
 }
 
-function isRelevantThread(incomingThreadId: string, activeThreadId: string | null): boolean {
-  return !activeThreadId || incomingThreadId === activeThreadId
+function persistLastThreadId(threadId: string | null): void {
+  if (threadId) {
+    window.localStorage.setItem(lastThreadStorageKey, threadId)
+  } else {
+    window.localStorage.removeItem(lastThreadStorageKey)
+  }
 }
 
 function threadTitle(thread: Thread): string {
