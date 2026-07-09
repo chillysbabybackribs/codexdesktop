@@ -1345,51 +1345,6 @@ function ActivityRow({
   )
 }
 
-const approvalTitles: Record<CodexApprovalRequest['method'], string> = {
-  'item/commandExecution/requestApproval': 'Run command?',
-  'item/fileChange/requestApproval': 'Apply file changes?',
-  'item/permissions/requestApproval': 'Grant extra permissions?',
-  applyPatchApproval: 'Apply file changes?',
-  execCommandApproval: 'Run command?'
-}
-
-function ApprovalCard({
-  request,
-  onDecision
-}: {
-  request: CodexApprovalRequest
-  onDecision: (requestId: string | number, decision: CodexApprovalDecision) => Promise<void>
-}): JSX.Element {
-  return (
-    <article className="message approval-card">
-      <div className="approval-title">{approvalTitles[request.method]}</div>
-      {request.command ? <pre className="approval-command">$ {request.command}</pre> : null}
-      {request.files?.length ? (
-        <ul className="approval-files">
-          {request.files.map((file) => (
-            <li key={file}>{file}</li>
-          ))}
-        </ul>
-      ) : null}
-      {request.permissionsSummary ? <pre className="approval-command">{request.permissionsSummary}</pre> : null}
-      {request.reason ? <p className="approval-detail">{request.reason}</p> : null}
-      {request.grantRoot ? <p className="approval-detail">Grants write access under {request.grantRoot}</p> : null}
-      {request.cwd ? <p className="approval-detail approval-cwd">in {request.cwd}</p> : null}
-      <div className="approval-actions">
-        <button type="button" className="approval-approve" onClick={() => void onDecision(request.requestId, 'accept')}>
-          Approve
-        </button>
-        <button type="button" onClick={() => void onDecision(request.requestId, 'acceptForSession')}>
-          Approve for session
-        </button>
-        <button type="button" className="approval-deny" onClick={() => void onDecision(request.requestId, 'decline')}>
-          Deny
-        </button>
-      </div>
-    </article>
-  )
-}
-
 function ChatItemView({ item, messagePhase }: { item: ChatItem; messagePhase: MessagePhase }): JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
