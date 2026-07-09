@@ -181,6 +181,10 @@ export class CodexClient extends EventEmitter {
       sandbox: 'danger-full-access',
       config: compactWebSearchConfig,
       developerInstructions: buildGuidance(),
+      // Keep resume metadata small. The initial page is the renderer's
+      // bounded bootstrap payload; requesting populated thread.turns as well
+      // duplicates that history and makes large persisted chats feel frozen.
+      excludeTurns: true,
       initialTurnsPage: {
         limit: 500,
         sortDirection: 'asc',

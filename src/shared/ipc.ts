@@ -38,6 +38,11 @@ export type CodexSendMessageParams = {
   threadId?: string | null
   text: string
   cwd?: string | null
+  /**
+   * Model slug to run the turn with. Omitted/null keeps the CLI-configured
+   * default (or whatever the thread was last switched to server-side).
+   */
+  model?: string | null
 }
 
 export type CodexInterruptTurnParams = {
@@ -67,6 +72,7 @@ export const ipcChannels = {
   browserSetOverlayOpen: 'browser:setOverlayOpen',
   browserState: 'browser:state',
   codexGetAuthStatus: 'codex:getAuthStatus',
+  codexListModels: 'codex:listModels',
   codexListThreads: 'codex:listThreads',
   codexStartThread: 'codex:startThread',
   codexResumeThread: 'codex:resumeThread',
