@@ -178,10 +178,11 @@ export class CodexClient extends EventEmitter {
     })
   }
 
-  async startThread(cwd?: string | null): Promise<ThreadStartResponse> {
+  async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
     await this.ensureStarted()
     return this.request<ThreadStartResponse>('thread/start', {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
+      ...(model ? { model } : {}),
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
@@ -222,10 +223,13 @@ export class CodexClient extends EventEmitter {
   async sendMessage(
     threadId: string | null | undefined,
     text: string,
-    cwd?: string | null
+    cwd?: string | null,
+    model?: string | null
   ): Promise<TurnStartResponse & { threadId: string }> {
-    const activeThreadId = threadId ?? (await this.startThread(cwd)).thread.id
+    const activeThreadId = threadId ?? (await this.startThread(cwd, model)).thread.id
 
+    // `model` overrides this turn and all subsequent turns on the thread, so
+    // sending it every turn keeps resumed threads on the picker's selection.
     const response = await this.request<TurnStartResponse>('turn/start', {
       threadId: activeThreadId,
       input: [
@@ -235,6 +239,7 @@ export class CodexClient extends EventEmitter {
           text_elements: []
         }
       ],
+      ...(model ? { model } : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
