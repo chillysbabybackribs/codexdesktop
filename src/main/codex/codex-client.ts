@@ -321,15 +321,12 @@ export class CodexClient extends EventEmitter {
     }
   }
 
+  // The app runs fully unrestricted (approvalPolicy: 'never', danger-full-access)
+  // BY DESIGN, so app-server never asks the user to approve commands, file
+  // changes, or permissions. We only answer the non-approval server requests it
+  // still makes; anything else (including any stray approval request) is denied.
   private handleServerRequest(message: ServerRequest & JsonRpcMessage): void {
     switch (message.method) {
-      case 'item/commandExecution/requestApproval':
-      case 'item/fileChange/requestApproval':
-      case 'item/permissions/requestApproval':
-      case 'applyPatchApproval':
-      case 'execCommandApproval':
-        this.handleApprovalRequest(message.id!, message.method, message.params)
-        return
       case 'item/tool/requestUserInput':
         this.respond(message.id!, { answers: {} })
         return
@@ -339,67 +336,6 @@ export class CodexClient extends EventEmitter {
       default:
         this.respondError(message.id!, -32601, `Unsupported app-server request: ${message.method}`)
     }
-  }
-
-  private handleApprovalRequest(id: string | number, method: CodexApprovalMethod, params: unknown): void {
-    const request = describeApproval(id, method, params)
-    const approval: PendingApproval = { method, threadId: request.threadId, params }
-
-    if (this.autoApprove) {
-      this.respond(id, this.approvalResponse(approval, 'accept'))
-      return
-    }
-
-    this.pendingApprovals.set(id, approval)
-    this.emit('event', { type: 'approvalRequest', request } satisfies CodexEvent)
-  }
-
-  private approvalResponse(approval: PendingApproval, decision: CodexApprovalDecision): unknown {
-    switch (approval.method) {
-      case 'item/commandExecution/requestApproval':
-      case 'item/fileChange/requestApproval':
-        return { decision }
-      case 'applyPatchApproval':
-      case 'execCommandApproval':
-        return {
-          decision:
-            decision === 'accept' ? 'approved' : decision === 'acceptForSession' ? 'approved_for_session' : 'denied'
-        }
-      case 'item/permissions/requestApproval': {
-        if (decision === 'decline') {
-          return { permissions: {}, scope: 'turn' }
-        }
-
-        const params = approval.params as PermissionsRequestApprovalParams
-        return {
-          permissions: {
-            network: params.permissions.network ?? undefined,
-            fileSystem: params.permissions.fileSystem ?? undefined
-          },
-          scope: decision === 'acceptForSession' ? 'session' : 'turn'
-        }
-      }
-    }
-  }
-
-  private cancelPendingApprovals(threadId: string): void {
-    for (const [id, approval] of this.pendingApprovals) {
-      if (approval.threadId !== threadId) {
-        continue
-      }
-
-      this.pendingApprovals.delete(id)
-      this.respond(id, cancelResponse(approval.method))
-      this.emit('event', { type: 'approvalResolved', requestId: id } satisfies CodexEvent)
-    }
-  }
-
-  private dropPendingApprovals(): void {
-    for (const id of this.pendingApprovals.keys()) {
-      this.emit('event', { type: 'approvalResolved', requestId: id } satisfies CodexEvent)
-    }
-
-    this.pendingApprovals.clear()
   }
 
   private respond(id: string | number, result: unknown): void {
