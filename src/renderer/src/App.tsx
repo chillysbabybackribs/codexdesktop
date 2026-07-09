@@ -663,6 +663,22 @@ export default function App(): JSX.Element {
     )
   }
 
+  // Live diff stream: item/fileChange/patchUpdated replaces the item's full
+  // change set on every update (the diff grows as Codex writes the file).
+  function patchFileChanges(itemId: string, changes: FileUpdateChange[]): void {
+    setItems((current) => {
+      const index = current.findIndex((item) => item.id === itemId)
+
+      if (index === -1) {
+        return [...current, { type: 'fileChange', id: itemId, changes, status: 'inProgress' }]
+      }
+
+      return current.map((item) =>
+        item.id === itemId && item.type === 'fileChange' ? { ...item, changes } : item
+      )
+    })
+  }
+
   function patchReasoningPart(itemId: string, field: 'summary' | 'content', partIndex: number, delta: string): void {
     setItems((current) => {
       const index = current.findIndex((item) => item.id === itemId)
@@ -716,18 +732,20 @@ export default function App(): JSX.Element {
     })
   }
 
+  // The structured turn plan renders as a live checklist card that updates in
+  // place as steps complete.
   function upsertTurnPlan(
     turnId: string,
     explanation: string | null,
     plan: Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }>
   ): void {
-    const text = formatTurnPlan(explanation, plan)
-
-    if (!text) {
+    if (!plan.length && !explanation) {
       return
     }
 
-    const item: ThreadItem = { type: 'plan', id: `turn-plan-${turnId}`, text }
+    const id = `turn-plan-${turnId}`
+    const item: TurnPlanItem = { type: 'turnPlan', id, explanation, steps: plan }
+    noteItem(id, turnId)
     setItems((current) => upsertMany(current, [item]))
   }
 
