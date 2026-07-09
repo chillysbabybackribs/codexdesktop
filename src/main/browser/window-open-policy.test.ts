@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { isBlankPopupUrl, isExternalHttpUrl } from './window-open-policy.ts'
+import { isBlankPopupUrl, isExternalHttpUrl, isUnsafePopupUrl } from './window-open-policy.ts'
 
 test('isBlankPopupUrl treats empty and about:blank as blank popups', () => {
   assert.equal(isBlankPopupUrl(undefined), true)
@@ -16,4 +16,10 @@ test('isExternalHttpUrl matches http and https URLs only', () => {
   assert.equal(isExternalHttpUrl('about:blank'), false)
   assert.equal(isExternalHttpUrl(''), false)
   assert.equal(isExternalHttpUrl('javascript:alert(1)'), false)
+})
+
+test('isUnsafePopupUrl blocks javascript and file URLs', () => {
+  assert.equal(isUnsafePopupUrl('javascript:alert(1)'), true)
+  assert.equal(isUnsafePopupUrl('file:///etc/passwd'), true)
+  assert.equal(isUnsafePopupUrl('https://accounts.google.com'), false)
 })

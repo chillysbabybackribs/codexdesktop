@@ -249,13 +249,6 @@ function Icon({ children, className }: { children: React.ReactNode; className?: 
   )
 }
 
-const SparkleIcon = (): JSX.Element => (
-  <Icon>
-    <path d="M12 4l1.7 4.6L18 10.2l-4.3 1.7L12 16.5l-1.7-4.6L6 10.2l4.3-1.6L12 4Z" />
-    <path d="M18.5 15.5l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7.7-1.9Z" />
-  </Icon>
-)
-
 const TerminalIcon = (): JSX.Element => (
   <Icon>
     <path d="M5 8l4 4-4 4" />
@@ -404,48 +397,25 @@ function reasoningText(item: ReasoningItem): string {
   return parts.join('\n\n')
 }
 
-function ThoughtBlock({
-  item,
-  streaming,
-  meta
-}: {
-  item: ReasoningItem
-  streaming: boolean
-  meta: ItemMeta | undefined
-}): JSX.Element | null {
+// The streamed model narration renders as bare muted text — no per-block
+// "Thought" header (the live tail already signals thinking, and the narration
+// carries its own headlines).
+function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boolean }): JSX.Element | null {
   const text = reasoningText(item)
 
-  if (!text && !streaming) {
+  if (!text) {
     return null
   }
 
-  const duration = itemDurationMs(item, meta)
+  const body = (
+    <div className="thought-text">
+      <ReactMarkdown>{text}</ReactMarkdown>
+    </div>
+  )
 
   return (
     <div className={`thought-block ${streaming ? 'is-streaming' : ''}`}>
-      <div className="thought-head">
-        <span className="thought-icon">
-          <SparkleIcon />
-        </span>
-        {streaming ? (
-          <span className="shimmer-text">Thinking</span>
-        ) : (
-          <span className="thought-label">{duration && duration >= 1500 ? `Thought for ${fmtDuration(duration)}` : 'Thought'}</span>
-        )}
-      </div>
-      {text ? (
-        streaming ? (
-          <AutoFollow className="thought-stream">
-            <div className="thought-text">
-              <ReactMarkdown>{text}</ReactMarkdown>
-            </div>
-          </AutoFollow>
-        ) : (
-          <div className="thought-text">
-            <ReactMarkdown>{text}</ReactMarkdown>
-          </div>
-        )
-      ) : null}
+      {streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body}
     </div>
   )
 }
@@ -935,7 +905,7 @@ function WorkBlock({
 }): JSX.Element | null {
   switch (item.type) {
     case 'reasoning':
-      return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} meta={meta} />
+      return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'plan':
       return <PlanTextBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'turnPlan':

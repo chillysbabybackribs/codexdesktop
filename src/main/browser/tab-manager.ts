@@ -4,7 +4,7 @@ import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import { normalizeNavigationInput } from './url-utils.js'
-import { attachPopupExternalRouting } from './window-open-handlers.js'
+import { isBlankPopupUrl, isUnsafePopupUrl } from './window-open-policy.js'
 
 const browserPartition = 'persist:codex-browser'
 const defaultTabUrl = 'https://www.google.com'
@@ -118,6 +118,38 @@ export class TabManager {
     void view.webContents.loadURL(normalizeNavigationInput(url))
     this.pushState()
     return id
+  }
+
+  // window.open() must return a real WebContents or OAuth popups break. The old
+  // code created a tab and denied the window, leaving blank tabs and a null
+  // popup handle. createWindow wires the popup into the in-app tab strip.
+  private createPopupTab(url: string | undefined): BrowserTab {
+    const id = crypto.randomUUID()
+    const view = this.createView()
+
+    view.setBorderRadius?.(12)
+    view.setBounds(this.bounds)
+    this.window.contentView.addChildView(view)
+
+    const initialUrl = url?.trim() || 'about:blank'
+    const tab: BrowserTab = {
+      id,
+      view,
+      title: 'New Tab',
+      url: initialUrl,
+      isLoading: false
+    }
+
+    this.tabs.set(id, tab)
+    this.attachEvents(tab)
+    this.activateTab(id)
+
+    if (!isBlankPopupUrl(url) && !isUnsafePopupUrl(url)) {
+      void view.webContents.loadURL(normalizeNavigationInput(url!))
+    }
+
+    this.pushState()
+    return tab
   }
 
   private async createTabFromSaved(saved: SavedBrowserTab): Promise<string> {
@@ -284,11 +316,16 @@ export class TabManager {
   private attachEvents(tab: BrowserTab): void {
     const webContents = tab.view.webContents
 
-    // OAuth popups call window.open('') then navigate via JS. Converting those
-    // into in-app tabs breaks the flow and leaves blank tabs behind. Follow
-    // Electron's documented pattern: real URLs go to the system browser
-    // (where the user is already signed in), blank popups become real windows.
-    attachPopupExternalRouting(webContents, this.window)
+    webContents.setWindowOpenHandler((details) => {
+      if (isUnsafePopupUrl(details.url)) {
+        return { action: 'deny' }
+      }
+
+      return {
+        action: 'allow',
+        createWindow: () => this.createPopupTab(details.url).view.webContents
+      }
+    })
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'
