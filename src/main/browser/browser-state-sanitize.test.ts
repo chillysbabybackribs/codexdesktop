@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { SavedBrowserState } from './browser-state-types.js'
+import type { SavedBrowserState } from './browser-state-types.ts'
 import {
   parseSavedBrowserState,
   sanitizeBrowserState,
   sanitizeNavigationEntry,
   sanitizeSavedTab,
   sanitizeUrl
-} from './browser-state-sanitize.js'
+} from './browser-state-sanitize.ts'
 
 test('sanitizeUrl rejects unsafe and empty urls', () => {
   assert.equal(sanitizeUrl(''), null)
