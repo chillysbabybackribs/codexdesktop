@@ -947,13 +947,21 @@ export function WorkGroup({
 // ---------------------------------------------------------------------------
 
 // Human label for what Codex is doing right now, from the newest live item.
-export function currentActionLabel(items: WorkItem[], streamingMessage: boolean): string {
-  for (let i = items.length - 1; i >= 0; i -= 1) {
-    const item = items[i]
+export function currentActionLabel(
+  items: WorkItem[],
+  itemMeta: Record<string, ItemMeta>,
+  streamingMessage: boolean
+): string {
+  // The turn plan is a status board, not an action — skip it when deciding
+  // what Codex is doing right now.
+  const scan = items.filter((item) => item.type !== 'turnPlan')
+
+  for (let i = scan.length - 1; i >= 0; i -= 1) {
+    const item = scan[i]
     const running =
       'status' in item && typeof item.status === 'string'
         ? item.status === 'inProgress'
-        : i === items.length - 1
+        : i === scan.length - 1 && !itemMeta[item.id]?.completedAtMs
 
     if (!running) {
       continue
@@ -963,7 +971,6 @@ export function currentActionLabel(items: WorkItem[], streamingMessage: boolean)
       case 'reasoning':
         return 'Thinking'
       case 'plan':
-      case 'turnPlan':
         return 'Planning'
       case 'commandExecution': {
         const action = item.commandActions.find(isBrowseAction)
@@ -1054,18 +1061,20 @@ function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string
 export function TurnTail({
   live,
   items,
+  itemMeta,
   meta,
   streamingMessage
 }: {
   live: boolean
   items: WorkItem[]
+  itemMeta: Record<string, ItemMeta>
   meta: TurnMeta | undefined
   streamingMessage: boolean
 }): JSX.Element | null {
   const now = useNow(live)
 
   if (live) {
-    const label = currentActionLabel(items, streamingMessage)
+    const label = currentActionLabel(items, itemMeta, streamingMessage)
     const elapsed = meta?.startedAtMs ? Math.max(0, now - meta.startedAtMs) : null
     const tokens = meta?.tokens?.total.totalTokens
 

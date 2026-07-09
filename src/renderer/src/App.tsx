@@ -911,6 +911,7 @@ function ChatPane({
                 key={row.id}
                 live={row.turnId === activeTurnId}
                 items={turnWork.get(row.turnId) ?? []}
+                itemMeta={itemMeta}
                 meta={turnMeta[row.turnId]}
                 streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
               />
