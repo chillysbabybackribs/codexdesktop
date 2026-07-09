@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
+import { buildSerpExtractionProgram, googleSearchUrl } from './research-utils.js'
 
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
@@ -164,38 +165,6 @@ export class ResearchRunner {
     this.view.webContents.setUserAgent(chromeLikeUserAgent())
     return this.view
   }
-}
-
-function googleSearchUrl(query: string, maxResults: number): string {
-  return `https://www.google.com/search?num=${maxResults * 2}&q=${encodeURIComponent(query)}`
-}
-
-function buildSerpExtractionProgram(maxResults: number): string {
-  return `
-  const maxResults = ${maxResults};
-  const seen = new Set();
-  const results = [];
-  for (const anchor of document.querySelectorAll('a[href]')) {
-    let url;
-    try {
-      const candidate = new URL(anchor.href, location.href);
-      url = candidate.pathname === '/url' ? candidate.searchParams.get('q') : candidate.href;
-    } catch {
-      continue;
-    }
-    if (!url || !/^https?:\\/\\//i.test(url)) continue;
-    let parsed;
-    try { parsed = new URL(url); } catch { continue; }
-    if (/google\\.com$/i.test(parsed.hostname) || /(^|\\.)google\\./i.test(parsed.hostname)) continue;
-    if (seen.has(parsed.href)) continue;
-    seen.add(parsed.href);
-    const title = (anchor.innerText || anchor.textContent || '').replace(/\\s+/g, ' ').trim();
-    if (!title || title.length < 3) continue;
-    results.push({ url: parsed.href, title });
-    if (results.length >= maxResults) break;
-  }
-  return results;
-`
 }
 
 async function loadPage(webContents: Electron.WebContents, url: string): Promise<void> {
