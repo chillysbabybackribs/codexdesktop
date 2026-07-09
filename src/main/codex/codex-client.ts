@@ -10,6 +10,8 @@ import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { DynamicToolCallResponse } from '../../shared/codex-protocol/v2/DynamicToolCallResponse.js'
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
+import type { Model } from '../../shared/codex-protocol/v2/Model.js'
+import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
@@ -146,6 +148,22 @@ export class CodexClient extends EventEmitter {
       includeToken: false,
       refreshToken: false
     })
+  }
+
+  async listModels(): Promise<Model[]> {
+    await this.ensureStarted()
+    const models: Model[] = []
+    let cursor: string | null = null
+
+    do {
+      const page: ModelListResponse = await this.request<ModelListResponse>('model/list', {
+        ...(cursor ? { cursor } : {})
+      })
+      models.push(...page.data)
+      cursor = page.nextCursor
+    } while (cursor)
+
+    return models.filter((model) => !model.hidden)
   }
 
   async listThreads(options?: { cursor?: string | null; cwd?: string | null }): Promise<ThreadListResponse> {
