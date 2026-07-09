@@ -128,8 +128,14 @@ function pathOf(req: IncomingMessage): string {
   return new URL(req.url ?? '/', 'http://x').pathname
 }
 
-async function route(tabs: TabManager, req: IncomingMessage, res: ServerResponse): Promise<void> {
+async function route(getTabs: TabsGetter, req: IncomingMessage, res: ServerResponse): Promise<void> {
   const path = pathOf(req)
+
+  const tabs = getTabs()
+  if (!tabs) {
+    sendJson(res, 503, { ok: false, error: 'browser not ready (no window)' })
+    return
+  }
 
   try {
     if (req.method === 'GET' && path === '/tabs') {
@@ -175,7 +181,7 @@ async function route(tabs: TabManager, req: IncomingMessage, res: ServerResponse
   }
 }
 
-export function startBrowserControlServer(tabs: TabManager): Promise<BrowserControlServer> {
+export function startBrowserControlServer(getTabs: TabsGetter): Promise<BrowserControlServer> {
   const path = socketPath()
 
   // A stale socket file from a hard crash would make listen() fail with EADDRINUSE.
