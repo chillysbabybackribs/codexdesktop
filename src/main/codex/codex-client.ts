@@ -2,18 +2,7 @@ import { EventEmitter } from 'node:events'
 import { createInterface } from 'node:readline'
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import type { BrowserWindow } from 'electron'
-import type {
-  CodexApprovalDecision,
-  CodexApprovalMethod,
-  CodexApprovalRequest,
-  CodexConnectionStatus,
-  CodexEvent
-} from '../../shared/ipc.js'
-import type { ApplyPatchApprovalParams } from '../../shared/codex-protocol/ApplyPatchApprovalParams.js'
-import type { ExecCommandApprovalParams } from '../../shared/codex-protocol/ExecCommandApprovalParams.js'
-import type { CommandExecutionRequestApprovalParams } from '../../shared/codex-protocol/v2/CommandExecutionRequestApprovalParams.js'
-import type { FileChangeRequestApprovalParams } from '../../shared/codex-protocol/v2/FileChangeRequestApprovalParams.js'
-import type { PermissionsRequestApprovalParams } from '../../shared/codex-protocol/v2/PermissionsRequestApprovalParams.js'
+import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
 import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js'
@@ -366,77 +355,5 @@ export class CodexClient extends EventEmitter {
     }
 
     this.pending.clear()
-  }
-}
-
-function describeApproval(id: string | number, method: CodexApprovalMethod, params: unknown): CodexApprovalRequest {
-  switch (method) {
-    case 'item/commandExecution/requestApproval': {
-      const p = params as CommandExecutionRequestApprovalParams
-      return {
-        requestId: id,
-        method,
-        threadId: p.threadId,
-        command: p.command ?? undefined,
-        cwd: p.cwd ?? undefined,
-        reason: p.reason ?? undefined
-      }
-    }
-    case 'item/fileChange/requestApproval': {
-      const p = params as FileChangeRequestApprovalParams
-      return {
-        requestId: id,
-        method,
-        threadId: p.threadId,
-        reason: p.reason ?? undefined,
-        grantRoot: p.grantRoot ?? undefined
-      }
-    }
-    case 'item/permissions/requestApproval': {
-      const p = params as PermissionsRequestApprovalParams
-      return {
-        requestId: id,
-        method,
-        threadId: p.threadId,
-        cwd: p.cwd,
-        reason: p.reason ?? undefined,
-        permissionsSummary: JSON.stringify(p.permissions, null, 2)
-      }
-    }
-    case 'applyPatchApproval': {
-      const p = params as ApplyPatchApprovalParams
-      return {
-        requestId: id,
-        method,
-        threadId: p.conversationId,
-        reason: p.reason ?? undefined,
-        grantRoot: p.grantRoot ?? undefined,
-        files: Object.keys(p.fileChanges)
-      }
-    }
-    case 'execCommandApproval': {
-      const p = params as ExecCommandApprovalParams
-      return {
-        requestId: id,
-        method,
-        threadId: p.conversationId,
-        command: p.command.join(' '),
-        cwd: p.cwd,
-        reason: p.reason ?? undefined
-      }
-    }
-  }
-}
-
-function cancelResponse(method: CodexApprovalMethod): unknown {
-  switch (method) {
-    case 'item/commandExecution/requestApproval':
-    case 'item/fileChange/requestApproval':
-      return { decision: 'cancel' }
-    case 'applyPatchApproval':
-    case 'execCommandApproval':
-      return { decision: 'abort' }
-    case 'item/permissions/requestApproval':
-      return { permissions: {}, scope: 'turn' }
   }
 }
