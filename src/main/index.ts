@@ -4,6 +4,7 @@ import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
+import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
@@ -36,6 +37,7 @@ let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
 const browserAgent = new BrowserAgentController(() => tabManager)
+const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -145,6 +147,7 @@ function bootstrap(): void {
 
   app.on('before-quit', () => {
     flushBrowserPersistSync()
+    researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null
     void browserControl?.close()
@@ -193,7 +196,7 @@ async function restoreBrowserTabs(): Promise<void> {
 }
 
 function registerIpc(): void {
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent)
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner)
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
   ipcMain.handle(ipcChannels.windowToggleMaximize, () => {

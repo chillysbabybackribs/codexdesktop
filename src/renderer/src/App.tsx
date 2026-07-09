@@ -18,6 +18,7 @@ import type {
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
+import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
@@ -130,6 +131,7 @@ const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
+const modelStorageKey = 'codexdesktop.model'
 
 export default function App(): JSX.Element {
   const [split, setSplit] = useState(() => {
@@ -151,6 +153,12 @@ export default function App(): JSX.Element {
     () => window.localStorage.getItem('codexdesktop.workspace')
   )
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
+  const [models, setModels] = useState<Model[]>([])
+  // Model slug sent with every turn. `null` = no explicit pick yet, so turns
+  // omit the override and run on the CLI-configured default.
+  const [selectedModel, setSelectedModel] = useState<string | null>(
+    () => window.localStorage.getItem(modelStorageKey)
+  )
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
   // Lifecycle data the item payloads don't carry: which turn an item belongs
@@ -209,6 +217,35 @@ export default function App(): JSX.Element {
 
     void refreshThreads()
   }, [workspace])
+
+  // The model catalog comes from `model/list` on the app-server, so it is the
+  // same list (and default) the CLI's own /model picker shows. Loaded once the
+  // server is ready; if it fails, sends simply omit the override.
+  useEffect(() => {
+    if (codexStatus !== 'ready' || models.length) {
+      return
+    }
+
+    let cancelled = false
+
+    window.api.codex.listModels().then(
+      (list: Model[]) => {
+        if (cancelled || !list.length) {
+          return
+        }
+        setModels(list)
+        // Drop a persisted pick the CLI no longer offers.
+        setSelectedModel((current) =>
+          current && list.some((model) => model.model === current) ? current : null
+        )
+      },
+      (error: Error) => console.warn('Failed to load Codex model list', error)
+    )
+
+    return () => {
+      cancelled = true
+    }
+  }, [codexStatus, models.length])
 
   useEffect(() => {
     const dispose = window.api.codex.onEvent((event) => {
@@ -372,7 +409,8 @@ export default function App(): JSX.Element {
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
         text: trimmed,
-        cwd: workspace
+        cwd: workspace,
+        model: selectedModel
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -389,6 +427,11 @@ export default function App(): JSX.Element {
     } finally {
       setIsSending(false)
     }
+  }
+
+  const handleSelectModel = (model: string): void => {
+    setSelectedModel(model)
+    window.localStorage.setItem(modelStorageKey, model)
   }
 
   const handleStop = async (): Promise<void> => {
@@ -1029,6 +1072,9 @@ function ChatPane({
   hasThreadContent,
   isBusy,
   workspace,
+  models,
+  selectedModel,
+  onSelectModel,
   onSend,
   onStop,
   onNewThread,
@@ -1053,6 +1099,9 @@ function ChatPane({
   hasThreadContent: boolean
   isBusy: boolean
   workspace: string | null
+  models: Model[]
+  selectedModel: string | null
+  onSelectModel: (model: string) => void
   onSend: (text: string) => Promise<void>
   onStop: () => Promise<void>
   onNewThread: () => void
@@ -1159,6 +1208,9 @@ function ChatPane({
       <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
+          {models.length ? (
+            <ModelPill models={models} selectedModel={selectedModel} onSelectModel={onSelectModel} />
+          ) : null}
         </div>
         <Composer
           docked={hasThreadContent}

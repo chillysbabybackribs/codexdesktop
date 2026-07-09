@@ -2,13 +2,15 @@ import { ipcMain, type BrowserWindow } from 'electron'
 import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
+import type { ResearchRunner } from '../browser/research-runner.js'
 import { CodexClient } from './codex-client.js'
 
 export function registerCodexIpc(
   getWindow: () => BrowserWindow | null,
-  browserAgent: BrowserAgentController
+  browserAgent: BrowserAgentController,
+  researchRunner: ResearchRunner
 ): CodexClient {
-  const client = new CodexClient(getWindow, browserAgent)
+  const client = new CodexClient(getWindow, browserAgent, researchRunner)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)
