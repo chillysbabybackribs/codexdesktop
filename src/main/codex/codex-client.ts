@@ -82,9 +82,7 @@ export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
   private readonly pending = new Map<string | number, PendingRequest>()
-  private readonly pendingApprovals = new Map<string | number, PendingApproval>()
   private requestCounter = 0
-  private autoApprove = false
 
   constructor(private readonly getWindow: () => BrowserWindow | null) {
     super()
@@ -112,8 +110,8 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     return this.request<ThreadStartResponse>('thread/start', {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
-      approvalPolicy: 'on-request',
-      sandbox: 'workspace-write',
+      approvalPolicy: 'never',
+      sandbox: 'danger-full-access',
       historyMode: 'legacy',
       developerInstructions: buildGuidance()
     })
