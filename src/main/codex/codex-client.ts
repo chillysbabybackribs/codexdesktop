@@ -372,9 +372,44 @@ export class CodexClient extends EventEmitter {
       case 'currentTime/read':
         this.respond(message.id!, { currentTimeAt: Math.floor(Date.now() / 1000) })
         return
+      case 'item/tool/call':
+        void this.handleDynamicToolCall(message.id!, message.params as DynamicToolCallParams)
+        return
       default:
         this.respondError(message.id!, -32601, `Unsupported app-server request: ${message.method}`)
     }
+  }
+
+  private async handleDynamicToolCall(id: string | number, params: DynamicToolCallParams): Promise<void> {
+    const args = asRecord(params.arguments)
+    let result
+
+    if (params.namespace !== 'browser') {
+      result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace ?? '(none)'}` }
+    } else if (params.tool === 'run') {
+      const code = readString(args.code)
+      result = code
+        ? await this.browserAgent.run(code, {
+            tabId: readString(args.tab),
+            timeoutMs: readNumber(args.timeoutMs),
+            maxResultChars: readNumber(args.maxResultChars)
+          })
+        : { ok: false, error: 'browser.run requires a string "code" argument' }
+    } else if (params.tool === 'extract_page') {
+      result = await this.browserAgent.extractPage({
+        tabId: readString(args.tab),
+        timeoutMs: readNumber(args.timeoutMs),
+        maxResultChars: readNumber(args.maxResultChars)
+      })
+    } else {
+      result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
+    }
+
+    const response: DynamicToolCallResponse = {
+      success: result.ok,
+      contentItems: [{ type: 'inputText', text: JSON.stringify(result) }]
+    }
+    this.respond(id, response)
   }
 
   private respond(id: string | number, result: unknown): void {
@@ -408,4 +443,16 @@ export class CodexClient extends EventEmitter {
 
     this.pending.clear()
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
+}
+
+function readString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() ? value : undefined
+}
+
+function readNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined
 }
