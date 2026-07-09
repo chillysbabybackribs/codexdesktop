@@ -536,12 +536,18 @@ button {
 }
 
 .message-user {
-  margin-left: auto;
-  max-width: min(760px, 82%);
-  padding: 12px 14px;
-  border: 1px solid #2a2a2a;
-  border-radius: 8px;
-  background: #202020;
+  box-sizing: border-box;
+  width: calc(100% + 56px);
+  max-width: none;
+  margin: 0 -28px 12px;
+  padding: 8px 28px;
+  border: none;
+  border-radius: 0;
+  background: #1e1e1e;
+}
+
+.message-user p {
+  margin: 0;
 }
 
 .message-assistant {
