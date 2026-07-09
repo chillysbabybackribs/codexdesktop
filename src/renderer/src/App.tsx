@@ -760,12 +760,13 @@ export default function App(): JSX.Element {
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
           items={items}
+          itemMeta={itemMeta}
+          turnMeta={turnMeta}
           title={activeThreadTitle}
           status={codexStatus}
           threads={threads}
           activeThreadId={activeThreadId}
           activeTurnId={activeTurnId}
-          typingIds={typingIds}
           isThreadMenuOpen={isThreadMenuOpen}
           hasThreadContent={hasThreadContent}
           isBusy={isSending || Boolean(activeTurnId)}
