@@ -194,7 +194,7 @@ export function startBrowserControlServer(getTabs: TabsGetter): Promise<BrowserC
   }
 
   const server: Server = createServer((req, res) => {
-    void route(tabs, req, res)
+    void route(getTabs, req, res)
   })
 
   return new Promise((resolve, reject) => {
