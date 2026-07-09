@@ -665,9 +665,24 @@ export default function App(): JSX.Element {
   function noteItem(itemId: string, turnId: string | null, patch: Partial<ItemMeta> = {}): void {
     setItemMeta((current) => {
       const existing = current[itemId]
+      const nextItem = {
+        ...existing,
+        ...patch,
+        turnId: turnId ?? existing?.turnId ?? null
+      }
+
+      if (
+        existing &&
+        Object.keys(nextItem).every((key) =>
+          Object.is(existing[key as keyof ItemMeta], nextItem[key as keyof ItemMeta])
+        )
+      ) {
+        return current
+      }
+
       return {
         ...current,
-        [itemId]: { ...existing, ...patch, turnId: turnId ?? existing?.turnId ?? null }
+        [itemId]: nextItem
       }
     })
   }
@@ -776,24 +791,58 @@ export default function App(): JSX.Element {
   }
 
   function upsertItem(item: ThreadItem): void {
+    flushPendingAgentDeltas()
     setItems((current) => upsertMany(current, [item]))
   }
 
   function patchItemText(itemId: string, delta: string, fallbackType: 'agentMessage'): void {
+    pendingAgentDeltasRef.current.set(
+      itemId,
+      `${pendingAgentDeltasRef.current.get(itemId) ?? ''}${delta}`
+    )
+
+    if (agentDeltaFrameRef.current !== null) {
+      return
+    }
+
+    agentDeltaFrameRef.current = window.requestAnimationFrame(() => {
+      agentDeltaFrameRef.current = null
+      flushPendingAgentDeltas(fallbackType)
+    })
+  }
+
+  function flushPendingAgentDeltas(fallbackType: 'agentMessage' = 'agentMessage'): void {
+    const pending = pendingAgentDeltasRef.current
+
+    if (!pending.size) {
+      return
+    }
+
+    if (agentDeltaFrameRef.current !== null) {
+      window.cancelAnimationFrame(agentDeltaFrameRef.current)
+      agentDeltaFrameRef.current = null
+    }
+
+    pendingAgentDeltasRef.current = new Map()
     setItems((current) => {
-      const index = current.findIndex((item) => item.id === itemId)
+      let next = current
 
-      if (index === -1) {
-        return [...current, { type: fallbackType, id: itemId, text: delta, phase: null, memoryCitation: null }]
-      }
+      for (const [itemId, delta] of pending) {
+        const index = next.findIndex((item) => item.id === itemId)
 
-      return current.map((item) => {
-        if (item.id !== itemId || item.type !== 'agentMessage') {
-          return item
+        if (index === -1) {
+          next = [...next, { type: fallbackType, id: itemId, text: delta, phase: null, memoryCitation: null }]
+          continue
         }
 
-        return { ...item, text: `${item.text}${delta}` }
-      })
+        next = next.map((item) =>
+          item.id === itemId && item.type === 'agentMessage'
+            ? { ...item, text: `${item.text}${delta}` }
+            : item
+        )
+      }
+
+      return next
     })
   }
 
