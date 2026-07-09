@@ -811,12 +811,13 @@ function TitleBar(): JSX.Element {
 
 function ChatPane({
   items,
+  itemMeta,
+  turnMeta,
   title,
   status,
   threads,
   activeThreadId,
   activeTurnId,
-  typingIds,
   isThreadMenuOpen,
   hasThreadContent,
   isBusy,
@@ -829,12 +830,13 @@ function ChatPane({
   onPickWorkspace
 }: {
   items: ChatItem[]
+  itemMeta: Record<string, ItemMeta>
+  turnMeta: Record<string, TurnMeta>
   title: string
   status: string
   threads: Thread[]
   activeThreadId: string | null
   activeTurnId: string | null
-  typingIds: Set<string>
   isThreadMenuOpen: boolean
   hasThreadContent: boolean
   isBusy: boolean
@@ -847,16 +849,27 @@ function ChatPane({
   onPickWorkspace: () => Promise<void>
 }): JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const rows = useMemo(() => buildRows(items), [items])
-  // The final activity block is "live" only while a turn is running; the rest have finished.
-  const lastActivityId = useMemo(() => {
-    for (let i = rows.length - 1; i >= 0; i -= 1) {
-      if (rows[i].kind === 'activity') {
-        return (rows[i] as Extract<RenderRow, { kind: 'activity' }>).id
+  const { rows, turnWork } = useMemo(
+    () => buildRows(items, itemMeta, activeTurnId),
+    [items, itemMeta, activeTurnId]
+  )
+
+  // True while the live turn's newest item is an assistant message still
+  // receiving deltas — drives the "Writing" tail label and message caret.
+  const streamingMessageId = useMemo(() => {
+    if (!activeTurnId) {
+      return null
+    }
+    for (let i = items.length - 1; i >= 0; i -= 1) {
+      const item = items[i]
+      if (item.type === 'system' || itemMeta[item.id]?.turnId !== activeTurnId) {
+        continue
       }
+      return item.type === 'agentMessage' && !itemMeta[item.id]?.completedAtMs ? item.id : null
     }
     return null
-  }, [rows])
+  }, [items, itemMeta, activeTurnId])
+
   return (
     <section className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'}`}>
       <div className="chat-toolbar">
@@ -880,22 +893,37 @@ function ChatPane({
         />
       </div>
 
-      <ThreadScroll dependencies={[items.length, activeTurnId]}>
-        {rows.map((row) =>
-          row.kind === 'activity' ? (
-            <ActivityCard
-              key={row.id}
-              items={row.items}
-              live={Boolean(activeTurnId) && row.id === lastActivityId}
-            />
-          ) : (
+      <ThreadScroll dependencies={[items, itemMeta, activeTurnId]}>
+        {rows.map((row) => {
+          if (row.kind === 'work') {
+            return (
+              <WorkGroup
+                key={row.id}
+                items={row.items}
+                itemMeta={itemMeta}
+                live={Boolean(activeTurnId) && row.turnId === activeTurnId}
+              />
+            )
+          }
+          if (row.kind === 'tail') {
+            return (
+              <TurnTail
+                key={row.id}
+                live={row.turnId === activeTurnId}
+                items={turnWork.get(row.turnId) ?? []}
+                meta={turnMeta[row.turnId]}
+                streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
+              />
+            )
+          }
+          return (
             <ChatItemView
               key={row.item.id}
               item={row.item}
-              messagePhase={agentMessagePhase(row.item, Boolean(activeTurnId), typingIds)}
+              streaming={row.item.id === streamingMessageId}
             />
           )
-        )}
+        })}
       </ThreadScroll>
 
       <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
