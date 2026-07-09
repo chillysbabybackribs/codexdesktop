@@ -480,7 +480,7 @@ button {
 .thread-scroll {
   min-height: 0;
   overflow: auto;
-  padding: 6px 28px 150px;
+  padding: 6px 28px 195px;
   /* Auto-scroll owns the viewport — wheel/trackpad still work, no bar shows. */
   scrollbar-width: none;
 }

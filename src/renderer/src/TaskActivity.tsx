@@ -924,12 +924,14 @@ function WorkBlock({
   item,
   meta,
   live,
-  isNewest
+  isNewest,
+  workspace
 }: {
   item: WorkItem
   meta: ItemMeta | undefined
   live: boolean
   isNewest: boolean
+  workspace: string | null
 }): JSX.Element | null {
   switch (item.type) {
     case 'reasoning':
@@ -941,7 +943,7 @@ function WorkBlock({
     case 'commandExecution':
       return <CommandBlock item={item} meta={meta} live={live} />
     case 'fileChange':
-      return <FileChangeBlock item={item} live={live} />
+      return <FileChangeBlock item={item} live={live} workspace={workspace} />
     case 'mcpToolCall':
       return <McpBlock item={item} meta={meta} live={live} />
     case 'dynamicToolCall':
@@ -956,11 +958,13 @@ function WorkBlock({
 export function WorkGroup({
   items,
   itemMeta,
-  live
+  live,
+  workspace
 }: {
   items: WorkItem[]
   itemMeta: Record<string, ItemMeta>
   live: boolean
+  workspace: string | null
 }): JSX.Element {
   const newestId = items[items.length - 1]?.id
 
@@ -973,6 +977,7 @@ export function WorkGroup({
           meta={itemMeta[item.id]}
           live={live}
           isNewest={item.id === newestId}
+          workspace={workspace}
         />
       ))}
     </div>
@@ -1063,7 +1068,10 @@ function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string
       let dels = 0
       for (const fileItem of fileItems) {
         for (const change of fileItem.changes) {
-          const parsed = parseUnifiedDiff(change.diff)
+          const parsed = parseUnifiedDiff(
+            change.diff,
+            change.kind.type === 'add' ? 'add' : change.kind.type === 'delete' ? 'del' : undefined
+          )
           adds += parsed.adds
           dels += parsed.dels
         }

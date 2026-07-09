@@ -903,6 +903,7 @@ function ChatPane({
                 items={row.items}
                 itemMeta={itemMeta}
                 live={Boolean(activeTurnId) && row.turnId === activeTurnId}
+                workspace={workspace}
               />
             )
           }
