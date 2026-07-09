@@ -43,6 +43,15 @@ type PendingApproval = {
   params: unknown
 }
 
+const reasoningGuidance = [
+  'Codex Desktop task-shaping guidance:',
+  '- Start by organizing the task in the visible reasoning or plan stream before tool use when the task benefits from planning.',
+  '- Decide whether a formal plan is necessary. For trivial tasks, briefly note the direct path and proceed.',
+  '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
+  '- Keep the plan updated when observations from tools change the best path.',
+  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
+].join('\n')
+
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
@@ -79,7 +88,8 @@ export class CodexClient extends EventEmitter {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
       approvalPolicy: 'on-request',
       sandbox: 'workspace-write',
-      historyMode: 'legacy'
+      historyMode: 'legacy',
+      developerInstructions: reasoningGuidance
     })
   }
 
@@ -88,7 +98,8 @@ export class CodexClient extends EventEmitter {
     return this.request<ThreadResumeResponse>('thread/resume', {
       threadId,
       approvalPolicy: 'on-request',
-      sandbox: 'workspace-write'
+      sandbox: 'workspace-write',
+      developerInstructions: reasoningGuidance
     })
   }
 
@@ -116,6 +127,13 @@ export class CodexClient extends EventEmitter {
           text_elements: []
         }
       ],
+      summary: 'auto',
+      additionalContext: {
+        codexdesktop_reasoning_guidance: {
+          kind: 'application',
+          value: reasoningGuidance
+        }
+      },
       approvalPolicy: 'on-request'
     })
 
