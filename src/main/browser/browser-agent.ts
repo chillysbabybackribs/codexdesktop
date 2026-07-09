@@ -89,10 +89,9 @@ export class BrowserAgentController {
 
       const startedAt = Date.now()
       const execution = executePageProgram(webContents, code)
-      const settled = withTimeout(execution, timeoutMs)
 
       try {
-        const rawResult = await settled
+        const rawResult = await execution
         const bounded = boundResult(rawResult, maxResultChars)
         return {
           ok: true,
@@ -122,9 +121,15 @@ export class BrowserAgentController {
     )
     this.tabQueues.set(tabId, queueTail)
 
-    // Keep the queue alive until the underlying executeJavaScript promise has
-    // settled, even when the caller's timeout wins the race.
-    return withTimeout(operation, timeoutMs + 250)
+    try {
+      return await withTimeout(operation, timeoutMs)
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        tabId
+      } satisfies BrowserAgentFailure
+    }
   }
 
   async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
