@@ -411,9 +411,9 @@ button {
 .thread-menu-item {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   padding: 0 10px;
-  height: 36px;
+  height: 38px;
   border: 0;
   border-radius: 9px;
   background: transparent;
