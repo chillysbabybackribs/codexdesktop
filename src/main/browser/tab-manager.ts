@@ -4,6 +4,7 @@ import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import { normalizeNavigationInput } from './url-utils.js'
+import { attachPopupExternalRouting } from './window-open-handlers.js'
 
 const browserPartition = 'persist:codex-browser'
 const defaultTabUrl = 'https://www.google.com'
@@ -283,10 +284,11 @@ export class TabManager {
   private attachEvents(tab: BrowserTab): void {
     const webContents = tab.view.webContents
 
-    webContents.setWindowOpenHandler(({ url }) => {
-      this.createTab(url)
-      return { action: 'deny' }
-    })
+    // OAuth popups call window.open('') then navigate via JS. Converting those
+    // into in-app tabs breaks the flow and leaves blank tabs behind. Follow
+    // Electron's documented pattern: real URLs go to the system browser
+    // (where the user is already signed in), blank popups become real windows.
+    attachPopupExternalRouting(webContents, this.window)
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'
