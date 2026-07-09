@@ -1,6 +1,7 @@
 import { app } from 'electron'
 import type { NavigationEntry } from 'electron'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 
 export type SavedBrowserTab = {
@@ -52,23 +53,42 @@ export class BrowserStateStore {
   }
 
   async save(state: SavedBrowserState): Promise<void> {
+    const payload = this.sanitizeState(state)
+
+    if (!payload) {
+      return
+    }
+
+    await mkdir(dirname(this.filePath), { recursive: true })
+    await writeFile(this.filePath, `${JSON.stringify(payload)}\n`, 'utf8')
+  }
+
+  saveSync(state: SavedBrowserState): void {
+    const payload = this.sanitizeState(state)
+
+    if (!payload) {
+      return
+    }
+
+    mkdirSync(dirname(this.filePath), { recursive: true })
+    writeFileSync(this.filePath, `${JSON.stringify(payload)}\n`, 'utf8')
+  }
+
+  private sanitizeState(state: SavedBrowserState): SavedBrowserState | null {
     const tabs = state.tabs
       .slice(0, MAX_SAVED_BROWSER_TABS)
       .map(sanitizeSavedTab)
       .filter((tab): tab is SavedBrowserTab => tab !== null)
 
     if (tabs.length === 0) {
-      return
+      return null
     }
 
-    const payload: SavedBrowserState = {
+    return {
       version: 1,
       activeTabIndex: clamp(state.activeTabIndex, 0, tabs.length - 1),
       tabs
     }
-
-    await mkdir(dirname(this.filePath), { recursive: true })
-    await writeFile(this.filePath, `${JSON.stringify(payload)}\n`, 'utf8')
   }
 }
 

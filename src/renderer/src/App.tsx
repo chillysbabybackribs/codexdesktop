@@ -676,6 +676,7 @@ export default function App(): JSX.Element {
   function hydrateThread(thread: Thread, fallbackTurns?: Turn[]): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
+    watchThreadIdRef.current = thread.id
     setActiveThreadId(thread.id)
     setActiveThreadTitle(threadTitle(thread))
     setActiveTurnId(turns.find((turn) => turn.status === 'inProgress')?.id ?? null)

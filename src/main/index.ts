@@ -43,6 +43,19 @@ async function flushBrowserPersist(): Promise<void> {
   }
 }
 
+function flushBrowserPersistSync(): void {
+  if (persistBrowserTimer) {
+    clearTimeout(persistBrowserTimer)
+    persistBrowserTimer = null
+  }
+
+  const snapshot = tabManager?.captureSnapshot()
+
+  if (snapshot) {
+    browserStateStore.saveSync(snapshot)
+  }
+}
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 2048,
@@ -130,7 +143,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('before-quit', () => {
-  void flushBrowserPersist()
+  flushBrowserPersistSync()
   codexClient?.dispose()
   codexClient = null
   void browserControl?.close()
