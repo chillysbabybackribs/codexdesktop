@@ -1,0 +1,1145 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
+import type { WebSearchAction } from '../../shared/codex-protocol/WebSearchAction'
+import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
+
+// ---------------------------------------------------------------------------
+// Shared task-state types (owned here, consumed by App)
+// ---------------------------------------------------------------------------
+
+// Structured turn plan (turn/plan/updated) rendered as a checklist card. Local
+// to the app — the protocol's `plan` ThreadItem is a plain text stream.
+export type TurnPlanItem = {
+  type: 'turnPlan'
+  id: string
+  explanation: string | null
+  steps: TurnPlanStep[]
+}
+
+// Per-item lifecycle data the ThreadItem payloads don't carry themselves.
+export type ItemMeta = {
+  turnId: string | null
+  startedAtMs?: number
+  completedAtMs?: number
+  // Latest item/mcpToolCall/progress messages, newest last.
+  progress?: string[]
+}
+
+export type TurnMetaStatus = 'inProgress' | 'completed' | 'failed' | 'interrupted'
+
+export type TurnMeta = {
+  status: TurnMetaStatus
+  startedAtMs?: number
+  completedAtMs?: number
+  durationMs?: number
+  errorMessage?: string
+  tokens?: ThreadTokenUsage
+  diffSummary?: TurnDiffSummary
+}
+
+type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
+type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
+type McpToolCallItem = Extract<ThreadItem, { type: 'mcpToolCall' }>
+type DynamicToolCallItem = Extract<ThreadItem, { type: 'dynamicToolCall' }>
+type ReasoningItem = Extract<ThreadItem, { type: 'reasoning' }>
+type PlanItem = Extract<ThreadItem, { type: 'plan' }>
+type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
+
+export const workItemTypes = [
+  'reasoning',
+  'plan',
+  'turnPlan',
+  'commandExecution',
+  'fileChange',
+  'mcpToolCall',
+  'dynamicToolCall',
+  'collabAgentToolCall',
+  'subAgentActivity',
+  'webSearch',
+  'imageGeneration',
+  'imageView',
+  'sleep'
+] as const
+
+export type WorkItem = Extract<ThreadItem, { type: (typeof workItemTypes)[number] }> | TurnPlanItem
+
+// ---------------------------------------------------------------------------
+// Small shared utilities
+// ---------------------------------------------------------------------------
+
+// 1 Hz clock for live elapsed labels; inert (and effect-free re-renders) when idle.
+function useNow(active: boolean): number {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (!active) {
+      return
+    }
+    setNow(Date.now())
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [active])
+
+  return now
+}
+
+// A viewport that stays pinned to its bottom edge as content streams in.
+// overflow:hidden — the user never scrolls inside it, so no scrollbar can show;
+// growth is revealed by following the tail, Cursor-style.
+function AutoFollow({
+  className,
+  children
+}: {
+  className?: string
+  children: React.ReactNode
+}): JSX.Element {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (el) {
+      el.scrollTop = el.scrollHeight
+    }
+  })
+
+  return (
+    <div ref={ref} className={`auto-follow ${className ?? ''}`}>
+      {children}
+    </div>
+  )
+}
+
+export function fmtDuration(ms: number): string {
+  if (ms < 1000) {
+    return `${(ms / 1000).toFixed(1)}s`
+  }
+  const seconds = Math.round(ms / 1000)
+  if (seconds < 60) {
+    return `${seconds}s`
+  }
+  const minutes = Math.floor(seconds / 60)
+  return `${minutes}m ${String(seconds % 60).padStart(2, '0')}s`
+}
+
+export function fmtTokens(count: number): string {
+  if (count < 1000) {
+    return String(count)
+  }
+  if (count < 1_000_000) {
+    return `${(count / 1000).toFixed(1)}k`
+  }
+  return `${(count / 1_000_000).toFixed(2)}M`
+}
+
+function basename(path: string): string {
+  const clean = path.replace(/\/+$/, '')
+  return clean.split('/').pop() || clean
+}
+
+function dirOf(path: string): string {
+  const clean = path.replace(/\/+$/, '')
+  const index = clean.lastIndexOf('/')
+  return index > 0 ? clean.slice(0, index) : ''
+}
+
+function truncate(text: string, max: number): string {
+  const flat = text.replace(/\s+/g, ' ').trim()
+  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
+}
+
+// eslint-disable-next-line no-control-regex
+const ansiPattern = /\[[0-9;?]*[ -/]*[@-~]/g
+
+function stripAnsi(text: string): string {
+  return text.replace(ansiPattern, '')
+}
+
+function previewJson(value: unknown, max: number): string | null {
+  if (value === null || value === undefined) {
+    return null
+  }
+  try {
+    const text = typeof value === 'string' ? value : JSON.stringify(value)
+    if (!text || text === '{}' || text === 'null') {
+      return null
+    }
+    return truncate(text, max)
+  } catch {
+    return null
+  }
+}
+
+function itemDurationMs(item: WorkItem, meta: ItemMeta | undefined): number | null {
+  if ('durationMs' in item && typeof item.durationMs === 'number') {
+    return item.durationMs
+  }
+  if (meta?.startedAtMs && meta?.completedAtMs) {
+    return Math.max(0, meta.completedAtMs - meta.startedAtMs)
+  }
+  return null
+}
+
+// Effective display status: items abandoned by an interrupted/failed turn keep
+// status "inProgress" forever — once the turn is no longer live they render as
+// stopped, not running.
+type BlockStatus = 'running' | 'done' | 'failed' | 'declined' | 'stopped'
+
+function blockStatus(item: WorkItem, live: boolean): BlockStatus {
+  const raw =
+    item.type === 'commandExecution' ||
+    item.type === 'fileChange' ||
+    item.type === 'mcpToolCall' ||
+    item.type === 'dynamicToolCall'
+      ? item.status
+      : null
+
+  if (raw === 'failed') {
+    return 'failed'
+  }
+  if (raw === 'declined') {
+    return 'declined'
+  }
+  if (raw === 'inProgress') {
+    return live ? 'running' : 'stopped'
+  }
+  return 'done'
+}
+
+// ---------------------------------------------------------------------------
+// Icons — quiet 15px strokes matching the app's existing inline icon style
+// ---------------------------------------------------------------------------
+
+function Icon({ children, className }: { children: React.ReactNode; className?: string }): JSX.Element {
+  return (
+    <svg
+      className={className}
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  )
+}
+
+const SparkleIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M12 4l1.7 4.6L18 10.2l-4.3 1.7L12 16.5l-1.7-4.6L6 10.2l4.3-1.6L12 4Z" />
+    <path d="M18.5 15.5l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7.7-1.9Z" />
+  </Icon>
+)
+
+const TerminalIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M5 8l4 4-4 4" />
+    <path d="M12 17h7" />
+  </Icon>
+)
+
+const FilePenIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M13 4H7a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 7 20h10a1.5 1.5 0 0 0 1.5-1.5V9.5L13 4Z" />
+    <path d="M13 4v5.5h5.5" />
+  </Icon>
+)
+
+const FileReadIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M13 4H7a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 7 20h10a1.5 1.5 0 0 0 1.5-1.5V9.5L13 4Z" />
+    <path d="M9 13h6M9 16.2h4" />
+  </Icon>
+)
+
+const FolderListIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h3.6a1.5 1.5 0 0 1 1.1.44l1 1.06h7.8A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5L3.5 7Z" />
+  </Icon>
+)
+
+const SearchGlassIcon = (): JSX.Element => (
+  <Icon>
+    <circle cx="11" cy="11" r="6.2" />
+    <path d="m19.6 19.6-3.4-3.4" />
+  </Icon>
+)
+
+const GlobeIcon = (): JSX.Element => (
+  <Icon>
+    <circle cx="12" cy="12" r="8.2" />
+    <path d="M3.8 12h16.4M12 3.8c2.4 2.2 3.6 5 3.6 8.2s-1.2 6-3.6 8.2c-2.4-2.2-3.6-5-3.6-8.2s1.2-6 3.6-8.2Z" />
+  </Icon>
+)
+
+const PlugIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M9 3.8v4.4M15 3.8v4.4" />
+    <path d="M6.5 8.2h11v3.2a5.5 5.5 0 0 1-11 0V8.2Z" />
+    <path d="M12 16.9v3.3" />
+  </Icon>
+)
+
+const ListChecksIcon = (): JSX.Element => (
+  <Icon>
+    <path d="M4 6.5l1.4 1.4L8 5.3" />
+    <path d="M4 13l1.4 1.4L8 11.8" />
+    <path d="M11.5 7h8M11.5 13.5h8M4.5 19.5h15" />
+  </Icon>
+)
+
+const BotIcon = (): JSX.Element => (
+  <Icon>
+    <rect x="5" y="8" width="14" height="10" rx="2.5" />
+    <path d="M12 8V4.5M9.5 13h.01M14.5 13h.01" />
+  </Icon>
+)
+
+const ImageIcon = (): JSX.Element => (
+  <Icon>
+    <rect x="4" y="5" width="16" height="14" rx="2" />
+    <circle cx="9" cy="10" r="1.4" />
+    <path d="m5.5 17 4.5-4.5 3 3 2.5-2.5 3 4" />
+  </Icon>
+)
+
+const ClockIcon = (): JSX.Element => (
+  <Icon>
+    <circle cx="12" cy="12" r="8.2" />
+    <path d="M12 7.5V12l3 2" />
+  </Icon>
+)
+
+function Spinner(): JSX.Element {
+  return <span className="work-spinner" />
+}
+
+// ---------------------------------------------------------------------------
+// Row + card primitives
+// ---------------------------------------------------------------------------
+
+function ToolRow({
+  icon,
+  status,
+  verb,
+  detail,
+  detailTitle,
+  meta,
+  sub
+}: {
+  icon: JSX.Element
+  status: BlockStatus
+  verb: string
+  detail?: string | null
+  detailTitle?: string
+  meta?: string | null
+  sub?: React.ReactNode
+}): JSX.Element {
+  return (
+    <div className={`tool-row status-${status}`}>
+      <span className="tool-row-icon">{status === 'running' ? <Spinner /> : icon}</span>
+      <div className="tool-row-main">
+        <div className="tool-row-line">
+          <span className="tool-row-verb">{verb}</span>
+          {detail ? (
+            <code className="tool-row-detail" title={detailTitle ?? detail}>
+              {detail}
+            </code>
+          ) : null}
+          {meta ? <span className="tool-row-meta">{meta}</span> : null}
+        </div>
+        {sub}
+      </div>
+    </div>
+  )
+}
+
+function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: number | null }): JSX.Element | null {
+  if (status === 'failed') {
+    return <span className="work-chip chip-fail">{typeof exitCode === 'number' ? `exit ${exitCode}` : 'failed'}</span>
+  }
+  if (status === 'declined') {
+    return <span className="work-chip chip-muted">declined</span>
+  }
+  if (status === 'stopped') {
+    return <span className="work-chip chip-muted">stopped</span>
+  }
+  if (typeof exitCode === 'number' && exitCode !== 0) {
+    return <span className="work-chip chip-fail">exit {exitCode}</span>
+  }
+  return null
+}
+
+// ---------------------------------------------------------------------------
+// Thought (reasoning) — the streamed model narration
+// ---------------------------------------------------------------------------
+
+function reasoningText(item: ReasoningItem): string {
+  const parts = [...item.summary, ...item.content].map((part) => part.trim()).filter(Boolean)
+  return parts.join('\n\n')
+}
+
+function ThoughtBlock({
+  item,
+  streaming,
+  meta
+}: {
+  item: ReasoningItem
+  streaming: boolean
+  meta: ItemMeta | undefined
+}): JSX.Element | null {
+  const text = reasoningText(item)
+
+  if (!text && !streaming) {
+    return null
+  }
+
+  const duration = itemDurationMs(item, meta)
+
+  return (
+    <div className={`thought-block ${streaming ? 'is-streaming' : ''}`}>
+      <div className="thought-head">
+        <span className="thought-icon">
+          <SparkleIcon />
+        </span>
+        {streaming ? (
+          <span className="shimmer-text">Thinking</span>
+        ) : (
+          <span className="thought-label">{duration && duration >= 1500 ? `Thought for ${fmtDuration(duration)}` : 'Thought'}</span>
+        )}
+      </div>
+      {text ? (
+        streaming ? (
+          <AutoFollow className="thought-stream">
+            <div className="thought-text">
+              <ReactMarkdown>{text}</ReactMarkdown>
+            </div>
+          </AutoFollow>
+        ) : (
+          <div className="thought-text">
+            <ReactMarkdown>{text}</ReactMarkdown>
+          </div>
+        )
+      ) : null}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Command execution — compact Cursor-style rows for read/list/search, a real
+// terminal card for everything else
+// ---------------------------------------------------------------------------
+
+function isBrowseAction(action: CommandAction): boolean {
+  return action.type === 'read' || action.type === 'listFiles' || action.type === 'search'
+}
+
+function CompactActionRows({
+  item,
+  status,
+  duration
+}: {
+  item: CommandExecutionItem
+  status: BlockStatus
+  duration: number | null
+}): JSX.Element {
+  const meta = duration && duration >= 100 ? fmtDuration(duration) : null
+
+  return (
+    <>
+      {item.commandActions.map((action, index) => {
+        const rowMeta = index === item.commandActions.length - 1 ? meta : null
+        if (action.type === 'read') {
+          return (
+            <ToolRow
+              key={`${item.id}-${index}`}
+              icon={<FileReadIcon />}
+              status={status}
+              verb="Read"
+              detail={action.name}
+              detailTitle={action.path}
+              meta={rowMeta}
+            />
+          )
+        }
+        if (action.type === 'listFiles') {
+          return (
+            <ToolRow
+              key={`${item.id}-${index}`}
+              icon={<FolderListIcon />}
+              status={status}
+              verb="Listed"
+              detail={action.path ? basename(action.path) : 'files'}
+              detailTitle={action.path ?? undefined}
+              meta={rowMeta}
+            />
+          )
+        }
+        const search = action.type === 'search' ? action : null
+        return (
+          <ToolRow
+            key={`${item.id}-${index}`}
+            icon={<SearchGlassIcon />}
+            status={status}
+            verb="Searched"
+            detail={search?.query ? `"${truncate(search.query, 70)}"${search.path ? ` in ${basename(search.path)}` : ''}` : truncate(action.command, 80)}
+            detailTitle={action.command}
+            meta={rowMeta}
+          />
+        )
+      })}
+    </>
+  )
+}
+
+const collapsedOutputLines = 12
+
+function TerminalCard({
+  item,
+  status,
+  duration,
+  liveNow
+}: {
+  item: CommandExecutionItem
+  status: BlockStatus
+  duration: number | null
+  liveNow: number
+}): JSX.Element {
+  const [showAll, setShowAll] = useState(false)
+  const running = status === 'running'
+  const output = useMemo(() => stripAnsi(item.aggregatedOutput ?? '').replace(/\n+$/, ''), [item.aggregatedOutput])
+  const lines = useMemo(() => (output ? output.split('\n') : []), [output])
+
+  const hiddenCount = !running && !showAll ? Math.max(0, lines.length - collapsedOutputLines) : 0
+  const shownLines = hiddenCount > 0 ? lines.slice(hiddenCount) : lines
+
+  const elapsed = running && itemStart(item, liveNow) !== null ? fmtDuration(itemStart(item, liveNow)!) : null
+
+  return (
+    <div className={`term-card status-${status}`}>
+      <div className="term-head">
+        <span className="term-icon">{running ? <Spinner /> : <TerminalIcon />}</span>
+        <code className="term-command" title={item.command}>
+          {item.command}
+        </code>
+        <span className="term-meta">
+          {running && elapsed ? <span className="term-elapsed">{elapsed}</span> : null}
+          {!running && duration ? <span className="term-elapsed">{fmtDuration(duration)}</span> : null}
+          <StatusChip status={status} exitCode={item.exitCode} />
+        </span>
+      </div>
+      {lines.length > 0 ? (
+        running ? (
+          <AutoFollow className="term-output is-live">
+            <pre>{output}</pre>
+          </AutoFollow>
+        ) : (
+          <div className="term-output">
+            {hiddenCount > 0 ? (
+              <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
+                ⋯ show {hiddenCount} earlier {hiddenCount === 1 ? 'line' : 'lines'}
+              </button>
+            ) : null}
+            <pre>{shownLines.join('\n')}</pre>
+            {showAll && lines.length > collapsedOutputLines ? (
+              <button type="button" className="output-expand" onClick={() => setShowAll(false)}>
+                collapse output
+              </button>
+            ) : null}
+          </div>
+        )
+      ) : null}
+    </div>
+  )
+}
+
+// Elapsed ms for a live command — durationMs is only set at completion, so use
+// wall-clock from the ticking `now` against nothing better than render time.
+// Returns null when we have no anchor (freshly created item).
+const commandStartTimes = new WeakMap<CommandExecutionItem, number>()
+
+function itemStart(item: CommandExecutionItem, now: number): number | null {
+  let start = commandStartTimes.get(item)
+  if (start === undefined) {
+    start = now
+    commandStartTimes.set(item, start)
+  }
+  return Math.max(0, now - start)
+}
+
+function CommandBlock({
+  item,
+  meta,
+  live
+}: {
+  item: CommandExecutionItem
+  meta: ItemMeta | undefined
+  live: boolean
+}): JSX.Element {
+  const status = blockStatus(item, live)
+  const duration = itemDurationMs(item, meta)
+  const now = useNow(status === 'running')
+
+  const browseOnly =
+    item.commandActions.length > 0 &&
+    item.commandActions.every(isBrowseAction) &&
+    status !== 'failed' &&
+    status !== 'declined'
+
+  if (browseOnly) {
+    return <CompactActionRows item={item} status={status} duration={duration} />
+  }
+
+  return <TerminalCard item={item} status={status} duration={duration} liveNow={now} />
+}
+
+// ---------------------------------------------------------------------------
+// File changes — live-streaming diff cards
+// ---------------------------------------------------------------------------
+
+const collapsedDiffLines = 18
+
+function DiffCard({
+  path,
+  kind,
+  diff,
+  status
+}: {
+  path: string
+  kind: FileChangeItem['changes'][number]['kind']
+  diff: string
+  status: BlockStatus
+}): JSX.Element {
+  const [showAll, setShowAll] = useState(false)
+  const parsed = useMemo(() => parseUnifiedDiff(diff), [diff])
+  const running = status === 'running'
+
+  const kindBadge =
+    kind.type === 'add' ? 'new' : kind.type === 'delete' ? 'deleted' : kind.move_path ? 'renamed' : null
+
+  const dir = dirOf(path)
+  const overflow = !running && !showAll ? Math.max(0, parsed.lines.length - collapsedDiffLines) : 0
+  const shownLines = overflow > 0 ? parsed.lines.slice(0, collapsedDiffLines) : parsed.lines
+
+  return (
+    <div className={`diff-card status-${status}`}>
+      <div className="diff-head">
+        <span className="diff-file-icon">{running ? <Spinner /> : <FilePenIcon />}</span>
+        <span className="diff-file" title={path}>
+          <span className="diff-file-name">{basename(path)}</span>
+          {dir ? <span className="diff-file-dir">{dir}</span> : null}
+        </span>
+        {kindBadge ? <span className="work-chip chip-muted">{kindBadge}</span> : null}
+        {kind.type === 'update' && kind.move_path ? (
+          <span className="diff-file-dir" title={kind.move_path}>
+            → {basename(kind.move_path)}
+          </span>
+        ) : null}
+        <span className="diff-counts">
+          {parsed.adds > 0 ? <span className="diff-count-add">+{parsed.adds}</span> : null}
+          {parsed.dels > 0 ? <span className="diff-count-del">−{parsed.dels}</span> : null}
+          <StatusChip status={status} />
+        </span>
+      </div>
+      {parsed.lines.length > 0 ? (
+        running ? (
+          <AutoFollow className="diff-body is-live">
+            <DiffLines lines={parsed.lines} />
+          </AutoFollow>
+        ) : (
+          <div className="diff-body">
+            <DiffLines lines={shownLines} />
+            {overflow > 0 ? (
+              <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
+                ⋯ show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
+              </button>
+            ) : null}
+            {showAll && parsed.lines.length > collapsedDiffLines ? (
+              <button type="button" className="output-expand" onClick={() => setShowAll(false)}>
+                collapse diff
+              </button>
+            ) : null}
+          </div>
+        )
+      ) : running ? (
+        <div className="diff-body">
+          <div className="diff-skeleton" />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function DiffLines({ lines }: { lines: DiffLine[] }): JSX.Element {
+  return (
+    <div className="diff-lines">
+      {lines.map((line, index) =>
+        line.kind === 'hunk' ? (
+          <div key={index} className="diff-line diff-hunk">
+            <span className="diff-gutter" />
+            <span className="diff-text">{line.text}</span>
+          </div>
+        ) : (
+          <div key={index} className={`diff-line diff-${line.kind}`}>
+            <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '−' : ''}</span>
+            <span className="diff-text">
+              {line.segments
+                ? line.segments.map((segment, si) =>
+                    segment.emph ? (
+                      <mark key={si} className="diff-emph">
+                        {segment.text}
+                      </mark>
+                    ) : (
+                      <span key={si}>{segment.text}</span>
+                    )
+                  )
+                : line.text || ' '}
+            </span>
+          </div>
+        )
+      )}
+    </div>
+  )
+}
+
+function FileChangeBlock({ item, live }: { item: FileChangeItem; live: boolean }): JSX.Element {
+  const status = blockStatus(item, live)
+
+  return (
+    <>
+      {item.changes.map((change) => (
+        <DiffCard key={`${item.id}-${change.path}`} path={change.path} kind={change.kind} diff={change.diff} status={status} />
+      ))}
+      {item.changes.length === 0 && status === 'running' ? (
+        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="…" />
+      ) : null}
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// MCP / dynamic tool calls, web search, plans, and the long tail
+// ---------------------------------------------------------------------------
+
+function McpBlock({
+  item,
+  meta,
+  live
+}: {
+  item: McpToolCallItem
+  meta: ItemMeta | undefined
+  live: boolean
+}): JSX.Element {
+  const status = blockStatus(item, live)
+  const duration = itemDurationMs(item, meta)
+  const args = previewJson(item.arguments, 80)
+  const progress = status === 'running' && meta?.progress?.length ? meta.progress[meta.progress.length - 1] : null
+  const errorText = item.error ? truncate(String((item.error as { message?: string }).message ?? 'tool error'), 160) : null
+
+  return (
+    <ToolRow
+      icon={<PlugIcon />}
+      status={status}
+      verb={item.server}
+      detail={args ? `${item.tool} ${args}` : item.tool}
+      detailTitle={args ? `${item.tool} ${args}` : item.tool}
+      meta={duration && duration >= 100 ? fmtDuration(duration) : null}
+      sub={
+        progress ? (
+          <div className="tool-row-sub shimmer-text">{truncate(progress, 120)}</div>
+        ) : errorText ? (
+          <div className="tool-row-sub is-error">{errorText}</div>
+        ) : null
+      }
+    />
+  )
+}
+
+function DynamicToolBlock({
+  item,
+  meta,
+  live
+}: {
+  item: DynamicToolCallItem
+  meta: ItemMeta | undefined
+  live: boolean
+}): JSX.Element {
+  const status = blockStatus(item, live)
+  const duration = itemDurationMs(item, meta)
+  const args = previewJson(item.arguments, 80)
+  const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool
+
+  return (
+    <ToolRow
+      icon={<PlugIcon />}
+      status={item.success === false ? 'failed' : status}
+      verb="Tool"
+      detail={args ? `${name} ${args}` : name}
+      meta={duration && duration >= 100 ? fmtDuration(duration) : null}
+    />
+  )
+}
+
+function webSearchDescription(action: WebSearchAction | null, query: string): { verb: string; detail: string | null } {
+  if (action?.type === 'open_page') {
+    return { verb: 'Opened page', detail: action.url ?? null }
+  }
+  if (action?.type === 'find_in_page') {
+    return { verb: 'Found in page', detail: action.pattern ?? action.url ?? null }
+  }
+  const searchQuery =
+    action?.type === 'search' ? (action.query ?? action.queries?.[0] ?? query) : query
+  return { verb: 'Searched web', detail: searchQuery ? `"${truncate(searchQuery, 90)}"` : null }
+}
+
+function WebSearchBlock({ item, live }: { item: WebSearchItem; live: boolean }): JSX.Element {
+  const { verb, detail } = webSearchDescription(item.action, item.query)
+  return <ToolRow icon={<GlobeIcon />} status={blockStatus(item, live)} verb={verb} detail={detail} />
+}
+
+function TurnPlanBlock({ item }: { item: TurnPlanItem }): JSX.Element | null {
+  if (!item.steps.length && !item.explanation) {
+    return null
+  }
+
+  return (
+    <div className="plan-card">
+      <div className="plan-head">
+        <span className="plan-icon">
+          <ListChecksIcon />
+        </span>
+        <span className="plan-title">Plan</span>
+      </div>
+      {item.explanation ? <div className="plan-explanation">{item.explanation}</div> : null}
+      <div className="plan-steps">
+        {item.steps.map((step, index) => (
+          <div key={index} className={`plan-step is-${step.status}`}>
+            <span className="plan-step-mark">
+              {step.status === 'inProgress' ? <Spinner /> : <span className="plan-dot" />}
+            </span>
+            <span className={`plan-step-text ${step.status === 'inProgress' ? 'shimmer-text' : ''}`}>{step.step}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function PlanTextBlock({ item, streaming }: { item: PlanItem; streaming: boolean }): JSX.Element | null {
+  if (!item.text && !streaming) {
+    return null
+  }
+
+  const body = (
+    <div className="thought-text">
+      <ReactMarkdown>{item.text}</ReactMarkdown>
+    </div>
+  )
+
+  return (
+    <div className={`thought-block ${streaming ? 'is-streaming' : ''}`}>
+      <div className="thought-head">
+        <span className="thought-icon">
+          <ListChecksIcon />
+        </span>
+        {streaming ? <span className="shimmer-text">Planning</span> : <span className="thought-label">Plan</span>}
+      </div>
+      {item.text ? (streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body) : null}
+    </div>
+  )
+}
+
+function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): JSX.Element | null {
+  const status = blockStatus(item, live)
+
+  switch (item.type) {
+    case 'sleep':
+      return <ToolRow icon={<ClockIcon />} status={status} verb="Waited" detail={`${Math.round(item.durationMs / 1000)}s`} />
+    case 'imageView':
+      return <ToolRow icon={<ImageIcon />} status={status} verb="Viewed" detail={basename(item.path)} detailTitle={item.path} />
+    case 'imageGeneration':
+      return (
+        <ToolRow
+          icon={<ImageIcon />}
+          status={item.status === 'inProgress' && live ? 'running' : status}
+          verb="Generated image"
+          detail={item.revisedPrompt ? truncate(item.revisedPrompt, 90) : item.savedPath ? basename(item.savedPath) : null}
+        />
+      )
+    case 'subAgentActivity':
+      return <ToolRow icon={<BotIcon />} status={status} verb="Sub-agent" detail={`${item.kind} · ${basename(item.agentPath)}`} />
+    case 'collabAgentToolCall':
+      return (
+        <ToolRow
+          icon={<BotIcon />}
+          status={item.status === 'inProgress' && live ? 'running' : status}
+          verb="Agent"
+          detail={item.prompt ? truncate(item.prompt, 90) : String(item.tool)}
+        />
+      )
+    default:
+      return null
+  }
+}
+
+// ---------------------------------------------------------------------------
+// WorkBlock dispatcher + WorkGroup
+// ---------------------------------------------------------------------------
+
+function WorkBlock({
+  item,
+  meta,
+  live,
+  isNewest
+}: {
+  item: WorkItem
+  meta: ItemMeta | undefined
+  live: boolean
+  isNewest: boolean
+}): JSX.Element | null {
+  switch (item.type) {
+    case 'reasoning':
+      return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} meta={meta} />
+    case 'plan':
+      return <PlanTextBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
+    case 'turnPlan':
+      return <TurnPlanBlock item={item} />
+    case 'commandExecution':
+      return <CommandBlock item={item} meta={meta} live={live} />
+    case 'fileChange':
+      return <FileChangeBlock item={item} live={live} />
+    case 'mcpToolCall':
+      return <McpBlock item={item} meta={meta} live={live} />
+    case 'dynamicToolCall':
+      return <DynamicToolBlock item={item} meta={meta} live={live} />
+    case 'webSearch':
+      return <WebSearchBlock item={item} live={live} />
+    default:
+      return <GenericBlock item={item} live={live} />
+  }
+}
+
+export function WorkGroup({
+  items,
+  itemMeta,
+  live
+}: {
+  items: WorkItem[]
+  itemMeta: Record<string, ItemMeta>
+  live: boolean
+}): JSX.Element {
+  const newestId = items[items.length - 1]?.id
+
+  return (
+    <div className="work-group">
+      {items.map((item) => (
+        <WorkBlock
+          key={item.id}
+          item={item}
+          meta={itemMeta[item.id]}
+          live={live}
+          isNewest={item.id === newestId}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Turn tail — live shimmer status while running, permanent receipt when done
+// ---------------------------------------------------------------------------
+
+// Human label for what Codex is doing right now, from the newest live item.
+export function currentActionLabel(items: WorkItem[], streamingMessage: boolean): string {
+  for (let i = items.length - 1; i >= 0; i -= 1) {
+    const item = items[i]
+    const running =
+      'status' in item && typeof item.status === 'string'
+        ? item.status === 'inProgress'
+        : i === items.length - 1
+
+    if (!running) {
+      continue
+    }
+
+    switch (item.type) {
+      case 'reasoning':
+        return 'Thinking'
+      case 'plan':
+      case 'turnPlan':
+        return 'Planning'
+      case 'commandExecution': {
+        const action = item.commandActions.find(isBrowseAction)
+        if (action && item.commandActions.every(isBrowseAction)) {
+          if (action.type === 'read') {
+            return `Reading ${action.name}`
+          }
+          if (action.type === 'search') {
+            return action.query ? `Searching "${truncate(action.query, 32)}"` : 'Searching files'
+          }
+          return 'Listing files'
+        }
+        return `Running ${truncate(item.command, 38)}`
+      }
+      case 'fileChange': {
+        const path = item.changes[0]?.path
+        return path ? `Editing ${basename(path)}` : 'Editing files'
+      }
+      case 'mcpToolCall':
+        return `Calling ${item.server}.${item.tool}`
+      case 'dynamicToolCall':
+        return `Calling ${item.tool}`
+      case 'webSearch':
+        return 'Searching the web'
+      case 'imageGeneration':
+        return 'Generating image'
+      case 'subAgentActivity':
+      case 'collabAgentToolCall':
+        return 'Coordinating agents'
+      case 'sleep':
+        return 'Waiting'
+      default:
+        break
+    }
+  }
+
+  return streamingMessage ? 'Writing' : 'Working'
+}
+
+function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string[] {
+  const parts: string[] = []
+
+  const diffSummary = meta?.diffSummary
+  if (diffSummary && diffSummary.files > 0) {
+    parts.push(
+      `${diffSummary.files} ${diffSummary.files === 1 ? 'file' : 'files'} +${diffSummary.adds} −${diffSummary.dels}`
+    )
+  } else {
+    const fileItems = items.filter((item): item is FileChangeItem => item.type === 'fileChange')
+    if (fileItems.length) {
+      const paths = new Set(fileItems.flatMap((item) => item.changes.map((change) => change.path)))
+      let adds = 0
+      let dels = 0
+      for (const fileItem of fileItems) {
+        for (const change of fileItem.changes) {
+          const parsed = parseUnifiedDiff(change.diff)
+          adds += parsed.adds
+          dels += parsed.dels
+        }
+      }
+      parts.push(`${paths.size} ${paths.size === 1 ? 'file' : 'files'} +${adds} −${dels}`)
+    }
+  }
+
+  const commands = items.filter((item) => item.type === 'commandExecution').length
+  if (commands) {
+    parts.push(`${commands} ${commands === 1 ? 'command' : 'commands'}`)
+  }
+
+  const searches = items.filter((item) => item.type === 'webSearch').length
+  if (searches) {
+    parts.push(`${searches} ${searches === 1 ? 'search' : 'searches'}`)
+  }
+
+  const toolCalls = items.filter((item) => item.type === 'mcpToolCall' || item.type === 'dynamicToolCall').length
+  if (toolCalls) {
+    parts.push(`${toolCalls} ${toolCalls === 1 ? 'tool call' : 'tool calls'}`)
+  }
+
+  const tokens = meta?.tokens?.total.totalTokens
+  if (tokens) {
+    parts.push(`${fmtTokens(tokens)} tokens`)
+  }
+
+  return parts
+}
+
+export function TurnTail({
+  live,
+  items,
+  meta,
+  streamingMessage
+}: {
+  live: boolean
+  items: WorkItem[]
+  meta: TurnMeta | undefined
+  streamingMessage: boolean
+}): JSX.Element | null {
+  const now = useNow(live)
+
+  if (live) {
+    const label = currentActionLabel(items, streamingMessage)
+    const elapsed = meta?.startedAtMs ? Math.max(0, now - meta.startedAtMs) : null
+    const tokens = meta?.tokens?.total.totalTokens
+
+    return (
+      <div className="turn-tail is-live">
+        <span className="tail-orb" aria-hidden="true" />
+        <span className="shimmer-text tail-label">{label}</span>
+        {elapsed !== null && elapsed >= 3000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
+        {tokens ? (
+          <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
+            {fmtTokens(tokens)} tok
+          </span>
+        ) : null}
+      </div>
+    )
+  }
+
+  if (!items.length) {
+    return null
+  }
+
+  const durationMs =
+    meta?.durationMs ??
+    (meta?.startedAtMs && meta?.completedAtMs ? Math.max(0, meta.completedAtMs - meta.startedAtMs) : null)
+  const parts = turnSummaryParts(items, meta)
+
+  let lead: string
+  let tone = ''
+  if (meta?.status === 'failed') {
+    lead = durationMs ? `Failed after ${fmtDuration(durationMs)}` : 'Failed'
+    tone = 'is-failed'
+  } else if (meta?.status === 'interrupted') {
+    lead = durationMs ? `Stopped after ${fmtDuration(durationMs)}` : 'Stopped'
+    tone = 'is-stopped'
+  } else {
+    lead = durationMs ? `Worked for ${fmtDuration(durationMs)}` : 'Worked'
+  }
+
+  return (
+    <div className={`turn-tail is-done ${tone}`}>
+      <span className="tail-rule" aria-hidden="true" />
+      <span className="tail-summary">
+        {[lead, ...parts].join(' · ')}
+        {meta?.status === 'failed' && meta.errorMessage ? ` — ${truncate(meta.errorMessage, 160)}` : ''}
+      </span>
+      <span className="tail-rule" aria-hidden="true" />
+    </div>
+  )
+}
+
+function tokenTooltip(tokens: ThreadTokenUsage | undefined): string | undefined {
+  if (!tokens) {
+    return undefined
+  }
+  const { total } = tokens
+  const parts = [
+    `input ${fmtTokens(total.inputTokens)}`,
+    `cached ${fmtTokens(total.cachedInputTokens)}`,
+    `output ${fmtTokens(total.outputTokens)}`,
+    `reasoning ${fmtTokens(total.reasoningOutputTokens)}`
+  ]
+  if (tokens.modelContextWindow) {
+    parts.push(`context ${fmtTokens(tokens.modelContextWindow)}`)
+  }
+  return parts.join(' · ')
+}
