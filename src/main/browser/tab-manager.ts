@@ -1,4 +1,5 @@
 import { BrowserWindow, WebContentsView, shell } from 'electron'
+import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import { normalizeNavigationInput } from './url-utils.js'
 
@@ -217,6 +218,31 @@ export class TabManager {
 
   private getActiveTab(): BrowserTab | null {
     return this.activeTabId ? (this.tabs.get(this.activeTabId) ?? null) : null
+  }
+
+  // --- Agent control surface ---------------------------------------------
+  // Public accessors used by the browser-control server so the Codex agent can
+  // drive whichever tab it's targeting. Default target is the visible active
+  // tab; an explicit id lets it reach any tab for multi-tab work.
+
+  getActiveTabId(): string | null {
+    return this.activeTabId
+  }
+
+  // Resolve the WebContents to run against. No id → the visible active tab.
+  resolveWebContents(tabId?: string | null): WebContents | null {
+    const tab = tabId ? this.tabs.get(tabId) : this.getActiveTab()
+    return tab?.view.webContents ?? null
+  }
+
+  // Flat list for the agent to discover targets before acting.
+  listTabs(): Array<{ id: string; url: string; title: string; active: boolean }> {
+    return Array.from(this.tabs.values()).map((tab) => ({
+      id: tab.id,
+      url: tab.view.webContents.getURL() || tab.url,
+      title: tab.title,
+      active: tab.id === this.activeTabId
+    }))
   }
 
   private pushState(): void {
