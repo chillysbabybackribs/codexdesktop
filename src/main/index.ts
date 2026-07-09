@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'node:path'
 import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
@@ -101,6 +101,19 @@ function registerIpc(): void {
     }
   })
   ipcMain.handle(ipcChannels.windowClose, () => mainWindow?.close())
+
+  ipcMain.handle(ipcChannels.workspacePick, async () => {
+    if (!mainWindow) {
+      return null
+    }
+
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Choose workspace folder',
+      properties: ['openDirectory', 'createDirectory']
+    })
+
+    return result.canceled ? null : (result.filePaths[0] ?? null)
+  })
 
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))

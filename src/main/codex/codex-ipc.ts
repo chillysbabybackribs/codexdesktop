@@ -1,5 +1,10 @@
 import { ipcMain, type BrowserWindow } from 'electron'
-import type { CodexEvent, CodexInterruptTurnParams, CodexSendMessageParams } from '../../shared/ipc.js'
+import type {
+  CodexEvent,
+  CodexInterruptTurnParams,
+  CodexRespondApprovalParams,
+  CodexSendMessageParams
+} from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import { CodexClient } from './codex-client.js'
 
@@ -12,15 +17,19 @@ export function registerCodexIpc(getWindow: () => BrowserWindow | null): CodexCl
 
   ipcMain.handle(ipcChannels.codexGetAuthStatus, () => client.getAuthStatus())
   ipcMain.handle(ipcChannels.codexListThreads, () => client.listThreads())
-  ipcMain.handle(ipcChannels.codexStartThread, () => client.startThread())
+  ipcMain.handle(ipcChannels.codexStartThread, (_event, cwd?: string | null) => client.startThread(cwd))
   ipcMain.handle(ipcChannels.codexResumeThread, (_event, threadId: string) => client.resumeThread(threadId))
   ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
-    client.sendMessage(params.threadId, params.text)
+    client.sendMessage(params.threadId, params.text, params.cwd)
   )
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
   )
+  ipcMain.handle(ipcChannels.codexRespondApproval, (_event, params: CodexRespondApprovalParams) =>
+    client.respondToApproval(params.requestId, params.decision)
+  )
+  ipcMain.handle(ipcChannels.codexSetAutoApprove, (_event, enabled: boolean) => client.setAutoApprove(enabled))
 
   return client
 }

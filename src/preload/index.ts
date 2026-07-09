@@ -4,6 +4,7 @@ import type {
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
+  CodexRespondApprovalParams,
   CodexSendMessageParams
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
@@ -34,16 +35,22 @@ const api = {
   codex: {
     getAuthStatus: () => ipcRenderer.invoke(ipcChannels.codexGetAuthStatus),
     listThreads: () => ipcRenderer.invoke(ipcChannels.codexListThreads),
-    startThread: () => ipcRenderer.invoke(ipcChannels.codexStartThread),
+    startThread: (cwd?: string | null) => ipcRenderer.invoke(ipcChannels.codexStartThread, cwd),
     resumeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexResumeThread, threadId),
     readThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
     sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
     interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
+    respondApproval: (params: CodexRespondApprovalParams) =>
+      ipcRenderer.invoke(ipcChannels.codexRespondApproval, params),
+    setAutoApprove: (enabled: boolean) => ipcRenderer.invoke(ipcChannels.codexSetAutoApprove, enabled),
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.codexEvent, wrapped)
       return () => ipcRenderer.off(ipcChannels.codexEvent, wrapped)
     }
+  },
+  workspace: {
+    pick: (): Promise<string | null> => ipcRenderer.invoke(ipcChannels.workspacePick)
   }
 }
 

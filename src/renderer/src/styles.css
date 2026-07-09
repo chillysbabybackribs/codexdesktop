@@ -110,10 +110,41 @@ button {
 .chat-toolbar {
   position: relative;
   display: grid;
-  grid-template-columns: 36px minmax(0, 304px) 1fr;
+  grid-template-columns: 36px minmax(0, 304px) auto 1fr;
   align-items: center;
   gap: 12px;
   padding: 12px 22px;
+}
+
+.workspace-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 220px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #242424;
+  border-radius: 7px;
+  background: transparent;
+  color: #9aa0a6;
+  font-size: 12px;
+}
+
+.workspace-button:hover {
+  background: #202020;
+  color: #d4d4d4;
+}
+
+.workspace-icon {
+  color: #777d84;
+  font-size: 11px;
+}
+
+.workspace-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .icon-button,
@@ -319,6 +350,88 @@ button {
   white-space: pre-wrap;
 }
 
+.approval-card {
+  max-width: min(860px, 92%);
+  padding: 14px;
+  border: 1px solid #52441f;
+  border-radius: 8px;
+  background: #221e15;
+}
+
+.approval-title {
+  color: #e4c889;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.approval-command {
+  max-height: 200px;
+  margin: 10px 0 0;
+  overflow: auto;
+  color: #e4e8ec;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.approval-files {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #c8d0d7;
+  font-size: 13px;
+}
+
+.approval-detail {
+  margin: 8px 0 0;
+  color: #b8bec4;
+  font-size: 13px;
+}
+
+.approval-cwd {
+  color: #7f858b;
+  font-size: 12px;
+}
+
+.approval-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.approval-actions button {
+  padding: 5px 13px;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: #cfd4d8;
+  font-size: 13px;
+}
+
+.approval-actions button:hover {
+  background: #343434;
+}
+
+.approval-actions .approval-approve {
+  border-color: #2d5233;
+  background: #1f3524;
+  color: #9ed7aa;
+}
+
+.approval-actions .approval-approve:hover {
+  background: #27422d;
+}
+
+.approval-actions .approval-deny {
+  border-color: #52302d;
+  background: #35201f;
+  color: #eaa2a2;
+}
+
+.approval-actions .approval-deny:hover {
+  background: #422a28;
+}
+
 .status-pill {
   flex: 0 0 auto;
   margin-left: auto;
@@ -397,12 +510,27 @@ button {
 }
 
 .composer-status {
+  flex: 1;
   min-width: 0;
   overflow: hidden;
   color: #737a80;
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.auto-approve-toggle {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  color: #8d9399;
+  font-size: 12px;
+  user-select: none;
+}
+
+.auto-approve-toggle input {
+  accent-color: #4a90d9;
 }
 
 .send-button {

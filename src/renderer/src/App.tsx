@@ -1,6 +1,13 @@
 import { FormEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import type { BrowserBounds, BrowserState, BrowserTabState, CodexEvent } from '../../shared/ipc'
+import type {
+  BrowserBounds,
+  BrowserState,
+  BrowserTabState,
+  CodexApprovalDecision,
+  CodexApprovalRequest,
+  CodexEvent
+} from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
@@ -30,6 +37,13 @@ export default function App(): JSX.Element {
   const [isSending, setIsSending] = useState(false)
   const [codexStatus, setCodexStatus] = useState('idle')
   const [threads, setThreads] = useState<Thread[]>([])
+  const [approvals, setApprovals] = useState<CodexApprovalRequest[]>([])
+  const [autoApprove, setAutoApprove] = useState(
+    () => window.localStorage.getItem('codexdesktop.autoApprove') === 'true'
+  )
+  const [workspace, setWorkspace] = useState<string | null>(
+    () => window.localStorage.getItem('codexdesktop.workspace')
+  )
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
@@ -52,14 +66,38 @@ export default function App(): JSX.Element {
   }, [split])
 
   useEffect(() => {
+    window.localStorage.setItem('codexdesktop.autoApprove', String(autoApprove))
+    void window.api.codex.setAutoApprove(autoApprove)
+  }, [autoApprove])
+
+  useEffect(() => {
+    if (workspace) {
+      window.localStorage.setItem('codexdesktop.workspace', workspace)
+    } else {
+      window.localStorage.removeItem('codexdesktop.workspace')
+    }
+  }, [workspace])
+
+  useEffect(() => {
     const dispose = window.api.codex.onEvent((event) => {
       if (event.type === 'status') {
         setCodexStatus(event.status)
 
         if (event.status === 'exited' || event.status === 'error') {
           addSystemItem(event.message ?? 'Codex app-server is not available.', event.status === 'error' ? 'error' : 'warning')
+          setApprovals([])
         }
 
+        return
+      }
+
+      if (event.type === 'approvalRequest') {
+        setApprovals((current) => [...current, event.request])
+        return
+      }
+
+      if (event.type === 'approvalResolved') {
+        setApprovals((current) => current.filter((approval) => approval.requestId !== event.requestId))
         return
       }
 
@@ -197,7 +235,8 @@ export default function App(): JSX.Element {
     try {
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
-        text: trimmed
+        text: trimmed,
+        cwd: workspace
       })
       setActiveThreadId(response.threadId)
       setActiveTurnId(response.turn.id)
@@ -242,7 +281,30 @@ export default function App(): JSX.Element {
     }
   }
 
+  const handlePickWorkspace = async (): Promise<void> => {
+    try {
+      const picked = await window.api.workspace.pick()
+
+      if (picked) {
+        setWorkspace(picked)
+      }
+    } catch (error) {
+      addSystemItem(`Workspace selection failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
+  const handleApprovalDecision = async (requestId: string | number, decision: CodexApprovalDecision): Promise<void> => {
+    setApprovals((current) => current.filter((approval) => approval.requestId !== requestId))
+
+    try {
+      await window.api.codex.respondApproval({ requestId, decision })
+    } catch (error) {
+      addSystemItem(`Approval response failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
   const hasThreadContent = items.length > 0
+  const visibleApprovals = approvals.filter((approval) => isRelevantThread(approval.threadId, activeThreadId))
 
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
@@ -397,6 +459,7 @@ export default function App(): JSX.Element {
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
           items={items}
+          approvals={visibleApprovals}
           title={activeThreadTitle}
           status={codexStatus}
           threads={threads}
@@ -404,11 +467,16 @@ export default function App(): JSX.Element {
           isThreadMenuOpen={isThreadMenuOpen}
           hasThreadContent={hasThreadContent}
           isBusy={isSending || Boolean(activeTurnId)}
+          workspace={workspace}
+          autoApprove={autoApprove}
           onSend={handleSend}
           onStop={handleStop}
           onNewThread={handleNewThread}
           onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
           onResumeThread={handleResumeThread}
+          onPickWorkspace={handlePickWorkspace}
+          onApprovalDecision={handleApprovalDecision}
+          onToggleAutoApprove={setAutoApprove}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -443,6 +511,7 @@ function TitleBar(): JSX.Element {
 
 function ChatPane({
   items,
+  approvals,
   title,
   status,
   threads,
@@ -450,13 +519,19 @@ function ChatPane({
   isThreadMenuOpen,
   hasThreadContent,
   isBusy,
+  workspace,
+  autoApprove,
   onSend,
   onStop,
   onNewThread,
   onToggleThreadMenu,
-  onResumeThread
+  onResumeThread,
+  onPickWorkspace,
+  onApprovalDecision,
+  onToggleAutoApprove
 }: {
   items: ChatItem[]
+  approvals: CodexApprovalRequest[]
   title: string
   status: string
   threads: Thread[]
@@ -464,11 +539,16 @@ function ChatPane({
   isThreadMenuOpen: boolean
   hasThreadContent: boolean
   isBusy: boolean
+  workspace: string | null
+  autoApprove: boolean
   onSend: (text: string) => Promise<void>
   onStop: () => Promise<void>
   onNewThread: () => void
   onToggleThreadMenu: () => void
   onResumeThread: (threadId: string) => Promise<void>
+  onPickWorkspace: () => Promise<void>
+  onApprovalDecision: (requestId: string | number, decision: CodexApprovalDecision) => Promise<void>
+  onToggleAutoApprove: (enabled: boolean) => void
 }): JSX.Element {
   return (
     <section className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'}`}>
@@ -480,6 +560,15 @@ function ChatPane({
           <span className="spin-arrow">↻</span>
           <span className="thread-title">{title}</span>
           <span className="chevron">⌄</span>
+        </button>
+        <button
+          type="button"
+          className="workspace-button"
+          title={workspace ?? 'No workspace selected — new chats start in your home folder'}
+          onClick={() => void onPickWorkspace()}
+        >
+          <span className="workspace-icon">▣</span>
+          <span className="workspace-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
         </button>
         {isThreadMenuOpen ? (
           <div className="thread-menu">
@@ -505,10 +594,66 @@ function ChatPane({
         {items.map((item) => (
           <ChatItemView key={item.id} item={item} />
         ))}
+        {approvals.map((approval) => (
+          <ApprovalCard key={String(approval.requestId)} request={approval} onDecision={onApprovalDecision} />
+        ))}
       </div>
 
-      <Composer docked={hasThreadContent} isBusy={isBusy} status={status} onSend={onSend} onStop={onStop} />
+      <Composer
+        docked={hasThreadContent}
+        isBusy={isBusy}
+        status={status}
+        autoApprove={autoApprove}
+        onSend={onSend}
+        onStop={onStop}
+        onToggleAutoApprove={onToggleAutoApprove}
+      />
     </section>
+  )
+}
+
+const approvalTitles: Record<CodexApprovalRequest['method'], string> = {
+  'item/commandExecution/requestApproval': 'Run command?',
+  'item/fileChange/requestApproval': 'Apply file changes?',
+  'item/permissions/requestApproval': 'Grant extra permissions?',
+  applyPatchApproval: 'Apply file changes?',
+  execCommandApproval: 'Run command?'
+}
+
+function ApprovalCard({
+  request,
+  onDecision
+}: {
+  request: CodexApprovalRequest
+  onDecision: (requestId: string | number, decision: CodexApprovalDecision) => Promise<void>
+}): JSX.Element {
+  return (
+    <article className="message approval-card">
+      <div className="approval-title">{approvalTitles[request.method]}</div>
+      {request.command ? <pre className="approval-command">$ {request.command}</pre> : null}
+      {request.files?.length ? (
+        <ul className="approval-files">
+          {request.files.map((file) => (
+            <li key={file}>{file}</li>
+          ))}
+        </ul>
+      ) : null}
+      {request.permissionsSummary ? <pre className="approval-command">{request.permissionsSummary}</pre> : null}
+      {request.reason ? <p className="approval-detail">{request.reason}</p> : null}
+      {request.grantRoot ? <p className="approval-detail">Grants write access under {request.grantRoot}</p> : null}
+      {request.cwd ? <p className="approval-detail approval-cwd">in {request.cwd}</p> : null}
+      <div className="approval-actions">
+        <button type="button" className="approval-approve" onClick={() => void onDecision(request.requestId, 'accept')}>
+          Approve
+        </button>
+        <button type="button" onClick={() => void onDecision(request.requestId, 'acceptForSession')}>
+          Approve for session
+        </button>
+        <button type="button" className="approval-deny" onClick={() => void onDecision(request.requestId, 'decline')}>
+          Deny
+        </button>
+      </div>
+    </article>
   )
 }
 
@@ -577,14 +722,18 @@ function Composer({
   docked,
   isBusy,
   status,
+  autoApprove,
   onSend,
-  onStop
+  onStop,
+  onToggleAutoApprove
 }: {
   docked: boolean
   isBusy: boolean
   status: string
+  autoApprove: boolean
   onSend: (text: string) => Promise<void>
   onStop: () => Promise<void>
+  onToggleAutoApprove: (enabled: boolean) => void
 }): JSX.Element {
   const [value, setValue] = useState('')
 
@@ -618,6 +767,14 @@ function Composer({
       />
       <div className="composer-footer">
         <span className="composer-status">{status}</span>
+        <label className="auto-approve-toggle" title="Automatically approve command, file-change, and permission requests">
+          <input
+            type="checkbox"
+            checked={autoApprove}
+            onChange={(event) => onToggleAutoApprove(event.target.checked)}
+          />
+          Auto-approve
+        </label>
         <button type="submit" className="send-button" aria-label={isBusy ? 'Stop turn' : 'Send message'} disabled={!isBusy && !value.trim()}>
           {isBusy ? '■' : '↑'}
         </button>
@@ -767,6 +924,10 @@ function isRelevantThread(incomingThreadId: string, activeThreadId: string | nul
 
 function threadTitle(thread: Thread): string {
   return thread.name || thread.preview || 'New Chat'
+}
+
+function workspaceName(path: string): string {
+  return path.replace(/\/+$/, '').split('/').pop() || path
 }
 
 function formatThreadTime(seconds: number): string {

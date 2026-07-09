@@ -3,6 +3,7 @@ import type {
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
+  CodexRespondApprovalParams,
   CodexSendMessageParams
 } from '../shared/ipc'
 import type { GetAuthStatusResponse } from '../shared/codex-protocol/GetAuthStatusResponse'
@@ -36,12 +37,17 @@ declare global {
       codex: {
         getAuthStatus: () => Promise<GetAuthStatusResponse>
         listThreads: () => Promise<ThreadListResponse>
-        startThread: () => Promise<ThreadStartResponse>
+        startThread: (cwd?: string | null) => Promise<ThreadStartResponse>
         resumeThread: (threadId: string) => Promise<ThreadResumeResponse>
         readThread: (threadId: string) => Promise<ThreadReadResponse>
         sendMessage: (params: CodexSendMessageParams) => Promise<TurnStartResponse & { threadId: string }>
         interruptTurn: (params: CodexInterruptTurnParams) => Promise<unknown>
+        respondApproval: (params: CodexRespondApprovalParams) => Promise<void>
+        setAutoApprove: (enabled: boolean) => Promise<void>
         onEvent: (listener: (event: CodexEvent) => void) => () => void
+      }
+      workspace: {
+        pick: () => Promise<string | null>
       }
     }
   }
