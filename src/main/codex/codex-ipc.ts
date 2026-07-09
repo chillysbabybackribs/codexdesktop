@@ -1,10 +1,5 @@
 import { ipcMain, type BrowserWindow } from 'electron'
-import type {
-  CodexEvent,
-  CodexInterruptTurnParams,
-  CodexRespondApprovalParams,
-  CodexSendMessageParams
-} from '../../shared/ipc.js'
+import type { CodexEvent, CodexInterruptTurnParams, CodexSendMessageParams } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import { CodexClient } from './codex-client.js'
 
@@ -26,10 +21,6 @@ export function registerCodexIpc(getWindow: () => BrowserWindow | null): CodexCl
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
   )
-  ipcMain.handle(ipcChannels.codexRespondApproval, (_event, params: CodexRespondApprovalParams) =>
-    client.respondToApproval(params.requestId, params.decision)
-  )
-  ipcMain.handle(ipcChannels.codexSetAutoApprove, (_event, enabled: boolean) => client.setAutoApprove(enabled))
 
   return client
 }

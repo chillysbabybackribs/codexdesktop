@@ -26,12 +26,6 @@ type PendingRequest = {
   reject: (reason: Error) => void
 }
 
-type PendingApproval = {
-  method: CodexApprovalMethod
-  threadId: string
-  params: unknown
-}
-
 const taskShapingGuidance = [
   'Codex Desktop task-shaping guidance:',
   '- Start by organizing the task in the visible reasoning or plan stream before tool use when the task benefits from planning.',
