@@ -19,6 +19,10 @@ export class TabManager {
   private activeTabId: string | null = null
   private bounds: BrowserBounds = hiddenBounds
   private isDraggingDivider = false
+  // The native browser view sits above all renderer DOM, so a renderer overlay
+  // (settings modal, etc.) can't cover it with z-index — we hide the view while
+  // an overlay is open, the same trick used during a divider drag.
+  private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
 
   constructor(private readonly window: BrowserWindow) {}
@@ -97,8 +101,7 @@ export class TabManager {
     }
 
     this.activeTabId = id
-    const active = this.getActiveTab()
-    active?.view.setBounds(this.isDraggingDivider ? hiddenBounds : this.bounds)
+    this.syncActiveBounds()
     this.pushState()
   }
 
@@ -136,21 +139,30 @@ export class TabManager {
 
   setBounds(bounds: BrowserBounds): void {
     this.bounds = sanitizeBounds(bounds)
-
-    if (!this.isDraggingDivider) {
-      this.getActiveTab()?.view.setBounds(this.bounds)
-    }
+    this.syncActiveBounds()
   }
 
   beginDividerDrag(): void {
     this.isDraggingDivider = true
-    this.getActiveTab()?.view.setBounds(hiddenBounds)
+    this.syncActiveBounds()
   }
 
   endDividerDrag(bounds: BrowserBounds): void {
     this.bounds = sanitizeBounds(bounds)
     this.isDraggingDivider = false
-    this.getActiveTab()?.view.setBounds(this.bounds)
+    this.syncActiveBounds()
+  }
+
+  setOverlayOpen(open: boolean): void {
+    this.isOverlayOpen = open
+    this.syncActiveBounds()
+  }
+
+  // The active view is on-screen only when nothing renderer-side needs the
+  // browser region clear — a divider drag in progress, or an overlay covering it.
+  private syncActiveBounds(): void {
+    const hidden = this.isDraggingDivider || this.isOverlayOpen
+    this.getActiveTab()?.view.setBounds(hidden ? hiddenBounds : this.bounds)
   }
 
   private attachEvents(tab: BrowserTab): void {

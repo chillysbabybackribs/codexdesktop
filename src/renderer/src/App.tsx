@@ -1,4 +1,13 @@
-import { FormEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  FormEvent,
+  KeyboardEvent as ReactKeyboardEvent,
+  PointerEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import ReactMarkdown from 'react-markdown'
 import type {
   BrowserBounds,
@@ -20,6 +29,109 @@ type SystemItem = {
 }
 
 type ChatItem = ThreadItem | SystemItem
+
+// Item types that represent Codex "working" — tool calls and its running narration.
+// Everything the user sees as live activity flows through the ActivityCard; the rest
+// (user + assistant messages, system notices) renders as normal chat.
+const activityTypes = new Set<ThreadItem['type']>([
+  'reasoning',
+  'plan',
+  'commandExecution',
+  'fileChange',
+  'mcpToolCall',
+  'dynamicToolCall',
+  'collabAgentToolCall',
+  'subAgentActivity',
+  'webSearch',
+  'imageGeneration',
+  'sleep'
+])
+
+type ActivityItem = Extract<ThreadItem, { type: (typeof activityTypesTuple)[number] }>
+
+// Kept as a tuple purely so TypeScript can narrow ActivityItem above.
+const activityTypesTuple = [
+  'reasoning',
+  'plan',
+  'commandExecution',
+  'fileChange',
+  'mcpToolCall',
+  'dynamicToolCall',
+  'collabAgentToolCall',
+  'subAgentActivity',
+  'webSearch',
+  'imageGeneration',
+  'sleep'
+] as const
+
+function isActivity(item: ChatItem): item is ActivityItem {
+  return item.type !== 'system' && activityTypes.has(item.type)
+}
+
+type ActivityStatus = 'inProgress' | 'completed' | 'failed' | 'declined'
+
+function activityStatus(item: ActivityItem): ActivityStatus {
+  if (
+    item.type === 'commandExecution' ||
+    item.type === 'fileChange' ||
+    item.type === 'mcpToolCall' ||
+    item.type === 'dynamicToolCall'
+  ) {
+    return item.status as ActivityStatus
+  }
+
+  return 'completed'
+}
+
+// A "run" is the trailing block of activity items after the last real message.
+// While a turn is live it renders as the streaming ActivityCard; once the turn
+// ends it collapses to a one-line summary above the typed-out answer.
+type RenderRow =
+  | { kind: 'chat'; item: ChatItem }
+  | { kind: 'activity'; id: string; items: ActivityItem[] }
+
+function buildRows(items: ChatItem[]): RenderRow[] {
+  const rows: RenderRow[] = []
+  let run: ActivityItem[] | null = null
+
+  const flush = (): void => {
+    if (run && run.length) {
+      rows.push({ kind: 'activity', id: `activity-${run[0].id}`, items: run })
+    }
+    run = null
+  }
+
+  for (const item of items) {
+    if (isActivity(item)) {
+      run ??= []
+      run.push(item)
+      continue
+    }
+
+    flush()
+    rows.push({ kind: 'chat', item })
+  }
+
+  flush()
+  return rows
+}
+
+// An agent message is in one of three phases:
+//  - 'streaming': its turn is still running → hide from chat (the activity card
+//    is what's on screen); the answer belongs in chat only once the turn ends.
+//  - 'typing': the turn just finished this session → type it out.
+//  - 'settled': loaded from history or already typed → show in full.
+type MessagePhase = 'streaming' | 'typing' | 'settled'
+
+function agentMessagePhase(item: ChatItem, turnLive: boolean, typingIds: Set<string>): MessagePhase {
+  if (item.type !== 'agentMessage') {
+    return 'settled'
+  }
+  if (typingIds.has(item.id)) {
+    return 'typing'
+  }
+  return turnLive ? 'streaming' : 'settled'
+}
 
 const minChatWidth = 280
 const minBrowserWidth = 420
@@ -47,6 +159,10 @@ export default function App(): JSX.Element {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
+  // Agent-message ids that should type out — only messages that streamed in live
+  // this session, never ones loaded from history.
+  const [typingIds, setTypingIds] = useState<Set<string>>(() => new Set())
+  const liveItemIdsRef = useRef<Set<string>>(new Set())
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
   const pendingBoundsRef = useRef<BrowserBounds | null>(null)
@@ -266,10 +382,15 @@ export default function App(): JSX.Element {
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
     setItems([])
+    setTypingIds(new Set())
+    liveItemIdsRef.current = new Set()
   }
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
     setIsThreadMenuOpen(false)
+    // Resumed history should render instantly, never re-type.
+    setTypingIds(new Set())
+    liveItemIdsRef.current = new Set()
 
     try {
       const resumed = await window.api.codex.resumeThread(threadId)
@@ -324,12 +445,15 @@ export default function App(): JSX.Element {
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
           setActiveThreadId(notification.params.threadId)
           setActiveTurnId(notification.params.turn.id)
+          liveItemIdsRef.current = new Set()
           mergeItems(notification.params.turn.items)
         }
         return
       case 'turn/completed':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
           mergeItems(notification.params.turn.items)
+          // Any agent message that streamed in during this turn now types out.
+          promoteTypingIds()
           setActiveTurnId(null)
         }
         void refreshThreads()
@@ -337,11 +461,15 @@ export default function App(): JSX.Element {
       case 'item/started':
       case 'item/completed':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          if (notification.params.item.type === 'agentMessage') {
+            liveItemIdsRef.current.add(notification.params.item.id)
+          }
           upsertItem(notification.params.item)
         }
         return
       case 'item/agentMessage/delta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          liveItemIdsRef.current.add(notification.params.itemId)
           patchItemText(notification.params.itemId, notification.params.delta, 'agentMessage')
         }
         return
@@ -374,6 +502,26 @@ export default function App(): JSX.Element {
 
   function mergeItems(nextItems: ThreadItem[]): void {
     setItems((current) => upsertMany(current, nextItems))
+  }
+
+  // Promote the agent messages that streamed in during the just-finished turn so
+  // they type out. `turn/completed` doesn't carry the message items — they arrive
+  // over the item/delta stream — so we promote the ids we tracked live directly.
+  function promoteTypingIds(): void {
+    const fresh = [...liveItemIdsRef.current]
+
+    if (!fresh.length) {
+      return
+    }
+
+    setTypingIds((current) => {
+      const next = new Set(current)
+      for (const id of fresh) {
+        next.add(id)
+      }
+      return next
+    })
+    liveItemIdsRef.current = new Set()
   }
 
   async function refreshThreads(): Promise<void> {
@@ -464,6 +612,8 @@ export default function App(): JSX.Element {
           status={codexStatus}
           threads={threads}
           activeThreadId={activeThreadId}
+          activeTurnId={activeTurnId}
+          typingIds={typingIds}
           isThreadMenuOpen={isThreadMenuOpen}
           hasThreadContent={hasThreadContent}
           isBusy={isSending || Boolean(activeTurnId)}
@@ -516,6 +666,8 @@ function ChatPane({
   status,
   threads,
   activeThreadId,
+  activeTurnId,
+  typingIds,
   isThreadMenuOpen,
   hasThreadContent,
   isBusy,
@@ -536,6 +688,8 @@ function ChatPane({
   status: string
   threads: Thread[]
   activeThreadId: string | null
+  activeTurnId: string | null
+  typingIds: Set<string>
   isThreadMenuOpen: boolean
   hasThreadContent: boolean
   isBusy: boolean
@@ -550,65 +704,640 @@ function ChatPane({
   onApprovalDecision: (requestId: string | number, decision: CodexApprovalDecision) => Promise<void>
   onToggleAutoApprove: (enabled: boolean) => void
 }): JSX.Element {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const rows = useMemo(() => buildRows(items), [items])
+  // The final activity block is "live" only while a turn is running; the rest have finished.
+  const lastActivityId = useMemo(() => {
+    for (let i = rows.length - 1; i >= 0; i -= 1) {
+      if (rows[i].kind === 'activity') {
+        return (rows[i] as Extract<RenderRow, { kind: 'activity' }>).id
+      }
+    }
+    return null
+  }, [rows])
   return (
     <section className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'}`}>
       <div className="chat-toolbar">
-        <button type="button" className="icon-button" aria-label="Toggle sidebar">
-          <span className="icon-sidebar" />
-        </button>
-        <button type="button" className="thread-select" aria-label="Open thread menu" onClick={onToggleThreadMenu}>
-          <span className="spin-arrow">↻</span>
-          <span className="thread-title">{title}</span>
-          <span className="chevron">⌄</span>
-        </button>
         <button
           type="button"
-          className="workspace-button"
-          title={workspace ?? 'No workspace selected — new chats start in your home folder'}
-          onClick={() => void onPickWorkspace()}
+          className="icon-button"
+          aria-label="Open settings"
+          title="Settings"
+          onClick={() => setIsSettingsOpen(true)}
         >
-          <span className="workspace-icon">▣</span>
-          <span className="workspace-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
+          <SettingsIcon />
         </button>
-        {isThreadMenuOpen ? (
-          <div className="thread-menu">
-            <button type="button" className="thread-menu-item new-thread-item" onClick={onNewThread}>
-              New Chat
+        <ThreadMenu
+          title={title}
+          threads={threads}
+          activeThreadId={activeThreadId}
+          isOpen={isThreadMenuOpen}
+          onToggle={onToggleThreadMenu}
+          onNewThread={onNewThread}
+          onResumeThread={onResumeThread}
+        />
+      </div>
+
+      <ThreadScroll dependencies={[items.length, activeTurnId]}>
+        {rows.map((row) =>
+          row.kind === 'activity' ? (
+            <ActivityCard
+              key={row.id}
+              items={row.items}
+              live={Boolean(activeTurnId) && row.id === lastActivityId}
+            />
+          ) : (
+            <ChatItemView
+              key={row.item.id}
+              item={row.item}
+              messagePhase={agentMessagePhase(row.item, Boolean(activeTurnId), typingIds)}
+            />
+          )
+        )}
+        {approvals.map((approval) => (
+          <ApprovalCard key={String(approval.requestId)} request={approval} onDecision={onApprovalDecision} />
+        ))}
+      </ThreadScroll>
+
+      <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+        <div className="composer-context">
+          <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
+        </div>
+        <Composer
+          docked={hasThreadContent}
+          isBusy={isBusy}
+          status={status}
+          onSend={onSend}
+          onStop={onStop}
+        />
+      </div>
+
+      {isSettingsOpen ? (
+        <SettingsModal
+          autoApprove={autoApprove}
+          onToggleAutoApprove={onToggleAutoApprove}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      ) : null}
+    </section>
+  )
+}
+
+// The thread selector: a centered trigger that opens a premium popover with a
+// search field, a "New chat" action, and the recent-thread list grouped by
+// recency. Supports type-to-filter and full keyboard navigation. Closes on
+// outside-click / Escape.
+function ThreadMenu({
+  title,
+  threads,
+  activeThreadId,
+  isOpen,
+  onToggle,
+  onNewThread,
+  onResumeThread
+}: {
+  title: string
+  threads: Thread[]
+  activeThreadId: string | null
+  isOpen: boolean
+  onToggle: () => void
+  onNewThread: () => void
+  onResumeThread: (threadId: string) => Promise<void>
+}): JSX.Element {
+  const wrapRef = useRef<HTMLDivElement | null>(null)
+  const searchRef = useRef<HTMLInputElement | null>(null)
+  const [query, setQuery] = useState('')
+  // Index into the flat, filtered list of navigable rows (New chat = -1).
+  const [activeIndex, setActiveIndex] = useState(-1)
+
+  // Filter by title/preview, then bucket into recency groups. `nowSeconds` is
+  // sampled once per open so relative labels ("2h", "Yesterday") stay stable.
+  const { groups, flatIds } = useMemo(
+    () => groupThreadsForMenu(threads, query),
+    [threads, query]
+  )
+
+  // Reset transient state whenever the menu opens; focus the search field so the
+  // user can immediately type to filter (Cursor-style).
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+    setQuery('')
+    setActiveIndex(-1)
+    const id = window.requestAnimationFrame(() => searchRef.current?.focus())
+    return () => window.cancelAnimationFrame(id)
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: MouseEvent): void => {
+      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) {
+        onToggle()
+      }
+    }
+
+    window.addEventListener('mousedown', handlePointerDown)
+    return () => {
+      window.removeEventListener('mousedown', handlePointerDown)
+    }
+  }, [isOpen, onToggle])
+
+  const resume = (threadId: string): void => {
+    onToggle()
+    void onResumeThread(threadId)
+  }
+
+  const handleKeyDown = (event: ReactKeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      onToggle()
+      return
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      setActiveIndex((index) => Math.min(index + 1, flatIds.length - 1))
+      return
+    }
+    if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      setActiveIndex((index) => Math.max(index - 1, -1))
+      return
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      if (activeIndex === -1) {
+        onToggle()
+        onNewThread()
+      } else if (flatIds[activeIndex]) {
+        resume(flatIds[activeIndex])
+      }
+    }
+  }
+
+  return (
+    <div ref={wrapRef} className="thread-select-wrap">
+      <button
+        type="button"
+        className={`thread-select ${isOpen ? 'is-open' : ''}`}
+        aria-label="Open thread menu"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+      >
+        <span className="thread-title">{title}</span>
+        <span className="chevron" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="m6 9 6 6 6-6"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </button>
+      {isOpen ? (
+        <div className="thread-menu" role="menu" onKeyDown={handleKeyDown}>
+          <div className="thread-menu-search">
+            <SearchIcon />
+            <input
+              ref={searchRef}
+              type="text"
+              className="thread-menu-search-input"
+              placeholder="Search chats…"
+              value={query}
+              spellCheck={false}
+              autoComplete="off"
+              onChange={(event) => {
+                setQuery(event.target.value)
+                setActiveIndex(-1)
+              }}
+            />
+          </div>
+
+          <div className="thread-menu-scroll">
+            <button
+              type="button"
+              className={`thread-menu-new ${activeIndex === -1 ? 'is-highlighted' : ''}`}
+              role="menuitem"
+              onMouseEnter={() => setActiveIndex(-1)}
+              onClick={() => {
+                onToggle()
+                onNewThread()
+              }}
+            >
+              <span className="thread-menu-new-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 5v14M5 12h14"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+              New chat
             </button>
-            {threads.slice(0, 12).map((thread) => (
-              <button
-                type="button"
-                key={thread.id}
-                className={`thread-menu-item ${thread.id === activeThreadId ? 'is-active' : ''}`}
-                onClick={() => void onResumeThread(thread.id)}
-              >
-                <span>{threadTitle(thread)}</span>
-                <time>{formatThreadTime(thread.recencyAt ?? thread.updatedAt)}</time>
-              </button>
+
+            {flatIds.length ? (
+              groups.map((group) => (
+                <div className="thread-menu-group" key={group.label}>
+                  <div className="thread-menu-label">{group.label}</div>
+                  {group.threads.map((thread) => {
+                    const index = flatIds.indexOf(thread.id)
+                    return (
+                      <button
+                        type="button"
+                        key={thread.id}
+                        role="menuitem"
+                        className={`thread-menu-item ${
+                          thread.id === activeThreadId ? 'is-active' : ''
+                        } ${index === activeIndex ? 'is-highlighted' : ''}`}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onClick={() => resume(thread.id)}
+                      >
+                        <span className="thread-menu-item-icon" aria-hidden="true">
+                          <ChatBubbleIcon />
+                        </span>
+                        <span className="thread-menu-item-title">{threadTitle(thread)}</span>
+                        <time className="thread-menu-item-time">
+                          {relativeThreadTime(thread.recencyAt ?? thread.updatedAt)}
+                        </time>
+                      </button>
+                    )
+                  })}
+                </div>
+              ))
+            ) : (
+              <div className="thread-menu-empty">
+                {query ? `No chats matching “${query.trim()}”` : 'No chats yet'}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+type ThreadGroup = { label: string; threads: Thread[] }
+
+// Filters threads by the search query, sorts by recency, and buckets them into
+// human recency bands (Today / Yesterday / Previous 7 days / Older). Returns the
+// grouped view plus a flat id list in display order for keyboard navigation.
+function groupThreadsForMenu(
+  threads: Thread[],
+  query: string
+): { groups: ThreadGroup[]; flatIds: string[] } {
+  const needle = query.trim().toLowerCase()
+  const matched = needle
+    ? threads.filter((thread) => threadTitle(thread).toLowerCase().includes(needle))
+    : threads
+
+  const sorted = [...matched].sort(
+    (a, b) => (b.recencyAt ?? b.updatedAt) - (a.recencyAt ?? a.updatedAt)
+  )
+
+  const now = Date.now()
+  const startOfToday = new Date(now)
+  startOfToday.setHours(0, 0, 0, 0)
+  const dayMs = 86_400_000
+  const todayStart = startOfToday.getTime()
+  const yesterdayStart = todayStart - dayMs
+  const weekStart = todayStart - 7 * dayMs
+
+  const buckets: ThreadGroup[] = [
+    { label: 'Today', threads: [] },
+    { label: 'Yesterday', threads: [] },
+    { label: 'Previous 7 days', threads: [] },
+    { label: 'Older', threads: [] }
+  ]
+
+  for (const thread of sorted) {
+    const ms = (thread.recencyAt ?? thread.updatedAt) * 1000
+    if (ms >= todayStart) {
+      buckets[0].threads.push(thread)
+    } else if (ms >= yesterdayStart) {
+      buckets[1].threads.push(thread)
+    } else if (ms >= weekStart) {
+      buckets[2].threads.push(thread)
+    } else {
+      buckets[3].threads.push(thread)
+    }
+  }
+
+  const groups = buckets.filter((bucket) => bucket.threads.length > 0)
+  const flatIds = groups.flatMap((group) => group.threads.map((thread) => thread.id))
+  return { groups, flatIds }
+}
+
+function SearchIcon(): JSX.Element {
+  return (
+    <svg
+      className="thread-menu-search-icon"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m20 20-3.2-3.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ChatBubbleIcon(): JSX.Element {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8A1.5 1.5 0 0 1 18.5 15H9l-4 3.5V15H5.5A1.5 1.5 0 0 1 4 13.5v-8Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function FolderIcon(): JSX.Element {
+  return (
+    <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.2a1.5 1.5 0 0 1 1.06.44l1.06 1.06A1.5 1.5 0 0 0 11.88 7H19.5A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5v-11Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function SettingsIcon(): JSX.Element {
+  return (
+    <svg className="icon-settings" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function SettingsModal({
+  autoApprove,
+  onToggleAutoApprove,
+  onClose
+}: {
+  autoApprove: boolean
+  onToggleAutoApprove: (enabled: boolean) => void
+  onClose: () => void
+}): JSX.Element {
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [onClose])
+
+  // The browser is a native view above the DOM, so hide it while this modal is
+  // open — otherwise it renders on top of the modal. Restored on unmount.
+  useEffect(() => {
+    void window.api.browser.setOverlayOpen(true)
+    return () => {
+      void window.api.browser.setOverlayOpen(false)
+    }
+  }, [])
+
+  return (
+    <div className="settings-overlay" onPointerDown={onClose}>
+      <div
+        className="settings-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Settings"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
+        <header className="settings-header">
+          <h2 className="settings-title">Settings</h2>
+          <button type="button" className="settings-close" aria-label="Close settings" onClick={onClose}>
+            ×
+          </button>
+        </header>
+
+        <section className="settings-section">
+          <h3 className="settings-section-title">Approvals</h3>
+          <label className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">Auto-approve</span>
+              <span className="settings-row-hint">
+                Automatically approve command, file-change, and permission requests without prompting.
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              className="settings-toggle"
+              checked={autoApprove}
+              onChange={(event) => onToggleAutoApprove(event.target.checked)}
+            />
+          </label>
+        </section>
+      </div>
+    </div>
+  )
+}
+
+// Keeps the transcript pinned to the bottom as content streams in, but yields to
+// the user the moment they scroll up to read back — re-pinning only when they
+// return to the bottom themselves.
+function ThreadScroll({
+  children,
+  dependencies
+}: {
+  children: React.ReactNode
+  dependencies: unknown[]
+}): JSX.Element {
+  const ref = useRef<HTMLDivElement | null>(null)
+  const pinnedRef = useRef(true)
+
+  const handleScroll = useCallback(() => {
+    const el = ref.current
+    if (!el) {
+      return
+    }
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+    pinnedRef.current = distanceFromBottom < 48
+  }, [])
+
+  useEffect(() => {
+    const el = ref.current
+    if (el && pinnedRef.current) {
+      el.scrollTop = el.scrollHeight
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencies)
+
+  return (
+    <div ref={ref} className="thread-scroll" onScroll={handleScroll}>
+      {children}
+    </div>
+  )
+}
+
+// Reveals `text` a few characters per frame so a completed answer lands as a
+// typewriter stream. `enabled` gates the reveal: it stays empty until the caller
+// turns typing on (turn completed), then types from wherever it left off up to
+// the full text. While disabled it shows nothing — the live activity card is
+// what's on screen during the turn; the answer belongs in chat afterward.
+function useTypewriter(text: string, enabled: boolean): string {
+  const [shown, setShown] = useState('')
+  const targetRef = useRef(text)
+  targetRef.current = text
+  const frameRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!enabled) {
+      // Still streaming/hidden — keep the chat answer empty until the turn ends.
+      setShown('')
+      return
+    }
+
+    const step = (): void => {
+      setShown((current) => {
+        const target = targetRef.current
+        if (current.length >= target.length) {
+          return target
+        }
+        // Reveal in small chunks so long answers don't take forever.
+        const next = Math.min(target.length, current.length + Math.max(2, Math.ceil((target.length - current.length) / 45)))
+        if (next < target.length) {
+          frameRef.current = window.requestAnimationFrame(step)
+        }
+        return target.slice(0, next)
+      })
+    }
+
+    frameRef.current = window.requestAnimationFrame(step)
+
+    return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current)
+      }
+    }
+  }, [enabled])
+
+  return shown
+}
+
+const runningLabel: Partial<Record<ActivityItem['type'], string>> = {
+  reasoning: 'Thinking',
+  plan: 'Planning',
+  commandExecution: 'Running',
+  fileChange: 'Editing files',
+  mcpToolCall: 'Calling tool',
+  dynamicToolCall: 'Calling tool',
+  webSearch: 'Searching',
+  imageGeneration: 'Generating image',
+  subAgentActivity: 'Sub-agent',
+  collabAgentToolCall: 'Coordinating',
+  sleep: 'Waiting'
+}
+
+function ActivityCard({ items, live }: { items: ActivityItem[]; live: boolean }): JSX.Element {
+  const [expanded, setExpanded] = useState(false)
+  const bodyRef = useRef<HTMLDivElement | null>(null)
+  const pinnedRef = useRef(true)
+
+  // Auto-scroll the card body while live, unless the user scrolled up within it.
+  useEffect(() => {
+    if (!live) {
+      return
+    }
+    const el = bodyRef.current
+    if (el && pinnedRef.current) {
+      el.scrollTop = el.scrollHeight
+    }
+  }, [items, live])
+
+  const handleBodyScroll = useCallback(() => {
+    const el = bodyRef.current
+    if (!el) {
+      return
+    }
+    pinnedRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24
+  }, [])
+
+  if (!live) {
+    const summary = summarizeActivity(items)
+    return (
+      <div className={`activity-card is-done ${expanded ? 'is-expanded' : ''}`}>
+        <button type="button" className="activity-summary" onClick={() => setExpanded((v) => !v)}>
+          <span className={`activity-caret ${expanded ? 'is-open' : ''}`}>▸</span>
+          <span className="activity-summary-text">{summary}</span>
+          <span className="activity-summary-toggle">{expanded ? 'hide' : 'details'}</span>
+        </button>
+        {expanded ? (
+          <div className="activity-body is-static">
+            {items.map((item) => (
+              <ActivityRow key={item.id} item={item} live={false} isLast={false} />
             ))}
           </div>
         ) : null}
       </div>
+    )
+  }
 
-      <div className="thread-scroll">
+  const lastId = items[items.length - 1]?.id
+
+  return (
+    <div className="activity-card is-live">
+      <div ref={bodyRef} className="activity-body" onScroll={handleBodyScroll}>
         {items.map((item) => (
-          <ChatItemView key={item.id} item={item} />
-        ))}
-        {approvals.map((approval) => (
-          <ApprovalCard key={String(approval.requestId)} request={approval} onDecision={onApprovalDecision} />
+          <ActivityRow key={item.id} item={item} live={live} isLast={item.id === lastId} />
         ))}
       </div>
+    </div>
+  )
+}
 
-      <Composer
-        docked={hasThreadContent}
-        isBusy={isBusy}
-        status={status}
-        autoApprove={autoApprove}
-        onSend={onSend}
-        onStop={onStop}
-        onToggleAutoApprove={onToggleAutoApprove}
-      />
-    </section>
+function ActivityRow({
+  item,
+  live,
+  isLast
+}: {
+  item: ActivityItem
+  live: boolean
+  isLast: boolean
+}): JSX.Element {
+  const status = activityStatus(item)
+  const running = status === 'inProgress'
+  const { icon, label, detail } = describeActivity(item)
+  // Only the currently-running item peeks a few tail lines of live output.
+  const peek = live && running && isLast ? activityPeek(item) : null
+
+  return (
+    <div className={`activity-row status-${status} ${running ? 'is-running' : ''}`}>
+      <span className="activity-icon">{running && isLast && live ? <span className="activity-spinner" /> : icon}</span>
+      <div className="activity-main">
+        <div className="activity-line">
+          <span className="activity-label">{label}</span>
+          {detail ? <code className="activity-detail">{detail}</code> : null}
+          <span className="activity-status">{statusGlyph(status)}</span>
+        </div>
+        {peek ? <pre className="activity-peek">{peek}</pre> : null}
+      </div>
+    </div>
   )
 }
 
@@ -657,7 +1386,7 @@ function ApprovalCard({
   )
 }
 
-function ChatItemView({ item }: { item: ChatItem }): JSX.Element {
+function ChatItemView({ item, messagePhase }: { item: ChatItem; messagePhase: MessagePhase }): JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
@@ -671,46 +1400,16 @@ function ChatItemView({ item }: { item: ChatItem }): JSX.Element {
   }
 
   if (item.type === 'agentMessage') {
-    return (
-      <article className="message message-assistant">
-        <ReactMarkdown>{item.text || ' '}</ReactMarkdown>
-      </article>
-    )
+    // While its turn is still running the answer stays hidden — the activity card
+    // carries the live view; the answer types into chat once the turn completes.
+    if (messagePhase === 'streaming') {
+      return null
+    }
+    return <AssistantMessage text={item.text} typing={messagePhase === 'typing'} />
   }
 
-  if (item.type === 'reasoning') {
-    const text = [...item.summary, ...item.content].filter(Boolean).join('\n\n')
-
-    return (
-      <details className="message message-reasoning">
-        <summary>Reasoning</summary>
-        <p>{text || 'Thinking...'}</p>
-      </details>
-    )
-  }
-
-  if (item.type === 'commandExecution') {
-    return (
-      <article className="message message-command">
-        <div className="command-header">
-          <span>$</span>
-          <code>{item.command}</code>
-          <span className={`status-pill status-${item.status}`}>{item.status}</span>
-        </div>
-        {item.aggregatedOutput ? <pre>{tailLines(item.aggregatedOutput, 140)}</pre> : null}
-      </article>
-    )
-  }
-
-  if (item.type === 'fileChange') {
-    return (
-      <article className="message message-tool">
-        <strong>File change</strong>
-        <span className={`status-pill status-${item.status}`}>{item.status}</span>
-      </article>
-    )
-  }
-
+  // Any activity-classified item reaching here is a fallback; ActivityCard owns
+  // the normal path. Keep it minimal so nothing renders as a raw type name.
   return (
     <article className="message message-tool">
       <strong>{item.type}</strong>
@@ -718,22 +1417,53 @@ function ChatItemView({ item }: { item: ChatItem }): JSX.Element {
   )
 }
 
+function AssistantMessage({ text, typing }: { text: string; typing: boolean }): JSX.Element {
+  // `typing` is set only for a message that just finished streaming this session;
+  // history/resume loads pass false and render in full immediately.
+  const shown = useTypewriter(text, typing)
+  const value = typing ? shown : text
+  const isTyping = typing && shown.length < text.length
+
+  return (
+    <article className={`message message-assistant ${isTyping ? 'is-typing' : ''}`}>
+      <ReactMarkdown>{value || ' '}</ReactMarkdown>
+    </article>
+  )
+}
+
+function WorkspacePill({
+  workspace,
+  onPickWorkspace
+}: {
+  workspace: string | null
+  onPickWorkspace: () => Promise<void>
+}): JSX.Element {
+  return (
+    <button
+      type="button"
+      className="workspace-pill"
+      title={workspace ?? 'No workspace selected — new chats start in your home folder'}
+      onClick={() => void onPickWorkspace()}
+    >
+      <FolderIcon />
+      <span className="workspace-pill-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
+      <span className="workspace-pill-caret">⌄</span>
+    </button>
+  )
+}
+
 function Composer({
   docked,
   isBusy,
   status,
-  autoApprove,
   onSend,
-  onStop,
-  onToggleAutoApprove
+  onStop
 }: {
   docked: boolean
   isBusy: boolean
   status: string
-  autoApprove: boolean
   onSend: (text: string) => Promise<void>
   onStop: () => Promise<void>
-  onToggleAutoApprove: (enabled: boolean) => void
 }): JSX.Element {
   const [value, setValue] = useState('')
 
@@ -751,7 +1481,7 @@ function Composer({
   }
 
   return (
-    <form className={`composer ${docked ? 'is-docked' : 'is-centered'}`} onSubmit={handleSubmit}>
+    <form className="composer" onSubmit={handleSubmit}>
       <textarea
         value={value}
         rows={3}
@@ -767,14 +1497,6 @@ function Composer({
       />
       <div className="composer-footer">
         <span className="composer-status">{status}</span>
-        <label className="auto-approve-toggle" title="Automatically approve command, file-change, and permission requests">
-          <input
-            type="checkbox"
-            checked={autoApprove}
-            onChange={(event) => onToggleAutoApprove(event.target.checked)}
-          />
-          Auto-approve
-        </label>
         <button type="submit" className="send-button" aria-label={isBusy ? 'Stop turn' : 'Send message'} disabled={!isBusy && !value.trim()}>
           {isBusy ? '■' : '↑'}
         </button>
@@ -930,16 +1652,159 @@ function workspaceName(path: string): string {
   return path.replace(/\/+$/, '').split('/').pop() || path
 }
 
-function formatThreadTime(seconds: number): string {
-  return new Intl.DateTimeFormat(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  }).format(new Date(seconds * 1000))
+// Compact recency label for a thread row: "now", "5m", "3h" within a day, then
+// "Yesterday", a weekday within the week, and a short date beyond that. Keeps
+// rows scannable instead of repeating a full "Jul 9, 3:14 PM" on every line.
+function relativeThreadTime(seconds: number): string {
+  const then = seconds * 1000
+  const diff = Date.now() - then
+  if (diff < 45_000) {
+    return 'now'
+  }
+  const minutes = Math.round(diff / 60_000)
+  if (minutes < 60) {
+    return `${minutes}m`
+  }
+  const hours = Math.round(diff / 3_600_000)
+  if (hours < 24) {
+    return `${hours}h`
+  }
+
+  const startOfToday = new Date()
+  startOfToday.setHours(0, 0, 0, 0)
+  const dayMs = 86_400_000
+  if (then >= startOfToday.getTime() - dayMs) {
+    return 'Yesterday'
+  }
+  if (then >= startOfToday.getTime() - 6 * dayMs) {
+    return new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(then)
+  }
+  return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(then)
 }
 
 function tailLines(text: string, maxLines: number): string {
   const lines = text.split(/\r?\n/)
   return lines.length > maxLines ? lines.slice(-maxLines).join('\n') : text
+}
+
+// One-line description of an activity item: an icon, a short label, and an
+// optional monospace detail (the command, query, tool name, file paths...).
+function describeActivity(item: ActivityItem): { icon: string; label: string; detail: string | null } {
+  switch (item.type) {
+    case 'reasoning': {
+      const text = [...item.summary, ...item.content].filter(Boolean).join(' ').trim()
+      return { icon: '✦', label: 'Thinking', detail: text ? firstLine(text, 120) : null }
+    }
+    case 'plan':
+      return { icon: '◇', label: 'Plan', detail: item.text ? firstLine(item.text, 120) : null }
+    case 'commandExecution':
+      return { icon: '⚙', label: 'Ran', detail: firstLine(item.command, 140) }
+    case 'fileChange': {
+      const paths = item.changes.map((change) => shortPath(change.path))
+      return { icon: '✎', label: item.changes.length === 1 ? 'Edited' : `Edited ${item.changes.length} files`, detail: paths.slice(0, 3).join(', ') || null }
+    }
+    case 'mcpToolCall':
+      return { icon: '⛁', label: 'Tool', detail: `${item.server}/${item.tool}` }
+    case 'dynamicToolCall':
+      return { icon: '⛁', label: 'Tool', detail: item.namespace ? `${item.namespace}.${item.tool}` : item.tool }
+    case 'webSearch':
+      return { icon: '🔍', label: 'Searched', detail: webSearchDetail(item.action, item.query) }
+    case 'imageGeneration':
+      return { icon: '🖼', label: 'Image', detail: item.revisedPrompt ? firstLine(item.revisedPrompt, 100) : null }
+    case 'subAgentActivity':
+      return { icon: '◈', label: 'Sub-agent', detail: shortPath(item.agentPath) }
+    case 'collabAgentToolCall':
+      return { icon: '◈', label: 'Coordinating', detail: item.prompt ? firstLine(item.prompt, 100) : item.tool }
+    case 'sleep':
+      return { icon: '◔', label: 'Waited', detail: `${Math.round(item.durationMs / 1000)}s` }
+    default:
+      return { icon: '•', label: (item as ThreadItem).type, detail: null }
+  }
+}
+
+function webSearchDetail(action: WebSearchActionLike, query: string): string | null {
+  if (!action) {
+    return query || null
+  }
+  if (action.type === 'search') {
+    return action.query ?? action.queries?.[0] ?? query ?? null
+  }
+  if (action.type === 'openPage') {
+    return action.url ?? null
+  }
+  if (action.type === 'findInPage') {
+    return action.pattern ?? action.url ?? null
+  }
+  return query || null
+}
+
+type WebSearchActionLike =
+  | { type: 'search'; query: string | null; queries: string[] | null }
+  | { type: 'openPage'; url: string | null }
+  | { type: 'findInPage'; url: string | null; pattern: string | null }
+  | { type: 'other' }
+  | null
+
+// The tail of the running item's live output, shown while it's in progress.
+function activityPeek(item: ActivityItem): string | null {
+  if (item.type === 'commandExecution' && item.aggregatedOutput) {
+    return tailLines(item.aggregatedOutput, 6).trimEnd()
+  }
+  if (item.type === 'reasoning') {
+    const text = [...item.summary, ...item.content].filter(Boolean).join('\n').trim()
+    return text ? tailLines(text, 4) : null
+  }
+  return null
+}
+
+// The collapsed summary shown after a run completes: elapsed feel + tool tally.
+function summarizeActivity(items: ActivityItem[]): string {
+  const tools = items.filter((item) => item.type !== 'reasoning' && item.type !== 'plan').length
+  const searched = items.filter((item) => item.type === 'webSearch').length
+  const edited = items
+    .filter((item): item is Extract<ActivityItem, { type: 'fileChange' }> => item.type === 'fileChange')
+    .reduce((sum, item) => sum + item.changes.length, 0)
+  const ranMs = items
+    .filter((item): item is Extract<ActivityItem, { type: 'commandExecution' }> => item.type === 'commandExecution')
+    .reduce((sum, item) => sum + (item.durationMs ?? 0), 0)
+
+  const parts: string[] = []
+  if (tools) {
+    parts.push(`${tools} ${tools === 1 ? 'step' : 'steps'}`)
+  }
+  if (edited) {
+    parts.push(`${edited} ${edited === 1 ? 'edit' : 'edits'}`)
+  }
+  if (searched) {
+    parts.push(`${searched} ${searched === 1 ? 'search' : 'searches'}`)
+  }
+  if (ranMs > 400) {
+    parts.push(`${(ranMs / 1000).toFixed(ranMs >= 10000 ? 0 : 1)}s`)
+  }
+
+  return parts.length ? `Worked · ${parts.join(' · ')}` : 'Worked'
+}
+
+function statusGlyph(status: ActivityStatus): string {
+  switch (status) {
+    case 'completed':
+      return '✓'
+    case 'failed':
+      return '✕'
+    case 'declined':
+      return '⊘'
+    default:
+      return ''
+  }
+}
+
+function firstLine(text: string, max: number): string {
+  const line = text.split(/\r?\n/).find((entry) => entry.trim()) ?? text
+  const trimmed = line.trim()
+  return trimmed.length > max ? `${trimmed.slice(0, max - 1)}…` : trimmed
+}
+
+function shortPath(path: string): string {
+  const parts = path.replace(/\/+$/, '').split('/')
+  return parts.slice(-2).join('/') || path
 }

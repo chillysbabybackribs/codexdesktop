@@ -26,6 +26,7 @@ const api = {
     setBounds: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserSetBounds, bounds),
     beginDividerDrag: () => ipcRenderer.invoke(ipcChannels.browserBeginDividerDrag),
     endDividerDrag: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserEndDividerDrag, bounds),
+    setOverlayOpen: (open: boolean) => ipcRenderer.invoke(ipcChannels.browserSetOverlayOpen, open),
     onState: (listener: (state: BrowserState) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, state: BrowserState): void => listener(state)
       ipcRenderer.on(ipcChannels.browserState, wrapped)

@@ -1,0 +1,1 @@
+export type ResidencyRequirement = "us";

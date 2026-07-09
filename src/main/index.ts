@@ -114,7 +114,6 @@ function registerIpc(): void {
 
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
-
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))
   ipcMain.handle(ipcChannels.browserActivateTab, (_event, tabId: string) => tabManager?.activateTab(tabId))
@@ -127,4 +126,5 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
+  ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
 }

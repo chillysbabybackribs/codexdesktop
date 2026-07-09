@@ -1,0 +1,9 @@
+import type { McpServerStatus } from "./McpServerStatus";
+export type ListMcpServerStatusResponse = {
+    data: Array<McpServerStatus>;
+    /**
+     * Opaque cursor to pass to the next call to continue after the last item.
+     * If None, there are no more items to return.
+     */
+    nextCursor: string | null;
+};

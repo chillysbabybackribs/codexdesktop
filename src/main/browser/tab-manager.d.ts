@@ -1,0 +1,31 @@
+import { BrowserWindow } from 'electron';
+import type { BrowserBounds, BrowserState } from '../../shared/ipc.js';
+type BrowserStateListener = (state: BrowserState) => void;
+export declare class TabManager {
+    private readonly window;
+    private readonly tabs;
+    private activeTabId;
+    private bounds;
+    private isDraggingDivider;
+    private isOverlayOpen;
+    private stateListener;
+    constructor(window: BrowserWindow);
+    onState(listener: BrowserStateListener): void;
+    createInitialTab(): void;
+    createTab(url?: string): string;
+    closeTab(id: string): void;
+    activateTab(id: string): void;
+    navigate(id: string, input: string): void;
+    goBack(id: string): void;
+    goForward(id: string): void;
+    reload(id: string): void;
+    setBounds(bounds: BrowserBounds): void;
+    beginDividerDrag(): void;
+    endDividerDrag(bounds: BrowserBounds): void;
+    setOverlayOpen(open: boolean): void;
+    private syncActiveBounds;
+    private attachEvents;
+    private getActiveTab;
+    private pushState;
+}
+export {};

@@ -5,7 +5,10 @@
   "main": "./out/main/index.js",
   "type": "module",
   "scripts": {
-    "dev": "electron-vite dev",
+    "dev": "node scripts/dev-with-autogit.mjs",
+    "dev:app": "electron-vite dev",
+    "git:autosnapshot": "node scripts/git-autosnapshot.mjs --watch",
+    "git:autosnapshot:once": "node scripts/git-autosnapshot.mjs --once",
     "build": "npm run typecheck && electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",

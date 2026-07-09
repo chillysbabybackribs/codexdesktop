@@ -99,6 +99,7 @@ export const ipcChannels = {
   browserSetBounds: 'browser:setBounds',
   browserBeginDividerDrag: 'browser:beginDividerDrag',
   browserEndDividerDrag: 'browser:endDividerDrag',
+  browserSetOverlayOpen: 'browser:setOverlayOpen',
   browserState: 'browser:state',
   codexGetAuthStatus: 'codex:getAuthStatus',
   codexListThreads: 'codex:listThreads',
