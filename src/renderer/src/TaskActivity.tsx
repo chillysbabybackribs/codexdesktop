@@ -1090,14 +1090,29 @@ export function TurnTail({
 
   if (live) {
     const label = currentActionLabel(items, itemMeta, streamingMessage)
-    const elapsed = meta?.startedAtMs ? Math.max(0, now - meta.startedAtMs) : null
     const tokens = meta?.tokens?.total.totalTokens
+
+    // Timer follows the CURRENT task: anchored to the newest running item's
+    // start time, falling back to the turn start while nothing is running.
+    let anchor = meta?.startedAtMs ?? null
+    const scan = items.filter((item) => item.type !== 'turnPlan')
+    for (let i = scan.length - 1; i >= 0; i -= 1) {
+      const item = scan[i]
+      const running =
+        'status' in item && typeof item.status === 'string'
+          ? item.status === 'inProgress'
+          : i === scan.length - 1 && !itemMeta[item.id]?.completedAtMs
+      if (running) {
+        anchor = itemMeta[item.id]?.startedAtMs ?? anchor
+        break
+      }
+    }
+    const elapsed = anchor ? Math.max(0, now - anchor) : null
 
     return (
       <div className="turn-tail is-live">
-        <span className="tail-orb" aria-hidden="true" />
-        <span className="shimmer-text tail-label">{label}</span>
-        {elapsed !== null && elapsed >= 3000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
+        <span className="shimmer-text tail-label">{label}…</span>
+        {elapsed !== null && elapsed >= 1000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
         {tokens ? (
           <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
             {fmtTokens(tokens)} tok

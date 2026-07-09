@@ -597,16 +597,17 @@ button {
   margin: 0 0 18px;
 }
 
-/* Shared shimmering label — the signature "model is working" text. */
+/* Shared shimmering label — the signature "model is working" text. Bright
+   white sweep over a light base so it reads as animated white, not gray. */
 .shimmer-text {
-  color: #9aa0a6;
+  color: #c3c9d0;
   background: linear-gradient(
     100deg,
-    #878d94 0%,
-    #878d94 38%,
-    #f0f3f6 50%,
-    #878d94 62%,
-    #878d94 100%
+    #aab0b7 0%,
+    #aab0b7 36%,
+    #ffffff 50%,
+    #aab0b7 64%,
+    #aab0b7 100%
   );
   background-size: 250% 100%;
   -webkit-background-clip: text;
@@ -780,7 +781,7 @@ button {
 }
 
 .thought-text {
-  padding: 4px 0 0 27px;
+  padding: 2px 0 0;
   color: #939aa2;
   font-size: 13.5px;
   line-height: 1.55;
@@ -1141,29 +1142,6 @@ button {
   margin-top: 2px;
 }
 
-.tail-orb {
-  flex: 0 0 auto;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #7fa3f0;
-  box-shadow: 0 0 8px rgb(127 163 240 / 55%);
-  animation: orb-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes orb-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(0.72);
-    opacity: 0.6;
-  }
-}
-
 .tail-label {
   min-width: 0;
   overflow: hidden;
@@ -1245,7 +1223,6 @@ button {
     -webkit-text-fill-color: currentcolor;
   }
 
-  .tail-orb,
   .diff-skeleton {
     animation: none;
   }
