@@ -4,7 +4,6 @@ import type {
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
-  CodexRespondApprovalParams,
   CodexSendMessageParams
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
@@ -41,9 +40,6 @@ const api = {
     readThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
     sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
     interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
-    respondApproval: (params: CodexRespondApprovalParams) =>
-      ipcRenderer.invoke(ipcChannels.codexRespondApproval, params),
-    setAutoApprove: (enabled: boolean) => ipcRenderer.invoke(ipcChannels.codexSetAutoApprove, enabled),
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.codexEvent, wrapped)
