@@ -8,6 +8,14 @@ const repoRoot = resolve(scriptDir, '..')
 const binExt = process.platform === 'win32' ? '.cmd' : ''
 const electronViteBin = join(repoRoot, 'node_modules', '.bin', `electron-vite${binExt}`)
 
+// Forward any extra args to electron-vite (e.g. --remote-debugging-port=9222).
+// npm passes them after a literal `--`; drop that one separator if present so
+// `npm run dev -- --flag` and a direct `node ... -- --flag` both work.
+const forwardedArgs = process.argv.slice(2)
+if (forwardedArgs[0] === '--') {
+  forwardedArgs.shift()
+}
+
 let shuttingDown = false
 
 const autogit = spawn(process.execPath, [join(scriptDir, 'git-autosnapshot.mjs'), '--watch'], {
@@ -16,7 +24,8 @@ const autogit = spawn(process.execPath, [join(scriptDir, 'git-autosnapshot.mjs')
   stdio: 'inherit'
 })
 
-const app = spawn(electronViteBin, ['dev'], {
+// electron-vite needs a `--` before flags meant for the Electron app itself.
+const app = spawn(electronViteBin, ['dev', ...(forwardedArgs.length ? ['--', ...forwardedArgs] : [])], {
   cwd: repoRoot,
   env: process.env,
   stdio: 'inherit'

@@ -479,9 +479,28 @@ export default function App(): JSX.Element {
         }
         return
       case 'item/reasoning/summaryTextDelta':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, notification.params.delta)
+        }
+        return
+      case 'item/reasoning/summaryPartAdded':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, '')
+        }
+        return
       case 'item/reasoning/textDelta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
-          patchReasoning(notification.params.itemId, notification.params.delta)
+          patchReasoningPart(notification.params.itemId, 'content', notification.params.contentIndex, notification.params.delta)
+        }
+        return
+      case 'item/plan/delta':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          patchPlan(notification.params.itemId, notification.params.delta)
+        }
+        return
+      case 'turn/plan/updated':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          upsertTurnPlan(notification.params.turnId, notification.params.explanation, notification.params.plan)
         }
         return
       case 'error':
@@ -577,12 +596,23 @@ export default function App(): JSX.Element {
     )
   }
 
-  function patchReasoning(itemId: string, delta: string): void {
+  function patchReasoningPart(itemId: string, field: 'summary' | 'content', partIndex: number, delta: string): void {
     setItems((current) => {
       const index = current.findIndex((item) => item.id === itemId)
 
       if (index === -1) {
-        return [...current, { type: 'reasoning', id: itemId, summary: [delta], content: [] }]
+        const item: Extract<ThreadItem, { type: 'reasoning' }> = {
+          type: 'reasoning',
+          id: itemId,
+          summary: [],
+          content: []
+        }
+        const target = field === 'summary' ? item.summary : item.content
+        while (target.length <= partIndex) {
+          target.push('')
+        }
+        target[partIndex] = delta
+        return [...current, item]
       }
 
       return current.map((item) => {
@@ -590,11 +620,48 @@ export default function App(): JSX.Element {
           return item
         }
 
-        const summary = item.summary.length ? [...item.summary] : ['']
-        summary[summary.length - 1] = `${summary[summary.length - 1]}${delta}`
-        return { ...item, summary }
+        const target = field === 'summary' ? [...item.summary] : [...item.content]
+        while (target.length <= partIndex) {
+          target.push('')
+        }
+        target[partIndex] = `${target[partIndex]}${delta}`
+
+        return field === 'summary' ? { ...item, summary: target } : { ...item, content: target }
       })
     })
+  }
+
+  function patchPlan(itemId: string, delta: string): void {
+    setItems((current) => {
+      const index = current.findIndex((item) => item.id === itemId)
+
+      if (index === -1) {
+        return [...current, { type: 'plan', id: itemId, text: delta }]
+      }
+
+      return current.map((item) => {
+        if (item.id !== itemId || item.type !== 'plan') {
+          return item
+        }
+
+        return { ...item, text: `${item.text}${delta}` }
+      })
+    })
+  }
+
+  function upsertTurnPlan(
+    turnId: string,
+    explanation: string | null,
+    plan: Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }>
+  ): void {
+    const text = formatTurnPlan(explanation, plan)
+
+    if (!text) {
+      return
+    }
+
+    const item: ThreadItem = { type: 'plan', id: `turn-plan-${turnId}`, text }
+    setItems((current) => upsertMany(current, [item]))
   }
 
   function addSystemItem(text: string, level: SystemItem['level'] = 'info'): void {
@@ -1328,7 +1395,8 @@ function ActivityRow({
   live: boolean
   isLast: boolean
 }): JSX.Element {
-  const status = activityStatus(item)
+  const streamingThought = live && isLast && (item.type === 'reasoning' || item.type === 'plan')
+  const status = streamingThought ? 'inProgress' : activityStatus(item)
   const running = status === 'inProgress'
   const { icon, label, detail } = describeActivity(item)
   // Only the currently-running item peeks a few tail lines of live output.
@@ -1695,6 +1763,41 @@ function tailLines(text: string, maxLines: number): string {
   return lines.length > maxLines ? lines.slice(-maxLines).join('\n') : text
 }
 
+function formatTurnPlan(
+  explanation: string | null,
+  plan: Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }>
+): string {
+  const lines: string[] = []
+  const trimmedExplanation = explanation?.trim()
+
+  if (trimmedExplanation) {
+    lines.push(trimmedExplanation)
+  }
+
+  for (const entry of plan) {
+    const step = entry.step.trim()
+
+    if (!step) {
+      continue
+    }
+
+    lines.push(`${planStatusLabel(entry.status)} ${step}`)
+  }
+
+  return lines.join('\n')
+}
+
+function planStatusLabel(status: 'pending' | 'inProgress' | 'completed'): string {
+  switch (status) {
+    case 'completed':
+      return '[done]'
+    case 'inProgress':
+      return '[now]'
+    default:
+      return '[next]'
+  }
+}
+
 // One-line description of an activity item: an icon, a short label, and an
 // optional monospace detail (the command, query, tool name, file paths...).
 function describeActivity(item: ActivityItem): { icon: string; label: string; detail: string | null } {
@@ -1761,6 +1864,9 @@ function activityPeek(item: ActivityItem): string | null {
   if (item.type === 'reasoning') {
     const text = [...item.summary, ...item.content].filter(Boolean).join('\n').trim()
     return text ? tailLines(text, 4) : null
+  }
+  if (item.type === 'plan') {
+    return item.text ? tailLines(item.text, 8).trimEnd() : null
   }
   return null
 }
