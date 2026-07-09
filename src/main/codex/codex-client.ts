@@ -63,13 +63,56 @@ function buildGuidance(): string {
   return [...taskShapingGuidance, ...browserControlGuidance()].join('\n')
 }
 
+const browserDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'namespace',
+    name: 'browser',
+    description: 'Efficient control and text extraction from the visible embedded browser.',
+    tools: [
+      {
+        type: 'function',
+        name: 'run',
+        description: 'Run a batched JavaScript program in a visible browser tab. Inspect, act, wait, and verify in one call; return compact JSON.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            code: { type: 'string', description: 'JavaScript program. Top-level return and await are supported.' },
+            tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+            timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
+            maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
+          },
+          required: ['code'],
+          additionalProperties: false
+        }
+      },
+      {
+        type: 'function',
+        name: 'extract_page',
+        description: 'Deterministically extract useful text from the visible page, excluding images, scripts, styles, navigation, ads, dialogs, hidden UI, and repeated boilerplate.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+            timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
+            maxResultChars: { type: 'number', description: 'Optional extracted content limit from 1000 to 100000 characters.' }
+          },
+          additionalProperties: false
+        }
+      }
+    ]
+  }
+]
+
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
   private readonly pending = new Map<string | number, PendingRequest>()
   private requestCounter = 0
 
-  constructor(private readonly getWindow: () => BrowserWindow | null) {
+  constructor(
+    private readonly getWindow: () => BrowserWindow | null,
+    private readonly browserAgent: BrowserAgentController
+  ) {
     super()
   }
 
@@ -100,6 +143,7 @@ export class CodexClient extends EventEmitter {
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
+      dynamicTools: browserDynamicTools,
       developerInstructions: buildGuidance()
     })
   }
