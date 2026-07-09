@@ -1341,12 +1341,15 @@ button {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition:
-    transform 260ms ease,
-    width 260ms ease,
-    left 260ms ease,
-    bottom 260ms ease,
-    top 260ms ease;
+  /* Hydration and turn completion must not animate the layout underneath the
+     user. The composer changes state atomically after the transcript is ready. */
+}
+
+.chat-restore-status {
+  max-width: min(860px, 92%);
+  margin: 18px 0 28px;
+  color: #9da4ab;
+  font-size: 13px;
 }
 
 .composer-dock.is-centered {

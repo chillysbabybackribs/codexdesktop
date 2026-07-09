@@ -657,6 +657,7 @@ export default function App(): JSX.Element {
   }
 
   function mergeItems(nextItems: ThreadItem[]): void {
+    flushPendingAgentDeltas()
     setItems((current) => upsertMany(current, nextItems))
   }
 
