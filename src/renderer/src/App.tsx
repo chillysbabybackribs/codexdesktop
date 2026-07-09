@@ -793,8 +793,6 @@ function ChatPane({
 
       {isSettingsOpen ? (
         <SettingsModal
-          autoApprove={autoApprove}
-          onToggleAutoApprove={onToggleAutoApprove}
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
@@ -1120,12 +1118,8 @@ function SettingsIcon(): JSX.Element {
 }
 
 function SettingsModal({
-  autoApprove,
-  onToggleAutoApprove,
   onClose
 }: {
-  autoApprove: boolean
-  onToggleAutoApprove: (enabled: boolean) => void
   onClose: () => void
 }): JSX.Element {
   useEffect(() => {
@@ -1162,24 +1156,6 @@ function SettingsModal({
             ×
           </button>
         </header>
-
-        <section className="settings-section">
-          <h3 className="settings-section-title">Approvals</h3>
-          <label className="settings-row">
-            <div className="settings-row-text">
-              <span className="settings-row-label">Auto-approve</span>
-              <span className="settings-row-hint">
-                Automatically approve command, file-change, and permission requests without prompting.
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              className="settings-toggle"
-              checked={autoApprove}
-              onChange={(event) => onToggleAutoApprove(event.target.checked)}
-            />
-          </label>
-        </section>
       </div>
     </div>
   )
