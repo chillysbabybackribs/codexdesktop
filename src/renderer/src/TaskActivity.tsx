@@ -721,13 +721,28 @@ function DiffLines({ lines }: { lines: DiffLine[] }): JSX.Element {
   )
 }
 
-function FileChangeBlock({ item, live }: { item: FileChangeItem; live: boolean }): JSX.Element {
+function FileChangeBlock({
+  item,
+  live,
+  workspace
+}: {
+  item: FileChangeItem
+  live: boolean
+  workspace: string | null
+}): JSX.Element {
   const status = blockStatus(item, live)
 
   return (
     <>
       {item.changes.map((change) => (
-        <DiffCard key={`${item.id}-${change.path}`} path={change.path} kind={change.kind} diff={change.diff} status={status} />
+        <DiffCard
+          key={`${item.id}-${change.path}`}
+          path={change.path}
+          kind={change.kind}
+          diff={change.diff}
+          status={status}
+          workspace={workspace}
+        />
       ))}
       {item.changes.length === 0 && status === 'running' ? (
         <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="…" />
