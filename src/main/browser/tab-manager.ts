@@ -1,5 +1,5 @@
 import { BrowserWindow, WebContentsView, shell } from 'electron'
-import type { WebContents } from 'electron'
+import type { BrowserWindowConstructorOptions, WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
@@ -120,31 +120,54 @@ export class TabManager {
     return id
   }
 
-  // window.open() must return a real WebContents or OAuth popups break. The old
-  // code created a tab and denied the window, leaving blank tabs and a null
-  // popup handle. createWindow wires the popup into the in-app tab strip.
-  private createPopupTab(url: string | undefined): BrowserTab {
-    const id = crypto.randomUUID()
-    const view = this.createView()
+  // Electron passes a pre-created webContents in createWindow — we must adopt it
+  // into a WebContentsView or window.open() throws "Invalid webContents".
+  private adoptPopupTab(
+    options: BrowserWindowConstructorOptions,
+    url: string | undefined,
+    disposition: string
+  ): BrowserTab {
+    const view = new WebContentsView(
+      options.webContents
+        ? {
+            webContents: options.webContents,
+            webPreferences: {
+              contextIsolation: true,
+              nodeIntegration: false,
+              sandbox: true,
+              partition: browserPartition,
+              ...(options.webPreferences ?? {})
+            }
+          }
+        : {
+            webPreferences: {
+              contextIsolation: true,
+              nodeIntegration: false,
+              sandbox: true,
+              partition: browserPartition,
+              ...(options.webPreferences ?? {})
+            }
+          }
+    )
 
     view.setBorderRadius?.(12)
     view.setBounds(this.bounds)
     this.window.contentView.addChildView(view)
 
-    const initialUrl = url?.trim() || 'about:blank'
     const tab: BrowserTab = {
-      id,
+      id: crypto.randomUUID(),
       view,
       title: 'New Tab',
-      url: initialUrl,
+      url: url?.trim() || view.webContents.getURL() || 'about:blank',
       isLoading: false
     }
 
-    this.tabs.set(id, tab)
+    this.tabs.set(tab.id, tab)
     this.attachEvents(tab)
-    this.activateTab(id)
+    this.activateTab(tab.id)
 
-    if (!isBlankPopupUrl(url) && !isUnsafePopupUrl(url)) {
+    // background-tab defers webContents creation; load the target URL ourselves.
+    if (disposition === 'background-tab' && !isBlankPopupUrl(url) && !isUnsafePopupUrl(url)) {
       void view.webContents.loadURL(normalizeNavigationInput(url!))
     }
 
@@ -323,7 +346,7 @@ export class TabManager {
 
       return {
         action: 'allow',
-        createWindow: () => this.createPopupTab(details.url).view.webContents
+        createWindow: (options) => this.adoptPopupTab(options, details.url, details.disposition).view.webContents
       }
     })
 
