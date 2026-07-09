@@ -40,6 +40,9 @@ const taskShapingGuidance = [
   '- Decide whether a formal plan is necessary. For trivial tasks, briefly note the direct path and proceed.',
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
+  '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
+  '- Research budget: make one broad web search with up to three query variants, open at most two strongest sources, use targeted extraction, then synthesize. Search again only when sources conflict or the question is high-stakes.',
+  '- Prefer snippets and targeted passages over long full-page results. Do not repeat large source text in later reasoning.',
   '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
 ]
 
@@ -64,6 +67,27 @@ function browserControlGuidance(): string[] {
 
 function buildGuidance(): string {
   return [...taskShapingGuidance, ...browserControlGuidance()].join('\n')
+}
+
+const compactWebSearchConfig = {
+  tools: {
+    web_search: {
+      context_size: 'low'
+    }
+  }
+}
+
+function resolveTurnPolicy(text: string): { effort?: string; summary: 'auto' | 'concise' } {
+  const normalized = text.trim().toLowerCase()
+  const wordCount = normalized ? normalized.split(/\s+/).length : 0
+  const implementationTask = /\b(implement|fix|refactor|debug|edit|modify|build|test|audit|codebase|repository|repo)\b/.test(normalized)
+  const researchTask = /\b(current|latest|review|compare|research|pricing|news|sources|overall|what is|who is|when is)\b/.test(normalized)
+
+  if (wordCount <= 80 && researchTask && !implementationTask) {
+    return { effort: 'low', summary: 'concise' }
+  }
+
+  return { summary: 'auto' }
 }
 
 const browserRunSchema = {
@@ -143,6 +167,7 @@ export class CodexClient extends EventEmitter {
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
+      config: compactWebSearchConfig,
       dynamicTools: browserDynamicTools,
       developerInstructions: buildGuidance()
     })
@@ -154,6 +179,7 @@ export class CodexClient extends EventEmitter {
       threadId,
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
+      config: compactWebSearchConfig,
       developerInstructions: buildGuidance(),
       initialTurnsPage: {
         limit: 500,
@@ -187,7 +213,7 @@ export class CodexClient extends EventEmitter {
           text_elements: []
         }
       ],
-      summary: 'auto',
+      ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
 
@@ -205,6 +231,7 @@ export class CodexClient extends EventEmitter {
   }
 
   dispose(): void {
+    this.rejectPending(new Error('Codex app-server stopped'))
     this.child?.kill()
     this.child = null
   }
@@ -263,41 +290,67 @@ export class CodexClient extends EventEmitter {
     const lines = createInterface({ input: child.stdout })
     lines.on('line', (line) => this.handleLine(line))
 
-    await this.request('initialize', {
-      clientInfo: {
-        name: 'codexdesktop',
-        title: 'Codex Desktop',
-        version: '0.1.0'
-      },
-      capabilities: {
-        experimentalApi: true,
-        requestAttestation: false,
-        optOutNotificationMethods: [
-          'rawResponseItem/completed',
-          'thread/realtime/started',
-          'thread/realtime/itemAdded',
-          'thread/realtime/transcript/delta',
-          'thread/realtime/transcript/done',
-          'thread/realtime/outputAudio/delta',
-          'thread/realtime/sdp',
-          'thread/realtime/error',
-          'thread/realtime/closed'
-        ]
+    try {
+      await this.request('initialize', {
+        clientInfo: {
+          name: 'codexdesktop',
+          title: 'Codex Desktop',
+          version: '0.1.0'
+        },
+        capabilities: {
+          experimentalApi: true,
+          requestAttestation: false,
+          optOutNotificationMethods: [
+            'rawResponseItem/completed',
+            'thread/realtime/started',
+            'thread/realtime/itemAdded',
+            'thread/realtime/transcript/delta',
+            'thread/realtime/transcript/done',
+            'thread/realtime/outputAudio/delta',
+            'thread/realtime/sdp',
+            'thread/realtime/error',
+            'thread/realtime/closed'
+          ]
+        }
+      })
+      this.notify('initialized')
+      this.emitStatus('ready')
+    } catch (error) {
+      if (this.child === child) {
+        this.child = null
+        child.kill()
       }
-    })
-    this.notify('initialized')
-    this.emitStatus('ready')
+      throw error
+    }
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
     const id = `codexdesktop-${++this.requestCounter}`
 
     return new Promise<T>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        const pending = this.pending.get(id)
+        if (!pending) {
+          return
+        }
+
+        this.pending.delete(id)
+        pending.reject(new Error(`Codex request timed out: ${method}`))
+      }, requestTimeoutMs)
+
       this.pending.set(id, {
         resolve: (value) => resolve(value as T),
-        reject
+        reject,
+        timer
       })
-      this.write({ jsonrpc: '2.0', id, method, params })
+
+      try {
+        this.write({ jsonrpc: '2.0', id, method, params })
+      } catch (error) {
+        clearTimeout(timer)
+        this.pending.delete(id)
+        reject(error instanceof Error ? error : new Error(String(error)))
+      }
     })
   }
 
@@ -346,6 +399,7 @@ export class CodexClient extends EventEmitter {
     }
 
     this.pending.delete(message.id!)
+    clearTimeout(pending.timer)
 
     if (message.error) {
       pending.reject(new Error(message.error.message))
@@ -442,6 +496,7 @@ export class CodexClient extends EventEmitter {
 
   private rejectPending(error: Error): void {
     for (const pending of this.pending.values()) {
+      clearTimeout(pending.timer)
       pending.reject(error)
     }
 
