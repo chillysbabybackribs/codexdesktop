@@ -142,6 +142,9 @@ export default function App(): JSX.Element {
   const [isSending, setIsSending] = useState(false)
   const [codexStatus, setCodexStatus] = useState('idle')
   const [threads, setThreads] = useState<Thread[]>([])
+  const [threadsNextCursor, setThreadsNextCursor] = useState<string | null>(null)
+  const [threadsLoading, setThreadsLoading] = useState(false)
+  const [threadsError, setThreadsError] = useState<string | null>(null)
   const [workspace, setWorkspace] = useState<string | null>(
     () => window.localStorage.getItem('codexdesktop.workspace')
   )
@@ -1033,9 +1036,13 @@ function ChatPane({
           threads={threads}
           activeThreadId={activeThreadId}
           isOpen={isThreadMenuOpen}
+          threadsNextCursor={threadsNextCursor}
+          threadsLoading={threadsLoading}
+          threadsError={threadsError}
           onToggle={onToggleThreadMenu}
           onNewThread={onNewThread}
           onResumeThread={onResumeThread}
+          onLoadMoreThreads={onLoadMoreThreads}
         />
       </div>
 
@@ -1105,17 +1112,25 @@ function ThreadMenu({
   threads,
   activeThreadId,
   isOpen,
+  threadsNextCursor,
+  threadsLoading,
+  threadsError,
   onToggle,
   onNewThread,
-  onResumeThread
+  onResumeThread,
+  onLoadMoreThreads
 }: {
   title: string
   threads: Thread[]
   activeThreadId: string | null
   isOpen: boolean
+  threadsNextCursor: string | null
+  threadsLoading: boolean
+  threadsError: string | null
   onToggle: () => void
   onNewThread: () => void
   onResumeThread: (threadId: string) => Promise<void>
+  onLoadMoreThreads: () => Promise<void>
 }): JSX.Element {
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const searchRef = useRef<HTMLInputElement | null>(null)
@@ -1296,9 +1311,28 @@ function ThreadMenu({
               ))
             ) : (
               <div className="thread-menu-empty">
-                {query ? `No chats matching “${query.trim()}”` : 'No chats yet'}
+                {query
+                  ? `No chats matching “${query.trim()}”`
+                  : threadsError
+                    ? `Could not load chats: ${threadsError}`
+                    : 'No chats yet'}
               </div>
             )}
+
+            {threadsError && flatIds.length ? (
+              <div className="thread-menu-status thread-menu-status-error">{threadsError}</div>
+            ) : null}
+
+            {threadsNextCursor && !query ? (
+              <button
+                type="button"
+                className="thread-menu-load-more"
+                disabled={threadsLoading}
+                onClick={() => void onLoadMoreThreads()}
+              >
+                {threadsLoading ? 'Loading…' : 'Load more chats'}
+              </button>
+            ) : null}
           </div>
         </div>
       ) : null}

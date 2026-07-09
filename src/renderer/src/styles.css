@@ -477,6 +477,40 @@ button {
   text-align: center;
 }
 
+.thread-menu-status {
+  padding: 10px 16px 0;
+  color: #8a9097;
+  font-size: 12px;
+  text-align: center;
+}
+
+.thread-menu-status-error {
+  color: #d98b8b;
+}
+
+.thread-menu-load-more {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 8px 12px 12px;
+  padding: 10px 12px;
+  border: 1px solid #2d3138;
+  border-radius: 10px;
+  background: #1a1d22;
+  color: #c8ccd1;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.thread-menu-load-more:hover:not(:disabled) {
+  background: #22262d;
+  border-color: #3a4048;
+}
+
+.thread-menu-load-more:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .thread-scroll {
   min-height: 0;
   overflow: auto;
