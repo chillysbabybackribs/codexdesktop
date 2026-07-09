@@ -190,19 +190,8 @@ export default function App(): JSX.Element {
 
         if (event.status === 'exited' || event.status === 'error') {
           addSystemItem(event.message ?? 'Codex app-server is not available.', event.status === 'error' ? 'error' : 'warning')
-          setApprovals([])
         }
 
-        return
-      }
-
-      if (event.type === 'approvalRequest') {
-        setApprovals((current) => [...current, event.request])
-        return
-      }
-
-      if (event.type === 'approvalResolved') {
-        setApprovals((current) => current.filter((approval) => approval.requestId !== event.requestId))
         return
       }
 
@@ -403,18 +392,7 @@ export default function App(): JSX.Element {
     }
   }
 
-  const handleApprovalDecision = async (requestId: string | number, decision: CodexApprovalDecision): Promise<void> => {
-    setApprovals((current) => current.filter((approval) => approval.requestId !== requestId))
-
-    try {
-      await window.api.codex.respondApproval({ requestId, decision })
-    } catch (error) {
-      addSystemItem(`Approval response failed: ${(error as Error).message}`, 'error')
-    }
-  }
-
   const hasThreadContent = items.length > 0
-  const visibleApprovals = approvals.filter((approval) => isRelevantThread(approval.threadId, activeThreadId))
 
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
