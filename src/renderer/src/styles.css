@@ -188,7 +188,8 @@ button {
 }
 
 .thread-select-wrap {
-  position: relative;
+  /* Static so the palette anchors to (and is width-bounded by) the full-width
+     .chat-toolbar rather than this narrow centered trigger. */
   justify-self: center;
   display: flex;
   justify-content: center;
@@ -246,12 +247,15 @@ button {
    bar on the active/hovered row. Modeled on Cursor's "Go to File" palette. */
 .thread-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% - 4px);
   left: 50%;
+  right: auto;
   z-index: 12;
   display: flex;
   flex-direction: column;
-  width: min(720px, calc(100vw - 96px));
+  /* Anchored to .chat-toolbar, so 100% == pane width. Wide but pane-bounded,
+     capped so it never gets absurdly wide on a large pane. */
+  width: min(760px, calc(100% - 24px));
   max-height: min(60vh, calc(100vh - 150px));
   padding: 0;
   border: 1px solid rgb(255 255 255 / 9%);
