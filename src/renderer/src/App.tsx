@@ -157,12 +157,17 @@ export default function App(): JSX.Element {
   const isDraggingDividerRef = useRef(false)
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
+  const activeTurnIdRef = useRef<string | null>(activeTurnId)
 
   useEffect(() => window.api.browser.onState(setBrowserState), [])
 
   useEffect(() => {
     activeThreadIdRef.current = activeThreadId
   }, [activeThreadId])
+
+  useEffect(() => {
+    activeTurnIdRef.current = activeTurnId
+  }, [activeTurnId])
 
   useEffect(() => {
     splitRef.current = split
@@ -405,43 +410,90 @@ export default function App(): JSX.Element {
         return
       case 'turn/started':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          const turn = notification.params.turn
           setActiveThreadId(notification.params.threadId)
-          setActiveTurnId(notification.params.turn.id)
-          liveItemIdsRef.current = new Set()
-          mergeItems(notification.params.turn.items)
+          setActiveTurnId(turn.id)
+          noteTurn(turn.id, {
+            status: 'inProgress',
+            startedAtMs: turn.startedAt ? turn.startedAt * 1000 : Date.now()
+          })
+          adoptTurnItems(turn.id, turn.items)
+          mergeItems(turn.items)
         }
         return
       case 'turn/completed':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
-          mergeItems(notification.params.turn.items)
-          // Any agent message that streamed in during this turn now types out.
-          promoteTypingIds()
-          setActiveTurnId(null)
+          const turn = notification.params.turn
+          adoptTurnItems(turn.id, turn.items)
+          mergeItems(turn.items)
+          noteTurn(turn.id, {
+            status: turn.status === 'inProgress' ? 'completed' : turn.status,
+            completedAtMs: turn.completedAt ? turn.completedAt * 1000 : Date.now(),
+            durationMs: turn.durationMs ?? undefined,
+            errorMessage: turn.error?.message
+          })
+          setActiveTurnId((current) => (current === turn.id ? null : current))
         }
         void refreshThreads()
         return
       case 'item/started':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.item.id, notification.params.turnId, {
+            startedAtMs: notification.params.startedAtMs
+          })
+          upsertItem(notification.params.item)
+        }
+        return
       case 'item/completed':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
-          if (notification.params.item.type === 'agentMessage') {
-            liveItemIdsRef.current.add(notification.params.item.id)
-          }
+          noteItem(notification.params.item.id, notification.params.turnId, {
+            completedAtMs: notification.params.completedAtMs
+          })
           upsertItem(notification.params.item)
         }
         return
       case 'item/agentMessage/delta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
-          liveItemIdsRef.current.add(notification.params.itemId)
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchItemText(notification.params.itemId, notification.params.delta, 'agentMessage')
         }
         return
       case 'item/commandExecution/outputDelta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchCommandOutput(notification.params.itemId, notification.params.delta)
+        }
+        return
+      case 'item/fileChange/patchUpdated':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
+          patchFileChanges(notification.params.itemId, notification.params.changes)
+        }
+        return
+      case 'item/mcpToolCall/progress':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItemProgress(
+            notification.params.itemId,
+            notification.params.turnId,
+            notification.params.message
+          )
+        }
+        return
+      case 'thread/tokenUsage/updated':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteTurn(notification.params.turnId, { tokens: notification.params.tokenUsage })
+        }
+        return
+      case 'turn/diff/updated':
+        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteTurn(notification.params.turnId, {
+            diffSummary: summarizeTurnDiff(notification.params.diff)
+          })
         }
         return
       case 'item/reasoning/summaryTextDelta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, notification.params.delta)
         }
         return
@@ -452,11 +504,13 @@ export default function App(): JSX.Element {
         return
       case 'item/reasoning/textDelta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'content', notification.params.contentIndex, notification.params.delta)
         }
         return
       case 'item/plan/delta':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchPlan(notification.params.itemId, notification.params.delta)
         }
         return
@@ -468,6 +522,14 @@ export default function App(): JSX.Element {
       case 'error':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
           addSystemItem(notification.params.error.message, 'error')
+          const failedTurnId = activeTurnIdRef.current
+          if (failedTurnId) {
+            noteTurn(failedTurnId, {
+              status: 'failed',
+              completedAtMs: Date.now(),
+              errorMessage: notification.params.error.message
+            })
+          }
           setActiveTurnId(null)
         }
         return
@@ -485,24 +547,46 @@ export default function App(): JSX.Element {
     setItems((current) => upsertMany(current, nextItems))
   }
 
-  // Promote the agent messages that streamed in during the just-finished turn so
-  // they type out. `turn/completed` doesn't carry the message items — they arrive
-  // over the item/delta stream — so we promote the ids we tracked live directly.
-  function promoteTypingIds(): void {
-    const fresh = [...liveItemIdsRef.current]
+  // Record lifecycle metadata for an item. The incoming turnId wins when
+  // present; existing fields survive partial updates.
+  function noteItem(itemId: string, turnId: string | null, patch: Partial<ItemMeta> = {}): void {
+    setItemMeta((current) => {
+      const existing = current[itemId]
+      return {
+        ...current,
+        [itemId]: { ...existing, ...patch, turnId: turnId ?? existing?.turnId ?? null }
+      }
+    })
+  }
 
-    if (!fresh.length) {
-      return
-    }
+  function noteItemProgress(itemId: string, turnId: string | null, message: string): void {
+    setItemMeta((current) => {
+      const existing = current[itemId]
+      const progress = [...(existing?.progress ?? []), message].slice(-5)
+      return {
+        ...current,
+        [itemId]: { ...existing, progress, turnId: turnId ?? existing?.turnId ?? null }
+      }
+    })
+  }
 
-    setTypingIds((current) => {
-      const next = new Set(current)
-      for (const id of fresh) {
-        next.add(id)
+  function noteTurn(turnId: string, patch: Partial<TurnMeta>): void {
+    setTurnMeta((current) => ({
+      ...current,
+      [turnId]: { status: 'inProgress', ...current[turnId], ...patch }
+    }))
+  }
+
+  // Tag a batch of items (from turn/started, turn/completed, or turn/start
+  // responses) with the turn they belong to.
+  function adoptTurnItems(turnId: string, turnItems: ThreadItem[]): void {
+    setItemMeta((current) => {
+      const next = { ...current }
+      for (const item of turnItems) {
+        next[item.id] = { ...next[item.id], turnId }
       }
       return next
     })
-    liveItemIdsRef.current = new Set()
   }
 
   async function refreshThreads(): Promise<void> {
@@ -518,7 +602,28 @@ export default function App(): JSX.Element {
     setActiveThreadId(thread.id)
     setActiveThreadTitle(threadTitle(thread))
     setActiveTurnId(thread.turns.find((turn) => turn.status === 'inProgress')?.id ?? null)
-    setItems(thread.turns.flatMap((turn) => turn.items))
+
+    const nextItems: ChatItem[] = []
+    const nextItemMeta: Record<string, ItemMeta> = {}
+    const nextTurnMeta: Record<string, TurnMeta> = {}
+
+    for (const turn of thread.turns) {
+      nextTurnMeta[turn.id] = {
+        status: turn.status,
+        startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
+        completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
+        durationMs: turn.durationMs ?? undefined,
+        errorMessage: turn.error?.message
+      }
+      for (const item of turn.items) {
+        nextItemMeta[item.id] = { turnId: turn.id }
+        nextItems.push(item)
+      }
+    }
+
+    setItems(nextItems)
+    setItemMeta(nextItemMeta)
+    setTurnMeta(nextTurnMeta)
   }
 
   function upsertItem(item: ThreadItem): void {
