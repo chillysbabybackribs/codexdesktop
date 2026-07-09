@@ -29,7 +29,10 @@ type JsonRpcMessage = {
 type PendingRequest = {
   resolve: (value: unknown) => void
   reject: (reason: Error) => void
+  timer: ReturnType<typeof setTimeout>
 }
+
+const requestTimeoutMs = 30_000
 
 const taskShapingGuidance = [
   'Codex Desktop task-shaping guidance:',
@@ -207,13 +210,13 @@ export class CodexClient extends EventEmitter {
   }
 
   private async ensureStarted(): Promise<void> {
+    if (this.startPromise) {
+      return this.startPromise
+    }
+
     if (this.child && !this.child.killed) {
       this.emitStatus('ready')
       return
-    }
-
-    if (this.startPromise) {
-      return this.startPromise
     }
 
     this.startPromise = this.start()
