@@ -8,6 +8,27 @@ import { startBrowserControlServer, type BrowserControlServer } from './browser/
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 
+// Chromium locks profile storage (cookies, service workers, etc.). A second
+// instance against the same userData dir causes random IO errors like:
+// "Failed to delete the database: Database IO error".
+const hasSingleInstanceLock = app.requestSingleInstanceLock()
+
+if (!hasSingleInstanceLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+
+      mainWindow.focus()
+    }
+  })
+
+  bootstrap()
+}
+
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
@@ -112,43 +133,45 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(async () => {
-  registerIpc()
-  createWindow()
-
-  // Stand up the agent's browser control surface and publish its socket path
-  // into the environment BEFORE the codex child is spawned. The child inherits
-  // process.env (see codex-client spawn), and it only spawns lazily on the
-  // first message, so setting it here is always in time. Bound to a getter so
-  // it survives window close/reopen swapping the TabManager instance.
-  try {
-    browserControl = await startBrowserControlServer(() => tabManager)
-    process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
-    console.log(`Browser control socket: ${browserControl.socketPath}`)
-  } catch (error) {
-    console.error('Failed to start browser control server', error)
-  }
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+function bootstrap(): void {
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit()
     }
   })
-})
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+  app.on('before-quit', () => {
+    flushBrowserPersistSync()
+    codexClient?.dispose()
+    codexClient = null
+    void browserControl?.close()
+    browserControl = null
+  })
 
-app.on('before-quit', () => {
-  flushBrowserPersistSync()
-  codexClient?.dispose()
-  codexClient = null
-  void browserControl?.close()
-  browserControl = null
-})
+  void app.whenReady().then(async () => {
+    registerIpc()
+    createWindow()
+
+    // Stand up the agent's browser control surface and publish its socket path
+    // into the environment BEFORE the codex child is spawned. The child inherits
+    // process.env (see codex-client spawn), and it only spawns lazily on the
+    // first message, so setting it here is always in time. Bound to a getter so
+    // it survives window close/reopen swapping the TabManager instance.
+    try {
+      browserControl = await startBrowserControlServer(() => tabManager)
+      process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
+      console.log(`Browser control socket: ${browserControl.socketPath}`)
+    } catch (error) {
+      console.error('Failed to start browser control server', error)
+    }
+
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+      }
+    })
+  })
+}
 
 async function restoreBrowserTabs(): Promise<void> {
   const saved = await browserStateStore.load()
