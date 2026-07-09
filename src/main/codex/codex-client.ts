@@ -115,7 +115,7 @@ export class CodexClient extends EventEmitter {
       approvalPolicy: 'on-request',
       sandbox: 'workspace-write',
       historyMode: 'legacy',
-      developerInstructions: reasoningGuidance
+      developerInstructions: buildGuidance()
     })
   }
 
@@ -125,7 +125,7 @@ export class CodexClient extends EventEmitter {
       threadId,
       approvalPolicy: 'on-request',
       sandbox: 'workspace-write',
-      developerInstructions: reasoningGuidance
+      developerInstructions: buildGuidance()
     })
   }
 
@@ -157,7 +157,7 @@ export class CodexClient extends EventEmitter {
       additionalContext: {
         codexdesktop_reasoning_guidance: {
           kind: 'application',
-          value: reasoningGuidance
+          value: buildGuidance()
         }
       },
       approvalPolicy: 'on-request'
