@@ -504,11 +504,13 @@ const collapsedOutputLines = 12
 
 function TerminalCard({
   item,
+  meta,
   status,
   duration,
   liveNow
 }: {
   item: CommandExecutionItem
+  meta: ItemMeta | undefined
   status: BlockStatus
   duration: number | null
   liveNow: number
@@ -521,7 +523,8 @@ function TerminalCard({
   const hiddenCount = !running && !showAll ? Math.max(0, lines.length - collapsedOutputLines) : 0
   const shownLines = hiddenCount > 0 ? lines.slice(hiddenCount) : lines
 
-  const elapsed = running && itemStart(item, liveNow) !== null ? fmtDuration(itemStart(item, liveNow)!) : null
+  const elapsedMs = running && meta?.startedAtMs ? Math.max(0, liveNow - meta.startedAtMs) : null
+  const elapsed = elapsedMs !== null && elapsedMs >= 2500 ? fmtDuration(elapsedMs) : null
 
   return (
     <div className={`term-card status-${status}`}>
@@ -561,20 +564,6 @@ function TerminalCard({
   )
 }
 
-// Elapsed ms for a live command — durationMs is only set at completion, so use
-// wall-clock from the ticking `now` against nothing better than render time.
-// Returns null when we have no anchor (freshly created item).
-const commandStartTimes = new WeakMap<CommandExecutionItem, number>()
-
-function itemStart(item: CommandExecutionItem, now: number): number | null {
-  let start = commandStartTimes.get(item)
-  if (start === undefined) {
-    start = now
-    commandStartTimes.set(item, start)
-  }
-  return Math.max(0, now - start)
-}
-
 function CommandBlock({
   item,
   meta,
@@ -598,7 +587,7 @@ function CommandBlock({
     return <CompactActionRows item={item} status={status} duration={duration} />
   }
 
-  return <TerminalCard item={item} status={status} duration={duration} liveNow={now} />
+  return <TerminalCard item={item} meta={meta} status={status} duration={duration} liveNow={now} />
 }
 
 // ---------------------------------------------------------------------------
