@@ -66,6 +66,8 @@ export class TabManager {
   }
 
   captureSnapshot(): SavedBrowserState | null {
+    this.removeDeadTabs()
+
     if (this.tabs.size === 0) {
       return null
     }
@@ -75,17 +77,24 @@ export class TabManager {
       .map((id) => this.tabs.get(id))
       .filter((tab): tab is BrowserTab => tab !== undefined)
       .map((tab) => {
-        const history = tab.view.webContents.navigationHistory
-        const entries = history.getAllEntries()
-        const activeIndex = clampIndex(history.getActiveIndex(), entries.length)
+        const snapshot = snapshotTabHistory(tab)
+
+        if (!snapshot) {
+          return null
+        }
 
         return {
           title: tab.title,
-          url: tab.view.webContents.getURL() || tab.url,
-          entries,
-          activeIndex
+          url: snapshot.url,
+          entries: snapshot.entries,
+          activeIndex: snapshot.activeIndex
         } satisfies SavedBrowserTab
       })
+      .filter((tab): tab is SavedBrowserTab => tab !== null)
+
+    if (tabs.length === 0) {
+      return null
+    }
 
     const activeTabIndex = this.activeTabId ? tabIds.indexOf(this.activeTabId) : 0
 
@@ -245,7 +254,11 @@ export class TabManager {
     }
 
     this.window.contentView.removeChildView(tab.view)
-    tab.view.webContents.close()
+
+    if (!tab.view.webContents.isDestroyed()) {
+      tab.view.webContents.close()
+    }
+
     this.tabs.delete(id)
 
     if (this.activeTabId === id) {
@@ -390,6 +403,61 @@ export class TabManager {
         void shell.openExternal(url)
       }
     })
+
+    webContents.once('destroyed', () => {
+      if (!this.tabs.has(tab.id)) {
+        return
+      }
+
+      try {
+        this.window.contentView.removeChildView(tab.view)
+      } catch {
+        // View may already be detached when OAuth popups self-close.
+      }
+
+      this.tabs.delete(tab.id)
+
+      if (this.activeTabId === tab.id) {
+        const next = this.tabs.keys().next().value as string | undefined
+        this.activeTabId = null
+
+        if (next) {
+          this.activateTab(next)
+        } else {
+          this.createTab()
+        }
+      }
+
+      this.pushState()
+    })
+  }
+
+  private removeDeadTabs(): void {
+    for (const [id, tab] of this.tabs) {
+      if (!tab.view.webContents.isDestroyed()) {
+        continue
+      }
+
+      try {
+        this.window.contentView.removeChildView(tab.view)
+      } catch {
+        // Already removed.
+      }
+
+      this.tabs.delete(id)
+
+      if (this.activeTabId === id) {
+        this.activeTabId = null
+      }
+    }
+
+    if (this.activeTabId && !this.tabs.has(this.activeTabId)) {
+      this.activeTabId = null
+    }
+
+    if (!this.activeTabId && this.tabs.size > 0) {
+      this.activateTab(this.tabs.keys().next().value as string)
+    }
   }
 
   private getActiveTab(): BrowserTab | null {
@@ -408,33 +476,40 @@ export class TabManager {
   // Resolve the WebContents to run against. No id → the visible active tab.
   resolveWebContents(tabId?: string | null): WebContents | null {
     const tab = tabId ? this.tabs.get(tabId) : this.getActiveTab()
-    return tab?.view.webContents ?? null
+    const webContents = tab?.view.webContents
+
+    if (!webContents || webContents.isDestroyed()) {
+      return null
+    }
+
+    return webContents
   }
 
   // Flat list for the agent to discover targets before acting.
   listTabs(): Array<{ id: string; url: string; title: string; active: boolean }> {
     return Array.from(this.tabs.values()).map((tab) => ({
       id: tab.id,
-      url: tab.view.webContents.getURL() || tab.url,
+      url: safeWebContentsUrl(tab.view.webContents) || tab.url,
       title: tab.title,
       active: tab.id === this.activeTabId
     }))
   }
 
   private pushState(): void {
+    this.removeDeadTabs()
+
     this.stateListener?.({
       activeTabId: this.activeTabId,
       tabs: Array.from(this.tabs.values()).map((tab): BrowserTabState => {
-        const webContents = tab.view.webContents
-        const history = webContents.navigationHistory
+        const navigation = readTabNavigation(tab)
 
         return {
           id: tab.id,
           title: tab.title,
-          url: tab.url,
+          url: navigation.url || tab.url,
           isLoading: tab.isLoading,
-          canGoBack: history.canGoBack(),
-          canGoForward: history.canGoForward()
+          canGoBack: navigation.canGoBack,
+          canGoForward: navigation.canGoForward
         }
       })
     })
@@ -466,5 +541,80 @@ function sanitizeBounds(bounds: BrowserBounds): BrowserBounds {
     y: Math.max(0, Math.round(bounds.y)),
     width: Math.max(1, Math.round(bounds.width)),
     height: Math.max(1, Math.round(bounds.height))
+  }
+}
+
+function readTabNavigation(tab: BrowserTab): {
+  url: string
+  canGoBack: boolean
+  canGoForward: boolean
+} {
+  const webContents = tab.view.webContents
+
+  if (webContents.isDestroyed()) {
+    return { url: tab.url, canGoBack: false, canGoForward: false }
+  }
+
+  const history = webContents.navigationHistory
+
+  if (!history) {
+    return {
+      url: safeWebContentsUrl(webContents) || tab.url,
+      canGoBack: false,
+      canGoForward: false
+    }
+  }
+
+  return {
+    url: safeWebContentsUrl(webContents) || tab.url,
+    canGoBack: history.canGoBack(),
+    canGoForward: history.canGoForward()
+  }
+}
+
+function snapshotTabHistory(tab: BrowserTab): {
+  url: string
+  entries: SavedBrowserTab['entries']
+  activeIndex: number
+} | null {
+  const webContents = tab.view.webContents
+
+  if (webContents.isDestroyed()) {
+    return null
+  }
+
+  const url = safeWebContentsUrl(webContents) || tab.url
+  const history = webContents.navigationHistory
+
+  if (!history) {
+    if (!url || url === 'about:blank') {
+      return null
+    }
+
+    return {
+      url,
+      entries: [{ url, title: tab.title || url }],
+      activeIndex: 0
+    }
+  }
+
+  const entries = history.getAllEntries()
+
+  return {
+    url,
+    entries,
+    activeIndex: clampIndex(history.getActiveIndex(), entries.length)
+  }
+}
+
+function safeWebContentsUrl(webContents: WebContents): string {
+  if (webContents.isDestroyed()) {
+    return ''
+  }
+
+  try {
+    return webContents.getURL()
+  } catch {
+    return ''
   }
 }
