@@ -432,6 +432,12 @@ export default function App(): JSX.Element {
     options: { silent?: boolean } = {}
   ): Promise<void> {
     const generation = ++resumeGenerationRef.current
+    const previousThreadId = activeThreadIdRef.current
+
+    if (previousThreadId && previousThreadId !== threadId) {
+      void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+    }
+
     watchThreadIdRef.current = threadId
 
     try {
