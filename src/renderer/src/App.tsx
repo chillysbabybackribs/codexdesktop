@@ -344,6 +344,7 @@ export default function App(): JSX.Element {
     }
 
     setIsSending(true)
+    watchThreadIdRef.current = activeThreadId
 
     try {
       const response = await window.api.codex.sendMessage({
@@ -351,7 +352,9 @@ export default function App(): JSX.Element {
         text: trimmed,
         cwd: workspace
       })
+      watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
+      persistLastThreadId(response.threadId)
       setActiveTurnId(response.turn.id)
       noteTurn(response.turn.id, {
         status: 'inProgress',
@@ -380,6 +383,9 @@ export default function App(): JSX.Element {
 
   const handleNewThread = (): void => {
     setIsThreadMenuOpen(false)
+    resumeGenerationRef.current += 1
+    watchThreadIdRef.current = null
+    persistLastThreadId(null)
     setActiveThreadId(null)
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
@@ -390,14 +396,48 @@ export default function App(): JSX.Element {
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
     setIsThreadMenuOpen(false)
+    await resumeThreadById(threadId)
+  }
+
+  async function resumeThreadById(
+    threadId: string,
+    options: { silent?: boolean } = {}
+  ): Promise<void> {
+    const generation = ++resumeGenerationRef.current
+    watchThreadIdRef.current = threadId
 
     try {
       const resumed = await window.api.codex.resumeThread(threadId)
-      hydrateThread(resumed.thread)
-      const read = await window.api.codex.readThread(threadId)
-      hydrateThread(read.thread)
+
+      if (generation !== resumeGenerationRef.current) {
+        return
+      }
+
+      hydrateThread(resumed.thread, resumed.initialTurnsPage?.data)
+
+      if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
+        const read = await window.api.codex.readThread(threadId)
+
+        if (generation !== resumeGenerationRef.current) {
+          return
+        }
+
+        hydrateThread(read.thread)
+      }
+
+      persistLastThreadId(threadId)
     } catch (error) {
-      addSystemItem(`Thread resume failed: ${(error as Error).message}`, 'error')
+      if (generation !== resumeGenerationRef.current) {
+        return
+      }
+
+      watchThreadIdRef.current = activeThreadIdRef.current
+
+      if (!options.silent) {
+        addSystemItem(`Thread resume failed: ${(error as Error).message}`, 'error')
+      } else {
+        persistLastThreadId(null)
+      }
     }
   }
 
@@ -420,6 +460,8 @@ export default function App(): JSX.Element {
 
     switch (notification.method) {
       case 'thread/started':
+        watchThreadIdRef.current = notification.params.thread.id
+        persistLastThreadId(notification.params.thread.id)
         setActiveThreadId(notification.params.thread.id)
         setActiveThreadTitle(threadTitle(notification.params.thread))
         return
@@ -430,7 +472,12 @@ export default function App(): JSX.Element {
         void refreshThreads()
         return
       case 'turn/started':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (!watchThreadIdRef.current && !activeThreadIdRef.current) {
+          watchThreadIdRef.current = notification.params.threadId
+          persistLastThreadId(notification.params.threadId)
+        }
+
+        if (isRelevantThread(notification.params.threadId)) {
           const turn = notification.params.turn
           setActiveThreadId(notification.params.threadId)
           setActiveTurnId(turn.id)
@@ -443,7 +490,7 @@ export default function App(): JSX.Element {
         }
         return
       case 'turn/completed':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           const turn = notification.params.turn
           adoptTurnItems(turn.id, turn.items)
           mergeItems(turn.items)
@@ -458,7 +505,7 @@ export default function App(): JSX.Element {
         void refreshThreads()
         return
       case 'item/started':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.item.id, notification.params.turnId, {
             startedAtMs: notification.params.startedAtMs
           })
@@ -466,7 +513,7 @@ export default function App(): JSX.Element {
         }
         return
       case 'item/completed':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.item.id, notification.params.turnId, {
             completedAtMs: notification.params.completedAtMs
           })
@@ -474,25 +521,25 @@ export default function App(): JSX.Element {
         }
         return
       case 'item/agentMessage/delta':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchItemText(notification.params.itemId, notification.params.delta, 'agentMessage')
         }
         return
       case 'item/commandExecution/outputDelta':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchCommandOutput(notification.params.itemId, notification.params.delta)
         }
         return
       case 'item/fileChange/patchUpdated':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchFileChanges(notification.params.itemId, notification.params.changes)
         }
         return
       case 'item/mcpToolCall/progress':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItemProgress(
             notification.params.itemId,
             notification.params.turnId,
@@ -501,48 +548,48 @@ export default function App(): JSX.Element {
         }
         return
       case 'thread/tokenUsage/updated':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteTurn(notification.params.turnId, { tokens: notification.params.tokenUsage })
         }
         return
       case 'turn/diff/updated':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteTurn(notification.params.turnId, {
             diffSummary: summarizeTurnDiff(notification.params.diff)
           })
         }
         return
       case 'item/reasoning/summaryTextDelta':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, notification.params.delta)
         }
         return
       case 'item/reasoning/summaryPartAdded':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, '')
         }
         return
       case 'item/reasoning/textDelta':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'content', notification.params.contentIndex, notification.params.delta)
         }
         return
       case 'item/plan/delta':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
           patchPlan(notification.params.itemId, notification.params.delta)
         }
         return
       case 'turn/plan/updated':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           upsertTurnPlan(notification.params.turnId, notification.params.explanation, notification.params.plan)
         }
         return
       case 'error':
-        if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (isRelevantThread(notification.params.threadId)) {
           addSystemItem(notification.params.error.message, 'error')
           const failedTurnId = activeTurnIdRef.current
           if (failedTurnId) {
@@ -556,7 +603,7 @@ export default function App(): JSX.Element {
         }
         return
       case 'warning':
-        if (!notification.params.threadId || isRelevantThread(notification.params.threadId, currentThreadId)) {
+        if (!notification.params.threadId || isRelevantThread(notification.params.threadId)) {
           addSystemItem(notification.params.message, 'warning')
         }
         return
