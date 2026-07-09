@@ -54,7 +54,12 @@ async function handleEval(tabs: TabManager, tabId: string | null, code: string):
     return { ok: false, error: tabId ? `no tab with id ${tabId}` : 'no active tab' }
   }
   try {
-    const result = await wc.executeJavaScript(code, true)
+    // Wrap in an async IIFE so the agent can write a full program with top-level
+    // `return` and `await` (as the guidance documents) — executeJavaScript
+    // otherwise evaluates the string as a bare expression, where `return` is a
+    // syntax error. The IIFE returns a promise, which executeJavaScript awaits.
+    const wrapped = `(async () => { ${code}\n})()`
+    const result = await wc.executeJavaScript(wrapped, true)
     return { ok: true, result }
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : String(error) }
