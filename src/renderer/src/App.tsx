@@ -500,6 +500,7 @@ export default function App(): JSX.Element {
         return
       case 'item/reasoning/summaryPartAdded':
         if (isRelevantThread(notification.params.threadId, currentThreadId)) {
+          noteItem(notification.params.itemId, notification.params.turnId)
           patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, '')
         }
         return
