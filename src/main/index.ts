@@ -3,12 +3,14 @@ import { join } from 'node:path'
 import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { TabManager } from './browser/tab-manager.js'
+import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
+let browserControl: BrowserControlServer | null = null
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
