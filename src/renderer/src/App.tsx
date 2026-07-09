@@ -127,6 +127,7 @@ function buildRows(
 const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
+const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 
 export default function App(): JSX.Element {
   const [split, setSplit] = useState(() => {
@@ -159,8 +160,13 @@ export default function App(): JSX.Element {
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
   const activeTurnIdRef = useRef<string | null>(activeTurnId)
+  const watchThreadIdRef = useRef<string | null>(null)
+  const resumeGenerationRef = useRef(0)
+  const hasAutoRestoredRef = useRef(false)
 
-  useEffect(() => window.api.browser.onState(setBrowserState), [])
+  useEffect(() => {
+    return window.api.browser.onState(setBrowserState)
+  }, [])
 
   useEffect(() => {
     activeThreadIdRef.current = activeThreadId
@@ -197,10 +203,24 @@ export default function App(): JSX.Element {
       handleCodexNotification(event.notification as ServerNotification)
     })
 
-    void window.api.codex.getAuthStatus().catch((error: Error) => {
-      addSystemItem(`Codex auth check failed: ${error.message}`, 'error')
-    })
-    void refreshThreads()
+    void (async () => {
+      try {
+        await window.api.codex.getAuthStatus()
+      } catch (error) {
+        addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
+      }
+
+      await refreshThreads()
+
+      if (!hasAutoRestoredRef.current) {
+        hasAutoRestoredRef.current = true
+        const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+
+        if (lastThreadId) {
+          await resumeThreadById(lastThreadId, { silent: true })
+        }
+      }
+    })()
 
     return dispose
   }, [])

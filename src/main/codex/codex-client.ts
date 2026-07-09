@@ -106,7 +106,12 @@ export class CodexClient extends EventEmitter {
       threadId,
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
-      developerInstructions: buildGuidance()
+      developerInstructions: buildGuidance(),
+      initialTurnsPage: {
+        limit: 500,
+        sortDirection: 'asc',
+        itemsView: 'full'
+      }
     })
   }
 

@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'node:path'
 import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
+import { BrowserStateStore } from './browser/browser-state-store.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerCodexIpc } from './codex/codex-ipc.js'
@@ -11,6 +12,36 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
+const browserStateStore = new BrowserStateStore()
+let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
+
+function scheduleBrowserPersist(): void {
+  if (persistBrowserTimer) {
+    clearTimeout(persistBrowserTimer)
+  }
+
+  persistBrowserTimer = setTimeout(() => {
+    persistBrowserTimer = null
+    const snapshot = tabManager?.captureSnapshot()
+
+    if (snapshot) {
+      void browserStateStore.save(snapshot)
+    }
+  }, 500)
+}
+
+async function flushBrowserPersist(): Promise<void> {
+  if (persistBrowserTimer) {
+    clearTimeout(persistBrowserTimer)
+    persistBrowserTimer = null
+  }
+
+  const snapshot = tabManager?.captureSnapshot()
+
+  if (snapshot) {
+    await browserStateStore.save(snapshot)
+  }
+}
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -47,10 +78,13 @@ function createWindow(): void {
   tabManager.onState((state) => {
     mainWindow?.webContents.send(ipcChannels.browserState, state)
   })
+  tabManager.onPersist(() => {
+    scheduleBrowserPersist()
+  })
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
-    tabManager?.createInitialTab()
+    void restoreBrowserTabs()
   })
 
   mainWindow.on('closed', () => {
@@ -96,11 +130,27 @@ app.on('window-all-closed', () => {
 })
 
 app.on('before-quit', () => {
+  void flushBrowserPersist()
   codexClient?.dispose()
   codexClient = null
   void browserControl?.close()
   browserControl = null
 })
+
+async function restoreBrowserTabs(): Promise<void> {
+  const saved = await browserStateStore.load()
+
+  if (saved && saved.tabs.length > 0) {
+    try {
+      await tabManager?.restoreFromSnapshot(saved)
+      return
+    } catch (error) {
+      console.error('Failed to restore browser tabs, falling back to default tab', error)
+    }
+  }
+
+  tabManager?.createInitialTab()
+}
 
 function registerIpc(): void {
   codexClient = registerCodexIpc(() => mainWindow)

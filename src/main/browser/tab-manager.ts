@@ -376,7 +376,26 @@ export class TabManager {
         }
       })
     })
+    this.persistListener?.()
   }
+}
+
+function isSafeNavigationUrl(url: string): boolean {
+  const lower = url.trim().toLowerCase()
+
+  return Boolean(url.trim()) && !lower.startsWith('javascript:') && !lower.startsWith('file:')
+}
+
+function clampIndex(index: number, length: number): number {
+  if (length <= 0) {
+    return 0
+  }
+
+  if (!Number.isFinite(index)) {
+    return length - 1
+  }
+
+  return Math.min(length - 1, Math.max(0, Math.round(index)))
 }
 
 function sanitizeBounds(bounds: BrowserBounds): BrowserBounds {
