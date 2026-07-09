@@ -141,6 +141,7 @@ export default function App(): JSX.Element {
   const [activeThreadTitle, setActiveThreadTitle] = useState('New Chat')
   const [activeTurnId, setActiveTurnId] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
+  const [isRestoring, setIsRestoring] = useState(true)
   const [codexStatus, setCodexStatus] = useState('idle')
   const [threads, setThreads] = useState<Thread[]>([])
   const [threadsNextCursor, setThreadsNextCursor] = useState<string | null>(null)
@@ -168,6 +169,9 @@ export default function App(): JSX.Element {
   const watchThreadIdRef = useRef<string | null>(null)
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
+  const initializationPromiseRef = useRef<Promise<void> | null>(null)
+  const pendingAgentDeltasRef = useRef<Map<string, string>>(new Map())
+  const agentDeltaFrameRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -221,24 +225,24 @@ export default function App(): JSX.Element {
       handleCodexNotification(event.notification as ServerNotification)
     })
 
-    void (async () => {
-      try {
-        await window.api.codex.getAuthStatus()
-      } catch (error) {
-        addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
-      }
+    if (!initializationPromiseRef.current) {
+      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+      initializationPromiseRef.current = (async () => {
+        const authPromise = window.api.codex.getAuthStatus().catch((error) => {
+          addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
+        })
+        const threadsPromise = refreshThreads()
+        const restorePromise = lastThreadId
+          ? resumeThreadById(lastThreadId, { silent: true })
+          : Promise.resolve()
 
-      await refreshThreads()
-
-      if (!hasAutoRestoredRef.current) {
+        await Promise.all([authPromise, threadsPromise, restorePromise])
         hasAutoRestoredRef.current = true
-        const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+        setIsRestoring(false)
+      })()
+    }
 
-        if (lastThreadId) {
-          await resumeThreadById(lastThreadId, { silent: true })
-        }
-      }
-    })()
+    void initializationPromiseRef.current
 
     return dispose
   }, [])
@@ -902,6 +906,7 @@ export default function App(): JSX.Element {
           turnMeta={turnMeta}
           title={activeThreadTitle}
           status={codexStatus}
+          isRestoring={isRestoring}
           threads={threads}
           activeThreadId={activeThreadId}
           activeTurnId={activeTurnId}
@@ -957,6 +962,7 @@ function ChatPane({
   turnMeta,
   title,
   status,
+  isRestoring,
   threads,
   activeThreadId,
   activeTurnId,
@@ -980,6 +986,7 @@ function ChatPane({
   turnMeta: Record<string, TurnMeta>
   title: string
   status: string
+  isRestoring: boolean
   threads: Thread[]
   activeThreadId: string | null
   activeTurnId: string | null
@@ -1021,7 +1028,10 @@ function ChatPane({
   }, [items, itemMeta, activeTurnId])
 
   return (
-    <section className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'}`}>
+    <section
+      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
+      aria-busy={isRestoring}
+    >
       <div className="chat-toolbar">
         <button
           type="button"
@@ -1051,6 +1061,11 @@ function ChatPane({
         resetKey={activeThreadId}
         dependencies={[items, itemMeta, activeTurnId]}
       >
+        {isRestoring ? (
+          <div className="chat-restore-status" role="status" aria-live="polite">
+            <span className="shimmer-text">Restoring conversation…</span>
+          </div>
+        ) : null}
         {rows.map((row) => {
           if (row.kind === 'work') {
             return (
