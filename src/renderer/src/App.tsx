@@ -164,6 +164,7 @@ export default function App(): JSX.Element {
   const watchThreadIdRef = useRef<string | null>(null)
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
+  const threadsNextCursorRef = useRef<string | null>(null)
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -182,11 +183,23 @@ export default function App(): JSX.Element {
   }, [split])
 
   useEffect(() => {
+    threadsNextCursorRef.current = threadsNextCursor
+  }, [threadsNextCursor])
+
+  useEffect(() => {
     if (workspace) {
       window.localStorage.setItem('codexdesktop.workspace', workspace)
     } else {
       window.localStorage.removeItem('codexdesktop.workspace')
     }
+  }, [workspace])
+
+  useEffect(() => {
+    if (!hasAutoRestoredRef.current) {
+      return
+    }
+
+    void refreshThreads()
   }, [workspace])
 
   useEffect(() => {
@@ -383,6 +396,8 @@ export default function App(): JSX.Element {
   }
 
   const handleNewThread = (): void => {
+    const previousThreadId = activeThreadIdRef.current
+
     setIsThreadMenuOpen(false)
     resumeGenerationRef.current += 1
     watchThreadIdRef.current = null
@@ -393,6 +408,10 @@ export default function App(): JSX.Element {
     setItems([])
     setItemMeta({})
     setTurnMeta({})
+
+    if (previousThreadId) {
+      void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+    }
   }
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
@@ -476,6 +495,11 @@ export default function App(): JSX.Element {
           setActiveThreadTitle(notification.params.threadName || 'New Chat')
         }
         void refreshThreads()
+        return
+      case 'thread/archived':
+      case 'thread/deleted':
+      case 'thread/closed':
+        removeThreadFromList(notification.params.threadId)
         return
       case 'turn/started':
         if (!watchThreadIdRef.current && !activeThreadIdRef.current) {
@@ -664,13 +688,46 @@ export default function App(): JSX.Element {
     })
   }
 
-  async function refreshThreads(): Promise<void> {
-    try {
-      const response = await window.api.codex.listThreads()
-      setThreads(response.data)
-    } catch {
-      // A failed history refresh should not block the active conversation.
+  function removeThreadFromList(threadId: string): void {
+    setThreads((current) => current.filter((thread) => thread.id !== threadId))
+
+    if (window.localStorage.getItem(lastThreadStorageKey) === threadId) {
+      persistLastThreadId(null)
     }
+  }
+
+  async function refreshThreads(options: { append?: boolean } = {}): Promise<void> {
+    const cursor = options.append ? threadsNextCursorRef.current : null
+
+    try {
+      setThreadsLoading(true)
+
+      if (!options.append) {
+        setThreadsError(null)
+      }
+
+      const response = await window.api.codex.listThreads({
+        cwd: workspace,
+        cursor
+      })
+
+      setThreads((current) => (options.append ? [...current, ...response.data] : response.data))
+      setThreadsNextCursor(response.nextCursor)
+    } catch (error) {
+      if (!options.append) {
+        setThreadsError((error as Error).message)
+      }
+    } finally {
+      setThreadsLoading(false)
+    }
+  }
+
+  async function loadMoreThreads(): Promise<void> {
+    if (!threadsNextCursorRef.current || threadsLoading) {
+      return
+    }
+
+    await refreshThreads({ append: true })
   }
 
   function hydrateThread(thread: Thread, fallbackTurns?: Turn[]): void {
@@ -845,6 +902,9 @@ export default function App(): JSX.Element {
           activeThreadId={activeThreadId}
           activeTurnId={activeTurnId}
           isThreadMenuOpen={isThreadMenuOpen}
+          threadsNextCursor={threadsNextCursor}
+          threadsLoading={threadsLoading}
+          threadsError={threadsError}
           hasThreadContent={hasThreadContent}
           isBusy={isSending || Boolean(activeTurnId)}
           workspace={workspace}
@@ -853,6 +913,7 @@ export default function App(): JSX.Element {
           onNewThread={handleNewThread}
           onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
           onResumeThread={handleResumeThread}
+          onLoadMoreThreads={loadMoreThreads}
           onPickWorkspace={handlePickWorkspace}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
@@ -896,6 +957,9 @@ function ChatPane({
   activeThreadId,
   activeTurnId,
   isThreadMenuOpen,
+  threadsNextCursor,
+  threadsLoading,
+  threadsError,
   hasThreadContent,
   isBusy,
   workspace,
@@ -904,6 +968,7 @@ function ChatPane({
   onNewThread,
   onToggleThreadMenu,
   onResumeThread,
+  onLoadMoreThreads,
   onPickWorkspace
 }: {
   items: ChatItem[]
@@ -915,6 +980,9 @@ function ChatPane({
   activeThreadId: string | null
   activeTurnId: string | null
   isThreadMenuOpen: boolean
+  threadsNextCursor: string | null
+  threadsLoading: boolean
+  threadsError: string | null
   hasThreadContent: boolean
   isBusy: boolean
   workspace: string | null
@@ -923,6 +991,7 @@ function ChatPane({
   onNewThread: () => void
   onToggleThreadMenu: () => void
   onResumeThread: (threadId: string) => Promise<void>
+  onLoadMoreThreads: () => Promise<void>
   onPickWorkspace: () => Promise<void>
 }): JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)

@@ -4,6 +4,7 @@ import type {
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
+  CodexListThreadsParams,
   CodexSendMessageParams
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
@@ -34,12 +35,14 @@ const api = {
   },
   codex: {
     getAuthStatus: () => ipcRenderer.invoke(ipcChannels.codexGetAuthStatus),
-    listThreads: () => ipcRenderer.invoke(ipcChannels.codexListThreads),
+    listThreads: (params?: CodexListThreadsParams) =>
+      ipcRenderer.invoke(ipcChannels.codexListThreads, params),
     startThread: (cwd?: string | null) => ipcRenderer.invoke(ipcChannels.codexStartThread, cwd),
     resumeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexResumeThread, threadId),
     readThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
     sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
     interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
+    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.codexEvent, wrapped)

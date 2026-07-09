@@ -45,6 +45,11 @@ export type CodexInterruptTurnParams = {
   turnId: string
 }
 
+export type CodexListThreadsParams = {
+  cursor?: string | null
+  cwd?: string | null
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -68,6 +73,7 @@ export const ipcChannels = {
   codexReadThread: 'codex:readThread',
   codexSendMessage: 'codex:sendMessage',
   codexInterruptTurn: 'codex:interruptTurn',
+  codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',
   workspacePick: 'workspace:pick'
 } as const

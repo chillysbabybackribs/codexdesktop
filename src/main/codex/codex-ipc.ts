@@ -1,5 +1,5 @@
 import { ipcMain, type BrowserWindow } from 'electron'
-import type { CodexEvent, CodexInterruptTurnParams, CodexSendMessageParams } from '../../shared/ipc.js'
+import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import { CodexClient } from './codex-client.js'
 
@@ -11,7 +11,9 @@ export function registerCodexIpc(getWindow: () => BrowserWindow | null): CodexCl
   })
 
   ipcMain.handle(ipcChannels.codexGetAuthStatus, () => client.getAuthStatus())
-  ipcMain.handle(ipcChannels.codexListThreads, () => client.listThreads())
+  ipcMain.handle(ipcChannels.codexListThreads, (_event, params?: CodexListThreadsParams) =>
+    client.listThreads(params)
+  )
   ipcMain.handle(ipcChannels.codexStartThread, (_event, cwd?: string | null) => client.startThread(cwd))
   ipcMain.handle(ipcChannels.codexResumeThread, (_event, threadId: string) => client.resumeThread(threadId))
   ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
@@ -20,6 +22,9 @@ export function registerCodexIpc(getWindow: () => BrowserWindow | null): CodexCl
   )
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
+  )
+  ipcMain.handle(ipcChannels.codexUnsubscribeThread, (_event, threadId: string) =>
+    client.unsubscribeThread(threadId)
   )
 
   return client

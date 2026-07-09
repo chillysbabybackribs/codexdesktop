@@ -1,8 +1,8 @@
 import { BrowserWindow, WebContentsView, shell } from 'electron'
 import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
-import type { SavedBrowserState, SavedBrowserTab } from './browser-state-store.js'
-import { MAX_SAVED_BROWSER_TABS } from './browser-state-store.js'
+import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
+import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import { normalizeNavigationInput } from './url-utils.js'
 
 const browserPartition = 'persist:codex-browser'

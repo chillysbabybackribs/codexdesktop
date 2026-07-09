@@ -10,6 +10,7 @@ import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadLi
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
 import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
+import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
 
 type JsonRpcMessage = {
@@ -79,13 +80,15 @@ export class CodexClient extends EventEmitter {
     })
   }
 
-  async listThreads(): Promise<ThreadListResponse> {
+  async listThreads(options?: { cursor?: string | null; cwd?: string | null }): Promise<ThreadListResponse> {
     await this.ensureStarted()
     return this.request<ThreadListResponse>('thread/list', {
       limit: 30,
       sortKey: 'recency_at',
       sortDirection: 'desc',
-      archived: false
+      archived: false,
+      ...(options?.cursor ? { cursor: options.cursor } : {}),
+      ...(options?.cwd ? { cwd: options.cwd } : {})
     })
   }
 
@@ -155,6 +158,11 @@ export class CodexClient extends EventEmitter {
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
     await this.ensureStarted()
     return this.request('turn/interrupt', { threadId, turnId })
+  }
+
+  async unsubscribeThread(threadId: string): Promise<ThreadUnsubscribeResponse> {
+    await this.ensureStarted()
+    return this.request<ThreadUnsubscribeResponse>('thread/unsubscribe', { threadId })
   }
 
   dispose(): void {
