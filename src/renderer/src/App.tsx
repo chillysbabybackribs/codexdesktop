@@ -327,6 +327,11 @@ export default function App(): JSX.Element {
       })
       setActiveThreadId(response.threadId)
       setActiveTurnId(response.turn.id)
+      noteTurn(response.turn.id, {
+        status: 'inProgress',
+        startedAtMs: response.turn.startedAt ? response.turn.startedAt * 1000 : Date.now()
+      })
+      adoptTurnItems(response.turn.id, response.turn.items)
       mergeItems(response.turn.items)
     } catch (error) {
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
@@ -353,15 +358,12 @@ export default function App(): JSX.Element {
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
     setItems([])
-    setTypingIds(new Set())
-    liveItemIdsRef.current = new Set()
+    setItemMeta({})
+    setTurnMeta({})
   }
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
     setIsThreadMenuOpen(false)
-    // Resumed history should render instantly, never re-type.
-    setTypingIds(new Set())
-    liveItemIdsRef.current = new Set()
 
     try {
       const resumed = await window.api.codex.resumeThread(threadId)
