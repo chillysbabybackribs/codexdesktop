@@ -2,10 +2,12 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import { join } from 'node:path';
 import { ipcChannels } from '../shared/ipc.js';
 import { TabManager } from './browser/tab-manager.js';
+import { startBrowserControlServer } from './browser/browser-control-server.js';
 import { registerCodexIpc } from './codex/codex-ipc.js';
 let mainWindow = null;
 let tabManager = null;
 let codexClient = null;
+let browserControl = null;
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 2048,
@@ -52,9 +54,22 @@ function createWindow() {
         void mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
     }
 }
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     registerIpc();
     createWindow();
+    // Stand up the agent's browser control surface and publish its socket path
+    // into the environment BEFORE the codex child is spawned. The child inherits
+    // process.env (see codex-client spawn), and it only spawns lazily on the
+    // first message, so setting it here is always in time. Bound to a getter so
+    // it survives window close/reopen swapping the TabManager instance.
+    try {
+        browserControl = await startBrowserControlServer(() => tabManager);
+        process.env.CODEX_BROWSER_SOCK = browserControl.socketPath;
+        console.log(`Browser control socket: ${browserControl.socketPath}`);
+    }
+    catch (error) {
+        console.error('Failed to start browser control server', error);
+    }
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
@@ -69,6 +84,8 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
     codexClient?.dispose();
     codexClient = null;
+    void browserControl?.close();
+    browserControl = null;
 });
 function registerIpc() {
     codexClient = registerCodexIpc(() => mainWindow);

@@ -170,6 +170,27 @@ export class TabManager {
     getActiveTab() {
         return this.activeTabId ? (this.tabs.get(this.activeTabId) ?? null) : null;
     }
+    // --- Agent control surface ---------------------------------------------
+    // Public accessors used by the browser-control server so the Codex agent can
+    // drive whichever tab it's targeting. Default target is the visible active
+    // tab; an explicit id lets it reach any tab for multi-tab work.
+    getActiveTabId() {
+        return this.activeTabId;
+    }
+    // Resolve the WebContents to run against. No id → the visible active tab.
+    resolveWebContents(tabId) {
+        const tab = tabId ? this.tabs.get(tabId) : this.getActiveTab();
+        return tab?.view.webContents ?? null;
+    }
+    // Flat list for the agent to discover targets before acting.
+    listTabs() {
+        return Array.from(this.tabs.values()).map((tab) => ({
+            id: tab.id,
+            url: tab.view.webContents.getURL() || tab.url,
+            title: tab.title,
+            active: tab.id === this.activeTabId
+        }));
+    }
     pushState() {
         this.stateListener?.({
             activeTabId: this.activeTabId,

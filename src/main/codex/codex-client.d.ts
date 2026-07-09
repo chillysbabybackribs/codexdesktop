@@ -1,6 +1,5 @@
 import { EventEmitter } from 'node:events';
 import type { BrowserWindow } from 'electron';
-import type { CodexApprovalDecision } from '../../shared/ipc.js';
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js';
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js';
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js';
@@ -12,9 +11,7 @@ export declare class CodexClient extends EventEmitter {
     private child;
     private startPromise;
     private readonly pending;
-    private readonly pendingApprovals;
     private requestCounter;
-    private autoApprove;
     constructor(getWindow: () => BrowserWindow | null);
     getAuthStatus(): Promise<GetAuthStatusResponse>;
     listThreads(): Promise<ThreadListResponse>;
@@ -25,8 +22,6 @@ export declare class CodexClient extends EventEmitter {
         threadId: string;
     }>;
     interruptTurn(threadId: string, turnId: string): Promise<unknown>;
-    setAutoApprove(enabled: boolean): void;
-    respondToApproval(requestId: string | number, decision: CodexApprovalDecision): void;
     dispose(): void;
     private ensureStarted;
     private start;
@@ -35,10 +30,6 @@ export declare class CodexClient extends EventEmitter {
     private handleLine;
     private handleResponse;
     private handleServerRequest;
-    private handleApprovalRequest;
-    private approvalResponse;
-    private cancelPendingApprovals;
-    private dropPendingApprovals;
     private respond;
     private respondError;
     private write;

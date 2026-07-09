@@ -13,7 +13,5 @@ export function registerCodexIpc(getWindow) {
     ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId) => client.readThread(threadId));
     ipcMain.handle(ipcChannels.codexSendMessage, (_event, params) => client.sendMessage(params.threadId, params.text, params.cwd));
     ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params) => client.interruptTurn(params.threadId, params.turnId));
-    ipcMain.handle(ipcChannels.codexRespondApproval, (_event, params) => client.respondToApproval(params.requestId, params.decision));
-    ipcMain.handle(ipcChannels.codexSetAutoApprove, (_event, enabled) => client.setAutoApprove(enabled));
     return client;
 }

@@ -1,14 +1,44 @@
 import { EventEmitter } from 'node:events';
 import { createInterface } from 'node:readline';
 import { spawn } from 'node:child_process';
+const taskShapingGuidance = [
+    'Codex Desktop task-shaping guidance:',
+    '- Start by organizing the task in the visible reasoning or plan stream before tool use when the task benefits from planning.',
+    '- Decide whether a formal plan is necessary. For trivial tasks, briefly note the direct path and proceed.',
+    '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
+    '- Keep the plan updated when observations from tools change the best path.',
+    '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
+];
+// The visible embedded browser is exposed to you as a local Unix-socket HTTP
+// endpoint you drive from the shell — not a fixed tool set. You write whatever
+// JS the task needs and run it IN the live page, getting structured JSON back in
+// the same call. This block is only included when the socket is up.
+function browserControlGuidance() {
+    const sock = process.env.CODEX_BROWSER_SOCK;
+    if (!sock) {
+        return [];
+    }
+    return [
+        'Embedded browser control (the browser pane the user is watching):',
+        `- It is a local HTTP server on the Unix socket at ${sock}. Drive it from your shell; there are no browser tools to call.`,
+        '- Run arbitrary JS in the ACTIVE tab and get its return value as JSON (one call can fill+submit+read-back a whole form):',
+        `    curl -s --unix-socket "${sock}" http://x/eval --data-binary 'const f=document.forms[0]; f.q.value="hello"; f.submit(); return {url:location.href};'`,
+        '  The body IS the JS. `return` a value; returned promises are awaited, so do the whole operation in one program and read the resulting state back.',
+        '- Discover tabs: `curl -s --unix-socket "$SOCK" http://x/tabs`. Target a specific tab: add `?tab=<id>` to /eval, or `{"tab":"<id>"}` to /cdp.',
+        '- Tab control: POST JSON to http://x/tabs with {"action":"create"|"close"|"activate"|"navigate", url|input, tab}.',
+        '- For what page JS cannot do (trusted input events, network intercept, real load-idle waits, screenshots): POST {"method","params","tab"} to http://x/cdp to send a raw Chrome DevTools Protocol command.',
+        '- Prefer expressing the whole task as one page program over many small round-trips. Read the DOM once, act once, verify in the same return.'
+    ];
+}
+function buildGuidance() {
+    return [...taskShapingGuidance, ...browserControlGuidance()].join('\n');
+}
 export class CodexClient extends EventEmitter {
     getWindow;
     child = null;
     startPromise = null;
     pending = new Map();
-    pendingApprovals = new Map();
     requestCounter = 0;
-    autoApprove = false;
     constructor(getWindow) {
         super();
         this.getWindow = getWindow;
@@ -33,17 +63,19 @@ export class CodexClient extends EventEmitter {
         await this.ensureStarted();
         return this.request('thread/start', {
             cwd: cwd ?? process.env.HOME ?? process.cwd(),
-            approvalPolicy: 'on-request',
-            sandbox: 'workspace-write',
-            historyMode: 'legacy'
+            approvalPolicy: 'never',
+            sandbox: 'danger-full-access',
+            historyMode: 'legacy',
+            developerInstructions: buildGuidance()
         });
     }
     async resumeThread(threadId) {
         await this.ensureStarted();
         return this.request('thread/resume', {
             threadId,
-            approvalPolicy: 'on-request',
-            sandbox: 'workspace-write'
+            approvalPolicy: 'never',
+            sandbox: 'danger-full-access',
+            developerInstructions: buildGuidance()
         });
     }
     async readThread(threadId) {
@@ -64,35 +96,20 @@ export class CodexClient extends EventEmitter {
                     text_elements: []
                 }
             ],
-            approvalPolicy: 'on-request'
+            summary: 'auto',
+            additionalContext: {
+                codexdesktop_reasoning_guidance: {
+                    kind: 'application',
+                    value: buildGuidance()
+                }
+            },
+            approvalPolicy: 'never'
         });
         return { ...response, threadId: activeThreadId };
     }
     async interruptTurn(threadId, turnId) {
         await this.ensureStarted();
-        this.cancelPendingApprovals(threadId);
         return this.request('turn/interrupt', { threadId, turnId });
-    }
-    setAutoApprove(enabled) {
-        this.autoApprove = enabled;
-        if (!enabled) {
-            return;
-        }
-        // Flipping auto-approve on resolves anything already waiting on the user.
-        for (const [id, approval] of this.pendingApprovals) {
-            this.pendingApprovals.delete(id);
-            this.respond(id, this.approvalResponse(approval, 'accept'));
-            this.emit('event', { type: 'approvalResolved', requestId: id });
-        }
-    }
-    respondToApproval(requestId, decision) {
-        const approval = this.pendingApprovals.get(requestId);
-        if (!approval) {
-            return;
-        }
-        this.pendingApprovals.delete(requestId);
-        this.respond(requestId, this.approvalResponse(approval, decision));
-        this.emit('event', { type: 'approvalResolved', requestId });
     }
     dispose() {
         this.child?.kill();
@@ -133,13 +150,11 @@ export class CodexClient extends EventEmitter {
             const message = `codex app-server exited (${code ?? signal ?? 'unknown'})`;
             this.emitStatus('exited', message);
             this.rejectPending(new Error(message));
-            this.dropPendingApprovals();
         });
         child.on('error', (error) => {
             this.child = null;
             this.emitStatus('error', error.message);
             this.rejectPending(error);
-            this.dropPendingApprovals();
         });
         const lines = createInterface({ input: child.stdout });
         lines.on('line', (line) => this.handleLine(line));
@@ -222,15 +237,12 @@ export class CodexClient extends EventEmitter {
             pending.resolve(message.result);
         }
     }
+    // The app runs fully unrestricted (approvalPolicy: 'never', danger-full-access)
+    // BY DESIGN, so app-server never asks the user to approve commands, file
+    // changes, or permissions. We only answer the non-approval server requests it
+    // still makes; anything else (including any stray approval request) is denied.
     handleServerRequest(message) {
         switch (message.method) {
-            case 'item/commandExecution/requestApproval':
-            case 'item/fileChange/requestApproval':
-            case 'item/permissions/requestApproval':
-            case 'applyPatchApproval':
-            case 'execCommandApproval':
-                this.handleApprovalRequest(message.id, message.method, message.params);
-                return;
             case 'item/tool/requestUserInput':
                 this.respond(message.id, { answers: {} });
                 return;
@@ -240,57 +252,6 @@ export class CodexClient extends EventEmitter {
             default:
                 this.respondError(message.id, -32601, `Unsupported app-server request: ${message.method}`);
         }
-    }
-    handleApprovalRequest(id, method, params) {
-        const request = describeApproval(id, method, params);
-        const approval = { method, threadId: request.threadId, params };
-        if (this.autoApprove) {
-            this.respond(id, this.approvalResponse(approval, 'accept'));
-            return;
-        }
-        this.pendingApprovals.set(id, approval);
-        this.emit('event', { type: 'approvalRequest', request });
-    }
-    approvalResponse(approval, decision) {
-        switch (approval.method) {
-            case 'item/commandExecution/requestApproval':
-            case 'item/fileChange/requestApproval':
-                return { decision };
-            case 'applyPatchApproval':
-            case 'execCommandApproval':
-                return {
-                    decision: decision === 'accept' ? 'approved' : decision === 'acceptForSession' ? 'approved_for_session' : 'denied'
-                };
-            case 'item/permissions/requestApproval': {
-                if (decision === 'decline') {
-                    return { permissions: {}, scope: 'turn' };
-                }
-                const params = approval.params;
-                return {
-                    permissions: {
-                        network: params.permissions.network ?? undefined,
-                        fileSystem: params.permissions.fileSystem ?? undefined
-                    },
-                    scope: decision === 'acceptForSession' ? 'session' : 'turn'
-                };
-            }
-        }
-    }
-    cancelPendingApprovals(threadId) {
-        for (const [id, approval] of this.pendingApprovals) {
-            if (approval.threadId !== threadId) {
-                continue;
-            }
-            this.pendingApprovals.delete(id);
-            this.respond(id, cancelResponse(approval.method));
-            this.emit('event', { type: 'approvalResolved', requestId: id });
-        }
-    }
-    dropPendingApprovals() {
-        for (const id of this.pendingApprovals.keys()) {
-            this.emit('event', { type: 'approvalResolved', requestId: id });
-        }
-        this.pendingApprovals.clear();
     }
     respond(id, result) {
         this.write({ jsonrpc: '2.0', id, result });
@@ -316,75 +277,5 @@ export class CodexClient extends EventEmitter {
             pending.reject(error);
         }
         this.pending.clear();
-    }
-}
-function describeApproval(id, method, params) {
-    switch (method) {
-        case 'item/commandExecution/requestApproval': {
-            const p = params;
-            return {
-                requestId: id,
-                method,
-                threadId: p.threadId,
-                command: p.command ?? undefined,
-                cwd: p.cwd ?? undefined,
-                reason: p.reason ?? undefined
-            };
-        }
-        case 'item/fileChange/requestApproval': {
-            const p = params;
-            return {
-                requestId: id,
-                method,
-                threadId: p.threadId,
-                reason: p.reason ?? undefined,
-                grantRoot: p.grantRoot ?? undefined
-            };
-        }
-        case 'item/permissions/requestApproval': {
-            const p = params;
-            return {
-                requestId: id,
-                method,
-                threadId: p.threadId,
-                cwd: p.cwd,
-                reason: p.reason ?? undefined,
-                permissionsSummary: JSON.stringify(p.permissions, null, 2)
-            };
-        }
-        case 'applyPatchApproval': {
-            const p = params;
-            return {
-                requestId: id,
-                method,
-                threadId: p.conversationId,
-                reason: p.reason ?? undefined,
-                grantRoot: p.grantRoot ?? undefined,
-                files: Object.keys(p.fileChanges)
-            };
-        }
-        case 'execCommandApproval': {
-            const p = params;
-            return {
-                requestId: id,
-                method,
-                threadId: p.conversationId,
-                command: p.command.join(' '),
-                cwd: p.cwd,
-                reason: p.reason ?? undefined
-            };
-        }
-    }
-}
-function cancelResponse(method) {
-    switch (method) {
-        case 'item/commandExecution/requestApproval':
-        case 'item/fileChange/requestApproval':
-            return { decision: 'cancel' };
-        case 'applyPatchApproval':
-        case 'execCommandApproval':
-            return { decision: 'abort' };
-        case 'item/permissions/requestApproval':
-            return { permissions: {}, scope: 'turn' };
     }
 }

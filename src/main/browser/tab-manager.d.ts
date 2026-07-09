@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import type { WebContents } from 'electron';
 import type { BrowserBounds, BrowserState } from '../../shared/ipc.js';
 type BrowserStateListener = (state: BrowserState) => void;
 export declare class TabManager {
@@ -26,6 +27,14 @@ export declare class TabManager {
     private syncActiveBounds;
     private attachEvents;
     private getActiveTab;
+    getActiveTabId(): string | null;
+    resolveWebContents(tabId?: string | null): WebContents | null;
+    listTabs(): Array<{
+        id: string;
+        url: string;
+        title: string;
+        active: boolean;
+    }>;
     private pushState;
 }
 export {};

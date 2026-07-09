@@ -32,8 +32,6 @@ const api = {
         readThread: (threadId) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
         sendMessage: (params) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
         interruptTurn: (params) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
-        respondApproval: (params) => ipcRenderer.invoke(ipcChannels.codexRespondApproval, params),
-        setAutoApprove: (enabled) => ipcRenderer.invoke(ipcChannels.codexSetAutoApprove, enabled),
         onEvent: (listener) => {
             const wrapped = (_event, event) => listener(event);
             ipcRenderer.on(ipcChannels.codexEvent, wrapped);

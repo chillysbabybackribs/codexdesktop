@@ -26,36 +26,11 @@ export type CodexNotificationEvent = {
     type: 'notification';
     notification: unknown;
 };
-export type CodexApprovalMethod = 'item/commandExecution/requestApproval' | 'item/fileChange/requestApproval' | 'item/permissions/requestApproval' | 'applyPatchApproval' | 'execCommandApproval';
-export type CodexApprovalRequest = {
-    requestId: string | number;
-    method: CodexApprovalMethod;
-    threadId: string;
-    command?: string;
-    cwd?: string;
-    reason?: string;
-    grantRoot?: string;
-    files?: string[];
-    permissionsSummary?: string;
-};
-export type CodexApprovalDecision = 'accept' | 'acceptForSession' | 'decline';
-export type CodexApprovalRequestEvent = {
-    type: 'approvalRequest';
-    request: CodexApprovalRequest;
-};
-export type CodexApprovalResolvedEvent = {
-    type: 'approvalResolved';
-    requestId: string | number;
-};
-export type CodexEvent = CodexStatusEvent | CodexNotificationEvent | CodexApprovalRequestEvent | CodexApprovalResolvedEvent;
+export type CodexEvent = CodexStatusEvent | CodexNotificationEvent;
 export type CodexSendMessageParams = {
     threadId?: string | null;
     text: string;
     cwd?: string | null;
-};
-export type CodexRespondApprovalParams = {
-    requestId: string | number;
-    decision: CodexApprovalDecision;
 };
 export type CodexInterruptTurnParams = {
     threadId: string;
@@ -84,8 +59,6 @@ export declare const ipcChannels: {
     readonly codexReadThread: 'codex:readThread';
     readonly codexSendMessage: 'codex:sendMessage';
     readonly codexInterruptTurn: 'codex:interruptTurn';
-    readonly codexRespondApproval: 'codex:respondApproval';
-    readonly codexSetAutoApprove: 'codex:setAutoApprove';
     readonly codexEvent: 'codex:event';
     readonly workspacePick: 'workspace:pick';
 };

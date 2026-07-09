@@ -21,8 +21,6 @@ export const ipcChannels = {
     codexReadThread: 'codex:readThread',
     codexSendMessage: 'codex:sendMessage',
     codexInterruptTurn: 'codex:interruptTurn',
-    codexRespondApproval: 'codex:respondApproval',
-    codexSetAutoApprove: 'codex:setAutoApprove',
     codexEvent: 'codex:event',
     workspacePick: 'workspace:pick'
 };

@@ -641,7 +641,6 @@ export default function App(): JSX.Element {
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
           items={items}
-          approvals={visibleApprovals}
           title={activeThreadTitle}
           status={codexStatus}
           threads={threads}
@@ -652,15 +651,12 @@ export default function App(): JSX.Element {
           hasThreadContent={hasThreadContent}
           isBusy={isSending || Boolean(activeTurnId)}
           workspace={workspace}
-          autoApprove={autoApprove}
           onSend={handleSend}
           onStop={handleStop}
           onNewThread={handleNewThread}
           onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
           onResumeThread={handleResumeThread}
           onPickWorkspace={handlePickWorkspace}
-          onApprovalDecision={handleApprovalDecision}
-          onToggleAutoApprove={setAutoApprove}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -695,7 +691,6 @@ function TitleBar(): JSX.Element {
 
 function ChatPane({
   items,
-  approvals,
   title,
   status,
   threads,
@@ -706,18 +701,14 @@ function ChatPane({
   hasThreadContent,
   isBusy,
   workspace,
-  autoApprove,
   onSend,
   onStop,
   onNewThread,
   onToggleThreadMenu,
   onResumeThread,
-  onPickWorkspace,
-  onApprovalDecision,
-  onToggleAutoApprove
+  onPickWorkspace
 }: {
   items: ChatItem[]
-  approvals: CodexApprovalRequest[]
   title: string
   status: string
   threads: Thread[]
@@ -728,15 +719,12 @@ function ChatPane({
   hasThreadContent: boolean
   isBusy: boolean
   workspace: string | null
-  autoApprove: boolean
   onSend: (text: string) => Promise<void>
   onStop: () => Promise<void>
   onNewThread: () => void
   onToggleThreadMenu: () => void
   onResumeThread: (threadId: string) => Promise<void>
   onPickWorkspace: () => Promise<void>
-  onApprovalDecision: (requestId: string | number, decision: CodexApprovalDecision) => Promise<void>
-  onToggleAutoApprove: (enabled: boolean) => void
 }): JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const rows = useMemo(() => buildRows(items), [items])
@@ -788,9 +776,6 @@ function ChatPane({
             />
           )
         )}
-        {approvals.map((approval) => (
-          <ApprovalCard key={String(approval.requestId)} request={approval} onDecision={onApprovalDecision} />
-        ))}
       </ThreadScroll>
 
       <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
