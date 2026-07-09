@@ -971,7 +971,7 @@ export default function App(): JSX.Element {
           threadsLoading={threadsLoading}
           threadsError={threadsError}
           hasThreadContent={hasThreadContent}
-          isBusy={isSending || Boolean(activeTurnId)}
+          isBusy={isRestoring || isSending || Boolean(activeTurnId)}
           workspace={workspace}
           onSend={handleSend}
           onStop={handleStop}
