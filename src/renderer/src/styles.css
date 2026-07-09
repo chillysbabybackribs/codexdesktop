@@ -481,6 +481,12 @@ button {
   min-height: 0;
   overflow: auto;
   padding: 6px 28px 150px;
+  /* Auto-scroll owns the viewport — wheel/trackpad still work, no bar shows. */
+  scrollbar-width: none;
+}
+
+.thread-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .message {
@@ -536,188 +542,646 @@ button {
   background: #1f1f1f;
 }
 
-/* Live activity card — the running tool-call / reasoning stream. Borderless
-   while live so it reads as "Codex working", not a boxed message. */
-.activity-card {
-  max-width: min(860px, 92%);
-  margin: 0 0 24px;
-}
+/* ------------------------------------------------------------------------
+   In-task activity — the Cursor-style live work stream. Sequential blocks
+   (thought, tool rows, terminal cards, diff cards) that stream in while the
+   turn runs and STAY expanded once it completes. All live viewports follow
+   their own tail with overflow hidden — no scrollbars, ever.
+   ------------------------------------------------------------------------ */
 
-.activity-card.is-live {
-  border-left: 2px solid #2f2f2f;
-  padding-left: 14px;
-}
-
-.activity-body {
+.work-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 7px;
+  max-width: min(860px, 92%);
+  margin: 0 0 18px;
 }
 
-.activity-card.is-live .activity-body {
-  max-height: 208px;
-  overflow: auto;
-  scrollbar-width: thin;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 18px);
-  mask-image: linear-gradient(180deg, transparent 0, #000 18px);
-}
-
-.activity-body.is-static {
-  margin-top: 8px;
-  padding-left: 8px;
-  border-left: 1px solid #262626;
-}
-
-.activity-row {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  align-items: start;
-  gap: 8px;
-  padding: 3px 0;
-  color: #8f959b;
-  font-size: 13px;
-}
-
-.activity-row.is-running {
-  color: #d6dbe0;
-}
-
-.activity-icon {
-  display: grid;
-  place-items: center;
-  height: 20px;
-  color: #7c828a;
-  font-size: 12px;
-}
-
-.activity-row.status-failed .activity-icon {
-  color: #eaa2a2;
-}
-
-.activity-main {
-  min-width: 0;
-}
-
-.activity-line {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-
-.activity-label {
-  flex: 0 0 auto;
+/* Shared shimmering label — the signature "model is working" text. */
+.shimmer-text {
   color: #9aa0a6;
+  background: linear-gradient(
+    100deg,
+    #878d94 0%,
+    #878d94 38%,
+    #f0f3f6 50%,
+    #878d94 62%,
+    #878d94 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-slide 2.2s linear infinite;
 }
 
-.activity-row.is-running .activity-label {
-  color: #e6eaee;
-  font-weight: 600;
+@keyframes shimmer-slide {
+  from {
+    background-position: 125% 0;
+  }
+
+  to {
+    background-position: -125% 0;
+  }
 }
 
-.activity-detail {
-  min-width: 0;
-  overflow: hidden;
-  color: #c2c8ce;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.activity-status {
-  flex: 0 0 auto;
-  margin-left: auto;
-  color: #6f757c;
-  font-size: 12px;
-}
-
-.activity-row.status-completed .activity-status {
-  color: #7bbf8a;
-}
-
-.activity-row.status-failed .activity-status,
-.activity-row.status-declined .activity-status {
-  color: #eaa2a2;
-}
-
-.activity-peek {
-  margin: 6px 0 4px;
-  max-height: 96px;
-  overflow: hidden;
-  color: #9198a0;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 11.5px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.activity-spinner {
+.work-spinner {
   display: inline-block;
   width: 11px;
   height: 11px;
-  border: 1.5px solid #4a4f55;
-  border-top-color: #cfd4d8;
+  border: 1.5px solid #43484e;
+  border-top-color: #d6dbe0;
   border-radius: 50%;
-  animation: activity-spin 720ms linear infinite;
+  animation: work-spin 720ms linear infinite;
 }
 
-@keyframes activity-spin {
+@keyframes work-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Collapsed summary after the run completes. */
-.activity-card.is-done {
-  margin-bottom: 18px;
+/* Tail-following viewport: content streams in, the newest lines stay visible,
+   the top fades out. overflow:hidden means no scrollbar can exist. */
+.auto-follow {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 26px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 26px);
 }
 
-.activity-summary {
+.work-chip {
+  flex: 0 0 auto;
+  padding: 1px 7px;
+  border: 1px solid #333333;
+  border-radius: 999px;
+  background: #232323;
+  color: #8a9096;
+  font-size: 10.5px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.work-chip.chip-fail {
+  border-color: #55302c;
+  background: rgb(248 81 73 / 8%);
+  color: #f0a9a2;
+}
+
+/* --- Compact tool rows (Read / Listed / Searched / MCP / web) ------------ */
+
+.tool-row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 7px;
+  padding: 1px 0;
+  font-size: 13px;
+}
+
+.tool-row-icon {
+  display: grid;
+  place-items: center;
+  height: 20px;
+  color: #767d85;
+}
+
+.tool-row.status-failed .tool-row-icon {
+  color: #e08e87;
+}
+
+.tool-row-main {
+  min-width: 0;
+}
+
+.tool-row-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  line-height: 20px;
+}
+
+.tool-row-verb {
+  flex: 0 0 auto;
+  color: #aab0b7;
+  font-weight: 500;
+}
+
+.tool-row.status-running .tool-row-verb {
+  color: #dfe3e8;
+}
+
+.tool-row.status-failed .tool-row-verb {
+  color: #e8a49d;
+}
+
+.tool-row-detail {
+  min-width: 0;
+  overflow: hidden;
+  color: #858c94;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-row.status-running .tool-row-detail {
+  color: #b9c0c7;
+}
+
+.tool-row-meta {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-left: 10px;
+  color: #61676e;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tool-row-sub {
+  margin-top: 1px;
+  overflow: hidden;
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-row-sub.is-error {
+  color: #d99a94;
+}
+
+/* --- Thought / plan narration blocks ------------------------------------ */
+
+.thought-block {
+  padding: 2px 0;
+}
+
+.thought-head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  min-height: 20px;
+  font-size: 12px;
+}
+
+.thought-icon {
+  display: grid;
+  place-items: center;
+  color: #767d85;
+}
+
+.thought-label {
+  color: #82888f;
+  font-weight: 550;
+}
+
+.thought-stream {
+  max-height: 132px;
+}
+
+.thought-text {
+  padding: 4px 0 0 27px;
+  color: #939aa2;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.thought-text p {
+  margin: 0 0 9px;
+}
+
+.thought-text p:last-child {
+  margin-bottom: 2px;
+}
+
+.thought-text code {
+  font-size: 12px;
+  color: #a9b0b8;
+}
+
+.thought-text strong {
+  color: #b3bac1;
+}
+
+/* --- Terminal cards ------------------------------------------------------ */
+
+.term-card {
+  overflow: hidden;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  background: #1b1b1b;
+}
+
+.term-card.status-failed {
+  border-color: #46302d;
+}
+
+.term-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 8px 12px;
+}
+
+.term-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  height: 19px;
+  color: #767d85;
+}
+
+.term-command {
+  flex: 1;
+  min-width: 0;
+  max-height: 60px;
+  overflow: hidden;
+  color: #ccd2d9;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.term-meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  height: 19px;
+}
+
+.term-elapsed {
+  color: #61676e;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.term-output {
+  border-top: 1px solid #242424;
+  background: #161616;
+}
+
+.term-output.is-live {
+  max-height: 200px;
+}
+
+.term-output pre {
+  margin: 0;
+  padding: 9px 14px;
+  color: #969da5;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-expand {
+  display: block;
   width: 100%;
-  padding: 5px 4px;
+  padding: 5px 14px;
   border: 0;
   background: transparent;
-  color: #868c92;
-  font-size: 13px;
+  color: #6d747c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
   text-align: left;
   cursor: pointer;
 }
 
-.activity-summary:hover {
-  color: #c4c9ce;
+.output-expand:hover {
+  color: #c0c6cc;
 }
 
-.activity-caret {
-  display: inline-block;
-  color: #6d737a;
-  font-size: 10px;
-  transition: transform 140ms ease;
+/* --- Diff cards (live file edits) ---------------------------------------- */
+
+.diff-card {
+  overflow: hidden;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  background: #1b1b1b;
 }
 
-.activity-caret.is-open {
-  transform: rotate(90deg);
+.diff-card.status-failed {
+  border-color: #46302d;
 }
 
-.activity-summary-text {
+.diff-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: #1f1f1f;
+}
+
+.diff-file-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #767d85;
+}
+
+.diff-file {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+
+.diff-file-name {
+  flex: 0 0 auto;
+  color: #dde2e7;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.diff-file-dir {
+  min-width: 0;
+  overflow: hidden;
+  color: #6d747c;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diff-counts {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.diff-count-add {
+  color: #57ab5a;
+}
+
+.diff-count-del {
+  color: #e5534b;
+}
+
+.diff-body {
+  border-top: 1px solid #262626;
+  background: #191919;
+}
+
+.diff-body.is-live {
+  max-height: 320px;
+}
+
+.diff-lines {
+  padding: 5px 0;
+}
+
+.diff-line {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  padding-right: 12px;
+}
+
+.diff-gutter {
+  color: #565c63;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  text-align: center;
+  user-select: none;
+}
+
+.diff-text {
+  color: #b8bec5;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.diff-line.diff-add {
+  background: rgb(63 185 80 / 10%);
+}
+
+.diff-line.diff-add .diff-gutter {
+  color: #6bc46d;
+}
+
+.diff-line.diff-del {
+  background: rgb(248 81 73 / 9%);
+}
+
+.diff-line.diff-del .diff-gutter {
+  color: #e5534b;
+}
+
+.diff-emph {
+  border-radius: 2px;
+  color: inherit;
+}
+
+.diff-add .diff-emph {
+  background: rgb(63 185 80 / 32%);
+}
+
+.diff-del .diff-emph {
+  background: rgb(248 81 73 / 30%);
+}
+
+.diff-line.diff-hunk {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background: rgb(101 134 255 / 5%);
+}
+
+.diff-line.diff-hunk .diff-text {
+  color: #6d7580;
+  font-size: 10.5px;
+}
+
+.diff-skeleton {
+  height: 30px;
+  margin: 10px 14px;
+  border-radius: 6px;
+  background: linear-gradient(100deg, #202020 40%, #2a2a2a 50%, #202020 60%);
+  background-size: 220% 100%;
+  animation: shimmer-slide 1.6s linear infinite;
+}
+
+/* --- Plan checklist card -------------------------------------------------- */
+
+.plan-card {
+  padding: 10px 14px 11px;
+  border: 1px solid #292929;
+  border-radius: 10px;
+  background: #1b1b1b;
+}
+
+.plan-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #82888f;
+}
+
+.plan-icon {
+  display: grid;
+  place-items: center;
+}
+
+.plan-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.plan-explanation {
+  margin-top: 7px;
+  color: #939aa2;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.plan-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.plan-step {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.plan-step-mark {
+  display: grid;
+  place-items: center;
+  height: 19px;
+}
+
+.plan-dot {
+  width: 7px;
+  height: 7px;
+  border: 1.4px solid #565c63;
+  border-radius: 50%;
+}
+
+.plan-step.is-completed .plan-dot {
+  border-color: #6f757c;
+  background: #6f757c;
+}
+
+.plan-step.is-pending .plan-step-text {
+  color: #9aa1a8;
+}
+
+.plan-step.is-completed .plan-step-text {
+  color: #71787f;
+}
+
+/* --- Turn tail: live shimmer status → permanent receipt ------------------- */
+
+.turn-tail {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: min(860px, 92%);
+  margin: 0 0 22px;
+  font-size: 12.5px;
+}
+
+.turn-tail.is-live {
+  margin-top: 2px;
+}
+
+.tail-orb {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #7fa3f0;
+  box-shadow: 0 0 8px rgb(127 163 240 / 55%);
+  animation: orb-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes orb-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.72);
+    opacity: 0.6;
+  }
+}
+
+.tail-label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tail-meta {
+  flex: 0 0 auto;
+  color: #61676e;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.turn-tail.is-done {
+  gap: 12px;
+  color: #6d747c;
+  font-size: 11.5px;
+}
+
+.turn-tail.is-done .tail-rule:first-child {
+  display: none;
+}
+
+.tail-summary {
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.activity-summary-toggle {
-  margin-left: auto;
-  color: #61676d;
-  font-size: 11px;
+.tail-rule {
+  flex: 1 1 24px;
+  height: 1px;
+  background: #242424;
 }
 
-/* Typewriter caret on the streaming answer. */
-.message-assistant.is-typing > *:last-child::after {
+.turn-tail.is-failed {
+  color: #cf938d;
+}
+
+.turn-tail.is-failed .tail-rule {
+  background: #382624;
+}
+
+/* --- Streaming assistant message ----------------------------------------- */
+
+.message-commentary {
+  color: #a9afb6;
+}
+
+.message-commentary p {
+  font-size: 15px;
+}
+
+.message-assistant.is-streaming > *:last-child::after {
   content: "";
   display: inline-block;
   width: 7px;
@@ -731,6 +1195,19 @@ button {
 @keyframes caret-blink {
   50% {
     opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: currentcolor;
+  }
+
+  .tail-orb,
+  .diff-skeleton {
+    animation: none;
   }
 }
 
