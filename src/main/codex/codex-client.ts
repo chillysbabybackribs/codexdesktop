@@ -3,6 +3,7 @@ import { createInterface } from 'node:readline'
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import type { BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
+import type { ResearchRunner } from '../browser/research-runner.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
@@ -43,7 +44,7 @@ const taskShapingGuidance = [
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
-  '- Research budget: make one broad web search with up to three query variants, open at most two strongest sources, use targeted extraction, then synthesize. Search again only when sources conflict or the question is high-stakes.',
+  '- Research budget: call research_web once with up to three query variants, process at most two strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
   '- Prefer snippets and targeted passages over long full-page results. Do not repeat large source text in later reasoning.',
   '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
 ]
@@ -54,6 +55,7 @@ function browserControlGuidance(): string[] {
   const sock = process.env.CODEX_BROWSER_SOCK
   const guidance = [
     'Embedded browser control (the browser pane the user is watching):',
+    '- Use research_web for public/current web research. It performs compact SERP discovery, sequential page extraction, and saves full page artifacts for targeted follow-up.',
     '- Prefer browser_extract_page for reading page content. It removes scripts, styles, images, media, navigation, footers, ads, dialogs, hidden UI, duplicate boilerplate, and bounds the returned text.',
     '- Use browser_run for task-specific JavaScript. Batch inspection, actions, waits, and verification in one program; return compact JSON rather than raw DOM.',
     '- Use browser_run only when the deterministic extractor is insufficient or when the task requires interaction.',
@@ -71,7 +73,11 @@ function buildGuidance(): string {
   return [...taskShapingGuidance, ...browserControlGuidance()].join('\n')
 }
 
-const compactWebSearchConfig = {
+const newThreadConfig = {
+  web_search: 'disabled'
+}
+
+const legacyResumeConfig = {
   tools: {
     web_search: {
       context_size: 'low'
@@ -114,6 +120,24 @@ const browserExtractPageSchema = {
   additionalProperties: false
 }
 
+const researchWebSchema = {
+  type: 'object',
+  properties: {
+    queries: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 3,
+      items: { type: 'string' },
+      description: 'One to three focused search queries. Prefer one query plus one official-source variant.'
+    },
+    maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
+    maxPages: { type: 'number', description: 'Optional pages to process, from 1 to 8. Defaults to 5.' },
+    snippetChars: { type: 'number', description: 'Optional extracted text per page, from 1000 to 8000 characters.' }
+  },
+  required: ['queries'],
+  additionalProperties: false
+}
+
 const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
@@ -126,6 +150,12 @@ const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_extract_page',
     description: 'Deterministically extract useful text from the visible page, excluding images, scripts, styles, navigation, ads, dialogs, hidden UI, and repeated boilerplate.',
     inputSchema: browserExtractPageSchema
+  },
+  {
+    type: 'function',
+    name: 'research_web',
+    description: 'Run compact deterministic public web research: extract SERP URLs, process qualifying pages sequentially, save full artifacts to disk, and return targeted text evidence.',
+    inputSchema: researchWebSchema
   }
 ]
 
@@ -137,7 +167,8 @@ export class CodexClient extends EventEmitter {
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
-    private readonly browserAgent: BrowserAgentController
+    private readonly browserAgent: BrowserAgentController,
+    private readonly researchRunner: ResearchRunner
   ) {
     super()
   }
@@ -186,7 +217,7 @@ export class CodexClient extends EventEmitter {
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
-      config: compactWebSearchConfig,
+      config: newThreadConfig,
       dynamicTools: browserDynamicTools,
       developerInstructions: buildGuidance()
     })
@@ -198,7 +229,7 @@ export class CodexClient extends EventEmitter {
       threadId,
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
-      config: compactWebSearchConfig,
+      config: legacyResumeConfig,
       developerInstructions: buildGuidance(),
       // Keep resume metadata small. The initial page is the renderer's
       // bounded bootstrap payload; requesting populated thread.turns as well
@@ -477,6 +508,13 @@ export class CodexClient extends EventEmitter {
           timeoutMs: readNumber(args.timeoutMs),
           maxResultChars: readNumber(args.maxResultChars)
         })
+      } else if (params.tool === 'research_web') {
+        result = await this.researchRunner.run({
+          queries: readStringArray(args.queries),
+          maxResults: readNumber(args.maxResults),
+          maxPages: readNumber(args.maxPages),
+          snippetChars: readNumber(args.snippetChars)
+        })
       } else {
         result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
       }
@@ -541,4 +579,8 @@ function readString(value: unknown): string | undefined {
 
 function readNumber(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+function readStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
 }

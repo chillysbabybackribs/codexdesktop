@@ -1016,6 +1016,9 @@ export default function App(): JSX.Element {
           hasThreadContent={hasThreadContent}
           isBusy={isRestoring || isSending || Boolean(activeTurnId)}
           workspace={workspace}
+          models={models}
+          selectedModel={selectedModel}
+          onSelectModel={handleSelectModel}
           onSend={handleSend}
           onStop={handleStop}
           onNewThread={handleNewThread}
