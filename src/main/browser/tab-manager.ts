@@ -1,12 +1,12 @@
 import { BrowserWindow, WebContentsView, shell } from 'electron'
-import type { BrowserWindowConstructorOptions, WebContents } from 'electron'
+import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
+import { attachPopupWindowHandling } from './browser-popups.js'
+import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { normalizeNavigationInput } from './url-utils.js'
-import { isBlankPopupUrl, isUnsafePopupUrl } from './window-open-policy.js'
 
-const browserPartition = 'persist:codex-browser'
 const defaultTabUrl = 'https://www.google.com'
 
 type BrowserStateListener = (state: BrowserState) => void
@@ -124,64 +124,9 @@ export class TabManager {
     this.tabs.set(id, tab)
     this.attachEvents(tab)
     this.activateTab(id)
-    void view.webContents.loadURL(normalizeNavigationInput(url))
+    void view.webContents.loadURL(normalizeNavigationInput(url), { userAgent: chromeLikeUserAgent() })
     this.pushState()
     return id
-  }
-
-  // Electron passes a pre-created webContents in createWindow — we must adopt it
-  // into a WebContentsView or window.open() throws "Invalid webContents".
-  private adoptPopupTab(
-    options: BrowserWindowConstructorOptions,
-    url: string | undefined,
-    disposition: string
-  ): BrowserTab {
-    const view = new WebContentsView(
-      options.webContents
-        ? {
-            webContents: options.webContents,
-            webPreferences: {
-              contextIsolation: true,
-              nodeIntegration: false,
-              sandbox: true,
-              partition: browserPartition,
-              ...(options.webPreferences ?? {})
-            }
-          }
-        : {
-            webPreferences: {
-              contextIsolation: true,
-              nodeIntegration: false,
-              sandbox: true,
-              partition: browserPartition,
-              ...(options.webPreferences ?? {})
-            }
-          }
-    )
-
-    view.setBorderRadius?.(12)
-    view.setBounds(this.bounds)
-    this.window.contentView.addChildView(view)
-
-    const tab: BrowserTab = {
-      id: crypto.randomUUID(),
-      view,
-      title: 'New Tab',
-      url: url?.trim() || view.webContents.getURL() || 'about:blank',
-      isLoading: false
-    }
-
-    this.tabs.set(tab.id, tab)
-    this.attachEvents(tab)
-    this.activateTab(tab.id)
-
-    // background-tab defers webContents creation; load the target URL ourselves.
-    if (disposition === 'background-tab' && !isBlankPopupUrl(url) && !isUnsafePopupUrl(url)) {
-      void view.webContents.loadURL(normalizeNavigationInput(url!))
-    }
-
-    this.pushState()
-    return tab
   }
 
   private async createTabFromSaved(saved: SavedBrowserTab): Promise<string> {
@@ -215,17 +160,17 @@ export class TabManager {
         tab.url = view.webContents.getURL() || safeEntries[activeIndex]?.url || saved.url
         tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
       } else if (isSafeNavigationUrl(saved.url)) {
-        await view.webContents.loadURL(saved.url)
+        await view.webContents.loadURL(saved.url, { userAgent: chromeLikeUserAgent() })
         tab.url = view.webContents.getURL() || saved.url
         tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
       } else {
-        await view.webContents.loadURL(defaultTabUrl)
+        await view.webContents.loadURL(defaultTabUrl, { userAgent: chromeLikeUserAgent() })
         tab.url = defaultTabUrl
         tab.title = 'New Tab'
       }
     } catch {
       const fallbackUrl = isSafeNavigationUrl(saved.url) ? saved.url : defaultTabUrl
-      await view.webContents.loadURL(fallbackUrl)
+      await view.webContents.loadURL(fallbackUrl, { userAgent: chromeLikeUserAgent() })
       tab.url = view.webContents.getURL() || fallbackUrl
       tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
     } finally {
@@ -296,7 +241,7 @@ export class TabManager {
       return
     }
 
-    void tab.view.webContents.loadURL(normalizeNavigationInput(input))
+    void tab.view.webContents.loadURL(normalizeNavigationInput(input), { userAgent: chromeLikeUserAgent() })
   }
 
   goBack(id: string): void {
@@ -352,16 +297,7 @@ export class TabManager {
   private attachEvents(tab: BrowserTab): void {
     const webContents = tab.view.webContents
 
-    webContents.setWindowOpenHandler((details) => {
-      if (isUnsafePopupUrl(details.url)) {
-        return { action: 'deny' }
-      }
-
-      return {
-        action: 'allow',
-        createWindow: (options) => this.adoptPopupTab(options, details.url, details.disposition).view.webContents
-      }
-    })
+    attachPopupWindowHandling(webContents, this.window)
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'

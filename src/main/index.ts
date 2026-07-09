@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import type { BrowserBounds } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
+import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerCodexIpc } from './codex/codex-ipc.js'
@@ -149,6 +150,7 @@ function bootstrap(): void {
   })
 
   void app.whenReady().then(async () => {
+    configureBrowserSession()
     registerIpc()
     createWindow()
 
