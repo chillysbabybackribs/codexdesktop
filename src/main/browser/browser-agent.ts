@@ -50,8 +50,11 @@ type QueuedOperation<T> = Promise<T>
  */
 export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
+  private readonly getTabs: () => TabManager | null
 
-  constructor(private readonly getTabs: () => TabManager | null) {}
+  constructor(getTabs: () => TabManager | null) {
+    this.getTabs = getTabs
+  }
 
   listTabs(): ReturnType<TabManager['listTabs']> {
     return this.getTabs()?.listTabs() ?? []
