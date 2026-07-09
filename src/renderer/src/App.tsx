@@ -807,8 +807,10 @@ function ThreadMenu({
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const [query, setQuery] = useState('')
-  // Index into the flat, filtered list of navigable rows (New chat = -1).
-  const [activeIndex, setActiveIndex] = useState(-1)
+  // Highlighted row for keyboard/hover navigation. `null` = nothing highlighted
+  // (the resting state on open — no row shows a pre-selection). `-1` = the New
+  // chat action; `0..n` index into the flat, filtered thread list.
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   // Filter by title/preview, then bucket into recency groups. `nowSeconds` is
   // sampled once per open so relative labels ("2h", "Yesterday") stay stable.
@@ -824,7 +826,7 @@ function ThreadMenu({
       return
     }
     setQuery('')
-    setActiveIndex(-1)
+    setActiveIndex(null)
     const id = window.requestAnimationFrame(() => searchRef.current?.focus())
     return () => window.cancelAnimationFrame(id)
   }, [isOpen])
