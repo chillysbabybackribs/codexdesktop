@@ -4,6 +4,7 @@ import {
   PointerEvent,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
@@ -1046,7 +1047,10 @@ function ChatPane({
         />
       </div>
 
-      <ThreadScroll dependencies={[items, itemMeta, activeTurnId]}>
+      <ThreadScroll
+        resetKey={activeThreadId}
+        dependencies={[items, itemMeta, activeTurnId]}
+      >
         {rows.map((row) => {
           if (row.kind === 'work') {
             return (
@@ -1496,13 +1500,58 @@ function SettingsModal({
 // return to the bottom themselves.
 function ThreadScroll({
   children,
-  dependencies
+  dependencies,
+  resetKey
 }: {
   children: React.ReactNode
   dependencies: unknown[]
+  resetKey: string | null
 }): JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
+  const frameRef = useRef<number | null>(null)
+  const settleFrameRef = useRef<number | null>(null)
+
+  const cancelScheduledFollow = useCallback(() => {
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current)
+      frameRef.current = null
+    }
+    if (settleFrameRef.current !== null) {
+      window.cancelAnimationFrame(settleFrameRef.current)
+      settleFrameRef.current = null
+    }
+  }, [])
+
+  const followTail = useCallback(() => {
+    if (!pinnedRef.current || ref.current === null) {
+      return
+    }
+
+    cancelScheduledFollow()
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null
+      const el = ref.current
+
+      if (!el || !pinnedRef.current) {
+        return
+      }
+
+      el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
+
+      // Markdown code blocks, font metrics, and live diff rows can settle one
+      // layout pass after React commits. A second frame catches that growth
+      // without making every stream delta pay for a synchronous measurement.
+      settleFrameRef.current = window.requestAnimationFrame(() => {
+        settleFrameRef.current = null
+        const settled = ref.current
+        if (settled && pinnedRef.current) {
+          settled.scrollTop = Math.max(0, settled.scrollHeight - settled.clientHeight)
+        }
+      })
+    })
+  }, [cancelScheduledFollow])
 
   const handleScroll = useCallback(() => {
     const el = ref.current
@@ -1510,20 +1559,57 @@ function ThreadScroll({
       return
     }
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    pinnedRef.current = distanceFromBottom < 48
+    pinnedRef.current = distanceFromBottom <= 32
   }, [])
 
-  useEffect(() => {
-    const el = ref.current
-    if (el && pinnedRef.current) {
-      el.scrollTop = el.scrollHeight
-    }
+  useLayoutEffect(() => {
+    // A new thread is a new reading context. Start it at the latest content,
+    // even if the previous thread had deliberately released auto-follow.
+    pinnedRef.current = true
+    followTail()
+  }, [followTail, resetKey])
+
+  useLayoutEffect(() => {
+    followTail()
+    // The caller supplies render-driving state rather than a single scalar.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies)
 
+  useEffect(() => {
+    const el = ref.current
+    const content = contentRef.current
+
+    if (!el || !content) {
+      return
+    }
+
+    const resizeObserver = new ResizeObserver(() => followTail())
+    resizeObserver.observe(el)
+    resizeObserver.observe(content)
+
+    // Text and element changes inside Markdown are not guaranteed to change
+    // the wrapper's own box immediately. Observe them so code-block wrapping,
+    // streaming assistant text, file diffs, and the live tail all get a final
+    // bottom correction after their layout settles.
+    const mutationObserver = new MutationObserver(() => followTail())
+    mutationObserver.observe(content, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    })
+
+    return () => {
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+      cancelScheduledFollow()
+    }
+  }, [cancelScheduledFollow, followTail])
+
   return (
     <div ref={ref} className="thread-scroll" onScroll={handleScroll}>
-      {children}
+      <div ref={contentRef} className="thread-scroll-content">
+        {children}
+      </div>
     </div>
   )
 }
@@ -1843,4 +1929,3 @@ function relativeThreadTime(seconds: number): string {
   }
   return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(then)
 }
-

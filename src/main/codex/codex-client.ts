@@ -188,12 +188,6 @@ export class CodexClient extends EventEmitter {
         }
       ],
       summary: 'auto',
-      additionalContext: {
-        codexdesktop_reasoning_guidance: {
-          kind: 'application',
-          value: buildGuidance()
-        }
-      },
       approvalPolicy: 'never'
     })
 
@@ -381,35 +375,45 @@ export class CodexClient extends EventEmitter {
   }
 
   private async handleDynamicToolCall(id: string | number, params: DynamicToolCallParams): Promise<void> {
-    const args = asRecord(params.arguments)
-    let result
+    try {
+      const args = asRecord(params.arguments)
+      let result
 
-    if (params.namespace !== 'browser') {
-      result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace ?? '(none)'}` }
-    } else if (params.tool === 'run') {
-      const code = readString(args.code)
-      result = code
-        ? await this.browserAgent.run(code, {
-            tabId: readString(args.tab),
-            timeoutMs: readNumber(args.timeoutMs),
-            maxResultChars: readNumber(args.maxResultChars)
-          })
-        : { ok: false, error: 'browser.run requires a string "code" argument' }
-    } else if (params.tool === 'extract_page') {
-      result = await this.browserAgent.extractPage({
-        tabId: readString(args.tab),
-        timeoutMs: readNumber(args.timeoutMs),
-        maxResultChars: readNumber(args.maxResultChars)
-      })
-    } else {
-      result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
-    }
+      if (params.namespace !== 'browser') {
+        result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace ?? '(none)'}` }
+      } else if (params.tool === 'run') {
+        const code = readString(args.code)
+        result = code
+          ? await this.browserAgent.run(code, {
+              tabId: readString(args.tab),
+              timeoutMs: readNumber(args.timeoutMs),
+              maxResultChars: readNumber(args.maxResultChars)
+            })
+          : { ok: false, error: 'browser.run requires a string "code" argument' }
+      } else if (params.tool === 'extract_page') {
+        result = await this.browserAgent.extractPage({
+          tabId: readString(args.tab),
+          timeoutMs: readNumber(args.timeoutMs),
+          maxResultChars: readNumber(args.maxResultChars)
+        })
+      } else {
+        result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
+      }
 
-    const response: DynamicToolCallResponse = {
-      success: result.ok,
-      contentItems: [{ type: 'inputText', text: JSON.stringify(result) }]
+      const response: DynamicToolCallResponse = {
+        success: result.ok,
+        contentItems: [{ type: 'inputText', text: JSON.stringify(result) }]
+      }
+      this.respond(id, response)
+    } catch (error) {
+      this.respond(id, {
+        success: false,
+        contentItems: [{
+          type: 'inputText',
+          text: JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) })
+        }]
+      } satisfies DynamicToolCallResponse)
     }
-    this.respond(id, response)
   }
 
   private respond(id: string | number, result: unknown): void {

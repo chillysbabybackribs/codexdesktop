@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
@@ -88,8 +88,10 @@ function useNow(active: boolean): number {
 }
 
 // A viewport that stays pinned to its bottom edge as content streams in.
-// overflow:hidden — the user never scrolls inside it, so no scrollbar can show;
-// growth is revealed by following the tail, Cursor-style.
+// These viewports intentionally do not expose their own scrollbar; the outer
+// transcript owns reading position. Resize/mutation observation is important
+// here because a Markdown code block or a live diff can grow after React's
+// first layout pass.
 function AutoFollow({
   className,
   children
@@ -99,12 +101,65 @@ function AutoFollow({
 }): JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current
-    if (el) {
-      el.scrollTop = el.scrollHeight
+
+    if (!el) {
+      return
     }
-  })
+
+    let frame: number | null = null
+    let settleFrame: number | null = null
+
+    const cancel = (): void => {
+      if (frame !== null) {
+        window.cancelAnimationFrame(frame)
+        frame = null
+      }
+      if (settleFrame !== null) {
+        window.cancelAnimationFrame(settleFrame)
+        settleFrame = null
+      }
+    }
+
+    const follow = (): void => {
+      cancel()
+      frame = window.requestAnimationFrame(() => {
+        frame = null
+        el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
+        settleFrame = window.requestAnimationFrame(() => {
+          settleFrame = null
+          el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
+        })
+      })
+    }
+
+    const resizeObserver = new ResizeObserver(follow)
+    resizeObserver.observe(el)
+    for (const child of Array.from(el.children)) {
+      resizeObserver.observe(child)
+    }
+
+    const mutationObserver = new MutationObserver(() => {
+      for (const child of Array.from(el.children)) {
+        resizeObserver.observe(child)
+      }
+      follow()
+    })
+    mutationObserver.observe(el, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    })
+
+    follow()
+
+    return () => {
+      cancel()
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+    }
+  }, [])
 
   return (
     <div ref={ref} className={`auto-follow ${className ?? ''}`}>

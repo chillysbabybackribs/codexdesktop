@@ -123,6 +123,11 @@ export class BrowserAgentController {
       () => undefined
     )
     this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) {
+        this.tabQueues.delete(tabId)
+      }
+    })
 
     try {
       return await withTimeout(operation, timeoutMs)
@@ -143,7 +148,12 @@ export class BrowserAgentController {
       MAX_BROWSER_RESULT_CHARS
     )
 
-    return this.run(buildPageExtractionProgram(maxResultChars), {
+    // Leave room for the structured extraction envelope when bounding the
+    // page body, so the result remains JSON rather than becoming a partial
+    // serialization of the whole envelope.
+    const contentMaxChars = Math.max(1_000, maxResultChars - 1_000)
+
+    return this.run(buildPageExtractionProgram(contentMaxChars), {
       ...options,
       maxResultChars
     })

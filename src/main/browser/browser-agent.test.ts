@@ -25,6 +25,7 @@ test('page extraction program removes media and low-value components', () => {
   assert.match(program, /script.*style.*img.*nav.*footer/s)
   assert.match(program, /removedImages: true/)
   assert.match(program, /return \{\n    title/)
+  assert.doesNotThrow(() => new Function(program))
 })
 
 test('browser agent runs a program against the active tab', async () => {

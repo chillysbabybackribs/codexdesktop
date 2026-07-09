@@ -516,11 +516,16 @@ button {
   overflow: auto;
   padding: 6px 28px 195px;
   /* Auto-scroll owns the viewport — wheel/trackpad still work, no bar shows. */
+  overflow-anchor: none;
   scrollbar-width: none;
 }
 
 .thread-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.thread-scroll-content {
+  min-height: 1px;
 }
 
 .message {
