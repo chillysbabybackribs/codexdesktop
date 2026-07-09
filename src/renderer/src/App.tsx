@@ -853,6 +853,11 @@ function ThreadMenu({
     void onResumeThread(threadId)
   }
 
+  const openNewThread = (): void => {
+    onToggle()
+    onNewThread()
+  }
+
   const handleKeyDown = (event: ReactKeyboardEvent): void => {
     if (event.key === 'Escape') {
       event.preventDefault()
@@ -861,19 +866,23 @@ function ThreadMenu({
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault()
-      setActiveIndex((index) => Math.min(index + 1, flatIds.length - 1))
+      // First press moves off the resting state onto New chat, then into the list.
+      setActiveIndex((index) => (index === null ? -1 : Math.min(index + 1, flatIds.length - 1)))
       return
     }
     if (event.key === 'ArrowUp') {
       event.preventDefault()
-      setActiveIndex((index) => Math.max(index - 1, -1))
+      setActiveIndex((index) => (index === null ? -1 : Math.max(index - 1, -1)))
       return
     }
     if (event.key === 'Enter') {
+      // With nothing highlighted, let Enter fall through (no-op here).
+      if (activeIndex === null) {
+        return
+      }
       event.preventDefault()
       if (activeIndex === -1) {
-        onToggle()
-        onNewThread()
+        openNewThread()
       } else if (flatIds[activeIndex]) {
         resume(flatIds[activeIndex])
       }
@@ -928,10 +937,7 @@ function ThreadMenu({
               className={`thread-menu-new ${activeIndex === -1 ? 'is-highlighted' : ''}`}
               role="menuitem"
               onMouseEnter={() => setActiveIndex(-1)}
-              onClick={() => {
-                onToggle()
-                onNewThread()
-              }}
+              onClick={openNewThread}
             >
               <span className="thread-menu-new-icon" aria-hidden="true">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
