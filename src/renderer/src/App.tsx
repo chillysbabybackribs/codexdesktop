@@ -1346,154 +1346,7 @@ function ThreadScroll({
   )
 }
 
-// Reveals `text` a few characters per frame so a completed answer lands as a
-// typewriter stream. `enabled` gates the reveal: it stays empty until the caller
-// turns typing on (turn completed), then types from wherever it left off up to
-// the full text. While disabled it shows nothing — the live activity card is
-// what's on screen during the turn; the answer belongs in chat afterward.
-function useTypewriter(text: string, enabled: boolean): string {
-  const [shown, setShown] = useState('')
-  const targetRef = useRef(text)
-  targetRef.current = text
-  const frameRef = useRef<number | null>(null)
-
-  useEffect(() => {
-    if (!enabled) {
-      // Still streaming/hidden — keep the chat answer empty until the turn ends.
-      setShown('')
-      return
-    }
-
-    const step = (): void => {
-      setShown((current) => {
-        const target = targetRef.current
-        if (current.length >= target.length) {
-          return target
-        }
-        // Reveal in small chunks so long answers don't take forever.
-        const next = Math.min(target.length, current.length + Math.max(2, Math.ceil((target.length - current.length) / 45)))
-        if (next < target.length) {
-          frameRef.current = window.requestAnimationFrame(step)
-        }
-        return target.slice(0, next)
-      })
-    }
-
-    frameRef.current = window.requestAnimationFrame(step)
-
-    return () => {
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current)
-      }
-    }
-  }, [enabled])
-
-  return shown
-}
-
-const runningLabel: Partial<Record<ActivityItem['type'], string>> = {
-  reasoning: 'Thinking',
-  plan: 'Planning',
-  commandExecution: 'Running',
-  fileChange: 'Editing files',
-  mcpToolCall: 'Calling tool',
-  dynamicToolCall: 'Calling tool',
-  webSearch: 'Searching',
-  imageGeneration: 'Generating image',
-  subAgentActivity: 'Sub-agent',
-  collabAgentToolCall: 'Coordinating',
-  sleep: 'Waiting'
-}
-
-function ActivityCard({ items, live }: { items: ActivityItem[]; live: boolean }): JSX.Element {
-  const [expanded, setExpanded] = useState(false)
-  const bodyRef = useRef<HTMLDivElement | null>(null)
-  const pinnedRef = useRef(true)
-
-  // Auto-scroll the card body while live, unless the user scrolled up within it.
-  useEffect(() => {
-    if (!live) {
-      return
-    }
-    const el = bodyRef.current
-    if (el && pinnedRef.current) {
-      el.scrollTop = el.scrollHeight
-    }
-  }, [items, live])
-
-  const handleBodyScroll = useCallback(() => {
-    const el = bodyRef.current
-    if (!el) {
-      return
-    }
-    pinnedRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 24
-  }, [])
-
-  if (!live) {
-    const summary = summarizeActivity(items)
-    return (
-      <div className={`activity-card is-done ${expanded ? 'is-expanded' : ''}`}>
-        <button type="button" className="activity-summary" onClick={() => setExpanded((v) => !v)}>
-          <span className={`activity-caret ${expanded ? 'is-open' : ''}`}>▸</span>
-          <span className="activity-summary-text">{summary}</span>
-          <span className="activity-summary-toggle">{expanded ? 'hide' : 'details'}</span>
-        </button>
-        {expanded ? (
-          <div className="activity-body is-static">
-            {items.map((item) => (
-              <ActivityRow key={item.id} item={item} live={false} isLast={false} />
-            ))}
-          </div>
-        ) : null}
-      </div>
-    )
-  }
-
-  const lastId = items[items.length - 1]?.id
-
-  return (
-    <div className="activity-card is-live">
-      <div ref={bodyRef} className="activity-body" onScroll={handleBodyScroll}>
-        {items.map((item) => (
-          <ActivityRow key={item.id} item={item} live={live} isLast={item.id === lastId} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ActivityRow({
-  item,
-  live,
-  isLast
-}: {
-  item: ActivityItem
-  live: boolean
-  isLast: boolean
-}): JSX.Element {
-  const streamingThought = live && isLast && (item.type === 'reasoning' || item.type === 'plan')
-  const status = streamingThought ? 'inProgress' : activityStatus(item)
-  const running = status === 'inProgress'
-  const { icon, label, detail } = describeActivity(item)
-  // Only the currently-running item peeks a few tail lines of live output.
-  const peek = live && running && isLast ? activityPeek(item) : null
-
-  return (
-    <div className={`activity-row status-${status} ${running ? 'is-running' : ''}`}>
-      <span className="activity-icon">{running && isLast && live ? <span className="activity-spinner" /> : icon}</span>
-      <div className="activity-main">
-        <div className="activity-line">
-          <span className="activity-label">{label}</span>
-          {detail ? <code className="activity-detail">{detail}</code> : null}
-          <span className="activity-status">{statusGlyph(status)}</span>
-        </div>
-        {peek ? <pre className="activity-peek">{peek}</pre> : null}
-      </div>
-    </div>
-  )
-}
-
-function ChatItemView({ item, messagePhase }: { item: ChatItem; messagePhase: MessagePhase }): JSX.Element | null {
+function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
@@ -1507,16 +1360,26 @@ function ChatItemView({ item, messagePhase }: { item: ChatItem; messagePhase: Me
   }
 
   if (item.type === 'agentMessage') {
-    // While its turn is still running the answer stays hidden — the activity card
-    // carries the live view; the answer types into chat once the turn completes.
-    if (messagePhase === 'streaming') {
-      return null
-    }
-    return <AssistantMessage text={item.text} typing={messagePhase === 'typing'} />
+    // Messages stream into the transcript live, Cursor-style — commentary
+    // (in-task narration) renders slightly muted; the final answer full-weight.
+    return (
+      <AssistantMessage text={item.text} streaming={streaming} commentary={item.phase === 'commentary'} />
+    )
   }
 
-  // Any activity-classified item reaching here is a fallback; ActivityCard owns
-  // the normal path. Keep it minimal so nothing renders as a raw type name.
+  if (item.type === 'contextCompaction') {
+    return <article className="message message-system message-system-info">Context compacted</article>
+  }
+
+  if (item.type === 'enteredReviewMode' || item.type === 'exitedReviewMode') {
+    return (
+      <article className="message message-system message-system-info">
+        {item.type === 'enteredReviewMode' ? 'Entered review mode' : 'Exited review mode'}
+      </article>
+    )
+  }
+
+  // Anything else (hookPrompt and future item types) stays quiet but visible.
   return (
     <article className="message message-tool">
       <strong>{item.type}</strong>
@@ -1524,16 +1387,22 @@ function ChatItemView({ item, messagePhase }: { item: ChatItem; messagePhase: Me
   )
 }
 
-function AssistantMessage({ text, typing }: { text: string; typing: boolean }): JSX.Element {
-  // `typing` is set only for a message that just finished streaming this session;
-  // history/resume loads pass false and render in full immediately.
-  const shown = useTypewriter(text, typing)
-  const value = typing ? shown : text
-  const isTyping = typing && shown.length < text.length
-
+function AssistantMessage({
+  text,
+  streaming,
+  commentary
+}: {
+  text: string
+  streaming: boolean
+  commentary: boolean
+}): JSX.Element {
   return (
-    <article className={`message message-assistant ${isTyping ? 'is-typing' : ''}`}>
-      <ReactMarkdown>{value || ' '}</ReactMarkdown>
+    <article
+      className={`message message-assistant ${commentary ? 'message-commentary' : ''} ${
+        streaming ? 'is-streaming' : ''
+      }`}
+    >
+      <ReactMarkdown>{text || ' '}</ReactMarkdown>
     </article>
   )
 }
