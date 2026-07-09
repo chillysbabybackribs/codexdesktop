@@ -34,7 +34,10 @@ const isFileHeader = (line: string): boolean =>
   line.startsWith('new mode') ||
   line.startsWith('*** ')
 
-export function parseUnifiedDiff(diff: string): ParsedDiff {
+// `forceAll` handles add/delete file changes where the app-server sends raw
+// file content without +/- markers — every content line IS an addition (or
+// removal), and should count and tint as one.
+export function parseUnifiedDiff(diff: string, forceAll?: 'add' | 'del'): ParsedDiff {
   const lines: DiffLine[] = []
   let adds = 0
   let dels = 0
@@ -68,6 +71,19 @@ export function parseUnifiedDiff(diff: string): ParsedDiff {
   // Trim a trailing blank context line left by the final "\n" split.
   while (lines.length && lines[lines.length - 1].kind === 'context' && !lines[lines.length - 1].text) {
     lines.pop()
+  }
+
+  if (forceAll && adds === 0 && dels === 0) {
+    for (const line of lines) {
+      if (line.kind === 'context') {
+        line.kind = forceAll
+        if (forceAll === 'add') {
+          adds += 1
+        } else {
+          dels += 1
+        }
+      }
+    }
   }
 
   emphasizeIntraline(lines)
