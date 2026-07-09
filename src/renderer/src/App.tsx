@@ -18,6 +18,16 @@ import type {
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import { summarizeTurnDiff } from './diff'
+import {
+  TurnTail,
+  WorkGroup,
+  workItemTypes,
+  type ItemMeta,
+  type TurnMeta,
+  type TurnPlanItem,
+  type WorkItem
+} from './TaskActivity'
 
 type SystemItem = {
   type: 'system'
@@ -26,109 +36,91 @@ type SystemItem = {
   text: string
 }
 
-type ChatItem = ThreadItem | SystemItem
+type ChatItem = ThreadItem | SystemItem | TurnPlanItem
 
-// Item types that represent Codex "working" — tool calls and its running narration.
-// Everything the user sees as live activity flows through the ActivityCard; the rest
-// (user + assistant messages, system notices) renders as normal chat.
-const activityTypes = new Set<ThreadItem['type']>([
-  'reasoning',
-  'plan',
-  'commandExecution',
-  'fileChange',
-  'mcpToolCall',
-  'dynamicToolCall',
-  'collabAgentToolCall',
-  'subAgentActivity',
-  'webSearch',
-  'imageGeneration',
-  'sleep'
-])
+// Item types that represent Codex "working" — its streamed thinking, tool
+// calls, file edits, and searches. These render sequentially as WorkGroup
+// blocks in the transcript and stay expanded after the turn completes; user
+// and assistant messages (and system notices) render as normal chat.
+const workTypes = new Set<string>(workItemTypes)
 
-type ActivityItem = Extract<ThreadItem, { type: (typeof activityTypesTuple)[number] }>
-
-// Kept as a tuple purely so TypeScript can narrow ActivityItem above.
-const activityTypesTuple = [
-  'reasoning',
-  'plan',
-  'commandExecution',
-  'fileChange',
-  'mcpToolCall',
-  'dynamicToolCall',
-  'collabAgentToolCall',
-  'subAgentActivity',
-  'webSearch',
-  'imageGeneration',
-  'sleep'
-] as const
-
-function isActivity(item: ChatItem): item is ActivityItem {
-  return item.type !== 'system' && activityTypes.has(item.type)
+function isWorkItem(item: ChatItem): item is WorkItem {
+  return workTypes.has(item.type)
 }
 
-type ActivityStatus = 'inProgress' | 'completed' | 'failed' | 'declined'
-
-function activityStatus(item: ActivityItem): ActivityStatus {
-  if (
-    item.type === 'commandExecution' ||
-    item.type === 'fileChange' ||
-    item.type === 'mcpToolCall' ||
-    item.type === 'dynamicToolCall'
-  ) {
-    return item.status as ActivityStatus
-  }
-
-  return 'completed'
-}
-
-// A "run" is the trailing block of activity items after the last real message.
-// While a turn is live it renders as the streaming ActivityCard; once the turn
-// ends it collapses to a one-line summary above the typed-out answer.
+// The transcript renders as a flat sequence of rows: chat messages, groups of
+// consecutive work blocks, and one "tail" per turn — the live shimmer status
+// while the turn runs, then a permanent receipt row once it finishes. Nothing
+// auto-collapses.
 type RenderRow =
-  | { kind: 'chat'; item: ChatItem }
-  | { kind: 'activity'; id: string; items: ActivityItem[] }
+  | { kind: 'chat'; item: ChatItem; turnId: string | null }
+  | { kind: 'work'; id: string; turnId: string | null; items: WorkItem[] }
+  | { kind: 'tail'; id: string; turnId: string }
 
-function buildRows(items: ChatItem[]): RenderRow[] {
+function buildRows(
+  items: ChatItem[],
+  itemMeta: Record<string, ItemMeta>,
+  activeTurnId: string | null
+): { rows: RenderRow[]; turnWork: Map<string, WorkItem[]> } {
   const rows: RenderRow[] = []
-  let run: ActivityItem[] | null = null
+  const turnWork = new Map<string, WorkItem[]>()
+  const lastWorkRowIndex = new Map<string, number>()
+  let run: WorkItem[] | null = null
+  let runTurnId: string | null = null
 
   const flush = (): void => {
     if (run && run.length) {
-      rows.push({ kind: 'activity', id: `activity-${run[0].id}`, items: run })
+      rows.push({ kind: 'work', id: `work-${run[0].id}`, turnId: runTurnId, items: run })
+      if (runTurnId) {
+        lastWorkRowIndex.set(runTurnId, rows.length - 1)
+      }
     }
     run = null
+    runTurnId = null
   }
 
   for (const item of items) {
-    if (isActivity(item)) {
+    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
+
+    if (isWorkItem(item)) {
+      if (run && runTurnId !== turnId) {
+        flush()
+      }
       run ??= []
+      runTurnId = turnId
       run.push(item)
+      if (turnId) {
+        const bucket = turnWork.get(turnId) ?? []
+        bucket.push(item)
+        turnWork.set(turnId, bucket)
+      }
       continue
     }
 
     flush()
-    rows.push({ kind: 'chat', item })
+    rows.push({ kind: 'chat', item, turnId })
   }
 
   flush()
-  return rows
-}
 
-// An agent message is in one of three phases:
-//  - 'streaming': its turn is still running → hide from chat (the activity card
-//    is what's on screen); the answer belongs in chat only once the turn ends.
-//  - 'typing': the turn just finished this session → type it out.
-//  - 'settled': loaded from history or already typed → show in full.
-type MessagePhase = 'streaming' | 'typing' | 'settled'
+  // Close each finished turn's work section with its receipt row. The live
+  // turn instead gets a single tail at the very end of the transcript.
+  const inserts: Array<{ index: number; row: RenderRow }> = []
+  for (const [turnId, index] of lastWorkRowIndex) {
+    if (turnId !== activeTurnId) {
+      inserts.push({ index, row: { kind: 'tail', id: `tail-${turnId}`, turnId } })
+    }
+  }
+  inserts.sort((a, b) => b.index - a.index)
+  for (const insert of inserts) {
+    rows.splice(insert.index + 1, 0, insert.row)
+  }
 
-function agentMessagePhase(item: ChatItem, turnLive: boolean, typingIds: Set<string>): MessagePhase {
-  if (item.type !== 'agentMessage') {
-    return 'settled'
+  if (activeTurnId) {
+    rows.push({ kind: 'tail', id: `tail-${activeTurnId}`, turnId: activeTurnId })
   }
-  if (typingIds.has(item.id)) {
-    return 'typing'
-  }
-  return turnLive ? 'streaming' : 'settled'
+
+  return { rows, turnWork }
 }
 
 const minChatWidth = 280
@@ -153,10 +145,11 @@ export default function App(): JSX.Element {
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
-  // Agent-message ids that should type out — only messages that streamed in live
-  // this session, never ones loaded from history.
-  const [typingIds, setTypingIds] = useState<Set<string>>(() => new Set())
-  const liveItemIdsRef = useRef<Set<string>>(new Set())
+  // Lifecycle data the item payloads don't carry: which turn an item belongs
+  // to, start/completion timestamps, MCP progress. Keyed by item id.
+  const [itemMeta, setItemMeta] = useState<Record<string, ItemMeta>>({})
+  // Per-turn status, timing, token usage, and diff stats for the tail rows.
+  const [turnMeta, setTurnMeta] = useState<Record<string, TurnMeta>>({})
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
   const pendingBoundsRef = useRef<BrowserBounds | null>(null)
