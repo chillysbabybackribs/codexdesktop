@@ -13,8 +13,6 @@ import type {
   BrowserBounds,
   BrowserState,
   BrowserTabState,
-  CodexApprovalDecision,
-  CodexApprovalRequest,
   CodexEvent
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
@@ -149,10 +147,6 @@ export default function App(): JSX.Element {
   const [isSending, setIsSending] = useState(false)
   const [codexStatus, setCodexStatus] = useState('idle')
   const [threads, setThreads] = useState<Thread[]>([])
-  const [approvals, setApprovals] = useState<CodexApprovalRequest[]>([])
-  const [autoApprove, setAutoApprove] = useState(
-    () => window.localStorage.getItem('codexdesktop.autoApprove') === 'true'
-  )
   const [workspace, setWorkspace] = useState<string | null>(
     () => window.localStorage.getItem('codexdesktop.workspace')
   )
@@ -180,11 +174,6 @@ export default function App(): JSX.Element {
   useEffect(() => {
     splitRef.current = split
   }, [split])
-
-  useEffect(() => {
-    window.localStorage.setItem('codexdesktop.autoApprove', String(autoApprove))
-    void window.api.codex.setAutoApprove(autoApprove)
-  }, [autoApprove])
 
   useEffect(() => {
     if (workspace) {
