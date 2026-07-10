@@ -53,9 +53,24 @@ export function sanitizeSavedTab(tab: SavedBrowserTab): SavedBrowserTab | null {
   return {
     title: typeof tab.title === 'string' && tab.title.trim() ? tab.title : fallbackUrl,
     url: entries[activeIndex]?.url ?? fallbackUrl,
+    favicon: sanitizeFavicon(tab.favicon),
     entries,
     activeIndex
   }
+}
+
+function sanitizeFavicon(favicon: unknown): string | null {
+  if (typeof favicon !== 'string') {
+    return null
+  }
+
+  const lower = favicon.trim().toLowerCase()
+
+  if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:image/')) {
+    return favicon
+  }
+
+  return null
 }
 
 export function sanitizeBrowserState(state: SavedBrowserState): SavedBrowserState | null {

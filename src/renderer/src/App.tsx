@@ -2282,7 +2282,7 @@ function TabStrip({ state }: { state: BrowserState }): JSX.Element {
           className={`tab ${tab.id === state.activeTabId ? 'is-active' : ''}`}
           onClick={() => void window.api.browser.activateTab(tab.id)}
         >
-          <span className="tab-dot">●</span>
+          <TabFavicon favicon={tab.favicon} isLoading={tab.isLoading} />
           <span className="tab-title">{tab.title || 'New Tab'}</span>
           <span
             role="button"
