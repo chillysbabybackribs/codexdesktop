@@ -7,6 +7,8 @@ import type {
   CodexListThreadsParams,
   CodexSendMessageParams,
   CodexSteerTurnParams,
+  TraceLoadParams,
+  TracePersistParams,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -59,6 +61,8 @@ export const api = {
     }
   },
   trace: {
+    persist: (params: TracePersistParams): Promise<void> => ipcRenderer.invoke(ipcChannels.tracePersist, params),
+    load: (params: TraceLoadParams): Promise<string | null> => ipcRenderer.invoke(ipcChannels.traceLoad, params),
     save: (params: TraceSaveParams): Promise<TraceSaveResult> => ipcRenderer.invoke(ipcChannels.traceSave, params)
   },
   workspace: {

@@ -1,7 +1,13 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { BrowserBounds, TraceSaveParams, TraceSaveResult } from '../shared/ipc.js'
+import type {
+  BrowserBounds,
+  TraceLoadParams,
+  TracePersistParams,
+  TraceSaveParams,
+  TraceSaveResult
+} from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
@@ -11,6 +17,7 @@ import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
+import { TurnTraceStore } from './turn-trace-store.js'
 
 // Chromium locks profile storage (cookies, service workers, etc.). A second
 // instance against the same userData dir causes random IO errors like:
@@ -198,6 +205,7 @@ async function restoreBrowserTabs(): Promise<void> {
 
 function registerIpc(): void {
   codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner)
+  const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
   ipcMain.handle(ipcChannels.windowToggleMaximize, () => {
@@ -238,6 +246,13 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
+
+  ipcMain.handle(ipcChannels.tracePersist, (_event, params: TracePersistParams) =>
+    turnTraceStore.persist(params)
+  )
+  ipcMain.handle(ipcChannels.traceLoad, (_event, params: TraceLoadParams) =>
+    turnTraceStore.load(params.threadId, params.turnId)
+  )
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {
     if (!mainWindow) {

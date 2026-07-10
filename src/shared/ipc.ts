@@ -72,6 +72,17 @@ export type TraceSaveResult = {
   path?: string
 }
 
+export type TracePersistParams = {
+  threadId: string
+  turnId: string
+  content: string
+}
+
+export type TraceLoadParams = {
+  threadId: string
+  turnId: string
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -99,6 +110,8 @@ export const ipcChannels = {
   codexInterruptTurn: 'codex:interruptTurn',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',
+  tracePersist: 'trace:persist',
+  traceLoad: 'trace:load',
   traceSave: 'trace:save',
   workspacePick: 'workspace:pick'
 } as const
