@@ -62,21 +62,33 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
         </header>
 
         <div className="trace-scroll">
+          {trace.capture.completeness === 'partial' ? (
+            <div className="trace-capture-warning" role="note">
+              <strong>Partial trace</strong>
+              <span>
+                This turn was restored without {trace.capture.missing.join(', ') || 'all live telemetry'}.
+                New completed turns are saved with the full live trace.
+              </span>
+            </div>
+          ) : null}
+
           <section className="trace-summary-grid">
             <TraceMetric label="Status" value={trace.turn.status} />
             <TraceMetric label="Duration" value={formatDuration(trace.turn.durationMs)} />
             <TraceMetric label="Model" value={trace.environment.model ?? 'unknown'} />
             <TraceMetric label="Workspace" value={trace.environment.workspace ?? 'default'} mono />
+            <TraceMetric label="Model calls" value={String(trace.usage.modelCallCount)} />
             <TraceMetric label="Commands" value={String(trace.summary.commandCount)} />
             <TraceMetric label="Tool calls" value={String(trace.summary.toolCallCount)} />
             <TraceMetric label="Browser calls" value={String(trace.summary.browserToolCount)} />
-            <TraceMetric label="Files changed" value={String(trace.summary.fileChangeCount)} />
           </section>
 
           <section className="trace-section">
             <div className="trace-section-heading">
               <h3>Turn usage</h3>
-              <span>Thread cumulative usage remains in the JSON export.</span>
+              <span>
+                Whole turn across {trace.usage.modelCallCount} model {trace.usage.modelCallCount === 1 ? 'call' : 'calls'}.
+              </span>
             </div>
             <div className="trace-token-row">
               <TraceToken label="Total" value={turnTokens?.totalTokens} />
@@ -86,6 +98,14 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
               <TraceToken label="Reasoning" value={turnTokens?.reasoningOutputTokens} />
               <TraceToken label="Context window" value={trace.usage.modelContextWindow} />
             </div>
+            {trace.usage.latestModelCall ? (
+              <p className="trace-usage-note">
+                Latest call: {formatTokens(trace.usage.latestModelCall.totalTokens)} tokens.
+                Thread total at completion: {trace.usage.threadTotalAtEnd
+                  ? formatTokens(trace.usage.threadTotalAtEnd.totalTokens)
+                  : 'unknown'}.
+              </p>
+            ) : null}
           </section>
 
           <section className="trace-section trace-identifiers">
@@ -108,6 +128,20 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
                   <code>{skill.path}</code>
                 </div>
               ))}
+            </section>
+          ) : null}
+
+          {trace.environment.modelReroutes.length ? (
+            <section className="trace-section trace-identifiers">
+              <h3>Model reroutes</h3>
+              <dl>
+                {trace.environment.modelReroutes.flatMap((reroute, index) => [
+                  <dt key={`${index}-time`}>{new Date(reroute.atMs).toLocaleTimeString()}</dt>,
+                  <dd key={`${index}-route`}>
+                    {reroute.fromModel} → {reroute.toModel} ({reroute.reason})
+                  </dd>
+                ])}
+              </dl>
             </section>
           ) : null}
 
