@@ -12,8 +12,11 @@ export type PersistedTurnTrace = {
 
 export class TurnTraceStore {
   private readonly queues = new Map<string, Promise<void>>()
+  private readonly root: string
 
-  constructor(private readonly root: string) {}
+  constructor(root: string) {
+    this.root = root
+  }
 
   async persist(trace: PersistedTurnTrace): Promise<void> {
     const key = traceKey(trace.threadId, trace.turnId)

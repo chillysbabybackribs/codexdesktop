@@ -71,14 +71,18 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
     },
     meta: {
       status: 'completed',
+      origin: 'live',
+      requestedModel: 'gpt-5.4',
       model: 'gpt-5.4',
       workspace: '/workspace',
       startedAtMs: 1_000,
       completedAtMs: 2_000,
       tokens: {
-        last: turnUsage,
-        total: cumulativeUsage,
-        modelContextWindow: 200_000
+        turn: turnUsage,
+        latestCall: turnUsage,
+        threadTotalAtEnd: cumulativeUsage,
+        modelContextWindow: 200_000,
+        modelCallCount: 3
       }
     }
   })
@@ -89,7 +93,10 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
   assert.equal(trace.environment.model, 'gpt-5.4')
   assert.equal(trace.environment.workspace, '/workspace')
   assert.deepEqual(trace.usage.turn, turnUsage)
+  assert.deepEqual(trace.usage.latestModelCall, turnUsage)
   assert.deepEqual(trace.usage.threadTotalAtEnd, cumulativeUsage)
+  assert.equal(trace.usage.modelCallCount, 3)
+  assert.equal(trace.capture.completeness, 'complete')
   assert.equal(trace.turn.durationMs, 1_000)
   assert.equal(trace.summary.itemCount, 3)
   assert.equal(trace.summary.toolCallCount, 1)
