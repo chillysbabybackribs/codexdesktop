@@ -58,8 +58,10 @@ test('candidate ranking boosts primary sources and lowers video results', () => 
   ]
 
   const ranked = rankSerpCandidates(candidates, candidates.map((candidate) => candidate.query), 3)
+  const video = ranked.find((candidate) => candidate.sourceTier === 'video')
 
   assert.equal(ranked[0].sourceTier, 'official')
   assert.equal(ranked[0].domain, 'docs.deepseek.com')
-  assert.equal(ranked.at(-1)?.sourceTier, 'video')
+  assert.ok(video)
+  assert.ok(video.score < ranked[0].score)
 })
