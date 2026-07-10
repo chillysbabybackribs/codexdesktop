@@ -1927,6 +1927,7 @@ button {
   display: flex;
   align-items: center;
   gap: 3px;
+  margin-left: auto;
 }
 
 .composer-new-chat {
