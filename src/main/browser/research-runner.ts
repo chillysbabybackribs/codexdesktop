@@ -3,7 +3,13 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
-import { buildSerpExtractionProgram, googleSearchUrl } from './research-utils.js'
+import {
+  buildResearchQueryVariants,
+  buildSerpExtractionProgram,
+  googleSearchUrl,
+  rankSerpCandidates,
+  type SerpCandidate
+} from './research-utils.js'
 import type { TabManager } from './tab-manager.js'
 
 const DEFAULT_MAX_RESULTS = 5
@@ -30,12 +36,16 @@ export type ResearchPage = {
   artifactPath: string
   htmlPath: string
   visibleTabId?: string
+  sourceQuery?: string
+  sourceTier?: string
+  score?: number
 }
 
 export type ResearchResult = {
   ok: boolean
   researchId?: string
   queries?: string[]
+  searchQueries?: string[]
   artifactDir?: string
   pages?: ResearchPage[]
   discoveredUrls?: string[]
@@ -45,15 +55,13 @@ export type ResearchResult = {
   error?: string
 }
 
-type SerpResult = { url: string; title: string }
-
 /**
  * A compact, deterministic research pipeline. SERP discovery stays hidden,
  * while qualifying pages are loaded sequentially in a dedicated visible tab;
  * Codex receives only extracted text and filesystem pointers to full artifacts.
  */
 export class ResearchRunner {
-  private view: WebContentsView | null = null
+  private readonly searchViews = new Set<WebContentsView>()
   private queue: Promise<void> = Promise.resolve()
 
   constructor(private readonly getTabs: () => TabManager | null) {}
@@ -68,12 +76,10 @@ export class ResearchRunner {
   }
 
   dispose(): void {
-    const webContents = this.view?.webContents
-    this.view = null
-
-    if (webContents && !webContents.isDestroyed()) {
-      webContents.close()
+    for (const view of this.searchViews) {
+      if (!view.webContents.isDestroyed()) view.webContents.close()
     }
+    this.searchViews.clear()
   }
 
   private async execute(request: ResearchRequest): Promise<ResearchResult> {
@@ -93,63 +99,85 @@ export class ResearchRunner {
     const artifactDir = join(app.getPath('userData'), 'research', researchId)
     await mkdir(artifactDir, { recursive: true })
 
-    const webContents = this.ensureView().webContents
-    const discovered = new Map<string, SerpResult>()
+    const searchQueries = buildResearchQueryVariants(queries)
+    const searchViews = searchQueries.map(() => this.createHiddenView())
+    const discovered: SerpCandidate[] = []
     const errors: Array<{ url?: string; error: string }> = []
 
-    for (const query of queries) {
-      try {
-        await loadPage(webContents, googleSearchUrl(query, maxResults))
-        const serp = await evaluate<SerpResult[]>(webContents, buildSerpExtractionProgram(maxResults))
-        for (const result of serp) {
-          if (!discovered.has(result.url)) discovered.set(result.url, result)
-        }
-      } catch (error) {
-        errors.push({ error: `SERP query failed for "${query}": ${formatError(error)}` })
+    const searchResults = await Promise.allSettled(searchQueries.map(async (query, index) => {
+      const webContents = searchViews[index].webContents
+      await loadPage(webContents, googleSearchUrl(query, maxResults))
+      const serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(webContents, buildSerpExtractionProgram(maxResults))
+      return serp.map((result) => ({ ...result, query }))
+    }))
+
+    for (const [index, result] of searchResults.entries()) {
+      if (result.status === 'fulfilled') {
+        discovered.push(...result.value)
+      } else {
+        errors.push({ error: `SERP query failed for "${searchQueries[index]}": ${formatError(result.reason)}` })
+      }
+    }
+    for (const view of searchViews) {
+      this.searchViews.delete(view)
+      if (!view.webContents.isDestroyed()) {
+        view.webContents.close()
       }
     }
 
-    const pages: ResearchPage[] = []
-    const candidates = [...discovered.values()].slice(0, maxPages)
+    const candidates = rankSerpCandidates(discovered, searchQueries, maxPages)
+    const fallbackView = this.getTabs() ? null : this.createHiddenView()
+    const fallbackContents = fallbackView?.webContents
     const tabs = this.getTabs()
     const visibleTabId = candidates.length > 0 ? tabs?.createTab('about:blank', { load: false }) : undefined
 
-    for (const [index, candidate] of candidates.entries()) {
-      try {
-        const pageContents = visibleTabId && tabs
-          ? (await tabs.navigateAndWait(visibleTabId, candidate.url), tabs.resolveWebContents(visibleTabId))
-          : (await loadPage(webContents, candidate.url), webContents)
+    const pages: ResearchPage[] = []
+    try {
+      for (const [index, candidate] of candidates.entries()) {
+        try {
+          const pageContents = visibleTabId && tabs
+            ? (await tabs.navigateAndWait(visibleTabId, candidate.url), tabs.resolveWebContents(visibleTabId))
+            : (fallbackContents ? (await loadPage(fallbackContents, candidate.url), fallbackContents) : null)
 
-        if (!pageContents) {
-          throw new Error('research tab is no longer available')
+          if (!pageContents) {
+            throw new Error('research page view is no longer available')
+          }
+
+          const extracted = await evaluate<{
+            title: string
+            url: string
+            content: string
+            wordCount: number
+            truncated: boolean
+          }>(pageContents, buildPageExtractionProgram(snippetChars))
+          const html = await evaluate<string>(pageContents, 'return document.documentElement?.outerHTML || ""')
+          const rank = index + 1
+          const baseName = `page-${String(rank).padStart(2, '0')}`
+          const artifactPath = join(artifactDir, `${baseName}.txt`)
+          const htmlPath = join(artifactDir, `${baseName}.html`)
+          await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
+          await writeFile(htmlPath, html, 'utf8')
+          pages.push({
+            rank,
+            url: extracted.url || candidate.url,
+            title: extracted.title || candidate.title,
+            content: extracted.content,
+            wordCount: extracted.wordCount,
+            artifactPath,
+            htmlPath,
+            ...(visibleTabId ? { visibleTabId } : {}),
+            sourceQuery: candidate.query,
+            sourceTier: candidate.sourceTier,
+            score: candidate.score
+          })
+        } catch (error) {
+          errors.push({ url: candidate.url, error: formatError(error) })
         }
-
-        const extracted = await evaluate<{
-          title: string
-          url: string
-          content: string
-          wordCount: number
-          truncated: boolean
-        }>(pageContents, buildPageExtractionProgram(snippetChars))
-        const html = await evaluate<string>(pageContents, 'return document.documentElement?.outerHTML || ""')
-        const rank = index + 1
-        const baseName = `page-${String(rank).padStart(2, '0')}`
-        const artifactPath = join(artifactDir, `${baseName}.txt`)
-        const htmlPath = join(artifactDir, `${baseName}.html`)
-        await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
-        await writeFile(htmlPath, html, 'utf8')
-        pages.push({
-          rank,
-          url: extracted.url || candidate.url,
-          title: extracted.title || candidate.title,
-          content: extracted.content,
-          wordCount: extracted.wordCount,
-          artifactPath,
-          htmlPath,
-          ...(visibleTabId ? { visibleTabId } : {})
-        })
-      } catch (error) {
-        errors.push({ url: candidate.url, error: formatError(error) })
+      }
+    } finally {
+      if (fallbackView) {
+        this.searchViews.delete(fallbackView)
+        if (!fallbackView.webContents.isDestroyed()) fallbackView.webContents.close()
       }
     }
 
@@ -157,9 +185,10 @@ export class ResearchRunner {
       ok: pages.length > 0,
       researchId,
       queries,
+      searchQueries,
       artifactDir,
-      discoveredUrls: candidates.map((candidate) => candidate.url),
-      discoveredCount: discovered.size,
+      discoveredUrls: [...new Set(discovered.map((candidate) => candidate.url))],
+      discoveredCount: new Set(discovered.map((candidate) => candidate.url)).size,
       pages,
       ...(visibleTabId ? { visibleTabId } : {}),
       ...(errors.length > 0 ? { errors } : {}),
@@ -167,12 +196,8 @@ export class ResearchRunner {
     }
   }
 
-  private ensureView(): WebContentsView {
-    if (this.view && !this.view.webContents.isDestroyed()) {
-      return this.view
-    }
-
-    this.view = new WebContentsView({
+  private createHiddenView(): WebContentsView {
+    const view = new WebContentsView({
       webPreferences: {
         contextIsolation: true,
         nodeIntegration: false,
@@ -180,8 +205,9 @@ export class ResearchRunner {
         partition: browserPartition
       }
     })
-    this.view.webContents.setUserAgent(chromeLikeUserAgent())
-    return this.view
+    view.webContents.setUserAgent(chromeLikeUserAgent())
+    this.searchViews.add(view)
+    return view
   }
 }
 
