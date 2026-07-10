@@ -1,7 +1,9 @@
 import { EventEmitter } from 'node:events'
 import { createInterface } from 'node:readline'
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
-import type { BrowserWindow } from 'electron'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
+import { app, type BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
@@ -90,6 +92,10 @@ const legacyResumeConfig = {
       context_size: 'low'
     }
   }
+}
+
+function localSkillsRoot(): string {
+  return join(app.getAppPath(), 'skills')
 }
 
 function resolveTurnPolicy(text: string): { effort?: string; summary: 'auto' | 'concise' } {
@@ -378,6 +384,7 @@ export class CodexClient extends EventEmitter {
           ]
         }
       })
+      await this.registerLocalSkills()
       this.notify('initialized')
       this.emitStatus('ready')
     } catch (error) {
@@ -386,6 +393,27 @@ export class CodexClient extends EventEmitter {
         child.kill()
       }
       throw error
+    }
+  }
+
+  private async registerLocalSkills(): Promise<void> {
+    const skillsRoot = localSkillsRoot()
+
+    if (!existsSync(skillsRoot)) {
+      console.warn(`Local Codex skills root not found: ${skillsRoot}`)
+      return
+    }
+
+    try {
+      await this.request('skills/extraRoots/set', {
+        extraRoots: [skillsRoot]
+      })
+      await this.request('skills/list', {
+        cwds: [app.getAppPath()],
+        forceReload: true
+      })
+    } catch (error) {
+      console.warn('Failed to register local Codex skills root', error)
     }
   }
 
