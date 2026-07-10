@@ -1390,11 +1390,10 @@ function TaskActivityCard({
   )
 }
 
-// The thread selector: a centered trigger that opens a premium popover with a
-// search field, a "New chat" action, and the recent-thread list grouped by
-// recency. Supports type-to-filter and full keyboard navigation. Closes on
-// outside-click / Escape.
+// The thread selector opens a searchable recent-thread popover. In the chat
+// composer it opens upward so history stays near the user's current workflow.
 function ThreadMenu({
+  placement = 'toolbar',
   title,
   threads,
   activeThreadId,
@@ -1403,10 +1402,10 @@ function ThreadMenu({
   threadsLoading,
   threadsError,
   onToggle,
-  onNewThread,
   onResumeThread,
   onLoadMoreThreads
 }: {
+  placement?: 'toolbar' | 'composer'
   title: string
   threads: Thread[]
   activeThreadId: string | null
@@ -1415,16 +1414,14 @@ function ThreadMenu({
   threadsLoading: boolean
   threadsError: string | null
   onToggle: () => void
-  onNewThread: () => void
   onResumeThread: (threadId: string) => Promise<void>
   onLoadMoreThreads: () => Promise<void>
 }): React.JSX.Element {
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const [query, setQuery] = useState('')
-  // Highlighted row for keyboard/hover navigation. `null` = nothing highlighted
-  // (the resting state on open — no row shows a pre-selection). `-1` = the New
-  // chat action; `0..n` index into the flat, filtered thread list.
+  // Highlighted row for keyboard/hover navigation. `null` is the resting state;
+  // `0..n` indexes the flat, filtered thread list.
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   // Filter by title/preview, then bucket into recency groups. `nowSeconds` is
@@ -1468,11 +1465,6 @@ function ThreadMenu({
     void onResumeThread(threadId)
   }
 
-  const openNewThread = (): void => {
-    onToggle()
-    onNewThread()
-  }
-
   const handleKeyDown = (event: ReactKeyboardEvent): void => {
     if (event.key === 'Escape') {
       event.preventDefault()
@@ -1481,13 +1473,18 @@ function ThreadMenu({
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault()
-      // First press moves off the resting state onto New chat, then into the list.
-      setActiveIndex((index) => (index === null ? -1 : Math.min(index + 1, flatIds.length - 1)))
+      setActiveIndex((index) => {
+        if (!flatIds.length) return null
+        return index === null ? 0 : Math.min(index + 1, flatIds.length - 1)
+      })
       return
     }
     if (event.key === 'ArrowUp') {
       event.preventDefault()
-      setActiveIndex((index) => (index === null ? -1 : Math.max(index - 1, -1)))
+      setActiveIndex((index) => {
+        if (!flatIds.length) return null
+        return index === null ? flatIds.length - 1 : Math.max(index - 1, 0)
+      })
       return
     }
     if (event.key === 'Enter') {
@@ -1496,16 +1493,14 @@ function ThreadMenu({
         return
       }
       event.preventDefault()
-      if (activeIndex === -1) {
-        openNewThread()
-      } else if (flatIds[activeIndex]) {
+      if (flatIds[activeIndex]) {
         resume(flatIds[activeIndex])
       }
     }
   }
 
   return (
-    <div ref={wrapRef} className="thread-select-wrap">
+    <div ref={wrapRef} className={`thread-select-wrap is-${placement}`}>
       <button
         type="button"
         className={`thread-select ${isOpen ? 'is-open' : ''}`}
@@ -1541,32 +1536,12 @@ function ThreadMenu({
               autoComplete="off"
               onChange={(event) => {
                 setQuery(event.target.value)
-                setActiveIndex(-1)
+                setActiveIndex(null)
               }}
             />
           </div>
 
           <div className="thread-menu-scroll">
-            <button
-              type="button"
-              className={`thread-menu-new ${activeIndex === -1 ? 'is-highlighted' : ''}`}
-              role="menuitem"
-              onMouseEnter={() => setActiveIndex(-1)}
-              onClick={openNewThread}
-            >
-              <span className="thread-menu-new-icon" aria-hidden="true">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 5v14M5 12h14"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              New chat
-            </button>
-
             {flatIds.length ? (
               groups.map((group) => (
                 <div className="thread-menu-group" key={group.label}>
