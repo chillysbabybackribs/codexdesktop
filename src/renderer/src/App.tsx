@@ -29,7 +29,8 @@ import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal } from './TraceModal'
-import { buildTurnTrace } from './trace'
+import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
+import { reduceTurnTelemetry } from './turn-telemetry'
 import {
   AutoFollow,
   TurnTail,
@@ -219,6 +220,8 @@ export default function App(): React.JSX.Element {
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
   const activeTurnIdRef = useRef<string | null>(activeTurnId)
+  const selectedModelRef = useRef<string | null>(selectedModel)
+  const workspaceRef = useRef<string | null>(workspace)
   const watchThreadIdRef = useRef<string | null>(null)
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
@@ -226,6 +229,7 @@ export default function App(): React.JSX.Element {
   const pendingAgentDeltasRef = useRef<Map<string, string>>(new Map())
   const agentDeltaTimerRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
+  const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -244,6 +248,14 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     activeTurnIdRef.current = activeTurnId
   }, [activeTurnId])
+
+  useEffect(() => {
+    selectedModelRef.current = selectedModel
+  }, [selectedModel])
+
+  useEffect(() => {
+    workspaceRef.current = workspace
+  }, [workspace])
 
   useEffect(() => {
     splitRef.current = split
@@ -268,6 +280,38 @@ export default function App(): React.JSX.Element {
 
     void refreshThreads()
   }, [workspace])
+
+  useEffect(() => {
+    if (!activeThreadId) return
+
+    for (const [turnId, meta] of Object.entries(turnMeta)) {
+      if (meta.origin !== 'live' || !isTerminalTurnStatus(meta.status)) continue
+
+      const trace = buildTurnTrace({
+        threadId: activeThreadId,
+        threadTitle: activeThreadTitle,
+        turnId,
+        model: selectedModel,
+        workspace,
+        items,
+        itemMeta,
+        meta
+      })
+      const content = `${JSON.stringify(trace, null, 2)}\n`
+      const fingerprint = JSON.stringify({ ...trace, exportedAt: '' })
+      const key = `${activeThreadId}/${turnId}`
+
+      if (persistedTraceFingerprintsRef.current.get(key) === fingerprint) continue
+      persistedTraceFingerprintsRef.current.set(key, fingerprint)
+
+      void window.api.trace.persist({ threadId: activeThreadId, turnId, content }).catch((error) => {
+        if (persistedTraceFingerprintsRef.current.get(key) === fingerprint) {
+          persistedTraceFingerprintsRef.current.delete(key)
+        }
+        console.warn('Failed to persist completed turn trace', error)
+      })
+    }
+  }, [activeThreadId, activeThreadTitle, selectedModel, workspace, items, itemMeta, turnMeta])
 
   // The model catalog comes from `model/list` on the app-server, so it is the
   // same list (and default) the CLI's own /model picker shows. Loaded once the
