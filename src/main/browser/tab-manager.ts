@@ -327,7 +327,6 @@ export class TabManager {
       // Chromium emits the page's declared favicon URLs, best-first. Prefer the
       // first valid http(s)/data URL; anything else (file:, blob:) is unsafe to
       // render from the renderer origin, so fall back to the neutral glyph.
-      console.log('[FAVICON-DBG] page-favicon-updated', tab.url, JSON.stringify(favicons), '-> picked', pickFavicon(favicons))
       tab.favicon = pickFavicon(favicons)
       this.pushState()
     })
