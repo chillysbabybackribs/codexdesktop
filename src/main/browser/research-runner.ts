@@ -4,10 +4,11 @@ import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
 import { buildSerpExtractionProgram, googleSearchUrl } from './research-utils.js'
+import type { TabManager } from './tab-manager.js'
 
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
-const DEFAULT_MAX_PAGES = 2
+const DEFAULT_MAX_PAGES = 3
 const MAX_MAX_PAGES = 8
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
@@ -28,6 +29,7 @@ export type ResearchPage = {
   wordCount: number
   artifactPath: string
   htmlPath: string
+  visibleTabId?: string
 }
 
 export type ResearchResult = {
@@ -38,6 +40,7 @@ export type ResearchResult = {
   pages?: ResearchPage[]
   discoveredUrls?: string[]
   discoveredCount?: number
+  visibleTabId?: string
   errors?: Array<{ url?: string; error: string }>
   error?: string
 }
@@ -45,13 +48,15 @@ export type ResearchResult = {
 type SerpResult = { url: string; title: string }
 
 /**
- * A compact, deterministic research pipeline. Search results and pages stay
- * inside one unattached WebContentsView; Codex receives only extracted text
- * and filesystem pointers to the full artifacts.
+ * A compact, deterministic research pipeline. SERP discovery stays hidden,
+ * while qualifying pages are loaded sequentially in a dedicated visible tab;
+ * Codex receives only extracted text and filesystem pointers to full artifacts.
  */
 export class ResearchRunner {
   private view: WebContentsView | null = null
   private queue: Promise<void> = Promise.resolve()
+
+  constructor(private readonly getTabs: () => TabManager | null) {}
 
   run(request: ResearchRequest): Promise<ResearchResult> {
     const operation = this.queue.then(() => this.execute(request))
@@ -106,18 +111,27 @@ export class ResearchRunner {
 
     const pages: ResearchPage[] = []
     const candidates = [...discovered.values()].slice(0, maxPages)
+    const tabs = this.getTabs()
+    const visibleTabId = candidates.length > 0 ? tabs?.createTab(candidates[0].url) : undefined
 
     for (const [index, candidate] of candidates.entries()) {
       try {
-        await loadPage(webContents, candidate.url)
+        const pageContents = visibleTabId && tabs
+          ? (await tabs.navigateAndWait(visibleTabId, candidate.url), tabs.resolveWebContents(visibleTabId))
+          : (await loadPage(webContents, candidate.url), webContents)
+
+        if (!pageContents) {
+          throw new Error('research tab is no longer available')
+        }
+
         const extracted = await evaluate<{
           title: string
           url: string
           content: string
           wordCount: number
           truncated: boolean
-        }>(webContents, buildPageExtractionProgram(snippetChars))
-        const html = await evaluate<string>(webContents, 'return document.documentElement?.outerHTML || ""')
+        }>(pageContents, buildPageExtractionProgram(snippetChars))
+        const html = await evaluate<string>(pageContents, 'return document.documentElement?.outerHTML || ""')
         const rank = index + 1
         const baseName = `page-${String(rank).padStart(2, '0')}`
         const artifactPath = join(artifactDir, `${baseName}.txt`)
@@ -131,7 +145,8 @@ export class ResearchRunner {
           content: extracted.content,
           wordCount: extracted.wordCount,
           artifactPath,
-          htmlPath
+          htmlPath,
+          ...(visibleTabId ? { visibleTabId } : {})
         })
       } catch (error) {
         errors.push({ url: candidate.url, error: formatError(error) })
@@ -146,6 +161,7 @@ export class ResearchRunner {
       discoveredUrls: candidates.map((candidate) => candidate.url),
       discoveredCount: discovered.size,
       pages,
+      ...(visibleTabId ? { visibleTabId } : {}),
       ...(errors.length > 0 ? { errors } : {}),
       ...(pages.length === 0 && errors.length === 0 ? { error: 'No qualifying pages found' } : {})
     }
