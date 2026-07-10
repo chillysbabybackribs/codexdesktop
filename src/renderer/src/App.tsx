@@ -179,6 +179,10 @@ const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const modelStorageKey = 'codexdesktop.model'
 
+function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
+  return status === 'completed' || status === 'failed' || status === 'interrupted'
+}
+
 export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'))
@@ -513,7 +517,9 @@ export default function App(): React.JSX.Element {
       setActiveTurnId(response.turn.id)
       noteTurn(response.turn.id, {
         status: 'inProgress',
-        model: selectedModel,
+        origin: 'live',
+        requestedModel: selectedModel,
+        model: response.model,
         workspace,
         startedAtMs: response.turn.startedAt ? response.turn.startedAt * 1000 : Date.now()
       })
@@ -607,7 +613,8 @@ export default function App(): React.JSX.Element {
         return
       }
 
-      hydrateThread(resumed.thread, resumed.initialTurnsPage?.data)
+      const environment = { model: resumed.model, workspace: resumed.cwd }
+      hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
 
       if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
         const read = await window.api.codex.readThread(threadId)
@@ -616,7 +623,7 @@ export default function App(): React.JSX.Element {
           return
         }
 
-        hydrateThread(read.thread)
+        hydrateThread(read.thread, undefined, environment)
       }
 
       persistLastThreadId(threadId)
@@ -687,8 +694,10 @@ export default function App(): React.JSX.Element {
           setActiveTurnId(turn.id)
           noteTurn(turn.id, {
             status: 'inProgress',
-            model: selectedModel,
-            workspace,
+            origin: 'live',
+            requestedModel: selectedModelRef.current,
+            model: selectedModelRef.current,
+            workspace: workspaceRef.current,
             startedAtMs: turn.startedAt ? turn.startedAt * 1000 : Date.now()
           })
           adoptTurnItems(turn.id, turn.items)
@@ -755,7 +764,23 @@ export default function App(): React.JSX.Element {
         return
       case 'thread/tokenUsage/updated':
         if (isRelevantThread(notification.params.threadId)) {
-          noteTurn(notification.params.turnId, { tokens: notification.params.tokenUsage })
+          setTurnMeta((current) => reduceTurnTelemetry(current, {
+            type: 'tokenUsage',
+            turnId: notification.params.turnId,
+            tokenUsage: notification.params.tokenUsage
+          }))
+        }
+        return
+      case 'model/rerouted':
+        if (isRelevantThread(notification.params.threadId)) {
+          setTurnMeta((current) => reduceTurnTelemetry(current, {
+            type: 'modelRerouted',
+            turnId: notification.params.turnId,
+            atMs: Date.now(),
+            fromModel: notification.params.fromModel,
+            toModel: notification.params.toModel,
+            reason: notification.params.reason
+          }))
         }
         return
       case 'turn/diff/updated':
@@ -796,16 +821,20 @@ export default function App(): React.JSX.Element {
         return
       case 'error':
         if (isRelevantThread(notification.params.threadId)) {
-          addSystemItem(notification.params.error.message, 'error')
-          const failedTurnId = activeTurnIdRef.current
-          if (failedTurnId) {
-            noteTurn(failedTurnId, {
-              status: 'failed',
-              completedAtMs: Date.now(),
-              errorMessage: notification.params.error.message
-            })
+          setTurnMeta((current) => reduceTurnTelemetry(current, {
+            type: 'error',
+            turnId: notification.params.turnId,
+            atMs: Date.now(),
+            message: notification.params.error.message,
+            willRetry: notification.params.willRetry
+          }))
+
+          if (!notification.params.willRetry) {
+            addSystemItem(notification.params.error.message, 'error')
+            setActiveTurnId((current) =>
+              current === notification.params.turnId ? null : current
+            )
           }
-          setActiveTurnId(null)
         }
         return
       case 'warning':
@@ -862,13 +891,7 @@ export default function App(): React.JSX.Element {
   }
 
   function noteTurn(turnId: string, patch: Partial<TurnMeta>): void {
-    setTurnMeta((current) => {
-      const existing = current[turnId]
-      return {
-        ...current,
-        [turnId]: { ...(existing ?? { status: 'inProgress' }), ...patch }
-      }
-    })
+    setTurnMeta((current) => reduceTurnTelemetry(current, { type: 'patch', turnId, patch }))
   }
 
   // Tag a batch of items (from turn/started, turn/completed, or turn/start
@@ -925,7 +948,11 @@ export default function App(): React.JSX.Element {
     await refreshThreads({ append: true })
   }
 
-  function hydrateThread(thread: Thread, fallbackTurns?: Turn[]): void {
+  function hydrateThread(
+    thread: Thread,
+    fallbackTurns?: Turn[],
+    environment?: { model: string | null; workspace: string | null }
+  ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
     watchThreadIdRef.current = thread.id
@@ -940,6 +967,9 @@ export default function App(): React.JSX.Element {
     for (const turn of turns) {
       nextTurnMeta[turn.id] = {
         status: turn.status,
+        origin: 'restored',
+        model: environment?.model ?? null,
+        workspace: environment?.workspace ?? thread.cwd,
         startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
         completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
         durationMs: turn.durationMs ?? undefined,
