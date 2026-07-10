@@ -2,10 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
-import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
 import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAction'
 import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
+import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
+
+export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
 
 // ---------------------------------------------------------------------------
 // Shared task-state types (owned here, consumed by App)
@@ -27,20 +29,6 @@ export type ItemMeta = {
   completedAtMs?: number
   // Latest item/mcpToolCall/progress messages, newest last.
   progress?: string[]
-}
-
-export type TurnMetaStatus = 'inProgress' | 'completed' | 'failed' | 'interrupted'
-
-export type TurnMeta = {
-  status: TurnMetaStatus
-  model?: string | null
-  workspace?: string | null
-  startedAtMs?: number
-  completedAtMs?: number
-  durationMs?: number
-  errorMessage?: string
-  tokens?: ThreadTokenUsage
-  diffSummary?: TurnDiffSummary
 }
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
@@ -1130,7 +1118,7 @@ function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string
     parts.push(`${toolCalls} ${toolCalls === 1 ? 'tool call' : 'tool calls'}`)
   }
 
-  const tokens = meta?.tokens?.last.totalTokens
+  const tokens = meta?.tokens?.turn.totalTokens
   if (tokens) {
     parts.push(`${fmtTokens(tokens)} tokens`)
   }
@@ -1157,7 +1145,7 @@ export function TurnTail({
 
   if (live) {
     const label = currentActionLabel(items, itemMeta, streamingMessage)
-    const tokens = meta?.tokens?.last.totalTokens
+    const tokens = meta?.tokens?.turn.totalTokens
 
     // Timer follows the CURRENT task: anchored to the newest running item's
     // start time, falling back to the turn start while nothing is running.
@@ -1224,16 +1212,18 @@ export function TurnTail({
   )
 }
 
-function tokenTooltip(tokens: ThreadTokenUsage | undefined): string | undefined {
+function tokenTooltip(tokens: TurnTokenTelemetry | undefined): string | undefined {
   if (!tokens) {
     return undefined
   }
-  const { last } = tokens
+  const { turn, latestCall } = tokens
   const parts = [
-    `latest input ${fmtTokens(last.inputTokens)}`,
-    `cached ${fmtTokens(last.cachedInputTokens)}`,
-    `output ${fmtTokens(last.outputTokens)}`,
-    `reasoning ${fmtTokens(last.reasoningOutputTokens)}`
+    `${tokens.modelCallCount} model ${tokens.modelCallCount === 1 ? 'call' : 'calls'}`,
+    `turn input ${fmtTokens(turn.inputTokens)}`,
+    `cached ${fmtTokens(turn.cachedInputTokens)}`,
+    `output ${fmtTokens(turn.outputTokens)}`,
+    `reasoning ${fmtTokens(turn.reasoningOutputTokens)}`,
+    `latest call ${fmtTokens(latestCall.totalTokens)}`
   ]
   if (tokens.modelContextWindow) {
     parts.push(`context ${fmtTokens(tokens.modelContextWindow)}`)
