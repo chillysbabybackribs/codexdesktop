@@ -97,7 +97,7 @@ export function AutoFollow({
 }: {
   className?: string
   children: React.ReactNode
-}): JSX.Element {
+}): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useLayoutEffect(() => {
@@ -291,7 +291,7 @@ function blockStatus(item: WorkItem, live: boolean): BlockStatus {
 // Icons — quiet 15px strokes matching the app's existing inline icon style
 // ---------------------------------------------------------------------------
 
-function Icon({ children, className }: { children: React.ReactNode; className?: string }): JSX.Element {
+function Icon({ children, className }: { children: React.ReactNode; className?: string }): React.JSX.Element {
   return (
     <svg
       className={className}
@@ -310,48 +310,48 @@ function Icon({ children, className }: { children: React.ReactNode; className?: 
   )
 }
 
-const TerminalIcon = (): JSX.Element => (
+const TerminalIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M5 8l4 4-4 4" />
     <path d="M12 17h7" />
   </Icon>
 )
 
-const FilePenIcon = (): JSX.Element => (
+const FilePenIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M13 4H7a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 7 20h10a1.5 1.5 0 0 0 1.5-1.5V9.5L13 4Z" />
     <path d="M13 4v5.5h5.5" />
   </Icon>
 )
 
-const FileReadIcon = (): JSX.Element => (
+const FileReadIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M13 4H7a1.5 1.5 0 0 0-1.5 1.5v13A1.5 1.5 0 0 0 7 20h10a1.5 1.5 0 0 0 1.5-1.5V9.5L13 4Z" />
     <path d="M9 13h6M9 16.2h4" />
   </Icon>
 )
 
-const FolderListIcon = (): JSX.Element => (
+const FolderListIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h3.6a1.5 1.5 0 0 1 1.1.44l1 1.06h7.8A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5L3.5 7Z" />
   </Icon>
 )
 
-const SearchGlassIcon = (): JSX.Element => (
+const SearchGlassIcon = (): React.JSX.Element => (
   <Icon>
     <circle cx="11" cy="11" r="6.2" />
     <path d="m19.6 19.6-3.4-3.4" />
   </Icon>
 )
 
-const GlobeIcon = (): JSX.Element => (
+const GlobeIcon = (): React.JSX.Element => (
   <Icon>
     <circle cx="12" cy="12" r="8.2" />
     <path d="M3.8 12h16.4M12 3.8c2.4 2.2 3.6 5 3.6 8.2s-1.2 6-3.6 8.2c-2.4-2.2-3.6-5-3.6-8.2s1.2-6 3.6-8.2Z" />
   </Icon>
 )
 
-const PlugIcon = (): JSX.Element => (
+const PlugIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M9 3.8v4.4M15 3.8v4.4" />
     <path d="M6.5 8.2h11v3.2a5.5 5.5 0 0 1-11 0V8.2Z" />
@@ -359,7 +359,7 @@ const PlugIcon = (): JSX.Element => (
   </Icon>
 )
 
-const ListChecksIcon = (): JSX.Element => (
+const ListChecksIcon = (): React.JSX.Element => (
   <Icon>
     <path d="M4 6.5l1.4 1.4L8 5.3" />
     <path d="M4 13l1.4 1.4L8 11.8" />
@@ -367,14 +367,14 @@ const ListChecksIcon = (): JSX.Element => (
   </Icon>
 )
 
-const BotIcon = (): JSX.Element => (
+const BotIcon = (): React.JSX.Element => (
   <Icon>
     <rect x="5" y="8" width="14" height="10" rx="2.5" />
     <path d="M12 8V4.5M9.5 13h.01M14.5 13h.01" />
   </Icon>
 )
 
-const ImageIcon = (): JSX.Element => (
+const ImageIcon = (): React.JSX.Element => (
   <Icon>
     <rect x="4" y="5" width="16" height="14" rx="2" />
     <circle cx="9" cy="10" r="1.4" />
@@ -382,14 +382,14 @@ const ImageIcon = (): JSX.Element => (
   </Icon>
 )
 
-const ClockIcon = (): JSX.Element => (
+const ClockIcon = (): React.JSX.Element => (
   <Icon>
     <circle cx="12" cy="12" r="8.2" />
     <path d="M12 7.5V12l3 2" />
   </Icon>
 )
 
-function Spinner(): JSX.Element {
+function Spinner(): React.JSX.Element {
   return <span className="work-spinner" />
 }
 
@@ -406,14 +406,14 @@ function ToolRow({
   meta,
   sub
 }: {
-  icon: JSX.Element
+  icon: React.JSX.Element
   status: BlockStatus
   verb: string
   detail?: string | null
   detailTitle?: string
   meta?: string | null
   sub?: React.ReactNode
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div className={`tool-row status-${status}`}>
       <span className="tool-row-icon">{status === 'running' ? <Spinner /> : icon}</span>
@@ -433,7 +433,7 @@ function ToolRow({
   )
 }
 
-function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: number | null }): JSX.Element | null {
+function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: number | null }): React.JSX.Element | null {
   if (status === 'failed') {
     return <span className="work-chip chip-fail">{typeof exitCode === 'number' ? `exit ${exitCode}` : 'failed'}</span>
   }
@@ -461,7 +461,7 @@ function reasoningText(item: ReasoningItem): string {
 // The streamed model narration renders as bare muted text — no per-block
 // "Thought" header (the live tail already signals thinking, and the narration
 // carries its own headlines).
-function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boolean }): JSX.Element | null {
+function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boolean }): React.JSX.Element | null {
   const text = reasoningText(item)
 
   if (!text) {
@@ -498,7 +498,7 @@ function CompactActionRows({
   item: CommandExecutionItem
   status: BlockStatus
   duration: number | null
-}): JSX.Element {
+}): React.JSX.Element {
   const meta = duration && duration >= 100 ? fmtDuration(duration) : null
 
   return (
@@ -562,7 +562,7 @@ function TerminalCard({
   status: BlockStatus
   duration: number | null
   liveNow: number
-}): JSX.Element {
+}): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
   const running = status === 'running'
   const output = useMemo(() => stripAnsi(item.aggregatedOutput ?? '').replace(/\n+$/, ''), [item.aggregatedOutput])
@@ -620,7 +620,7 @@ function CommandBlock({
   item: CommandExecutionItem
   meta: ItemMeta | undefined
   live: boolean
-}): JSX.Element {
+}): React.JSX.Element {
   const status = blockStatus(item, live)
   const duration = itemDurationMs(item, meta)
   const now = useNow(status === 'running')
@@ -656,7 +656,7 @@ function DiffCard({
   diff: string
   status: BlockStatus
   workspace: string | null
-}): JSX.Element {
+}): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
   const parsed = useMemo(
     () => parseUnifiedDiff(diff, kind.type === 'add' ? 'add' : kind.type === 'delete' ? 'del' : undefined),
@@ -720,7 +720,7 @@ function DiffCard({
   )
 }
 
-function DiffLines({ lines }: { lines: DiffLine[] }): JSX.Element {
+function DiffLines({ lines }: { lines: DiffLine[] }): React.JSX.Element {
   return (
     <div className="diff-lines">
       {lines.map((line, index) =>
@@ -760,7 +760,7 @@ function FileChangeBlock({
   item: FileChangeItem
   live: boolean
   workspace: string | null
-}): JSX.Element {
+}): React.JSX.Element {
   const status = blockStatus(item, live)
 
   return (
@@ -794,7 +794,7 @@ function McpBlock({
   item: McpToolCallItem
   meta: ItemMeta | undefined
   live: boolean
-}): JSX.Element {
+}): React.JSX.Element {
   const status = blockStatus(item, live)
   const duration = itemDurationMs(item, meta)
   const args = previewJson(item.arguments, 80)
@@ -828,7 +828,7 @@ function DynamicToolBlock({
   item: DynamicToolCallItem
   meta: ItemMeta | undefined
   live: boolean
-}): JSX.Element {
+}): React.JSX.Element {
   const status = blockStatus(item, live)
   const duration = itemDurationMs(item, meta)
   const args = previewJson(item.arguments, 80)
@@ -857,12 +857,12 @@ function webSearchDescription(action: WebSearchAction | null, query: string): { 
   return { verb: 'Searched web', detail: searchQuery ? `"${truncate(searchQuery, 90)}"` : null }
 }
 
-function WebSearchBlock({ item, live }: { item: WebSearchItem; live: boolean }): JSX.Element {
+function WebSearchBlock({ item, live }: { item: WebSearchItem; live: boolean }): React.JSX.Element {
   const { verb, detail } = webSearchDescription(item.action, item.query)
   return <ToolRow icon={<GlobeIcon />} status={blockStatus(item, live)} verb={verb} detail={detail} />
 }
 
-function TurnPlanBlock({ item }: { item: TurnPlanItem }): JSX.Element | null {
+function TurnPlanBlock({ item }: { item: TurnPlanItem }): React.JSX.Element | null {
   if (!item.steps.length && !item.explanation) {
     return null
   }
@@ -890,7 +890,7 @@ function TurnPlanBlock({ item }: { item: TurnPlanItem }): JSX.Element | null {
   )
 }
 
-function PlanTextBlock({ item, streaming }: { item: PlanItem; streaming: boolean }): JSX.Element | null {
+function PlanTextBlock({ item, streaming }: { item: PlanItem; streaming: boolean }): React.JSX.Element | null {
   if (!item.text && !streaming) {
     return null
   }
@@ -914,7 +914,7 @@ function PlanTextBlock({ item, streaming }: { item: PlanItem; streaming: boolean
   )
 }
 
-function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): JSX.Element | null {
+function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.JSX.Element | null {
   const status = blockStatus(item, live)
 
   switch (item.type) {
@@ -963,7 +963,7 @@ function WorkBlock({
   live: boolean
   isNewest: boolean
   workspace: string | null
-}): JSX.Element | null {
+}): React.JSX.Element | null {
   switch (item.type) {
     case 'reasoning':
       return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
@@ -998,7 +998,7 @@ export function WorkGroup({
   live: boolean
   workspace: string | null
   newestItemId?: string
-}): JSX.Element {
+}): React.JSX.Element {
   const newestId = newestItemId ?? items[items.length - 1]?.id
 
   return (
@@ -1148,7 +1148,7 @@ export function TurnTail({
   itemMeta: Record<string, ItemMeta>
   meta: TurnMeta | undefined
   streamingMessage: boolean
-}): JSX.Element | null {
+}): React.JSX.Element | null {
   const now = useNow(live)
 
   if (live) {

@@ -176,7 +176,7 @@ const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const modelStorageKey = 'codexdesktop.model'
 
-export default function App(): JSX.Element {
+export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'))
     return Number.isFinite(stored) && stored > 20 && stored < 70 ? stored : 37
@@ -1111,7 +1111,7 @@ export default function App(): JSX.Element {
   )
 }
 
-function TitleBar(): JSX.Element {
+function TitleBar(): React.JSX.Element {
   return (
     <header className="titlebar">
       <div className="titlebar-title">Chat</div>
@@ -1186,7 +1186,7 @@ function ChatPane({
   onResumeThread: (threadId: string) => Promise<void>
   onLoadMoreThreads: () => Promise<void>
   onPickWorkspace: () => Promise<void>
-}): JSX.Element {
+}): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const { rows, turnWork } = useMemo(
     () => buildRows(items, itemMeta, activeTurnId),
@@ -1325,10 +1325,10 @@ function TaskActivityCard({
   itemMeta: Record<string, ItemMeta>
   live: boolean
   workspace: string | null
-}): JSX.Element {
+}): React.JSX.Element {
   const newestWorkItemId = [...items].reverse().find(isWorkItem)?.id
   const newestActivityId = items[items.length - 1]?.id
-  const content: JSX.Element[] = []
+  const content: React.JSX.Element[] = []
   let workRun: WorkItem[] = []
 
   const flushWork = (): void => {
@@ -1404,7 +1404,7 @@ function ThreadMenu({
   onNewThread: () => void
   onResumeThread: (threadId: string) => Promise<void>
   onLoadMoreThreads: () => Promise<void>
-}): JSX.Element {
+}): React.JSX.Element {
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const searchRef = useRef<HTMLInputElement | null>(null)
   const [query, setQuery] = useState('')
@@ -1664,7 +1664,7 @@ function groupThreadsForMenu(
   return { groups, flatIds }
 }
 
-function SearchIcon(): JSX.Element {
+function SearchIcon(): React.JSX.Element {
   return (
     <svg
       className="thread-menu-search-icon"
@@ -1680,7 +1680,7 @@ function SearchIcon(): JSX.Element {
   )
 }
 
-function ChatBubbleIcon(): JSX.Element {
+function ChatBubbleIcon(): React.JSX.Element {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -1693,7 +1693,7 @@ function ChatBubbleIcon(): JSX.Element {
   )
 }
 
-function FolderIcon(): JSX.Element {
+function FolderIcon(): React.JSX.Element {
   return (
     <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -1706,7 +1706,7 @@ function FolderIcon(): JSX.Element {
   )
 }
 
-function SettingsIcon(): JSX.Element {
+function SettingsIcon(): React.JSX.Element {
   return (
     <svg className="icon-settings" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
@@ -1724,7 +1724,7 @@ function SettingsModal({
   onClose
 }: {
   onClose: () => void
-}): JSX.Element {
+}): React.JSX.Element {
   useEffect(() => {
     const handleKey = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
@@ -1775,7 +1775,7 @@ function ThreadScroll({
   children: React.ReactNode
   dependencies: unknown[]
   resetKey: string | null
-}): JSX.Element {
+}): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
@@ -1907,7 +1907,7 @@ function ThreadScroll({
   )
 }
 
-const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): JSX.Element | null {
+const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): React.JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
@@ -1956,7 +1956,7 @@ const AssistantMessage = memo(function AssistantMessage({
   text: string
   streaming: boolean
   commentary: boolean
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <article
       className={`message message-assistant ${commentary ? 'message-commentary' : ''} ${
@@ -1985,7 +1985,7 @@ type ChartConfig = {
   values?: number[]
 }
 
-const MarkdownContent = memo(function MarkdownContent({ text }: { text: string }): JSX.Element {
+const MarkdownContent = memo(function MarkdownContent({ text }: { text: string }): React.JSX.Element {
   return (
     <div className="markdown-body">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
@@ -2064,7 +2064,7 @@ function parseChartConfig(value: string): ChartConfig | null {
   }
 }
 
-function ChartBlock({ config }: { config: ChartConfig }): JSX.Element {
+function ChartBlock({ config }: { config: ChartConfig }): React.JSX.Element {
   const data = config.data ?? []
   const max = Math.max(...data.map((datum) => Math.abs(datum.value)), 1)
   const min = Math.min(...data.map((datum) => datum.value), 0)
@@ -2140,7 +2140,7 @@ function WorkspacePill({
 }: {
   workspace: string | null
   onPickWorkspace: () => Promise<void>
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <button
       type="button"
@@ -2167,7 +2167,7 @@ function ModelPill({
   models: Model[]
   selectedModel: string | null
   onSelectModel: (model: string) => void
-}): JSX.Element {
+}): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const wrapRef = useRef<HTMLDivElement | null>(null)
 
@@ -2244,7 +2244,7 @@ function ModelPill({
   )
 }
 
-function ModelIcon(): JSX.Element {
+function ModelIcon(): React.JSX.Element {
   return (
     <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.6" />
@@ -2274,7 +2274,7 @@ function Composer({
   onSend: (text: string) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
-}): JSX.Element {
+}): React.JSX.Element {
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -2348,7 +2348,7 @@ function BrowserPane({
   activeTab: BrowserTabState | null
   viewHostRef: React.RefObject<HTMLDivElement | null>
   viewBounds: BrowserBounds | null
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <section className="browser-pane">
       <TabStrip state={state} />
@@ -2360,7 +2360,7 @@ function BrowserPane({
   )
 }
 
-function TabStrip({ state }: { state: BrowserState }): JSX.Element {
+function TabStrip({ state }: { state: BrowserState }): React.JSX.Element {
   return (
     <div className="tab-strip">
       {state.tabs.map((tab) => (
@@ -2399,7 +2399,7 @@ function TabStrip({ state }: { state: BrowserState }): JSX.Element {
   )
 }
 
-function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading: boolean }): JSX.Element {
+function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading: boolean }): React.JSX.Element {
   // Reset the error flag whenever the favicon URL changes so a fresh icon gets
   // a chance to load after a previous one failed.
   const [failed, setFailed] = useState(false)
@@ -2424,7 +2424,7 @@ function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading:
   return <GlobeIcon />
 }
 
-function GlobeIcon(): JSX.Element {
+function GlobeIcon(): React.JSX.Element {
   return (
     <svg className="tab-favicon tab-favicon-fallback" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.2" />
@@ -2438,7 +2438,7 @@ function GlobeIcon(): JSX.Element {
   )
 }
 
-function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): JSX.Element {
+function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): React.JSX.Element {
   const [input, setInput] = useState('')
 
   useEffect(() => {

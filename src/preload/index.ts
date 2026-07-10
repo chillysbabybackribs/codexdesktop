@@ -10,7 +10,7 @@ import type {
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 
-const api = {
+export const api = {
   window: {
     minimize: () => ipcRenderer.invoke(ipcChannels.windowMinimize),
     toggleMaximize: () => ipcRenderer.invoke(ipcChannels.windowToggleMaximize),

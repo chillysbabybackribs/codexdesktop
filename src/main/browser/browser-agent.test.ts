@@ -42,7 +42,7 @@ test('browser agent runs a program against the active tab', async () => {
 })
 
 test('browser agent serializes programs targeting the same tab', async () => {
-  let releaseFirst: (() => void) | null = null
+  let releaseFirst: () => void = () => assert.fail('first browser operation was not queued')
   let active = 0
   let maximumActive = 0
   let call = 0
@@ -69,7 +69,7 @@ test('browser agent serializes programs targeting the same tab', async () => {
   await new Promise((resolve) => setImmediate(resolve))
 
   assert.equal(maximumActive, 1)
-  releaseFirst?.()
+  releaseFirst()
   await Promise.all([first, second])
   assert.equal(maximumActive, 1)
 })

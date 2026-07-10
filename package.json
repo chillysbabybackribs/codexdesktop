@@ -11,7 +11,7 @@
     "git:autosnapshot:once": "node scripts/git-autosnapshot.mjs --once",
     "build": "npm run typecheck && electron-vite build",
     "preview": "electron-vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/browser/*.test.ts",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
