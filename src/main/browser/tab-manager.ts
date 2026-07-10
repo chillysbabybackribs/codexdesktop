@@ -5,9 +5,11 @@ import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.j
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import { attachPopupWindowHandling } from './browser-popups.js'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
+import { loadPageAndSettle } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 
 const defaultTabUrl = 'https://www.google.com'
+const browserBackgroundColor = '#181a1d'
 
 type BrowserStateListener = (state: BrowserState) => void
 
@@ -24,6 +26,7 @@ const hiddenBounds: BrowserBounds = { x: -10000, y: -10000, width: 10, height: 1
 
 export class TabManager {
   private readonly tabs = new Map<string, BrowserTab>()
+  private readonly navigationControllers = new Map<string, AbortController>()
   private activeTabId: string | null = null
   private bounds: BrowserBounds = hiddenBounds
   private isDraggingDivider = false
@@ -51,17 +54,21 @@ export class TabManager {
 
   async restoreFromSnapshot(state: SavedBrowserState): Promise<void> {
     const savedTabs = state.tabs.slice(0, MAX_SAVED_BROWSER_TABS)
+    const created = savedTabs.map((savedTab) => this.createSavedTabShell(savedTab))
+    const activeIndex = clampIndex(state.activeTabIndex, created.length)
+    const active = created[activeIndex]
 
-    for (const savedTab of savedTabs) {
-      await this.createTabFromSaved(savedTab)
+    if (active) {
+      // Put the saved active surface on screen immediately. Its native dark
+      // background remains visible until Chromium has useful content to paint.
+      this.activateTab(active.tab.id)
+      await this.hydrateSavedTab(active.tab, active.saved)
     }
 
-    const tabIds = Array.from(this.tabs.keys())
-    const activeTabId = tabIds[Math.min(Math.max(state.activeTabIndex, 0), tabIds.length - 1)]
-
-    if (activeTabId) {
-      this.activateTab(activeTabId)
-    }
+    const background = created.filter((entry) => entry !== active)
+    void runWithConcurrency(background, 2, async ({ tab, saved }) => {
+      await this.hydrateSavedTab(tab, saved)
+    }).finally(() => this.pushState())
 
     this.pushState()
   }
@@ -107,11 +114,13 @@ export class TabManager {
     }
   }
 
-  createTab(url = defaultTabUrl, options: { load?: boolean } = {}): string {
+  createTab(url = defaultTabUrl, options: { load?: boolean; activate?: boolean } = {}): string {
     const id = crypto.randomUUID()
     const view = this.createView()
 
     view.setBorderRadius?.(12)
+    view.setBackgroundColor(browserBackgroundColor)
+    view.setVisible(false)
     view.setBounds(this.activeTabId ? hiddenBounds : this.bounds)
     this.window.contentView.addChildView(view)
 
@@ -126,19 +135,23 @@ export class TabManager {
 
     this.tabs.set(id, tab)
     this.attachEvents(tab)
-    this.activateTab(id)
+    if (options.activate !== false) {
+      this.activateTab(id)
+    }
     if (options.load !== false) {
-      void view.webContents.loadURL(normalizeNavigationInput(url), { userAgent: chromeLikeUserAgent() })
+      void this.startNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
     }
     this.pushState()
     return id
   }
 
-  private async createTabFromSaved(saved: SavedBrowserTab): Promise<string> {
+  private createSavedTabShell(saved: SavedBrowserTab): { tab: BrowserTab; saved: SavedBrowserTab } {
     const id = crypto.randomUUID()
     const view = this.createView()
 
     view.setBorderRadius?.(12)
+    view.setBackgroundColor(browserBackgroundColor)
+    view.setVisible(false)
     view.setBounds(hiddenBounds)
     this.window.contentView.addChildView(view)
 
@@ -154,6 +167,11 @@ export class TabManager {
     this.tabs.set(id, tab)
     this.attachEvents(tab)
 
+    return { tab, saved }
+  }
+
+  private async hydrateSavedTab(tab: BrowserTab, saved: SavedBrowserTab): Promise<void> {
+    const view = tab.view
     try {
       const safeEntries = saved.entries.filter((entry) => isSafeNavigationUrl(entry.url))
 
@@ -166,24 +184,23 @@ export class TabManager {
         tab.url = view.webContents.getURL() || safeEntries[activeIndex]?.url || saved.url
         tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
       } else if (isSafeNavigationUrl(saved.url)) {
-        await view.webContents.loadURL(saved.url, { userAgent: chromeLikeUserAgent() })
+        await this.startNavigation(tab, saved.url)
         tab.url = view.webContents.getURL() || saved.url
         tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
       } else {
-        await view.webContents.loadURL(defaultTabUrl, { userAgent: chromeLikeUserAgent() })
+        await this.startNavigation(tab, defaultTabUrl)
         tab.url = defaultTabUrl
         tab.title = 'New Tab'
       }
     } catch {
       const fallbackUrl = isSafeNavigationUrl(saved.url) ? saved.url : defaultTabUrl
-      await view.webContents.loadURL(fallbackUrl, { userAgent: chromeLikeUserAgent() })
+      await this.startNavigation(tab, fallbackUrl)
       tab.url = view.webContents.getURL() || fallbackUrl
       tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
     } finally {
       tab.isLoading = false
+      this.pushState()
     }
-
-    return id
   }
 
   private createView(): WebContentsView {
