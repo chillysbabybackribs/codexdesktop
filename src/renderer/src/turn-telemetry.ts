@@ -130,7 +130,7 @@ export function accumulateTokenUsage(
       latestCall: cloneUsage(incoming.last),
       threadTotalAtEnd: cloneUsage(incoming.total),
       modelContextWindow: incoming.modelContextWindow,
-      modelCallCount: 1
+      modelCallCount: incoming.last.totalTokens > 0 ? 1 : 0
     }
   }
 

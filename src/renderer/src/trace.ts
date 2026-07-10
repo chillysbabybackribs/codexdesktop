@@ -126,7 +126,9 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       ...(params.meta?.errorEvents?.length ? { errorEvents: params.meta.errorEvents } : {})
     },
     environment: {
-      requestedModel: valueOrFallback(params.meta?.requestedModel, params.model),
+      requestedModel: params.meta
+        ? (params.meta.requestedModel ?? null)
+        : params.model,
       model: valueOrFallback(params.meta?.model, params.model),
       workspace: valueOrFallback(params.meta?.workspace, params.workspace),
       modelReroutes: params.meta?.modelReroutes ?? []
