@@ -556,7 +556,8 @@ button {
 }
 
 .message-assistant {
-  max-width: min(860px, 92%);
+  max-width: min(920px, 100%);
+  color: #e2e5e8;
 }
 
 .message-system {
@@ -585,6 +586,413 @@ button {
   border: 1px solid #2e2e2e;
   border-radius: 8px;
   background: #1f1f1f;
+}
+
+/* --- Premium assistant markdown ----------------------------------------- */
+
+.markdown-body {
+  max-width: 100%;
+  color: #d9dde1;
+  font-size: 14.5px;
+  line-height: 1.68;
+  overflow-wrap: anywhere;
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body p {
+  margin: 0 0 14px;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  color: #f1f3f5;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+}
+
+.markdown-body h1 {
+  margin: 4px 0 18px;
+  font-size: 25px;
+  font-weight: 720;
+}
+
+.markdown-body h2 {
+  margin: 30px 0 12px;
+  padding-top: 17px;
+  border-top: 1px solid #2b2e32;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.markdown-body h3 {
+  margin: 22px 0 9px;
+  font-size: 15.5px;
+  font-weight: 680;
+}
+
+.markdown-body h4 {
+  margin: 18px 0 7px;
+  color: #c9ced3;
+  font-size: 14px;
+  font-weight: 680;
+}
+
+.markdown-body strong {
+  color: #f2f4f6;
+  font-weight: 700;
+}
+
+.markdown-body em {
+  color: #bbc1c7;
+}
+
+.markdown-body a {
+  color: #8ab9f0;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.markdown-body a:hover {
+  color: #b5d5fa;
+  text-decoration: underline;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin: 5px 0 16px;
+  padding-left: 25px;
+}
+
+.markdown-body li {
+  margin: 5px 0;
+  padding-left: 4px;
+}
+
+.markdown-body li::marker {
+  color: #8d969f;
+}
+
+.markdown-body li > p {
+  margin-bottom: 7px;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ul,
+.markdown-body ol ol {
+  margin-top: 4px;
+  margin-bottom: 7px;
+}
+
+.markdown-body input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+  margin: 0 7px 0 0;
+  accent-color: #8ab9f0;
+  vertical-align: -1px;
+}
+
+.markdown-body del {
+  color: #7d858d;
+}
+
+.markdown-body .markdown-quote {
+  margin: 18px 0;
+  padding: 11px 16px;
+  border-left: 3px solid #5d789a;
+  border-radius: 0 8px 8px 0;
+  background: #1c2229;
+  color: #b9c2cb;
+}
+
+.markdown-body .markdown-quote p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body .markdown-rule {
+  height: 1px;
+  margin: 24px 0;
+  border: 0;
+  background: #2b2e32;
+}
+
+.markdown-body :not(pre) > code {
+  padding: 2px 6px;
+  border: 1px solid #353a40;
+  border-radius: 5px;
+  background: #202328;
+  color: #d9e5f1;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.86em;
+}
+
+.markdown-body pre {
+  max-width: 100%;
+  margin: 17px 0 20px;
+  padding: 15px 17px;
+  overflow: auto;
+  border: 1px solid #30353b;
+  border-radius: 10px;
+  background: #14171a;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
+  scrollbar-width: thin;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #cbd4de;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+.markdown-table-wrap {
+  width: 100%;
+  margin: 18px 0 21px;
+  overflow-x: auto;
+  border: 1px solid #30353b;
+  border-radius: 10px;
+  background: #191c20;
+  scrollbar-width: thin;
+}
+
+.markdown-body table {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 10px 13px;
+  border-bottom: 1px solid #2b3035;
+  vertical-align: top;
+}
+
+.markdown-body th {
+  background: #22262b;
+  color: #eef1f4;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.markdown-body tr:last-child td {
+  border-bottom: 0;
+}
+
+.markdown-body tbody tr:nth-child(even) {
+  background: rgb(255 255 255 / 1.8%);
+}
+
+.markdown-body tbody tr:hover {
+  background: rgb(138 185 240 / 6%);
+}
+
+.markdown-chart {
+  margin: 19px 0 22px;
+  padding: 16px 17px 15px;
+  border: 1px solid #303943;
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at 100% 0%, rgb(87 127 170 / 12%), transparent 42%),
+    #191d22;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 12%);
+}
+
+.markdown-chart-title {
+  color: #eef2f5;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.markdown-chart-description {
+  margin: 4px 0 13px;
+  color: #8e98a2;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.markdown-bar-chart {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  min-height: 152px;
+  padding: 14px 5px 0;
+}
+
+.markdown-bar-item {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  gap: 7px;
+  min-width: 0;
+}
+
+.markdown-bar-track {
+  display: flex;
+  flex: 1;
+  align-items: end;
+  width: 100%;
+  min-height: 105px;
+  border-bottom: 1px solid #3b424a;
+  background: repeating-linear-gradient(to bottom, transparent 0 25px, rgb(255 255 255 / 4%) 26px, transparent 27px);
+}
+
+.markdown-bar-fill {
+  position: relative;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  width: min(46px, 76%);
+  min-height: 4px;
+  margin: 0 auto;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, #8fc3f4, #4e81b4);
+  color: #dcecff;
+  transition: height 220ms ease, width 220ms ease;
+}
+
+.markdown-bar-fill span {
+  position: absolute;
+  top: -20px;
+  color: #aebdcb;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.markdown-bar-label {
+  max-width: 100%;
+  overflow: hidden;
+  color: #98a1aa;
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 8px 0 0;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-item {
+  display: grid;
+  grid-template-columns: minmax(58px, 25%) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-track {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 9px;
+  border: 0;
+  border-radius: 99px;
+  background: #2a3036;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-fill {
+  width: 0;
+  height: 9px;
+  min-height: 9px;
+  margin: 0;
+  border-radius: 99px;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-fill span {
+  top: -18px;
+  right: 0;
+}
+
+.markdown-chart.is-horizontal-bar .markdown-bar-label {
+  grid-column: 1;
+  grid-row: 1;
+  text-align: right;
+}
+
+.markdown-line-chart {
+  position: relative;
+  height: 165px;
+  margin-top: 14px;
+  padding-bottom: 31px;
+}
+
+.markdown-line-chart svg {
+  display: block;
+  width: 100%;
+  height: 126px;
+  overflow: visible;
+}
+
+.markdown-chart-gridline {
+  fill: none;
+  stroke: rgb(255 255 255 / 8%);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.markdown-chart-line {
+  fill: none;
+  stroke: #8fc3f4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.markdown-line-points {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.markdown-line-point {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.markdown-line-point strong {
+  color: #b3c9de;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.markdown-line-point span {
+  max-width: 72px;
+  overflow: hidden;
+  color: #89939d;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ------------------------------------------------------------------------
