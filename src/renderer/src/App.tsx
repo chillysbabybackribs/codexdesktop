@@ -1481,7 +1481,13 @@ function TaskActivityCard({
   live: boolean
   workspace: string | null
 }): React.JSX.Element {
-  const newestWorkItemId = [...items].reverse().find(isWorkItem)?.id
+  let newestWorkItemId: string | undefined
+  for (let i = items.length - 1; i >= 0; i -= 1) {
+    if (isWorkItem(items[i])) {
+      newestWorkItemId = items[i].id
+      break
+    }
+  }
   const newestActivityId = items[items.length - 1]?.id
   const content: React.JSX.Element[] = []
   let workRun: WorkItem[] = []
