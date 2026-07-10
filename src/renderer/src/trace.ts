@@ -27,8 +27,13 @@ export type TurnTraceEvent = {
 }
 
 export type TurnTrace = {
-  schemaVersion: 1
+  schemaVersion: 2
   exportedAt: string
+  capture: {
+    source: 'live' | 'restored' | 'unknown'
+    completeness: 'complete' | 'partial'
+    missing: string[]
+  }
   thread: {
     id: string | null
     title: string
@@ -42,13 +47,17 @@ export type TurnTrace = {
     error?: string
   }
   environment: {
+    requestedModel: string | null
     model: string | null
     workspace: string | null
+    modelReroutes: NonNullable<TurnMeta['modelReroutes']>
   }
   usage: {
     turn: TokenUsageBreakdown | null
+    latestModelCall: TokenUsageBreakdown | null
     threadTotalAtEnd: TokenUsageBreakdown | null
     modelContextWindow: number | null
+    modelCallCount: number
   }
   summary: {
     itemCount: number
@@ -92,13 +101,19 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
     )?.text ?? ''
   const timeline = turnItems.map((item, index) => traceEvent(item, params.itemMeta[item.id], index))
   const toolItems = turnItems.filter((item) => item.type === 'dynamicToolCall' || item.type === 'mcpToolCall')
+  const capture = traceCapture(params.meta, finalResponse)
+  const cleanTitle = stripSkillMarkerFromTitle(params.threadTitle)
+  const traceTitle = cleanTitle === 'New Chat' && prompt.trim()
+    ? clip(singleLine(prompt), 140)
+    : cleanTitle
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     exportedAt: new Date().toISOString(),
+    capture,
     thread: {
       id: params.threadId,
-      title: stripSkillMarkerFromTitle(params.threadTitle)
+      title: traceTitle
     },
     turn: {
       id: params.turnId,
@@ -106,16 +121,21 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       ...(iso(params.meta?.startedAtMs) ? { startedAt: iso(params.meta?.startedAtMs) } : {}),
       ...(iso(params.meta?.completedAtMs) ? { completedAt: iso(params.meta?.completedAtMs) } : {}),
       ...(turnDuration(params.meta) !== undefined ? { durationMs: turnDuration(params.meta) } : {}),
-      ...(params.meta?.errorMessage ? { error: params.meta.errorMessage } : {})
+      ...(params.meta?.errorMessage ? { error: params.meta.errorMessage } : {}),
+      ...(params.meta?.errorEvents?.length ? { errorEvents: params.meta.errorEvents } : {})
     },
     environment: {
-      model: params.meta?.model ?? params.model,
-      workspace: params.meta?.workspace ?? params.workspace
+      requestedModel: valueOrFallback(params.meta?.requestedModel, params.model),
+      model: valueOrFallback(params.meta?.model, params.model),
+      workspace: valueOrFallback(params.meta?.workspace, params.workspace),
+      modelReroutes: params.meta?.modelReroutes ?? []
     },
     usage: {
-      turn: params.meta?.tokens?.last ?? null,
-      threadTotalAtEnd: params.meta?.tokens?.total ?? null,
+      turn: params.meta?.tokens?.turn ?? null,
+      latestModelCall: params.meta?.tokens?.latestCall ?? null,
+      threadTotalAtEnd: params.meta?.tokens?.threadTotalAtEnd ?? null,
       modelContextWindow: params.meta?.tokens?.modelContextWindow ?? null
+      ,modelCallCount: params.meta?.tokens?.modelCallCount ?? 0
     },
     summary: {
       itemCount: turnItems.length,
@@ -133,6 +153,15 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
     finalResponse: clip(finalResponse, maxTextChars),
     timeline
   }
+}
+
+export function isTurnTrace(value: unknown): value is TurnTrace {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Partial<TurnTrace>
+  return candidate.schemaVersion === 2 &&
+    typeof candidate.exportedAt === 'string' &&
+    Boolean(candidate.turn && typeof candidate.turn.id === 'string') &&
+    Boolean(candidate.thread && Array.isArray(candidate.timeline))
 }
 
 function traceEvent(item: TraceInputItem, meta: ItemMeta | undefined, index: number): TurnTraceEvent {
@@ -277,6 +306,28 @@ function turnDuration(meta: TurnMeta | undefined): number | undefined {
   if (typeof meta?.durationMs === 'number') return meta.durationMs
   if (meta?.startedAtMs && meta.completedAtMs) return Math.max(0, meta.completedAtMs - meta.startedAtMs)
   return undefined
+}
+
+function traceCapture(meta: TurnMeta | undefined, finalResponse: string): TurnTrace['capture'] {
+  const missing: string[] = []
+  const source = meta?.origin ?? 'unknown'
+
+  if (!meta) missing.push('turnTelemetry')
+  if (!meta?.tokens) missing.push('tokenUsage')
+  if (!finalResponse && meta?.status !== 'inProgress') missing.push('finalResponse')
+  if (source === 'restored') {
+    missing.push('ephemeralExecutionItems', 'structuredSkillSelection')
+  }
+
+  return {
+    source,
+    completeness: missing.length ? 'partial' : 'complete',
+    missing
+  }
+}
+
+function valueOrFallback<T>(value: T | null | undefined, fallback: T | null): T | null {
+  return value === undefined ? fallback : value
 }
 
 function iso(value: number | undefined): string | undefined {
