@@ -35,6 +35,7 @@ test('sanitizeSavedTab falls back to url when entries are empty', () => {
   const tab = sanitizeSavedTab({
     title: 'Docs',
     url: 'https://docs.example.com',
+    favicon: null,
     entries: [],
     activeIndex: 0
   })
@@ -42,6 +43,7 @@ test('sanitizeSavedTab falls back to url when entries are empty', () => {
   assert.deepEqual(tab, {
     title: 'Docs',
     url: 'https://docs.example.com',
+    favicon: null,
     entries: [],
     activeIndex: 0
   })
@@ -51,6 +53,7 @@ test('sanitizeSavedTab drops tabs with only unsafe urls', () => {
   const tab = sanitizeSavedTab({
     title: 'Bad',
     url: 'javascript:void(0)',
+    favicon: null,
     entries: [{ url: 'file:///tmp/x', title: 'X' }],
     activeIndex: 0
   })
@@ -66,12 +69,14 @@ test('sanitizeBrowserState clamps active tab index', () => {
       {
         title: 'One',
         url: 'https://one.example',
+        favicon: null,
         entries: [],
         activeIndex: 0
       },
       {
         title: 'Two',
         url: 'https://two.example',
+        favicon: null,
         entries: [],
         activeIndex: 0
       }
@@ -94,6 +99,7 @@ test('parseSavedBrowserState round-trips a valid snapshot', () => {
       {
         title: 'Google',
         url: 'https://www.google.com',
+        favicon: null,
         entries: [{ url: 'https://www.google.com', title: 'Google' }],
         activeIndex: 0
       }
