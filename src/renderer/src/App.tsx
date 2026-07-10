@@ -4,6 +4,7 @@ import {
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent,
   isValidElement,
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -141,13 +142,6 @@ function buildRows(
       continue
     }
 
-    // A final answer is intentionally buffered while its turn is running.
-    // Codex does not mark every provider's answer chunks consistently, so the
-    // active-turn check applies to all agent messages, not only final_answer.
-    if (item.type === 'agentMessage' && turnId === activeTurnId) {
-      continue
-    }
-
     rows.push({ kind: 'chat', item, turnId })
     if (turnId) {
       lastRowIndex.set(turnId, rows.length - 1)
@@ -229,7 +223,7 @@ export default function App(): JSX.Element {
   const hasAutoRestoredRef = useRef(false)
   const initializationPromiseRef = useRef<Promise<void> | null>(null)
   const pendingAgentDeltasRef = useRef<Map<string, string>>(new Map())
-  const agentDeltaFrameRef = useRef<number | null>(null)
+  const agentDeltaTimerRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -445,11 +439,11 @@ export default function App(): JSX.Element {
     window.addEventListener('pointerup', handleUp, { once: true })
   }
 
-  const handleSend = async (text: string): Promise<void> => {
+  const handleSend = async (text: string): Promise<boolean> => {
     const trimmed = text.trim()
 
     if (!trimmed || isSending || activeTurnId) {
-      return
+      return false
     }
 
     setIsSending(true)
@@ -472,10 +466,30 @@ export default function App(): JSX.Element {
       })
       adoptTurnItems(response.turn.id, response.turn.items)
       mergeItems(response.turn.items)
+      return true
     } catch (error) {
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
+      return false
     } finally {
       setIsSending(false)
+    }
+  }
+
+  const handleSteer = async (text: string): Promise<boolean> => {
+    const trimmed = text.trim()
+    const threadId = activeThreadIdRef.current
+    const turnId = activeTurnIdRef.current
+
+    if (!trimmed || !threadId || !turnId) {
+      return false
+    }
+
+    try {
+      await window.api.codex.steerTurn({ threadId, turnId, text: trimmed })
+      return true
+    } catch (error) {
+      addSystemItem(`Could not add guidance to the active turn: ${(error as Error).message}`, 'error')
+      return false
     }
   }
 
@@ -1070,6 +1084,7 @@ export default function App(): JSX.Element {
           selectedModel={selectedModel}
           onSelectModel={handleSelectModel}
           onSend={handleSend}
+          onSteer={handleSteer}
           onStop={handleStop}
           onNewThread={handleNewThread}
           onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
