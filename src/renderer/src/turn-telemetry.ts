@@ -1,4 +1,6 @@
 import type { ModelRerouteReason } from '../../shared/codex-protocol/v2/ModelRerouteReason'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown'
 import type { TurnDiffSummary } from './diff'
@@ -35,7 +37,12 @@ export type TurnMeta = {
   origin?: TurnTelemetryOrigin
   requestedModel?: string | null
   model?: string | null
+  reasoningEffort?: ReasoningEffort | null
   workspace?: string | null
+  goalAtStart?: ThreadGoal | null
+  goalAtEnd?: ThreadGoal | null
+  goalContinuation?: boolean
+  goalContinuationInferred?: boolean
   startedAtMs?: number
   completedAtMs?: number
   durationMs?: number

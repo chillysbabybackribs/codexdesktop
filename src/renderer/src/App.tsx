@@ -22,9 +22,12 @@ import type {
   CodexEvent
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
+import type { ThreadGoalStatus } from '../../shared/codex-protocol/v2/ThreadGoalStatus'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
@@ -183,6 +186,10 @@ function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
 }
 
+function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
+  return goal ? { ...goal } : null
+}
+
 export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'))
@@ -192,6 +199,9 @@ export default function App(): React.JSX.Element {
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null)
   const [activeThreadTitle, setActiveThreadTitle] = useState('New Chat')
   const [activeTurnId, setActiveTurnId] = useState<string | null>(null)
+  const [activeGoal, setActiveGoal] = useState<ThreadGoal | null>(null)
+  const [isGoalUpdating, setIsGoalUpdating] = useState(false)
+  const [activeReasoningEffort, setActiveReasoningEffort] = useState<ReasoningEffort | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [isRestoring, setIsRestoring] = useState(true)
   const [codexStatus, setCodexStatus] = useState('idle')
@@ -224,6 +234,9 @@ export default function App(): React.JSX.Element {
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
   const activeTurnIdRef = useRef<string | null>(activeTurnId)
+  const activeGoalRef = useRef<ThreadGoal | null>(activeGoal)
+  const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
+  const userTurnRequestPendingRef = useRef(false)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const workspaceRef = useRef<string | null>(workspace)
   const watchThreadIdRef = useRef<string | null>(null)
@@ -256,6 +269,14 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     activeTurnIdRef.current = activeTurnId
   }, [activeTurnId])
+
+  useEffect(() => {
+    activeGoalRef.current = activeGoal
+  }, [activeGoal])
+
+  useEffect(() => {
+    activeReasoningEffortRef.current = activeReasoningEffort
+  }, [activeReasoningEffort])
 
   useEffect(() => {
     selectedModelRef.current = selectedModel
