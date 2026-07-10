@@ -3,7 +3,7 @@ import type { NavigationEntry } from 'electron'
 export type SavedBrowserTab = {
   title: string
   url: string
-  favicon?: string | null
+  favicon: string | null
   entries: NavigationEntry[]
   activeIndex: number
 }
