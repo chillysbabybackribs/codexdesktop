@@ -152,7 +152,7 @@ function classifySource(
   title: string,
   queryTokens: string[]
 ): RankedSerpCandidate['sourceTier'] {
-  if ([...VIDEO_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`))) return 'video'
+  if ([...VIDEO_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`)) || /\/(watch|video|videos|shorts|live)(\/|$)/i.test(pathname)) return 'video'
   if ([...COMMUNITY_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`))) return 'community'
   if (/\.(gov|mil|edu)$/i.test(domain) || /(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) return 'official'
   if (/\/(docs?|developer|reference|api|spec|standards?)\b/i.test(pathname) || /\bofficial\b/i.test(title)) return 'primary'
