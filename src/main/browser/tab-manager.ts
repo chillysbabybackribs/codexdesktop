@@ -491,13 +491,15 @@ export class TabManager {
   }
 }
 
-// Chromium reports favicon candidates best-first. Take the first that's safe to
-// render from the renderer origin — http(s) or data URLs — and ignore the rest.
+// Chromium reports favicon candidates best-first. Take the first the renderer
+// can actually load under its CSP (img-src 'self' data: https:) — https or data
+// image URLs only. http/blob/file candidates are dropped so we fall back to the
+// neutral glyph rather than shipping a src the renderer will refuse to render.
 function pickFavicon(favicons: string[]): string | null {
   for (const candidate of favicons) {
     const lower = candidate.trim().toLowerCase()
 
-    if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:image/')) {
+    if (lower.startsWith('https://') || lower.startsWith('data:image/')) {
       return candidate
     }
   }

@@ -66,7 +66,7 @@ function sanitizeFavicon(favicon: unknown): string | null {
 
   const lower = favicon.trim().toLowerCase()
 
-  if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:image/')) {
+  if (lower.startsWith('https://') || lower.startsWith('data:image/')) {
     return favicon
   }
 
