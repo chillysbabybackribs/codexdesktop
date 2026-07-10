@@ -1246,6 +1246,15 @@ function ChatPane({
           onResumeThread={onResumeThread}
           onLoadMoreThreads={onLoadMoreThreads}
         />
+        <button
+          type="button"
+          className="icon-button chat-toolbar-new"
+          aria-label="New chat"
+          title="New chat"
+          onClick={onNewThread}
+        >
+          <NewChatIcon />
+        </button>
       </div>
 
       <ThreadScroll
@@ -1718,6 +1727,20 @@ function SettingsIcon(): React.JSX.Element {
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function NewChatIcon(): React.JSX.Element {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 19h14M12 5v10M7 10l5-5 5 5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
@@ -2333,7 +2356,8 @@ function Composer({
         <div className="composer-actions">
           {isTurnActive ? (
             <button type="button" className="stop-button" aria-label="Stop turn" onClick={() => void onStop()}>
-              ■
+              <span className="stop-button-icon" aria-hidden="true">■</span>
+              <span>Stop</span>
             </button>
           ) : null}
           <button
