@@ -197,8 +197,8 @@ export class ResearchRunner {
             htmlPath,
             sourceQuery: candidate.query,
             sourceTier: candidate.sourceTier,
-            score: candidate.score
-            ,verified: true
+            score: candidate.score,
+            verified: true
           } satisfies ResearchPage
         } catch (error) {
           if (signal.aborted) throw error

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  assessExtractedPage,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
@@ -64,4 +65,59 @@ test('candidate ranking boosts primary sources and lowers video results', () => 
   assert.equal(ranked[0].domain, 'docs.deepseek.com')
   assert.ok(video)
   assert.ok(video.score < ranked[0].score)
+})
+
+test('firsthand queries prioritize issue and discussion reports', () => {
+  const query = 'Electron WebContentsView Linux firsthand migration reports'
+  const candidates: SerpCandidate[] = [
+    {
+      url: 'https://www.electronjs.org/docs/latest/api/web-contents-view',
+      title: 'WebContentsView API documentation',
+      snippet: 'Official API reference for WebContentsView',
+      rank: 1,
+      query
+    },
+    {
+      url: 'https://github.com/electron/electron/issues/44567',
+      title: 'Linux rendering regression after migrating to WebContentsView',
+      snippet: 'I migrated from BrowserView and reproduced this on Ubuntu with Electron 34',
+      rank: 2,
+      query
+    }
+  ]
+
+  const ranked = rankSerpCandidates(candidates, [query], 2)
+
+  assert.equal(ranked[0].sourceTier, 'community')
+  assert.equal(ranked[0].domain, 'github.com')
+})
+
+test('page assessment accepts substantial content and rejects extraction failures', () => {
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Migration report',
+      url: 'https://example.com/report',
+      content: 'A developer migration report with concrete environment and reproduction details. '.repeat(12),
+      wordCount: 96
+    }),
+    { verified: true }
+  )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Just a moment',
+      url: 'https://example.com/report',
+      content: 'Checking your browser before accessing the site. Verify you are human.',
+      wordCount: 11
+    }),
+    { verified: false, reason: 'challenge-page' }
+  )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Empty shell',
+      url: 'https://example.com/report',
+      content: 'Loading...',
+      wordCount: 1
+    }),
+    { verified: false, reason: 'insufficient-content' }
+  )
 })
