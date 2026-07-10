@@ -2003,7 +2003,14 @@ const markdownComponents: Components = {
   blockquote: ({ children }) => <blockquote className="markdown-quote">{children}</blockquote>,
   hr: () => <hr className="markdown-rule" />,
   a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noreferrer">
+    <a
+      href={href}
+      onClick={(event) => {
+        if (!href || !/^https?:\/\//i.test(href)) return
+        event.preventDefault()
+        void window.api.browser.newTab(href)
+      }}
+    >
       {children}
     </a>
   ),
