@@ -46,6 +46,11 @@ const taskShapingGuidance = [
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
   '- Research budget: call research_web once with up to three query variants, process at most two strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
   '- Prefer snippets and targeted passages over long full-page results. Do not repeat large source text in later reasoning.',
+  'Response formatting guidance:',
+  '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
+  '- Use GitHub-Flavored Markdown tables for comparisons, summaries, rankings, and other repeated field data. Use blockquotes for important caveats and fenced code blocks for code or commands.',
+  '- When quantitative trends or comparisons are clearer visually, include a fenced `chart` block containing JSON with `type` (`bar`, `horizontal-bar`, or `line`), optional `title`, `description`, `unit`, and `data` entries shaped as `{ "label": "…", "value": 0 }`. Do not add charts when the data is too small or uncertain to benefit from one.',
+  '- Keep supporting context and caveats visually lighter than the primary answer; do not turn every response into a wall of text.',
   '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
 ]
 
