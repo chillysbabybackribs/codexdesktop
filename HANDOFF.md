@@ -2,6 +2,14 @@
 
 Updated: 2026-07-10
 
+## Progress Update
+
+- Per-call telemetry is implemented with a bounded 128-call curve, cache/uncached breakdowns, context percentage, input deltas, compaction markers, and preceding tool argument/result sizes.
+- Persisted turn traces now use schema v5 and the trace UI includes a context-growth table.
+- A controlled five-turn no-tool versus fixed-payload benchmark was run in both arm orders. The tool arm added an average 5,255 tokens of normalized final-context growth and about 82.6K of cumulative input. See `docs/token-baseline-2026-07-10.md`.
+- The compact `research_web` and `browser_extract_page` tools are already declared; the older finding below that says otherwise is retained as audit history but is no longer current.
+- Next implementation phase: correct the explicit per-turn effort policy and its renderer bookkeeping, then repeat the matched benchmark before enabling compaction.
+
 ## Objective
 
 Reduce extreme Codex token growth during tool-heavy tasks and multi-turn conversations without weakening the model, removing CDP, or degrading task quality.
