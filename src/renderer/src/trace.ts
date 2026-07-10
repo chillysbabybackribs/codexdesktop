@@ -48,7 +48,7 @@ export type TraceArtifact = {
 }
 
 export type TurnTrace = {
-  schemaVersion: 2 | 3 | 4
+  schemaVersion: 2 | 3 | 4 | 5
   exportedAt: string
   capture: {
     source: 'live' | 'restored' | 'unknown'
@@ -83,6 +83,8 @@ export type TurnTrace = {
     threadTotalAtEnd: TokenUsageBreakdown | null
     modelContextWindow: number | null
     modelCallCount: number
+    modelCalls?: NonNullable<TurnMeta['tokens']>['modelCalls']
+    droppedModelCallSamples?: number
     accounting?: {
       turnTotalSemantics: 'accumulatedAcrossModelCalls'
       latestModelCallSemantics: 'singleMostRecentCall'
@@ -203,7 +205,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
   const goal = goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts)
 
   return {
-    schemaVersion: 4,
+    schemaVersion: 5,
     exportedAt: new Date().toISOString(),
     capture,
     thread: {
@@ -234,6 +236,8 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       threadTotalAtEnd: params.meta?.tokens?.threadTotalAtEnd ?? null,
       modelContextWindow: params.meta?.tokens?.modelContextWindow ?? null,
       modelCallCount: params.meta?.tokens?.modelCallCount ?? 0,
+      modelCalls: params.meta?.tokens?.modelCalls ?? [],
+      droppedModelCallSamples: params.meta?.tokens?.droppedModelCallSamples ?? 0,
       accounting: usageAccounting(params.meta?.tokens)
     },
     summary: {
@@ -269,7 +273,12 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
 export function isTurnTrace(value: unknown): value is TurnTrace {
   if (!value || typeof value !== 'object') return false
   const candidate = value as Partial<TurnTrace>
-  return (candidate.schemaVersion === 2 || candidate.schemaVersion === 3 || candidate.schemaVersion === 4) &&
+  return (
+    candidate.schemaVersion === 2 ||
+    candidate.schemaVersion === 3 ||
+    candidate.schemaVersion === 4 ||
+    candidate.schemaVersion === 5
+  ) &&
     typeof candidate.exportedAt === 'string' &&
     Boolean(candidate.turn && typeof candidate.turn.id === 'string') &&
     Boolean(candidate.thread && Array.isArray(candidate.timeline))
