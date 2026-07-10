@@ -89,11 +89,13 @@ export function AutoFollow({
   children: React.ReactNode
 }): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
 
   useLayoutEffect(() => {
     const el = ref.current
+    const content = contentRef.current
 
-    if (!el) {
+    if (!el || !content) {
       return
     }
 
@@ -135,17 +137,12 @@ export function AutoFollow({
       })
     }
 
+    // Observe the inner content box, which grows as streamed text is appended —
+    // the scroll container's own border box does not. This catches growth with
+    // a coalesced resize callback instead of a subtree characterData
+    // MutationObserver firing once per streamed character.
     const resizeObserver = new ResizeObserver(follow)
-    resizeObserver.observe(el)
-
-    const mutationObserver = new MutationObserver(() => {
-      follow()
-    })
-    mutationObserver.observe(el, {
-      childList: true,
-      characterData: true,
-      subtree: true
-    })
+    resizeObserver.observe(content)
 
     follow()
 
@@ -153,13 +150,12 @@ export function AutoFollow({
       disposed = true
       cancel()
       resizeObserver.disconnect()
-      mutationObserver.disconnect()
     }
   }, [])
 
   return (
     <div ref={ref} className={`auto-follow ${className ?? ''}`}>
-      {children}
+      <div ref={contentRef}>{children}</div>
     </div>
   )
 }

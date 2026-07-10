@@ -2022,20 +2022,15 @@ function ThreadScroll({
     }
 
     let active = true
+    // The `dependencies` layout effect already calls followTail on every React
+    // commit (i.e. every batched streaming flush), which covers text growth.
+    // The ResizeObserver catches the reflows React does NOT drive — code-block
+    // wrapping, diff rows, and font metrics settling a frame after commit. A
+    // subtree characterData MutationObserver would fire on every streamed
+    // character for no gain over these two, so it is intentionally omitted.
     const resizeObserver = new ResizeObserver(followTail)
     resizeObserver.observe(el)
     resizeObserver.observe(content)
-
-    // Text and element changes inside Markdown are not guaranteed to change
-    // the wrapper's own box immediately. Observe them so code-block wrapping,
-    // streaming assistant text, file diffs, and the live tail all get a final
-    // bottom correction after their layout settles.
-    const mutationObserver = new MutationObserver(followTail)
-    mutationObserver.observe(content, {
-      childList: true,
-      characterData: true,
-      subtree: true
-    })
 
     // Web fonts can reflow existing markdown after the initial commit without
     // producing a React update. Catch that one late layout pass when supported.
@@ -2048,7 +2043,6 @@ function ThreadScroll({
     return () => {
       active = false
       resizeObserver.disconnect()
-      mutationObserver.disconnect()
       cancelScheduledFollow()
     }
   }, [cancelScheduledFollow, followTail])
