@@ -33,6 +33,8 @@ export type TurnMetaStatus = 'inProgress' | 'completed' | 'failed' | 'interrupte
 
 export type TurnMeta = {
   status: TurnMetaStatus
+  model?: string | null
+  workspace?: string | null
   startedAtMs?: number
   completedAtMs?: number
   durationMs?: number
