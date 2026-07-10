@@ -11,7 +11,9 @@ export function buildSerpExtractionProgram(maxResults: number): string {
     let url;
     try {
       const candidate = new URL(anchor.href, location.href);
-      url = candidate.pathname === '/url' ? candidate.searchParams.get('q') : candidate.href;
+      url = candidate.pathname === '/url'
+        ? (candidate.searchParams.get('q') || candidate.searchParams.get('url') || candidate.searchParams.get('u'))
+        : candidate.href;
     } catch {
       continue;
     }

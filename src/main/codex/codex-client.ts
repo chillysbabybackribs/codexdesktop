@@ -131,7 +131,7 @@ const researchWebSchema = {
       description: 'One to three focused search queries. Prefer one query plus one official-source variant.'
     },
     maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', description: 'Optional pages to process, from 1 to 8. Defaults to 5.' },
+    maxPages: { type: 'number', description: 'Optional pages to process, from 1 to 8. Defaults to 2.' },
     snippetChars: { type: 'number', description: 'Optional extracted text per page, from 1000 to 8000 characters.' }
   },
   required: ['queries'],

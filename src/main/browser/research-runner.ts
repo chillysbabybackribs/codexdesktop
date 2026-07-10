@@ -7,7 +7,7 @@ import { buildSerpExtractionProgram, googleSearchUrl } from './research-utils.js
 
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
-const DEFAULT_MAX_PAGES = 5
+const DEFAULT_MAX_PAGES = 2
 const MAX_MAX_PAGES = 8
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
@@ -37,6 +37,7 @@ export type ResearchResult = {
   artifactDir?: string
   pages?: ResearchPage[]
   discoveredUrls?: string[]
+  discoveredCount?: number
   errors?: Array<{ url?: string; error: string }>
   error?: string
 }
@@ -142,7 +143,8 @@ export class ResearchRunner {
       researchId,
       queries,
       artifactDir,
-      discoveredUrls: [...discovered.keys()],
+      discoveredUrls: candidates.map((candidate) => candidate.url),
+      discoveredCount: discovered.size,
       pages,
       ...(errors.length > 0 ? { errors } : {}),
       ...(pages.length === 0 && errors.length === 0 ? { error: 'No qualifying pages found' } : {})
