@@ -495,7 +495,10 @@ function goalTrace(
       successfulCommandCount: commandItems.filter((item) => item.status === 'completed').length,
       failedCommandCount: commandItems.filter((item) => item.status === 'failed' || item.status === 'declined').length,
       successfulStructuredToolCount: structuredItems.filter(isStructuredSuccess).length,
-      failedStructuredToolCount: structuredItems.filter((item) => item.status === 'failed' || !isStructuredSuccess(item)).length,
+      failedStructuredToolCount: structuredItems.filter((item) =>
+        item.status === 'failed' ||
+        (item.type === 'dynamicToolCall' ? item.success === false : item.error !== null)
+      ).length,
       successfulResearchToolCount: structuredItems.filter((item) =>
         item.type === 'dynamicToolCall' && item.tool === 'research_web' && isStructuredSuccess(item)
       ).length,

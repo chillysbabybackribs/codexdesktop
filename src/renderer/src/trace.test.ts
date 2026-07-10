@@ -74,7 +74,30 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
       origin: 'live',
       requestedModel: 'gpt-5.4',
       model: 'gpt-5.4',
+      reasoningEffort: 'xhigh',
       workspace: '/workspace',
+      goalAtStart: {
+        threadId: 'thread-1',
+        objective: 'Compare recent firsthand migration reports',
+        status: 'active',
+        tokenBudget: 10_000,
+        tokensUsed: 200,
+        timeUsedSeconds: 3,
+        createdAt: 1,
+        updatedAt: 2
+      },
+      goalAtEnd: {
+        threadId: 'thread-1',
+        objective: 'Compare recent firsthand migration reports',
+        status: 'complete',
+        tokenBudget: 10_000,
+        tokensUsed: 1_400,
+        timeUsedSeconds: 8,
+        createdAt: 1,
+        updatedAt: 3
+      },
+      goalContinuation: true,
+      goalContinuationInferred: true,
       startedAtMs: 1_000,
       completedAtMs: 2_000,
       tokens: {
@@ -91,12 +114,13 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
   assert.equal(trace.prompt, 'Compare the recent reports.')
   assert.equal(trace.finalResponse, 'Here are the findings.')
   assert.equal(trace.environment.model, 'gpt-5.4')
+  assert.equal(trace.environment.reasoningEffort, 'xhigh')
   assert.equal(trace.environment.workspace, '/workspace')
   assert.deepEqual(trace.usage.turn, turnUsage)
   assert.deepEqual(trace.usage.latestModelCall, turnUsage)
   assert.deepEqual(trace.usage.threadTotalAtEnd, cumulativeUsage)
   assert.equal(trace.usage.modelCallCount, 3)
-  assert.equal(trace.schemaVersion, 3)
+  assert.equal(trace.schemaVersion, 4)
   assert.equal(trace.capture.completeness, 'complete')
   assert.equal(trace.capture.fidelity, 'full')
   assert.equal(trace.turn.durationMs, 1_000)
@@ -117,6 +141,14 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
     { name: 'artifact-first-web-research', path: '/skills/artifact-first-web-research/SKILL.md' }
   ])
   assert.equal(trace.timeline[1]?.status, 'completed')
+  assert.equal(trace.goal?.statusAtStart, 'active')
+  assert.equal(trace.goal?.statusAtEnd, 'complete')
+  assert.equal(trace.goal?.tokensUsedDelta, 1_200)
+  assert.equal(trace.goal?.continuation, true)
+  assert.equal(trace.goal?.continuationInferred, true)
+  assert.equal(trace.goal?.completionClaimed, true)
+  assert.equal(trace.goal?.observedCompletionEvidence.successfulStructuredToolCount, 1)
+  assert.equal(trace.goal?.observedCompletionEvidence.finalResponsePresent, true)
 })
 
 test('buildTurnTrace marks bounded captures and indexes sources and artifacts', () => {
@@ -201,8 +233,73 @@ test('buildTurnTrace marks bounded captures and indexes sources and artifacts', 
   ])
 })
 
-test('isTurnTrace accepts durable schema 2 snapshots and current schema 3 traces', () => {
+test('research tool artifacts contribute to observed goal evidence', () => {
+  const artifactDir = '/home/dp/.config/codexdesktop/research/run-1'
+  const items: ThreadItem[] = [
+    {
+      type: 'dynamicToolCall',
+      id: 'research-1',
+      namespace: null,
+      tool: 'research_web',
+      arguments: { queries: ['Electron migration'] },
+      status: 'completed',
+      contentItems: [{
+        type: 'inputText',
+        text: JSON.stringify({
+          ok: true,
+          artifactDir,
+          pages: [{
+            artifactPath: `${artifactDir}/page-01.txt`,
+            htmlPath: `${artifactDir}/page-01.html`
+          }]
+        })
+      }],
+      success: true,
+      durationMs: 400
+    },
+    {
+      type: 'agentMessage',
+      id: 'answer-1',
+      text: 'Done.',
+      phase: 'final_answer',
+      memoryCitation: null
+    }
+  ]
+
+  const trace = buildTurnTrace({
+    threadId: 'thread-1',
+    threadTitle: 'Migration research',
+    turnId: 'turn-1',
+    model: 'gpt-5.5',
+    workspace: '/workspace',
+    items,
+    itemMeta: {
+      'research-1': { turnId: 'turn-1' },
+      'answer-1': { turnId: 'turn-1' }
+    },
+    meta: {
+      status: 'completed',
+      goalAtStart: {
+        threadId: 'thread-1',
+        objective: 'Research migration reports',
+        status: 'active',
+        tokenBudget: null,
+        tokensUsed: 0,
+        timeUsedSeconds: 0,
+        createdAt: 1,
+        updatedAt: 1
+      }
+    }
+  })
+
+  assert.equal(trace.artifactIndex?.items.length, 3)
+  assert.equal(trace.goal?.observedCompletionEvidence.artifactCount, 3)
+  assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
+})
+
+test('isTurnTrace accepts durable schema 2 and 3 snapshots and current schema 4 traces', () => {
   assert.equal(isTurnTrace({ schemaVersion: 2, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 3, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
+  assert.equal(isTurnTrace({ schemaVersion: 4, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 1, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), false)
 })
