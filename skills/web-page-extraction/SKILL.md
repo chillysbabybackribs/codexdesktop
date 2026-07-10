@@ -25,6 +25,15 @@ sed -n '120,170p' /path/to/page-01.txt
 
 Use separate `rg` calls for independent facts. Keep output bounded and preserve the source path and line context in the working notes. Use the `.html` artifact only when the cleaned text is insufficient, and search it with specific terms rather than dumping it.
 
+For a public page that was not staged by `research_web`, fetch to disk instead of writing the response to stdout:
+
+```sh
+curl -L --compressed --max-time 20 -sS 'https://example.com/page' -o /tmp/research/page.html
+rg -n -i -C 2 'pricing|input|output' /tmp/research/page.html
+```
+
+If the page is script-rendered or protected, use the visible browser path and save a bounded extraction artifact; do not keep retrying raw `curl` output in the conversation.
+
 ## Browser Use
 
 - The visible browser tab is for user-facing navigation and interactive or authenticated pages.
