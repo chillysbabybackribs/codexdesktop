@@ -28,11 +28,12 @@ export class TurnTraceStore {
       await rename(temporaryPath, path)
     })
 
-    this.queues.set(key, operation.catch(() => {}))
+    const queueTail = operation.catch(() => {})
+    this.queues.set(key, queueTail)
     try {
       await operation
     } finally {
-      if (this.queues.get(key) === operation) this.queues.delete(key)
+      if (this.queues.get(key) === queueTail) this.queues.delete(key)
     }
   }
 

@@ -45,6 +45,7 @@ export type TurnTrace = {
     completedAt?: string
     durationMs?: number
     error?: string
+    errorEvents?: NonNullable<TurnMeta['errorEvents']>
   }
   environment: {
     requestedModel: string | null
@@ -134,8 +135,8 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       turn: params.meta?.tokens?.turn ?? null,
       latestModelCall: params.meta?.tokens?.latestCall ?? null,
       threadTotalAtEnd: params.meta?.tokens?.threadTotalAtEnd ?? null,
-      modelContextWindow: params.meta?.tokens?.modelContextWindow ?? null
-      ,modelCallCount: params.meta?.tokens?.modelCallCount ?? 0
+      modelContextWindow: params.meta?.tokens?.modelContextWindow ?? null,
+      modelCallCount: params.meta?.tokens?.modelCallCount ?? 0
     },
     summary: {
       itemCount: turnItems.length,
