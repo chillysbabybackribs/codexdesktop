@@ -944,15 +944,24 @@ export default function App(): React.JSX.Element {
         return
       case 'thread/tokenUsage/updated':
         if (isRelevantThread(notification.params.threadId)) {
-          const compactedBeforeCall = pendingCompactionByTurnRef.current.delete(notification.params.turnId)
-          setTurnMeta((current) => reduceTurnTelemetry(current, {
-            type: 'tokenUsage',
-            turnId: notification.params.turnId,
-            tokenUsage: notification.params.tokenUsage,
-            atMs: Date.now(),
-            precedingItem: precedingModelInputByTurnRef.current.get(notification.params.turnId) ?? null,
-            compactedBeforeCall
-          }))
+          setTurnMeta((current) => {
+            const existing = current[notification.params.turnId]?.tokens
+            const isNewCall = existing
+              ? notification.params.tokenUsage.total.totalTokens > existing.threadTotalAtEnd.totalTokens
+              : notification.params.tokenUsage.last.totalTokens > 0
+            const compactedBeforeCall = isNewCall
+              ? pendingCompactionByTurnRef.current.delete(notification.params.turnId)
+              : false
+
+            return reduceTurnTelemetry(current, {
+              type: 'tokenUsage',
+              turnId: notification.params.turnId,
+              tokenUsage: notification.params.tokenUsage,
+              atMs: Date.now(),
+              precedingItem: precedingModelInputByTurnRef.current.get(notification.params.turnId) ?? null,
+              compactedBeforeCall
+            })
+          })
         }
         return
       case 'model/rerouted':
