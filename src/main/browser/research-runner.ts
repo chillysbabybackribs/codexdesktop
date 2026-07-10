@@ -74,7 +74,7 @@ export class ResearchRunner {
 
   constructor(private readonly getTabs: () => TabManager | null) {}
 
-  run(request: ResearchRequest, runId = crypto.randomUUID()): Promise<ResearchResult> {
+  run(request: ResearchRequest, runId: string = crypto.randomUUID()): Promise<ResearchResult> {
     const controller = new AbortController()
     this.activeRuns.set(runId, controller)
     const operation = this.queue.then(() => this.execute(request, controller.signal))
@@ -156,7 +156,10 @@ export class ResearchRunner {
 
     const candidates = rankSerpCandidates(discovered, searchQueries, maxPages)
     const tabs = this.getTabs()
-    const pageResults = await mapWithConcurrency(candidates, PAGE_WORKER_CONCURRENCY, async (candidate, index) => {
+    const pageResults = await mapWithConcurrency<typeof candidates[number], ResearchPage | null>(
+      candidates,
+      PAGE_WORKER_CONCURRENCY,
+      async (candidate, index): Promise<ResearchPage | null> => {
       throwIfAborted(signal)
       const view = this.createHiddenView()
       try {
@@ -197,7 +200,8 @@ export class ResearchRunner {
       } finally {
         this.closeHiddenView(view)
       }
-    })
+      }
+    )
     const pages = pageResults.filter((page): page is ResearchPage => page !== null)
     const visibleTabId = pages.length > 0 && tabs
       ? this.stageBestPage(tabs, pages[0].url)

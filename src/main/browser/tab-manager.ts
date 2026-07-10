@@ -386,8 +386,8 @@ export class TabManager {
     // Drop a stale favicon when navigating to a different document so the old
     // site's icon doesn't linger over the new page. In-page navigations (hash
     // changes, history.pushState) keep the current icon.
-    webContents.on('did-start-navigation', (_event, details) => {
-      if (details.isMainFrame && !details.isSameDocument && tab.favicon !== null) {
+    webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
+      if (isMainFrame && !isInPlace && tab.favicon !== null) {
         tab.favicon = null
         this.pushState()
       }
