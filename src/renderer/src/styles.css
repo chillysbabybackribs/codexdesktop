@@ -204,14 +204,16 @@ button {
 }
 
 .thread-select-wrap.is-composer .thread-select {
+  width: 28px;
   height: 28px;
-  max-width: 220px;
-  padding: 0 8px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: #9aa0a6;
-  font-size: 13px;
-  font-weight: 550;
+}
+
+.thread-select-wrap.is-composer .chevron {
+  display: none;
 }
 
 .thread-select-wrap.is-composer .thread-select:hover,

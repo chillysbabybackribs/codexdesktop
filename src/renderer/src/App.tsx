@@ -1504,12 +1504,17 @@ function ThreadMenu({
       <button
         type="button"
         className={`thread-select ${isOpen ? 'is-open' : ''}`}
-        aria-label="Open thread menu"
+        aria-label={placement === 'composer' ? 'Chat history' : 'Open thread menu'}
+        title={placement === 'composer' ? 'Chat history' : undefined}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={onToggle}
       >
-        <span className="thread-title">{title}</span>
+        {placement === 'composer' ? (
+          <ChatBubbleIcon />
+        ) : (
+          <span className="thread-title">{stripSkillMarkerFromTitle(title)}</span>
+        )}
         <span className="chevron" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
             <path
@@ -2592,7 +2597,11 @@ function persistLastThreadId(threadId: string | null): void {
 }
 
 function threadTitle(thread: Thread): string {
-  return thread.name || thread.preview || 'New Chat'
+  return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat')
+}
+
+function stripSkillMarkerFromTitle(title: string): string {
+  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat'
 }
 
 function workspaceName(path: string): string {
