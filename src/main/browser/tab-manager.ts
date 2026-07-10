@@ -67,7 +67,11 @@ export class TabManager {
 
     const background = created.filter((entry) => entry !== active)
     void runWithConcurrency(background, 2, async ({ tab, saved }) => {
-      await this.hydrateSavedTab(tab, saved)
+      try {
+        await this.hydrateSavedTab(tab, saved)
+      } catch (error) {
+        console.warn(`Failed to restore background tab ${tab.id}`, error)
+      }
     }).finally(() => this.pushState())
 
     this.pushState()
@@ -221,6 +225,9 @@ export class TabManager {
       return
     }
 
+    this.navigationControllers.get(id)?.abort()
+    this.navigationControllers.delete(id)
+
     this.window.contentView.removeChildView(tab.view)
 
     if (!tab.view.webContents.isDestroyed()) {
@@ -249,6 +256,7 @@ export class TabManager {
     }
 
     for (const tab of this.tabs.values()) {
+      tab.view.setVisible(false)
       tab.view.setBounds(hiddenBounds)
     }
 
@@ -264,7 +272,7 @@ export class TabManager {
       return
     }
 
-    void tab.view.webContents.loadURL(normalizeNavigationInput(input), { userAgent: chromeLikeUserAgent() })
+    void this.startNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
   }
 
   async navigateAndWait(id: string, input: string, timeoutMs = 15_000): Promise<void> {
@@ -274,10 +282,7 @@ export class TabManager {
       throw new Error(`no tab with id ${id}`)
     }
 
-    const load = tab.view.webContents.loadURL(normalizeNavigationInput(input), {
-      userAgent: chromeLikeUserAgent()
-    })
-    await withTimeout(load, timeoutMs)
+    await this.startNavigation(tab, normalizeNavigationInput(input), timeoutMs)
   }
 
   goBack(id: string): void {
@@ -285,6 +290,7 @@ export class TabManager {
     const history = tab?.view.webContents.navigationHistory
 
     if (history?.canGoBack()) {
+      this.navigationControllers.get(id)?.abort()
       history.goBack()
     }
   }
@@ -294,11 +300,13 @@ export class TabManager {
     const history = tab?.view.webContents.navigationHistory
 
     if (history?.canGoForward()) {
+      this.navigationControllers.get(id)?.abort()
       history.goForward()
     }
   }
 
   reload(id: string): void {
+    this.navigationControllers.get(id)?.abort()
     this.tabs.get(id)?.view.webContents.reload()
   }
 
@@ -327,7 +335,29 @@ export class TabManager {
   // browser region clear — a divider drag in progress, or an overlay covering it.
   private syncActiveBounds(): void {
     const hidden = this.isDraggingDivider || this.isOverlayOpen
-    this.getActiveTab()?.view.setBounds(hidden ? hiddenBounds : this.bounds)
+    const active = this.getActiveTab()
+    active?.view.setVisible(!hidden)
+    active?.view.setBounds(hidden ? hiddenBounds : this.bounds)
+  }
+
+  private async startNavigation(tab: BrowserTab, url: string, timeoutMs = 15_000): Promise<void> {
+    const previous = this.navigationControllers.get(tab.id)
+    previous?.abort()
+
+    const controller = new AbortController()
+    this.navigationControllers.set(tab.id, controller)
+
+    try {
+      await loadPageAndSettle(tab.view.webContents, url, {
+        timeoutMs,
+        userAgent: chromeLikeUserAgent(),
+        signal: controller.signal
+      })
+    } finally {
+      if (this.navigationControllers.get(tab.id) === controller) {
+        this.navigationControllers.delete(tab.id)
+      }
+    }
   }
 
   private attachEvents(tab: BrowserTab): void {
@@ -356,8 +386,8 @@ export class TabManager {
     // Drop a stale favicon when navigating to a different document so the old
     // site's icon doesn't linger over the new page. In-page navigations (hash
     // changes, history.pushState) keep the current icon.
-    webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
-      if (isMainFrame && !isInPlace && tab.favicon !== null) {
+    webContents.on('did-start-navigation', (_event, details) => {
+      if (details.isMainFrame && !details.isSameDocument && tab.favicon !== null) {
         tab.favicon = null
         this.pushState()
       }
@@ -375,12 +405,17 @@ export class TabManager {
       this.pushState()
     })
 
-    webContents.on('did-navigate-in-page', (_event, url) => {
-      tab.url = url
-      this.pushState()
+    webContents.on('did-navigate-in-page', (_event, url, isMainFrame) => {
+      if (isMainFrame) {
+        tab.url = url
+        this.pushState()
+      }
     })
 
-    webContents.on('did-fail-load', (_event, _errorCode, errorDescription, validatedURL) => {
+    webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+      if (!isMainFrame || errorCode === -3) {
+        return
+      }
       tab.isLoading = false
       tab.url = validatedURL || tab.url
       tab.title = errorDescription || tab.title
@@ -395,6 +430,8 @@ export class TabManager {
     })
 
     webContents.once('destroyed', () => {
+      this.navigationControllers.get(tab.id)?.abort()
+      this.navigationControllers.delete(tab.id)
       if (!this.tabs.has(tab.id)) {
         return
       }
