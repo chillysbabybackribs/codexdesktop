@@ -4,10 +4,47 @@ Use this workflow for public web research when the answer depends on details ins
 
 ## Contract
 
+- Do a brief search preflight before calling `research_web` unless the lookup is trivial or already tightly specified.
 - Use `research_web` once to discover, rank, visibly stage, clean, and save candidate pages.
 - Treat the returned `artifactPath` and `htmlPath` values as the source files. The tool intentionally does not return page-body text.
 - Use the native shell command tool for the first-class extraction pass over those files.
 - Never print an entire HTML or text artifact into the conversation.
+
+## Search Preflight
+
+Before any non-trivial search, write a compact internal preflight:
+
+1. Classify the source type: official docs, primary data, current news, social sentiment, product reviews, forums, academic/legal/medical, code/docs, or private/workspace content.
+2. State the evidence target in one sentence: what would count as a useful answer, and what should be excluded.
+3. Pick two or three query lanes. Each lane should have a distinct job, such as official source, exact phrase, site-specific discussion, comparison, error text, or counter-evidence.
+4. Define evidence classes before reading: primary, firsthand, expert/secondary, aggregated, speculative, stale, or noise.
+5. Set a pivot rule: when to stop retrying static search/extraction and switch to browser, saved artifacts, site search, official docs, or bounded uncertainty.
+6. Sketch the extraction schema: the 3-6 fields needed to answer cleanly.
+
+Keep the preflight short. Its job is to prevent blurry searching, not to become a plan essay.
+
+Useful source-type defaults:
+
+- Official docs: prefer official-domain queries, fetch the exact page, and cite current primary text.
+- Current news: include date/source freshness, compare at least two credible sources when claims may conflict.
+- Social sentiment: sample multiple threads, separate firsthand reports from speculation, and describe sample limits.
+- Product reviews: separate hands-on review, affiliate/listicle content, user complaints, and vendor claims.
+- Technical errors: search exact error strings first, then adjacent symbols/version names.
+- High-stakes domains: prefer primary/regulatory/medical/legal sources and flag uncertainty rather than overgeneralizing.
+
+Reusable extraction schemas:
+
+```json
+{"claim":"","source_type":"","evidence":"","date":"","confidence":"","caveat":""}
+```
+
+```json
+{"source":"","firsthand":[],"agreement":[],"disagreement":[],"open_questions":[],"noise":[]}
+```
+
+```json
+{"item":"","price_or_metric":"","conditions":"","source_line":"","last_checked":""}
+```
 
 ## Targeted Reads
 
