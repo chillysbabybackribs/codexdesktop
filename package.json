@@ -5,14 +5,21 @@
   "main": "./out/main/index.js",
   "type": "module",
   "scripts": {
+    "predev": "npm run clean:source-shadows",
     "dev": "node scripts/dev-with-autogit.mjs",
+    "predev:app": "npm run clean:source-shadows",
     "dev:app": "electron-vite dev",
     "git:autosnapshot": "node scripts/git-autosnapshot.mjs --watch",
     "git:autosnapshot:once": "node scripts/git-autosnapshot.mjs --once",
+    "prebuild": "npm run clean:source-shadows",
     "build": "npm run typecheck && electron-vite build",
     "preview": "electron-vite preview",
+    "pretypecheck": "npm run check:source-shadows",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "pretest": "npm run check:source-shadows",
     "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/browser/*.test.ts src/main/codex/*.test.ts",
+    "clean:source-shadows": "node scripts/source-shadow-guard.mjs --fix",
+    "check:source-shadows": "node scripts/source-shadow-guard.mjs --check",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
   "dependencies": {
