@@ -105,7 +105,9 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
         latestCall: turnUsage,
         threadTotalAtEnd: cumulativeUsage,
         modelContextWindow: 200_000,
-        modelCallCount: 3
+        modelCallCount: 3,
+        modelCalls: [],
+        droppedModelCallSamples: 0
       }
     }
   })
@@ -205,7 +207,9 @@ test('buildTurnTrace marks bounded captures and indexes sources and artifacts', 
         latestCall: turnUsage,
         threadTotalAtEnd: turnUsage,
         modelContextWindow: 200_000,
-        modelCallCount: 1
+        modelCallCount: 1,
+        modelCalls: [],
+        droppedModelCallSamples: 0
       }
     }
   })

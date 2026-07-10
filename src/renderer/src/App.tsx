@@ -633,6 +633,8 @@ export default function App(): React.JSX.Element {
     setItems([])
     setItemMeta({})
     setTurnMeta({})
+    precedingModelInputByTurnRef.current.clear()
+    pendingCompactionByTurnRef.current.clear()
 
     if (previousThreadId) {
       void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
@@ -1152,6 +1154,9 @@ export default function App(): React.JSX.Element {
   ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
+    precedingModelInputByTurnRef.current.clear()
+    pendingCompactionByTurnRef.current.clear()
+
     watchThreadIdRef.current = thread.id
     setActiveThreadId(thread.id)
     setActiveThreadTitle(threadTitle(thread))
@@ -1176,6 +1181,7 @@ export default function App(): React.JSX.Element {
         errorMessage: turn.error?.message
       }
       for (const item of turn.items) {
+        if (turn.status === 'inProgress') rememberModelCallInput(turn.id, item)
         nextItemMeta[item.id] = { turnId: turn.id }
         nextItems.push(item)
       }
