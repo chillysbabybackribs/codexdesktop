@@ -1203,9 +1203,9 @@ function ChatPane({
           </div>
         ) : null}
         {rows.map((row) => {
-          if (row.kind === 'work') {
+          if (row.kind === 'activity') {
             return (
-              <WorkGroup
+              <TaskActivityCard
                 key={row.id}
                 items={row.items}
                 itemMeta={itemMeta}
@@ -1257,6 +1257,67 @@ function ChatPane({
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
+    </section>
+  )
+}
+
+function TaskActivityCard({
+  items,
+  itemMeta,
+  live,
+  workspace
+}: {
+  items: ActivityItem[]
+  itemMeta: Record<string, ItemMeta>
+  live: boolean
+  workspace: string | null
+}): JSX.Element {
+  const newestWorkItemId = [...items].reverse().find(isWorkItem)?.id
+  const newestActivityId = items[items.length - 1]?.id
+  const content: JSX.Element[] = []
+  let workRun: WorkItem[] = []
+
+  const flushWork = (): void => {
+    if (!workRun.length) {
+      return
+    }
+    const first = workRun[0]
+    content.push(
+      <WorkGroup
+        key={`work-${first.id}`}
+        items={workRun}
+        itemMeta={itemMeta}
+        live={live}
+        workspace={workspace}
+        newestItemId={newestWorkItemId}
+      />
+    )
+    workRun = []
+  }
+
+  for (const item of items) {
+    if (isWorkItem(item)) {
+      workRun.push(item)
+      continue
+    }
+
+    flushWork()
+    content.push(
+      <div
+        className={`task-activity-message ${live && item.id === newestActivityId && !itemMeta[item.id]?.completedAtMs ? 'is-streaming' : ''}`}
+        key={item.id}
+      >
+        <MarkdownContent text={item.text || ' '} />
+      </div>
+    )
+  }
+  flushWork()
+
+  return (
+    <section className="task-activity-card" aria-label="In-task activity" aria-live={live ? 'polite' : 'off'}>
+      <AutoFollow className="task-activity-card-scroll">
+        <div className="task-activity-card-content">{content}</div>
+      </AutoFollow>
     </section>
   )
 }

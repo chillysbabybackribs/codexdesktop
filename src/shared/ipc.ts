@@ -9,6 +9,7 @@ export type BrowserTabState = {
   id: string
   title: string
   url: string
+  favicon: string | null
   isLoading: boolean
   canGoBack: boolean
   canGoForward: boolean

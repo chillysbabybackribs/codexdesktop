@@ -16,6 +16,7 @@ type BrowserTab = {
   view: WebContentsView
   title: string
   url: string
+  favicon: string | null
   isLoading: boolean
 }
 
@@ -118,6 +119,7 @@ export class TabManager {
       view,
       title: 'New Tab',
       url,
+      favicon: null,
       isLoading: false
     }
 
@@ -144,6 +146,7 @@ export class TabManager {
       view,
       title: saved.title || 'New Tab',
       url: saved.url,
+      favicon: saved.favicon ?? null,
       isLoading: true
     }
 
