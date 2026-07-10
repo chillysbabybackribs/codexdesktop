@@ -1233,28 +1233,6 @@ function ChatPane({
         >
           <SettingsIcon />
         </button>
-        <ThreadMenu
-          title={title}
-          threads={threads}
-          activeThreadId={activeThreadId}
-          isOpen={isThreadMenuOpen}
-          threadsNextCursor={threadsNextCursor}
-          threadsLoading={threadsLoading}
-          threadsError={threadsError}
-          onToggle={onToggleThreadMenu}
-          onNewThread={onNewThread}
-          onResumeThread={onResumeThread}
-          onLoadMoreThreads={onLoadMoreThreads}
-        />
-        <button
-          type="button"
-          className="icon-button chat-toolbar-new"
-          aria-label="New chat"
-          title="New chat"
-          onClick={onNewThread}
-        >
-          <NewChatIcon />
-        </button>
       </div>
 
       <ThreadScroll
@@ -1306,6 +1284,30 @@ function ChatPane({
           {models.length ? (
             <ModelPill models={models} selectedModel={selectedModel} onSelectModel={onSelectModel} />
           ) : null}
+          <div className="composer-thread-controls">
+            <ThreadMenu
+              placement="composer"
+              title={title}
+              threads={threads}
+              activeThreadId={activeThreadId}
+              isOpen={isThreadMenuOpen}
+              threadsNextCursor={threadsNextCursor}
+              threadsLoading={threadsLoading}
+              threadsError={threadsError}
+              onToggle={onToggleThreadMenu}
+              onResumeThread={onResumeThread}
+              onLoadMoreThreads={onLoadMoreThreads}
+            />
+            <button
+              type="button"
+              className="icon-button composer-new-chat"
+              aria-label="New chat"
+              title="New chat"
+              onClick={onNewThread}
+            >
+              <NewChatIcon />
+            </button>
+          </div>
         </div>
         <Composer
           docked={hasThreadContent}
