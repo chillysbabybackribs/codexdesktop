@@ -1,6 +1,7 @@
 import type { ModelRerouteReason } from '../../shared/codex-protocol/v2/ModelRerouteReason'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown'
 import type { TurnDiffSummary } from './diff'
@@ -21,6 +22,28 @@ export type TurnErrorEvent = {
   willRetry: boolean
 }
 
+export type ModelCallAttribution = {
+  itemId: string
+  itemType: string
+  label: string
+  argumentChars: number | null
+  resultChars: number | null
+}
+
+export type ModelCallSample = {
+  sequence: number
+  atMs: number | null
+  usage: TokenUsageBreakdown
+  uncachedInputTokens: number
+  contextWindow: number | null
+  contextPercent: number | null
+  inputDeltaFromPrevious: number | null
+  compactedBeforeCall: boolean
+  precedingItem: ModelCallAttribution | null
+}
+
+export const maxModelCallSamples = 128
+
 export type TurnTokenTelemetry = {
   /** Usage accumulated across every model call observed for this turn. */
   turn: TokenUsageBreakdown
@@ -30,6 +53,9 @@ export type TurnTokenTelemetry = {
   threadTotalAtEnd: TokenUsageBreakdown
   modelContextWindow: number | null
   modelCallCount: number
+  /** Bounded exact per-call samples, oldest retained sample first. */
+  modelCalls: ModelCallSample[]
+  droppedModelCallSamples: number
 }
 
 export type TurnMeta = {
@@ -57,7 +83,14 @@ export type TurnTelemetryState = Record<string, TurnMeta>
 
 export type TurnTelemetryAction =
   | { type: 'patch'; turnId: string; patch: Partial<TurnMeta> }
-  | { type: 'tokenUsage'; turnId: string; tokenUsage: ThreadTokenUsage }
+  | {
+      type: 'tokenUsage'
+      turnId: string
+      tokenUsage: ThreadTokenUsage
+      atMs?: number
+      precedingItem?: ModelCallAttribution | null
+      compactedBeforeCall?: boolean
+    }
   | {
       type: 'modelRerouted'
       turnId: string
@@ -88,7 +121,14 @@ export function reduceTurnTelemetry(
       next = { ...current, ...action.patch }
       break
     case 'tokenUsage':
-      next = { ...current, tokens: accumulateTokenUsage(current.tokens, action.tokenUsage) }
+      next = {
+        ...current,
+        tokens: accumulateTokenUsage(current.tokens, action.tokenUsage, {
+          atMs: action.atMs,
+          precedingItem: action.precedingItem,
+          compactedBeforeCall: action.compactedBeforeCall
+        })
+      }
       break
     case 'modelRerouted':
       next = {
@@ -129,15 +169,25 @@ export function reduceTurnTelemetry(
 
 export function accumulateTokenUsage(
   current: TurnTokenTelemetry | undefined,
-  incoming: ThreadTokenUsage
+  incoming: ThreadTokenUsage,
+  sampleContext: {
+    atMs?: number
+    precedingItem?: ModelCallAttribution | null
+    compactedBeforeCall?: boolean
+  } = {}
 ): TurnTokenTelemetry {
   if (!current) {
+    const modelCallCount = incoming.last.totalTokens > 0 ? 1 : 0
     return {
       turn: cloneUsage(incoming.last),
       latestCall: cloneUsage(incoming.last),
       threadTotalAtEnd: cloneUsage(incoming.total),
       modelContextWindow: incoming.modelContextWindow,
-      modelCallCount: incoming.last.totalTokens > 0 ? 1 : 0
+      modelCallCount,
+      modelCalls: modelCallCount > 0
+        ? [buildModelCallSample(1, incoming, null, sampleContext)]
+        : [],
+      droppedModelCallSamples: 0
     }
   }
 
@@ -153,13 +203,122 @@ export function accumulateTokenUsage(
     }
   }
 
+  const sample = buildModelCallSample(
+    current.modelCallCount + 1,
+    incoming,
+    current.latestCall,
+    sampleContext
+  )
+  const modelCalls = [...current.modelCalls, sample]
+  const droppedNow = Math.max(0, modelCalls.length - maxModelCallSamples)
+
   return {
     turn: addUsage(current.turn, totalDelta),
     latestCall: cloneUsage(incoming.last),
     threadTotalAtEnd: cloneUsage(incoming.total),
     modelContextWindow: incoming.modelContextWindow,
-    modelCallCount: current.modelCallCount + 1
+    modelCallCount: current.modelCallCount + 1,
+    modelCalls: modelCalls.slice(-maxModelCallSamples),
+    droppedModelCallSamples: current.droppedModelCallSamples + droppedNow
   }
+}
+
+export function modelCallAttributionForItem(item: ThreadItem): ModelCallAttribution | null {
+  switch (item.type) {
+    case 'userMessage':
+      return attribution(item, 'User prompt', serializedChars(item.content), null)
+    case 'hookPrompt':
+      return attribution(item, 'Hook prompt', serializedChars(item.fragments), null)
+    case 'commandExecution':
+      return attribution(item, 'Shell command', item.command.length, item.aggregatedOutput?.length ?? null)
+    case 'fileChange':
+      return attribution(
+        item,
+        'File change',
+        null,
+        item.changes.reduce((sum, change) => sum + change.diff.length, 0)
+      )
+    case 'mcpToolCall':
+      return attribution(
+        item,
+        `${item.server}/${item.tool}`,
+        serializedChars(item.arguments),
+        serializedChars(item.result ?? item.error)
+      )
+    case 'dynamicToolCall':
+      return attribution(
+        item,
+        item.namespace ? `${item.namespace}/${item.tool}` : item.tool,
+        serializedChars(item.arguments),
+        serializedChars(item.contentItems)
+      )
+    case 'collabAgentToolCall':
+      return attribution(item, item.tool, item.prompt?.length ?? null, serializedChars(item.agentsStates))
+    case 'webSearch':
+      return attribution(item, 'Web search', item.query.length, serializedChars(item.action))
+    case 'imageView':
+      return attribution(item, 'Image view', item.path.length, null)
+    case 'imageGeneration':
+      return attribution(item, 'Image generation', item.revisedPrompt?.length ?? null, item.result.length)
+    default:
+      return null
+  }
+}
+
+function buildModelCallSample(
+  sequence: number,
+  incoming: ThreadTokenUsage,
+  previous: TokenUsageBreakdown | null,
+  context: {
+    atMs?: number
+    precedingItem?: ModelCallAttribution | null
+    compactedBeforeCall?: boolean
+  }
+): ModelCallSample {
+  const usage = cloneUsage(incoming.last)
+  const contextWindow = incoming.modelContextWindow
+
+  return {
+    sequence,
+    atMs: context.atMs ?? null,
+    usage,
+    uncachedInputTokens: Math.max(0, usage.inputTokens - usage.cachedInputTokens),
+    contextWindow,
+    contextPercent: contextWindow && contextWindow > 0
+      ? roundPercent(usage.inputTokens / contextWindow)
+      : null,
+    inputDeltaFromPrevious: previous ? usage.inputTokens - previous.inputTokens : null,
+    compactedBeforeCall: context.compactedBeforeCall ?? false,
+    precedingItem: context.precedingItem ? { ...context.precedingItem } : null
+  }
+}
+
+function attribution(
+  item: ThreadItem,
+  label: string,
+  argumentChars: number | null,
+  resultChars: number | null
+): ModelCallAttribution {
+  return {
+    itemId: item.id,
+    itemType: item.type,
+    label,
+    argumentChars,
+    resultChars
+  }
+}
+
+function serializedChars(value: unknown): number | null {
+  if (value === null || value === undefined) return null
+  try {
+    return JSON.stringify(value).length
+  } catch {
+    return null
+  }
+}
+
+function roundPercent(value: number): number {
+  return Math.round(value * 10_000) / 100
 }
 
 function addUsage(left: TokenUsageBreakdown, right: TokenUsageBreakdown): TokenUsageBreakdown {

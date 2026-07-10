@@ -41,9 +41,11 @@ export function buildResearchQueryVariants(queries: string[], maxVariants = 3): 
   const seed = supplied[0]
   if (!seed) return []
 
-  const additions = /\b(review|compare|comparison|best|rating|overall|opinion|versus|vs\.)\b/i.test(seed)
-    ? ['independent analysis', 'official source']
-    : ['official documentation', 'technical details']
+  const additions = /\b(firsthand|experience|report|forum|reddit|discussion|issue)\b/i.test(seed)
+    ? ['GitHub issues discussions', 'developer forum report']
+    : /\b(review|compare|comparison|best|rating|overall|opinion|versus|vs\.)\b/i.test(seed)
+      ? ['independent analysis', 'official source']
+      : ['official documentation', 'technical details']
 
   return uniqueStrings([
     ...supplied,

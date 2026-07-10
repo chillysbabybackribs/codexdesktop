@@ -33,6 +33,17 @@ test('single-query research expands into bounded deterministic variants', () => 
   )
 })
 
+test('firsthand research expands into developer-report source lanes', () => {
+  assert.deepEqual(
+    buildResearchQueryVariants(['Electron WebContentsView firsthand Linux reports']),
+    [
+      'Electron WebContentsView firsthand Linux reports',
+      'Electron WebContentsView firsthand Linux reports GitHub issues discussions',
+      'Electron WebContentsView firsthand Linux reports developer forum report'
+    ]
+  )
+})
+
 test('candidate ranking boosts primary sources and lowers video results', () => {
   const candidates: SerpCandidate[] = [
     {
