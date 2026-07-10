@@ -1143,13 +1143,15 @@ export function TurnTail({
   items,
   itemMeta,
   meta,
-  streamingMessage
+  streamingMessage,
+  onOpenTrace
 }: {
   live: boolean
   items: WorkItem[]
   itemMeta: Record<string, ItemMeta>
   meta: TurnMeta | undefined
   streamingMessage: boolean
+  onOpenTrace?: () => void
 }): React.JSX.Element | null {
   const now = useNow(live)
 
@@ -1183,6 +1185,7 @@ export function TurnTail({
             {fmtTokens(tokens)} tok
           </span>
         ) : null}
+        {onOpenTrace ? <button type="button" className="turn-trace-button" onClick={onOpenTrace}>Trace</button> : null}
       </div>
     )
   }
@@ -1215,6 +1218,7 @@ export function TurnTail({
         {[lead, ...parts].join(' · ')}
         {meta?.status === 'failed' && meta.errorMessage ? ` — ${truncate(meta.errorMessage, 160)}` : ''}
       </span>
+      {onOpenTrace ? <button type="button" className="turn-trace-button" onClick={onOpenTrace}>Trace</button> : null}
       <span className="tail-rule" aria-hidden="true" />
     </div>
   )

@@ -28,6 +28,8 @@ import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
+import { TraceModal } from './TraceModal'
+import { buildTurnTrace } from './trace'
 import {
   AutoFollow,
   TurnTail,
@@ -467,6 +469,8 @@ export default function App(): React.JSX.Element {
       setActiveTurnId(response.turn.id)
       noteTurn(response.turn.id, {
         status: 'inProgress',
+        model: selectedModel,
+        workspace,
         startedAtMs: response.turn.startedAt ? response.turn.startedAt * 1000 : Date.now()
       })
       adoptTurnItems(response.turn.id, response.turn.items)
@@ -639,6 +643,8 @@ export default function App(): React.JSX.Element {
           setActiveTurnId(turn.id)
           noteTurn(turn.id, {
             status: 'inProgress',
+            model: selectedModel,
+            workspace,
             startedAtMs: turn.startedAt ? turn.startedAt * 1000 : Date.now()
           })
           adoptTurnItems(turn.id, turn.items)
