@@ -19,6 +19,24 @@ const cumulativeUsage = {
   reasoningOutputTokens: 4_000
 }
 
+const modelCallSample = {
+  sequence: 1,
+  atMs: 1_500,
+  usage: turnUsage,
+  uncachedInputTokens: 400,
+  contextWindow: 200_000,
+  contextPercent: 0.4,
+  inputDeltaFromPrevious: null,
+  compactedBeforeCall: false,
+  precedingItem: {
+    itemId: 'browser-current',
+    itemType: 'dynamicToolCall',
+    label: 'browser_run',
+    argumentChars: 34,
+    resultChars: 19
+  }
+}
+
 test('buildTurnTrace isolates the selected turn and reports per-turn usage', () => {
   const items: ThreadItem[] = [
     {
@@ -106,8 +124,8 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
         threadTotalAtEnd: cumulativeUsage,
         modelContextWindow: 200_000,
         modelCallCount: 3,
-        modelCalls: [],
-        droppedModelCallSamples: 0
+        modelCalls: [modelCallSample],
+        droppedModelCallSamples: 2
       }
     }
   })
@@ -122,7 +140,7 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
   assert.deepEqual(trace.usage.latestModelCall, turnUsage)
   assert.deepEqual(trace.usage.threadTotalAtEnd, cumulativeUsage)
   assert.equal(trace.usage.modelCallCount, 3)
-  assert.equal(trace.schemaVersion, 4)
+  assert.equal(trace.schemaVersion, 5)
   assert.equal(trace.capture.completeness, 'complete')
   assert.equal(trace.capture.fidelity, 'full')
   assert.equal(trace.turn.durationMs, 1_000)
@@ -135,6 +153,8 @@ test('buildTurnTrace isolates the selected turn and reports per-turn usage', () 
   assert.equal(trace.usage.accounting?.uncachedInputTokens, 400)
   assert.equal(trace.usage.accounting?.cachedInputPercent, 50)
   assert.equal(trace.usage.accounting?.latestCallContextPercent, 0.4)
+  assert.deepEqual(trace.usage.modelCalls, [modelCallSample])
+  assert.equal(trace.usage.droppedModelCallSamples, 2)
   assert.equal(trace.timing?.wallDurationMs, 1_000)
   assert.equal(trace.timing?.attributedDurationMs, 250)
   assert.equal(trace.timing?.unattributedDurationMs, 750)
@@ -301,9 +321,10 @@ test('research tool artifacts contribute to observed goal evidence', () => {
   assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
 })
 
-test('isTurnTrace accepts durable schema 2 and 3 snapshots and current schema 4 traces', () => {
+test('isTurnTrace accepts durable schema 2-4 snapshots and current schema 5 traces', () => {
   assert.equal(isTurnTrace({ schemaVersion: 2, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 3, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 4, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
+  assert.equal(isTurnTrace({ schemaVersion: 5, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 1, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), false)
 })
