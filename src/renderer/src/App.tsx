@@ -2255,39 +2255,54 @@ function ModelIcon(): JSX.Element {
 
 function Composer({
   docked,
-  isBusy,
+  isLoading,
+  isTurnActive,
   status,
   onSend,
+  onSteer,
   onStop
 }: {
   docked: boolean
-  isBusy: boolean
+  isLoading: boolean
+  isTurnActive: boolean
   status: string
-  onSend: (text: string) => Promise<void>
+  onSend: (text: string) => Promise<boolean>
+  onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
 }): JSX.Element {
   const [value, setValue] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+    textarea.style.height = '0px'
+    textarea.style.height = `${Math.min(190, Math.max(54, textarea.scrollHeight))}px`
+  }, [value])
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
 
-    if (isBusy) {
-      void onStop()
+    const text = value.trim()
+    if (!text || isLoading) {
       return
     }
 
-    const text = value
     setValue('')
-    void onSend(text)
+    const accepted = isTurnActive ? await onSteer(text) : await onSend(text)
+    if (!accepted) {
+      setValue((current) => current ? `${text}\n${current}` : text)
+    }
   }
 
   return (
     <form className="composer" onSubmit={handleSubmit}>
       <textarea
+        ref={textareaRef}
         value={value}
-        rows={3}
-        placeholder={docked ? 'Reply...' : 'Plan, Build, / for commands, @ for context'}
-        disabled={isBusy}
+        rows={1}
+        placeholder={isTurnActive ? 'Add guidance while Codex works…' : docked ? 'Reply…' : 'Plan, build, or ask anything…'}
+        disabled={isLoading}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === 'Enter' && !event.shiftKey) {
@@ -2297,10 +2312,22 @@ function Composer({
         }}
       />
       <div className="composer-footer">
-        <span className="composer-status">{status}</span>
-        <button type="submit" className="send-button" aria-label={isBusy ? 'Stop turn' : 'Send message'} disabled={!isBusy && !value.trim()}>
-          {isBusy ? '■' : '↑'}
-        </button>
+        <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{status}</span>
+        <div className="composer-actions">
+          {isTurnActive ? (
+            <button type="button" className="stop-button" aria-label="Stop turn" onClick={() => void onStop()}>
+              ■
+            </button>
+          ) : null}
+          <button
+            type="submit"
+            className="send-button"
+            aria-label={isTurnActive ? 'Add guidance to turn' : 'Send message'}
+            disabled={isLoading || !value.trim()}
+          >
+            ↑
+          </button>
+        </div>
       </div>
     </form>
   )
