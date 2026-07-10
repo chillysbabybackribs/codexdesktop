@@ -48,7 +48,7 @@ export type TraceArtifact = {
 }
 
 export type TurnTrace = {
-  schemaVersion: 2 | 3
+  schemaVersion: 2 | 3 | 4
   exportedAt: string
   capture: {
     source: 'live' | 'restored' | 'unknown'
@@ -73,6 +73,7 @@ export type TurnTrace = {
   environment: {
     requestedModel: string | null
     model: string | null
+    reasoningEffort: string | null
     workspace: string | null
     modelReroutes: NonNullable<TurnMeta['modelReroutes']>
   }
@@ -121,6 +122,33 @@ export type TurnTrace = {
     scope: 'visibleTurnEvents'
     items: TraceArtifact[]
   }
+  goal?: {
+    objective: string
+    statusAtStart: string | null
+    statusAtEnd: string | null
+    tokenBudget: number | null
+    tokensUsedAtStart: number | null
+    tokensUsedAtEnd: number | null
+    tokensUsedDelta: number | null
+    timeUsedSecondsAtStart: number | null
+    timeUsedSecondsAtEnd: number | null
+    timeUsedSecondsDelta: number | null
+    continuation: boolean
+    continuationInferred: boolean
+    lifecycleChanged: boolean
+    completionClaimed: boolean
+    observedCompletionEvidence: {
+      finalResponsePresent: boolean
+      citationCount: number
+      artifactCount: number
+      successfulCommandCount: number
+      failedCommandCount: number
+      successfulStructuredToolCount: number
+      failedStructuredToolCount: number
+      successfulResearchToolCount: number
+      fileChangeCount: number
+    }
+  }
   skills: Array<{ name: string; path: string }>
   prompt: string
   finalResponse: string
@@ -163,6 +191,8 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
   const commandCount = turnItems.filter((item) => item.type === 'commandExecution').length
   const searchEventCount = turnItems.filter((item) => item.type === 'webSearch').length
   const structuredToolCallCount = toolItems.length
+  const sources = traceSources(rawFinalResponse)
+  const artifacts = traceArtifacts(turnItems)
   const truncations = traceTruncations({
     thread: { title: traceTitle },
     prompt,
@@ -172,7 +202,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
   const capture = traceCapture(params.meta, rawFinalResponse, truncations)
 
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     exportedAt: new Date().toISOString(),
     capture,
     thread: {
@@ -193,6 +223,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
         ? (params.meta.requestedModel ?? null)
         : params.model,
       model: valueOrFallback(params.meta?.model, params.model),
+      reasoningEffort: params.meta?.reasoningEffort ?? null,
       workspace: valueOrFallback(params.meta?.workspace, params.workspace),
       modelReroutes: params.meta?.modelReroutes ?? []
     },
@@ -220,12 +251,15 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
     timing: traceTiming(params.meta, timeline),
     sourceIndex: {
       scope: 'finalResponseCitations',
-      items: traceSources(rawFinalResponse)
+      items: sources
     },
     artifactIndex: {
       scope: 'visibleTurnEvents',
-      items: traceArtifacts(turnItems)
+      items: artifacts
     },
+    ...(goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts)
+      ? { goal: goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts) }
+      : {}),
     skills,
     prompt: clip(prompt, maxTextChars),
     finalResponse: clip(finalResponse, maxTextChars),
@@ -236,7 +270,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
 export function isTurnTrace(value: unknown): value is TurnTrace {
   if (!value || typeof value !== 'object') return false
   const candidate = value as Partial<TurnTrace>
-  return (candidate.schemaVersion === 2 || candidate.schemaVersion === 3) &&
+  return (candidate.schemaVersion === 2 || candidate.schemaVersion === 3 || candidate.schemaVersion === 4) &&
     typeof candidate.exportedAt === 'string' &&
     Boolean(candidate.turn && typeof candidate.turn.id === 'string') &&
     Boolean(candidate.thread && Array.isArray(candidate.timeline))
