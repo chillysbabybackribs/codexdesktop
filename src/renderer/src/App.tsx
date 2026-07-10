@@ -237,6 +237,7 @@ export default function App(): React.JSX.Element {
   const activeGoalRef = useRef<ThreadGoal | null>(activeGoal)
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
+  const userRequestedTurnIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const workspaceRef = useRef<string | null>(workspace)
   const watchThreadIdRef = useRef<string | null>(null)
@@ -540,7 +541,10 @@ export default function App(): React.JSX.Element {
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
       persistLastThreadId(response.threadId)
+      const turnAlreadyObserved = activeTurnIdRef.current === response.turn.id
+      if (!turnAlreadyObserved) userRequestedTurnIdRef.current = response.turn.id
       setActiveTurnId(response.turn.id)
+      activeTurnIdRef.current = response.turn.id
       setActiveReasoningEffort(response.reasoningEffort)
       activeReasoningEffortRef.current = response.reasoningEffort
       const goalSnapshot = cloneGoal(activeGoalRef.current)
@@ -614,6 +618,8 @@ export default function App(): React.JSX.Element {
     setActiveThreadId(null)
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
+    activeTurnIdRef.current = null
+    userRequestedTurnIdRef.current = null
     setActiveGoal(null)
     activeGoalRef.current = null
     setActiveReasoningEffort(null)
@@ -842,9 +848,12 @@ export default function App(): React.JSX.Element {
         if (isRelevantThread(notification.params.threadId)) {
           const turn = notification.params.turn
           const goalSnapshot = cloneGoal(activeGoalRef.current)
-          const goalContinuation = goalSnapshot?.status === 'active' && !userTurnRequestPendingRef.current
+          const userInitiated = userTurnRequestPendingRef.current || userRequestedTurnIdRef.current === turn.id
+          if (userRequestedTurnIdRef.current === turn.id) userRequestedTurnIdRef.current = null
+          const goalContinuation = goalSnapshot?.status === 'active' && !userInitiated
           setActiveThreadId(notification.params.threadId)
           setActiveTurnId(turn.id)
+          activeTurnIdRef.current = turn.id
           noteTurn(turn.id, {
             status: 'inProgress',
             origin: 'live',
@@ -874,6 +883,7 @@ export default function App(): React.JSX.Element {
             errorMessage: turn.error?.message,
             goalAtEnd: cloneGoal(activeGoalRef.current)
           })
+          if (activeTurnIdRef.current === turn.id) activeTurnIdRef.current = null
           setActiveTurnId((current) => (current === turn.id ? null : current))
         }
         void refreshThreads()
@@ -990,6 +1000,7 @@ export default function App(): React.JSX.Element {
 
           if (!notification.params.willRetry) {
             addSystemItem(notification.params.error.message, 'error')
+            if (activeTurnIdRef.current === notification.params.turnId) activeTurnIdRef.current = null
             setActiveTurnId((current) =>
               current === notification.params.turnId ? null : current
             )
@@ -1121,7 +1132,9 @@ export default function App(): React.JSX.Element {
     watchThreadIdRef.current = thread.id
     setActiveThreadId(thread.id)
     setActiveThreadTitle(threadTitle(thread))
-    setActiveTurnId(turns.find((turn) => turn.status === 'inProgress')?.id ?? null)
+    const inProgressTurnId = turns.find((turn) => turn.status === 'inProgress')?.id ?? null
+    setActiveTurnId(inProgressTurnId)
+    activeTurnIdRef.current = inProgressTurnId
 
     const nextItems: ChatItem[] = []
     const nextItemMeta: Record<string, ItemMeta> = {}
