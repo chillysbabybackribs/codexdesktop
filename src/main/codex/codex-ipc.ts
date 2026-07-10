@@ -1,5 +1,5 @@
 import { ipcMain, type BrowserWindow } from 'electron'
-import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams } from '../../shared/ipc.js'
+import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams, CodexSteerTurnParams } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
@@ -26,6 +26,9 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
     client.sendMessage(params.threadId, params.text, params.cwd, params.model)
+  )
+  ipcMain.handle(ipcChannels.codexSteerTurn, (_event, params: CodexSteerTurnParams) =>
+    client.steerTurn(params.threadId, params.turnId, params.text)
   )
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)

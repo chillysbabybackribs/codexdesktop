@@ -5,7 +5,8 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
-  CodexSendMessageParams
+  CodexSendMessageParams,
+  CodexSteerTurnParams
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 
@@ -42,6 +43,7 @@ const api = {
     resumeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexResumeThread, threadId),
     readThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
     sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
+    steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.codexSteerTurn, params),
     interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
     unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
     onEvent: (listener: (event: CodexEvent) => void) => {

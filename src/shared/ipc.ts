@@ -51,6 +51,12 @@ export type CodexInterruptTurnParams = {
   turnId: string
 }
 
+export type CodexSteerTurnParams = {
+  threadId: string
+  turnId: string
+  text: string
+}
+
 export type CodexListThreadsParams = {
   cursor?: string | null
   cwd?: string | null
@@ -79,6 +85,7 @@ export const ipcChannels = {
   codexResumeThread: 'codex:resumeThread',
   codexReadThread: 'codex:readThread',
   codexSendMessage: 'codex:sendMessage',
+  codexSteerTurn: 'codex:steerTurn',
   codexInterruptTurn: 'codex:interruptTurn',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',

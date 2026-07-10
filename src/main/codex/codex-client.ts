@@ -174,6 +174,15 @@ export class CodexClient extends EventEmitter {
     return this.request('turn/interrupt', { threadId, turnId })
   }
 
+  async steerTurn(threadId: string, turnId: string, text: string): Promise<unknown> {
+    await this.ensureStarted()
+    return this.request('turn/steer', {
+      threadId,
+      expectedTurnId: turnId,
+      input: [{ type: 'text', text, text_elements: [] }]
+    })
+  }
+
   async unsubscribeThread(threadId: string): Promise<ThreadUnsubscribeResponse> {
     await this.ensureStarted()
     return this.request<ThreadUnsubscribeResponse>('thread/unsubscribe', { threadId })
