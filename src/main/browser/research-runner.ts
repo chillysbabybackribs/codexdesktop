@@ -31,7 +31,6 @@ export type ResearchPage = {
   rank: number
   url: string
   title: string
-  content: string
   wordCount: number
   artifactPath: string
   htmlPath: string
@@ -161,7 +160,6 @@ export class ResearchRunner {
             rank,
             url: extracted.url || candidate.url,
             title: extracted.title || candidate.title,
-            content: extracted.content,
             wordCount: extracted.wordCount,
             artifactPath,
             htmlPath,
