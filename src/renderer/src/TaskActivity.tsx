@@ -88,11 +88,10 @@ function useNow(active: boolean): number {
 }
 
 // A viewport that stays pinned to its bottom edge as content streams in.
-// These viewports intentionally do not expose their own scrollbar; the outer
-// transcript owns reading position. Resize/mutation observation is important
-// here because a Markdown code block or a live diff can grow after React's
-// first layout pass.
-function AutoFollow({
+// The caller controls whether it is visually scrollable. Resize/mutation
+// observation catches Markdown, terminal output, and live diffs that grow
+// after React's first layout pass without scheduling unbounded follow frames.
+export function AutoFollow({
   className,
   children
 }: {
@@ -110,6 +109,7 @@ function AutoFollow({
 
     let frame: number | null = null
     let settleFrame: number | null = null
+    let disposed = false
 
     const cancel = (): void => {
       if (frame !== null) {
@@ -123,27 +123,32 @@ function AutoFollow({
     }
 
     const follow = (): void => {
-      cancel()
+      if (disposed || frame !== null) {
+        return
+      }
+
       frame = window.requestAnimationFrame(() => {
         frame = null
+        if (disposed) {
+          return
+        }
         el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
-        settleFrame = window.requestAnimationFrame(() => {
-          settleFrame = null
-          el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
-        })
+
+        if (settleFrame === null) {
+          settleFrame = window.requestAnimationFrame(() => {
+            settleFrame = null
+            if (!disposed) {
+              el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
+            }
+          })
+        }
       })
     }
 
     const resizeObserver = new ResizeObserver(follow)
     resizeObserver.observe(el)
-    for (const child of Array.from(el.children)) {
-      resizeObserver.observe(child)
-    }
 
     const mutationObserver = new MutationObserver(() => {
-      for (const child of Array.from(el.children)) {
-        resizeObserver.observe(child)
-      }
       follow()
     })
     mutationObserver.observe(el, {
@@ -155,6 +160,7 @@ function AutoFollow({
     follow()
 
     return () => {
+      disposed = true
       cancel()
       resizeObserver.disconnect()
       mutationObserver.disconnect()
@@ -984,14 +990,16 @@ export function WorkGroup({
   items,
   itemMeta,
   live,
-  workspace
+  workspace,
+  newestItemId
 }: {
   items: WorkItem[]
   itemMeta: Record<string, ItemMeta>
   live: boolean
   workspace: string | null
+  newestItemId?: string
 }): JSX.Element {
-  const newestId = items[items.length - 1]?.id
+  const newestId = newestItemId ?? items[items.length - 1]?.id
 
   return (
     <div className="work-group">
