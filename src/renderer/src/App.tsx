@@ -33,7 +33,11 @@ import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
-import { reduceTurnTelemetry } from './turn-telemetry'
+import {
+  modelCallAttributionForItem,
+  reduceTurnTelemetry,
+  type ModelCallAttribution
+} from './turn-telemetry'
 import {
   AutoFollow,
   TurnTail,
@@ -252,6 +256,8 @@ export default function App(): React.JSX.Element {
   const itemMutationTimerRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
+  const precedingModelInputByTurnRef = useRef<Map<string, ModelCallAttribution>>(new Map())
+  const pendingCompactionByTurnRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -867,6 +873,7 @@ export default function App(): React.JSX.Element {
             goalContinuationInferred: goalContinuation,
             startedAtMs: turn.startedAt ? turn.startedAt * 1000 : Date.now()
           })
+          for (const item of turn.items) rememberModelCallInput(turn.id, item)
           adoptTurnItems(turn.id, turn.items)
           mergeItems(turn.items)
         }
@@ -890,6 +897,7 @@ export default function App(): React.JSX.Element {
         return
       case 'item/started':
         if (isRelevantThread(notification.params.threadId)) {
+          rememberModelCallInput(notification.params.turnId, notification.params.item)
           noteItem(notification.params.item.id, notification.params.turnId, {
             startedAtMs: notification.params.startedAtMs
           })
@@ -898,6 +906,7 @@ export default function App(): React.JSX.Element {
         return
       case 'item/completed':
         if (isRelevantThread(notification.params.threadId)) {
+          rememberModelCallInput(notification.params.turnId, notification.params.item)
           noteItem(notification.params.item.id, notification.params.turnId, {
             completedAtMs: notification.params.completedAtMs
           })
@@ -933,10 +942,14 @@ export default function App(): React.JSX.Element {
         return
       case 'thread/tokenUsage/updated':
         if (isRelevantThread(notification.params.threadId)) {
+          const compactedBeforeCall = pendingCompactionByTurnRef.current.delete(notification.params.turnId)
           setTurnMeta((current) => reduceTurnTelemetry(current, {
             type: 'tokenUsage',
             turnId: notification.params.turnId,
-            tokenUsage: notification.params.tokenUsage
+            tokenUsage: notification.params.tokenUsage,
+            atMs: Date.now(),
+            precedingItem: precedingModelInputByTurnRef.current.get(notification.params.turnId) ?? null,
+            compactedBeforeCall
           }))
         }
         return
@@ -1062,6 +1075,16 @@ export default function App(): React.JSX.Element {
 
   function noteTurn(turnId: string, patch: Partial<TurnMeta>): void {
     setTurnMeta((current) => reduceTurnTelemetry(current, { type: 'patch', turnId, patch }))
+  }
+
+  function rememberModelCallInput(turnId: string, item: ThreadItem): void {
+    if (item.type === 'contextCompaction') {
+      pendingCompactionByTurnRef.current.add(turnId)
+      return
+    }
+
+    const attribution = modelCallAttributionForItem(item)
+    if (attribution) precedingModelInputByTurnRef.current.set(turnId, attribution)
   }
 
   // Tag a batch of items (from turn/started, turn/completed, or turn/start
