@@ -12,7 +12,7 @@
     "build": "npm run typecheck && electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/browser/*.test.ts",
+    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/browser/*.test.ts src/main/codex/*.test.ts",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
   "dependencies": {

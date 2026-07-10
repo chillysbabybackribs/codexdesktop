@@ -400,6 +400,11 @@ export class CodexClient extends EventEmitter {
 
     if (message.method) {
       const notification = message as ServerNotification
+
+      if (notification.method === 'skills/changed') {
+        void this.refreshLocalSkills(true)
+      }
+
       this.emit('event', {
         type: 'notification',
         notification
