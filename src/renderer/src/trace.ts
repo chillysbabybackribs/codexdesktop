@@ -200,6 +200,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
     timeline
   })
   const capture = traceCapture(params.meta, rawFinalResponse, truncations)
+  const goal = goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts)
 
   return {
     schemaVersion: 4,
@@ -257,9 +258,7 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       scope: 'visibleTurnEvents',
       items: artifacts
     },
-    ...(goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts)
-      ? { goal: goalTrace(params.meta, turnItems, rawFinalResponse, sources, artifacts) }
-      : {}),
+    ...(goal ? { goal } : {}),
     skills,
     prompt: clip(prompt, maxTextChars),
     finalResponse: clip(finalResponse, maxTextChars),
@@ -441,6 +440,67 @@ function traceCapture(
     missing,
     fidelity: truncations.length ? 'bounded' : 'full',
     truncations
+  }
+}
+
+function goalTrace(
+  meta: TurnMeta | undefined,
+  items: TraceInputItem[],
+  finalResponse: string,
+  sources: TraceSource[],
+  artifacts: TraceArtifact[]
+): TurnTrace['goal'] | undefined {
+  const start = meta?.goalAtStart ?? null
+  const end = meta?.goalAtEnd === undefined ? start : meta.goalAtEnd
+  if (!start && !end) return undefined
+
+  const commandItems = items.filter(
+    (item): item is Extract<ThreadItem, { type: 'commandExecution' }> => item.type === 'commandExecution'
+  )
+  const structuredItems = items.filter(
+    (item): item is Extract<ThreadItem, { type: 'dynamicToolCall' | 'mcpToolCall' }> =>
+      item.type === 'dynamicToolCall' || item.type === 'mcpToolCall'
+  )
+  const isStructuredSuccess = (item: typeof structuredItems[number]): boolean =>
+    item.status === 'completed' && (item.type === 'dynamicToolCall' ? item.success !== false : item.error === null)
+  const fileChangeCount = items
+    .filter((item): item is Extract<ThreadItem, { type: 'fileChange' }> => item.type === 'fileChange')
+    .reduce((count, item) => count + item.changes.length, 0)
+  const startTokens = start?.tokensUsed ?? null
+  const endTokens = end?.tokensUsed ?? null
+  const startTime = start?.timeUsedSeconds ?? null
+  const endTime = end?.timeUsedSeconds ?? null
+
+  return {
+    objective: end?.objective ?? start?.objective ?? '',
+    statusAtStart: start?.status ?? null,
+    statusAtEnd: end?.status ?? null,
+    tokenBudget: end?.tokenBudget ?? start?.tokenBudget ?? null,
+    tokensUsedAtStart: startTokens,
+    tokensUsedAtEnd: endTokens,
+    tokensUsedDelta: startTokens !== null && endTokens !== null ? Math.max(0, endTokens - startTokens) : null,
+    timeUsedSecondsAtStart: startTime,
+    timeUsedSecondsAtEnd: endTime,
+    timeUsedSecondsDelta: startTime !== null && endTime !== null ? Math.max(0, endTime - startTime) : null,
+    continuation: meta?.goalContinuation ?? false,
+    continuationInferred: meta?.goalContinuationInferred ?? false,
+    lifecycleChanged: Boolean(
+      start && (!end || start.status !== end.status || start.objective !== end.objective || start.tokenBudget !== end.tokenBudget)
+    ),
+    completionClaimed: end?.status === 'complete',
+    observedCompletionEvidence: {
+      finalResponsePresent: Boolean(finalResponse.trim()),
+      citationCount: sources.length,
+      artifactCount: artifacts.length,
+      successfulCommandCount: commandItems.filter((item) => item.status === 'completed').length,
+      failedCommandCount: commandItems.filter((item) => item.status === 'failed' || item.status === 'declined').length,
+      successfulStructuredToolCount: structuredItems.filter(isStructuredSuccess).length,
+      failedStructuredToolCount: structuredItems.filter((item) => item.status === 'failed' || !isStructuredSuccess(item)).length,
+      successfulResearchToolCount: structuredItems.filter((item) =>
+        item.type === 'dynamicToolCall' && item.tool === 'research_web' && isStructuredSuccess(item)
+      ).length,
+      fileChangeCount
+    }
   }
 }
 
