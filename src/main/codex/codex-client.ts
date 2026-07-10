@@ -44,7 +44,8 @@ const taskShapingGuidance = [
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
-  '- Research budget: call research_web once with up to three query variants, process at most three strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
+  '- Research budget: call research_web once with up to three semantic query variants, process at most three strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
+  '- Make research variants meaningfully different: broad topic, official or primary-source angle when applicable, and independent review or analysis angle when useful. Do not use one-word fragments.',
   '- Prefer snippets and targeted passages over long full-page results. Do not repeat large source text in later reasoning.',
   'Response formatting guidance:',
   '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
@@ -159,7 +160,7 @@ const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Run compact deterministic public web research: extract SERP URLs, process qualifying pages sequentially, save full artifacts to disk, and return targeted text evidence.',
+    description: 'Run compact deterministic public web research: search up to three semantic query variants in parallel, extract result-card URLs, rank and deduplicate candidates, lower video sources until transcript extraction exists, process the best pages sequentially, save full artifacts to disk, and return targeted text evidence.',
     inputSchema: researchWebSchema
   }
 ]
