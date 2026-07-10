@@ -1332,6 +1332,8 @@ export default function App(): React.JSX.Element {
           threads={threads}
           activeThreadId={activeThreadId}
           activeTurnId={activeTurnId}
+          activeGoal={activeGoal}
+          isGoalUpdating={isGoalUpdating}
           isThreadMenuOpen={isThreadMenuOpen}
           threadsNextCursor={threadsNextCursor}
           threadsLoading={threadsLoading}
@@ -1350,6 +1352,9 @@ export default function App(): React.JSX.Element {
           onResumeThread={handleResumeThread}
           onLoadMoreThreads={loadMoreThreads}
           onPickWorkspace={handlePickWorkspace}
+          onSaveGoal={handleSaveGoal}
+          onSetGoalStatus={handleSetGoalStatus}
+          onClearGoal={handleClearGoal}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -1392,6 +1397,8 @@ function ChatPane({
   threads,
   activeThreadId,
   activeTurnId,
+  activeGoal,
+  isGoalUpdating,
   isThreadMenuOpen,
   threadsNextCursor,
   threadsLoading,
@@ -1409,7 +1416,10 @@ function ChatPane({
   onToggleThreadMenu,
   onResumeThread,
   onLoadMoreThreads,
-  onPickWorkspace
+  onPickWorkspace,
+  onSaveGoal,
+  onSetGoalStatus,
+  onClearGoal
 }: {
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
@@ -1420,6 +1430,8 @@ function ChatPane({
   threads: Thread[]
   activeThreadId: string | null
   activeTurnId: string | null
+  activeGoal: ThreadGoal | null
+  isGoalUpdating: boolean
   isThreadMenuOpen: boolean
   threadsNextCursor: string | null
   threadsLoading: boolean
@@ -1438,6 +1450,9 @@ function ChatPane({
   onResumeThread: (threadId: string) => Promise<void>
   onLoadMoreThreads: () => Promise<void>
   onPickWorkspace: () => Promise<void>
+  onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
+  onSetGoalStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
+  onClearGoal: () => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
@@ -1580,6 +1595,13 @@ function ChatPane({
           {models.length ? (
             <ModelPill models={models} selectedModel={selectedModel} onSelectModel={onSelectModel} />
           ) : null}
+          <GoalControl
+            goal={activeGoal}
+            disabled={Boolean(activeTurnId) || isGoalUpdating}
+            onSave={onSaveGoal}
+            onSetStatus={onSetGoalStatus}
+            onClear={onClearGoal}
+          />
           <div className="composer-thread-controls">
             <ThreadMenu
               placement="composer"
