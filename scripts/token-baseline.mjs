@@ -4,33 +4,38 @@ import { createInterface } from 'node:readline'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 
-const options = parseArgs(process.argv.slice(2))
-const startedAt = new Date()
-const harness = new AppServerHarness(options)
+let options
+let startedAt
 
-try {
-  await harness.start()
-  const scenarios = []
+async function main() {
+  options = parseArgs(process.argv.slice(2))
+  startedAt = new Date()
+  const harness = new AppServerHarness(options)
 
-  for (const kind of options.order) {
-    scenarios.push(await runScenario(harness, kind))
+  try {
+    await harness.start()
+    const scenarios = []
+
+    for (const kind of options.order) {
+      scenarios.push(await runScenario(harness, kind))
+    }
+
+    const report = buildReport(scenarios)
+    const outputPath = resolve(options.output)
+    await mkdir(dirname(outputPath), { recursive: true })
+    await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
+    process.stdout.write(`${JSON.stringify({
+      ok: true,
+      output: outputPath,
+      model: report.config.model,
+      effort: report.config.effort,
+      turns: report.config.turns,
+      payloadChars: report.config.payloadChars,
+      comparison: report.comparison
+    })}\n`)
+  } finally {
+    await harness.stop()
   }
-
-  const report = buildReport(scenarios)
-  const outputPath = resolve(options.output)
-  await mkdir(dirname(outputPath), { recursive: true })
-  await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
-  process.stdout.write(`${JSON.stringify({
-    ok: true,
-    output: outputPath,
-    model: report.config.model,
-    effort: report.config.effort,
-    turns: report.config.turns,
-    payloadChars: report.config.payloadChars,
-    comparison: report.comparison
-  })}\n`)
-} finally {
-  await harness.stop()
 }
 
 async function runScenario(harness, kind) {
@@ -419,3 +424,5 @@ function round(value, digits) {
   const scale = 10 ** digits
   return Math.round(value * scale) / scale
 }
+
+await main()
