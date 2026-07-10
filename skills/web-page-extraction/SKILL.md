@@ -40,6 +40,36 @@ If the page is script-rendered or protected, use the visible browser path and sa
 - Use `browser_run` for a narrowly scoped DOM query or interaction, not for returning a full static page.
 - For dynamic pages, first navigate visibly, wait for the required state, then save or inspect only the specific fields needed.
 
+## Reddit And Comment Threads
+
+Use this path for Reddit, Hacker News, forums, review pages, and other comment-heavy pages where search snippets often find the right thread but static extraction may return only navigation or a client-rendered shell.
+
+1. Start with `research_web` for discovery, but treat Reddit snippets as leads, not evidence. Search for thread titles plus product/model names and include `site:reddit.com/r/<subreddit>` when the subreddit matters.
+2. Try the cheap static route once: fetch the `.json`, old/mobile page, or cleaned artifact. If it returns a block page, login wall, or only boilerplate, stop retrying static fetches.
+3. Switch to the visible browser path. Navigate to the thread, wait for comments to render, then use `document.body.innerText` or targeted DOM selectors with a hard character limit.
+4. Extract structured facts from the rendered text: title, age, subreddit, post body, top comments, repeated claims, disagreement, access/rollout notes, and caveats. Ignore ads, sidebars, mod boilerplate, and promoted posts.
+5. For multiple threads, write a disposable parser in `/tmp` or run a compact `browser_run` loop that returns JSON such as `{url,title,post,comments:[{author,score,body}]}`. Keep it task-local; do not add bulky permanent tools unless the workflow repeats often.
+6. Summarize sentiment by evidence class: firsthand use, secondhand reaction, speculation, launch/availability chatter, and naming/pricing complaints. Call out sample-size limits, especially for launch-day products.
+
+Useful on-the-fly probes:
+
+```sh
+curl -L --max-time 20 -A 'Mozilla/5.0' 'https://www.reddit.com/r/SUB/comments/ID/thread.json?limit=100' | jq .
+```
+
+```js
+const urls = ['https://www.reddit.com/r/OpenAI/comments/.../'];
+const out = [];
+for (const url of urls) {
+  location.href = url;
+  await new Promise(r => setTimeout(r, 5000));
+  out.push({ url: location.href, title: document.title, text: document.body.innerText.slice(0, 12000) });
+}
+return out;
+```
+
+When using browser text, verify that the result includes actual comments before synthesizing. If only the shell appears, try one more wait/scroll pass and then disclose the access limitation.
+
 ## Evidence Discipline
 
 - Prefer official and primary pages already selected by the research stage.
