@@ -103,6 +103,10 @@ function summarizeScenario(kind, thread, turns) {
       : null
   })))
   const input = calls.map((call) => call.inputTokens)
+  const firstCallInput = input[0] ?? null
+  for (const call of calls) {
+    call.inputGrowthFromFirst = firstCallInput === null ? null : call.inputTokens - firstCallInput
+  }
   const cumulativeInput = sum(input)
   const cachedInput = sum(calls.map((call) => call.cachedInputTokens))
 
@@ -114,9 +118,15 @@ function summarizeScenario(kind, thread, turns) {
     turnCount: turns.length,
     modelCallCount: calls.length,
     toolCallCount: sum(turns.map((turn) => turn.toolCalls.length)),
-    firstCallInput: input[0] ?? null,
+    firstCallInput,
     finalCallInput: input.at(-1) ?? null,
     maximumCallInput: input.length ? Math.max(...input) : null,
+    finalInputGrowthFromFirst: firstCallInput === null || !input.length
+      ? null
+      : input.at(-1) - firstCallInput,
+    maximumInputGrowthFromFirst: firstCallInput === null || !input.length
+      ? null
+      : Math.max(...input) - firstCallInput,
     cumulativeInput,
     averageInputPerCall: calls.length ? Math.round(cumulativeInput / calls.length) : null,
     cachedInput,
@@ -155,8 +165,11 @@ function buildReport(scenarios) {
     },
     scenarios,
     comparison: {
+      firstCallInputOffset: nullableDelta(tool.firstCallInput, noTool.firstCallInput),
       finalCallInputDelta: nullableDelta(tool.finalCallInput, noTool.finalCallInput),
       maximumCallInputDelta: nullableDelta(tool.maximumCallInput, noTool.maximumCallInput),
+      finalInputGrowthDelta: nullableDelta(tool.finalInputGrowthFromFirst, noTool.finalInputGrowthFromFirst),
+      maximumInputGrowthDelta: nullableDelta(tool.maximumInputGrowthFromFirst, noTool.maximumInputGrowthFromFirst),
       cumulativeInputDelta: tool.cumulativeInput - noTool.cumulativeInput,
       averageInputPerCallDelta: nullableDelta(tool.averageInputPerCall, noTool.averageInputPerCall),
       modelCallDelta: tool.modelCallCount - noTool.modelCallCount,
