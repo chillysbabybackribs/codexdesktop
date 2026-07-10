@@ -2480,6 +2480,146 @@ button {
   margin-left: 2px;
 }
 
+.goal-control {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  margin-left: 2px;
+}
+
+.goal-pill {
+  max-width: 150px;
+}
+
+.goal-control.has-goal .goal-pill {
+  color: #c9d7c5;
+}
+
+.goal-status-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #858b91;
+}
+
+.goal-status-dot.is-active {
+  background: #76a66d;
+  box-shadow: 0 0 0 2px rgb(118 166 109 / 14%);
+}
+
+.goal-status-dot.is-paused,
+.goal-status-dot.is-usageLimited,
+.goal-status-dot.is-budgetLimited {
+  background: #c39a58;
+}
+
+.goal-status-dot.is-blocked {
+  background: #bd6d67;
+}
+
+.goal-status-dot.is-complete {
+  background: #6e9db8;
+}
+
+.goal-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 31;
+  width: min(340px, calc(100vw - 40px));
+  padding: 12px;
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 8px;
+  background: rgb(30 30 32 / 98%);
+  box-shadow: 0 18px 48px -16px rgb(0 0 0 / 60%);
+  backdrop-filter: blur(22px) saturate(150%);
+  animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.goal-menu form {
+  display: grid;
+  gap: 7px;
+}
+
+.goal-menu label {
+  color: #aeb4b9;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.goal-menu textarea,
+.goal-menu input {
+  width: 100%;
+  border: 1px solid #3a3a3c;
+  border-radius: 6px;
+  outline: 0;
+  background: #242426;
+  color: #e6e6e6;
+  font: inherit;
+}
+
+.goal-menu textarea {
+  min-height: 82px;
+  padding: 9px 10px;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.goal-menu input {
+  height: 34px;
+  padding: 0 10px;
+}
+
+.goal-menu textarea:focus,
+.goal-menu input:focus {
+  border-color: #6684b8;
+  box-shadow: 0 0 0 2px rgb(102 132 184 / 14%);
+}
+
+.goal-menu textarea:disabled,
+.goal-menu input:disabled {
+  opacity: 0.62;
+}
+
+.goal-usage {
+  margin: 1px 0 0;
+  color: #838a90;
+  font-size: 12px;
+}
+
+.goal-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+}
+
+.goal-actions button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid #414144;
+  border-radius: 6px;
+  background: #2a2a2d;
+  color: #d8d8d8;
+  cursor: pointer;
+}
+
+.goal-actions button:hover:not(:disabled) {
+  border-color: #55555a;
+  background: #333337;
+}
+
+.goal-actions button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.goal-actions .goal-clear {
+  margin-left: auto;
+  color: #c98a85;
+}
+
 .model-menu {
   position: absolute;
   bottom: calc(100% + 8px);
