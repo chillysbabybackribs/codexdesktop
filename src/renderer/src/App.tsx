@@ -28,6 +28,7 @@ import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import {
+  AutoFollow,
   TurnTail,
   WorkGroup,
   workItemTypes,
@@ -45,6 +46,8 @@ type SystemItem = {
 }
 
 type ChatItem = ThreadItem | SystemItem | TurnPlanItem
+type AgentMessageItem = Extract<ThreadItem, { type: 'agentMessage' }>
+type ActivityItem = WorkItem | AgentMessageItem
 
 // Item types that represent Codex "working" — its streamed thinking, tool
 // calls, file edits, and searches. These render sequentially as WorkGroup
@@ -56,13 +59,17 @@ function isWorkItem(item: ChatItem): item is WorkItem {
   return workTypes.has(item.type)
 }
 
-// The transcript renders as a flat sequence of rows: chat messages, groups of
-// consecutive work blocks, and one "tail" per turn — the live shimmer status
-// while the turn runs, then a permanent receipt row once it finishes. Nothing
-// auto-collapses.
+function isActivityItem(item: ChatItem): item is ActivityItem {
+  return isWorkItem(item) || (item.type === 'agentMessage' && item.phase === 'commentary')
+}
+
+// The transcript has two deliberately separate surfaces per turn: a bounded
+// activity feed for tool work and in-task commentary, then the final answer.
+// While a turn is active, all assistant output is held out of the main flow;
+// only the completed answer is allowed to leave the activity feed.
 type RenderRow =
   | { kind: 'chat'; item: ChatItem; turnId: string | null }
-  | { kind: 'work'; id: string; turnId: string | null; items: WorkItem[] }
+  | { kind: 'activity'; id: string; turnId: string | null; items: ActivityItem[] }
   | { kind: 'tail'; id: string; turnId: string }
 
 function buildRows(
@@ -72,51 +79,68 @@ function buildRows(
 ): { rows: RenderRow[]; turnWork: Map<string, WorkItem[]> } {
   const rows: RenderRow[] = []
   const turnWork = new Map<string, WorkItem[]>()
-  const lastWorkRowIndex = new Map<string, number>()
-  let run: WorkItem[] | null = null
-  let runTurnId: string | null = null
-
-  const flush = (): void => {
-    if (run && run.length) {
-      rows.push({ kind: 'work', id: `work-${run[0].id}`, turnId: runTurnId, items: run })
-      if (runTurnId) {
-        lastWorkRowIndex.set(runTurnId, rows.length - 1)
-      }
-    }
-    run = null
-    runTurnId = null
-  }
+  const activityByTurn = new Map<string, ActivityItem[]>()
 
   for (const item of items) {
     const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
 
-    if (isWorkItem(item)) {
-      if (run && runTurnId !== turnId) {
-        flush()
-      }
-      run ??= []
-      runTurnId = turnId
-      run.push(item)
-      if (turnId) {
-        const bucket = turnWork.get(turnId) ?? []
-        bucket.push(item)
-        turnWork.set(turnId, bucket)
+    if (isActivityItem(item) && turnId) {
+      const activity = activityByTurn.get(turnId) ?? []
+      activity.push(item)
+      activityByTurn.set(turnId, activity)
+    }
+
+    if (isWorkItem(item) && turnId) {
+      const work = turnWork.get(turnId) ?? []
+      work.push(item)
+      turnWork.set(turnId, work)
+    }
+  }
+
+  const emittedActivityTurns = new Set<string>()
+  const lastRowIndex = new Map<string, number>()
+
+  for (const item of items) {
+    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
+
+    if (isActivityItem(item)) {
+      if (turnId && !emittedActivityTurns.has(turnId)) {
+        rows.push({
+          kind: 'activity',
+          id: `activity-${turnId}`,
+          turnId,
+          items: activityByTurn.get(turnId) ?? [item]
+        })
+        emittedActivityTurns.add(turnId)
+        lastRowIndex.set(turnId, rows.length - 1)
+      } else if (!turnId) {
+        rows.push({ kind: 'activity', id: `activity-${item.id}`, turnId: null, items: [item] })
       }
       continue
     }
 
-    flush()
+    // A final answer is intentionally buffered while its turn is running.
+    // Codex does not mark every provider's answer chunks consistently, so the
+    // active-turn check applies to all agent messages, not only final_answer.
+    if (item.type === 'agentMessage' && turnId === activeTurnId) {
+      continue
+    }
+
     rows.push({ kind: 'chat', item, turnId })
+    if (turnId) {
+      lastRowIndex.set(turnId, rows.length - 1)
+    }
   }
 
-  flush()
-
-  // Close each finished turn's work section with its receipt row. The live
-  // turn instead gets a single tail at the very end of the transcript.
+  // Close completed work after its answer, not between the work feed and the
+  // answer. The live turn retains a single status row at the transcript tail.
   const inserts: Array<{ index: number; row: RenderRow }> = []
-  for (const [turnId, index] of lastWorkRowIndex) {
+  for (const turnId of turnWork.keys()) {
     if (turnId !== activeTurnId) {
-      inserts.push({ index, row: { kind: 'tail', id: `tail-${turnId}`, turnId } })
+      const index = lastRowIndex.get(turnId)
+      if (index !== undefined) {
+        inserts.push({ index, row: { kind: 'tail', id: `tail-${turnId}`, turnId } })
+      }
     }
   }
   inserts.sort((a, b) => b.index - a.index)
