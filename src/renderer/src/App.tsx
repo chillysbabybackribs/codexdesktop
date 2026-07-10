@@ -2311,6 +2311,45 @@ function TabStrip({ state }: { state: BrowserState }): JSX.Element {
   )
 }
 
+function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading: boolean }): JSX.Element {
+  // Reset the error flag whenever the favicon URL changes so a fresh icon gets
+  // a chance to load after a previous one failed.
+  const [failed, setFailed] = useState(false)
+  useEffect(() => setFailed(false), [favicon])
+
+  if (isLoading) {
+    return <span className="tab-favicon tab-favicon-spinner" aria-hidden="true" />
+  }
+
+  if (favicon && !failed) {
+    return (
+      <img
+        className="tab-favicon"
+        src={favicon}
+        alt=""
+        aria-hidden="true"
+        onError={() => setFailed(true)}
+      />
+    )
+  }
+
+  return <GlobeIcon />
+}
+
+function GlobeIcon(): JSX.Element {
+  return (
+    <svg className="tab-favicon tab-favicon-fallback" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M8 1.75c1.9 0 3.25 2.8 3.25 6.25S9.9 14.25 8 14.25 4.75 11.45 4.75 8 6.1 1.75 8 1.75Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <path d="M2 8h12M2.6 5.5h10.8M2.6 10.5h10.8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): JSX.Element {
   const [input, setInput] = useState('')
 
