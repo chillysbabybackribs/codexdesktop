@@ -909,14 +909,16 @@ export default function App(): JSX.Element {
       `${pendingAgentDeltasRef.current.get(itemId) ?? ''}${delta}`
     )
 
-    if (agentDeltaFrameRef.current !== null) {
+    if (agentDeltaTimerRef.current !== null) {
       return
     }
 
-    agentDeltaFrameRef.current = window.requestAnimationFrame(() => {
-      agentDeltaFrameRef.current = null
+    // Re-rendering incremental Markdown on every token is expensive. A short
+    // 32ms batch still feels continuous while halving peak parse/layout work.
+    agentDeltaTimerRef.current = window.setTimeout(() => {
+      agentDeltaTimerRef.current = null
       flushPendingAgentDeltas(fallbackType)
-    })
+    }, 32)
   }
 
   function flushPendingAgentDeltas(fallbackType: 'agentMessage' = 'agentMessage'): void {
@@ -926,9 +928,9 @@ export default function App(): JSX.Element {
       return
     }
 
-    if (agentDeltaFrameRef.current !== null) {
-      window.cancelAnimationFrame(agentDeltaFrameRef.current)
-      agentDeltaFrameRef.current = null
+    if (agentDeltaTimerRef.current !== null) {
+      window.clearTimeout(agentDeltaTimerRef.current)
+      agentDeltaTimerRef.current = null
     }
 
     pendingAgentDeltasRef.current = new Map()
