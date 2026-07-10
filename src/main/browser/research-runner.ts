@@ -126,9 +126,9 @@ export class ResearchRunner {
     }
 
     const candidates = rankSerpCandidates(discovered, searchQueries, maxPages)
-    const fallbackView = this.getTabs() ? null : this.createHiddenView()
-    const fallbackContents = fallbackView?.webContents
     const tabs = this.getTabs()
+    const fallbackView = tabs ? null : this.createHiddenView()
+    const fallbackContents = fallbackView?.webContents
     const visibleTabId = candidates.length > 0 ? tabs?.createTab('about:blank', { load: false }) : undefined
 
     const pages: ResearchPage[] = []
