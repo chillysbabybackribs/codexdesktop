@@ -169,9 +169,9 @@ function itemLabel(item: TraceInputItem): string {
 }
 
 function itemStatus(item: TraceInputItem): string | null | undefined {
+  if (item.type === 'dynamicToolCall' && item.success !== null) return item.success ? 'completed' : 'failed'
   if ('status' in item && typeof item.status === 'string') return item.status
   if (item.type === 'system') return item.level
-  if (item.type === 'dynamicToolCall' && item.success !== null) return item.success ? 'completed' : 'failed'
   return null
 }
 
