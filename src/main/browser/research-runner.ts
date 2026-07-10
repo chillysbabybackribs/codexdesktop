@@ -119,84 +119,92 @@ export class ResearchRunner {
     await mkdir(artifactDir, { recursive: true })
 
     const searchQueries = buildResearchQueryVariants(queries)
-    const searchViews = searchQueries.map(() => this.createHiddenView())
     const discovered: SerpCandidate[] = []
     const errors: Array<{ url?: string; error: string }> = []
 
-    const searchResults = await Promise.allSettled(searchQueries.map(async (query, index) => {
-      const webContents = searchViews[index].webContents
-      await loadPage(webContents, googleSearchUrl(query, maxResults))
-      const serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(webContents, buildSerpExtractionProgram(maxResults))
-      return serp.map((result) => ({ ...result, query }))
-    }))
+    const searchView = this.createHiddenView()
+    try {
+      for (const query of searchQueries) {
+        throwIfAborted(signal)
+        try {
+          const cacheKey = `${maxResults}:${query.toLowerCase()}`
+          const cached = this.searchCache.get(cacheKey)
+          let serp: Array<Omit<SerpCandidate, 'query'>>
 
-    for (const [index, result] of searchResults.entries()) {
-      if (result.status === 'fulfilled') {
-        discovered.push(...result.value)
-      } else {
-        errors.push({ error: `SERP query failed for "${searchQueries[index]}": ${formatError(result.reason)}` })
+          if (cached && cached.expiresAt > Date.now()) {
+            serp = cached.candidates
+          } else {
+            await loadPage(searchView.webContents, googleSearchUrl(query, maxResults), signal)
+            serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
+              searchView.webContents,
+              buildSerpExtractionProgram(maxResults)
+            )
+            this.searchCache.set(cacheKey, {
+              expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+              candidates: serp
+            })
+          }
+          discovered.push(...serp.map((result) => ({ ...result, query })))
+        } catch (error) {
+          if (signal.aborted) throw error
+          errors.push({ error: `SERP query failed for "${query}": ${formatError(error)}` })
+        }
       }
-    }
-    for (const view of searchViews) {
-      this.searchViews.delete(view)
-      if (!view.webContents.isDestroyed()) {
-        view.webContents.close()
-      }
+    } finally {
+      this.closeHiddenView(searchView)
     }
 
     const candidates = rankSerpCandidates(discovered, searchQueries, maxPages)
     const tabs = this.getTabs()
-    const fallbackView = tabs ? null : this.createHiddenView()
-    const fallbackContents = fallbackView?.webContents
-    const visibleTabId = candidates.length > 0 ? tabs?.createTab('about:blank', { load: false }) : undefined
+    const pageResults = await mapWithConcurrency(candidates, PAGE_WORKER_CONCURRENCY, async (candidate, index) => {
+      throwIfAborted(signal)
+      const view = this.createHiddenView()
+      try {
+        await loadPage(view.webContents, candidate.url, signal)
+        const extracted = await evaluate<{
+          title: string
+          url: string
+          content: string
+          wordCount: number
+          truncated: boolean
+        }>(view.webContents, buildPageExtractionProgram(snippetChars))
+        const html = await evaluate<string>(
+          view.webContents,
+          `return (document.documentElement?.outerHTML || '').slice(0, ${MAX_HTML_CHARS})`
+        )
+        const rank = index + 1
+        const baseName = `page-${String(rank).padStart(2, '0')}`
+        const artifactPath = join(artifactDir, `${baseName}.txt`)
+        const htmlPath = join(artifactDir, `${baseName}.html`)
+        await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
+        await writeFile(htmlPath, html, 'utf8')
 
-    const pages: ResearchPage[] = []
-    try {
-      for (const [index, candidate] of candidates.entries()) {
-        try {
-          const pageContents = visibleTabId && tabs
-            ? (await tabs.navigateAndWait(visibleTabId, candidate.url), tabs.resolveWebContents(visibleTabId))
-            : (fallbackContents ? (await loadPage(fallbackContents, candidate.url), fallbackContents) : null)
-
-          if (!pageContents) {
-            throw new Error('research page view is no longer available')
-          }
-
-          const extracted = await evaluate<{
-            title: string
-            url: string
-            content: string
-            wordCount: number
-            truncated: boolean
-          }>(pageContents, buildPageExtractionProgram(snippetChars))
-          const html = await evaluate<string>(pageContents, 'return document.documentElement?.outerHTML || ""')
-          const rank = index + 1
-          const baseName = `page-${String(rank).padStart(2, '0')}`
-          const artifactPath = join(artifactDir, `${baseName}.txt`)
-          const htmlPath = join(artifactDir, `${baseName}.html`)
-          await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
-          await writeFile(htmlPath, html, 'utf8')
-          pages.push({
-            rank,
-            url: extracted.url || candidate.url,
-            title: extracted.title || candidate.title,
-            wordCount: extracted.wordCount,
-            artifactPath,
-            htmlPath,
-            ...(visibleTabId ? { visibleTabId } : {}),
-            sourceQuery: candidate.query,
-            sourceTier: candidate.sourceTier,
-            score: candidate.score
-          })
-        } catch (error) {
-          errors.push({ url: candidate.url, error: formatError(error) })
-        }
+        return {
+          rank,
+          url: extracted.url || candidate.url,
+          title: extracted.title || candidate.title,
+          wordCount: extracted.wordCount,
+          artifactPath,
+          htmlPath,
+          sourceQuery: candidate.query,
+          sourceTier: candidate.sourceTier,
+          score: candidate.score
+        } satisfies ResearchPage
+      } catch (error) {
+        if (signal.aborted) throw error
+        errors.push({ url: candidate.url, error: formatError(error) })
+        return null
+      } finally {
+        this.closeHiddenView(view)
       }
-    } finally {
-      if (fallbackView) {
-        this.searchViews.delete(fallbackView)
-        if (!fallbackView.webContents.isDestroyed()) fallbackView.webContents.close()
-      }
+    })
+    const pages = pageResults.filter((page): page is ResearchPage => page !== null)
+    const visibleTabId = pages.length > 0 && tabs
+      ? this.stageBestPage(tabs, pages[0].url)
+      : undefined
+
+    if (visibleTabId) {
+      for (const page of pages) page.visibleTabId = visibleTabId
     }
 
     return {
