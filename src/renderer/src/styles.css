@@ -1916,18 +1916,14 @@ button {
 }
 
 .composer-context {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
   min-height: 28px;
-  padding: 0 64px 0 2px;
+  padding: 0 2px;
 }
 
 .composer-thread-controls {
-  position: absolute;
-  top: 0;
-  right: 2px;
   display: flex;
   align-items: center;
   gap: 3px;
