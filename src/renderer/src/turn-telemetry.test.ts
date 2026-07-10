@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.ts'
-import { accumulateTokenUsage, reduceTurnTelemetry } from './turn-telemetry.ts'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
+import {
+  accumulateTokenUsage,
+  maxModelCallSamples,
+  modelCallAttributionForItem,
+  reduceTurnTelemetry
+} from './turn-telemetry.ts'
 
 function usage(totalTokens: number): ThreadTokenUsage['last'] {
   return {
@@ -22,14 +28,54 @@ function tokenUpdate(last: number, total: number): ThreadTokenUsage {
 }
 
 test('accumulateTokenUsage separates the whole turn, latest call, and thread total', () => {
-  const first = accumulateTokenUsage(undefined, tokenUpdate(12_000, 112_000))
-  const second = accumulateTokenUsage(first, tokenUpdate(8_000, 120_000))
+  const first = accumulateTokenUsage(undefined, tokenUpdate(12_000, 112_000), {
+    atMs: 1_000,
+    precedingItem: {
+      itemId: 'user-1',
+      itemType: 'userMessage',
+      label: 'User prompt',
+      argumentChars: 80,
+      resultChars: null
+    }
+  })
+  const second = accumulateTokenUsage(first, tokenUpdate(8_000, 120_000), {
+    atMs: 2_000,
+    precedingItem: {
+      itemId: 'tool-1',
+      itemType: 'dynamicToolCall',
+      label: 'research_web',
+      argumentChars: 120,
+      resultChars: 2_400
+    },
+    compactedBeforeCall: true
+  })
 
   assert.deepEqual(first.turn, usage(12_000))
   assert.deepEqual(second.turn, usage(20_000))
   assert.deepEqual(second.latestCall, usage(8_000))
   assert.deepEqual(second.threadTotalAtEnd, usage(120_000))
   assert.equal(second.modelCallCount, 2)
+  assert.equal(second.modelCalls.length, 2)
+  assert.deepEqual(second.modelCalls[0], {
+    sequence: 1,
+    atMs: 1_000,
+    usage: usage(12_000),
+    uncachedInputTokens: 4_800,
+    contextWindow: 200_000,
+    contextPercent: 3.6,
+    inputDeltaFromPrevious: null,
+    compactedBeforeCall: false,
+    precedingItem: {
+      itemId: 'user-1',
+      itemType: 'userMessage',
+      label: 'User prompt',
+      argumentChars: 80,
+      resultChars: null
+    }
+  })
+  assert.equal(second.modelCalls[1]?.inputDeltaFromPrevious, -2_400)
+  assert.equal(second.modelCalls[1]?.compactedBeforeCall, true)
+  assert.equal(second.modelCalls[1]?.precedingItem?.resultChars, 2_400)
 })
 
 test('duplicate token notifications do not inflate usage or model-call count', () => {
@@ -38,6 +84,42 @@ test('duplicate token notifications do not inflate usage or model-call count', (
 
   assert.deepEqual(duplicate.turn, usage(12_000))
   assert.equal(duplicate.modelCallCount, 1)
+  assert.equal(duplicate.modelCalls.length, 1)
+})
+
+test('model-call samples stay bounded while preserving their global sequence', () => {
+  let telemetry = accumulateTokenUsage(undefined, tokenUpdate(1, 1))
+
+  for (let sequence = 2; sequence <= maxModelCallSamples + 3; sequence += 1) {
+    telemetry = accumulateTokenUsage(telemetry, tokenUpdate(sequence, sequence))
+  }
+
+  assert.equal(telemetry.modelCallCount, maxModelCallSamples + 3)
+  assert.equal(telemetry.modelCalls.length, maxModelCallSamples)
+  assert.equal(telemetry.modelCalls[0]?.sequence, 4)
+  assert.equal(telemetry.droppedModelCallSamples, 3)
+})
+
+test('tool attribution records model-visible argument and result sizes', () => {
+  const item: ThreadItem = {
+    type: 'dynamicToolCall',
+    id: 'tool-1',
+    namespace: null,
+    tool: 'browser_run',
+    arguments: { code: 'return document.title' },
+    status: 'completed',
+    contentItems: [{ type: 'inputText', text: '{"title":"Example"}' }],
+    success: true,
+    durationMs: 12
+  }
+
+  assert.deepEqual(modelCallAttributionForItem(item), {
+    itemId: 'tool-1',
+    itemType: 'dynamicToolCall',
+    label: 'browser_run',
+    argumentChars: JSON.stringify(item.arguments).length,
+    resultChars: JSON.stringify(item.contentItems).length
+  })
 })
 
 test('retryable errors remain non-terminal while final errors fail the turn', () => {
