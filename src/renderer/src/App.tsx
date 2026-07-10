@@ -1272,11 +1272,13 @@ function ChatPane({
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
+  const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null)
+  const traceLoadGenerationRef = useRef(0)
   const { rows, turnWork } = useMemo(
     () => buildRows(items, itemMeta, activeTurnId),
     [items, itemMeta, activeTurnId]
   )
-  const trace = useMemo(
+  const currentTrace = useMemo(
     () => traceTurnId
       ? buildTurnTrace({
           threadId: activeThreadId,
@@ -1291,9 +1293,33 @@ function ChatPane({
       : null,
     [traceTurnId, activeThreadId, title, selectedModel, workspace, items, itemMeta, turnMeta]
   )
+  const trace = storedTrace?.turn.id === traceTurnId ? storedTrace : currentTrace
+
+  function openTrace(turnId: string): void {
+    const generation = ++traceLoadGenerationRef.current
+    setTraceTurnId(turnId)
+    setStoredTrace(null)
+
+    if (!activeThreadId || turnMeta[turnId]?.origin !== 'restored') return
+
+    void window.api.trace.load({ threadId: activeThreadId, turnId }).then((content) => {
+      if (generation !== traceLoadGenerationRef.current || !content) return
+
+      try {
+        const parsed: unknown = JSON.parse(content)
+        if (isTurnTrace(parsed) && parsed.turn.id === turnId) setStoredTrace(parsed)
+      } catch (error) {
+        console.warn('Failed to load persisted turn trace', error)
+      }
+    }, (error) => {
+      console.warn('Failed to load persisted turn trace', error)
+    })
+  }
 
   useEffect(() => {
+    traceLoadGenerationRef.current += 1
     setTraceTurnId(null)
+    setStoredTrace(null)
   }, [activeThreadId])
 
   // True while the live turn's newest item is an assistant message still
@@ -1365,7 +1391,7 @@ function ChatPane({
                 itemMeta={itemMeta}
                 meta={turnMeta[row.turnId]}
                 streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
-                onOpenTrace={() => setTraceTurnId(row.turnId)}
+                onOpenTrace={() => openTrace(row.turnId)}
               />
             )
           }
@@ -1426,7 +1452,11 @@ function ChatPane({
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
-      {trace ? <TraceModal trace={trace} onClose={() => setTraceTurnId(null)} /> : null}
+      {trace ? <TraceModal trace={trace} onClose={() => {
+        traceLoadGenerationRef.current += 1
+        setTraceTurnId(null)
+        setStoredTrace(null)
+      }} /> : null}
     </section>
   )
 }
