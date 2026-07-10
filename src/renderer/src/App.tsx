@@ -1910,15 +1910,24 @@ function ThreadScroll({
   )
 }
 
+function stripAutomaticSkillMarker(text: string): string {
+  return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
+}
+
 const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): React.JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
 
   if (item.type === 'userMessage') {
+    const text = item.content
+      .filter((content) => content.type === 'text')
+      .map((content) => stripAutomaticSkillMarker(content.text))
+      .join('\n')
+
     return (
       <article className="message message-user">
-        <p>{item.content.map((content) => (content.type === 'text' ? content.text : `[${content.type}]`)).join('\n')}</p>
+        <p>{text}</p>
       </article>
     )
   }

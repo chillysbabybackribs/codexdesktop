@@ -26,6 +26,7 @@ import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
 import {
   browserDynamicTools,
   buildGuidance,
+  formatSkillInvocationText,
   legacyResumeConfig,
   newThreadConfig,
   resolveTurnPolicy,
@@ -326,17 +327,19 @@ export class CodexClient extends EventEmitter {
   }
 
   private buildTurnInput(text: string): UserInput[] {
+    const skills = selectTurnSkills(text, this.localSkills)
+
     return [
-      ...selectTurnSkills(text, this.localSkills).map((skill): UserInput => ({
+      {
+        type: 'text',
+        text: formatSkillInvocationText(text, skills),
+        text_elements: []
+      },
+      ...skills.map((skill): UserInput => ({
         type: 'skill',
         name: skill.name,
         path: skill.path
-      })),
-      {
-        type: 'text',
-        text,
-        text_elements: []
-      }
+      }))
     ]
   }
 

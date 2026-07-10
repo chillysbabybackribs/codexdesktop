@@ -60,6 +60,15 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   })
 }
 
+export function formatSkillInvocationText(text: string, skills: SkillMetadata[]): string {
+  const normalized = text.toLowerCase()
+  const missingMarkers = skills
+    .map((skill) => `$${skill.name}`)
+    .filter((marker) => !normalized.includes(marker.toLowerCase()))
+
+  return missingMarkers.length > 0 ? `${missingMarkers.join(' ')}\n${text}` : text
+}
+
 const browserRunSchema = {
   type: 'object',
   properties: {
