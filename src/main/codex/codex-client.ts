@@ -170,6 +170,7 @@ export class CodexClient extends EventEmitter {
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
     await this.ensureStarted()
+    this.researchRunner.cancel(turnId)
     return this.request('turn/interrupt', { threadId, turnId })
   }
 
@@ -435,7 +436,7 @@ export class CodexClient extends EventEmitter {
           maxResults: readNumber(args.maxResults),
           maxPages: readNumber(args.maxPages),
           snippetChars: readNumber(args.snippetChars)
-        })
+        }, params.turnId)
       } else {
         result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
       }

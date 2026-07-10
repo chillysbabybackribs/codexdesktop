@@ -235,24 +235,34 @@ export class ResearchRunner {
     this.searchViews.add(view)
     return view
   }
+
+  private closeHiddenView(view: WebContentsView): void {
+    this.searchViews.delete(view)
+    if (!view.webContents.isDestroyed()) view.webContents.close()
+  }
+
+  private stageBestPage(tabs: TabManager, url: string): string {
+    if (this.stagingTabId && tabs.resolveWebContents(this.stagingTabId)) {
+      tabs.navigate(this.stagingTabId, url)
+      tabs.activateTab(this.stagingTabId)
+      return this.stagingTabId
+    }
+
+    this.stagingTabId = tabs.createTab(url)
+    return this.stagingTabId
+  }
 }
 
-async function loadPage(webContents: Electron.WebContents, url: string): Promise<void> {
-  await withTimeout(webContents.loadURL(url, { userAgent: chromeLikeUserAgent() }), PAGE_TIMEOUT_MS)
+async function loadPage(webContents: Electron.WebContents, url: string, signal: AbortSignal): Promise<void> {
+  await loadPageAndSettle(webContents, url, {
+    timeoutMs: PAGE_TIMEOUT_MS,
+    userAgent: chromeLikeUserAgent(),
+    signal
+  })
 }
 
 async function evaluate<T>(webContents: Electron.WebContents, code: string): Promise<T> {
   return webContents.executeJavaScript(`(async () => { ${code}\n})()`, true) as Promise<T>
-}
-
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  const timeout = new Promise<T>((_resolve, reject) => {
-    timer = setTimeout(() => reject(new Error(`research operation timed out after ${timeoutMs}ms`)), timeoutMs)
-  })
-  return Promise.race([promise, timeout]).finally(() => {
-    if (timer) clearTimeout(timer)
-  })
 }
 
 function clamp(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {
@@ -262,4 +272,58 @@ function clamp(value: number | null | undefined, fallback: number, minimum: numb
 
 function formatError(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
+}
+
+function throwIfAborted(signal: AbortSignal): void {
+  if (signal.aborted) throw new Error('research run aborted')
+}
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const results = new Array<R>(items.length)
+  let nextIndex = 0
+  const runners = Array.from({ length: Math.min(Math.max(1, concurrency), items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex
+      nextIndex += 1
+      results[index] = await worker(items[index], index)
+    }
+  })
+  await Promise.all(runners)
+  return results
+}
+
+async function pruneResearchArtifacts(root: string): Promise<void> {
+  try {
+    const entries = await readdir(root, { withFileTypes: true })
+    const directories = await Promise.all(entries
+      .filter((entry) => entry.isDirectory())
+      .map(async (entry) => {
+        const path = join(root, entry.name)
+        const info = await stat(path)
+        const children = await readdir(path, { withFileTypes: true })
+        const sizes = await Promise.all(children
+          .filter((child) => child.isFile())
+          .map(async (child) => (await stat(join(path, child.name))).size))
+        return { path, modifiedAt: info.mtimeMs, size: sizes.reduce((sum, size) => sum + size, 0) }
+      }))
+
+    directories.sort((left, right) => right.modifiedAt - left.modifiedAt)
+    let retainedBytes = 0
+    const now = Date.now()
+
+    for (const directory of directories) {
+      retainedBytes += directory.size
+      if (now - directory.modifiedAt > RESEARCH_MAX_AGE_MS || retainedBytes > RESEARCH_MAX_BYTES) {
+        await rm(directory.path, { recursive: true, force: true })
+      }
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.warn('Failed to prune research artifacts', error)
+    }
+  }
 }
