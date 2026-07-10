@@ -534,6 +534,15 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
     const searchable = `${item.command}\n${item.aggregatedOutput ?? ''}`
     for (const match of searchable.matchAll(/\/tmp\/codexdesktop-tasks\/[A-Za-z0-9._/-]+/g)) {
       const path = match[0].replace(/[.,;:)\]]+$/g, '').replace(/\/$/, '')
+      const capsulePath = /^\/tmp\/codexdesktop-tasks\/[^/]+/.exec(path)?.[0]
+      if (capsulePath) {
+        artifacts.set(capsulePath, {
+          path: capsulePath,
+          kind: 'researchCapsule',
+          originEventId: item.id,
+          availability: 'pathOnly'
+        })
+      }
       const leaf = path.split('/').pop() ?? ''
       artifacts.set(path, {
         path,
