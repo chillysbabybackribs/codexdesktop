@@ -122,6 +122,10 @@ button {
   justify-self: start;
 }
 
+.chat-toolbar .chat-toolbar-new {
+  justify-self: end;
+}
+
 .icon-button,
 .thread-select {
   border: 0;
@@ -2214,10 +2218,21 @@ button {
 }
 
 .stop-button {
+  display: inline-flex;
+  width: auto;
+  min-width: 62px;
+  padding: 0 10px;
+  gap: 6px;
   border-color: #473434;
-  background: #2c2323;
-  color: #d8aaaa;
-  font-size: 10px;
+  border-radius: 999px;
+  background: #302323;
+  color: #e1b2b2;
+  font-size: 12px;
+  font-weight: 620;
+}
+
+.stop-button-icon {
+  font-size: 8px;
 }
 
 .split-divider {

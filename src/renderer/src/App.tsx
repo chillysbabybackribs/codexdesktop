@@ -1735,12 +1735,12 @@ function SettingsIcon(): React.JSX.Element {
 function NewChatIcon(): React.JSX.Element {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4.5" y="4.5" width="15" height="15" rx="3" stroke="currentColor" strokeWidth="1.7" />
       <path
-        d="M5 19h14M12 5v10M7 10l5-5 5 5"
+        d="M12 8.5v7M8.5 12h7"
         stroke="currentColor"
-        strokeWidth="1.8"
+        strokeWidth="1.7"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   )
