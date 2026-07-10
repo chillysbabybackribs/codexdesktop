@@ -527,6 +527,7 @@ export default function App(): React.JSX.Element {
     }
 
     setIsSending(true)
+    userTurnRequestPendingRef.current = true
     watchThreadIdRef.current = activeThreadId
 
     try {
@@ -540,12 +541,20 @@ export default function App(): React.JSX.Element {
       setActiveThreadId(response.threadId)
       persistLastThreadId(response.threadId)
       setActiveTurnId(response.turn.id)
+      setActiveReasoningEffort(response.reasoningEffort)
+      activeReasoningEffortRef.current = response.reasoningEffort
+      const goalSnapshot = cloneGoal(activeGoalRef.current)
       noteTurn(response.turn.id, {
         status: 'inProgress',
         origin: 'live',
         requestedModel: selectedModel,
         model: response.model,
+        reasoningEffort: response.reasoningEffort,
         workspace,
+        goalAtStart: goalSnapshot,
+        goalAtEnd: goalSnapshot,
+        goalContinuation: false,
+        goalContinuationInferred: false,
         startedAtMs: response.turn.startedAt ? response.turn.startedAt * 1000 : Date.now()
       })
       adoptTurnItems(response.turn.id, response.turn.items)
@@ -555,6 +564,7 @@ export default function App(): React.JSX.Element {
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
+      userTurnRequestPendingRef.current = false
       setIsSending(false)
     }
   }
@@ -604,6 +614,10 @@ export default function App(): React.JSX.Element {
     setActiveThreadId(null)
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
+    setActiveGoal(null)
+    activeGoalRef.current = null
+    setActiveReasoningEffort(null)
+    activeReasoningEffortRef.current = null
     setItems([])
     setItemMeta({})
     setTurnMeta({})
@@ -625,6 +639,11 @@ export default function App(): React.JSX.Element {
     const generation = ++resumeGenerationRef.current
     const previousThreadId = activeThreadIdRef.current
 
+    setActiveGoal(null)
+    activeGoalRef.current = null
+    setActiveReasoningEffort(null)
+    activeReasoningEffortRef.current = null
+
     if (previousThreadId && previousThreadId !== threadId) {
       void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
     }
@@ -639,6 +658,8 @@ export default function App(): React.JSX.Element {
       }
 
       const environment = { model: resumed.model, workspace: resumed.cwd }
+      setActiveReasoningEffort(resumed.reasoningEffort)
+      activeReasoningEffortRef.current = resumed.reasoningEffort
       hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
 
       if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
@@ -649,6 +670,15 @@ export default function App(): React.JSX.Element {
         }
 
         hydrateThread(read.thread, undefined, environment)
+      }
+
+      try {
+        const goal = await window.api.codex.getGoal(threadId)
+        if (generation !== resumeGenerationRef.current) return
+        setActiveGoal(goal)
+        activeGoalRef.current = goal
+      } catch (error) {
+        console.warn('Failed to restore thread goal', error)
       }
 
       persistLastThreadId(threadId)
@@ -676,6 +706,80 @@ export default function App(): React.JSX.Element {
       }
     } catch (error) {
       addSystemItem(`Workspace selection failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
+  async function ensureThreadForGoal(): Promise<string> {
+    const existingThreadId = activeThreadIdRef.current
+    if (existingThreadId) return existingThreadId
+
+    const started = await window.api.codex.startThread({
+      cwd: workspaceRef.current,
+      model: selectedModelRef.current
+    })
+    const threadId = started.thread.id
+    watchThreadIdRef.current = threadId
+    setActiveThreadId(threadId)
+    setActiveThreadTitle(threadTitle(started.thread))
+    setActiveReasoningEffort(started.reasoningEffort)
+    activeReasoningEffortRef.current = started.reasoningEffort
+    persistLastThreadId(threadId)
+    return threadId
+  }
+
+  async function handleSaveGoal(objective: string, tokenBudget: number | null): Promise<boolean> {
+    const trimmed = objective.trim()
+    if (!trimmed || activeTurnIdRef.current || isGoalUpdating) return false
+
+    setIsGoalUpdating(true)
+    try {
+      const threadId = await ensureThreadForGoal()
+      const goal = await window.api.codex.setGoal({
+        threadId,
+        objective: trimmed,
+        status: 'active',
+        tokenBudget
+      })
+      setActiveGoal(goal)
+      activeGoalRef.current = goal
+      return true
+    } catch (error) {
+      addSystemItem(`Goal update failed: ${(error as Error).message}`, 'error')
+      return false
+    } finally {
+      setIsGoalUpdating(false)
+    }
+  }
+
+  async function handleSetGoalStatus(status: Extract<ThreadGoalStatus, 'active' | 'paused'>): Promise<void> {
+    const threadId = activeThreadIdRef.current
+    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating) return
+
+    setIsGoalUpdating(true)
+    try {
+      const goal = await window.api.codex.setGoal({ threadId, status })
+      setActiveGoal(goal)
+      activeGoalRef.current = goal
+    } catch (error) {
+      addSystemItem(`Goal status update failed: ${(error as Error).message}`, 'error')
+    } finally {
+      setIsGoalUpdating(false)
+    }
+  }
+
+  async function handleClearGoal(): Promise<void> {
+    const threadId = activeThreadIdRef.current
+    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating) return
+
+    setIsGoalUpdating(true)
+    try {
+      await window.api.codex.clearGoal(threadId)
+      setActiveGoal(null)
+      activeGoalRef.current = null
+    } catch (error) {
+      addSystemItem(`Goal clear failed: ${(error as Error).message}`, 'error')
+    } finally {
+      setIsGoalUpdating(false)
     }
   }
 
