@@ -1740,11 +1740,10 @@ function ThreadScroll({
   }, [])
 
   const followTail = useCallback(() => {
-    if (!pinnedRef.current || ref.current === null) {
+    if (!pinnedRef.current || ref.current === null || frameRef.current !== null) {
       return
     }
 
-    cancelScheduledFollow()
     frameRef.current = window.requestAnimationFrame(() => {
       frameRef.current = null
       const el = ref.current
@@ -1753,20 +1752,28 @@ function ThreadScroll({
         return
       }
 
-      el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight)
+      const target = Math.max(0, el.scrollHeight - el.clientHeight)
+      if (Math.abs(el.scrollTop - target) > 1) {
+        el.scrollTop = target
+      }
 
       // Markdown code blocks, font metrics, and live diff rows can settle one
       // layout pass after React commits. A second frame catches that growth
       // without making every stream delta pay for a synchronous measurement.
-      settleFrameRef.current = window.requestAnimationFrame(() => {
-        settleFrameRef.current = null
-        const settled = ref.current
-        if (settled && pinnedRef.current) {
-          settled.scrollTop = Math.max(0, settled.scrollHeight - settled.clientHeight)
-        }
-      })
+      if (settleFrameRef.current === null) {
+        settleFrameRef.current = window.requestAnimationFrame(() => {
+          settleFrameRef.current = null
+          const settled = ref.current
+          if (settled && pinnedRef.current) {
+            const settledTarget = Math.max(0, settled.scrollHeight - settled.clientHeight)
+            if (Math.abs(settled.scrollTop - settledTarget) > 1) {
+              settled.scrollTop = settledTarget
+            }
+          }
+        })
+      }
     })
-  }, [cancelScheduledFollow])
+  }, [])
 
   const handleScroll = useCallback(() => {
     const el = ref.current
@@ -1774,15 +1781,22 @@ function ThreadScroll({
       return
     }
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    pinnedRef.current = distanceFromBottom <= 32
-  }, [])
+    pinnedRef.current = distanceFromBottom <= 48
+
+    // A queued frame from a prior delta must never pull a reader back down
+    // after they have deliberately scrolled away from the live edge.
+    if (!pinnedRef.current) {
+      cancelScheduledFollow()
+    }
+  }, [cancelScheduledFollow])
 
   useLayoutEffect(() => {
     // A new thread is a new reading context. Start it at the latest content,
     // even if the previous thread had deliberately released auto-follow.
+    cancelScheduledFollow()
     pinnedRef.current = true
     followTail()
-  }, [followTail, resetKey])
+  }, [cancelScheduledFollow, followTail, resetKey])
 
   useLayoutEffect(() => {
     followTail()
@@ -1798,7 +1812,8 @@ function ThreadScroll({
       return
     }
 
-    const resizeObserver = new ResizeObserver(() => followTail())
+    let active = true
+    const resizeObserver = new ResizeObserver(followTail)
     resizeObserver.observe(el)
     resizeObserver.observe(content)
 
@@ -1806,14 +1821,23 @@ function ThreadScroll({
     // the wrapper's own box immediately. Observe them so code-block wrapping,
     // streaming assistant text, file diffs, and the live tail all get a final
     // bottom correction after their layout settles.
-    const mutationObserver = new MutationObserver(() => followTail())
+    const mutationObserver = new MutationObserver(followTail)
     mutationObserver.observe(content, {
       childList: true,
       characterData: true,
       subtree: true
     })
 
+    // Web fonts can reflow existing markdown after the initial commit without
+    // producing a React update. Catch that one late layout pass when supported.
+    void document.fonts?.ready.then(() => {
+      if (active) {
+        followTail()
+      }
+    })
+
     return () => {
+      active = false
       resizeObserver.disconnect()
       mutationObserver.disconnect()
       cancelScheduledFollow()

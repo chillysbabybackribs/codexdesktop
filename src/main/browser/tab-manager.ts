@@ -322,9 +322,27 @@ export class TabManager {
       this.pushState()
     })
 
+    webContents.on('page-favicon-updated', (_event, favicons) => {
+      // Chromium emits the page's declared favicon URLs, best-first. Prefer the
+      // first valid http(s)/data URL; anything else (file:, blob:) is unsafe to
+      // render from the renderer origin, so fall back to the neutral glyph.
+      tab.favicon = pickFavicon(favicons)
+      this.pushState()
+    })
+
     webContents.on('did-start-loading', () => {
       tab.isLoading = true
       this.pushState()
+    })
+
+    // Drop a stale favicon when navigating to a different document so the old
+    // site's icon doesn't linger over the new page. In-page navigations (hash
+    // changes, history.pushState) keep the current icon.
+    webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
+      if (isMainFrame && !isInPlace && tab.favicon !== null) {
+        tab.favicon = null
+        this.pushState()
+      }
     })
 
     webContents.on('did-stop-loading', () => {
