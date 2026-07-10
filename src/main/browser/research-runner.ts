@@ -112,7 +112,7 @@ export class ResearchRunner {
     const pages: ResearchPage[] = []
     const candidates = [...discovered.values()].slice(0, maxPages)
     const tabs = this.getTabs()
-    const visibleTabId = candidates.length > 0 ? tabs?.createTab(candidates[0].url) : undefined
+    const visibleTabId = candidates.length > 0 ? tabs?.createTab('about:blank', { load: false }) : undefined
 
     for (const [index, candidate] of candidates.entries()) {
       try {

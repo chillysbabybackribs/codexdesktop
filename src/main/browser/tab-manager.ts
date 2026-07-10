@@ -105,7 +105,7 @@ export class TabManager {
     }
   }
 
-  createTab(url = defaultTabUrl): string {
+  createTab(url = defaultTabUrl, options: { load?: boolean } = {}): string {
     const id = crypto.randomUUID()
     const view = this.createView()
 
@@ -124,7 +124,9 @@ export class TabManager {
     this.tabs.set(id, tab)
     this.attachEvents(tab)
     this.activateTab(id)
-    void view.webContents.loadURL(normalizeNavigationInput(url), { userAgent: chromeLikeUserAgent() })
+    if (options.load !== false) {
+      void view.webContents.loadURL(normalizeNavigationInput(url), { userAgent: chromeLikeUserAgent() })
+    }
     this.pushState()
     return id
   }
