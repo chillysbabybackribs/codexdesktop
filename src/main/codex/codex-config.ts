@@ -90,6 +90,19 @@ const browserExtractPageSchema = {
   additionalProperties: false
 }
 
+const browserCdpSchema = {
+  type: 'object',
+  properties: {
+    method: { type: 'string', description: 'Chrome DevTools Protocol method, such as Page.captureScreenshot.' },
+    params: { type: 'object', description: 'Optional CDP command parameters.' },
+    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
+    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
+  },
+  required: ['method'],
+  additionalProperties: false
+}
+
 const researchWebSchema = {
   type: 'object',
   properties: {
@@ -120,6 +133,12 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_extract_page',
     description: 'Deterministically extract useful text from the visible page, excluding images, scripts, styles, navigation, ads, dialogs, hidden UI, and repeated boilerplate.',
     inputSchema: browserExtractPageSchema
+  },
+  {
+    type: 'function',
+    name: 'browser_cdp',
+    description: 'Send one targeted Chrome DevTools Protocol command to a browser tab through the shared per-tab operation queue. Use only when browser_run cannot express the required input, lifecycle, capture, or network operation.',
+    inputSchema: browserCdpSchema
   },
   {
     type: 'function',

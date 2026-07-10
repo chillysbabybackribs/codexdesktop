@@ -420,6 +420,15 @@ export class CodexClient extends EventEmitter {
           timeoutMs: readNumber(args.timeoutMs),
           maxResultChars: readNumber(args.maxResultChars)
         })
+      } else if (params.tool === 'browser_cdp') {
+        const method = readString(args.method)
+        result = method
+          ? await this.browserAgent.cdp(method, asRecord(args.params), {
+              tabId: readString(args.tab),
+              timeoutMs: readNumber(args.timeoutMs),
+              maxResultChars: readNumber(args.maxResultChars)
+            })
+          : { ok: false, error: 'browser_cdp requires a string "method" argument' }
       } else if (params.tool === 'research_web') {
         result = await this.researchRunner.run({
           queries: readStringArray(args.queries),
