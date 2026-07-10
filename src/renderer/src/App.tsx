@@ -79,9 +79,8 @@ function isActivityItem(
 }
 
 // The transcript has two deliberately separate surfaces per turn: a bounded
-// activity feed for tool work and in-task commentary, then the final answer.
-// While a turn is active, all assistant output is held out of the main flow;
-// only the completed answer is allowed to leave the activity feed.
+// activity feed for tool work and in-task commentary, then a final answer that
+// remains in the main flow while its text streams.
 type RenderRow =
   | { kind: 'chat'; item: ChatItem; turnId: string | null }
   | { kind: 'activity'; id: string; turnId: string | null; items: ActivityItem[] }
@@ -228,6 +227,12 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
+  }, [])
+
+  useEffect(() => () => {
+    if (agentDeltaTimerRef.current !== null) {
+      window.clearTimeout(agentDeltaTimerRef.current)
+    }
   }, [])
 
   useEffect(() => {
