@@ -534,6 +534,8 @@ button {
   color: #d9d9d9;
   font-size: 20px;
   line-height: 1.6;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
 }
 
 .message p {
@@ -567,7 +569,8 @@ button {
   border-radius: 8px;
   background: #202020;
   color: #b8bec4;
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 .message-system-error {
@@ -629,20 +632,20 @@ button {
   margin: 30px 0 12px;
   padding-top: 17px;
   border-top: 1px solid #2b2e32;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
 }
 
 .markdown-body h3 {
   margin: 22px 0 9px;
-  font-size: 15.5px;
+  font-size: 19px;
   font-weight: 680;
 }
 
 .markdown-body h4 {
   margin: 18px 0 7px;
   color: #c9ced3;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 680;
 }
 
@@ -788,7 +791,7 @@ button {
 .markdown-body th {
   background: #22262b;
   color: #eef1f4;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -1005,6 +1008,8 @@ button {
   height: 228px;
   max-width: min(920px, 100%);
   margin: 0 0 18px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 228px;
 }
 
 .task-activity-card-scroll {
@@ -1043,8 +1048,8 @@ button {
 
 .task-activity-message .markdown-body {
   color: #98a0a8;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .task-activity-message .markdown-body h1,
@@ -1061,7 +1066,7 @@ button {
   margin: 9px 0 5px;
   padding: 0;
   border: 0;
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 0;
 }
 
@@ -1889,7 +1894,7 @@ button {
   border-radius: 7px;
   background: transparent;
   color: #9aa0a6;
-  font-size: 12.5px;
+  font-size: 13.5px;
   cursor: pointer;
   transition:
     background 120ms ease,
@@ -2004,7 +2009,7 @@ button {
   gap: 7px;
   align-items: center;
   color: #e2e2e2;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -2019,15 +2024,15 @@ button {
 
 .model-option-desc {
   color: #8a9096;
-  font-size: 11.5px;
-  line-height: 1.35;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .composer {
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 10px;
-  min-height: 118px;
+  min-height: 104px;
   border: 1px solid #2a2a2a;
   border-radius: 10px;
   background: linear-gradient(180deg, #222222, #1d1d1d);
@@ -2038,13 +2043,16 @@ button {
   width: 100%;
   min-width: 0;
   min-height: 54px;
+  max-height: 190px;
   padding: 18px 16px 0;
   resize: none;
+  overflow-y: auto;
   border: 0;
   outline: 0;
   background: transparent;
   color: #ececec;
-  font-size: 16px;
+  font-size: 17px;
+  line-height: 1.5;
 }
 
 .composer textarea::placeholder {
@@ -2064,9 +2072,19 @@ button {
   min-width: 0;
   overflow: hidden;
   color: #737a80;
-  font-size: 12px;
+  font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.composer-status.is-active {
+  color: #aeb5bc;
+}
+
+.composer-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .settings-overlay {
@@ -2172,7 +2190,8 @@ button {
   accent-color: #4a90d9;
 }
 
-.send-button {
+.send-button,
+.stop-button {
   display: grid;
   width: 28px;
   height: 28px;
@@ -2181,14 +2200,24 @@ button {
   border-radius: 50%;
   background: #282828;
   color: #cfd4d8;
+  cursor: pointer;
 }
 
-.send-button:not(:disabled):hover {
+.send-button:not(:disabled):hover,
+.stop-button:hover {
   background: #333a40;
 }
 
 .send-button:disabled {
   color: #60666c;
+  cursor: default;
+}
+
+.stop-button {
+  border-color: #473434;
+  background: #2c2323;
+  color: #d8aaaa;
+  font-size: 10px;
 }
 
 .split-divider {
