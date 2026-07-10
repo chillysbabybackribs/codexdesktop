@@ -1741,6 +1741,23 @@ button {
   background: #382624;
 }
 
+.turn-trace-button {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  border: 1px solid #30353a;
+  border-radius: 5px;
+  background: transparent;
+  color: #747c84;
+  font-size: 10.5px;
+  cursor: pointer;
+}
+
+.turn-trace-button:hover {
+  border-color: #46515b;
+  background: #20252a;
+  color: #bcc4cc;
+}
+
 /* --- Streaming assistant message ----------------------------------------- */
 
 .message-commentary {
@@ -1879,6 +1896,361 @@ button {
 .status-failed,
 .status-declined {
   color: #eaa2a2;
+}
+
+/* --- Per-turn trace ------------------------------------------------------- */
+
+.trace-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 26px;
+  background: rgb(5 7 9 / 72%);
+  backdrop-filter: blur(8px);
+}
+
+.trace-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(980px, 100%);
+  height: min(88vh, 900px);
+  overflow: hidden;
+  border: 1px solid #343a40;
+  border-radius: 14px;
+  background: #171a1d;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 58%);
+}
+
+.trace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #292e33;
+  background: #1c2024;
+}
+
+.trace-header h2 {
+  margin: 0;
+  color: #f0f2f4;
+  font-size: 18px;
+}
+
+.trace-header p {
+  max-width: 560px;
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: #858d95;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+}
+
+.trace-header-actions button {
+  height: 30px;
+  padding: 0 11px;
+  border: 1px solid #394047;
+  border-radius: 7px;
+  background: #24292e;
+  color: #c9d0d6;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.trace-header-actions button:hover {
+  border-color: #4c5863;
+  background: #2d343a;
+  color: #f0f2f4;
+}
+
+.trace-header-actions .trace-close {
+  width: 30px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  font-size: 20px;
+}
+
+.trace-scroll {
+  min-height: 0;
+  padding: 18px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.trace-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trace-metric,
+.trace-token {
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid #292f34;
+  border-radius: 8px;
+  background: #1c2024;
+}
+
+.trace-metric span,
+.trace-token span {
+  display: block;
+  margin-bottom: 4px;
+  color: #737c85;
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.trace-metric strong,
+.trace-token strong {
+  display: block;
+  overflow: hidden;
+  color: #d9dee2;
+  font-size: 13px;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-metric strong.is-mono {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11.5px;
+}
+
+.trace-section {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #292f34;
+  border-radius: 10px;
+  background: #191d20;
+}
+
+.trace-section h3 {
+  margin: 0 0 10px;
+  color: #dce1e5;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.trace-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.trace-section-heading span {
+  color: #6f7880;
+  font-size: 11px;
+}
+
+.trace-token-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.trace-token {
+  padding: 8px 9px;
+  background: #20252a;
+}
+
+.trace-identifiers dl {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 6px 12px;
+  margin: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+}
+
+.trace-identifiers dt {
+  color: #6f7880;
+}
+
+.trace-identifiers dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #b8c0c7;
+}
+
+.trace-skill {
+  display: grid;
+  grid-template-columns: minmax(180px, auto) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.trace-skill strong {
+  color: #b9c9e8;
+  font-size: 12px;
+}
+
+.trace-skill code {
+  overflow: hidden;
+  color: #858f98;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-text,
+.trace-event-body pre {
+  max-height: 340px;
+  margin: 0;
+  padding: 11px 12px;
+  overflow: auto;
+  border: 1px solid #292f34;
+  border-radius: 7px;
+  background: #121518;
+  color: #c4ccd3;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.trace-timeline {
+  display: grid;
+  gap: 6px;
+}
+
+.trace-event {
+  overflow: hidden;
+  border: 1px solid #292f34;
+  border-radius: 8px;
+  background: #1c2024;
+}
+
+.trace-event summary {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 10px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.trace-event summary::-webkit-details-marker {
+  display: none;
+}
+
+.trace-event[open] summary {
+  border-bottom: 1px solid #292f34;
+  background: #21262b;
+}
+
+.trace-event-index {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #292f34;
+  color: #8d969f;
+  font-size: 10px;
+}
+
+.trace-event-label {
+  min-width: 0;
+  overflow: hidden;
+  color: #d5dbe0;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-event-type,
+.trace-event-duration,
+.trace-event-status {
+  color: #78828b;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+}
+
+.trace-event-status.is-completed,
+.trace-event-status.is-complete {
+  color: #82b990;
+}
+
+.trace-event-status.is-failed {
+  color: #d3918b;
+}
+
+.trace-event-body {
+  padding: 10px;
+}
+
+.trace-event-time {
+  margin: 0 2px 8px;
+  color: #6f7880;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+}
+
+.trace-event-body pre {
+  max-height: 420px;
+}
+
+.trace-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 38px;
+  padding: 7px 18px;
+  border-top: 1px solid #292e33;
+  background: #1c2024;
+  color: #818a92;
+  font-size: 11px;
+}
+
+.trace-footer span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trace-footer code {
+  flex: 0 0 auto;
+  color: #69727a;
+  font-size: 10px;
+}
+
+@media (max-width: 920px) {
+  .trace-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trace-token-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trace-event summary {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+  }
+
+  .trace-event-type,
+  .trace-event-status {
+    display: none;
+  }
 }
 
 /* The dock groups the workspace context bar with the composer so they move as
