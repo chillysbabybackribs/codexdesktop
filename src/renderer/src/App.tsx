@@ -1902,7 +1902,7 @@ function ThreadScroll({
   )
 }
 
-function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): JSX.Element | null {
+const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
@@ -1941,9 +1941,9 @@ function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean 
       <strong>{item.type}</strong>
     </article>
   )
-}
+})
 
-function AssistantMessage({
+const AssistantMessage = memo(function AssistantMessage({
   text,
   streaming,
   commentary
@@ -1961,7 +1961,7 @@ function AssistantMessage({
       <MarkdownContent text={text || ' '} />
     </article>
   )
-}
+})
 
 type ChartDatum = {
   label: string
@@ -1980,7 +1980,7 @@ type ChartConfig = {
   values?: number[]
 }
 
-function MarkdownContent({ text }: { text: string }): JSX.Element {
+const MarkdownContent = memo(function MarkdownContent({ text }: { text: string }): JSX.Element {
   return (
     <div className="markdown-body">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
@@ -1988,7 +1988,7 @@ function MarkdownContent({ text }: { text: string }): JSX.Element {
       </ReactMarkdown>
     </div>
   )
-}
+})
 
 const markdownComponents: Components = {
   h1: ({ children }) => <h1 className="markdown-title">{children}</h1>,
