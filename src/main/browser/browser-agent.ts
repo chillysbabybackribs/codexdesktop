@@ -1,4 +1,5 @@
 import type { WebContents } from 'electron'
+import { cdpSessionFor } from './cdp-session.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -94,7 +95,11 @@ export class BrowserAgentController {
       const execution = executePageProgram(webContents, code)
 
       try {
-        const rawResult = await execution
+        const rawResult = await withTimeout(
+          execution,
+          timeoutMs,
+          () => cdpSessionFor(webContents).terminateExecution()
+        )
         const bounded = boundResult(rawResult, maxResultChars)
         return {
           ok: true,
@@ -129,15 +134,77 @@ export class BrowserAgentController {
       }
     })
 
-    try {
-      return await withTimeout(operation, timeoutMs)
-    } catch (error) {
-      return {
-        ok: false,
-        error: error instanceof Error ? error.message : String(error),
-        tabId
-      } satisfies BrowserAgentFailure
+    return operation
+  }
+
+  async cdp(
+    method: string,
+    params: object = {},
+    options: BrowserAgentOptions = {}
+  ): Promise<BrowserAgentResult> {
+    if (!method.trim()) {
+      return { ok: false, error: 'browser.cdp requires a method' } satisfies BrowserAgentFailure
     }
+
+    const tabs = this.getTabs()
+    const tabId = options.tabId ?? tabs?.getActiveTabId()
+    if (!tabs || !tabId) {
+      return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
+    const operation = previous.then(async (): Promise<BrowserAgentResult> => {
+      const webContents = tabs.resolveWebContents(tabId)
+      if (!webContents) {
+        return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
+      }
+
+      const startedAt = Date.now()
+      try {
+        const rawResult = await withTimeout(
+          cdpSessionFor(webContents).send(method, params),
+          timeoutMs
+        )
+        const bounded = boundResult(rawResult, maxResultChars)
+        return {
+          ok: true,
+          result: bounded.value,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          resultChars: bounded.chars,
+          truncated: bounded.truncated
+        } satisfies BrowserAgentSuccess
+      } catch (error) {
+        return {
+          ok: false,
+          error: error instanceof Error ? error.message : String(error),
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt
+        } satisfies BrowserAgentFailure
+      }
+    })
+
+    const queueTail = operation.then(
+      () => undefined,
+      () => undefined
+    )
+    this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
+    })
+
+    return operation
   }
 
   async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
@@ -248,10 +315,18 @@ async function executePageProgram(webContents: WebContents, code: string): Promi
   return webContents.executeJavaScript(wrapped, true)
 }
 
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  onTimeout?: () => void | Promise<void>
+): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | null = null
   const timeout = new Promise<T>((_resolve, reject) => {
-    timer = setTimeout(() => reject(new Error(`browser operation timed out after ${timeoutMs}ms`)), timeoutMs)
+    timer = setTimeout(() => {
+      void Promise.resolve(onTimeout?.()).finally(() => {
+        reject(new Error(`browser operation timed out after ${timeoutMs}ms`))
+      })
+    }, timeoutMs)
   })
 
   return Promise.race([promise, timeout]).finally(() => {

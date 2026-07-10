@@ -45,30 +45,6 @@ function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   res.end(body)
 }
 
-// Forward a raw Chrome DevTools Protocol command to the tab. This is the escape
-// hatch for what in-page JS can't do: trusted input events (canvas/anti-bot),
-// network interception, real load-idle waits, screenshots/PDF.
-async function handleCdp(
-  tabs: TabManager,
-  tabId: string | null,
-  method: string,
-  params: unknown
-): Promise<unknown> {
-  const wc = tabs.resolveWebContents(tabId)
-  if (!wc) {
-    return { ok: false, error: tabId ? `no tab with id ${tabId}` : 'no active tab' }
-  }
-  try {
-    if (!wc.debugger.isAttached()) {
-      wc.debugger.attach('1.3')
-    }
-    const result = await wc.debugger.sendCommand(method, (params ?? {}) as object)
-    return { ok: true, result }
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : String(error) }
-  }
-}
-
 async function handleTabsAction(tabs: TabManager, body: string): Promise<unknown> {
   let parsed: { action?: string; url?: string; input?: string; tab?: string }
   try {
@@ -155,7 +131,13 @@ async function route(
         sendJson(res, 400, { ok: false, error: '"method" is required' })
         return
       }
-      sendJson(res, 200, await handleCdp(tabs, parsed.tab ?? tabParam(req), parsed.method, parsed.params))
+      sendJson(res, 200, await browserAgent.cdp(
+        parsed.method,
+        parsed.params && typeof parsed.params === 'object' && !Array.isArray(parsed.params)
+          ? parsed.params as object
+          : {},
+        { tabId: parsed.tab ?? tabParam(req) }
+      ))
       return
     }
 
