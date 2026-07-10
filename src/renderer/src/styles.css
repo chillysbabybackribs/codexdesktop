@@ -2256,9 +2256,28 @@ button {
   white-space: nowrap;
 }
 
-.tab-dot {
-  color: #f28a31;
-  font-size: 10px;
+.tab-favicon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: 3px;
+}
+
+.tab-favicon-fallback {
+  color: #8a8a8a;
+}
+
+.tab.is-active .tab-favicon-fallback {
+  color: #b5b5b5;
+}
+
+.tab-favicon-spinner {
+  box-sizing: border-box;
+  border: 1.5px solid #43484e;
+  border-top-color: #f28a31;
+  border-radius: 50%;
+  animation: work-spin 720ms linear infinite;
 }
 
 .tab-close {

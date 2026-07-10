@@ -49,18 +49,32 @@ type ChatItem = ThreadItem | SystemItem | TurnPlanItem
 type AgentMessageItem = Extract<ThreadItem, { type: 'agentMessage' }>
 type ActivityItem = WorkItem | AgentMessageItem
 
-// Item types that represent Codex "working" — its streamed thinking, tool
-// calls, file edits, and searches. These render sequentially as WorkGroup
-// blocks in the transcript and stay expanded after the turn completes; user
-// and assistant messages (and system notices) render as normal chat.
+// Item types that represent Codex "working" — streamed thinking, tool calls,
+// file edits, and searches. They stay in a compact per-turn activity feed;
+// user and completed assistant messages render in the main conversation.
 const workTypes = new Set<string>(workItemTypes)
 
 function isWorkItem(item: ChatItem): item is WorkItem {
   return workTypes.has(item.type)
 }
 
-function isActivityItem(item: ChatItem): item is ActivityItem {
-  return isWorkItem(item) || (item.type === 'agentMessage' && item.phase === 'commentary')
+function isActivityItem(
+  item: ChatItem,
+  turnId: string | null,
+  lastAgentMessageIdByTurn: ReadonlyMap<string, string>
+): item is ActivityItem {
+  if (isWorkItem(item)) {
+    return true
+  }
+
+  if (item.type !== 'agentMessage') {
+    return false
+  }
+
+  // Some providers leave `phase` null. Keep every non-final unknown chunk in
+  // the activity feed and reserve the last agent message for the completed
+  // response, preserving the desired layout on older/resumed threads too.
+  return item.phase === 'commentary' || (item.phase === null && turnId !== null && item.id !== lastAgentMessageIdByTurn.get(turnId))
 }
 
 // The transcript has two deliberately separate surfaces per turn: a bounded
@@ -80,11 +94,19 @@ function buildRows(
   const rows: RenderRow[] = []
   const turnWork = new Map<string, WorkItem[]>()
   const activityByTurn = new Map<string, ActivityItem[]>()
+  const lastAgentMessageIdByTurn = new Map<string, string>()
+
+  for (const item of items) {
+    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
+    if (item.type === 'agentMessage' && turnId) {
+      lastAgentMessageIdByTurn.set(turnId, item.id)
+    }
+  }
 
   for (const item of items) {
     const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
 
-    if (isActivityItem(item) && turnId) {
+    if (isActivityItem(item, turnId, lastAgentMessageIdByTurn) && turnId) {
       const activity = activityByTurn.get(turnId) ?? []
       activity.push(item)
       activityByTurn.set(turnId, activity)
@@ -103,7 +125,7 @@ function buildRows(
   for (const item of items) {
     const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
 
-    if (isActivityItem(item)) {
+    if (isActivityItem(item, turnId, lastAgentMessageIdByTurn)) {
       if (turnId && !emittedActivityTurns.has(turnId)) {
         rows.push({
           kind: 'activity',
