@@ -1916,18 +1916,21 @@ button {
 }
 
 .composer-context {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 0 2px;
+  min-height: 28px;
+  padding: 0 64px 0 2px;
 }
 
 .composer-thread-controls {
+  position: absolute;
+  top: 0;
+  right: 2px;
   display: flex;
-  min-width: 0;
   align-items: center;
   gap: 3px;
-  margin-left: auto;
 }
 
 .composer-new-chat {
