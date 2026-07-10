@@ -812,10 +812,13 @@ export default function App(): React.JSX.Element {
   }
 
   function noteTurn(turnId: string, patch: Partial<TurnMeta>): void {
-    setTurnMeta((current) => ({
-      ...current,
-      [turnId]: { status: 'inProgress', ...current[turnId], ...patch }
-    }))
+    setTurnMeta((current) => {
+      const existing = current[turnId]
+      return {
+        ...current,
+        [turnId]: { ...(existing ?? { status: 'inProgress' }), ...patch }
+      }
+    })
   }
 
   // Tag a batch of items (from turn/started, turn/completed, or turn/start

@@ -31,7 +31,9 @@ export const api = {
     onState: (listener: (state: BrowserState) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, state: BrowserState): void => listener(state)
       ipcRenderer.on(ipcChannels.browserState, wrapped)
-      return () => ipcRenderer.off(ipcChannels.browserState, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserState, wrapped)
+      }
     }
   },
   codex: {
@@ -49,7 +51,9 @@ export const api = {
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.codexEvent, wrapped)
-      return () => ipcRenderer.off(ipcChannels.codexEvent, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.codexEvent, wrapped)
+      }
     }
   },
   workspace: {

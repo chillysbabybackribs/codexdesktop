@@ -4,7 +4,7 @@ import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
-import type { WebSearchAction } from '../../shared/codex-protocol/WebSearchAction'
+import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAction'
 import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
 
 // ---------------------------------------------------------------------------
@@ -846,10 +846,10 @@ function DynamicToolBlock({
 }
 
 function webSearchDescription(action: WebSearchAction | null, query: string): { verb: string; detail: string | null } {
-  if (action?.type === 'open_page') {
+  if (action?.type === 'openPage') {
     return { verb: 'Opened page', detail: action.url ?? null }
   }
-  if (action?.type === 'find_in_page') {
+  if (action?.type === 'findInPage') {
     return { verb: 'Found in page', detail: action.pattern ?? action.url ?? null }
   }
   const searchQuery =
