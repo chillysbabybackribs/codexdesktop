@@ -1128,7 +1128,7 @@ function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string
     parts.push(`${toolCalls} ${toolCalls === 1 ? 'tool call' : 'tool calls'}`)
   }
 
-  const tokens = meta?.tokens?.total.totalTokens
+  const tokens = meta?.tokens?.last.totalTokens
   if (tokens) {
     parts.push(`${fmtTokens(tokens)} tokens`)
   }
@@ -1153,7 +1153,7 @@ export function TurnTail({
 
   if (live) {
     const label = currentActionLabel(items, itemMeta, streamingMessage)
-    const tokens = meta?.tokens?.total.totalTokens
+    const tokens = meta?.tokens?.last.totalTokens
 
     // Timer follows the CURRENT task: anchored to the newest running item's
     // start time, falling back to the turn start while nothing is running.
@@ -1222,12 +1222,12 @@ function tokenTooltip(tokens: ThreadTokenUsage | undefined): string | undefined 
   if (!tokens) {
     return undefined
   }
-  const { total } = tokens
+  const { last } = tokens
   const parts = [
-    `input ${fmtTokens(total.inputTokens)}`,
-    `cached ${fmtTokens(total.cachedInputTokens)}`,
-    `output ${fmtTokens(total.outputTokens)}`,
-    `reasoning ${fmtTokens(total.reasoningOutputTokens)}`
+    `latest input ${fmtTokens(last.inputTokens)}`,
+    `cached ${fmtTokens(last.cachedInputTokens)}`,
+    `output ${fmtTokens(last.outputTokens)}`,
+    `reasoning ${fmtTokens(last.reasoningOutputTokens)}`
   ]
   if (tokens.modelContextWindow) {
     parts.push(`context ${fmtTokens(tokens.modelContextWindow)}`)
