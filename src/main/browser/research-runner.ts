@@ -160,46 +160,46 @@ export class ResearchRunner {
       candidates,
       PAGE_WORKER_CONCURRENCY,
       async (candidate, index): Promise<ResearchPage | null> => {
-      throwIfAborted(signal)
-      const view = this.createHiddenView()
-      try {
-        await loadPage(view.webContents, candidate.url, signal)
-        const extracted = await evaluate<{
-          title: string
-          url: string
-          content: string
-          wordCount: number
-          truncated: boolean
-        }>(view.webContents, buildPageExtractionProgram(snippetChars))
-        const html = await evaluate<string>(
-          view.webContents,
-          `return (document.documentElement?.outerHTML || '').slice(0, ${MAX_HTML_CHARS})`
-        )
-        const rank = index + 1
-        const baseName = `page-${String(rank).padStart(2, '0')}`
-        const artifactPath = join(artifactDir, `${baseName}.txt`)
-        const htmlPath = join(artifactDir, `${baseName}.html`)
-        await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
-        await writeFile(htmlPath, html, 'utf8')
+        throwIfAborted(signal)
+        const view = this.createHiddenView()
+        try {
+          await loadPage(view.webContents, candidate.url, signal)
+          const extracted = await evaluate<{
+            title: string
+            url: string
+            content: string
+            wordCount: number
+            truncated: boolean
+          }>(view.webContents, buildPageExtractionProgram(snippetChars))
+          const html = await evaluate<string>(
+            view.webContents,
+            `return (document.documentElement?.outerHTML || '').slice(0, ${MAX_HTML_CHARS})`
+          )
+          const rank = index + 1
+          const baseName = `page-${String(rank).padStart(2, '0')}`
+          const artifactPath = join(artifactDir, `${baseName}.txt`)
+          const htmlPath = join(artifactDir, `${baseName}.html`)
+          await writeFile(artifactPath, `${extracted.content}\n`, 'utf8')
+          await writeFile(htmlPath, html, 'utf8')
 
-        return {
-          rank,
-          url: extracted.url || candidate.url,
-          title: extracted.title || candidate.title,
-          wordCount: extracted.wordCount,
-          artifactPath,
-          htmlPath,
-          sourceQuery: candidate.query,
-          sourceTier: candidate.sourceTier,
-          score: candidate.score
-        } satisfies ResearchPage
-      } catch (error) {
-        if (signal.aborted) throw error
-        errors.push({ url: candidate.url, error: formatError(error) })
-        return null
-      } finally {
-        this.closeHiddenView(view)
-      }
+          return {
+            rank,
+            url: extracted.url || candidate.url,
+            title: extracted.title || candidate.title,
+            wordCount: extracted.wordCount,
+            artifactPath,
+            htmlPath,
+            sourceQuery: candidate.query,
+            sourceTier: candidate.sourceTier,
+            score: candidate.score
+          } satisfies ResearchPage
+        } catch (error) {
+          if (signal.aborted) throw error
+          errors.push({ url: candidate.url, error: formatError(error) })
+          return null
+        } finally {
+          this.closeHiddenView(view)
+        }
       }
     )
     const pages = pageResults.filter((page): page is ResearchPage => page !== null)
