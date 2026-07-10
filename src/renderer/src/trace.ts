@@ -615,12 +615,45 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
   for (const item of items) {
     if (item.type === 'fileChange') {
       for (const change of item.changes) {
-        artifacts.set(change.path, {
+        addTraceArtifact(artifacts, {
           path: change.path,
           kind: 'workspaceChange',
           originEventId: item.id,
           availability: 'pathOnly'
         })
+      }
+      continue
+    }
+    if (item.type === 'dynamicToolCall' && item.tool === 'research_web') {
+      for (const content of item.contentItems ?? []) {
+        if (content.type !== 'inputText') continue
+        try {
+          const result = JSON.parse(content.text) as {
+            artifactDir?: unknown
+            pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
+          }
+          if (typeof result.artifactDir === 'string') {
+            addTraceArtifact(artifacts, {
+              path: result.artifactDir,
+              kind: 'researchCapsule',
+              originEventId: item.id,
+              availability: 'pathOnly'
+            })
+          }
+          for (const page of Array.isArray(result.pages) ? result.pages : []) {
+            for (const path of [page.artifactPath, page.htmlPath]) {
+              if (typeof path !== 'string') continue
+              addTraceArtifact(artifacts, {
+                path,
+                kind: 'generatedFile',
+                originEventId: item.id,
+                availability: 'pathOnly'
+              })
+            }
+          }
+        } catch {
+          // A failed or partial tool result is not promoted into the artifact index.
+        }
       }
       continue
     }
@@ -630,7 +663,7 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       const path = match[0].replace(/[.,;:)\]]+$/g, '').replace(/\/$/, '')
       const capsulePath = /^\/tmp\/codexdesktop-tasks\/[^/]+/.exec(path)?.[0]
       if (capsulePath) {
-        artifacts.set(capsulePath, {
+        addTraceArtifact(artifacts, {
           path: capsulePath,
           kind: 'researchCapsule',
           originEventId: item.id,
@@ -638,7 +671,7 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
         })
       }
       const leaf = path.split('/').pop() ?? ''
-      artifacts.set(path, {
+      addTraceArtifact(artifacts, {
         path,
         kind: leaf.includes('.') ? 'generatedFile' : 'researchCapsule',
         originEventId: item.id,
@@ -647,6 +680,10 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
     }
   }
   return [...artifacts.values()]
+}
+
+function addTraceArtifact(artifacts: Map<string, TraceArtifact>, artifact: TraceArtifact): void {
+  if (!artifacts.has(artifact.path)) artifacts.set(artifact.path, artifact)
 }
 
 function traceTruncations(value: unknown): TraceTruncation[] {
