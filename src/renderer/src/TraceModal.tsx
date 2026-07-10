@@ -90,6 +90,7 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
             <TraceMetric label="Status" value={trace.turn.status} />
             <TraceMetric label="Duration" value={formatDuration(trace.turn.durationMs)} />
             <TraceMetric label="Model" value={trace.environment.model ?? 'unknown'} />
+            <TraceMetric label="Reasoning" value={trace.environment.reasoningEffort ?? 'unknown'} />
             <TraceMetric label="Model calls" value={String(trace.usage.modelCallCount)} />
             <TraceMetric label="Executions" value={String(executionCount)} />
             <TraceMetric label="Commands" value={String(trace.summary.commandCount)} />
@@ -138,6 +139,41 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
               thread total is the cumulative counter snapshot at completion.
             </p>
           </section>
+
+          {trace.goal ? (
+            <section className="trace-section trace-goal">
+              <div className="trace-section-heading">
+                <h3>Goal lifecycle</h3>
+                <span>
+                  {trace.goal.statusAtStart ?? 'none'} → {trace.goal.statusAtEnd ?? 'cleared'}
+                </span>
+              </div>
+              <p className="trace-goal-objective">{trace.goal.objective}</p>
+              <div className="trace-token-row">
+                <TraceToken label="Budget" value={trace.goal.tokenBudget} />
+                <TraceToken label="Tokens used" value={trace.goal.tokensUsedAtEnd} />
+                <TraceToken label="Turn delta" value={trace.goal.tokensUsedDelta} />
+                <TraceMetric
+                  label="Continuation"
+                  value={trace.goal.continuation
+                    ? trace.goal.continuationInferred ? 'yes, inferred' : 'yes'
+                    : 'no'}
+                />
+              </div>
+              <div className="trace-goal-evidence">
+                <span>Observed completion evidence</span>
+                <strong>{trace.goal.observedCompletionEvidence.citationCount} citations</strong>
+                <strong>{trace.goal.observedCompletionEvidence.artifactCount} artifacts</strong>
+                <strong>{trace.goal.observedCompletionEvidence.successfulCommandCount} successful commands</strong>
+                <strong>{trace.goal.observedCompletionEvidence.successfulStructuredToolCount} successful tools</strong>
+                <strong>{trace.goal.observedCompletionEvidence.fileChangeCount} file changes</strong>
+              </div>
+              <p className="trace-usage-note">
+                Completion claimed: {trace.goal.completionClaimed ? 'yes' : 'no'}.
+                These are observed execution signals, not proof that the objective was satisfied.
+              </p>
+            </section>
+          ) : null}
 
           {trace.timing ? (
             <section className="trace-section">
