@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 3,
+  "exportedAt": "2026-07-10T04:22:49.480Z",
+  "capture": {
+    "source": "live",
+    "completeness": "partial",
+    "missing": [],
+    "fidelity": "bounded",
+    "truncations": [
+      {
+        "path": "thread.title",
+        "reason": "sizeLimit",
+        "capturedCharacters": 140,
+        "omittedCharacters": 167
+      },
+      {
+        "path": "timeline[19].details.output",
+        "reason": "sizeLimit",
+        "capturedCharacters": 30000,
+        "omittedCharacters": 52484
+      }
+    ]
+  },
+  "thread": {
+    "id": "019f4a41-23a9-7e32-be25-dfd685c66581",
+    "title": "Find recent firsthand reports from developers who migrated from BrowserView to WebContentsView, especially on Linux. Separate reproducible t\n[… truncated 167 characters]"
+  },
+  "turn": {
+    "id": "019f4a41-2410-7a60-a828-19994fbbff2a",
+    "status": "completed",
+    "startedAt": "2026-07-10T04:20:10.000Z",
+    "completedAt": "2026-07-10T04:22:45.000Z",
+    "durationMs": 155068
+  },
+  "environment": {
+    "requestedModel": "gpt-5.5",
+    "model": "gpt-5.5",
+    "workspace": "/home/dp/Desktop/soloapps/codexdesktop",
+    "modelReroutes": []
+  },
+  "usage": {
+    "turn": {
+      "totalTokens": 210035,
+      "inputTokens": 204125,
+      "cachedInputTokens": 166400,
+      "outputTokens": 5910,
+      "reasoningOutputTokens": 448
+    },
+    "latestModelCall": {
+      "totalTokens": 36749,
+      "inputTokens": 35190,
+      "cachedInputTokens": 27648,
+      "outputTokens": 1559,
+      "reasoningOutputTokens": 92
+    },
+    "threadTotalAtEnd": {
+      "totalTokens": 210035,
+      "inputTokens": 204125,
+      "cachedInputTokens": 166400,
+      "outputTokens": 5910,
+      "reasoningOutputTokens": 448
+    },
+    "modelContextWindow": 258400,
+    "modelCallCount": 8,
+    "accounting": {
+      "turnTotalSemantics": "accumulatedAcrossModelCalls",
+      "latestModelCallSemantics": "singleMostRecentCall",
+      "threadTotalAtEndSemantics": "cumulativeThreadCounterSnapshot",
+      "uncachedInputTokens": 37725,
+      "cachedInputPercent": 81.5,
+      "latestCallContextPercent": 13.6,
+      "averageTokensPerModelCall": 26254
+    }
+  },
+  "summary": {
+    "itemCount": 22,
+    "commandCount": 6,
+    "browserToolCount": 1,
+    "structuredToolCallCount": 1,
+    "executionCount": 7,
+    "failedCommandCount": 1,
+    "fileChangeCount": 0,
+    "searchEventCount": 0,
+    "skillCount": 1
+  },
+  "timing": {
+    "wallDurationMs": 155068,
+    "attributedDurationMs": 80840,
+    "unattributedDurationMs": 74228,
+    "attributionPercent": 52.1,
+    "timedEventCount": 21,
+    "method": "unionOfVisibleEventSpans"
+  },
+  "sourceIndex": {
+    "scope": "finalResponseCitations",
+    "items": [
+      {
+        "url": "https://www.electronjs.org/docs/latest/api/browser-view",
+        "label": "BrowserView docs",
+        "host": "www.electronjs.org",
+        "kind": "official"
+      },
+      {
+        "url": "https://www.electronjs.org/docs/latest/api/web-contents-view",
+        "label": "WebContentsView docs",
+        "host": "www.electronjs.org",
+        "kind": "official"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/44914",
+        "label": "electron/electron#44914",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/42339",
+        "label": "electron/electron#42339",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/43531",
+        "label": "electron/electron#43531",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/electron/electron/pull/49315",
+        "label": "PR #49315",
+        "host": "github.com",
+        "kind": "projectRecord"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/47990",
+        "label": "electron/electron#47990",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/49307",
+        "label": "electron/electron#49307",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/electron/electron/pull/49379",
+        "label": "PR #49379",
+        "host": "github.com",
+        "kind": "projectRecord"
+      },
+      {
+        "url": "https://github.com/electron/electron/issues/51337",
+        "label": "electron/electron#51337",
+        "host": "github.com",
+        "kind": "firsthand"
+      },
+      {
+        "url": "https://github.com/mattermost/desktop/pull/3892",
+        "label": "Mattermost desktop PR #3892",
+        "host": "github.com",
+        "kind": "other"
+      },
+      {
+        "url": "https://github.com/electron/electron/pull/51769",
+        "label": "electron/electron PR #51769",
+        "host": "github.com",
+        "kind": "projectRecord"
+      },
+      {
+        "url": "https://github.com/electron/electron/pull/51338",
+        "label": "PR #51338",
+        "host": "github.com",
+        "kind": "projectRecord"
+      },
+      {
+        "url": "https://github.com/TimH-DE/GemiDesk/pull/17",
+        "label": "GemiDesk PR #17",
+        "host": "github.com",
+        "kind": "other"
+      },
+      {
+        "url": "https://github.com/cabinetai/cabinet/pull/165",
+        "label": "Cabinet PR #165",
+        "host": "github.com",
+        "kind": "other"
+      },
+      {
+        "url": "https://github.com/IsmaelMartinez/teams-for-linux/pull/2426",
+        "label": "teams-for-linux PR #2426",
+        "host": "github.com",
+        "kind": "other"
+      }
+    ]
+  },
+  "artifactIndex": {
+    "scope": "visibleTurnEvents",
+    "items": [
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux",
+        "kind": "researchCapsule",
+        "originEventId": "call_JmZha8y8EwyPeaxFFYq69t9w",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/intent.json",
+        "kind": "generatedFile",
+        "originEventId": "call_VlhP7LgF735u4ZpWDzCVsNlb",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/run.mjs",
+        "kind": "generatedFile",
+        "originEventId": "call_VlhP7LgF735u4ZpWDzCVsNlb",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/evidence.jsonl",
+        "kind": "generatedFile",
+        "originEventId": "call_ylQgjcvWSYkn1uYHAXhf2OQr",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/metrics.json",
+        "kind": "generatedFile",
+        "originEventId": "call_VlhP7LgF735u4ZpWDzCVsNlb",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs",
+        "kind": "generatedFile",
+        "originEventId": "call_RHPcosoStTmR9U3Sxy9DYaIp",
+        "availability": "pathOnly"
+      },
+      {
+        "path": "/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json",
+        "kind": "generatedFile",
+        "originEventId": "call_JmZha8y8EwyPeaxFFYq69t9w",
+        "availability": "pathOnly"
+      }
+    ]
+  },
+  "skills": [
+    {
+      "name": "artifact-first-web-research",
+      "path": "/home/dp/Desktop/soloapps/codexdesktop/skills/artifact-first-web-research/SKILL.md"
+    }
+  ],
+  "prompt": "Find recent firsthand reports from developers who migrated from BrowserView to WebContentsView, especially on Linux. Separate reproducible technical details from general opinion, identify the patterns that appear more than once, and tell me which concerns are still relevant to Electron 43. Include sources.",
+  "finalResponse": "**Bottom Line**\n\nBrowserView-to-WebContentsView migration concerns are still real in Electron 43, but the strongest current evidence is not “WebContentsView is broken on Linux.” It is: WebContentsView changes the app architecture from a BrowserWindow-owned overlay model to the Views hierarchy, so layout, focus, lifecycle, transparency, DevTools, and Wayland/input details need retesting.\n\nElectron 43.1.0 is current on npm, and Electron’s docs still mark `BrowserView` deprecated while documenting `WebContentsView` as the replacement: [BrowserView docs](https://www.electronjs.org/docs/latest/api/browser-view), [WebContentsView docs](https://www.electronjs.org/docs/latest/api/web-contents-view).\n\n**Reproducible Technical Details**\n\n| Pattern | Firsthand Evidence | What Is Reproducible | Electron 43 Relevance |\n|---|---|---|---|\n| Transparency/background behavior changed | [electron/electron#44914](https://github.com/electron/electron/issues/44914) reports `WebContentsView` not transparent by default on Linux, Electron 33.2.1 | Linux repro with WebContentsView transparency expectations | Likely relevant if your migration relies on transparent stacked views; not confirmed on 43 |\n| Focus gets stolen when adding views | [electron/electron#42339](https://github.com/electron/electron/issues/42339) says `addChildView` focuses the added WebContentsView | Adding a WebContentsView can shift focus unexpectedly | Still architecturally relevant; verify on 43 |\n| Hidden/background painting and ready state | [electron/electron#43531](https://github.com/electron/electron/issues/43531) and [PR #49315](https://github.com/electron/electron/pull/49315) discuss `ready-to-show` / initially hidden WebContentsView behavior | Hidden WebContentsView may not paint/fire readiness as expected without newer options | Relevant: newer Electron has work in this area, so older reports should not be assumed unchanged |\n| Nested/child WebContentsView rendering | [electron/electron#47990](https://github.com/electron/electron/issues/47990) reports incorrect rendering when adding a WebContentsView to another WebContentsView | `addChildView` hierarchy can render incorrectly in nested cases | Relevant if you nest views; unknown for 43 without repro |\n| `window.open` / background tab creation edge case | [electron/electron#49307](https://github.com/electron/electron/issues/49307), [PR #49379](https://github.com/electron/electron/pull/49379) | `setWindowOpenHandler` with background-tab disposition can produce undefined `options.webContents`; docs example was updated | Relevant to browser-like apps and tab implementations |\n| Shared options/object mutation leak | [electron/electron#51337](https://github.com/electron/electron/issues/51337) reports BrowserWindow `backgroundColor` leaking into WebContentsView when sharing `webPreferences` object, Electron 41.3.0, including Ubuntu/other Linux | Reusing mutable option objects can produce surprising cross-view configuration | Likely relevant through 43 unless fixed in your exact version; easy to avoid by cloning options |\n| Destroyed WebContents lifecycle guard | [Mattermost desktop PR #3892](https://github.com/mattermost/desktop/pull/3892) guards `MattermostWebContentsView` against destroyed/undefined `webContents` | Real app hit errors after hung/kill scenario; fix adds lifecycle guard | Relevant as a migration hygiene pattern, not Electron-core proof |\n| Linux/Wayland input APIs remain moving target | [electron/electron PR #51769](https://github.com/electron/electron/pull/51769) implements `setIgnoreMouseEvents` on Wayland; [PR #51338](https://github.com/electron/electron/pull/51338) adds `BaseWindow.getCursorPoint()` after Wayland cursor limitations | Wayland differs from X11 for pointer passthrough/cursor location | Highly relevant on Linux, especially Wayland, but not specific to BrowserView migration alone |\n\n**General Opinion / Lower-Signal Reports**\n\nSeveral app PRs describe migrations as beneficial, but do not give detailed failure modes:\n\n- [GemiDesk PR #17](https://github.com/TimH-DE/GemiDesk/pull/17): migrated from deprecated BrowserView to WebContentsView, enabled hardware acceleration and native Wayland switches, and tuned background throttling. Useful as a migration example, but it mixes several performance changes, so it does not isolate WebContentsView effects.\n- [Cabinet PR #165](https://github.com/cabinetai/cabinet/pull/165): adds a native WebContentsView-backed in-app browser with IPC handlers and bookmark/session support. Good architecture evidence, not a bug report.\n- [teams-for-linux PR #2426](https://github.com/IsmaelMartinez/teams-for-linux/pull/2426): proposes multiple `WebContentsView` sessions in one `BaseWindow` with partition isolation. Useful design signal, not runtime proof.\n\n**Patterns Appearing More Than Once**\n\n1. **View hierarchy matters now.** Multiple reports touch `addChildView`, nested views, z-order, focus, hidden painting, and lifecycle. Migrating is not a rename from `setBrowserView` to `contentView.addChildView`.\n\n2. **Browser-like apps hit the sharpest edges.** Tabs, background tabs, window-open handling, DevTools, and multiple embedded sessions show up repeatedly.\n\n3. **Linux concerns are more about compositor/input behavior than WebContentsView alone.** Wayland pointer passthrough, cursor coordinates, transparency, and hardware acceleration/native Wayland flags are the recurring Linux-specific watchpoints.\n\n4. **Lifecycle guards become more important.** Real app code now guards destroyed/undefined `webContents`, especially around reconnects, kills, hangs, or dynamic view replacement.\n\n**Still Relevant To Electron 43**\n\nConfirmed relevant:\n\n- `BrowserView` is deprecated; migration pressure remains official.\n- `WebContentsView` / `BaseWindow` / Views hierarchy is the current direction.\n- Linux Wayland/input behavior is still active engineering territory.\n\nLikely relevant, verify in your app:\n\n- Focus changes on `addChildView`.\n- Transparency/background color assumptions.\n- Hidden/background view readiness.\n- DevTools or `setWindowOpenHandler` behavior in browser-like UIs.\n- Destroyed `webContents` lifecycle guards.\n- Avoiding shared mutable options objects.\n\nLess safe to treat as current without repro:\n\n- Specific Electron 30-39 rendering bugs.\n- Older Linux transparency behavior from Electron 33.\n- Any report where the fix landed in later Electron but was not retested on 43.\n\nMy practical read: for Electron 43, the migration is viable, but I’d budget a Linux/Wayland test pass around focus, transparent overlays, background tabs, DevTools, and view destruction. Those are the places where the firsthand reports cluster.",
+  "timeline": [
+    {
+      "index": 1,
+      "id": "019f4a41-26e8-7c41-bb76-c6821e13fb89",
+      "type": "userMessage",
+      "label": "User prompt",
+      "startedAt": "2026-07-10T04:20:11.624Z",
+      "completedAt": "2026-07-10T04:20:11.624Z",
+      "durationMs": 0,
+      "status": null,
+      "details": {
+        "content": [
+          {
+            "type": "text",
+            "text": "$artifact-first-web-research\nFind recent firsthand reports from developers who migrated from BrowserView to WebContentsView, especially on Linux. Separate reproducible technical details from general opinion, identify the patterns that appear more than once, and tell me which concerns are still relevant to Electron 43. Include sources."
+          },
+          {
+            "type": "skill",
+            "name": "artifact-first-web-research",
+            "path": "/home/dp/Desktop/soloapps/codexdesktop/skills/artifact-first-web-research/SKILL.md"
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "id": "msg_0d1c22136bd3f9da016a5072fc93e88196a4220a3d5331b3cd",
+      "type": "agentMessage",
+      "label": "Agent commentary",
+      "startedAt": "2026-07-10T04:20:12.601Z",
+      "completedAt": "2026-07-10T04:20:13.754Z",
+      "durationMs": 1153,
+      "status": null,
+      "details": {
+        "phase": "commentary",
+        "text": "I’ll use the artifact-first research flow here: gather official Electron version context plus firsthand developer reports from GitHub/forums, then separate hard repro details from sentiment and call out what can or cannot be tied to Electron 43."
+      }
+    },
+    {
+      "index": 3,
+      "id": "rs_0d1c22136bd3f9da016a5072fdbb1081969733e2582b1fa5ca",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:20:13.758Z",
+      "completedAt": "2026-07-10T04:20:16.789Z",
+      "durationMs": 3031,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Preparing for web research and scripting**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 4,
+      "id": "call_VlhP7LgF735u4ZpWDzCVsNlb",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc \"mkdir -p /tmp/codexdesktop-tasks/wcv-migration-linux && cat > /tm\n[… truncated 6738 characters]",
+      "startedAt": "2026-07-10T04:20:48.840Z",
+      "completedAt": "2026-07-10T04:21:06.450Z",
+      "durationMs": 17609,
+      "status": "completed",
+      "details": {
+        "command": "/bin/bash -lc \"mkdir -p /tmp/codexdesktop-tasks/wcv-migration-linux && cat > /tmp/codexdesktop-tasks/wcv-migration-linux/intent.json <<'EOF'\n{\n  \\\"question\\\":\\\"Find recent firsthand reports from developers who migrated from BrowserView to WebContentsView, especially on Linux. Separate reproducible technical details from general opinion, identify recurring patterns, assess relevance to Electron 43, include sources.\\\",\n  \\\"targetVersion\\\":\\\"Electron 43\\\",\n  \\\"evidenceFields\\\":[\\\"source\\\",\\\"title\\\",\\\"url\\\",\\\"sourceType\\\",\\\"observedAt\\\",\\\"reportedVersion\\\",\\\"platform\\\",\\\"claim\\\",\\\"evidenceStrength\\\",\\\"targetVersionApplicability\\\",\\\"caveat\\\"],\n  \\\"sourceLanes\\\":[\\\"Electron official docs/releases\\\",\\\"GitHub issues/PRs/discussions via API\\\",\\\"web search for developer reports\\\"],\n  \\\"stoppingRule\\\":\\\"Stop after official version context plus at least 5 firsthand reports or when results are exhausted; one gap-fill if Electron 43 applicability unresolved.\\\"\n}\nEOF\ncat > /tmp/codexdesktop-tasks/wcv-migration-linux/run.mjs <<'EOF'\nimport fs from 'node:fs';\nimport path from 'node:path';\nconst dir = '/tmp/codexdesktop-tasks/wcv-migration-linux';\nconst evidencePath = path.join(dir, 'evidence.jsonl');\nconst metricsPath = path.join(dir, 'metrics.json');\nfs.writeFileSync(evidencePath, '');\nconst observedAt = new Date().toISOString();\nconst records=[]; const diagnostics=[];\nfunction add(r){ records.push({observedAt, ...r}); fs.appendFileSync(evidencePath, JSON.stringify({observedAt,...r})+'\\\\n'); }\nasync function gh(pathname){\n  const url='https://api.github.com'+pathname;\n  const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json','User-Agent':'codexdesktop-research'}});\n  const text=await res.text();\n  if(\"'!res.ok){ diagnostics.push({url,status:res.status,text:text.slice(0,300)}); return null; }\n  return JSON.parse(text);\n}\nfunction clean(s='\"''){ return s.replace(/\\\\r/g,'').replace(/\\\\n{3,}/g,'\\\\n\\\\n').slice(0,4000); }\nasync function main(){\n  // Official context\n  const docs = await fetch('https://www.electronjs.org/docs/latest/api/web-contents-view').then(r=>r.text()).catch(e=>String(e));\n  add({source:'Electron Docs', title:'WebContentsView API', url:'https://www.electronjs.org/docs/latest/api/web-contents-view', sourceType:'primary', reportedVersion:'latest docs', platform:'all', status: docs.includes('WebContentsView')?'fetched':'unknown', claim: docs.includes('WebContentsView') ? 'Official API exists in latest docs; page describes WebContentsView as a View that owns a WebContents and can be added to BaseWindow contentView.' : 'Could not verify docs content', evidenceStrength:'high', targetVersionApplicability:'likely', caveat:'Latest docs are versionless unless version selector is used.'});\n  const browserViewDocs = await fetch('https://www.electronjs.org/docs/latest/api/browser-view').then(r=>r.text()).catch(e=>String(e));\n  add({source:'Electron Docs', title:'BrowserView API', url:'https://www.electronjs.org/docs/latest/api/browser-view', sourceType:'primary', reportedVersion:'latest docs', platform:'all', status: browserViewDocs.includes('Deprecated')?'deprecated':'fetched', claim: browserViewDocs.includes('Deprecated') ? 'Official BrowserView docs mark the API deprecated.' : 'BrowserView docs fetched but deprecation text not detected in raw HTML.', evidenceStrength:'high', targetVersionApplicability:'likely', caveat:'Docs do not by themselves prove runtime behavior on Linux.'});\n  const v43 = await gh('/repos/electron/electron/releases/tags/v43.0.0-alpha.1');\n  if(v43) add({source:'GitHub Releases', title:v43.name||'Electron v43 release', url:v43.html_url, sourceType:'primary', reportedVersion:v43.tag_name, platform:'all', status:'release exists', claim:\"'`Electron ${v43.tag_name} release exists (${v43.prerelease?'\"'prerelease':'stable'}); migration concerns need source-specific version evidence to be confirmed for 43.\"'`, evidenceStrength:'\"'high', targetVersionApplicability:'confirmed', caveat:'Release existence only, not WebContentsView behavior.'});\n\n  const queries = [\n    'repo:electron/electron WebContentsView BrowserView Linux',\n    'repo:electron/electron \\\"WebContentsView\\\" \\\"BrowserView\\\"',\n    'repo:electron/electron \\\"setBrowserView\\\" \\\"WebContentsView\\\"',\n    'repo:electron/electron \\\"WebContentsView\\\" \\\"Linux\\\"',\n    '\\\"BrowserView\\\" \\\"WebContentsView\\\" \\\"Linux\\\" electron',\n    '\\\"migrated\\\" \\\"BrowserView\\\" \\\"WebContentsView\\\" electron'\n  ];\n  const seen = new Set();\n  for(const q of queries){\n    const data = await gh(\"'`/search/issues?q=${encodeURIComponent(q)}&sort=updated&order=desc&per_page=10`);\n    if(!data?.items) continue;\n    for(const item of data.items){\n      if(seen.has(item.html_url)) continue; seen.add(item.html_url);\n      const full = await gh(`/repos/${item.repository_url.split('\"'/repos/')[1]}/issues/\"'${item.number}`);\n      const comments = await gh(`/repos/${item.repository_url.split('\"'/repos/')[1]}/issues/\"'${item.number}/comments?per_page=30`);\n      const body = clean((full?.body||item.body||'\"''));\n      const commentText = Array.isArray(comments) ? clean(comments.map(c=>\"'`@${c.user?.login}: ${c.body}`).join('\"'\\\\n---\\\\n')) : '';\n      const text=(item.title+'\\\\n'+body+'\\\\n'+commentText);\n      const linux=/linux|ubuntu|wayland|x11|xorg|debian|fedora|arch/i.test(text);\n      const firsthand=/I |we |our |repro|steps|expected|actual|crash|segfault|doesn.t|broken|migrat/i.test(text);\n      const version = (text.match(/Electron\\\\s*(?:v|version)?\\\\s*([0-9]{2}(?:\\\\.[0-9.\\\\-a-z]+)?)/i)||[])[1] || (text.match(/electron\\\\s*:?\\\\s*([0-9]{2}\\\\.[0-9.\\\\-a-z]+)/i)||[])[1] || '';\n      if(/WebContentsView/i.test(text) && (/BrowserView/i.test(text) || linux || firsthand)){\n        add({source:'GitHub issue/discussion', title:item.title, url:item.html_url, sourceType:firsthand?'firsthand':'aggregate', reportedVersion:version||'not stated', platform:linux?'Linux mentioned':'not specific', status:item.state, claim: clean(text).slice(0,1200), evidenceStrength:firsthand?'medium':'low', targetVersionApplicability: version?.startsWith('43')?'confirmed':(/43/.test(text)?'likely':'unknown'), caveat:'GitHub API extraction; claim field is source excerpt, verify full thread for nuance.'});\n      }\n    }\n  }\n  fs.writeFileSync(metricsPath, JSON.stringify({ok:true, records:records.length, diagnostics, artifacts:{evidence:evidencePath, metrics:metricsPath}}, null, 2));\n  console.log(JSON.stringify({ok:true, records:records.length, gaps: records.length<8?['firsthand reports may be sparse; consider browser gap-fill search']:[], artifacts:{evidence:evidencePath, metrics:metricsPath}, durationMs:0}));\n}\nmain().catch(e=>{ fs.writeFileSync(metricsPath, JSON.stringify({ok:false,error:String(e),records:records.length,diagnostics},null,2)); console.log(JSON.stringify({ok:false,error:String(e),records:records.length,artifacts:{evidence:evidencePath,metrics:metricsPath}})); });\nEOF\nnode /tmp/codexdesktop-tasks/wcv-migration-linux/run.mjs\"",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "mkdir -p /tmp/codexdesktop-tasks/wcv-migration-linux && cat > /tmp/codexdesktop-tasks/wcv-migration-linux/intent.json <<'EOF'\n{\n  \"question\":\"Find recent firsthand reports from developers who migrated from BrowserView to WebContentsView, especially on Linux. Separate reproducible technical details from general opinion, identify recurring patterns, assess relevance to Electron 43, include sources.\",\n  \"targetVersion\":\"Electron 43\",\n  \"evidenceFields\":[\"source\",\"title\",\"url\",\"sourceType\",\"observedAt\",\"reportedVersion\",\"platform\",\"claim\",\"evidenceStrength\",\"targetVersionApplicability\",\"caveat\"],\n  \"sourceLanes\":[\"Electron official docs/releases\",\"GitHub issues/PRs/discussions via API\",\"web search for developer reports\"],\n  \"stoppingRule\":\"Stop after official version context plus at least 5 firsthand reports or when results are exhausted; one gap-fill if Electron 43 applicability unresolved.\"\n}\nEOF\ncat > /tmp/codexdesktop-tasks/wcv-migration-linux/run.mjs <<'EOF'\nimport fs from 'node:fs';\nimport path from 'node:path';\nconst dir = '/tmp/codexdesktop-tasks/wcv-migration-linux';\nconst evidencePath = path.join(dir, 'evidence.jsonl');\nconst metricsPath = path.join(dir, 'metrics.json');\nfs.writeFileSync(evidencePath, '');\nconst observedAt = new Date().toISOString();\nconst records=[]; const diagnostics=[];\nfunction add(r){ records.push({observedAt, ...r}); fs.appendFileSync(evidencePath, JSON.stringify({observedAt,...r})+'\\n'); }\nasync function gh(pathname){\n  const url='https://api.github.com'+pathname;\n  const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json','User-Agent':'codexdesktop-research'}});\n  const text=await res.text();\n  if(!res.ok){ diagnostics.push({url,status:res.status,text:text.slice(0,300)}); return null; }\n  return JSON.parse(text);\n}\nfunction clean(s=''){ return s.replace(/\\r/g,'').replace(/\\n{3,}/g,'\\n\\n').slice(0,4000); }\nasync function main(){\n  // Official context\n  const docs = await fetch('https://www.electronjs.org/docs/latest/api/web-contents-view').then(r=>r.text()).catch(e=>String(e));\n  add({source:'Electron Docs', title:'WebContentsView API', url:'https://www.electronjs.org/docs/latest/api/web-contents-view', sourceType:'primary', reportedVersion:'latest docs', platform:'all', status: docs.includes('WebContentsView')?'fetched':'unknown', claim: docs.includes('WebContentsView') ? 'Official API exists in latest docs; page describes WebContentsView as a View that owns a WebContents and can be added to BaseWindow contentView.' : 'Could not verify docs content', evidenceStrength:'high', targetVersionApplicability:'likely', caveat:'Latest docs are versionless unless version selector is used.'});\n  const browserViewDocs = await fetch('https://www.electronjs.org/docs/latest/api/browser-view').then(r=>r.text()).catch(e=>String(e));\n  add({source:'Electron Docs', title:'BrowserView API', url:'https://www.electronjs.org/docs/latest/api/browser-view', sourceType:'primary', reportedVersion:'latest docs', platform:'all', status: browserViewDocs.includes('Deprecated')?'deprecated':'fetched', claim: browserViewDocs.includes('Deprecated') ? 'Official BrowserView docs mark the API deprecated.' : 'BrowserView docs fetched but deprecation text not detected in raw HTML.', evidenceStrength:'high', targetVersionApplicability:'likely', caveat:'Docs do not by themselves prove runtime behavior on Linux.'});\n  const v43 = await gh('/repos/electron/electron/releases/tags/v43.0.0-alpha.1');\n  if(v43) add({source:'GitHub Releases', title:v43.name||'Electron v43 release', url:v43.html_url, sourceType:'primary', reportedVersion:v43.tag_name, platform:'all', status:'release exists', claim:`Electron ${v43.tag_name} release exists (${v43.prerelease?'prerelease':'stable'}); migration concerns need source-specific version evidence to be confirmed for 43.`, evidenceStrength:'high', targetVersionApplicability:'confirmed', caveat:'Release existence only, not WebContentsView behavior.'});\n\n  const queries = [\n    'repo:electron/electron WebContentsView BrowserView Linux',\n    'repo:electron/electron \"WebContentsView\" \"BrowserView\"',\n    'repo:electron/electron \"setBrowserView\" \"WebContentsView\"',\n    'repo:electron/electron \"WebContentsView\" \"Linux\"',\n    '\"BrowserView\" \"WebContentsView\" \"Linux\" electron',\n    '\"migrated\" \"BrowserView\" \"WebContentsView\" electron'\n  ];\n  const seen = new Set();\n  for(const q of queries){\n    const data = await gh(`/search/issues?q=${encodeURIComponent(q)}&sort=updated&order=desc&per_page=10`);\n    if(!data?.items) continue;\n    for(const item of data.items){\n      if(seen.has(item.html_url)) continue; seen.add(item.html_url);\n      const full = await gh(`/repos/${item.repository_url.split('/repos/')[1]}/issues/${item.number}`);\n      const comments = await gh(`/repos/${item.repository_url.split('/repos/')[1]}/issues/${item.number}/comments?per_page=30`);\n      const body = clean((full?.body||item.body||''));\n      const commentText = Array.isArray(comments) ? clean(comments.map(c=>`@${c.user?.login}: ${c.body}`).join('\\n---\\n')) : '';\n      const text=(item.title+'\\n'+body+'\\n'+commentText);\n      const linux=/linux|ubuntu|wayland|x11|xorg|debian|fedora|arch/i.test(text);\n      const firsthand=/I |we |our |repro|steps|expected|actual|crash|segfault|doesn.t|broken|migrat/i.test(text);\n      const version = (text.match(/Electron\\s*(?:v|version)?\\s*([0-9]{2}(?:\\.[0-9.\\-a-z]+)?)/i)||[])[1] || (text.match(/electron\\s*:?\\s*([0-9]{2}\\.[0-9.\\-a-z]+)/i)||[])[1] || '';\n      if(/WebContentsView/i.test(text) && (/BrowserView/i.test(text) || linux || firsthand)){\n        add({source:'GitHub issue/discussion', title:item.title, url:item.html_url, sourceType:firsthand?'firsthand':'aggregate', reportedVersion:version||'not stated', platform:linux?'Linux mentioned':'not specific', status:item.state, claim: clean(text).slice(0,1200), evidenceStrength:firsthand?'medium':'low', targetVersionApplicability: version?.startsWith('43')?'confirmed':(/43/.test(text)?'likely':'unknown'), caveat:'GitHub API extraction; claim field is source excerpt, verify full thread for nuance.'});\n      }\n    }\n  }\n  fs.writeFileSync(metricsPath, JSON.stringify({ok:true, records:records.length, diagnostics, artifacts:{evidence:evidencePath, metrics:metricsPath}}, null, 2));\n  console.log(JSON.stringify({ok:true, records:records.length, gaps: records.length<8?['firsthand reports may be sparse; consider browser gap-fill search']:[], artifacts:{evidence:evidencePath, metrics:metricsPath}, durationMs:0}));\n}\nmain().catch(e=>{ fs.writeFileSync(metricsPath, JSON.stringify({ok:false,error:String(e),records:records.length,diagnostics},null,2)); console.log(JSON.stringify({ok:false,error:String(e),records:records.length,artifacts:{evidence:evidencePath,metrics:metricsPath}})); });\nEOF\nnode /tmp/codexdesktop-tasks/wcv-migration-linux/run.mjs"
+          }
+        ],
+        "exitCode": 0,
+        "output": "{\"ok\":true,\"records\":33,\"gaps\":[],\"artifacts\":{\"evidence\":\"/tmp/codexdesktop-tasks/wcv-migration-linux/evidence.jsonl\",\"metrics\":\"/tmp/codexdesktop-tasks/wcv-migration-linux/metrics.json\"},\"durationMs\":0}\n",
+        "outputTruncated": false
+      }
+    },
+    {
+      "index": 5,
+      "id": "rs_0d1c22136bd3f9da016a507334e56c81969d437572cc612a49",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:21:08.982Z",
+      "completedAt": "2026-07-10T04:21:09.364Z",
+      "durationMs": 382,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Inspecting evidence**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 6,
+      "id": "msg_0d1c22136bd3f9da016a507335520c81968288bf1dd5e97d84",
+      "type": "agentMessage",
+      "label": "Agent commentary",
+      "startedAt": "2026-07-10T04:21:09.366Z",
+      "completedAt": "2026-07-10T04:21:10.420Z",
+      "durationMs": 1054,
+      "status": null,
+      "details": {
+        "phase": "commentary",
+        "text": "I’ve got the first artifact pass: official docs/release context plus GitHub threads surfaced through the API. Now I’m compressing the evidence down to firsthand migration details versus broad commentary, because the raw search finds a lot of adjacent noise."
+      }
+    },
+    {
+      "index": 7,
+      "id": "call_ylQgjcvWSYkn1uYHAXhf2OQr",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc \"node - <<'EOF' const fs=require('fs'); const rows=fs.readFileSync\n[… truncated 388 characters]",
+      "startedAt": "2026-07-10T04:21:13.421Z",
+      "completedAt": "2026-07-10T04:21:13.422Z",
+      "durationMs": 0,
+      "status": "completed",
+      "details": {
+        "command": "/bin/bash -lc \"node - <<'EOF'\nconst fs=require('fs');\nconst rows=fs.readFileSync('/tmp/codexdesktop-tasks/wcv-migration-linux/evidence.jsonl','utf8').trim().split('\\\\n').map(JSON.parse);\nfor (const [i,r] of rows.entries()) {\n console.log('\\\\n#'+(i+1), r.title, '\\\\nURL:', r.url, '\\\\nver:', r.reportedVersion, 'platform:', r.platform, 'strength:', r.evidenceStrength, 'app:', r.targetVersionApplicability, '\\\\nclaim:', r.claim.slice(0,700).replace(/\\\\n/g,' | '));\n}\nEOF\"",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "node - <<'EOF'\nconst fs=require('fs');\nconst rows=fs.readFileSync('/tmp/codexdesktop-tasks/wcv-migration-linux/evidence.jsonl','utf8').trim().split('\\n').map(JSON.parse);\nfor (const [i,r] of rows.entries()) {\n console.log('\\n#'+(i+1), r.title, '\\nURL:', r.url, '\\nver:', r.reportedVersion, 'platform:', r.platform, 'strength:', r.evidenceStrength, 'app:', r.targetVersionApplicability, '\\nclaim:', r.claim.slice(0,700).replace(/\\n/g,' | '));\n}\nEOF"
+          }
+        ],
+        "exitCode": 0,
+        "output": "\n#1 WebContentsView API \nURL: https://www.electronjs.org/docs/latest/api/web-contents-view \nver: latest docs platform: all strength: high app: likely \nclaim: Official API exists in latest docs; page describes WebContentsView as a View that owns a WebContents and can be added to BaseWindow contentView.\n\n#2 BrowserView API \nURL: https://www.electronjs.org/docs/latest/api/browser-view \nver: latest docs platform: all strength: high app: likely \nclaim: Official BrowserView docs mark the API deprecated.\n\n#3 electron v43.0.0-alpha.1 \nURL: https://github.com/electron/electron/releases/tag/v43.0.0-alpha.1 \nver: v43.0.0-alpha.1 platform: all strength: high app: confirmed \nclaim: Electron v43.0.0-alpha.1 release exists (prerelease); migration concerns need source-specific version evidence to be confirmed for 43.\n\n#4 fix: implement setIgnoreMouseEvents on Wayland \nURL: https://github.com/electron/electron/pull/51769 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: fix: implement setIgnoreMouseEvents on Wayland | #### Description of Change |  | On Wayland the X11 code path inside `NativeWindowViews::SetIgnoreMouseEvents` | never executed, so transparent overlay windows (e.g. desktop pets) kept | intercepting pointer events instead of passing them through. |  | This wires the Wayland path to the platform window's input region via | `ElectronDesktopWindowTreeHostLinux::SetIgnoreMouseEvents`, persisting the | new state on the host so subsequent `UpdateFrameHints()` calls (bounds, | theme, scale changes) keep the requested behavior. The input region is | set to a single empty rect, so no part of the surface receives pointer | events — the compositor passes them through to whateve\n\n#5 refactor: simplify content_view_ hit-test transparency on macOS \nURL: https://github.com/electron/electron/pull/51617 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: refactor: simplify content_view_ hit-test transparency on macOS | #### Description of Change |  | Replaces the fix for #51576 that landed in #51586 with a more scoped one. Same crash fix, much smaller surface. |  | ##### Background |  | For `BrowserWindow` on macOS, the `WebContentsView` is added as a *sibling* of `content_view_` at lower z-order so that user-added child views paint above web content. But `content_view_` covers the whole window, so the default `views` hit-test always stops at `content_view_` before reaching the `WebContentsView`. After Chromium [CL:6574464](https://chromium-review.googlesource.com/c/chromium/src/+/6574464) (M139) changed `BridgedContentView::hitTest:` to use `GetHitTestRe\n\n#6 setIgnoreMouseEvents for BrowserView \nURL: https://github.com/electron/electron/issues/23863 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: setIgnoreMouseEvents for BrowserView | ### Preflight Checklist | <!-- Please ensure you've completed the following steps by replacing [ ] with [x]--> |  | * [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/master/CONTRIBUTING.md) for this project. | * [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/master/CODE_OF_CONDUCT.md) that this project adheres to. | * [x] I have searched the issue tracker for a feature request that matches the one I want to file, without success. |  | ### Problem Description | My browser is using BrowserView for displaying external content and it's currently impossible to draw DOM Elements over BrowserView. So\n\n#7 feat: API for creating/manipulating the views hierarchy  \nURL: https://github.com/electron/electron/pull/32890 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: feat: API for creating/manipulating the views hierarchy  | Closes #32751 |  | ## Motivation |  | Bring native ScrollView component into Electron to provide flexible way of showing mutliple BrowserViews in one window in a performant way. Please see the issue [#32751](https://github.com/electron/electron/issues/32751) for more details. |  | ## The challenges we addressed in this PR | - building a hierarchy of views, in particular, the ScrollView API | - integration with WebContents API (so far we have used BrowserView) | - draggable regions feature behavior on Mac and Windows / Linux | - triggering `beforeunload` events | - possible vibrancy for WebContents views |  | ## Implementation | For clarity of the review, we organ\n\n#8 [Bug]: WebContentsView not being transparent by default \nURL: https://github.com/electron/electron/issues/44914 \nver: 33.2.1 platform: Linux mentioned strength: medium app: likely \nclaim: [Bug]: WebContentsView not being transparent by default | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 33.2.1 |  | ### What operating system(s) are you using? |  | Other Linux |  | ### Operating System Version |  | 6.11.8 |  | ### What arch are you using? |  | x64 |  | ### Last Known Working\n\n#9 fix: native `View` wrapper crash missing when adding child view \nURL: https://github.com/electron/electron/pull/43638 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: fix: native `View` wrapper crash missing when adding child view | #### Description of Change |  | Closes https://github.com/electron/electron/issues/43449. |  | It should be possible to call `win.contentView.addChildView(v1)` either before or after adding a `WebContentsView` as a child of a `View` `v1`. Prior to this PR, this functionality worked on Windows and Linux, but did not display and also caused a paint-related crash on macOS due to the call to `ViewHierarchyChanged` not being called correctly via `DelayedNativeViewHost`. |  | I believe at one point `NativeViewHost` had issues with children being attached, but in local testing I found no issues, and calling `ViewHierarchyChanged` in the superclass\n\n#10 fix: vibrant view is inserted into Views API hierarchy \nURL: https://github.com/electron/electron/pull/42263 \nver: 30 platform: Linux mentioned strength: medium app: likely \nclaim: fix: vibrant view is inserted into Views API hierarchy | #### Description of Change |  | Fixes https://github.com/electron/electron/issues/41979 in Electron 30. |  | ##### Summary |  | In Electron 30 setting a BrowserWindow's vibrancy on macOS will often cause the entire contents of the screen to have the vibrancy effect, wiping all actual window contents. This traces back to https://github.com/electron/electron/pull/35658 which replaced BrowserViews with WebContentsViews that use Chromium's Views API. We can fix this by inserting the vibrant view into Chromium's Views hierarchy by wrapping the vibrant view in a NativeViewHost. |  | ##### Before Electron 30 |  | The vibrancy setting creates a native macOS NSVisua\n\n#11 [Bug]: incorrect behavior of the WebContentsView when the electron app window is inactive \nURL: https://github.com/electron/electron/issues/42059 \nver: 30.0.1 platform: Linux mentioned strength: medium app: likely \nclaim: [Bug]: incorrect behavior of the WebContentsView when the electron app window is inactive | ### Preflight Checklist |  | - [X] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [X] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [X] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 30.0.1 |  | ### What operating system are you using? |  | Windows |  | ### Operating System Version |  | Windows 11 Pro version 23H2 Build 2263\n\n#12 feat: Allow creation of new window to be customizable. \nURL: https://github.com/electron/electron/pull/41432 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: feat: Allow creation of new window to be customizable. | #### Description of Change |  | This PR adds a way to manually control the creation of a guest window in `webContents.setWindowOpenHandler`. My main motivation for this change is to have the possibility to properly handle new windows in form of BrowserView (in order to support `window.opener` I need to pass appropriate `WebContents` when creating an instance of it). |  | I am not an expert so I don't know what important things I could've missed introducing this change but I am hoping that with your guidance we'll be able to work on this PR and make such functionality possible in Electron.  |  | This is a copy of https://github.com/electron/electron/\n\n#13 [Feature Request]: addChildView option to stop the added view grabbing focus \nURL: https://github.com/electron/electron/issues/42339 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: [Feature Request]: addChildView option to stop the added view grabbing focus | ### Preflight Checklist |  | - [X] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [X] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [X] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a feature request that matches the one I want to file, without success. |  | ### Problem Description |  | Whenever addChildView is called to add a WebContentsView to an existing BaseWindow, the webcontents will always grab the focus from \n\n#14 WindowOpenHandlerResponse.createWindow passes `BrowserWindowConstructorOptions` with an undocumented \"webContents\" property \nURL: https://github.com/electron/electron/issues/50851 \nver: 41.x.y platform: Linux mentioned strength: medium app: unknown \nclaim: WindowOpenHandlerResponse.createWindow passes `BrowserWindowConstructorOptions` with an undocumented \"webContents\" property | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 41.x.y |  | ### What operating system(s) are you using? |  | macOS |  | ### Operating System Version |  | Seq\n\n#15 [Feature Request]: Add mouse event to 'before-input-event' event in webContents \nURL: https://github.com/electron/electron/issues/34616 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: [Feature Request]: Add mouse event to 'before-input-event' event in webContents | ### Preflight Checklist |  | - [X] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [X] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [X] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a feature request that matches the one I want to file, without success. |  | ### Problem Description |  | I can't find a way to handle click events in the Renderer from the Main process. |  | ### Proposed Solution |  | The 'before-input-event'\n\n#16 docs: update the example of `webContents.setWindowOpenHandler` to cla… \nURL: https://github.com/electron/electron/pull/49379 \nver: not stated platform: not specific strength: medium app: unknown \nclaim: docs: update the example of `webContents.setWindowOpenHandler` to cla… | …rify `background-tab` disposition cases |  | #### Description of Change |  | Resolves https://github.com/electron/electron/issues/49307 to some extent. |  | Current `createWindow` example in `webContents.setWindowOpenHandler` doesn't work well for `background-tab` disposition (Middle-click, or CmdOrCtrl+Left click). It creates a transparent view that nothing paints on it when using `BrowserView`, and causes a main process error for `WebContentsView`. |  | The root cause is that Chromium would defer the `webContents` of `background-tab` to become ready, so that `options.webContents` is undefined. See https://github.com/chromium/chromium/\n\n#17 `windowOpenHandler`'s `createWindow` receives undefined `options.webContents` for `background-tab` disposition \nURL: https://github.com/electron/electron/issues/49307 \nver: 39.2.7 platform: Linux mentioned strength: medium app: unknown \nclaim: `windowOpenHandler`'s `createWindow` receives undefined `options.webContents` for `background-tab` disposition | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 39.2.7 & 38.5.0 |  | ### What operating system(s) are you using? |  | Windows |  | ### Operating System Version |  | Windo\n\n#18 [Feature Request]: Bypass the \"allow paste\" \nURL: https://github.com/electron/electron/issues/40995 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: [Feature Request]: Bypass the \"allow paste\" | ### Preflight Checklist |  | - [X] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [X] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [X] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a feature request that matches the one I want to file, without success. |  | ### Problem Description |  | ![截屏2024-01-15 22 12 04](https://github.com/electron/electron/assets/3746270/30d3f964-4b14-415a-992b-0262b599b100) | (screenshot: brand new fiddle) |  | In latest v29, I c\n\n#19 [Feature Request]: allow frame drawing while unvisible \nURL: https://github.com/electron/electron/issues/42140 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: [Feature Request]: allow frame drawing while unvisible | ### Preflight Checklist |  | - [X] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [X] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [X] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a feature request that matches the one I want to file, without success. |  | ### Problem Description |  | In the video, Google Meet was used to reproduce the bug to clearly show the behavior of the application window in inactive mode | There was a bug with both \n\n#20 [FeatureRequest]: native ScrollView in the main process \nURL: https://github.com/electron/electron/issues/32751 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: [FeatureRequest]: native ScrollView in the main process | # Problem |  | Hey Electron Community 👋 |  | We're developing a tab-less browser that allows users to open sites in cards and align them as a grid on an infinite canvas. |  | Additionally, we intend to create a panoramic scrolling functionality, which allows users to navigate between cards by swiping left and right |  | The following GIF illustrates a simplified version of the layout and the horizontal scrolling experience: |  | ![150981006-84fe796e-60bd-43c0-952d-831d1bfd9998.gif](https://user-images.githubusercontent.com/2891206/150981006-84fe796e-60bd-43c0-952d-831d1bfd9998.gif) |  | We use BrowserViews for showing the content of the website. |  | - For creati\n\n#21 Regression in 42.4.0: setDevToolsWebContents() + detached DevTools breaks DevTools dropdown/popup/context menus again (previously fixed, see #49753) \nURL: https://github.com/electron/electron/issues/51962 \nver: 42.4.0 platform: Linux mentioned strength: medium app: likely \nclaim: Regression in 42.4.0: setDevToolsWebContents() + detached DevTools breaks DevTools dropdown/popup/context menus again (previously fixed, see #49753) | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 42.4.0 |  | ### What operating system(s) are you using? |  | Windows |  | ### Op\n\n#22 feat: `ready-to-show` event on `webContents` \nURL: https://github.com/electron/electron/pull/49315 \nver: not stated platform: Linux mentioned strength: medium app: likely \nclaim: feat: `ready-to-show` event on `webContents` | #### Description of Change |  | Fixes #43531 |  | Feat: add paintWhenInitiallyHidden option to WebContentsView |  | This PR adds a `paintWhenInitiallyHidden` option to the `WebContentsView` constructor. |  | Setting this flag to `true` ( which is **default** ) \"wakes up\" the renderer so it can fire `ready-to-show` and correctly set its initial visibilityState to hidden while still in the background. |  | ⚠️ This PR introduces a breaking change ⚠️.  |  | <!-- | Thank you for your Pull Request. Please provide a description above and review | the requirements below. |  | Contributors guide: https://github.com/electron/electron/blob/main/CONTRIBUTING.md | --> |  | #### Checklist | <!-- Remo\n\n#23 Adding a WebContentsView to another WebContentsView using ⁠`addChildView` is not rendering correctly \nURL: https://github.com/electron/electron/issues/47990 \nver: 37.2.6 platform: Linux mentioned strength: medium app: unknown \nclaim: Adding a WebContentsView to another WebContentsView using ⁠`addChildView` is not rendering correctly | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 37.2.6 |  | ### What operating system(s) are you using? |  | macOS |  | ### Operating System Version |  | macOS 13.7 (22H123) |  | ### W\n\n#24 feat: support per-corner radii in View.setBorderRadius() \nURL: https://github.com/electron/electron/pull/51472 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: feat: support per-corner radii in View.setBorderRadius() | #### Description of Change |  | `View.setBorderRadius()` now accepts an object form `{ topLeft, topRight, bottomRight, bottomLeft }` in addition to the existing single integer, so apps can build browser-shell layouts (rounded top corners on a toolbar, rounded bottom corners on a content pane) without workarounds. Each property defaults to `0` when missing; the integer form is unchanged. |  | The change also flows through `WebContentsView` via the existing `InspectableWebContentsView::SetCornerRadii(gfx::RoundedCornersF)`, so per-corner radii reach the WebView compositor with no additional plumbing. |  | Internally, `View::ApplyBorderRadius` was sw\n\n#25 feat: add BaseWindow.getCursorPoint() API \nURL: https://github.com/electron/electron/pull/51338 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: feat: add BaseWindow.getCursorPoint() API | #### Description of Change |  | Adds a new `BaseWindow.getCursorPoint()` instance method that returns the position of the mouse cursor relative to the window frame as a `Point` object, where `(0, 0)` represents the top-left corner of the window. |  | **Motivation:** |  | After #50092 landed, `screen.getCursorScreenPoint()` became a no-op on Wayland (returning `{}`), leaving no built-in way to obtain cursor position on that platform. Maintainers in #51153 and #51325 proposed a `BaseWindow.getCursorPoint()` API as the proper solution. |  | Unlike `screen.getCursorScreenPoint()`, this method: | - Returns coordinates **relative to the window**, not the screen | - Works on *\n\n#26 Shared webPreferences object causes BrowserWindow backgroundColor to leak into WebContentsView \nURL: https://github.com/electron/electron/issues/51337 \nver: 41.3.0 platform: Linux mentioned strength: medium app: unknown \nclaim: Shared webPreferences object causes BrowserWindow backgroundColor to leak into WebContentsView | ### Preflight Checklist |  | - [x] I have read the [Contributing Guidelines](https://github.com/electron/electron/blob/main/CONTRIBUTING.md) for this project. | - [x] I agree to follow the [Code of Conduct](https://github.com/electron/electron/blob/main/CODE_OF_CONDUCT.md) that this project adheres to. | - [x] I have searched the [issue tracker](https://www.github.com/electron/electron/issues) for a bug report that matches the one I want to file, without success. |  | ### Electron Version |  | 41.3.0 |  | ### What operating system(s) are you using? |  | Windows, macOS, Ubuntu, Other Linux, Other (specify below) |  | ### Opera\n\n#27 Document Codex-first maintenance baseline \nURL: https://github.com/fkiller/GnuNae/pull/35 \nver: 39.x. platform: Linux mentioned strength: medium app: unknown \nclaim: Document Codex-first maintenance baseline | ## Summary |  | This PR establishes a Codex-first maintenance baseline for GnuNae and incorporates the first review pass. Future work can now be scoped through GitHub Issues, Codex tasks, PRs, non-release CI, owner review, and intentional release/store workflows. |  | ## What I inspected |  | - Package manager and scripts: `package.json`, `package-lock.json`, `resources/package.json`, `resources/codex/package.json`. | - Build config: `tsconfig.json`, `vite.config.ts`, electron-builder config in `package.json`. | - Electron runtime entry points: `src/electron/main.ts`, `src/electron/preload.ts`. | - Renderer entry points and app modes: `src/ui/index.tsx`, `src/ui/App.t\n\n#28 Bump electron from 28.3.1 to 30.0.6 \nURL: https://github.com/borisnezlobin/editor/pull/59 \nver: 30.0.6 platform: Linux mentioned strength: medium app: unknown \nclaim: Bump electron from 28.3.1 to 30.0.6 | Bumps [electron](https://github.com/electron/electron) from 28.3.1 to 30.0.6. | <details> | <summary>Release notes</summary> | <p><em>Sourced from <a href=\"https://github.com/electron/electron/releases\">electron's releases</a>.</em></p> | <blockquote> | <h2>electron v30.0.6</h2> | <h1>Release Notes for v30.0.6</h1> | <h2>Fixes</h2> | <ul> | <li>Fixed a potential issue with Linux layout invalidation. <a href=\"https://redirect.github.com/electron/electron/pull/42189\">#42189</a></li> | </ul> | <h2>electron v30.0.5</h2> | <h1>Release Notes for v30.0.5</h1> | <h2>Fixes</h2> | <ul> | <li>Fixed an issue where <code>setTitleBarOverlay</code> didn't work as expected when called on <code>BaseWin\n\n#29 feat(browser): in-app browse mode ported faithfully from PR #96 \nURL: https://github.com/cabinetai/cabinet/pull/165 \nver: not stated platform: not specific strength: medium app: unknown \nclaim: feat(browser): in-app browse mode ported faithfully from PR #96 | Native WebContentsView-backed in-app browser (with iframe fallback on the web build). External links in KB articles, the viewer-toolbar Globe button (websites/apps only), and tree-node clicks while browsing all open here; X-Frame-Options sites load in the desktop app. |  | - Verbatim from PR #96: browser-view.tsx, open-url.ts, api/browser/{bookmarks, frame-check} (bookmarks path adapted DATA_PARENT_DIR -> CABINET_INTERNAL_DIR). | - Electron: new browser-views.cjs module (WebContentsView IPC handlers, kb-auth cookie sync for /api/assets, native bookmarks menu) wired into main.cjs/preload.cjs; forge.config.cjs ships the new .cjs files. | \n\n#30 Guard MattermostWebContentsView against destroyed webContents \nURL: https://github.com/mattermost/desktop/pull/3892 \nver: not stated platform: not specific strength: medium app: likely \nclaim: Guard MattermostWebContentsView against destroyed webContents | #### Summary | While connecting from a hot spot this morning, my desktop app appeared hung, so I tried to kill it, and got back to back errors, one of which I screenshotted: |  | <img width=\"486\" height=\"698\" alt=\"CleanShot 2026-07-08 at 11 42 27@2x\" src=\"https://github.com/user-attachments/assets/77b89672-a94b-483d-b4f4-714384823544\" /> |  | This PR attempts to guard against accessing a destroyed or `undefined` `webContents`.  |  | #### Ticket Link |  | NONE |  | #### Checklist | - [x] Added or updated unit tests (required for all new features) | - [ ] Has UI changes | - [x] read and understood our [Contributing Guidelines](https://github.com/mattermost/des\n\n#31 perf: optimize electron architecture with WebContentsView and hardware acceleration \nURL: https://github.com/TimH-DE/GemiDesk/pull/17 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: perf: optimize electron architecture with WebContentsView and hardware acceleration | Implemented several key performance optimizations for GemiDesk: |  | 1. Forced hardware acceleration and native Wayland support using Chromium command line switches. | 2. Enabled background throttling for inactive WebContentsViews. | 3. Added a 500ms debounce to the title change observer in the preload script to reduce IPC traffic. | 4. Migrated from the deprecated `BrowserView` API to `WebContentsView` in Electron. | 5. Updated unit tests and dependencies to accommodate the WebContentsView changes. |  | --- | *PR created automatically by Jules for task [10612881731585109186](https://jules.google.com/task/10612881731585109186)\n\n#32 feat: browser focus mode, webview migration, session composer store \nURL: https://github.com/zvadaadam/deus-machine/pull/255 \nver: not stated platform: not specific strength: medium app: unknown \nclaim: feat: browser focus mode, webview migration, session composer store | ## Summary | - Migrates the browser to `<webview>` (Codex pattern) and adds a focus-mode overlay with a floating chat composer; focus auto-enters when the chat panel is collapsed via button or splitter drag, and exits when expanded. | - Introduces `sessionComposerStore` (per-session, Immer-backed) that owns draft, model, thinking level, plan mode, and all staged content (pastes, inspected elements, file/skill mentions, image attachments); `MessageInput` becomes presentational, `SessionComposer` wraps it — cross-surface drift (main chat ↔ modal ↔ focus overlay) is gone. | - Retires the `chatInsertStore` pub/sub layer — BrowserPanel\n\n#33 docs(adr): propose ADR-020 multi-account profile switcher \nURL: https://github.com/IsmaelMartinez/teams-for-linux/pull/2426 \nver: not stated platform: Linux mentioned strength: medium app: unknown \nclaim: docs(adr): propose ADR-020 multi-account profile switcher | ## Summary |  | - Proposes **ADR-020**: a multi-account (multi-tenant) profile switcher that runs N Microsoft 365 sessions inside one `BaseWindow` using per-profile `WebContentsView` + `session.fromPartition` isolation. Partition layout matches the existing `PartitionsManager`, so cookies, tokens, localStorage, and IndexedDB stay isolated per tenant. | - Explicitly addresses every blocker from ADR-010 (single-instance lock, tray, 72 IPC channels, 17 browser tools, screen-sharing preview, call state, auth/session conflicts) and **distinguishes this scope from ADR-010's rejected scope**. ADR-010 rejected *multi-window-for-one-account* (pop-ou\n",
+        "outputTruncated": false
+      }
+    },
+    {
+      "index": 8,
+      "id": "rs_0d1c22136bd3f9da016a50733ad81481969c476d1102e03074",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:21:14.910Z",
+      "completedAt": "2026-07-10T04:21:16.592Z",
+      "durationMs": 1682,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Gathering Electron issue details**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 9,
+      "id": "msg_0d1c22136bd3f9da016a50733c91048196a0763c9cde63b1e0",
+      "type": "agentMessage",
+      "label": "Agent commentary",
+      "startedAt": "2026-07-10T04:21:16.593Z",
+      "completedAt": "2026-07-10T04:21:17.892Z",
+      "durationMs": 1299,
+      "status": null,
+      "details": {
+        "phase": "commentary",
+        "text": "The useful cluster is narrower than the search count suggests. The repeated themes are view hierarchy/lifecycle, transparency/background painting, focus, child view rendering, and Wayland/Linux input or cursor quirks; I’m doing one gap-fill around those so I don’t overstate stale issues as Electron 43 facts."
+      }
+    },
+    {
+      "index": 10,
+      "id": "call_RHPcosoStTmR9U3Sxy9DYaIp",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc \"cat > /tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs <<'\n[… truncated 2617 characters]",
+      "startedAt": "2026-07-10T04:21:32.572Z",
+      "completedAt": "2026-07-10T04:21:34.502Z",
+      "durationMs": 1929,
+      "status": "failed",
+      "details": {
+        "command": "/bin/bash -lc \"cat > /tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs <<'EOF'\nimport fs from 'node:fs';\nconst out='/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json';\nasync function gh(p){const r=await fetch('https://api.github.com'+p,{headers:{'User-Agent':'codexdesktop-research','Accept':'application/vnd.github+json'}}); if(\"'!r.ok) return {error:r.status, text:(await r.text()).slice(0,500)}; return r.json();}\nconst targets=[44914,42339,43531,47990,49307,51337,51962,23863,32751,42059,42140];\nconst data=[];\nfor(const n of targets){\n const issue=await gh(`/repos/electron/electron/issues/${n}`);\n const comments=await gh(`/repos/electron/electron/issues/${n}/comments?per_page=100`);\n data.push({number:n,title:issue.title,url:issue.html_url,state:issue.state,labels:issue.labels?.map(l=>l.name),created_at:issue.created_at,updated_at:issue.updated_at,closed_at:issue.closed_at,body:issue.body,comments:Array.isArray(comments)?comments.map(c=>({user:c.user.login,created_at:c.created_at,body:c.body.slice(0,1500)})):comments});\n}\n// search recent v43/webcontentsview\nconst searches=[];\nfor(const q of ['\"'repo:electron/electron WebContentsView Electron 43','repo:electron/electron WebContentsView v43','repo:electron/electron WebContentsView 42.4.0','repo:electron/electron WebContentsView Wayland']){\n const res=await gh(\"'`/search/issues?q=${encodeURIComponent(q)}&sort=updated&order=desc&per_page=20`);\n searches.push({q, items:res.items?.map(i=>({title:i.title,url:i.html_url,state:i.state,updated_at:i.updated_at}))||res});\n}\nfs.writeFileSync(out, JSON.stringify({targets:data, searches}, null, 2));\nconsole.log(JSON.stringify({ok:true,path:out,targets:data.length,searches:searches.length}));\nEOF\nnode /tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs\nnode - <<'\"'EOF'\nconst d=require('/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json');\nfor(const x of d.targets){\n console.log('\\\\n#'+x.number, x.title, x.state, 'labels:', x.labels?.join(','), 'updated', x.updated_at, 'closed', x.closed_at, '\\\\nURL', x.url);\n const text=(x.body||'').replace(/\\\\r/g,'').split('\\\\n').filter(l=>/Electron Version|Operating system|Linux|Ubuntu|Wayland|BrowserView|WebContentsView|Actual Behavior|Expected Behavior|Steps|repro|transparent|focus|paint|inactive|background|destroyed|undefined|version|Last Known/i.test(l)).slice(0,24).join(' | ');\n console.log(text.slice(0,2000));\n for(const c of (x.comments||[]).slice(-3)) console.log(' comment', c.user, c.created_at, c.body.replace(/\\\\n/g,' | ').slice(0,500));\n}\nconsole.log('\\\\nSEARCHES');\nfor(const s of d.searches){console.log('Q',s.q); for(const i of s.items.slice(0,8)) console.log('-',i.title,i.state,i.updated_at,i.url)}\nEOF\"",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "cat > /tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs <<'EOF'\nimport fs from 'node:fs';\nconst out='/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json';\nasync function gh(p){const r=await fetch('https://api.github.com'+p,{headers:{'User-Agent':'codexdesktop-research','Accept':'application/vnd.github+json'}}); if(!r.ok) return {error:r.status, text:(await r.text()).slice(0,500)}; return r.json();}\nconst targets=[44914,42339,43531,47990,49307,51337,51962,23863,32751,42059,42140];\nconst data=[];\nfor(const n of targets){\n const issue=await gh(`/repos/electron/electron/issues/${n}`);\n const comments=await gh(`/repos/electron/electron/issues/${n}/comments?per_page=100`);\n data.push({number:n,title:issue.title,url:issue.html_url,state:issue.state,labels:issue.labels?.map(l=>l.name),created_at:issue.created_at,updated_at:issue.updated_at,closed_at:issue.closed_at,body:issue.body,comments:Array.isArray(comments)?comments.map(c=>({user:c.user.login,created_at:c.created_at,body:c.body.slice(0,1500)})):comments});\n}\n// search recent v43/webcontentsview\nconst searches=[];\nfor(const q of ['repo:electron/electron WebContentsView Electron 43','repo:electron/electron WebContentsView v43','repo:electron/electron WebContentsView 42.4.0','repo:electron/electron WebContentsView Wayland']){\n const res=await gh(`/search/issues?q=${encodeURIComponent(q)}&sort=updated&order=desc&per_page=20`);\n searches.push({q, items:res.items?.map(i=>({title:i.title,url:i.html_url,state:i.state,updated_at:i.updated_at}))||res});\n}\nfs.writeFileSync(out, JSON.stringify({targets:data, searches}, null, 2));\nconsole.log(JSON.stringify({ok:true,path:out,targets:data.length,searches:searches.length}));\nEOF\nnode /tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.mjs\nnode - <<'EOF'\nconst d=require('/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json');\nfor(const x of d.targets){\n console.log('\\n#'+x.number, x.title, x.state, 'labels:', x.labels?.join(','), 'updated', x.updated_at, 'closed', x.closed_at, '\\nURL', x.url);\n const text=(x.body||'').replace(/\\r/g,'').split('\\n').filter(l=>/Electron Version|Operating system|Linux|Ubuntu|Wayland|BrowserView|WebContentsView|Actual Behavior|Expected Behavior|Steps|repro|transparent|focus|paint|inactive|background|destroyed|undefined|version|Last Known/i.test(l)).slice(0,24).join(' | ');\n console.log(text.slice(0,2000));\n for(const c of (x.comments||[]).slice(-3)) console.log(' comment', c.user, c.created_at, c.body.replace(/\\n/g,' | ').slice(0,500));\n}\nconsole.log('\\nSEARCHES');\nfor(const s of d.searches){console.log('Q',s.q); for(const i of s.items.slice(0,8)) console.log('-',i.title,i.state,i.updated_at,i.url)}\nEOF"
+          }
+        ],
+        "exitCode": 1,
+        "output": "{\"ok\":true,\"path\":\"/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json\",\"targets\":11,\"searches\":4}\n\n#44914 undefined undefined labels: undefined updated undefined closed undefined \nURL undefined\n\n[stdin]:6\n for(const c of (x.comments||[]).slice(-3)) console.log(' comment', c.user, c.created_at, c.body.replace(/\\n/g,' | ').slice(0,500));\n                                 ^\n\nTypeError: (x.comments || []).slice is not a function or its return value is not iterable\n    at [stdin]:6:34\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [stdin]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_stdin:51:5\n    at Socket.<anonymous> (node:internal/process/execution:205:5)\n    at Socket.emit (node:events:520:35)\n\nNode.js v24.13.1\n",
+        "outputTruncated": false
+      }
+    },
+    {
+      "index": 11,
+      "id": "rs_0d1c22136bd3f9da016a50734f96fc8196aa9fcd6a084a3e80",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:21:35.613Z",
+      "completedAt": "2026-07-10T04:21:36.646Z",
+      "durationMs": 1033,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Investigating undefined rate limit**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 12,
+      "id": "call_JmZha8y8EwyPeaxFFYq69t9w",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc \"node - <<'EOF' const d=require('/tmp/codexdesktop-tasks/wcv-migra\n[… truncated 95 characters]",
+      "startedAt": "2026-07-10T04:21:37.656Z",
+      "completedAt": "2026-07-10T04:21:37.657Z",
+      "durationMs": 0,
+      "status": "completed",
+      "details": {
+        "command": "/bin/bash -lc \"node - <<'EOF'\nconst d=require('/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json');\nconsole.log(JSON.stringify(d.targets[0],null,2).slice(0,1000));\nEOF\"",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "node - <<'EOF'\nconst d=require('/tmp/codexdesktop-tasks/wcv-migration-linux/gapfill.json');\nconsole.log(JSON.stringify(d.targets[0],null,2).slice(0,1000));\nEOF"
+          }
+        ],
+        "exitCode": 0,
+        "output": "{\n  \"number\": 44914,\n  \"comments\": {\n    \"error\": 403,\n    \"text\": \"{\\\"message\\\":\\\"API rate limit exceeded for 24.125.4.32. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\\\",\\\"documentation_url\\\":\\\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting\\\"}\\n\"\n  }\n}\n",
+        "outputTruncated": false
+      }
+    },
+    {
+      "index": 13,
+      "id": "rs_0d1c22136bd3f9da016a507352d514819681c9c290fc2fe5d7",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:21:38.858Z",
+      "completedAt": "2026-07-10T04:21:40.073Z",
+      "durationMs": 1215,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Considering browser or raw HTML fetch**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 14,
+      "id": "msg_0d1c22136bd3f9da016a50735409ac8196aaf5012f151e5a1a",
+      "type": "agentMessage",
+      "label": "Agent commentary",
+      "startedAt": "2026-07-10T04:21:40.074Z",
+      "completedAt": "2026-07-10T04:21:41.247Z",
+      "durationMs": 1173,
+      "status": null,
+      "details": {
+        "phase": "commentary",
+        "text": "GitHub’s unauthenticated API rate limit kicked in during the targeted pass, but the first pass already captured the issue list and versions. I’m switching the gap-fill to normal page fetches/search result snippets for just the unresolved details instead of hammering the API."
+      }
+    },
+    {
+      "index": 15,
+      "id": "call_7P8P4OJmKzv5WJ9TRnjq0nsM",
+      "type": "dynamicToolCall",
+      "label": "Tool: browser_run",
+      "startedAt": "2026-07-10T04:21:51.222Z",
+      "completedAt": "2026-07-10T04:21:59.089Z",
+      "durationMs": 7867,
+      "status": "completed",
+      "details": {
+        "namespace": null,
+        "tool": "browser_run",
+        "arguments": {
+          "code": "return await (async()=>{\n const urls=[\n 'https://github.com/electron/electron/issues/44914',\n 'https://github.com/electron/electron/issues/42339',\n 'https://github.com/electron/electron/issues/43531',\n 'https://github.com/electron/electron/issues/47990',\n 'https://github.com/electron/electron/issues/49307',\n 'https://github.com/electron/electron/issues/51337',\n 'https://github.com/electron/electron/issues/51962',\n 'https://github.com/electron/electron/pull/49315',\n 'https://github.com/electron/electron/pull/51769'\n ];\n const results=[];\n for(const url of urls){\n   const res=await fetch(url,{credentials:'include'}).catch(e=>({ok:false,status:0,text:async()=>String(e)}));\n   const html=await res.text();\n   const text=html.replace(/<script[\\s\\S]*?<\\/script>/g,' ').replace(/<style[\\s\\S]*?<\\/style>/g,' ').replace(/<[^>]+>/g,' ').replace(/&quot;/g,'\"').replace(/&#39;/g,\"'\").replace(/&amp;/g,'&').replace(/\\s+/g,' ').slice(0,20000);\n   const title=(html.match(/<title>(.*?)<\\/title>/i)||[])[1]?.replace(/&middot;/g,'·') || '';\n   const snippets=[];\n   for(const re of [/Electron Version.{0,300}/ig,/Operating System.{0,300}/ig,/Actual Behavior.{0,500}/ig,/Expected Behavior.{0,500}/ig,/WebContentsView.{0,500}/ig,/BrowserView.{0,500}/ig,/Linux.{0,400}/ig,/Wayland.{0,400}/ig,/background.{0,400}/ig,/transparent.{0,400}/ig,/focus.{0,400}/ig,/closed this as completed.{0,200}/ig,/fixed.{0,300}/ig]){\n     for(const m of text.matchAll(re)) snippets.push(m[0]);\n   }\n   results.push({url,status:res.status,title,verified: text.includes('electron') || title.includes('electron'), snippets:[...new Set(snippets)].slice(0,20)});\n }\n return {results};\n})()",
+          "timeoutMs": 60000,
+          "maxResultChars": 30000
+        },
+        "success": true,
+        "output": [
+          {
+            "type": "inputText",
+            "text": "{\"ok\":true,\"result\":{\"results\":[{\"url\":\"https://github.com/electron/electron/issues/44914\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/42339\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/43531\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/47990\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/49307\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/51337\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/issues/51962\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/pull/49315\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]},{\"url\":\"https://github.com/electron/electron/pull/51769\",\"status\":0,\"title\":\"\",\"verified\":false,\"snippets\":[]}]},\"tabId\":\"6037778b-acdd-4f54-a622-2606c7ada0ef\",\"url\":\"https://skillsmp.com/creators\",\"title\":\"Agent Skills Creators | SkillsMP\",\"durationMs\":7863,\"resultChars\":1026,\"truncated\":false}",
+            "truncated": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "id": "rs_0d1c22136bd3f9da016a50736890bc8196a8027b3856e851fd",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:22:00.589Z",
+      "completedAt": "2026-07-10T04:22:03.409Z",
+      "durationMs": 2820,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Checking Electron version and issues**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 17,
+      "id": "call_4keUVAUBryjuEbJ4XarjhmdM",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc 'npm view electron version && npm view electron@43.0.0-alpha.1 ver\n[… truncated 41 characters]",
+      "startedAt": "2026-07-10T04:22:04.212Z",
+      "completedAt": "2026-07-10T04:22:06.635Z",
+      "durationMs": 2422,
+      "status": "completed",
+      "details": {
+        "command": "/bin/bash -lc 'npm view electron version && npm view electron@43.0.0-alpha.1 version && npm view electron@latest version'",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "npm view electron version && npm view electron@43.0.0-alpha.1 version && npm view electron@latest version"
+          }
+        ],
+        "exitCode": 0,
+        "output": "43.1.0\n43.0.0-alpha.1\n43.1.0\n",
+        "outputTruncated": false
+      }
+    },
+    {
+      "index": 18,
+      "id": "rs_0d1c22136bd3f9da016a50736f60cc81969792e095ccb31681",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:22:07.414Z",
+      "completedAt": "2026-07-10T04:22:08.483Z",
+      "durationMs": 1069,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Searching for official docs and release notes**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 19,
+      "id": "msg_0d1c22136bd3f9da016a507370722c819690e3c5f56b38cf43",
+      "type": "agentMessage",
+      "label": "Agent commentary",
+      "startedAt": "2026-07-10T04:22:08.484Z",
+      "completedAt": "2026-07-10T04:22:10.117Z",
+      "durationMs": 1633,
+      "status": null,
+      "details": {
+        "phase": "commentary",
+        "text": "One useful live check: `electron@latest` on npm is `43.1.0`, so I’ll treat Electron 43 as current stable rather than only the alpha release record from GitHub. That matters for the relevance call: I’ll mark items as confirmed for 43 only when the report itself names 43 or the API/deprecation is official-current."
+      }
+    },
+    {
+      "index": 20,
+      "id": "call_szKyAvayYCFEpFHMUb5EVrbs",
+      "type": "commandExecution",
+      "label": "Command: /bin/bash -lc 'npm view electron@43.1.0 version time dist-tags --json'",
+      "startedAt": "2026-07-10T04:22:11.388Z",
+      "completedAt": "2026-07-10T04:22:11.935Z",
+      "durationMs": 543,
+      "status": "completed",
+      "details": {
+        "command": "/bin/bash -lc 'npm view electron@43.1.0 version time dist-tags --json'",
+        "cwd": "/home/dp/Desktop/soloapps/codexdesktop",
+        "source": "unifiedExecStartup",
+        "commandActions": [
+          {
+            "type": "unknown",
+            "command": "npm view electron@43.1.0 version time dist-tags --json"
+          }
+        ],
+        "exitCode": 0,
+        "output": "{\n  \"version\": \"43.1.0\",\n  \"time\": {\n    \"created\": \"2012-05-18T23:11:55.741Z\",\n    \"modified\": \"2026-07-09T23:00:25.318Z\",\n    \"0.1.0\": \"2012-05-18T23:11:56.439Z\",\n    \"0.1.1\": \"2012-05-22T14:37:24.301Z\",\n    \"0.1.2\": \"2012-05-23T22:07:09.937Z\",\n    \"0.2.0\": \"2012-06-11T02:21:27.719Z\",\n    \"0.2.1\": \"2012-06-11T08:15:27.535Z\",\n    \"0.3.0\": \"2012-10-07T17:44:36.428Z\",\n    \"0.4.0\": \"2013-01-21T21:06:57.826Z\",\n    \"0.4.1\": \"2014-12-15T16:00:19.916Z\",\n    \"1.3.1\": \"2016-07-28T16:32:17.329Z\",\n    \"1.3.2\": \"2016-08-02T23:27:42.035Z\",\n    \"1.3.3\": \"2016-08-10T11:09:39.987Z\",\n    \"1.3.4\": \"2016-08-23T10:50:42.594Z\",\n    \"1.3.5\": \"2016-09-02T07:57:18.244Z\",\n    \"1.3.6\": \"2016-09-14T07:18:46.295Z\",\n    \"1.4.0\": \"2016-09-15T07:25:36.907Z\",\n    \"1.4.1\": \"2016-09-22T11:25:49.509Z\",\n    \"1.3.7\": \"2016-09-27T10:03:30.522Z\",\n    \"1.4.2\": \"2016-09-30T12:23:01.465Z\",\n    \"1.4.3\": \"2016-10-06T10:08:01.790Z\",\n    \"1.4.4\": \"2016-10-20T02:23:44.429Z\",\n    \"1.3.8\": \"2016-10-20T07:11:51.081Z\",\n    \"1.4.5\": \"2016-11-01T17:34:44.938Z\",\n    \"1.4.6\": \"2016-11-09T21:26:32.985Z\",\n    \"1.4.7\": \"2016-11-16T18:46:56.667Z\",\n    \"1.3.9\": \"2016-11-16T20:57:04.133Z\",\n    \"1.3.10\": \"2016-11-22T19:19:33.952Z\",\n    \"1.4.8\": \"2016-11-22T23:46:16.565Z\",\n    \"1.3.11\": \"2016-11-23T22:07:24.444Z\",\n    \"1.4.9\": \"2016-11-23T23:50:49.542Z\",\n    \"1.3.12\": \"2016-11-28T20:49:25.362Z\",\n    \"1.4.10\": \"2016-11-28T22:12:56.360Z\",\n    \"1.3.13\": \"2016-12-06T23:53:14.771Z\",\n    \"1.4.11\": \"2016-12-07T18:03:39.265Z\",\n    \"1.4.12\": \"2016-12-10T06:47:29.088Z\",\n    \"1.4.13\": \"2016-12-20T21:09:22.800Z\",\n    \"1.4.14\": \"2017-01-10T20:45:12.738Z\",\n    \"1.4.15\": \"2017-01-19T18:10:34.131Z\",\n    \"1.5.0\": \"2017-01-24T18:20:26.488Z\",\n    \"1.5.1\": \"2017-02-06T18:00:20.521Z\",\n    \"1.6.0\": \"2017-02-07T02:23:24.266Z\",\n    \"1.6.1\": \"2017-02-21T18:24:32.445Z\",\n    \"1.6.2\": \"2017-03-01T20:06:46.141Z\",\n    \"1.6.3\": \"2017-03-07T19:32:39.600Z\",\n    \"1.3.14\": \"2017-03-14T18:47:52.966Z\",\n    \"1.6.4\": \"2017-03-22T23:06:08.454Z\",\n    \"1.6.5\": \"2017-03-31T20:32:13.713Z\",\n    \"1.4.16\": \"2017-04-05T17:34:19.957Z\",\n    \"1.6.6\": \"2017-04-07T20:04:13.286Z\",\n    \"1.6.7\": \"2017-04-18T20:58:25.795Z\",\n    \"1.3.15\": \"2017-04-21T00:04:48.703Z\",\n    \"1.6.8\": \"2017-05-01T22:56:36.112Z\",\n    \"1.6.9\": \"2017-05-10T16:39:40.473Z\",\n    \"1.7.0\": \"2017-05-10T19:58:28.630Z\",\n    \"1.6.10\": \"2017-05-16T19:37:43.428Z\",\n    \"1.7.1\": \"2017-05-16T21:41:46.219Z\",\n    \"1.6.11\": \"2017-05-25T19:52:42.265Z\",\n    \"1.7.2\": \"2017-05-26T20:39:13.962Z\",\n    \"1.7.3\": \"2017-06-08T22:46:08.005Z\",\n    \"1.7.4\": \"2017-06-28T23:47:30.806Z\",\n    \"1.7.5\": \"2017-07-17T22:12:34.592Z\",\n    \"1.6.12\": \"2017-08-03T23:31:22.757Z\",\n    \"1.7.6\": \"2017-08-09T19:39:37.549Z\",\n    \"1.7.7\": \"2017-08-30T20:59:09.580Z\",\n    \"1.8.0\": \"2017-08-31T23:13:08.025Z\",\n    \"1.6.13\": \"2017-09-06T19:56:50.304Z\",\n    \"1.7.8\": \"2017-09-24T03:09:58.453Z\",\n    \"1.6.14\": \"2017-09-28T01:26:31.769Z\",\n    \"1.8.1\": \"2017-09-29T00:26:37.930Z\",\n    \"1.7.9\": \"2017-10-10T21:03:29.608Z\",\n    \"1.6.15\": \"2017-10-11T17:58:49.577Z\",\n    \"1.8.2-beta.1\": \"2017-10-19T16:49:06.512Z\",\n    \"1.8.2-beta.2\": \"2017-11-06T21:24:43.087Z\",\n    \"1.8.2-beta.3\": \"2017-12-05T02:14:22.762Z\",\n    \"1.7.10\": \"2017-12-18T20:44:17.549Z\",\n    \"1.7.11\": \"2018-01-22T22:28:51.430Z\",\n    \"1.6.16\": \"2018-01-23T01:18:36.559Z\",\n    \"1.8.2-beta.4\": \"2018-01-23T03:39:04.907Z\",\n    \"1.8.2-beta.5\": \"2018-01-31T22:07:40.125Z\",\n    \"1.7.12\": \"2018-01-31T22:15:48.454Z\",\n    \"1.6.17\": \"2018-01-31T22:26:38.132Z\",\n    \"1.8.2\": \"2018-02-07T01:45:29.385Z\",\n    \"2.0.0-beta.1\": \"2018-02-21T21:26:19.162Z\",\n    \"2.0.0-beta.2\": \"2018-03-05T20:08:37.874Z\",\n    \"1.8.3\": \"2018-03-06T01:46:05.864Z\",\n    \"2.0.0-beta.3\": \"2018-03-09T17:17:18.925Z\",\n    \"1.7.13\": \"2018-03-15T16:14:30.271Z\",\n    \"2.0.0-beta.4\": \"2018-03-15T17:14:25.170Z\",\n    \"1.8.4\": \"2018-03-16T18:49:23.856Z\",\n    \"2.0.0-beta.5\": \"2018-03-20T21:10:19.840Z\",\n    \"2.0.0-beta.6\": \"2018-03-27T20:57:58.737Z\",\n    \"2.0.0-beta.7\": \"2018-04-03T20:51:57.134Z\",\n    \"2.0.0-beta.8\": \"2018-04-26T16:13:52.284Z\",\n    \"1.8.5\": \"2018-04-26T18:34:59.582Z\",\n    \"1.7.14\": \"2018-04-27T00:50:49.737Z\",\n    \"1.8.6\": \"2018-04-27T00:58:04.312Z\",\n    \"2.0.0\": \"2018-05-01T20:46:57.608Z\",\n    \"1.6.18\": \"2018-05-15T19:32:40.736Z\",\n    \"1.7.15\": \"2018-05-16T18:14:34.424Z\",\n    \"1.8.7\": \"2018-05-16T18:22:12.797Z\",\n    \"2.0.1\": \"2018-05-16T18:41:25.808Z\",\n    \"2.0.2\": \"2018-05-22T20:15:35.048Z\",\n    \"3.0.0-beta.1\": \"2018-06-21T01:14:14.856Z\",\n    \"2.0.3\": \"2018-06-21T16:22:55.033Z\",\n    \"2.0.4\": \"2018-07-03T19:31:00.367Z\",\n    \"3.0.0-beta.2\": \"2018-07-10T20:21:12.451Z\",\n    \"2.0.5\": \"2018-07-13T19:53:27.882Z\",\n    \"3.0.0-beta.3\": \"2018-07-17T17:49:54.687Z\",\n    \"2.0.6\": \"2018-08-01T01:15:02.136Z\",\n    \"3.0.0-beta.4\": \"2018-08-01T21:05:43.174Z\",\n    \"2.0.7\": \"2018-08-08T22:22:28.184Z\",\n    \"2.1.0-unsupported.20180809\": \"2018-08-09T23:39:22.846Z\",\n    \"3.0.0-beta.5\": \"2018-08-13T16:33:21.017Z\",\n    \"4.0.0-nightly.20180816\": \"2018-08-17T00:48:26.046Z\",\n    \"4.0.0-nightly.20180817\": \"2018-08-18T00:39:12.990Z\",\n    \"3.0.0-nightly.20180818\": \"2018-08-18T07:50:44.255Z\",\n    \"4.0.0-nightly.20180819\": \"2018-08-19T01:51:31.313Z\",\n    \"2.0.8-nightly.20180819\": \"2018-08-20T00:27:11.297Z\",\n    \"3.0.0-beta.6\": \"2018-08-20T18:48:02.744Z\",\n    \"2.0.8-nightly.20180820\": \"2018-08-21T00:40:04.328Z\",\n    \"3.0.0-nightly.20180821\": \"2018-08-21T20:00:48.075Z\",\n    \"4.0.0-nightly.20180821\": \"2018-08-21T21:18:49.881Z\",\n    \"3.0.0-beta.7\": \"2018-08-22T18:57:07.903Z\",\n    \"2.0.8\": \"2018-08-22T18:57:54.848Z\",\n    \"1.8.8\": \"2018-08-22T20:51:57.252Z\",\n    \"1.7.16\": \"2018-08-22T20:55:33.054Z\",\n    \"3.0.0-beta.8\": \"2018-08-29T06:49:03.020Z\",\n    \"3.0.0-nightly.20180904\": \"2018-09-05T01:09:33.067Z\",\n    \"3.0.0-beta.9\": \"2018-09-06T01:35:19.967Z\",\n    \"3.0.0-beta.10\": \"2018-09-08T05:19:13.812Z\",\n    \"2.0.9\": \"2018-09-10T16:13:25.352Z\",\n    \"3.0.0-beta.11\": \"2018-09-12T08:56:43.127Z\",\n    \"3.0.0-beta.12\": \"2018-09-12T21:26:32.548Z\",\n    \"3.0.0-beta.13\": \"2018-09-17T18:32:16.049Z\",\n    \"3.0.0\": \"2018-09-18T21:00:46.441Z\",\n    \"2.0.10\": \"2018-09-19T10:16:59.581Z\",\n    \"3.0.1\": \"2018-09-27T00:52:34.667Z\",\n    \"3.0.2\": \"2018-09-27T21:19:21.483Z\",\n    \"4.0.0-nightly.20180929\": \"2018-09-29T14:45:09.660Z\",\n    \"2.0.11\": \"2018-10-01T17:34:46.971Z\",\n    \"4.0.0-nightly.20181006\": \"2018-10-06T11:26:28.969Z\",\n    \"3.0.3\": \"2018-10-07T00:17:43.102Z\",\n    \"4.0.0-nightly.20181010\": \"2018-10-10T15:35:57.376Z\",\n    \"3.0.4\": \"2018-10-11T06:11:18.146Z\",\n    \"4.0.0-beta.1\": \"2018-10-11T07:32:31.250Z\",\n    \"4.0.0-beta.2\": \"2018-10-12T01:20:12.135Z\",\n    \"4.0.0-beta.3\": \"2018-10-12T21:20:45.600Z\",\n    \"3.0.5\": \"2018-10-19T01:36:39.789Z\",\n    \"2.0.12\": \"2018-10-19T01:55:24.241Z\",\n    \"4.0.0-beta.4\": \"2018-10-19T02:28:53.650Z\",\n    \"4.0.0-beta.5\": \"2018-10-23T15:01:31.505Z\",\n    \"3.0.6\": \"2018-10-24T23:29:34.439Z\",\n    \"3.0.7\": \"2018-11-01T00:19:25.564Z\",\n    \"2.0.13\": \"2018-11-01T00:36:23.241Z\",\n    \"4.0.0-beta.6\": \"2018-11-01T00:54:46.040Z\",\n    \"3.0.8\": \"2018-11-05T23:35:45.329Z\",\n    \"4.0.0-beta.7\": \"2018-11-06T00:24:24.297Z\",\n    \"3.0.9\": \"2018-11-13T04:05:30.948Z\",\n    \"2.0.14\": \"2018-11-19T20:16:22.320Z\",\n    \"3.0.10\": \"2018-11-19T21:27:30.073Z\",\n    \"4.0.0-beta.8\": \"2018-11-30T16:14:43.296Z\",\n    \"3.1.0-beta.1\": \"2018-12-02T18:41:41.591Z\",\n    \"3.1.0-beta.2\": \"2018-12-04T04:30:41.143Z\",\n    \"3.0.11\": \"2018-12-11T00:09:23.215Z\",\n    \"4.0.0-beta.9\": \"2018-12-11T00:52:36.405Z\",\n    \"2.0.15\": \"2018-12-13T19:10:16.794Z\",\n    \"3.0.12\": \"2018-12-14T22:40:19.324Z\",\n    \"3.1.0-beta.3\": \"2018-12-14T22:55:12.892Z\",\n    \"3.0.13\": \"2018-12-17T20:03:34.995Z\",\n    \"3.1.0-beta.4\": \"2018-12-17T20:54:19.117Z\",\n    \"4.0.0-beta.10\": \"2018-12-17T23:21:06.800Z\",\n    \"2.0.16\": \"2018-12-18T23:07:07.098Z\",\n    \"4.0.0-beta.11\": \"2018-12-19T00:43:23.253Z\",\n    \"4.0.0\": \"2018-12-20T21:09:48.035Z\",\n    \"3.1.0-beta.5\": \"2019-01-04T20:44:10.163Z\",\n    \"4.0.1\": \"2019-01-04T21:01:21.168Z\",\n    \"3.0.14\": \"2019-01-04T23:03:30.298Z\",\n    \"3.1.0\": \"2019-01-07T18:48:08.842Z\",\n    \"3.1.1\": \"2019-01-14T23:27:02.901Z\",\n    \"4.0.2\": \"2019-01-22T21:22:20.949Z\",\n    \"5.0.0-beta.1\": \"2019-01-23T04:12:39.884Z\",\n    \"3.1.2\": \"2019-01-24T23:32:53.417Z\",\n    \"4.0.3\": \"2019-01-29T19:07:36.221Z\",\n    \"2.0.17\": \"2019-01-31T16:52:34.692Z\",\n    \"3.0.15\": \"2019-01-31T17:15:18.003Z\",\n    \"3.1.3\": \"2019-01-31T21:59:22.962Z\",\n    \"4.0.4\": \"2019-02-02T16:21:41.559Z\",\n    \"5.0.0-beta.2\": \"2019-02-04T00:40:06.322Z\",\n    \"4.0.5\": \"2019-02-15T01:02:58.900Z\",\n    \"5.0.0-beta.3\": \"2019-02-15T04:17:51.691Z\",\n    \"3.1.4\": \"2019-02-15T21:08:00.076Z\",\n    \"4.0.6\": \"2019-02-27T01:46:48.213Z\",\n    \"5.0.0-beta.4\": \"2019-02-27T20:30:41.027Z\",\n    \"3.1.5\": \"2019-03-04T23:49:58.818Z\",\n    \"4.0.7\": \"2019-03-05T01:42:37.072Z\",\n    \"5.0.0-beta.5\": \"2019-03-05T17:14:41.152Z\",\n    \"2.0.18\": \"2019-03-08T00:02:17.292Z\",\n    \"3.1.6\": \"2019-03-08T03:57:23.913Z\",\n    \"3.0.16\": \"2019-03-08T06:20:58.667Z\",\n    \"4.0.8\": \"2019-03-08T15:53:12.958Z\",\n    \"4.1.0\": \"2019-03-14T01:46:07.020Z\",\n    \"5.0.0-beta.6\": \"2019-03-20T18:42:51.867Z\",\n    \"4.1.1\": \"2019-03-20T23:10:25.320Z\",\n    \"3.1.7\": \"2019-03-21T20:54:24.336Z\",\n    \"5.0.0-beta.7\": \"2019-03-28T00:29:44.979Z\",\n    \"3.1.8\": \"2019-03-28T20:55:28.374Z\",\n    \"4.1.2\": \"2019-03-28T22:29:53.685Z\",\n    \"4.1.3\": \"2019-03-29T19:46:25.567Z\",\n    \"5.0.0-beta.8\": \"2019-04-04T18:30:13.625Z\",\n    \"4.1.4\": \"2019-04-04T21:00:37.275Z\",\n    \"5.0.0-beta.9\": \"2019-04-20T01:24:03.470Z\",\n    \"5.0.0\": \"2019-04-24T16:50:39.625Z\",\n    \"4.1.5\": \"2019-04-24T23:58:21.720Z\",\n    \"6.0.0-beta.1\": \"2019-05-01T07:21:33.456Z\",\n    \"3.1.9\": \"2019-05-01T18:28:15.232Z\",\n    \"4.2.0\": \"2019-05-03T03:23:54.844Z\",\n    \"5.0.1\": \"2019-05-04T05:11:00.829Z\",\n    \"6.0.0-beta.2\": \"2019-05-08T05:16:15.609Z\",\n    \"4.2.1\": \"2019-05-14T21:17:51.590Z\",\n    \"6.0.0-beta.3\": \"2019-05-14T22:24:23.807Z\",\n    \"4.2.2\": \"2019-05-17T02:16:01.826Z\",\n    \"6.0.0-beta.4\": \"2019-05-21T21:20:41.195Z\",\n    \"5.0.2\": \"2019-05-23T15:26:08.158Z\",\n    \"3.1.10\": \"2019-05-29T16:31:37.579Z\",\n    \"6.0.0-beta.5\": \"2019-05-29T19:35:32.142Z\",\n    \"4.2.3\": \"2019-05-31T04:13:27.081Z\",\n    \"6.0.0-beta.6\": \"2019-06-05T00:15:57.316Z\",\n    \"4.2.4\": \"2019-06-05T22:25:55.344Z\",\n    \"3.1.11\": \"2019-06-06T18:06:20.517Z\",\n    \"5.0.3\": \"2019-06-07T21:32:23.024Z\",\n    \"6.0.0-beta.7\": \"2019-06-11T22:22:48.469Z\",\n    \"6.0.0-beta.8\": \"2019-06-14T21:06:33.663Z\",\n    \"5.0.4\": \"2019-06-15T01:02:51.206Z\",\n    \"6.0.0-beta.9\": \"2019-06-18T23:18:29.526Z\",\n    \"5.0.5\": \"2019-06-21T20:48:34.271Z\",\n    \"4.2.5\": \"2019-06-21T21:11:57.004Z\",\n    \"6.0.0-beta.10\": \"2019-06-22T00:54:35.613Z\",\n    \"6.0.0-beta.11\": \"2019-06-26T02:05:06.223Z\",\n    \"5.0.6\": \"2019-06-26T22:31:18.260Z\",\n    \"4.2.6\": \"2019-07-02T01:10:47.169Z\",\n    \"6.0.0-beta.12\": \"2019-07-04T01:35:31.040Z\",\n    \"6.0.0-beta.13\": \"2019-07-10T22:56:12.517Z\",\n    \"3.1.12\": \"2019-07-11T16:50:35.555Z\",\n    \"4.2.7\": \"2019-07-16T17:54:33.370Z\",\n    \"5.0.7\": \"2019-07-16T18:53:32.554Z\",\n    \"6.0.0-beta.14\": \"2019-07-17T19:53:53.229Z\",\n    \"4.2.8\": \"2019-07-20T00:45:21.678Z\",\n    \"6.0.0-beta.15\": \"2019-07-20T01:17:20.034Z\",\n    \"5.0.8\": \"2019-07-23T23:53:51.009Z\",\n    \"6.0.0\": \"2019-07-29T21:12:46.410Z\",\n    \"3.1.13\": \"2019-07-31T17:48:34.731Z\",\n    \"7.0.0-beta.1\": \"2019-08-01T07:57:53.620Z\",\n    \"4.2.9\": \"2019-08-06T00:18:19.193Z\",\n    \"5.0.9\": \"2019-08-06T23:57:02.465Z\",\n    \"6.0.1\": \"2019-08-07T00:28:24.200Z\",\n    \"7.0.0-beta.2\": \"2019-08-07T22:28:51.903Z\",\n    \"6.0.2\": \"2019-08-12T23:56:41.774Z\",\n    \"7.0.0-beta.3\": \"2019-08-15T04:43:21.374Z\",\n    \"5.0.10\": \"2019-08-20T00:37:09.497Z\",\n    \"6.0.3\": \"2019-08-20T02:05:03.758Z\",\n    \"6.0.4\": \"2019-08-24T00:01:37.390Z\",\n    \"6.0.5\": \"2019-08-27T21:29:59.925Z\",\n    \"4.2.10\": \"2019-08-29T20:44:09.994Z\",\n    \"6.0.6\": \"2019-08-30T06:32:56.369Z\",\n    \"6.0.7\": \"2019-08-31T05:43:57.252Z\",\n    \"7.0.0-beta.4\": \"2019-09-03T17:40:37.606Z\",\n    \"6.0.8\": \"2019-09-09T19:24:11.430Z\",\n    \"6.0.9\": \"2019-09-12T13:31:29.405Z\",\n    \"6.0.10\": \"2019-09-19T05:41:15.811Z\",\n    \"4.2.11\": \"2019-09-24T19:15:33.611Z\",\n    \"7.0.0-beta.5\": \"2019-09-24T19:50:11.683Z\",\n    \"5.0.11\": \"2019-09-24T23:35:34.796Z\",\n    \"6.0.11\": \"2019-10-02T00:05:04.173Z\",\n    \"6.0.12\": \"2019-10-08T23:08:06.073Z\",\n    \"7.0.0-beta.6\": \"2019-10-09T01:12:42.307Z\",\n    \"7.0.0-beta.7\": \"2019-10-16T13:55:23.668Z\",\n    \"4.2.12\": \"2019-10-16T20:26:25.642Z\",\n    \"7.0.0\": \"2019-10-21T22:24:41.636Z\",\n    \"6.1.0\": \"2019-10-22T02:02:59.033Z\",\n    \"6.1.1\": \"2019-10-23T20:49:11.420Z\",\n    \"8.0.0-beta.1\": \"2019-10-24T20:38:27.315Z\",\n    \"6.1.2\": \"2019-10-24T22:06:59.553Z\",\n    \"8.0.0-beta.2\": \"2019-11-01T00:51:04.409Z\",\n    \"6.1.3\": \"2019-11-01T19:14:22.102Z\",\n    \"7.0.1\": \"2019-11-01T19:20:30.886Z\",\n    \"5.0.12\": \"2019-11-02T07:17:51.238Z\",\n    \"6.1.4\": \"2019-11-05T07:44:52.467Z\",\n    \"7.1.0\": \"2019-11-05T11:06:11.386Z\",\n    \"7.1.1\": \"2019-11-07T23:55:12.629Z\",\n    \"7.1.2\": \"2019-11-20T02:44:34.768Z\",\n    \"8.0.0-beta.3\": \"2019-11-20T22:56:05.812Z\",\n    \"6.1.5\": \"2019-11-21T03:51:45.920Z\",\n    \"7.1.3\": \"2019-12-03T02:02:12.868Z\",\n    \"8.0.0-beta.4\": \"2019-12-04T02:51:03.661Z\",\n    \"7.1.4\": \"2019-12-10T01:39:00.023Z\",\n    \"6.1.6\": \"2019-12-11T19:23:06.516Z\",\n    \"7.1.5\": \"2019-12-13T22:13:09.577Z\",\n    \"6.1.7\": \"2019-12-17T03:10:23.751Z\",\n    \"5.0.13\": \"2019-12-17T22:33:53.381Z\",\n    \"7.1.6\": \"2019-12-18T02:17:31.754Z\",\n    \"8.0.0-beta.5\": \"2019-12-18T22:15:11.788Z\",\n    \"7.1.7\": \"2019-12-19T21:16:11.936Z\",\n    \"7.1.8\": \"2020-01-08T22:06:08.896Z\",\n    \"7.1.9\": \"2020-01-13T19:34:17.089Z\",\n    \"8.0.0-beta.6\": \"2020-01-14T15:34:52.369Z\",\n    \"8.0.0-beta.7\": \"2020-01-16T20:39:15.857Z\",\n    \"7.1.10\": \"2020-01-22T21:49:33.687Z\",\n    \"8.0.0-beta.8\": \"2020-01-29T21:53:05.387Z\",\n    \"8.0.0-beta.9\": \"2020-01-30T04:55:50.436Z\",\n    \"7.1.11\": \"2020-01-30T08:44:22.321Z\",\n    \"8.0.0\": \"2020-02-03T23:52:54.257Z\",\n    \"9.0.0-beta.1\": \"2020-02-10T19:04:37.594Z\",\n    \"7.1.12\": \"2020-02-10T21:32:00.236Z\",\n    \"8.0.1\": \"2020-02-14T18:39:41.462Z\",\n    \"9.0.0-beta.2\": \"2020-02-16T03:14:14.991Z\",\n    \"7.1.13\": \"2020-02-20T20:00:08.235Z\",\n    \"6.1.8\": \"2020-02-21T15:52:59.625Z\",\n    \"9.0.0-beta.3\": \"2020-02-26T01:11:31.434Z\",\n    \"8.0.2\": \"2020-02-26T04:20:10.980Z\",\n    \"6.1.9\": \"2020-02-28T04:29:55.709Z\",\n    \"9.0.0-beta.4\": \"2020-02-28T04:30:28.862Z\",\n    \"7.1.14\": \"2020-02-28T23:50:55.788Z\",\n    \"9.0.0-beta.5\": \"2020-03-02T18:07:20.897Z\",\n    \"8.0.3\": \"2020-03-03T02:18:00.113Z\",\n    \"8.1.0\": \"2020-03-06T12:18:30.240Z\",\n    \"9.0.0-beta.6\": \"2020-03-06T14:22:25.098Z\",\n    \"9.0.0-beta.7\": \"2020-03-09T18:38:30.634Z\",\n    \"8.1.1\": \"2020-03-10T02:01:39.309Z\",\n    \"9.0.0-beta.9\": \"2020-03-16T19:31:26.524Z\",\n    \"9.0.0-beta.10\": \"2020-03-23T15:50:53.797Z\",\n    \"7.2.0\": \"2020-03-23T23:58:21.064Z\",\n    \"7.2.1\": \"2020-03-24T08:48:24.286Z\",\n    \"8.2.0\": \"2020-03-24T18:34:17.500Z\",\n    \"9.0.0-beta.12\": \"2020-03-30T18:18:08.787Z\",\n    \"9.0.0-beta.13\": \"2020-04-02T19:38:55.571Z\",\n    \"9.0.0-beta.14\": \"2020-04-06T18:23:57.703Z\",\n    \"8.2.1\": \"2020-04-06T23:49:26.282Z\",\n    \"9.0.0-beta.15\": \"2020-04-09T21:15:48.055Z\",\n    \"9.0.0-beta.16\": \"2020-04-13T18:23:25.437Z\",\n    \"8.2.2\": \"2020-04-13T21:10:12.808Z\",\n    \"6.1.10\": \"2020-04-14T16:15:00.003Z\",\n    \"7.2.2\": \"2020-04-14T19:11:49.094Z\",\n    \"8.2.3\": \"2020-04-17T00:00:52.439Z\",\n    \"7.2.3\": \"2020-04-17T00:13:02.023Z\",\n    \"9.0.0-beta.17\": \"2020-04-17T00:14:19.357Z\",\n    \"9.0.0-beta.18\": \"2020-04-20T18:58:03.023Z\",\n    \"9.0.0-beta.19\": \"2020-04-24T20:28:19.658Z\",\n    \"9.0.0-beta.20\": \"2020-04-27T18:49:19.191Z\",\n    \"9.0.0-beta.21\": \"2020-04-28T08:03:03.302Z\",\n    \"8.2.4\": \"2020-04-28T08:04:26.969Z\",\n    \"7.2.4\": \"2020-04-29T20:38:08.932Z\",\n    \"9.0.0-beta.22\": \"2020-04-30T20:21:55.128Z\",\n    \"8.2.5\": \"2020-04-30T21:17:59.389Z\",\n    \"6.1.11\": \"2020-05-05T19:38:19.074Z\",\n    \"9.0.0-beta.24\": \"2020-05-11T19:11:32.626Z\",\n    \"7.3.0\": \"2020-05-15T02:19:48.363Z\",\n    \"8.3.0\": \"2020-05-15T03:31:30.077Z\",\n    \"6.1.12\": \"2020-05-18T19:53:31.498Z\",\n    \"9.0.0\": \"2020-05-19T00:34:56.092Z\",\n    \"10.0.0-beta.1\": \"2020-05-22T01:46:58.548Z\",\n    \"10.0.0-beta.2\": \"2020-06-01T19:27:23.569Z\",\n    \"8.3.1\": \"2020-06-01T19:37:00.620Z\",\n    \"9.0.1\": \"2020-06-01T19:38:08.503Z\",\n    \"7.3.1\": \"2020-06-01T20:58:36.730Z\",\n    \"9.0.2\": \"2020-06-02T21:39:58.415Z\",\n    \"9.0.3\": \"2020-06-08T16:20:35.617Z\",\n    \"9.0.4\": \"2020-06-12T22:38:53.598Z\",\n    \"8.3.2\": \"2020-06-15T19:38:34.741Z\",\n    \"10.0.0-beta.3\": \"2020-06-15T20:13:54.325Z\",\n    \"10.0.0-beta.4\": \"2020-06-18T20:31:31.451Z\",\n    \"8.3.3\": \"2020-06-18T20:31:47.592Z\",\n    \"9.0.5\": \"2020-06-22T21:44:49.967Z\",\n    \"7.3.2\": \"2020-06-24T22:44:55.436Z\",\n    \"8.3.4\": \"2020-06-25T01:08:23.705Z\",\n    \"10.0.0-beta.8\": \"2020-07-03T01:48:56.631Z\",\n    \"10.0.0-beta.9\": \"2020-07-06T19:08:27.777Z\",\n    \"9.1.0\": \"2020-07-06T23:31:19.998Z\",\n    \"8.4.0\": \"2020-07-07T19:13:58.779Z\",\n    \"10.0.0-beta.10\": \"2020-07-09T20:26:55.301Z\",\n    \"10.0.0-beta.11\": \"2020-07-13T20:17:29.931Z\",\n    \"10.0.0-beta.12\": \"2020-07-16T20:10:02.435Z\",\n    \"9.1.1\": \"2020-07-20T22:53:28.950Z\",\n    \"8.4.1\": \"2020-07-23T18:48:04.874Z\",\n    \"10.0.0-beta.14\": \"2020-07-27T19:58:16.856Z\",\n    \"9.1.2\": \"2020-07-29T02:05:32.878Z\",\n    \"10.0.0-beta.15\": \"2020-07-29T21:32:19.497Z\",\n    \"10.0.0-beta.17\": \"2020-08-03T18:45:39.388Z\",\n    \"10.0.0-beta.19\": \"2020-08-06T19:05:35.138Z\",\n    \"8.5.0\": \"2020-08-07T18:09:37.656Z\",\n    \"9.2.0\": \"2020-08-07T18:17:52.719Z\",\n    \"10.0.0-beta.20\": \"2020-08-10T21:16:59.380Z\",\n    \"10.0.0-beta.21\": \"2020-08-11T03:26:53.225Z\",\n    \"10.0.0-beta.23\": \"2020-08-17T20:07:28.142Z\",\n    \"9.2.1\": \"2020-08-18T21:23:34.626Z\",\n    \"10.0.0-beta.25\": \"2020-08-22T08:13:49.313Z\",\n    \"10.0.0\": \"2020-08-24T21:01:37.620Z\",\n    \"7.3.3\": \"2020-08-25T16:21:01.138Z\",\n    \"11.0.0-beta.1\": \"2020-08-26T22:43:51.028Z\",\n    \"10.0.1\": \"2020-08-27T17:58:53.228Z\",\n    \"10.1.0\": \"2020-08-28T01:16:48.301Z\",\n    \"11.0.0-beta.3\": \"2020-08-31T19:38:12.869Z\",\n    \"10.1.1\": \"2020-09-01T06:57:03.365Z\",\n    \"8.5.1\": \"2020-09-03T01:08:25.247Z\",\n    \"9.3.0\": \"2020-09-03T05:09:51.444Z\",\n    \"11.0.0-beta.4\": \"2020-09-03T20:02:36.327Z\",\n    \"11.0.0-beta.6\": \"2020-09-10T19:56:31.427Z\",\n    \"11.0.0-beta.7\": \"2020-09-14T19:40:41.292Z\",\n    \"10.1.2\": \"2020-09-14T23:53:12.014Z\",\n    \"9.3.1\": \"2020-09-15T00:45:13.779Z\",\n    \"8.5.2\": \"2020-09-22T20:40:05.130Z\",\n    \"11.0.0-beta.8\": \"2020-09-25T00:07:31.897Z\",\n    \"11.0.0-beta.9\": \"2020-09-28T20:12:46.972Z\",\n    \"10.1.3\": \"2020-09-29T04:48:22.093Z\",\n    \"9.3.2\": \"2020-10-05T19:56:19.409Z\",\n    \"11.0.0-beta.11\": \"2020-10-05T20:01:11.604Z\",\n    \"11.0.0-beta.12\": \"2020-10-14T00:55:25.779Z\",\n    \"11.0.0-beta.13\": \"2020-10-15T19:38:26.872Z\",\n    \"10.1.4\": \"2020-10-20T01:50:41.227Z\",\n    \"10.1.5\": \"2020-10-23T21:37:31.027Z\",\n    \"11.0.0-beta.16\": \"2020-10-24T01:01:56.704Z\",\n    \"11.0.0-beta.17\": \"2020-10-26T18:44:03.045Z\",\n    \"9.3.3\": \"2020-10-26T22:00:53.852Z\",\n    \"11.0.0-beta.18\": \"2020-10-29T18:36:08.341Z\",\n    \"8.5.3\": \"2020-10-30T02:38:46.841Z\",\n    \"11.0.0-beta.19\": \"2020-11-02T22:17:25.479Z\",\n    \"11.0.0-beta.20\": \"2020-11-06T20:07:05.717Z\",\n    \"9.3.4\": \"2020-11-10T00:14:33.848Z\",\n    \"11.0.0-beta.22\": \"2020-11-12T18:34:58.361Z\",\n    \"11.0.0-beta.23\": \"2020-11-14T03:34:01.071Z\",\n    \"11.0.0\": \"2020-11-16T22:39:29.389Z\",\n    \"8.5.4\": \"2020-11-17T14:12:24.687Z\",\n    \"11.0.1\": \"2020-11-17T14:12:35.948Z\",\n    \"10.1.6\": \"2020-11-18T17:42:36.002Z\",\n    \"8.5.5\": \"2020-11-18T23:40:55.244Z\",\n    \"12.0.0-beta.1\": \"2020-11-19T03:18:28.000Z\",\n    \"11.0.2\": \"2020-11-19T21:55:03.418Z\",\n    \"12.0.0-beta.3\": \"2020-11-23T18:03:30.205Z\",\n    \"9.3.5\": \"2020-11-24T00:54:05.415Z\",\n    \"11.0.3\": \"2020-11-24T05:57:27.114Z\",\n    \"12.0.0-beta.4\": \"2020-11-26T18:08:30.248Z\",\n    \"12.0.0-beta.5\": \"2020-11-30T17:35:08.815Z\",\n    \"12.0.0-beta.6\": \"2020-12-03T17:08:54.188Z\",\n    \"12.0.0-beta.7\": \"2020-12-07T17:02:29.880Z\",\n    \"11.0.4\": \"2020-12-07T22:08:36.550Z\",\n    \"10.1.7\": \"2020-12-08T02:59:07.028Z\",\n    \"12.0.0-beta.8\": \"2020-12-10T17:07:34.447Z\",\n    \"11.0.5\": \"2020-12-11T18:58:45.963Z\",\n    \"12.0.0-beta.9\": \"2020-12-11T23:41:55.783Z\",\n    \"10.2.0\": \"2020-12-12T00:53:21.052Z\",\n    \"11.1.0\": \"2020-12-12T01:33:54.538Z\",\n    \"9.4.0\": \"2020-12-12T01:45:49.882Z\",\n    \"12.0.0-beta.10\": \"2020-12-14T17:11:21.013Z\",\n    \"12.0.0-beta.11\": \"2020-12-17T17:02:35.639Z\",\n    \"12.0.0-beta.12\": \"2020-12-21T16:57:54.789Z\",\n    \"11.1.1\": \"2020-12-21T21:12:16.508Z\",\n    \"12.0.0-beta.14\": \"2021-01-11T17:30:19.888Z\",\n    \"11.2.0\": \"2021-01-13T00:39:16.868Z\",\n    \"9.4.1\": \"2021-01-13T20:43:57.091Z\",\n    \"10.3.0\": \"2021-01-15T18:50:38.167Z\",\n    \"12.0.0-beta.16\": \"2021-01-18T17:41:34.233Z\",\n    \"11.2.1\": \"2021-01-23T03:56:25.366Z\",\n    \"12.0.0-beta.18\": \"2021-01-25T16:54:53.118Z\",\n    \"10.3.1\": \"2021-01-27T22:55:58.516Z\",\n    \"9.4.2\": \"2021-01-27T23:23:52.535Z\",\n    \"12.0.0-beta.19\": \"2021-01-28T17:32:07.208Z\",\n    \"12.0.0-beta.20\": \"2021-02-01T17:07:59.818Z\",\n    \"11.2.2\": \"2021-02-02T21:13:24.611Z\",\n    \"12.0.0-beta.21\": \"2021-02-03T04:56:03.373Z\",\n    \"12.0.0-beta.22\": \"2021-02-04T17:07:02.429Z\",\n    \"9.4.3\": \"2021-02-05T22:22:14.871Z\",\n    \"10.3.2\": \"2021-02-05T22:56:32.646Z\",\n    \"11.2.3\": \"2021-02-06T02:19:22.786Z\",\n    \"12.0.0-beta.23\": \"2021-02-09T01:14:04.257Z\",\n    \"12.0.0-beta.24\": \"2021-02-09T18:37:25.134Z\",\n    \"12.0.0-beta.25\": \"2021-02-11T17:02:33.104Z\",\n    \"12.0.0-beta.26\": \"2021-02-16T11:07:07.193Z\",\n    \"12.0.0-beta.27\": \"2021-02-19T00:46:25.356Z\",\n    \"11.3.0\": \"2021-02-20T00:00:31.230Z\",\n    \"10.4.0\": \"2021-02-20T00:02:27.664Z\",\n    \"12.0.0-beta.28\": \"2021-02-22T17:03:57.263Z\",\n    \"12.0.0-beta.29\": \"2021-02-23T21:18:42.819Z\",\n    \"12.0.0-beta.30\": \"2021-02-25T17:26:54.277Z\",\n    \"12.0.0-beta.31\": \"2021-03-01T16:58:58.658Z\",\n    \"12.0.0\": \"2021-03-02T03:10:35.097Z\",\n    \"9.4.4\": \"2021-03-03T19:21:33.230Z\",\n    \"13.0.0-beta.2\": \"2021-03-05T16:33:00.111Z\",\n    \"13.0.0-beta.3\": \"2021-03-08T17:03:09.091Z\",\n    \"12.0.1\": \"2021-03-10T23:55:03.418Z\",\n    \"13.0.0-beta.4\": \"2021-03-11T20:47:29.344Z\",\n    \"13.0.0-beta.5\": \"2021-03-15T17:05:03.754Z\",\n    \"10.4.1\": \"2021-03-15T21:13:35.588Z\",\n    \"13.0.0-beta.6\": \"2021-03-18T17:06:28.775Z\",\n    \"13.0.0-beta.7\": \"2021-03-22T19:13:44.657Z\",\n    \"11.4.0\": \"2021-03-23T03:15:18.080Z\",\n    \"11.4.1\": \"2021-03-23T19:16:11.765Z\",\n    \"10.4.2\": \"2021-03-23T19:25:17.063Z\",\n    \"12.0.2\": \"2021-03-24T01:24:36.303Z\",\n    \"13.0.0-beta.8\": \"2021-03-25T17:03:32.127Z\",\n    \"13.0.0-beta.9\": \"2021-03-29T17:17:24.487Z\",\n    \"11.4.2\": \"2021-04-02T22:01:43.223Z\",\n    \"13.0.0-beta.11\": \"2021-04-05T18:06:43.067Z\",\n    \"13.0.0-beta.12\": \"2021-04-08T17:32:46.495Z\",\n    \"13.0.0-beta.13\": \"2021-04-12T18:33:20.916Z\",\n    \"12.0.3\": \"2021-04-13T17:00:39.346Z\",\n    \"12.0.4\": \"2021-04-13T22:59:17.486Z\",\n    \"13.0.0-beta.14\": \"2021-04-14T00:18:01.848Z\",\n    \"10.4.3\": \"2021-04-14T00:46:56.939Z\",\n    \"11.4.3\": \"2021-04-14T08:16:07.918Z\",\n    \"13.0.0-beta.16\": \"2021-04-21T00:01:14.158Z\",\n    \"12.0.5\": \"2021-04-21T02:12:22.592Z\",\n    \"13.0.0-beta.17\": \"2021-04-22T17:06:57.287Z\",\n    \"13.0.0-beta.18\": \"2021-04-26T17:10:29.627Z\",\n    \"10.4.4\": \"2021-04-27T18:27:46.456Z\",\n    \"11.4.4\": \"2021-04-27T19:27:18.229Z\",\n    \"12.0.6\": \"2021-04-30T22:59:08.705Z\",\n    \"13.0.0-beta.20\": \"2021-05-04T01:54:42.763Z\",\n    \"11.4.5\": \"2021-05-05T01:13:29.484Z\",\n    \"10.4.5\": \"2021-05-05T02:13:19.235Z\",\n    \"13.0.0-beta.21\": \"2021-05-05T21:03:50.337Z\",\n    \"13.0.0-beta.22\": \"2021-05-06T20:07:42.425Z\",\n    \"13.0.0-beta.23\": \"2021-05-07T09:51:42.440Z\",\n    \"12.0.7\": \"2021-05-07T15:04:53.204Z\",\n    \"11.4.6\": \"2021-05-08T02:51:47.159Z\",\n    \"13.0.0-beta.24\": \"2021-05-11T00:24:47.559Z\",\n    \"13.0.0-beta.26\": \"2021-05-13T15:54:03.237Z\",\n    \"13.0.0-beta.27\": \"2021-05-17T15:29:04.587Z\",\n    \"12.0.8\": \"2021-05-17T21:27:54.401Z\",\n    \"11.4.7\": \"2021-05-17T23:01:42.279Z\",\n    \"10.4.6\": \"2021-05-19T02:32:13.634Z\",\n    \"12.0.9\": \"2021-05-19T22:48:24.330Z\",\n    \"13.0.0-beta.28\": \"2021-05-20T16:02:33.768Z\",\n    \"10.4.7\": \"2021-05-24T19:46:44.181Z\",\n    \"13.0.0\": \"2021-05-25T03:03:51.044Z\",\n    \"13.0.1\": \"2021-05-25T19:28:51.746Z\",\n    \"14.0.0-beta.1\": \"2021-05-26T21:18:27.707Z\",\n    \"14.0.0-beta.2\": \"2021-05-31T17:16:31.957Z\",\n    \"13.1.0\": \"2021-06-03T03:12:23.131Z\",\n    \"12.0.10\": \"2021-06-03T14:58:19.489Z\",\n    \"14.0.0-beta.3\": \"2021-06-03T15:49:18.752Z\",\n    \"11.4.8\": \"2021-06-03T15:56:50.753Z\",\n    \"13.1.1\": \"2021-06-04T19:28:23.774Z\",\n    \"13.1.2\": \"2021-06-09T18:41:52.367Z\",\n    \"12.0.11\": \"2021-06-09T18:58:22.941Z\",\n    \"14.0.0-beta.5\": \"2021-06-10T15:49:21.122Z\",\n    \"14.0.0-beta.6\": \"2021-06-14T15:27:21.344Z\",\n    \"14.0.0-beta.7\": \"2021-06-17T15:26:21.434Z\",\n    \"14.0.0-beta.8\": \"2021-06-21T16:07:48.999Z\",\n    \"13.1.3\": \"2021-06-21T19:31:53.222Z\",\n    \"12.0.12\": \"2021-06-21T19:55:17.676Z\",\n    \"11.4.9\": \"2021-06-22T02:20:52.460Z\",\n    \"13.1.4\": \"2021-06-22T21:51:20.629Z\",\n    \"14.0.0-beta.9\": \"2021-06-25T16:17:18.273Z\",\n    \"14.0.0-beta.10\": \"2021-06-28T17:19:46.429Z\",\n    \"12.0.13\": \"2021-06-29T00:14:23.884Z\",\n    \"14.0.0-beta.11\": \"2021-07-01T17:18:17.380Z\",\n    \"13.1.5\": \"2021-07-01T21:06:19.276Z\",\n    \"14.0.0-beta.12\": \"2021-07-05T15:30:52.062Z\",\n    \"13.1.6\": \"2021-07-05T23:39:47.894Z\",\n    \"11.4.10\": \"2021-07-06T20:53:24.637Z\",\n    \"12.0.14\": \"2021-07-06T21:30:18.991Z\",\n    \"14.0.0-beta.13\": \"2021-07-13T00:07:43.321Z\",\n    \"14.0.0-beta.14\": \"2021-07-15T15:22:50.895Z\",\n    \"12.0.15\": \"2021-07-15T19:09:54.593Z\",\n    \"13.1.7\": \"2021-07-15T19:38:18.046Z\",\n    \"14.0.0-beta.15\": \"2021-07-20T22:01:48.872Z\",\n    \"15.0.0-alpha.1\": \"2021-07-21T23:55:50.822Z\",\n    \"14.0.0-beta.16\": \"2021-07-22T16:34:06.410Z\",\n    \"14.0.0-beta.17\": \"2021-07-26T15:27:27.746Z\",\n    \"15.0.0-alpha.2\": \"2021-07-26T19:39:19.033Z\",\n    \"14.0.0-beta.18\": \"2021-08-02T15:51:12.696Z\",\n    \"15.0.0-alpha.3\": \"2021-08-02T17:13:31.826Z\",\n    \"11.4.11\": \"2021-08-03T19:37:48.101Z\",\n    \"13.1.8\": \"2021-08-03T22:38:59.723Z\",\n    \"12.0.16\": \"2021-08-03T22:46:17.161Z\",\n    \"14.0.0-beta.19\": \"2021-08-05T15:20:55.779Z\",\n    \"15.0.0-alpha.4\": \"2021-08-05T18:51:17.454Z\",\n    \"14.0.0-beta.20\": \"2021-08-09T15:22:08.872Z\",\n    \"15.0.0-alpha.5\": \"2021-08-09T17:11:43.517Z\",\n    \"13.1.9\": \"2021-08-10T02:16:12.809Z\",\n    \"14.0.0-beta.21\": \"2021-08-12T15:25:55.689Z\",\n    \"15.0.0-alpha.6\": \"2021-08-12T17:30:23.828Z\",\n    \"13.2.0\": \"2021-08-17T14:32:01.917Z\",\n    \"15.0.0-alpha.7\": \"2021-08-17T14:32:56.363Z\",\n    \"14.0.0-beta.22\": \"2021-08-17T18:06:49.839Z\",\n    \"13.2.1\": \"2021-08-17T23:41:19.621Z\",\n    \"12.0.17\": \"2021-08-18T00:31:51.180Z\",\n    \"11.4.12\": \"2021-08-18T03:21:20.211Z\",\n    \"14.0.0-beta.23\": \"2021-08-19T16:08:59.711Z\",\n    \"15.0.0-alpha.8\": \"2021-08-19T18:05:29.534Z\",\n    \"15.0.0-alpha.9\": \"2021-08-23T16:53:35.586Z\",\n    \"13.2.2\": \"2021-08-23T22:57:52.630Z\",\n    \"14.0.0-beta.24\": \"2021-08-26T16:02:55.601Z\",\n    \"15.0.0-alpha.10\": \"2021-08-26T18:39:30.511Z\",\n    \"13.2.3\": \"2021-08-27T20:25:19.189Z\",\n    \"12.0.18\": \"2021-08-27T20:33:32.267Z\",\n    \"14.0.0-beta.25\": \"2021-08-30T15:43:26.521Z\",\n    \"14.0.0\": \"2021-08-30T23:02:21.699Z\",\n    \"11.5.0\": \"2021-08-31T19:22:30.262Z\",\n    \"12.1.0\": \"2021-08-31T21:03:19.279Z\",\n    \"13.3.0\": \"2021-08-31T21:24:18.715Z\",\n    \"15.0.0-beta.1\": \"2021-08-31T22:01:31.404Z\",\n    \"15.0.0-beta.2\": \"2021-09-02T16:38:09.971Z\",\n    \"15.0.0-beta.3\": \"2021-09-07T11:32:03.066Z\",\n    \"15.0.0-beta.4\": \"2021-09-09T20:44:23.447Z\",\n    \"15.0.0-beta.5\": \"2021-09-13T17:42:27.974Z\",\n    \"13.4.0\": \"2021-09-13T19:52:06.691Z\",\n    \"14.0.1\": \"2021-09-13T20:05:50.686Z\",\n    \"12.1.1\": \"2021-09-13T23:36:22.508Z\",\n    \"15.0.0-beta.6\": \"2021-09-15T00:08:26.725Z\",\n    \"15.0.0-beta.7\": \"2021-09-16T20:47:58.558Z\",\n    \"12.1.2\": \"2021-09-20T21:30:50.761Z\",\n    \"15.0.0\": \"2021-09-21T20:43:18.822Z\",\n    \"16.0.0-alpha.1\": \"2021-09-22T21:43:21.419Z\",\n    \"13.5.0\": \"2021-09-27T22:59:50.500Z\",\n    \"12.2.0\": \"2021-09-28T13:37:34.267Z\",\n    \"14.0.2\": \"2021-09-29T17:34:56.269Z\",\n    \"16.0.0-alpha.2\": \"2021-09-30T16:04:58.957Z\",\n    \"16.0.0-alpha.3\": \"2021-09-30T22:40:58.103Z\",\n    \"12.2.1\": \"2021-09-30T23:01:22.071Z\",\n    \"13.5.1\": \"2021-09-30T23:18:20.064Z\",\n    \"14.1.0\": \"2021-09-30T23:18:48.732Z\",\n    \"15.1.0\": \"2021-10-01T16:39:02.300Z\",\n    \"16.0.0-alpha.4\": \"2021-10-04T13:57:38.436Z\",\n    \"16.0.0-alpha.5\": \"2021-10-04T21:38:31.098Z\",\n    \"15.1.1\": \"2021-10-04T21:39:59.618Z\",\n    \"16.0.0-alpha.6\": \"2021-10-07T22:57:55.005Z\",\n    \"15.1.2\": \"2021-10-08T18:09:28.208Z\",\n    \"14.1.1\": \"2021-10-09T00:33:27.070Z\",\n    \"16.0.0-alpha.7\": \"2021-10-11T17:10:54.634Z\",\n    \"13.5.2\": \"2021-10-11T18:22:25.860Z\",\n    \"12.2.2\": \"2021-10-11T19:02:22.413Z\",\n    \"16.0.0-alpha.8\": \"2021-10-14T20:17:52.532Z\",\n    \"15.2.0\": \"2021-10-14T21:49:53.008Z\",\n    \"16.0.0-alpha.9\": \"2021-10-18T17:23:22.568Z\",\n    \"15.3.0\": \"2021-10-20T16:45:58.872Z\",\n    \"16.0.0-beta.1\": \"2021-10-20T16:56:03.162Z\",\n    \"14.2.0\": \"2021-10-20T18:52:22.799Z\",\n    \"13.6.0\": \"2021-10-21T04:40:28.148Z\",\n    \"16.0.0-beta.2\": \"2021-10-21T15:27:22.801Z\",\n    \"16.0.0-beta.3\": \"2021-10-25T15:25:55.755Z\",\n    \"16.0.0-beta.4\": \"2021-10-27T23:48:24.943Z\",\n    \"13.6.1\": \"2021-10-28T00:25:00.584Z\",\n    \"16.0.0-beta.5\": \"2021-10-28T15:22:21.305Z\",\n    \"16.0.0-beta.6\": \"2021-11-01T15:50:39.735Z\",\n    \"16.0.0-beta.7\": \"2021-11-04T15:29:48.062Z\",\n    \"16.0.0-beta.8\": \"2021-11-08T16:21:14.347Z\",\n    \"15.3.1\": \"2021-11-08T19:42:03.007Z\",\n    \"14.2.1\": \"2021-11-08T22:17:00.689Z\",\n    \"16.0.0-beta.9\": \"2021-11-11T15:22:01.323Z\",\n    \"12.2.3\": \"2021-11-15T21:31:56.777Z\",\n    \"16.0.0\": \"2021-11-16T01:17:55.600Z\",\n    \"15.3.2\": \"2021-11-16T02:23:32.232Z\",\n    \"13.6.2\": \"2021-11-16T22:10:20.835Z\",\n    \"17.0.0-alpha.1\": \"2021-11-17T17:45:54.798Z\",\n    \"17.0.0-alpha.2\": \"2021-11-18T17:59:24.854Z\",\n    \"16.0.1\": \"2021-11-18T18:53:35.751Z\",\n    \"17.0.0-alpha.3\": \"2021-11-22T19:33:03.627Z\",\n    \"16.0.2\": \"2021-11-24T23:33:19.879Z\",\n    \"17.0.0-alpha.4\": \"2021-11-25T19:34:51.280Z\",\n    \"16.0.3\": \"2021-11-30T22:57:50.794Z\",\n    \"15.3.3\": \"2021-11-30T23:49:25.771Z\",\n    \"14.2.2\": \"2021-12-01T00:19:54.709Z\",\n    \"13.6.3\": \"2021-12-01T05:01:29.359Z\",\n    \"16.0.4\": \"2021-12-03T04:05:13.818Z\",\n    \"17.0.0-alpha.5\": \"2021-12-16T03:47:00.748Z\",\n    \"15.3.4\": \"2021-12-16T19:46:51.946Z\",\n    \"14.2.3\": \"2021-12-16T19:54:19.307Z\",\n    \"16.0.5\": \"2021-12-17T03:20:01.044Z\",\n    \"17.0.0-alpha.6\": \"2022-01-03T19:56:30.942Z\",\n    \"16.0.6\": \"2022-01-0\n[… truncated 52484 characters]",
+        "outputTruncated": true
+      }
+    },
+    {
+      "index": 21,
+      "id": "rs_0d1c22136bd3f9da016a507375028881968e3aa2a1700e51a8",
+      "type": "reasoning",
+      "label": "Reasoning summary",
+      "startedAt": "2026-07-10T04:22:13.048Z",
+      "completedAt": "2026-07-10T04:22:15.962Z",
+      "durationMs": 2914,
+      "status": null,
+      "details": {
+        "summary": [
+          "**Summarizing final observations**"
+        ],
+        "content": []
+      }
+    },
+    {
+      "index": 22,
+      "id": "msg_0d1c22136bd3f9da016a507377efbc8196b92ee1552d43338a",
+      "type": "agentMessage",
+      "label": "Agent response",
+      "startedAt": "2026-07-10T04:22:15.963Z",
+      "completedAt": "2026-07-10T04:22:45.966Z",
+      "durationMs": 30003,
+      "status": null,
+      "details": {
+        "phase": "final_answer",
+        "text": "**Bottom Line**\n\nBrowserView-to-WebContentsView migration concerns are still real in Electron 43, but the strongest current evidence is not “WebContentsView is broken on Linux.” It is: WebContentsView changes the app architecture from a BrowserWindow-owned overlay model to the Views hierarchy, so layout, focus, lifecycle, transparency, DevTools, and Wayland/input details need retesting.\n\nElectron 43.1.0 is current on npm, and Electron’s docs still mark `BrowserView` deprecated while documenting `WebContentsView` as the replacement: [BrowserView docs](https://www.electronjs.org/docs/latest/api/browser-view), [WebContentsView docs](https://www.electronjs.org/docs/latest/api/web-contents-view).\n\n**Reproducible Technical Details**\n\n| Pattern | Firsthand Evidence | What Is Reproducible | Electron 43 Relevance |\n|---|---|---|---|\n| Transparency/background behavior changed | [electron/electron#44914](https://github.com/electron/electron/issues/44914) reports `WebContentsView` not transparent by default on Linux, Electron 33.2.1 | Linux repro with WebContentsView transparency expectations | Likely relevant if your migration relies on transparent stacked views; not confirmed on 43 |\n| Focus gets stolen when adding views | [electron/electron#42339](https://github.com/electron/electron/issues/42339) says `addChildView` focuses the added WebContentsView | Adding a WebContentsView can shift focus unexpectedly | Still architecturally relevant; verify on 43 |\n| Hidden/background painting and ready state | [electron/electron#43531](https://github.com/electron/electron/issues/43531) and [PR #49315](https://github.com/electron/electron/pull/49315) discuss `ready-to-show` / initially hidden WebContentsView behavior | Hidden WebContentsView may not paint/fire readiness as expected without newer options | Relevant: newer Electron has work in this area, so older reports should not be assumed unchanged |\n| Nested/child WebContentsView rendering | [electron/electron#47990](https://github.com/electron/electron/issues/47990) reports incorrect rendering when adding a WebContentsView to another WebContentsView | `addChildView` hierarchy can render incorrectly in nested cases | Relevant if you nest views; unknown for 43 without repro |\n| `window.open` / background tab creation edge case | [electron/electron#49307](https://github.com/electron/electron/issues/49307), [PR #49379](https://github.com/electron/electron/pull/49379) | `setWindowOpenHandler` with background-tab disposition can produce undefined `options.webContents`; docs example was updated | Relevant to browser-like apps and tab implementations |\n| Shared options/object mutation leak | [electron/electron#51337](https://github.com/electron/electron/issues/51337) reports BrowserWindow `backgroundColor` leaking into WebContentsView when sharing `webPreferences` object, Electron 41.3.0, including Ubuntu/other Linux | Reusing mutable option objects can produce surprising cross-view configuration | Likely relevant through 43 unless fixed in your exact version; easy to avoid by cloning options |\n| Destroyed WebContents lifecycle guard | [Mattermost desktop PR #3892](https://github.com/mattermost/desktop/pull/3892) guards `MattermostWebContentsView` against destroyed/undefined `webContents` | Real app hit errors after hung/kill scenario; fix adds lifecycle guard | Relevant as a migration hygiene pattern, not Electron-core proof |\n| Linux/Wayland input APIs remain moving target | [electron/electron PR #51769](https://github.com/electron/electron/pull/51769) implements `setIgnoreMouseEvents` on Wayland; [PR #51338](https://github.com/electron/electron/pull/51338) adds `BaseWindow.getCursorPoint()` after Wayland cursor limitations | Wayland differs from X11 for pointer passthrough/cursor location | Highly relevant on Linux, especially Wayland, but not specific to BrowserView migration alone |\n\n**General Opinion / Lower-Signal Reports**\n\nSeveral app PRs describe migrations as beneficial, but do not give detailed failure modes:\n\n- [GemiDesk PR #17](https://github.com/TimH-DE/GemiDesk/pull/17): migrated from deprecated BrowserView to WebContentsView, enabled hardware acceleration and native Wayland switches, and tuned background throttling. Useful as a migration example, but it mixes several performance changes, so it does not isolate WebContentsView effects.\n- [Cabinet PR #165](https://github.com/cabinetai/cabinet/pull/165): adds a native WebContentsView-backed in-app browser with IPC handlers and bookmark/session support. Good architecture evidence, not a bug report.\n- [teams-for-linux PR #2426](https://github.com/IsmaelMartinez/teams-for-linux/pull/2426): proposes multiple `WebContentsView` sessions in one `BaseWindow` with partition isolation. Useful design signal, not runtime proof.\n\n**Patterns Appearing More Than Once**\n\n1. **View hierarchy matters now.** Multiple reports touch `addChildView`, nested views, z-order, focus, hidden painting, and lifecycle. Migrating is not a rename from `setBrowserView` to `contentView.addChildView`.\n\n2. **Browser-like apps hit the sharpest edges.** Tabs, background tabs, window-open handling, DevTools, and multiple embedded sessions show up repeatedly.\n\n3. **Linux concerns are more about compositor/input behavior than WebContentsView alone.** Wayland pointer passthrough, cursor coordinates, transparency, and hardware acceleration/native Wayland flags are the recurring Linux-specific watchpoints.\n\n4. **Lifecycle guards become more important.** Real app code now guards destroyed/undefined `webContents`, especially around reconnects, kills, hangs, or dynamic view replacement.\n\n**Still Relevant To Electron 43**\n\nConfirmed relevant:\n\n- `BrowserView` is deprecated; migration pressure remains official.\n- `WebContentsView` / `BaseWindow` / Views hierarchy is the current direction.\n- Linux Wayland/input behavior is still active engineering territory.\n\nLikely relevant, verify in your app:\n\n- Focus changes on `addChildView`.\n- Transparency/background color assumptions.\n- Hidden/background view readiness.\n- DevTools or `setWindowOpenHandler` behavior in browser-like UIs.\n- Destroyed `webContents` lifecycle guards.\n- Avoiding shared mutable options objects.\n\nLess safe to treat as current without repro:\n\n- Specific Electron 30-39 rendering bugs.\n- Older Linux transparency behavior from Electron 33.\n- Any report where the fix landed in later Electron but was not retested on 43.\n\nMy practical read: for Electron 43, the migration is viable, but I’d budget a Linux/Wayland test pass around focus, transparent overlays, background tabs, DevTools, and view destruction. Those are the places where the firsthand reports cluster."
+      }
+    }
+  ]
+}
