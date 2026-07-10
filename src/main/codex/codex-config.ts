@@ -1,4 +1,5 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
+import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 
 const taskShapingGuidance = [
   'Codex Desktop task-shaping guidance:',
@@ -66,6 +67,21 @@ export function resolveTurnPolicy(text: string): { effort?: string; summary: 'au
   }
 
   return { summary: 'auto' }
+}
+
+export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
+  const normalized = text.trim().toLowerCase()
+  const webExtractionTask =
+    /https?:\/\//.test(normalized) ||
+    /\b(search|research|browse|look up|find online|on the web|website|webpage|web page|source|sources|citation|citations|current|latest|news|pricing)\b/.test(normalized)
+
+  return skills.filter((skill) => {
+    if (normalized.includes(`$${skill.name.toLowerCase()}`)) {
+      return true
+    }
+
+    return skill.name === 'web-page-extraction' && webExtractionTask
+  })
 }
 
 const browserRunSchema = {

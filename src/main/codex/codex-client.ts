@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events'
 import { createInterface } from 'node:readline'
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { isAbsolute, join, relative, resolve } from 'node:path'
 import { app, type BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
@@ -14,18 +14,22 @@ import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/Dynam
 import type { DynamicToolCallResponse } from '../../shared/codex-protocol/v2/DynamicToolCallResponse.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
+import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
+import type { SkillsListResponse } from '../../shared/codex-protocol/v2/SkillsListResponse.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
 import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
+import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
 import {
   browserDynamicTools,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
-  resolveTurnPolicy
+  resolveTurnPolicy,
+  selectTurnSkills
 } from './codex-config.js'
 
 type JsonRpcMessage = {
@@ -49,11 +53,17 @@ function localSkillsRoot(): string {
   return join(app.getAppPath(), 'skills')
 }
 
+function isPathWithin(root: string, candidate: string): boolean {
+  const pathFromRoot = relative(root, resolve(candidate))
+  return pathFromRoot !== '..' && !pathFromRoot.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`) && !isAbsolute(pathFromRoot)
+}
+
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
   private readonly pending = new Map<string | number, PendingRequest>()
   private requestCounter = 0
+  private localSkills: SkillMetadata[] = []
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
@@ -148,18 +158,13 @@ export class CodexClient extends EventEmitter {
     model?: string | null
   ): Promise<TurnStartResponse & { threadId: string }> {
     const activeThreadId = threadId ?? (await this.startThread(cwd, model)).thread.id
+    const input = this.buildTurnInput(text)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
     const response = await this.request<TurnStartResponse>('turn/start', {
       threadId: activeThreadId,
-      input: [
-        {
-          type: 'text',
-          text,
-          text_elements: []
-        }
-      ],
+      input,
       ...(model ? { model } : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
@@ -179,7 +184,7 @@ export class CodexClient extends EventEmitter {
     return this.request('turn/steer', {
       threadId,
       expectedTurnId: turnId,
-      input: [{ type: 'text', text, text_elements: [] }]
+      input: this.buildTurnInput(text)
     })
   }
 
@@ -271,8 +276,8 @@ export class CodexClient extends EventEmitter {
           ]
         }
       })
-      await this.registerLocalSkills()
       this.notify('initialized')
+      await this.registerLocalSkills()
       this.emitStatus('ready')
     } catch (error) {
       if (this.child === child) {
@@ -287,6 +292,7 @@ export class CodexClient extends EventEmitter {
     const skillsRoot = localSkillsRoot()
 
     if (!existsSync(skillsRoot)) {
+      this.localSkills = []
       console.warn(`Local Codex skills root not found: ${skillsRoot}`)
       return
     }
@@ -295,13 +301,43 @@ export class CodexClient extends EventEmitter {
       await this.request('skills/extraRoots/set', {
         extraRoots: [skillsRoot]
       })
-      await this.request('skills/list', {
-        cwds: [app.getAppPath()],
-        forceReload: true
-      })
+      await this.refreshLocalSkills(true)
     } catch (error) {
+      this.localSkills = []
       console.warn('Failed to register local Codex skills root', error)
     }
+  }
+
+  private async refreshLocalSkills(forceReload = false): Promise<void> {
+    const skillsRoot = resolve(localSkillsRoot())
+
+    try {
+      const result = await this.request<SkillsListResponse>('skills/list', {
+        cwds: [app.getAppPath()],
+        forceReload
+      })
+
+      this.localSkills = result.data
+        .flatMap((entry) => entry.skills)
+        .filter((skill) => skill.enabled && isPathWithin(skillsRoot, skill.path))
+    } catch (error) {
+      console.warn('Failed to refresh local Codex skills', error)
+    }
+  }
+
+  private buildTurnInput(text: string): UserInput[] {
+    return [
+      ...selectTurnSkills(text, this.localSkills).map((skill): UserInput => ({
+        type: 'skill',
+        name: skill.name,
+        path: skill.path
+      })),
+      {
+        type: 'text',
+        text,
+        text_elements: []
+      }
+    ]
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
