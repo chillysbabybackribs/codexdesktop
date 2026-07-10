@@ -65,6 +65,7 @@ export class CodexClient extends EventEmitter {
   private readonly pending = new Map<string | number, PendingRequest>()
   private requestCounter = 0
   private localSkills: SkillMetadata[] = []
+  private readonly threadModels = new Map<string, string>()
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
@@ -112,7 +113,7 @@ export class CodexClient extends EventEmitter {
 
   async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
     await this.ensureStarted()
-    return this.request<ThreadStartResponse>('thread/start', {
+    const response = await this.request<ThreadStartResponse>('thread/start', {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
       ...(model ? { model } : {}),
       approvalPolicy: 'never',
@@ -122,11 +123,13 @@ export class CodexClient extends EventEmitter {
       dynamicTools: browserDynamicTools,
       developerInstructions: buildGuidance()
     })
+    this.threadModels.set(response.thread.id, response.model)
+    return response
   }
 
   async resumeThread(threadId: string): Promise<ThreadResumeResponse> {
     await this.ensureStarted()
-    return this.request<ThreadResumeResponse>('thread/resume', {
+    const response = await this.request<ThreadResumeResponse>('thread/resume', {
       threadId,
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
@@ -142,6 +145,8 @@ export class CodexClient extends EventEmitter {
         itemsView: 'full'
       }
     })
+    this.threadModels.set(threadId, response.model)
+    return response
   }
 
   async readThread(threadId: string): Promise<ThreadReadResponse> {
@@ -157,7 +162,8 @@ export class CodexClient extends EventEmitter {
     text: string,
     cwd?: string | null,
     model?: string | null
-  ): Promise<TurnStartResponse & { threadId: string }> {
+  ): Promise<TurnStartResponse & { threadId: string; model: string | null }> {
+    await this.ensureStarted()
     const activeThreadId = threadId ?? (await this.startThread(cwd, model)).thread.id
     const input = this.buildTurnInput(text)
 
@@ -170,8 +176,13 @@ export class CodexClient extends EventEmitter {
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
+    if (model) this.threadModels.set(activeThreadId, model)
 
-    return { ...response, threadId: activeThreadId }
+    return {
+      ...response,
+      threadId: activeThreadId,
+      model: model ?? this.threadModels.get(activeThreadId) ?? null
+    }
   }
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
@@ -406,6 +417,15 @@ export class CodexClient extends EventEmitter {
 
       if (notification.method === 'skills/changed') {
         void this.refreshLocalSkills(true)
+      }
+
+      if (notification.method === 'model/rerouted') {
+        this.threadModels.set(notification.params.threadId, notification.params.toModel)
+      } else if (
+        notification.method === 'thread/deleted' ||
+        notification.method === 'thread/closed'
+      ) {
+        this.threadModels.delete(notification.params.threadId)
       }
 
       this.emit('event', {
