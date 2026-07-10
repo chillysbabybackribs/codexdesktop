@@ -1,3 +1,8 @@
+---
+name: web-page-extraction
+description: Use when a task requires researching or extracting evidence from public web pages, especially when pages need saved artifacts, targeted shell reads, or visible-browser interaction for dynamic or authenticated content.
+---
+
 # Web Page Extraction
 
 Use this workflow for public web research when the answer depends on details inside pages.
