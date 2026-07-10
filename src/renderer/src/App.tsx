@@ -230,8 +230,12 @@ export default function App(): React.JSX.Element {
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
   const initializationPromiseRef = useRef<Promise<void> | null>(null)
-  const pendingAgentDeltasRef = useRef<Map<string, string>>(new Map())
-  const agentDeltaTimerRef = useRef<number | null>(null)
+  // All streaming patches (agent text, command output, reasoning, plan, file
+  // changes) accumulate here and apply in a single batched setItems per frame.
+  // Batching every delta kind — not just agent text — is what keeps a long
+  // turn's reasoning/command streams from re-rendering the transcript per token.
+  const pendingItemMutationsRef = useRef<Array<(items: ChatItem[]) => ChatItem[]>>([])
+  const itemMutationTimerRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
 
@@ -240,8 +244,8 @@ export default function App(): React.JSX.Element {
   }, [])
 
   useEffect(() => () => {
-    if (agentDeltaTimerRef.current !== null) {
-      window.clearTimeout(agentDeltaTimerRef.current)
+    if (itemMutationTimerRef.current !== null) {
+      window.clearTimeout(itemMutationTimerRef.current)
     }
   }, [])
 
