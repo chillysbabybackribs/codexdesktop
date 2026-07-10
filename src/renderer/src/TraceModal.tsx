@@ -39,6 +39,13 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
   }
 
   const turnTokens = trace.usage.turn
+  const truncations = trace.capture.truncations ?? []
+  const structuredToolCallCount = trace.summary.structuredToolCallCount ?? trace.summary.toolCallCount ?? 0
+  const searchEventCount = trace.summary.searchEventCount ?? trace.summary.searchCount ?? 0
+  const executionCount = trace.summary.executionCount ??
+    trace.summary.commandCount + structuredToolCallCount + searchEventCount
+  const failedCommandCount = trace.summary.failedCommandCount ?? 0
+  const accounting = trace.usage.accounting
 
   return (
     <div className="trace-overlay" onPointerDown={onClose}>
@@ -64,11 +71,18 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
         <div className="trace-scroll">
           {trace.capture.completeness === 'partial' ? (
             <div className="trace-capture-warning" role="note">
-              <strong>Partial trace</strong>
-              <span>
-                This turn was restored without {trace.capture.missing.join(', ') || 'all live telemetry'}.
-                New completed turns are saved with the full live trace.
-              </span>
+              <strong>{truncations.length && !trace.capture.missing.length ? 'Bounded trace' : 'Partial trace'}</strong>
+              <div className="trace-capture-copy">
+                {trace.capture.missing.length ? (
+                  <span>Missing: {trace.capture.missing.join(', ')}.</span>
+                ) : null}
+                {truncations.length ? (
+                  <span>
+                    {truncations.length} {truncations.length === 1 ? 'field was' : 'fields were'} size-limited or omitted:
+                    {' '}{truncations.map((entry) => entry.path).join(', ')}.
+                  </span>
+                ) : null}
+              </div>
             </div>
           ) : null}
 
@@ -76,12 +90,18 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
             <TraceMetric label="Status" value={trace.turn.status} />
             <TraceMetric label="Duration" value={formatDuration(trace.turn.durationMs)} />
             <TraceMetric label="Model" value={trace.environment.model ?? 'unknown'} />
-            <TraceMetric label="Workspace" value={trace.environment.workspace ?? 'default'} mono />
             <TraceMetric label="Model calls" value={String(trace.usage.modelCallCount)} />
+            <TraceMetric label="Executions" value={String(executionCount)} />
             <TraceMetric label="Commands" value={String(trace.summary.commandCount)} />
-            <TraceMetric label="Tool calls" value={String(trace.summary.toolCallCount)} />
-            <TraceMetric label="Browser calls" value={String(trace.summary.browserToolCount)} />
+            <TraceMetric label="Structured tools" value={String(structuredToolCallCount)} />
+            <TraceMetric label="Search events" value={String(searchEventCount)} />
+            <TraceMetric label="Browser tools" value={String(trace.summary.browserToolCount)} />
+            <TraceMetric label="Failed commands" value={String(failedCommandCount)} />
           </section>
+          <p className="trace-accounting-note">
+            Executions count shell commands, structured tool calls, and structured search events.
+            Network or search work performed inside a shell command remains part of that command.
+          </p>
 
           <section className="trace-section">
             <div className="trace-section-heading">
@@ -94,6 +114,7 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
               <TraceToken label="Total" value={turnTokens?.totalTokens} />
               <TraceToken label="Input" value={turnTokens?.inputTokens} />
               <TraceToken label="Cached" value={turnTokens?.cachedInputTokens} />
+              <TraceToken label="Uncached" value={accounting?.uncachedInputTokens} />
               <TraceToken label="Output" value={turnTokens?.outputTokens} />
               <TraceToken label="Reasoning" value={turnTokens?.reasoningOutputTokens} />
               <TraceToken label="Context window" value={trace.usage.modelContextWindow} />
@@ -102,17 +123,50 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
               <p className="trace-usage-note">
                 Latest call: {formatTokens(trace.usage.latestModelCall.totalTokens)} tokens.
                 Thread total at completion: {trace.usage.threadTotalAtEnd
-                  ? formatTokens(trace.usage.threadTotalAtEnd.totalTokens)
-                  : 'unknown'}.
+                ? formatTokens(trace.usage.threadTotalAtEnd.totalTokens)
+                : 'unknown'}.
+                {accounting?.cachedInputPercent !== null && accounting?.cachedInputPercent !== undefined
+                  ? ` Cache rate: ${accounting.cachedInputPercent.toFixed(1)}%.`
+                  : ''}
+                {accounting?.latestCallContextPercent !== null && accounting?.latestCallContextPercent !== undefined
+                  ? ` Latest-call context: ${accounting.latestCallContextPercent.toFixed(1)}%.`
+                  : ''}
               </p>
             ) : null}
+            <p className="trace-usage-note">
+              Turn total is accumulated consumption across model calls; latest call is one request;
+              thread total is the cumulative counter snapshot at completion.
+            </p>
           </section>
+
+          {trace.timing ? (
+            <section className="trace-section">
+              <div className="trace-section-heading">
+                <h3>Timing coverage</h3>
+                <span>{trace.timing.timedEventCount} timed event spans</span>
+              </div>
+              <div className="trace-token-row trace-timing-row">
+                <TraceMetric label="Wall time" value={formatDuration(trace.timing.wallDurationMs ?? undefined)} />
+                <TraceMetric label="Attributed" value={formatDuration(trace.timing.attributedDurationMs)} />
+                <TraceMetric label="Unattributed" value={formatDuration(trace.timing.unattributedDurationMs ?? undefined)} />
+                <TraceMetric
+                  label="Coverage"
+                  value={trace.timing.attributionPercent === null ? 'unknown' : `${trace.timing.attributionPercent.toFixed(1)}%`}
+                />
+              </div>
+              <p className="trace-usage-note">
+                Attributed time is the overlap-adjusted union of visible event spans. Unattributed time is waiting or work
+                for which the app server did not expose a timed event.
+              </p>
+            </section>
+          ) : null}
 
           <section className="trace-section trace-identifiers">
             <h3>Identity</h3>
             <dl>
               <dt>Thread</dt><dd>{trace.thread.id ?? 'not assigned'}</dd>
               <dt>Turn</dt><dd>{trace.turn.id}</dd>
+              <dt>Workspace</dt><dd>{trace.environment.workspace ?? 'default'}</dd>
               <dt>Started</dt><dd>{trace.turn.startedAt ?? 'unknown'}</dd>
               <dt>Completed</dt><dd>{trace.turn.completedAt ?? 'in progress'}</dd>
               <dt>Exported</dt><dd>{trace.exportedAt}</dd>
@@ -128,6 +182,41 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
                   <code>{skill.path}</code>
                 </div>
               ))}
+            </section>
+          ) : null}
+
+          {trace.sourceIndex?.items.length ? (
+            <section className="trace-section">
+              <div className="trace-section-heading">
+                <h3>Sources cited</h3>
+                <span>{trace.sourceIndex.items.length} final-response citations</span>
+              </div>
+              <div className="trace-index-list">
+                {trace.sourceIndex.items.map((source) => (
+                  <div className="trace-index-item" key={source.url}>
+                    <span className={`trace-index-kind is-${source.kind}`}>{source.kind}</span>
+                    <strong>{source.label}</strong>
+                    <code>{source.url}</code>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {trace.artifactIndex?.items.length ? (
+            <section className="trace-section">
+              <div className="trace-section-heading">
+                <h3>Artifacts</h3>
+                <span>{trace.artifactIndex.items.length} paths observed in turn events</span>
+              </div>
+              <div className="trace-index-list">
+                {trace.artifactIndex.items.map((artifact) => (
+                  <div className="trace-index-item" key={`${artifact.originEventId}:${artifact.path}`}>
+                    <span className="trace-index-kind">{artifact.kind}</span>
+                    <code>{artifact.path}</code>
+                  </div>
+                ))}
+              </div>
             </section>
           ) : null}
 
