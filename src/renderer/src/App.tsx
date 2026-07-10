@@ -1144,6 +1144,7 @@ function ChatPane({
   selectedModel,
   onSelectModel,
   onSend,
+  onSteer,
   onStop,
   onNewThread,
   onToggleThreadMenu,
@@ -1170,7 +1171,8 @@ function ChatPane({
   models: Model[]
   selectedModel: string | null
   onSelectModel: (model: string) => void
-  onSend: (text: string) => Promise<void>
+  onSend: (text: string) => Promise<boolean>
+  onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
   onNewThread: () => void
   onToggleThreadMenu: () => void
@@ -1195,7 +1197,13 @@ function ChatPane({
       if (item.type === 'system' || itemMeta[item.id]?.turnId !== activeTurnId) {
         continue
       }
-      return item.type === 'agentMessage' && !itemMeta[item.id]?.completedAtMs ? item.id : null
+      if (
+        item.type === 'agentMessage' &&
+        item.phase !== 'commentary' &&
+        !itemMeta[item.id]?.completedAtMs
+      ) {
+        return item.id
+      }
     }
     return null
   }, [items, itemMeta, activeTurnId])
@@ -1282,9 +1290,11 @@ function ChatPane({
         </div>
         <Composer
           docked={hasThreadContent}
-          isBusy={isBusy}
-          status={status}
+          isLoading={isRestoring || isBusy && !activeTurnId}
+          isTurnActive={Boolean(activeTurnId)}
+          status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
           onSend={onSend}
+          onSteer={onSteer}
           onStop={onStop}
         />
       </div>
