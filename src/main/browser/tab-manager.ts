@@ -87,6 +87,7 @@ export class TabManager {
         return {
           title: tab.title,
           url: snapshot.url,
+          favicon: tab.favicon,
           entries: snapshot.entries,
           activeIndex: snapshot.activeIndex
         } satisfies SavedBrowserTab
@@ -479,6 +480,7 @@ export class TabManager {
           id: tab.id,
           title: tab.title,
           url: navigation.url || tab.url,
+          favicon: tab.favicon,
           isLoading: tab.isLoading,
           canGoBack: navigation.canGoBack,
           canGoForward: navigation.canGoForward
@@ -487,6 +489,20 @@ export class TabManager {
     })
     this.persistListener?.()
   }
+}
+
+// Chromium reports favicon candidates best-first. Take the first that's safe to
+// render from the renderer origin — http(s) or data URLs — and ignore the rest.
+function pickFavicon(favicons: string[]): string | null {
+  for (const candidate of favicons) {
+    const lower = candidate.trim().toLowerCase()
+
+    if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('data:image/')) {
+      return candidate
+    }
+  }
+
+  return null
 }
 
 function isSafeNavigationUrl(url: string): boolean {
