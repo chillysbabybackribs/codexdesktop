@@ -44,7 +44,7 @@ const taskShapingGuidance = [
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
-  '- Research budget: call research_web once with up to three query variants, process at most two strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
+  '- Research budget: call research_web once with up to three query variants, process at most three strongest pages by default, then synthesize. Search again only when sources conflict or the question is high-stakes.',
   '- Prefer snippets and targeted passages over long full-page results. Do not repeat large source text in later reasoning.',
   'Response formatting guidance:',
   '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
@@ -136,7 +136,7 @@ const researchWebSchema = {
       description: 'One to three focused search queries. Prefer one query plus one official-source variant.'
     },
     maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', description: 'Optional pages to process, from 1 to 8. Defaults to 2.' },
+    maxPages: { type: 'number', description: 'Optional pages to process, from 1 to 8. Defaults to 3.' },
     snippetChars: { type: 'number', description: 'Optional extracted text per page, from 1000 to 8000 characters.' }
   },
   required: ['queries'],

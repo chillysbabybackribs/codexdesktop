@@ -37,7 +37,7 @@ let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
 const browserAgent = new BrowserAgentController(() => tabManager)
-const researchRunner = new ResearchRunner()
+const researchRunner = new ResearchRunner(() => tabManager)
 const browserStateStore = new BrowserStateStore()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 
