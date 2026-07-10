@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
@@ -941,7 +941,10 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
 // WorkBlock dispatcher + WorkGroup
 // ---------------------------------------------------------------------------
 
-function WorkBlock({
+// Memoized on its scalar props. `item` keeps reference identity across deltas
+// unless it's the one being patched, and `meta` is a single per-item entry, so
+// a streaming sibling no longer re-renders every settled tool card in the turn.
+const WorkBlock = memo(function WorkBlock({
   item,
   meta,
   live,
@@ -974,7 +977,7 @@ function WorkBlock({
     default:
       return <GenericBlock item={item} live={live} />
   }
-}
+})
 
 export function WorkGroup({
   items,
