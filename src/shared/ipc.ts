@@ -62,6 +62,16 @@ export type CodexListThreadsParams = {
   cwd?: string | null
 }
 
+export type TraceSaveParams = {
+  suggestedName: string
+  content: string
+}
+
+export type TraceSaveResult = {
+  saved: boolean
+  path?: string
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -89,5 +99,6 @@ export const ipcChannels = {
   codexInterruptTurn: 'codex:interruptTurn',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',
+  traceSave: 'trace:save',
   workspacePick: 'workspace:pick'
 } as const

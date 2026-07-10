@@ -6,7 +6,9 @@ import type {
   CodexInterruptTurnParams,
   CodexListThreadsParams,
   CodexSendMessageParams,
-  CodexSteerTurnParams
+  CodexSteerTurnParams,
+  TraceSaveParams,
+  TraceSaveResult
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 
@@ -55,6 +57,9 @@ export const api = {
         ipcRenderer.off(ipcChannels.codexEvent, wrapped)
       }
     }
+  },
+  trace: {
+    save: (params: TraceSaveParams): Promise<TraceSaveResult> => ipcRenderer.invoke(ipcChannels.traceSave, params)
   },
   workspace: {
     pick: (): Promise<string | null> => ipcRenderer.invoke(ipcChannels.workspacePick)

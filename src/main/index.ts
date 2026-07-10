@@ -1,6 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { BrowserBounds } from '../shared/ipc.js'
+import type { BrowserBounds, TraceSaveParams, TraceSaveResult } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
@@ -237,4 +238,29 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
+
+  ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {
+    if (!mainWindow) {
+      return { saved: false }
+    }
+
+    const suggestedName = sanitizeTraceFileName(params.suggestedName)
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: 'Save turn trace',
+      defaultPath: suggestedName,
+      filters: [{ name: 'JSON', extensions: ['json'] }]
+    })
+
+    if (result.canceled || !result.filePath) {
+      return { saved: false }
+    }
+
+    await writeFile(result.filePath, params.content, 'utf8')
+    return { saved: true, path: result.filePath }
+  })
+}
+
+function sanitizeTraceFileName(name: string): string {
+  const cleaned = name.replace(/[^a-z0-9._-]+/gi, '-').replace(/^-+|-+$/g, '') || 'codex-turn-trace'
+  return cleaned.toLowerCase().endsWith('.json') ? cleaned : `${cleaned}.json`
 }
