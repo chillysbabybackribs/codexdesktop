@@ -46,6 +46,13 @@ export type CodexSendMessageParams = {
   model?: string | null
 }
 
+export type CodexStartThreadParams = {
+  cwd?: string | null
+  model?: string | null
+}
+
+export type CodexSetGoalParams = ThreadGoalSetParams
+
 export type CodexInterruptTurnParams = {
   threadId: string
   turnId: string
@@ -105,6 +112,9 @@ export const ipcChannels = {
   codexStartThread: 'codex:startThread',
   codexResumeThread: 'codex:resumeThread',
   codexReadThread: 'codex:readThread',
+  codexGetGoal: 'codex:getGoal',
+  codexSetGoal: 'codex:setGoal',
+  codexClearGoal: 'codex:clearGoal',
   codexSendMessage: 'codex:sendMessage',
   codexSteerTurn: 'codex:steerTurn',
   codexInterruptTurn: 'codex:interruptTurn',
@@ -115,3 +125,4 @@ export const ipcChannels = {
   traceSave: 'trace:save',
   workspacePick: 'workspace:pick'
 } as const
+import type { ThreadGoalSetParams } from './codex-protocol/v2/ThreadGoalSetParams.js'

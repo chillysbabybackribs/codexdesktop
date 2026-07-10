@@ -8,6 +8,7 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
 import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
@@ -17,6 +18,11 @@ import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelList
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import type { SkillsListResponse } from '../../shared/codex-protocol/v2/SkillsListResponse.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
+import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js'
+import type { ThreadGoalGetResponse } from '../../shared/codex-protocol/v2/ThreadGoalGetResponse.js'
+import type { ThreadGoalSetParams } from '../../shared/codex-protocol/v2/ThreadGoalSetParams.js'
+import type { ThreadGoalSetResponse } from '../../shared/codex-protocol/v2/ThreadGoalSetResponse.js'
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
 import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
@@ -66,6 +72,7 @@ export class CodexClient extends EventEmitter {
   private requestCounter = 0
   private localSkills: SkillMetadata[] = []
   private readonly threadModels = new Map<string, string>()
+  private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
@@ -124,6 +131,7 @@ export class CodexClient extends EventEmitter {
       developerInstructions: buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)
+    this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
     return response
   }
 
@@ -146,6 +154,7 @@ export class CodexClient extends EventEmitter {
       }
     })
     this.threadModels.set(threadId, response.model)
+    this.threadReasoningEfforts.set(threadId, response.reasoningEffort)
     return response
   }
 
@@ -157,14 +166,36 @@ export class CodexClient extends EventEmitter {
     })
   }
 
+  async getGoal(threadId: string): Promise<ThreadGoal | null> {
+    await this.ensureStarted()
+    const response = await this.request<ThreadGoalGetResponse>('thread/goal/get', { threadId })
+    return response.goal
+  }
+
+  async setGoal(params: ThreadGoalSetParams): Promise<ThreadGoal> {
+    await this.ensureStarted()
+    const response = await this.request<ThreadGoalSetResponse>('thread/goal/set', params)
+    return response.goal
+  }
+
+  async clearGoal(threadId: string): Promise<ThreadGoalClearResponse> {
+    await this.ensureStarted()
+    return this.request<ThreadGoalClearResponse>('thread/goal/clear', { threadId })
+  }
+
   async sendMessage(
     threadId: string | null | undefined,
     text: string,
     cwd?: string | null,
     model?: string | null
-  ): Promise<TurnStartResponse & { threadId: string; model: string | null }> {
+  ): Promise<TurnStartResponse & {
+    threadId: string
+    model: string | null
+    reasoningEffort: ReasoningEffort | null
+  }> {
     await this.ensureStarted()
-    const activeThreadId = threadId ?? (await this.startThread(cwd, model)).thread.id
+    const startedThread = threadId ? null : await this.startThread(cwd, model)
+    const activeThreadId = threadId ?? startedThread!.thread.id
     const input = this.buildTurnInput(text)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
@@ -181,7 +212,8 @@ export class CodexClient extends EventEmitter {
     return {
       ...response,
       threadId: activeThreadId,
-      model: model ?? this.threadModels.get(activeThreadId) ?? null
+      model: model ?? this.threadModels.get(activeThreadId) ?? null,
+      reasoningEffort: startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     }
   }
 
@@ -426,6 +458,7 @@ export class CodexClient extends EventEmitter {
         notification.method === 'thread/closed'
       ) {
         this.threadModels.delete(notification.params.threadId)
+        this.threadReasoningEfforts.delete(notification.params.threadId)
       }
 
       this.emit('event', {

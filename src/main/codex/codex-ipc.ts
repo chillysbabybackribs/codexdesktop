@@ -1,5 +1,13 @@
 import { ipcMain, type BrowserWindow } from 'electron'
-import type { CodexEvent, CodexInterruptTurnParams, CodexListThreadsParams, CodexSendMessageParams, CodexSteerTurnParams } from '../../shared/ipc.js'
+import type {
+  CodexEvent,
+  CodexInterruptTurnParams,
+  CodexListThreadsParams,
+  CodexSendMessageParams,
+  CodexSetGoalParams,
+  CodexStartThreadParams,
+  CodexSteerTurnParams
+} from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
@@ -21,9 +29,14 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexListThreads, (_event, params?: CodexListThreadsParams) =>
     client.listThreads(params)
   )
-  ipcMain.handle(ipcChannels.codexStartThread, (_event, cwd?: string | null) => client.startThread(cwd))
+  ipcMain.handle(ipcChannels.codexStartThread, (_event, params?: CodexStartThreadParams) =>
+    client.startThread(params?.cwd, params?.model)
+  )
   ipcMain.handle(ipcChannels.codexResumeThread, (_event, threadId: string) => client.resumeThread(threadId))
   ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
+  ipcMain.handle(ipcChannels.codexGetGoal, (_event, threadId: string) => client.getGoal(threadId))
+  ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
+  ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
     client.sendMessage(params.threadId, params.text, params.cwd, params.model)
   )
