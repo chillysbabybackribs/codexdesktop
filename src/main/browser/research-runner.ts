@@ -1,8 +1,9 @@
 import { app, WebContentsView } from 'electron'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
+import { loadPageAndSettle } from './page-navigation.js'
 import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
@@ -19,6 +20,11 @@ const MAX_MAX_PAGES = 8
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
+const PAGE_WORKER_CONCURRENCY = 2
+const MAX_HTML_CHARS = 2_000_000
+const SEARCH_CACHE_TTL_MS = 10 * 60_000
+const RESEARCH_MAX_AGE_MS = 7 * 24 * 60 * 60_000
+const RESEARCH_MAX_BYTES = 250 * 1024 * 1024
 
 export type ResearchRequest = {
   queries: string[]
@@ -61,27 +67,40 @@ export type ResearchResult = {
  */
 export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()
+  private readonly activeRuns = new Map<string, AbortController>()
+  private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
   private queue: Promise<void> = Promise.resolve()
+  private stagingTabId: string | null = null
 
   constructor(private readonly getTabs: () => TabManager | null) {}
 
-  run(request: ResearchRequest): Promise<ResearchResult> {
-    const operation = this.queue.then(() => this.execute(request))
+  run(request: ResearchRequest, runId = crypto.randomUUID()): Promise<ResearchResult> {
+    const controller = new AbortController()
+    this.activeRuns.set(runId, controller)
+    const operation = this.queue.then(() => this.execute(request, controller.signal))
     this.queue = operation.then(
       () => undefined,
       () => undefined
     )
-    return operation
+    return operation.finally(() => {
+      if (this.activeRuns.get(runId) === controller) this.activeRuns.delete(runId)
+    })
+  }
+
+  cancel(runId: string): void {
+    this.activeRuns.get(runId)?.abort()
   }
 
   dispose(): void {
+    for (const controller of this.activeRuns.values()) controller.abort()
+    this.activeRuns.clear()
     for (const view of this.searchViews) {
       if (!view.webContents.isDestroyed()) view.webContents.close()
     }
     this.searchViews.clear()
   }
 
-  private async execute(request: ResearchRequest): Promise<ResearchResult> {
+  private async execute(request: ResearchRequest, signal: AbortSignal): Promise<ResearchResult> {
     const queries = request.queries
       .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
       .map((query) => query.trim())
@@ -96,6 +115,7 @@ export class ResearchRunner {
     const snippetChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
     const researchId = crypto.randomUUID()
     const artifactDir = join(app.getPath('userData'), 'research', researchId)
+    await pruneResearchArtifacts(join(app.getPath('userData'), 'research'))
     await mkdir(artifactDir, { recursive: true })
 
     const searchQueries = buildResearchQueryVariants(queries)
