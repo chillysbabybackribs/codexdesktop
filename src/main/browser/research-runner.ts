@@ -61,9 +61,9 @@ export type ResearchResult = {
 }
 
 /**
- * A compact, deterministic research pipeline. SERP discovery stays hidden,
- * while qualifying pages are loaded sequentially in a dedicated visible tab;
- * Codex receives only extracted text and filesystem pointers to full artifacts.
+ * A compact, deterministic research pipeline. Discovery is cached and
+ * serialized, qualifying pages use a bounded hidden worker pool, and the best
+ * result is staged in one reusable visible tab after extraction completes.
  */
 export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()
