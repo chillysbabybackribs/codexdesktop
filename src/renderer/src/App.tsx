@@ -1197,10 +1197,30 @@ function ChatPane({
   onPickWorkspace: () => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
   const { rows, turnWork } = useMemo(
     () => buildRows(items, itemMeta, activeTurnId),
     [items, itemMeta, activeTurnId]
   )
+  const trace = useMemo(
+    () => traceTurnId
+      ? buildTurnTrace({
+          threadId: activeThreadId,
+          threadTitle: title,
+          turnId: traceTurnId,
+          model: selectedModel,
+          workspace,
+          items,
+          itemMeta,
+          meta: turnMeta[traceTurnId]
+        })
+      : null,
+    [traceTurnId, activeThreadId, title, selectedModel, workspace, items, itemMeta, turnMeta]
+  )
+
+  useEffect(() => {
+    setTraceTurnId(null)
+  }, [activeThreadId])
 
   // True while the live turn's newest item is an assistant message still
   // receiving deltas — drives the "Writing" tail label and message caret.
@@ -1271,6 +1291,7 @@ function ChatPane({
                 itemMeta={itemMeta}
                 meta={turnMeta[row.turnId]}
                 streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
+                onOpenTrace={() => setTraceTurnId(row.turnId)}
               />
             )
           }
@@ -1331,6 +1352,7 @@ function ChatPane({
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
+      {trace ? <TraceModal trace={trace} onClose={() => setTraceTurnId(null)} /> : null}
     </section>
   )
 }
