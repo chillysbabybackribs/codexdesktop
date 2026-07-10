@@ -852,7 +852,7 @@ export default function App(): React.JSX.Element {
   }
 
   function mergeItems(nextItems: ThreadItem[]): void {
-    flushPendingAgentDeltas()
+    flushPendingItemMutations()
     setItems((current) => upsertMany(current, nextItems))
   }
 
@@ -991,65 +991,70 @@ export default function App(): React.JSX.Element {
   }
 
   function upsertItem(item: ThreadItem): void {
-    flushPendingAgentDeltas()
+    flushPendingItemMutations()
     setItems((current) => upsertMany(current, [item]))
   }
 
-  function patchItemText(itemId: string, delta: string, fallbackType: 'agentMessage'): void {
-    pendingAgentDeltasRef.current.set(
-      itemId,
-      `${pendingAgentDeltasRef.current.get(itemId) ?? ''}${delta}`
-    )
+  // Queue a streaming mutation and schedule a single batched apply. Every delta
+  // kind funnels through here so a burst of reasoning/command/text tokens
+  // collapses into one setItems (one buildRows + one render) per ~32ms frame
+  // instead of one per token. A 32ms batch still reads as continuous.
+  function enqueueItemMutation(mutate: (items: ChatItem[]) => ChatItem[]): void {
+    pendingItemMutationsRef.current.push(mutate)
 
-    if (agentDeltaTimerRef.current !== null) {
+    if (itemMutationTimerRef.current !== null) {
       return
     }
 
-    // Re-rendering incremental Markdown on every token is expensive. A short
-    // 32ms batch still feels continuous while halving peak parse/layout work.
-    agentDeltaTimerRef.current = window.setTimeout(() => {
-      agentDeltaTimerRef.current = null
-      flushPendingAgentDeltas(fallbackType)
+    itemMutationTimerRef.current = window.setTimeout(() => {
+      itemMutationTimerRef.current = null
+      flushPendingItemMutations()
     }, 32)
   }
 
-  function flushPendingAgentDeltas(fallbackType: 'agentMessage' = 'agentMessage'): void {
-    const pending = pendingAgentDeltasRef.current
+  // Apply every queued mutation in order in a single state update. Ordering is
+  // preserved (mutations run in enqueue order), so this is safe to call ahead of
+  // a full-item upsert to keep pending deltas from landing after their item.
+  function flushPendingItemMutations(): void {
+    const pending = pendingItemMutationsRef.current
 
-    if (!pending.size) {
+    if (!pending.length) {
       return
     }
 
-    if (agentDeltaTimerRef.current !== null) {
-      window.clearTimeout(agentDeltaTimerRef.current)
-      agentDeltaTimerRef.current = null
+    if (itemMutationTimerRef.current !== null) {
+      window.clearTimeout(itemMutationTimerRef.current)
+      itemMutationTimerRef.current = null
     }
 
-    pendingAgentDeltasRef.current = new Map()
+    pendingItemMutationsRef.current = []
     setItems((current) => {
       let next = current
-
-      for (const [itemId, delta] of pending) {
-        const index = next.findIndex((item) => item.id === itemId)
-
-        if (index === -1) {
-          next = [...next, { type: fallbackType, id: itemId, text: delta, phase: null, memoryCitation: null }]
-          continue
-        }
-
-        next = next.map((item) =>
-          item.id === itemId && item.type === 'agentMessage'
-            ? { ...item, text: `${item.text}${delta}` }
-            : item
-        )
+      for (const mutate of pending) {
+        next = mutate(next)
       }
-
       return next
     })
   }
 
+  function patchItemText(itemId: string, delta: string, fallbackType: 'agentMessage'): void {
+    enqueueItemMutation((current) => {
+      const index = current.findIndex((item) => item.id === itemId)
+
+      if (index === -1) {
+        return [...current, { type: fallbackType, id: itemId, text: delta, phase: null, memoryCitation: null }]
+      }
+
+      return current.map((item) =>
+        item.id === itemId && item.type === 'agentMessage'
+          ? { ...item, text: `${item.text}${delta}` }
+          : item
+      )
+    })
+  }
+
   function patchCommandOutput(itemId: string, delta: string): void {
-    setItems((current) =>
+    enqueueItemMutation((current) =>
       current.map((item) => {
         if (item.id !== itemId || item.type !== 'commandExecution') {
           return item
@@ -1066,7 +1071,7 @@ export default function App(): React.JSX.Element {
   // Live diff stream: item/fileChange/patchUpdated replaces the item's full
   // change set on every update (the diff grows as Codex writes the file).
   function patchFileChanges(itemId: string, changes: FileUpdateChange[]): void {
-    setItems((current) => {
+    enqueueItemMutation((current) => {
       const index = current.findIndex((item) => item.id === itemId)
 
       if (index === -1) {
@@ -1080,7 +1085,7 @@ export default function App(): React.JSX.Element {
   }
 
   function patchReasoningPart(itemId: string, field: 'summary' | 'content', partIndex: number, delta: string): void {
-    setItems((current) => {
+    enqueueItemMutation((current) => {
       const index = current.findIndex((item) => item.id === itemId)
 
       if (index === -1) {
@@ -1115,7 +1120,7 @@ export default function App(): React.JSX.Element {
   }
 
   function patchPlan(itemId: string, delta: string): void {
-    setItems((current) => {
+    enqueueItemMutation((current) => {
       const index = current.findIndex((item) => item.id === itemId)
 
       if (index === -1) {
