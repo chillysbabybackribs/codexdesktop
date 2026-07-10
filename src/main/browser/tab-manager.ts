@@ -244,6 +244,19 @@ export class TabManager {
     void tab.view.webContents.loadURL(normalizeNavigationInput(input), { userAgent: chromeLikeUserAgent() })
   }
 
+  async navigateAndWait(id: string, input: string, timeoutMs = 15_000): Promise<void> {
+    const tab = this.tabs.get(id)
+
+    if (!tab) {
+      throw new Error(`no tab with id ${id}`)
+    }
+
+    const load = tab.view.webContents.loadURL(normalizeNavigationInput(input), {
+      userAgent: chromeLikeUserAgent()
+    })
+    await withTimeout(load, timeoutMs)
+  }
+
   goBack(id: string): void {
     const tab = this.tabs.get(id)
     const history = tab?.view.webContents.navigationHistory
@@ -553,4 +566,15 @@ function safeWebContentsUrl(webContents: WebContents): string {
   } catch {
     return ''
   }
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | null = null
+  const timeout = new Promise<T>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new Error(`navigation timed out after ${timeoutMs}ms`)), timeoutMs)
+  })
+
+  return Promise.race([promise, timeout]).finally(() => {
+    if (timer) clearTimeout(timer)
+  })
 }
