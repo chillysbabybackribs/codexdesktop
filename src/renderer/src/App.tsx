@@ -2584,6 +2584,149 @@ function ModelPill({
   )
 }
 
+function GoalControl({
+  goal,
+  disabled,
+  onSave,
+  onSetStatus,
+  onClear
+}: {
+  goal: ThreadGoal | null
+  disabled: boolean
+  onSave: (objective: string, tokenBudget: number | null) => Promise<boolean>
+  onSetStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
+  onClear: () => Promise<void>
+}): React.JSX.Element {
+  const [isOpen, setIsOpen] = useState(false)
+  const [objective, setObjective] = useState(goal?.objective ?? '')
+  const [tokenBudget, setTokenBudget] = useState(goal?.tokenBudget ? String(goal.tokenBudget) : '')
+  const wrapRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    setObjective(goal?.objective ?? '')
+    setTokenBudget(goal?.tokenBudget ? String(goal.tokenBudget) : '')
+  }, [goal?.objective, goal?.tokenBudget])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handlePointerDown = (event: MouseEvent): void => {
+      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) setIsOpen(false)
+    }
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setIsOpen(false)
+    }
+
+    window.addEventListener('mousedown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('mousedown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen])
+
+  const submitGoal = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+    const parsedBudget = tokenBudget.trim() ? Number(tokenBudget) : null
+    if (parsedBudget !== null && (!Number.isFinite(parsedBudget) || parsedBudget <= 0)) return
+
+    const saved = await onSave(
+      objective,
+      parsedBudget === null ? null : Math.floor(parsedBudget)
+    )
+    if (saved) setIsOpen(false)
+  }
+
+  return (
+    <div ref={wrapRef} className={`goal-control ${goal ? 'has-goal' : ''}`}>
+      <button
+        type="button"
+        className="workspace-pill goal-pill"
+        title={goal?.objective ?? 'Set a thread goal'}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <GoalIcon />
+        <span className="workspace-pill-name">{goal ? goalStatusLabel(goal.status) : 'Goal'}</span>
+        {goal ? <span className={`goal-status-dot is-${goal.status}`} aria-hidden="true" /> : null}
+      </button>
+      {isOpen ? (
+        <div className="goal-menu" role="dialog" aria-label="Thread goal">
+          <form onSubmit={(event) => void submitGoal(event)}>
+            <label htmlFor="goal-objective">Objective</label>
+            <textarea
+              id="goal-objective"
+              value={objective}
+              rows={4}
+              maxLength={1_000}
+              disabled={disabled}
+              placeholder="What should this thread keep working toward?"
+              onChange={(event) => setObjective(event.target.value)}
+            />
+            <label htmlFor="goal-token-budget">Token budget</label>
+            <input
+              id="goal-token-budget"
+              type="number"
+              min="1"
+              step="1000"
+              value={tokenBudget}
+              disabled={disabled}
+              placeholder="No limit"
+              onChange={(event) => setTokenBudget(event.target.value)}
+            />
+            {goal ? (
+              <p className="goal-usage">
+                {goal.tokensUsed.toLocaleString()} tokens · {formatGoalTime(goal.timeUsedSeconds)}
+              </p>
+            ) : null}
+            <div className="goal-actions">
+              <button type="submit" disabled={disabled || !objective.trim()}>
+                {goal ? 'Update' : 'Start goal'}
+              </button>
+              {goal?.status === 'active' ? (
+                <button type="button" disabled={disabled} onClick={() => void onSetStatus('paused')}>Pause</button>
+              ) : goal?.status === 'paused' ? (
+                <button type="button" disabled={disabled} onClick={() => void onSetStatus('active')}>Resume</button>
+              ) : null}
+              {goal ? (
+                <button type="button" className="goal-clear" disabled={disabled} onClick={() => void onClear()}>Clear</button>
+              ) : null}
+            </div>
+          </form>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function goalStatusLabel(status: ThreadGoalStatus): string {
+  return {
+    active: 'Goal active',
+    paused: 'Goal paused',
+    blocked: 'Goal blocked',
+    usageLimited: 'Usage limited',
+    budgetLimited: 'Budget reached',
+    complete: 'Goal complete'
+  }[status]
+}
+
+function formatGoalTime(seconds: number): string {
+  if (seconds < 60) return `${Math.round(seconds)}s`
+  const minutes = Math.floor(seconds / 60)
+  return seconds < 3_600 ? `${minutes}m ${Math.round(seconds % 60)}s` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`
+}
+
+function GoalIcon(): React.JSX.Element {
+  return (
+    <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 4V2.5M20 12h1.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function ModelIcon(): React.JSX.Element {
   return (
     <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
