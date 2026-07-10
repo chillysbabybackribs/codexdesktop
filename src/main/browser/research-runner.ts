@@ -8,6 +8,7 @@ import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
+  assessExtractedPage,
   rankSerpCandidates,
   type SerpCandidate
 } from './research-utils.js'
@@ -44,6 +45,7 @@ export type ResearchPage = {
   sourceQuery?: string
   sourceTier?: string
   score?: number
+  verified: true
 }
 
 export type ResearchResult = {
@@ -171,6 +173,10 @@ export class ResearchRunner {
             wordCount: number
             truncated: boolean
           }>(view.webContents, buildPageExtractionProgram(snippetChars))
+          const assessment = assessExtractedPage(extracted)
+          if (!assessment.verified) {
+            throw new Error(`page verification failed: ${assessment.reason}`)
+          }
           const html = await evaluate<string>(
             view.webContents,
             `return (document.documentElement?.outerHTML || '').slice(0, ${MAX_HTML_CHARS})`
@@ -192,6 +198,7 @@ export class ResearchRunner {
             sourceQuery: candidate.query,
             sourceTier: candidate.sourceTier,
             score: candidate.score
+            ,verified: true
           } satisfies ResearchPage
         } catch (error) {
           if (signal.aborted) throw error

@@ -21,6 +21,11 @@ export type RankedSerpCandidate = SerpCandidate & {
   sourceTier: 'official' | 'primary' | 'community' | 'video' | 'general'
 }
 
+export type ExtractedPageAssessment = {
+  verified: boolean
+  reason?: 'invalid-url' | 'challenge-page' | 'insufficient-content'
+}
+
 export function googleSearchUrl(query: string, maxResults: number): string {
   return `https://www.google.com/search?num=${maxResults * 2}&q=${encodeURIComponent(query)}`
 }
@@ -91,6 +96,7 @@ export function buildSerpExtractionProgram(maxResults: number): string {
 
 export function rankSerpCandidates(candidates: SerpCandidate[], queries: string[], limit: number): RankedSerpCandidate[] {
   const queryTokens = uniqueStrings(queries.flatMap(tokenize))
+  const preferCommunity = queries.some((query) => /\b(firsthand|experience|report|forum|reddit|discussion|issue|review|opinion)\b/i.test(query))
   const deduped = new Map<string, RankedSerpCandidate>()
 
   for (const candidate of candidates) {
@@ -112,7 +118,7 @@ export function rankSerpCandidates(candidates: SerpCandidate[], queries: string[
       snippetMatches * 7 +
       (exactPhrase ? 22 : 0) +
       Math.max(0, 12 - candidate.rank) +
-      sourceBonus(source) +
+      sourceBonus(source, preferCommunity) +
       distinctiveDomainMatch(domain, queryTokens)
     )
     const ranked: RankedSerpCandidate = {
@@ -130,7 +136,7 @@ export function rankSerpCandidates(candidates: SerpCandidate[], queries: string[
 
   const sorted = [...deduped.values()].sort((left, right) => {
     if (right.score !== left.score) return right.score - left.score
-    if (left.sourceTier !== right.sourceTier) return sourceBonus(right.sourceTier) - sourceBonus(left.sourceTier)
+    if (left.sourceTier !== right.sourceTier) return sourceBonus(right.sourceTier, preferCommunity) - sourceBonus(left.sourceTier, preferCommunity)
     return left.rank - right.rank
   })
 
@@ -146,6 +152,30 @@ export function rankSerpCandidates(candidates: SerpCandidate[], queries: string[
   return selected
 }
 
+export function assessExtractedPage(page: {
+  title: string
+  url: string
+  content: string
+  wordCount: number
+}): ExtractedPageAssessment {
+  let url: URL
+  try {
+    url = new URL(page.url)
+  } catch {
+    return { verified: false, reason: 'invalid-url' }
+  }
+  if (!/^https?:$/.test(url.protocol)) return { verified: false, reason: 'invalid-url' }
+
+  const sample = `${page.title}\n${page.content.slice(0, 1_500)}`.toLowerCase()
+  if (/captcha|verify you are human|access denied|sign in to continue|checking your browser|just a moment/.test(sample)) {
+    return { verified: false, reason: 'challenge-page' }
+  }
+  if (page.wordCount < 40 || page.content.trim().length < 240) {
+    return { verified: false, reason: 'insufficient-content' }
+  }
+  return { verified: true }
+}
+
 function classifySource(
   domain: string,
   pathname: string,
@@ -153,15 +183,19 @@ function classifySource(
   queryTokens: string[]
 ): RankedSerpCandidate['sourceTier'] {
   if ([...VIDEO_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`)) || /\/(watch|video|videos|shorts|live)(\/|$)/i.test(pathname)) return 'video'
-  if ([...COMMUNITY_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`))) return 'community'
+  if (
+    [...COMMUNITY_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`)) ||
+    (domain === 'github.com' && /\/(issues|discussions|pull)(\/|$)/i.test(pathname))
+  ) return 'community'
   if (/\.(gov|mil|edu)$/i.test(domain) || /(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) return 'official'
   if (/\/(docs?|developer|reference|api|spec|standards?)\b/i.test(pathname) || /\bofficial\b/i.test(title)) return 'primary'
   if (distinctiveDomainMatch(domain, queryTokens) >= 8) return 'primary'
   return 'general'
 }
 
-function sourceBonus(source: RankedSerpCandidate['sourceTier']): number {
-  return { official: 30, primary: 16, general: 0, community: -10, video: -24 }[source]
+function sourceBonus(source: RankedSerpCandidate['sourceTier'], preferCommunity = false): number {
+  if (source === 'community') return preferCommunity ? 20 : -10
+  return { official: 30, primary: 16, general: 0, video: -24 }[source]
 }
 
 function distinctiveDomainMatch(domain: string, queryTokens: string[]): number {

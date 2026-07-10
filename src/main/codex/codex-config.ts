@@ -8,6 +8,8 @@ const taskShapingGuidance = [
   '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
   '- Keep the plan updated when observations from tools change the best path.',
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
+  '- For public web research, use research_web for bounded discovery and saved page artifacts, then inspect only targeted passages from those artifacts.',
+  '- Use browser_run for interactive or authenticated page state and browser_extract_page for one visible page. Do not dump full page bodies into model context.',
   'Response formatting guidance:',
   '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
   '- Use GitHub-Flavored Markdown tables for comparisons, summaries, rankings, and other repeated field data. Use blockquotes for important caveats and fenced code blocks for code or commands.',
@@ -32,17 +34,11 @@ export const legacyResumeConfig = {
   }
 }
 
-export function resolveTurnPolicy(text: string): { effort?: string; summary: 'auto' | 'concise' } {
+export function resolveTurnPolicy(text: string): { summary: 'auto' | 'concise' } {
   const normalized = text.trim().toLowerCase()
-  const wordCount = normalized ? normalized.split(/\s+/).length : 0
-  const implementationTask = /\b(implement|fix|refactor|debug|edit|modify|build|test|audit|codebase|repository|repo)\b/.test(normalized)
   const researchTask = /\b(current|latest|review|compare|research|pricing|news|sources|overall|what is|who is|when is)\b/.test(normalized)
 
-  if (wordCount <= 80 && researchTask && !implementationTask) {
-    return { effort: 'low', summary: 'concise' }
-  }
-
-  return { summary: 'auto' }
+  return { summary: researchTask ? 'concise' : 'auto' }
 }
 
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
@@ -94,17 +90,57 @@ const browserCdpSchema = {
   additionalProperties: false
 }
 
+const browserExtractPageSchema = {
+  type: 'object',
+  properties: {
+    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    timeoutMs: { type: 'number', description: 'Optional extraction timeout from 250 to 60000 milliseconds.' },
+    maxResultChars: { type: 'number', description: 'Optional extracted content limit from 1000 to 100000 characters.' }
+  },
+  additionalProperties: false
+}
+
+const researchWebSchema = {
+  type: 'object',
+  properties: {
+    queries: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 3,
+      items: { type: 'string' },
+      description: 'One to three focused discovery queries covering the strongest relevant source lanes.'
+    },
+    maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
+    maxPages: { type: 'number', description: 'Optional verified pages to save, from 1 to 8. Defaults to 3.' },
+    snippetChars: { type: 'number', description: 'Optional cleaned text saved per page, from 1000 to 8000 characters.' }
+  },
+  required: ['queries'],
+  additionalProperties: false
+}
+
 export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_run',
-    description: 'Run a batched JavaScript program in a visible browser tab. Inspect, act, wait, and verify in one call; return compact JSON.',
+    description: 'Run a batched JavaScript program in a visible browser tab. Inspect, act, wait, and verify in one call; return compact JSON. Page-origin CORS rules apply, so navigate the tab before reading another origin.',
     inputSchema: browserRunSchema
+  },
+  {
+    type: 'function',
+    name: 'browser_extract_page',
+    description: 'Extract bounded useful text from one visible page after verifying it is real content rather than an empty shell, login wall, or challenge page.',
+    inputSchema: browserExtractPageSchema
   },
   {
     type: 'function',
     name: 'browser_cdp',
     description: 'Send a targeted Chrome DevTools Protocol command to a browser tab through the shared per-tab operation queue. Use CDP directly for network, lifecycle, DOM snapshots, screenshots, input, storage, runtime, and other browser primitives.',
     inputSchema: browserCdpSchema
+  },
+  {
+    type: 'function',
+    name: 'research_web',
+    description: 'Discover, rank, verify, and save a bounded set of public web pages. Returns compact metadata and artifact paths without loading page bodies into model context.',
+    inputSchema: researchWebSchema
   }
 ]
