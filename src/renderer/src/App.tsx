@@ -657,7 +657,11 @@ export default function App(): React.JSX.Element {
         return
       }
 
-      const environment = { model: resumed.model, workspace: resumed.cwd }
+      const environment = {
+        model: resumed.model,
+        workspace: resumed.cwd,
+        reasoningEffort: resumed.reasoningEffort
+      }
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
@@ -800,6 +804,24 @@ export default function App(): React.JSX.Element {
         setActiveThreadId(notification.params.thread.id)
         setActiveThreadTitle(threadTitle(notification.params.thread))
         return
+      case 'thread/goal/updated':
+        if (isRelevantThread(notification.params.threadId)) {
+          const goal = cloneGoal(notification.params.goal)
+          setActiveGoal(goal)
+          activeGoalRef.current = goal
+          if (notification.params.turnId) {
+            noteTurn(notification.params.turnId, { goalAtEnd: goal })
+          }
+        }
+        return
+      case 'thread/goal/cleared':
+        if (isRelevantThread(notification.params.threadId)) {
+          setActiveGoal(null)
+          activeGoalRef.current = null
+          const turnId = activeTurnIdRef.current
+          if (turnId) noteTurn(turnId, { goalAtEnd: null })
+        }
+        return
       case 'thread/name/updated':
         if (notification.params.threadId === currentThreadId) {
           setActiveThreadTitle(notification.params.threadName || 'New Chat')
@@ -819,6 +841,8 @@ export default function App(): React.JSX.Element {
 
         if (isRelevantThread(notification.params.threadId)) {
           const turn = notification.params.turn
+          const goalSnapshot = cloneGoal(activeGoalRef.current)
+          const goalContinuation = goalSnapshot?.status === 'active' && !userTurnRequestPendingRef.current
           setActiveThreadId(notification.params.threadId)
           setActiveTurnId(turn.id)
           noteTurn(turn.id, {
@@ -826,7 +850,12 @@ export default function App(): React.JSX.Element {
             origin: 'live',
             requestedModel: selectedModelRef.current,
             model: selectedModelRef.current,
+            reasoningEffort: activeReasoningEffortRef.current,
             workspace: workspaceRef.current,
+            goalAtStart: goalSnapshot,
+            goalAtEnd: goalSnapshot,
+            goalContinuation,
+            goalContinuationInferred: goalContinuation,
             startedAtMs: turn.startedAt ? turn.startedAt * 1000 : Date.now()
           })
           adoptTurnItems(turn.id, turn.items)
@@ -842,7 +871,8 @@ export default function App(): React.JSX.Element {
             status: turn.status === 'inProgress' ? 'completed' : turn.status,
             completedAtMs: turn.completedAt ? turn.completedAt * 1000 : Date.now(),
             durationMs: turn.durationMs ?? undefined,
-            errorMessage: turn.error?.message
+            errorMessage: turn.error?.message,
+            goalAtEnd: cloneGoal(activeGoalRef.current)
           })
           setActiveTurnId((current) => (current === turn.id ? null : current))
         }
@@ -1080,7 +1110,11 @@ export default function App(): React.JSX.Element {
   function hydrateThread(
     thread: Thread,
     fallbackTurns?: Turn[],
-    environment?: { model: string | null; workspace: string | null }
+    environment?: {
+      model: string | null
+      workspace: string | null
+      reasoningEffort: ReasoningEffort | null
+    }
   ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
@@ -1098,6 +1132,7 @@ export default function App(): React.JSX.Element {
         status: turn.status,
         origin: 'restored',
         model: environment?.model ?? null,
+        reasoningEffort: environment?.reasoningEffort ?? null,
         workspace: environment?.workspace ?? thread.cwd,
         startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
         completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
