@@ -4,8 +4,10 @@ const sessions = new WeakMap<WebContents, CdpSession>()
 
 export class CdpSession {
   private attached = false
+  private readonly webContents: WebContents
 
-  constructor(private readonly webContents: WebContents) {
+  constructor(webContents: WebContents) {
+    this.webContents = webContents
     webContents.debugger.on('detach', () => {
       this.attached = false
     })
