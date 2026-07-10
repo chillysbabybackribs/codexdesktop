@@ -46,6 +46,8 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
     trace.summary.commandCount + structuredToolCallCount + searchEventCount
   const failedCommandCount = trace.summary.failedCommandCount ?? 0
   const accounting = trace.usage.accounting
+  const modelCalls = trace.usage.modelCalls ?? []
+  const droppedModelCallSamples = trace.usage.droppedModelCallSamples ?? 0
 
   return (
     <div className="trace-overlay" onPointerDown={onClose}>
@@ -139,6 +141,72 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
               thread total is the cumulative counter snapshot at completion.
             </p>
           </section>
+
+          {modelCalls.length ? (
+            <section className="trace-section">
+              <div className="trace-section-heading">
+                <h3>Context growth</h3>
+                <span>
+                  {modelCalls.length} retained {modelCalls.length === 1 ? 'sample' : 'samples'}
+                  {droppedModelCallSamples ? ` · ${droppedModelCallSamples} older dropped` : ''}
+                </span>
+              </div>
+              <div className="trace-call-table-wrap">
+                <table className="trace-call-table">
+                  <thead>
+                    <tr>
+                      <th>Call</th>
+                      <th>Input</th>
+                      <th>Cache</th>
+                      <th>Context</th>
+                      <th>Delta</th>
+                      <th>Preceded by</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {modelCalls.map((sample) => (
+                      <tr key={sample.sequence} className={sample.compactedBeforeCall ? 'is-compacted' : ''}>
+                        <td>
+                          <strong>#{sample.sequence}</strong>
+                          <span>{formatCallTime(sample.atMs)}</span>
+                          {sample.compactedBeforeCall ? <em>compacted</em> : null}
+                        </td>
+                        <td>
+                          <strong>{formatTokens(sample.usage.inputTokens)}</strong>
+                          <div className="trace-call-bar" aria-hidden="true">
+                            <span style={{ width: `${Math.min(100, sample.contextPercent ?? 0)}%` }} />
+                          </div>
+                        </td>
+                        <td>
+                          <strong>{formatTokens(sample.usage.cachedInputTokens)} cached</strong>
+                          <span>{formatTokens(sample.uncachedInputTokens)} uncached</span>
+                        </td>
+                        <td>
+                          <strong>{sample.contextPercent === null ? 'unknown' : `${sample.contextPercent.toFixed(1)}%`}</strong>
+                          <span>{sample.contextWindow ? `of ${formatTokens(sample.contextWindow)}` : 'window unknown'}</span>
+                        </td>
+                        <td>
+                          <strong>{formatSignedTokens(sample.inputDeltaFromPrevious)}</strong>
+                        </td>
+                        <td>
+                          {sample.precedingItem ? (
+                            <>
+                              <strong>{sample.precedingItem.label}</strong>
+                              <code title={sample.precedingItem.itemId}>{sample.precedingItem.itemType}</code>
+                              <span>
+                                {formatChars(sample.precedingItem.argumentChars)} args ·{' '}
+                                {formatChars(sample.precedingItem.resultChars)} result
+                              </span>
+                            </>
+                          ) : <span>unknown</span>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ) : null}
 
           {trace.goal ? (
             <section className="trace-section trace-goal">
@@ -343,6 +411,20 @@ function formatTokens(value: number): string {
   if (value < 1_000) return value.toLocaleString()
   if (value < 1_000_000) return `${(value / 1_000).toFixed(value >= 100_000 ? 0 : 1)}k`
   return `${(value / 1_000_000).toFixed(1)}m`
+}
+
+function formatSignedTokens(value: number | null): string {
+  if (value === null) return 'baseline'
+  if (value === 0) return 'no change'
+  return `${value > 0 ? '+' : '−'}${formatTokens(Math.abs(value))}`
+}
+
+function formatChars(value: number | null): string {
+  return value === null ? '—' : `${formatTokens(value)} chars`
+}
+
+function formatCallTime(value: number | null): string {
+  return value === null ? 'time unknown' : new Date(value).toLocaleTimeString()
 }
 
 function formatDuration(value: number | undefined): string {
