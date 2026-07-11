@@ -23,7 +23,7 @@ function plugin(overrides: Partial<PluginSummary> = {}): PluginSummary {
     keywords: [],
     ...overrides
   }
-})
+}
 
 function marketplace(overrides: Partial<PluginMarketplaceEntry> = {}): PluginMarketplaceEntry {
   return {
@@ -85,4 +85,4 @@ test('auth completion requires every bundled app to be accessible', () => {
   assert.deepEqual(unresolvedPluginApps(apps, [
     { id: 'one', name: 'One', installUrl: apps[0].installUrl, isAccessible: true, isEnabled: true }
   ]), [apps[1]])
-}
+})

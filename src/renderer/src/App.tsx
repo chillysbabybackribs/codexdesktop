@@ -3801,7 +3801,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
           ) : null}
           {actionError ? <div className="plugin-action-error" role="alert"><span>{actionError}</span><button type="button" onClick={() => setActionError(null)} aria-label="Dismiss error">×</button></div> : null}
           {state === 'loading' ? <div className="plugin-browser-state shimmer-text">Loading plugin catalog…</div> : null}
-          {state === 'error' ? <div className="plugin-browser-state">The plugin catalog could not be loaded. <button type="button" onClick={load}>Try again</button></div> : null}
+          {state === 'error' ? <div className="plugin-browser-state">The plugin catalog could not be loaded. <button type="button" onClick={() => void load()}>Try again</button></div> : null}
           {state === 'ready' && !plugins.length ? <div className="plugin-browser-state">No plugins match that search.</div> : null}
           {state === 'ready' && plugins.length ? (
             <section className="plugin-browser-group">
