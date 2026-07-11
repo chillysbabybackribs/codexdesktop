@@ -62,6 +62,7 @@ import {
   type SystemItem
 } from './transcript-model'
 import {
+  isImmediateItemNotification,
   isItemNotification,
   reduceItemNotificationItems,
   reduceItemNotificationMeta,
@@ -1097,22 +1098,15 @@ export default function App(): React.JSX.Element {
 
     setItemMeta((current) => reduceItemNotificationMeta(current, notification, { compactionBeforeTokens }))
 
-    switch (notification.method) {
-      case 'item/started':
-      case 'item/completed':
-      case 'item/fileChange/patchUpdated':
-        // File-change notifications are full, growing snapshots rather than
-        // tiny append-only token deltas. Applying each snapshot immediately
-        // lets the live diff card visibly grow during long writes instead of
-        // collapsing a burst of patches into one update on the next frame.
-        flushPendingItemMutations()
-        setItems((current) => reduceItemNotificationItems(current, notification))
-        break
-      case 'item/mcpToolCall/progress':
-        break
-      default:
-        enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
-        break
+    if (isImmediateItemNotification(notification)) {
+      // File-change notifications are full, growing snapshots rather than
+      // tiny append-only token deltas. Applying each snapshot immediately
+      // lets the live diff card visibly grow during long writes instead of
+      // collapsing a burst of patches into one update on the next frame.
+      flushPendingItemMutations()
+      setItems((current) => reduceItemNotificationItems(current, notification))
+    } else if (notification.method !== 'item/mcpToolCall/progress') {
+      enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
     }
 
     if (notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction') {

@@ -46,6 +46,12 @@ export function itemNotificationId(notification: ItemNotification): string {
     : notification.params.itemId
 }
 
+export function isImmediateItemNotification(notification: ItemNotification): boolean {
+  return notification.method === 'item/started' ||
+    notification.method === 'item/completed' ||
+    notification.method === 'item/fileChange/patchUpdated'
+}
+
 export function reduceItemNotificationItems(items: ChatItem[], notification: ItemNotification): ChatItem[] {
   switch (notification.method) {
     case 'item/started':
