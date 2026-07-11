@@ -148,6 +148,18 @@ function createWindow(): void {
   tabManager.onPersist(() => {
     scheduleBrowserPersist()
   })
+  tabManager.onVisit({
+    recordVisit: (url, title) => browserHistoryStore.recordVisit(url, title),
+    updateTitle: (url, title) => browserHistoryStore.updateTitle(url, title)
+  })
+
+  omniboxPopup = new OmniboxPopup(mainWindow, (url) => {
+    const activeTabId = tabManager?.getActiveTabId()
+
+    if (activeTabId) {
+      tabManager?.navigate(activeTabId, url)
+    }
+  })
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
@@ -155,6 +167,8 @@ function createWindow(): void {
   })
 
   mainWindow.on('closed', () => {
+    omniboxPopup?.dispose()
+    omniboxPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -175,6 +189,7 @@ function bootstrap(): void {
 
   app.on('before-quit', () => {
     flushBrowserPersistSync()
+    void browserHistoryStore.flush()
     researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null
@@ -188,6 +203,7 @@ function bootstrap(): void {
       isUserVisibleWebContents: (webContents) =>
         tabManager?.isUserVisibleWebContents(webContents) ?? false
     })
+    await browserHistoryStore.load()
     registerIpc()
     createWindow()
 
@@ -313,6 +329,22 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
+  ipcMain.handle(
+    ipcChannels.browserOmniboxQuery,
+    (_event, text: string, anchor: OmniboxAnchor): OmniboxSuggestion[] => {
+      const suggestions = buildSuggestions(String(text ?? ''), browserHistoryStore.entries())
+
+      if (suggestions.length > 0) {
+        omniboxPopup?.show(anchor, suggestions)
+      } else {
+        omniboxPopup?.hide()
+      }
+
+      return suggestions
+    }
+  )
+  ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))
+  ipcMain.handle(ipcChannels.browserOmniboxClose, () => omniboxPopup?.hide())
 
   ipcMain.handle(
     ipcChannels.notificationBackgroundTurn,
