@@ -318,6 +318,9 @@ export default function App(): React.JSX.Element {
   // Persistence only starts writing after restore has run, so a fresh mount
   // can't wipe the stored dock.
   const agentDockRestoredRef = useRef(false)
+  // Per-session overload recovery, keyed by session key — the dock equivalent
+  // of autoRecoveryRef (which only ever tracks the focused thread).
+  const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
