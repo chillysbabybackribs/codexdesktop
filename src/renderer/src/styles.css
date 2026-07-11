@@ -3420,7 +3420,7 @@ button {
   border-right: 0;
   border-radius: 12px 0 0 12px;
   background: #131313;
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
 }
 
 .agent-overlay.is-flash {
@@ -3430,11 +3430,11 @@ button {
 @keyframes agent-flash {
   0% {
     border-color: #4a90d9;
-    box-shadow: 0 0 0 1px #4a90d9, 0 10px 34px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 0 1px #4a90d9, 0 3px 14px rgba(0, 0, 0, 0.18);
   }
   100% {
     border-color: #232323;
-    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
   }
 }
 
