@@ -3065,27 +3065,13 @@ function ThreadScroll({
   // bottom-follow and releases the moment the reader scrolls.
   const anchorTurnRef = useRef<string | null>(null)
   const prevTurnRef = useRef<string | null>(null)
-  // The pending requestAnimationFrame(anchorTop) scheduled on a live send, so it
-  // can be cancelled if the thread resets or the component unmounts before it
-  // fires (otherwise it would run anchorTop against stale/torn-down state).
-  const anchorFrameRef = useRef<number | null>(null)
   // A fresh/restored thread may arrive with activeTurnId already set for an
   // in-progress turn; that must NOT yank it to the top — only a live send does.
-  // The reset records the turn id it absorbed so the anchor effect can skip it
-  // even when resetKey and activeTurnId change in SEPARATE commits (thread switch
-  // updates the id first, then hydrateThread sets activeTurnId a tick later — a
-  // one-shot boolean would already be consumed by then and wrongly yank it up).
-  const absorbedTurnRef = useRef<string | null>(null)
+  const justResetRef = useRef(false)
   // Programmatic scrollTop writes fire onScroll; without this guard the first
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
   const suppressScrollRef = useRef(false)
-  // Mirrors the activeTurnId prop so the reset effect — which is keyed on
-  // resetKey only (adding activeTurnId to its deps would wrongly re-jump to
-  // bottom on every send) — can read the turn active AT reset time without a
-  // stale closure.
-  const liveTurnRef = useRef(activeTurnId)
-  liveTurnRef.current = activeTurnId
   const [spacerOn, setSpacerOn] = useState(false)
 
   const cancelScheduledFollow = useCallback(() => {
@@ -3097,16 +3083,12 @@ function ThreadScroll({
       window.cancelAnimationFrame(settleFrameRef.current)
       settleFrameRef.current = null
     }
-    if (anchorFrameRef.current !== null) {
-      window.cancelAnimationFrame(anchorFrameRef.current)
-      anchorFrameRef.current = null
-    }
   }, [])
 
   // Scroll the anchored turn's user message to the top of the viewport, sizing
   // a trailing spacer so there is always room to scroll it that far even before
   // the answer fills in.
-  const anchorTop = useCallback((attempt = 0) => {
+  const anchorTop = useCallback(() => {
     const el = ref.current
     const turnId = anchorTurnRef.current
     if (!el || !turnId) return
@@ -3114,26 +3096,7 @@ function ThreadScroll({
     const node = el.querySelector<HTMLElement>(
       `.message-user[data-turn-id="${CSS.escape(turnId)}"]`
     )
-    if (!node) {
-      // The user row for this turn hasn't committed yet (slow flush / restore).
-      // Retry on the next frame up to a bound rather than leaving anchor mode
-      // stuck on with a spacer but no scroll. Bounded so a turn whose row never
-      // renders can't spin forever.
-      if (attempt < 12) {
-        anchorFrameRef.current = window.requestAnimationFrame(() => {
-          anchorFrameRef.current = null
-          anchorTop(attempt + 1)
-        })
-      }
-      return
-    }
-
-    // Found the row — any retry frame still pending from an earlier attempt is
-    // now redundant.
-    if (anchorFrameRef.current !== null) {
-      window.cancelAnimationFrame(anchorFrameRef.current)
-      anchorFrameRef.current = null
-    }
+    if (!node) return
 
     // Small breathing room so the message sits just below the viewport top
     // rather than flush against (or clipped above) the edge.
@@ -3217,49 +3180,15 @@ function ThreadScroll({
     if (!el) {
       return
     }
-
-    // In top-anchor mode, only a reader-driven scroll DURING a live turn should
-    // release the anchor. Two kinds of scroll events must NOT release it:
-    //
-    //  1. Layout jitter mid-stream — content growth and our own spacer-height
-    //     writes shift scrollTop and fire onScroll without going through the
-    //     suppress guard (which covers only the explicit scrollTop assignment,
-    //     not the browser's reflow adjustments). Filtered by the readerMoved
-    //     check: anchorTop re-pins the message to ~topGap every commit, so jitter
-    //     leaves it there while a genuine scroll moves it well away.
-    //  2. The completion reflow — when the turn ends, React removes the live tail
-    //     and the content shrinks, repositioning the still-anchored message and
-    //     firing a scroll event. If that released the anchor it would race ahead
-    //     of the completion freeze effect and snap the message down. The freeze
-    //     effect runs synchronously at that commit (before this async scroll
-    //     event), and by then liveTurnRef is already null — so gate release on a
-    //     turn still being live and let the freeze own teardown.
-    if (anchorTurnRef.current !== null) {
-      if (liveTurnRef.current === null) {
-        // Completion (or post-completion) reflow — the freeze effect owns this.
-        return
-      }
-      const node = el.querySelector<HTMLElement>(
-        `.message-user[data-turn-id="${CSS.escape(anchorTurnRef.current)}"]`
-      )
-      if (node) {
-        const userTop = node.getBoundingClientRect().top - el.getBoundingClientRect().top
-        // topGap is 12; require a clear move away before treating it as an
-        // intentional reader scroll rather than sub-pixel/one-row drift.
-        if (Math.abs(userTop - 12) <= 80) {
-          return
-        }
-      }
-      anchorTurnRef.current = null
-      setSpacerOn(false)
-      if (anchorFrameRef.current !== null) {
-        window.cancelAnimationFrame(anchorFrameRef.current)
-        anchorFrameRef.current = null
-      }
-    }
-
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
     pinnedRef.current = distanceFromBottom <= 48
+
+    // A deliberate scroll releases the top-anchor, exactly like it releases
+    // bottom-follow — the reader is now driving.
+    if (anchorTurnRef.current !== null) {
+      anchorTurnRef.current = null
+      setSpacerOn(false)
+    }
 
     // A queued frame from a prior delta must never pull a reader back down
     // after they have deliberately scrolled away from the live edge.
@@ -3274,11 +3203,7 @@ function ThreadScroll({
     cancelScheduledFollow()
     anchorTurnRef.current = null
     prevTurnRef.current = null
-    // Record whatever turn is active as this thread resets. The anchor effect
-    // skips any turn id that the reset absorbed, so a restored in-progress turn
-    // is never yanked to the top — and this survives resetKey and activeTurnId
-    // landing in separate commits (a one-shot flag would not).
-    absorbedTurnRef.current = liveTurnRef.current
+    justResetRef.current = true
     setSpacerOn(false)
     pinnedRef.current = true
     followTail()
@@ -3297,18 +3222,14 @@ function ThreadScroll({
     if (
       activeTurnId !== null &&
       activeTurnId !== prevTurnRef.current &&
-      activeTurnId !== absorbedTurnRef.current
+      !justResetRef.current
     ) {
       anchorTurnRef.current = activeTurnId
       pinnedRef.current = false
       cancelScheduledFollow()
       setSpacerOn(true)
       // The new user row + spacer land next commit; anchor once they exist.
-      // Tracked so a reset/unmount before it fires can cancel it.
-      anchorFrameRef.current = window.requestAnimationFrame(() => {
-        anchorFrameRef.current = null
-        anchorTop()
-      })
+      window.requestAnimationFrame(anchorTop)
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
@@ -3317,12 +3238,6 @@ function ThreadScroll({
       // exact minimum that preserves scrollTop — 0 if the answer already fills
       // the viewport, otherwise just enough to hold position (no excess).
       anchorTurnRef.current = null
-      // A very fast turn can finish before the send's anchor rAF (or a retry)
-      // fires; cancel it so it can't re-anchor after we've frozen.
-      if (anchorFrameRef.current !== null) {
-        window.cancelAnimationFrame(anchorFrameRef.current)
-        anchorFrameRef.current = null
-      }
       const el = ref.current
       const spacer = spacerRef.current
       if (el && spacer) {
@@ -3342,6 +3257,7 @@ function ThreadScroll({
       pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
+    justResetRef.current = false
   }, [activeTurnId, anchorTop, cancelScheduledFollow])
 
   useEffect(() => {
@@ -3354,21 +3270,12 @@ function ThreadScroll({
 
     let active = true
     // The `dependencies` layout effect already calls followTail on every React
-    // commit (i.e. every batched streaming flush), which covers text growth AND
-    // re-runs the anchor (shrinking the spacer as the answer fills in). The
-    // ResizeObserver only needs to catch the reflows React does NOT drive —
-    // code-block wrapping, diff rows, and font metrics settling a frame after
-    // commit — for bottom-follow. It must NOT route into anchorTop: anchorTop
-    // writes spacer.style.height, which resizes the observed content element and
-    // re-triggers the observer, a ResizeObserver feedback loop. So skip while the
-    // top-anchor owns the scroll; the layout effect keeps the anchor honest. A
+    // commit (i.e. every batched streaming flush), which covers text growth.
+    // The ResizeObserver catches the reflows React does NOT drive — code-block
+    // wrapping, diff rows, and font metrics settling a frame after commit. A
     // subtree characterData MutationObserver would fire on every streamed
     // character for no gain over these two, so it is intentionally omitted.
-    const onReflow = (): void => {
-      if (anchorTurnRef.current !== null) return
-      followTail()
-    }
-    const resizeObserver = new ResizeObserver(onReflow)
+    const resizeObserver = new ResizeObserver(followTail)
     resizeObserver.observe(el)
     resizeObserver.observe(content)
 
@@ -3376,7 +3283,7 @@ function ThreadScroll({
     // producing a React update. Catch that one late layout pass when supported.
     void document.fonts?.ready.then(() => {
       if (active) {
-        onReflow()
+        followTail()
       }
     })
 
