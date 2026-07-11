@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { ModelPill } from './ModelPill'
+import type { Model } from '../../shared/codex-protocol/v2/Model'
 
 export type AgentLiteMessage = {
   id: string
@@ -22,6 +24,8 @@ export type AgentSession = {
   // Optional helper mode: when true, each send includes a compact digest of
   // the main chat so the agent can answer questions about it.
   watchesMain: boolean
+  // Per-agent model override; null follows the main chat's selected model.
+  model: string | null
 }
 
 export function AgentTabStrip({
@@ -65,6 +69,9 @@ export function AgentTabStrip({
 export function AgentColumn({
   sessions,
   selectedKey,
+  models,
+  mainModel,
+  onSetModel,
   onSelect,
   onMinimize,
   onCloseSession,
@@ -75,6 +82,9 @@ export function AgentColumn({
 }: {
   sessions: AgentSession[]
   selectedKey: string | null
+  models: Model[]
+  mainModel: string | null
+  onSetModel: (key: string, model: string) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
@@ -144,6 +154,9 @@ export function AgentColumn({
             key={session.key}
             session={session}
             isSelected={session.key === selectedKey}
+            models={models}
+            mainModel={mainModel}
+            onSetModel={onSetModel}
             onSelect={onSelect}
             onMinimize={onMinimize}
             onCloseSession={onCloseSession}
