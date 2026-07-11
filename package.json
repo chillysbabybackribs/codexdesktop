@@ -9,6 +9,7 @@
     "dev": "node scripts/dev-with-autogit.mjs",
     "predev:app": "npm run clean:source-shadows",
     "dev:app": "electron-vite dev",
+    "verify:app": "npm run build && node scripts/verify-instance.mjs",
     "git:autosnapshot": "node scripts/git-autosnapshot.mjs --watch",
     "git:autosnapshot:once": "node scripts/git-autosnapshot.mjs --once",
     "prebuild": "npm run clean:source-shadows",

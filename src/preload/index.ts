@@ -28,6 +28,10 @@ import type {
 import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
+  runtime: {
+    instanceRole: process.env.CODEX_DESKTOP_INSTANCE_ROLE === 'verification' ? 'verification' as const : 'host' as const,
+    sessionId: process.env.CODEX_DESKTOP_HOST_SESSION_ID ?? ''
+  },
   clipboard: {
     writeText: (text: string): Promise<boolean> => ipcRenderer.invoke(ipcChannels.clipboardWrite, text)
   },

@@ -20,8 +20,26 @@ const taskShapingGuidance = [
   '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
 ]
 
-export function buildGuidance(): string {
-  return taskShapingGuidance.join('\n')
+export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
+  const guidance = [...taskShapingGuidance]
+
+  if (env.CODEX_DESKTOP_SELF_HOSTED === '1') {
+    const hostPid = env.CODEX_DESKTOP_HOST_PID || 'unknown'
+    const parentPid = env.CODEX_DESKTOP_DEV_SERVER_PID || 'unknown'
+    const sessionId = env.CODEX_DESKTOP_HOST_SESSION_ID || 'unknown'
+    const role = env.CODEX_DESKTOP_INSTANCE_ROLE || 'host'
+
+    guidance.push(
+      'Protected Codex Desktop host session:',
+      `- This Codex app-server is running inside Codex Desktop session ${sessionId} (role=${role}, Electron PID=${hostPid}, parent/dev-server PID=${parentPid}).`,
+      '- Treat the Electron PID, its parent/dev-server PID, and their process tree as protected infrastructure for the current conversation.',
+      '- Never signal, terminate, restart, replace, or run a competing dev server against that protected process tree, including through kill, pkill, killall, taskkill, app.quit, Alt+F4, or window-close automation.',
+      '- Building and static tests are safe. For restart or lifecycle verification, use `npm run verify:app`, which launches a visibly labeled disposable instance with isolated user data.',
+      '- Do not run `npm run dev` or `npm run dev:app` for verification while CODEX_DESKTOP_SELF_HOSTED=1. If a disposable instance cannot be used, preserve the host and report that live restart verification was skipped.'
+    )
+  }
+
+  return guidance.join('\n')
 }
 
 // Note on compaction: `compact_prompt` exists in codex config but only feeds

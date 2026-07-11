@@ -1,5 +1,6 @@
 import { app, BrowserWindow, clipboard, crashReporter, dialog, ipcMain, Notification } from 'electron'
 import { readFile, writeFile } from 'node:fs/promises'
+import { randomUUID } from 'node:crypto'
 import { join } from 'node:path'
 import type {
   ArtifactReadImageParams,
@@ -39,6 +40,15 @@ import { AttachmentStore } from './attachment-store.js'
 if (process.env.CODEX_DESKTOP_USER_DATA) {
   app.setPath('userData', process.env.CODEX_DESKTOP_USER_DATA)
 }
+
+const instanceRole = process.env.CODEX_DESKTOP_INSTANCE_ROLE === 'verification' ? 'verification' : 'host'
+const hostSessionId = process.env.CODEX_DESKTOP_HOST_SESSION_ID || randomUUID()
+process.env.CODEX_DESKTOP_SELF_HOSTED = '1'
+process.env.CODEX_DESKTOP_INSTANCE_ROLE = instanceRole
+process.env.CODEX_DESKTOP_HOST_SESSION_ID = hostSessionId
+process.env.CODEX_DESKTOP_HOST_PID = String(process.pid)
+process.env.CODEX_DESKTOP_DEV_SERVER_PID = String(process.ppid)
+process.env.CODEX_DESKTOP_HOST_USER_DATA = app.getPath('userData')
 
 // Chromium locks profile storage (cookies, service workers, etc.). A second
 // instance against the same userData dir causes random IO errors like:
@@ -137,6 +147,7 @@ function sendToMainRenderer(channel: string, payload: unknown): void {
 }
 
 function createWindow(): void {
+  const windowTitle = instanceRole === 'verification' ? 'Chat — Verification Instance' : 'Chat'
   mainWindow = new BrowserWindow({
     width: 2048,
     height: 1024,
@@ -144,7 +155,7 @@ function createWindow(): void {
     minHeight: 620,
     show: false,
     frame: false,
-    title: 'Chat',
+    title: windowTitle,
     backgroundColor: '#121212',
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),

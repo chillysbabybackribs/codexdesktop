@@ -2360,9 +2360,13 @@ export default function App(): React.JSX.Element {
 }
 
 function TitleBar(): React.JSX.Element {
+  const isVerificationInstance = window.api.runtime.instanceRole === 'verification'
+
   return (
-    <header className="titlebar">
-      <div className="titlebar-title">Chat</div>
+    <header className={`titlebar ${isVerificationInstance ? 'is-verification' : ''}`}>
+      <div className="titlebar-title">
+        {isVerificationInstance ? 'Chat — Verification Instance' : 'Chat'}
+      </div>
       <div className="window-controls">
         <button type="button" aria-label="Minimize" onClick={() => void window.api.window.minimize()}>
           -
