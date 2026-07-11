@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, WebContentsView, shell } from 'electron'
+import { app, BrowserWindow, Menu, WebContentsView } from 'electron'
 import { join } from 'node:path'
 import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
@@ -554,9 +554,11 @@ export class TabManager {
     })
 
     webContents.on('will-navigate', (event, url) => {
+      // Block guest-initiated file:// navigation. Handing an arbitrary local
+      // path to the OS (shell.openExternal) would let a hostile page launch
+      // documents/handlers off-screen; just refuse it.
       if (url.startsWith('file://')) {
         event.preventDefault()
-        void shell.openExternal(url)
       }
     })
 

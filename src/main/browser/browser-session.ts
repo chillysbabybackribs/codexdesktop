@@ -15,10 +15,24 @@ export type BrowserSessionOptions = {
   isUserVisibleWebContents: (webContents: WebContents) => boolean
 }
 
+// Permissions we let untrusted guest pages hold without a prompt. Everything
+// else (geolocation, camera/microphone via `media`, clipboard-read, MIDI, USB,
+// serial, etc.) is denied: the embedded browser has no UI to review a grant,
+// and a silent default-allow would let a hostile page read the OS clipboard or
+// tap hardware. `clipboard-sanitized-write` stays denied — the app's own
+// auto-copy path handles writes through a sender-validated IPC channel.
+const allowedGuestPermissions = new Set(['fullscreen', 'pointerLock'])
+
 export function configureBrowserSession(options: BrowserSessionOptions): void {
   const browserSession = session.fromPartition(browserPartition)
   browserSession.setUserAgent(chromeLikeUserAgent())
   browserSession.setSpellCheckerLanguages(['en-US'])
+  browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
+    callback(allowedGuestPermissions.has(permission))
+  })
+  browserSession.setPermissionCheckHandler((_webContents, permission) =>
+    allowedGuestPermissions.has(permission)
+  )
   browserSession.on('will-download', (event, item, webContents) => {
     if (!options.isUserVisibleWebContents(webContents)) {
       event.preventDefault()
