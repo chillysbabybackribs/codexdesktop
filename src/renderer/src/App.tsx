@@ -3065,9 +3065,17 @@ function ThreadScroll({
   // bottom-follow and releases the moment the reader scrolls.
   const anchorTurnRef = useRef<string | null>(null)
   const prevTurnRef = useRef<string | null>(null)
+  // The pending requestAnimationFrame(anchorTop) scheduled on a live send, so it
+  // can be cancelled if the thread resets or the component unmounts before it
+  // fires (otherwise it would run anchorTop against stale/torn-down state).
+  const anchorFrameRef = useRef<number | null>(null)
   // A fresh/restored thread may arrive with activeTurnId already set for an
   // in-progress turn; that must NOT yank it to the top — only a live send does.
-  const justResetRef = useRef(false)
+  // The reset records the turn id it absorbed so the anchor effect can skip it
+  // even when resetKey and activeTurnId change in SEPARATE commits (thread switch
+  // updates the id first, then hydrateThread sets activeTurnId a tick later — a
+  // one-shot boolean would already be consumed by then and wrongly yank it up).
+  const absorbedTurnRef = useRef<string | null>(null)
   // Programmatic scrollTop writes fire onScroll; without this guard the first
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
@@ -3082,6 +3090,10 @@ function ThreadScroll({
     if (settleFrameRef.current !== null) {
       window.cancelAnimationFrame(settleFrameRef.current)
       settleFrameRef.current = null
+    }
+    if (anchorFrameRef.current !== null) {
+      window.cancelAnimationFrame(anchorFrameRef.current)
+      anchorFrameRef.current = null
     }
   }, [])
 
