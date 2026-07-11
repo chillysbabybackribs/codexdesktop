@@ -13,6 +13,8 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
+  CodexPluginInstallParams,
+  CodexPluginQueryParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
   CodexStartThreadParams,
@@ -25,6 +27,9 @@ import type {
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
+import type { PluginInstalledResponse } from '../shared/codex-protocol/v2/PluginInstalledResponse.js'
+import type { PluginListResponse } from '../shared/codex-protocol/v2/PluginListResponse.js'
+import type { PluginInstallResponse } from '../shared/codex-protocol/v2/PluginInstallResponse.js'
 import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
@@ -102,6 +107,14 @@ export const api = {
     compactThread: (threadId: string): Promise<{ started: boolean }> =>
       ipcRenderer.invoke(ipcChannels.codexCompactThread, threadId),
     unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
+    listInstalledPlugins: (params?: CodexPluginQueryParams): Promise<PluginInstalledResponse> =>
+      ipcRenderer.invoke(ipcChannels.codexListInstalledPlugins, params),
+    listPlugins: (params?: CodexPluginQueryParams): Promise<PluginListResponse> =>
+      ipcRenderer.invoke(ipcChannels.codexListPlugins, params),
+    installPlugin: (params: CodexPluginInstallParams): Promise<PluginInstallResponse> =>
+      ipcRenderer.invoke(ipcChannels.codexInstallPlugin, params),
+    uninstallPlugin: (pluginId: string): Promise<void> =>
+      ipcRenderer.invoke(ipcChannels.codexUninstallPlugin, pluginId),
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.codexEvent, wrapped)

@@ -138,6 +138,16 @@ export type CodexListThreadsParams = {
   cwd?: string | null
 }
 
+export type CodexPluginQueryParams = {
+  cwd?: string | null
+}
+
+export type CodexPluginInstallParams = {
+  pluginName: string
+  marketplacePath?: string | null
+  remoteMarketplaceName?: string | null
+}
+
 export type MemoryPersistParams = {
   threadId: string
   title: string
@@ -229,6 +239,10 @@ export const ipcChannels = {
   codexInterruptTurn: 'codex:interruptTurn',
   codexCompactThread: 'codex:compactThread',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
+  codexListInstalledPlugins: 'codex:listInstalledPlugins',
+  codexListPlugins: 'codex:listPlugins',
+  codexInstallPlugin: 'codex:installPlugin',
+  codexUninstallPlugin: 'codex:uninstallPlugin',
   codexEvent: 'codex:event',
   memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',

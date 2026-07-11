@@ -22,6 +22,10 @@ import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadS
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js'
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
+import type { PluginInstalledResponse } from '../../shared/codex-protocol/v2/PluginInstalledResponse.js'
+import type { PluginListResponse } from '../../shared/codex-protocol/v2/PluginListResponse.js'
+import type { PluginInstallParams } from '../../shared/codex-protocol/v2/PluginInstallParams.js'
+import type { PluginInstallResponse } from '../../shared/codex-protocol/v2/PluginInstallResponse.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
 import {
   AppServerRpc,
@@ -104,6 +108,33 @@ export class CodexClient extends EventEmitter {
       ...(options?.cursor ? { cursor: options.cursor } : {}),
       ...(options?.cwd ? { cwd: options.cwd } : {})
     })
+  }
+
+  async listInstalledPlugins(cwd?: string | null): Promise<PluginInstalledResponse> {
+    await this.ensureStarted()
+    return this.request<PluginInstalledResponse>('plugin/installed', {
+      ...(cwd ? { cwds: [cwd] } : {})
+    })
+  }
+
+  async listPlugins(cwd?: string | null): Promise<PluginListResponse> {
+    await this.ensureStarted()
+    return this.request<PluginListResponse>('plugin/list', {
+      ...(cwd ? { cwds: [cwd] } : {})
+    })
+  }
+
+  async installPlugin(params: PluginInstallParams): Promise<PluginInstallResponse> {
+    await this.ensureStarted()
+    const result = await this.request<PluginInstallResponse>('plugin/install', params)
+    await this.localSkills.refresh(<T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams), true)
+    return result
+  }
+
+  async uninstallPlugin(pluginId: string): Promise<void> {
+    await this.ensureStarted()
+    await this.request('plugin/uninstall', { pluginId })
+    await this.localSkills.refresh(<T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams), true)
   }
 
   async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {

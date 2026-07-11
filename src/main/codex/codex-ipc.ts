@@ -3,6 +3,8 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
+  CodexPluginInstallParams,
+  CodexPluginQueryParams,
   MemoryPersistParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
@@ -57,6 +59,18 @@ export function registerCodexIpc(
   )
   ipcMain.handle(ipcChannels.codexUnsubscribeThread, (_event, threadId: string) =>
     client.unsubscribeThread(threadId)
+  )
+  ipcMain.handle(ipcChannels.codexListInstalledPlugins, (_event, params?: CodexPluginQueryParams) =>
+    client.listInstalledPlugins(params?.cwd)
+  )
+  ipcMain.handle(ipcChannels.codexListPlugins, (_event, params?: CodexPluginQueryParams) =>
+    client.listPlugins(params?.cwd)
+  )
+  ipcMain.handle(ipcChannels.codexInstallPlugin, (_event, params: CodexPluginInstallParams) =>
+    client.installPlugin(params)
+  )
+  ipcMain.handle(ipcChannels.codexUninstallPlugin, (_event, pluginId: string) =>
+    client.uninstallPlugin(pluginId)
   )
   ipcMain.handle(ipcChannels.memoryPersist, (_event, params: MemoryPersistParams) =>
     memoryStore.persist(params)
