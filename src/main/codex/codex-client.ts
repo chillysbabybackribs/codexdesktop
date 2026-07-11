@@ -6,6 +6,7 @@ import { isAbsolute, join, relative, resolve } from 'node:path'
 import { app, type BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
+import type { MemoryStore } from '../memory-store.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
@@ -38,6 +39,7 @@ import {
   resolveTurnPolicy,
   selectTurnSkills
 } from './codex-config.js'
+import { buildInjectedMemory, shouldLoadLastChatMemory } from '../memory-format.js'
 
 type JsonRpcMessage = {
   jsonrpc?: '2.0'
@@ -77,7 +79,8 @@ export class CodexClient extends EventEmitter {
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
     private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner
+    private readonly researchRunner: ResearchRunner,
+    private readonly memoryStore: MemoryStore
   ) {
     super()
   }
@@ -118,7 +121,11 @@ export class CodexClient extends EventEmitter {
     })
   }
 
-  async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
+  async startThread(
+    cwd?: string | null,
+    model?: string | null,
+    priorChatMemory?: string | null
+  ): Promise<ThreadStartResponse> {
     await this.ensureStarted()
     const response = await this.request<ThreadStartResponse>('thread/start', {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
@@ -128,7 +135,9 @@ export class CodexClient extends EventEmitter {
       historyMode: 'legacy',
       config: newThreadConfig,
       dynamicTools: browserDynamicTools,
-      developerInstructions: buildGuidance()
+      developerInstructions: priorChatMemory
+        ? `${buildGuidance()}\n\n${buildInjectedMemory(priorChatMemory)}`
+        : buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)
     this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
@@ -194,7 +203,16 @@ export class CodexClient extends EventEmitter {
     reasoningEffort: ReasoningEffort | null
   }> {
     await this.ensureStarted()
-    const startedThread = threadId ? null : await this.startThread(cwd, model)
+    let priorChatMemory: string | null = null
+    if (!threadId && shouldLoadLastChatMemory(text)) {
+      try {
+        priorChatMemory = await this.memoryStore.loadLastChat(cwd)
+      } catch (error) {
+        console.warn('Failed to load app-owned chat memory', error)
+      }
+    }
+
+    const startedThread = threadId ? null : await this.startThread(cwd, model, priorChatMemory)
     const activeThreadId = threadId ?? startedThread!.thread.id
     const input = this.buildTurnInput(text)
 

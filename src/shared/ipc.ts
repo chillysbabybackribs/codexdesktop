@@ -69,6 +69,17 @@ export type CodexListThreadsParams = {
   cwd?: string | null
 }
 
+export type MemoryPersistParams = {
+  threadId: string
+  title: string
+  workspace: string | null
+  updatedAt: string
+  turns: Array<{
+    user: string
+    assistant: string
+  }>
+}
+
 export type TraceSaveParams = {
   suggestedName: string
   content: string
@@ -120,6 +131,7 @@ export const ipcChannels = {
   codexInterruptTurn: 'codex:interruptTurn',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',
+  memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',
   traceSave: 'trace:save',

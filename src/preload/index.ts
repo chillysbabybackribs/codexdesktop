@@ -9,6 +9,7 @@ import type {
   CodexSetGoalParams,
   CodexStartThreadParams,
   CodexSteerTurnParams,
+  MemoryPersistParams,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
@@ -64,6 +65,9 @@ export const api = {
         ipcRenderer.off(ipcChannels.codexEvent, wrapped)
       }
     }
+  },
+  memory: {
+    persist: (params: MemoryPersistParams): Promise<void> => ipcRenderer.invoke(ipcChannels.memoryPersist, params)
   },
   trace: {
     persist: (params: TracePersistParams): Promise<void> => ipcRenderer.invoke(ipcChannels.tracePersist, params),

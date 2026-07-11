@@ -19,7 +19,8 @@ import type {
   BrowserBounds,
   BrowserState,
   BrowserTabState,
-  CodexEvent
+  CodexEvent,
+  MemoryPersistParams
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
@@ -256,6 +257,7 @@ export default function App(): React.JSX.Element {
   const itemMutationTimerRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
+  const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map())
   const precedingModelInputByTurnRef = useRef<Map<string, ModelCallAttribution>>(new Map())
   const pendingCompactionByTurnRef = useRef<Set<string>>(new Set())
 
@@ -348,6 +350,37 @@ export default function App(): React.JSX.Element {
       })
     }
   }, [activeThreadId, activeThreadTitle, selectedModel, workspace, items, itemMeta, turnMeta])
+
+  useEffect(() => {
+    if (!activeThreadId || activeTurnId) return
+    if (!Object.values(turnMeta).some((meta) => meta.origin === 'live' && isTerminalTurnStatus(meta.status))) return
+
+    const turns = completedMemoryTurns(items, itemMeta, turnMeta)
+    if (!turns.length) return
+
+    const completionTimes = Object.values(turnMeta)
+      .map((meta) => meta.completedAtMs)
+      .filter((value): value is number => typeof value === 'number')
+    const completedAtMs = completionTimes.length ? Math.max(...completionTimes) : Date.now()
+    const params: MemoryPersistParams = {
+      threadId: activeThreadId,
+      title: activeThreadTitle,
+      workspace,
+      updatedAt: new Date(completedAtMs).toISOString(),
+      turns
+    }
+    const fingerprint = JSON.stringify(params)
+
+    if (persistedMemoryFingerprintsRef.current.get(activeThreadId) === fingerprint) return
+    persistedMemoryFingerprintsRef.current.set(activeThreadId, fingerprint)
+
+    void window.api.memory.persist(params).catch((error) => {
+      if (persistedMemoryFingerprintsRef.current.get(activeThreadId) === fingerprint) {
+        persistedMemoryFingerprintsRef.current.delete(activeThreadId)
+      }
+      console.warn('Failed to persist chat memory', error)
+    })
+  }, [activeThreadId, activeThreadTitle, activeTurnId, workspace, items, itemMeta, turnMeta])
 
   // The model catalog comes from `model/list` on the app-server, so it is the
   // same list (and default) the CLI's own /model picker shows. Loaded once the
@@ -2291,6 +2324,36 @@ function ThreadScroll({
 
 function stripAutomaticSkillMarker(text: string): string {
   return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
+}
+
+function completedMemoryTurns(
+  items: ChatItem[],
+  itemMeta: Record<string, ItemMeta>,
+  turnMeta: Record<string, TurnMeta>
+): MemoryPersistParams['turns'] {
+  const turns = new Map<string, { user: string; assistant: string }>()
+
+  for (const item of items) {
+    if (item.type === 'system') continue
+    const turnId = itemMeta[item.id]?.turnId
+    if (!turnId || !isTerminalTurnStatus(turnMeta[turnId]?.status)) continue
+
+    const turn = turns.get(turnId) ?? { user: '', assistant: '' }
+
+    if (item.type === 'userMessage') {
+      turn.user = item.content
+        .filter((content) => content.type === 'text')
+        .map((content) => stripAutomaticSkillMarker(content.text))
+        .join('\n')
+        .trim()
+    } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
+      turn.assistant = item.text.trim()
+    }
+
+    turns.set(turnId, turn)
+  }
+
+  return [...turns.values()].filter((turn) => turn.user && turn.assistant)
 }
 
 const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): React.JSX.Element | null {

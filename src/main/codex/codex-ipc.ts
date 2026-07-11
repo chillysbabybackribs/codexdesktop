@@ -3,6 +3,7 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
+  MemoryPersistParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
   CodexStartThreadParams,
@@ -12,13 +13,15 @@ import { ipcChannels } from '../../shared/ipc.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { CodexClient } from './codex-client.js'
+import type { MemoryStore } from '../memory-store.js'
 
 export function registerCodexIpc(
   getWindow: () => BrowserWindow | null,
   browserAgent: BrowserAgentController,
-  researchRunner: ResearchRunner
+  researchRunner: ResearchRunner,
+  memoryStore: MemoryStore
 ): CodexClient {
-  const client = new CodexClient(getWindow, browserAgent, researchRunner)
+  const client = new CodexClient(getWindow, browserAgent, researchRunner, memoryStore)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)
@@ -48,6 +51,9 @@ export function registerCodexIpc(
   )
   ipcMain.handle(ipcChannels.codexUnsubscribeThread, (_event, threadId: string) =>
     client.unsubscribeThread(threadId)
+  )
+  ipcMain.handle(ipcChannels.memoryPersist, (_event, params: MemoryPersistParams) =>
+    memoryStore.persist(params)
   )
 
   return client

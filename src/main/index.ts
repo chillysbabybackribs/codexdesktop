@@ -18,6 +18,7 @@ import { startBrowserControlServer, type BrowserControlServer } from './browser/
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
+import { MemoryStore } from './memory-store.js'
 
 // Chromium locks profile storage (cookies, service workers, etc.). A second
 // instance against the same userData dir causes random IO errors like:
@@ -204,7 +205,8 @@ async function restoreBrowserTabs(): Promise<void> {
 }
 
 function registerIpc(): void {
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner)
+  const memoryStore = new MemoryStore(join(app.getPath('userData'), 'memory'))
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
