@@ -3080,11 +3080,12 @@ function ThreadScroll({
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
   const suppressScrollRef = useRef(false)
-  // Mirrors the activeTurnId prop so the reset effect (whose deps are keyed on
-  // resetKey, not activeTurnId) can read the turn active AT reset time without a
+  // Mirrors the activeTurnId prop so the reset effect — which is keyed on
+  // resetKey only (adding activeTurnId to its deps would wrongly re-jump to
+  // bottom on every send) — can read the turn active AT reset time without a
   // stale closure.
-  const activeTurnIdRef = useRef(activeTurnId)
-  activeTurnIdRef.current = activeTurnId
+  const liveTurnRef = useRef(activeTurnId)
+  liveTurnRef.current = activeTurnId
   const [spacerOn, setSpacerOn] = useState(false)
 
   const cancelScheduledFollow = useCallback(() => {
