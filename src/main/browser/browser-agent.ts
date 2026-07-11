@@ -1,5 +1,5 @@
 import type { WebContents } from 'electron'
-import { cdpSessionFor } from './cdp-session.js'
+import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -11,6 +11,13 @@ export type BrowserAgentOptions = {
   tabId?: string | null
   timeoutMs?: number | null
   maxResultChars?: number | null
+}
+
+export type BrowserCdpEventOptions = BrowserAgentOptions & {
+  afterSequence?: number | null
+  filter?: Record<string, unknown> | null
+  contains?: Record<string, string> | null
+  limit?: number | null
 }
 
 export type BrowserAgentResult = {
@@ -146,65 +153,31 @@ export class BrowserAgentController {
       return { ok: false, error: 'browser.cdp requires a method' } satisfies BrowserAgentFailure
     }
 
-    const tabs = this.getTabs()
-    const tabId = options.tabId ?? tabs?.getActiveTabId()
-    if (!tabs || !tabId) {
-      return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    return this.runCdpOperation(options, (session, timeoutMs) =>
+      withTimeout(session.send(method, params), timeoutMs)
+    )
+  }
+
+  async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, (session) => session.capabilities())
+  }
+
+  async cdpEvents(options: BrowserCdpEventOptions = {}, method?: string | null): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => {
+      await session.capabilities()
+      return session.eventPage(toEventQuery(options, method))
+    })
+  }
+
+  async waitForCdpEvent(method: string, options: BrowserCdpEventOptions = {}): Promise<BrowserAgentResult> {
+    if (!method.trim()) {
+      return { ok: false, error: 'browser.cdp wait requires an event method' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation = previous.then(async (): Promise<BrowserAgentResult> => {
-      const webContents = tabs.resolveWebContents(tabId)
-      if (!webContents) {
-        return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
-      }
-
-      const startedAt = Date.now()
-      try {
-        const rawResult = await withTimeout(
-          cdpSessionFor(webContents).send(method, params),
-          timeoutMs
-        )
-        const bounded = boundResult(rawResult, maxResultChars)
-        return {
-          ok: true,
-          result: bounded.value,
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt,
-          resultChars: bounded.chars,
-          truncated: bounded.truncated
-        } satisfies BrowserAgentSuccess
-      } catch (error) {
-        return {
-          ok: false,
-          error: error instanceof Error ? error.message : String(error),
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt
-        } satisfies BrowserAgentFailure
-      }
+    return this.runCdpOperation(options, async (session, timeoutMs) => {
+      await session.prepareForEvent(method)
+      return session.waitForEvent(toEventQuery(options, method), timeoutMs)
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-
-    return operation
   }
 
   async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
