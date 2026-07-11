@@ -23,7 +23,9 @@ import type {
   BrowserState,
   BrowserTabState,
   CodexEvent,
-  MemoryPersistParams
+  MemoryPersistParams,
+  OmniboxAnchor,
+  OmniboxSuggestion
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
