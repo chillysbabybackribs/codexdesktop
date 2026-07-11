@@ -4387,10 +4387,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
           typedTextRef.current = event.target.value
           justFocusedRef.current = true
           event.target.select()
-          // Do not open the native suggestions view during the focus click.
-          // Raising that separate WebContentsView can interrupt the click's
-          // keyboard focus before the user gets a chance to type. Suggestions
-          // still open immediately from onChange once input begins.
+          runQuery('')
         }}
         onMouseUp={(event) => {
           // Keep the select-all from the focus click; without this the mouseup
