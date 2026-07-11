@@ -38,6 +38,9 @@
     "artifactPath": {"type": ["string", "null"]},
     "independenceKey": {"type": "string"},
     "commercialStrength": {"enum": ["none", "weak", "medium", "strong"]},
+    "classificationConfidence": {"enum": ["low", "medium", "high"]},
+    "classificationReason": {"type": ["string", "null"]},
+    "moneyType": {"enum": ["none", "currency_mention", "adjacent_spend", "revenue_or_valuation", "hypothetical", "exact_job_spend", "exact_job_wage"]},
     "caveat": {"type": ["string", "null"]}
   }
 }

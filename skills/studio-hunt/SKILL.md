@@ -158,6 +158,8 @@ Phase 0 has no low ceiling. A credible first pass normally includes at least:
 
 These are diagnostic floors, not completion targets. Hundreds of launches with no buyer/operator evidence still fail.
 
+All floors refer to **qualified** evidence after `scripts/audit-phase0.mjs`, never raw collector labels or regex matches. Report retrieved and qualified counts side by side. A record can be substantively retrieved (`retrievalStatus: verified`) while still being low-confidence, stale, adjacent, or irrelevant to a job; retrieval verification is not evidence qualification.
+
 Continue collecting while a new independent batch materially changes top-cluster ordering or more than 20% of promising clusters lack a required evidence side. Stop only after two consecutive independent batches produce all of:
 
 - less than 5% new qualified job sentences;
@@ -185,6 +187,8 @@ buyer + trigger + input + repeated action + output + destination
 
 Semantic or lexical similarity may suggest joins, but the parent must validate concrete fields and quotes. Shared nouns such as `AI`, `inventory`, `marketing`, or `compliance` are insufficient.
 
+Lexical clusters are discovery artifacts only. They cannot receive Explosion Potential scores until the intersection artifact lists the exact record IDs satisfying each contract requirement. If no validated join exists, record the cluster as `UNJOINED` instead of assigning impressionistic subscale values.
+
 ### Intersection contract
 
 A cluster can direct later research only with:
@@ -198,6 +202,8 @@ A cluster can direct later research only with:
 - a traceable job sentence;
 - no more than one vendor-authored core source;
 - a plausible solo-accessible buyer channel.
+
+Represent these requirements mechanically in each intersection record as a `requirements` object. Each requirement contains `pass`, `recordIds`, and a short reason. Scores are secondary: any failed hard requirement caps the result at WATCH, and missing provenance makes it NO-GO/INSUFFICIENT COVERAGE regardless of the numeric score.
 
 Founder feedback remains market-supply evidence unless a buyer/operator supplies their own workflow, purchase, or workaround.
 
@@ -217,6 +223,8 @@ Explosion Potential =
 Market Motion measures formation acceleration, breadth of verified revenue/customer growth, survival, discussion acceleration, founder breadth, monetization efficiency, and catalyst strength. Work Reality measures firsthand repeated work, exact-job spend, burden/frequency, workaround adoption, cross-source residue, buyer reachability, and concrete artifacts. White Space measures repeated missing segments, fragmented workflows, incumbent dissatisfaction, dedicated-product density, attainable data, solo-buildability, and distribution.
 
 Apply cumulative penalties for a dominant outlier (-10), founder echo chamber (-10), clone saturation (-15), revocable single-platform dependency (-10 to -20), mature funded incumbents without a demonstrated gap (-20), procurement-heavy buyers (-15), launch growth without customer breadth (-10), and declining survival/high sale pressure (-10). One extraordinary MRR value can never compensate for missing work reality.
+
+Store subscales, named penalties, and the formula version. Recompute `score` mechanically and fail the audit when the stored score differs by more than 0.01.
 
 ### Hard Phase 0 gate
 
