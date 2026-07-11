@@ -1,5 +1,6 @@
 import type { WebContents } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
+import type { CdpArtifactStore } from './cdp-artifact-store.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -18,6 +19,12 @@ export type BrowserCdpEventOptions = BrowserAgentOptions & {
   filter?: Record<string, unknown> | null
   contains?: Record<string, string> | null
   limit?: number | null
+}
+
+type CdpOperationContext = {
+  tabId: string
+  url: string
+  title: string
 }
 
 export type BrowserAgentResult = {
@@ -60,7 +67,10 @@ export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
   private readonly getTabs: () => TabManager | null
 
-  constructor(getTabs: () => TabManager | null) {
+  constructor(
+    getTabs: () => TabManager | null,
+    private readonly artifactStore?: CdpArtifactStore
+  ) {
     this.getTabs = getTabs
   }
 
@@ -153,9 +163,10 @@ export class BrowserAgentController {
       return { ok: false, error: 'browser.cdp requires a method' } satisfies BrowserAgentFailure
     }
 
-    return this.runCdpOperation(options, (session, timeoutMs) =>
-      withTimeout(session.send(method, params), timeoutMs)
-    )
+    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+      const result = await withTimeout(session.send(method, params), timeoutMs)
+      return this.materializeCdpResult(method, params, result, context)
+    })
   }
 
   async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
@@ -182,7 +193,7 @@ export class BrowserAgentController {
 
   private async runCdpOperation(
     options: BrowserAgentOptions,
-    execute: (session: CdpSession, timeoutMs: number) => Promise<unknown>
+    execute: (session: CdpSession, timeoutMs: number, context: CdpOperationContext) => Promise<unknown>
   ): Promise<BrowserAgentResult> {
     const tabs = this.getTabs()
     const tabId = options.tabId ?? tabs?.getActiveTabId()
@@ -206,7 +217,8 @@ export class BrowserAgentController {
 
       const startedAt = Date.now()
       try {
-        const rawResult = await execute(cdpSessionFor(webContents), timeoutMs)
+        const context = { tabId, url: safeUrl(webContents), title: safeTitle(webContents) }
+        const rawResult = await execute(cdpSessionFor(webContents), timeoutMs, context)
         const bounded = boundResult(rawResult, maxResultChars)
         return {
           ok: true,
@@ -240,6 +252,28 @@ export class BrowserAgentController {
     })
 
     return operation
+  }
+
+  private async materializeCdpResult(
+    method: string,
+    params: object,
+    result: unknown,
+    context: CdpOperationContext
+  ): Promise<unknown> {
+    if (method !== 'Page.captureScreenshot' || !this.artifactStore) return result
+    const data = asRecord(result).data
+    if (typeof data !== 'string') return result
+
+    const requestedFormat = typeof asRecord(params).format === 'string' ? asRecord(params).format : null
+    const screenshot = await this.artifactStore.persistScreenshot(data, requestedFormat)
+    return {
+      screenshot: {
+        ...screenshot,
+        tabId: context.tabId,
+        url: context.url,
+        title: context.title
+      }
+    }
   }
 
   async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {

@@ -1,5 +1,5 @@
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
-import { basename, extname, join, relative, resolve } from 'node:path'
+import { extname, join, relative, resolve } from 'node:path'
 
 const maxScreenshotBytes = 20 * 1024 * 1024
 const maxReadableImageBytes = 20 * 1024 * 1024
@@ -73,7 +73,7 @@ export class CdpArtifactStore {
   private isOwnedPath(candidate: string): boolean {
     const root = resolve(this.root())
     const pathFromRoot = relative(root, resolve(candidate))
-    return pathFromRoot !== '' && !pathFromRoot.startsWith('..') && !pathFromRoot.includes('..') && Boolean(formatFromExtension(candidate))
+    return pathFromRoot !== '' && !pathFromRoot.startsWith('..') && Boolean(formatFromExtension(candidate))
   }
 }
 
