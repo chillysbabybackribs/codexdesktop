@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "auditedAt": "2026-07-11T15:54:47.418Z",
+  "auditedAt": "2026-07-11T15:56:54.379Z",
   "phase0": "hunts/2026-07-11-4/phase-0",
   "totals": {
     "records": 750,
@@ -48,18 +48,10 @@
     }
   },
   "scoreErrors": [],
-  "intersectionsMissingRequirementProvenance": [
-    "ix-ai-agent-operations",
-    "ix-payment-revenue-operations",
-    "ix-content-handoff",
-    "ix-compliance-security",
-    "ix-travel-booking",
-    "ix-website-commerce"
-  ],
+  "intersectionsMissingRequirementProvenance": [],
   "verdict": "FAIL",
   "findings": [
     "79 records label old publications as current.",
-    "6 intersections lack requirement-level supporting record IDs.",
     "Collector money counts exceed qualified exact-job money.",
     "Collector firsthand counts exceed conservative audited firsthand counts."
   ]

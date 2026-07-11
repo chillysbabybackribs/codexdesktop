@@ -10,14 +10,13 @@ No intersection satisfies the contract. The decisive failures are:
 - source concentration: formation is HN-only and buyer reality is Stack Exchange plus Ask HN;
 - neither WATCH direction has two independent firsthand records for the exact job or two independently verified motion products.
 
-| Intersection | Score | Result | Binding failure |
-|---|---:|---|---|
-| Content handoff | 42.55 | WATCH | One firsthand $1,000/year workflow; no independent corroboration or acceleration |
-| Payment/revenue operations | 41.50 | WATCH | One firsthand 3-hour/$15K monthly workflow; no exact-job product breadth |
-| AI agent operations | 29.70 | NO-GO | Saturation, founder echo, weak joins, platform dependency |
-| Compliance/security | 24.55 | NO-GO | Mature incumbents and no verified new job gap |
-| Travel/booking | 21.50 | NO-GO | Shared nouns, no concrete repeated-job join |
-| Website/commerce | 17.70 | NO-GO | Fragmented jobs, incumbent density, prior-idea overlap |
+| Intersection | Scoring status | Result | Binding failure |
+|---|---|---|---|
+| Content handoff | Hard requirements failed | WATCH | One firsthand $1,000/year workflow; no independent corroboration or acceleration |
+| Payment/revenue operations | Hard requirements failed | WATCH | One firsthand 3-hour/$15K monthly workflow; no exact-job product breadth |
+| AI agent operations | Unjoined | NO-GO | No validated exact-job join; numeric scoring prohibited |
+| Compliance/security | Unjoined | NO-GO | No validated exact-job join; numeric scoring prohibited |
+| Travel/booking | Unjoined | NO-GO | Shared nouns, no concrete repeated-job join |
+| Website/commerce | Unjoined | NO-GO | Fragmented jobs, incumbent density, prior-idea overlap |
 
 The skill requires the hunt to stop here. No product candidates were invented and no ideas were promoted.
-
