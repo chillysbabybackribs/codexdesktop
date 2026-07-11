@@ -10,21 +10,17 @@ function isEditable(target: EventTarget | null): boolean {
 export function AutoCopySelection(): React.JSX.Element | null {
   const pointerStart = useRef<{ x: number; y: number } | null>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [visible, setVisible] = useState(false)
+  const [toast, setToast] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
-    const showCopied = (): void => {
+    const showCopied = (x: number, y: number): void => {
       if (hideTimer.current) clearTimeout(hideTimer.current)
-      setVisible(true)
-      hideTimer.current = setTimeout(() => setVisible(false), 1_250)
+      setToast({
+        x: Math.max(12, Math.min(x + 14, window.innerWidth - 116)),
+        y: Math.max(12, Math.min(y + 14, window.innerHeight - 48))
+      })
+      hideTimer.current = setTimeout(() => setToast(null), 1_350)
     }
-    const onAutoCopied = window.api?.clipboard?.onAutoCopied
-    const cleanupAutoCopied = typeof onAutoCopied === 'function'
-      ? onAutoCopied(showCopied)
-      : () => {}
-    const stopListeningForBrowserCopies = typeof cleanupAutoCopied === 'function'
-      ? cleanupAutoCopied
-      : () => {}
 
     const onPointerDown = (event: globalThis.PointerEvent): void => {
       pointerStart.current = event.button === 0 && !isEditable(event.target)
@@ -45,6 +41,7 @@ export function AutoCopySelection(): React.JSX.Element | null {
           void Promise.resolve(writeText(text)).catch(() => {})
         }
         selection?.removeAllRanges()
+        showCopied(event.clientX, event.clientY)
       }
     }
     const onPointerCancel = (): void => { pointerStart.current = null }
@@ -53,7 +50,6 @@ export function AutoCopySelection(): React.JSX.Element | null {
     window.addEventListener('pointerup', onPointerUp, true)
     window.addEventListener('pointercancel', onPointerCancel, true)
     return () => {
-      stopListeningForBrowserCopies()
       window.removeEventListener('pointerdown', onPointerDown, true)
       window.removeEventListener('pointerup', onPointerUp, true)
       window.removeEventListener('pointercancel', onPointerCancel, true)
@@ -61,5 +57,15 @@ export function AutoCopySelection(): React.JSX.Element | null {
     }
   }, [])
 
-  return visible ? <div className="auto-copy-toast" role="status" aria-live="polite">Copied</div> : null
+  return toast ? (
+    <div
+      className="auto-copy-toast"
+      role="status"
+      aria-live="polite"
+      style={{ left: toast.x, top: toast.y }}
+    >
+      <span className="auto-copy-toast-mark" aria-hidden="true">✓</span>
+      <span>Copied</span>
+    </div>
+  ) : null
 }

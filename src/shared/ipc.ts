@@ -211,7 +211,6 @@ export const ipcChannels = {
   browserFocusOmnibox: 'browser:focusOmnibox',
   browserSelectionCopy: 'browser:selectionCopy',
   clipboardWrite: 'clipboard:write',
-  clipboardAutoCopied: 'clipboard:autoCopied',
   codexGetAuthStatus: 'codex:getAuthStatus',
   codexListModels: 'codex:listModels',
   codexListThreads: 'codex:listThreads',

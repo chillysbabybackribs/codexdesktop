@@ -292,7 +292,6 @@ function registerIpc(): void {
   const copySelection = (text: unknown): boolean => {
     if (typeof text !== 'string' || !text.trim() || text.length > 1_000_000) return false
     clipboard.writeText(text)
-    sendToMainRenderer(ipcChannels.clipboardAutoCopied, true)
     return true
   }
   ipcMain.handle(ipcChannels.clipboardWrite, (_event, text: unknown) => copySelection(text))
