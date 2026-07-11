@@ -195,7 +195,8 @@ export class TabManager {
       favicon: saved.favicon ?? null,
       isLoading: true,
       isAudible: false,
-      isMuted: false
+      isMuted: false,
+      suppressVisits: true
     }
 
     this.tabs.set(id, tab)
@@ -233,6 +234,7 @@ export class TabManager {
       tab.title = view.webContents.getTitle() || tab.url || 'New Tab'
     } finally {
       tab.isLoading = false
+      tab.suppressVisits = false
       this.pushState()
     }
   }
@@ -480,6 +482,7 @@ export class TabManager {
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'
+      this.visitListener?.updateTitle(tab.url, title)
       this.pushState()
     })
 
@@ -515,12 +518,18 @@ export class TabManager {
 
     webContents.on('did-navigate', (_event, url) => {
       tab.url = url
+      if (!tab.suppressVisits) {
+        this.visitListener?.recordVisit(url, webContents.getTitle())
+      }
       this.pushState()
     })
 
     webContents.on('did-navigate-in-page', (_event, url, isMainFrame) => {
       if (isMainFrame) {
         tab.url = url
+        if (!tab.suppressVisits) {
+          this.visitListener?.recordVisit(url, webContents.getTitle())
+        }
         this.pushState()
       }
     })
