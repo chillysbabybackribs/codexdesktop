@@ -4159,29 +4159,130 @@ function GlobeIcon(): React.JSX.Element {
 
 function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): React.JSX.Element {
   const [input, setInput] = useState('')
+  const [isEditing, setIsEditing] = useState(false)
+  const [suggestions, setSuggestions] = useState<OmniboxSuggestion[]>([])
+  const [selectedIndex, setSelectedIndex] = useState(-1)
   const [findOpen, setFindOpen] = useState(false)
   const [findText, setFindText] = useState('')
   const [findResult, setFindResult] = useState({ activeMatchOrdinal: 0, matches: 0 })
   const findInputRef = useRef<HTMLInputElement>(null)
+  const omniboxRef = useRef<HTMLInputElement>(null)
+  // The user's typed text, kept while arrow keys preview suggestions so
+  // stepping back to "no selection" restores it.
+  const typedTextRef = useRef('')
+  const justFocusedRef = useRef(false)
+  const querySeqRef = useRef(0)
 
+  // Mirror the page URL into the bar ONLY while the user isn't editing —
+  // redirects and pushState-heavy sites must not clobber typing mid-edit.
   useEffect(() => {
-    setInput(activeTab?.url ?? '')
-  }, [activeTab?.url])
+    if (!isEditing) {
+      setInput(activeTab?.url ?? '')
+    }
+  }, [activeTab?.url, isEditing])
+
+  // Switching tabs always ends the edit in the old tab's context.
+  useEffect(() => {
+    setIsEditing(false)
+    closePopup()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab?.id])
 
   useEffect(() => window.api.browser.onFindRequested(() => setFindOpen(true)), [])
+  useEffect(
+    () =>
+      window.api.browser.onFocusOmnibox(() => {
+        omniboxRef.current?.focus()
+      }),
+    []
+  )
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') {
         event.preventDefault()
         setFindOpen(true)
       }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
+        event.preventDefault()
+        omniboxRef.current?.focus()
+      }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
+  // The dropdown is a native view anchored to a fixed rect; close it rather
+  // than let it drift when the window (and toolbar) geometry changes.
+  useEffect(() => {
+    const onResize = (): void => {
+      if (document.activeElement === omniboxRef.current) {
+        omniboxRef.current?.blur()
+      }
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
   useEffect(() => {
     if (findOpen) requestAnimationFrame(() => findInputRef.current?.focus())
   }, [findOpen])
+
+  const measureAnchor = (): OmniboxAnchor | null => {
+    const rect = omniboxRef.current?.getBoundingClientRect()
+    return rect ? { x: rect.left - 2, y: rect.bottom + 4, width: rect.width + 4 } : null
+  }
+
+  const runQuery = (text: string): void => {
+    const anchor = measureAnchor()
+    if (!anchor) return
+    const seq = ++querySeqRef.current
+    void window.api.browser.omniboxQuery(text, anchor).then((rows) => {
+      if (seq === querySeqRef.current) {
+        setSuggestions(rows)
+        setSelectedIndex(-1)
+      }
+    })
+  }
+
+  const closePopup = (): void => {
+    querySeqRef.current += 1
+    setSuggestions([])
+    setSelectedIndex(-1)
+    void window.api.browser.omniboxClose()
+  }
+
+  const moveSelection = (delta: 1 | -1): void => {
+    if (!suggestions.length) return
+    let next = selectedIndex + delta
+    if (next >= suggestions.length) next = -1
+    if (next < -1) next = suggestions.length - 1
+    setSelectedIndex(next)
+    void window.api.browser.omniboxSelect(next)
+    if (next === -1) {
+      setInput(typedTextRef.current)
+    } else {
+      const suggestion = suggestions[next]
+      setInput(suggestion.kind === 'search' ? suggestion.text : suggestion.url)
+    }
+  }
+
+  const handleOmniboxKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      moveSelection(event.key === 'ArrowDown' ? 1 : -1)
+      return
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      if (suggestions.length) {
+        // First Escape: dismiss the dropdown, keep the typed text.
+        closePopup()
+        setInput(typedTextRef.current)
+      } else {
+        // Second Escape: revert to the page URL and leave the bar.
+        setInput(activeTab?.url ?? '')
+        omniboxRef.current?.blur()
+      }
+    }
+  }
 
   const runFind = async (forward: boolean): Promise<void> => {
     if (!activeTab || !findText) return
@@ -4197,9 +4298,15 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
 
-    if (activeTab) {
-      void window.api.browser.navigate(activeTab.id, input)
+    const selected = selectedIndex >= 0 ? suggestions[selectedIndex] : null
+    const target = selected ? selected.url : input
+
+    if (activeTab && target.trim()) {
+      void window.api.browser.navigate(activeTab.id, target)
     }
+
+    closePopup()
+    omniboxRef.current?.blur()
   }
 
   return (
