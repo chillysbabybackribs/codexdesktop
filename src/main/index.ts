@@ -2,6 +2,8 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type {
+  ArtifactReadImageParams,
+  ArtifactReadImageResult,
   BrowserBounds,
   TraceLoadParams,
   TracePersistParams,
@@ -11,6 +13,7 @@ import type {
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
+import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
@@ -45,7 +48,8 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
-const browserAgent = new BrowserAgentController(() => tabManager)
+const cdpArtifactStore = new CdpArtifactStore(() => join(app.getPath('userData'), 'cdp-artifacts'))
+const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactStore)
 const researchRunner = new ResearchRunner(() => tabManager)
 const browserStateStore = new BrowserStateStore()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
@@ -237,6 +241,9 @@ function registerIpc(): void {
 
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
+  ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
+    dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
+  }))
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))
   ipcMain.handle(ipcChannels.browserActivateTab, (_event, tabId: string) => tabManager?.activateTab(tabId))
