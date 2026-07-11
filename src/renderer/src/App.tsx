@@ -2326,6 +2326,13 @@ function stripAutomaticSkillMarker(text: string): string {
   return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
 }
 
+function stripInjectedMemory(text: string): string {
+  return text.replace(
+    /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
+    ''
+  )
+}
+
 function completedMemoryTurns(
   items: ChatItem[],
   itemMeta: Record<string, ItemMeta>,
@@ -2343,7 +2350,7 @@ function completedMemoryTurns(
     if (item.type === 'userMessage') {
       turn.user = item.content
         .filter((content) => content.type === 'text')
-        .map((content) => stripAutomaticSkillMarker(content.text))
+        .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
         .join('\n')
         .trim()
     } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
@@ -2364,7 +2371,7 @@ const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: Cha
   if (item.type === 'userMessage') {
     const text = item.content
       .filter((content) => content.type === 'text')
-      .map((content) => stripAutomaticSkillMarker(content.text))
+      .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
       .join('\n')
 
     return (

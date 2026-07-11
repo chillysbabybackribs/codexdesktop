@@ -121,11 +121,7 @@ export class CodexClient extends EventEmitter {
     })
   }
 
-  async startThread(
-    cwd?: string | null,
-    model?: string | null,
-    priorChatMemory?: string | null
-  ): Promise<ThreadStartResponse> {
+  async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
     await this.ensureStarted()
     const response = await this.request<ThreadStartResponse>('thread/start', {
       cwd: cwd ?? process.env.HOME ?? process.cwd(),
@@ -135,9 +131,7 @@ export class CodexClient extends EventEmitter {
       historyMode: 'legacy',
       config: newThreadConfig,
       dynamicTools: browserDynamicTools,
-      developerInstructions: priorChatMemory
-        ? `${buildGuidance()}\n\n${buildInjectedMemory(priorChatMemory)}`
-        : buildGuidance()
+      developerInstructions: buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)
     this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
@@ -212,9 +206,9 @@ export class CodexClient extends EventEmitter {
       }
     }
 
-    const startedThread = threadId ? null : await this.startThread(cwd, model, priorChatMemory)
+    const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.buildTurnInput(text)
+    const input = this.buildTurnInput(text, priorChatMemory)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -387,13 +381,15 @@ export class CodexClient extends EventEmitter {
     }
   }
 
-  private buildTurnInput(text: string): UserInput[] {
+  private buildTurnInput(text: string, priorChatMemory?: string | null): UserInput[] {
     const skills = selectTurnSkills(text, this.localSkills)
+    const visibleText = formatSkillInvocationText(text, skills)
+    const memory = priorChatMemory ? buildInjectedMemory(priorChatMemory) : ''
 
     return [
       {
         type: 'text',
-        text: formatSkillInvocationText(text, skills),
+        text: memory ? `${memory}\n\nCurrent user request:\n${visibleText}` : visibleText,
         text_elements: []
       },
       ...skills.map((skill): UserInput => ({
