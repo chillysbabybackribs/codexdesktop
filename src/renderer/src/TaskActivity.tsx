@@ -39,6 +39,15 @@ type ReasoningItem = Extract<ThreadItem, { type: 'reasoning' }>
 type PlanItem = Extract<ThreadItem, { type: 'plan' }>
 type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
 
+type CdpScreenshotArtifact = {
+  artifactPath: string
+  fileName: string
+  mediaType: string
+  bytes: number
+  width: number | null
+  height: number | null
+}
+
 export const workItemTypes = [
   'reasoning',
   'plan',
@@ -819,6 +828,24 @@ function DynamicToolBlock({
   const duration = itemDurationMs(item, meta)
   const args = previewJson(item.arguments, 80)
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool
+  const screenshot = cdpScreenshotArtifact(item)
+
+  if (screenshot) {
+    const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
+    return (
+      <div className="cdp-screenshot-result">
+        <ToolRow
+          icon={<ImageIcon />}
+          status={item.success === false ? 'failed' : status}
+          verb="Captured screenshot"
+          detail={screenshot.fileName}
+          detailTitle={screenshot.artifactPath}
+          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
+        />
+        <CdpScreenshotPreview artifact={screenshot} />
+      </div>
+    )
+  }
 
   return (
     <ToolRow
@@ -829,6 +856,57 @@ function DynamicToolBlock({
       meta={duration && duration >= 100 ? fmtDuration(duration) : null}
     />
   )
+}
+
+function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArtifact }): React.JSX.Element | null {
+  const [dataUrl, setDataUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    let active = true
+    void window.api.artifact.readImage({ artifactPath: artifact.artifactPath }).then((result) => {
+      if (active) setDataUrl(result.dataUrl)
+    }).catch(() => {
+      if (active) setDataUrl(null)
+    })
+    return () => {
+      active = false
+    }
+  }, [artifact.artifactPath])
+
+  if (!dataUrl) return null
+  return (
+    <img
+      className="cdp-screenshot-preview"
+      src={dataUrl}
+      alt={`Captured browser screenshot: ${artifact.fileName}`}
+      width={artifact.width ?? undefined}
+      height={artifact.height ?? undefined}
+    />
+  )
+}
+
+function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact | null {
+  if (item.tool !== 'browser_cdp') return null
+
+  for (const content of item.contentItems ?? []) {
+    if (content.type !== 'inputText') continue
+    try {
+      const screenshot = (JSON.parse(content.text) as { screenshot?: Partial<CdpScreenshotArtifact> }).screenshot
+      if (!screenshot || typeof screenshot.artifactPath !== 'string' || typeof screenshot.fileName !== 'string') continue
+      if (typeof screenshot.mediaType !== 'string' || typeof screenshot.bytes !== 'number') continue
+      return {
+        artifactPath: screenshot.artifactPath,
+        fileName: screenshot.fileName,
+        mediaType: screenshot.mediaType,
+        bytes: screenshot.bytes,
+        width: typeof screenshot.width === 'number' ? screenshot.width : null,
+        height: typeof screenshot.height === 'number' ? screenshot.height : null
+      }
+    } catch {
+      // A failed or non-JSON CDP result is not an image artifact.
+    }
+  }
+  return null
 }
 
 function webSearchDescription(action: WebSearchAction | null, query: string): { verb: string; detail: string | null } {

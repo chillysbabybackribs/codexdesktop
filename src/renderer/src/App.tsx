@@ -24,6 +24,8 @@ import type {
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { CodexErrorInfo } from '../../shared/codex-protocol/v2/CodexErrorInfo'
+import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
@@ -190,6 +192,29 @@ const modelStorageKey = 'codexdesktop.model'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
+}
+
+// Turn failures the app can recover from by retrying/continuing on the same
+// thread: capacity problems on the provider side, not problems with the
+// request itself (auth, context window, budget, policy).
+const maxAutoRecoveryAttempts = 3
+const autoRecoveryDelayMs = 10_000
+const autoRecoveryPrompt =
+  'The previous turn was cut short by a model availability error. Continue the task from where you left off.'
+
+function isRecoverableTurnError(info: CodexErrorInfo | null): boolean {
+  if (!info) return false
+  if (info === 'serverOverloaded' || info === 'internalServerError') return true
+  return typeof info === 'object' && 'responseTooManyFailedAttempts' in info
+}
+
+type AutoRecoveryState = {
+  threadId: string
+  attempts: number
+  // Turn ids already handled, so the `error` notification and the
+  // `turn/completed` failure for the same turn schedule only one recovery.
+  handledTurnIds: Set<string>
+  timer: number | null
 }
 
 function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {

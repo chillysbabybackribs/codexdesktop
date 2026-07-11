@@ -1303,6 +1303,23 @@ button {
   color: #d99a94;
 }
 
+.cdp-screenshot-result {
+  display: grid;
+  gap: 8px;
+}
+
+.cdp-screenshot-preview {
+  display: block;
+  width: min(360px, 100%);
+  max-height: 240px;
+  margin-left: 31px;
+  object-fit: contain;
+  object-position: left top;
+  border: 1px solid #303943;
+  border-radius: 8px;
+  background: #111419;
+}
+
 /* --- Thought / plan narration blocks ------------------------------------ */
 
 .thought-block {
