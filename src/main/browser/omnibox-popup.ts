@@ -1,7 +1,7 @@
 import { ipcMain, WebContentsView } from 'electron'
 import type { BrowserWindow, IpcMainEvent } from 'electron'
 import { join } from 'node:path'
-import type { OmniboxAnchor, OmniboxSuggestion } from '../../shared/ipc.js'
+import type { OmniboxAnchor, OmniboxRenderPayload, OmniboxSuggestion } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 
 // Keep in sync with the row/card metrics in src/renderer/omnibox-popup.html.
@@ -10,11 +10,6 @@ const CARD_CHROME = 14
 const SHADOW_SPACE = 14
 
 const hiddenBounds = { x: -10000, y: -10000, width: 10, height: 10 }
-
-export type OmniboxRenderPayload = {
-  suggestions: OmniboxSuggestion[]
-  selectedIndex: number
-}
 
 // The suggestion dropdown. Renderer DOM cannot overlay the page (native tab
 // views paint above it), so the dropdown is its own transparent
