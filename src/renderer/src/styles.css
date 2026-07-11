@@ -3657,7 +3657,8 @@ button {
   gap: 8px;
   flex: 0 0 auto;
   padding: 8px 10px;
-  border-bottom: 1px solid #222222;
+  background: rgba(88, 101, 242, 0.07);
+  border-bottom: 1px solid rgba(88, 101, 242, 0.14);
 }
 
 .agent-overlay-title {
@@ -3706,7 +3707,7 @@ button {
   max-width: 85%;
   padding: 7px 11px;
   border-radius: 10px;
-  background: #1f1f1f;
+  background: rgba(255, 255, 255, 0.08);
   color: #e0e3e7;
   font-size: 13px;
   line-height: 1.5;
