@@ -1,5 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
+  ArtifactReadImageParams,
+  ArtifactReadImageResult,
   BrowserBounds,
   BrowserState,
   CodexEvent,
@@ -73,6 +75,10 @@ export const api = {
     persist: (params: TracePersistParams): Promise<void> => ipcRenderer.invoke(ipcChannels.tracePersist, params),
     load: (params: TraceLoadParams): Promise<string | null> => ipcRenderer.invoke(ipcChannels.traceLoad, params),
     save: (params: TraceSaveParams): Promise<TraceSaveResult> => ipcRenderer.invoke(ipcChannels.traceSave, params)
+  },
+  artifact: {
+    readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>
+      ipcRenderer.invoke(ipcChannels.artifactReadImage, params)
   },
   workspace: {
     pick: (): Promise<string | null> => ipcRenderer.invoke(ipcChannels.workspacePick)

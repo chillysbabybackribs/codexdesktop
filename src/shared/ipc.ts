@@ -97,6 +97,14 @@ export type TracePersistParams = {
   content: string
 }
 
+export type ArtifactReadImageParams = {
+  artifactPath: string
+}
+
+export type ArtifactReadImageResult = {
+  dataUrl: string | null
+}
+
 export type TraceLoadParams = {
   threadId: string
   turnId: string
@@ -136,6 +144,7 @@ export const ipcChannels = {
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',
   traceSave: 'trace:save',
+  artifactReadImage: 'artifact:readImage',
   workspacePick: 'workspace:pick'
 } as const
 import type { ThreadGoalSetParams } from './codex-protocol/v2/ThreadGoalSetParams.js'

@@ -433,6 +433,10 @@ function toEventQuery(options: BrowserCdpEventOptions, method?: string | null): 
   }
 }
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+
 function clampNumber(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return fallback
   return Math.min(maximum, Math.max(minimum, Math.round(value)))
