@@ -454,7 +454,7 @@ function AgentWindow({
             disabled={isSending}
             onClick={() => onResetSession(session.key)}
           >
-            <AgentPlusIcon />
+            <NewChatPlusIcon />
           </button>
         )}
       </form>
@@ -546,6 +546,14 @@ function AgentPlusIcon(): React.JSX.Element {
       <rect x="3.5" y="6.5" width="13" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
       <path d="M7.5 11h5M10 8.5v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       <path d="M17.5 4.5v5M15 7h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function NewChatPlusIcon(): React.JSX.Element {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
