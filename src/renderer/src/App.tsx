@@ -62,18 +62,19 @@ import { selectCompletedWork } from './memory-work'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
 import {
-  appendAgentMessageDelta,
-  appendCommandOutputDelta,
-  appendPlanDelta,
-  appendReasoningDelta,
   buildRows,
   isWorkItem,
-  replaceFileChanges,
   upsertMany,
   type ActivityItem,
   type ChatItem,
   type SystemItem
 } from './transcript-model'
+import {
+  isItemNotification,
+  reduceItemNotificationItems,
+  reduceItemNotificationMeta,
+  type ItemNotification
+} from './item-notifications'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -1592,6 +1593,47 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function handleMainItemNotification(notification: ItemNotification): void {
+    if (!isRelevantThread(notification.params.threadId)) return
+
+    let compactionBeforeTokens: number | null | undefined
+    if (notification.method === 'item/started' || notification.method === 'item/completed') {
+      rememberModelCallInput(notification.params.turnId, notification.params.item)
+    }
+
+    if (notification.method === 'item/started' && notification.params.item.type === 'contextCompaction') {
+      compactionBeforeTokens = contextUsageRef.current?.last.totalTokens ?? null
+      activeCompactionRef.current = {
+        itemId: notification.params.item.id,
+        turnId: notification.params.turnId,
+        beforeTokens: compactionBeforeTokens
+      }
+      setIsCompacting(true)
+    }
+
+    setItemMeta((current) => reduceItemNotificationMeta(current, notification, { compactionBeforeTokens }))
+
+    switch (notification.method) {
+      case 'item/started':
+      case 'item/completed':
+        flushPendingItemMutations()
+        setItems((current) => reduceItemNotificationItems(current, notification))
+        break
+      case 'item/mcpToolCall/progress':
+        break
+      default:
+        enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
+        break
+    }
+
+    if (notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction') {
+      if (activeCompactionRef.current?.itemId === notification.params.item.id) {
+        activeCompactionRef.current = null
+      }
+      setIsCompacting(false)
+    }
+  }
+
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
 
@@ -1609,6 +1651,11 @@ export default function App(): React.JSX.Element {
         handleAgentNotification(backgroundSession, notification)
         return
       }
+    }
+
+    if (isItemNotification(notification)) {
+      handleMainItemNotification(notification)
+      return
     }
 
     switch (notification.method) {
@@ -1719,66 +1766,6 @@ export default function App(): React.JSX.Element {
         }
         void refreshThreads()
         return
-      case 'item/started':
-        if (isRelevantThread(notification.params.threadId)) {
-          rememberModelCallInput(notification.params.turnId, notification.params.item)
-          const startPatch: Partial<ItemMeta> = { startedAtMs: notification.params.startedAtMs }
-          if (notification.params.item.type === 'contextCompaction') {
-            const beforeTokens = contextUsageRef.current?.last.totalTokens ?? null
-            activeCompactionRef.current = {
-              itemId: notification.params.item.id,
-              turnId: notification.params.turnId,
-              beforeTokens
-            }
-            startPatch.compaction = { beforeTokens, afterTokens: null }
-            setIsCompacting(true)
-          }
-          noteItem(notification.params.item.id, notification.params.turnId, startPatch)
-          upsertItem(notification.params.item)
-        }
-        return
-      case 'item/completed':
-        if (isRelevantThread(notification.params.threadId)) {
-          rememberModelCallInput(notification.params.turnId, notification.params.item)
-          noteItem(notification.params.item.id, notification.params.turnId, {
-            completedAtMs: notification.params.completedAtMs
-          })
-          upsertItem(notification.params.item)
-          if (notification.params.item.type === 'contextCompaction') {
-            if (activeCompactionRef.current?.itemId === notification.params.item.id) {
-              activeCompactionRef.current = null
-            }
-            setIsCompacting(false)
-          }
-        }
-        return
-      case 'item/agentMessage/delta':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchItemText(notification.params.itemId, notification.params.delta)
-        }
-        return
-      case 'item/commandExecution/outputDelta':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchCommandOutput(notification.params.itemId, notification.params.delta)
-        }
-        return
-      case 'item/fileChange/patchUpdated':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchFileChanges(notification.params.itemId, notification.params.changes)
-        }
-        return
-      case 'item/mcpToolCall/progress':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItemProgress(
-            notification.params.itemId,
-            notification.params.turnId,
-            notification.params.message
-          )
-        }
-        return
       case 'thread/tokenUsage/updated':
         if (isRelevantThread(notification.params.threadId)) {
           contextUsageRef.current = notification.params.tokenUsage
@@ -1831,30 +1818,6 @@ export default function App(): React.JSX.Element {
           noteTurn(notification.params.turnId, {
             diffSummary: summarizeTurnDiff(notification.params.diff)
           })
-        }
-        return
-      case 'item/reasoning/summaryTextDelta':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, notification.params.delta)
-        }
-        return
-      case 'item/reasoning/summaryPartAdded':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchReasoningPart(notification.params.itemId, 'summary', notification.params.summaryIndex, '')
-        }
-        return
-      case 'item/reasoning/textDelta':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchReasoningPart(notification.params.itemId, 'content', notification.params.contentIndex, notification.params.delta)
-        }
-        return
-      case 'item/plan/delta':
-        if (isRelevantThread(notification.params.threadId)) {
-          noteItem(notification.params.itemId, notification.params.turnId)
-          patchPlan(notification.params.itemId, notification.params.delta)
         }
         return
       case 'turn/plan/updated':
