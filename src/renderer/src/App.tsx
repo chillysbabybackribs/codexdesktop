@@ -3100,7 +3100,7 @@ function ThreadScroll({
   // Scroll the anchored turn's user message to the top of the viewport, sizing
   // a trailing spacer so there is always room to scroll it that far even before
   // the answer fills in.
-  const anchorTop = useCallback(() => {
+  const anchorTop = useCallback((attempt = 0) => {
     const el = ref.current
     const turnId = anchorTurnRef.current
     if (!el || !turnId) return
@@ -3108,7 +3108,26 @@ function ThreadScroll({
     const node = el.querySelector<HTMLElement>(
       `.message-user[data-turn-id="${CSS.escape(turnId)}"]`
     )
-    if (!node) return
+    if (!node) {
+      // The user row for this turn hasn't committed yet (slow flush / restore).
+      // Retry on the next frame up to a bound rather than leaving anchor mode
+      // stuck on with a spacer but no scroll. Bounded so a turn whose row never
+      // renders can't spin forever.
+      if (attempt < 12) {
+        anchorFrameRef.current = window.requestAnimationFrame(() => {
+          anchorFrameRef.current = null
+          anchorTop(attempt + 1)
+        })
+      }
+      return
+    }
+
+    // Found the row — any retry frame still pending from an earlier attempt is
+    // now redundant.
+    if (anchorFrameRef.current !== null) {
+      window.cancelAnimationFrame(anchorFrameRef.current)
+      anchorFrameRef.current = null
+    }
 
     // Small breathing room so the message sits just below the viewport top
     // rather than flush against (or clipped above) the edge.
