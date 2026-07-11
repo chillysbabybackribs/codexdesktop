@@ -1322,21 +1322,54 @@ button {
   color: #d99a94;
 }
 
-.cdp-screenshot-result {
+.cdp-screenshot-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  max-width: min(920px, 100%);
+  margin: -7px 0 20px;
+}
+
+.cdp-screenshot-attachment {
   display: grid;
-  gap: 8px;
+  justify-items: start;
+  gap: 6px;
+  max-width: min(360px, 100%);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #8f969e;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .cdp-screenshot-preview {
   display: block;
   width: min(360px, 100%);
   max-height: 240px;
-  margin-left: 31px;
   object-fit: contain;
   object-position: left top;
-  border: 1px solid #303943;
-  border-radius: 8px;
-  background: #111419;
+  border-radius: 6px;
+}
+
+.cdp-screenshot-filename {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cdp-screenshot-attachment:hover .cdp-screenshot-filename {
+  color: #c2c8cf;
+}
+
+.cdp-screenshot-attachment:focus-visible {
+  outline: 2px solid #748da8;
+  outline-offset: 5px;
+  border-radius: 6px;
 }
 
 /* --- Thought / plan narration blocks ------------------------------------ */

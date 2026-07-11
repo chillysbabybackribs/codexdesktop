@@ -113,7 +113,9 @@ export const api = {
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>
-      ipcRenderer.invoke(ipcChannels.artifactReadImage, params)
+      ipcRenderer.invoke(ipcChannels.artifactReadImage, params),
+    openImage: (params: ArtifactReadImageParams): Promise<boolean> =>
+      ipcRenderer.invoke(ipcChannels.artifactOpenImage, params)
   },
   attachments: {
     pick: (): Promise<ChatAttachment[]> => ipcRenderer.invoke(ipcChannels.attachmentPick),

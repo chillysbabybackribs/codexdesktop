@@ -229,6 +229,7 @@ export const ipcChannels = {
   traceLoad: 'trace:load',
   traceSave: 'trace:save',
   artifactReadImage: 'artifact:readImage',
+  artifactOpenImage: 'artifact:openImage',
   attachmentPick: 'attachment:pick',
   attachmentSave: 'attachment:save',
   attachmentPreview: 'attachment:preview',

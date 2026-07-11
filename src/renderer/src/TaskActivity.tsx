@@ -42,7 +42,7 @@ type ReasoningItem = Extract<ThreadItem, { type: 'reasoning' }>
 type PlanItem = Extract<ThreadItem, { type: 'plan' }>
 type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
 
-type CdpScreenshotArtifact = {
+export type CdpScreenshotArtifact = {
   artifactPath: string
   fileName: string
   mediaType: string
@@ -851,17 +851,14 @@ function DynamicToolBlock({
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
     return (
-      <div className="cdp-screenshot-result">
-        <ToolRow
-          icon={<ImageIcon />}
-          status={item.success === false ? 'failed' : status}
-          verb="Captured screenshot"
-          detail={screenshot.fileName}
-          detailTitle={screenshot.artifactPath}
-          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
-        />
-        <CdpScreenshotPreview artifact={screenshot} />
-      </div>
+      <ToolRow
+        icon={<ImageIcon />}
+        status={item.success === false ? 'failed' : status}
+        verb="Captured screenshot"
+        detail={screenshot.fileName}
+        detailTitle={screenshot.artifactPath}
+        meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
+      />
     )
   }
 
@@ -889,7 +886,7 @@ function DynamicToolBlock({
   )
 }
 
-function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArtifact }): React.JSX.Element | null {
+export function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArtifact }): React.JSX.Element | null {
   const [dataUrl, setDataUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -906,13 +903,22 @@ function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArtifact })
 
   if (!dataUrl) return null
   return (
-    <img
-      className="cdp-screenshot-preview"
-      src={dataUrl}
-      alt={`Captured browser screenshot: ${artifact.fileName}`}
-      width={artifact.width ?? undefined}
-      height={artifact.height ?? undefined}
-    />
+    <button
+      type="button"
+      className="cdp-screenshot-attachment"
+      aria-label={`Open ${artifact.fileName} in the browser`}
+      title="Open in browser"
+      onClick={() => void window.api.artifact.openImage({ artifactPath: artifact.artifactPath })}
+    >
+      <img
+        className="cdp-screenshot-preview"
+        src={dataUrl}
+        alt={`Captured browser screenshot: ${artifact.fileName}`}
+        width={artifact.width ?? undefined}
+        height={artifact.height ?? undefined}
+      />
+      <span className="cdp-screenshot-filename">{artifact.fileName}</span>
+    </button>
   )
 }
 
@@ -940,6 +946,18 @@ function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact
     }
   }
   return null
+}
+
+export function cdpScreenshotArtifacts(items: WorkItem[]): CdpScreenshotArtifact[] {
+  const artifacts = new Map<string, CdpScreenshotArtifact>()
+  for (const item of items) {
+    if (item.type !== 'dynamicToolCall') continue
+    const artifact = cdpScreenshotArtifact(item)
+    if (artifact && !artifacts.has(artifact.artifactPath)) {
+      artifacts.set(artifact.artifactPath, artifact)
+    }
+  }
+  return [...artifacts.values()]
 }
 
 function cdpFileArtifact(item: DynamicToolCallItem): CdpFileArtifact | null {

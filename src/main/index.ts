@@ -298,6 +298,12 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
     dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
   }))
+  ipcMain.handle(ipcChannels.artifactOpenImage, async (_event, params: ArtifactReadImageParams): Promise<boolean> => {
+    const dataUrl = await cdpArtifactStore.readImageDataUrl(params.artifactPath)
+    if (!dataUrl || !tabManager) return false
+    tabManager.createTab(dataUrl)
+    return true
+  })
   ipcMain.handle(ipcChannels.attachmentPick, async () => {
     if (!mainWindow) return []
     const result = await dialog.showOpenDialog(mainWindow, {
