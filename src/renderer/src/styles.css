@@ -3490,6 +3490,9 @@ button {
   .plugin-install-button,
   .plugin-browser-tools label { transition: none; }
   .plugin-browser-card:hover { transform: none; }
+  .settings-navigation-row,
+  .settings-navigation-arrow { transition: none; }
+  .settings-navigation-row:hover .settings-navigation-arrow { transform: none; }
 }
 
 .attachment-strip {
@@ -3800,6 +3803,43 @@ button {
   color: #7f858b;
   font-size: 12px;
   line-height: 1.4;
+}
+
+.settings-navigation-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 13px;
+  border: 1px solid #303033;
+  border-radius: 9px;
+  background: #202022;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.settings-navigation-row:hover {
+  border-color: #424247;
+  background: #252527;
+}
+
+.settings-navigation-row:focus-visible {
+  outline: 2px solid #7189b5;
+  outline-offset: 2px;
+}
+
+.settings-navigation-arrow {
+  flex: 0 0 auto;
+  color: #858b92;
+  font-size: 17px;
+  transition: transform 150ms ease, color 150ms ease;
+}
+
+.settings-navigation-row:hover .settings-navigation-arrow {
+  color: #d9dadd;
+  transform: translateX(2px);
 }
 
 .settings-toggle {
