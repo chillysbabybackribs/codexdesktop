@@ -63,142 +63,19 @@ import {
 import { selectCompletedWork } from './memory-work'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
-
-type SystemItem = {
-  type: 'system'
-  id: string
-  level: 'info' | 'warning' | 'error'
-  text: string
-}
-
-type ChatItem = ThreadItem | SystemItem | TurnPlanItem
-type AgentMessageItem = Extract<ThreadItem, { type: 'agentMessage' }>
-type ActivityItem = WorkItem | AgentMessageItem
+import {
+  buildRows,
+  isWorkItem,
+  upsertMany,
+  type ChatItem,
+  type SystemItem
+} from './transcript-model'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
   return !selected || selected.inputModalities.includes('image')
 }
 
-// Item types that represent Codex "working" — streamed thinking, tool calls,
-// file edits, and searches. They stay in a compact per-turn activity feed;
-// user and completed assistant messages render in the main conversation.
-const workTypes = new Set<string>(workItemTypes)
-
-function isWorkItem(item: ChatItem): item is WorkItem {
-  return workTypes.has(item.type)
-}
-
-function isActivityItem(
-  item: ChatItem,
-  turnId: string | null,
-  lastAgentMessageIdByTurn: ReadonlyMap<string, string>
-): item is ActivityItem {
-  if (isWorkItem(item)) {
-    return true
-  }
-
-  if (item.type !== 'agentMessage') {
-    return false
-  }
-
-  // Some providers leave `phase` null. Keep every non-final unknown chunk in
-  // the activity feed and reserve the last agent message for the completed
-  // response, preserving the desired layout on older/resumed threads too.
-  return item.phase === 'commentary' || (item.phase === null && turnId !== null && item.id !== lastAgentMessageIdByTurn.get(turnId))
-}
-
-// The transcript has two deliberately separate surfaces per turn: a bounded
-// activity feed for tool work and in-task commentary, then a final answer that
-// remains in the main flow while its text streams.
-type RenderRow =
-  | { kind: 'chat'; item: ChatItem; turnId: string | null }
-  | { kind: 'activity'; id: string; turnId: string | null; items: ActivityItem[] }
-  | { kind: 'tail'; id: string; turnId: string }
-
-function buildRows(
-  items: ChatItem[],
-  itemMeta: Record<string, ItemMeta>,
-  activeTurnId: string | null
-): { rows: RenderRow[]; turnWork: Map<string, WorkItem[]> } {
-  const rows: RenderRow[] = []
-  const turnWork = new Map<string, WorkItem[]>()
-  const activityByTurn = new Map<string, ActivityItem[]>()
-  const lastAgentMessageIdByTurn = new Map<string, string>()
-
-  for (const item of items) {
-    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
-    if (item.type === 'agentMessage' && turnId) {
-      lastAgentMessageIdByTurn.set(turnId, item.id)
-    }
-  }
-
-  for (const item of items) {
-    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
-
-    if (isActivityItem(item, turnId, lastAgentMessageIdByTurn) && turnId) {
-      const activity = activityByTurn.get(turnId) ?? []
-      activity.push(item)
-      activityByTurn.set(turnId, activity)
-    }
-
-    if (isWorkItem(item) && turnId) {
-      const work = turnWork.get(turnId) ?? []
-      work.push(item)
-      turnWork.set(turnId, work)
-    }
-  }
-
-  const emittedActivityTurns = new Set<string>()
-  const lastRowIndex = new Map<string, number>()
-
-  for (const item of items) {
-    const turnId = item.type === 'system' ? null : (itemMeta[item.id]?.turnId ?? null)
-
-    if (isActivityItem(item, turnId, lastAgentMessageIdByTurn)) {
-      if (turnId && !emittedActivityTurns.has(turnId)) {
-        rows.push({
-          kind: 'activity',
-          id: `activity-${turnId}`,
-          turnId,
-          items: activityByTurn.get(turnId) ?? [item]
-        })
-        emittedActivityTurns.add(turnId)
-        lastRowIndex.set(turnId, rows.length - 1)
-      } else if (!turnId) {
-        rows.push({ kind: 'activity', id: `activity-${item.id}`, turnId: null, items: [item] })
-      }
-      continue
-    }
-
-    rows.push({ kind: 'chat', item, turnId })
-    if (turnId) {
-      lastRowIndex.set(turnId, rows.length - 1)
-    }
-  }
-
-  // Close completed work after its answer, not between the work feed and the
-  // answer. The live turn retains a single status row at the transcript tail.
-  const inserts: Array<{ index: number; row: RenderRow }> = []
-  for (const turnId of turnWork.keys()) {
-    if (turnId !== activeTurnId) {
-      const index = lastRowIndex.get(turnId)
-      if (index !== undefined) {
-        inserts.push({ index, row: { kind: 'tail', id: `tail-${turnId}`, turnId } })
-      }
-    }
-  }
-  inserts.sort((a, b) => b.index - a.index)
-  for (const insert of inserts) {
-    rows.splice(insert.index + 1, 0, insert.row)
-  }
-
-  if (activeTurnId) {
-    rows.push({ kind: 'tail', id: `tail-${activeTurnId}`, turnId: activeTurnId })
-  }
-
-  return { rows, turnWork }
-}
 
 const minChatWidth = 280
 const minBrowserWidth = 420
