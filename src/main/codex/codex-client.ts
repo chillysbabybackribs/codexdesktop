@@ -26,6 +26,12 @@ import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadToke
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
+import {
+  AppServerRpc,
+  type JsonRpcId,
+  type JsonRpcMessage,
+  type JsonRpcRequestMessage
+} from './app-server-rpc.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
@@ -36,23 +42,6 @@ import {
 } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
 
-type JsonRpcMessage = {
-  jsonrpc?: '2.0'
-  id?: string | number
-  method?: string
-  params?: unknown
-  result?: unknown
-  error?: { code: number; message: string; data?: unknown }
-}
-
-type PendingRequest = {
-  resolve: (value: unknown) => void
-  reject: (reason: Error) => void
-  timer: ReturnType<typeof setTimeout>
-}
-
-const requestTimeoutMs = 30_000
-
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
 // long threads stay responsive instead of riding the limit.
@@ -61,8 +50,7 @@ const autoCompactContextRatio = 0.8
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
-  private readonly pending = new Map<string | number, PendingRequest>()
-  private requestCounter = 0
+  private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
   private readonly threadModels = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
@@ -74,6 +62,11 @@ export class CodexClient extends EventEmitter {
     private readonly researchRunner: ResearchRunner
   ) {
     super()
+    this.rpc = new AppServerRpc({
+      write: (message) => this.writeToChild(message),
+      onNotification: (message) => this.handleNotification(message),
+      onRequest: (message) => this.handleServerRequest(message)
+    })
   }
 
   async getAuthStatus(): Promise<GetAuthStatusResponse> {
@@ -256,7 +249,7 @@ export class CodexClient extends EventEmitter {
   }
 
   dispose(): void {
-    this.rejectPending(new Error('Codex app-server stopped'))
+    this.rpc.rejectPending(new Error('Codex app-server stopped'))
     this.child?.kill()
     this.child = null
   }
@@ -303,17 +296,17 @@ export class CodexClient extends EventEmitter {
       this.child = null
       const message = `codex app-server exited (${code ?? signal ?? 'unknown'})`
       this.emitStatus('exited', message)
-      this.rejectPending(new Error(message))
+      this.rpc.rejectPending(new Error(message))
     })
 
     child.on('error', (error) => {
       this.child = null
       this.emitStatus('error', error.message)
-      this.rejectPending(error)
+      this.rpc.rejectPending(error)
     })
 
     const lines = createInterface({ input: child.stdout })
-    lines.on('line', (line) => this.handleLine(line))
+    lines.on('line', (line) => this.rpc.handleLine(line))
 
     try {
       await this.request('initialize', {
@@ -338,7 +331,7 @@ export class CodexClient extends EventEmitter {
           ]
         }
       })
-      this.notify('initialized')
+      this.rpc.notify('initialized')
       await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
       this.emitStatus('ready')
     } catch (error) {
@@ -351,93 +344,38 @@ export class CodexClient extends EventEmitter {
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
-    const id = `codexdesktop-${++this.requestCounter}`
-
-    return new Promise<T>((resolve, reject) => {
-      const timer = setTimeout(() => {
-        const pending = this.pending.get(id)
-        if (!pending) {
-          return
-        }
-
-        this.pending.delete(id)
-        pending.reject(new Error(`Codex request timed out: ${method}`))
-      }, requestTimeoutMs)
-
-      this.pending.set(id, {
-        resolve: (value) => resolve(value as T),
-        reject,
-        timer
-      })
-
-      try {
-        this.write({ jsonrpc: '2.0', id, method, params })
-      } catch (error) {
-        clearTimeout(timer)
-        this.pending.delete(id)
-        reject(error instanceof Error ? error : new Error(String(error)))
-      }
-    })
+    return this.rpc.request<T>(method, params)
   }
 
-  private notify(method: string, params?: unknown): void {
-    this.write({ jsonrpc: '2.0', method, params })
-  }
+  private handleNotification(message: JsonRpcMessage & { method: string }): void {
+    const notification = message as ServerNotification
 
-  private handleLine(line: string): void {
-    if (!line.trim()) {
-      return
+    if (notification.method === 'skills/changed') {
+      void this.localSkills.refresh(<T>(method: string, params?: unknown) => this.request<T>(method, params), true)
     }
 
-    let message: JsonRpcMessage
-
-    try {
-      message = JSON.parse(line) as JsonRpcMessage
-    } catch (error) {
-      console.warn('Ignoring non-JSON app-server line', { line, error })
-      return
+    if (notification.method === 'model/rerouted') {
+      this.threadModels.set(notification.params.threadId, notification.params.toModel)
+    } else if (notification.method === 'thread/tokenUsage/updated') {
+      this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
+    } else if (notification.method === 'turn/completed') {
+      this.maybeAutoCompact(notification.params.threadId)
+    } else if (notification.method === 'thread/compacted') {
+      this.compactionsInFlight.delete(notification.params.threadId)
+    } else if (
+      notification.method === 'thread/deleted' ||
+      notification.method === 'thread/closed'
+    ) {
+      this.threadModels.delete(notification.params.threadId)
+      this.threadReasoningEfforts.delete(notification.params.threadId)
+      this.threadTokenUsage.delete(notification.params.threadId)
+      this.compactionsInFlight.delete(notification.params.threadId)
     }
 
-    if (message.id !== undefined && (message.result !== undefined || message.error !== undefined)) {
-      this.handleResponse(message)
-      return
-    }
-
-    if (message.id !== undefined && message.method) {
-      this.handleServerRequest(message as ServerRequest & JsonRpcMessage)
-      return
-    }
-
-    if (message.method) {
-      const notification = message as ServerNotification
-
-      if (notification.method === 'skills/changed') {
-        void this.localSkills.refresh(<T>(method: string, params?: unknown) => this.request<T>(method, params), true)
-      }
-
-      if (notification.method === 'model/rerouted') {
-        this.threadModels.set(notification.params.threadId, notification.params.toModel)
-      } else if (notification.method === 'thread/tokenUsage/updated') {
-        this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
-      } else if (notification.method === 'turn/completed') {
-        this.maybeAutoCompact(notification.params.threadId)
-      } else if (notification.method === 'thread/compacted') {
-        this.compactionsInFlight.delete(notification.params.threadId)
-      } else if (
-        notification.method === 'thread/deleted' ||
-        notification.method === 'thread/closed'
-      ) {
-        this.threadModels.delete(notification.params.threadId)
-        this.threadReasoningEfforts.delete(notification.params.threadId)
-        this.threadTokenUsage.delete(notification.params.threadId)
-        this.compactionsInFlight.delete(notification.params.threadId)
-      }
-
-      this.emit('event', {
-        type: 'notification',
-        notification
-      } satisfies CodexEvent)
-    }
+    this.emit('event', {
+      type: 'notification',
+      notification
+    } satisfies CodexEvent)
   }
 
   private noteThreadTokenUsage(threadId: string, tokenUsage: ThreadTokenUsage): void {
@@ -467,60 +405,35 @@ export class CodexClient extends EventEmitter {
     })
   }
 
-  private handleResponse(message: JsonRpcMessage): void {
-    const pending = this.pending.get(message.id!)
-
-    if (!pending) {
-      return
-    }
-
-    this.pending.delete(message.id!)
-    clearTimeout(pending.timer)
-
-    if (message.error) {
-      pending.reject(new Error(message.error.message))
-    } else {
-      pending.resolve(message.result)
-    }
-  }
-
   // The app runs fully unrestricted (approvalPolicy: 'never', danger-full-access)
   // BY DESIGN, so app-server never asks the user to approve commands, file
   // changes, or permissions. We only answer the non-approval server requests it
   // still makes; anything else (including any stray approval request) is denied.
-  private handleServerRequest(message: ServerRequest & JsonRpcMessage): void {
+  private handleServerRequest(message: JsonRpcRequestMessage): void {
     switch (message.method) {
       case 'item/tool/requestUserInput':
-        this.respond(message.id!, { answers: {} })
+        this.rpc.respond(message.id, { answers: {} })
         return
       case 'currentTime/read':
-        this.respond(message.id!, { currentTimeAt: Math.floor(Date.now() / 1000) })
+        this.rpc.respond(message.id, { currentTimeAt: Math.floor(Date.now() / 1000) })
         return
       case 'item/tool/call':
-        void this.handleDynamicToolCall(message.id!, message.params as DynamicToolCallParams)
+        void this.handleDynamicToolCall(message.id, message.params as DynamicToolCallParams)
         return
       default:
-        this.respondError(message.id!, -32601, `Unsupported app-server request: ${message.method}`)
+        this.rpc.respondError(message.id, -32601, `Unsupported app-server request: ${message.method}`)
     }
   }
 
-  private async handleDynamicToolCall(id: string | number, params: DynamicToolCallParams): Promise<void> {
+  private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
       researchRunner: this.researchRunner
     })
-    this.respond(id, response)
+    this.rpc.respond(id, response)
   }
 
-  private respond(id: string | number, result: unknown): void {
-    this.write({ jsonrpc: '2.0', id, result })
-  }
-
-  private respondError(id: string | number, code: number, message: string): void {
-    this.write({ jsonrpc: '2.0', id, error: { code, message } })
-  }
-
-  private write(message: JsonRpcMessage): void {
+  private writeToChild(message: JsonRpcMessage): void {
     if (!this.child) {
       throw new Error('codex app-server is not running')
     }
@@ -536,12 +449,4 @@ export class CodexClient extends EventEmitter {
     } satisfies CodexEvent)
   }
 
-  private rejectPending(error: Error): void {
-    for (const pending of this.pending.values()) {
-      clearTimeout(pending.timer)
-      pending.reject(error)
-    }
-
-    this.pending.clear()
-  }
 }
