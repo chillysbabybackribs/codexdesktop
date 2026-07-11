@@ -336,7 +336,8 @@ test('CDP screenshot artifacts are indexed without their image payload', () => {
         screenshot: { artifactPath: screenshotPath, bytes: 72, mediaType: 'image/png' }
       })
     }],
-    success: true
+    success: true,
+    durationMs: 12
   }]
 
   const trace = buildTurnTrace({
