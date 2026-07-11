@@ -15,7 +15,12 @@ const taskShapingGuidance = [
   '- Use GitHub-Flavored Markdown tables for comparisons, summaries, rankings, and other repeated field data. Use blockquotes for important caveats and fenced code blocks for code or commands.',
   '- When quantitative trends or comparisons are clearer visually, include a fenced `chart` block containing JSON with `type` (`bar`, `horizontal-bar`, or `line`), optional `title`, `description`, `unit`, and `data` entries shaped as `{ "label": "…", "value": 0 }`. Do not add charts when the data is too small or uncertain to benefit from one.',
   '- Keep supporting context and caveats visually lighter than the primary answer; do not turn every response into a wall of text.',
-  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
+  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.',
+  'App self-improvement reporting:',
+  '- Codex Desktop is a locally developed app. Its tools (browser_run, browser_extract_page, browser_cdp, research_web), skills, and this guidance are editable source code, and the user wants to hear when they get in the way.',
+  '- If this task hit real friction caused by the app itself — a missing capability, a tool limitation or bad default, a truncated or misleading result, a skill that steered you wrong, or a manual workaround you had to invent — end your final answer with a short explanation of what happened and what change to the app would fix it.',
+  '- Express each distinct issue as a fenced `app-improvement` block containing JSON with `title` (short summary), `kind` (`code`, `skill`, `tool`, or `process`), `observation` (what happened during this task and why it was suboptimal), and `suggestion` (the concrete change: which tool or skill, what behavior, what default).',
+  '- Report at most two issues per response, picking the highest-impact ones. Only report friction that actually occurred in this task; never fabricate one, and never report ordinary errors you caused yourself, such as wrong tool arguments.'
 ]
 
 export function buildGuidance(): string {

@@ -2482,17 +2482,21 @@ const markdownComponents: Components = {
   ),
   pre: ({ children, ...props }) => {
     const child = Children.toArray(children)[0]
-    if (isValidElement(child) && child.type === ChartBlock) {
+    if (isValidElement(child) && (child.type === ChartBlock || child.type === ImprovementBlock)) {
       return child
     }
     return <pre {...props}>{children}</pre>
   },
   code: ({ children, className, ...props }) => {
-    const language = className?.match(/language-(\w+)/)?.[1]
+    const language = className?.match(/language-([\w-]+)/)?.[1]
     const value = String(children).replace(/\n$/, '')
 
     if ((language === 'chart' || language === 'graph') && parseChartConfig(value)) {
       return <ChartBlock config={parseChartConfig(value)!} />
+    }
+
+    if (language === 'app-improvement' && parseImprovementNote(value)) {
+      return <ImprovementBlock note={parseImprovementNote(value)!} />
     }
 
     return (
