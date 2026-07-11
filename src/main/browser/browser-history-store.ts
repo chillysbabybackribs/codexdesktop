@@ -20,8 +20,11 @@ export class BrowserHistoryStore {
   private saveTimer: ReturnType<typeof setTimeout> | null = null
   private saveQueue: Promise<void> = Promise.resolve()
   private loaded = false
+  private readonly getFilePath: () => string
 
-  constructor(private readonly getFilePath: () => string) {}
+  constructor(getFilePath: () => string) {
+    this.getFilePath = getFilePath
+  }
 
   async load(): Promise<void> {
     try {
