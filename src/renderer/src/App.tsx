@@ -83,6 +83,7 @@ const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
+const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
@@ -143,6 +144,9 @@ export default function App(): React.JSX.Element {
   // omit the override and run on the CLI-configured default.
   const [selectedModel, setSelectedModel] = useState<string | null>(
     () => window.localStorage.getItem(modelStorageKey)
+  )
+  const [selectedReasoningEffort, setSelectedReasoningEffort] = useState<ReasoningEffort | null>(
+    () => window.localStorage.getItem(reasoningEffortStorageKey)
   )
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
@@ -549,7 +553,8 @@ export default function App(): React.JSX.Element {
         text: trimmed,
         attachments,
         cwd: workspace,
-        model: selectedModel
+        model: selectedModel,
+        effort: selectedReasoningEffort
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -608,6 +613,23 @@ export default function App(): React.JSX.Element {
     cancelAutoRecovery()
     setSelectedModel(model)
     window.localStorage.setItem(modelStorageKey, model)
+
+    const selected = models.find((candidate) => candidate.model === model)
+    if (!selected) return
+    const supported = selected.supportedReasoningEfforts.map((option) => option.reasoningEffort)
+    const nextEffort = selectedReasoningEffort && supported.includes(selectedReasoningEffort)
+      ? selectedReasoningEffort
+      : selected.defaultReasoningEffort
+    setSelectedReasoningEffort(nextEffort)
+    window.localStorage.setItem(reasoningEffortStorageKey, nextEffort)
+  }
+
+  const handleSelectModelEffort = (model: string, effort: ReasoningEffort): void => {
+    cancelAutoRecovery()
+    setSelectedModel(model)
+    setSelectedReasoningEffort(effort)
+    window.localStorage.setItem(modelStorageKey, model)
+    window.localStorage.setItem(reasoningEffortStorageKey, effort)
   }
 
   const handleStop = async (): Promise<void> => {
@@ -1750,7 +1772,9 @@ export default function App(): React.JSX.Element {
           workspace={workspace}
           models={models}
           selectedModel={selectedModel}
+          selectedReasoningEffort={selectedReasoningEffort}
           onSelectModel={handleSelectModel}
+          onSelectModelEffort={handleSelectModelEffort}
           onSend={handleSend}
           onSteer={handleSteer}
           onStop={handleStop}
@@ -1837,7 +1861,9 @@ function ChatPane({
   workspace,
   models,
   selectedModel,
+  selectedReasoningEffort,
   onSelectModel,
+  onSelectModelEffort,
   onSend,
   onSteer,
   onStop,
@@ -1888,7 +1914,9 @@ function ChatPane({
   workspace: string | null
   models: Model[]
   selectedModel: string | null
+  selectedReasoningEffort: ReasoningEffort | null
   onSelectModel: (model: string) => void
+  onSelectModelEffort: (model: string, effort: ReasoningEffort) => void
   onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
@@ -2154,7 +2182,13 @@ function ChatPane({
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
           {models.length ? (
-            <ModelPill models={models} selectedModel={selectedModel} onSelectModel={onSelectModel} />
+            <ModelPill
+              models={models}
+              selectedModel={selectedModel}
+              selectedEffort={selectedReasoningEffort}
+              onSelectModel={onSelectModel}
+              onSelectModelEffort={onSelectModelEffort}
+            />
           ) : null}
           <GoalControl
             goal={activeGoal}
