@@ -3231,15 +3231,29 @@ function ThreadScroll({
       // The new user row + spacer land next commit; anchor once they exist.
       window.requestAnimationFrame(anchorTop)
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
-      // The turn finished. Release the anchor and collapse the spacer so no
-      // reserved room is left as dead space below the answer. Dropping the
-      // spacer shrinks scrollHeight without moving scrollTop, so the message
-      // and answer stay exactly where they are — the reader just no longer has
-      // empty space beneath them.
+      // The turn finished. Stop actively re-anchoring, but FREEZE the current
+      // scroll position so the message/answer don't snap back down. Removing the
+      // spacer entirely would shrink scrollHeight below the current scrollTop and
+      // the browser would clamp it (the snap). Instead, size the spacer to the
+      // exact minimum that preserves scrollTop — 0 if the answer already fills
+      // the viewport, otherwise just enough to hold position (no excess).
       anchorTurnRef.current = null
-      setSpacerOn(false)
-      // A short answer can no longer hold the message at the top; let the next
-      // bottom-follow tick settle naturally rather than forcing a jump.
+      const el = ref.current
+      const spacer = spacerRef.current
+      if (el && spacer) {
+        const priorSpacer = spacer.offsetHeight
+        const contentWithoutSpacer = el.scrollHeight - priorSpacer
+        const needed = Math.max(0, el.scrollTop + el.clientHeight - contentWithoutSpacer)
+        if (needed <= 0) {
+          setSpacerOn(false)
+        } else {
+          spacer.style.height = `${needed}px`
+        }
+      } else {
+        setSpacerOn(false)
+      }
+      // The reader is no longer following the live edge; leave bottom-follow off
+      // until they scroll back down themselves.
       pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
