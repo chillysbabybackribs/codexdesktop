@@ -2413,6 +2413,9 @@ function ChatPane({
   onAgentStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  // Which region the user is working in: the main chat (default) or the agent
+  // column. Drives the dim/unfocus treatment on agent windows via CSS.
+  const [isMainFocused, setIsMainFocused] = useState(true)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null)
   const traceLoadGenerationRef = useRef(0)
@@ -2488,6 +2491,15 @@ function ChatPane({
 
   const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
+  // Pointer-downs and focus moves decide the active region: anything inside
+  // the agent column or tab strip counts as agent territory, everything else
+  // is the main chat.
+  const updateFocusRegion = (target: EventTarget | null): void => {
+    const inAgents =
+      target instanceof HTMLElement && Boolean(target.closest('.agent-column-shell, .agent-tabs'))
+    setIsMainFocused(!inAgents)
+  }
+
   const focusAgent = (key: string): void => {
     const wasOpen = openAgentKeys.includes(key)
     onSelectAgent(key)
@@ -2545,8 +2557,10 @@ function ChatPane({
     <section
       className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
         openAgentSessions.length ? 'has-agents' : ''
-      }`}
+      } ${isMainFocused ? 'is-main-focused' : ''}`}
       aria-busy={isRestoring}
+      onPointerDownCapture={(event) => updateFocusRegion(event.target)}
+      onFocusCapture={(event) => updateFocusRegion(event.target)}
     >
       <div className="chat-toolbar">
         <button
