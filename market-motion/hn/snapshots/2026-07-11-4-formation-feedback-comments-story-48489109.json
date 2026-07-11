@@ -1,0 +1,414 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48489109",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 43
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Akimsa3"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have the same thing. I live in the process, and when something is about to conclude or close to becoming 'finished', my mind immediately wants to move on to something else. To trick myself, I just tell myself it's never near completion—it's always a process, and it's never truly finished. That way, I can keep working because I'm not chasing an end; I'm just exploring, and you can always add more ideas because it never really ends. So you just gotta keep going and going with that on mind, that's how i've been approaching that recently. Live in the process forever."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Akimsa3",
+          "story_48489109"
+        ],
+        "author": "Akimsa3",
+        "comment_text": "I have the same thing. I live in the process, and when something is about to conclude or close to becoming &#x27;finished&#x27;, my mind immediately wants to move on to something else. To trick myself, I just tell myself it&#x27;s never near completion—it&#x27;s always a process, and it&#x27;s never truly finished. That way, I can keep working because I&#x27;m not chasing an end; I&#x27;m just exploring, and you can always add more ideas because it never really ends. So you just gotta keep going and going with that on mind, that&#x27;s how i&#x27;ve been approaching that recently. Live in the process forever.",
+        "created_at": "2026-06-18T13:56:29Z",
+        "created_at_i": 1781790989,
+        "objectID": "48585434",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-18T14:00:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "austin-cheney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My current job has turned me ADHD.  There are times when I am actively writing feedback into urgent conversations in 3-5 Teams channels simultaneously while watching for incoming emails because people look at me to lead operations for this big project even though that is no longer my title.  That is on top of managing 14 seats on a contract and being just a junior developer by title on that contract carrying the normal developer assignments.<p>So... when I am on a 3 hour call I am already done.  I have about 40 minutes of attention span and my mind has moved on.  Its irrational to expect ADHD as a performance benefit and simultaneously expect 3 hours of unbroken focus, so I am really just playing games while people talk to themselves out loud.<p>Before this I have never thought I had ADHD.  I used to be that guy who could program in a deep focus continuously for hours or read books all the time.  This job has killed it.<p>Fortunately, I can still program and I still write personal software even thought that is no longer my job (I am a developer, but I no longer develop software in the regular sense).  The only goal of software is automation.  I write personal software to solve real world problems I have that I don't want to solve manually multiple times.<p>What's most interesting to me about this is not the ADHD of it, but the autism of it.  My preferred language of choice for writing personal software is TypeScript.  I have a personal style I use that allows me to achieve my best productivity while providing the best performance I can squeeze out of TypeScript.  I have honed this personal preference over the twenty years I have been writing this code (JavaScript before TypeScript) both for work and as a hobby.  Holy fuck the autism runs high in the world of JavaScript/TypeScript.  I don't show my code to people online anymore because the people who write JavaScript/TypeScript only for work (not the hobby developers) tend to be high anxiety cowards with high narcissism that cannot program even a little.  They can't program and when they cannot find a framework template (think coloring book and crayons for retarded children) they immediately move into hostility mode.  WTF, my software is personal software written for an audience of one, but the narcissists will find a way to make it about themselves and then go to war when the software is written with an expectation of reading code (kind of like how a novel with words doesn't put pictures on every page).<p>rant complete."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_austin-cheney",
+          "story_48489109"
+        ],
+        "author": "austin-cheney",
+        "comment_text": "My current job has turned me ADHD.  There are times when I am actively writing feedback into urgent conversations in 3-5 Teams channels simultaneously while watching for incoming emails because people look at me to lead operations for this big project even though that is no longer my title.  That is on top of managing 14 seats on a contract and being just a junior developer by title on that contract carrying the normal developer assignments.<p>So... when I am on a 3 hour call I am already done.  I have about 40 minutes of attention span and my mind has moved on.  Its irrational to expect ADHD as a performance benefit and simultaneously expect 3 hours of unbroken focus, so I am really just playing games while people talk to themselves out loud.<p>Before this I have never thought I had ADHD.  I used to be that guy who could program in a deep focus continuously for hours or read books all the time.  This job has killed it.<p>Fortunately, I can still program and I still write personal software even thought that is no longer my job (I am a developer, but I no longer develop software in the regular sense).  The only goal of software is automation.  I write personal software to solve real world problems I have that I don&#x27;t want to solve manually multiple times.<p>What&#x27;s most interesting to me about this is not the ADHD of it, but the autism of it.  My preferred language of choice for writing personal software is TypeScript.  I have a personal style I use that allows me to achieve my best productivity while providing the best performance I can squeeze out of TypeScript.  I have honed this personal preference over the twenty years I have been writing this code (JavaScript before TypeScript) both for work and as a hobby.  Holy fuck the autism runs high in the world of JavaScript&#x2F;TypeScript.  I don&#x27;t show my code to people online anymore because the people who write JavaScript&#x2F;TypeScript only for work (not the hobby developers) tend to be high anxiety cowards with high narcissism that cannot program even a little.  They can&#x27;t program and when they cannot find a framework template (think coloring book and crayons for retarded children) they immediately move into hostility mode.  WTF, my software is personal software written for an audience of one, but the narcissists will find a way to make it about themselves and then go to war when the software is written with an expectation of reading code (kind of like how a novel with words doesn&#x27;t put pictures on every page).<p>rant complete.",
+        "created_at": "2026-06-14T07:24:22Z",
+        "created_at_i": 1781421862,
+        "objectID": "48524974",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-14T07:48:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thisislorenzov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Feel you (and yeah, the gym dashboard thing hits home).<p>It's way too early to make strong claims, after all I built it only a few days ago, but yesterday it helped me quite a lot focussing on a particular topic (I built a little node that detects when the requests/response content is drifting from the original intended topic using embeddings)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thisislorenzov",
+          "story_48489109"
+        ],
+        "author": "thisislorenzov",
+        "comment_text": "Feel you (and yeah, the gym dashboard thing hits home).<p>It&#x27;s way too early to make strong claims, after all I built it only a few days ago, but yesterday it helped me quite a lot focussing on a particular topic (I built a little node that detects when the requests&#x2F;response content is drifting from the original intended topic using embeddings)",
+        "created_at": "2026-06-12T12:15:50Z",
+        "created_at_i": 1781266550,
+        "objectID": "48503163",
+        "parent_id": 48502891,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-12T12:21:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ramblerman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "From the title alone I was going to comment that these tools we build are not about not procrastinating but about chasing some illusionary productivity.<p>My own examples<p>- Instead of learning a language, I can write a tool that generates flashcards for me from books I'm reading, surely that's better than &quot;actually&quot; reading a book<p>- Instead of using my morning willpower to hit the gym, surely a dashboard that shows me how many reps I did per week, with graphs of my progressions will get me better gains ... someday.<p>The fact you called it ProductivityProxy seems like we are on the same page."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ramblerman",
+          "story_48489109"
+        ],
+        "author": "ramblerman",
+        "children": [
+          48503163
+        ],
+        "comment_text": "From the title alone I was going to comment that these tools we build are not about not procrastinating but about chasing some illusionary productivity.<p>My own examples<p>- Instead of learning a language, I can write a tool that generates flashcards for me from books I&#x27;m reading, surely that&#x27;s better than &quot;actually&quot; reading a book<p>- Instead of using my morning willpower to hit the gym, surely a dashboard that shows me how many reps I did per week, with graphs of my progressions will get me better gains ... someday.<p>The fact you called it ProductivityProxy seems like we are on the same page.",
+        "created_at": "2026-06-12T11:46:54Z",
+        "created_at_i": 1781264814,
+        "objectID": "48502891",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-13T13:22:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thisislorenzov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don't. Or at least, I don't, hence the title."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thisislorenzov",
+          "story_48489109"
+        ],
+        "author": "thisislorenzov",
+        "comment_text": "You don&#x27;t. Or at least, I don&#x27;t, hence the title.",
+        "created_at": "2026-06-11T21:46:16Z",
+        "created_at_i": 1781214376,
+        "objectID": "48496866",
+        "parent_id": 48496625,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-12T00:25:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yahyaaa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you prevent the rule system itself from becoming the thing you end up tinkering with instead of actually using it for focus?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Yahyaaa",
+          "story_48489109"
+        ],
+        "author": "Yahyaaa",
+        "children": [
+          48496866
+        ],
+        "comment_text": "How do you prevent the rule system itself from becoming the thing you end up tinkering with instead of actually using it for focus?",
+        "created_at": "2026-06-11T21:24:43Z",
+        "created_at_i": 1781213083,
+        "objectID": "48496625",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-27T23:30:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thisislorenzov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Assuming that we're not dealing with bizantine failures (e.g. the LLM has not been hijacked/compromised), the worst that can happen is that it introduces some nodes with blocking calls and our local machine traffic stops. At that point, we can just disable the proxy and check where the LLM fucked up.<p>The bizantine failure assumption is fundamental though: If by any chance some LLM injects a rule like &quot;send traffic to xyz&quot;, the story changes.<p>As usual, always doublecheck the LLM work. Triple-check it whenever redirection of traffic is involved."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thisislorenzov",
+          "story_48489109"
+        ],
+        "author": "thisislorenzov",
+        "children": [
+          48489919
+        ],
+        "comment_text": "Assuming that we&#x27;re not dealing with bizantine failures (e.g. the LLM has not been hijacked&#x2F;compromised), the worst that can happen is that it introduces some nodes with blocking calls and our local machine traffic stops. At that point, we can just disable the proxy and check where the LLM fucked up.<p>The bizantine failure assumption is fundamental though: If by any chance some LLM injects a rule like &quot;send traffic to xyz&quot;, the story changes.<p>As usual, always doublecheck the LLM work. Triple-check it whenever redirection of traffic is involved.",
+        "created_at": "2026-06-11T13:00:40Z",
+        "created_at_i": 1781182840,
+        "objectID": "48489764",
+        "parent_id": 48489670,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-11T13:15:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lionelgarnier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Was going to try this tonight, but, well... tomorrow. \nJokes aside, I like the part with the visual layer over mitmproxy addons.\nQuestion: since custom nodes run unsandboxed, how are you thinking about the &quot;let an LLM write the policies&quot; angle?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lionelgarnier",
+          "story_48489109"
+        ],
+        "author": "lionelgarnier",
+        "children": [
+          48489764
+        ],
+        "comment_text": "Was going to try this tonight, but, well... tomorrow. \nJokes aside, I like the part with the visual layer over mitmproxy addons.\nQuestion: since custom nodes run unsandboxed, how are you thinking about the &quot;let an LLM write the policies&quot; angle?",
+        "created_at": "2026-06-11T12:53:12Z",
+        "created_at_i": 1781182392,
+        "objectID": "48489670",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-11T13:01:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vanshsoni0027"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jj"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vanshsoni0027",
+          "story_48489109"
+        ],
+        "author": "vanshsoni0027",
+        "comment_text": "jj",
+        "created_at": "2026-06-11T11:57:40Z",
+        "created_at_i": 1781179060,
+        "objectID": "48489168",
+        "parent_id": 48489138,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-11T12:03:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thisislorenzov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone wise told me, it's just a procrastination ouroboros"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thisislorenzov",
+          "story_48489109"
+        ],
+        "author": "thisislorenzov",
+        "children": [
+          48489168
+        ],
+        "comment_text": "As someone wise told me, it&#x27;s just a procrastination ouroboros",
+        "created_at": "2026-06-11T11:54:47Z",
+        "created_at_i": 1781178887,
+        "objectID": "48489138",
+        "parent_id": 48489127,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-11T11:58:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "galsapir"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i feel like i've had exactly the same thought in the past :-0 might even have written about it. feel your pain"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I procrastinate by building tools to stop me from procrastinating: A sad story"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_galsapir",
+          "story_48489109"
+        ],
+        "author": "galsapir",
+        "children": [
+          48489138
+        ],
+        "comment_text": "i feel like i&#x27;ve had exactly the same thought in the past :-0 might even have written about it. feel your pain",
+        "created_at": "2026-06-11T11:53:20Z",
+        "created_at_i": 1781178800,
+        "objectID": "48489127",
+        "parent_id": 48489109,
+        "story_id": 48489109,
+        "story_title": "I procrastinate by building tools to stop me from procrastinating: A sad story",
+        "updated_at": "2026-06-11T11:58:13Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 11,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48489109&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 24
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 1
+  }
+}

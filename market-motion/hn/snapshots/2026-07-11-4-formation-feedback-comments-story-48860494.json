@@ -1,0 +1,722 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48860494",
+    "window": "recent-90d",
+    "tag": "ask_hn",
+    "score": 74
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Leewen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I known  this is me. Just here for help"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Leewen",
+          "story_48860494"
+        ],
+        "author": "Leewen",
+        "comment_text": "I known  this is me. Just here for help",
+        "created_at": "2026-07-11T13:40:41Z",
+        "created_at_i": 1783777241,
+        "objectID": "48871975",
+        "parent_id": 48864520,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T13:46:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "carlosjobim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You could also pay for Premium, it's very good value for money."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_carlosjobim",
+          "story_48860494"
+        ],
+        "author": "carlosjobim",
+        "comment_text": "You could also pay for Premium, it&#x27;s very good value for money.",
+        "created_at": "2026-07-11T13:35:18Z",
+        "created_at_i": 1783776918,
+        "objectID": "48871941",
+        "parent_id": 48863865,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T14:20:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danshipt"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here a potential “nice” lesson: teach them to leave behind something they like. Now, that takes something (even for adults)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danshipt",
+          "story_48860494"
+        ],
+        "author": "danshipt",
+        "comment_text": "Here a potential “nice” lesson: teach them to leave behind something they like. Now, that takes something (even for adults)",
+        "created_at": "2026-07-11T08:39:54Z",
+        "created_at_i": 1783759194,
+        "objectID": "48870089",
+        "parent_id": 48862295,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T10:15:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "toomuchtodo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Rip with yt-dlp into Plex or Jellyfin server."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_toomuchtodo",
+          "story_48860494"
+        ],
+        "author": "toomuchtodo",
+        "comment_text": "Rip with yt-dlp into Plex or Jellyfin server.",
+        "created_at": "2026-07-10T22:48:14Z",
+        "created_at_i": 1783723694,
+        "objectID": "48866295",
+        "parent_id": 48862295,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T22:50:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tripleee"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; it removes their services and adds some security/privacy<p>that to me is what de-Googling is. I'm not trying to hurt their marketshare."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tripleee",
+          "story_48860494"
+        ],
+        "author": "tripleee",
+        "comment_text": "&gt; it removes their services and adds some security&#x2F;privacy<p>that to me is what de-Googling is. I&#x27;m not trying to hurt their marketshare.",
+        "created_at": "2026-07-10T22:44:16Z",
+        "created_at_i": 1783723456,
+        "objectID": "48866248",
+        "parent_id": 48864529,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T22:49:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jraph"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's uniquely hard to get rid of Android (when you don't consider iOS as an option, because possibly the remedy would be worse than the issue). A degoogled Android is already a good step.<p>I'm as little reliant on proprietary services as possible and I'll jump to Linux mobile (having used a pinephone for one year as my main phone, I know it'll be comfortable for me) when a convincing phone that's not very expensive given the outdated hardware it has and that doesn't rely on an Android base can run it smoothly enough, but that phone doesn't exist yet.<p>Alternatives include not having a smartphone but the network effect and the expectations on you having one are quite strong.<p>The Fairphone 5 I have is very close to run PostmarketOS well, I have hope but for now few but critical features are missing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jraph",
+          "story_48860494"
+        ],
+        "author": "jraph",
+        "comment_text": "It&#x27;s uniquely hard to get rid of Android (when you don&#x27;t consider iOS as an option, because possibly the remedy would be worse than the issue). A degoogled Android is already a good step.<p>I&#x27;m as little reliant on proprietary services as possible and I&#x27;ll jump to Linux mobile (having used a pinephone for one year as my main phone, I know it&#x27;ll be comfortable for me) when a convincing phone that&#x27;s not very expensive given the outdated hardware it has and that doesn&#x27;t rely on an Android base can run it smoothly enough, but that phone doesn&#x27;t exist yet.<p>Alternatives include not having a smartphone but the network effect and the expectations on you having one are quite strong.<p>The Fairphone 5 I have is very close to run PostmarketOS well, I have hope but for now few but critical features are missing.",
+        "created_at": "2026-07-10T20:34:47Z",
+        "created_at_i": 1783715687,
+        "objectID": "48864876",
+        "parent_id": 48864529,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T21:58:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jraph"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Apple Photos (which is also not a nice company, none of them really are)<p>There are entities that provide services that are nice, which actually value your privacy, are possibly non profit, based on free software.<p>Of course it's rarely gratis, sometimes it's less smooth, but hey, at least you avoid the villains.<p>See for instance <a href=\"https://www.chatons.org/\" rel=\"nofollow\">https://www.chatons.org/</a><p>Or you could self host (of course that costs time and you need to have a strong backup strategy... but on the other hand you should also backup what you host at the gafam, you never know when they decide to lock you out for some reason).<p>It's kinda sad to flee from one gafam just to trap yourself in another one. However, congrats for your successful degoogling!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jraph",
+          "story_48860494"
+        ],
+        "author": "jraph",
+        "comment_text": "&gt; Apple Photos (which is also not a nice company, none of them really are)<p>There are entities that provide services that are nice, which actually value your privacy, are possibly non profit, based on free software.<p>Of course it&#x27;s rarely gratis, sometimes it&#x27;s less smooth, but hey, at least you avoid the villains.<p>See for instance <a href=\"https:&#x2F;&#x2F;www.chatons.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.chatons.org&#x2F;</a><p>Or you could self host (of course that costs time and you need to have a strong backup strategy... but on the other hand you should also backup what you host at the gafam, you never know when they decide to lock you out for some reason).<p>It&#x27;s kinda sad to flee from one gafam just to trap yourself in another one. However, congrats for your successful degoogling!",
+        "created_at": "2026-07-10T20:25:21Z",
+        "created_at_i": 1783715121,
+        "objectID": "48864779",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T21:01:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That doesn’t feel very de-Googled, when it’s using an OS that was built by Google on hardware made by Google. Sure it removes their services and adds some security/privacy, but it still adds to Google’s power by giving marketshare to both their mobile OS and mobile hardware."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_48860494"
+        ],
+        "author": "al_borland",
+        "children": [
+          48864876,
+          48866248
+        ],
+        "comment_text": "That doesn’t feel very de-Googled, when it’s using an OS that was built by Google on hardware made by Google. Sure it removes their services and adds some security&#x2F;privacy, but it still adds to Google’s power by giving marketshare to both their mobile OS and mobile hardware.",
+        "created_at": "2026-07-10T20:01:50Z",
+        "created_at_i": 1783713710,
+        "objectID": "48864529",
+        "parent_id": 48863202,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T06:53:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cider9986"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Don't have to do everything at once.<p><a href=\"https://www.privacyguides.org/en/basics/why-privacy-matters/\" rel=\"nofollow\">https://www.privacyguides.org/en/basics/why-privacy-matters/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Cider9986",
+          "story_48860494"
+        ],
+        "author": "Cider9986",
+        "children": [
+          48871975
+        ],
+        "comment_text": "Don&#x27;t have to do everything at once.<p><a href=\"https:&#x2F;&#x2F;www.privacyguides.org&#x2F;en&#x2F;basics&#x2F;why-privacy-matters&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.privacyguides.org&#x2F;en&#x2F;basics&#x2F;why-privacy-matters&#x2F;</a>",
+        "created_at": "2026-07-10T20:01:22Z",
+        "created_at_i": 1783713682,
+        "objectID": "48864520",
+        "parent_id": 48862649,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T13:41:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jayturley"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "With streaming balkanized into so many individual providers, it's hard to pay for more than a couple.<p>So the Grandson has learned to discriminate ads from content, and as soon as an ad comes one, we all chorus, &quot;Stinky Ad!&quot; and then everyone rushes to be the first person to get to the remote and skip it.<p>It's not a perfect solution, but it's what we have."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jayturley",
+          "story_48860494"
+        ],
+        "author": "jayturley",
+        "children": [
+          48871941
+        ],
+        "comment_text": "With streaming balkanized into so many individual providers, it&#x27;s hard to pay for more than a couple.<p>So the Grandson has learned to discriminate ads from content, and as soon as an ad comes one, we all chorus, &quot;Stinky Ad!&quot; and then everyone rushes to be the first person to get to the remote and skip it.<p>It&#x27;s not a perfect solution, but it&#x27;s what we have.",
+        "created_at": "2026-07-10T19:05:22Z",
+        "created_at_i": 1783710322,
+        "objectID": "48863865",
+        "parent_id": 48862295,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T13:36:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lwowowx"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It’s very easy to get kids to break habits."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lwowowx",
+          "story_48860494"
+        ],
+        "author": "lwowowx",
+        "comment_text": "It’s very easy to get kids to break habits.",
+        "created_at": "2026-07-10T18:21:29Z",
+        "created_at_i": 1783707689,
+        "objectID": "48863412",
+        "parent_id": 48862295,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T15:17:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cider9986"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's fantastic. If you want any app recommendations, lmk. I like to replace the default apps with more up to date ones."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Cider9986",
+          "story_48860494"
+        ],
+        "author": "Cider9986",
+        "comment_text": "It&#x27;s fantastic. If you want any app recommendations, lmk. I like to replace the default apps with more up to date ones.",
+        "created_at": "2026-07-10T18:09:58Z",
+        "created_at_i": 1783706998,
+        "objectID": "48863255",
+        "parent_id": 48863202,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T18:11:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tripleee"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm using GrapheneOS - very simple to setup. Only actual downside is it only works on pixel devices currently"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tripleee",
+          "story_48860494"
+        ],
+        "author": "tripleee",
+        "children": [
+          48864529,
+          48863255
+        ],
+        "comment_text": "I&#x27;m using GrapheneOS - very simple to setup. Only actual downside is it only works on pixel devices currently",
+        "created_at": "2026-07-10T18:06:12Z",
+        "created_at_i": 1783706772,
+        "objectID": "48863202",
+        "parent_id": 48862843,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T03:00:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bythckr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How did you degoogle Android?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bythckr",
+          "story_48860494"
+        ],
+        "author": "bythckr",
+        "children": [
+          48863202
+        ],
+        "comment_text": "How did you degoogle Android?",
+        "created_at": "2026-07-10T17:35:36Z",
+        "created_at_i": 1783704936,
+        "objectID": "48862843",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T18:07:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Leewen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It’s cool ,but I can’t to fucking lazy"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Leewen",
+          "story_48860494"
+        ],
+        "author": "Leewen",
+        "children": [
+          48864520
+        ],
+        "comment_text": "It’s cool ,but I can’t to fucking lazy",
+        "created_at": "2026-07-10T17:15:37Z",
+        "created_at_i": 1783703737,
+        "objectID": "48862649",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-10T20:48:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fsflover"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; it became a matter of principle to do a Google Takeout of my photos and create a script to import them into Apple Photos<p>Meet the new boss, the same as the old one. If you actually want to make a change, consider GNU/Linux on desktop and phones."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fsflover",
+          "story_48860494"
+        ],
+        "author": "fsflover",
+        "comment_text": "&gt; it became a matter of principle to do a Google Takeout of my photos and create a script to import them into Apple Photos<p>Meet the new boss, the same as the old one. If you actually want to make a change, consider GNU&#x2F;Linux on desktop and phones.",
+        "created_at": "2026-07-10T17:14:04Z",
+        "created_at_i": 1783703644,
+        "objectID": "48862631",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T06:53:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zache6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you're using something Fire Stick/Android TV, TizenTube Cobalt has been great for me and my family. It has an ad blocker, Sponsorblock, Dearrow, and a few other goodies."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zache6",
+          "story_48860494"
+        ],
+        "author": "zache6",
+        "comment_text": "If you&#x27;re using something Fire Stick&#x2F;Android TV, TizenTube Cobalt has been great for me and my family. It has an ad blocker, Sponsorblock, Dearrow, and a few other goodies.",
+        "created_at": "2026-07-10T16:58:09Z",
+        "created_at_i": 1783702689,
+        "objectID": "48862472",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T09:54:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "delduca"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree, but it's quite hard not to pay for YouTube when you have kids and they watch it on television."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_delduca",
+          "story_48860494"
+        ],
+        "author": "delduca",
+        "children": [
+          48870089,
+          48863865,
+          48863412,
+          48866295
+        ],
+        "comment_text": "I agree, but it&#x27;s quite hard not to pay for YouTube when you have kids and they watch it on television.",
+        "created_at": "2026-07-10T16:41:47Z",
+        "created_at_i": 1783701707,
+        "objectID": "48862295",
+        "parent_id": 48862273,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T08:40:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danshipt"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I liked it until the part about paying for yt. I prefer to not use yt again than to pay for it and make google even richer"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danshipt",
+          "story_48860494"
+        ],
+        "author": "danshipt",
+        "children": [
+          48862295
+        ],
+        "comment_text": "I liked it until the part about paying for yt. I prefer to not use yt again than to pay for it and make google even richer",
+        "created_at": "2026-07-10T16:39:33Z",
+        "created_at_i": 1783701573,
+        "objectID": "48862273",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T06:52:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "verdverm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm on a similar path, huge Google fan for 20 years. Something has happened under Sundar and Kurian (cloud), maybe some insiders will comment to let us know. What I see is slop across every product line, I assume from over indexing on Ai with insufficient HITL around a model family that is not as good at agentic.<p>Haven't made it all the way, but I was able to find a way to downgrade my Google One back to the $2/m for extra storage. YouTube will remain to avoid ads. Everything else has been switched or is being worked on, but after 20 years it takes longer than I imagined. I'm giving up tap to pay and headed towards GrapheneOS instead of Apple, where your going to get Gemini a la Siri. OpenCode Go, Fireworks, and OEM Spark for my llms. Still looking for my cloud provide, leaning towards digital ocean."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I De-Googled Myself"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_verdverm",
+          "story_48860494"
+        ],
+        "author": "verdverm",
+        "comment_text": "I&#x27;m on a similar path, huge Google fan for 20 years. Something has happened under Sundar and Kurian (cloud), maybe some insiders will comment to let us know. What I see is slop across every product line, I assume from over indexing on Ai with insufficient HITL around a model family that is not as good at agentic.<p>Haven&#x27;t made it all the way, but I was able to find a way to downgrade my Google One back to the $2&#x2F;m for extra storage. YouTube will remain to avoid ads. Everything else has been switched or is being worked on, but after 20 years it takes longer than I imagined. I&#x27;m giving up tap to pay and headed towards GrapheneOS instead of Apple, where your going to get Gemini a la Siri. OpenCode Go, Fireworks, and OEM Spark for my llms. Still looking for my cloud provide, leaning towards digital ocean.",
+        "created_at": "2026-07-10T15:56:09Z",
+        "created_at_i": 1783698969,
+        "objectID": "48861671",
+        "parent_id": 48860494,
+        "story_id": 48860494,
+        "story_title": "Tell HN: I De-Googled Myself",
+        "updated_at": "2026-07-11T12:03:06Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 20,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48860494&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 1
+  }
+}

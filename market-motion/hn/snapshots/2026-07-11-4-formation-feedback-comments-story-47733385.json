@@ -1,0 +1,842 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "47733385",
+    "window": "prior-90d",
+    "tag": "show_hn",
+    "score": 63
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mrkandy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It’s a bit unexpected, but I perform most of my batch image processing in ComfyUI (<a href=\"https://www.comfy.org/\" rel=\"nofollow\">https://www.comfy.org/</a>). It's primary focused on AI Image/Video generation, but also pretty god for general workflow engine."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mrkandy",
+          "story_47733385"
+        ],
+        "author": "mrkandy",
+        "comment_text": "It’s a bit unexpected, but I perform most of my batch image processing in ComfyUI (<a href=\"https:&#x2F;&#x2F;www.comfy.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.comfy.org&#x2F;</a>). It&#x27;s primary focused on AI Image&#x2F;Video generation, but also pretty god for general workflow engine.",
+        "created_at": "2026-04-13T20:04:41Z",
+        "created_at_i": 1776110681,
+        "objectID": "47757148",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-13T20:09:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lillesvin"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I didn't mean to detract from your tool. Sorry if it came off like that.<p>More options is more better. :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lillesvin",
+          "story_47733385"
+        ],
+        "author": "lillesvin",
+        "comment_text": "I didn&#x27;t mean to detract from your tool. Sorry if it came off like that.<p>More options is more better. :)",
+        "created_at": "2026-04-12T10:42:13Z",
+        "created_at_i": 1775990533,
+        "objectID": "47738172",
+        "parent_id": 47733952,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T10:45:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mh-"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You should figure out how to fix the way it appears in the MAS listing, it's going to cost you a lot of downloads among a savvy audience. I always check that IAP section on free apps before I bother downloading.<p>I get why the previous subscription option would still appear, but I'm not sure why the one-time option wouldn't be appearing. Maybe not enough transactions on it yet?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mh-",
+          "story_47733385"
+        ],
+        "author": "mh-",
+        "comment_text": "You should figure out how to fix the way it appears in the MAS listing, it&#x27;s going to cost you a lot of downloads among a savvy audience. I always check that IAP section on free apps before I bother downloading.<p>I get why the previous subscription option would still appear, but I&#x27;m not sure why the one-time option wouldn&#x27;t be appearing. Maybe not enough transactions on it yet?",
+        "created_at": "2026-04-11T22:36:41Z",
+        "created_at_i": 1775947001,
+        "objectID": "47734613",
+        "parent_id": 47733837,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T22:53:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Rekindle8090"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You are replying to an LLM, not a person."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Rekindle8090",
+          "story_47733385"
+        ],
+        "author": "Rekindle8090",
+        "comment_text": "You are replying to an LLM, not a person.",
+        "created_at": "2026-04-11T21:46:58Z",
+        "created_at_i": 1775944018,
+        "objectID": "47734303",
+        "parent_id": 47733912,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T12:30:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jsmith99"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Capture One which is the biggest Lightroom alternative (popular with wedding and fashion industry) has pretty good tools for batch edit and getting a consistent look across a shot. It's expensive though."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jsmith99",
+          "story_47733385"
+        ],
+        "author": "jsmith99",
+        "comment_text": "Capture One which is the biggest Lightroom alternative (popular with wedding and fashion industry) has pretty good tools for batch edit and getting a consistent look across a shot. It&#x27;s expensive though.",
+        "created_at": "2026-04-11T21:34:25Z",
+        "created_at_i": 1775943265,
+        "objectID": "47734215",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T21:38:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wow. Thats cool. I would love to try it out."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "comment_text": "Wow. Thats cool. I would love to try it out.",
+        "created_at": "2026-04-11T21:25:04Z",
+        "created_at_i": 1775942704,
+        "objectID": "47734136",
+        "parent_id": 47734009,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T21:27:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks. Yah, I should have let the new non-subscription version release before putting on HN. But its gonna follow freemium model with one time life time purchase."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "comment_text": "Thanks. Yah, I should have let the new non-subscription version release before putting on HN. But its gonna follow freemium model with one time life time purchase.",
+        "created_at": "2026-04-11T21:24:37Z",
+        "created_at_i": 1775942677,
+        "objectID": "47734132",
+        "parent_id": 47734088,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T21:27:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you. Please let me know if it solves your problem and is useful to you!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "comment_text": "Thank you. Please let me know if it solves your problem and is useful to you!",
+        "created_at": "2026-04-11T21:22:35Z",
+        "created_at_i": 1775942555,
+        "objectID": "47734121",
+        "parent_id": 47734056,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T21:27:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "inovica"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'd suggest adjusting your text. Sure there is no subscription, but it's also not free. There's a one-time charge. I'm not against that - just saying it would be appropriate to be more transparent"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_inovica",
+          "story_47733385"
+        ],
+        "author": "inovica",
+        "children": [
+          47734132
+        ],
+        "comment_text": "I&#x27;d suggest adjusting your text. Sure there is no subscription, but it&#x27;s also not free. There&#x27;s a one-time charge. I&#x27;m not against that - just saying it would be appropriate to be more transparent",
+        "created_at": "2026-04-11T21:18:29Z",
+        "created_at_i": 1775942309,
+        "objectID": "47734088",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T23:35:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "foundermodus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wow, that's so cool man. Gotta try this out. Thanks :))"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_foundermodus",
+          "story_47733385"
+        ],
+        "author": "foundermodus",
+        "children": [
+          47734121
+        ],
+        "comment_text": "Wow, that&#x27;s so cool man. Gotta try this out. Thanks :))",
+        "created_at": "2026-04-11T21:11:50Z",
+        "created_at_i": 1775941910,
+        "objectID": "47734056",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T15:22:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rajptech"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's the right approach. Building from real use keeps you honest about what actually matters vs what sounds cool in a feature list. Good luck with the launch."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rajptech",
+          "story_47733385"
+        ],
+        "author": "rajptech",
+        "comment_text": "That&#x27;s the right approach. Building from real use keeps you honest about what actually matters vs what sounds cool in a feature list. Good luck with the launch.",
+        "created_at": "2026-04-11T21:06:05Z",
+        "created_at_i": 1775941565,
+        "objectID": "47734017",
+        "parent_id": 47733912,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T00:06:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "onion2k"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built my own photo <i>viewer</i> for OSX entirely because Finder doesn't have an 'actual size' option. OSX is pretty terrible for image management."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_onion2k",
+          "story_47733385"
+        ],
+        "author": "onion2k",
+        "children": [
+          47734136
+        ],
+        "comment_text": "I built my own photo <i>viewer</i> for OSX entirely because Finder doesn&#x27;t have an &#x27;actual size&#x27; option. OSX is pretty terrible for image management.",
+        "created_at": "2026-04-11T21:04:50Z",
+        "created_at_i": 1775941490,
+        "objectID": "47734009",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T23:35:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yeah ImageMagick is solid, especially when the edits are very consistent<p>I think where I struggled was when the set is mostly similar but still needs small per photo tweaks\nwriting new commands or rerunning pipeline for small changes felt a bit heavy<p>I wanted something more interactive where I can adjust visually, apply to many, then still tweak few without starting over"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "children": [
+          47738172
+        ],
+        "comment_text": "yeah ImageMagick is solid, especially when the edits are very consistent<p>I think where I struggled was when the set is mostly similar but still needs small per photo tweaks\nwriting new commands or rerunning pipeline for small changes felt a bit heavy<p>I wanted something more interactive where I can adjust visually, apply to many, then still tweak few without starting over",
+        "created_at": "2026-04-11T20:55:01Z",
+        "created_at_i": 1775940901,
+        "objectID": "47733952",
+        "parent_id": 47733946,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T10:43:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lillesvin"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you're not afraid of working in a CLI, ImageMagick is also a very solid tool for editing lots and lots of images in bulk as long as you know what you want done to them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lillesvin",
+          "story_47733385"
+        ],
+        "author": "lillesvin",
+        "children": [
+          47733952
+        ],
+        "comment_text": "If you&#x27;re not afraid of working in a CLI, ImageMagick is also a very solid tool for editing lots and lots of images in bulk as long as you know what you want done to them.",
+        "created_at": "2026-04-11T20:53:52Z",
+        "created_at_i": 1775940832,
+        "objectID": "47733946",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T20:56:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sublinear"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; the big players optimize for the casual user<p>This is the OG enshittification.<p>Software quality is declining because people don't have the same problems anymore. They've become so detached from their true desires and learned to cope with their walled garden ecosystems. If their iPhone doesn't do it they just pretend it's not possible."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sublinear",
+          "story_47733385"
+        ],
+        "author": "sublinear",
+        "comment_text": "&gt; the big players optimize for the casual user<p>This is the OG enshittification.<p>Software quality is declining because people don&#x27;t have the same problems anymore. They&#x27;ve become so detached from their true desires and learned to cope with their walled garden ecosystems. If their iPhone doesn&#x27;t do it they just pretend it&#x27;s not possible.",
+        "created_at": "2026-04-11T20:53:00Z",
+        "created_at_i": 1775940780,
+        "objectID": "47733939",
+        "parent_id": 47733849,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T23:37:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yeah exactly, it started as just solving my own workflow<p>I am shipping it now, but still treating it like a tool I use myself first and improving it based on real use<p>not trying to compete with big tools, more like filling that gap when you have a specific workflow that does not fit well anywhere"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "children": [
+          47734017,
+          47734303
+        ],
+        "comment_text": "yeah exactly, it started as just solving my own workflow<p>I am shipping it now, but still treating it like a tool I use myself first and improving it based on real use<p>not trying to compete with big tools, more like filling that gap when you have a specific workflow that does not fit well anywhere",
+        "created_at": "2026-04-11T20:48:15Z",
+        "created_at_i": 1775940495,
+        "objectID": "47733912",
+        "parent_id": 47733849,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-22T20:39:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "0x6c6f6c"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is likely one of the many pains of App Store subscription configuration issues. Once anyone has subscribed you will have to migrate those yourself and even those details I'm not sure what restrictions there are. The latest seems to be one-time purchase, but historical cleanup is probably necessary on their part"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_0x6c6f6c",
+          "story_47733385"
+        ],
+        "author": "0x6c6f6c",
+        "comment_text": "This is likely one of the many pains of App Store subscription configuration issues. Once anyone has subscribed you will have to migrate those yourself and even those details I&#x27;m not sure what restrictions there are. The latest seems to be one-time purchase, but historical cleanup is probably necessary on their part",
+        "created_at": "2026-04-11T20:44:06Z",
+        "created_at_i": 1775940246,
+        "objectID": "47733879",
+        "parent_id": 47733726,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T01:30:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yeah Retrobatch is solid, I have seen it<p>on pricing, that is fair callout, older versions had subscription and App Store listing might still show that depending on update or region\nI recently moved it to one time purchase because it makes more sense for this kind of tool<p>still figuring things out as I go"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "comment_text": "yeah Retrobatch is solid, I have seen it<p>on pricing, that is fair callout, older versions had subscription and App Store listing might still show that depending on update or region\nI recently moved it to one time purchase because it makes more sense for this kind of tool<p>still figuring things out as I go",
+        "created_at": "2026-04-11T20:42:08Z",
+        "created_at_i": 1775940128,
+        "objectID": "47733856",
+        "parent_id": 47733726,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T21:17:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rajptech"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The best tools come from scratching your own itch. 2000 photos is exactly the kind of pain point that no existing tool solves well enough because the big players optimize for the casual user, not the power user with a specific workflow. I built a CLI tool for the same reason — existing solutions didn't work the way I needed them to. Curious: are you planning to ship this or keep it as a personal tool?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rajptech",
+          "story_47733385"
+        ],
+        "author": "rajptech",
+        "children": [
+          47733912,
+          47733939
+        ],
+        "comment_text": "The best tools come from scratching your own itch. 2000 photos is exactly the kind of pain point that no existing tool solves well enough because the big players optimize for the casual user, not the power user with a specific workflow. I built a CLI tool for the same reason — existing solutions didn&#x27;t work the way I needed them to. Curious: are you planning to ship this or keep it as a personal tool?",
+        "created_at": "2026-04-11T20:41:07Z",
+        "created_at_i": 1775940067,
+        "objectID": "47733849",
+        "parent_id": 47733385,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-12T12:30:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yeah earlier versions had subscription, I was experimenting with pricing\nbut I did not like it either, especially for something like this<p>latest version is one time purchase now<p>trying to keep it simple and local, no uploads and no ongoing fees"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_om202",
+          "story_47733385"
+        ],
+        "author": "om202",
+        "children": [
+          47734613
+        ],
+        "comment_text": "yeah earlier versions had subscription, I was experimenting with pricing\nbut I did not like it either, especially for something like this<p>latest version is one time purchase now<p>trying to keep it simple and local, no uploads and no ongoing fees",
+        "created_at": "2026-04-11T20:40:10Z",
+        "created_at_i": 1775940010,
+        "objectID": "47733837",
+        "parent_id": 47733735,
+        "story_id": 47733385,
+        "story_title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "story_url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12",
+        "updated_at": "2026-04-11T22:37:26Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 25,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47733385&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 23
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

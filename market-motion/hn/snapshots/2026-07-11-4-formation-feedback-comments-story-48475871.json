@@ -1,0 +1,703 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48475871",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 815
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "win311fwg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I only see one definition, which is the same definition it has always had: <i>One</i> person talking <i>to one</i> other person. Hence one to one for short.<p>There is no disagreement about that. The only difference in your case, as opposed to experiences others have had, is the dynamic between those two people. You are not seeking a meeting or want to have a meeting, thus the meeting is being called only for the benefit of the other person.<p>Let's simplify this: Nobody calls a meeting they don't find any value in. If someone is asking you to join a meeting, it is for them. It might also be for you if you both can see value, but that was said to not be the case in your case. When only the other party finds value, you are going to struggle to cut them off without some pushback, but this is where you can determine what value they are trying to get out of the meeting and see if there is a better way to deliver it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_win311fwg",
+          "story_48475871"
+        ],
+        "author": "win311fwg",
+        "comment_text": "I only see one definition, which is the same definition it has always had: <i>One</i> person talking <i>to one</i> other person. Hence one to one for short.<p>There is no disagreement about that. The only difference in your case, as opposed to experiences others have had, is the dynamic between those two people. You are not seeking a meeting or want to have a meeting, thus the meeting is being called only for the benefit of the other person.<p>Let&#x27;s simplify this: Nobody calls a meeting they don&#x27;t find any value in. If someone is asking you to join a meeting, it is for them. It might also be for you if you both can see value, but that was said to not be the case in your case. When only the other party finds value, you are going to struggle to cut them off without some pushback, but this is where you can determine what value they are trying to get out of the meeting and see if there is a better way to deliver it.",
+        "created_at": "2026-06-16T20:03:43Z",
+        "created_at_i": 1781640223,
+        "objectID": "48561180",
+        "parent_id": 48506680,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-16T20:27:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tclancy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nothing quite says “guy that weirds out his coworkers but doesn’t know it” quite like this. Solid statement."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tclancy",
+          "story_48475871"
+        ],
+        "author": "tclancy",
+        "comment_text": "Nothing quite says “guy that weirds out his coworkers but doesn’t know it” quite like this. Solid statement.",
+        "created_at": "2026-06-13T21:38:38Z",
+        "created_at_i": 1781386718,
+        "objectID": "48521741",
+        "parent_id": 48481864,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-13T21:40:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mewpmewp2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I feel like I have got promoted fast enough. More than what is considered a &quot;terminal level&quot;. I do say yes to high value growth opportunities so that is not the case. In fact I think because of how I act during 1 on 1s is helping me with that, because I am causing no headaches to my manager with honesty.<p>Basically I am just trying to figure out how I can cause no extra work to anyone and being optimistic to my manager about everything while really I am not.<p>But it means that I am brainstorming bulletpoints that I think are best to achieve that beforehand, and it is performative."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mewpmewp2",
+          "story_48475871"
+        ],
+        "author": "mewpmewp2",
+        "comment_text": "I feel like I have got promoted fast enough. More than what is considered a &quot;terminal level&quot;. I do say yes to high value growth opportunities so that is not the case. In fact I think because of how I act during 1 on 1s is helping me with that, because I am causing no headaches to my manager with honesty.<p>Basically I am just trying to figure out how I can cause no extra work to anyone and being optimistic to my manager about everything while really I am not.<p>But it means that I am brainstorming bulletpoints that I think are best to achieve that beforehand, and it is performative.",
+        "created_at": "2026-06-13T04:48:39Z",
+        "created_at_i": 1781326119,
+        "objectID": "48513310",
+        "parent_id": 48487511,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-13T05:00:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ghaff"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Twitter was also effectively wrecked in a variety of ways and nothing really came in to replace it. Which may well have been OK. But it was the reality."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ghaff",
+          "story_48475871"
+        ],
+        "author": "ghaff",
+        "comment_text": "Twitter was also effectively wrecked in a variety of ways and nothing really came in to replace it. Which may well have been OK. But it was the reality.",
+        "created_at": "2026-06-12T17:52:24Z",
+        "created_at_i": 1781286744,
+        "objectID": "48507273",
+        "parent_id": 48481797,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-14T08:31:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Aurornis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; The meeting isn't for you.<p>Wild how many different definitions of a 1:1 are in this thread.<p>Most of the other commenters are emphatically saying that the 1:1 is for the employee, not the manager.<p>The fact that nobody can agree on what the 1:1 is supposed to be is emblematic of all the problems that have been rolled up into the way that 1:1s are being cargo culted in modern business enivronments.<p>Employees talking to managers is good. The way we've turned it into a cargo cult performance where nobody can agree on what it's supposed to be but people will attack you for suggesting alternatives (see some of the weird comments shaming people in this thread) is why they've become so hated.<p>It's starting to remind me of the way Agile went from a human-first light touch philosophy to becoming a heavy, process-first ideology that starts replacing good planning with a bunch of rituals."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Aurornis",
+          "story_48475871"
+        ],
+        "author": "Aurornis",
+        "children": [
+          48561180
+        ],
+        "comment_text": "&gt; The meeting isn&#x27;t for you.<p>Wild how many different definitions of a 1:1 are in this thread.<p>Most of the other commenters are emphatically saying that the 1:1 is for the employee, not the manager.<p>The fact that nobody can agree on what the 1:1 is supposed to be is emblematic of all the problems that have been rolled up into the way that 1:1s are being cargo culted in modern business enivronments.<p>Employees talking to managers is good. The way we&#x27;ve turned it into a cargo cult performance where nobody can agree on what it&#x27;s supposed to be but people will attack you for suggesting alternatives (see some of the weird comments shaming people in this thread) is why they&#x27;ve become so hated.<p>It&#x27;s starting to remind me of the way Agile went from a human-first light touch philosophy to becoming a heavy, process-first ideology that starts replacing good planning with a bunch of rituals.",
+        "created_at": "2026-06-12T17:08:47Z",
+        "created_at_i": 1781284127,
+        "objectID": "48506680",
+        "parent_id": 48490089,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-16T20:04:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mstaoru"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wish my manager's calendar was purely 1:1s.<p>I switched to a large company from a series of startups (including my own), it is definitely a big change, and &quot;efficiency&quot; is not the thing anymore.<p>Now I can spend days fighting with some gnarly IT security problem to load an internal Python package cross-org with a Managed Identity token issued to Build Pipeline that is scoped to a Service Principal with a wrong checkbox, or something equally cryptic and useless. Nothing of it would be even remotely possible in a startup. Is it &quot;performative&quot;?.. I think not. Is it efficient or necessary? Probably not, but who knows. Chesterton's Fence and all that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mstaoru",
+          "story_48475871"
+        ],
+        "author": "mstaoru",
+        "comment_text": "I wish my manager&#x27;s calendar was purely 1:1s.<p>I switched to a large company from a series of startups (including my own), it is definitely a big change, and &quot;efficiency&quot; is not the thing anymore.<p>Now I can spend days fighting with some gnarly IT security problem to load an internal Python package cross-org with a Managed Identity token issued to Build Pipeline that is scoped to a Service Principal with a wrong checkbox, or something equally cryptic and useless. Nothing of it would be even remotely possible in a startup. Is it &quot;performative&quot;?.. I think not. Is it efficient or necessary? Probably not, but who knows. Chesterton&#x27;s Fence and all that.",
+        "created_at": "2026-06-12T07:11:40Z",
+        "created_at_i": 1781248300,
+        "objectID": "48500833",
+        "parent_id": 48475871,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-12T07:17:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aprdm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "question bank ?! lol, no wonder people complain about being performative.<p>If you have nothing to talk about, cancel it"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aprdm",
+          "story_48475871"
+        ],
+        "author": "aprdm",
+        "comment_text": "question bank ?! lol, no wonder people complain about being performative.<p>If you have nothing to talk about, cancel it",
+        "created_at": "2026-06-11T20:42:38Z",
+        "created_at_i": 1781210558,
+        "objectID": "48496143",
+        "parent_id": 48484573,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T20:48:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aprdm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Really depends on the team etc. I don't think every team needs to have 1-1, certainly not weekly as a mandate.<p>The best cultures I worked at didn't have 1-1 series by default"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aprdm",
+          "story_48475871"
+        ],
+        "author": "aprdm",
+        "comment_text": "Really depends on the team etc. I don&#x27;t think every team needs to have 1-1, certainly not weekly as a mandate.<p>The best cultures I worked at didn&#x27;t have 1-1 series by default",
+        "created_at": "2026-06-11T20:39:24Z",
+        "created_at_i": 1781210364,
+        "objectID": "48496098",
+        "parent_id": 48476711,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T20:42:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Schlagbohrer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Possibly more holes if Grok has been vibe coding much of it for years now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Schlagbohrer",
+          "story_48475871"
+        ],
+        "author": "Schlagbohrer",
+        "comment_text": "Possibly more holes if Grok has been vibe coding much of it for years now.",
+        "created_at": "2026-06-11T16:37:27Z",
+        "created_at_i": 1781195847,
+        "objectID": "48492671",
+        "parent_id": 48480504,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T16:41:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Jeremy1026"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, which would allude to sentences 2 and 3 in my original comment."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Jeremy1026",
+          "story_48475871"
+        ],
+        "author": "Jeremy1026",
+        "comment_text": "Yes, which would allude to sentences 2 and 3 in my original comment.",
+        "created_at": "2026-06-11T15:29:29Z",
+        "created_at_i": 1781191769,
+        "objectID": "48491706",
+        "parent_id": 48489233,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T15:33:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "order-matters"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "in a way, for sure - but the incentive exists outside the system so the system would not know what incentives people have for using it.  but it usually has rules, input/outputs, delegated authorities for limited scopes, etc. so the system is just the result of those things which may be a greater or lesser scope than any given incentive.  Systems are usually used to manage many different incentives as well, so perfect alignment with all of them is often impossible<p>For example, we might say the US postal systems intended purpose is to deliver mail legal packages.  the unabomber had an incentive to use that system to deliver bombs through the mail and it worked.  So it was more true to say the purpose of the us postal system (at that time) was to move any items at all from one location to another, at least with respect to the incentive of wanting stuff moved around.<p>but having a mailman potentially go to every home every day is also something the system does.  exciting dogs is something the system does.  Just like how blocking the street is something that the garbage collection system does in its current state, which might have an impact on the hours of the day chosen to send hte trucks to collect.  There may not be an incentive for everything the system does, and when framed around purpose you might call them side effects, but it's all the same to the system.<p>when a person is operating as part of the system and something goes wrong, we try to shift blame to them - and it becomes a grey area. this is often why individuals are not held accountable for their actions on behalf of a system when they hurt someone.  if you call the police on your neighbor falsely claiming he is violent, the police show up and are too aggressive, and your neighbor get injured - there is mixed responsibility.  Using force is within the scope of the police system, you subjected your neighbor to that system knowing that, and the officers have discretion oso depending on the details may or may not have been acting as reasonable representatives of the police system.  Taken to an extreme though, SWAT-ing your neighbor is now seen as a serious crime on your part, as we understand teh system that supports a SWAT team showing up to a location to include damages and a low bar for lethal force.  we cant say the purpose of the 'SWAT system' is to attend to threats, its not. it is to act on behalf of information claiming a threat exists, because thats what it does.<p>okay im yapping again, my bad"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_order-matters",
+          "story_48475871"
+        ],
+        "author": "order-matters",
+        "comment_text": "in a way, for sure - but the incentive exists outside the system so the system would not know what incentives people have for using it.  but it usually has rules, input&#x2F;outputs, delegated authorities for limited scopes, etc. so the system is just the result of those things which may be a greater or lesser scope than any given incentive.  Systems are usually used to manage many different incentives as well, so perfect alignment with all of them is often impossible<p>For example, we might say the US postal systems intended purpose is to deliver mail legal packages.  the unabomber had an incentive to use that system to deliver bombs through the mail and it worked.  So it was more true to say the purpose of the us postal system (at that time) was to move any items at all from one location to another, at least with respect to the incentive of wanting stuff moved around.<p>but having a mailman potentially go to every home every day is also something the system does.  exciting dogs is something the system does.  Just like how blocking the street is something that the garbage collection system does in its current state, which might have an impact on the hours of the day chosen to send hte trucks to collect.  There may not be an incentive for everything the system does, and when framed around purpose you might call them side effects, but it&#x27;s all the same to the system.<p>when a person is operating as part of the system and something goes wrong, we try to shift blame to them - and it becomes a grey area. this is often why individuals are not held accountable for their actions on behalf of a system when they hurt someone.  if you call the police on your neighbor falsely claiming he is violent, the police show up and are too aggressive, and your neighbor get injured - there is mixed responsibility.  Using force is within the scope of the police system, you subjected your neighbor to that system knowing that, and the officers have discretion oso depending on the details may or may not have been acting as reasonable representatives of the police system.  Taken to an extreme though, SWAT-ing your neighbor is now seen as a serious crime on your part, as we understand teh system that supports a SWAT team showing up to a location to include damages and a low bar for lethal force.  we cant say the purpose of the &#x27;SWAT system&#x27; is to attend to threats, its not. it is to act on behalf of information claiming a threat exists, because thats what it does.<p>okay im yapping again, my bad",
+        "created_at": "2026-06-11T14:46:05Z",
+        "created_at_i": 1781189165,
+        "objectID": "48491091",
+        "parent_id": 48486894,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T14:51:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "episteme"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This very much depends on the place and the level of maturity in how you share the negativity. Good managers will try to understand and help you, that's a large part of their job.<p>Also, if you are a high performer then being an attrition risk isn't necessarily a bad thing, it's in the companies best interest to try keep people who are important."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_episteme",
+          "story_48475871"
+        ],
+        "author": "episteme",
+        "comment_text": "This very much depends on the place and the level of maturity in how you share the negativity. Good managers will try to understand and help you, that&#x27;s a large part of their job.<p>Also, if you are a high performer then being an attrition risk isn&#x27;t necessarily a bad thing, it&#x27;s in the companies best interest to try keep people who are important.",
+        "created_at": "2026-06-11T13:34:35Z",
+        "created_at_i": 1781184875,
+        "objectID": "48490156",
+        "parent_id": 48487536,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-12T18:12:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "win311fwg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The meeting isn't for you. If it were, you'd have been the one scheduling it.<p>First place to start is to determine what value the other party is deriving from the meeting. Zero in on exactly why they want to have the meeting. From there, you can put your problem solving skills in action to determine if there is a better way to deliver equivalent value.<p>However, keep in mind that it is likely that the value you are delivering is your company during that time. A lot of hiring happens because the people involved want to have 'friends' around them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_win311fwg",
+          "story_48475871"
+        ],
+        "author": "win311fwg",
+        "children": [
+          48506680
+        ],
+        "comment_text": "The meeting isn&#x27;t for you. If it were, you&#x27;d have been the one scheduling it.<p>First place to start is to determine what value the other party is deriving from the meeting. Zero in on exactly why they want to have the meeting. From there, you can put your problem solving skills in action to determine if there is a better way to deliver equivalent value.<p>However, keep in mind that it is likely that the value you are delivering is your company during that time. A lot of hiring happens because the people involved want to have &#x27;friends&#x27; around them.",
+        "created_at": "2026-06-11T13:28:54Z",
+        "created_at_i": 1781184534,
+        "objectID": "48490089",
+        "parent_id": 48485390,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-14T05:31:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Esophagus4"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; That is the worst questions to ask to the experienced people.<p>God what a know-it-all. This is just a vent without substance by someone that I can safely assume hates his job and his manager."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Esophagus4",
+          "story_48475871"
+        ],
+        "author": "Esophagus4",
+        "comment_text": "&gt; That is the worst questions to ask to the experienced people.<p>God what a know-it-all. This is just a vent without substance by someone that I can safely assume hates his job and his manager.",
+        "created_at": "2026-06-11T12:22:08Z",
+        "created_at_i": 1781180528,
+        "objectID": "48489358",
+        "parent_id": 48487536,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-15T20:01:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "boxed"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ok? But it's still like 1/3."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_boxed",
+          "story_48475871"
+        ],
+        "author": "boxed",
+        "children": [
+          48491706
+        ],
+        "comment_text": "Ok? But it&#x27;s still like 1&#x2F;3.",
+        "created_at": "2026-06-11T12:05:43Z",
+        "created_at_i": 1781179543,
+        "objectID": "48489233",
+        "parent_id": 48479209,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T15:30:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FinnLobsien"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, agreed. But it's not a binary. It's not like you can either wrestle with hard engineering problems until an eventual breakthrough or exclusively pretend to be working.<p>Sure, on one extreme is the purely value-extractive person whose only work product is calling recurring meetings to talk about how great things are going (while having contributed little). In that case, it's an error to be corrected.<p>But there are different types of useful work. Let's use engineering as an example.<p>You could build a set of new filter options on in-product analytics that customers have been asking for. Assuming this doesn't require net-new data sources or whatnot, this is usually not a complex engineering challenge, but will be loved by customers.<p>Then you have types who refactor an obscure caching function to reduce its memory use 15% when performance wasn't an issue, but it was a fun engineering puzzle that made the code more elegant.<p>Clearly both create value, but one will be more useful to customers, although it's not as fun to solve.<p>My point isn't that we should treat corporate bureaucracy, performative work, and freeloading as &quot;the way things are&quot; (they're toxic to any work culture). I'm saying that &quot;deeper engineering challenge&quot; doesn't equal &quot;more important work&quot;.<p>Also, I don't necessarily like this! Deep problem-solving and focused work on tricky challenges are the most fulfilling things to me and to most people I know. But this is the dynamic we're in.<p>(and yes you can argue that having the most efficient code possible prevents future performance issues and whatnot and is thus long-term more valuable than analytics options, but at least in the startup world, limited resources mean you tend to solve things when they become problems, not because they could one day become problems)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_FinnLobsien",
+          "story_48475871"
+        ],
+        "author": "FinnLobsien",
+        "comment_text": "Yes, agreed. But it&#x27;s not a binary. It&#x27;s not like you can either wrestle with hard engineering problems until an eventual breakthrough or exclusively pretend to be working.<p>Sure, on one extreme is the purely value-extractive person whose only work product is calling recurring meetings to talk about how great things are going (while having contributed little). In that case, it&#x27;s an error to be corrected.<p>But there are different types of useful work. Let&#x27;s use engineering as an example.<p>You could build a set of new filter options on in-product analytics that customers have been asking for. Assuming this doesn&#x27;t require net-new data sources or whatnot, this is usually not a complex engineering challenge, but will be loved by customers.<p>Then you have types who refactor an obscure caching function to reduce its memory use 15% when performance wasn&#x27;t an issue, but it was a fun engineering puzzle that made the code more elegant.<p>Clearly both create value, but one will be more useful to customers, although it&#x27;s not as fun to solve.<p>My point isn&#x27;t that we should treat corporate bureaucracy, performative work, and freeloading as &quot;the way things are&quot; (they&#x27;re toxic to any work culture). I&#x27;m saying that &quot;deeper engineering challenge&quot; doesn&#x27;t equal &quot;more important work&quot;.<p>Also, I don&#x27;t necessarily like this! Deep problem-solving and focused work on tricky challenges are the most fulfilling things to me and to most people I know. But this is the dynamic we&#x27;re in.<p>(and yes you can argue that having the most efficient code possible prevents future performance issues and whatnot and is thus long-term more valuable than analytics options, but at least in the startup world, limited resources mean you tend to solve things when they become problems, not because they could one day become problems)",
+        "created_at": "2026-06-11T09:08:58Z",
+        "created_at_i": 1781168938,
+        "objectID": "48488014",
+        "parent_id": 48479102,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T09:10:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Npovview"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It was a good run then. Now that guy will run in another organization."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Npovview",
+          "story_48475871"
+        ],
+        "author": "Npovview",
+        "comment_text": "It was a good run then. Now that guy will run in another organization.",
+        "created_at": "2026-06-11T08:57:30Z",
+        "created_at_i": 1781168250,
+        "objectID": "48487952",
+        "parent_id": 48486434,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T23:52:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjav"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; At the startups, particularly the high performing ones, issues were addressed immediately.<p>1:1s are not about addressing issues, most certainly not any issues that need addressing immediately.<p>If you have an immediate issue, open an incident or file a top priority bug, or whatever is the process at your company."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jjav",
+          "story_48475871"
+        ],
+        "author": "jjav",
+        "comment_text": "&gt; At the startups, particularly the high performing ones, issues were addressed immediately.<p>1:1s are not about addressing issues, most certainly not any issues that need addressing immediately.<p>If you have an immediate issue, open an incident or file a top priority bug, or whatever is the process at your company.",
+        "created_at": "2026-06-11T08:34:35Z",
+        "created_at_i": 1781166875,
+        "objectID": "48487806",
+        "parent_id": 48478691,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T22:58:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjav"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; How about if the direct has absolutely no interest in talking about anything because they are just trying to do their job, which is going fine? Because that's 99%, maybe 100% of these meetings I've ever had.<p>Easy, send a message prior to the meeting &quot;Hey, I have no topics to cover this week, so let's skip it and save the time&quot;.<p>Done."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jjav",
+          "story_48475871"
+        ],
+        "author": "jjav",
+        "comment_text": "&gt; How about if the direct has absolutely no interest in talking about anything because they are just trying to do their job, which is going fine? Because that&#x27;s 99%, maybe 100% of these meetings I&#x27;ve ever had.<p>Easy, send a message prior to the meeting &quot;Hey, I have no topics to cover this week, so let&#x27;s skip it and save the time&quot;.<p>Done.",
+        "created_at": "2026-06-11T08:30:58Z",
+        "created_at_i": 1781166658,
+        "objectID": "48487790",
+        "parent_id": 48480791,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T08:33:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjav"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Sounds insane? It was!<p>Well yes, it sounds insane.<p>It <i>is</i> good to connect at a personal level. Talk about your weekend, family, hobbies. This might happen naturally in an office setting, but with everyone remote on zoom, it's helpful to make it a habit. For most people these human connections are super supportive.<p>You can't force it though. Some people don't work that way. A manager must adapt to each style. I have employees who like to talk for hours about everything, so I'm happy to do it. I also have one employee who is very matter of fact, only brings up a specific issue if they need me to do something about it and that's it. I know nothing about their life outside work but that's their preference so that's ok too. They are one of the highest performers in the team, it's just their style."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are most corporate SWE jobs performative?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jjav",
+          "story_48475871"
+        ],
+        "author": "jjav",
+        "comment_text": "&gt; Sounds insane? It was!<p>Well yes, it sounds insane.<p>It <i>is</i> good to connect at a personal level. Talk about your weekend, family, hobbies. This might happen naturally in an office setting, but with everyone remote on zoom, it&#x27;s helpful to make it a habit. For most people these human connections are super supportive.<p>You can&#x27;t force it though. Some people don&#x27;t work that way. A manager must adapt to each style. I have employees who like to talk for hours about everything, so I&#x27;m happy to do it. I also have one employee who is very matter of fact, only brings up a specific issue if they need me to do something about it and that&#x27;s it. I know nothing about their life outside work but that&#x27;s their preference so that&#x27;s ok too. They are one of the highest performers in the team, it&#x27;s just their style.",
+        "created_at": "2026-06-11T08:28:51Z",
+        "created_at_i": 1781166531,
+        "objectID": "48487776",
+        "parent_id": 48482477,
+        "story_id": 48475871,
+        "story_title": "Ask HN: Are most corporate SWE jobs performative?",
+        "updated_at": "2026-06-11T08:33:27Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 283,
+    "nbPages": 15,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48475871&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 1,
+        "roundTrip": 15
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

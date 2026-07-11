@@ -1,0 +1,662 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48481802",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 40
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "slipknotfan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We have problems;\nWe use code to solve them;\nWe have a good time.<p>If you do not feel the drive to code for the fun of the game, then don't do it. I once met a guy who had been doing programming for at least 7 years of his life, 5 as an intern and 2 as a job. He quit because he was in it for the money not for love of the game. He found more fulfillment teaching.<p>There is not enough time on this earth to waste years on things that we do not enjoy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_slipknotfan",
+          "story_48481802"
+        ],
+        "author": "slipknotfan",
+        "comment_text": "We have problems;\nWe use code to solve them;\nWe have a good time.<p>If you do not feel the drive to code for the fun of the game, then don&#x27;t do it. I once met a guy who had been doing programming for at least 7 years of his life, 5 as an intern and 2 as a job. He quit because he was in it for the money not for love of the game. He found more fulfillment teaching.<p>There is not enough time on this earth to waste years on things that we do not enjoy.",
+        "created_at": "2026-06-12T00:06:45Z",
+        "created_at_i": 1781222805,
+        "objectID": "48498141",
+        "parent_id": 48489206,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-12T00:12:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You are right. I phrased the title bad, now I'm thinking of not the why, but how to keep learning with the goal of that long term thing and I think the answer is something that I must think about myself... something personal"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "comment_text": "You are right. I phrased the title bad, now I&#x27;m thinking of not the why, but how to keep learning with the goal of that long term thing and I think the answer is something that I must think about myself... something personal",
+        "created_at": "2026-06-11T12:13:02Z",
+        "created_at_i": 1781179982,
+        "objectID": "48489292",
+        "parent_id": 48482615,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T15:08:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I hope for a strong reason to be found for actually knowing stuff exist and understanding them. That was the fun part for me too, specially after solving a problem so bad and then after a long time ranging from a month to a year, finding out it's known thing that has a name and you can solve the problem so much easier!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "comment_text": "I hope for a strong reason to be found for actually knowing stuff exist and understanding them. That was the fun part for me too, specially after solving a problem so bad and then after a long time ranging from a month to a year, finding out it&#x27;s known thing that has a name and you can solve the problem so much easier!",
+        "created_at": "2026-06-11T12:10:49Z",
+        "created_at_i": 1781179849,
+        "objectID": "48489273",
+        "parent_id": 48482910,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:13:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI is horrible at brainstorming and giving ideas and creative stuff like that I think that's the only place I can say any human is better. Yeah developing sounds good. I found some stuff AI can make something like. Like ncase interactive lessons and some other nice web 1.0 stuff. It's just I'm trying to reverse engineer those and they are so creative I don't know how the hell I should even copy them. (said copying because copying is easier than anything else, but even that's hard!)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "comment_text": "AI is horrible at brainstorming and giving ideas and creative stuff like that I think that&#x27;s the only place I can say any human is better. Yeah developing sounds good. I found some stuff AI can make something like. Like ncase interactive lessons and some other nice web 1.0 stuff. It&#x27;s just I&#x27;m trying to reverse engineer those and they are so creative I don&#x27;t know how the hell I should even copy them. (said copying because copying is easier than anything else, but even that&#x27;s hard!)",
+        "created_at": "2026-06-11T12:07:54Z",
+        "created_at_i": 1781179674,
+        "objectID": "48489250",
+        "parent_id": 48482645,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:08:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah, that's what I think I can do, until I reach the place to be decent enough and find out why we need to code!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "children": [
+          48498141
+        ],
+        "comment_text": "Yeah, that&#x27;s what I think I can do, until I reach the place to be decent enough and find out why we need to code!",
+        "created_at": "2026-06-11T12:02:56Z",
+        "created_at_i": 1781179376,
+        "objectID": "48489206",
+        "parent_id": 48485474,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-12T00:07:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; less than a decade experience.\nYeah, obviously I have less than a decade of experience, and the thing is I can't see how I progress. It's like AI upgrades people even if they are bad, so I don't know if I'm really good or becoming better or it's just AI. I'm practicing for a competition, they said we can use any AI we want. Later we had to use Gemma 3 and oh god, the scores lowered very, very much. The thing is I knew that I'd run into problems without AI, and since using it I forgot what I learnt, from important abstract and theoretical concepts to boilerplate code. But others were using it and our progress was monitored in time-limited competitions, and AI was really good at speeding us up so if you didn't use it you'd be the last person all the time."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "comment_text": "&gt; less than a decade experience.\nYeah, obviously I have less than a decade of experience, and the thing is I can&#x27;t see how I progress. It&#x27;s like AI upgrades people even if they are bad, so I don&#x27;t know if I&#x27;m really good or becoming better or it&#x27;s just AI. I&#x27;m practicing for a competition, they said we can use any AI we want. Later we had to use Gemma 3 and oh god, the scores lowered very, very much. The thing is I knew that I&#x27;d run into problems without AI, and since using it I forgot what I learnt, from important abstract and theoretical concepts to boilerplate code. But others were using it and our progress was monitored in time-limited competitions, and AI was really good at speeding us up so if you didn&#x27;t use it you&#x27;d be the last person all the time.",
+        "created_at": "2026-06-11T12:00:40Z",
+        "created_at_i": 1781179240,
+        "objectID": "48489189",
+        "parent_id": 48482925,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:03:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manimonji"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's just that when I was exploring different things, I really liked front-end and  I put more time on that. Recently I used google AI studio, and it designed the thing very well, and I sucked at designing and slow in developing. In other areas, it helped me a lot, for example Laravel docs looked hard to learn for me and I just used php or node js or Django or whatever to avoid Laravel instead, but then I just wanted to prototype some idea, and I used AI, and first I was blindly copy pasting, then I started learning and that was good. But it doesn't happen everywhere. Of course I'm not saying &quot;AI is gonna take programmers place&quot; or something like that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manimonji",
+          "story_48481802"
+        ],
+        "author": "manimonji",
+        "comment_text": "It&#x27;s just that when I was exploring different things, I really liked front-end and  I put more time on that. Recently I used google AI studio, and it designed the thing very well, and I sucked at designing and slow in developing. In other areas, it helped me a lot, for example Laravel docs looked hard to learn for me and I just used php or node js or Django or whatever to avoid Laravel instead, but then I just wanted to prototype some idea, and I used AI, and first I was blindly copy pasting, then I started learning and that was good. But it doesn&#x27;t happen everywhere. Of course I&#x27;m not saying &quot;AI is gonna take programmers place&quot; or something like that.",
+        "created_at": "2026-06-11T11:50:57Z",
+        "created_at_i": 1781178657,
+        "objectID": "48489103",
+        "parent_id": 48487196,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T11:52:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TimByte"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It depends on the type of task and the developer's level. For typical CRUD tasks, I'd say AI is often already faster and better than an average developer. But as soon as ambiguous requirements or architectural trade-offs appear, the situation changes<p>Speed itself also changes the equation. If I can try out five implementation approaches in the same time I used to spend writing just one, the overall quality of the project could very well improve."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TimByte",
+          "story_48481802"
+        ],
+        "author": "TimByte",
+        "comment_text": "It depends on the type of task and the developer&#x27;s level. For typical CRUD tasks, I&#x27;d say AI is often already faster and better than an average developer. But as soon as ambiguous requirements or architectural trade-offs appear, the situation changes<p>Speed itself also changes the equation. If I can try out five implementation approaches in the same time I used to spend writing just one, the overall quality of the project could very well improve.",
+        "created_at": "2026-06-11T10:56:50Z",
+        "created_at_i": 1781175410,
+        "objectID": "48488687",
+        "parent_id": 48482717,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T11:00:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TimByte"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If programming were just about typing text, the profession would have disappeared already. In practice most of the work involves understanding requirements, analyzing constraints, finding trade-offs, and fixing problems before they hit production. AI is still noticeably worse at all that than it is at generating code.<p>At the end of the day it's just a tool. If someone enjoys building things, AI expands their capabilities rather than taking them away. Right now one developer can put together what used to require a small team. To me that sounds like an argument for learning it, not against it"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TimByte",
+          "story_48481802"
+        ],
+        "author": "TimByte",
+        "comment_text": "If programming were just about typing text, the profession would have disappeared already. In practice most of the work involves understanding requirements, analyzing constraints, finding trade-offs, and fixing problems before they hit production. AI is still noticeably worse at all that than it is at generating code.<p>At the end of the day it&#x27;s just a tool. If someone enjoys building things, AI expands their capabilities rather than taking them away. Right now one developer can put together what used to require a small team. To me that sounds like an argument for learning it, not against it",
+        "created_at": "2026-06-11T10:49:50Z",
+        "created_at_i": 1781174990,
+        "objectID": "48488632",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T11:43:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kypro"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Ai does NOT do better than a reasonable person. It gets about 80% of the way most of the time. And totally wrong and broken sometimes.<p>I agree, but you're talking about something you're clearly very competent in. That doesn't mean AI isn't as good as a relatively junior engineer.<p>It also says nothing about AIs of the future. 2 years ago AI could hardly do any tasks without a huge amount of human assistance. Now most SWE will tell you they don't even write code anymore. Let's give it another 2 years."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kypro",
+          "story_48481802"
+        ],
+        "author": "kypro",
+        "comment_text": "&gt; Ai does NOT do better than a reasonable person. It gets about 80% of the way most of the time. And totally wrong and broken sometimes.<p>I agree, but you&#x27;re talking about something you&#x27;re clearly very competent in. That doesn&#x27;t mean AI isn&#x27;t as good as a relatively junior engineer.<p>It also says nothing about AIs of the future. 2 years ago AI could hardly do any tasks without a huge amount of human assistance. Now most SWE will tell you they don&#x27;t even write code anymore. Let&#x27;s give it another 2 years.",
+        "created_at": "2026-06-11T10:33:29Z",
+        "created_at_i": 1781174009,
+        "objectID": "48488524",
+        "parent_id": 48485753,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:20:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "drrob"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Faster? Maybe. Better? Ha. If you honestly think the code quality and perf of AI's code is better than a half-decent human engineer then you're in the wrong line of work. Or you're just an AI bot...yep, that one."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_drrob",
+          "story_48481802"
+        ],
+        "author": "drrob",
+        "children": [
+          48489103
+        ],
+        "comment_text": "Faster? Maybe. Better? Ha. If you honestly think the code quality and perf of AI&#x27;s code is better than a half-decent human engineer then you&#x27;re in the wrong line of work. Or you&#x27;re just an AI bot...yep, that one.",
+        "created_at": "2026-06-11T07:02:32Z",
+        "created_at_i": 1781161352,
+        "objectID": "48487196",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T11:51:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tim-tday"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use coding assistants about 7 hrs a day in fields I know backwards and forwards and fields I know not at all.<p>Ai does NOT do better than a reasonable person. It gets about 80% of the way most of the time. And totally wrong and broken sometimes.<p>It just writes 10x faster. Once testing, bug fixing, testing again, and manually fixing the occasional huge fuck up im about 5x faster than I was. Things would be even better if I was a better programmer to begin with."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tim-tday",
+          "story_48481802"
+        ],
+        "author": "tim-tday",
+        "children": [
+          48488524
+        ],
+        "comment_text": "I use coding assistants about 7 hrs a day in fields I know backwards and forwards and fields I know not at all.<p>Ai does NOT do better than a reasonable person. It gets about 80% of the way most of the time. And totally wrong and broken sometimes.<p>It just writes 10x faster. Once testing, bug fixing, testing again, and manually fixing the occasional huge fuck up im about 5x faster than I was. Things would be even better if I was a better programmer to begin with.",
+        "created_at": "2026-06-11T03:00:21Z",
+        "created_at_i": 1781146821,
+        "objectID": "48485753",
+        "parent_id": 48482925,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T10:34:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "slipknotfan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "do what you enjoy and ride out the bubble,\nremember, ai is only regurgitating and could never make another hubble,\nyou learn by working at the problems through struggle,\nafter enough work, you will no longer be a computing muggle."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_slipknotfan",
+          "story_48481802"
+        ],
+        "author": "slipknotfan",
+        "children": [
+          48489206
+        ],
+        "comment_text": "do what you enjoy and ride out the bubble,\nremember, ai is only regurgitating and could never make another hubble,\nyou learn by working at the problems through struggle,\nafter enough work, you will no longer be a computing muggle.",
+        "created_at": "2026-06-11T02:13:57Z",
+        "created_at_i": 1781144037,
+        "objectID": "48485474",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:03:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kypro"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; AI does not do it better. It just does it faster.<p>Untrue for the majority of engineers, and almost all with less than a decade experience.<p>The AIs will only get better from here too."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kypro",
+          "story_48481802"
+        ],
+        "author": "kypro",
+        "children": [
+          48489189,
+          48485753
+        ],
+        "comment_text": "&gt; AI does not do it better. It just does it faster.<p>Untrue for the majority of engineers, and almost all with less than a decade experience.<p>The AIs will only get better from here too.",
+        "created_at": "2026-06-10T21:25:12Z",
+        "created_at_i": 1781126712,
+        "objectID": "48482925",
+        "parent_id": 48482717,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:01:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kypro"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you genuinely enjoy building, then I think you should just focus on building and not worry about the code. If you can get the results you want without caring, then just do that.<p>Anything you learn that has any value (which is very little these days) will soon become worthless as AI continues to improve.<p>If you're learning to code because you're a problem solver like myself, and you enjoy challenging your mind, then this isn't the field for you anymore.<p>I'm looking to retire soon because I feel like I have no professional purpose as SWE anymore. I used to enjoy building things, but I think that was because I liked the challenge of building things that were difficult, and I don't find any aspect of working with AI challenging really.<p>Even before you starting coding, just knowing how to do something complicated the right way used to be hard.<p>There are problems where if you can't figure out the math or don't know the algorithms in the field, then you basically cannot solve the problem. You don't even really know what you're looking for.<p>Today if you're trying to solve some complex scheduling problem you can just ask an AI and it might crap out a genetic algorithm, or if you need to align two objects in 3D space you can ask an AI and it will crap out an implementation of the Kabsch algorithm. You don't need to know how they work or the math behind them. You don't even need to know they exist.<p>I would hate for you to waste as much time as I have learning useless stuff.<p>Ask yourself why you want to learn to code, and pursue that in a more valuable way."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kypro",
+          "story_48481802"
+        ],
+        "author": "kypro",
+        "children": [
+          48489273
+        ],
+        "comment_text": "If you genuinely enjoy building, then I think you should just focus on building and not worry about the code. If you can get the results you want without caring, then just do that.<p>Anything you learn that has any value (which is very little these days) will soon become worthless as AI continues to improve.<p>If you&#x27;re learning to code because you&#x27;re a problem solver like myself, and you enjoy challenging your mind, then this isn&#x27;t the field for you anymore.<p>I&#x27;m looking to retire soon because I feel like I have no professional purpose as SWE anymore. I used to enjoy building things, but I think that was because I liked the challenge of building things that were difficult, and I don&#x27;t find any aspect of working with AI challenging really.<p>Even before you starting coding, just knowing how to do something complicated the right way used to be hard.<p>There are problems where if you can&#x27;t figure out the math or don&#x27;t know the algorithms in the field, then you basically cannot solve the problem. You don&#x27;t even really know what you&#x27;re looking for.<p>Today if you&#x27;re trying to solve some complex scheduling problem you can just ask an AI and it might crap out a genetic algorithm, or if you need to align two objects in 3D space you can ask an AI and it will crap out an implementation of the Kabsch algorithm. You don&#x27;t need to know how they work or the math behind them. You don&#x27;t even need to know they exist.<p>I would hate for you to waste as much time as I have learning useless stuff.<p>Ask yourself why you want to learn to code, and pursue that in a more valuable way.",
+        "created_at": "2026-06-10T21:23:59Z",
+        "created_at_i": 1781126639,
+        "objectID": "48482910",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:11:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "codingdave"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI does not do it better. It just does it faster. Sometimes that is useful. Sometimes that is harmful. You would want to learn to code to be able to tell the difference."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_codingdave",
+          "story_48481802"
+        ],
+        "author": "codingdave",
+        "children": [
+          48488687,
+          48482925
+        ],
+        "comment_text": "AI does not do it better. It just does it faster. Sometimes that is useful. Sometimes that is harmful. You would want to learn to code to be able to tell the difference.",
+        "created_at": "2026-06-10T21:06:12Z",
+        "created_at_i": 1781125572,
+        "objectID": "48482717",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T14:28:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ciwolex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "- Like every muscle, doing it by yourself, develops your brain's thinking abilities.<p>- Yes, AI can do whatever the brain can do, but that doesn't develop it.<p>- What sets humans apart is the ability to think about a situation and do something about it. The ability to think sets us apart. That ability should be developed regardless of what AI can do.<p>- AI could be better. So what? Comparing yourself with others is the root of disappointment and dissatisfaction. Compare yourself with yourself. Are you better today than you were yesterday?<p>- Competing with AI is an ever losing battle. Don't compete with AI. Develelop yourself."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ciwolex",
+          "story_48481802"
+        ],
+        "author": "ciwolex",
+        "children": [
+          48489250
+        ],
+        "comment_text": "- Like every muscle, doing it by yourself, develops your brain&#x27;s thinking abilities.<p>- Yes, AI can do whatever the brain can do, but that doesn&#x27;t develop it.<p>- What sets humans apart is the ability to think about a situation and do something about it. The ability to think sets us apart. That ability should be developed regardless of what AI can do.<p>- AI could be better. So what? Comparing yourself with others is the root of disappointment and dissatisfaction. Compare yourself with yourself. Are you better today than you were yesterday?<p>- Competing with AI is an ever losing battle. Don&#x27;t compete with AI. Develelop yourself.",
+        "created_at": "2026-06-10T21:00:02Z",
+        "created_at_i": 1781125202,
+        "objectID": "48482645",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:08:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hnthrow10282910"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why learn math when a calculator can do it? Why read a book if AI can summarise it? Why walk to the store if someone can deliver it?<p>There is no free lunch. The trade off is you get short term gains and long term cognitive dementia. You become a useless generalist."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why would someone want to learn code when AI does it better and faster?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hnthrow10282910",
+          "story_48481802"
+        ],
+        "author": "hnthrow10282910",
+        "children": [
+          48489292
+        ],
+        "comment_text": "Why learn math when a calculator can do it? Why read a book if AI can summarise it? Why walk to the store if someone can deliver it?<p>There is no free lunch. The trade off is you get short term gains and long term cognitive dementia. You become a useless generalist.",
+        "created_at": "2026-06-10T20:57:52Z",
+        "created_at_i": 1781125072,
+        "objectID": "48482615",
+        "parent_id": 48481802,
+        "story_id": 48481802,
+        "story_title": "Why would someone want to learn code when AI does it better and faster?",
+        "updated_at": "2026-06-11T12:13:58Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 18,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48481802&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 30
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

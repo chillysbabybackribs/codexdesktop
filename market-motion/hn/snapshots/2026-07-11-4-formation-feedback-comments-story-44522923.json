@@ -1,0 +1,729 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "44522923",
+    "window": "prior-year-comparable-90d",
+    "tag": "show_hn",
+    "score": 45
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stark2025"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Great stuff!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_stark2025",
+          "story_44522923"
+        ],
+        "author": "stark2025",
+        "comment_text": "Great stuff!",
+        "created_at": "2025-07-10T23:56:13Z",
+        "created_at_i": 1752191773,
+        "objectID": "44527008",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-11T00:00:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Only Open AI right now. Maybe i will add Ollama or Gemini in future"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "comment_text": "Only Open AI right now. Maybe i will add Ollama or Gemini in future",
+        "created_at": "2025-07-10T21:39:31Z",
+        "created_at_i": 1752183571,
+        "objectID": "44525908",
+        "parent_id": 44525546,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T21:43:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Khromchenko13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What other LLMs do you support?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Khromchenko13",
+          "story_44522923"
+        ],
+        "author": "Khromchenko13",
+        "children": [
+          44525908
+        ],
+        "comment_text": "What other LLMs do you support?",
+        "created_at": "2025-07-10T20:59:34Z",
+        "created_at_i": 1752181174,
+        "objectID": "44525546",
+        "parent_id": 44523504,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T21:40:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No, maybe in the future"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "comment_text": "No, maybe in the future",
+        "created_at": "2025-07-10T18:53:10Z",
+        "created_at_i": 1752173590,
+        "objectID": "44524253",
+        "parent_id": 44524218,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "devafromla"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Do you support Gemini?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_devafromla",
+          "story_44522923"
+        ],
+        "author": "devafromla",
+        "children": [
+          44524253
+        ],
+        "comment_text": "Do you support Gemini?",
+        "created_at": "2025-07-10T18:48:50Z",
+        "created_at_i": 1752173330,
+        "objectID": "44524218",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unfortunately, no — not for now. Maybe in the future"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "comment_text": "Unfortunately, no — not for now. Maybe in the future",
+        "created_at": "2025-07-10T18:17:22Z",
+        "created_at_i": 1752171442,
+        "objectID": "44523927",
+        "parent_id": 44523880,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unfortunately, yes — you need to spend money for every test run. But you’re paying either way. Let me explain: I work at a big company with a large QA team. People write tests in JS/TS/Python. It takes time to write them, and then more time to maintain them when they break due to UI changes. Our team spends a lot of time fixing flaky and broken tests. Time is money. So leadership has to make a decision: should people spend less time writing and maintaining tests and focus more on quality, even if it means paying for test runs?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "comment_text": "Unfortunately, yes — you need to spend money for every test run. But you’re paying either way. Let me explain: I work at a big company with a large QA team. People write tests in JS&#x2F;TS&#x2F;Python. It takes time to write them, and then more time to maintain them when they break due to UI changes. Our team spends a lot of time fixing flaky and broken tests. Time is money. So leadership has to make a decision: should people spend less time writing and maintaining tests and focus more on quality, even if it means paying for test runs?",
+        "created_at": "2025-07-10T18:14:43Z",
+        "created_at_i": 1752171283,
+        "objectID": "44523902",
+        "parent_id": 44523831,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T18:19:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MaxRadio"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Can I use Olama?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MaxRadio",
+          "story_44522923"
+        ],
+        "author": "MaxRadio",
+        "children": [
+          44523927
+        ],
+        "comment_text": "Can I use Olama?",
+        "created_at": "2025-07-10T18:12:59Z",
+        "created_at_i": 1752171179,
+        "objectID": "44523880",
+        "parent_id": 44523528,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chosenman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So, are you saying that I should spend money on every test run?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chosenman",
+          "story_44522923"
+        ],
+        "author": "chosenman",
+        "children": [
+          44523902
+        ],
+        "comment_text": "So, are you saying that I should spend money on every test run?",
+        "created_at": "2025-07-10T18:08:43Z",
+        "created_at_i": 1752170923,
+        "objectID": "44523831",
+        "parent_id": 44523713,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Basically, it’s built on top of Playwright — kind of like Selenium. The pros are that it’s easy to write tests in English and you don’t need to maintain them. The cons are that you spend tokens, so it costs money for every test run."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "children": [
+          44523831
+        ],
+        "comment_text": "Basically, it’s built on top of Playwright — kind of like Selenium. The pros are that it’s easy to write tests in English and you don’t need to maintain them. The cons are that you spend tokens, so it costs money for every test run.",
+        "created_at": "2025-07-10T17:58:25Z",
+        "created_at_i": 1752170305,
+        "objectID": "44523713",
+        "parent_id": 44523625,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T18:59:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chosenman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So it potentially can outperform/ substitute selenium for frontend testing?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chosenman",
+          "story_44522923"
+        ],
+        "author": "chosenman",
+        "children": [
+          44523713
+        ],
+        "comment_text": "So it potentially can outperform&#x2F; substitute selenium for frontend testing?",
+        "created_at": "2025-07-10T17:52:08Z",
+        "created_at_i": 1752169928,
+        "objectID": "44523625",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have a 5-minute quick start guide on the website. It’s easy to get started — you just need an OpenAI key"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "children": [
+          44523880
+        ],
+        "comment_text": "I have a 5-minute quick start guide on the website. It’s easy to get started — you just need an OpenAI key",
+        "created_at": "2025-07-10T17:43:16Z",
+        "created_at_i": 1752169396,
+        "objectID": "44523528",
+        "parent_id": 44523484,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hmm, I didn’t test this many tests. But you can run all tests in parallel — two at a time — and we should be good. The limitation isn’t the framework; it’s your budget and the tier you have on OpenAI. If you have Tier 2, which allows more requests to the OpenAI API, you could potentially run 1,000 tests in a single run."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "children": [
+          44525546
+        ],
+        "comment_text": "Hmm, I didn’t test this many tests. But you can run all tests in parallel — two at a time — and we should be good. The limitation isn’t the framework; it’s your budget and the tier you have on OpenAI. If you have Tier 2, which allows more requests to the OpenAI API, you could potentially run 1,000 tests in a single run.",
+        "created_at": "2025-07-10T17:41:29Z",
+        "created_at_i": 1752169289,
+        "objectID": "44523504",
+        "parent_id": 44523449,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T21:00:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MaxRadio"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This stuff is pretty helpful, love to test with it!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MaxRadio",
+          "story_44522923"
+        ],
+        "author": "MaxRadio",
+        "children": [
+          44523528
+        ],
+        "comment_text": "This stuff is pretty helpful, love to test with it!",
+        "created_at": "2025-07-10T17:39:36Z",
+        "created_at_i": 1752169176,
+        "objectID": "44523484",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Khromchenko13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How good is it in terms of scalability? \nIm looking for something that wont crap out when we get to 100s or 1000s of tests"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Khromchenko13",
+          "story_44522923"
+        ],
+        "author": "Khromchenko13",
+        "children": [
+          44523504
+        ],
+        "comment_text": "How good is it in terms of scalability? \nIm looking for something that wont crap out when we get to 100s or 1000s of tests",
+        "created_at": "2025-07-10T17:37:01Z",
+        "created_at_i": 1752169021,
+        "objectID": "44523449",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you! It’s free and open source. Contributions are welcome! I’ll be releasing a new feature soon that will make it even easier."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_papapin777",
+          "story_44522923"
+        ],
+        "author": "papapin777",
+        "comment_text": "Thank you! It’s free and open source. Contributions are welcome! I’ll be releasing a new feature soon that will make it even easier.",
+        "created_at": "2025-07-10T17:27:50Z",
+        "created_at_i": 1752168470,
+        "objectID": "44523336",
+        "parent_id": 44523286,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "snetch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Love it. Very easy to setup and start adding e2e tests using prompt."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_snetch",
+          "story_44522923"
+        ],
+        "author": "snetch",
+        "children": [
+          44523336
+        ],
+        "comment_text": "Love it. Very easy to setup and start adding e2e tests using prompt.",
+        "created_at": "2025-07-10T17:23:20Z",
+        "created_at_i": 1752168200,
+        "objectID": "44523286",
+        "parent_id": 44522923,
+        "story_id": 44522923,
+        "story_title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "story_url": "https://endorphinai.dev",
+        "updated_at": "2025-07-10T20:04:53Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 17,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44522923&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 1
+  }
+}

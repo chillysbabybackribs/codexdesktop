@@ -1,0 +1,714 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48485950",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 69
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tristanj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Search for 中转站 (transfer station). One of the popular ones is <a href=\"https://yunwu.ai/\" rel=\"nofollow\">https://yunwu.ai/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tristanj",
+          "story_48485950"
+        ],
+        "author": "tristanj",
+        "comment_text": "Search for 中转站 (transfer station). One of the popular ones is <a href=\"https:&#x2F;&#x2F;yunwu.ai&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;yunwu.ai&#x2F;</a>",
+        "created_at": "2026-06-12T01:07:32Z",
+        "created_at_i": 1781226452,
+        "objectID": "48498582",
+        "parent_id": 48486783,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-12T01:09:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gaws"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; <i>OpenCode has a generous $10 plan for open weight models</i><p>No point if one can't use Anthropic's models."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gaws",
+          "story_48485950"
+        ],
+        "author": "gaws",
+        "comment_text": "&gt; <i>OpenCode has a generous $10 plan for open weight models</i><p>No point if one can&#x27;t use Anthropic&#x27;s models.",
+        "created_at": "2026-06-11T17:33:55Z",
+        "created_at_i": 1781199235,
+        "objectID": "48493536",
+        "parent_id": 48486010,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-12T17:37:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "3stacks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Can anyone account for the wild inconsistency between people's reports of session usage? I would hear stories of people saying they burned their weekly quota in 30 minutes, and then there's this post. Yet I used Fable exclusively today across multiple work projects fairly extensively and haven't cracked 20%."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_3stacks",
+          "story_48485950"
+        ],
+        "author": "3stacks",
+        "comment_text": "Can anyone account for the wild inconsistency between people&#x27;s reports of session usage? I would hear stories of people saying they burned their weekly quota in 30 minutes, and then there&#x27;s this post. Yet I used Fable exclusively today across multiple work projects fairly extensively and haven&#x27;t cracked 20%.",
+        "created_at": "2026-06-11T13:46:14Z",
+        "created_at_i": 1781185574,
+        "objectID": "48490278",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T13:48:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "moltar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Maybe from all those stolen API keys?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_moltar",
+          "story_48485950"
+        ],
+        "author": "moltar",
+        "comment_text": "Maybe from all those stolen API keys?",
+        "created_at": "2026-06-11T06:41:54Z",
+        "created_at_i": 1781160114,
+        "objectID": "48487028",
+        "parent_id": 48486066,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T11:23:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akmarinov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Where is that? So i can stay away from them?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_akmarinov",
+          "story_48485950"
+        ],
+        "author": "akmarinov",
+        "children": [
+          48498582
+        ],
+        "comment_text": "Where is that? So i can stay away from them?",
+        "created_at": "2026-06-11T06:09:42Z",
+        "created_at_i": 1781158182,
+        "objectID": "48486783",
+        "parent_id": 48486055,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-12T01:08:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "queenkjuul"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Truly. Corporate can pay Fable price if they want, but I'm not impressed. I'll wait til next year"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_queenkjuul",
+          "story_48485950"
+        ],
+        "author": "queenkjuul",
+        "comment_text": "Truly. Corporate can pay Fable price if they want, but I&#x27;m not impressed. I&#x27;ll wait til next year",
+        "created_at": "2026-06-11T05:44:21Z",
+        "created_at_i": 1781156661,
+        "objectID": "48486622",
+        "parent_id": 48486272,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T14:44:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "queenkjuul"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Doesn't even seem that great, to me. Granted it was one day of work where i didn't use it particularly heavily. But i tried to lean into the &quot;use a background agent for everything&quot; thing but i didn't get a ton done past what i had to do by hand (manually deploying changes, testing them, moving on: we're switching hosting providers, gotta make sure updates keep rolling, no way for Claude to do it outside handing over the prod S3 keys which, not even Fable lol)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_queenkjuul",
+          "story_48485950"
+        ],
+        "author": "queenkjuul",
+        "comment_text": "Doesn&#x27;t even seem that great, to me. Granted it was one day of work where i didn&#x27;t use it particularly heavily. But i tried to lean into the &quot;use a background agent for everything&quot; thing but i didn&#x27;t get a ton done past what i had to do by hand (manually deploying changes, testing them, moving on: we&#x27;re switching hosting providers, gotta make sure updates keep rolling, no way for Claude to do it outside handing over the prod S3 keys which, not even Fable lol)",
+        "created_at": "2026-06-11T05:31:50Z",
+        "created_at_i": 1781155910,
+        "objectID": "48486555",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T05:35:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "verdverm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "People are also paying attention to open models for a reason, they are around 6-9 months behind and far cheaper. Fable output looks like a modest improvement, certainly not 2x like the price. We'll have similar models we can run ourselves by this time next year"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_verdverm",
+          "story_48485950"
+        ],
+        "author": "verdverm",
+        "children": [
+          48486622
+        ],
+        "comment_text": "People are also paying attention to open models for a reason, they are around 6-9 months behind and far cheaper. Fable output looks like a modest improvement, certainly not 2x like the price. We&#x27;ll have similar models we can run ourselves by this time next year",
+        "created_at": "2026-06-11T04:36:57Z",
+        "created_at_i": 1781152617,
+        "objectID": "48486272",
+        "parent_id": 48486215,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T15:16:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "minimaxir"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "None of those models are Fable's class. There are definitely many cheaper options for LLM agents, but people are paying attention to Fable for a reason."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_minimaxir",
+          "story_48485950"
+        ],
+        "author": "minimaxir",
+        "children": [
+          48486272
+        ],
+        "comment_text": "None of those models are Fable&#x27;s class. There are definitely many cheaper options for LLM agents, but people are paying attention to Fable for a reason.",
+        "created_at": "2026-06-11T04:29:17Z",
+        "created_at_i": 1781152157,
+        "objectID": "48486215",
+        "parent_id": 48486010,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T20:01:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jauntywundrkind"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wait till June 22nd! That'll be like $5000/week usage. This may be the cheapest Fable-class or better Anthropic model you ever see in your lifetime.<p>(Anthropic has said they want to get Fable back on to subscription plans at some point.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jauntywundrkind",
+          "story_48485950"
+        ],
+        "author": "jauntywundrkind",
+        "comment_text": "Wait till June 22nd! That&#x27;ll be like $5000&#x2F;week usage. This may be the cheapest Fable-class or better Anthropic model you ever see in your lifetime.<p>(Anthropic has said they want to get Fable back on to subscription plans at some point.)",
+        "created_at": "2026-06-11T04:28:50Z",
+        "created_at_i": 1781152130,
+        "objectID": "48486213",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T11:31:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rvz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Well, as predicted I see many here complaining about how expensive Fable is. [0]<p>It is not just companies that know it is economically expensive, but it is also expensive to companies who have zero-data retention policies and they cannot offer AI features that use this model.<p>Anthropic doesn't care and won't talk to you unless you're paying them hundreds of millions. There are now local models which are great alternatives which have no quotas and can work with companies that have zero data retention policies.<p>[0] <a href=\"https://news.ycombinator.com/item?id=48467112\">https://news.ycombinator.com/item?id=48467112</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rvz",
+          "story_48485950"
+        ],
+        "author": "rvz",
+        "comment_text": "Well, as predicted I see many here complaining about how expensive Fable is. [0]<p>It is not just companies that know it is economically expensive, but it is also expensive to companies who have zero-data retention policies and they cannot offer AI features that use this model.<p>Anthropic doesn&#x27;t care and won&#x27;t talk to you unless you&#x27;re paying them hundreds of millions. There are now local models which are great alternatives which have no quotas and can work with companies that have zero data retention policies.<p>[0] <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48467112\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48467112</a>",
+        "created_at": "2026-06-11T04:22:59Z",
+        "created_at_i": 1781151779,
+        "objectID": "48486179",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T11:24:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dioko"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fable so far has only been incrementally better than Opus 4.8 in my testing. The testing so far has been coding on a large monolith. In general Claude is starting to feel like it's optimize for greenfield vibe-coding projects. I vastly prefer Codex for coding on large, established codebases."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dioko",
+          "story_48485950"
+        ],
+        "author": "dioko",
+        "comment_text": "Fable so far has only been incrementally better than Opus 4.8 in my testing. The testing so far has been coding on a large monolith. In general Claude is starting to feel like it&#x27;s optimize for greenfield vibe-coding projects. I vastly prefer Codex for coding on large, established codebases.",
+        "created_at": "2026-06-11T04:18:41Z",
+        "created_at_i": 1781151521,
+        "objectID": "48486147",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T16:21:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mbmbn"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you achieve that? Any special tooling or just skills?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mbmbn",
+          "story_48485950"
+        ],
+        "author": "mbmbn",
+        "comment_text": "How do you achieve that? Any special tooling or just skills?",
+        "created_at": "2026-06-11T04:13:24Z",
+        "created_at_i": 1781151204,
+        "objectID": "48486112",
+        "parent_id": 48486075,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T16:21:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Insanity"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ah, well that makes sense. Will be interesting to see what adoption looks like for a model that’s billed at a more realistic price-point towards profitability."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Insanity",
+          "story_48485950"
+        ],
+        "author": "Insanity",
+        "comment_text": "Ah, well that makes sense. Will be interesting to see what adoption looks like for a model that’s billed at a more realistic price-point towards profitability.",
+        "created_at": "2026-06-11T04:09:00Z",
+        "created_at_i": 1781150940,
+        "objectID": "48486094",
+        "parent_id": 48486053,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T04:11:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "discordance"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "They're reselling pooled capacity from many Max accounts through Chinese proxies at below official prices:<p><a href=\"https://www.chinatalk.media/p/the-grey-market-for-american-llms\" rel=\"nofollow\">https://www.chinatalk.media/p/the-grey-market-for-american-l...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_discordance",
+          "story_48485950"
+        ],
+        "author": "discordance",
+        "comment_text": "They&#x27;re reselling pooled capacity from many Max accounts through Chinese proxies at below official prices:<p><a href=\"https:&#x2F;&#x2F;www.chinatalk.media&#x2F;p&#x2F;the-grey-market-for-american-llms\" rel=\"nofollow\">https:&#x2F;&#x2F;www.chinatalk.media&#x2F;p&#x2F;the-grey-market-for-american-l...</a>",
+        "created_at": "2026-06-11T04:08:59Z",
+        "created_at_i": 1781150939,
+        "objectID": "48486093",
+        "parent_id": 48486066,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-12T13:25:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tristanj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Account sharing. They route your request via one of thousands of Max 5X accounts."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tristanj",
+          "story_48485950"
+        ],
+        "author": "tristanj",
+        "comment_text": "Account sharing. They route your request via one of thousands of Max 5X accounts.",
+        "created_at": "2026-06-11T04:07:01Z",
+        "created_at_i": 1781150821,
+        "objectID": "48486081",
+        "parent_id": 48486066,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T23:04:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "discordance"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Currently running an experiment where I'm using Fable as a planner/orchestrator/verifier and using Mimo 2.5 as subagents/builders. Seems to be doing well with my old specs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_discordance",
+          "story_48485950"
+        ],
+        "author": "discordance",
+        "children": [
+          48486112
+        ],
+        "comment_text": "Currently running an experiment where I&#x27;m using Fable as a planner&#x2F;orchestrator&#x2F;verifier and using Mimo 2.5 as subagents&#x2F;builders. Seems to be doing well with my old specs.",
+        "created_at": "2026-06-11T04:05:12Z",
+        "created_at_i": 1781150712,
+        "objectID": "48486075",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T11:29:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "_345"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "... how. how is that even possible. pirated usage plans?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author__345",
+          "story_48485950"
+        ],
+        "author": "_345",
+        "children": [
+          48486093,
+          48486081,
+          48487028
+        ],
+        "comment_text": "... how. how is that even possible. pirated usage plans?",
+        "created_at": "2026-06-11T04:04:16Z",
+        "created_at_i": 1781150656,
+        "objectID": "48486066",
+        "parent_id": 48486055,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T07:44:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bottlepalm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sometimes I think about how much power I'm using with 10 Fable agents running in parallel for 10 minutes each. It's gotta be a lot. Compared to my PC which with a great GPU can run a crap agent that takes way too long and does a terrible job at everything.<p>Anyways, I don't get it, do you wish they never released Fable? I can't believe they're making any money on it. I'd bet they said we're gonna burn 100 million dollars on 12 days of unlimited access just to at least give people a taste and maybe recoup our losses if people actually pay for it later."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bottlepalm",
+          "story_48485950"
+        ],
+        "author": "bottlepalm",
+        "comment_text": "Sometimes I think about how much power I&#x27;m using with 10 Fable agents running in parallel for 10 minutes each. It&#x27;s gotta be a lot. Compared to my PC which with a great GPU can run a crap agent that takes way too long and does a terrible job at everything.<p>Anyways, I don&#x27;t get it, do you wish they never released Fable? I can&#x27;t believe they&#x27;re making any money on it. I&#x27;d bet they said we&#x27;re gonna burn 100 million dollars on 12 days of unlimited access just to at least give people a taste and maybe recoup our losses if people actually pay for it later.",
+        "created_at": "2026-06-11T04:04:00Z",
+        "created_at_i": 1781150640,
+        "objectID": "48486063",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T04:07:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tristanj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Currently Fable is available through Chinese resellers at around ~$17.50/1M tokens, or about a 65% discount vs API prices. Still expensive compared to Opus."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anthropic's Fable model is too expensive"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tristanj",
+          "story_48485950"
+        ],
+        "author": "tristanj",
+        "children": [
+          48486783,
+          48486066
+        ],
+        "comment_text": "Currently Fable is available through Chinese resellers at around ~$17.50&#x2F;1M tokens, or about a 65% discount vs API prices. Still expensive compared to Opus.",
+        "created_at": "2026-06-11T04:02:54Z",
+        "created_at_i": 1781150574,
+        "objectID": "48486055",
+        "parent_id": 48485950,
+        "story_id": 48485950,
+        "story_title": "Tell HN: Anthropic's Fable model is too expensive",
+        "updated_at": "2026-06-11T23:04:46Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 26,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48485950&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 25
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 1
+  }
+}

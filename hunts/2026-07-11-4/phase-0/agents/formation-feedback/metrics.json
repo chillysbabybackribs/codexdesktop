@@ -1,0 +1,207 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "lane": "formation_feedback",
+  "totalRecords": 470,
+  "verifiedRecords": 470,
+  "stories": 192,
+  "comments": 278,
+  "firsthand": 103,
+  "exactMoney": 19,
+  "uniqueAuthors": 382,
+  "uniqueProductDomains": 53,
+  "suspectedDuplicateIndependenceKeys": [
+    {
+      "key": "news-ycombinator-com|rstagi|48859439|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|tade0|48859873|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "fata-dev|djoume|fata|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "redflag-check-info|vedant28t|i-built-a-red-flag-warning-zone|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|spycoder77|48478510|hn-algolia",
+      "count": 3
+    },
+    {
+      "key": "news-ycombinator-com|adam-hincu|48486225|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|michaelzuo|48485429|hn-algolia",
+      "count": 6
+    },
+    {
+      "key": "news-ycombinator-com|thisislorenzov|48489109|hn-algolia",
+      "count": 3
+    },
+    {
+      "key": "news-ycombinator-com|manimonji|48481802|hn-algolia",
+      "count": 7
+    },
+    {
+      "key": "apps-apple-com|om202|editing-2000-photos-made-me-build-a-macos-bulk-photo-editor|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|oyaa52|47736372|hn-algolia",
+      "count": 4
+    },
+    {
+      "key": "benbridle-com|benbridle|bedrock|hn-algolia",
+      "count": 5
+    },
+    {
+      "key": "endorphinai-dev|papapin777|endorphin-ai|hn-algolia",
+      "count": 6
+    },
+    {
+      "key": "github-com|bharatgel|asyncmcp|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|aprdm|48475871|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "github-com|oulipo|pangolin|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "github-com|rshemet|cactus|hn-algolia",
+      "count": 4
+    },
+    {
+      "key": "benbridle-com|kragen|bedrock|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|qup|48859439|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|ben-w|48857085|hn-algolia",
+      "count": 5
+    },
+    {
+      "key": "news-ycombinator-com|wnissen|44525626|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|isntthatsth|44525626|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|6510|48478510|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|al-borland|48481947|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|leephillips|48481947|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|theozero|47736831|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|talloaktrees|48863171|hn-algolia",
+      "count": 3
+    },
+    {
+      "key": "news-ycombinator-com|jraph|48860494|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|cider9986|48860494|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|queenkjuul|48485950|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|dlcarrier|48486225|hn-algolia",
+      "count": 3
+    },
+    {
+      "key": "news-ycombinator-com|timbyte|48486763|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|shanilss|44514652|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|an-aparallel|44528693|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|duanemclemore|44528693|hn-algolia",
+      "count": 2
+    },
+    {
+      "key": "news-ycombinator-com|giantg2|44528693|hn-algolia",
+      "count": 2
+    }
+  ],
+  "bySource": {
+    "Hacker News via official Algolia API": 470
+  },
+  "byWindow": {
+    "recent-30d": 48,
+    "prior-30d": 160,
+    "prior-90d": 95,
+    "prior-year-comparable-90d": 114,
+    "recent-90d": 53
+  },
+  "byActor": {
+    "startup_founder": 96,
+    "unknown": 271,
+    "buyer_operator": 103
+  },
+  "byStatement": {
+    "product_pitch": 96,
+    "market_opinion": 221,
+    "own_workflow": 89,
+    "feature_request": 50,
+    "own_purchase": 9,
+    "own_workaround": 5
+  },
+  "byVerification": {
+    "verified": 470
+  },
+  "missingFields": {
+    "productDomain": 313,
+    "actorEvidence": 271,
+    "buyer": 367,
+    "trigger": 470,
+    "input": 470,
+    "repeatedAction": 367,
+    "output": 470,
+    "destination": 470,
+    "frequency": 452,
+    "timeSpent": 445,
+    "priceOrWage": 451,
+    "remainingManualWork": 465,
+    "objection": 346,
+    "requestedOutcome": 420
+  },
+  "queryCount": 46,
+  "failureCount": 0,
+  "coverageNotes": [
+    "Show HN and Ask HN use official Algolia API across recent/prior 30d, recent/prior 90d, and prior-year comparable 90d.",
+    "High-engagement stories were comment-hydrated; launch records remain supply evidence only.",
+    "Actor and statement labels are conservative text classifications and require parent audit."
+  ]
+}

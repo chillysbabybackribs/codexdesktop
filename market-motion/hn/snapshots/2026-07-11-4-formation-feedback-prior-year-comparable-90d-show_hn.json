@@ -1,0 +1,2583 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "window": "prior-year-comparable-90d",
+  "start": 1744459200,
+  "end": 1752235200,
+  "tag": "show_hn",
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "qn9n"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SwiftList is a reimplementation of the Unix ls command in Swift 6.0. It provides compatibility with standard ls flags while offering modern Swift API design and cross-platform support.<p>Technical Implementation<p>- Swift 6.0 with Foundation and FileManager for reliable file operations\n- Swift Argument Parser for clean command-line interface\n- Shell completion support for bash, zsh, and fish\n- Swift Package Manager integration for easy installation\n- Follows Swift API Design Guidelines throughout<p>Key Features<p>- ls flag compatibility (--all, --long, --recurse, etc.)\n- Color and icon (emoji) support for enhanced file identification\n- Multiple display formats (basic, detailed, recursive)\n- Multiple path support\n- Built-in shell completion generation (--generate-completion-script)<p>Recent Development<p>- Fixed shell completion reliability across bash, zsh, and fish\n- Added standard version flag support\n- Enhanced long format display options<p>Why Swift?<p>Swift's strong type system, memory safety, and Foundation integration make it well-suited for system utilities. The result is a fast, reliable ls replacement with modern error handling and clean architecture.\nThe project demonstrates practical Swift usage beyond iOS/macOS app development, showing how Swift can be effective for command-line tools and system utilities.\nMIT licensed, comprehensive test coverage, ready for production use."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Swift List – A Modern Swift Implementation of Ls"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/maclong9/list"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_qn9n",
+          "story_44530961",
+          "show_hn"
+        ],
+        "author": "qn9n",
+        "created_at": "2025-07-11T11:34:05Z",
+        "created_at_i": 1752233645,
+        "num_comments": 0,
+        "objectID": "44530961",
+        "points": 3,
+        "story_id": 44530961,
+        "story_text": "SwiftList is a reimplementation of the Unix ls command in Swift 6.0. It provides compatibility with standard ls flags while offering modern Swift API design and cross-platform support.<p>Technical Implementation<p>- Swift 6.0 with Foundation and FileManager for reliable file operations\n- Swift Argument Parser for clean command-line interface\n- Shell completion support for bash, zsh, and fish\n- Swift Package Manager integration for easy installation\n- Follows Swift API Design Guidelines throughout<p>Key Features<p>- ls flag compatibility (--all, --long, --recurse, etc.)\n- Color and icon (emoji) support for enhanced file identification\n- Multiple display formats (basic, detailed, recursive)\n- Multiple path support\n- Built-in shell completion generation (--generate-completion-script)<p>Recent Development<p>- Fixed shell completion reliability across bash, zsh, and fish\n- Added standard version flag support\n- Enhanced long format display options<p>Why Swift?<p>Swift&#x27;s strong type system, memory safety, and Foundation integration make it well-suited for system utilities. The result is a fast, reliable ls replacement with modern error handling and clean architecture.\nThe project demonstrates practical Swift usage beyond iOS&#x2F;macOS app development, showing how Swift can be effective for command-line tools and system utilities.\nMIT licensed, comprehensive test coverage, ready for production use.",
+        "title": "Show HN: Swift List – A Modern Swift Implementation of Ls",
+        "updated_at": "2025-07-11T11:58:57Z",
+        "url": "https://github.com/maclong9/list"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vernu"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: TheGistHub – Free AI book summaries in 10 minutes"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://thegisthub.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vernu",
+          "story_44530931",
+          "show_hn"
+        ],
+        "author": "vernu",
+        "children": [
+          44530932
+        ],
+        "created_at": "2025-07-11T11:29:31Z",
+        "created_at_i": 1752233371,
+        "num_comments": 1,
+        "objectID": "44530931",
+        "points": 1,
+        "story_id": 44530931,
+        "title": "Show HN: TheGistHub – Free AI book summaries in 10 minutes",
+        "updated_at": "2025-07-11T11:32:26Z",
+        "url": "https://thegisthub.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AGI_Laboratory"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm excited to share AGI Laboratory, an open-source PyTorch framework that takes a different approach to AGI development"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AGI Laboratory – Evolving AGI through community"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Dan23RR/AGI_Laboratory"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_AGI_Laboratory",
+          "story_44530891",
+          "show_hn"
+        ],
+        "author": "AGI_Laboratory",
+        "created_at": "2025-07-11T11:22:35Z",
+        "created_at_i": 1752232955,
+        "num_comments": 0,
+        "objectID": "44530891",
+        "points": 1,
+        "story_id": 44530891,
+        "story_text": "I&#x27;m excited to share AGI Laboratory, an open-source PyTorch framework that takes a different approach to AGI development",
+        "title": "Show HN: AGI Laboratory – Evolving AGI through community",
+        "updated_at": "2025-07-11T11:27:11Z",
+        "url": "https://github.com/Dan23RR/AGI_Laboratory"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eliasdorneles"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wanted a simple way to manage my monthly budget, and I got tired of trying to bend Google Sheets to do what I needed.<p>So I built a terminal-based personal budget planning application built with Python and Textual.<p>Your data is stored locally in a JSON file, keeping your financial information private and accessible offline.<p>Do you find this useful?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: TUI personal monthly budget planner"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/eliasdorneles/moomoolah"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_eliasdorneles",
+          "story_44530759",
+          "show_hn"
+        ],
+        "author": "eliasdorneles",
+        "created_at": "2025-07-11T11:02:52Z",
+        "created_at_i": 1752231772,
+        "num_comments": 0,
+        "objectID": "44530759",
+        "points": 4,
+        "story_id": 44530759,
+        "story_text": "I wanted a simple way to manage my monthly budget, and I got tired of trying to bend Google Sheets to do what I needed.<p>So I built a terminal-based personal budget planning application built with Python and Textual.<p>Your data is stored locally in a JSON file, keeping your financial information private and accessible offline.<p>Do you find this useful?",
+        "title": "Show HN: TUI personal monthly budget planner",
+        "updated_at": "2025-07-12T08:11:13Z",
+        "url": "https://github.com/eliasdorneles/moomoolah"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gafoo1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I built a Python module called HardView to retrieve low-level hardware and system info across platforms.<p>I needed something fast, structured, and consistent across Windows and Linux — something that could handle BIOS data, CPU, memory, disks, network, SMART attributes, and real-time monitoring.<p>Most existing tools (like psutil or pySMART) either didn’t go deep enough, weren’t cross-platform, or didn’t expose everything in JSON format — so I wrote my own in C, then exposed it as a Python module.<p>Key features:<p>BIOS/system/CPU/RAM/disk/network info<p>SMART and partition info (disks)<p>Real-time CPU/RAM/system usage monitoring<p>JSON output and Python API<p>It’s open-source and still evolving. Would love feedback, ideas, or contributions!<p>GitHub: <a href=\"https://github.com/gafoo173/hardview\">https://github.com/gafoo173/hardview</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: HardView – Cross-platform Python module for detailed hardware info"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/gafoo173/HardView"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gafoo1",
+          "story_44530701",
+          "show_hn"
+        ],
+        "author": "gafoo1",
+        "created_at": "2025-07-11T10:54:07Z",
+        "created_at_i": 1752231247,
+        "num_comments": 0,
+        "objectID": "44530701",
+        "points": 1,
+        "story_id": 44530701,
+        "story_text": "Hi HN,<p>I built a Python module called HardView to retrieve low-level hardware and system info across platforms.<p>I needed something fast, structured, and consistent across Windows and Linux — something that could handle BIOS data, CPU, memory, disks, network, SMART attributes, and real-time monitoring.<p>Most existing tools (like psutil or pySMART) either didn’t go deep enough, weren’t cross-platform, or didn’t expose everything in JSON format — so I wrote my own in C, then exposed it as a Python module.<p>Key features:<p>BIOS&#x2F;system&#x2F;CPU&#x2F;RAM&#x2F;disk&#x2F;network info<p>SMART and partition info (disks)<p>Real-time CPU&#x2F;RAM&#x2F;system usage monitoring<p>JSON output and Python API<p>It’s open-source and still evolving. Would love feedback, ideas, or contributions!<p>GitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;gafoo173&#x2F;hardview\">https:&#x2F;&#x2F;github.com&#x2F;gafoo173&#x2F;hardview</a>",
+        "title": "Show HN: HardView – Cross-platform Python module for detailed hardware info",
+        "updated_at": "2025-07-11T10:55:40Z",
+        "url": "https://github.com/gafoo173/HardView"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FerkiHN"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,\nI'm excited to share ByteWise Search, an innovative open-source search engine I've been building. Unlike traditional search engines, ByteWise is designed to be entirely client-side, running directly in your browser. This means it offers unparalleled privacy, blazing speed, and near-zero traffic consumption for search queries.\nWhy ByteWise Search?<p>My goal was to create a search experience that puts the user first, without compromises on privacy or performance. Here's what makes it unique:<p>* Absolute Privacy: Your search queries never leave your device. All processing happens locally in your browser. No tracking, no cookies, no fingerprints.<p>* Zero Traffic for Search: After the initial load, every subsequent search query consumes 0KB of network traffic. Results are served instantly from a local database.<p>* Offline Functionality: Thanks to Service Workers and IndexedDB, ByteWise Search works perfectly even when you're offline.<p>* No API Keys, No Backend: This project runs entirely on GitHub Pages, making it completely free to host and use. There are no external APIs for search results, eliminating dependencies and potential costs.<p>The Community-Driven Vision\nThis is where it gets really interesting, and where I need your help!\nInstead of relying on a centralized index, ByteWise Search is designed to be community-driven. \nThe search results are powered by a local database that can be extended and improved by users like you.\nHow it works:<p>* Local Contributions: You can add new &quot;query -&gt; relevant link&quot; pairs directly within the app. These contributions are saved locally in your browser.<p>* Export &amp; Share: You can export your local contributions as a JSON file.<p>* Contribute via GitHub Pull Request: The vision is for the community to contribute these exported JSON files back to the main GitHub repository via Pull Requests. Once merged, these contributions become part of the public, shared database, benefiting everyone using ByteWise Search.<p>This model allows us to collectively build a high-quality, curated, and privacy-respecting knowledge base, tailored by the community for the community.\nPerformance Highlights (vs. traditional search)<p>* Initial Load: ~24KB<p>* Search Query: 0KB (from cache/local DB)<p>* Response Speed: Instant (from cache/local DB)<p>* Offline Support:  Yes<p>* External API Calls for \nSearch:  None<p>Call to Action\nI believe this approach has the potential to redefine how we think about search, especially for specific, curated knowledge domains.<p>I'd love to get your feedback, ideas, and especially contributions!<p>* Try the Live Demo: <a href=\"https://ferki-git-creator.github.io/bytewise-search/\" rel=\"nofollow\">https://ferki-git-creator.github.io/bytewise-search/</a><p>* Explore the Code &amp; Contribute: <a href=\"https://github.com/ferki-git-creator/bytewise-search\">https://github.com/ferki-git-creator/bytewise-search</a><p>Let's build a truly private and community-powered search engine together!\nThanks for checking it out."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ByteWise Search a Privacy, Zero-Traffic, Community-Driven Search Engine"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FerkiHN",
+          "story_44530688",
+          "show_hn"
+        ],
+        "author": "FerkiHN",
+        "children": [
+          44530708,
+          44532460
+        ],
+        "created_at": "2025-07-11T10:52:12Z",
+        "created_at_i": 1752231132,
+        "num_comments": 2,
+        "objectID": "44530688",
+        "points": 5,
+        "story_id": 44530688,
+        "story_text": "Hey HN,\nI&#x27;m excited to share ByteWise Search, an innovative open-source search engine I&#x27;ve been building. Unlike traditional search engines, ByteWise is designed to be entirely client-side, running directly in your browser. This means it offers unparalleled privacy, blazing speed, and near-zero traffic consumption for search queries.\nWhy ByteWise Search?<p>My goal was to create a search experience that puts the user first, without compromises on privacy or performance. Here&#x27;s what makes it unique:<p>* Absolute Privacy: Your search queries never leave your device. All processing happens locally in your browser. No tracking, no cookies, no fingerprints.<p>* Zero Traffic for Search: After the initial load, every subsequent search query consumes 0KB of network traffic. Results are served instantly from a local database.<p>* Offline Functionality: Thanks to Service Workers and IndexedDB, ByteWise Search works perfectly even when you&#x27;re offline.<p>* No API Keys, No Backend: This project runs entirely on GitHub Pages, making it completely free to host and use. There are no external APIs for search results, eliminating dependencies and potential costs.<p>The Community-Driven Vision\nThis is where it gets really interesting, and where I need your help!\nInstead of relying on a centralized index, ByteWise Search is designed to be community-driven. \nThe search results are powered by a local database that can be extended and improved by users like you.\nHow it works:<p>* Local Contributions: You can add new &quot;query -&gt; relevant link&quot; pairs directly within the app. These contributions are saved locally in your browser.<p>* Export &amp; Share: You can export your local contributions as a JSON file.<p>* Contribute via GitHub Pull Request: The vision is for the community to contribute these exported JSON files back to the main GitHub repository via Pull Requests. Once merged, these contributions become part of the public, shared database, benefiting everyone using ByteWise Search.<p>This model allows us to collectively build a high-quality, curated, and privacy-respecting knowledge base, tailored by the community for the community.\nPerformance Highlights (vs. traditional search)<p>* Initial Load: ~24KB<p>* Search Query: 0KB (from cache&#x2F;local DB)<p>* Response Speed: Instant (from cache&#x2F;local DB)<p>* Offline Support:  Yes<p>* External API Calls for \nSearch:  None<p>Call to Action\nI believe this approach has the potential to redefine how we think about search, especially for specific, curated knowledge domains.<p>I&#x27;d love to get your feedback, ideas, and especially contributions!<p>* Try the Live Demo: <a href=\"https:&#x2F;&#x2F;ferki-git-creator.github.io&#x2F;bytewise-search&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;ferki-git-creator.github.io&#x2F;bytewise-search&#x2F;</a><p>* Explore the Code &amp; Contribute: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ferki-git-creator&#x2F;bytewise-search\">https:&#x2F;&#x2F;github.com&#x2F;ferki-git-creator&#x2F;bytewise-search</a><p>Let&#x27;s build a truly private and community-powered search engine together!\nThanks for checking it out.",
+        "title": "Show HN: ByteWise Search a Privacy, Zero-Traffic, Community-Driven Search Engine",
+        "updated_at": "2025-07-14T00:12:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "e1-m"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi, I built a Python framework called Dispytch for handling events. It’s meant to be simple, clean, and testable.<p>Would love feedback or thoughts if you get a chance to check it out:\n<a href=\"https://github.com/e1-m/dispytch\">https://github.com/e1-m/dispytch</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Dispytch – a Python framework for building event-driven services"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/e1-m/dispytch"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_e1-m",
+          "story_44530625",
+          "show_hn"
+        ],
+        "author": "e1-m",
+        "created_at": "2025-07-11T10:44:01Z",
+        "created_at_i": 1752230641,
+        "num_comments": 0,
+        "objectID": "44530625",
+        "points": 1,
+        "story_id": 44530625,
+        "story_text": "Hi, I built a Python framework called Dispytch for handling events. It’s meant to be simple, clean, and testable.<p>Would love feedback or thoughts if you get a chance to check it out:\n<a href=\"https:&#x2F;&#x2F;github.com&#x2F;e1-m&#x2F;dispytch\">https:&#x2F;&#x2F;github.com&#x2F;e1-m&#x2F;dispytch</a>",
+        "title": "Show HN: Dispytch – a Python framework for building event-driven services",
+        "updated_at": "2025-07-11T10:45:11Z",
+        "url": "https://github.com/e1-m/dispytch"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nikkey80"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tweek GPT. Interact with your calendar and tasks using GPT"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://chatgpt.com/g/g-6855973a1d108191abb0a7708664b8f7-tweek"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nikkey80",
+          "story_44530542",
+          "show_hn"
+        ],
+        "author": "nikkey80",
+        "created_at": "2025-07-11T10:30:28Z",
+        "created_at_i": 1752229828,
+        "num_comments": 0,
+        "objectID": "44530542",
+        "points": 3,
+        "story_id": 44530542,
+        "title": "Show HN: Tweek GPT. Interact with your calendar and tasks using GPT",
+        "updated_at": "2025-07-11T10:34:40Z",
+        "url": "https://chatgpt.com/g/g-6855973a1d108191abb0a7708664b8f7-tweek"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "herodoturtle"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A Good Job Advert"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://sudowrite.com/jobs/designer"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_herodoturtle",
+          "story_44530394",
+          "show_hn"
+        ],
+        "author": "herodoturtle",
+        "created_at": "2025-07-11T10:06:57Z",
+        "created_at_i": 1752228417,
+        "num_comments": 0,
+        "objectID": "44530394",
+        "points": 2,
+        "story_id": 44530394,
+        "title": "Show HN: A Good Job Advert",
+        "updated_at": "2025-07-11T13:10:27Z",
+        "url": "https://sudowrite.com/jobs/designer"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ishqdehlvi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Experience conversations that feel genuinely human - no scripts, no canned responses, just authentic emotional connection that actually stays."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: WTMFAi – Join for Waitlist and"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://wtmf.ai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ishqdehlvi",
+          "story_44530277",
+          "show_hn"
+        ],
+        "author": "ishqdehlvi",
+        "created_at": "2025-07-11T09:51:08Z",
+        "created_at_i": 1752227468,
+        "num_comments": 0,
+        "objectID": "44530277",
+        "points": 1,
+        "story_id": 44530277,
+        "story_text": "Experience conversations that feel genuinely human - no scripts, no canned responses, just authentic emotional connection that actually stays.",
+        "title": "Show HN: WTMFAi – Join for Waitlist and",
+        "updated_at": "2025-07-11T09:52:55Z",
+        "url": "https://wtmf.ai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "funcin"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi Hacker Family,<p>I’d love to share a project I’ve been building independently: AI Email Writer – WriteMail.app<p>The inspiration came from a personal experience. I was applying for a part-time role at a company overseas, but I wasn’t confident about how to write a proper email. Sure, there are many AI tools out there, but I found it frustrating to constantly craft the right prompts just to get a decent draft.<p>That got me thinking — maybe others face the same challenge.<p>So I created WriteMail.app – an AI-powered email writing lab focused on helping you write better emails, not just faster ones.<p>Unlike typical “email generators,” WriteMail is a guided and interactive platform that blends writing purpose, tone control, and message structure — so your emails sound more professional, effective, and human.<p>What you can do with WriteMail.app:<p>1. Quickly write business emails, requests, rejections, thank-you notes, and more<p>2. Define your intent, and let the AI choose the right tone and phrasing<p>3. Instantly adjust the tone – make it more polite, assertive, concise, etc.<p>4. Need to reply to a message? Paste it in — and get a thoughtful response<p>5. Multilingual support is built-in – write or reply in the language you prefer<p>We’re currently powered by GPT-4, and I’m actively optimizing the system to fine-tune prompts and outputs for even more accurate and polished results.<p>It’s still an early-stage project, but I’d be thrilled if you give it a try and share your feedback. I’m building this to make thoughtful email writing more accessible for everyone.<p>Really appreciate your time, and I’m excited to hear any feedback or suggestions you may have."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I built AI Email Writer – Let AI help you write better Emails"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://writemail.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_funcin",
+          "story_44530108",
+          "show_hn"
+        ],
+        "author": "funcin",
+        "children": [
+          44530173
+        ],
+        "created_at": "2025-07-11T09:27:45Z",
+        "created_at_i": 1752226065,
+        "num_comments": 1,
+        "objectID": "44530108",
+        "points": 1,
+        "story_id": 44530108,
+        "story_text": "Hi Hacker Family,<p>I’d love to share a project I’ve been building independently: AI Email Writer – WriteMail.app<p>The inspiration came from a personal experience. I was applying for a part-time role at a company overseas, but I wasn’t confident about how to write a proper email. Sure, there are many AI tools out there, but I found it frustrating to constantly craft the right prompts just to get a decent draft.<p>That got me thinking — maybe others face the same challenge.<p>So I created WriteMail.app – an AI-powered email writing lab focused on helping you write better emails, not just faster ones.<p>Unlike typical “email generators,” WriteMail is a guided and interactive platform that blends writing purpose, tone control, and message structure — so your emails sound more professional, effective, and human.<p>What you can do with WriteMail.app:<p>1. Quickly write business emails, requests, rejections, thank-you notes, and more<p>2. Define your intent, and let the AI choose the right tone and phrasing<p>3. Instantly adjust the tone – make it more polite, assertive, concise, etc.<p>4. Need to reply to a message? Paste it in — and get a thoughtful response<p>5. Multilingual support is built-in – write or reply in the language you prefer<p>We’re currently powered by GPT-4, and I’m actively optimizing the system to fine-tune prompts and outputs for even more accurate and polished results.<p>It’s still an early-stage project, but I’d be thrilled if you give it a try and share your feedback. I’m building this to make thoughtful email writing more accessible for everyone.<p>Really appreciate your time, and I’m excited to hear any feedback or suggestions you may have.",
+        "title": "Show HN: I built AI Email Writer – Let AI help you write better Emails",
+        "updated_at": "2025-07-22T22:14:10Z",
+        "url": "https://writemail.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Stepanchykov"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Independent images collection from the whole internet. Daily updates"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Online Photo Gallery"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.newurgency.art"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Stepanchykov",
+          "story_44530075",
+          "show_hn"
+        ],
+        "author": "Stepanchykov",
+        "children": [
+          44530095
+        ],
+        "created_at": "2025-07-11T09:24:34Z",
+        "created_at_i": 1752225874,
+        "num_comments": 0,
+        "objectID": "44530075",
+        "points": 1,
+        "story_id": 44530075,
+        "story_text": "Independent images collection from the whole internet. Daily updates",
+        "title": "Show HN: Online Photo Gallery",
+        "updated_at": "2025-07-11T09:53:55Z",
+        "url": "https://www.newurgency.art"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chr15m"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built nkv because I wanted a simple way to pass simple values between different devices without maintaining a central server. Nostr provides a backbone with &quot;good enough&quot; decentralization. Enjoy!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A decentralized command line key-value store on Nostr"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/chr15m/nkv"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_chr15m",
+          "story_44530055",
+          "show_hn"
+        ],
+        "author": "chr15m",
+        "created_at": "2025-07-11T09:21:39Z",
+        "created_at_i": 1752225699,
+        "num_comments": 0,
+        "objectID": "44530055",
+        "points": 2,
+        "story_id": 44530055,
+        "story_text": "I built nkv because I wanted a simple way to pass simple values between different devices without maintaining a central server. Nostr provides a backbone with &quot;good enough&quot; decentralization. Enjoy!",
+        "title": "Show HN: A decentralized command line key-value store on Nostr",
+        "updated_at": "2025-07-11T09:26:41Z",
+        "url": "https://github.com/chr15m/nkv"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lur0913"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I built CD Calculator – <a href=\"https://cd-calculator.net\" rel=\"nofollow\">https://cd-calculator.net</a> – a simple tool that helps people calculate interest returns on bank CDs (Certificates of Deposit).\nMost CD calculators online are either too basic, too outdated, or full of ads. I wanted to make something that's:<p>- Clean and fast\n- Easy to use\n- Focused on accuracy<p>With this tool, users can:\n- Enter principal, rate, and term to get instant results\n- Simulate compound interest monthly or annually\n- Copy results with one click<p>Advanced features are coming soon, including:\n- Recurring deposits\n- Early withdrawal penalty simulation\n- After-tax return estimator<p>It’s built with Astro, Tailwind CSS, and vanilla JavaScript. I’d love feedback on:\n- Usability (especially on mobile)\n- Feature ideas or improvements\n- Accuracy of the calculations<p>Thanks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: CD Calculator – A tool to calculate bank CD interest returns"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://cd-calculator.net/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lur0913",
+          "story_44529727",
+          "show_hn"
+        ],
+        "author": "lur0913",
+        "created_at": "2025-07-11T08:40:16Z",
+        "created_at_i": 1752223216,
+        "num_comments": 0,
+        "objectID": "44529727",
+        "points": 2,
+        "story_id": 44529727,
+        "story_text": "Hi HN,<p>I built CD Calculator – <a href=\"https:&#x2F;&#x2F;cd-calculator.net\" rel=\"nofollow\">https:&#x2F;&#x2F;cd-calculator.net</a> – a simple tool that helps people calculate interest returns on bank CDs (Certificates of Deposit).\nMost CD calculators online are either too basic, too outdated, or full of ads. I wanted to make something that&#x27;s:<p>- Clean and fast\n- Easy to use\n- Focused on accuracy<p>With this tool, users can:\n- Enter principal, rate, and term to get instant results\n- Simulate compound interest monthly or annually\n- Copy results with one click<p>Advanced features are coming soon, including:\n- Recurring deposits\n- Early withdrawal penalty simulation\n- After-tax return estimator<p>It’s built with Astro, Tailwind CSS, and vanilla JavaScript. I’d love feedback on:\n- Usability (especially on mobile)\n- Feature ideas or improvements\n- Accuracy of the calculations<p>Thanks!",
+        "title": "Show HN: CD Calculator – A tool to calculate bank CD interest returns",
+        "updated_at": "2025-07-11T08:53:10Z",
+        "url": "https://cd-calculator.net/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yoav_sbg"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I made a simple iOS app to track and count my habits"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/il/app/clicker-counter-simple-tally/id6747491747"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yoav_sbg",
+          "story_44529663",
+          "show_hn"
+        ],
+        "author": "yoav_sbg",
+        "created_at": "2025-07-11T08:30:49Z",
+        "created_at_i": 1752222649,
+        "num_comments": 0,
+        "objectID": "44529663",
+        "points": 2,
+        "story_id": 44529663,
+        "title": "Show HN: I made a simple iOS app to track and count my habits",
+        "updated_at": "2025-07-11T08:53:10Z",
+        "url": "https://apps.apple.com/il/app/clicker-counter-simple-tally/id6747491747"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mosbyllc"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi Hacker News,<p>I'm excited to share a project I've been passionately working on in my spare time: AI Movie Finder (<a href=\"https://www.aimoviefinder.com\" rel=\"nofollow\">https://www.aimoviefinder.com</a>).<p>The idea was born out of a simple, yet frequent, frustration: having a movie on the tip of my tongue but being unable to recall the title. All I could remember were fragments – a specific scene, a snippet of dialogue, the general plot, or even just the mood it evoked. Traditional search engines often fell short with these kinds of abstract queries.<p>So, I decided to build a solution. AI Movie Finder uses a natural language processing model to understand these descriptive and sometimes vague queries. You can type in things like:<p>&quot;that movie where a guy keeps reliving the same day&quot;<p>&quot;a sci-fi film with a blue alien opera singer&quot;<p>&quot;a feel-good movie about a band in the 80s&quot;<p>The goal is to make movie discovery more intuitive and human-like. Instead of just searching by actors or exact titles, you can search by memory and feeling.<p>The backend is built with Python and utilizes a fine-tuned sentence transformer model to create vector embeddings for a large movie database. The frontend is a clean and simple interface built with vanilla JavaScript to keep it fast and accessible.<p>This is still very much a work in progress, and the database is continuously growing. I'm actively working on improving the model's accuracy and expanding the search capabilities.<p>I would love to get your feedback. Please give it a try and let me know what you think. I'm particularly interested in:<p>How well does it work for your queries?<p>Are there any features you think would be a great addition?<p>Any suggestions on how to improve the model or the user experience?<p>Thanks for checking it out! I'll be here to answer any questions."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AI Movie Finder – I created a way to find movies by describing"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.aimoviefinder.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mosbyllc",
+          "story_44529525",
+          "show_hn"
+        ],
+        "author": "mosbyllc",
+        "children": [
+          44546711,
+          44571329,
+          44532282,
+          44535399
+        ],
+        "created_at": "2025-07-11T08:09:19Z",
+        "created_at_i": 1752221359,
+        "num_comments": 3,
+        "objectID": "44529525",
+        "points": 10,
+        "story_id": 44529525,
+        "story_text": "Hi Hacker News,<p>I&#x27;m excited to share a project I&#x27;ve been passionately working on in my spare time: AI Movie Finder (<a href=\"https:&#x2F;&#x2F;www.aimoviefinder.com\" rel=\"nofollow\">https:&#x2F;&#x2F;www.aimoviefinder.com</a>).<p>The idea was born out of a simple, yet frequent, frustration: having a movie on the tip of my tongue but being unable to recall the title. All I could remember were fragments – a specific scene, a snippet of dialogue, the general plot, or even just the mood it evoked. Traditional search engines often fell short with these kinds of abstract queries.<p>So, I decided to build a solution. AI Movie Finder uses a natural language processing model to understand these descriptive and sometimes vague queries. You can type in things like:<p>&quot;that movie where a guy keeps reliving the same day&quot;<p>&quot;a sci-fi film with a blue alien opera singer&quot;<p>&quot;a feel-good movie about a band in the 80s&quot;<p>The goal is to make movie discovery more intuitive and human-like. Instead of just searching by actors or exact titles, you can search by memory and feeling.<p>The backend is built with Python and utilizes a fine-tuned sentence transformer model to create vector embeddings for a large movie database. The frontend is a clean and simple interface built with vanilla JavaScript to keep it fast and accessible.<p>This is still very much a work in progress, and the database is continuously growing. I&#x27;m actively working on improving the model&#x27;s accuracy and expanding the search capabilities.<p>I would love to get your feedback. Please give it a try and let me know what you think. I&#x27;m particularly interested in:<p>How well does it work for your queries?<p>Are there any features you think would be a great addition?<p>Any suggestions on how to improve the model or the user experience?<p>Thanks for checking it out! I&#x27;ll be here to answer any questions.",
+        "title": "Show HN: AI Movie Finder – I created a way to find movies by describing",
+        "updated_at": "2025-07-16T12:46:30Z",
+        "url": "https://www.aimoviefinder.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "randomaifreak"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Code is all you need – Sherlog MCP"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/GetSherlog/Sherlog-MCP"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_randomaifreak",
+          "story_44529286",
+          "show_hn"
+        ],
+        "author": "randomaifreak",
+        "created_at": "2025-07-11T07:29:00Z",
+        "created_at_i": 1752218940,
+        "num_comments": 0,
+        "objectID": "44529286",
+        "points": 4,
+        "story_id": 44529286,
+        "title": "Show HN: Code is all you need – Sherlog MCP",
+        "updated_at": "2025-07-11T08:53:10Z",
+        "url": "https://github.com/GetSherlog/Sherlog-MCP"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alexbradford196"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Those selfie --&gt; AI headshot tools are actually useful but they charge waaaay too much $35 - $49.<p><a href=\"https://www.betterpic.io/#pricing\" rel=\"nofollow\">https://www.betterpic.io/#pricing</a><p><a href=\"https://secta.ai/headshots\" rel=\"nofollow\">https://secta.ai/headshots</a><p><a href=\"https://www.aragon.ai/#pricing\" rel=\"nofollow\">https://www.aragon.ai/#pricing</a><p>I made a website which uses the exact same backend but has a much smaller margin, <a href=\"https://aiworkphoto.com\" rel=\"nofollow\">https://aiworkphoto.com</a><p>I would love to make it free for HN but I’d go broke. Use “aiworkphoto” to take my margin to $0. In return, I would love your feedback!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A 50% Undercut"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.aiworkphoto.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alexbradford196",
+          "story_44529237",
+          "show_hn"
+        ],
+        "author": "alexbradford196",
+        "children": [
+          44529635,
+          44529253
+        ],
+        "created_at": "2025-07-11T07:17:45Z",
+        "created_at_i": 1752218265,
+        "num_comments": 2,
+        "objectID": "44529237",
+        "points": 1,
+        "story_id": 44529237,
+        "story_text": "Those selfie --&gt; AI headshot tools are actually useful but they charge waaaay too much $35 - $49.<p><a href=\"https:&#x2F;&#x2F;www.betterpic.io&#x2F;#pricing\" rel=\"nofollow\">https:&#x2F;&#x2F;www.betterpic.io&#x2F;#pricing</a><p><a href=\"https:&#x2F;&#x2F;secta.ai&#x2F;headshots\" rel=\"nofollow\">https:&#x2F;&#x2F;secta.ai&#x2F;headshots</a><p><a href=\"https:&#x2F;&#x2F;www.aragon.ai&#x2F;#pricing\" rel=\"nofollow\">https:&#x2F;&#x2F;www.aragon.ai&#x2F;#pricing</a><p>I made a website which uses the exact same backend but has a much smaller margin, <a href=\"https:&#x2F;&#x2F;aiworkphoto.com\" rel=\"nofollow\">https:&#x2F;&#x2F;aiworkphoto.com</a><p>I would love to make it free for HN but I’d go broke. Use “aiworkphoto” to take my margin to $0. In return, I would love your feedback!",
+        "title": "Show HN: A 50% Undercut",
+        "updated_at": "2025-07-11T20:49:26Z",
+        "url": "https://www.aiworkphoto.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gparashar"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Edzy: India's gamified AI tutor making CBSE learning fun &amp; effective for school students. Personalized lessons, duels &amp; streaks. Learn like you play!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Gamified AI Tutor for School Students"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.edzy.ai/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gparashar",
+          "story_44529018",
+          "show_hn"
+        ],
+        "author": "gparashar",
+        "created_at": "2025-07-11T06:39:37Z",
+        "created_at_i": 1752215977,
+        "num_comments": 0,
+        "objectID": "44529018",
+        "points": 1,
+        "story_id": 44529018,
+        "story_text": "Edzy: India&#x27;s gamified AI tutor making CBSE learning fun &amp; effective for school students. Personalized lessons, duels &amp; streaks. Learn like you play!",
+        "title": "Show HN: Gamified AI Tutor for School Students",
+        "updated_at": "2025-07-11T06:44:24Z",
+        "url": "https://www.edzy.ai/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No-Arugula5818"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Made a cool (freemium) tool to send RSS feeds to your Kobo. You basically add any feed on the web app, install the Kobuddy app and all the rest happens auto-magically!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Send RSS Feeds to Kobo E-reader"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://my.kobuddy.app/feeds"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_No-Arugula5818",
+          "story_44528964",
+          "show_hn"
+        ],
+        "author": "No-Arugula5818",
+        "created_at": "2025-07-11T06:31:45Z",
+        "created_at_i": 1752215505,
+        "num_comments": 0,
+        "objectID": "44528964",
+        "points": 1,
+        "story_id": 44528964,
+        "story_text": "Made a cool (freemium) tool to send RSS feeds to your Kobo. You basically add any feed on the web app, install the Kobuddy app and all the rest happens auto-magically!",
+        "title": "Show HN: Send RSS Feeds to Kobo E-reader",
+        "updated_at": "2025-07-11T06:33:56Z",
+        "url": "https://my.kobuddy.app/feeds"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "freakynit"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A tiny disk-based graph database for Node.js"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/freakynit/tiny-graph-db"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_freakynit",
+          "story_44528739",
+          "show_hn"
+        ],
+        "author": "freakynit",
+        "created_at": "2025-07-11T05:46:13Z",
+        "created_at_i": 1752212773,
+        "num_comments": 0,
+        "objectID": "44528739",
+        "points": 1,
+        "story_id": 44528739,
+        "title": "Show HN: A tiny disk-based graph database for Node.js",
+        "updated_at": "2025-07-11T05:52:18Z",
+        "url": "https://github.com/freakynit/tiny-graph-db"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "preetsuthar17"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>A few years ago, when I was working as a freelance web developer, there were many projects that used repetitive layouts and designs<p>That's when I built my own collection of basic UI components like buttons and all. At that time, I was using CSS, so I styled my components using CSS. Later, I decided to open-source these components, and that’s when I created HextaUI<p>After a few months, I found out about Tailwind CSS, so I decided to recreate all components with better design, modularity, and accessibility. This time, I also added animated components, not just base components. After building and launching, I left it and went on a break. (It didn’t get any response because I didn’t know marketing.)<p>Two months ago, I decided to rebuild the entire project—but this time, I wanted to scale it and make it stand out, because there’s a lot of competition. So I rebuilt all base components, made them last versions, and gave it my all<p>This time, it got a great response in fact, it crossed 50k visitors in just 72 hours<p>Looking at the response and demand, I created pre-built blocks using the base components and launched them at a minimal price. That also blew up and crossed more than 10 sales and crossed $500 revenue in just 24 hours. I was selling pre-built website blocks and UI components.<p>What I learned: product matters the most. No matter how many competitors are out there, people still buy good products. If you think, “People are already building what I’m building,” or “There are better options” then build something better. Make something specific. Niche down under that same niche<p>Just build it.<p>Preet"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I rebuilt few years old project and now it covers my expenses"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.hextaui.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_preetsuthar17",
+          "story_44528635",
+          "show_hn"
+        ],
+        "author": "preetsuthar17",
+        "created_at": "2025-07-11T05:20:55Z",
+        "created_at_i": 1752211255,
+        "num_comments": 0,
+        "objectID": "44528635",
+        "points": 2,
+        "story_id": 44528635,
+        "story_text": "Hey HN,<p>A few years ago, when I was working as a freelance web developer, there were many projects that used repetitive layouts and designs<p>That&#x27;s when I built my own collection of basic UI components like buttons and all. At that time, I was using CSS, so I styled my components using CSS. Later, I decided to open-source these components, and that’s when I created HextaUI<p>After a few months, I found out about Tailwind CSS, so I decided to recreate all components with better design, modularity, and accessibility. This time, I also added animated components, not just base components. After building and launching, I left it and went on a break. (It didn’t get any response because I didn’t know marketing.)<p>Two months ago, I decided to rebuild the entire project—but this time, I wanted to scale it and make it stand out, because there’s a lot of competition. So I rebuilt all base components, made them last versions, and gave it my all<p>This time, it got a great response in fact, it crossed 50k visitors in just 72 hours<p>Looking at the response and demand, I created pre-built blocks using the base components and launched them at a minimal price. That also blew up and crossed more than 10 sales and crossed $500 revenue in just 24 hours. I was selling pre-built website blocks and UI components.<p>What I learned: product matters the most. No matter how many competitors are out there, people still buy good products. If you think, “People are already building what I’m building,” or “There are better options” then build something better. Make something specific. Niche down under that same niche<p>Just build it.<p>Preet",
+        "title": "Show HN: I rebuilt few years old project and now it covers my expenses",
+        "updated_at": "2025-07-11T08:53:10Z",
+        "url": "https://www.hextaui.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vincentyyy"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey everyone,<p>I feel like a lot of us have gotten used to social media as our main way to stay informed. It’s where we get our news, trends, opinions, and everything. But honestly, my attention has been wrecked by it. TikTok, X, Instagram... I go in to check one thing and suddenly I’ve lost 90 minutes.<p>So I started wondering what if we could actually control what we see? Like, fully. What if we could own our feed instead of letting the algorithm choose what we scroll through?<p>To play with that idea, I built a small demo app. You just type in what you want to follow, like “recent crypto big things”. The app uses AI to pull updates every few hours. It only fetches what you tell it to.<p>Currently this demo app is more useful if you want to be focused on something (might not be that helpful for entertainment yet). So at least when you want to focus this app can be an option. I’ve been using it for a couple of weeks and it’s helped me stop bouncing between X and LinkedIn.<p>If you're interested in being our beta testers, check it out: www.a01ai.com.  After you sign up, you will receive a TestFlight link to our app.<p>Would love to hear what you think."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keep up with the world without information overload"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.a01ai.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vincentyyy",
+          "story_44528373",
+          "show_hn"
+        ],
+        "author": "vincentyyy",
+        "children": [
+          44528525
+        ],
+        "created_at": "2025-07-11T04:24:44Z",
+        "created_at_i": 1752207884,
+        "num_comments": 2,
+        "objectID": "44528373",
+        "points": 2,
+        "story_id": 44528373,
+        "story_text": "Hey everyone,<p>I feel like a lot of us have gotten used to social media as our main way to stay informed. It’s where we get our news, trends, opinions, and everything. But honestly, my attention has been wrecked by it. TikTok, X, Instagram... I go in to check one thing and suddenly I’ve lost 90 minutes.<p>So I started wondering what if we could actually control what we see? Like, fully. What if we could own our feed instead of letting the algorithm choose what we scroll through?<p>To play with that idea, I built a small demo app. You just type in what you want to follow, like “recent crypto big things”. The app uses AI to pull updates every few hours. It only fetches what you tell it to.<p>Currently this demo app is more useful if you want to be focused on something (might not be that helpful for entertainment yet). So at least when you want to focus this app can be an option. I’ve been using it for a couple of weeks and it’s helped me stop bouncing between X and LinkedIn.<p>If you&#x27;re interested in being our beta testers, check it out: www.a01ai.com.  After you sign up, you will receive a TestFlight link to our app.<p>Would love to hear what you think.",
+        "title": "Show HN: Keep up with the world without information overload",
+        "updated_at": "2025-07-11T08:12:56Z",
+        "url": "https://www.a01ai.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "luhemarora"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There is too much research to keep up with, so I built an agent that runs daily summaries on arxiv papers. Gets delivered to my inbox every morning."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Built an agent to keep up with research"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.usebyline.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_luhemarora",
+          "story_44528227",
+          "show_hn"
+        ],
+        "author": "luhemarora",
+        "created_at": "2025-07-11T03:48:52Z",
+        "created_at_i": 1752205732,
+        "num_comments": 0,
+        "objectID": "44528227",
+        "points": 1,
+        "story_id": 44528227,
+        "story_text": "There is too much research to keep up with, so I built an agent that runs daily summaries on arxiv papers. Gets delivered to my inbox every morning.",
+        "title": "Show HN: Built an agent to keep up with research",
+        "updated_at": "2025-07-11T03:51:09Z",
+        "url": "https://www.usebyline.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ahmedobaidi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN! I built ggRMCP, a Go-based gateway that lets AI models call your existing gRPC services without any code changes.<p>The core idea: most companies have tons of gRPC services, but connecting them to AI tools requires building custom integrations. ggRMCP bridges this gap by translating between gRPC and the Model Context Protocol (MCP), so Claude or OpenAI can discover and call your services as if they were native tools."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: gRPC to MCP Gateway – Let AI models call your existing gRPC services"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/aalobaidi/ggRMCP"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ahmedobaidi",
+          "story_44527759",
+          "show_hn"
+        ],
+        "author": "ahmedobaidi",
+        "created_at": "2025-07-11T02:02:58Z",
+        "created_at_i": 1752199378,
+        "num_comments": 0,
+        "objectID": "44527759",
+        "points": 2,
+        "story_id": 44527759,
+        "story_text": "Hi HN! I built ggRMCP, a Go-based gateway that lets AI models call your existing gRPC services without any code changes.<p>The core idea: most companies have tons of gRPC services, but connecting them to AI tools requires building custom integrations. ggRMCP bridges this gap by translating between gRPC and the Model Context Protocol (MCP), so Claude or OpenAI can discover and call your services as if they were native tools.",
+        "title": "Show HN: gRPC to MCP Gateway – Let AI models call your existing gRPC services",
+        "updated_at": "2025-07-11T07:22:54Z",
+        "url": "https://github.com/aalobaidi/ggRMCP"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MatthewTKD"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I just launched Intermittent Fasting Calculator, a free, no‑signup web tool to plan your next meal and fasting window.<p>Pick from popular methods (16:8, 14:10, 18:6, 20:4, OMAD) or set a custom fasting window (1–23 hrs), enter your last meal or desired next‑meal time, and get an instant, color‑coded 24‑hour timeline.<p>Export results as text, image, or PDF. Works on mobile and desktop, with built‑in guidance on fasting methods and safety.<p>I built this to simplify my own fasting schedule planning—no more mental math or clunky apps.<p>I’d love to hear your thoughts on the UI, features, or anything you’d add. Thanks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Intermittent Fasting Calculator – Plan Meals and Fasting Times"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://intermittentfastingcalculator.org/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_MatthewTKD",
+          "story_44527692",
+          "show_hn"
+        ],
+        "author": "MatthewTKD",
+        "created_at": "2025-07-11T01:53:34Z",
+        "created_at_i": 1752198814,
+        "num_comments": 0,
+        "objectID": "44527692",
+        "points": 2,
+        "story_id": 44527692,
+        "story_text": "Hi HN,<p>I just launched Intermittent Fasting Calculator, a free, no‑signup web tool to plan your next meal and fasting window.<p>Pick from popular methods (16:8, 14:10, 18:6, 20:4, OMAD) or set a custom fasting window (1–23 hrs), enter your last meal or desired next‑meal time, and get an instant, color‑coded 24‑hour timeline.<p>Export results as text, image, or PDF. Works on mobile and desktop, with built‑in guidance on fasting methods and safety.<p>I built this to simplify my own fasting schedule planning—no more mental math or clunky apps.<p>I’d love to hear your thoughts on the UI, features, or anything you’d add. Thanks!",
+        "title": "Show HN: Intermittent Fasting Calculator – Plan Meals and Fasting Times",
+        "updated_at": "2025-07-11T07:23:54Z",
+        "url": "https://intermittentfastingcalculator.org/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AgentSphere"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey everyone<p>We’re opening up early access to AgentSphere, a secure runtime platform for executing AI-generated code inside cloud sandboxes. If you’re building with LLMs (ChatGPT, Claude, etc.), and want them to not just write code but actually run it — this is for you.<p>--------------------------------------------<p>What is AgentSphere?<p>AgentSphere provides an easy way for you to launch lightweight, isolated environments in the cloud using our JavaScript SDK, Python SDK or APIs. Each sandbox behaves like a containerized runtime — Think of it as Execution-as-a-Service: no local setup, no config hell — just send a command and it runs securely.<p>--------------------------------------------<p>How AgentSphere Works with MCP Clients?<p>AgentSphere is integrated into the MCP ecosystem and works seamlessly with:<p>- Cursor<p>- Claude Code<p>- Raycast<p>- Gemini CLI<p>- and more MCP clients...<p>Reference Docs: <a href=\"https://www.agentsphere.run/docs/mcp-server\" rel=\"nofollow\">https://www.agentsphere.run/docs/mcp-server</a><p>--------------------------------------------<p>Demo<p>The following video clip demonstrates what AgentSphere can help in action.<p>- Web Game Mario: <a href=\"https://www.youtube.com/watch?v=5mtqUzAwXoA\" rel=\"nofollow\">https://www.youtube.com/watch?v=5mtqUzAwXoA</a><p>- Calculator: <a href=\"https://www.youtube.com/watch?v=ZXTPOddl_Jo\" rel=\"nofollow\">https://www.youtube.com/watch?v=ZXTPOddl_Jo</a><p>--------------------------------------------<p>Join the Beta<p>If you want to:<p>- Build LLM agents that actually execute code and handle data<p>- Use Cursor, Claude Code, Raycast, Gemini CLI, or similar MCP clients and want the output to “just run”<p>- Experiment with autonomous agent workflows<p>- Test AI-generated code in a safe, isolated environment<p>Just give AgentSphere a try.<p>Want to build with AgentSphere? Register now and grab your API key in just a few clicks!<p><a href=\"https://www.agentsphere.run/\" rel=\"nofollow\">https://www.agentsphere.run/</a><p>We're looking for developers, builders, and AI toolmakers to test it out, and tell us what is great and what doesn’t. We'd love your feedback.<p>Got questions? Drop them below. Thank you!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Looking for Beta Testers: Run AI-Generated Code in AgentSphere Sandbox"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_AgentSphere",
+          "story_44527535",
+          "show_hn"
+        ],
+        "author": "AgentSphere",
+        "created_at": "2025-07-11T01:24:08Z",
+        "created_at_i": 1752197048,
+        "num_comments": 0,
+        "objectID": "44527535",
+        "points": 2,
+        "story_id": 44527535,
+        "story_text": "Hey everyone<p>We’re opening up early access to AgentSphere, a secure runtime platform for executing AI-generated code inside cloud sandboxes. If you’re building with LLMs (ChatGPT, Claude, etc.), and want them to not just write code but actually run it — this is for you.<p>--------------------------------------------<p>What is AgentSphere?<p>AgentSphere provides an easy way for you to launch lightweight, isolated environments in the cloud using our JavaScript SDK, Python SDK or APIs. Each sandbox behaves like a containerized runtime — Think of it as Execution-as-a-Service: no local setup, no config hell — just send a command and it runs securely.<p>--------------------------------------------<p>How AgentSphere Works with MCP Clients?<p>AgentSphere is integrated into the MCP ecosystem and works seamlessly with:<p>- Cursor<p>- Claude Code<p>- Raycast<p>- Gemini CLI<p>- and more MCP clients...<p>Reference Docs: <a href=\"https:&#x2F;&#x2F;www.agentsphere.run&#x2F;docs&#x2F;mcp-server\" rel=\"nofollow\">https:&#x2F;&#x2F;www.agentsphere.run&#x2F;docs&#x2F;mcp-server</a><p>--------------------------------------------<p>Demo<p>The following video clip demonstrates what AgentSphere can help in action.<p>- Web Game Mario: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=5mtqUzAwXoA\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=5mtqUzAwXoA</a><p>- Calculator: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=ZXTPOddl_Jo\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=ZXTPOddl_Jo</a><p>--------------------------------------------<p>Join the Beta<p>If you want to:<p>- Build LLM agents that actually execute code and handle data<p>- Use Cursor, Claude Code, Raycast, Gemini CLI, or similar MCP clients and want the output to “just run”<p>- Experiment with autonomous agent workflows<p>- Test AI-generated code in a safe, isolated environment<p>Just give AgentSphere a try.<p>Want to build with AgentSphere? Register now and grab your API key in just a few clicks!<p><a href=\"https:&#x2F;&#x2F;www.agentsphere.run&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.agentsphere.run&#x2F;</a><p>We&#x27;re looking for developers, builders, and AI toolmakers to test it out, and tell us what is great and what doesn’t. We&#x27;d love your feedback.<p>Got questions? Drop them below. Thank you!",
+        "title": "Show HN: Looking for Beta Testers: Run AI-Generated Code in AgentSphere Sandbox",
+        "updated_at": "2025-07-11T15:46:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "acdev"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Intuitive Layout Image Generation Prompt Generator"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://rymajp.com/ipgen"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_acdev",
+          "story_44527516",
+          "show_hn"
+        ],
+        "author": "acdev",
+        "created_at": "2025-07-11T01:21:38Z",
+        "created_at_i": 1752196898,
+        "num_comments": 0,
+        "objectID": "44527516",
+        "points": 1,
+        "story_id": 44527516,
+        "title": "Show HN: Intuitive Layout Image Generation Prompt Generator",
+        "updated_at": "2025-07-11T01:24:24Z",
+        "url": "https://rymajp.com/ipgen"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_talent"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi I'm Ben<p>Today, I want to share something I've been building for the last couple months.<p>0.finance is an open-source bank account.<p>You might wonder what I mean with &quot;bank account&quot; or how this would even be possible.<p>The term here is used loosely. In essence we're just a UI on top of a crypto wallet.<p>But, we do partner up with some &quot;on-/off-ramp&quot; providers and make it easy for to expose &quot;virtual accounts&quot; these virtual accounts and expose ACH details and make it possible to give a bank-like experience to the end user.<p>Under the hood, we use some recent advances in crypto UX to make sure you don't need to manage private keys directly. From he point of view of the user it pretty much feels like a classical bank.<p>The future:\nAnd that's just a small taste of what we're working on we're actually in the process of creating an automation layer to help manage your entire financial stack little by little. For example, we created a small gmail connector that allows you to automatically categorize your receipts from your incoming email. Or we also parse emails to auto-populate wire transfers so you can pay your vendors more easily.<p>PS: It is possible today is to self-host (although painful atm). That means you could effectively get paid on our hosted instance and decide to fork us and continue down your own path."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Open-Source Alternative to Mercury"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/different-ai/zero-finance"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ben_talent",
+          "story_44527369",
+          "show_hn"
+        ],
+        "author": "ben_talent",
+        "created_at": "2025-07-11T00:52:15Z",
+        "created_at_i": 1752195135,
+        "num_comments": 0,
+        "objectID": "44527369",
+        "points": 2,
+        "story_id": 44527369,
+        "story_text": "Hi I&#x27;m Ben<p>Today, I want to share something I&#x27;ve been building for the last couple months.<p>0.finance is an open-source bank account.<p>You might wonder what I mean with &quot;bank account&quot; or how this would even be possible.<p>The term here is used loosely. In essence we&#x27;re just a UI on top of a crypto wallet.<p>But, we do partner up with some &quot;on-&#x2F;off-ramp&quot; providers and make it easy for to expose &quot;virtual accounts&quot; these virtual accounts and expose ACH details and make it possible to give a bank-like experience to the end user.<p>Under the hood, we use some recent advances in crypto UX to make sure you don&#x27;t need to manage private keys directly. From he point of view of the user it pretty much feels like a classical bank.<p>The future:\nAnd that&#x27;s just a small taste of what we&#x27;re working on we&#x27;re actually in the process of creating an automation layer to help manage your entire financial stack little by little. For example, we created a small gmail connector that allows you to automatically categorize your receipts from your incoming email. Or we also parse emails to auto-populate wire transfers so you can pay your vendors more easily.<p>PS: It is possible today is to self-host (although painful atm). That means you could effectively get paid on our hosted instance and decide to fork us and continue down your own path.",
+        "title": "Show HN: Open-Source Alternative to Mercury",
+        "updated_at": "2025-07-11T07:23:54Z",
+        "url": "https://github.com/different-ai/zero-finance"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LunarFrost88"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AI data analyst for growth and data teams"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://arka.so"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_LunarFrost88",
+          "story_44527149",
+          "show_hn"
+        ],
+        "author": "LunarFrost88",
+        "created_at": "2025-07-11T00:17:35Z",
+        "created_at_i": 1752193055,
+        "num_comments": 0,
+        "objectID": "44527149",
+        "points": 2,
+        "story_id": 44527149,
+        "title": "Show HN: AI data analyst for growth and data teams",
+        "updated_at": "2025-07-11T07:23:54Z",
+        "url": "https://arka.so"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ntuthuko_hlela"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I just deployed GovDocs – which use AI to make SA gov docs searchable"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.govdocs.co.za/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Ntuthuko_hlela",
+          "story_44527128",
+          "show_hn"
+        ],
+        "author": "Ntuthuko_hlela",
+        "created_at": "2025-07-11T00:13:35Z",
+        "created_at_i": 1752192815,
+        "num_comments": 0,
+        "objectID": "44527128",
+        "points": 2,
+        "story_id": 44527128,
+        "title": "Show HN: I just deployed GovDocs – which use AI to make SA gov docs searchable",
+        "updated_at": "2025-07-11T00:16:11Z",
+        "url": "https://www.govdocs.co.za/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "raydawg88"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built a small Chrome extension for people who write long conversations in Claude and don’t want to unexpectedly hit the 200,000-token limit.<p>Context Compass automatically counts words and estimates token usage as you write. It updates in real time, gives you a visible percentage bar, and helps power users manage sprawling chats without losing work or flow.<p>I built it because I kept getting the “max context” error and realized there was no way to track usage in Claude.<p>No signups, no tracking, just a simple install.<p>Would love any feedback or ideas for improvements. Thanks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Context Compass – Track Claude chat token usage before hitting limit"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://chromewebstore.google.com/detail/context-compass-for-claud/fmbipbgbfoganenegfmkmlidljbfnkhf"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_raydawg88",
+          "story_44526662",
+          "show_hn"
+        ],
+        "author": "raydawg88",
+        "created_at": "2025-07-10T23:00:26Z",
+        "created_at_i": 1752188426,
+        "num_comments": 0,
+        "objectID": "44526662",
+        "points": 1,
+        "story_id": 44526662,
+        "story_text": "I built a small Chrome extension for people who write long conversations in Claude and don’t want to unexpectedly hit the 200,000-token limit.<p>Context Compass automatically counts words and estimates token usage as you write. It updates in real time, gives you a visible percentage bar, and helps power users manage sprawling chats without losing work or flow.<p>I built it because I kept getting the “max context” error and realized there was no way to track usage in Claude.<p>No signups, no tracking, just a simple install.<p>Would love any feedback or ideas for improvements. Thanks!",
+        "title": "Show HN: Context Compass – Track Claude chat token usage before hitting limit",
+        "updated_at": "2025-07-10T23:02:39Z",
+        "url": "https://chromewebstore.google.com/detail/context-compass-for-claud/fmbipbgbfoganenegfmkmlidljbfnkhf"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "spenserhuang"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Bullpost is Rova’s official waitlist. It is a 6 week competition that rewards you for bullish tweets about underrated startups and founders.<p>With a $15,000+ prize pool, Bullpost lets you:<p>Earn points by posting and amplifying bullish tweets about founders &amp; startups\n Win weekly prizes for top engagement and amplifying top posts\n Compete for the final $10K prize split among top contributors and amplifiers<p>Rova aligns early adopters and builders into one unified growth community, turning your support into tangible rewards. Learn more at <a href=\"https://x.com/rovadotxyz/status/1943349951745909183\" rel=\"nofollow\">https://x.com/rovadotxyz/status/1943349951745909183</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bullpost about founders and startups to show your conviction"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://rova.xyz/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_spenserhuang",
+          "story_44526343",
+          "show_hn"
+        ],
+        "author": "spenserhuang",
+        "children": [
+          44533129,
+          44531250
+        ],
+        "created_at": "2025-07-10T22:22:36Z",
+        "created_at_i": 1752186156,
+        "num_comments": 2,
+        "objectID": "44526343",
+        "points": 5,
+        "story_id": 44526343,
+        "story_text": "Bullpost is Rova’s official waitlist. It is a 6 week competition that rewards you for bullish tweets about underrated startups and founders.<p>With a $15,000+ prize pool, Bullpost lets you:<p>Earn points by posting and amplifying bullish tweets about founders &amp; startups\n Win weekly prizes for top engagement and amplifying top posts\n Compete for the final $10K prize split among top contributors and amplifiers<p>Rova aligns early adopters and builders into one unified growth community, turning your support into tangible rewards. Learn more at <a href=\"https:&#x2F;&#x2F;x.com&#x2F;rovadotxyz&#x2F;status&#x2F;1943349951745909183\" rel=\"nofollow\">https:&#x2F;&#x2F;x.com&#x2F;rovadotxyz&#x2F;status&#x2F;1943349951745909183</a>",
+        "title": "Show HN: Bullpost about founders and startups to show your conviction",
+        "updated_at": "2025-07-11T17:03:56Z",
+        "url": "https://rova.xyz/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "benbridle"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey everyone, this is my latest project.<p>Bedrock is a lightweight program runtime: programs assemble down to a few kilobytes of bytecode that can run on any computer, console, or handheld. The runtime is tiny, it can be implemented from scratch in a few hours, and the I/O devices for accessing the keyboard, screen, networking, etc. can be added on as needed.<p>I designed Bedrock to make it easier to maintain programs as a solo developer. It's deeply inspired by Uxn and PICO-8, but it makes significant departures from Uxn to provide more capabilities to programs and to be easier to implement.<p>Let me know if you try it out or have any questions."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bedrock – An 8-bit computing system for running programs anywhere"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://benbridle.com/projects/bedrock.html"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_benbridle",
+          "story_44526322",
+          "show_hn"
+        ],
+        "author": "benbridle",
+        "children": [
+          44566292,
+          44565729,
+          44568386,
+          44566466,
+          44566420,
+          44569178,
+          44571643,
+          44569891,
+          44568273,
+          44565958,
+          44566072,
+          44566459,
+          44565888,
+          44566945,
+          44566202,
+          44567723,
+          44573334,
+          44573251,
+          44566222,
+          44566614
+        ],
+        "created_at": "2025-07-10T22:20:18Z",
+        "created_at_i": 1752186018,
+        "num_comments": 68,
+        "objectID": "44526322",
+        "points": 221,
+        "story_id": 44526322,
+        "story_text": "Hey everyone, this is my latest project.<p>Bedrock is a lightweight program runtime: programs assemble down to a few kilobytes of bytecode that can run on any computer, console, or handheld. The runtime is tiny, it can be implemented from scratch in a few hours, and the I&#x2F;O devices for accessing the keyboard, screen, networking, etc. can be added on as needed.<p>I designed Bedrock to make it easier to maintain programs as a solo developer. It&#x27;s deeply inspired by Uxn and PICO-8, but it makes significant departures from Uxn to provide more capabilities to programs and to be easier to implement.<p>Let me know if you try it out or have any questions.",
+        "title": "Show HN: Bedrock – An 8-bit computing system for running programs anywhere",
+        "updated_at": "2025-10-05T15:39:59Z",
+        "url": "https://benbridle.com/projects/bedrock.html"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jchiu1234"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "See some ideas of what you can do here: <a href=\"https://x.com/johnathanchewy/status/1943432883387142214\" rel=\"nofollow\">https://x.com/johnathanchewy/status/1943432883387142214</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Scribble Draw (Image Generation)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.scribbledraw.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jchiu1234",
+          "story_44526257",
+          "show_hn"
+        ],
+        "author": "jchiu1234",
+        "created_at": "2025-07-10T22:13:09Z",
+        "created_at_i": 1752185589,
+        "num_comments": 0,
+        "objectID": "44526257",
+        "points": 2,
+        "story_id": 44526257,
+        "story_text": "See some ideas of what you can do here: <a href=\"https:&#x2F;&#x2F;x.com&#x2F;johnathanchewy&#x2F;status&#x2F;1943432883387142214\" rel=\"nofollow\">https:&#x2F;&#x2F;x.com&#x2F;johnathanchewy&#x2F;status&#x2F;1943432883387142214</a>",
+        "title": "Show HN: Scribble Draw (Image Generation)",
+        "updated_at": "2025-07-11T07:45:10Z",
+        "url": "https://www.scribbledraw.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eddguzzo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built Invisitris, which is a Tetris variation where the all but the last placed piece are invisible.\nPeriodically the whole grid is revealed or when you clear lines."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Invisitris – A Tetris variation with a disappearing grid"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://invisitris.bitechunk.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_eddguzzo",
+          "story_44526207",
+          "show_hn"
+        ],
+        "author": "eddguzzo",
+        "created_at": "2025-07-10T22:08:10Z",
+        "created_at_i": 1752185290,
+        "num_comments": 0,
+        "objectID": "44526207",
+        "points": 1,
+        "story_id": 44526207,
+        "story_text": "I built Invisitris, which is a Tetris variation where the all but the last placed piece are invisible.\nPeriodically the whole grid is revealed or when you clear lines.",
+        "title": "Show HN: Invisitris – A Tetris variation with a disappearing grid",
+        "updated_at": "2025-07-10T22:10:10Z",
+        "url": "https://invisitris.bitechunk.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KApilmittal"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;I got tired of the endless group chat debate about where to meet, especially when someone always ended up with a terrible commute while others walked 5 minutes.<p>So I built Midway@ - an AI that finds meeting spots where everyone's travel time is actually fair. Not just geographic midpoints (which are often terrible), but real optimization for travel time equity.<p>*How it works:*\n- Enter everyone's starting location + transport method (car/transit/walk/bike)  \n- Describe what you want ('coffee shop with WiFi', 'restaurant with parking')\n- AI analyzes thousands of venues using live traffic/transit data\n- Returns spots where commute times are balanced<p>*Technical details:*\n- Google Maps APIs for real-time travel calculations\n- Custom algorithm that minimizes travel time variance across the group\n- Handles mixed transport modes (some drive, others take transit)\n- Venue ranking considers both travel equity and suitability match<p>*Interesting data from 10,000+ groups:*\n- 67% of manually chosen meetup spots have &gt;15min travel time imbalance\n- Geographic center is optimal location only 23% of the time\n- Groups save average 47 minutes of coordination time<p>Built with Next.js, deployed on Vercel. Would love feedback on the algorithm or UX improvements!<p>Demo: <a href=\"https://www.midway.at\" rel=\"nofollow\">https://www.midway.at</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AI-powered meetup planner that optimizes for fair travel times"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.midway.at"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_KApilmittal",
+          "story_44526185",
+          "show_hn"
+        ],
+        "author": "KApilmittal",
+        "created_at": "2025-07-10T22:06:07Z",
+        "created_at_i": 1752185167,
+        "num_comments": 0,
+        "objectID": "44526185",
+        "points": 1,
+        "story_id": 44526185,
+        "story_text": "&quot;I got tired of the endless group chat debate about where to meet, especially when someone always ended up with a terrible commute while others walked 5 minutes.<p>So I built Midway@ - an AI that finds meeting spots where everyone&#x27;s travel time is actually fair. Not just geographic midpoints (which are often terrible), but real optimization for travel time equity.<p>*How it works:*\n- Enter everyone&#x27;s starting location + transport method (car&#x2F;transit&#x2F;walk&#x2F;bike)  \n- Describe what you want (&#x27;coffee shop with WiFi&#x27;, &#x27;restaurant with parking&#x27;)\n- AI analyzes thousands of venues using live traffic&#x2F;transit data\n- Returns spots where commute times are balanced<p>*Technical details:*\n- Google Maps APIs for real-time travel calculations\n- Custom algorithm that minimizes travel time variance across the group\n- Handles mixed transport modes (some drive, others take transit)\n- Venue ranking considers both travel equity and suitability match<p>*Interesting data from 10,000+ groups:*\n- 67% of manually chosen meetup spots have &gt;15min travel time imbalance\n- Geographic center is optimal location only 23% of the time\n- Groups save average 47 minutes of coordination time<p>Built with Next.js, deployed on Vercel. Would love feedback on the algorithm or UX improvements!<p>Demo: <a href=\"https:&#x2F;&#x2F;www.midway.at\" rel=\"nofollow\">https:&#x2F;&#x2F;www.midway.at</a>",
+        "title": "Show HN: AI-powered meetup planner that optimizes for fair travel times",
+        "updated_at": "2025-07-10T22:10:10Z",
+        "url": "https://www.midway.at"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "miloschwartz"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Pangolin is an open source self-hosted tunneled reverse proxy management server with identity and access control, designed to securely expose private resources through encrypted WireGuard tunnels running in user space.<p>We made Pangolin so you retain full control over your infrastructure while providing a user-friendly and feature-rich solution for managing proxies, authentication, and access, all with a clean and simple dashboard web UI.<p>GitHub: <a href=\"https://github.com/fosrl/pangolin\">https://github.com/fosrl/pangolin</a><p>Deployment takes about 5 minutes on a VPS: <a href=\"https://docs.fossorial.io/Getting%20Started/quick-install\" rel=\"nofollow\">https://docs.fossorial.io/Getting%20Started/quick-install</a><p>Demo by Lawrence Systems (YouTube): <a href=\"https://youtu.be/g5qOpxhhS7M?si=M1XTWLGLUZW0WzTv&amp;t=723\" rel=\"nofollow\">https://youtu.be/g5qOpxhhS7M?si=M1XTWLGLUZW0WzTv&amp;t=723</a><p>Some use cases:<p><pre><code>  - Grant users access to your apps from anywhere using just a web-browser\n\n  - Proxy behind CGNAT\n\n  - One application load balancer across multiple clouds and on-premises\n\n  - Easily expose services on IoT and edge devices for field monitoring\n\n  - Bring localhost online for easy access\n</code></pre>\nA few key features:<p><pre><code>  - No port forwarding and hide your public IP for self-hosting\n\n  - Create proxies to multiple different private networks\n\n  - OAuth2/OIDC identity providers\n\n  - Role-based access control\n\n  - Raw TCP and UDP support\n\n  - Resource-specific pin codes, passwords, email OTP\n\n  - Self-destructing shareable links\n\n  - API for automation\n\n  - WAF with CrowdSec and Geoblocking</code></pre>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Pangolin – Open source alternative to Cloudflare Tunnels"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/fosrl/pangolin"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_miloschwartz",
+          "story_44526015",
+          "show_hn"
+        ],
+        "author": "miloschwartz",
+        "children": [
+          44529524,
+          44527896,
+          44526044,
+          44529650,
+          44529267,
+          44529048,
+          44537732,
+          44677803,
+          44531327,
+          44529427,
+          44548410,
+          44528210,
+          44528116,
+          44528643,
+          44530384,
+          44530451,
+          44529349,
+          44528588,
+          44531555,
+          44538387,
+          44539874,
+          44530586,
+          44536560,
+          44529358,
+          44529328,
+          44532299,
+          44535852,
+          44538540,
+          44530798,
+          44530132,
+          44528244,
+          44532570,
+          44530787,
+          44560089,
+          44538461,
+          44538188,
+          44531522,
+          44527863,
+          44529198,
+          44530098,
+          44527832,
+          44538595
+        ],
+        "created_at": "2025-07-10T21:50:43Z",
+        "created_at_i": 1752184243,
+        "num_comments": 125,
+        "objectID": "44526015",
+        "points": 500,
+        "story_id": 44526015,
+        "story_text": "Pangolin is an open source self-hosted tunneled reverse proxy management server with identity and access control, designed to securely expose private resources through encrypted WireGuard tunnels running in user space.<p>We made Pangolin so you retain full control over your infrastructure while providing a user-friendly and feature-rich solution for managing proxies, authentication, and access, all with a clean and simple dashboard web UI.<p>GitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;fosrl&#x2F;pangolin\">https:&#x2F;&#x2F;github.com&#x2F;fosrl&#x2F;pangolin</a><p>Deployment takes about 5 minutes on a VPS: <a href=\"https:&#x2F;&#x2F;docs.fossorial.io&#x2F;Getting%20Started&#x2F;quick-install\" rel=\"nofollow\">https:&#x2F;&#x2F;docs.fossorial.io&#x2F;Getting%20Started&#x2F;quick-install</a><p>Demo by Lawrence Systems (YouTube): <a href=\"https:&#x2F;&#x2F;youtu.be&#x2F;g5qOpxhhS7M?si=M1XTWLGLUZW0WzTv&amp;t=723\" rel=\"nofollow\">https:&#x2F;&#x2F;youtu.be&#x2F;g5qOpxhhS7M?si=M1XTWLGLUZW0WzTv&amp;t=723</a><p>Some use cases:<p><pre><code>  - Grant users access to your apps from anywhere using just a web-browser\n\n  - Proxy behind CGNAT\n\n  - One application load balancer across multiple clouds and on-premises\n\n  - Easily expose services on IoT and edge devices for field monitoring\n\n  - Bring localhost online for easy access\n</code></pre>\nA few key features:<p><pre><code>  - No port forwarding and hide your public IP for self-hosting\n\n  - Create proxies to multiple different private networks\n\n  - OAuth2&#x2F;OIDC identity providers\n\n  - Role-based access control\n\n  - Raw TCP and UDP support\n\n  - Resource-specific pin codes, passwords, email OTP\n\n  - Self-destructing shareable links\n\n  - API for automation\n\n  - WAF with CrowdSec and Geoblocking</code></pre>",
+        "title": "Show HN: Pangolin – Open source alternative to Cloudflare Tunnels",
+        "updated_at": "2026-07-01T00:49:28Z",
+        "url": "https://github.com/fosrl/pangolin"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "helen_devunus"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Please check out my Free OpenAPI audit tool"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://devunus.com/free-tools/api-audit"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_helen_devunus",
+          "story_44525628",
+          "show_hn"
+        ],
+        "author": "helen_devunus",
+        "created_at": "2025-07-10T21:07:28Z",
+        "created_at_i": 1752181648,
+        "num_comments": 0,
+        "objectID": "44525628",
+        "points": 1,
+        "story_id": 44525628,
+        "title": "Show HN: Please check out my Free OpenAPI audit tool",
+        "updated_at": "2025-07-10T21:12:24Z",
+        "url": "https://devunus.com/free-tools/api-audit"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cookiengineer"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Today I got really annoyed at existing prettifier tools that I was using to reverse engineer a binary, so I built a little CLI tool that just prettifies files based on their file extension and/or headers, and which doesn't need runtime dependencies when installed as it's a standalone go binary. I wanted it to be as simple as possible, without any overengineered CLI flags that nobody will be able to remember.<p>Maybe this tool will be helpful to someone else, too.<p>~Cheers"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Pwettify – dead simple universal CLI prettifier"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cookiengineer/pwettify"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cookiengineer",
+          "story_44525610",
+          "show_hn"
+        ],
+        "author": "cookiengineer",
+        "created_at": "2025-07-10T21:05:49Z",
+        "created_at_i": 1752181549,
+        "num_comments": 0,
+        "objectID": "44525610",
+        "points": 1,
+        "story_id": 44525610,
+        "story_text": "Today I got really annoyed at existing prettifier tools that I was using to reverse engineer a binary, so I built a little CLI tool that just prettifies files based on their file extension and&#x2F;or headers, and which doesn&#x27;t need runtime dependencies when installed as it&#x27;s a standalone go binary. I wanted it to be as simple as possible, without any overengineered CLI flags that nobody will be able to remember.<p>Maybe this tool will be helpful to someone else, too.<p>~Cheers",
+        "title": "Show HN: Pwettify – dead simple universal CLI prettifier",
+        "updated_at": "2025-07-10T21:11:39Z",
+        "url": "https://github.com/cookiengineer/pwettify"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jsathianathen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN, I’m Johann - founder of Jars Global, where we build and launch a lot of products.<p>We built Outbrand to have daily content for all products, on auto-pilot.<p>You can setup once by inputting your brand details and goals. Then you get a 30 day content schedule with graphics. You can integrate with social platforms so it runs on auto-pilot.<p>Setup once, then get daily content easily.<p>PS. Please roast it! Really want to improve it so it's extremely high quality content that founders can use for their products."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I built a tool that automates content for busy founders"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.outbrand.design/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jsathianathen",
+          "story_44525532",
+          "show_hn"
+        ],
+        "author": "jsathianathen",
+        "children": [
+          44525616
+        ],
+        "created_at": "2025-07-10T20:57:58Z",
+        "created_at_i": 1752181078,
+        "num_comments": 1,
+        "objectID": "44525532",
+        "points": 1,
+        "story_id": 44525532,
+        "story_text": "Hey HN, I’m Johann - founder of Jars Global, where we build and launch a lot of products.<p>We built Outbrand to have daily content for all products, on auto-pilot.<p>You can setup once by inputting your brand details and goals. Then you get a 30 day content schedule with graphics. You can integrate with social platforms so it runs on auto-pilot.<p>Setup once, then get daily content easily.<p>PS. Please roast it! Really want to improve it so it&#x27;s extremely high quality content that founders can use for their products.",
+        "title": "Show HN: I built a tool that automates content for busy founders",
+        "updated_at": "2025-07-10T21:07:24Z",
+        "url": "https://www.outbrand.design/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rgthelen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I got tired of spending hours setting up local AI (Python environments, CUDA drivers, model downloads, vector DBs), so I'm building a tool that packages everything into a single executable.<p>The current cloud AI model makes us digital serfs, paying rent to use tools we don't own, feeding data to systems we don't control. The farm model makes us owners—of our models, our data, our future. But ownership requires responsibility. You must tend your farm.<p>The idea: Think Docker but for AI projects / deployments. One binary contains:<p>- Model weights (quantized GGUF).<p>- Vector database (embedded ChromaDB)<p>- Agent runtime (LangChain, etc)<p>- Web UI<p>- Platform-specific optimizations<p>What's actually working now:<p>- Full CLI structure<p>- Plugin architecture for platforms/databases/communication<p>- Mac platform detection with Metal support<p>- Demo web UI showing the vision<p>- Project scaffolding and configuration<p>What's still placeholder:<p>- Actual model compilation (shows &quot;llamas in the pasture&quot; message)<p>- Real vector DB embedding<p>Target use cases:<p>-Deploy to air-gapped systems<p>-Edge devices (Raspberry Pi, Jetson)<p>-Non-technical users (literally copy one file)<p>- Avoid cloud dependencies<p>Technical approach:<p>TypeScript/Node.js for CLI (great ecosystem)<p>Plugin system for extensibility<p>Platform-specific compilation (Metal on Mac, CUDA on Linux)<p>Static linking everything possible<p>Questions for HN:<p>Is the single-binary approach worth the tradeoffs? (5-15GB files, compile time)<p>What's your current local AI deployment pain? Would this help?<p>Is the farming metaphor too much? (plant, harvest, bale, till, etc.)<p>What features would make this actually useful for you?<p>GitHub: <a href=\"https://github.com/llamafarm/llamafarm-cli\">https://github.com/llamafarm/llamafarm-cli</a>\nYou can try the CLI now - all commands work but show friendly placeholder messages.<p>The plugin system is real - easy to contribute platform support.<p>Really looking for gut reactions - is this solving a real problem or am I over-engineering?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: LlamaFarm – Working on binary AI Project deployment – (early preview)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/llama-farm/llamafarm"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rgthelen",
+          "story_44525502",
+          "show_hn"
+        ],
+        "author": "rgthelen",
+        "children": [
+          44525770
+        ],
+        "created_at": "2025-07-10T20:55:27Z",
+        "created_at_i": 1752180927,
+        "num_comments": 1,
+        "objectID": "44525502",
+        "points": 2,
+        "story_id": 44525502,
+        "story_text": "I got tired of spending hours setting up local AI (Python environments, CUDA drivers, model downloads, vector DBs), so I&#x27;m building a tool that packages everything into a single executable.<p>The current cloud AI model makes us digital serfs, paying rent to use tools we don&#x27;t own, feeding data to systems we don&#x27;t control. The farm model makes us owners—of our models, our data, our future. But ownership requires responsibility. You must tend your farm.<p>The idea: Think Docker but for AI projects &#x2F; deployments. One binary contains:<p>- Model weights (quantized GGUF).<p>- Vector database (embedded ChromaDB)<p>- Agent runtime (LangChain, etc)<p>- Web UI<p>- Platform-specific optimizations<p>What&#x27;s actually working now:<p>- Full CLI structure<p>- Plugin architecture for platforms&#x2F;databases&#x2F;communication<p>- Mac platform detection with Metal support<p>- Demo web UI showing the vision<p>- Project scaffolding and configuration<p>What&#x27;s still placeholder:<p>- Actual model compilation (shows &quot;llamas in the pasture&quot; message)<p>- Real vector DB embedding<p>Target use cases:<p>-Deploy to air-gapped systems<p>-Edge devices (Raspberry Pi, Jetson)<p>-Non-technical users (literally copy one file)<p>- Avoid cloud dependencies<p>Technical approach:<p>TypeScript&#x2F;Node.js for CLI (great ecosystem)<p>Plugin system for extensibility<p>Platform-specific compilation (Metal on Mac, CUDA on Linux)<p>Static linking everything possible<p>Questions for HN:<p>Is the single-binary approach worth the tradeoffs? (5-15GB files, compile time)<p>What&#x27;s your current local AI deployment pain? Would this help?<p>Is the farming metaphor too much? (plant, harvest, bale, till, etc.)<p>What features would make this actually useful for you?<p>GitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;llamafarm&#x2F;llamafarm-cli\">https:&#x2F;&#x2F;github.com&#x2F;llamafarm&#x2F;llamafarm-cli</a>\nYou can try the CLI now - all commands work but show friendly placeholder messages.<p>The plugin system is real - easy to contribute platform support.<p>Really looking for gut reactions - is this solving a real problem or am I over-engineering?",
+        "title": "Show HN: LlamaFarm – Working on binary AI Project deployment – (early preview)",
+        "updated_at": "2025-10-07T15:44:07Z",
+        "url": "https://github.com/llama-farm/llamafarm"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "seuyu_bin"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I always had a hard time finding free laurel wreath illustrations when making screenshots for new apps. So I decided to create my own generator. It’s completely free, so I hope it helps others who’ve faced the same problem."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I built a laurel wreath generator"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://laurelwreathgenerator.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_seuyu_bin",
+          "story_44525439",
+          "show_hn"
+        ],
+        "author": "seuyu_bin",
+        "created_at": "2025-07-10T20:49:22Z",
+        "created_at_i": 1752180562,
+        "num_comments": 0,
+        "objectID": "44525439",
+        "points": 1,
+        "story_id": 44525439,
+        "story_text": "I always had a hard time finding free laurel wreath illustrations when making screenshots for new apps. So I decided to create my own generator. It’s completely free, so I hope it helps others who’ve faced the same problem.",
+        "title": "Show HN: I built a laurel wreath generator",
+        "updated_at": "2026-04-14T14:10:38Z",
+        "url": "https://laurelwreathgenerator.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mandarwagh"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>I built ownyourpixel.fun — a web project where anyone can buy pixels on a global canvas and later resell them, just like digital real estate.<p>Inspired by the original Million Dollar Homepage, this is a modern version built for today’s internet.<p>What You Can Do:\n Buy pixels on the canvas — $1 per pixel<p>Upload/change your image + link anytime<p>Resell your pixels on the upcoming marketplace<p>Shareable pixel URLs (auto-zoom and highlight)<p>Pixels are permanently owned — no one else can buy yours<p>Why I Built This:\nI wanted to reimagine one of the internet's most viral ideas, but with a twist:<p>What if pixel space wasn’t just bought — but also traded?<p>This turns digital space into a resellable asset — a kind of open billboard economy where you can flip pixels like micro-domains.<p>Tech:\nFrontend: HTML + Tailwind (React/Canvas version next)<p>Backend: Firebase<p>Payments: Stripe<p>Hosting: Vercel<p>Early Access\nWe're launching soon. You can join the waitlist here:\n ownyourpixel.fun"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Ownyourpixel.fun – Buy Pixels and Resell Them Like Digital Real Estate"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ownyourpixel.fun/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mandarwagh",
+          "story_44525209",
+          "show_hn"
+        ],
+        "author": "mandarwagh",
+        "created_at": "2025-07-10T20:29:13Z",
+        "created_at_i": 1752179353,
+        "num_comments": 0,
+        "objectID": "44525209",
+        "points": 2,
+        "story_id": 44525209,
+        "story_text": "Hey HN,<p>I built ownyourpixel.fun — a web project where anyone can buy pixels on a global canvas and later resell them, just like digital real estate.<p>Inspired by the original Million Dollar Homepage, this is a modern version built for today’s internet.<p>What You Can Do:\n Buy pixels on the canvas — $1 per pixel<p>Upload&#x2F;change your image + link anytime<p>Resell your pixels on the upcoming marketplace<p>Shareable pixel URLs (auto-zoom and highlight)<p>Pixels are permanently owned — no one else can buy yours<p>Why I Built This:\nI wanted to reimagine one of the internet&#x27;s most viral ideas, but with a twist:<p>What if pixel space wasn’t just bought — but also traded?<p>This turns digital space into a resellable asset — a kind of open billboard economy where you can flip pixels like micro-domains.<p>Tech:\nFrontend: HTML + Tailwind (React&#x2F;Canvas version next)<p>Backend: Firebase<p>Payments: Stripe<p>Hosting: Vercel<p>Early Access\nWe&#x27;re launching soon. You can join the waitlist here:\n ownyourpixel.fun",
+        "title": "Show HN: Ownyourpixel.fun – Buy Pixels and Resell Them Like Digital Real Estate",
+        "updated_at": "2025-07-10T20:46:38Z",
+        "url": "https://www.ownyourpixel.fun/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HichamCh"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I built a free website that automatically detects faces in the browser and lets you blur/pixelate them client‑side.  Short videos stream to a server for FFmpeg + FD model processing and are deleted later.\n* Privacy first\n* No sign‑up\n* PWA/offline once cached\n* Multi‑language UI (i18n‑next)<p>I’m looking for feedback on perf/UX, and also validate the need (If any...) before adding a Pro tier (longer videos, batch...).<p>Happy to dive into the code/design."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FaceBlurify – browser‑only face blurring in <10 s"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.faceblurify.com/en/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_HichamCh",
+          "story_44524879",
+          "show_hn"
+        ],
+        "author": "HichamCh",
+        "created_at": "2025-07-10T20:00:32Z",
+        "created_at_i": 1752177632,
+        "num_comments": 0,
+        "objectID": "44524879",
+        "points": 1,
+        "story_id": 44524879,
+        "story_text": "Hi HN,<p>I built a free website that automatically detects faces in the browser and lets you blur&#x2F;pixelate them client‑side.  Short videos stream to a server for FFmpeg + FD model processing and are deleted later.\n* Privacy first\n* No sign‑up\n* PWA&#x2F;offline once cached\n* Multi‑language UI (i18n‑next)<p>I’m looking for feedback on perf&#x2F;UX, and also validate the need (If any...) before adding a Pro tier (longer videos, batch...).<p>Happy to dive into the code&#x2F;design.",
+        "title": "Show HN: FaceBlurify – browser‑only face blurring in <10 s",
+        "updated_at": "2025-07-10T20:04:24Z",
+        "url": "https://www.faceblurify.com/en/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "prasadpilla"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>Prasad here, I've been using cursor from very early days.<p>Adding rules to my project really improved the quality and the Autonomity of cursor agent, but it took a good bit of time for me to do that manually.<p>So I built a tool to generate rules based on the technology and various preferences.<p>Please check it out.<p><a href=\"https://cursor-rules-generator.xyz/\" rel=\"nofollow\">https://cursor-rules-generator.xyz/</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cursor Rules Generator"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://cursor-rules-generator.xyz/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_prasadpilla",
+          "story_44524822",
+          "show_hn"
+        ],
+        "author": "prasadpilla",
+        "children": [
+          44535410
+        ],
+        "created_at": "2025-07-10T19:55:48Z",
+        "created_at_i": 1752177348,
+        "num_comments": 0,
+        "objectID": "44524822",
+        "points": 8,
+        "story_id": 44524822,
+        "story_text": "Hey HN,<p>Prasad here, I&#x27;ve been using cursor from very early days.<p>Adding rules to my project really improved the quality and the Autonomity of cursor agent, but it took a good bit of time for me to do that manually.<p>So I built a tool to generate rules based on the technology and various preferences.<p>Please check it out.<p><a href=\"https:&#x2F;&#x2F;cursor-rules-generator.xyz&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;cursor-rules-generator.xyz&#x2F;</a>",
+        "title": "Show HN: Cursor Rules Generator",
+        "updated_at": "2025-07-13T19:10:34Z",
+        "url": "https://cursor-rules-generator.xyz/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mpcadosch"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN, I've been tinkering/building AI applications that require interaction with spreadsheets (Excel / Google Sheets). Realized that LLMs don't work off-the-shelf when it comes to producing correct, reliable output for spreadsheets, regardless of how you wish to encode it (JSON, markdown, XML, etc.)<p>After prompting, fine-tuning LLMs to work for my applications, decided to expose the functionality as an API to this community. Eager to see if it is helpful/of interest to others. Let me know if you need an invite."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Prompt to Spreadsheet"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.parseclabs.ai/api-service"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mpcadosch",
+          "story_44524738",
+          "show_hn"
+        ],
+        "author": "mpcadosch",
+        "created_at": "2025-07-10T19:47:15Z",
+        "created_at_i": 1752176835,
+        "num_comments": 0,
+        "objectID": "44524738",
+        "points": 2,
+        "story_id": 44524738,
+        "story_text": "Hi HN, I&#x27;ve been tinkering&#x2F;building AI applications that require interaction with spreadsheets (Excel &#x2F; Google Sheets). Realized that LLMs don&#x27;t work off-the-shelf when it comes to producing correct, reliable output for spreadsheets, regardless of how you wish to encode it (JSON, markdown, XML, etc.)<p>After prompting, fine-tuning LLMs to work for my applications, decided to expose the functionality as an API to this community. Eager to see if it is helpful&#x2F;of interest to others. Let me know if you need an invite.",
+        "title": "Show HN: Prompt to Spreadsheet",
+        "updated_at": "2025-07-10T20:09:53Z",
+        "url": "https://www.parseclabs.ai/api-service"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manthan1674"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Natural language Jira assistant for Slack"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://patra.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_manthan1674",
+          "story_44524689",
+          "show_hn"
+        ],
+        "author": "manthan1674",
+        "created_at": "2025-07-10T19:34:17Z",
+        "created_at_i": 1752176057,
+        "num_comments": 0,
+        "objectID": "44524689",
+        "points": 1,
+        "story_id": 44524689,
+        "title": "Show HN: Natural language Jira assistant for Slack",
+        "updated_at": "2025-07-10T19:38:09Z",
+        "url": "https://patra.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HenryNdubuaku"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN, Henry and Roman here - we've been building a cross-platform framework for deploying LLMs, VLMs, Embedding Models and TTS models locally on smartphones.<p>Ollama enables deploying LLMs models locally on laptops and edge severs, Cactus enables deploying on phones. Deploying directly on phones facilitates building AI apps and agents capable of phone use without breaking privacy, supports real-time inference with no latency, we have seen personalised RAG pipelines for users and more.<p>Apple and Google actively went into local AI models recently with the launch of Apple Foundation Frameworks and Google AI Edge respectively. However, both are platform-specific and only support specific models from the company. To this end, Cactus:<p>- Is available in Flutter, React-Native &amp; Kotlin Multi-platform for cross-platform developers, since most apps are built with these today.<p>- Supports any GGUF model you can find on Huggingface; Qwen, Gemma, Llama, DeepSeek, Phi, Mistral, SmolLM, SmolVLM, InternVLM, Jan Nano etc.<p>- Accommodates from FP32 to as low as 2-bit quantized models, for better efficiency and less device strain.<p>- Have MCP tool-calls to make them performant, truly helpful (set reminder, gallery search, reply messages) and more.<p>- Fallback to big cloud models for complex, constrained or large-context tasks, ensuring robustness and high availability.<p>It's completely open source. Would love to have more people try it out and tell us how to make it great!<p>Repo: <a href=\"https://github.com/cactus-compute/cactus\">https://github.com/cactus-compute/cactus</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_HenryNdubuaku",
+          "story_44524544",
+          "show_hn"
+        ],
+        "author": "HenryNdubuaku",
+        "children": [
+          44526027,
+          44528773,
+          44525807,
+          44526590,
+          44530017,
+          44525242,
+          44529772,
+          44527019,
+          44524965,
+          44526013,
+          44532973,
+          44535678,
+          44524812,
+          44524990,
+          44525273,
+          44537399,
+          44564462,
+          44527324,
+          44526192,
+          44524769,
+          44527020,
+          44530897,
+          44530312,
+          44524805,
+          44530591,
+          44528566,
+          44527318,
+          44525158,
+          44524873,
+          44525324,
+          44529079,
+          44530738,
+          44525814,
+          44525270,
+          44526188
+        ],
+        "created_at": "2025-07-10T19:20:59Z",
+        "created_at_i": 1752175259,
+        "num_comments": 82,
+        "objectID": "44524544",
+        "points": 231,
+        "story_id": 44524544,
+        "story_text": "Hey HN, Henry and Roman here - we&#x27;ve been building a cross-platform framework for deploying LLMs, VLMs, Embedding Models and TTS models locally on smartphones.<p>Ollama enables deploying LLMs models locally on laptops and edge severs, Cactus enables deploying on phones. Deploying directly on phones facilitates building AI apps and agents capable of phone use without breaking privacy, supports real-time inference with no latency, we have seen personalised RAG pipelines for users and more.<p>Apple and Google actively went into local AI models recently with the launch of Apple Foundation Frameworks and Google AI Edge respectively. However, both are platform-specific and only support specific models from the company. To this end, Cactus:<p>- Is available in Flutter, React-Native &amp; Kotlin Multi-platform for cross-platform developers, since most apps are built with these today.<p>- Supports any GGUF model you can find on Huggingface; Qwen, Gemma, Llama, DeepSeek, Phi, Mistral, SmolLM, SmolVLM, InternVLM, Jan Nano etc.<p>- Accommodates from FP32 to as low as 2-bit quantized models, for better efficiency and less device strain.<p>- Have MCP tool-calls to make them performant, truly helpful (set reminder, gallery search, reply messages) and more.<p>- Fallback to big cloud models for complex, constrained or large-context tasks, ensuring robustness and high availability.<p>It&#x27;s completely open source. Would love to have more people try it out and tell us how to make it great!<p>Repo: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;cactus-compute&#x2F;cactus\">https:&#x2F;&#x2F;github.com&#x2F;cactus-compute&#x2F;cactus</a>",
+        "title": "Show HN: Cactus – Ollama for Smartphones",
+        "updated_at": "2026-05-15T12:28:43Z",
+        "url": "https://github.com/cactus-compute/cactus"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "artiomyak"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Learn times tables and print them"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://times-tables.org/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_artiomyak",
+          "story_44524328",
+          "show_hn"
+        ],
+        "author": "artiomyak",
+        "created_at": "2025-07-10T19:00:55Z",
+        "created_at_i": 1752174055,
+        "num_comments": 0,
+        "objectID": "44524328",
+        "points": 1,
+        "story_id": 44524328,
+        "title": "Show HN: Learn times tables and print them",
+        "updated_at": "2025-07-10T19:06:54Z",
+        "url": "https://times-tables.org/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "loocao"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Discover Sand Blast! Block Puzzle, the innovative puzzle game with satisfying sand physics and colorful blocks. Enjoy endless, ad-free gameplay, offline support, and strategic challenges for all ages."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Play Sand Blast Block Puzzle Online"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://sandblastblockpuzzle.io"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_loocao",
+          "story_44524245",
+          "show_hn"
+        ],
+        "author": "loocao",
+        "children": [
+          44524480
+        ],
+        "created_at": "2025-07-10T18:51:49Z",
+        "created_at_i": 1752173509,
+        "num_comments": 2,
+        "objectID": "44524245",
+        "points": 1,
+        "story_id": 44524245,
+        "story_text": "Discover Sand Blast! Block Puzzle, the innovative puzzle game with satisfying sand physics and colorful blocks. Enjoy endless, ad-free gameplay, offline support, and strategic challenges for all ages.",
+        "title": "Show HN: Play Sand Blast Block Puzzle Online",
+        "updated_at": "2025-07-11T01:47:38Z",
+        "url": "https://sandblastblockpuzzle.io"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "branc116"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "First version of brplot released!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Brplot v0.0.1"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/branc116/brplot/releases/tag/v0.0.1"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_branc116",
+          "story_44524062",
+          "show_hn"
+        ],
+        "author": "branc116",
+        "created_at": "2025-07-10T18:32:04Z",
+        "created_at_i": 1752172324,
+        "num_comments": 0,
+        "objectID": "44524062",
+        "points": 2,
+        "story_id": 44524062,
+        "story_text": "First version of brplot released!",
+        "title": "Show HN: Brplot v0.0.1",
+        "updated_at": "2025-07-10T20:04:53Z",
+        "url": "https://github.com/branc116/brplot/releases/tag/v0.0.1"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jacobprall"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: The right way to build authorized RAG chatbots"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.osohq.com/post/right-approach-to-authorization-in-rag"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jacobprall",
+          "story_44523717",
+          "show_hn"
+        ],
+        "author": "jacobprall",
+        "created_at": "2025-07-10T17:58:37Z",
+        "created_at_i": 1752170317,
+        "num_comments": 0,
+        "objectID": "44523717",
+        "points": 8,
+        "story_id": 44523717,
+        "title": "Show HN: The right way to build authorized RAG chatbots",
+        "updated_at": "2025-07-10T18:28:08Z",
+        "url": "https://www.osohq.com/post/right-approach-to-authorization-in-rag"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sillypuddy"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been frustrated by the quality of our media, it often presents strong arguments for one side, and straw man for the other. So I built a tool where LLMs argue opposite sides of a debate as a way exploring a topic more deeply.<p>Each side is randomly assigned a model (pro or con), and the idea is to surface the best arguments from both perspectives.<p>Currently, it uses GPT-4, Gemini 2.5 Flash, and Grok-3. I’d love any reactions or feedback to improve it.<p><a href=\"https://www.botbicker.com/\" rel=\"nofollow\">https://www.botbicker.com/</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Learn Through Debates"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.botbicker.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sillypuddy",
+          "story_44523689",
+          "show_hn"
+        ],
+        "author": "sillypuddy",
+        "created_at": "2025-07-10T17:56:49Z",
+        "created_at_i": 1752170209,
+        "num_comments": 0,
+        "objectID": "44523689",
+        "points": 1,
+        "story_id": 44523689,
+        "story_text": "I&#x27;ve been frustrated by the quality of our media, it often presents strong arguments for one side, and straw man for the other. So I built a tool where LLMs argue opposite sides of a debate as a way exploring a topic more deeply.<p>Each side is randomly assigned a model (pro or con), and the idea is to surface the best arguments from both perspectives.<p>Currently, it uses GPT-4, Gemini 2.5 Flash, and Grok-3. I’d love any reactions or feedback to improve it.<p><a href=\"https:&#x2F;&#x2F;www.botbicker.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.botbicker.com&#x2F;</a>",
+        "title": "Show HN: Learn Through Debates",
+        "updated_at": "2025-07-10T17:58:40Z",
+        "url": "https://www.botbicker.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "maxbolgarin"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have used this tool for two years and now it becomes a real git swiss knife. I believe it can help many developers"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Gitbasher – A simple bash utility to make Git easy to use"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/maxbolgarin/gitbasher"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_maxbolgarin",
+          "story_44523679",
+          "show_hn"
+        ],
+        "author": "maxbolgarin",
+        "created_at": "2025-07-10T17:56:07Z",
+        "created_at_i": 1752170167,
+        "num_comments": 0,
+        "objectID": "44523679",
+        "points": 3,
+        "story_id": 44523679,
+        "story_text": "I have used this tool for two years and now it becomes a real git swiss knife. I believe it can help many developers",
+        "title": "Show HN: Gitbasher – A simple bash utility to make Git easy to use",
+        "updated_at": "2025-07-10T19:27:53Z",
+        "url": "https://github.com/maxbolgarin/gitbasher"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "optimlayer"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Noggn AI: like TikTok, but for your brain"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://skilltok.vercel.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_optimlayer",
+          "story_44523452",
+          "show_hn"
+        ],
+        "author": "optimlayer",
+        "created_at": "2025-07-10T17:37:20Z",
+        "created_at_i": 1752169040,
+        "num_comments": 0,
+        "objectID": "44523452",
+        "points": 3,
+        "story_id": 44523452,
+        "title": "Show HN: Noggn AI: like TikTok, but for your brain",
+        "updated_at": "2025-07-10T18:16:23Z",
+        "url": "https://skilltok.vercel.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "felarof"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN, we're a YC startup building an open-source, privacy-first alternative to Perplexity Comet.<p>No invite system unlike bunch of others – you can download it today from our website or GitHub: <a href=\"https://github.com/browseros-ai/BrowserOS\">https://github.com/browseros-ai/BrowserOS</a><p>--- Why bother building an alternative? We believe browsers will become the new operating systems, where we offload much bunch of our work to AI agents. But these agents will have access to all your sensitive data – emails, docs, on top of your browser history. Open-source, privacy-first alternatives need to exist.<p>We're not a search or ad company, so no weird incentives. Your data stays on your machine. <i>You can use local LLMs with Ollama</i>. We also support BYOK (bring your own keys), so no $200/month plans.<p>Another big difference vs Perplexity Comet: our agent runs locally in your browser (not on their server). You can actually watch it click around and do stuff, which is pretty cool! Short demo here: <a href=\"https://bit.ly/browserOS-demo\" rel=\"nofollow\">https://bit.ly/browserOS-demo</a><p>--- How we built? We patch Chromium's C++ source code with our changes, so we have the same security as Google Chrome. We also have an auto-updater for security patches and regular updates.<p>Working with Chromium's 15M lines of C++ has been another fun adventure that I'm writing a blog post on. Cursor/VSCode breaks at this scale, so we're back to using grep to find stuff and make changes. Claude code works surprisingly well too.<p>Building the binary takes ~3 hours on our M4 Max MacBook.<p>--- Next? We're just 2 people with a lot of work ahead (Firefox started with 3 hackers, history rhymes!). But we strongly believe that a privacy-first browser with local LLM support is more important than ever – since agents will have access to so much sensitive data.<p>Looking forward to any and all comments!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Open source alternative to Perplexity Comet"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.browseros.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_felarof",
+          "story_44523409",
+          "show_hn"
+        ],
+        "author": "felarof",
+        "children": [
+          44527426,
+          44536066,
+          44531006,
+          44526983,
+          44524345,
+          44527117,
+          44529227,
+          44524170,
+          44524044,
+          44530596,
+          44623197,
+          44525674,
+          44545225,
+          44528374,
+          44526965,
+          44614290,
+          44548069,
+          44542475,
+          44525500,
+          44528502,
+          44527992,
+          44527163,
+          44527968,
+          44526961,
+          44525755,
+          44527690,
+          44526459,
+          44527067,
+          44528366,
+          44533585,
+          44529746,
+          44529183,
+          44530876,
+          44523410,
+          44535381
+        ],
+        "created_at": "2025-07-10T17:33:07Z",
+        "created_at_i": 1752168787,
+        "num_comments": 122,
+        "objectID": "44523409",
+        "points": 291,
+        "story_id": 44523409,
+        "story_text": "Hey HN, we&#x27;re a YC startup building an open-source, privacy-first alternative to Perplexity Comet.<p>No invite system unlike bunch of others – you can download it today from our website or GitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;browseros-ai&#x2F;BrowserOS\">https:&#x2F;&#x2F;github.com&#x2F;browseros-ai&#x2F;BrowserOS</a><p>--- Why bother building an alternative? We believe browsers will become the new operating systems, where we offload much bunch of our work to AI agents. But these agents will have access to all your sensitive data – emails, docs, on top of your browser history. Open-source, privacy-first alternatives need to exist.<p>We&#x27;re not a search or ad company, so no weird incentives. Your data stays on your machine. <i>You can use local LLMs with Ollama</i>. We also support BYOK (bring your own keys), so no $200&#x2F;month plans.<p>Another big difference vs Perplexity Comet: our agent runs locally in your browser (not on their server). You can actually watch it click around and do stuff, which is pretty cool! Short demo here: <a href=\"https:&#x2F;&#x2F;bit.ly&#x2F;browserOS-demo\" rel=\"nofollow\">https:&#x2F;&#x2F;bit.ly&#x2F;browserOS-demo</a><p>--- How we built? We patch Chromium&#x27;s C++ source code with our changes, so we have the same security as Google Chrome. We also have an auto-updater for security patches and regular updates.<p>Working with Chromium&#x27;s 15M lines of C++ has been another fun adventure that I&#x27;m writing a blog post on. Cursor&#x2F;VSCode breaks at this scale, so we&#x27;re back to using grep to find stuff and make changes. Claude code works surprisingly well too.<p>Building the binary takes ~3 hours on our M4 Max MacBook.<p>--- Next? We&#x27;re just 2 people with a lot of work ahead (Firefox started with 3 hackers, history rhymes!). But we strongly believe that a privacy-first browser with local LLM support is more important than ever – since agents will have access to so much sensitive data.<p>Looking forward to any and all comments!",
+        "title": "Show HN: Open source alternative to Perplexity Comet",
+        "updated_at": "2026-05-26T16:29:55Z",
+        "url": "https://www.browseros.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ebukao"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Last winter, my girlfriend was working on her university thesis and had to transcribe hours of interviews manually. I ended up helping her by running a local model of whisper and months later I decide to build a product out of it. It is a simple AI transcription tool that lets you upload audio or video and get clean, readable transcripts. It works well for thesis interviews, lectures, podcasts — anything spoken.\n- Free plan for up to 30 minutes/month. - Supports audio and video files - Speaker Identification and labelling. - AI insight and summary. - Colorful tags to organize and filter your transcript - Upload custom vocabulary to help improve your transcription - Export to formats compatible with research tools like NVivo, Atlas.ti, MAXQDA, R / RStudio and SPSS - Built with privacy in mind (no training on your data) and many other features<p>The app is available on www.verbatimly.com<p>I’d love to get your thoughts — whether you're a student, researcher, or just someone who’s had to type out long interviews by hand. Let me know what works, what doesn't, and what would make it better.<p>Also, we are proudly made in Germany.<p>Happy to answer questions or help anyone get started!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I built an AI transcription app because my gf needed one for uni"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ebukao",
+          "story_44523195",
+          "show_hn"
+        ],
+        "author": "ebukao",
+        "children": [
+          44535411
+        ],
+        "created_at": "2025-07-10T17:14:40Z",
+        "created_at_i": 1752167680,
+        "num_comments": 0,
+        "objectID": "44523195",
+        "points": 4,
+        "story_id": 44523195,
+        "story_text": "Last winter, my girlfriend was working on her university thesis and had to transcribe hours of interviews manually. I ended up helping her by running a local model of whisper and months later I decide to build a product out of it. It is a simple AI transcription tool that lets you upload audio or video and get clean, readable transcripts. It works well for thesis interviews, lectures, podcasts — anything spoken.\n- Free plan for up to 30 minutes&#x2F;month. - Supports audio and video files - Speaker Identification and labelling. - AI insight and summary. - Colorful tags to organize and filter your transcript - Upload custom vocabulary to help improve your transcription - Export to formats compatible with research tools like NVivo, Atlas.ti, MAXQDA, R &#x2F; RStudio and SPSS - Built with privacy in mind (no training on your data) and many other features<p>The app is available on www.verbatimly.com<p>I’d love to get your thoughts — whether you&#x27;re a student, researcher, or just someone who’s had to type out long interviews by hand. Let me know what works, what doesn&#x27;t, and what would make it better.<p>Also, we are proudly made in Germany.<p>Happy to answer questions or help anyone get started!",
+        "title": "Show HN: I built an AI transcription app because my gf needed one for uni",
+        "updated_at": "2025-07-12T15:23:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bharatgel"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: asyncmcp – Run MCP over async transport via AWS SNS+SQS"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/bh-rat/asyncmcp"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bharatgel",
+          "story_44523094",
+          "show_hn"
+        ],
+        "author": "bharatgel",
+        "children": [
+          44526213,
+          44530839
+        ],
+        "created_at": "2025-07-10T17:04:00Z",
+        "created_at_i": 1752167040,
+        "num_comments": 4,
+        "objectID": "44523094",
+        "points": 35,
+        "story_id": 44523094,
+        "title": "Show HN: asyncmcp – Run MCP over async transport via AWS SNS+SQS",
+        "updated_at": "2025-07-13T18:53:51Z",
+        "url": "https://github.com/bh-rat/asyncmcp"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papapin777"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://endorphinai.dev"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_papapin777",
+          "story_44522923",
+          "show_hn"
+        ],
+        "author": "papapin777",
+        "children": [
+          44523449,
+          44523625,
+          44523286,
+          44523484,
+          44524218,
+          44527008
+        ],
+        "created_at": "2025-07-10T16:45:51Z",
+        "created_at_i": 1752165951,
+        "num_comments": 17,
+        "objectID": "44522923",
+        "points": 11,
+        "story_id": 44522923,
+        "title": "Show HN: Endorphin AI–Run browser E2E tests from plain English with QA AI agent",
+        "updated_at": "2025-07-11T09:43:40Z",
+        "url": "https://endorphinai.dev"
+      }
+    ],
+    "hitsPerPage": 60,
+    "nbHits": 6771,
+    "nbPages": 17,
+    "page": 0,
+    "params": "tags=show_hn&numericFilters=created_at_i%3E1744459200%2Ccreated_at_i%3C1752235200&hitsPerPage=60&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 15
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 2
+        }
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 5
+  }
+}

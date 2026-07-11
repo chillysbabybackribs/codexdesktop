@@ -1,0 +1,831 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "44524544",
+    "window": "prior-year-comparable-90d",
+    "tag": "show_hn",
+    "score": 395
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mounir-portia"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Love having this running on my Android phone. Reckon i am going to use to automate some task reminders i can do during my commute!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mounir-portia",
+          "story_44524544"
+        ],
+        "author": "mounir-portia",
+        "comment_text": "Love having this running on my Android phone. Reckon i am going to use to automate some task reminders i can do during my commute!",
+        "created_at": "2025-07-14T19:45:49Z",
+        "created_at_i": 1752522349,
+        "objectID": "44564462",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-14T19:50:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HenryNdubuaku"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_HenryNdubuaku",
+          "story_44524544"
+        ],
+        "author": "HenryNdubuaku",
+        "comment_text": "Thanks!",
+        "created_at": "2025-07-12T07:32:45Z",
+        "created_at_i": 1752305565,
+        "objectID": "44540078",
+        "parent_id": 44529079,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-12T07:38:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wanderingmind"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I understand this is targetted towarda devwlopers, bur Can someone explain why should I go through this complex install process instead of just using ChatterUI? It can handle same GGUF format and works great with Gemma and Qwen. What kind of usecases am I missing?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wanderingmind",
+          "story_44524544"
+        ],
+        "author": "wanderingmind",
+        "children": [
+          44538715
+        ],
+        "comment_text": "I understand this is targetted towarda devwlopers, bur Can someone explain why should I go through this complex install process instead of just using ChatterUI? It can handle same GGUF format and works great with Gemma and Qwen. What kind of usecases am I missing?",
+        "created_at": "2025-07-11T22:27:41Z",
+        "created_at_i": 1752272861,
+        "objectID": "44537399",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-12T02:11:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pxc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a cool app! I'm happy to play with it. Some feedback:<p>1. The lack of a dark mode is an accessibility issue for me. I have a genetic condition that causes severe light sensitivity and special difficulty with contrast. The only way for me to achieve sufficient contrast without uncomfortable and blinding brightness is dark mode, so at present I can only use your app by disabling dark mode and inverting colors across my phone. This is of course not ideal because it ruins photos in other apps, and I end up with some unavoidable very bright white &quot;hotspots&quot; on my phone that I don't normally have when I can just use dark mode. Relatedly, the contrast for some of the text in the app is low to the point of being practically unreadable for me (getting enough contrast with it similarly requires cranking up the brightness). :(<p>2. I tried downloading a few other models, namely Jan Nano and SmolLM3, using the GGUF link download functionality, but every time I select them, the app just immediately crashes.<p>I understand that the chat app on the Play Store is basically just a demo for the framework, and if I were really using it I would be in charge of my own theming and downloading the required models and so on, but these still seem worth fixing to me."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pxc",
+          "story_44524544"
+        ],
+        "author": "pxc",
+        "comment_text": "This is a cool app! I&#x27;m happy to play with it. Some feedback:<p>1. The lack of a dark mode is an accessibility issue for me. I have a genetic condition that causes severe light sensitivity and special difficulty with contrast. The only way for me to achieve sufficient contrast without uncomfortable and blinding brightness is dark mode, so at present I can only use your app by disabling dark mode and inverting colors across my phone. This is of course not ideal because it ruins photos in other apps, and I end up with some unavoidable very bright white &quot;hotspots&quot; on my phone that I don&#x27;t normally have when I can just use dark mode. Relatedly, the contrast for some of the text in the app is low to the point of being practically unreadable for me (getting enough contrast with it similarly requires cranking up the brightness). :(<p>2. I tried downloading a few other models, namely Jan Nano and SmolLM3, using the GGUF link download functionality, but every time I select them, the app just immediately crashes.<p>I understand that the chat app on the Play Store is basically just a demo for the framework, and if I were really using it I would be in charge of my own theming and downloading the required models and so on, but these still seem worth fixing to me.",
+        "created_at": "2025-07-11T18:50:11Z",
+        "created_at_i": 1752259811,
+        "objectID": "44535678",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-12T03:50:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pogue"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ah ha!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pogue",
+          "story_44524544"
+        ],
+        "author": "pogue",
+        "comment_text": "Ah ha!",
+        "created_at": "2025-07-11T16:48:00Z",
+        "created_at_i": 1752252480,
+        "objectID": "44534318",
+        "parent_id": 44534214,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:52:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://play.google.com/store/apps/details?id=com.rshemetsubuser.myapp\">https://play.google.com/store/apps/details?id=com.rshemetsub...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "children": [
+          44534318
+        ],
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.rshemetsubuser.myapp\">https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.rshemetsub...</a>",
+        "created_at": "2025-07-11T16:37:33Z",
+        "created_at_i": 1752251853,
+        "objectID": "44534214",
+        "parent_id": 44528646,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-12T06:01:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thank you! Very kind feedback, and we'll add your feedback to our to-dos.<p>re: &quot;question would get stuck on the last phrase and keep repeating it without end.&quot; - that's a limitation of the model i'm afraid. Smaller models tend to do that sometimes."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "thank you! Very kind feedback, and we&#x27;ll add your feedback to our to-dos.<p>re: &quot;question would get stuck on the last phrase and keep repeating it without end.&quot; - that&#x27;s a limitation of the model i&#x27;m afraid. Smaller models tend to do that sometimes.",
+        "created_at": "2025-07-11T16:36:51Z",
+        "created_at_i": 1752251811,
+        "objectID": "44534199",
+        "parent_id": 44530591,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:42:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "say more about &quot;community tools&quot;?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "say more about &quot;community tools&quot;?",
+        "created_at": "2025-07-11T16:35:14Z",
+        "created_at_i": 1752251714,
+        "objectID": "44534187",
+        "parent_id": 44530312,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:37:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "in the app you mean?<p>Adding shortly!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "in the app you mean?<p>Adding shortly!",
+        "created_at": "2025-07-11T16:34:41Z",
+        "created_at_i": 1752251681,
+        "objectID": "44534184",
+        "parent_id": 44527019,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T17:58:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "that's our mission! if you are passionate about the space, we look forward to your contributions!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "that&#x27;s our mission! if you are passionate about the space, we look forward to your contributions!",
+        "created_at": "2025-07-11T16:34:26Z",
+        "created_at_i": 1752251666,
+        "objectID": "44534177",
+        "parent_id": 44530738,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:37:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "no, good observation - not hidden; we don't have a &quot;clear conversation&quot; button.<p>to your previous point - Cactus fully supports tool calling (for models that have been instruction-trained accordingly, e.g. Qwen 1.7B)<p>for &quot;turning your old phones into local llm servers&quot;, Cactus is likely not the best tool. We'd recommend something like actual Ollama or Exo"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "no, good observation - not hidden; we don&#x27;t have a &quot;clear conversation&quot; button.<p>to your previous point - Cactus fully supports tool calling (for models that have been instruction-trained accordingly, e.g. Qwen 1.7B)<p>for &quot;turning your old phones into local llm servers&quot;, Cactus is likely not the best tool. We&#x27;d recommend something like actual Ollama or Exo",
+        "created_at": "2025-07-11T16:33:47Z",
+        "created_at_i": 1752251627,
+        "objectID": "44534168",
+        "parent_id": 44530017,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:37:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rshemet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "looking forward to your feedback!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rshemet",
+          "story_44524544"
+        ],
+        "author": "rshemet",
+        "comment_text": "looking forward to your feedback!",
+        "created_at": "2025-07-11T16:30:40Z",
+        "created_at_i": 1752251440,
+        "objectID": "44534130",
+        "parent_id": 44532973,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:31:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; <i>as you are for sure aware</i><p>&gt; <i>Why lie?</i><p>Whoa—that's way too aggressive for this forum and definitely against the site guidelines. Could you please review them (<a href=\"https://news.ycombinator.com/newsguidelines.html\">https://news.ycombinator.com/newsguidelines.html</a>) and take the spirit of this site more to heart? We'd appreciate it. You can always make your substantive points while doing that.<p>Note this one: &quot;<i>Please respond to the strongest plausible interpretation of what someone says, not a weaker one that's easier to criticize. Assume good faith.</i>&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_44524544"
+        ],
+        "author": "dang",
+        "comment_text": "&gt; <i>as you are for sure aware</i><p>&gt; <i>Why lie?</i><p>Whoa—that&#x27;s way too aggressive for this forum and definitely against the site guidelines. Could you please review them (<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html</a>) and take the spirit of this site more to heart? We&#x27;d appreciate it. You can always make your substantive points while doing that.<p>Note this one: &quot;<i>Please respond to the strongest plausible interpretation of what someone says, not a weaker one that&#x27;s easier to criticize. Assume good faith.</i>&quot;",
+        "created_at": "2025-07-11T16:24:47Z",
+        "created_at_i": 1752251087,
+        "objectID": "44534059",
+        "parent_id": 44525324,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:27:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "liuliu"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don't need to guess: <a href=\"https://github.com/cactus-compute/cactus/tree/main/cpp\">https://github.com/cactus-compute/cactus/tree/main/cpp</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_liuliu",
+          "story_44524544"
+        ],
+        "author": "liuliu",
+        "comment_text": "You don&#x27;t need to guess: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;cactus-compute&#x2F;cactus&#x2F;tree&#x2F;main&#x2F;cpp\">https:&#x2F;&#x2F;github.com&#x2F;cactus-compute&#x2F;cactus&#x2F;tree&#x2F;main&#x2F;cpp</a>",
+        "created_at": "2025-07-11T16:11:39Z",
+        "created_at_i": 1752250299,
+        "objectID": "44533874",
+        "parent_id": 44529772,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-14T18:09:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "awaseem"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is actually crazy. The API is so simple! I tried to do this on Swift using LLM.swift and it went okay, excited to try this on RN"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_awaseem",
+          "story_44524544"
+        ],
+        "author": "awaseem",
+        "children": [
+          44534130
+        ],
+        "comment_text": "This is actually crazy. The API is so simple! I tried to do this on Swift using LLM.swift and it went okay, excited to try this on RN",
+        "created_at": "2025-07-11T15:05:46Z",
+        "created_at_i": 1752246346,
+        "objectID": "44532973",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T16:31:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "poly2it"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not just the first paragraph, the whole response reads like LLM output."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_poly2it",
+          "story_44524544"
+        ],
+        "author": "poly2it",
+        "comment_text": "Not just the first paragraph, the whole response reads like LLM output.",
+        "created_at": "2025-07-11T11:26:48Z",
+        "created_at_i": 1752233208,
+        "objectID": "44530911",
+        "parent_id": 44530435,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T21:25:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ekianjo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "appreciate if you can provide a apk that does not require google play services to run..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ekianjo",
+          "story_44524544"
+        ],
+        "author": "ekianjo",
+        "comment_text": "appreciate if you can provide a apk that does not require google play services to run...",
+        "created_at": "2025-07-11T11:23:32Z",
+        "created_at_i": 1752233012,
+        "objectID": "44530897",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T13:33:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "anupj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Running LLMs, VLMs, and TTS models locally on smartphones is quietly redefining what 'edge AI' means suddenly, the edge is in your pocket, not just at the network boundary. The next wave of apps will be built by those who treat mobile as the new AI server"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_anupj",
+          "story_44524544"
+        ],
+        "author": "anupj",
+        "children": [
+          44534177
+        ],
+        "comment_text": "Running LLMs, VLMs, and TTS models locally on smartphones is quietly redefining what &#x27;edge AI&#x27; means suddenly, the edge is in your pocket, not just at the network boundary. The next wave of apps will be built by those who treat mobile as the new AI server",
+        "created_at": "2025-07-11T10:59:00Z",
+        "created_at_i": 1752231540,
+        "objectID": "44530738",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-14T18:11:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nunobrito"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've installed the Android version from <a href=\"https://play.google.com/store/apps/details?id=com.rshemetsubuser.myapp\">https://play.google.com/store/apps/details?id=com.rshemetsub...</a><p>It is fantastic. Compared to another program I had installed a year ago, the speed of processing and answering is really good and accurate. Was able to ask mathematical questions, basic translation between different languages and even trivia about movies released almost 30 years ago.<p>Things to improve: 1) sometimes the question would get stuck on the last phrase and keep repeating it without end. 2) The chat does not scroll the window to follow the answer and we have to scroll manually.<p>In either case, excellent start. It is without the fastest offline LLM that I've seen working on this phone."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nunobrito",
+          "story_44524544"
+        ],
+        "author": "nunobrito",
+        "children": [
+          44534199
+        ],
+        "comment_text": "I&#x27;ve installed the Android version from <a href=\"https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.rshemetsubuser.myapp\">https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.rshemetsub...</a><p>It is fantastic. Compared to another program I had installed a year ago, the speed of processing and answering is really good and accurate. Was able to ask mathematical questions, basic translation between different languages and even trivia about movies released almost 30 years ago.<p>Things to improve: 1) sometimes the question would get stuck on the last phrase and keep repeating it without end. 2) The chat does not scroll the window to follow the answer and we have to scroll manually.<p>In either case, excellent start. It is without the fastest offline LLM that I&#x27;ve seen working on this phone.",
+        "created_at": "2025-07-11T10:38:04Z",
+        "created_at_i": 1752230284,
+        "objectID": "44530591",
+        "parent_id": 44524544,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T20:00:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nunobrito"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks, looking fantastic so far."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cactus – Ollama for Smartphones"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cactus-compute/cactus"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nunobrito",
+          "story_44524544"
+        ],
+        "author": "nunobrito",
+        "comment_text": "Thanks, looking fantastic so far.",
+        "created_at": "2025-07-11T10:19:15Z",
+        "created_at_i": 1752229155,
+        "objectID": "44530467",
+        "parent_id": 44524897,
+        "story_id": 44524544,
+        "story_title": "Show HN: Cactus – Ollama for Smartphones",
+        "story_url": "https://github.com/cactus-compute/cactus",
+        "updated_at": "2025-07-11T10:24:10Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 82,
+    "nbPages": 5,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44524544&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 18
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

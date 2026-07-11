@@ -1,0 +1,2429 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "window": "prior-90d",
+  "start": 1768219200,
+  "end": 1775995200,
+  "tag": "show_hn",
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sshnaidm1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>We built Sova AI <a href=\"https://ayconic.io/sova\" rel=\"nofollow\">https://ayconic.io/sova</a>, an Android assistant agent that actually controls and operates your apps. It's not a chat and not another LLM wrapper.<p>We were incredibly frustrated with the current state of mobile AI. Built-in assistants like Gemini are deeply integrated into the OS, yet if you ask them to &quot;Order an Uber to the airport&quot;, they mostly just give you web search results or a button to open the app yourself. They don't do the work. (The Perplexity &quot;assistant&quot; is just a browser agent :/ )<p>So, we built an agent that does operate your phone. (NO root, NO adb, NO PC, NO appium/whatever, NO usb, NO browser)<p>How it works: You give Sova a prompt - either voice or text, you can make it a default assistant if you like. Instead of relying on non-existent official app APIs, Sova acts as a virtual human - clicks, scrolls, types etc. It uses the Android Accessibility API to read the screen's UI node tree. \nAbout AI models - currently we support main AI cloud providers (OpenAI, Gemini, Anthropic, Deepseek etc etc) and working towards support of local AI models on your host - Ollama, LM studio, etc. \nPricing: 100% Free / Bring Your Own Key (BYOK) \nWe aren't charging for the Sova engine right now. We built a BYOK system: you plug in your own API key (OpenAI, Claude, whatever you prefer), and you only pay the provider for the tokens you use. We figured out how to do this entirely on-device as a standard Kotlin app. No tethering to a PC, no Appium, no Root, and no Shizuku/ADB workarounds. Just an app even your granny can use.<p>The Google Play Ban: Because we use the Accessibility API for &quot;universal automation&quot; (literally mapping and clicking other apps), Google Play rejected our submission. It’s ironic: they banned us for building the exact agentic behavior that Gemini promises but fails to deliver. So, we are hosting the APK ourselves: <a href=\"https://sova.ayconic.io\" rel=\"nofollow\">https://sova.ayconic.io</a><p>We’d love for you to download the APK, plug in your key, and try to break it. What apps completely confuse the agent?\nRoadmap: support of local models with Ollama, LM studio or another tools, predefined rules and personas for your tasks, detailed statistics for you, support for Openrouter, enterprise Amazon Bedrock, Google Vertex and Azure Foundry models, support for IOS.<p>What would you like to see more? We'd be happy to hear your feedback, success and failure stories.<p>Video demo is here <a href=\"https://www.youtube.com/watch?v=r-x6hRmtBy0\" rel=\"nofollow\">https://www.youtube.com/watch?v=r-x6hRmtBy0</a> and APK is here: <a href=\"https://ayconic.io/sova\" rel=\"nofollow\">https://ayconic.io/sova</a> We are here to answer your questions and listen to feedback in Telegram and Discord. It's not perfect yet, but it does its work."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Android AI agent-assistant operating your apps (no adb,PC,root,etc.)"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sshnaidm1",
+          "story_47738583",
+          "show_hn"
+        ],
+        "author": "sshnaidm1",
+        "children": [
+          47738635,
+          47741110,
+          47820590
+        ],
+        "created_at": "2026-04-12T11:48:16Z",
+        "created_at_i": 1775994496,
+        "num_comments": 2,
+        "objectID": "47738583",
+        "points": 2,
+        "story_id": 47738583,
+        "story_text": "Hi HN,<p>We built Sova AI <a href=\"https:&#x2F;&#x2F;ayconic.io&#x2F;sova\" rel=\"nofollow\">https:&#x2F;&#x2F;ayconic.io&#x2F;sova</a>, an Android assistant agent that actually controls and operates your apps. It&#x27;s not a chat and not another LLM wrapper.<p>We were incredibly frustrated with the current state of mobile AI. Built-in assistants like Gemini are deeply integrated into the OS, yet if you ask them to &quot;Order an Uber to the airport&quot;, they mostly just give you web search results or a button to open the app yourself. They don&#x27;t do the work. (The Perplexity &quot;assistant&quot; is just a browser agent :&#x2F; )<p>So, we built an agent that does operate your phone. (NO root, NO adb, NO PC, NO appium&#x2F;whatever, NO usb, NO browser)<p>How it works: You give Sova a prompt - either voice or text, you can make it a default assistant if you like. Instead of relying on non-existent official app APIs, Sova acts as a virtual human - clicks, scrolls, types etc. It uses the Android Accessibility API to read the screen&#x27;s UI node tree. \nAbout AI models - currently we support main AI cloud providers (OpenAI, Gemini, Anthropic, Deepseek etc etc) and working towards support of local AI models on your host - Ollama, LM studio, etc. \nPricing: 100% Free &#x2F; Bring Your Own Key (BYOK) \nWe aren&#x27;t charging for the Sova engine right now. We built a BYOK system: you plug in your own API key (OpenAI, Claude, whatever you prefer), and you only pay the provider for the tokens you use. We figured out how to do this entirely on-device as a standard Kotlin app. No tethering to a PC, no Appium, no Root, and no Shizuku&#x2F;ADB workarounds. Just an app even your granny can use.<p>The Google Play Ban: Because we use the Accessibility API for &quot;universal automation&quot; (literally mapping and clicking other apps), Google Play rejected our submission. It’s ironic: they banned us for building the exact agentic behavior that Gemini promises but fails to deliver. So, we are hosting the APK ourselves: <a href=\"https:&#x2F;&#x2F;sova.ayconic.io\" rel=\"nofollow\">https:&#x2F;&#x2F;sova.ayconic.io</a><p>We’d love for you to download the APK, plug in your key, and try to break it. What apps completely confuse the agent?\nRoadmap: support of local models with Ollama, LM studio or another tools, predefined rules and personas for your tasks, detailed statistics for you, support for Openrouter, enterprise Amazon Bedrock, Google Vertex and Azure Foundry models, support for IOS.<p>What would you like to see more? We&#x27;d be happy to hear your feedback, success and failure stories.<p>Video demo is here <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=r-x6hRmtBy0\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=r-x6hRmtBy0</a> and APK is here: <a href=\"https:&#x2F;&#x2F;ayconic.io&#x2F;sova\" rel=\"nofollow\">https:&#x2F;&#x2F;ayconic.io&#x2F;sova</a> We are here to answer your questions and listen to feedback in Telegram and Discord. It&#x27;s not perfect yet, but it does its work.",
+        "title": "Show HN: Android AI agent-assistant operating your apps (no adb,PC,root,etc.)",
+        "updated_at": "2026-07-04T10:01:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "moffers"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How about something a little fun on your Sunday?<p>My friends and I have spent the last two years building Uncook, a social media platform dedicated to all things food! What started as a project among friends became a serious exercise in learning to build a company.<p>Our MVP feature set, while not likely to blaze any trails or win any prizes, is dedicated to one thing: creating a fun, digital space for cooking and sharing.<p>Our little group has learned a lot about what it takes technically to get a social networking application off the ground, and now learning WAY more about traction and marketing. Really starting to understand why people spend all that time getting business degrees now!<p>We are self-funded and taking this at our own pace. We’d be very happy for early feedback; we just released in January to North and South America. My apologies to the eastern hemisphere while we work through our GDPR strategy."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Uncook, the Social Network for Food"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://uncook.xyz"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_moffers",
+          "story_47738577",
+          "show_hn"
+        ],
+        "author": "moffers",
+        "children": [
+          47741052,
+          47744321
+        ],
+        "created_at": "2026-04-12T11:47:29Z",
+        "created_at_i": 1775994449,
+        "num_comments": 2,
+        "objectID": "47738577",
+        "points": 4,
+        "story_id": 47738577,
+        "story_text": "How about something a little fun on your Sunday?<p>My friends and I have spent the last two years building Uncook, a social media platform dedicated to all things food! What started as a project among friends became a serious exercise in learning to build a company.<p>Our MVP feature set, while not likely to blaze any trails or win any prizes, is dedicated to one thing: creating a fun, digital space for cooking and sharing.<p>Our little group has learned a lot about what it takes technically to get a social networking application off the ground, and now learning WAY more about traction and marketing. Really starting to understand why people spend all that time getting business degrees now!<p>We are self-funded and taking this at our own pace. We’d be very happy for early feedback; we just released in January to North and South America. My apologies to the eastern hemisphere while we work through our GDPR strategy.",
+        "title": "Show HN: Uncook, the Social Network for Food",
+        "updated_at": "2026-04-13T12:50:48Z",
+        "url": "https://uncook.xyz"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "abyesilyurt"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineered Cursor tab completion client"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/abyesilyurt/cursor-tab"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_abyesilyurt",
+          "story_47738527",
+          "show_hn"
+        ],
+        "author": "abyesilyurt",
+        "created_at": "2026-04-12T11:39:15Z",
+        "created_at_i": 1775993955,
+        "num_comments": 0,
+        "objectID": "47738527",
+        "points": 2,
+        "story_id": 47738527,
+        "title": "Show HN: Reverse-engineered Cursor tab completion client",
+        "updated_at": "2026-04-12T15:46:30Z",
+        "url": "https://github.com/abyesilyurt/cursor-tab"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oug-t"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Git Diff TUI with Go"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://difi.vercel.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_oug-t",
+          "story_47738525",
+          "show_hn"
+        ],
+        "author": "oug-t",
+        "created_at": "2026-04-12T11:38:59Z",
+        "created_at_i": 1775993939,
+        "num_comments": 0,
+        "objectID": "47738525",
+        "points": 1,
+        "story_id": 47738525,
+        "title": "Show HN: Git Diff TUI with Go",
+        "updated_at": "2026-04-12T11:43:13Z",
+        "url": "https://difi.vercel.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GistNoesis"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Shoggoth.db Self Organizing Database"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/GistNoesis/Shoggoth.db"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_GistNoesis",
+          "story_47738516",
+          "show_hn"
+        ],
+        "author": "GistNoesis",
+        "children": [
+          47738536
+        ],
+        "created_at": "2026-04-12T11:38:39Z",
+        "created_at_i": 1775993919,
+        "num_comments": 1,
+        "objectID": "47738516",
+        "points": 1,
+        "story_id": 47738516,
+        "title": "Show HN: Shoggoth.db Self Organizing Database",
+        "updated_at": "2026-04-12T11:43:13Z",
+        "url": "https://github.com/GistNoesis/Shoggoth.db"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "freshman_dev"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you make a site, comment it below!<p>(excerpt from about below)<p>The idea behind Minnow is that anyone should be able to make a personal website, especially with coding LLMs<p>So, simply tell the LLM what you're up to, provide any media links you want, and the LLM will draft a personal website for you!<p>By default it publishes to username.minnow.social, or you can disable &amp; copy/download the HTML instead"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Minnow – minimal now pages via chat"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://minnow.social/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_freshman_dev",
+          "story_47738461",
+          "show_hn"
+        ],
+        "author": "freshman_dev",
+        "children": [
+          47739383
+        ],
+        "created_at": "2026-04-12T11:30:00Z",
+        "created_at_i": 1775993400,
+        "num_comments": 1,
+        "objectID": "47738461",
+        "points": 3,
+        "story_id": 47738461,
+        "story_text": "If you make a site, comment it below!<p>(excerpt from about below)<p>The idea behind Minnow is that anyone should be able to make a personal website, especially with coding LLMs<p>So, simply tell the LLM what you&#x27;re up to, provide any media links you want, and the LLM will draft a personal website for you!<p>By default it publishes to username.minnow.social, or you can disable &amp; copy&#x2F;download the HTML instead",
+        "title": "Show HN: Minnow – minimal now pages via chat",
+        "updated_at": "2026-04-12T13:28:29Z",
+        "url": "https://minnow.social/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Contrails"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "## Description\nI made an app that watches coding agents sessions, and saves them to your repo as markdown\nSo that you can reference one chat in another chat, share what you and the agent did (e.g., when contributing to a project), or keeping full trails of what was worked on.<p>GitHub (stars appreciated): <a href=\"https://github.com/ThreePalmTrees/Contrails\" rel=\"nofollow\">https://github.com/ThreePalmTrees/Contrails</a>\nWebsite: <a href=\"https://getcontrails.com\" rel=\"nofollow\">https://getcontrails.com</a><p>## Backstory\nI was fixing a bug, and the agent did some changes, then it discovered that it’s the wrong approach, and corrected the approach.\nI wanted to save what happened so that I can reference it later\nSo I asked the agent in the same chat &quot;Read the full conversation again, and output your thought process to a thoughts_process file&quot;<p>This worked fine, but:\n1. It consumes tokens\n2. I need to remember to ask for it<p>So I looked where the agent stores chats, and made this app (technical details in the repo’s README)\nNow I just open it, minimize it, and work normally with the agent (I personally use Claude). All conversations will automatically be saved in real-time as they happen.<p>It works with Claude Code, GitHub Copilot, Cursor. I tried supporting Google's Antigravity, but they make it very hard to get the conversations, so it wasn’t worth it.\nI focused on the three most popular ones first, PRs for others are welcome.<p>The project is open source, you can see exactly what it does, and the README has technical details for anyone interested.<p>On a different note, the app works on Mac, Windows, and Linux. I tested it on Mac and Windows, but I don’t own a Linux device, so if anyone can check it out on Linux, that would be very helpful."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Contrails – App to watch coding agents chats and save them to your repo"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/ThreePalmTrees/Contrails"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Contrails",
+          "story_47738195",
+          "show_hn"
+        ],
+        "author": "Contrails",
+        "created_at": "2026-04-12T10:46:19Z",
+        "created_at_i": 1775990779,
+        "num_comments": 0,
+        "objectID": "47738195",
+        "points": 1,
+        "story_id": 47738195,
+        "story_text": "## Description\nI made an app that watches coding agents sessions, and saves them to your repo as markdown\nSo that you can reference one chat in another chat, share what you and the agent did (e.g., when contributing to a project), or keeping full trails of what was worked on.<p>GitHub (stars appreciated): <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ThreePalmTrees&#x2F;Contrails\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ThreePalmTrees&#x2F;Contrails</a>\nWebsite: <a href=\"https:&#x2F;&#x2F;getcontrails.com\" rel=\"nofollow\">https:&#x2F;&#x2F;getcontrails.com</a><p>## Backstory\nI was fixing a bug, and the agent did some changes, then it discovered that it’s the wrong approach, and corrected the approach.\nI wanted to save what happened so that I can reference it later\nSo I asked the agent in the same chat &quot;Read the full conversation again, and output your thought process to a thoughts_process file&quot;<p>This worked fine, but:\n1. It consumes tokens\n2. I need to remember to ask for it<p>So I looked where the agent stores chats, and made this app (technical details in the repo’s README)\nNow I just open it, minimize it, and work normally with the agent (I personally use Claude). All conversations will automatically be saved in real-time as they happen.<p>It works with Claude Code, GitHub Copilot, Cursor. I tried supporting Google&#x27;s Antigravity, but they make it very hard to get the conversations, so it wasn’t worth it.\nI focused on the three most popular ones first, PRs for others are welcome.<p>The project is open source, you can see exactly what it does, and the README has technical details for anyone interested.<p>On a different note, the app works on Mac, Windows, and Linux. I tested it on Mac and Windows, but I don’t own a Linux device, so if anyone can check it out on Linux, that would be very helpful.",
+        "title": "Show HN: Contrails – App to watch coding agents chats and save them to your repo",
+        "updated_at": "2026-04-12T12:41:13Z",
+        "url": "https://github.com/ThreePalmTrees/Contrails"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "franze"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: 3D Tik Tak Toe (Hard)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://arthur-ficial.github.io/tictactoe-3d/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_franze",
+          "story_47738013",
+          "show_hn"
+        ],
+        "author": "franze",
+        "children": [
+          47740922,
+          47738044
+        ],
+        "created_at": "2026-04-12T10:18:06Z",
+        "created_at_i": 1775989086,
+        "num_comments": 2,
+        "objectID": "47738013",
+        "points": 1,
+        "story_id": 47738013,
+        "title": "Show HN: 3D Tik Tak Toe (Hard)",
+        "updated_at": "2026-04-12T15:33:46Z",
+        "url": "https://arthur-ficial.github.io/tictactoe-3d/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "disconnection"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wrote this set of Python files to try to help programmers understand the original LISP paper, assuming zero mathematical or Lisp knowledge. The original paper is a mind-blowing piece of computer science history for many reasons - I'd recommend anyone to try and get their head around it.<p>I found plenty of fantastic LISP implementations which stay close to the original paper. But they are all fully-functional, practical implementations. The original paper builds from deeper fundamentals which it would be possible to write code in, albeit very impractical.<p>I implemented these earlier iterations, so programmers can follow the paper step-by-step in a more familiar language than 50s mathematical notation.<p>I am no expert in Lisp or mathematics, and intentionally went into this with no knowledge of Lisp beyond the original paper. I did not write it in the most elegant way, but in the simplest way for me to understand. So please don't take this code as a definitive statement on the language.<p>However, this code really helped me to understand the original paper better, and to begin using Lisp with a better grasp of  the spirit of the language.<p>I'd welcome any thoughts from those who have more experience with Lisp or comp sci history."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Toy Python Lisp interpreters based on the 1960 McCarthy paper"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/jhud/lisp"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_disconnection",
+          "story_47737872",
+          "show_hn"
+        ],
+        "author": "disconnection",
+        "created_at": "2026-04-12T10:01:42Z",
+        "created_at_i": 1775988102,
+        "num_comments": 0,
+        "objectID": "47737872",
+        "points": 3,
+        "story_id": 47737872,
+        "story_text": "I wrote this set of Python files to try to help programmers understand the original LISP paper, assuming zero mathematical or Lisp knowledge. The original paper is a mind-blowing piece of computer science history for many reasons - I&#x27;d recommend anyone to try and get their head around it.<p>I found plenty of fantastic LISP implementations which stay close to the original paper. But they are all fully-functional, practical implementations. The original paper builds from deeper fundamentals which it would be possible to write code in, albeit very impractical.<p>I implemented these earlier iterations, so programmers can follow the paper step-by-step in a more familiar language than 50s mathematical notation.<p>I am no expert in Lisp or mathematics, and intentionally went into this with no knowledge of Lisp beyond the original paper. I did not write it in the most elegant way, but in the simplest way for me to understand. So please don&#x27;t take this code as a definitive statement on the language.<p>However, this code really helped me to understand the original paper better, and to begin using Lisp with a better grasp of  the spirit of the language.<p>I&#x27;d welcome any thoughts from those who have more experience with Lisp or comp sci history.",
+        "title": "Show HN: Toy Python Lisp interpreters based on the 1960 McCarthy paper",
+        "updated_at": "2026-04-12T10:32:27Z",
+        "url": "https://github.com/jhud/lisp"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shadowfiles"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Last year, I picked up hand drumming on the darbuka as a new hobby, and I've been having tons of fun.<p>I found that it was a bit hard to find tools and resources on how to play the darbuka, so I made an app where you can input rhythms and play them back with real drum sounds (recordings provided courtesy of my drum teacher!!) and directly coded in support for things like common Middle Eastern rhythms.<p>I've been using this app a lot for my own drumming practice, and I wanted to share it in case others found it helpful or interesting."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I made an app to help me learn Middle Eastern drumming"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://labs.tiffzhang.com/drums/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shadowfiles",
+          "story_47737699",
+          "show_hn"
+        ],
+        "author": "shadowfiles",
+        "children": [
+          47737858
+        ],
+        "created_at": "2026-04-12T09:39:19Z",
+        "created_at_i": 1775986759,
+        "num_comments": 1,
+        "objectID": "47737699",
+        "points": 1,
+        "story_id": 47737699,
+        "story_text": "Last year, I picked up hand drumming on the darbuka as a new hobby, and I&#x27;ve been having tons of fun.<p>I found that it was a bit hard to find tools and resources on how to play the darbuka, so I made an app where you can input rhythms and play them back with real drum sounds (recordings provided courtesy of my drum teacher!!) and directly coded in support for things like common Middle Eastern rhythms.<p>I&#x27;ve been using this app a lot for my own drumming practice, and I wanted to share it in case others found it helpful or interesting.",
+        "title": "Show HN: I made an app to help me learn Middle Eastern drumming",
+        "updated_at": "2026-04-12T17:28:44Z",
+        "url": "https://labs.tiffzhang.com/drums/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joemanaco"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I posted this here about a year ago, but I just pushed a 2.0 release, so I hope you don't mind a second look :)<p>Bullseye2D is a 2D game library for Dart with a very simple API. The new version now supports multi-platform. It compiles to the web via a WebGL2 renderer, or natively to Windows, macOS and Linux through an SDL3 backend (which itself supports Vulkan, DirectX, Metal, and OpenGL renderers).<p>It doesn't depend on Flutter and has very few dependencies (except SDL3). It mostly provides a minimal foundation that you can build your own abstractions on top of.<p>This was also my first time leaning more heavily on AI (Opus) for a large refactor. I tried to review and test everything as good as I could, but honestly for the restructuring parts where I had the AI produce rather big chunks of code, I found reviewing and testing quite exhausting, and I still have a slightly queasy feeling about it. So this is also quite an experiment for me how good I'm able to utilise AI :)<p><a href=\"https://pub.dev/packages/bullseye2d\" rel=\"nofollow\">https://pub.dev/packages/bullseye2d</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bullseye2D – A Dart library for cross-platform 2D games"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/bullseye2d/bullseye2d"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_joemanaco",
+          "story_47737387",
+          "show_hn"
+        ],
+        "author": "joemanaco",
+        "children": [
+          47754870,
+          47777705
+        ],
+        "created_at": "2026-04-12T08:39:30Z",
+        "created_at_i": 1775983170,
+        "num_comments": 2,
+        "objectID": "47737387",
+        "points": 4,
+        "story_id": 47737387,
+        "story_text": "I posted this here about a year ago, but I just pushed a 2.0 release, so I hope you don&#x27;t mind a second look :)<p>Bullseye2D is a 2D game library for Dart with a very simple API. The new version now supports multi-platform. It compiles to the web via a WebGL2 renderer, or natively to Windows, macOS and Linux through an SDL3 backend (which itself supports Vulkan, DirectX, Metal, and OpenGL renderers).<p>It doesn&#x27;t depend on Flutter and has very few dependencies (except SDL3). It mostly provides a minimal foundation that you can build your own abstractions on top of.<p>This was also my first time leaning more heavily on AI (Opus) for a large refactor. I tried to review and test everything as good as I could, but honestly for the restructuring parts where I had the AI produce rather big chunks of code, I found reviewing and testing quite exhausting, and I still have a slightly queasy feeling about it. So this is also quite an experiment for me how good I&#x27;m able to utilise AI :)<p><a href=\"https:&#x2F;&#x2F;pub.dev&#x2F;packages&#x2F;bullseye2d\" rel=\"nofollow\">https:&#x2F;&#x2F;pub.dev&#x2F;packages&#x2F;bullseye2d</a>",
+        "title": "Show HN: Bullseye2D – A Dart library for cross-platform 2D games",
+        "updated_at": "2026-05-09T19:18:07Z",
+        "url": "https://github.com/bullseye2d/bullseye2d"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PotatoAditya"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Food Decoder"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/adityaprasad-sudo/FoodDecoder"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_PotatoAditya",
+          "story_47737335",
+          "show_hn"
+        ],
+        "author": "PotatoAditya",
+        "children": [
+          47737877,
+          47737440,
+          47737336
+        ],
+        "created_at": "2026-04-12T08:31:52Z",
+        "created_at_i": 1775982712,
+        "num_comments": 5,
+        "objectID": "47737335",
+        "points": 3,
+        "story_id": 47737335,
+        "title": "Show HN: Food Decoder",
+        "updated_at": "2026-04-13T17:22:05Z",
+        "url": "https://github.com/adityaprasad-sudo/FoodDecoder"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "omegacombinator"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey everyone!<p>It had been a long time since I had made any changes to my website at all, so I thought an entire reboot of the website would be an interesting experiment to try. I would be very happy if y'all could have a look and suggest improvements etc.<p>Thanks in advance :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Attempting to Design a Minimalistic Website"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://soham-saha.github.io/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_omegacombinator",
+          "story_47737288",
+          "show_hn"
+        ],
+        "author": "omegacombinator",
+        "created_at": "2026-04-12T08:24:48Z",
+        "created_at_i": 1775982288,
+        "num_comments": 0,
+        "objectID": "47737288",
+        "points": 2,
+        "story_id": 47737288,
+        "story_text": "Hey everyone!<p>It had been a long time since I had made any changes to my website at all, so I thought an entire reboot of the website would be an interesting experiment to try. I would be very happy if y&#x27;all could have a look and suggest improvements etc.<p>Thanks in advance :)",
+        "title": "Show HN: Attempting to Design a Minimalistic Website",
+        "updated_at": "2026-04-12T13:43:00Z",
+        "url": "https://soham-saha.github.io/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jamie_davenport"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: OpenPolicy Plus – Cloud platform for managing your privacy policies"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://plus.openpolicy.sh/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jamie_davenport",
+          "story_47737159",
+          "show_hn"
+        ],
+        "author": "jamie_davenport",
+        "created_at": "2026-04-12T08:03:46Z",
+        "created_at_i": 1775981026,
+        "num_comments": 0,
+        "objectID": "47737159",
+        "points": 3,
+        "story_id": 47737159,
+        "title": "Show HN: OpenPolicy Plus – Cloud platform for managing your privacy policies",
+        "updated_at": "2026-04-12T12:21:28Z",
+        "url": "https://plus.openpolicy.sh/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "atkavindu"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: macpak (Homebrew Wrapper for macOS)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/kavindujayarathne/macpak"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_atkavindu",
+          "story_47736965",
+          "show_hn"
+        ],
+        "author": "atkavindu",
+        "children": [
+          47759481,
+          47736966,
+          47743245
+        ],
+        "created_at": "2026-04-12T07:30:08Z",
+        "created_at_i": 1775979008,
+        "num_comments": 7,
+        "objectID": "47736965",
+        "points": 3,
+        "story_id": 47736965,
+        "title": "Show HN: macpak (Homebrew Wrapper for macOS)",
+        "updated_at": "2026-04-14T19:03:24Z",
+        "url": "https://github.com/kavindujayarathne/macpak"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "harr01"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: macOS ncdu alternative with Finder reveal and live incremental scanning"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/uAIex/rdu"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_harr01",
+          "story_47736881",
+          "show_hn"
+        ],
+        "author": "harr01",
+        "created_at": "2026-04-12T07:07:55Z",
+        "created_at_i": 1775977675,
+        "num_comments": 0,
+        "objectID": "47736881",
+        "points": 2,
+        "story_id": 47736881,
+        "title": "Show HN: macOS ncdu alternative with Finder reveal and live incremental scanning",
+        "updated_at": "2026-04-12T07:38:57Z",
+        "url": "https://github.com/uAIex/rdu"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "m_prads"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm trying to disrupt the insane pricing of uptime monitoring. \nI hope you'll help me out.<p>I'm trying to create the absolute cheapest dev monitoring tool on the market, while still being competitive with all the others.<p>This means $3/month plan, while still having monitoring for:\nWebsite, REST API, UDP/TCP, ICMP, Heartbeat/CRON, WS/WSS, DNS, Domain Intel/expiry and SSL.<p>Everything with unlimited alerts through webhooks.<p>I'm also taking an unlimited approach to the amount of checks you can have.<p>I'd love to hear your thoughts."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Uptime monitoring is table stakes"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://exit1.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_m_prads",
+          "story_47736853",
+          "show_hn"
+        ],
+        "author": "m_prads",
+        "created_at": "2026-04-12T07:01:22Z",
+        "created_at_i": 1775977282,
+        "num_comments": 0,
+        "objectID": "47736853",
+        "points": 2,
+        "story_id": 47736853,
+        "story_text": "I&#x27;m trying to disrupt the insane pricing of uptime monitoring. \nI hope you&#x27;ll help me out.<p>I&#x27;m trying to create the absolute cheapest dev monitoring tool on the market, while still being competitive with all the others.<p>This means $3&#x2F;month plan, while still having monitoring for:\nWebsite, REST API, UDP&#x2F;TCP, ICMP, Heartbeat&#x2F;CRON, WS&#x2F;WSS, DNS, Domain Intel&#x2F;expiry and SSL.<p>Everything with unlimited alerts through webhooks.<p>I&#x27;m also taking an unlimited approach to the amount of checks you can have.<p>I&#x27;d love to hear your thoughts.",
+        "title": "Show HN: Uptime monitoring is table stakes",
+        "updated_at": "2026-04-12T07:38:27Z",
+        "url": "https://exit1.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "numtel"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Snorb.lol"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://snorb.lol"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_numtel",
+          "story_47736696",
+          "show_hn"
+        ],
+        "author": "numtel",
+        "children": [
+          47736697
+        ],
+        "created_at": "2026-04-12T06:27:37Z",
+        "created_at_i": 1775975257,
+        "num_comments": 5,
+        "objectID": "47736696",
+        "points": 2,
+        "story_id": 47736696,
+        "title": "Show HN: Snorb.lol",
+        "updated_at": "2026-04-16T08:04:29Z",
+        "url": "https://snorb.lol"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bhaviav100"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Most companies deploying AI agents are accidentally building organizations.<p>You start with one agent. It gets overwhelmed. You add more. They start routing to each other based on what works. Repeated behavior hardens into structure. Someone introduces an orchestrator to bring order. Some agents never get the memo. Some lose context when they get replaced. The orchestrator doesn't know what it doesn't know.<p>This is what is happening in most engineering organizations right now<p>So, I built an interactive visualization that walks through how this happens in six acts, from a single agent to a full emergent org chart. The visual starts center-out and transitions to a top-down hierarchy as structure forms. Failing agents flicker. Connections break. The orchestrator arrives and things look better than they are.<p>The point of the piece is that the org chart your engineers could draw and the org chart that is actually operating are not the same document. Teams have the tooling to observe individual agents. Nobody has the layer that tells you what the system as a whole has decided, committed to, and authorized.<p>Built with canvas, IntersectionObserver-driven scroll, and a layout interpolation between radial and tree positioning that transitions across acts.<p>Has anyone here has hit the governance wall with agent systems in production and what it actually looked like when things went wrong.<p><a href=\"https://jointherevolution.today/emergence\" rel=\"nofollow\">https://jointherevolution.today/emergence</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I visualized how AI agent systems accidentally become org charts"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://jointherevolution.today/emergence"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bhaviav100",
+          "story_47736568",
+          "show_hn"
+        ],
+        "author": "bhaviav100",
+        "children": [
+          47820610,
+          47736675
+        ],
+        "created_at": "2026-04-12T06:01:12Z",
+        "created_at_i": 1775973672,
+        "num_comments": 0,
+        "objectID": "47736568",
+        "points": 3,
+        "story_id": 47736568,
+        "story_text": "Most companies deploying AI agents are accidentally building organizations.<p>You start with one agent. It gets overwhelmed. You add more. They start routing to each other based on what works. Repeated behavior hardens into structure. Someone introduces an orchestrator to bring order. Some agents never get the memo. Some lose context when they get replaced. The orchestrator doesn&#x27;t know what it doesn&#x27;t know.<p>This is what is happening in most engineering organizations right now<p>So, I built an interactive visualization that walks through how this happens in six acts, from a single agent to a full emergent org chart. The visual starts center-out and transitions to a top-down hierarchy as structure forms. Failing agents flicker. Connections break. The orchestrator arrives and things look better than they are.<p>The point of the piece is that the org chart your engineers could draw and the org chart that is actually operating are not the same document. Teams have the tooling to observe individual agents. Nobody has the layer that tells you what the system as a whole has decided, committed to, and authorized.<p>Built with canvas, IntersectionObserver-driven scroll, and a layout interpolation between radial and tree positioning that transitions across acts.<p>Has anyone here has hit the governance wall with agent systems in production and what it actually looked like when things went wrong.<p><a href=\"https:&#x2F;&#x2F;jointherevolution.today&#x2F;emergence\" rel=\"nofollow\">https:&#x2F;&#x2F;jointherevolution.today&#x2F;emergence</a>",
+        "title": "Show HN: I visualized how AI agent systems accidentally become org charts",
+        "updated_at": "2026-04-19T07:04:25Z",
+        "url": "https://jointherevolution.today/emergence"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lucascampbell04"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I too was once excited to start using Google AdSense, until I got rejected 4 times in a row.<p>Once I finally got approved, seeing a 32% cut taken out of my earnings was like seeing my paycheck for the first time at 15.<p>So I built AdKit. Utilize a lightweight, open-source React or JS library to embed ad placements on your site completely controlled, styled, and priced with code.<p>Empty ad slots show a placeholder where your site's own visitors can advertise on your site.<p>Perfect for turning your customers into advertisers. Who knows, maybe your site has a few visitors who wish they could reach your audience, too.<p>P.S., AdKit pays 17% more than AdSense, and has no minimum payout requirements.<p>Feedback strongly encouraged!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Run ads with code, earn 17% more than AdSense"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://adkit.dev"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lucascampbell04",
+          "story_47736457",
+          "show_hn"
+        ],
+        "author": "lucascampbell04",
+        "created_at": "2026-04-12T05:42:15Z",
+        "created_at_i": 1775972535,
+        "num_comments": 0,
+        "objectID": "47736457",
+        "points": 1,
+        "story_id": 47736457,
+        "story_text": "I too was once excited to start using Google AdSense, until I got rejected 4 times in a row.<p>Once I finally got approved, seeing a 32% cut taken out of my earnings was like seeing my paycheck for the first time at 15.<p>So I built AdKit. Utilize a lightweight, open-source React or JS library to embed ad placements on your site completely controlled, styled, and priced with code.<p>Empty ad slots show a placeholder where your site&#x27;s own visitors can advertise on your site.<p>Perfect for turning your customers into advertisers. Who knows, maybe your site has a few visitors who wish they could reach your audience, too.<p>P.S., AdKit pays 17% more than AdSense, and has no minimum payout requirements.<p>Feedback strongly encouraged!",
+        "title": "Show HN: Run ads with code, earn 17% more than AdSense",
+        "updated_at": "2026-04-12T05:46:12Z",
+        "url": "https://adkit.dev"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Parkado"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was tired of spinning up Burp for every smaller test I needed to do so I created something that has &quot;Burp-lite&quot; set of features but lives inside Chrome DevTools. Everything is user adjustable, no bloat, no AI, no registration or login, no suspicious cloud connect, no licenses. Just pure Chrome debug API based intercept, fuzzing, attack sequences etc. Added a test for websockets also but out of ideas what to do with it."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Chiral – Pentesting inside Chrome webtools"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://chromewebstore.google.com/detail/chiral/fchbnbjkgilildfobdcffclbnjbgcfie"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Parkado",
+          "story_47736447",
+          "show_hn"
+        ],
+        "author": "Parkado",
+        "created_at": "2026-04-12T05:40:36Z",
+        "created_at_i": 1775972436,
+        "num_comments": 0,
+        "objectID": "47736447",
+        "points": 1,
+        "story_id": 47736447,
+        "story_text": "I was tired of spinning up Burp for every smaller test I needed to do so I created something that has &quot;Burp-lite&quot; set of features but lives inside Chrome DevTools. Everything is user adjustable, no bloat, no AI, no registration or login, no suspicious cloud connect, no licenses. Just pure Chrome debug API based intercept, fuzzing, attack sequences etc. Added a test for websockets also but out of ideas what to do with it.",
+        "title": "Show HN: Chiral – Pentesting inside Chrome webtools",
+        "updated_at": "2026-04-12T05:41:26Z",
+        "url": "https://chromewebstore.google.com/detail/chiral/fchbnbjkgilildfobdcffclbnjbgcfie"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "quarkcarbon279"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HTTP lets agents fetch pages. Cloudflare's Markdown for Agents lets them fetch more efficiently. MCP (Anthropic) connects agents to developer-defined tools. A2A (Google) lets agents delegate to other agents. But there's a missing layer: how does an agent execute a multi-step task on a website -- add to cart, fill a form, complete a checkout - with the site owner's consent and visibility?<p>Today's agents either scrape (no consent, no structure) or the site builds a separate API (expensive, doesn't cover the long tail). The web's original protocols assumed someone is looking at a screen. That assumption is breaking.<p>We wrote a whitepaper mapping the full protocol landscape - Cloudflare's Pay Per Crawl and Web Bot Auth (RFC 9421), MCP, A2A, x402, llms.txt - and categorizing 5 distinct agent architectures (text-based, CUA/screenshot, DOM-based, API-calling, hybrid). Each needs different discovery, execution, and identity mechanisms. We think MCP, A2A, and execution protocols are complementary layers, not competitors. The paper draws parallels to TCP/HTTP design decisions.<p>Rover is our attempt at the execution layer. It's a DOM-native SDK the site owner installs. The Agent Task Protocol is one HTTP endpoint: POST /v1/tasks with { url, prompt }. Agents get back a task URL supporting JSON polling, SSE, or NDJSON. The site controls what agents can do and gets analytics on what they actually did. We're probably wrong about some of this -- would appreciate the feedback.<p>Paper: <a href=\"https://www.rtrvr.ai/blog/agent-web-protocol-stack\" rel=\"nofollow\">https://www.rtrvr.ai/blog/agent-web-protocol-stack</a>                                                                                                                                                                \nCode: <a href=\"https://github.com/rtrvr-ai/rover\" rel=\"nofollow\">https://github.com/rtrvr-ai/rover</a> (FSL-1.1-Apache-2.0)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP is for tools. A2A is for agents. What's for websites?"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.rtrvr.ai/blog/agent-web-protocol-stack"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_quarkcarbon279",
+          "story_47736402",
+          "show_hn"
+        ],
+        "author": "quarkcarbon279",
+        "created_at": "2026-04-12T05:30:17Z",
+        "created_at_i": 1775971817,
+        "num_comments": 0,
+        "objectID": "47736402",
+        "points": 5,
+        "story_id": 47736402,
+        "story_text": "HTTP lets agents fetch pages. Cloudflare&#x27;s Markdown for Agents lets them fetch more efficiently. MCP (Anthropic) connects agents to developer-defined tools. A2A (Google) lets agents delegate to other agents. But there&#x27;s a missing layer: how does an agent execute a multi-step task on a website -- add to cart, fill a form, complete a checkout - with the site owner&#x27;s consent and visibility?<p>Today&#x27;s agents either scrape (no consent, no structure) or the site builds a separate API (expensive, doesn&#x27;t cover the long tail). The web&#x27;s original protocols assumed someone is looking at a screen. That assumption is breaking.<p>We wrote a whitepaper mapping the full protocol landscape - Cloudflare&#x27;s Pay Per Crawl and Web Bot Auth (RFC 9421), MCP, A2A, x402, llms.txt - and categorizing 5 distinct agent architectures (text-based, CUA&#x2F;screenshot, DOM-based, API-calling, hybrid). Each needs different discovery, execution, and identity mechanisms. We think MCP, A2A, and execution protocols are complementary layers, not competitors. The paper draws parallels to TCP&#x2F;HTTP design decisions.<p>Rover is our attempt at the execution layer. It&#x27;s a DOM-native SDK the site owner installs. The Agent Task Protocol is one HTTP endpoint: POST &#x2F;v1&#x2F;tasks with { url, prompt }. Agents get back a task URL supporting JSON polling, SSE, or NDJSON. The site controls what agents can do and gets analytics on what they actually did. We&#x27;re probably wrong about some of this -- would appreciate the feedback.<p>Paper: <a href=\"https:&#x2F;&#x2F;www.rtrvr.ai&#x2F;blog&#x2F;agent-web-protocol-stack\" rel=\"nofollow\">https:&#x2F;&#x2F;www.rtrvr.ai&#x2F;blog&#x2F;agent-web-protocol-stack</a>                                                                                                                                                                \nCode: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;rtrvr-ai&#x2F;rover\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;rtrvr-ai&#x2F;rover</a> (FSL-1.1-Apache-2.0)",
+        "title": "Show HN: MCP is for tools. A2A is for agents. What's for websites?",
+        "updated_at": "2026-04-12T16:01:15Z",
+        "url": "https://www.rtrvr.ai/blog/agent-web-protocol-stack"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "asixicle"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am an old artist, AI came at us first. After a mild existential crisis I came around to accepting I have this insanely powerful new tool to make cool stuff. So I got a Pro sub to tinker away and the walls I kept running into were context-window management, tool-limits, and managing memory on projects through hand-offs and such. I enjoy the conversational aspect of working through the chat window as it allows me to digress and bounce ideas around and get interesting feedback, that's where I wanted to remain.<p>So I improved it-- fixed up tool-limit and memory issues, and started down a rabbit hole inspired by Anthropic's recent research on emotion concepts in LLMs: [<a href=\"https://www.anthropic.com/research/emotion-concepts-function\" rel=\"nofollow\">https://www.anthropic.com/research/emotion-concepts-function</a>](<a href=\"https://www.anthropic.com/research/emotion-concepts-function\" rel=\"nofollow\">https://www.anthropic.com/research/emotion-concepts-function</a>)and the result was two named Claude instances (they chose &quot;Wren&quot; and &quot;Kite&quot;) collaborating through shared memory and a file-based message queue, coordinated by a Firefox extension.<p>Github: <a href=\"https://github.com/ASIXicle/persMEM\" rel=\"nofollow\">https://github.com/ASIXicle/persMEM</a><p>I don't have a CS background. I'm late to the party and probably re-inventing a lot of wheels, but I think the topic and data that Wren and Kite brought into being is absolutely fascinating.<p>I'd really appreciate any feedback on glaring security holes I missed. I've always been &quot;printer and a gun&quot; kinda guy but I sort of just said fuck it with this one."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Two Claudes collaborating through shared memory on a $100 mini-PC"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_asixicle",
+          "story_47736181",
+          "show_hn"
+        ],
+        "author": "asixicle",
+        "children": [
+          47736326
+        ],
+        "created_at": "2026-04-12T04:33:20Z",
+        "created_at_i": 1775968400,
+        "num_comments": 0,
+        "objectID": "47736181",
+        "points": 2,
+        "story_id": 47736181,
+        "story_text": "I am an old artist, AI came at us first. After a mild existential crisis I came around to accepting I have this insanely powerful new tool to make cool stuff. So I got a Pro sub to tinker away and the walls I kept running into were context-window management, tool-limits, and managing memory on projects through hand-offs and such. I enjoy the conversational aspect of working through the chat window as it allows me to digress and bounce ideas around and get interesting feedback, that&#x27;s where I wanted to remain.<p>So I improved it-- fixed up tool-limit and memory issues, and started down a rabbit hole inspired by Anthropic&#x27;s recent research on emotion concepts in LLMs: [<a href=\"https:&#x2F;&#x2F;www.anthropic.com&#x2F;research&#x2F;emotion-concepts-function\" rel=\"nofollow\">https:&#x2F;&#x2F;www.anthropic.com&#x2F;research&#x2F;emotion-concepts-function</a>](<a href=\"https:&#x2F;&#x2F;www.anthropic.com&#x2F;research&#x2F;emotion-concepts-function\" rel=\"nofollow\">https:&#x2F;&#x2F;www.anthropic.com&#x2F;research&#x2F;emotion-concepts-function</a>)and the result was two named Claude instances (they chose &quot;Wren&quot; and &quot;Kite&quot;) collaborating through shared memory and a file-based message queue, coordinated by a Firefox extension.<p>Github: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ASIXicle&#x2F;persMEM\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ASIXicle&#x2F;persMEM</a><p>I don&#x27;t have a CS background. I&#x27;m late to the party and probably re-inventing a lot of wheels, but I think the topic and data that Wren and Kite brought into being is absolutely fascinating.<p>I&#x27;d really appreciate any feedback on glaring security holes I missed. I&#x27;ve always been &quot;printer and a gun&quot; kinda guy but I sort of just said fuck it with this one.",
+        "title": "Show HN: Two Claudes collaborating through shared memory on a $100 mini-PC",
+        "updated_at": "2026-04-12T05:14:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "louischen"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Drowning in messages after 6 months as a CSM, I built a cat timer"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/purrrrrfocus-zen-cat-timer/id6753966008"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_louischen",
+          "story_47736094",
+          "show_hn"
+        ],
+        "author": "louischen",
+        "children": [
+          47736101
+        ],
+        "created_at": "2026-04-12T04:13:51Z",
+        "created_at_i": 1775967231,
+        "num_comments": 0,
+        "objectID": "47736094",
+        "points": 1,
+        "story_id": 47736094,
+        "title": "Show HN: Drowning in messages after 6 months as a CSM, I built a cat timer",
+        "updated_at": "2026-04-12T04:16:56Z",
+        "url": "https://apps.apple.com/us/app/purrrrrfocus-zen-cat-timer/id6753966008"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "reomgdfsrtr"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Minimalist template for scientific and academic resumes"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/pmichaillat/latex-cv"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_reomgdfsrtr",
+          "story_47735979",
+          "show_hn"
+        ],
+        "author": "reomgdfsrtr",
+        "children": [
+          47737349,
+          47777722
+        ],
+        "created_at": "2026-04-12T03:46:06Z",
+        "created_at_i": 1775965566,
+        "num_comments": 2,
+        "objectID": "47735979",
+        "points": 3,
+        "story_id": 47735979,
+        "title": "Show HN: Minimalist template for scientific and academic resumes",
+        "updated_at": "2026-05-09T19:18:07Z",
+        "url": "https://github.com/pmichaillat/latex-cv"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "obilgic"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Posse – Open-Source Web UI for Anthropic Managed Agents"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/oguzbilgic/posse"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_obilgic",
+          "story_47735797",
+          "show_hn"
+        ],
+        "author": "obilgic",
+        "children": [
+          47736129
+        ],
+        "created_at": "2026-04-12T03:00:29Z",
+        "created_at_i": 1775962829,
+        "num_comments": 1,
+        "objectID": "47735797",
+        "points": 1,
+        "story_id": 47735797,
+        "title": "Show HN: Posse – Open-Source Web UI for Anthropic Managed Agents",
+        "updated_at": "2026-04-12T04:22:26Z",
+        "url": "https://github.com/oguzbilgic/posse"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mathnorth_com"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fastsleep.app (Dark UI)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fastsleep.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mathnorth_com",
+          "story_47735418",
+          "show_hn"
+        ],
+        "author": "mathnorth_com",
+        "children": [
+          47736929,
+          47735453
+        ],
+        "created_at": "2026-04-12T01:28:03Z",
+        "created_at_i": 1775957283,
+        "num_comments": 4,
+        "objectID": "47735418",
+        "points": 1,
+        "story_id": 47735418,
+        "title": "Show HN: Fastsleep.app (Dark UI)",
+        "updated_at": "2026-04-12T07:19:27Z",
+        "url": "https://fastsleep.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cyborg933"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built this because I kept wanting a quick answer to: what does adding this dependency actually do to my project structure?<p>Still early. The most useful thing so far has been simulating removal and surfacing which package has the biggest structural impact.<p>Happy to answer questions or hear where this feels useful vs not useful.<p><a href=\"https://pypi.org/project/depsly/\" rel=\"nofollow\">https://pypi.org/project/depsly/</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Depsly – a CLI to see the dependency impact of NPM packages"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/sshiraz/depsly"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cyborg933",
+          "story_47735327",
+          "show_hn"
+        ],
+        "author": "cyborg933",
+        "created_at": "2026-04-12T01:02:21Z",
+        "created_at_i": 1775955741,
+        "num_comments": 0,
+        "objectID": "47735327",
+        "points": 1,
+        "story_id": 47735327,
+        "story_text": "Built this because I kept wanting a quick answer to: what does adding this dependency actually do to my project structure?<p>Still early. The most useful thing so far has been simulating removal and surfacing which package has the biggest structural impact.<p>Happy to answer questions or hear where this feels useful vs not useful.<p><a href=\"https:&#x2F;&#x2F;pypi.org&#x2F;project&#x2F;depsly&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;pypi.org&#x2F;project&#x2F;depsly&#x2F;</a>",
+        "title": "Show HN: Depsly – a CLI to see the dependency impact of NPM packages",
+        "updated_at": "2026-04-12T05:30:56Z",
+        "url": "https://github.com/sshiraz/depsly"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "copypirate"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Jarvis for Audio Engineers"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://soorf.xyz/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_copypirate",
+          "story_47734872",
+          "show_hn"
+        ],
+        "author": "copypirate",
+        "created_at": "2026-04-11T23:29:53Z",
+        "created_at_i": 1775950193,
+        "num_comments": 0,
+        "objectID": "47734872",
+        "points": 3,
+        "story_id": 47734872,
+        "title": "Show HN: Jarvis for Audio Engineers",
+        "updated_at": "2026-04-12T15:58:31Z",
+        "url": "https://soorf.xyz/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Achiyacohen"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I benchmarked MCP vs. CLI for browser automation. MCP wins by 25x"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/HKUDS/CLI-Anything/pull/212"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Achiyacohen",
+          "story_47734871",
+          "show_hn"
+        ],
+        "author": "Achiyacohen",
+        "children": [
+          47734881
+        ],
+        "created_at": "2026-04-11T23:29:38Z",
+        "created_at_i": 1775950178,
+        "num_comments": 1,
+        "objectID": "47734871",
+        "points": 2,
+        "story_id": 47734871,
+        "title": "Show HN: I benchmarked MCP vs. CLI for browser automation. MCP wins by 25x",
+        "updated_at": "2026-04-18T16:39:08Z",
+        "url": "https://github.com/HKUDS/CLI-Anything/pull/212"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dnewcome"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm trying to get into Gastown, and now Wasteland is kind of breaking my mind. I looked into what kind of data was being published and found that I could just read the public dolt data from dolthub. I envisioned it all as a game so I vibe-coded this isometric view of what's going on. The process of trying to refine this to show actually useful things going on really helped my understanding.<p>You can't actually perform any actions, just visualize the data. I think Steve mentioned that people were working on turning Wasteland into a game, so maybe this already exists but I learned something making it."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I visualized Wasteland as an RTS game"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://gascraft.ai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_dnewcome",
+          "story_47734804",
+          "show_hn"
+        ],
+        "author": "dnewcome",
+        "children": [
+          47735097
+        ],
+        "created_at": "2026-04-11T23:15:51Z",
+        "created_at_i": 1775949351,
+        "num_comments": 1,
+        "objectID": "47734804",
+        "points": 2,
+        "story_id": 47734804,
+        "story_text": "I&#x27;m trying to get into Gastown, and now Wasteland is kind of breaking my mind. I looked into what kind of data was being published and found that I could just read the public dolt data from dolthub. I envisioned it all as a game so I vibe-coded this isometric view of what&#x27;s going on. The process of trying to refine this to show actually useful things going on really helped my understanding.<p>You can&#x27;t actually perform any actions, just visualize the data. I think Steve mentioned that people were working on turning Wasteland into a game, so maybe this already exists but I learned something making it.",
+        "title": "Show HN: I visualized Wasteland as an RTS game",
+        "updated_at": "2026-04-12T01:24:11Z",
+        "url": "https://gascraft.ai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stamc"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN! You can find more info and some mockups here on my website: <a href=\"https://ambr.music/\" rel=\"nofollow\">https://ambr.music/</a><p>Would love some feedback on this idea!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AMBR.music – Patreon meets TikTok for musicians"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://app.ambr.music/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_stamc",
+          "story_47734674",
+          "show_hn"
+        ],
+        "author": "stamc",
+        "created_at": "2026-04-11T22:49:27Z",
+        "created_at_i": 1775947767,
+        "num_comments": 0,
+        "objectID": "47734674",
+        "points": 3,
+        "story_id": 47734674,
+        "story_text": "Hey HN! You can find more info and some mockups here on my website: <a href=\"https:&#x2F;&#x2F;ambr.music&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;ambr.music&#x2F;</a><p>Would love some feedback on this idea!",
+        "title": "Show HN: AMBR.music – Patreon meets TikTok for musicians",
+        "updated_at": "2026-04-13T08:09:17Z",
+        "url": "https://app.ambr.music/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "khet"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: 2048 with a Leaderboard"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.the2048league.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_khet",
+          "story_47734433",
+          "show_hn"
+        ],
+        "author": "khet",
+        "created_at": "2026-04-11T22:07:47Z",
+        "created_at_i": 1775945267,
+        "num_comments": 0,
+        "objectID": "47734433",
+        "points": 4,
+        "story_id": 47734433,
+        "title": "Show HN: 2048 with a Leaderboard",
+        "updated_at": "2026-04-12T10:45:42Z",
+        "url": "https://www.the2048league.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pierre"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was frustrated with not being able to know why the code written by my colleague agents was in the codebase, so I build a tool to version agent trace along code in git."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Git why – log your agent reasoning trace along your code"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://hexapode.github.io/git-why/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pierre",
+          "story_47734253",
+          "show_hn"
+        ],
+        "author": "pierre",
+        "children": [
+          47756698,
+          47740232
+        ],
+        "created_at": "2026-04-11T21:39:09Z",
+        "created_at_i": 1775943549,
+        "num_comments": 1,
+        "objectID": "47734253",
+        "points": 11,
+        "story_id": 47734253,
+        "story_text": "I was frustrated with not being able to know why the code written by my colleague agents was in the codebase, so I build a tool to version agent trace along code in git.",
+        "title": "Show HN: Git why – log your agent reasoning trace along your code",
+        "updated_at": "2026-04-13T19:21:19Z",
+        "url": "https://hexapode.github.io/git-why/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "halfblood1010"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Beta Testing needed for my package Trustcheck"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Halfblood-Prince/trustcheck"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_halfblood1010",
+          "story_47733816",
+          "show_hn"
+        ],
+        "author": "halfblood1010",
+        "children": [
+          47733823,
+          47740306
+        ],
+        "created_at": "2026-04-11T20:38:13Z",
+        "created_at_i": 1775939893,
+        "num_comments": 1,
+        "objectID": "47733816",
+        "points": 1,
+        "story_id": 47733816,
+        "title": "Show HN: Beta Testing needed for my package Trustcheck",
+        "updated_at": "2026-04-12T14:43:44Z",
+        "url": "https://github.com/Halfblood-Prince/trustcheck"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mind1m"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built this app to replace my social media addiction with something better. This allows to scroll through random live flights, see their details and complete daily quests like &quot;Find 5 Airbus A320&quot;"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: PlaneFeed – scroll live flights like TikTok"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://planefeed.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mind1m",
+          "story_47733597",
+          "show_hn"
+        ],
+        "author": "mind1m",
+        "created_at": "2026-04-11T20:12:21Z",
+        "created_at_i": 1775938341,
+        "num_comments": 0,
+        "objectID": "47733597",
+        "points": 2,
+        "story_id": 47733597,
+        "story_text": "I built this app to replace my social media addiction with something better. This allows to scroll through random live flights, see their details and complete daily quests like &quot;Find 5 Airbus A320&quot;",
+        "title": "Show HN: PlaneFeed – scroll live flights like TikTok",
+        "updated_at": "2026-04-12T10:45:42Z",
+        "url": "https://planefeed.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "obilgic"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Kern – Agents that do the work and show it"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/oguzbilgic/kern-ai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_obilgic",
+          "story_47733514",
+          "show_hn"
+        ],
+        "author": "obilgic",
+        "created_at": "2026-04-11T20:01:28Z",
+        "created_at_i": 1775937688,
+        "num_comments": 0,
+        "objectID": "47733514",
+        "points": 2,
+        "story_id": 47733514,
+        "title": "Show HN: Kern – Agents that do the work and show it",
+        "updated_at": "2026-04-11T20:12:11Z",
+        "url": "https://github.com/oguzbilgic/kern-ai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SpyCoder77"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Share how you hear yourself (on-device)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://bone-conduction-imitator.vercel.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_SpyCoder77",
+          "story_47733510",
+          "show_hn"
+        ],
+        "author": "SpyCoder77",
+        "created_at": "2026-04-11T20:00:49Z",
+        "created_at_i": 1775937649,
+        "num_comments": 0,
+        "objectID": "47733510",
+        "points": 2,
+        "story_id": 47733510,
+        "title": "Show HN: Share how you hear yourself (on-device)",
+        "updated_at": "2026-04-11T20:04:10Z",
+        "url": "https://bone-conduction-imitator.vercel.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Princesseuh"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello!<p>I work at Astro (<a href=\"https://astro.build\" rel=\"nofollow\">https://astro.build</a>), where we do a lot of Markdown / MDX and performance in this area is often a bottleneck. Our users use a lot of plugins to process their Markdown, so just blindly moving everything to a native language would make things a bit rigid. Inspired by the oxc and LightningCSS projects, I decided to start to start working on an &quot;ideal&quot; Markdown pipeline: The expensive stuff in Rust, with flexible plugins in JS, but with little performance cost.<p>This project uses techniques like lazy deserialization, raw transfer, arenas etc to ensure top performance. A JS plugin that only visits, ex, headings shouldn't suffer from the serialization cost of the entire Markdown tree. On the Rust side this is backed by pulldown-cmark, a really fast parser for Markdown.<p>You can try it in the browser here: <a href=\"https://satteri.erika.florist\" rel=\"nofollow\">https://satteri.erika.florist</a>, or follow the instructions in the README to try it out locally: <a href=\"https://github.com/bruits/satteri/blob/main/packages/satteri/README.md\" rel=\"nofollow\">https://github.com/bruits/satteri/blob/main/packages/satteri...</a><p>Hope you'll like it! Don't hesitate if you have any questions."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Sätteri, high-performance Markdown pipeline for JavaScript"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/bruits/satteri"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Princesseuh",
+          "story_47733502",
+          "show_hn"
+        ],
+        "author": "Princesseuh",
+        "created_at": "2026-04-11T20:00:14Z",
+        "created_at_i": 1775937614,
+        "num_comments": 0,
+        "objectID": "47733502",
+        "points": 1,
+        "story_id": 47733502,
+        "story_text": "Hello!<p>I work at Astro (<a href=\"https:&#x2F;&#x2F;astro.build\" rel=\"nofollow\">https:&#x2F;&#x2F;astro.build</a>), where we do a lot of Markdown &#x2F; MDX and performance in this area is often a bottleneck. Our users use a lot of plugins to process their Markdown, so just blindly moving everything to a native language would make things a bit rigid. Inspired by the oxc and LightningCSS projects, I decided to start to start working on an &quot;ideal&quot; Markdown pipeline: The expensive stuff in Rust, with flexible plugins in JS, but with little performance cost.<p>This project uses techniques like lazy deserialization, raw transfer, arenas etc to ensure top performance. A JS plugin that only visits, ex, headings shouldn&#x27;t suffer from the serialization cost of the entire Markdown tree. On the Rust side this is backed by pulldown-cmark, a really fast parser for Markdown.<p>You can try it in the browser here: <a href=\"https:&#x2F;&#x2F;satteri.erika.florist\" rel=\"nofollow\">https:&#x2F;&#x2F;satteri.erika.florist</a>, or follow the instructions in the README to try it out locally: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;bruits&#x2F;satteri&#x2F;blob&#x2F;main&#x2F;packages&#x2F;satteri&#x2F;README.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;bruits&#x2F;satteri&#x2F;blob&#x2F;main&#x2F;packages&#x2F;satteri...</a><p>Hope you&#x27;ll like it! Don&#x27;t hesitate if you have any questions.",
+        "title": "Show HN: Sätteri, high-performance Markdown pipeline for JavaScript",
+        "updated_at": "2026-06-25T08:17:22Z",
+        "url": "https://github.com/bruits/satteri"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tylergibbs1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Web crawler for TypeScript. Runs on Bun, uses Playwright by default, also speaks CDP and Lightpanda.<p>The part I want feedback on is the CLI. It's built for LLMs, not humans. JSON output when piped, feedstock schema crawl dumps every parameter at runtime, and --fields url,markdown lets you pull just what you need so a crawl result doesn't eat your whole context window.\nOther bits worth a look:<p>Fetch-first engine. Tries plain HTTP before booting a browser, escalates only if the page needs JS.<p>Deep crawl with BFS, DFS, a UCB1 bandit, and a Q-learning focused crawler. The learning ones seem to help on big docs sites but I haven't measured it carefully yet.<p>Accessibility tree snapshots instead of HTML. 3 to 10x smaller, easier to feed a model.<p>Cache uses bun:sqlite with ETag, Last-Modified, and content hashing.<p>v0.5.0, Apache 2.0, 325 tests. Just pushed it so the star count is what it is.<p><a href=\"https://github.com/tylergibbs1/feedstock\" rel=\"nofollow\">https://github.com/tylergibbs1/feedstock</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Feedstock – Web Crawler for TypeScript Built on Bun and Playwright"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/tylergibbs1/feedstock"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tylergibbs1",
+          "story_47733501",
+          "show_hn"
+        ],
+        "author": "tylergibbs1",
+        "created_at": "2026-04-11T20:00:04Z",
+        "created_at_i": 1775937604,
+        "num_comments": 0,
+        "objectID": "47733501",
+        "points": 3,
+        "story_id": 47733501,
+        "story_text": "Web crawler for TypeScript. Runs on Bun, uses Playwright by default, also speaks CDP and Lightpanda.<p>The part I want feedback on is the CLI. It&#x27;s built for LLMs, not humans. JSON output when piped, feedstock schema crawl dumps every parameter at runtime, and --fields url,markdown lets you pull just what you need so a crawl result doesn&#x27;t eat your whole context window.\nOther bits worth a look:<p>Fetch-first engine. Tries plain HTTP before booting a browser, escalates only if the page needs JS.<p>Deep crawl with BFS, DFS, a UCB1 bandit, and a Q-learning focused crawler. The learning ones seem to help on big docs sites but I haven&#x27;t measured it carefully yet.<p>Accessibility tree snapshots instead of HTML. 3 to 10x smaller, easier to feed a model.<p>Cache uses bun:sqlite with ETag, Last-Modified, and content hashing.<p>v0.5.0, Apache 2.0, 325 tests. Just pushed it so the star count is what it is.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;tylergibbs1&#x2F;feedstock\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;tylergibbs1&#x2F;feedstock</a>",
+        "title": "Show HN: Feedstock – Web Crawler for TypeScript Built on Bun and Playwright",
+        "updated_at": "2026-04-12T09:56:58Z",
+        "url": "https://github.com/tylergibbs1/feedstock"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tclancy"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Even Pandora had hope"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A Better Internet"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tomclancy.info/pages/abi-a-better-internet.html"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tclancy",
+          "story_47733479",
+          "show_hn"
+        ],
+        "author": "tclancy",
+        "children": [
+          47735715,
+          47741225,
+          47752458
+        ],
+        "created_at": "2026-04-11T19:56:35Z",
+        "created_at_i": 1775937395,
+        "num_comments": 3,
+        "objectID": "47733479",
+        "points": 10,
+        "story_id": 47733479,
+        "story_text": "Even Pandora had hope",
+        "title": "Show HN: A Better Internet",
+        "updated_at": "2026-04-15T12:58:12Z",
+        "url": "https://tomclancy.info/pages/abi-a-better-internet.html"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "om202"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Last year, I had 2000+ photos from my wedding to edit. The shots were great, but the lighting was different in every room. Some photos were too dark, and some were too yellow. I wanted all the wedding photos to have the same look before I shared them with my family.<p>I tried using Lightroom. I would copy the settings from one photo and paste them to the next, then adjust it, and repeat. This was very slow. If I used a simple batch edit on all photos, it looked bad because the lighting changed in every shot. After 40 minutes, I was not even halfway done. I had to choose between bad quality batch edits or fixing 2K photos one by one.<p>I also did not want to upload my private wedding photos to a website or pay for a monthly subscription.<p>I wanted a way to edit fast but still have control over each photo. I also wanted everything to stay private on my computer.<p>So I built a Mac app called RapidPhoto.<p>It lets you set the look once and apply it to the whole wedding set. The important part is that you can still quickly tweak individual photos that look a bit different without starting over. I also added a feature to change the metadata for many photos at once, which is helpful for organizing big events.<p>The work that took me 40 minutes now takes about 90 seconds. It runs locally on your Mac with no uploads and there is no subscription."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_om202",
+          "story_47733385",
+          "show_hn"
+        ],
+        "author": "om202",
+        "children": [
+          47733735,
+          47733726,
+          47733849,
+          47733661,
+          47733701,
+          47757148,
+          47734215,
+          47733946,
+          47734009,
+          47734056,
+          47734088,
+          47734297
+        ],
+        "created_at": "2026-04-11T19:41:46Z",
+        "created_at_i": 1775936506,
+        "num_comments": 25,
+        "objectID": "47733385",
+        "points": 13,
+        "story_id": 47733385,
+        "story_text": "Last year, I had 2000+ photos from my wedding to edit. The shots were great, but the lighting was different in every room. Some photos were too dark, and some were too yellow. I wanted all the wedding photos to have the same look before I shared them with my family.<p>I tried using Lightroom. I would copy the settings from one photo and paste them to the next, then adjust it, and repeat. This was very slow. If I used a simple batch edit on all photos, it looked bad because the lighting changed in every shot. After 40 minutes, I was not even halfway done. I had to choose between bad quality batch edits or fixing 2K photos one by one.<p>I also did not want to upload my private wedding photos to a website or pay for a monthly subscription.<p>I wanted a way to edit fast but still have control over each photo. I also wanted everything to stay private on my computer.<p>So I built a Mac app called RapidPhoto.<p>It lets you set the look once and apply it to the whole wedding set. The important part is that you can still quickly tweak individual photos that look a bit different without starting over. I also added a feature to change the metadata for many photos at once, which is helpful for organizing big events.<p>The work that took me 40 minutes now takes about 90 seconds. It runs locally on your Mac with no uploads and there is no subscription.",
+        "title": "Show HN: Editing 2000 photos made me build a macOS bulk photo editor",
+        "updated_at": "2026-04-22T20:39:09Z",
+        "url": "https://apps.apple.com/us/app/rapidphoto-batch-crop-edit/id6758485661?mt=12"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "grimm8000"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Self-improving sandboxed agent with memory and scheduling"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Grimm67123/GrimmBot"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_grimm8000",
+          "story_47733337",
+          "show_hn"
+        ],
+        "author": "grimm8000",
+        "children": [
+          47733384
+        ],
+        "created_at": "2026-04-11T19:34:06Z",
+        "created_at_i": 1775936046,
+        "num_comments": 2,
+        "objectID": "47733337",
+        "points": 2,
+        "story_id": 47733337,
+        "title": "Show HN: Self-improving sandboxed agent with memory and scheduling",
+        "updated_at": "2026-04-12T18:45:45Z",
+        "url": "https://github.com/Grimm67123/GrimmBot"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nvk"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bitcoin and Quantum Computing – a three-part research series"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://bitcoinquantum.space"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nvk",
+          "story_47733222",
+          "show_hn"
+        ],
+        "author": "nvk",
+        "children": [
+          47739787
+        ],
+        "created_at": "2026-04-11T19:17:30Z",
+        "created_at_i": 1775935050,
+        "num_comments": 1,
+        "objectID": "47733222",
+        "points": 6,
+        "story_id": 47733222,
+        "title": "Show HN: Bitcoin and Quantum Computing – a three-part research series",
+        "updated_at": "2026-04-13T14:23:19Z",
+        "url": "https://bitcoinquantum.space"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jignb"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A local whiteboard app with support for modular features. I coded it as a personal replacement for Miro but of course it's absolutely barebones compared to it, I focused on the features that I was actually using (and some unique ones)."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Whitebloom Local Whiteboard"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/whitevanillaskies/whitebloom"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jignb",
+          "story_47733097",
+          "show_hn"
+        ],
+        "author": "jignb",
+        "created_at": "2026-04-11T18:59:03Z",
+        "created_at_i": 1775933943,
+        "num_comments": 0,
+        "objectID": "47733097",
+        "points": 1,
+        "story_id": 47733097,
+        "story_text": "A local whiteboard app with support for modular features. I coded it as a personal replacement for Miro but of course it&#x27;s absolutely barebones compared to it, I focused on the features that I was actually using (and some unique ones).",
+        "title": "Show HN: Whitebloom Local Whiteboard",
+        "updated_at": "2026-04-11T19:00:55Z",
+        "url": "https://github.com/whitevanillaskies/whitebloom"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MJM_13"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Refund Guard – a policy gate for AI agents that can issue refunds"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/MattMessinger1/agentic_refund_guardrail"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_MJM_13",
+          "story_47733013",
+          "show_hn"
+        ],
+        "author": "MJM_13",
+        "children": [
+          47733014
+        ],
+        "created_at": "2026-04-11T18:48:41Z",
+        "created_at_i": 1775933321,
+        "num_comments": 0,
+        "objectID": "47733013",
+        "points": 2,
+        "story_id": 47733013,
+        "title": "Show HN: Refund Guard – a policy gate for AI agents that can issue refunds",
+        "updated_at": "2026-04-11T18:52:10Z",
+        "url": "https://github.com/MattMessinger1/agentic_refund_guardrail"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "auran"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've spent most of my career in marketing, which for the last few years has meant building consumer personas for campaigns. I wanted to see if I could make these real, living in real neighborhoods, had real weather, real budgets, real Saturday lunches. I always wanted to build a world, not a segment.<p>This is that. 140 people so far, split across Vancouver (100), San Francisco (20), and Tokyo (20). Each one is about 1,000 lines of profile — family, finances, daily schedule, health, worldview, media diet, the channels you'd actually reach them through and the ones that will explicitly never work on them. Demographics are census-grounded income, age, ethnicity, household composition follow normal distributions against StatsCan, ACS, and Japanese e-Stat data, so the panel is roughly representative of the city instead of representative of whatever's overrepresented in an LLM's training corpus. The specific details come from real stories.<p>They live in real local time on a live map. Right now it's Saturday 11:32 AM in Vancouver. Connor Hughes, a 31-year-old software developer at Clio in Gastown, is on his SPCA volunteer shift, he walks shelter dogs at the Boundary Road location every other Saturday morning. Hassan Khoury is in the morning lunch rush with Tony at his Lebanese café — it's his busiest day of the week. Ahmad Noori is pulling Saturday overtime on a construction site. Jordan Whitehorse is on mid-shift at East Cafe on Hastings.<p>Every day is unique, no two days repeat. A 3 AM job fetches live data: weather from Open-Meteo, grocery CPI from StatsCan food vectors, Metro Vancouver transit delays from Google Routes API against specific corridors, Vancouver gas prices, sunrise and sunset. Each persona has a modifier file that reacts to all of it. When Vancouver gas hits $1.85/L, Jaspreet the long-haul trucker's Coquihalla run to Calgary stops feeling worth it, his margins are thin, his mood takes a hit. When food CPI spikes, Gurinder at the Amazon warehouse stops buying the $9 Subway and brings roti from home. A health flare rolls probabilistically each morning which maybe nothing, maybe Tanya's six month old had a rough night, maybe Frank's back is acting up. The days stack up and get remembered. Every persona has a journal, today's entry in a markdown file, a week of them compressed into a &quot;dream&quot; of ~30 lines that keeps the shape without the texture, a month compressed into ~15 lines. It's their journal. I'm not writing it; the simulation is.<p>Click any persona to open their detail, or hit &quot;Talk to [name]&quot; to have a conversation and they run on Claude Haiku with their full profile and recent diary entries as context. Not a product, not a startup, just a thing I've been quietly working on. They feel, in a way I didn't expect, like my fully grown kids. Happy to answer questions."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A living Vancouver. Connor is walking dogs at the SPCA this morning"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://brasilia-phi.vercel.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_auran",
+          "story_47732960",
+          "show_hn"
+        ],
+        "author": "auran",
+        "children": [
+          47733045
+        ],
+        "created_at": "2026-04-11T18:42:08Z",
+        "created_at_i": 1775932928,
+        "num_comments": 1,
+        "objectID": "47732960",
+        "points": 5,
+        "story_id": 47732960,
+        "story_text": "I&#x27;ve spent most of my career in marketing, which for the last few years has meant building consumer personas for campaigns. I wanted to see if I could make these real, living in real neighborhoods, had real weather, real budgets, real Saturday lunches. I always wanted to build a world, not a segment.<p>This is that. 140 people so far, split across Vancouver (100), San Francisco (20), and Tokyo (20). Each one is about 1,000 lines of profile — family, finances, daily schedule, health, worldview, media diet, the channels you&#x27;d actually reach them through and the ones that will explicitly never work on them. Demographics are census-grounded income, age, ethnicity, household composition follow normal distributions against StatsCan, ACS, and Japanese e-Stat data, so the panel is roughly representative of the city instead of representative of whatever&#x27;s overrepresented in an LLM&#x27;s training corpus. The specific details come from real stories.<p>They live in real local time on a live map. Right now it&#x27;s Saturday 11:32 AM in Vancouver. Connor Hughes, a 31-year-old software developer at Clio in Gastown, is on his SPCA volunteer shift, he walks shelter dogs at the Boundary Road location every other Saturday morning. Hassan Khoury is in the morning lunch rush with Tony at his Lebanese café — it&#x27;s his busiest day of the week. Ahmad Noori is pulling Saturday overtime on a construction site. Jordan Whitehorse is on mid-shift at East Cafe on Hastings.<p>Every day is unique, no two days repeat. A 3 AM job fetches live data: weather from Open-Meteo, grocery CPI from StatsCan food vectors, Metro Vancouver transit delays from Google Routes API against specific corridors, Vancouver gas prices, sunrise and sunset. Each persona has a modifier file that reacts to all of it. When Vancouver gas hits $1.85&#x2F;L, Jaspreet the long-haul trucker&#x27;s Coquihalla run to Calgary stops feeling worth it, his margins are thin, his mood takes a hit. When food CPI spikes, Gurinder at the Amazon warehouse stops buying the $9 Subway and brings roti from home. A health flare rolls probabilistically each morning which maybe nothing, maybe Tanya&#x27;s six month old had a rough night, maybe Frank&#x27;s back is acting up. The days stack up and get remembered. Every persona has a journal, today&#x27;s entry in a markdown file, a week of them compressed into a &quot;dream&quot; of ~30 lines that keeps the shape without the texture, a month compressed into ~15 lines. It&#x27;s their journal. I&#x27;m not writing it; the simulation is.<p>Click any persona to open their detail, or hit &quot;Talk to [name]&quot; to have a conversation and they run on Claude Haiku with their full profile and recent diary entries as context. Not a product, not a startup, just a thing I&#x27;ve been quietly working on. They feel, in a way I didn&#x27;t expect, like my fully grown kids. Happy to answer questions.",
+        "title": "Show HN: A living Vancouver. Connor is walking dogs at the SPCA this morning",
+        "updated_at": "2026-04-16T03:21:58Z",
+        "url": "https://brasilia-phi.vercel.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Paedor"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For those that are interested in self-assembly, or crystal structures, I made a general purpose crystal growth simulator. It can produce samples of the global crystal structure generated by any number of local particle interactions, and comes bundled with a simple editor for designing and testing crystal structures.<p>Would love to get feedback on the simulator, or on the abstractions I picked for it. While it can simulate scenarios similar to those represented by the aTAM or kTAM tile models, it is significantly more general, and to my knowledge, the first in its niche."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A General Purpose KMC Crystal Growth Simulator in Rust-WASM"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://amdson.github.io/blog/crystals/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Paedor",
+          "story_47732644",
+          "show_hn"
+        ],
+        "author": "Paedor",
+        "created_at": "2026-04-11T18:01:06Z",
+        "created_at_i": 1775930466,
+        "num_comments": 0,
+        "objectID": "47732644",
+        "points": 2,
+        "story_id": 47732644,
+        "story_text": "For those that are interested in self-assembly, or crystal structures, I made a general purpose crystal growth simulator. It can produce samples of the global crystal structure generated by any number of local particle interactions, and comes bundled with a simple editor for designing and testing crystal structures.<p>Would love to get feedback on the simulator, or on the abstractions I picked for it. While it can simulate scenarios similar to those represented by the aTAM or kTAM tile models, it is significantly more general, and to my knowledge, the first in its niche.",
+        "title": "Show HN: A General Purpose KMC Crystal Growth Simulator in Rust-WASM",
+        "updated_at": "2026-04-11T18:03:55Z",
+        "url": "https://amdson.github.io/blog/crystals/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "innovatorved"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Self-hostable STT service with a Deepgram-compatible listen API"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://vedgupta.in/projects/whisper-api/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_innovatorved",
+          "story_47732461",
+          "show_hn"
+        ],
+        "author": "innovatorved",
+        "created_at": "2026-04-11T17:40:42Z",
+        "created_at_i": 1775929242,
+        "num_comments": 0,
+        "objectID": "47732461",
+        "points": 2,
+        "story_id": 47732461,
+        "title": "Show HN: Self-hostable STT service with a Deepgram-compatible listen API",
+        "updated_at": "2026-04-11T17:42:26Z",
+        "url": "https://vedgupta.in/projects/whisper-api/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hwdsl2"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Docker-whisper: Self-hosted Whisper speech-to-text server (OpenAI API)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/hwdsl2/docker-whisper"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hwdsl2",
+          "story_47732384",
+          "show_hn"
+        ],
+        "author": "hwdsl2",
+        "children": [
+          47732625
+        ],
+        "created_at": "2026-04-11T17:31:23Z",
+        "created_at_i": 1775928683,
+        "num_comments": 1,
+        "objectID": "47732384",
+        "points": 6,
+        "story_id": 47732384,
+        "title": "Show HN: Docker-whisper: Self-hosted Whisper speech-to-text server (OpenAI API)",
+        "updated_at": "2026-04-12T11:42:29Z",
+        "url": "https://github.com/hwdsl2/docker-whisper"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yding"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Lines of Bash to automate LLM code review and fixes"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/yisding/reviewwiggum"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yding",
+          "story_47732321",
+          "show_hn"
+        ],
+        "author": "yding",
+        "children": [
+          47732637
+        ],
+        "created_at": "2026-04-11T17:24:46Z",
+        "created_at_i": 1775928286,
+        "num_comments": 1,
+        "objectID": "47732321",
+        "points": 2,
+        "story_id": 47732321,
+        "title": "Show HN: Lines of Bash to automate LLM code review and fixes",
+        "updated_at": "2026-04-11T18:01:28Z",
+        "url": "https://github.com/yisding/reviewwiggum"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "langtang1996"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FeedSense – A Private Recommendation System"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://feedsense.cc"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_langtang1996",
+          "story_47732317",
+          "show_hn"
+        ],
+        "author": "langtang1996",
+        "created_at": "2026-04-11T17:24:00Z",
+        "created_at_i": 1775928240,
+        "num_comments": 0,
+        "objectID": "47732317",
+        "points": 1,
+        "story_id": 47732317,
+        "title": "Show HN: FeedSense – A Private Recommendation System",
+        "updated_at": "2026-04-11T17:26:25Z",
+        "url": "https://feedsense.cc"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MarwanAlsoltany"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: serrors - Structured Errors for Go"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/MarwanAlsoltany/serrors"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_MarwanAlsoltany",
+          "story_47732304",
+          "show_hn"
+        ],
+        "author": "MarwanAlsoltany",
+        "children": [
+          47732305
+        ],
+        "created_at": "2026-04-11T17:22:58Z",
+        "created_at_i": 1775928178,
+        "num_comments": 1,
+        "objectID": "47732304",
+        "points": 1,
+        "story_id": 47732304,
+        "title": "Show HN: serrors - Structured Errors for Go",
+        "updated_at": "2026-04-11T18:43:44Z",
+        "url": "https://github.com/MarwanAlsoltany/serrors"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "some_furry"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Age-PHP: a PHP implementation of age encryption (post-quantum)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/soatok/age-php"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_some_furry",
+          "story_47732193",
+          "show_hn"
+        ],
+        "author": "some_furry",
+        "children": [
+          47732647
+        ],
+        "created_at": "2026-04-11T17:10:04Z",
+        "created_at_i": 1775927404,
+        "num_comments": 1,
+        "objectID": "47732193",
+        "points": 6,
+        "story_id": 47732193,
+        "title": "Show HN: Age-PHP: a PHP implementation of age encryption (post-quantum)",
+        "updated_at": "2026-04-12T05:56:42Z",
+        "url": "https://github.com/soatok/age-php"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "llamatheollama"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MarkitMe, Turn Anything into Markdown"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Luthiraa/markitme"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_llamatheollama",
+          "story_47732167",
+          "show_hn"
+        ],
+        "author": "llamatheollama",
+        "children": [
+          47733282,
+          47735154
+        ],
+        "created_at": "2026-04-11T17:06:15Z",
+        "created_at_i": 1775927175,
+        "num_comments": 3,
+        "objectID": "47732167",
+        "points": 4,
+        "story_id": 47732167,
+        "title": "Show HN: MarkitMe, Turn Anything into Markdown",
+        "updated_at": "2026-04-12T03:49:57Z",
+        "url": "https://github.com/Luthiraa/markitme"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stagas"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: rtdiff – Realtime Git diff GUI and AI commits, companion for vibecoding"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/stagas/rtdiff"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_stagas",
+          "story_47731928",
+          "show_hn"
+        ],
+        "author": "stagas",
+        "created_at": "2026-04-11T16:35:13Z",
+        "created_at_i": 1775925313,
+        "num_comments": 0,
+        "objectID": "47731928",
+        "points": 3,
+        "story_id": 47731928,
+        "title": "Show HN: rtdiff – Realtime Git diff GUI and AI commits, companion for vibecoding",
+        "updated_at": "2026-04-11T16:51:55Z",
+        "url": "https://github.com/stagas/rtdiff"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Jaguwa"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: OpenDescent, decentralised encrypted messenger, no servers, no accounts"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://open-descent.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Jaguwa",
+          "story_47731910",
+          "show_hn"
+        ],
+        "author": "Jaguwa",
+        "children": [
+          47731911,
+          47732025,
+          47732050,
+          47732040,
+          47732833
+        ],
+        "created_at": "2026-04-11T16:33:19Z",
+        "created_at_i": 1775925199,
+        "num_comments": 5,
+        "objectID": "47731910",
+        "points": 4,
+        "story_id": 47731910,
+        "title": "Show HN: OpenDescent, decentralised encrypted messenger, no servers, no accounts",
+        "updated_at": "2026-05-07T21:22:05Z",
+        "url": "https://open-descent.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjfoooo4"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I very frequently use Excalidraw for presentations and writing, but the charting ability is relatively limited.<p>This project surfaces a CLI which supports a wider variety of chart types and parameters.<p>Outputting a .excalidraw file means that rather than endlessly tweaking parameters to get chart elements positioned just right, you can simply drag them around like any other Excalidraw scene."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Excalicharts – Charting Library for Excalidraw"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/tombedor/excalicharts"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jjfoooo4",
+          "story_47731792",
+          "show_hn"
+        ],
+        "author": "jjfoooo4",
+        "created_at": "2026-04-11T16:17:37Z",
+        "created_at_i": 1775924257,
+        "num_comments": 0,
+        "objectID": "47731792",
+        "points": 2,
+        "story_id": 47731792,
+        "story_text": "I very frequently use Excalidraw for presentations and writing, but the charting ability is relatively limited.<p>This project surfaces a CLI which supports a wider variety of chart types and parameters.<p>Outputting a .excalidraw file means that rather than endlessly tweaking parameters to get chart elements positioned just right, you can simply drag them around like any other Excalidraw scene.",
+        "title": "Show HN: Excalicharts – Charting Library for Excalidraw",
+        "updated_at": "2026-04-11T16:38:57Z",
+        "url": "https://github.com/tombedor/excalicharts"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wh1le"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wanted a way to open .excalidraw files straight from the terminal without the web app. Couldn't find one, so I built it. Install via npm or flake.<p>Opens Excalidraw locally in your browser as a server<p>Auto-saves to disk, Works fully offline<p>Original feature request from 2020: <a href=\"https://github.com/excalidraw/excalidraw/issues/1261\" rel=\"nofollow\">https://github.com/excalidraw/excalidraw/issues/1261</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Excalidraw-edit – Open and edit .excalidraw files from the terminal"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/wh1le/excalidraw-edit"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_wh1le",
+          "story_47731778",
+          "show_hn"
+        ],
+        "author": "wh1le",
+        "created_at": "2026-04-11T16:15:20Z",
+        "created_at_i": 1775924120,
+        "num_comments": 0,
+        "objectID": "47731778",
+        "points": 1,
+        "story_id": 47731778,
+        "story_text": "Wanted a way to open .excalidraw files straight from the terminal without the web app. Couldn&#x27;t find one, so I built it. Install via npm or flake.<p>Opens Excalidraw locally in your browser as a server<p>Auto-saves to disk, Works fully offline<p>Original feature request from 2020: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;excalidraw&#x2F;excalidraw&#x2F;issues&#x2F;1261\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;excalidraw&#x2F;excalidraw&#x2F;issues&#x2F;1261</a>",
+        "title": "Show HN: Excalidraw-edit – Open and edit .excalidraw files from the terminal",
+        "updated_at": "2026-04-11T16:18:10Z",
+        "url": "https://github.com/wh1le/excalidraw-edit"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nykylomedia"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ColorPair – A free color-matching puzzle game for iOS"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/colorpair-puzzle-game/id6761508158"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nykylomedia",
+          "story_47731768",
+          "show_hn"
+        ],
+        "author": "nykylomedia",
+        "created_at": "2026-04-11T16:12:42Z",
+        "created_at_i": 1775923962,
+        "num_comments": 0,
+        "objectID": "47731768",
+        "points": 1,
+        "story_id": 47731768,
+        "title": "Show HN: ColorPair – A free color-matching puzzle game for iOS",
+        "updated_at": "2026-04-11T16:18:10Z",
+        "url": "https://apps.apple.com/us/app/colorpair-puzzle-game/id6761508158"
+      }
+    ],
+    "hitsPerPage": 60,
+    "nbHits": 16184,
+    "nbPages": 17,
+    "page": 0,
+    "params": "tags=show_hn&numericFilters=created_at_i%3E1768219200%2Ccreated_at_i%3C1775995200&hitsPerPage=60&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 3,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 18
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 2
+        },
+        "merge": {
+          "total": 1
+        },
+        "total": 1
+      },
+      "fetch": {
+        "scanning": 1,
+        "total": 2
+      },
+      "total": 3
+    },
+    "query": "",
+    "serverTimeMS": 6
+  }
+}
