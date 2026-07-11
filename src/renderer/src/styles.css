@@ -3598,15 +3598,37 @@ button {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
-  border: 1px solid #232323;
+  border: 1px solid rgba(88, 101, 242, 0.22);
   border-right: 0;
   border-radius: 12px 0 0 12px;
-  background: #131313;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+  /* Glassy, translucent surface — visibly a different layer from the solid
+     main-chat canvas behind it. */
+  background: rgba(20, 21, 27, 0.58);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
 }
 
 .agent-overlay.is-selected {
-  border-color: #4a4a4a;
+  border-color: rgba(88, 101, 242, 0.55);
+  background: rgba(24, 25, 33, 0.72);
+}
+
+/* While the user works in the main chat, agent windows recede: dimmer, less
+   saturated, clearly out of focus. Hover lifts one back to readable. */
+.chat-pane.is-main-focused .agent-overlay {
+  opacity: 0.55;
+  filter: saturate(0.75);
+}
+
+.chat-pane.is-main-focused .agent-overlay:hover {
+  opacity: 0.9;
+  filter: none;
 }
 
 .agent-overlay.is-flash {
@@ -3616,11 +3638,11 @@ button {
 @keyframes agent-flash {
   0% {
     border-color: #4a90d9;
-    box-shadow: 0 0 0 1px #4a90d9, 0 3px 14px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 0 0 1px #4a90d9, 0 3px 14px rgba(0, 0, 0, 0.22);
   }
   100% {
-    border-color: #232323;
-    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+    border-color: rgba(88, 101, 242, 0.22);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
   }
 }
 
