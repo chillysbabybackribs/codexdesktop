@@ -3885,7 +3885,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   }
 
   return (
-    <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
+    <form className="browser-toolbar" onSubmit={handleSubmit}>
       <button
         type="button"
         className="browser-nav-button"
