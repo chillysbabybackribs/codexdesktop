@@ -44,9 +44,33 @@ export type CodexNotificationEvent = {
 
 export type CodexEvent = CodexStatusEvent | CodexNotificationEvent
 
+export type ChatAttachment = {
+  id: string
+  kind: 'image' | 'file'
+  name: string
+  path: string
+  mediaType: string
+  size: number
+}
+
+export type AttachmentSaveInput = {
+  name: string
+  mediaType: string
+  data: Uint8Array
+}
+
+export type AttachmentPreviewParams = {
+  path: string
+}
+
+export type AttachmentPreviewResult = {
+  dataUrl: string | null
+}
+
 export type CodexSendMessageParams = {
   threadId?: string | null
   text: string
+  attachments?: ChatAttachment[]
   cwd?: string | null
   /**
    * Model slug to run the turn with. Omitted/null keeps the CLI-configured
@@ -167,6 +191,9 @@ export const ipcChannels = {
   traceLoad: 'trace:load',
   traceSave: 'trace:save',
   artifactReadImage: 'artifact:readImage',
+  attachmentPick: 'attachment:pick',
+  attachmentSave: 'attachment:save',
+  attachmentPreview: 'attachment:preview',
   notificationBackgroundTurn: 'notification:backgroundTurn',
   workspacePick: 'workspace:pick'
 } as const
