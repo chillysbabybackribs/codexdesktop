@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { AttachmentSaveInput, ChatAttachment } from '../../shared/ipc'
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 
-export function AttachmentButton({ disabled, onAdd }: { disabled?: boolean; onAdd: (items: ChatAttachment[]) => void }): React.JSX.Element {
+export function AttachmentButton({ disabled, onAdd, onError }: { disabled?: boolean; onAdd: (items: ChatAttachment[]) => void; onError?: (message: string) => void }): React.JSX.Element {
   const [busy, setBusy] = useState(false)
   return (
     <button
@@ -13,7 +13,10 @@ export function AttachmentButton({ disabled, onAdd }: { disabled?: boolean; onAd
       disabled={disabled || busy}
       onClick={() => {
         setBusy(true)
-        void window.api.attachments.pick().then(onAdd).finally(() => setBusy(false))
+        void window.api.attachments.pick()
+          .then(onAdd)
+          .catch((error: unknown) => onError?.(error instanceof Error ? error.message : String(error)))
+          .finally(() => setBusy(false))
       }}
     >
       <PaperclipIcon />

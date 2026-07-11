@@ -56,6 +56,8 @@ import {
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
+import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
+import type { ChatAttachment } from '../../shared/ipc'
 
 type SystemItem = {
   type: 'system'
@@ -628,10 +630,10 @@ export default function App(): React.JSX.Element {
     window.addEventListener('pointerup', handleUp, { once: true })
   }
 
-  const handleSend = async (text: string): Promise<boolean> => {
+  const handleSend = async (text: string, attachments: ChatAttachment[] = []): Promise<boolean> => {
     const trimmed = text.trim()
 
-    if (!trimmed || isSending || activeTurnId) {
+    if ((!trimmed && !attachments.length) || isSending || activeTurnId) {
       return false
     }
 
@@ -645,6 +647,7 @@ export default function App(): React.JSX.Element {
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
         text: trimmed,
+        attachments,
         cwd: workspace,
         model: selectedModel
       })
@@ -1275,7 +1278,7 @@ export default function App(): React.JSX.Element {
     }))
   }
 
-  async function handleAgentSend(key: string, text: string): Promise<boolean> {
+  async function handleAgentSend(key: string, text: string, attachments: ChatAttachment[] = []): Promise<boolean> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return false
 
@@ -1297,11 +1300,12 @@ export default function App(): React.JSX.Element {
         bindAgentThread(key, threadId)
       }
 
-      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text })
+      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
       const outgoingText = session.watchesMain ? `${buildMainChatContext()}\n\n${text}` : text
       const response = await window.api.codex.sendMessage({
         threadId,
         text: outgoingText,
+        attachments,
         cwd: workspaceRef.current,
         model: agentModel
       })
@@ -2383,7 +2387,7 @@ function ChatPane({
   models: Model[]
   selectedModel: string | null
   onSelectModel: (model: string) => void
-  onSend: (text: string) => Promise<boolean>
+  onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
   onNewThread: () => void
@@ -2408,7 +2412,7 @@ function ChatPane({
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
-  onAgentSend: (key: string, text: string) => Promise<boolean>
+  onAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
 }): React.JSX.Element {
@@ -3408,10 +3412,12 @@ const ChatItemView = memo(function ChatItemView({
       .filter((content) => content.type === 'text')
       .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
       .join('\n')
+    const attachments = attachmentsFromUserInput(item.content)
 
     return (
       <article className="message message-user">
-        <p>{text}</p>
+        {text ? <p>{text}</p> : null}
+        <AttachmentStrip attachments={attachments} />
       </article>
     )
   }
@@ -3881,12 +3887,14 @@ function Composer({
   isLoading: boolean
   isTurnActive: boolean
   status: string
-  onSend: (text: string) => Promise<boolean>
+  onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
   footerExtras?: React.ReactNode
 }): React.JSX.Element {
   const [value, setValue] = useState('')
+  const [attachments, setAttachments] = useState<ChatAttachment[]>([])
+  const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useLayoutEffect(() => {
@@ -3900,19 +3908,35 @@ function Composer({
     event.preventDefault()
 
     const text = value.trim()
-    if (!text || isLoading) {
+    if ((!text && !attachments.length) || isLoading) {
       return
     }
 
     setValue('')
-    const accepted = isTurnActive ? await onSteer(text) : await onSend(text)
+    const submittedAttachments = attachments
+    if (!isTurnActive) setAttachments([])
+    const accepted = isTurnActive ? await onSteer(text) : await onSend(text, submittedAttachments)
     if (!accepted) {
       setValue((current) => current ? `${text}\n${current}` : text)
+      if (!isTurnActive) setAttachments(submittedAttachments)
     }
   }
 
   return (
-    <form className="composer" onSubmit={handleSubmit}>
+    <form
+      className="composer"
+      onSubmit={handleSubmit}
+      onDragOver={(event) => { if (!isTurnActive && event.dataTransfer.types.includes('Files')) event.preventDefault() }}
+      onDrop={(event) => {
+        if (isTurnActive) return
+        const files = Array.from(event.dataTransfer.files)
+        if (!files.length) return
+        event.preventDefault()
+        setAttachmentError(null)
+        void saveBrowserFiles(files).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
+      }}
+    >
+      <AttachmentStrip attachments={attachments} removable onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
       <textarea
         ref={textareaRef}
         value={value}
@@ -3920,6 +3944,14 @@ function Composer({
         placeholder={isTurnActive ? 'Add guidance while Codex works…' : docked ? 'Reply…' : 'Plan, build, or ask anything…'}
         disabled={isLoading}
         onChange={(event) => setValue(event.target.value)}
+        onPaste={(event) => {
+          if (isTurnActive) return
+          const images = Array.from(event.clipboardData.files).filter((file) => file.type.startsWith('image/'))
+          if (!images.length) return
+          event.preventDefault()
+          setAttachmentError(null)
+          void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
+        }}
         onKeyDown={(event) => {
           if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault()
@@ -3928,8 +3960,9 @@ function Composer({
         }}
       />
       <div className="composer-footer">
-        <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{status}</span>
+        <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{attachmentError ?? status}</span>
         <div className="composer-actions">
+          <AttachmentButton disabled={isLoading || isTurnActive} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
           {footerExtras}
           {isTurnActive ? (
             <button
@@ -3946,7 +3979,7 @@ function Composer({
             type="submit"
             className="send-button"
             aria-label={isTurnActive ? 'Add guidance to turn' : 'Send message'}
-            disabled={isLoading || !value.trim()}
+            disabled={isLoading || (!value.trim() && !attachments.length)}
           >
             <SendArrowIcon />
           </button>
