@@ -3395,7 +3395,7 @@ function Composer({
         <PluginBrowserModal
           workspace={workspace}
           onClose={() => setIsPluginBrowserOpen(false)}
-          onChanged={(plugins) => setInstalledPlugins(plugins)}
+          onChanged={setInstalledPlugins}
         />
       ) : null}
     </form>
