@@ -6,6 +6,7 @@ import {
   completeAgentMessage,
   createAgentSession,
   parseAgentDock,
+  resetAgentSession,
   serializeAgentDock,
   stripMainChatContext,
   updateAgentSession
@@ -18,6 +19,25 @@ test('agent session updates preserve unrelated sessions', () => {
 
   assert.equal(updated[0]?.status, 'working')
   assert.equal(updated[1], second)
+})
+
+test('resetting an agent starts a fresh chat in the same configured slot', () => {
+  const session = {
+    ...createAgentSession('one', 'Agent 2'),
+    threadId: 'thread-1',
+    status: 'done' as const,
+    messages: [{ id: 'answer', role: 'assistant' as const, text: 'Complete' }],
+    watchesMain: true,
+    model: 'gpt-5'
+  }
+  const reset = resetAgentSession(session)
+
+  assert.equal(reset.key, 'one')
+  assert.equal(reset.title, 'Agent 2')
+  assert.equal(reset.model, 'gpt-5')
+  assert.equal(reset.watchesMain, true)
+  assert.equal(reset.threadId, null)
+  assert.deepEqual(reset.messages, [])
 })
 
 test('agent messages dedupe terminal errors and complete streamed text', () => {

@@ -52,6 +52,18 @@ export function createAgentSession(key: string, title: string): AgentSession {
   }
 }
 
+export function resetAgentSession(session: AgentSession): AgentSession {
+  return {
+    ...session,
+    threadId: null,
+    status: 'idle',
+    turnId: null,
+    messages: [],
+    contextUsage: null,
+    isCompacting: false
+  }
+}
+
 export function findAgentSessionByThread(sessions: AgentSession[], threadId: string): AgentSession | null {
   return sessions.find((session) => session.threadId === threadId) ?? null
 }

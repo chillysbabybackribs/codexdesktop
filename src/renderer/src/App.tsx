@@ -33,6 +33,7 @@ import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
+import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
@@ -70,6 +71,7 @@ import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
+import { createAgentLifecycle } from './agent-lifecycle'
 import { useAgentSessions } from './useAgentSessions'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
@@ -1043,15 +1045,7 @@ export default function App(): React.JSX.Element {
 
     cancelAgentRecovery(key)
     agentStartQueueRef.current = agentStartQueueRef.current.filter((candidate) => candidate !== key)
-    patchAgentSession(key, (current) => ({
-      ...current,
-      threadId: null,
-      status: 'idle',
-      turnId: null,
-      messages: [],
-      contextUsage: null,
-      isCompacting: false
-    }))
+    patchAgentSession(key, resetAgentSession)
     if (session.threadId && session.threadId !== activeThreadIdRef.current) {
       void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
     }
