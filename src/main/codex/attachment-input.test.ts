@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { ChatAttachment } from '../../shared/ipc.ts'
-import { attachmentTurnInputs } from './codex-client.ts'
+import { attachmentTurnInputs } from './attachment-input.ts'
 
 test('image attachments use bounded high detail while files remain path mentions', () => {
   const attachments: ChatAttachment[] = [

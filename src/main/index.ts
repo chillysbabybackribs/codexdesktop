@@ -21,6 +21,7 @@ import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
 import { buildSuggestions } from './browser/omnibox-suggestions.js'
+import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
@@ -312,8 +313,10 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))
   ipcMain.handle(ipcChannels.browserActivateTab, (_event, tabId: string) => tabManager?.activateTab(tabId))
+  // Address-bar input goes through the strict interpreter: dangerous schemes
+  // (javascript:, file:, data:) become searches instead of navigations.
   ipcMain.handle(ipcChannels.browserNavigate, (_event, tabId: string, input: string) => {
-    tabManager?.navigate(tabId, input)
+    tabManager?.navigate(tabId, describeNavigationInput(String(input ?? '')).url)
   })
   ipcMain.handle(ipcChannels.browserBack, (_event, tabId: string) => tabManager?.goBack(tabId))
   ipcMain.handle(ipcChannels.browserForward, (_event, tabId: string) => tabManager?.goForward(tabId))

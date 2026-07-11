@@ -447,6 +447,13 @@ export class TabManager {
         event.preventDefault()
         this.window.webContents.send('browser:findRequested')
       }
+      if ((input.control || input.meta) && input.key.toLowerCase() === 'l') {
+        event.preventDefault()
+        // Keyboard focus is in the page's webContents; hand it back to the
+        // chrome renderer or the omnibox input.focus() would be a no-op.
+        this.window.webContents.focus()
+        this.window.webContents.send('browser:focusOmnibox')
+      }
     })
 
     webContents.on('context-menu', (_event, params) => {
