@@ -55,14 +55,17 @@ function jobComplete(record) {
 
 const audited = records.map(record => {
   const money = moneyAudit(record);
-  const firsthand = firsthandAudit(record);
+  const firsthandLead = firsthandAudit(record);
+  const confidenceQualified = ['medium','high'].includes(record.classificationConfidence);
+  const firsthand = firsthandLead && confidenceQualified;
+  const exactMoney = money.qualified && confidenceQualified && ['exact_job_spend','exact_job_wage'].includes(record.moneyType);
   return {
     recordId: record.recordId, lane: record._laneDir, source: record.source, url: record.url,
     retrievedVerified: record.retrievalStatus === 'verified', artifactExists: artifactExists(record),
     publishedYear: yearOf(record), statedWindow: record.window,
     windowMismatch: record.window === 'current' && yearOf(record) && yearOf(record) < new Date().getUTCFullYear() - 1,
-    collectorFirsthand: Boolean(record.firsthand), qualifiedFirsthand: firsthand,
-    collectorMoney: Boolean(record.priceOrWage), moneyType: money.type, qualifiedExactJobMoney: money.qualified,
+    collectorFirsthand: Boolean(record.firsthand), heuristicFirsthandLead:firsthandLead, qualifiedFirsthand: firsthand,
+    collectorMoney: Boolean(record.priceOrWage), inferredMoneyType: money.type, statedMoneyType:record.moneyType || null, qualifiedExactJobMoney: exactMoney,
     qualifiedRepeatedWorkflow: firsthand && (Boolean(record.frequency) || recurrenceRe.test(record.textExcerpt || '')),
     completeJobSentence: jobComplete(record),
     lowConfidenceHeuristic: !record.classificationConfidence || record.classificationConfidence === 'low'

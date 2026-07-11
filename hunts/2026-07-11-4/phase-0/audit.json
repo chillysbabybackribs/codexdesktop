@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "auditedAt": "2026-07-11T15:57:24.973Z",
+  "auditedAt": "2026-07-11T15:57:45.393Z",
   "phase0": "hunts/2026-07-11-4/phase-0",
   "totals": {
     "records": 750,
     "retrievedVerified": 750,
-    "qualifiedFirsthand": 235,
-    "qualifiedRepeatedWorkflow": 62,
+    "qualifiedFirsthand": 0,
+    "qualifiedRepeatedWorkflow": 0,
     "currencyMentions": 103,
-    "qualifiedExactJobMoney": 7,
+    "qualifiedExactJobMoney": 0,
     "completeJobSentences": 0,
     "lowConfidenceHeuristic": 750
   },
@@ -27,8 +27,8 @@
     "formation-feedback": {
       "records": 470,
       "retrievedVerified": 470,
-      "qualifiedFirsthand": 103,
-      "qualifiedRepeatedWorkflow": 12,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
       "currencyMentions": 19,
       "qualifiedExactJobMoney": 0,
       "completeJobSentences": 0,
@@ -38,10 +38,10 @@
     "buyer-reality": {
       "records": 178,
       "retrievedVerified": 178,
-      "qualifiedFirsthand": 132,
-      "qualifiedRepeatedWorkflow": 50,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
       "currencyMentions": 67,
-      "qualifiedExactJobMoney": 7,
+      "qualifiedExactJobMoney": 0,
       "completeJobSentences": 0,
       "staleCurrentWindow": 79,
       "missingArtifacts": 0
