@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { basename, extname, join, relative, resolve } from 'node:path'
 import type { AttachmentSaveInput, ChatAttachment } from '../shared/ipc.js'
 
@@ -7,6 +7,7 @@ const maxFileBytes = 50 * 1024 * 1024
 const maxMessageBytes = 50 * 1024 * 1024
 const maxAttachments = 10
 const maxImages = 4
+const maxStoreBytes = 500 * 1024 * 1024
 
 const allowedFileExtensions = new Set([
   '.pdf', '.txt', '.md', '.markdown', '.csv', '.tsv', '.json', '.jsonl', '.yaml', '.yml', '.xml',
@@ -35,6 +36,10 @@ export class AttachmentStore {
 
     const root = this.root()
     await mkdir(root, { recursive: true })
+    const storedBytes = await directoryBytes(root)
+    if (storedBytes + totalBytes > maxStoreBytes) {
+      throw new Error('Attachment storage is full. Remove older chat attachments before adding more files.')
+    }
     const persisted: ChatAttachment[] = []
 
     try {
@@ -43,8 +48,13 @@ export class AttachmentStore {
         const storedName = `${id}--${item.name}`
         const path = join(root, storedName)
         const temporaryPath = `${path}.tmp`
-        await writeFile(temporaryPath, item.buffer, { flag: 'wx' })
-        await rename(temporaryPath, path)
+        try {
+          await writeFile(temporaryPath, item.buffer, { flag: 'wx' })
+          await rename(temporaryPath, path)
+        } catch (error) {
+          await rm(temporaryPath, { force: true })
+          throw error
+        }
         persisted.push({ id, kind: item.kind, name: item.name, path, mediaType: item.mediaType, size: item.buffer.length })
       }
       return persisted
@@ -118,6 +128,7 @@ function validateInput(input: AttachmentSaveInput): {
   const image = detectImage(buffer)
   if (image) {
     if (buffer.length > maxImageBytes) throw new Error(`${name} exceeds the 20 MB image limit`)
+    if (image.mediaType === 'image/gif' && gifFrameCount(buffer) > 1) throw new Error(`${name} is animated; only still GIF images are supported`)
     return { name: ensureExtension(name, image.extension), kind: 'image', mediaType: image.mediaType, buffer }
   }
 
@@ -161,4 +172,26 @@ function ensureExtension(name: string, extension: string): string {
 function normalizedMediaType(value: string): string {
   const normalized = value.split(';', 1)[0]?.trim().toLowerCase()
   return normalized && /^[a-z0-9.+-]+\/[a-z0-9.+-]+$/.test(normalized) ? normalized : 'application/octet-stream'
+}
+
+function gifFrameCount(buffer: Buffer): number {
+  let frames = 0
+  for (let index = 6; index < buffer.length; index += 1) {
+    if (buffer[index] === 0x2c) frames += 1
+    if (frames > 1) return frames
+  }
+  return frames
+}
+
+async function directoryBytes(directory: string): Promise<number> {
+  let total = 0
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (!entry.isFile() || entry.name.endsWith('.tmp')) continue
+    try {
+      total += (await stat(join(directory, entry.name))).size
+    } catch {
+      // A concurrent cleanup may remove an entry between readdir and stat.
+    }
+  }
+  return total
 }

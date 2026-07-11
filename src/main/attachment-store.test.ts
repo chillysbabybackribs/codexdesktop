@@ -42,3 +42,16 @@ test('attachment store rejects extension spoofing and unsupported binaries', asy
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test('attachment verification rejects renderer path and identity tampering', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-attachments-'))
+  try {
+    const store = new AttachmentStore(directory)
+    const [attachment] = await store.persistFiles([{ name: 'shot.png', mediaType: 'image/png', data: onePixelPng }])
+    assert.ok(attachment)
+    await assert.rejects(store.verify([{ ...attachment, path: join(directory, '..', 'shot.png') }]), /not owned/)
+    await assert.rejects(store.verify([{ ...attachment, id: crypto.randomUUID() }]), /identity does not match/)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
