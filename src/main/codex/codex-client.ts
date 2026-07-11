@@ -146,7 +146,7 @@ export class CodexClient extends EventEmitter {
     let page = 0
 
     while (wanted.size && page < 24) {
-      const response = await this.request<AppsListResponse>('app/list', {
+      const response: AppsListResponse = await this.request<AppsListResponse>('app/list', {
         cursor,
         limit: 500,
         ...(forceRefetch && page === 0 ? { forceRefetch: true } : {})

@@ -3427,6 +3427,77 @@ button {
   scrollbar-color: #38383b transparent;
 }
 
+.plugin-setup-panel {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 15px 16px;
+  border: 1px solid #66553b;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #27231d, #211f1c 62%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%), 0 10px 24px rgb(0 0 0 / 16%);
+  animation: plugin-setup-in 180ms ease-out;
+}
+
+@keyframes plugin-setup-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.plugin-setup-panel.is-success { border-color: #365c49; background: linear-gradient(135deg, #1c2822, #1b211e 68%); }
+.plugin-setup-panel.is-problem { border-color: #6a4145; background: linear-gradient(135deg, #2b2021, #221d1e 68%); }
+
+.plugin-setup-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid #745f3e;
+  border-radius: 10px;
+  background: #342c20;
+  color: #e7bc78;
+  font-size: 18px;
+  font-weight: 690;
+}
+
+.plugin-setup-panel.is-success .plugin-setup-icon { border-color: #3c6b52; background: #21372b; color: #91d5ac; }
+.plugin-setup-panel.is-problem .plugin-setup-icon { border-color: #78464b; background: #3c2528; color: #ef9ea5; }
+.plugin-setup-copy { min-width: 0; }
+.plugin-setup-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 9px; }
+.plugin-setup-heading span { color: #b49a70; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.plugin-setup-panel.is-success .plugin-setup-heading span { color: #79b48f; }
+.plugin-setup-panel.is-problem .plugin-setup-heading span { color: #cb8087; }
+.plugin-setup-heading strong { color: #f0eee9; font-size: 14px; font-weight: 640; letter-spacing: -.01em; }
+.plugin-setup-copy p { max-width: 62ch; margin: 5px 0 0; color: #aaa49a; font-size: 12px; line-height: 1.48; }
+.plugin-setup-actions { display: flex; align-items: center; gap: 7px; }
+.plugin-setup-actions button { min-height: 44px; padding: 0 14px; border-radius: 9px; font-size: 12px; font-weight: 650; cursor: pointer; }
+.plugin-setup-actions button:disabled { opacity: .58; cursor: default; }
+.plugin-setup-primary { border: 1px solid #536b94; background: #334563; color: #edf3ff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 7%); }
+.plugin-setup-primary:hover:not(:disabled) { border-color: #6884b2; background: #3d5276; }
+.plugin-setup-secondary { border: 1px solid transparent; background: transparent; color: #999da3; }
+.plugin-setup-secondary:hover { border-color: #3c3d40; background: #29292b; color: #d8dadd; }
+.plugin-setup-progress { display: flex; align-items: center; gap: 7px; margin-top: 8px; color: #bd9e6e; font-size: 11px; }
+.plugin-setup-spinner { width: 12px; height: 12px; border: 1.5px solid #524733; border-top-color: #d5a65e; border-radius: 50%; animation: work-spin 720ms linear infinite; }
+
+.plugin-action-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 14px;
+  padding: 11px 12px 11px 14px;
+  border: 1px solid #623b3f;
+  border-radius: 9px;
+  background: #2b2021;
+  color: #e7a0a6;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.plugin-action-error button { width: 30px; height: 30px; border: 0; border-radius: 7px; background: transparent; color: #bb777d; cursor: pointer; }
+.plugin-action-error button:hover { background: #3a292b; color: #ffc2c7; }
+
 .plugin-browser-group > h3 { margin: 0 0 11px 2px; color: #b7b7ba; font-size: 12px; font-weight: 560; letter-spacing: -.005em; }
 
 .plugin-browser-grid {
@@ -3459,36 +3530,61 @@ button {
 .plugin-browser-card-copy h4 { display: -webkit-box; margin: 0 0 4px; overflow: hidden; color: var(--plugin-text); font-size: 14px; font-weight: 580; line-height: 1.25; letter-spacing: -.01em; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .plugin-browser-card-copy p { display: -webkit-box; margin: 0; overflow: hidden; color: var(--plugin-text-muted); font-size: 11.5px; line-height: 1.38; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 
-.plugin-install-button { min-width: 68px; min-height: 36px; padding: 0 14px; border: 1px solid var(--plugin-border-strong); border-radius: 18px; background: #3a3a3c; color: #eeeeef; font-size: 12px; font-weight: 640; cursor: pointer; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
+.plugin-card-status { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #86bc99; font-size: 10.5px; font-weight: 620; }
+.plugin-card-status i { width: 6px; height: 6px; border-radius: 50%; background: #68a77e; box-shadow: 0 0 0 3px rgb(104 167 126 / 10%); }
+.plugin-card-status.needs-auth { color: #c4a06c; }
+.plugin-card-status.needs-auth i { background: #c49654; box-shadow: 0 0 0 3px rgb(196 150 84 / 11%); }
+
+.plugin-card-actions { display: grid; justify-items: stretch; gap: 2px; min-width: 78px; }
+
+.plugin-install-button { min-width: 72px; min-height: 44px; padding: 0 14px; border: 1px solid var(--plugin-border-strong); border-radius: 22px; background: #3a3a3c; color: #eeeeef; font-size: 12px; font-weight: 640; cursor: pointer; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
 .plugin-install-button:hover:not(:disabled) { border-color: #5a5a5f; background: #4a4a4d; }
 .plugin-install-button.is-installed { border-color: #3a3a3d; background: #29292b; color: #a8a8ac; }
 .plugin-install-button.is-installed:hover:not(:disabled) { border-color: #684549; background: #3a292b; color: #edb0b4; }
+.plugin-install-button.needs-auth { border-color: #596f95; background: #354865; color: #edf3ff; }
+.plugin-install-button.needs-auth:hover:not(:disabled) { border-color: #7189b3; background: #405777; }
 .plugin-install-button:disabled { opacity: .48; cursor: default; }
+.plugin-remove-link { min-height: 32px; border: 0; background: transparent; color: #777b81; font-size: 10.5px; cursor: pointer; }
+.plugin-remove-link:hover:not(:disabled) { color: #d88f95; }
 
 .plugin-mention-select:focus-visible,
 .plugin-remove:focus-visible,
 .browse-plugins-button:focus-visible,
 .plugin-browser-back:focus-visible,
 .plugin-install-button:focus-visible { outline: 2px solid var(--plugin-focus, #7189b5); outline-offset: 2px; }
+.plugin-setup-actions button:focus-visible,
+.plugin-action-error button:focus-visible,
+.plugin-remove-link:focus-visible { outline: 2px solid var(--plugin-focus, #7189b5); outline-offset: 2px; }
 
 @container (max-width: 780px) {
   .plugin-browser-grid { grid-template-columns: 1fr; }
+  .plugin-setup-panel { grid-template-columns: 42px minmax(0, 1fr); }
+  .plugin-setup-actions { grid-column: 2; justify-self: start; }
 }
 
 @container (max-width: 520px) {
   .plugin-browser-header { padding: 9px 14px; }
   .plugin-browser-tools { padding: 14px 18px; }
   .plugin-browser-catalog { padding: 15px 18px 20px; }
-  .plugin-browser-card { min-height: 98px; }
+  .plugin-browser-card { grid-template-columns: 48px minmax(0, 1fr); min-height: 98px; }
+  .plugin-browser-card .plugin-glyph.is-large { width: 48px; height: 48px; }
+  .plugin-card-actions { grid-column: 1 / -1; grid-template-columns: minmax(112px, 1fr) auto; align-items: center; justify-items: stretch; }
+  .plugin-remove-link { min-width: 70px; min-height: 44px; }
+  .plugin-setup-panel { grid-template-columns: 36px minmax(0, 1fr); padding: 13px; }
+  .plugin-setup-icon { width: 34px; height: 34px; border-radius: 9px; }
+  .plugin-setup-actions { grid-column: 1 / -1; width: 100%; }
+  .plugin-setup-actions button { flex: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .plugin-mention-menu,
   .plugin-browser-view { animation: none; }
   .plugin-browser-card,
+  .plugin-setup-panel,
   .plugin-install-button,
   .plugin-browser-tools label { transition: none; }
   .plugin-browser-card:hover { transform: none; }
+  .plugin-setup-spinner { animation-duration: 1.4s; }
   .settings-navigation-row,
   .settings-navigation-arrow { transition: none; }
   .settings-navigation-row:hover .settings-navigation-arrow { transform: none; }

@@ -23,7 +23,7 @@ function plugin(overrides: Partial<PluginSummary> = {}): PluginSummary {
     keywords: [],
     ...overrides
   }
-}
+})
 
 function marketplace(overrides: Partial<PluginMarketplaceEntry> = {}): PluginMarketplaceEntry {
   return {
