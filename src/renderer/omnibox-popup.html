@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+    />
+    <title>Suggestions</title>
+    <style>
+      /* Row/card metrics are mirrored in src/main/browser/omnibox-popup.ts
+         (ROW_HEIGHT / CARD_CHROME / SHADOW_SPACE) — keep them in sync. */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background: transparent;
+        overflow: hidden;
+        font-family: system-ui, sans-serif;
+        user-select: none;
+      }
+
+      #card {
+        margin: 0 2px 14px;
+        padding: 6px 0;
+        border: 1px solid #34383d;
+        border-radius: 10px;
+        background: #181a1d;
+        box-shadow: 0 6px 14px rgb(0 0 0 / 35%);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 34px minmax(0, auto) minmax(0, 1fr);
+        align-items: center;
+        height: 34px;
+        padding-right: 14px;
+        cursor: default;
+        font-size: 12.5px;
+        white-space: nowrap;
+      }
+
+      .row.is-selected,
+      .row:hover {
+        background: #24282e;
+      }
+
+      .row-icon {
+        justify-self: center;
+        width: 14px;
+        height: 14px;
+        color: #7d848b;
+      }
+
+      .row-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #e4e6e8;
+      }
+
+      .row-detail {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: 10px;
+        color: #7d848b;
+      }
+
+      .row-detail:not(:empty)::before {
+        content: '— ';
+      }
+    </style>
+  </head>
+  <body>
+    <div id="card"></div>
+    <script type="module" src="/src/omnibox-popup.ts"></script>
+  </body>
+</html>

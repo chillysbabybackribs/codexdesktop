@@ -51,6 +51,15 @@ type JsonRpcMessage = {
   error?: { code: number; message: string; data?: unknown }
 }
 
+export function attachmentTurnInputs(attachments: ChatAttachment[]): UserInput[] {
+  return attachments.map((attachment): UserInput => attachment.kind === 'image'
+    // `auto` maps to original-resolution processing on current GPT-5.5/5.6
+    // models. High retains screenshot fidelity while applying a finite
+    // image-token budget instead of carrying full-size pixels by default.
+    ? { type: 'localImage', path: attachment.path, detail: 'high' }
+    : { type: 'mention', name: attachment.name, path: attachment.path })
+}
+
 type PendingRequest = {
   resolve: (value: unknown) => void
   reject: (reason: Error) => void
@@ -416,12 +425,7 @@ export class CodexClient extends EventEmitter {
         text: visibleText,
         text_elements: []
       } satisfies UserInput] : []),
-      ...attachments.map((attachment): UserInput => attachment.kind === 'image'
-        // `auto` maps to original-resolution processing on current GPT-5.5/5.6
-        // models. High retains screenshot fidelity while applying a finite
-        // image-token budget instead of carrying full-size pixels by default.
-        ? { type: 'localImage', path: attachment.path, detail: 'high' }
-        : { type: 'mention', name: attachment.name, path: attachment.path }),
+      ...attachmentTurnInputs(attachments),
       ...skills.map((skill): UserInput => ({
         type: 'skill',
         name: skill.name,

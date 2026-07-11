@@ -37,6 +37,7 @@ import type { ThreadGoalStatus } from '../../shared/codex-protocol/v2/ThreadGoal
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
+import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
@@ -1247,8 +1248,7 @@ export default function App(): React.JSX.Element {
               for (const item of turn.items) {
                 if (item.type === 'userMessage') {
                   const text = item.content
-                    .filter((content) => content.type === 'text')
-                    .map((content) => content.text)
+                    .flatMap((content: UserInput) => content.type === 'text' ? [content.text] : [])
                     .join('\n')
                   const attachments = attachmentsFromUserInput(item.content)
                   if (text || attachments.length) {
