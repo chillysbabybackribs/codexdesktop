@@ -3242,6 +3242,8 @@ function ThreadScroll({
         // Layout jitter, not the reader. Keep the anchor; re-pin next commit.
         return
       }
+      // eslint-disable-next-line no-console
+      console.log('[RELEASE]', JSON.stringify({ userTop: node ? Math.round(node.getBoundingClientRect().top - el.getBoundingClientRect().top) : 'no-node', scrollTop: Math.round(el.scrollTop) }))
       anchorTurnRef.current = null
       setSpacerOn(false)
       if (anchorFrameRef.current !== null) {
