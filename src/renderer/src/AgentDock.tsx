@@ -7,32 +7,9 @@ import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
+import type { AgentSession } from './agent-session-model'
 
-export type AgentLiteMessage = {
-  id: string
-  role: 'user' | 'assistant'
-  text: string
-  attachments?: ChatAttachment[]
-}
-
-// Lightweight state for a background agent conversation. The focused thread
-// keeps the full activity/telemetry pipeline in App; background threads only
-// track what the dock renders: plain messages and turn status.
-export type AgentSession = {
-  key: string
-  threadId: string | null
-  title: string
-  status: 'idle' | 'working' | 'done'
-  turnId: string | null
-  messages: AgentLiteMessage[]
-  // Optional helper mode: when true, each send includes a compact digest of
-  // the main chat so the agent can answer questions about it.
-  watchesMain: boolean
-  // Per-agent model override; null follows the main chat's selected model.
-  model: string | null
-  contextUsage: ThreadTokenUsage | null
-  isCompacting: boolean
-}
+export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
 export function AgentTabStrip({
   sessions,

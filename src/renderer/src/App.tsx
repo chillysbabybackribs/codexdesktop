@@ -69,6 +69,17 @@ import {
 } from './item-notifications'
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
+import {
+  appendAgentSessionMessage,
+  applyAgentDeltas,
+  completeAgentMessage,
+  createAgentSession,
+  findAgentSessionByThread,
+  parseAgentDock,
+  serializeAgentDock,
+  stripMainChatContext,
+  updateAgentSession
+} from './agent-session-model'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -183,7 +194,7 @@ export default function App(): React.JSX.Element {
   // Batching every delta kind — not just agent text — is what keeps a long
   // turn's reasoning/command streams from re-rendering the transcript per token.
   const pendingItemMutationsRef = useRef<Array<(items: ChatItem[]) => ChatItem[]>>([])
-  const itemMutationTimerRef = useRef<number | null>(null)
+  const itemMutationFrameRef = useRef<number | null>(null)
   const threadsNextCursorRef = useRef<string | null>(null)
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
   const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map())
@@ -221,8 +232,8 @@ export default function App(): React.JSX.Element {
   }, [])
 
   useEffect(() => () => {
-    if (itemMutationTimerRef.current !== null) {
-      window.clearTimeout(itemMutationTimerRef.current)
+    if (itemMutationFrameRef.current !== null) {
+      window.cancelAnimationFrame(itemMutationFrameRef.current)
     }
     if (agentDeltaTimerRef.current !== null) {
       window.clearTimeout(agentDeltaTimerRef.current)
@@ -857,17 +868,15 @@ export default function App(): React.JSX.Element {
   }
 
   function backgroundSessionForThread(threadId: string): AgentSession | null {
-    return agentSessionsRef.current.find((session) => session.threadId === threadId) ?? null
+    return findAgentSessionByThread(agentSessionsRef.current, threadId)
   }
 
   function patchAgentSession(key: string, patch: (session: AgentSession) => AgentSession): void {
-    updateAgentSessions((sessions) =>
-      sessions.map((session) => (session.key === key ? patch(session) : session))
-    )
+    updateAgentSessions((sessions) => updateAgentSession(sessions, key, patch))
   }
 
   function appendAgentMessage(key: string, message: AgentLiteMessage): void {
-    patchAgentSession(key, (session) => ({ ...session, messages: [...session.messages, message] }))
+    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message))
   }
 
   // Apply every buffered agent delta in one state update per frame. Mirrors the
@@ -883,23 +892,7 @@ export default function App(): React.JSX.Element {
     if (buffer.size === 0) return
     agentDeltaBufferRef.current = new Map()
 
-    updateAgentSessions((sessions) =>
-      sessions.map((session) => {
-        const perItem = buffer.get(session.key)
-        if (!perItem || perItem.size === 0) return session
-
-        let messages = session.messages
-        for (const [itemId, delta] of perItem) {
-          const existing = messages.find((message) => message.id === itemId)
-          messages = existing
-            ? messages.map((message) =>
-                message.id === itemId ? { ...message, text: `${message.text}${delta}` } : message
-              )
-            : [...messages, { id: itemId, role: 'assistant' as const, text: delta }]
-        }
-        return { ...session, messages }
-      })
-    )
+    updateAgentSessions((sessions) => applyAgentDeltas(sessions, buffer))
   }
 
   function enqueueAgentDelta(key: string, itemId: string, delta: string): void {
@@ -918,11 +911,7 @@ export default function App(): React.JSX.Element {
   // Append unless a message with this id already exists — the `error`
   // notification and the failed `turn/completed` carry the same turn error.
   function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
-    patchAgentSession(key, (session) =>
-      session.messages.some((existing) => existing.id === message.id)
-        ? session
-        : { ...session, messages: [...session.messages, message] }
-    )
+    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message, true))
   }
 
   // Lite reducer for threads living in the dock: track turn status and plain
@@ -984,15 +973,7 @@ export default function App(): React.JSX.Element {
           return
         }
         if (item.type !== 'agentMessage') return
-        patchAgentSession(session.key, (current) => {
-          const existing = current.messages.find((message) => message.id === item.id)
-          const messages = existing
-            ? current.messages.map((message) =>
-                message.id === item.id ? { ...message, text: item.text } : message
-              )
-            : [...current.messages, { id: item.id, role: 'assistant' as const, text: item.text }]
-          return { ...current, messages }
-        })
+        updateAgentSessions((sessions) => completeAgentMessage(sessions, session.key, item.id, item.text))
         return
       }
       case 'item/started':
@@ -1046,18 +1027,7 @@ export default function App(): React.JSX.Element {
     const key = crypto.randomUUID()
     updateAgentSessions((sessions) => [
       ...sessions,
-      {
-        key,
-        threadId: null,
-        title: `Agent ${agentCounterRef.current++}`,
-        status: 'idle',
-        turnId: null,
-        messages: [],
-        watchesMain: false,
-        model: null,
-        contextUsage: null,
-        isCompacting: false
-      }
+      createAgentSession(key, `Agent ${agentCounterRef.current++}`)
     ])
     setOpenAgentKeys((current) => [...current, key])
     setSelectedAgentKey(key)
@@ -1087,43 +1057,20 @@ export default function App(): React.JSX.Element {
     if (!agentDockRestoredRef.current) return
     // Blank agents (no message sent yet, so no thread) persist too — they
     // restore as blank windows.
-    const sessions = agentSessions.map((session) => ({
-      threadId: session.threadId,
-      title: session.title,
-      watchesMain: session.watchesMain,
-      model: session.model,
-      open: openAgentKeys.includes(session.key),
-      selected: session.key === selectedAgentKey
-    }))
-    window.localStorage.setItem(
-      agentDockStorageKey,
-      JSON.stringify({ counter: agentCounterRef.current, sessions })
-    )
+    window.localStorage.setItem(agentDockStorageKey, serializeAgentDock(
+      agentCounterRef.current,
+      agentSessions,
+      openAgentKeys,
+      selectedAgentKey
+    ))
   }, [agentSessions, openAgentKeys, selectedAgentKey])
-
-  // Strip the helper-mode context preamble from persisted user messages so
-  // rehydrated transcripts show what the user actually typed.
-  function stripMainChatContext(text: string): string {
-    if (!text.startsWith('<main-chat-context>')) return text
-    const end = text.indexOf('</main-chat-context>')
-    return end === -1 ? text : text.slice(end + '</main-chat-context>'.length).trimStart()
-  }
 
   async function restoreAgentDock(): Promise<void> {
     try {
       const raw = window.localStorage.getItem(agentDockStorageKey)
       if (!raw) return
-      const parsed = JSON.parse(raw) as {
-        counter?: number
-        sessions?: Array<{
-          threadId?: string | null
-          title?: string
-          watchesMain?: boolean
-          model?: string | null
-          open?: boolean
-          selected?: boolean
-        }>
-      }
+      const parsed = parseAgentDock(raw)
+      if (!parsed) return
       if (typeof parsed.counter === 'number' && parsed.counter > agentCounterRef.current) {
         agentCounterRef.current = parsed.counter
       }
@@ -2012,19 +1959,20 @@ export default function App(): React.JSX.Element {
 
   // Queue a streaming mutation and schedule a single batched apply. Every delta
   // kind funnels through here so a burst of reasoning/command/text tokens
-  // collapses into one setItems (one buildRows + one render) per ~32ms frame
-  // instead of one per token. A 32ms batch still reads as continuous.
+  // collapses into one setItems (one buildRows + one render) per display frame
+  // instead of one per token. This keeps final-answer motion at the screen's
+  // native cadence while still coalescing bursts from the transport.
   function enqueueItemMutation(mutate: (items: ChatItem[]) => ChatItem[]): void {
     pendingItemMutationsRef.current.push(mutate)
 
-    if (itemMutationTimerRef.current !== null) {
+    if (itemMutationFrameRef.current !== null) {
       return
     }
 
-    itemMutationTimerRef.current = window.setTimeout(() => {
-      itemMutationTimerRef.current = null
+    itemMutationFrameRef.current = window.requestAnimationFrame(() => {
+      itemMutationFrameRef.current = null
       flushPendingItemMutations()
-    }, 32)
+    })
   }
 
   // Apply every queued mutation in order in a single state update. Ordering is
@@ -2037,9 +1985,9 @@ export default function App(): React.JSX.Element {
       return
     }
 
-    if (itemMutationTimerRef.current !== null) {
-      window.clearTimeout(itemMutationTimerRef.current)
-      itemMutationTimerRef.current = null
+    if (itemMutationFrameRef.current !== null) {
+      window.cancelAnimationFrame(itemMutationFrameRef.current)
+      itemMutationFrameRef.current = null
     }
 
     pendingItemMutationsRef.current = []
