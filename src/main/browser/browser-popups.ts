@@ -1,4 +1,5 @@
 import type { BrowserWindow, WebContents } from 'electron'
+import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { isUnsafePopupUrl } from './window-open-policy.js'
 
@@ -26,6 +27,7 @@ export function attachPopupWindowHandling(
         autoHideMenuBar: true,
         show: true,
         webPreferences: {
+          preload: join(__dirname, '../preload/browser-page.cjs'),
           contextIsolation: true,
           nodeIntegration: false,
           sandbox: true,

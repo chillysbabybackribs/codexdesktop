@@ -1,4 +1,4 @@
-import { app, BrowserWindow, crashReporter, dialog, ipcMain, Notification } from 'electron'
+import { app, BrowserWindow, clipboard, crashReporter, dialog, ipcMain, Notification } from 'electron'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type {
@@ -282,6 +282,18 @@ function registerIpc(): void {
     }
   })
   ipcMain.handle(ipcChannels.windowClose, () => mainWindow?.close())
+
+  const copySelection = (text: unknown): boolean => {
+    if (typeof text !== 'string' || !text.trim() || text.length > 1_000_000) return false
+    clipboard.writeText(text)
+    sendToMainRenderer(ipcChannels.clipboardAutoCopied, true)
+    return true
+  }
+  ipcMain.handle(ipcChannels.clipboardWrite, (_event, text: unknown) => copySelection(text))
+  ipcMain.on(ipcChannels.browserSelectionCopy, (event, text: unknown) => {
+    if (!tabManager?.isUserVisibleWebContents(event.sender)) return
+    copySelection(text)
+  })
 
   ipcMain.handle(ipcChannels.workspacePick, async () => {
     if (!mainWindow) {

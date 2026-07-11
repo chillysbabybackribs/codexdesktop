@@ -28,6 +28,14 @@ import type {
 import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
+  clipboard: {
+    writeText: (text: string): Promise<boolean> => ipcRenderer.invoke(ipcChannels.clipboardWrite, text),
+    onAutoCopied: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.clipboardAutoCopied, wrapped)
+      return () => ipcRenderer.off(ipcChannels.clipboardAutoCopied, wrapped)
+    }
+  },
   window: {
     minimize: () => ipcRenderer.invoke(ipcChannels.windowMinimize),
     toggleMaximize: () => ipcRenderer.invoke(ipcChannels.windowToggleMaximize),

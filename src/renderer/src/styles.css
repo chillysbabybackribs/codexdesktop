@@ -4198,3 +4198,29 @@ button {
   width: min(300px, 92vw);
   max-height: min(38vh, 300px);
 }
+.auto-copy-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(34, 34, 34, 0.94);
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
+  animation: auto-copy-toast-in 160ms ease-out;
+}
+
+@keyframes auto-copy-toast-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auto-copy-toast { animation: none; }
+}

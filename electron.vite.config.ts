@@ -12,7 +12,8 @@ export default defineConfig({
       rollupOptions: {
         input: {
           index: resolve('src/preload/index.ts'),
-          'omnibox-popup': resolve('src/preload/omnibox-popup.ts')
+          'omnibox-popup': resolve('src/preload/omnibox-popup.ts'),
+          'browser-page': resolve('src/preload/browser-page.ts')
         },
         output: {
           format: 'cjs',

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, WebContentsView, shell } from 'electron'
+import { join } from 'node:path'
 import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
@@ -242,6 +243,7 @@ export class TabManager {
   private createView(): WebContentsView {
     return new WebContentsView({
       webPreferences: {
+        preload: join(__dirname, '../preload/browser-page.cjs'),
         contextIsolation: true,
         nodeIntegration: false,
         sandbox: true,
