@@ -91,9 +91,26 @@ test('memory skill does not require a synthetic invocation marker', () => {
 })
 
 test('guidance nudges ambiguous continuation without requesting improvement cards', () => {
-  const guidance = buildGuidance()
+  const guidance = buildGuidance({})
   assert.match(guidance, /opening request is ambiguous.*use that skill/i)
   assert.doesNotMatch(guidance, /app-improvement|self-improvement reporting/i)
+  assert.doesNotMatch(guidance, /protected codex desktop host session/i)
+})
+
+test('self-hosted guidance protects the exact host session and routes live checks to an isolated instance', () => {
+  const guidance = buildGuidance({
+    CODEX_DESKTOP_SELF_HOSTED: '1',
+    CODEX_DESKTOP_INSTANCE_ROLE: 'host',
+    CODEX_DESKTOP_HOST_SESSION_ID: 'session-123',
+    CODEX_DESKTOP_HOST_PID: '4100',
+    CODEX_DESKTOP_DEV_SERVER_PID: '4000'
+  })
+
+  assert.match(guidance, /session session-123 \(role=host, Electron PID=4100, parent\/dev-server PID=4000\)/)
+  assert.match(guidance, /process tree as protected infrastructure/)
+  assert.match(guidance, /never signal, terminate, restart, replace/)
+  assert.match(guidance, /npm run verify:app/)
+  assert.match(guidance, /do not run `npm run dev` or `npm run dev:app`/i)
 })
 
 test('research turns keep the configured reasoning effort', () => {
