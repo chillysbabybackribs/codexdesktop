@@ -34,6 +34,12 @@ import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
 
+// Dev/testing hook: point userData somewhere else so a verification instance
+// can run alongside the real app (the single-instance lock is per userData).
+if (process.env.CODEX_DESKTOP_USER_DATA) {
+  app.setPath('userData', process.env.CODEX_DESKTOP_USER_DATA)
+}
+
 // Chromium locks profile storage (cookies, service workers, etc.). A second
 // instance against the same userData dir causes random IO errors like:
 // "Failed to delete the database: Database IO error".
