@@ -569,7 +569,11 @@ button {
 .thread-scroll {
   min-height: 0;
   overflow: auto;
-  padding: 6px 28px 195px;
+  /* The composer occupies its own grid row below the scroll (chat-pane
+     `50px 1fr auto`), so the transcript never needs to clear a floating
+     composer — a small bottom gap is all that's required. A large pad here
+     was pure dead space and destabilized the top-anchor scroll math. */
+  padding: 6px 28px 24px;
   /* Auto-scroll owns the viewport — wheel/trackpad still work, no bar shows. */
   overflow-anchor: none;
   scrollbar-width: none;
