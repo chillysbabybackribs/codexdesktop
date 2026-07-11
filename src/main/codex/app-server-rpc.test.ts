@@ -74,6 +74,16 @@ test('app-server RPC ignores blank, malformed, and non-object lines', () => {
   assert.deepEqual(requests, [])
 })
 
+test('app-server RPC reassembles a JSON response split across stdout lines', async () => {
+  const { rpc } = createRpc()
+  const response = rpc.request<{ description: string }>('plugin/list')
+
+  rpc.handleLine('{"id":"codexdesktop-1","result":{"description":"First part')
+  rpc.handleLine('\\n\\nSecond part"}}')
+
+  assert.deepEqual(await response, { description: 'First part\n\nSecond part' })
+})
+
 test('app-server RPC clears a pending request when writing fails', async () => {
   const rpc = new AppServerRpc({
     write: () => { throw new Error('pipe closed') },

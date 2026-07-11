@@ -30,6 +30,7 @@ type AppServerRpcOptions = {
 }
 
 const defaultRequestTimeoutMs = 30_000
+const maxBufferedMessageChars = 16_000_000
 
 export class AppServerRpc {
   private readonly writeMessage: AppServerRpcOptions['write']
@@ -40,6 +41,7 @@ export class AppServerRpc {
   private readonly requestIdPrefix: string
   private readonly pending = new Map<JsonRpcId, PendingRequest>()
   private requestCounter = 0
+  private partialMessage = ''
 
   constructor(options: AppServerRpcOptions) {
     this.writeMessage = options.write
@@ -96,17 +98,30 @@ export class AppServerRpc {
     if (!line.trim()) return
 
     let message: JsonRpcMessage
+    const candidate = this.partialMessage ? `${this.partialMessage}${line}` : line
 
     try {
-      const parsed = JSON.parse(line) as unknown
+      const parsed = JSON.parse(candidate) as unknown
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
         throw new Error('Expected a JSON-RPC object')
       }
       message = parsed as JsonRpcMessage
     } catch (error) {
+      // Remote plugin catalogs can contain multi-line descriptions. Some
+      // app-server versions stream those very large JSON responses across
+      // physical stdout lines, so retain an object-shaped prefix until the
+      // complete response arrives. Concatenate without a newline: the next
+      // fragment begins with the JSON string's escaped newline sequence.
+      if ((this.partialMessage || line.trimStart().startsWith('{')) && candidate.length < maxBufferedMessageChars) {
+        this.partialMessage = candidate
+        return
+      }
+      this.partialMessage = ''
       this.onInvalidLine(line, error)
       return
     }
+
+    this.partialMessage = ''
 
     if (message.id !== undefined && (message.result !== undefined || message.error !== undefined)) {
       this.handleResponse(message)
