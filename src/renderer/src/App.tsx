@@ -2512,6 +2512,7 @@ function ChatPane({
 
       <ThreadScroll
         resetKey={activeThreadId}
+        activeTurnId={activeTurnId}
         dependencies={[items, itemMeta, activeTurnId]}
       >
         {isRestoring ? (
