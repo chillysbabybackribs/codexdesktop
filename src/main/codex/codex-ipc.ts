@@ -3,8 +3,10 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
+  CodexPluginAppStatusParams,
   CodexPluginInstallParams,
   CodexPluginQueryParams,
+  CodexPluginReadParams,
   MemoryPersistParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
@@ -65,6 +67,12 @@ export function registerCodexIpc(
   )
   ipcMain.handle(ipcChannels.codexListPlugins, (_event, params?: CodexPluginQueryParams) =>
     client.listPlugins(params?.cwd)
+  )
+  ipcMain.handle(ipcChannels.codexReadPlugin, (_event, params: CodexPluginReadParams) =>
+    client.readPlugin(params)
+  )
+  ipcMain.handle(ipcChannels.codexGetPluginAppStatuses, (_event, params: CodexPluginAppStatusParams) =>
+    client.getPluginAppStatuses(params.appIds, params.forceRefetch)
   )
   ipcMain.handle(ipcChannels.codexInstallPlugin, (_event, params: CodexPluginInstallParams) =>
     client.installPlugin(params)

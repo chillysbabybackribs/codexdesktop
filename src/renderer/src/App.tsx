@@ -17,6 +17,7 @@ import type {
   BrowserBounds,
   BrowserState,
   CodexEvent,
+  CodexPluginAppStatus,
   MemoryPersistParams
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
@@ -31,6 +32,8 @@ import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry'
 import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary'
+import type { AppSummary } from '../../shared/codex-protocol/v2/AppSummary'
+import type { PluginAuthPolicy } from '../../shared/codex-protocol/v2/PluginAuthPolicy'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
@@ -76,6 +79,12 @@ import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } 
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
 import { useAgentSessions } from './useAgentSessions'
+import {
+  pluginInstallParams,
+  pluginUninstallId,
+  safePluginAuthUrl,
+  unresolvedPluginApps
+} from './plugin-lifecycle'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -3488,8 +3497,10 @@ function PluginMentionMenu({ state, plugins, selectedIndex, onChoose, onBrowse, 
       setArmed(plugin.id)
       return
     }
+    const uninstallId = pluginUninstallId(plugin)
+    if (!uninstallId) return
     setRemoving(plugin.id)
-    void window.api.codex.uninstallPlugin(plugin.id).then(() => {
+    void window.api.codex.uninstallPlugin(uninstallId).then(() => {
       onUninstalled(plugin.id)
       setArmed(null)
     }).finally(() => setRemoving(null))

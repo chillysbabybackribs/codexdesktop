@@ -3,7 +3,11 @@ import { join } from 'node:path'
 import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
-import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
+import type {
+  CodexConnectionStatus,
+  CodexEvent,
+  CodexPluginAppStatusResponse
+} from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
@@ -26,6 +30,8 @@ import type { PluginInstalledResponse } from '../../shared/codex-protocol/v2/Plu
 import type { PluginListResponse } from '../../shared/codex-protocol/v2/PluginListResponse.js'
 import type { PluginInstallParams } from '../../shared/codex-protocol/v2/PluginInstallParams.js'
 import type { PluginInstallResponse } from '../../shared/codex-protocol/v2/PluginInstallResponse.js'
+import type { PluginReadResponse } from '../../shared/codex-protocol/v2/PluginReadResponse.js'
+import type { AppsListResponse } from '../../shared/codex-protocol/v2/AppsListResponse.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
 import {
   AppServerRpc,
@@ -122,6 +128,47 @@ export class CodexClient extends EventEmitter {
     return this.request<PluginListResponse>('plugin/list', {
       ...(cwd ? { cwds: [cwd] } : {})
     })
+  }
+
+  async readPlugin(params: PluginInstallParams): Promise<PluginReadResponse> {
+    await this.ensureStarted()
+    return this.request<PluginReadResponse>('plugin/read', params)
+  }
+
+  async getPluginAppStatuses(
+    appIds: string[],
+    forceRefetch = false
+  ): Promise<CodexPluginAppStatusResponse> {
+    await this.ensureStarted()
+    const wanted = new Set(appIds.filter(Boolean).slice(0, 24))
+    const apps: CodexPluginAppStatusResponse['apps'] = []
+    let cursor: string | null = null
+    let page = 0
+
+    while (wanted.size && page < 24) {
+      const response = await this.request<AppsListResponse>('app/list', {
+        cursor,
+        limit: 500,
+        ...(forceRefetch && page === 0 ? { forceRefetch: true } : {})
+      })
+
+      for (const appInfo of response.data) {
+        if (!wanted.delete(appInfo.id)) continue
+        apps.push({
+          id: appInfo.id,
+          name: appInfo.name,
+          installUrl: appInfo.installUrl,
+          isAccessible: appInfo.isAccessible,
+          isEnabled: appInfo.isEnabled
+        })
+      }
+
+      cursor = response.nextCursor
+      page += 1
+      if (!cursor) break
+    }
+
+    return { apps }
   }
 
   async installPlugin(params: PluginInstallParams): Promise<PluginInstallResponse> {

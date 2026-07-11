@@ -13,8 +13,11 @@ import type {
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
+  CodexPluginAppStatusParams,
+  CodexPluginAppStatusResponse,
   CodexPluginInstallParams,
   CodexPluginQueryParams,
+  CodexPluginReadParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
   CodexStartThreadParams,
@@ -30,6 +33,7 @@ import type {
 import type { PluginInstalledResponse } from '../shared/codex-protocol/v2/PluginInstalledResponse.js'
 import type { PluginListResponse } from '../shared/codex-protocol/v2/PluginListResponse.js'
 import type { PluginInstallResponse } from '../shared/codex-protocol/v2/PluginInstallResponse.js'
+import type { PluginReadResponse } from '../shared/codex-protocol/v2/PluginReadResponse.js'
 import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
@@ -46,7 +50,7 @@ export const api = {
     close: () => ipcRenderer.invoke(ipcChannels.windowClose)
   },
   browser: {
-    newTab: (url?: string) => ipcRenderer.invoke(ipcChannels.browserNewTab, url),
+    newTab: (url?: string): Promise<string | undefined> => ipcRenderer.invoke(ipcChannels.browserNewTab, url),
     closeTab: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserCloseTab, tabId),
     activateTab: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserActivateTab, tabId),
     navigate: (tabId: string, input: string) => ipcRenderer.invoke(ipcChannels.browserNavigate, tabId, input),
@@ -111,6 +115,10 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.codexListInstalledPlugins, params),
     listPlugins: (params?: CodexPluginQueryParams): Promise<PluginListResponse> =>
       ipcRenderer.invoke(ipcChannels.codexListPlugins, params),
+    readPlugin: (params: CodexPluginReadParams): Promise<PluginReadResponse> =>
+      ipcRenderer.invoke(ipcChannels.codexReadPlugin, params),
+    getPluginAppStatuses: (params: CodexPluginAppStatusParams): Promise<CodexPluginAppStatusResponse> =>
+      ipcRenderer.invoke(ipcChannels.codexGetPluginAppStatuses, params),
     installPlugin: (params: CodexPluginInstallParams): Promise<PluginInstallResponse> =>
       ipcRenderer.invoke(ipcChannels.codexInstallPlugin, params),
     uninstallPlugin: (pluginId: string): Promise<void> =>
