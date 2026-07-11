@@ -107,7 +107,9 @@ export const api = {
     save: (files: AttachmentSaveInput[]): Promise<ChatAttachment[]> =>
       ipcRenderer.invoke(ipcChannels.attachmentSave, files),
     preview: (params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> =>
-      ipcRenderer.invoke(ipcChannels.attachmentPreview, params)
+      ipcRenderer.invoke(ipcChannels.attachmentPreview, params),
+    open: (params: AttachmentPreviewParams): Promise<boolean> =>
+      ipcRenderer.invoke(ipcChannels.attachmentOpen, params)
   },
   notifications: {
     backgroundTurn: (params: BackgroundTurnNotificationParams): Promise<void> =>

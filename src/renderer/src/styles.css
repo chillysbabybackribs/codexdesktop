@@ -3012,6 +3012,26 @@ button {
   background: #171717;
 }
 
+.attachment-open {
+  display: block;
+  width: 112px;
+  height: 76px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.attachment-open:focus-visible {
+  outline: 2px solid #8da9ef;
+  outline-offset: 3px;
+}
+
+.attachment-open:hover img {
+  filter: brightness(1.06);
+}
+
 .attachment-item figcaption {
   max-width: 100%;
   margin-top: 5px;
@@ -3995,6 +4015,11 @@ button {
 .agent-composer-body .attachment-image-placeholder,
 .agent-mini-message .attachment-item img,
 .agent-mini-message .attachment-image-placeholder {
+  width: 82px;
+  height: 56px;
+}
+
+.agent-mini-message .attachment-open {
   width: 82px;
   height: 56px;
 }

@@ -194,6 +194,7 @@ export const ipcChannels = {
   attachmentPick: 'attachment:pick',
   attachmentSave: 'attachment:save',
   attachmentPreview: 'attachment:preview',
+  attachmentOpen: 'attachment:open',
   notificationBackgroundTurn: 'notification:backgroundTurn',
   workspacePick: 'workspace:pick'
 } as const

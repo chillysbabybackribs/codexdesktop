@@ -64,8 +64,18 @@ function AttachmentItem({ attachment, removable, onRemove }: {
 
   return (
     <figure className={`attachment-item is-${attachment.kind}`} title={attachment.name}>
-      {preview ? (
+      {preview ? removable ? (
         <img src={preview} alt={attachment.name} loading="lazy" />
+      ) : (
+        <button
+          type="button"
+          className="attachment-open"
+          aria-label={`Open ${attachment.name} in browser`}
+          title="Open in browser"
+          onClick={() => void window.api.attachments.open({ path: attachment.path })}
+        >
+          <img src={preview} alt={attachment.name} loading="lazy" />
+        </button>
       ) : attachment.kind === 'image' ? (
         <span className="attachment-image-placeholder" aria-hidden="true" />
       ) : (

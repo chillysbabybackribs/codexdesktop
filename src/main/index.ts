@@ -280,6 +280,12 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.attachmentPreview, async (_event, params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> => ({
     dataUrl: await attachmentStore.preview(params.path)
   }))
+  ipcMain.handle(ipcChannels.attachmentOpen, async (_event, params: AttachmentPreviewParams): Promise<boolean> => {
+    const dataUrl = await attachmentStore.preview(params.path)
+    if (!dataUrl || !tabManager) return false
+    tabManager.createTab(dataUrl)
+    return true
+  })
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))
   ipcMain.handle(ipcChannels.browserActivateTab, (_event, tabId: string) => tabManager?.activateTab(tabId))
