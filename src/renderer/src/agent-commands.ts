@@ -1,5 +1,5 @@
 import type { ChatAttachment } from '../../shared/ipc'
-import type { AgentLiteMessage, AgentSession } from './agent-session-model'
+import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }
 
