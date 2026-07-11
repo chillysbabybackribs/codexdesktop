@@ -26,6 +26,14 @@ const priorChatMemorySkill: SkillMetadata = {
   enabled: true
 }
 
+const polishedUiSkill: SkillMetadata = {
+  name: 'build-polished-ui',
+  description: 'Design and build polished responsive interfaces',
+  path: '/app/skills/build-polished-ui/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('web research turns attach the extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Research the latest Electron navigation guidance', [webResearchSkill]),
@@ -36,6 +44,20 @@ test('web research turns attach the extraction skill', () => {
 test('unrelated implementation turns do not load the extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Refactor the tab manager and run its tests', [webResearchSkill]),
+    []
+  )
+})
+
+test('frontend design turns automatically attach the polished UI skill', () => {
+  assert.deepEqual(
+    selectTurnSkills('Build a polished responsive dashboard UI', [polishedUiSkill]),
+    [polishedUiSkill]
+  )
+})
+
+test('unrelated coding turns do not load the polished UI skill', () => {
+  assert.deepEqual(
+    selectTurnSkills('Refactor the tab manager and run its tests', [polishedUiSkill]),
     []
   )
 })

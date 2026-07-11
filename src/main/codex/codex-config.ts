@@ -54,13 +54,20 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   const webResearchTask =
     /https?:\/\//.test(normalized) ||
     /\b(search|research|browse|look up|find online|on the web|website|webpage|web page|source|sources|citation|citations|current|latest|news|pricing|reddit|forum|reviews?|compare|comparison)\b/.test(normalized)
+  const polishedUiTask =
+    /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
+    /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
 
   return skills.filter((skill) => {
     if (normalized.includes(`$${skill.name.toLowerCase()}`)) {
       return true
     }
 
-    return skill.name === 'artifact-first-web-research' && webResearchTask
+    if (skill.name === 'artifact-first-web-research') {
+      return webResearchTask
+    }
+
+    return skill.name === 'build-polished-ui' && polishedUiTask
   })
 }
 
