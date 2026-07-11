@@ -495,11 +495,12 @@ export default function App(): React.JSX.Element {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
-        // Agents restore first so the main resume's duplicate-thread absorb
-        // sees them registered.
+        // Main thread first — it warms up the codex child, so the dock's
+        // resume calls don't race a cold start. The dock restore then skips
+        // any thread the main view already owns.
         const restorePromise = (async () => {
-          await restoreAgentDock()
           if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+          await restoreAgentDock()
         })()
 
         await Promise.all([authPromise, threadsPromise, restorePromise])
