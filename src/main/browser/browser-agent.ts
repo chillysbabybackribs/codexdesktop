@@ -180,6 +180,68 @@ export class BrowserAgentController {
     })
   }
 
+  private async runCdpOperation(
+    options: BrowserAgentOptions,
+    execute: (session: CdpSession, timeoutMs: number) => Promise<unknown>
+  ): Promise<BrowserAgentResult> {
+    const tabs = this.getTabs()
+    const tabId = options.tabId ?? tabs?.getActiveTabId()
+    if (!tabs || !tabId) {
+      return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
+    const operation = previous.then(async (): Promise<BrowserAgentResult> => {
+      const webContents = tabs.resolveWebContents(tabId)
+      if (!webContents) {
+        return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
+      }
+
+      const startedAt = Date.now()
+      try {
+        const rawResult = await execute(cdpSessionFor(webContents), timeoutMs)
+        const bounded = boundResult(rawResult, maxResultChars)
+        return {
+          ok: true,
+          result: bounded.value,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          resultChars: bounded.chars,
+          truncated: bounded.truncated
+        } satisfies BrowserAgentSuccess
+      } catch (error) {
+        return {
+          ok: false,
+          error: error instanceof Error ? error.message : String(error),
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt
+        } satisfies BrowserAgentFailure
+      }
+    })
+
+    const queueTail = operation.then(
+      () => undefined,
+      () => undefined
+    )
+    this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
+    })
+
+    return operation
+  }
+
   async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
     const maxResultChars = clampNumber(
       options.maxResultChars,
@@ -324,6 +386,16 @@ function boundResult(value: unknown, maxChars: number): { value: unknown; chars:
     value: serialized.slice(0, maxChars).replace(/\s+\S*$/, ''),
     chars: serialized.length,
     truncated: true
+  }
+}
+
+function toEventQuery(options: BrowserCdpEventOptions, method?: string | null): CdpEventQuery {
+  return {
+    ...(method?.trim() ? { method } : {}),
+    ...(options.afterSequence === null || options.afterSequence === undefined ? {} : { afterSequence: options.afterSequence }),
+    ...(options.filter ? { filter: options.filter } : {}),
+    ...(options.contains ? { contains: options.contains } : {}),
+    ...(options.limit === null || options.limit === undefined ? {} : { limit: options.limit })
   }
 }
 
