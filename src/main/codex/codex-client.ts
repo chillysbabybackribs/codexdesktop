@@ -1,8 +1,7 @@
 import { EventEmitter } from 'node:events'
 import { createInterface } from 'node:readline'
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
-import { existsSync } from 'node:fs'
-import { isAbsolute, join, relative, resolve } from 'node:path'
+import { join } from 'node:path'
 import { app, type BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
@@ -14,8 +13,6 @@ import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
-import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
-import type { SkillsListResponse } from '../../shared/codex-protocol/v2/SkillsListResponse.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
 import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js'
@@ -28,20 +25,17 @@ import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadS
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js'
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
-import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
-import { attachmentTurnInputs } from './attachment-input.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
   buildGuidance,
-  formatSkillInvocationText,
   legacyResumeConfig,
   newThreadConfig,
   resolveTurnPolicy,
-  selectNewThreadSkills,
-  selectTurnSkills
+  resolveTurnPolicy
 } from './codex-config.js'
+import { LocalSkillRegistry } from './local-skill-registry.js'
 
 type JsonRpcMessage = {
   jsonrpc?: '2.0'
@@ -65,21 +59,12 @@ const requestTimeoutMs = 30_000
 // long threads stay responsive instead of riding the limit.
 const autoCompactContextRatio = 0.8
 
-function localSkillsRoot(): string {
-  return join(app.getAppPath(), 'skills')
-}
-
-function isPathWithin(root: string, candidate: string): boolean {
-  const pathFromRoot = relative(root, resolve(candidate))
-  return pathFromRoot !== '..' && !pathFromRoot.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`) && !isAbsolute(pathFromRoot)
-}
-
 export class CodexClient extends EventEmitter {
   private child: ChildProcessWithoutNullStreams | null = null
   private startPromise: Promise<void> | null = null
   private readonly pending = new Map<string | number, PendingRequest>()
   private requestCounter = 0
-  private localSkills: SkillMetadata[] = []
+  private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
   private readonly threadModels = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
