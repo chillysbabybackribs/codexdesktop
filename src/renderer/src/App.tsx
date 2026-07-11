@@ -3323,12 +3323,21 @@ function ThreadScroll({
 
     let active = true
     // The `dependencies` layout effect already calls followTail on every React
-    // commit (i.e. every batched streaming flush), which covers text growth.
-    // The ResizeObserver catches the reflows React does NOT drive — code-block
-    // wrapping, diff rows, and font metrics settling a frame after commit. A
+    // commit (i.e. every batched streaming flush), which covers text growth AND
+    // re-runs the anchor (shrinking the spacer as the answer fills in). The
+    // ResizeObserver only needs to catch the reflows React does NOT drive —
+    // code-block wrapping, diff rows, and font metrics settling a frame after
+    // commit — for bottom-follow. It must NOT route into anchorTop: anchorTop
+    // writes spacer.style.height, which resizes the observed content element and
+    // re-triggers the observer, a ResizeObserver feedback loop. So skip while the
+    // top-anchor owns the scroll; the layout effect keeps the anchor honest. A
     // subtree characterData MutationObserver would fire on every streamed
     // character for no gain over these two, so it is intentionally omitted.
-    const resizeObserver = new ResizeObserver(followTail)
+    const onReflow = (): void => {
+      if (anchorTurnRef.current !== null) return
+      followTail()
+    }
+    const resizeObserver = new ResizeObserver(onReflow)
     resizeObserver.observe(el)
     resizeObserver.observe(content)
 
@@ -3336,7 +3345,7 @@ function ThreadScroll({
     // producing a React update. Catch that one late layout pass when supported.
     void document.fonts?.ready.then(() => {
       if (active) {
-        followTail()
+        onReflow()
       }
     })
 
