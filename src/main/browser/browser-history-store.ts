@@ -122,8 +122,10 @@ export class BrowserHistoryStore {
       await writeFile(temporaryPath, serialized, 'utf8')
       await rename(temporaryPath, filePath)
     })
+    // Keep later writes usable after a failure, but return the actual operation
+    // so explicit flush callers can detect that persistence did not succeed.
     this.saveQueue = operation.catch(() => {})
-    return this.saveQueue
+    return operation
   }
 
   private serialize(): string {

@@ -49,6 +49,7 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
     const store = new BrowserHistoryStore(() => filePath)
     await store.load()
     store.recordVisit('https://example.com/', 'Example', 5000)
+    store.recordVisit('https://example.com/', 'Example Domain', 6000)
     await store.flush()
 
     const raw = JSON.parse(await readFile(filePath, 'utf8'))
@@ -59,8 +60,27 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
     await reloaded.load()
 
     assert.deepEqual(reloaded.entries(), [
-      { url: 'https://example.com/', title: 'Example', visitCount: 1, lastVisitAt: 5000 }
+      { url: 'https://example.com/', title: 'Example Domain', visitCount: 2, lastVisitAt: 6000 }
     ])
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test('flush reports a failed write and leaves the save queue reusable', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
+  try {
+    let filePath = directory
+    const store = new BrowserHistoryStore(() => filePath)
+    await store.load()
+    store.recordVisit('https://example.com/', 'Example', 5000)
+
+    await assert.rejects(store.flush())
+
+    filePath = join(directory, 'history.json')
+    await store.flush()
+    const persisted = JSON.parse(await readFile(filePath, 'utf8'))
+    assert.equal(persisted.entries[0].url, 'https://example.com/')
   } finally {
     await rm(directory, { recursive: true, force: true })
   }
