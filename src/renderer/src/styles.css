@@ -2557,6 +2557,13 @@ button {
   box-sizing: border-box;
   justify-content: center;
   transform: none;
+  /* The dock now spans the whole pane; stay click-through outside the actual
+     controls so the toolbar (settings gear) behind it keeps working. */
+  pointer-events: none;
+}
+
+.composer-dock.is-centered.has-agents > * {
+  pointer-events: auto;
 }
 
 .composer-dock.is-centered.has-agents .composer,
