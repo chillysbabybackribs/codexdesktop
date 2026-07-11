@@ -4,13 +4,14 @@
   "observedAt": "2026-07-11T15:41:10.401Z",
   "counts": {
     "records": 102,
-    "verified": 102,
+    "retrievedVerified": 102,
     "trustmrrApiRows": 100,
     "externalEnrichmentRecords": 2,
     "queryEvents": 12,
     "failures": 3,
     "categories": 23,
-    "exactMoneyRecords": 101
+    "commercialMetricRecords": 101,
+    "qualifiedExactJobMoney": 0
   },
   "bySource": {
     "TrustMRR API": 100,
