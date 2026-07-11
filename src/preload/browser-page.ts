@@ -9,9 +9,17 @@ const selectionCopyChannel = 'browser:selectionCopy'
 const dragThreshold = 4
 let pointerStart: { x: number; y: number } | null = null
 
-const selectionStyle = document.createElement('style')
-selectionStyle.textContent = '::selection { background: rgba(66, 133, 244, 0.28); color: inherit; }'
-;(document.head ?? document.documentElement).appendChild(selectionStyle)
+function installSelectionStyle(): void {
+  const selectionStyle = document.createElement('style')
+  selectionStyle.textContent = '::selection { background: rgba(66, 133, 244, 0.28); color: inherit; }'
+  ;(document.head ?? document.documentElement).appendChild(selectionStyle)
+}
+
+if (document.head || document.documentElement) {
+  installSelectionStyle()
+} else {
+  window.addEventListener('DOMContentLoaded', installSelectionStyle, { once: true })
+}
 
 function isEditable(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false
