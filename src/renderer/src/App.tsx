@@ -2717,7 +2717,7 @@ function TaskActivityCard({
 
   return (
     <>
-      <section className="task-activity-card" aria-label="In-task activity" aria-live={live ? 'polite' : 'off'}>
+      <section className={`task-activity-card ${live ? 'is-live' : ''}`} aria-label="In-task activity" aria-live={live ? 'polite' : 'off'}>
         <AutoFollow className="task-activity-card-scroll">
           <div className="task-activity-card-content">{content}</div>
         </AutoFollow>
