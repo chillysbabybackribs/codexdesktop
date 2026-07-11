@@ -13,6 +13,11 @@ const browserBackgroundColor = '#181818'
 
 type BrowserStateListener = (state: BrowserState) => void
 
+export type BrowserVisitListener = {
+  recordVisit(url: string, title: string): void
+  updateTitle(url: string, title: string): void
+}
+
 type BrowserTab = {
   id: string
   view: WebContentsView
@@ -22,6 +27,9 @@ type BrowserTab = {
   isLoading: boolean
   isAudible: boolean
   isMuted: boolean
+  // Session restore replays navigations; they are not user visits and must not
+  // inflate history counts on every app start.
+  suppressVisits: boolean
 }
 
 export type BrowserTarget = {
@@ -48,6 +56,7 @@ export class TabManager {
   private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
   private persistListener: (() => void) | null = null
+  private visitListener: BrowserVisitListener | null = null
 
   constructor(private readonly window: BrowserWindow) {}
 
@@ -58,6 +67,10 @@ export class TabManager {
 
   onPersist(listener: () => void): void {
     this.persistListener = listener
+  }
+
+  onVisit(listener: BrowserVisitListener): void {
+    this.visitListener = listener
   }
 
   createInitialTab(): void {
@@ -148,7 +161,8 @@ export class TabManager {
       favicon: null,
       isLoading: false,
       isAudible: false,
-      isMuted: false
+      isMuted: false,
+      suppressVisits: false
     }
 
     this.tabs.set(id, tab)
