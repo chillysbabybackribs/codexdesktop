@@ -79,21 +79,86 @@ export function AgentColumn({
   onSend: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const [canScrollUp, setCanScrollUp] = useState(false)
+  const [canScrollDown, setCanScrollDown] = useState(false)
+
+  const updateChevrons = (): void => {
+    const node = scrollRef.current
+    if (!node) return
+    setCanScrollUp(node.scrollTop > 4)
+    setCanScrollDown(node.scrollTop + node.clientHeight < node.scrollHeight - 4)
+  }
+
+  useEffect(() => {
+    updateChevrons()
+  }, [sessions.length])
+
+  useEffect(() => {
+    const handler = (): void => updateChevrons()
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+
+  const scrollByWindow = (direction: 1 | -1): void => {
+    const node = scrollRef.current
+    if (!node) return
+    const first = node.firstElementChild
+    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
+    node.scrollBy({ top: direction * slot, behavior: 'smooth' })
+  }
+
   return (
-    <div className="agent-column">
-      {sessions.map((session) => (
-        <AgentWindow
-          key={session.key}
-          session={session}
-          onMinimize={onMinimize}
-          onCloseSession={onCloseSession}
-          onPromote={onPromote}
-          onToggleWatch={onToggleWatch}
-          onSend={onSend}
-          onStop={onStop}
-        />
-      ))}
+    <div className="agent-column-shell">
+      <div ref={scrollRef} className="agent-column" onScroll={updateChevrons}>
+        {sessions.map((session) => (
+          <AgentWindow
+            key={session.key}
+            session={session}
+            onMinimize={onMinimize}
+            onCloseSession={onCloseSession}
+            onPromote={onPromote}
+            onToggleWatch={onToggleWatch}
+            onSend={onSend}
+            onStop={onStop}
+          />
+        ))}
+      </div>
+      {canScrollUp ? (
+        <button
+          type="button"
+          className="agent-column-chevron is-up"
+          aria-label="More agents above"
+          onClick={() => scrollByWindow(-1)}
+        >
+          <ChevronIcon direction="up" />
+        </button>
+      ) : null}
+      {canScrollDown ? (
+        <button
+          type="button"
+          className="agent-column-chevron is-down"
+          aria-label="More agents below"
+          onClick={() => scrollByWindow(1)}
+        >
+          <ChevronIcon direction="down" />
+        </button>
+      ) : null}
     </div>
+  )
+}
+
+function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Element {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d={direction === 'up' ? 'M5 15l7-7 7 7' : 'M5 9l7 7 7-7'}
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 
