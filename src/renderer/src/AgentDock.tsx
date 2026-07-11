@@ -201,6 +201,9 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
 function AgentWindow({
   session,
   isSelected,
+  models,
+  mainModel,
+  onSetModel,
   onSelect,
   onMinimize,
   onCloseSession,
@@ -211,6 +214,9 @@ function AgentWindow({
 }: {
   session: AgentSession
   isSelected: boolean
+  models: Model[]
+  mainModel: string | null
+  onSetModel: (key: string, model: string) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
@@ -283,6 +289,13 @@ function AgentWindow({
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
         <span className="agent-overlay-title">{session.title}</span>
+        {models.length ? (
+          <ModelPill
+            models={models}
+            selectedModel={session.model ?? mainModel}
+            onSelectModel={(model) => onSetModel(session.key, model)}
+          />
+        ) : null}
         <div className="agent-overlay-actions">
           <button
             type="button"
