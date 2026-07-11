@@ -70,16 +70,11 @@ import {
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
 import {
-  appendAgentSessionMessage,
-  applyAgentDeltas,
   completeAgentMessage,
-  createAgentSession,
-  findAgentSessionByThread,
   parseAgentDock,
-  serializeAgentDock,
-  stripMainChatContext,
-  updateAgentSession
+  stripMainChatContext
 } from './agent-session-model'
+import { useAgentSessions } from './useAgentSessions'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -163,9 +158,30 @@ export default function App(): React.JSX.Element {
   const [turnMeta, setTurnMeta] = useState<Record<string, TurnMeta>>({})
   // Latest thread-level usage snapshot; `last` sizes the current context.
   const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
-  const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
-  const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
-  const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
+  const {
+    agentSessions,
+    openAgentKeys,
+    selectedAgentKey,
+    setOpenAgentKeys,
+    setSelectedAgentKey,
+    agentSessionsRef,
+    agentDeltaBufferRef,
+    agentStartQueueRef,
+    agentCounterRef,
+    agentDockRestoredRef,
+    updateAgentSessions,
+    patchAgentSession,
+    appendAgentMessage,
+    appendAgentMessageOnce,
+    backgroundSessionForThread,
+    flushAgentDeltas,
+    enqueueAgentDelta,
+    handleNewAgent,
+    handleOpenAgent,
+    handleMinimizeAgent,
+    handleToggleWatchAgent,
+    handleSetAgentModel
+  } = useAgentSessions(agentDockStorageKey)
   const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
@@ -204,25 +220,6 @@ export default function App(): React.JSX.Element {
   // started from, so the compaction turn's token update can record the shrink.
   const activeCompactionRef = useRef<{ itemId: string; turnId: string; beforeTokens: number | null } | null>(null)
   const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
-  // Background agent sessions. The ref mirrors state synchronously (via
-  // updateAgentSessions) because the codex event handler routes on it.
-  const agentSessionsRef = useRef<AgentSession[]>([])
-  // Buffered agent-message deltas keyed by session key → itemId → accumulated
-  // text, flushed into agent-session state on a 32ms timer. Without this, each
-  // streamed token was one root-App re-render (the main chat already batches
-  // this way via enqueueItemMutation).
-  const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
-  const agentDeltaTimerRef = useRef<number | null>(null)
-  // Keys of agent sessions whose thread/start is in flight, so the
-  // thread/started notification binds to the session instead of hijacking the
-  // main view.
-  const agentStartQueueRef = useRef<string[]>([])
-  // Stable "Agent N" numbering (main chat is implicitly 1) that survives
-  // closes and restarts.
-  const agentCounterRef = useRef(2)
-  // Persistence only starts writing after restore has run, so a fresh mount
-  // can't wipe the stored dock.
-  const agentDockRestoredRef = useRef(false)
   // Per-session overload recovery, keyed by session key — the dock equivalent
   // of autoRecoveryRef (which only ever tracks the focused thread).
   const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
@@ -234,9 +231,6 @@ export default function App(): React.JSX.Element {
   useEffect(() => () => {
     if (itemMutationFrameRef.current !== null) {
       window.cancelAnimationFrame(itemMutationFrameRef.current)
-    }
-    if (agentDeltaTimerRef.current !== null) {
-      window.clearTimeout(agentDeltaTimerRef.current)
     }
   }, [])
 
