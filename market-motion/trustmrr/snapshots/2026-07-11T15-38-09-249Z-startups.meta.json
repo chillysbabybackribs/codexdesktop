@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-07-11T15:38:09.249Z",
+  "endpoint": "https://trustmrr.com/api/v1/startups",
+  "pagination": {
+    "limit": 10,
+    "pagesCaptured": 10,
+    "rowsCaptured": 100,
+    "totalReported": 8272,
+    "complete": false
+  },
+  "stopReason": "strict authenticated API request window exhausted; emergency time ceiling applied",
+  "responseMonetaryUnit": "cents",
+  "rawValuesPreserved": true,
+  "baselineStatus": "baseline-unavailable",
+  "sha256": "71a1f017b7f4aebbec7bb419eb722c0aab6e5982d3e423d8ddff50bd3cd796a6"
+}
