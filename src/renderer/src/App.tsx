@@ -2477,12 +2477,11 @@ function SettingsIcon(): React.JSX.Element {
 
 function NewChatIcon(): React.JSX.Element {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="4.5" y="4.5" width="15" height="15" rx="3" stroke="currentColor" strokeWidth="1.7" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d="M12 8.5v7M8.5 12h7"
+        d="M12 5v14M5 12h14"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>
@@ -3312,37 +3311,39 @@ function Composer({
         <div className="composer-actions">
           <AttachmentButton disabled={isLoading || isTurnActive} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
           {footerExtras}
-          {isTurnActive ? (
-            <button
-              type="button"
-              className="stop-square-button"
-              aria-label="Stop turn"
-              title="Stop"
-              onClick={() => void onStop()}
-            >
-              <span className="stop-square" aria-hidden="true" />
-            </button>
-          ) : hasDraft ? (
-            <button
-              type="submit"
-              className="send-button"
-              aria-label="Send message"
-              disabled={isLoading}
-            >
-              <SendArrowIcon />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="send-button composer-new-chat"
-              aria-label="New chat"
-              title="New chat"
-              disabled={isLoading}
-              onClick={onNewThread}
-            >
-              <NewChatIcon />
-            </button>
-          )}
+          <div className="composer-primary-action">
+            {isTurnActive ? (
+              <button
+                type="button"
+                className="stop-square-button"
+                aria-label="Stop turn"
+                title="Stop"
+                onClick={() => void onStop()}
+              >
+                <span className="stop-square" aria-hidden="true" />
+              </button>
+            ) : hasDraft ? (
+              <button
+                type="submit"
+                className="send-button"
+                aria-label="Send message"
+                disabled={isLoading}
+              >
+                <SendArrowIcon />
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="send-button composer-new-chat"
+                aria-label="New chat"
+                title="New chat"
+                disabled={isLoading}
+                onClick={onNewThread}
+              >
+                <NewChatIcon />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </form>

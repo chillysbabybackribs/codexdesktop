@@ -2714,6 +2714,11 @@ button {
 
 .composer-new-chat {
   flex: 0 0 auto;
+  color: #d3d6da;
+}
+
+.composer-new-chat:not(:disabled):hover {
+  color: #ffffff;
 }
 
 .workspace-pill {
@@ -3209,6 +3214,7 @@ button {
 }
 
 .composer {
+  position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 10px;
@@ -3407,7 +3413,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 14px 12px;
+  padding: 0 58px 12px 14px;
 }
 
 .composer-status {
@@ -3428,6 +3434,14 @@ button {
   display: flex;
   align-items: center;
   gap: 7px;
+}
+
+.composer-primary-action {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  display: flex;
+  transform: translateY(-50%);
 }
 
 .settings-overlay {
@@ -3578,10 +3592,11 @@ button {
   outline-offset: 2px;
 }
 
-.composer .send-button {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
+.composer .composer-primary-action .send-button,
+.composer .composer-primary-action .stop-square-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   border-color: #2c2c2c;
   background: #1c1c1c;
 }
