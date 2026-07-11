@@ -37,12 +37,14 @@ export function AutoCopySelection(): React.JSX.Element | null {
       if (!start || isEditable(event.target)) return
       if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < dragThreshold) return
 
-      const text = window.getSelection()?.toString() ?? ''
+      const selection = window.getSelection()
+      const text = selection?.toString() ?? ''
       if (text.trim()) {
         const writeText = window.api?.clipboard?.writeText
         if (typeof writeText === 'function') {
           void Promise.resolve(writeText(text)).catch(() => {})
         }
+        selection?.removeAllRanges()
       }
     }
     const onPointerCancel = (): void => { pointerStart.current = null }

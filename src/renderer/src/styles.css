@@ -4198,6 +4198,11 @@ button {
   width: min(300px, 92vw);
   max-height: min(38vh, 300px);
 }
+::selection {
+  background: rgba(66, 133, 244, 0.28);
+  color: inherit;
+}
+
 .auto-copy-toast {
   position: fixed;
   left: 18px;

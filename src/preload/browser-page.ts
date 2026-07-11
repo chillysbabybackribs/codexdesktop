@@ -9,6 +9,10 @@ const selectionCopyChannel = 'browser:selectionCopy'
 const dragThreshold = 4
 let pointerStart: { x: number; y: number } | null = null
 
+const selectionStyle = document.createElement('style')
+selectionStyle.textContent = '::selection { background: rgba(66, 133, 244, 0.28); color: inherit; }'
+;(document.head ?? document.documentElement).appendChild(selectionStyle)
+
 function isEditable(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false
   return Boolean(target.closest('input, textarea, [contenteditable=""], [contenteditable="true"], [role="textbox"]'))
@@ -26,8 +30,12 @@ window.addEventListener('pointerup', (event) => {
   if (!start || isEditable(event.target)) return
   if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < dragThreshold) return
 
-  const text = window.getSelection()?.toString() ?? ''
-  if (text.trim()) ipcRenderer.send(selectionCopyChannel, text)
+  const selection = window.getSelection()
+  const text = selection?.toString() ?? ''
+  if (text.trim()) {
+    ipcRenderer.send(selectionCopyChannel, text)
+    selection?.removeAllRanges()
+  }
 }, true)
 
 window.addEventListener('pointercancel', () => {
