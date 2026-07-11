@@ -47,6 +47,11 @@ export class OmniboxPopup {
     this.window.contentView.addChildView(view)
     view.setBounds(this.computeBounds(anchor, suggestions.length))
     view.setVisible(true)
+    // Raising a WebContentsView can transfer native keyboard focus to it even
+    // though the DOM focus is meant to stay in the main renderer's omnibox.
+    // Give focus back immediately so a single click leaves the URL selected
+    // and ready for typing while the suggestions remain visible above the page.
+    this.window.webContents.focus()
     this.visible = true
     this.sendRender()
   }
