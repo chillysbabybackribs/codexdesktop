@@ -106,6 +106,20 @@ test('CDP event journal remains bounded and reports dropped events', () => {
   assert.equal(page.droppedEvents, 14)
 })
 
+test('CDP event journal bounds large event payloads without returning partial JSON', () => {
+  const { session, contents } = fixture()
+  contents.debugger.emit('message', {}, 'Runtime.consoleAPICalled', { text: 'x'.repeat(20_000) })
+
+  const page = session.eventPage()
+  const event = page.events[0]
+
+  assert.equal(page.events.length, 1)
+  assert.equal((event.params as { truncated: boolean }).truncated, true)
+  assert.equal((event.params as { originalChars: number }).originalChars > 20_000, true)
+  assert.doesNotThrow(() => JSON.parse(JSON.stringify(page)))
+  assert.equal(JSON.stringify(page).length < 10_000, true)
+})
+
 test('preparing lifecycle and network events enables their domains', async () => {
   const { session, contents } = fixture()
 

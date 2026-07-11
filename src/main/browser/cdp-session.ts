@@ -1,7 +1,8 @@
 import type { WebContents } from 'electron'
 
 const maxBufferedEvents = 256
-const maxEventParamsChars = 16_000
+const maxEventParamsChars = 8_000
+const maxEventPageChars = 16_000
 
 export type CdpDomainCapability = {
   name: string
@@ -40,6 +41,7 @@ export type CdpEventPage = {
   latestSequence: number
   oldestSequence: number | null
   droppedEvents: number
+  hasMoreMatching: boolean
 }
 
 type EventWaiter = {
@@ -91,12 +93,15 @@ export class CdpSession {
   eventPage(query: CdpEventQuery = {}): CdpEventPage {
     const limit = clampInteger(query.limit, 30, 1, 100)
     const matching = this.events.filter((event) => matchesEvent(event, query))
+    const candidates = matching.slice(-limit)
+    const events = boundedEventPage(candidates)
 
     return {
-      events: matching.slice(-limit),
+      events,
       latestSequence: this.eventSequence,
       oldestSequence: this.events[0]?.sequence ?? null,
-      droppedEvents: this.droppedEvents
+      droppedEvents: this.droppedEvents,
+      hasMoreMatching: events.length < candidates.length || matching.length > candidates.length
     }
   }
 
@@ -299,6 +304,20 @@ function boundEventParams(value: unknown): unknown {
   } catch (error) {
     return { serializationError: errorMessage(error) }
   }
+}
+
+function boundedEventPage(events: CdpEventRecord[]): CdpEventRecord[] {
+  const result: CdpEventRecord[] = []
+  let chars = 0
+
+  for (const event of [...events].reverse()) {
+    const eventChars = JSON.stringify(event).length
+    if (result.length > 0 && chars + eventChars > maxEventPageChars) break
+    result.push(event)
+    chars += eventChars
+  }
+
+  return result.reverse()
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
