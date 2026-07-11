@@ -67,6 +67,8 @@ let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
+let quitPreparationStarted = false
+let quitReady = false
 const cdpArtifactStore = new CdpArtifactStore(() => join(app.getPath('userData'), 'cdp-artifacts'))
 const attachmentStore = new AttachmentStore(() => join(app.getPath('userData'), 'chat-attachments'))
 const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactStore)
@@ -212,14 +214,32 @@ function bootstrap(): void {
     }
   })
 
-  app.on('before-quit', () => {
+  app.on('before-quit', (event) => {
+    if (quitReady) {
+      return
+    }
+
+    event.preventDefault()
+    if (quitPreparationStarted) {
+      return
+    }
+    quitPreparationStarted = true
+
     flushBrowserPersistSync()
-    browserHistoryStore.flushSync()
     researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null
-    void browserControl?.close()
+    const closingBrowserControl = browserControl?.close()
     browserControl = null
+
+    // before-quit does not wait for promises. Hold the first quit request long
+    // enough to durably flush history, then allow the second request through.
+    void Promise.all([browserHistoryStore.flush(), closingBrowserControl])
+      .catch((error) => console.warn('Failed to finish shutdown persistence', error))
+      .finally(() => {
+        quitReady = true
+        app.quit()
+      })
   })
 
   void app.whenReady().then(async () => {

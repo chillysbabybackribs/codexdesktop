@@ -1,5 +1,4 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
-import { mkdirSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 
 export type HistoryEntry = {
@@ -92,19 +91,6 @@ export class BrowserHistoryStore {
     }
 
     await this.save()
-  }
-
-  flushSync(): void {
-    if (this.saveTimer) {
-      clearTimeout(this.saveTimer)
-      this.saveTimer = null
-    }
-
-    const filePath = this.getFilePath()
-    const temporaryPath = `${filePath}.tmp`
-    mkdirSync(dirname(filePath), { recursive: true })
-    writeFileSync(temporaryPath, this.serialize(), 'utf8')
-    renameSync(temporaryPath, filePath)
   }
 
   private prune(): void {

@@ -4273,8 +4273,8 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         result.inline.length > text.length &&
         result.inline.toLowerCase().startsWith(text.toLowerCase())
       ) {
-        setInput(result.inline)
         pendingInlineRef.current = { start: text.length, end: result.inline.length }
+        setInput(result.inline)
       }
     })
   }
