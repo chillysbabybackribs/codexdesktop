@@ -3248,7 +3248,7 @@ function ThreadScroll({
     // skips any turn id that the reset absorbed, so a restored in-progress turn
     // is never yanked to the top — and this survives resetKey and activeTurnId
     // landing in separate commits (a one-shot flag would not).
-    absorbedTurnRef.current = activeTurnIdRef.current
+    absorbedTurnRef.current = liveTurnRef.current
     setSpacerOn(false)
     pinnedRef.current = true
     followTail()
