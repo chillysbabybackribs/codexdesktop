@@ -10,7 +10,7 @@ import type {
   BackgroundTurnNotificationParams,
   BrowserBounds,
   OmniboxAnchor,
-  OmniboxSuggestion,
+  OmniboxQueryResult,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
@@ -20,7 +20,7 @@ import { ipcChannels } from '../shared/ipc.js'
 import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
-import { buildSuggestions } from './browser/omnibox-suggestions.js'
+import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
