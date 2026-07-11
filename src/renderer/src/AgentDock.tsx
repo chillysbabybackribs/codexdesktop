@@ -3,6 +3,9 @@ import type { FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+const overlayHeightStorageKey = 'codexdesktop.agentOverlayHeight'
+const minOverlayHeight = 240
+
 export type AgentLiteMessage = {
   id: string
   role: 'user' | 'assistant'
@@ -77,11 +80,38 @@ export function AgentOverlay({
   const [value, setValue] = useState('')
   const [isSending, setIsSending] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const [height, setHeight] = useState<number>(() => {
+    const stored = Number(window.localStorage.getItem(overlayHeightStorageKey))
+    return Number.isFinite(stored) && stored >= minOverlayHeight ? stored : 420
+  })
+  const heightRef = useRef(height)
+  const resizeDragRef = useRef<{ startY: number; startHeight: number } | null>(null)
 
   useEffect(() => {
     const node = scrollRef.current
     if (node) node.scrollTop = node.scrollHeight
   }, [session.messages, session.status])
+
+  const handleResizeStart = (event: React.PointerEvent<HTMLDivElement>): void => {
+    event.preventDefault()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    resizeDragRef.current = { startY: event.clientY, startHeight: heightRef.current }
+  }
+
+  const handleResizeMove = (event: React.PointerEvent<HTMLDivElement>): void => {
+    const drag = resizeDragRef.current
+    if (!drag) return
+    const maxHeight = Math.max(minOverlayHeight, window.innerHeight - 220)
+    const next = Math.min(Math.max(drag.startHeight + (drag.startY - event.clientY), minOverlayHeight), maxHeight)
+    heightRef.current = next
+    setHeight(next)
+  }
+
+  const handleResizeEnd = (): void => {
+    if (!resizeDragRef.current) return
+    resizeDragRef.current = null
+    window.localStorage.setItem(overlayHeightStorageKey, String(Math.round(heightRef.current)))
+  }
 
   const working = session.status === 'working'
 
@@ -100,7 +130,17 @@ export function AgentOverlay({
   }
 
   return (
-    <div className="agent-overlay" role="dialog" aria-label={`Agent: ${session.title}`}>
+    <div className="agent-overlay" style={{ height }} role="dialog" aria-label={`Agent: ${session.title}`}>
+      <div
+        className="agent-overlay-resize"
+        role="separator"
+        aria-orientation="horizontal"
+        aria-label="Resize agent window"
+        onPointerDown={handleResizeStart}
+        onPointerMove={handleResizeMove}
+        onPointerUp={handleResizeEnd}
+        onPointerCancel={handleResizeEnd}
+      />
       <div className="agent-overlay-header">
         <span className={`agent-tab-dot ${working ? 'is-working' : ''}`} />
         <span className="agent-overlay-title">{session.title}</span>

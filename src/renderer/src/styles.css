@@ -3384,18 +3384,42 @@ button {
 
 .agent-overlay {
   position: absolute;
-  right: 16px;
-  bottom: 118px;
+  right: 0;
+  bottom: 108px;
   z-index: 8;
   display: flex;
   flex-direction: column;
-  width: min(390px, calc(100% - 48px));
-  height: min(46vh, 480px);
+  width: min(400px, calc(100% - 48px));
   overflow: hidden;
-  border: 1px solid #2e3035;
-  border-radius: 12px;
-  background: #1c1e22;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid #232323;
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+  background: #131313;
+  box-shadow: -10px 8px 34px rgba(0, 0, 0, 0.45);
+}
+
+.agent-overlay-resize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  cursor: ns-resize;
+  z-index: 2;
+  touch-action: none;
+}
+
+.agent-overlay-resize:hover::after,
+.agent-overlay-resize:active::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 44px;
+  height: 3px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: #3a3a3a;
 }
 
 .agent-overlay-header {
@@ -3404,7 +3428,7 @@ button {
   gap: 8px;
   flex: 0 0 auto;
   padding: 8px 10px;
-  border-bottom: 1px solid #26282c;
+  border-bottom: 1px solid #222222;
 }
 
 .agent-overlay-title {
@@ -3452,7 +3476,7 @@ button {
   max-width: 85%;
   padding: 6px 10px;
   border-radius: 10px;
-  background: #26282c;
+  background: #1f1f1f;
   color: #dcdfe3;
   white-space: pre-wrap;
 }
@@ -3474,7 +3498,7 @@ button {
   overflow-x: auto;
   padding: 8px;
   border-radius: 8px;
-  background: #16181b;
+  background: #0f0f0f;
   font-size: 12px;
 }
 
@@ -3490,7 +3514,7 @@ button {
   gap: 6px;
   flex: 0 0 auto;
   padding: 8px;
-  border-top: 1px solid #26282c;
+  border-top: 1px solid #222222;
 }
 
 .agent-overlay-composer textarea {
@@ -3499,9 +3523,9 @@ button {
   max-height: 110px;
   resize: none;
   padding: 7px 9px;
-  border: 1px solid #2c2e33;
+  border: 1px solid #262626;
   border-radius: 8px;
-  background: #16181b;
+  background: #101010;
   color: #d8d8d8;
   font-size: 13px;
   line-height: 1.4;
@@ -3509,5 +3533,5 @@ button {
 }
 
 .agent-overlay-composer textarea:focus {
-  border-color: #3d4046;
+  border-color: #383838;
 }
