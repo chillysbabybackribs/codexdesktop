@@ -3965,7 +3965,11 @@ function Composer({
           if (isTurnActive) return
           const images = Array.from(event.clipboardData.files).filter((file) => file.type.startsWith('image/'))
           if (!images.length) return
+          const pastedText = event.clipboardData.getData('text/plain')
+          const start = event.currentTarget.selectionStart
+          const end = event.currentTarget.selectionEnd
           event.preventDefault()
+          if (pastedText) setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`)
           setAttachmentError(null)
           void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
         }}
