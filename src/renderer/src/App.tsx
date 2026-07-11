@@ -1037,6 +1037,26 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function handleResetAgentSession(key: string): void {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session || session.status === 'working') return
+
+    cancelAgentRecovery(key)
+    agentStartQueueRef.current = agentStartQueueRef.current.filter((candidate) => candidate !== key)
+    patchAgentSession(key, (current) => ({
+      ...current,
+      threadId: null,
+      status: 'idle',
+      turnId: null,
+      messages: [],
+      contextUsage: null,
+      isCompacting: false
+    }))
+    if (session.threadId && session.threadId !== activeThreadIdRef.current) {
+      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+    }
+  }
+
   // Promote: the agent's conversation takes over the main view and its window
   // closes. The previous main chat is not demoted into the dock — it lands in
   // thread history, exactly like switching threads from the history menu. If a
@@ -1714,6 +1734,7 @@ export default function App(): React.JSX.Element {
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
+          onResetAgentSession={handleResetAgentSession}
           onAgentSend={handleAgentSend}
           onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
@@ -1803,6 +1824,7 @@ function ChatPane({
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
+  onResetAgentSession,
   onAgentSend,
   onAgentSteer,
   onAgentStop,
@@ -1856,6 +1878,7 @@ function ChatPane({
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
+  onResetAgentSession: (key: string) => void
   onAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
@@ -2085,6 +2108,7 @@ function ChatPane({
             onSelect={onSelectAgent}
             onMinimize={onMinimizeAgent}
             onCloseSession={onCloseAgentSession}
+            onResetSession={onResetAgentSession}
             onPromote={onPromoteAgent}
             onToggleWatch={onToggleWatchAgent}
             onSend={onAgentSend}
