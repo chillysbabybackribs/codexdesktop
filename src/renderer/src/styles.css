@@ -3382,20 +3382,36 @@ button {
   flex: 0 0 auto;
 }
 
-.agent-overlay {
+.agent-overlay-row {
   position: absolute;
-  right: 0;
-  bottom: 108px;
+  bottom: calc(100% + 10px);
+  right: -22px;
   z-index: 8;
   display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 10px;
+  max-width: calc(100% + 22px);
+  pointer-events: none;
+}
+
+.agent-overlay {
+  position: relative;
+  display: flex;
   flex-direction: column;
-  width: min(400px, calc(100% - 48px));
+  flex: 0 1 400px;
+  min-width: 280px;
   overflow: hidden;
   border: 1px solid #232323;
+  border-radius: 12px;
+  background: #131313;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.agent-overlay:last-child {
   border-right: 0;
   border-radius: 12px 0 0 12px;
-  background: #131313;
-  box-shadow: -10px 8px 34px rgba(0, 0, 0, 0.45);
 }
 
 .agent-overlay-resize {

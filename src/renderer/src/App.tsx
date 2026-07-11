@@ -263,7 +263,7 @@ export default function App(): React.JSX.Element {
   // Latest thread-level usage snapshot; `last` sizes the current context.
   const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
-  const [openAgentKey, setOpenAgentKey] = useState<string | null>(null)
+  const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
   const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
@@ -1038,11 +1038,13 @@ export default function App(): React.JSX.Element {
         messages: []
       }
     ])
-    setOpenAgentKey(key)
+    setOpenAgentKeys((current) => [...current, key])
   }
 
   function handleOpenAgent(key: string): void {
-    setOpenAgentKey((current) => (current === key ? null : key))
+    setOpenAgentKeys((current) =>
+      current.includes(key) ? current.filter((candidate) => candidate !== key) : [...current, key]
+    )
   }
 
   function bindAgentThread(key: string, threadId: string, title: string | null): void {
@@ -1107,7 +1109,7 @@ export default function App(): React.JSX.Element {
   function handleCloseAgentSession(key: string): void {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
-    setOpenAgentKey((current) => (current === key ? null : current))
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     if (session?.threadId && session.threadId !== activeThreadIdRef.current) {
       void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
     }
@@ -1139,7 +1141,7 @@ export default function App(): React.JSX.Element {
       }
       return rest
     })
-    setOpenAgentKey(null)
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
 
     setActiveTurnId(null)
     activeTurnIdRef.current = null
@@ -1931,7 +1933,7 @@ export default function App(): React.JSX.Element {
           isCompacting={isCompacting}
           onCompactThread={handleCompactThread}
           agentSessions={agentSessions}
-          openAgentKey={openAgentKey}
+          openAgentKeys={openAgentKeys}
           onOpenAgent={handleOpenAgent}
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
@@ -2007,7 +2009,7 @@ function ChatPane({
   isCompacting,
   onCompactThread,
   agentSessions,
-  openAgentKey,
+  openAgentKeys,
   onOpenAgent,
   onNewAgent,
   onPromoteAgent,
@@ -2051,7 +2053,7 @@ function ChatPane({
   isCompacting: boolean
   onCompactThread: () => Promise<void>
   agentSessions: AgentSession[]
-  openAgentKey: string | null
+  openAgentKeys: string[]
   onOpenAgent: (key: string) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
@@ -2133,9 +2135,7 @@ function ChatPane({
     return null
   }, [items, itemMeta, activeTurnId])
 
-  const openAgentSession = openAgentKey
-    ? agentSessions.find((session) => session.key === openAgentKey) ?? null
-    : null
+  const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
   return (
     <section
@@ -2200,6 +2200,21 @@ function ChatPane({
       </ThreadScroll>
 
       <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+        {openAgentSessions.length ? (
+          <div className="agent-overlay-row">
+            {openAgentSessions.map((session) => (
+              <AgentOverlay
+                key={session.key}
+                session={session}
+                onMinimize={() => onOpenAgent(session.key)}
+                onCloseSession={onCloseAgentSession}
+                onPromote={onPromoteAgent}
+                onSend={onAgentSend}
+                onStop={onAgentStop}
+              />
+            ))}
+          </div>
+        ) : null}
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
           {models.length ? (
@@ -2214,7 +2229,7 @@ function ChatPane({
           />
           <AgentTabStrip
             sessions={agentSessions}
-            openKey={openAgentKey}
+            openKeys={openAgentKeys}
             onOpen={onOpenAgent}
             onNewAgent={onNewAgent}
           />
@@ -2261,17 +2276,6 @@ function ChatPane({
           }
         />
       </div>
-
-      {openAgentSession ? (
-        <AgentOverlay
-          session={openAgentSession}
-          onMinimize={() => onOpenAgent(openAgentSession.key)}
-          onCloseSession={onCloseAgentSession}
-          onPromote={onPromoteAgent}
-          onSend={onAgentSend}
-          onStop={onAgentStop}
-        />
-      ) : null}
 
       {isSettingsOpen ? (
         <SettingsModal

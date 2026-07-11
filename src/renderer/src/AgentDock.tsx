@@ -26,12 +26,12 @@ export type AgentSession = {
 
 export function AgentTabStrip({
   sessions,
-  openKey,
+  openKeys,
   onOpen,
   onNewAgent
 }: {
   sessions: AgentSession[]
-  openKey: string | null
+  openKeys: string[]
   onOpen: (key: string) => void
   onNewAgent: () => void
 }): React.JSX.Element {
@@ -41,7 +41,7 @@ export function AgentTabStrip({
         <button
           type="button"
           key={session.key}
-          className={`agent-tab ${session.key === openKey ? 'is-open' : ''}`}
+          className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''}`}
           title={session.title}
           onClick={() => onOpen(session.key)}
         >
