@@ -29,6 +29,8 @@ import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
 import type { ThreadGoalStatus } from '../../shared/codex-protocol/v2/ThreadGoalStatus'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry'
+import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
@@ -2019,6 +2021,7 @@ function ChatPane({
         </div>
         <Composer
           docked={hasThreadContent}
+          workspace={workspace}
           isLoading={isRestoring || isBusy && !activeTurnId}
           isTurnActive={Boolean(activeTurnId)}
           status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
@@ -3205,6 +3208,7 @@ function GoalIcon(): React.JSX.Element {
 
 function Composer({
   docked,
+  workspace,
   isLoading,
   isTurnActive,
   status,
@@ -3215,6 +3219,7 @@ function Composer({
   footerExtras
 }: {
   docked: boolean
+  workspace: string | null
   isLoading: boolean
   isTurnActive: boolean
   status: string
@@ -3228,6 +3233,11 @@ function Composer({
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
+  const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>('closed')
+  const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
+  const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
+  const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
   const hasDraft = Boolean(value.trim() || attachments.length)
 
   useLayoutEffect(() => {
@@ -3236,6 +3246,34 @@ function Composer({
     textarea.style.height = '0px'
     textarea.style.height = `${Math.min(190, Math.max(54, textarea.scrollHeight))}px`
   }, [value])
+
+  useEffect(() => {
+    if (pluginQuery === null || isLoading) {
+      setPluginMenuState('closed')
+      return
+    }
+
+    let cancelled = false
+    setPluginMenuState('loading')
+    void window.api.codex.listInstalledPlugins({ cwd: workspace }).then((result) => {
+      if (cancelled) return
+      setInstalledPlugins(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
+      setPluginMenuState('ready')
+    }, () => {
+      if (!cancelled) setPluginMenuState('error')
+    })
+    return () => { cancelled = true }
+  }, [pluginQuery !== null, workspace, isLoading])
+
+  const choosePlugin = (plugin: PluginSummary): void => {
+    const match = value.match(/(?:^|\s)@([^\s@]*)$/)
+    if (!match || match.index === undefined) return
+    const leadingSpace = match[0].startsWith(' ') ? ' ' : ''
+    const name = plugin.interface?.displayName || plugin.name
+    setValue(`${value.slice(0, match.index)}${leadingSpace}@${name} `)
+    setPluginMenuState('closed')
+    requestAnimationFrame(() => textareaRef.current?.focus())
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -3269,6 +3307,18 @@ function Composer({
         void saveBrowserFiles(files).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
       }}
     >
+      {pluginMenuState !== 'closed' ? (
+        <PluginMentionMenu
+          state={pluginMenuState}
+          plugins={installedPlugins.filter((plugin) => {
+            const name = plugin.interface?.displayName || plugin.name
+            return !pluginQuery || name.toLowerCase().includes(pluginQuery) || plugin.keywords.some((keyword) => keyword.toLowerCase().includes(pluginQuery))
+          })}
+          onChoose={choosePlugin}
+          onBrowse={() => { setPluginMenuState('closed'); setIsPluginBrowserOpen(true) }}
+          onUninstalled={(pluginId) => setInstalledPlugins((current) => current.filter((plugin) => plugin.id !== pluginId))}
+        />
+      ) : null}
       <AttachmentStrip attachments={attachments} removable onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
       <textarea
         ref={textareaRef}
@@ -3290,6 +3340,11 @@ function Composer({
           void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
         }}
         onKeyDown={(event) => {
+          if (event.key === 'Escape' && pluginMenuState !== 'closed') {
+            event.preventDefault()
+            setPluginMenuState('closed')
+            return
+          }
           if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault()
             event.currentTarget.form?.requestSubmit()
@@ -3336,7 +3391,146 @@ function Composer({
           </div>
         </div>
       </div>
+      {isPluginBrowserOpen ? (
+        <PluginBrowserModal
+          workspace={workspace}
+          onClose={() => setIsPluginBrowserOpen(false)}
+          onChanged={(plugins) => setInstalledPlugins(plugins)}
+        />
+      ) : null}
     </form>
+  )
+}
+
+function flattenPlugins(marketplaces: PluginMarketplaceEntry[]): PluginSummary[] {
+  return [...new Map(marketplaces.flatMap((marketplace) => marketplace.plugins).map((plugin) => [plugin.id, plugin])).values()]
+}
+
+function PluginGlyph({ plugin }: { plugin: PluginSummary }): React.JSX.Element {
+  const icon = plugin.interface?.composerIconUrl || plugin.interface?.logoUrlDark || plugin.interface?.logoUrl
+  if (icon) return <img src={icon} alt="" />
+  const name = plugin.interface?.displayName || plugin.name
+  return <span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span>
+}
+
+function TrashIcon(): React.JSX.Element {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+}
+
+function PluginMentionMenu({ state, plugins, onChoose, onBrowse, onUninstalled }: {
+  state: 'loading' | 'ready' | 'error'
+  plugins: PluginSummary[]
+  onChoose: (plugin: PluginSummary) => void
+  onBrowse: () => void
+  onUninstalled: (pluginId: string) => void
+}): React.JSX.Element {
+  const [removing, setRemoving] = useState<string | null>(null)
+  const [armed, setArmed] = useState<string | null>(null)
+
+  const remove = (plugin: PluginSummary): void => {
+    if (armed !== plugin.id) {
+      setArmed(plugin.id)
+      return
+    }
+    setRemoving(plugin.id)
+    void window.api.codex.uninstallPlugin(plugin.id).then(() => {
+      onUninstalled(plugin.id)
+      setArmed(null)
+    }).finally(() => setRemoving(null))
+  }
+
+  return (
+    <div className="plugin-mention-menu" role="listbox" aria-label="Installed plugins">
+      <div className="plugin-mention-heading"><span>Installed plugins</span><span>{plugins.length || ''}</span></div>
+      <div className="plugin-mention-list">
+        {state === 'loading' ? <div className="plugin-menu-message shimmer-text">Loading plugins…</div> : null}
+        {state === 'error' ? <div className="plugin-menu-message">Plugins could not be loaded.</div> : null}
+        {state === 'ready' && !plugins.length ? <div className="plugin-menu-message">No matching installed plugins.</div> : null}
+        {state === 'ready' ? plugins.map((plugin) => (
+          <div className="plugin-mention-row" key={plugin.id} role="option" aria-selected="false">
+            <button type="button" className="plugin-mention-select" onClick={() => onChoose(plugin)}>
+              <span className="plugin-glyph"><PluginGlyph plugin={plugin} /></span>
+              <span className="plugin-mention-copy"><strong>{plugin.interface?.displayName || plugin.name}</strong><small>{plugin.interface?.shortDescription || plugin.interface?.capabilities.slice(0, 2).join(' · ') || 'Plugin'}</small></span>
+            </button>
+            <button type="button" className={`plugin-remove ${armed === plugin.id ? 'is-armed' : ''}`} aria-label={armed === plugin.id ? `Confirm remove ${plugin.name}` : `Remove ${plugin.name}`} title={armed === plugin.id ? 'Click again to remove' : 'Remove plugin'} disabled={removing === plugin.id} onClick={() => remove(plugin)}>
+              {armed === plugin.id ? <span>Remove</span> : <TrashIcon />}
+            </button>
+          </div>
+        )) : null}
+      </div>
+      <button type="button" className="browse-plugins-button" onClick={onBrowse}><span>Browse plugins</span><span aria-hidden="true">↗</span></button>
+    </div>
+  )
+}
+
+function PluginBrowserModal({ workspace, onClose, onChanged }: {
+  workspace: string | null
+  onClose: () => void
+  onChanged: (plugins: PluginSummary[]) => void
+}): React.JSX.Element {
+  const [marketplaces, setMarketplaces] = useState<PluginMarketplaceEntry[]>([])
+  const [query, setQuery] = useState('')
+  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [busyId, setBusyId] = useState<string | null>(null)
+  const closeRef = useRef<HTMLButtonElement | null>(null)
+
+  const load = useCallback(() => {
+    setState('loading')
+    void window.api.codex.listPlugins({ cwd: workspace }).then((result) => {
+      setMarketplaces(result.marketplaces)
+      onChanged(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
+      setState('ready')
+    }, () => setState('error'))
+  }, [workspace, onChanged])
+
+  useEffect(load, [load])
+  useEffect(() => {
+    void window.api.browser.setOverlayOpen(true)
+    closeRef.current?.focus()
+    const handleKey = (event: KeyboardEvent): void => { if (event.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handleKey)
+    return () => { window.removeEventListener('keydown', handleKey); void window.api.browser.setOverlayOpen(false) }
+  }, [onClose])
+
+  const plugins = flattenPlugins(marketplaces).filter((plugin) => {
+    const haystack = [plugin.name, plugin.interface?.displayName, plugin.interface?.shortDescription, plugin.interface?.category, ...plugin.keywords].filter(Boolean).join(' ').toLowerCase()
+    return !query.trim() || haystack.includes(query.trim().toLowerCase())
+  })
+
+  const install = (plugin: PluginSummary, marketplace: PluginMarketplaceEntry | undefined): void => {
+    setBusyId(plugin.id)
+    void window.api.codex.installPlugin({ pluginName: plugin.name, marketplacePath: marketplace?.path ?? null, remoteMarketplaceName: marketplace?.path ? null : marketplace?.name ?? null }).then(load).finally(() => setBusyId(null))
+  }
+
+  const uninstall = (plugin: PluginSummary): void => {
+    setBusyId(plugin.id)
+    void window.api.codex.uninstallPlugin(plugin.id).then(load).finally(() => setBusyId(null))
+  }
+
+  return (
+    <div className="plugin-browser-overlay" onPointerDown={onClose}>
+      <section className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
+        <header className="plugin-browser-header">
+          <div><span className="plugin-browser-eyebrow">Extend Codex Desktop</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
+          <button ref={closeRef} type="button" className="plugin-browser-close" aria-label="Close plugin browser" onClick={onClose}>×</button>
+        </header>
+        <div className="plugin-browser-tools"><label><span aria-hidden="true">⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} plugins</span></div>
+        <div className="plugin-browser-grid">
+          {state === 'loading' ? <div className="plugin-browser-state shimmer-text">Loading plugin catalog…</div> : null}
+          {state === 'error' ? <div className="plugin-browser-state">The plugin catalog could not be loaded. <button type="button" onClick={load}>Try again</button></div> : null}
+          {state === 'ready' && !plugins.length ? <div className="plugin-browser-state">No plugins match that search.</div> : null}
+          {state === 'ready' ? plugins.map((plugin) => {
+            const marketplace = marketplaces.find((entry) => entry.plugins.some((candidate) => candidate.id === plugin.id))
+            return <article className="plugin-browser-card" key={plugin.id}>
+              <div className="plugin-browser-card-top"><span className="plugin-glyph is-large"><PluginGlyph plugin={plugin} /></span><span className="plugin-source">{marketplace?.interface?.displayName || marketplace?.name || 'Plugin'}</span></div>
+              <div className="plugin-browser-card-copy"><h3>{plugin.interface?.displayName || plugin.name}</h3><p>{plugin.interface?.shortDescription || plugin.interface?.longDescription || 'Adds focused capabilities to Codex Desktop.'}</p></div>
+              <div className="plugin-capabilities">{(plugin.interface?.capabilities || plugin.keywords).slice(0, 3).map((capability) => <span key={capability}>{capability}</span>)}</div>
+              <button type="button" className={`plugin-install-button ${plugin.installed ? 'is-installed' : ''}`} disabled={busyId === plugin.id || plugin.availability !== 'AVAILABLE'} onClick={() => plugin.installed ? uninstall(plugin) : install(plugin, marketplace)}>{busyId === plugin.id ? 'Working…' : plugin.installed ? 'Installed · Remove' : plugin.availability === 'AVAILABLE' ? 'Install' : 'Unavailable'}</button>
+            </article>
+          }) : null}
+        </div>
+      </section>
+    </div>
   )
 }
 
