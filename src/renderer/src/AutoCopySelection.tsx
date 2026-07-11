@@ -18,7 +18,13 @@ export function AutoCopySelection(): React.JSX.Element | null {
       setVisible(true)
       hideTimer.current = setTimeout(() => setVisible(false), 1_250)
     }
-    const stopListeningForBrowserCopies = window.api.clipboard.onAutoCopied(showCopied)
+    const onAutoCopied = window.api?.clipboard?.onAutoCopied
+    const cleanupAutoCopied = typeof onAutoCopied === 'function'
+      ? onAutoCopied(showCopied)
+      : () => {}
+    const stopListeningForBrowserCopies = typeof cleanupAutoCopied === 'function'
+      ? cleanupAutoCopied
+      : () => {}
 
     const onPointerDown = (event: globalThis.PointerEvent): void => {
       pointerStart.current = event.button === 0 && !isEditable(event.target)
@@ -32,7 +38,12 @@ export function AutoCopySelection(): React.JSX.Element | null {
       if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < dragThreshold) return
 
       const text = window.getSelection()?.toString() ?? ''
-      if (text.trim()) void window.api.clipboard.writeText(text)
+      if (text.trim()) {
+        const writeText = window.api?.clipboard?.writeText
+        if (typeof writeText === 'function') {
+          void Promise.resolve(writeText(text)).catch(() => {})
+        }
+      }
     }
     const onPointerCancel = (): void => { pointerStart.current = null }
 
