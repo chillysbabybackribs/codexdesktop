@@ -1080,7 +1080,12 @@ button {
    ------------------------------------------------------------------------ */
 
 .task-activity-card {
-  height: 228px;
+  /* Size to content up to a cap, rather than a fixed height. This keeps the
+     card from RETRACTING when a turn completes: it was already content-sized,
+     so nothing shrinks. Short runs stay short; long runs grow to the cap and
+     scroll internally past it. */
+  height: auto;
+  max-height: 228px;
   max-width: min(920px, 100%);
   margin: 0 0 18px;
   content-visibility: auto;
@@ -1088,10 +1093,11 @@ button {
 }
 
 /* The live turn's card gets more visible surface during long runs — more steps
-   on screen at once. It still scrolls internally; completed cards stay compact
-   at 228px so the transcript doesn't fill with tall empty cards. */
+   on screen at once. It grows with content to a taller cap and scrolls past it;
+   because completion only removes this class (raising nothing), the card keeps
+   its content height and never snaps down. */
 .task-activity-card.is-live {
-  height: min(60vh, 620px);
+  max-height: min(60vh, 620px);
   contain-intrinsic-size: auto 620px;
 }
 
