@@ -3282,6 +3282,12 @@ function ThreadScroll({
       // exact minimum that preserves scrollTop — 0 if the answer already fills
       // the viewport, otherwise just enough to hold position (no excess).
       anchorTurnRef.current = null
+      // A very fast turn can finish before the send's anchor rAF (or a retry)
+      // fires; cancel it so it can't re-anchor after we've frozen.
+      if (anchorFrameRef.current !== null) {
+        window.cancelAnimationFrame(anchorFrameRef.current)
+        anchorFrameRef.current = null
+      }
       const el = ref.current
       const spacer = spacerRef.current
       if (el && spacer) {
@@ -3301,7 +3307,6 @@ function ThreadScroll({
       pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
-    justResetRef.current = false
   }, [activeTurnId, anchorTop, cancelScheduledFollow])
 
   useEffect(() => {
