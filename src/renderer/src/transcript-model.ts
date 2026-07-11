@@ -4,7 +4,7 @@ import {
   type ItemMeta,
   type TurnPlanItem,
   type WorkItem
-} from './TaskActivity'
+} from './activity-model.js'
 
 export type SystemItem = {
   type: 'system'

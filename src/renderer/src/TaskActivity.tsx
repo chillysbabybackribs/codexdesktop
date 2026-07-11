@@ -2,37 +2,14 @@ import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'rea
 import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
-import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
 import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAction'
 import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
 import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
+import { workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
 
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
-
-// ---------------------------------------------------------------------------
-// Shared task-state types (owned here, consumed by App)
-// ---------------------------------------------------------------------------
-
-// Structured turn plan (turn/plan/updated) rendered as a checklist card. Local
-// to the app — the protocol's `plan` ThreadItem is a plain text stream.
-export type TurnPlanItem = {
-  type: 'turnPlan'
-  id: string
-  explanation: string | null
-  steps: TurnPlanStep[]
-}
-
-// Per-item lifecycle data the ThreadItem payloads don't carry themselves.
-export type ItemMeta = {
-  turnId: string | null
-  startedAtMs?: number
-  completedAtMs?: number
-  // Latest item/mcpToolCall/progress messages, newest last.
-  progress?: string[]
-  // For contextCompaction items: thread context size (tokens) entering the
-  // compaction, and the size the compaction turn reported after shrinking.
-  compaction?: { beforeTokens: number | null; afterTokens: number | null }
-}
+export { workItemTypes } from './activity-model'
+export type { ItemMeta, TurnPlanItem, WorkItem } from './activity-model'
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
@@ -58,24 +35,6 @@ type CdpFileArtifact = {
   kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
   bytes: number
 }
-
-export const workItemTypes = [
-  'reasoning',
-  'plan',
-  'turnPlan',
-  'commandExecution',
-  'fileChange',
-  'mcpToolCall',
-  'dynamicToolCall',
-  'collabAgentToolCall',
-  'subAgentActivity',
-  'webSearch',
-  'imageGeneration',
-  'imageView',
-  'sleep'
-] as const
-
-export type WorkItem = Extract<ThreadItem, { type: (typeof workItemTypes)[number] }> | TurnPlanItem
 
 // ---------------------------------------------------------------------------
 // Small shared utilities
