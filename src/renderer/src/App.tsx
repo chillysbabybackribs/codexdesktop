@@ -3080,6 +3080,11 @@ function ThreadScroll({
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
   const suppressScrollRef = useRef(false)
+  // Mirrors the activeTurnId prop so the reset effect (whose deps are keyed on
+  // resetKey, not activeTurnId) can read the turn active AT reset time without a
+  // stale closure.
+  const activeTurnIdRef = useRef(activeTurnId)
+  activeTurnIdRef.current = activeTurnId
   const [spacerOn, setSpacerOn] = useState(false)
 
   const cancelScheduledFollow = useCallback(() => {
@@ -3234,7 +3239,11 @@ function ThreadScroll({
     cancelScheduledFollow()
     anchorTurnRef.current = null
     prevTurnRef.current = null
-    justResetRef.current = true
+    // Record whatever turn is active as this thread resets. The anchor effect
+    // skips any turn id that the reset absorbed, so a restored in-progress turn
+    // is never yanked to the top — and this survives resetKey and activeTurnId
+    // landing in separate commits (a one-shot flag would not).
+    absorbedTurnRef.current = activeTurnIdRef.current
     setSpacerOn(false)
     pinnedRef.current = true
     followTail()
