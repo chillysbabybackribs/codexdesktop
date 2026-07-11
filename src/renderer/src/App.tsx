@@ -853,61 +853,6 @@ export default function App(): React.JSX.Element {
 
   // ---- Background agent sessions -------------------------------------------
 
-  // State and ref must stay in sync within the same tick: the codex event
-  // handler routes on the ref, and promote/demote swaps subscribe state
-  // immediately after mutating the list.
-  function updateAgentSessions(updater: (sessions: AgentSession[]) => AgentSession[]): void {
-    agentSessionsRef.current = updater(agentSessionsRef.current)
-    setAgentSessions(agentSessionsRef.current)
-  }
-
-  function backgroundSessionForThread(threadId: string): AgentSession | null {
-    return findAgentSessionByThread(agentSessionsRef.current, threadId)
-  }
-
-  function patchAgentSession(key: string, patch: (session: AgentSession) => AgentSession): void {
-    updateAgentSessions((sessions) => updateAgentSession(sessions, key, patch))
-  }
-
-  function appendAgentMessage(key: string, message: AgentLiteMessage): void {
-    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message))
-  }
-
-  // Apply every buffered agent delta in one state update per frame. Mirrors the
-  // main chat's flushPendingItemMutations so a burst of tokens across all open
-  // agents collapses into a single agent-session render.
-  function flushAgentDeltas(): void {
-    if (agentDeltaTimerRef.current !== null) {
-      window.clearTimeout(agentDeltaTimerRef.current)
-      agentDeltaTimerRef.current = null
-    }
-
-    const buffer = agentDeltaBufferRef.current
-    if (buffer.size === 0) return
-    agentDeltaBufferRef.current = new Map()
-
-    updateAgentSessions((sessions) => applyAgentDeltas(sessions, buffer))
-  }
-
-  function enqueueAgentDelta(key: string, itemId: string, delta: string): void {
-    let perItem = agentDeltaBufferRef.current.get(key)
-    if (!perItem) {
-      perItem = new Map()
-      agentDeltaBufferRef.current.set(key, perItem)
-    }
-    perItem.set(itemId, `${perItem.get(itemId) ?? ''}${delta}`)
-
-    if (agentDeltaTimerRef.current === null) {
-      agentDeltaTimerRef.current = window.setTimeout(flushAgentDeltas, 32)
-    }
-  }
-
-  // Append unless a message with this id already exists — the `error`
-  // notification and the failed `turn/completed` carry the same turn error.
-  function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
-    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message, true))
-  }
-
   // Lite reducer for threads living in the dock: track turn status and plain
   // chat text only. The full activity pipeline stays exclusive to the focused
   // thread.
@@ -1016,48 +961,6 @@ export default function App(): React.JSX.Element {
     }
     return messages
   }
-
-  function handleNewAgent(): void {
-    const key = crypto.randomUUID()
-    updateAgentSessions((sessions) => [
-      ...sessions,
-      createAgentSession(key, `Agent ${agentCounterRef.current++}`)
-    ])
-    setOpenAgentKeys((current) => [...current, key])
-    setSelectedAgentKey(key)
-  }
-
-  // Tab click focuses: opens the window if closed. Scrolling/flashing to it is
-  // handled where the DOM lives (ChatPane).
-  function handleOpenAgent(key: string): void {
-    setOpenAgentKeys((current) => (current.includes(key) ? current : [...current, key]))
-  }
-
-  function handleMinimizeAgent(key: string): void {
-    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
-  }
-
-  function handleToggleWatchAgent(key: string): void {
-    patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
-  }
-
-  function handleSetAgentModel(key: string, model: string): void {
-    patchAgentSession(key, (session) => ({ ...session, model }))
-  }
-
-  // Dock persistence, mirroring the main chat's lastThreadId restore: session
-  // metadata lives in localStorage; transcripts rehydrate from the server.
-  useEffect(() => {
-    if (!agentDockRestoredRef.current) return
-    // Blank agents (no message sent yet, so no thread) persist too — they
-    // restore as blank windows.
-    window.localStorage.setItem(agentDockStorageKey, serializeAgentDock(
-      agentCounterRef.current,
-      agentSessions,
-      openAgentKeys,
-      selectedAgentKey
-    ))
-  }, [agentSessions, openAgentKeys, selectedAgentKey])
 
   async function restoreAgentDock(): Promise<void> {
     try {
