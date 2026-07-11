@@ -3375,7 +3375,7 @@ button {
 }
 
 .agent-column {
-  --agent-window-height: clamp(320px, calc(50vh - 108px), 640px);
+  --agent-window-height: clamp(320px, calc(50vh - 72px), 760px);
   position: absolute;
   bottom: 0;
   right: -22px;
