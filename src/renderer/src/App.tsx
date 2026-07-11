@@ -3560,12 +3560,6 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
       if (!firstMarketplaceByPluginId.has(plugin.id)) firstMarketplaceByPluginId.set(plugin.id, marketplace)
     }
   }
-  const pluginsByMarketplace = new Map(marketplaces.map((marketplace) => [marketplace, [] as PluginSummary[]]))
-  for (const plugin of plugins) {
-    const marketplace = firstMarketplaceByPluginId.get(plugin.id)
-    if (marketplace) pluginsByMarketplace.get(marketplace)?.push(plugin)
-  }
-  const pluginGroups = marketplaces.map((marketplace) => ({ marketplace, plugins: pluginsByMarketplace.get(marketplace) ?? [] })).filter((group) => group.plugins.length)
 
   const install = (plugin: PluginSummary, marketplace: PluginMarketplaceEntry | undefined): void => {
     setBusyId(plugin.id)
@@ -3580,21 +3574,22 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
   return (
       <section className="plugin-browser-view" aria-labelledby="plugin-browser-title">
         <header className="plugin-browser-header">
-          <div><span className="plugin-browser-eyebrow">Codex Desktop marketplace</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
-          <button ref={closeRef} type="button" className="plugin-browser-back" onClick={onClose}><span aria-hidden="true">←</span><span>Back to chat</span></button>
+          <button ref={closeRef} type="button" className="plugin-browser-back" aria-label="Back to chat" title="Back to chat" onClick={onClose}><span aria-hidden="true">←</span></button>
+          <h2 id="plugin-browser-title">Plugins</h2>
         </header>
-        <div className="plugin-browser-tools"><label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.7" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} {plugins.length === 1 ? 'plugin' : 'plugins'}</span></div>
+        <div className="plugin-browser-tools"><label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.7" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label></div>
         <div className="plugin-browser-catalog">
           {state === 'loading' ? <div className="plugin-browser-state shimmer-text">Loading plugin catalog…</div> : null}
           {state === 'error' ? <div className="plugin-browser-state">The plugin catalog could not be loaded. <button type="button" onClick={load}>Try again</button></div> : null}
           {state === 'ready' && !plugins.length ? <div className="plugin-browser-state">No plugins match that search.</div> : null}
-          {state === 'ready' ? pluginGroups.map(({ marketplace, plugins: marketplacePlugins }) => (
-            <section className="plugin-browser-group" key={marketplace.name}>
-              <h3>{marketplace.interface?.displayName || marketplace.name || 'Plugins'}</h3>
+          {state === 'ready' && plugins.length ? (
+            <section className="plugin-browser-group">
+              <h3>Codex Desktop plugins</h3>
               <div className="plugin-browser-grid">
-                {marketplacePlugins.map((plugin) => {
+                {plugins.map((plugin) => {
                   const name = plugin.interface?.displayName || plugin.name
                   const action = busyId === plugin.id ? 'Working…' : plugin.installed ? 'Remove' : plugin.availability === 'AVAILABLE' ? 'Get' : 'Unavailable'
+                  const marketplace = firstMarketplaceByPluginId.get(plugin.id)
                   return <article className="plugin-browser-card" key={plugin.id}>
                     <span className="plugin-glyph is-large"><PluginGlyph plugin={plugin} /></span>
                     <div className="plugin-browser-card-copy"><h4>{name}</h4><p>{plugin.interface?.shortDescription || plugin.interface?.longDescription || 'Adds focused capabilities to Codex Desktop.'}</p></div>
@@ -3603,7 +3598,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
                 })}
               </div>
             </section>
-          )) : null}
+          ) : null}
         </div>
       </section>
   )
