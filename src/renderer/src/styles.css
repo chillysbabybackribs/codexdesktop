@@ -2968,17 +2968,21 @@ button {
   color: #c98a85;
 }
 
-.model-menu {
+.model-menu-shell {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
   z-index: 30;
+  animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.model-menu {
   display: flex;
   flex-direction: column;
   gap: 2px;
   width: 300px;
   max-height: min(48vh, 380px);
-  overflow: visible;
+  overflow-y: auto;
   scrollbar-width: none;
   padding: 6px;
   border: 1px solid rgb(255 255 255 / 9%);
@@ -2988,7 +2992,6 @@ button {
     0 0 0 1px rgb(0 0 0 / 40%),
     0 18px 48px -16px rgb(0 0 0 / 60%);
   backdrop-filter: blur(22px) saturate(150%);
-  animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes model-menu-in {
@@ -4380,9 +4383,12 @@ button {
   font-size: 12px;
 }
 
-.agent-overlay-context .model-menu {
+.agent-overlay-context .model-menu-shell {
   left: 0;
   bottom: calc(100% + 6px);
+}
+
+.agent-overlay-context .model-menu {
   width: min(300px, 92vw);
   max-height: min(38vh, 300px);
 }
