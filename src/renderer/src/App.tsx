@@ -69,6 +69,7 @@ import {
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
+import { createAgentCommands } from './agent-commands'
 import { useAgentSessions } from './useAgentSessions'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
@@ -915,119 +916,25 @@ export default function App(): React.JSX.Element {
     ].join('\n')
   }
 
-  // Agent tabs keep their stable "Agent N" names — server thread names never
-  // overwrite them.
-  function bindAgentThread(key: string, threadId: string): void {
-    patchAgentSession(key, (session) => ({
-      ...session,
-      threadId: session.threadId ?? threadId
-    }))
-  }
-
-  async function handleAgentSend(key: string, text: string, attachments: ChatAttachment[] = []): Promise<boolean> {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session) return false
-
-    // The user is driving this agent again — drop any pending recovery.
-    cancelAgentRecovery(key)
-
-    try {
-      const agentModel = session.model ?? selectedModelRef.current
-      if (attachments.some((attachment) => attachment.kind === 'image') && !modelAcceptsImages(models, agentModel)) {
-        appendAgentMessage(key, {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          text: '⚠ The selected model does not accept image inputs. Choose an image-capable model or remove the image.'
-        })
-        return false
-      }
-      let threadId = session.threadId
-      if (!threadId) {
-        agentStartQueueRef.current.push(key)
-        const started = await window.api.codex.startThread({
-          cwd: workspaceRef.current,
-          model: agentModel
-        })
-        threadId = started.thread.id
-        agentStartQueueRef.current = agentStartQueueRef.current.filter((queued) => queued !== key)
-        if (!threadId) throw new Error('Thread start returned no thread id')
-        bindAgentThread(key, threadId)
-      }
-
-      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
-      const outgoingText = session.watchesMain ? `${buildMainChatContext()}\n\n${text}` : text
-      const response = await window.api.codex.sendMessage({
-        threadId,
-        text: outgoingText,
-        attachments,
-        cwd: workspaceRef.current,
-        model: agentModel
-      })
-      patchAgentSession(key, (current) => ({
-        ...current,
-        status: 'working',
-        turnId: response.turn.id
-      }))
-      return true
-    } catch (error) {
-      appendAgentMessage(key, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: `⚠ Agent turn failed to start: ${(error as Error).message}`
-      })
-      return false
-    }
-  }
-
-  async function handleAgentStop(key: string): Promise<void> {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session?.threadId || !session.turnId) return
-    try {
-      await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
-    } catch {
-      // The turn may have already finished; the lite state settles via events.
-    }
-  }
-
-  async function handleAgentCompact(key: string): Promise<void> {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session?.threadId || session.turnId || session.isCompacting) return
-
-    try {
-      await window.api.codex.compactThread(session.threadId)
-    } catch (error) {
-      appendAgentMessage(key, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: `⚠ Compaction failed: ${(error as Error).message}`
-      })
-    }
-  }
-
-  // Mid-turn guidance for a dock agent, same turn/steer verb as the main
-  // composer. The steered text is appended locally because the lite reducer
-  // ignores userMessage items.
-  async function handleAgentSteer(key: string, text: string): Promise<boolean> {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    const trimmed = text.trim()
-    if (!trimmed || !session?.threadId || !session.turnId) return false
-    try {
-      await window.api.codex.steerTurn({
-        threadId: session.threadId,
-        turnId: session.turnId,
-        text: trimmed
-      })
-      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text: trimmed })
-      return true
-    } catch (error) {
-      appendAgentMessage(key, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: `⚠ Could not add guidance to the running turn: ${(error as Error).message}`
-      })
-      return false
-    }
-  }
+  const {
+    bindAgentThread,
+    handleAgentSend,
+    handleAgentStop,
+    handleAgentCompact,
+    handleAgentSteer
+  } = createAgentCommands({
+    store: {
+      sessionsRef: agentSessionsRef,
+      startQueueRef: agentStartQueueRef,
+      patchSession: patchAgentSession,
+      appendMessage: appendAgentMessage
+    },
+    getWorkspace: () => workspaceRef.current,
+    getSelectedModel: () => selectedModelRef.current,
+    acceptsImages: (model) => modelAcceptsImages(models, model),
+    buildMainChatContext,
+    cancelRecovery: cancelAgentRecovery
+  })
 
   function cancelAgentRecovery(key: string): void {
     const state = agentRecoveryRef.current.get(key)
