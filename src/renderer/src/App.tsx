@@ -56,6 +56,7 @@ import {
   cdpScreenshotArtifacts,
   type ItemMeta,
   type TurnMeta,
+  type TurnPlanItem,
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
@@ -65,6 +66,7 @@ import {
   buildRows,
   isWorkItem,
   upsertMany,
+  type ActivityItem,
   type ChatItem,
   type SystemItem
 } from './transcript-model'
