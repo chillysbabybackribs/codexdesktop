@@ -41,7 +41,7 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
   ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
-    client.sendMessage(params.threadId, params.text, params.cwd, params.model)
+    client.sendMessage(params.threadId, params.text, params.cwd, params.model, params.attachments)
   )
   ipcMain.handle(ipcChannels.codexSteerTurn, (_event, params: CodexSteerTurnParams) =>
     client.steerTurn(params.threadId, params.turnId, params.text)

@@ -30,6 +30,7 @@ import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadToke
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
+import type { ChatAttachment } from '../../shared/ipc.js'
 import {
   browserDynamicTools,
   buildGuidance,
@@ -200,7 +201,8 @@ export class CodexClient extends EventEmitter {
     threadId: string | null | undefined,
     text: string,
     cwd?: string | null,
-    model?: string | null
+    model?: string | null,
+    attachments: ChatAttachment[] = []
   ): Promise<TurnStartResponse & {
     threadId: string
     model: string | null
@@ -209,7 +211,7 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.buildTurnInput(text, !threadId)
+    const input = this.buildTurnInput(text, !threadId, attachments)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -402,18 +404,21 @@ export class CodexClient extends EventEmitter {
     }
   }
 
-  private buildTurnInput(text: string, isNewThread: boolean): UserInput[] {
+  private buildTurnInput(text: string, isNewThread: boolean, attachments: ChatAttachment[] = []): UserInput[] {
     const turnSkills = selectTurnSkills(text, this.localSkills)
     const newThreadSkills = isNewThread ? selectNewThreadSkills(this.localSkills) : []
     const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
     const visibleText = formatSkillInvocationText(text, turnSkills)
 
     return [
-      {
+      ...(visibleText.trim() ? [{
         type: 'text',
         text: visibleText,
         text_elements: []
-      },
+      } satisfies UserInput] : []),
+      ...attachments.map((attachment): UserInput => attachment.kind === 'image'
+        ? { type: 'localImage', path: attachment.path }
+        : { type: 'mention', name: attachment.name, path: attachment.path }),
       ...skills.map((skill): UserInput => ({
         type: 'skill',
         name: skill.name,

@@ -5,6 +5,7 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
+  ChatAttachment,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   BrowserFindResult,
@@ -21,7 +22,6 @@ import type {
   TracePersistParams,
   TraceSaveParams,
   TraceSaveResult
-  , ChatAttachment
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 
