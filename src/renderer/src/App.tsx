@@ -54,10 +54,8 @@ import {
   TurnTail,
   WorkGroup,
   cdpScreenshotArtifacts,
-  workItemTypes,
   type ItemMeta,
   type TurnMeta,
-  type TurnPlanItem,
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
@@ -4401,80 +4399,6 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
       ) : null}
     </form>
   )
-}
-
-function upsertMany(current: ChatItem[], nextItems: ChatItem[]): ChatItem[] {
-  const next = [...current]
-
-  for (const item of nextItems) {
-    const index = next.findIndex((currentItem) => currentItem.id === item.id)
-
-    if (index === -1) {
-      next.push(item)
-    } else {
-      next[index] = mergeChatItem(next[index], item)
-    }
-  }
-
-  return next
-}
-
-// App-server snapshots and deltas can cross the IPC boundary in adjacent
-// turns. Never let a shorter snapshot erase text that has already streamed
-// into the renderer; lifecycle/status fields still come from the newest item.
-function mergeChatItem(current: ChatItem, incoming: ChatItem): ChatItem {
-  if (current.type !== incoming.type) {
-    return incoming
-  }
-
-  switch (incoming.type) {
-    case 'agentMessage': {
-      const existing = current as Extract<ThreadItem, { type: 'agentMessage' }>
-      return {
-        ...existing,
-        ...incoming,
-        text: incoming.text.length >= existing.text.length ? incoming.text : existing.text
-      }
-    }
-    case 'commandExecution': {
-      const existing = current as Extract<ThreadItem, { type: 'commandExecution' }>
-      const incomingOutput = incoming.aggregatedOutput ?? ''
-      const existingOutput = existing.aggregatedOutput ?? ''
-      return {
-        ...existing,
-        ...incoming,
-        aggregatedOutput: incomingOutput.length >= existingOutput.length ? incomingOutput : existingOutput
-      }
-    }
-    case 'reasoning': {
-      const existing = current as Extract<ThreadItem, { type: 'reasoning' }>
-      return {
-        ...existing,
-        ...incoming,
-        summary: mergeTextParts(existing.summary, incoming.summary),
-        content: mergeTextParts(existing.content, incoming.content)
-      }
-    }
-    case 'plan': {
-      const existing = current as Extract<ThreadItem, { type: 'plan' }>
-      return {
-        ...existing,
-        ...incoming,
-        text: incoming.text.length >= existing.text.length ? incoming.text : existing.text
-      }
-    }
-    default:
-      return incoming
-  }
-}
-
-function mergeTextParts(current: string[], incoming: string[]): string[] {
-  const length = Math.max(current.length, incoming.length)
-  return Array.from({ length }, (_, index) => {
-    const existing = current[index] ?? ''
-    const next = incoming[index] ?? ''
-    return next.length >= existing.length ? next : existing
-  })
 }
 
 function persistLastThreadId(threadId: string | null): void {
