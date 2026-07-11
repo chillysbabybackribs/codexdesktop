@@ -1,7 +1,7 @@
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
-import { attachmentsFromUserInput } from './Attachments'
-import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model'
-import type { ChatItem } from './transcript-model'
+import { attachmentsFromUserInput } from './Attachments.js'
+import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
+import type { ChatItem } from './transcript-model.js'
 
 type MutableRef<T> = { current: T }
 
