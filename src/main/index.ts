@@ -352,8 +352,10 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
   ipcMain.handle(
     ipcChannels.browserOmniboxQuery,
-    (_event, text: string, anchor: OmniboxAnchor): OmniboxSuggestion[] => {
-      const suggestions = buildSuggestions(String(text ?? ''), browserHistoryStore.entries())
+    (_event, text: string, anchor: OmniboxAnchor): OmniboxQueryResult => {
+      const input = String(text ?? '')
+      const entries = browserHistoryStore.entries()
+      const suggestions = buildSuggestions(input, entries)
 
       if (suggestions.length > 0) {
         omniboxPopup?.show(anchor, suggestions)
@@ -361,7 +363,7 @@ function registerIpc(): void {
         omniboxPopup?.hide()
       }
 
-      return suggestions
+      return { suggestions, inline: inlineCompletion(input, entries) }
     }
   )
   ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))

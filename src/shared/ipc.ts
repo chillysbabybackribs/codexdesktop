@@ -51,6 +51,16 @@ export type OmniboxRenderPayload = {
   selectedIndex: number
 }
 
+export type OmniboxQueryResult = {
+  suggestions: OmniboxSuggestion[]
+  /**
+   * Full address-bar text to inline-autocomplete (typed prefix preserved), or
+   * null when nothing should complete. The renderer shows the remainder as
+   * selected text so the next keystroke replaces it.
+   */
+  inline: string | null
+}
+
 export type CodexConnectionStatus = 'idle' | 'starting' | 'ready' | 'exited' | 'error'
 
 export type CodexStatusEvent = {
