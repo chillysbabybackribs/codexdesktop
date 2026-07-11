@@ -81,12 +81,15 @@ const exactCurrency = normalized.filter(r => r.priceOrWage && /[$€£]/.test(r.
 const coverage = {
   runId:'2026-07-11-4', totalRecords:normalized.length,
   laneRecords:Object.fromEntries(lanes.map(l => [l, readJsonl(path.join(root,'agents',l,'records.jsonl')).length])),
-  verifiedRecords:normalized.filter(r => r.retrievalStatus === 'verified').length,
+  retrievedVerifiedRecords:normalized.filter(r => r.retrievalStatus === 'verified').length,
   uniqueIndependenceKeys:new Set(normalized.map(r => r.independenceKey)).size,
   sourceDomains:new Set(normalized.map(r => host(r.url))).size,
   exactCurrencyMentionsBeforeJobAudit:exactCurrency.length,
   completeJobSentences:jobs.filter(j => j.complete).length,
-  firsthandWithRepeatedAction:jobs.length,
+  heuristicFirsthandWithRepeatedAction:jobs.length,
+  qualifiedFirsthandRecords:0,
+  qualifiedRepeatedWorkflowRecords:0,
+  qualifiedExactJobMoneyRecords:0,
   trustMrrCoverage:{captured:100,available:8272,percent:1.21,rankOrderedTopHeavy:true,baseline:'unavailable'},
   limitations:[
     'No prior commercial snapshot; 7/30/90/180-day longitudinal acceleration cannot be established.',
@@ -94,6 +97,7 @@ const coverage = {
     'Formation/feedback is HN-only; buyer reality is Stack Exchange plus Ask HN.',
     'Most buyer records omit buyer/input fields; exact job sentences are therefore rarely complete.',
     'Automated money extraction included percentages and adjacent costs; parent audit did not treat them as exact-job spend.'
+    ,'All heuristic classifications lacked explicit confidence and reason fields, so none count toward qualified evidence floors in the eval audit.'
   ],
   adaptiveStopping:{satisfied:false,reason:'No independent second batch across all lanes and critical longitudinal coverage is absent.'},
   gate:'INSUFFICIENT COVERAGE; zero GO intersections'

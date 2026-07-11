@@ -4,7 +4,7 @@
 
 **Zero survivors.** Phase 0 ended with `INSUFFICIENT COVERAGE`; no idea was promoted.
 
-| Survivors | Rejected/NO-GO | WATCH | Verified records |
+| Survivors | Rejected/NO-GO | WATCH | Retrieved records |
 |---:|---:|---:|---:|
 | 0 | 4 | 2 | 750 |
 
@@ -31,10 +31,11 @@ Evidence: `br-0177`, firsthand Ask HN workflow. It lacks a second independent fi
 
 ## Coverage and comparison windows
 
-- 102 commercial observations, 470 formation/feedback records, 178 buyer-reality records.
+- 102 commercial observations, 470 formation/feedback records, 178 buyer-reality records were retrieved successfully. The eval audit qualifies zero heuristic records because collectors did not store classification confidence/reasons; retrieval is not evidence qualification.
 - HN windows: recent/prior 30 days, recent/prior 90 days, and prior-year comparable.
 - TrustMRR: first snapshot only; 100 of 8,272 products before rate limit, so 7/30/90/180-day deltas are unavailable.
 - Buyer reality: Stack Exchange and Ask HN; Reddit, services/jobs, and template marketplaces were not adequately covered.
+- 79 buyer records published before 2025 were incorrectly labeled `current`; the revised collector derives windows from publication time.
 
 ## Most surprising directional finding
 
@@ -43,4 +44,3 @@ The largest apparent wave—AI agent tooling—was the least defensible opportun
 ## Fact that would change the result
 
 A second commercial snapshot plus two independent firsthand operators paying for the same exact WATCH job—and two commercially moving products tied to it—could turn a WATCH into a GO. Until then, inventing a product would violate the evidence gate.
-
