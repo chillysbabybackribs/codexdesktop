@@ -148,6 +148,25 @@ export type CodexPluginInstallParams = {
   remoteMarketplaceName?: string | null
 }
 
+export type CodexPluginReadParams = CodexPluginInstallParams
+
+export type CodexPluginAppStatusParams = {
+  appIds: string[]
+  forceRefetch?: boolean
+}
+
+export type CodexPluginAppStatus = {
+  id: string
+  name: string
+  installUrl: string | null
+  isAccessible: boolean
+  isEnabled: boolean
+}
+
+export type CodexPluginAppStatusResponse = {
+  apps: CodexPluginAppStatus[]
+}
+
 export type MemoryPersistParams = {
   threadId: string
   title: string
@@ -241,6 +260,8 @@ export const ipcChannels = {
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexListInstalledPlugins: 'codex:listInstalledPlugins',
   codexListPlugins: 'codex:listPlugins',
+  codexReadPlugin: 'codex:readPlugin',
+  codexGetPluginAppStatuses: 'codex:getPluginAppStatuses',
   codexInstallPlugin: 'codex:installPlugin',
   codexUninstallPlugin: 'codex:uninstallPlugin',
   codexEvent: 'codex:event',
