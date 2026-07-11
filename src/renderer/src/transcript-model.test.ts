@@ -1,7 +1,17 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
-import { buildRows, mergeChatItem, upsertMany, type ChatItem } from './transcript-model.ts'
+import {
+  appendAgentMessageDelta,
+  appendCommandOutputDelta,
+  appendPlanDelta,
+  appendReasoningDelta,
+  buildRows,
+  mergeChatItem,
+  replaceFileChanges,
+  upsertMany,
+  type ChatItem
+} from './transcript-model.ts'
 
 type AgentMessage = Extract<ThreadItem, { type: 'agentMessage' }>
 
@@ -60,4 +70,60 @@ test('upsertMany preserves ordering while updating existing items and appending 
   assert.deepEqual(next.map((item) => item.id), ['answer-1', 'compact-1'])
   assert.equal(next[0]?.type === 'agentMessage' && next[0].text, 'Long response')
   assert.notEqual(next, current)
+})
+
+test('message and plan deltas create missing items and append subsequent chunks', () => {
+  const withMessage = appendAgentMessageDelta([], 'answer-1', 'Hello')
+  const completedMessage = appendAgentMessageDelta(withMessage, 'answer-1', ' world')
+  const withPlan = appendPlanDelta(completedMessage, 'plan-1', 'Step')
+  const completedPlan = appendPlanDelta(withPlan, 'plan-1', ' one')
+
+  assert.equal(completedPlan[0]?.type === 'agentMessage' && completedPlan[0].text, 'Hello world')
+  assert.equal(completedPlan[1]?.type === 'plan' && completedPlan[1].text, 'Step one')
+})
+
+test('command deltas append to existing output and ignore missing or mismatched items', () => {
+  const command: Extract<ThreadItem, { type: 'commandExecution' }> = {
+    type: 'commandExecution',
+    id: 'command-1',
+    command: 'npm test',
+    cwd: '/workspace',
+    processId: null,
+    source: 'agent',
+    status: 'inProgress',
+    commandActions: [],
+    aggregatedOutput: null,
+    exitCode: null,
+    durationMs: null
+  }
+
+  const first = appendCommandOutputDelta([command], 'command-1', 'pass')
+  const second = appendCommandOutputDelta(first, 'command-1', 'ed')
+
+  assert.equal(second[0]?.type === 'commandExecution' && second[0].aggregatedOutput, 'passed')
+  assert.deepEqual(appendCommandOutputDelta(second, 'missing', 'ignored'), second)
+})
+
+test('reasoning deltas preserve sparse part indexes and append in arrival order', () => {
+  const first = appendReasoningDelta([], 'reasoning-1', 'summary', 1, 'Second')
+  const second = appendReasoningDelta(first, 'reasoning-1', 'summary', 1, ' part')
+  const third = appendReasoningDelta(second, 'reasoning-1', 'content', 0, 'Details')
+  const reasoning = third[0]
+
+  assert.equal(reasoning?.type, 'reasoning')
+  if (reasoning?.type !== 'reasoning') assert.fail('expected reasoning item')
+  assert.deepEqual(reasoning.summary, ['', 'Second part'])
+  assert.deepEqual(reasoning.content, ['Details'])
+})
+
+test('file change updates replace the full streamed change set', () => {
+  const initial = [{ path: 'src/a.ts', kind: { type: 'update' as const, move_path: null }, diff: '+one' }]
+  const replacement = [{ path: 'src/a.ts', kind: { type: 'update' as const, move_path: null }, diff: '+one\n+two' }]
+  const created = replaceFileChanges([], 'file-1', [...initial])
+  const updated = replaceFileChanges(created, 'file-1', [...replacement])
+
+  assert.equal(updated[0]?.type, 'fileChange')
+  if (updated[0]?.type !== 'fileChange') assert.fail('expected file change item')
+  assert.deepEqual(updated[0].changes, replacement)
+  assert.equal(updated[0].status, 'inProgress')
 })

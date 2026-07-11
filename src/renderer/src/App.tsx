@@ -1755,7 +1755,7 @@ export default function App(): React.JSX.Element {
       case 'item/agentMessage/delta':
         if (isRelevantThread(notification.params.threadId)) {
           noteItem(notification.params.itemId, notification.params.turnId)
-          patchItemText(notification.params.itemId, notification.params.delta, 'agentMessage')
+          patchItemText(notification.params.itemId, notification.params.delta)
         }
         return
       case 'item/commandExecution/outputDelta':
@@ -2111,7 +2111,7 @@ export default function App(): React.JSX.Element {
     })
   }
 
-  function patchItemText(itemId: string, delta: string, fallbackType: 'agentMessage'): void {
+  function patchItemText(itemId: string, delta: string): void {
     enqueueItemMutation((current) => appendAgentMessageDelta(current, itemId, delta))
   }
 
