@@ -3299,6 +3299,11 @@ function ThreadScroll({
         const priorSpacer = spacer.offsetHeight
         const contentWithoutSpacer = el.scrollHeight - priorSpacer
         const needed = Math.max(0, el.scrollTop + el.clientHeight - contentWithoutSpacer)
+        // eslint-disable-next-line no-console
+        console.log('[FREEZE]', JSON.stringify({
+          scrollTop: Math.round(el.scrollTop), clientHeight: el.clientHeight,
+          scrollHeight: el.scrollHeight, priorSpacer, contentWithoutSpacer, needed: Math.round(needed)
+        }))
         if (needed <= 0) {
           setSpacerOn(false)
         } else {
