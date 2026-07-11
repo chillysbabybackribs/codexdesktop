@@ -1273,6 +1273,9 @@ export default function App(): React.JSX.Element {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return false
 
+    // The user is driving this agent again — drop any pending recovery.
+    cancelAgentRecovery(key)
+
     try {
       const agentModel = session.model ?? selectedModelRef.current
       let threadId = session.threadId
@@ -1319,6 +1322,115 @@ export default function App(): React.JSX.Element {
       await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
     } catch {
       // The turn may have already finished; the lite state settles via events.
+    }
+  }
+
+  // Mid-turn guidance for a dock agent, same turn/steer verb as the main
+  // composer. The steered text is appended locally because the lite reducer
+  // ignores userMessage items.
+  async function handleAgentSteer(key: string, text: string): Promise<boolean> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    const trimmed = text.trim()
+    if (!trimmed || !session?.threadId || !session.turnId) return false
+    try {
+      await window.api.codex.steerTurn({
+        threadId: session.threadId,
+        turnId: session.turnId,
+        text: trimmed
+      })
+      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text: trimmed })
+      return true
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Could not add guidance to the running turn: ${(error as Error).message}`
+      })
+      return false
+    }
+  }
+
+  function cancelAgentRecovery(key: string): void {
+    const state = agentRecoveryRef.current.get(key)
+    if (state?.timer !== null && state?.timer !== undefined) {
+      window.clearTimeout(state.timer)
+    }
+    agentRecoveryRef.current.delete(key)
+  }
+
+  // Dock mirror of maybeScheduleAutoRecovery: same attempt budget, delay, and
+  // model-fallback walk, but scoped to one session and reported through its
+  // lite transcript instead of system items.
+  function maybeScheduleAgentRecovery(key: string, turnId: string, error: TurnError | null): void {
+    if (!error || !isRecoverableTurnError(error.codexErrorInfo)) return
+
+    const existing = agentRecoveryRef.current.get(key)
+    if (existing?.handledTurnIds.has(turnId)) return
+
+    const state = existing ?? { attempts: 0, handledTurnIds: new Set<string>(), timer: null }
+    state.handledTurnIds.add(turnId)
+    agentRecoveryRef.current.set(key, state)
+
+    if (state.attempts >= maxAutoRecoveryAttempts) {
+      appendAgentMessageOnce(key, {
+        id: `recovery-stopped-${turnId}`,
+        role: 'assistant',
+        text: `⚠ Auto-recovery stopped after ${maxAutoRecoveryAttempts} attempts. Send a message to continue the task.`
+      })
+      return
+    }
+
+    state.attempts += 1
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    const currentModel = session?.model ?? selectedModelRef.current
+    const nextModel = state.attempts === 1 ? currentModel : pickFallbackModel(currentModel)
+    const switching = nextModel !== null && nextModel !== currentModel
+    const delaySeconds = Math.round(autoRecoveryDelayMs / 1000)
+    appendAgentMessageOnce(key, {
+      id: `recovery-${turnId}`,
+      role: 'assistant',
+      text: switching
+        ? `${currentModel ?? 'The model'} is under heavy load — continuing on ${nextModel} in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
+        : `The model is under heavy load — retrying in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
+    })
+    state.timer = window.setTimeout(() => {
+      state.timer = null
+      void runAgentRecovery(key, nextModel)
+    }, autoRecoveryDelayMs)
+  }
+
+  async function runAgentRecovery(key: string, model: string | null): Promise<void> {
+    // Bail silently if the recovery was cancelled or the session moved on
+    // (closed, promoted, or the user started another turn) while waiting.
+    if (!agentRecoveryRef.current.has(key)) return
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session?.threadId || session.turnId) return
+
+    // Surface the fallback in the window's model pill so the pill reflects
+    // what the thread is actually running on.
+    if (model && model !== session.model) {
+      patchAgentSession(key, (current) => ({ ...current, model }))
+    }
+
+    try {
+      const response = await window.api.codex.sendMessage({
+        threadId: session.threadId,
+        text: autoRecoveryPrompt,
+        cwd: workspaceRef.current,
+        model: model ?? session.model ?? selectedModelRef.current
+      })
+      patchAgentSession(key, (current) => ({
+        ...current,
+        status: 'working',
+        turnId: response.turn.id
+      }))
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Auto-recovery could not restart the turn: ${(error as Error).message}`
+      })
+      cancelAgentRecovery(key)
     }
   }
 
