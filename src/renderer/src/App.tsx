@@ -4405,7 +4405,10 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
           const text = event.target.value
           setInput(text)
           typedTextRef.current = text
-          runQuery(text)
+          // Inline-complete only while typing forward; completing right after
+          // a deletion would restore the text the user just removed.
+          const inputType = (event.nativeEvent as InputEvent).inputType ?? ''
+          runQuery(text, inputType.startsWith('insert'))
         }}
         onKeyDown={handleOmniboxKeyDown}
       />
