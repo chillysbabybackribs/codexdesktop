@@ -96,8 +96,8 @@ function hostOf(url: string): string {
 // Chromium-style inline autocomplete: the best history match whose typeable
 // form starts with the input completes the rest of the address bar text.
 // Returns the full completed text (the user's typed prefix preserved
-// verbatim), or null when nothing should complete. Only entries visited more
-// than once qualify — a single accidental visit must not hijack typing.
+// verbatim), or null when nothing should complete. Every persisted history
+// entry qualifies, matching the same history set shown in the dropdown.
 export function inlineCompletion(input: string, entries: HistoryEntry[], now = Date.now()): string | null {
   const typed = input.trim()
 
@@ -109,10 +109,6 @@ export function inlineCompletion(input: string, entries: HistoryEntry[], now = D
   let best: { form: string; score: number } | null = null
 
   for (const entry of entries) {
-    if (entry.visitCount < 2) {
-      continue
-    }
-
     const form = typeableForms(entry.url).find(
       (candidate) => candidate.length > typed.length && candidate.toLowerCase().startsWith(typedLower)
     )

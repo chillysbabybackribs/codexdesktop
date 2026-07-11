@@ -214,7 +214,7 @@ function bootstrap(): void {
 
   app.on('before-quit', () => {
     flushBrowserPersistSync()
-    void browserHistoryStore.flush()
+    browserHistoryStore.flushSync()
     researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null

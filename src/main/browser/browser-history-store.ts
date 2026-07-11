@@ -1,4 +1,5 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { mkdirSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 
 export type HistoryEntry = {
@@ -93,6 +94,19 @@ export class BrowserHistoryStore {
     await this.save()
   }
 
+  flushSync(): void {
+    if (this.saveTimer) {
+      clearTimeout(this.saveTimer)
+      this.saveTimer = null
+    }
+
+    const filePath = this.getFilePath()
+    const temporaryPath = `${filePath}.tmp`
+    mkdirSync(dirname(filePath), { recursive: true })
+    writeFileSync(temporaryPath, this.serialize(), 'utf8')
+    renameSync(temporaryPath, filePath)
+  }
+
   private prune(): void {
     if (this.entriesByUrl.size <= MAX_HISTORY_ENTRIES) {
       return
@@ -115,7 +129,7 @@ export class BrowserHistoryStore {
 
   private save(): Promise<void> {
     const filePath = this.getFilePath()
-    const serialized = `${JSON.stringify({ version: 1, entries: this.entries() })}\n`
+    const serialized = this.serialize()
     const operation = this.saveQueue.then(async () => {
       const temporaryPath = `${filePath}.tmp`
       await mkdir(dirname(filePath), { recursive: true })
@@ -124,6 +138,10 @@ export class BrowserHistoryStore {
     })
     this.saveQueue = operation.catch(() => {})
     return this.saveQueue
+  }
+
+  private serialize(): string {
+    return `${JSON.stringify({ version: 1, entries: this.entries() })}\n`
   }
 }
 

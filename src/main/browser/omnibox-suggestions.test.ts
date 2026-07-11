@@ -83,10 +83,10 @@ test('inlineCompletion prefers the most frecent match', () => {
   assert.equal(inlineCompletion('git', entries, NOW), 'github.com')
 })
 
-test('inlineCompletion never fires for searches, single visits, or exact text', () => {
+test('inlineCompletion uses recorded visits but never fires for searches or exact text', () => {
   const entries = [entry('https://wikipedia.org/', 'Wikipedia', 1), entry('https://example.com/', 'Example', 9)]
 
-  assert.equal(inlineCompletion('wik', entries, NOW), null, 'single visit must not complete')
+  assert.equal(inlineCompletion('wik', entries, NOW), 'wikipedia.org', 'a persisted history row should complete')
   assert.equal(inlineCompletion('how to wik', entries, NOW), null, 'spaces mean search')
   assert.equal(inlineCompletion('example.com', entries, NOW), null, 'nothing left to complete')
   assert.equal(inlineCompletion('', entries, NOW), null)

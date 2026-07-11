@@ -66,6 +66,25 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
   }
 })
 
+test('flushSync persists pending visits before shutdown', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'browser-history-sync-'))
+  const filePath = join(directory, 'history.json')
+  const store = new BrowserHistoryStore(() => filePath)
+  await store.load()
+
+  store.recordVisit('https://reddit.com/', 'Reddit', 123)
+  store.flushSync()
+
+  const restored = new BrowserHistoryStore(() => filePath)
+  await restored.load()
+  assert.deepEqual(restored.entries(), [{
+    url: 'https://reddit.com/',
+    title: 'Reddit',
+    visitCount: 1,
+    lastVisitAt: 123
+  }])
+})
+
 test('isRecordableUrl accepts only http(s)', () => {
   assert.equal(isRecordableUrl('https://a.com'), true)
   assert.equal(isRecordableUrl('http://a.com'), true)
