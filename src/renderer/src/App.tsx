@@ -2250,7 +2250,11 @@ function ChatPane({
         })}
       </ThreadScroll>
 
-      <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+      <div
+        className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'} ${
+          openAgentSessions.length ? 'has-agents' : ''
+        }`}
+      >
         {openAgentSessions.length ? (
           <AgentColumn
             sessions={openAgentSessions}

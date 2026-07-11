@@ -3375,9 +3375,9 @@ button {
 }
 
 .agent-column {
-  --agent-window-height: clamp(270px, calc(50vh - 150px), 440px);
+  --agent-window-height: clamp(320px, calc(50vh - 108px), 640px);
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: 0;
   right: -22px;
   z-index: 8;
   display: flex;
@@ -3389,6 +3389,19 @@ button {
   overscroll-behavior: contain;
   scroll-snap-type: y mandatory;
   scrollbar-width: none;
+}
+
+/* With agents open, the composer retracts horizontally and the agent column
+   runs the full right strip down to the composer's bottom edge. */
+.composer-dock.is-docked .composer,
+.composer-dock.is-docked .composer-context {
+  transition: width 160ms ease;
+}
+
+.composer-dock.is-docked.has-agents .composer,
+.composer-dock.is-docked.has-agents .composer-context {
+  width: calc(100% - 390px);
+  min-width: 220px;
 }
 
 .agent-column::-webkit-scrollbar {
