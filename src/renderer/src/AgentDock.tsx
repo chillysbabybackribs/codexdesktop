@@ -150,11 +150,11 @@ export function AgentColumn({
 
 function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Element {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d={direction === 'up' ? 'M5 15l7-7 7 7' : 'M5 9l7 7 7-7'}
         stroke="currentColor"
-        strokeWidth="2.2"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
