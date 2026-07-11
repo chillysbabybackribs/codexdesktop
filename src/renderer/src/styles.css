@@ -3844,9 +3844,9 @@ button {
   max-height: 120px;
   resize: none;
   padding: 7px 9px;
-  border: 1px solid #262626;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
-  background: #101010;
+  background: rgba(0, 0, 0, 0.3);
   color: #d8d8d8;
   font-size: 13px;
   line-height: 1.4;
@@ -3854,7 +3854,7 @@ button {
 }
 
 .agent-overlay-composer textarea:focus {
-  border-color: #383838;
+  border-color: rgba(88, 101, 242, 0.45);
 }
 
 .agent-overlay-composer textarea {
