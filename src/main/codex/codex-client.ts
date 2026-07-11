@@ -600,9 +600,17 @@ export class CodexClient extends EventEmitter {
       if (params.namespace !== null) {
         result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace}` }
       } else if (params.tool === 'browser_screenshot') {
-        result = await this.browserAgent.cdp('Page.captureScreenshot', { format: 'png' }, {
-          tabId: this.resolveAgentTab(params.threadId, readString(args.tab))
-        })
+        const tabId = this.resolveAgentTab(params.threadId, readString(args.tab))
+        result = await this.browserAgent.cdp('Page.captureScreenshot', { format: 'png' }, { tabId })
+        // Chromium can occasionally stall the first capture while attaching
+        // its debugger to a newly active WebContents. Retry once after the
+        // controller's per-tab queue has allowed that cold operation to settle.
+        if (!result.ok && result.errorCode === 'timeout') {
+          result = await this.browserAgent.cdp('Page.captureScreenshot', { format: 'png' }, {
+            tabId,
+            timeoutMs: 30_000
+          })
+        }
         const screenshot = asRecord(asRecord(result.result).screenshot)
         const artifactPath = readString(screenshot.artifactPath)
         if (result.ok && artifactPath) {
