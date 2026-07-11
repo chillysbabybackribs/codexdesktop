@@ -3,9 +3,6 @@ import type { FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const overlayHeightStorageKey = 'codexdesktop.agentOverlayHeight'
-const minOverlayHeight = 240
-
 export type AgentLiteMessage = {
   id: string
   role: 'user' | 'assistant'
@@ -22,17 +19,20 @@ export type AgentSession = {
   status: 'idle' | 'working'
   turnId: string | null
   messages: AgentLiteMessage[]
+  // Optional helper mode: when true, each send includes a compact digest of
+  // the main chat so the agent can answer questions about it.
+  watchesMain: boolean
 }
 
 export function AgentTabStrip({
   sessions,
   openKeys,
-  onOpen,
+  onFocus,
   onNewAgent
 }: {
   sessions: AgentSession[]
   openKeys: string[]
-  onOpen: (key: string) => void
+  onFocus: (key: string) => void
   onNewAgent: () => void
 }): React.JSX.Element {
   return (
@@ -43,7 +43,7 @@ export function AgentTabStrip({
           key={session.key}
           className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''}`}
           title={session.title}
-          onClick={() => onOpen(session.key)}
+          onClick={() => onFocus(session.key)}
         >
           <span className={`agent-tab-dot ${session.status === 'working' ? 'is-working' : ''}`} />
           <span className="agent-tab-title">{session.title}</span>
@@ -62,56 +62,66 @@ export function AgentTabStrip({
   )
 }
 
-export function AgentOverlay({
+export function AgentColumn({
+  sessions,
+  onMinimize,
+  onCloseSession,
+  onPromote,
+  onToggleWatch,
+  onSend,
+  onStop
+}: {
+  sessions: AgentSession[]
+  onMinimize: (key: string) => void
+  onCloseSession: (key: string) => void
+  onPromote: (key: string) => void
+  onToggleWatch: (key: string) => void
+  onSend: (key: string, text: string) => Promise<boolean>
+  onStop: (key: string) => Promise<void>
+}): React.JSX.Element {
+  return (
+    <div className="agent-column">
+      {sessions.map((session) => (
+        <AgentWindow
+          key={session.key}
+          session={session}
+          onMinimize={onMinimize}
+          onCloseSession={onCloseSession}
+          onPromote={onPromote}
+          onToggleWatch={onToggleWatch}
+          onSend={onSend}
+          onStop={onStop}
+        />
+      ))}
+    </div>
+  )
+}
+
+function AgentWindow({
   session,
   onMinimize,
   onCloseSession,
   onPromote,
+  onToggleWatch,
   onSend,
   onStop
 }: {
   session: AgentSession
-  onMinimize: () => void
+  onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
+  onToggleWatch: (key: string) => void
   onSend: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [value, setValue] = useState('')
   const [isSending, setIsSending] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const [height, setHeight] = useState<number>(() => {
-    const stored = Number(window.localStorage.getItem(overlayHeightStorageKey))
-    return Number.isFinite(stored) && stored >= minOverlayHeight ? stored : 420
-  })
-  const heightRef = useRef(height)
-  const resizeDragRef = useRef<{ startY: number; startHeight: number } | null>(null)
 
   useEffect(() => {
     const node = scrollRef.current
     if (node) node.scrollTop = node.scrollHeight
   }, [session.messages, session.status])
-
-  const handleResizeStart = (event: React.PointerEvent<HTMLDivElement>): void => {
-    event.preventDefault()
-    event.currentTarget.setPointerCapture(event.pointerId)
-    resizeDragRef.current = { startY: event.clientY, startHeight: heightRef.current }
-  }
-
-  const handleResizeMove = (event: React.PointerEvent<HTMLDivElement>): void => {
-    const drag = resizeDragRef.current
-    if (!drag) return
-    const maxHeight = Math.max(minOverlayHeight, window.innerHeight - 220)
-    const next = Math.min(Math.max(drag.startHeight + (drag.startY - event.clientY), minOverlayHeight), maxHeight)
-    heightRef.current = next
-    setHeight(next)
-  }
-
-  const handleResizeEnd = (): void => {
-    if (!resizeDragRef.current) return
-    resizeDragRef.current = null
-    window.localStorage.setItem(overlayHeightStorageKey, String(Math.round(heightRef.current)))
-  }
 
   const working = session.status === 'working'
 
@@ -130,21 +140,25 @@ export function AgentOverlay({
   }
 
   return (
-    <div className="agent-overlay" style={{ height }} role="dialog" aria-label={`Agent: ${session.title}`}>
-      <div
-        className="agent-overlay-resize"
-        role="separator"
-        aria-orientation="horizontal"
-        aria-label="Resize agent window"
-        onPointerDown={handleResizeStart}
-        onPointerMove={handleResizeMove}
-        onPointerUp={handleResizeEnd}
-        onPointerCancel={handleResizeEnd}
-      />
+    <div className="agent-overlay" data-agent-key={session.key} role="dialog" aria-label={`Agent: ${session.title}`}>
       <div className="agent-overlay-header">
         <span className={`agent-tab-dot ${working ? 'is-working' : ''}`} />
         <span className="agent-overlay-title">{session.title}</span>
         <div className="agent-overlay-actions">
+          <button
+            type="button"
+            className={`icon-button agent-watch-toggle ${session.watchesMain ? 'is-active' : ''}`}
+            aria-label={session.watchesMain ? 'Stop sharing main-chat context' : 'Share main-chat context'}
+            aria-pressed={session.watchesMain}
+            title={
+              session.watchesMain
+                ? 'Helper mode on: sends recent main-chat context with each message'
+                : 'Helper mode off: independent agent'
+            }
+            onClick={() => onToggleWatch(session.key)}
+          >
+            <EyeIcon />
+          </button>
           <button
             type="button"
             className="icon-button"
@@ -160,7 +174,7 @@ export function AgentOverlay({
             className="icon-button"
             aria-label="Minimize to tab"
             title="Minimize to tab"
-            onClick={onMinimize}
+            onClick={() => onMinimize(session.key)}
           >
             <MinimizeIcon />
           </button>
@@ -179,8 +193,8 @@ export function AgentOverlay({
       <div ref={scrollRef} className="agent-overlay-scroll">
         {session.messages.length === 0 ? (
           <div className="agent-overlay-empty">
-            A separate agent with its own conversation. It runs alongside the main chat and shares
-            the workspace.
+            An independent agent with its own conversation, running in parallel and sharing the
+            workspace. Toggle the eye to let it see recent main-chat context.
           </div>
         ) : (
           session.messages.map((message) => (
@@ -242,6 +256,20 @@ function AgentPlusIcon(): React.JSX.Element {
       <rect x="3.5" y="6.5" width="13" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
       <path d="M7.5 11h5M10 8.5v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       <path d="M17.5 4.5v5M15 7h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function EyeIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   )
 }

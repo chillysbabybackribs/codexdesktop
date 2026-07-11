@@ -3382,60 +3382,60 @@ button {
   flex: 0 0 auto;
 }
 
-.agent-overlay-row {
+.agent-column {
+  --agent-window-height: clamp(270px, calc(50vh - 150px), 440px);
   position: absolute;
   bottom: calc(100% + 10px);
   right: -22px;
   z-index: 8;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  flex-direction: column;
   gap: 10px;
-  max-width: calc(100% + 22px);
-  pointer-events: none;
+  width: min(400px, 75%);
+  max-height: calc(var(--agent-window-height) * 2 + 10px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+
+.agent-column::-webkit-scrollbar {
+  display: none;
 }
 
 .agent-overlay {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 0 1 400px;
-  min-width: 280px;
+  flex: 0 0 var(--agent-window-height);
+  height: var(--agent-window-height);
+  scroll-snap-align: start;
   overflow: hidden;
   border: 1px solid #232323;
-  border-radius: 12px;
-  background: #131313;
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
-  pointer-events: auto;
-}
-
-.agent-overlay:last-child {
   border-right: 0;
   border-radius: 12px 0 0 12px;
+  background: #131313;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
 }
 
-.agent-overlay-resize {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 7px;
-  cursor: ns-resize;
-  z-index: 2;
-  touch-action: none;
+.agent-overlay.is-flash {
+  animation: agent-flash 750ms ease-out;
 }
 
-.agent-overlay-resize:hover::after,
-.agent-overlay-resize:active::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 50%;
-  width: 44px;
-  height: 3px;
-  transform: translateX(-50%);
-  border-radius: 2px;
-  background: #3a3a3a;
+@keyframes agent-flash {
+  0% {
+    border-color: #4a90d9;
+    box-shadow: 0 0 0 1px #4a90d9, 0 10px 34px rgba(0, 0, 0, 0.45);
+  }
+  100% {
+    border-color: #232323;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.agent-watch-toggle.is-active {
+  color: #6fb26f;
+  background: #1c231c;
 }
 
 .agent-overlay-header {

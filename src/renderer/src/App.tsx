@@ -15,7 +15,7 @@ import {
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { AgentOverlay, AgentTabStrip } from './AgentDock'
+import { AgentColumn, AgentTabStrip } from './AgentDock'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
@@ -1035,16 +1035,46 @@ export default function App(): React.JSX.Element {
         title: `Agent ${sessions.length + 2}`,
         status: 'idle',
         turnId: null,
-        messages: []
+        messages: [],
+        watchesMain: false
       }
     ])
     setOpenAgentKeys((current) => [...current, key])
   }
 
+  // Tab click focuses: opens the window if closed. Scrolling/flashing to it is
+  // handled where the DOM lives (ChatPane).
   function handleOpenAgent(key: string): void {
-    setOpenAgentKeys((current) =>
-      current.includes(key) ? current.filter((candidate) => candidate !== key) : [...current, key]
-    )
+    setOpenAgentKeys((current) => (current.includes(key) ? current : [...current, key]))
+  }
+
+  function handleMinimizeAgent(key: string): void {
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+  }
+
+  function handleToggleWatchAgent(key: string): void {
+    patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
+  }
+
+  // Compact digest of the focused conversation, prepended to helper-agent
+  // sends. Built from renderer state — no extra IPC or token-heavy replay.
+  function buildMainChatContext(): string {
+    const recent = liteMessagesFromItems(items).slice(-8)
+    const lines = recent.map((message) => {
+      const text = message.text.length > 600 ? `${message.text.slice(0, 600)}…` : message.text
+      return `${message.role === 'user' ? 'User' : 'Assistant'}: ${text}`
+    })
+    return [
+      '<main-chat-context>',
+      "You are an optional helper agent running beside the user's main conversation.",
+      'Recent main-chat messages follow. Use them as context for the message after the closing tag.',
+      'Do not modify workspace files or take actions unless the user explicitly asks you to.',
+      '',
+      ...lines,
+      '',
+      `Main chat status: ${activeTurnIdRef.current ? 'a turn is currently running' : 'idle'}.`,
+      '</main-chat-context>'
+    ].join('\n')
   }
 
   function bindAgentThread(key: string, threadId: string, title: string | null): void {
@@ -1074,9 +1104,10 @@ export default function App(): React.JSX.Element {
       }
 
       appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text })
+      const outgoingText = session.watchesMain ? `${buildMainChatContext()}\n\n${text}` : text
       const response = await window.api.codex.sendMessage({
         threadId,
-        text,
+        text: outgoingText,
         cwd: workspaceRef.current,
         model: selectedModelRef.current
       })
@@ -1136,7 +1167,8 @@ export default function App(): React.JSX.Element {
           title: demotedTitle,
           status: demotedTurnId ? 'working' : 'idle',
           turnId: demotedTurnId,
-          messages: demotedMessages
+          messages: demotedMessages,
+          watchesMain: false
         })
       }
       return rest
@@ -1935,6 +1967,8 @@ export default function App(): React.JSX.Element {
           agentSessions={agentSessions}
           openAgentKeys={openAgentKeys}
           onOpenAgent={handleOpenAgent}
+          onMinimizeAgent={handleMinimizeAgent}
+          onToggleWatchAgent={handleToggleWatchAgent}
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
@@ -2011,6 +2045,8 @@ function ChatPane({
   agentSessions,
   openAgentKeys,
   onOpenAgent,
+  onMinimizeAgent,
+  onToggleWatchAgent,
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
@@ -2055,6 +2091,8 @@ function ChatPane({
   agentSessions: AgentSession[]
   openAgentKeys: string[]
   onOpenAgent: (key: string) => void
+  onMinimizeAgent: (key: string) => void
+  onToggleWatchAgent: (key: string) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
@@ -2137,6 +2175,19 @@ function ChatPane({
 
   const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
+  const focusAgent = (key: string): void => {
+    onOpenAgent(key)
+    // Scroll the column to the window once it exists in the DOM, with a brief
+    // highlight so the eye lands on the right agent.
+    requestAnimationFrame(() => {
+      const node = document.querySelector(`[data-agent-key="${key}"]`)
+      if (!(node instanceof HTMLElement)) return
+      node.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      node.classList.add('is-flash')
+      window.setTimeout(() => node.classList.remove('is-flash'), 750)
+    })
+  }
+
   return (
     <section
       className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
@@ -2201,19 +2252,15 @@ function ChatPane({
 
       <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
         {openAgentSessions.length ? (
-          <div className="agent-overlay-row">
-            {openAgentSessions.map((session) => (
-              <AgentOverlay
-                key={session.key}
-                session={session}
-                onMinimize={() => onOpenAgent(session.key)}
-                onCloseSession={onCloseAgentSession}
-                onPromote={onPromoteAgent}
-                onSend={onAgentSend}
-                onStop={onAgentStop}
-              />
-            ))}
-          </div>
+          <AgentColumn
+            sessions={openAgentSessions}
+            onMinimize={onMinimizeAgent}
+            onCloseSession={onCloseAgentSession}
+            onPromote={onPromoteAgent}
+            onToggleWatch={onToggleWatchAgent}
+            onSend={onAgentSend}
+            onStop={onAgentStop}
+          />
         ) : null}
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
@@ -2230,7 +2277,7 @@ function ChatPane({
           <AgentTabStrip
             sessions={agentSessions}
             openKeys={openAgentKeys}
-            onOpen={onOpenAgent}
+            onFocus={focusAgent}
             onNewAgent={onNewAgent}
           />
         </div>
