@@ -110,6 +110,24 @@ function flushBrowserPersistSync(): void {
   }
 }
 
+function sendToMainRenderer(channel: string, payload: unknown): void {
+  const window = mainWindow
+
+  if (!window || window.isDestroyed() || window.webContents.isDestroyed()) {
+    return
+  }
+
+  try {
+    window.webContents.send(channel, payload)
+  } catch (error) {
+    // The renderer can disappear between the lifetime check and send during
+    // reload/shutdown. That is expected and there is no receiver to notify.
+    if (!/render frame was disposed|webcontents.*destroyed|webcontents.*disposed/i.test(String(error))) {
+      console.warn(`Failed to send ${channel} to the renderer`, error)
+    }
+  }
+}
+
 function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 2048,
@@ -144,7 +162,7 @@ function createWindow(): void {
 
   tabManager = new TabManager(mainWindow)
   tabManager.onState((state) => {
-    mainWindow?.webContents.send(ipcChannels.browserState, state)
+    sendToMainRenderer(ipcChannels.browserState, state)
   })
   tabManager.onPersist(() => {
     scheduleBrowserPersist()
