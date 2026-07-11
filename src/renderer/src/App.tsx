@@ -2357,7 +2357,7 @@ function completedMemoryTurns(
       turn.assistant = item.text.trim()
     } else {
       const completedWork = completedWorkSummary(item)
-      if (completedWork && !turn.completedWork.includes(completedWork) && turn.completedWork.length < 3) {
+      if (completedWork && !turn.completedWork.includes(completedWork)) {
         turn.completedWork.push(completedWork)
       }
     }
@@ -2365,7 +2365,26 @@ function completedMemoryTurns(
     turns.set(turnId, turn)
   }
 
-  return [...turns.values()].filter((turn) => turn.user && turn.assistant)
+  return [...turns.values()]
+    .filter((turn) => turn.user && turn.assistant)
+    .map((turn) => ({ ...turn, completedWork: selectCompletedWork(turn.completedWork) }))
+}
+
+function selectCompletedWork(items: string[]): string[] {
+  return items
+    .map((item, index) => ({ item, index, score: completedWorkScore(item) }))
+    .sort((left, right) => right.score - left.score || right.index - left.index)
+    .slice(0, 3)
+    .sort((left, right) => left.index - right.index)
+    .map(({ item }) => item)
+}
+
+function completedWorkScore(item: string): number {
+  if (/\bfailed\b|\bdeclined\b/i.test(item)) return 4
+  if (/\btests? passed\b/i.test(item)) return 3
+  if (/^File changes completed:/i.test(item)) return 2
+  if (/^Command succeeded:/i.test(item)) return 1
+  return 0
 }
 
 function completedWorkSummary(item: ChatItem): string | null {
