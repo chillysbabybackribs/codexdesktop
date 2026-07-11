@@ -1545,13 +1545,13 @@ export default function App(): React.JSX.Element {
       return
     }
 
+    // hydrateThread (inside resumeThreadById) sets activeTurnId from the thread's
+    // actual inProgress turn. Do NOT re-assert the session's captured turnId: if
+    // the agent's turn completed while resume was in flight, re-marking it active
+    // soft-locks the main composer (handleSend refuses, Stop errors on a dead turn).
     setActiveTurnId(null)
     activeTurnIdRef.current = null
     await resumeThreadById(session.threadId)
-    if (session.turnId) {
-      setActiveTurnId(session.turnId)
-      activeTurnIdRef.current = session.turnId
-    }
   }
 
   // ---- End background agent sessions ---------------------------------------
@@ -2046,7 +2046,10 @@ export default function App(): React.JSX.Element {
       }
 
       const response = await window.api.codex.listThreads({
-        cwd: workspace,
+        // Ref, not state: refreshThreads is invoked from the mount-only codex
+        // event handler (e.g. agent turn/completed), whose closure captured the
+        // launch-time `workspace`. Using the ref refetches the current workspace.
+        cwd: workspaceRef.current,
         cursor
       })
 
