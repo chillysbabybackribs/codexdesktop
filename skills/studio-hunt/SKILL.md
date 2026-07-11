@@ -38,7 +38,9 @@ Vertical-agnosticism rule: niches are HARVESTED, not generated. Lanes 2 and 3 ar
 
 Source tactics (learned from prior runs): Reddit renders thin for plain fetches — hit `old.reddit.com` or the thread's `.json` endpoint from capsule scripts. Diversify the workaround lane beyond Etsy: Gumroad, Notion and Airtable template galleries, Creative Market, Google Sheets template roundups. Reserve 8–10 pages of the budget for a SECOND demand pass — first-person complaints inside the niches lanes 2/3 surface — instead of front-loading generic complaint searches. Classify every artifact as **verified** (content captured) or **discovered** (URL/snippet known but page blocked or unfetched); discovered evidence never counts toward triangulation — record it in `mined.md` as leads only.
 
-Execution: push I/O into one or two batched capsule scripts (see the artifact-first-web-research skill): a Node script that fetches public pages with 10–15-way concurrency via plain HTTPS, uses hidden browser work through `CODEX_BROWSER_SOCK` only for JS-heavy or logged-in pages, writes each page's cleaned text to `corpus/`, and prints a one-line JSON envelope (counts, failures, paths). Use `research_web` for SERP discovery of lane sources. Do not fetch pages one tool-call at a time.
+Execution: push I/O into one or two batched capsule scripts (see the artifact-first-web-research skill): a Node script that fetches public pages with 10–15-way concurrency via plain HTTPS, uses hidden browser work through `CODEX_BROWSER_SOCK` only for JS-heavy or logged-in pages, writes each page's cleaned text to `corpus/`, and prints a one-line JSON envelope (counts, failures, paths). Do not fetch pages one tool-call at a time.
+
+Discovery: consult `sources/DIRECTORY.md` in the workspace first — allocate roughly **70% of harvest budget to directory sources, at least 30% to frontier sources** not yet in the directory. For query-based discovery use the **Brave Search API** when a key resolves (in order: `process.env.BRAVE_API_KEY`, a `.env` line in the workspace root, a `.env` in the app repo): `GET https://api.search.brave.com/res/v1/web/search` with header `X-Subscription-Token`, params `q`, `count`, optional `freshness` and `result_filter=discussions` (forum threads — the demand lane's friend). Throttle to ~1 request/second (free tier). Brave results are **discovered** evidence until the page itself is fetched and verified. Fall back to `research_web` SERP discovery for gaps Brave misses. Never print the key or copy it into artifacts, scripts, or logs.
 
 ## Phase 2 — Mine (scripts, not vibes)
 
@@ -71,5 +73,7 @@ Open `dossier.html` in a browser tab for the user. Promote each survivor into th
 In chat: one compact table of survivors (name, one-liner, strongest number, confidence), the rejected count, and anything surprising from the run. The dossier holds the detail.
 
 ## Beta calibration duty
+
+After the run, update `sources/DIRECTORY.md`: fill each used source's yield column (`pages fetched → candidates fed`, appended per run), add frontier sources that produced a candidate, and flag any source with three consecutive zero-yield runs for pruning.
 
 This skill is under test. End `runlog.md` with honest notes: which lanes produced signal per page fetched, which sources were dead weight, where budgets pinched, what you would change in this SKILL.md. If app-level friction blocked you (tool defaults, missing capability), emit an `app-improvement` block.
