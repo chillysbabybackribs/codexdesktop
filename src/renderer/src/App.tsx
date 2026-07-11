@@ -192,6 +192,7 @@ const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
+const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
@@ -311,6 +312,12 @@ export default function App(): React.JSX.Element {
   // thread/started notification binds to the session instead of hijacking the
   // main view.
   const agentStartQueueRef = useRef<string[]>([])
+  // Stable "Agent N" numbering (main chat is implicitly 1) that survives
+  // closes and restarts.
+  const agentCounterRef = useRef(2)
+  // Persistence only starts writing after restore has run, so a fresh mount
+  // can't wipe the stored dock.
+  const agentDockRestoredRef = useRef(false)
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -1034,7 +1041,7 @@ export default function App(): React.JSX.Element {
       {
         key,
         threadId: null,
-        title: `Agent ${sessions.length + 2}`,
+        title: `Agent ${agentCounterRef.current++}`,
         status: 'idle',
         turnId: null,
         messages: [],
@@ -1085,11 +1092,12 @@ export default function App(): React.JSX.Element {
     ].join('\n')
   }
 
-  function bindAgentThread(key: string, threadId: string, title: string | null): void {
+  // Agent tabs keep their stable "Agent N" names — server thread names never
+  // overwrite them.
+  function bindAgentThread(key: string, threadId: string): void {
     patchAgentSession(key, (session) => ({
       ...session,
-      threadId: session.threadId ?? threadId,
-      title: title || session.title
+      threadId: session.threadId ?? threadId
     }))
   }
 
