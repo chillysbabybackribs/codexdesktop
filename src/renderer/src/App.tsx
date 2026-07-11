@@ -3119,17 +3119,33 @@ function SettingsModal({
 function ThreadScroll({
   children,
   dependencies,
-  resetKey
+  resetKey,
+  activeTurnId
 }: {
   children: React.ReactNode
   dependencies: unknown[]
   resetKey: string | null
+  activeTurnId: string | null
 }): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
+  const spacerRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
   const frameRef = useRef<number | null>(null)
   const settleFrameRef = useRef<number | null>(null)
+  // While non-null, this turn's user message is anchored to the top of the
+  // viewport (the answer streams into the space below). This mode overrides
+  // bottom-follow and releases the moment the reader scrolls.
+  const anchorTurnRef = useRef<string | null>(null)
+  const prevTurnRef = useRef<string | null>(null)
+  // A fresh/restored thread may arrive with activeTurnId already set for an
+  // in-progress turn; that must NOT yank it to the top — only a live send does.
+  const justResetRef = useRef(false)
+  // Programmatic scrollTop writes fire onScroll; without this guard the first
+  // anchor write would immediately release the anchor (bottom-pin doesn't need
+  // it because it re-pins to the same value).
+  const suppressScrollRef = useRef(false)
+  const [spacerOn, setSpacerOn] = useState(false)
 
   const cancelScheduledFollow = useCallback(() => {
     if (frameRef.current !== null) {
@@ -3142,7 +3158,44 @@ function ThreadScroll({
     }
   }, [])
 
+  // Scroll the anchored turn's user message to the top of the viewport, sizing
+  // a trailing spacer so there is always room to scroll it that far even before
+  // the answer fills in.
+  const anchorTop = useCallback(() => {
+    const el = ref.current
+    const turnId = anchorTurnRef.current
+    if (!el || !turnId) return
+
+    const node = el.querySelector<HTMLElement>(
+      `.message-user[data-turn-id="${CSS.escape(turnId)}"]`
+    )
+    if (!node) return
+
+    // How much empty room the content already has below the user message, and
+    // how much we still need so the message can reach the top. Size the spacer
+    // to exactly the shortfall — never leave more than one viewport of slack.
+    const spacer = spacerRef.current
+    if (spacer) {
+      const priorSpacer = spacer.offsetHeight
+      const contentBelow = el.scrollHeight - priorSpacer - node.offsetTop
+      const needed = Math.max(0, el.clientHeight - contentBelow)
+      const nextHeight = `${needed}px`
+      if (spacer.style.height !== nextHeight) spacer.style.height = nextHeight
+    }
+
+    const target = Math.max(0, node.offsetTop)
+    if (Math.abs(el.scrollTop - target) > 1) {
+      suppressScrollRef.current = true
+      el.scrollTop = target
+    }
+  }, [])
+
   const followTail = useCallback(() => {
+    // Top-anchor mode owns the scroll position while active.
+    if (anchorTurnRef.current !== null) {
+      anchorTop()
+      return
+    }
     if (!pinnedRef.current || ref.current === null || frameRef.current !== null) {
       return
     }
@@ -3157,6 +3210,7 @@ function ThreadScroll({
 
       const target = Math.max(0, el.scrollHeight - el.clientHeight)
       if (Math.abs(el.scrollTop - target) > 1) {
+        suppressScrollRef.current = true
         el.scrollTop = target
       }
 
@@ -3170,21 +3224,35 @@ function ThreadScroll({
           if (settled && pinnedRef.current) {
             const settledTarget = Math.max(0, settled.scrollHeight - settled.clientHeight)
             if (Math.abs(settled.scrollTop - settledTarget) > 1) {
+              suppressScrollRef.current = true
               settled.scrollTop = settledTarget
             }
           }
         })
       }
     })
-  }, [])
+  }, [anchorTop])
 
   const handleScroll = useCallback(() => {
+    // Ignore the scroll events our own programmatic writes produce.
+    if (suppressScrollRef.current) {
+      suppressScrollRef.current = false
+      return
+    }
+
     const el = ref.current
     if (!el) {
       return
     }
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
     pinnedRef.current = distanceFromBottom <= 48
+
+    // A deliberate scroll releases the top-anchor, exactly like it releases
+    // bottom-follow — the reader is now driving.
+    if (anchorTurnRef.current !== null) {
+      anchorTurnRef.current = null
+      setSpacerOn(false)
+    }
 
     // A queued frame from a prior delta must never pull a reader back down
     // after they have deliberately scrolled away from the live edge.
@@ -3197,6 +3265,10 @@ function ThreadScroll({
     // A new thread is a new reading context. Start it at the latest content,
     // even if the previous thread had deliberately released auto-follow.
     cancelScheduledFollow()
+    anchorTurnRef.current = null
+    prevTurnRef.current = null
+    justResetRef.current = true
+    setSpacerOn(false)
     pinnedRef.current = true
     followTail()
   }, [cancelScheduledFollow, followTail, resetKey])
@@ -3206,6 +3278,26 @@ function ThreadScroll({
     // The caller supplies render-driving state rather than a single scalar.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies)
+
+  // A live send (activeTurnId transitions to a new non-null value) anchors that
+  // turn's user message to the top. Skip the transition that coincides with a
+  // thread switch/restore — that turn is being read, not just asked.
+  useLayoutEffect(() => {
+    if (
+      activeTurnId !== null &&
+      activeTurnId !== prevTurnRef.current &&
+      !justResetRef.current
+    ) {
+      anchorTurnRef.current = activeTurnId
+      pinnedRef.current = false
+      cancelScheduledFollow()
+      setSpacerOn(true)
+      // The new user row + spacer land next commit; anchor once they exist.
+      window.requestAnimationFrame(anchorTop)
+    }
+    prevTurnRef.current = activeTurnId
+    justResetRef.current = false
+  }, [activeTurnId, anchorTop, cancelScheduledFollow])
 
   useEffect(() => {
     const el = ref.current
@@ -3245,6 +3337,9 @@ function ThreadScroll({
     <div ref={ref} className="thread-scroll" onScroll={handleScroll}>
       <div ref={contentRef} className="thread-scroll-content">
         {children}
+        {spacerOn ? (
+          <div ref={spacerRef} className="thread-scroll-anchor-spacer" aria-hidden="true" />
+        ) : null}
       </div>
     </div>
   )
