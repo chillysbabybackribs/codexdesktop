@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-07-11T15:54:47.418Z",
+  "phase0": "hunts/2026-07-11-4/phase-0",
+  "totals": {
+    "records": 750,
+    "retrievedVerified": 750,
+    "qualifiedFirsthand": 235,
+    "qualifiedRepeatedWorkflow": 62,
+    "currencyMentions": 103,
+    "qualifiedExactJobMoney": 13,
+    "completeJobSentences": 0,
+    "lowConfidenceHeuristic": 750
+  },
+  "byLane": {
+    "commercial-motion": {
+      "records": 102,
+      "retrievedVerified": 102,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
+      "currencyMentions": 17,
+      "qualifiedExactJobMoney": 0,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 0,
+      "missingArtifacts": 0
+    },
+    "formation-feedback": {
+      "records": 470,
+      "retrievedVerified": 470,
+      "qualifiedFirsthand": 103,
+      "qualifiedRepeatedWorkflow": 12,
+      "currencyMentions": 19,
+      "qualifiedExactJobMoney": 0,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 0,
+      "missingArtifacts": 0
+    },
+    "buyer-reality": {
+      "records": 178,
+      "retrievedVerified": 178,
+      "qualifiedFirsthand": 132,
+      "qualifiedRepeatedWorkflow": 50,
+      "currencyMentions": 67,
+      "qualifiedExactJobMoney": 13,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 79,
+      "missingArtifacts": 0
+    }
+  },
+  "scoreErrors": [],
+  "intersectionsMissingRequirementProvenance": [
+    "ix-ai-agent-operations",
+    "ix-payment-revenue-operations",
+    "ix-content-handoff",
+    "ix-compliance-security",
+    "ix-travel-booking",
+    "ix-website-commerce"
+  ],
+  "verdict": "FAIL",
+  "findings": [
+    "79 records label old publications as current.",
+    "6 intersections lack requirement-level supporting record IDs.",
+    "Collector money counts exceed qualified exact-job money.",
+    "Collector firsthand counts exceed conservative audited firsthand counts."
+  ]
+}
