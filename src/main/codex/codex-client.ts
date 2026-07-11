@@ -229,7 +229,7 @@ export class CodexClient extends EventEmitter {
     return this.request('turn/steer', {
       threadId,
       expectedTurnId: turnId,
-      input: this.buildTurnInput(text)
+      input: this.buildTurnInput(text, false)
     })
   }
 
