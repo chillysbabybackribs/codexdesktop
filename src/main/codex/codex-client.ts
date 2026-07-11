@@ -12,7 +12,6 @@ import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffor
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
 import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
-import type { DynamicToolCallResponse } from '../../shared/codex-protocol/v2/DynamicToolCallResponse.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
@@ -32,6 +31,7 @@ import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStart
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
 import { attachmentTurnInputs } from './attachment-input.js'
+import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
   buildGuidance,
@@ -578,127 +578,12 @@ export class CodexClient extends EventEmitter {
     }
   }
 
-  // An omitted tab deliberately stays null so BrowserAgentController targets
-  // the user's currently active visible tab. New tabs are only created through
-  // an explicit tab-creation action.
-  private resolveAgentTab(explicitTab: string | null | undefined): string | null {
-    return explicitTab || null
-  }
-
   private async handleDynamicToolCall(id: string | number, params: DynamicToolCallParams): Promise<void> {
-    try {
-      const args = asRecord(params.arguments)
-      let result
-      let imageUrl: string | null = null
-
-      if (params.namespace !== null) {
-        result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace}` }
-      } else if (params.tool === 'browser_screenshot') {
-        const tabId = this.resolveAgentTab(readString(args.tab))
-        result = await this.browserAgent.captureScreenshot({ tabId })
-        const screenshot = asRecord(asRecord(result.result).screenshot)
-        const artifactPath = readString(screenshot.artifactPath)
-        if (result.ok && artifactPath) {
-          imageUrl = await this.browserAgent.readScreenshotDataUrl(artifactPath)
-          if (!imageUrl) {
-            result = { ...result, ok: false, error: 'captured screenshot could not be loaded for model vision' }
-          }
-        }
-      } else if (params.tool === 'browser_run') {
-        const code = readString(args.code)
-        result = code
-          ? await this.browserAgent.run(code, {
-              tabId: this.resolveAgentTab(readString(args.tab)),
-              frame: readString(args.frame),
-              timeoutMs: readNumber(args.timeoutMs),
-              maxResultChars: readNumber(args.maxResultChars)
-            })
-          : { ok: false, error: 'browser_run requires a string "code" argument' }
-      } else if (params.tool === 'browser_extract_page') {
-        result = await this.browserAgent.extractPage({
-          tabId: this.resolveAgentTab(readString(args.tab)),
-          frame: readString(args.frame),
-          timeoutMs: readNumber(args.timeoutMs),
-          maxResultChars: readNumber(args.maxResultChars)
-        })
-      } else if (params.tool === 'browser_cdp') {
-        const operation = readString(args.operation) ?? 'command'
-        const method = readString(args.method)
-        const options = {
-          tabId: this.resolveAgentTab(readString(args.tab)),
-          timeoutMs: readNumber(args.timeoutMs),
-          maxResultChars: readNumber(args.maxResultChars),
-          afterSequence: readNumber(args.afterSequence),
-          filter: asRecord(args.filter),
-          contains: readStringRecord(args.contains),
-          limit: readNumber(args.limit)
-        }
-        if (operation === 'capabilities') {
-          result = await this.browserAgent.cdpCapabilities(options)
-        } else if (operation === 'events') {
-          result = await this.browserAgent.cdpEvents(options, method)
-        } else if (operation === 'wait') {
-          result = method
-            ? await this.browserAgent.waitForCdpEvent(method, options)
-            : { ok: false, error: 'browser_cdp wait requires a string "method" event name' }
-        } else if (operation === 'traceStart') {
-          result = await this.browserAgent.startCdpTrace(asRecord(args.params), options)
-        } else if (operation === 'traceStop') {
-          result = await this.browserAgent.stopCdpTrace(options)
-        } else if (operation === 'snapshot') {
-          result = await this.browserAgent.captureDomSnapshot(asRecord(args.params), options)
-        } else if (operation === 'networkStart') {
-          result = await this.browserAgent.startNetworkJournal(options)
-        } else if (operation === 'network') {
-          result = await this.browserAgent.readNetworkJournal(asRecord(args.params), options)
-        } else if (operation === 'networkBody') {
-          const requestId = readString(args.requestId)
-          result = requestId
-            ? await this.browserAgent.captureNetworkResponseBody(requestId, options)
-            : { ok: false, error: 'browser_cdp networkBody requires a string "requestId"' }
-        } else if (operation === 'networkStop') {
-          result = await this.browserAgent.stopNetworkJournal(options)
-        } else if (operation === 'performanceStart') {
-          result = await this.browserAgent.startPerformanceDiagnostics(options)
-        } else if (operation === 'performance') {
-          result = await this.browserAgent.readPerformanceDiagnostics(options)
-        } else if (operation === 'performanceStop') {
-          result = await this.browserAgent.stopPerformanceDiagnostics(options)
-        } else if (operation === 'command') {
-          result = method
-            ? await this.browserAgent.cdp(method, asRecord(args.params), options)
-            : { ok: false, error: 'browser_cdp command requires a string "method" argument' }
-        } else {
-          result = { ok: false, error: `unsupported browser_cdp operation: ${operation}` }
-        }
-      } else if (params.tool === 'research_web') {
-        result = await this.researchRunner.run({
-          queries: readStringArray(args.queries),
-          maxResults: readNumber(args.maxResults),
-          maxPages: readNumber(args.maxPages),
-          snippetChars: readNumber(args.snippetChars)
-        }, params.turnId)
-      } else {
-        result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
-      }
-
-      const response: DynamicToolCallResponse = {
-        success: result.ok,
-        contentItems: [
-          { type: 'inputText', text: JSON.stringify(result) },
-          ...(imageUrl ? [{ type: 'inputImage' as const, imageUrl }] : [])
-        ]
-      }
-      this.respond(id, response)
-    } catch (error) {
-      this.respond(id, {
-        success: false,
-        contentItems: [{
-          type: 'inputText',
-          text: JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) })
-        }]
-      } satisfies DynamicToolCallResponse)
-    }
+    const response = await routeDynamicToolCall(params, {
+      browserAgent: this.browserAgent,
+      researchRunner: this.researchRunner
+    })
+    this.respond(id, response)
   }
 
   private respond(id: string | number, result: unknown): void {
