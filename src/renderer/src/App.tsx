@@ -348,6 +348,9 @@ export default function App(): React.JSX.Element {
     if (itemMutationTimerRef.current !== null) {
       window.clearTimeout(itemMutationTimerRef.current)
     }
+    if (agentDeltaTimerRef.current !== null) {
+      window.clearTimeout(agentDeltaTimerRef.current)
+    }
   }, [])
 
   useEffect(() => {
@@ -1050,6 +1053,11 @@ export default function App(): React.JSX.Element {
   // chat text only. The full activity pipeline stays exclusive to the focused
   // thread.
   function handleAgentNotification(session: AgentSession, notification: ServerNotification): void {
+    // Land any buffered deltas before an event that reads/mutates messages, so
+    // a completed item or terminal message never lands ahead of its own tokens.
+    if (notification.method !== 'item/agentMessage/delta' && agentDeltaBufferRef.current.size > 0) {
+      flushAgentDeltas()
+    }
     switch (notification.method) {
       case 'turn/started':
         patchAgentSession(session.key, (current) => ({
