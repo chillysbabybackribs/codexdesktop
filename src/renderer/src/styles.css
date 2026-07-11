@@ -3557,6 +3557,14 @@ button {
   border-color: #383838;
 }
 
+.agent-overlay-composer textarea {
+  scrollbar-width: none;
+}
+
+.agent-overlay-composer textarea::-webkit-scrollbar {
+  display: none;
+}
+
 .stop-square-button {
   flex: 0 0 auto;
   display: inline-flex;
