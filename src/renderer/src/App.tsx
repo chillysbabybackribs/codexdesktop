@@ -3173,22 +3173,31 @@ function ThreadScroll({
     )
     if (!node) return
 
-    // How much empty room the content already has below the user message, and
-    // how much we still need so the message can reach the top. Size the spacer
-    // to exactly the shortfall — never leave more than one viewport of slack.
+    // Small breathing room so the message sits just below the viewport top
+    // rather than flush against (or clipped above) the edge.
+    const topGap = 12
+
+    // Size the trailing spacer to the exact shortfall of room below the user
+    // message, so it can reach the top without leaving more than one viewport
+    // of slack. Measured from the DOM, immune to offsetParent/padding quirks.
     const spacer = spacerRef.current
     if (spacer) {
       const priorSpacer = spacer.offsetHeight
-      const contentBelow = el.scrollHeight - priorSpacer - node.offsetTop
-      const needed = Math.max(0, el.clientHeight - contentBelow)
+      const elRect = el.getBoundingClientRect()
+      const nodeRect = node.getBoundingClientRect()
+      const nodeTopWithin = nodeRect.top - elRect.top + el.scrollTop
+      const contentBelow = el.scrollHeight - priorSpacer - nodeTopWithin
+      const needed = Math.max(0, el.clientHeight - contentBelow - topGap)
       const nextHeight = `${needed}px`
       if (spacer.style.height !== nextHeight) spacer.style.height = nextHeight
     }
 
-    const target = Math.max(0, node.offsetTop)
-    if (Math.abs(el.scrollTop - target) > 1) {
+    // Scroll by the measured delta between the message top and the viewport top
+    // (minus the gap), rather than computing an absolute offsetTop target.
+    const delta = node.getBoundingClientRect().top - el.getBoundingClientRect().top - topGap
+    if (Math.abs(delta) > 1) {
       suppressScrollRef.current = true
-      el.scrollTop = target
+      el.scrollTop += delta
     }
   }, [])
 
