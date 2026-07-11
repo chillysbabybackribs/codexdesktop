@@ -1083,6 +1083,14 @@ button {
   contain-intrinsic-size: auto 228px;
 }
 
+/* The live turn's card gets more visible surface during long runs — more steps
+   on screen at once. It still scrolls internally; completed cards stay compact
+   at 228px so the transcript doesn't fill with tall empty cards. */
+.task-activity-card.is-live {
+  height: min(60vh, 620px);
+  contain-intrinsic-size: auto 620px;
+}
+
 .task-activity-card-scroll {
   height: 100%;
   padding-right: 5px;
@@ -1232,6 +1240,11 @@ button {
 @media (max-height: 700px) {
   .task-activity-card {
     height: 180px;
+  }
+
+  .task-activity-card.is-live {
+    height: min(52vh, 360px);
+    contain-intrinsic-size: auto 360px;
   }
 }
 
