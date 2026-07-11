@@ -56,7 +56,7 @@ function showCopiedToast(x: number, y: number): void {
 }
 
 window.addEventListener('pointerdown', (event) => {
-  pointerStart = event.button === 0 && !isEditable(event.target)
+  pointerStart = event.isTrusted && event.button === 0 && !isEditable(event.target)
     ? { x: event.clientX, y: event.clientY }
     : null
 }, true)
@@ -64,7 +64,10 @@ window.addEventListener('pointerdown', (event) => {
 window.addEventListener('pointerup', (event) => {
   const start = pointerStart
   pointerStart = null
-  if (!start || isEditable(event.target)) return
+  // Only genuine user drags may auto-copy. Without this a foreground hostile
+  // page could dispatch synthetic PointerEvents to stuff the OS clipboard
+  // (pastejacking) with no user gesture.
+  if (!event.isTrusted || !start || isEditable(event.target)) return
   if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < dragThreshold) return
 
   const selection = window.getSelection()
