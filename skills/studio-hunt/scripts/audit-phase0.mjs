@@ -32,11 +32,14 @@ function yearOf(record) { const y = Number(String(record.publishedAt || '').slic
 function moneyAudit(record) {
   const excerpt = [record.textExcerpt, record.priceOrWage].filter(Boolean).join(' ');
   if (!currencyRe.test(excerpt)) return {type:'none', qualified:false};
-  if (disqualifyingMoneyRe.test(record.priceOrWage || '') || (!exactSpendRe.test(excerpt) && disqualifyingMoneyRe.test(excerpt))) return {type:'revenue_or_valuation', qualified:false};
-  if (/\b(?:suppose|imagine|example|let'?s say|making up numbers)\b/i.test(excerpt)) return {type:'hypothetical', qualified:false};
-  if (!exactSpendRe.test(excerpt)) return {type:'currency_mention', qualified:false};
+  const amount = record.priceOrWage || excerpt.match(currencyRe)?.[0] || '';
+  const amountAt = excerpt.toLowerCase().indexOf(amount.toLowerCase());
+  const amountContext = amountAt >= 0 ? excerpt.slice(Math.max(0, amountAt - 100), amountAt + amount.length + 100) : excerpt.slice(0, 220);
+  if (disqualifyingMoneyRe.test(amount) || disqualifyingMoneyRe.test(amountContext)) return {type:'revenue_or_valuation', qualified:false};
+  if (/\b(?:suppose|imagine|example|let'?s say|making up numbers)\b/i.test(amountContext)) return {type:'hypothetical', qualified:false};
+  if (!exactSpendRe.test(amountContext)) return {type:'currency_mention', qualified:false};
   const hasJob = Boolean(record.repeatedAction && (record.trigger || record.remainingManualWork || recurrenceRe.test(excerpt)));
-  return hasJob ? {type:/\b(?:wage|salary|hourly rate|hire|hired)\b/i.test(excerpt)?'exact_job_wage':'exact_job_spend',qualified:true} : {type:'adjacent_spend',qualified:false};
+  return hasJob ? {type:/\b(?:wage|salary|hourly rate|hire|hired)\b/i.test(amountContext)?'exact_job_wage':'exact_job_spend',qualified:true} : {type:'adjacent_spend',qualified:false};
 }
 function firsthandAudit(record) {
   const excerpt = record.textExcerpt || '';

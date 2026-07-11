@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "auditedAt": "2026-07-11T15:56:54.379Z",
+  "auditedAt": "2026-07-11T15:57:24.973Z",
   "phase0": "hunts/2026-07-11-4/phase-0",
   "totals": {
     "records": 750,
@@ -8,7 +8,7 @@
     "qualifiedFirsthand": 235,
     "qualifiedRepeatedWorkflow": 62,
     "currencyMentions": 103,
-    "qualifiedExactJobMoney": 13,
+    "qualifiedExactJobMoney": 7,
     "completeJobSentences": 0,
     "lowConfidenceHeuristic": 750
   },
@@ -41,7 +41,7 @@
       "qualifiedFirsthand": 132,
       "qualifiedRepeatedWorkflow": 50,
       "currencyMentions": 67,
-      "qualifiedExactJobMoney": 13,
+      "qualifiedExactJobMoney": 7,
       "completeJobSentences": 0,
       "staleCurrentWindow": 79,
       "missingArtifacts": 0
