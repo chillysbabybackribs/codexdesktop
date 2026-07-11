@@ -3410,25 +3410,20 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border: 1px solid #3a3f52;
-  border-radius: 11px;
-  background: #1b1d26;
-  color: #5865f2;
+  border: 0;
+  border-radius: 50%;
+  background: #e6e6e6;
+  color: #111111;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  transition:
-    background 120ms ease,
-    color 120ms ease,
-    border-color 120ms ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  transition: background 120ms ease;
 }
 
 .agent-column-chevron:hover {
-  color: #8b95ff;
-  border-color: #5865f2;
-  background: #202330;
+  background: #ffffff;
 }
 
 .agent-column-chevron.is-up {
