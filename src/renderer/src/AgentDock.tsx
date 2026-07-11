@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -117,11 +117,19 @@ function AgentWindow({
   const [value, setValue] = useState('')
   const [isSending, setIsSending] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     const node = scrollRef.current
     if (node) node.scrollTop = node.scrollHeight
   }, [session.messages, session.status])
+
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+    textarea.style.height = '0px'
+    textarea.style.height = `${Math.min(120, Math.max(34, textarea.scrollHeight))}px`
+  }, [value])
 
   const working = session.status === 'working'
 
@@ -212,6 +220,7 @@ function AgentWindow({
 
       <form className="agent-overlay-composer" onSubmit={handleSubmit}>
         <textarea
+          ref={textareaRef}
           value={value}
           rows={1}
           placeholder={working ? 'Agent is working…' : 'Message this agent…'}
