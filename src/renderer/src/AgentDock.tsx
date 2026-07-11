@@ -80,14 +80,21 @@ export function AgentColumn({
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const [canScrollUp, setCanScrollUp] = useState(false)
-  const [canScrollDown, setCanScrollDown] = useState(false)
+  const [hiddenAbove, setHiddenAbove] = useState(0)
+  const [hiddenBelow, setHiddenBelow] = useState(0)
 
   const updateChevrons = (): void => {
     const node = scrollRef.current
     if (!node) return
-    setCanScrollUp(node.scrollTop > 4)
-    setCanScrollDown(node.scrollTop + node.clientHeight < node.scrollHeight - 4)
+    const first = node.firstElementChild
+    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
+    const above = Math.max(0, Math.round(node.scrollTop / slot))
+    const below = Math.max(
+      0,
+      Math.round((node.scrollHeight - node.scrollTop - node.clientHeight) / slot)
+    )
+    setHiddenAbove(above)
+    setHiddenBelow(below)
   }
 
   useEffect(() => {
@@ -110,6 +117,19 @@ export function AgentColumn({
 
   return (
     <div className="agent-column-shell">
+      {hiddenAbove > 0 ? (
+        <button
+          type="button"
+          className="agent-scroll-bar"
+          aria-label={`${hiddenAbove} more agent${hiddenAbove > 1 ? 's' : ''} above`}
+          onClick={() => scrollByWindow(-1)}
+        >
+          <ChevronIcon direction="up" />
+          <span>
+            {hiddenAbove} more {hiddenAbove > 1 ? 'agents' : 'agent'}
+          </span>
+        </button>
+      ) : null}
       <div ref={scrollRef} className="agent-column" onScroll={updateChevrons}>
         {sessions.map((session) => (
           <AgentWindow
@@ -124,24 +144,17 @@ export function AgentColumn({
           />
         ))}
       </div>
-      {canScrollUp ? (
+      {hiddenBelow > 0 ? (
         <button
           type="button"
-          className="agent-column-chevron is-up"
-          aria-label="More agents above"
-          onClick={() => scrollByWindow(-1)}
-        >
-          <ChevronIcon direction="up" />
-        </button>
-      ) : null}
-      {canScrollDown ? (
-        <button
-          type="button"
-          className="agent-column-chevron is-down"
-          aria-label="More agents below"
+          className="agent-scroll-bar"
+          aria-label={`${hiddenBelow} more agent${hiddenBelow > 1 ? 's' : ''} below`}
           onClick={() => scrollByWindow(1)}
         >
           <ChevronIcon direction="down" />
+          <span>
+            {hiddenBelow} more {hiddenBelow > 1 ? 'agents' : 'agent'}
+          </span>
         </button>
       ) : null}
     </div>
