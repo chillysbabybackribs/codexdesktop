@@ -1891,17 +1891,6 @@ export default function App(): React.JSX.Element {
     })
   }
 
-  function noteItemProgress(itemId: string, turnId: string | null, message: string): void {
-    setItemMeta((current) => {
-      const existing = current[itemId]
-      const progress = [...(existing?.progress ?? []), message].slice(-5)
-      return {
-        ...current,
-        [itemId]: { ...existing, progress, turnId: turnId ?? existing?.turnId ?? null }
-      }
-    })
-  }
-
   function noteTurn(turnId: string, patch: Partial<TurnMeta>): void {
     setTurnMeta((current) => reduceTurnTelemetry(current, { type: 'patch', turnId, patch }))
   }
@@ -2027,11 +2016,6 @@ export default function App(): React.JSX.Element {
     setTurnMeta(nextTurnMeta)
   }
 
-  function upsertItem(item: ThreadItem): void {
-    flushPendingItemMutations()
-    setItems((current) => upsertMany(current, [item]))
-  }
-
   // Queue a streaming mutation and schedule a single batched apply. Every delta
   // kind funnels through here so a burst of reasoning/command/text tokens
   // collapses into one setItems (one buildRows + one render) per ~32ms frame
@@ -2072,28 +2056,6 @@ export default function App(): React.JSX.Element {
       }
       return next
     })
-  }
-
-  function patchItemText(itemId: string, delta: string): void {
-    enqueueItemMutation((current) => appendAgentMessageDelta(current, itemId, delta))
-  }
-
-  function patchCommandOutput(itemId: string, delta: string): void {
-    enqueueItemMutation((current) => appendCommandOutputDelta(current, itemId, delta))
-  }
-
-  // Live diff stream: item/fileChange/patchUpdated replaces the item's full
-  // change set on every update (the diff grows as Codex writes the file).
-  function patchFileChanges(itemId: string, changes: Parameters<typeof replaceFileChanges>[2]): void {
-    enqueueItemMutation((current) => replaceFileChanges(current, itemId, changes))
-  }
-
-  function patchReasoningPart(itemId: string, field: 'summary' | 'content', partIndex: number, delta: string): void {
-    enqueueItemMutation((current) => appendReasoningDelta(current, itemId, field, partIndex, delta))
-  }
-
-  function patchPlan(itemId: string, delta: string): void {
-    enqueueItemMutation((current) => appendPlanDelta(current, itemId, delta))
   }
 
   // The structured turn plan renders as a live checklist card that updates in
