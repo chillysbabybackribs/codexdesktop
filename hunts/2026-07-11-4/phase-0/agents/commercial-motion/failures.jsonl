@@ -1,0 +1,1 @@
+{"source":"TrustMRR API","url":"https://trustmrr.com/api/v1/startups?page=11&limit=10","observedAt":"2026-07-11T15:38:58.603Z","status":"error","error":"Cannot destructure property 'json' of '(intermediate value)' as it is undefined.","fallbacksAttempted":["5 retry attempts with bounded backoff"],"coverageImpact":"Full pagination stopped at failed page."}
