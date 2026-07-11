@@ -1117,7 +1117,7 @@ export default function App(): React.JSX.Element {
         threadId = started.thread.id
         agentStartQueueRef.current = agentStartQueueRef.current.filter((queued) => queued !== key)
         if (!threadId) throw new Error('Thread start returned no thread id')
-        bindAgentThread(key, threadId, threadTitle(started.thread))
+        bindAgentThread(key, threadId)
       }
 
       appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text })
@@ -1314,10 +1314,7 @@ export default function App(): React.JSX.Element {
       const backgroundSession = backgroundSessionForThread(incomingThreadId)
       if (backgroundSession) {
         if (notification.method === 'thread/name/updated') {
-          patchAgentSession(backgroundSession.key, (session) => ({
-            ...session,
-            title: notification.params.threadName || session.title
-          }))
+          // Dock titles stay "Agent N"; only the history list refreshes.
           void refreshThreads()
           return
         }
@@ -1339,7 +1336,7 @@ export default function App(): React.JSX.Element {
         }
         const pendingAgentKey = agentStartQueueRef.current.shift()
         if (pendingAgentKey) {
-          bindAgentThread(pendingAgentKey, startedThreadId, threadTitle(notification.params.thread))
+          bindAgentThread(pendingAgentKey, startedThreadId)
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
