@@ -4,11 +4,14 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
+import type { ChatAttachment } from '../../shared/ipc'
+import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 
 export type AgentLiteMessage = {
   id: string
   role: 'user' | 'assistant'
   text: string
+  attachments?: ChatAttachment[]
 }
 
 // Lightweight state for a background agent conversation. The focused thread
@@ -91,7 +94,7 @@ export function AgentColumn({
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
-  onSend: (key: string, text: string) => Promise<boolean>
+  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
@@ -226,11 +229,13 @@ function AgentWindow({
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
-  onSend: (key: string, text: string) => Promise<boolean>
+  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [value, setValue] = useState('')
+  const [attachments, setAttachments] = useState<ChatAttachment[]>([])
+  const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -258,16 +263,21 @@ function AgentWindow({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     const text = value.trim()
-    if (!text || isSending) return
+    if ((!text && !attachments.length) || isSending) return
     setValue('')
+    const submittedAttachments = attachments
+    if (!working) setAttachments([])
     setIsSending(true)
     try {
       // While a turn runs, typed text steers it instead of starting a new turn
       // — same routing as the main composer.
       const accepted = working
         ? await onSteer(session.key, text)
-        : await onSend(session.key, text)
-      if (!accepted) setValue((current) => (current ? `${text}\n${current}` : text))
+        : await onSend(session.key, text, submittedAttachments)
+      if (!accepted) {
+        setValue((current) => (current ? `${text}\n${current}` : text))
+        if (!working) setAttachments(submittedAttachments)
+      }
     } finally {
       setIsSending(false)
       // The composer stays text-ready: refocus once the textarea re-enables.
@@ -355,7 +365,7 @@ function AgentWindow({
               {message.role === 'assistant' ? (
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
               ) : (
-                message.text
+                <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
               )}
             </div>
           ))
@@ -373,7 +383,21 @@ function AgentWindow({
         </div>
       ) : null}
 
-      <form className="agent-overlay-composer" onSubmit={handleSubmit}>
+      <form
+        className="agent-overlay-composer"
+        onSubmit={handleSubmit}
+        onDragOver={(event) => { if (!working && event.dataTransfer.types.includes('Files')) event.preventDefault() }}
+        onDrop={(event) => {
+          if (working) return
+          const files = Array.from(event.dataTransfer.files)
+          if (!files.length) return
+          event.preventDefault()
+          setAttachmentError(null)
+          void saveBrowserFiles(files).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
+        }}
+      >
+        <div className="agent-composer-body">
+          <AttachmentStrip attachments={attachments} removable compact onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
         <textarea
           ref={textareaRef}
           value={value}
@@ -381,6 +405,14 @@ function AgentWindow({
           placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
           disabled={isSending}
           onChange={(event) => setValue(event.target.value)}
+          onPaste={(event) => {
+            if (working) return
+            const images = Array.from(event.clipboardData.files).filter((file) => file.type.startsWith('image/'))
+            if (!images.length) return
+            event.preventDefault()
+            setAttachmentError(null)
+            void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
               event.preventDefault()
@@ -388,6 +420,9 @@ function AgentWindow({
             }
           }}
         />
+          {attachmentError ? <span className="agent-attachment-error" role="status">{attachmentError}</span> : null}
+        </div>
+        <AttachmentButton disabled={working || isSending} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
         {working ? (
           <button
             type="button"
@@ -403,7 +438,7 @@ function AgentWindow({
             type="submit"
             className="send-button"
             aria-label="Send to agent"
-            disabled={isSending || !value.trim()}
+            disabled={isSending || (!value.trim() && !attachments.length)}
           >
             <SendArrowIcon />
           </button>
