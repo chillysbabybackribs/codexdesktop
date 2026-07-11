@@ -198,7 +198,8 @@ export class CodexClient extends EventEmitter {
     text: string,
     cwd?: string | null,
     model?: string | null,
-    attachments: ChatAttachment[] = []
+    attachments: ChatAttachment[] = [],
+    effort?: ReasoningEffort | null
   ): Promise<TurnStartResponse & {
     threadId: string
     model: string | null
@@ -215,16 +216,18 @@ export class CodexClient extends EventEmitter {
       threadId: activeThreadId,
       input,
       ...(model ? { model } : {}),
+      ...(effort ? { effort } : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
     if (model) this.threadModels.set(activeThreadId, model)
+    if (effort) this.threadReasoningEfforts.set(activeThreadId, effort)
 
     return {
       ...response,
       threadId: activeThreadId,
       model: model ?? this.threadModels.get(activeThreadId) ?? null,
-      reasoningEffort: startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
+      reasoningEffort: effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     }
   }
 

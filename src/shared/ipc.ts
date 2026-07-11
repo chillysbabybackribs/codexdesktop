@@ -1,3 +1,5 @@
+import type { ReasoningEffort } from './codex-protocol/ReasoningEffort'
+
 export type BrowserBounds = {
   x: number
   y: number
@@ -109,6 +111,8 @@ export type CodexSendMessageParams = {
    * default (or whatever the thread was last switched to server-side).
    */
   model?: string | null
+  /** Reasoning effort override for this turn and subsequent turns. */
+  effort?: ReasoningEffort | null
 }
 
 export type CodexStartThreadParams = {
