@@ -1079,16 +1079,16 @@ export default function App(): React.JSX.Element {
   // metadata lives in localStorage; transcripts rehydrate from the server.
   useEffect(() => {
     if (!agentDockRestoredRef.current) return
-    const sessions = agentSessions
-      .filter((session) => session.threadId)
-      .map((session) => ({
-        threadId: session.threadId,
-        title: session.title,
-        watchesMain: session.watchesMain,
-        model: session.model,
-        open: openAgentKeys.includes(session.key),
-        selected: session.key === selectedAgentKey
-      }))
+    // Blank agents (no message sent yet, so no thread) persist too — they
+    // restore as blank windows.
+    const sessions = agentSessions.map((session) => ({
+      threadId: session.threadId,
+      title: session.title,
+      watchesMain: session.watchesMain,
+      model: session.model,
+      open: openAgentKeys.includes(session.key),
+      selected: session.key === selectedAgentKey
+    }))
     window.localStorage.setItem(
       agentDockStorageKey,
       JSON.stringify({ counter: agentCounterRef.current, sessions })
@@ -1122,17 +1122,15 @@ export default function App(): React.JSX.Element {
         agentCounterRef.current = parsed.counter
       }
       const entries = (parsed.sessions ?? []).filter(
-        (entry): entry is typeof entry & { threadId: string } =>
-          typeof entry.threadId === 'string' &&
-          entry.threadId.length > 0 &&
+        (entry) =>
           // The main view owns its restored thread; don't double-own it.
-          entry.threadId !== activeThreadIdRef.current
+          !entry.threadId || entry.threadId !== activeThreadIdRef.current
       )
       if (!entries.length) return
 
       const restored: AgentSession[] = entries.map((entry) => ({
         key: crypto.randomUUID(),
-        threadId: entry.threadId,
+        threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
         title: entry.title || `Agent ${agentCounterRef.current++}`,
         status: 'idle',
         turnId: null,
@@ -1157,8 +1155,9 @@ export default function App(): React.JSX.Element {
 
       await Promise.all(
         restored.map(async (session) => {
+          if (!session.threadId) return
           try {
-            const resumed = await window.api.codex.resumeThread(session.threadId!)
+            const resumed = await window.api.codex.resumeThread(session.threadId)
             let turns =
               resumed.thread.turns.length > 0
                 ? resumed.thread.turns
