@@ -95,16 +95,17 @@ export async function saveBrowserFiles(files: File[]): Promise<ChatAttachment[]>
 }
 
 export function attachmentsFromUserInput(content: UserInput[]): ChatAttachment[] {
-  return content.flatMap((item) => {
+  const attachments: ChatAttachment[] = []
+  for (const item of content) {
     if (item.type === 'localImage') {
       const name = displayNameFromPath(item.path)
-      return [{ id: item.path, kind: 'image' as const, name, path: item.path, mediaType: 'image/*', size: 0 }]
+      attachments.push({ id: item.path, kind: 'image', name, path: item.path, mediaType: 'image/*', size: 0 })
     }
     if (item.type === 'mention') {
-      return [{ id: item.path, kind: 'file' as const, name: item.name || displayNameFromPath(item.path), path: item.path, mediaType: 'application/octet-stream', size: 0 }]
+      attachments.push({ id: item.path, kind: 'file', name: item.name || displayNameFromPath(item.path), path: item.path, mediaType: 'application/octet-stream', size: 0 })
     }
-    return []
-  })
+  }
+  return attachments
 }
 
 function displayNameFromPath(path: string): string {

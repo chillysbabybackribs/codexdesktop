@@ -2964,13 +2964,152 @@ button {
 
 .composer {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   gap: 10px;
   min-height: 104px;
   border: 1px solid #2a2a2a;
   border-radius: 10px;
   background: linear-gradient(180deg, #222222, #1d1d1d);
   box-shadow: 0 20px 42px rgb(0 0 0 / 22%);
+}
+
+.attachment-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.attachment-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.attachment-strip.is-compact {
+  gap: 8px;
+  padding: 7px 0 0;
+}
+
+.attachment-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 112px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+
+.attachment-item img,
+.attachment-image-placeholder {
+  display: block;
+  width: 112px;
+  height: 76px;
+  object-fit: cover;
+  border: 0;
+  border-radius: 7px;
+  background: #171717;
+}
+
+.attachment-item figcaption {
+  max-width: 100%;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #aeb3b8;
+  font-size: 11px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-item.is-file {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  width: 180px;
+  min-height: 38px;
+}
+
+.attachment-item.is-file figcaption {
+  margin: 0;
+  font-size: 12px;
+}
+
+.attachment-file-icon,
+.attachment-file-icon svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  color: #89919a;
+}
+
+.attachment-remove {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #343434;
+  border-radius: 50%;
+  background: #171717;
+  color: #d8d8d8;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 140ms ease, background 140ms ease;
+}
+
+.attachment-item:hover .attachment-remove,
+.attachment-remove:focus-visible {
+  opacity: 1;
+}
+
+.attachment-remove:hover {
+  background: #2a2020;
+}
+
+.attachment-button {
+  display: grid;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #9ba1a7;
+  cursor: pointer;
+}
+
+.attachment-button:hover:not(:disabled) {
+  background: #2a2a2a;
+  color: #ececec;
+}
+
+.attachment-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.attachment-button svg {
+  width: 19px;
+  height: 19px;
+}
+
+.attachment-button:focus-visible,
+.attachment-remove:focus-visible {
+  outline: 2px solid #8da9ef;
+  outline-offset: 2px;
+}
+
+.message-user .attachment-strip {
+  padding: 8px 0 2px;
 }
 
 .composer textarea {
@@ -3834,6 +3973,42 @@ button {
   gap: 6px;
   flex: 0 0 auto;
   padding: 8px;
+}
+
+.agent-composer-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.agent-composer-body .attachment-strip {
+  padding: 0 2px 7px;
+}
+
+.agent-composer-body .attachment-item,
+.agent-mini-message .attachment-item {
+  width: 82px;
+}
+
+.agent-composer-body .attachment-item img,
+.agent-composer-body .attachment-image-placeholder,
+.agent-mini-message .attachment-item img,
+.agent-mini-message .attachment-image-placeholder {
+  width: 82px;
+  height: 56px;
+}
+
+.agent-composer-body .attachment-item.is-file,
+.agent-mini-message .attachment-item.is-file {
+  width: 140px;
+}
+
+.agent-attachment-error {
+  padding: 4px 9px 0;
+  color: #d99797;
+  font-size: 10.5px;
+  line-height: 1.3;
 }
 
 .agent-overlay-composer textarea {
