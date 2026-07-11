@@ -30,7 +30,6 @@ import type { ThreadGoalStatus } from '../../shared/codex-protocol/v2/ThreadGoal
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
-import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
@@ -69,10 +68,7 @@ import {
 } from './item-notifications'
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
-import {
-  parseAgentDock,
-  stripMainChatContext
-} from './agent-session-model'
+import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { useAgentSessions } from './useAgentSessions'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
