@@ -3686,3 +3686,30 @@ button {
 .agent-overlay-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* Compact model pill inside agent window headers; menu opens downward there
+   (the composer's opens upward). */
+.agent-overlay-header .workspace-pill {
+  height: 22px;
+  max-width: 130px;
+  padding: 0 7px;
+  font-size: 11.5px;
+  flex: 0 1 auto;
+}
+
+.agent-overlay-header .workspace-pill-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.agent-overlay-header .model-pill-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.agent-overlay-header .model-menu {
+  bottom: auto;
+  top: calc(100% + 6px);
+  right: 0;
+  left: auto;
+}

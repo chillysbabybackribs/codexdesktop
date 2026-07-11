@@ -2064,6 +2064,7 @@ function ChatPane({
   onOpenAgent,
   onMinimizeAgent,
   onToggleWatchAgent,
+  onSetAgentModel,
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
@@ -2112,6 +2113,7 @@ function ChatPane({
   onOpenAgent: (key: string) => void
   onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
+  onSetAgentModel: (key: string, model: string) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
@@ -2320,6 +2322,9 @@ function ChatPane({
           <AgentColumn
             sessions={openAgentSessions}
             selectedKey={selectedAgentKey}
+            models={models}
+            mainModel={selectedModel}
+            onSetModel={onSetAgentModel}
             onSelect={onSelectAgent}
             onMinimize={onMinimizeAgent}
             onCloseSession={onCloseAgentSession}
