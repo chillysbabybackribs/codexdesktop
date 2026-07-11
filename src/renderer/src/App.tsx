@@ -3217,12 +3217,31 @@ function ThreadScroll({
     if (!el) {
       return
     }
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
-    pinnedRef.current = distanceFromBottom <= 48
 
-    // A deliberate scroll releases the top-anchor, exactly like it releases
-    // bottom-follow — the reader is now driving.
+    // In top-anchor mode, distinguish a reader-driven scroll from layout-induced
+    // scroll events. Streaming content growth and our own spacer-height writes
+    // both shift scrollTop and fire onScroll WITHOUT going through the suppress
+    // guard (that guard only covers the explicit scrollTop assignment, not the
+    // browser's reflow adjustments). Releasing on those spurious events tears the
+    // anchor down mid-turn — which then skips the completion freeze and snaps the
+    // message down. So only release when the anchored message has actually moved
+    // away from its pinned position near the top; anchorTop re-pins it to ~topGap
+    // every commit, so layout jitter leaves it there and won't trip this.
     if (anchorTurnRef.current !== null) {
+      const node = el.querySelector<HTMLElement>(
+        `.message-user[data-turn-id="${CSS.escape(anchorTurnRef.current)}"]`
+      )
+      let readerMoved = true
+      if (node) {
+        const userTop = node.getBoundingClientRect().top - el.getBoundingClientRect().top
+        // topGap is 12; allow generous slack for sub-pixel + one row of drift
+        // before treating it as an intentional scroll.
+        readerMoved = Math.abs(userTop - 12) > 80
+      }
+      if (!readerMoved) {
+        // Layout jitter, not the reader. Keep the anchor; re-pin next commit.
+        return
+      }
       anchorTurnRef.current = null
       setSpacerOn(false)
       if (anchorFrameRef.current !== null) {
@@ -3230,6 +3249,9 @@ function ThreadScroll({
         anchorFrameRef.current = null
       }
     }
+
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+    pinnedRef.current = distanceFromBottom <= 48
 
     // A queued frame from a prior delta must never pull a reader back down
     // after they have deliberately scrolled away from the live edge.
