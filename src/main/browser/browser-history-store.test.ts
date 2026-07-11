@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -53,16 +53,14 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
 
     const raw = JSON.parse(await readFile(filePath, 'utf8'))
     raw.entries.push({ url: 'javascript:alert(1)', title: 'bad' }, { title: 'no url' }, null)
+    await writeFile(filePath, JSON.stringify(raw), 'utf8')
+
     const reloaded = new BrowserHistoryStore(() => filePath)
     await reloaded.load()
-    // Simulate the tampered file by loading a store over it after rewrite.
-    const tampered = new BrowserHistoryStore(() => filePath)
-    await tampered.load()
 
     assert.deepEqual(reloaded.entries(), [
       { url: 'https://example.com/', title: 'Example', visitCount: 1, lastVisitAt: 5000 }
     ])
-    assert.equal(tampered.entries().length, 1)
   } finally {
     await rm(directory, { recursive: true, force: true })
   }
