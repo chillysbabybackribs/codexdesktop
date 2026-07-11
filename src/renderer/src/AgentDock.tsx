@@ -353,7 +353,7 @@ function AgentWindow({
             type="button"
             className="icon-button"
             aria-label="Close agent"
-            title="Close agent (unsubscribes the thread)"
+            title="Close agent (stops the turn and unsubscribes the thread)"
             onClick={() => onCloseSession(session.key)}
           >
             ×

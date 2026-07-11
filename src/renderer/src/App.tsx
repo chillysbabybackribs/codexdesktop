@@ -1513,6 +1513,12 @@ export default function App(): React.JSX.Element {
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     setSelectedAgentKey((current) => (current === key ? null : current))
     if (session?.threadId && session.threadId !== activeThreadIdRef.current) {
+      // Stop the turn before unsubscribing: nobody is watching a closed agent,
+      // so a running turn would keep burning tokens (and editing the workspace)
+      // invisibly. Interrupt first, then drop the subscription.
+      if (session.turnId) {
+        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
+      }
       void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
     }
   }
