@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
+import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import {
   appendAgentSessionMessage,
   applyAgentDeltas,
   createAgentSession,
+  completeAgentMessage,
   findAgentSessionByThread,
   serializeAgentDock,
   updateAgentSession,
@@ -10,14 +13,19 @@ import {
   type AgentSession
 } from './agent-session-model'
 
-export function useAgentSessions(storageKey: string): {
+export function useAgentSessions(
+  storageKey: string,
+  recovery: {
+    schedule: (key: string, turnId: string, error: TurnError | null) => void
+    cancel: (key: string) => void
+  }
+): {
   agentSessions: AgentSession[]
   openAgentKeys: string[]
   selectedAgentKey: string | null
   setOpenAgentKeys: React.Dispatch<React.SetStateAction<string[]>>
   setSelectedAgentKey: React.Dispatch<React.SetStateAction<string | null>>
   agentSessionsRef: React.MutableRefObject<AgentSession[]>
-  agentDeltaBufferRef: React.MutableRefObject<Map<string, Map<string, string>>>
   agentStartQueueRef: React.MutableRefObject<string[]>
   agentCounterRef: React.MutableRefObject<number>
   agentDockRestoredRef: React.MutableRefObject<boolean>
@@ -26,8 +34,7 @@ export function useAgentSessions(storageKey: string): {
   appendAgentMessage: (key: string, message: AgentLiteMessage) => void
   appendAgentMessageOnce: (key: string, message: AgentLiteMessage) => void
   backgroundSessionForThread: (threadId: string) => AgentSession | null
-  flushAgentDeltas: () => void
-  enqueueAgentDelta: (key: string, itemId: string, delta: string) => void
+  handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
   handleNewAgent: () => void
   handleOpenAgent: (key: string) => void
   handleMinimizeAgent: (key: string) => void
@@ -88,6 +95,86 @@ export function useAgentSessions(storageKey: string): {
     }
   }
 
+  function handleAgentNotification(session: AgentSession, notification: ServerNotification): void {
+    if (notification.method !== 'item/agentMessage/delta' && agentDeltaBufferRef.current.size > 0) {
+      flushAgentDeltas()
+    }
+
+    switch (notification.method) {
+      case 'turn/started':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'working',
+          turnId: notification.params.turn.id
+        }))
+        return
+      case 'turn/completed': {
+        const turn = notification.params.turn
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'done',
+          turnId: null,
+          isCompacting: false
+        }))
+        void window.api.notifications.backgroundTurn({
+          threadId: notification.params.threadId,
+          title: session.title || 'Background agent',
+          status: turn.status === 'failed' ? 'failed' : 'completed',
+          message: turn.error?.message ?? null
+        })
+        if (turn.error?.message) {
+          appendAgentMessageOnce(session.key, {
+            id: `error-${turn.id}`,
+            role: 'assistant',
+            text: `⚠ ${turn.error.message}`
+          })
+        }
+        if (turn.status === 'failed') recovery.schedule(session.key, turn.id, turn.error)
+        else recovery.cancel(session.key)
+        return
+      }
+      case 'item/agentMessage/delta':
+        enqueueAgentDelta(session.key, notification.params.itemId, notification.params.delta)
+        return
+      case 'item/completed': {
+        const item = notification.params.item
+        if (item.type === 'contextCompaction') {
+          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: false }))
+        } else if (item.type === 'agentMessage') {
+          updateAgentSessions((sessions) => completeAgentMessage(sessions, session.key, item.id, item.text))
+        }
+        return
+      }
+      case 'item/started':
+        if (notification.params.item.type === 'contextCompaction') {
+          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: true }))
+        }
+        return
+      case 'thread/tokenUsage/updated':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          contextUsage: notification.params.tokenUsage
+        }))
+        return
+      case 'error': {
+        const { turnId, error, willRetry } = notification.params
+        if (willRetry) return
+        appendAgentMessageOnce(session.key, {
+          id: `error-${turnId}`,
+          role: 'assistant',
+          text: `⚠ ${error.message}`
+        })
+        patchAgentSession(session.key, (current) =>
+          current.turnId === turnId ? { ...current, status: 'done', turnId: null } : current
+        )
+        recovery.schedule(session.key, turnId, error)
+        return
+      }
+      default:
+        return
+    }
+  }
+
   function handleNewAgent(): void {
     const key = crypto.randomUUID()
     updateAgentSessions((sessions) => [
@@ -135,7 +222,6 @@ export function useAgentSessions(storageKey: string): {
     setOpenAgentKeys,
     setSelectedAgentKey,
     agentSessionsRef,
-    agentDeltaBufferRef,
     agentStartQueueRef,
     agentCounterRef,
     agentDockRestoredRef,
@@ -144,8 +230,7 @@ export function useAgentSessions(storageKey: string): {
     appendAgentMessage,
     appendAgentMessageOnce,
     backgroundSessionForThread,
-    flushAgentDeltas,
-    enqueueAgentDelta,
+    handleAgentNotification,
     handleNewAgent,
     handleOpenAgent,
     handleMinimizeAgent,

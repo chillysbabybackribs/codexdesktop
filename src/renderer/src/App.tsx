@@ -70,7 +70,6 @@ import {
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
 import {
-  completeAgentMessage,
   parseAgentDock,
   stripMainChatContext
 } from './agent-session-model'
@@ -165,7 +164,6 @@ export default function App(): React.JSX.Element {
     setOpenAgentKeys,
     setSelectedAgentKey,
     agentSessionsRef,
-    agentDeltaBufferRef,
     agentStartQueueRef,
     agentCounterRef,
     agentDockRestoredRef,
@@ -174,14 +172,16 @@ export default function App(): React.JSX.Element {
     appendAgentMessage,
     appendAgentMessageOnce,
     backgroundSessionForThread,
-    flushAgentDeltas,
-    enqueueAgentDelta,
+    handleAgentNotification,
     handleNewAgent,
     handleOpenAgent,
     handleMinimizeAgent,
     handleToggleWatchAgent,
     handleSetAgentModel
-  } = useAgentSessions(agentDockStorageKey)
+  } = useAgentSessions(agentDockStorageKey, {
+    schedule: maybeScheduleAgentRecovery,
+    cancel: cancelAgentRecovery
+  })
   const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
@@ -852,98 +852,6 @@ export default function App(): React.JSX.Element {
   }
 
   // ---- Background agent sessions -------------------------------------------
-
-  // Lite reducer for threads living in the dock: track turn status and plain
-  // chat text only. The full activity pipeline stays exclusive to the focused
-  // thread.
-  function handleAgentNotification(session: AgentSession, notification: ServerNotification): void {
-    // Land any buffered deltas before an event that reads/mutates messages, so
-    // a completed item or terminal message never lands ahead of its own tokens.
-    if (notification.method !== 'item/agentMessage/delta' && agentDeltaBufferRef.current.size > 0) {
-      flushAgentDeltas()
-    }
-    switch (notification.method) {
-      case 'turn/started':
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          status: 'working',
-          turnId: notification.params.turn.id
-        }))
-        return
-      case 'turn/completed': {
-        const turn = notification.params.turn
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          status: 'done',
-          turnId: null,
-          isCompacting: false
-        }))
-        void window.api.notifications.backgroundTurn({
-          threadId: notification.params.threadId,
-          title: session.title || 'Background agent',
-          status: turn.status === 'failed' ? 'failed' : 'completed',
-          message: turn.error?.message ?? null
-        })
-        if (turn.error?.message) {
-          appendAgentMessageOnce(session.key, {
-            id: `error-${turn.id}`,
-            role: 'assistant',
-            text: `⚠ ${turn.error.message}`
-          })
-        }
-        if (turn.status === 'failed') {
-          maybeScheduleAgentRecovery(session.key, turn.id, turn.error)
-        } else {
-          // Healthy terminal turn (completed or user-interrupted) ends any
-          // recovery chain, mirroring the main chat.
-          cancelAgentRecovery(session.key)
-        }
-        return
-      }
-      case 'item/agentMessage/delta': {
-        const { itemId, delta } = notification.params
-        enqueueAgentDelta(session.key, itemId, delta)
-        return
-      }
-      case 'item/completed': {
-        const item = notification.params.item
-        if (item.type === 'contextCompaction') {
-          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: false }))
-          return
-        }
-        if (item.type !== 'agentMessage') return
-        updateAgentSessions((sessions) => completeAgentMessage(sessions, session.key, item.id, item.text))
-        return
-      }
-      case 'item/started':
-        if (notification.params.item.type === 'contextCompaction') {
-          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: true }))
-        }
-        return
-      case 'thread/tokenUsage/updated':
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          contextUsage: notification.params.tokenUsage
-        }))
-        return
-      case 'error': {
-        const { turnId, error, willRetry } = notification.params
-        if (willRetry) return
-        appendAgentMessageOnce(session.key, {
-          id: `error-${turnId}`,
-          role: 'assistant',
-          text: `⚠ ${error.message}`
-        })
-        patchAgentSession(session.key, (current) =>
-          current.turnId === turnId ? { ...current, status: 'done', turnId: null } : current
-        )
-        maybeScheduleAgentRecovery(session.key, turnId, error)
-        return
-      }
-      default:
-        return
-    }
-  }
 
   function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
     const messages: AgentLiteMessage[] = []
