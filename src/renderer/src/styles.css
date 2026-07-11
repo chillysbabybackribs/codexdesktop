@@ -1362,6 +1362,24 @@ button {
   color: #d99a94;
 }
 
+/* Keep in-task tool calls at the same comfortable reading scale as the
+   narration around them without enlarging tool rows used elsewhere. */
+.task-activity-card .tool-row {
+  font-size: 15px;
+}
+
+.task-activity-card .tool-row-detail {
+  font-size: 14px;
+}
+
+.task-activity-card .tool-row-meta {
+  font-size: 12px;
+}
+
+.task-activity-card .tool-row-sub {
+  font-size: 13px;
+}
+
 .cdp-screenshot-attachments {
   display: flex;
   flex-wrap: wrap;
