@@ -3100,24 +3100,46 @@ button {
 }
 
 .send-button {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border: 1px solid #343434;
-  border-radius: 50%;
-  background: #282828;
-  color: #cfd4d8;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  background: #101010;
+  color: #5865f2;
   cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 }
 
 .send-button:not(:disabled):hover {
-  background: #333a40;
+  background: #14161f;
+  border-color: #3a3f52;
+  color: #8b95ff;
 }
 
 .send-button:disabled {
-  color: #60666c;
+  color: #4a4d52;
   cursor: default;
+}
+
+.composer .send-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border-color: #2c2c2c;
+  background: #1c1c1c;
+}
+
+.composer .send-button:not(:disabled):hover {
+  background: #1d2029;
+  border-color: #3a3f52;
 }
 
 .split-divider {

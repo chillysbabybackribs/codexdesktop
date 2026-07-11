@@ -15,7 +15,7 @@ import {
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { AgentColumn, AgentTabStrip } from './AgentDock'
+import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
@@ -3641,7 +3641,7 @@ function Composer({
             aria-label={isTurnActive ? 'Add guidance to turn' : 'Send message'}
             disabled={isLoading || !value.trim()}
           >
-            ↑
+            <SendArrowIcon />
           </button>
         </div>
       </div>
