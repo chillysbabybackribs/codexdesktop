@@ -16,7 +16,7 @@ export type AgentSession = {
   key: string
   threadId: string | null
   title: string
-  status: 'idle' | 'working'
+  status: 'idle' | 'working' | 'done'
   turnId: string | null
   messages: AgentLiteMessage[]
   // Optional helper mode: when true, each send includes a compact digest of
@@ -45,7 +45,7 @@ export function AgentTabStrip({
           title={session.title}
           onClick={() => onFocus(session.key)}
         >
-          <span className={`agent-tab-dot ${session.status === 'working' ? 'is-working' : ''}`} />
+          <AgentStatusIcon status={session.status} />
           <span className="agent-tab-title">{session.title}</span>
         </button>
       ))}
@@ -142,7 +142,7 @@ function AgentWindow({
   return (
     <div className="agent-overlay" data-agent-key={session.key} role="dialog" aria-label={`Agent: ${session.title}`}>
       <div className="agent-overlay-header">
-        <span className={`agent-tab-dot ${working ? 'is-working' : ''}`} />
+        <AgentStatusIcon status={session.status} />
         <span className="agent-overlay-title">{session.title}</span>
         <div className="agent-overlay-actions">
           <button
@@ -248,6 +248,34 @@ function AgentWindow({
       </form>
     </div>
   )
+}
+
+function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.JSX.Element {
+  if (status === 'working') {
+    return <span className="agent-status agent-status-spinner" role="status" aria-label="Working" />
+  }
+  if (status === 'done') {
+    return (
+      <svg
+        className="agent-status agent-status-check"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        role="status"
+        aria-label="Completed"
+      >
+        <path
+          d="M4.5 12.5l5 5L19.5 7"
+          stroke="currentColor"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    )
+  }
+  return <span className="agent-status agent-status-dot" aria-hidden="true" />
 }
 
 function AgentPlusIcon(): React.JSX.Element {

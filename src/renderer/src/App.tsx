@@ -966,7 +966,7 @@ export default function App(): React.JSX.Element {
         return
       case 'turn/completed': {
         const turn = notification.params.turn
-        patchAgentSession(session.key, (current) => ({ ...current, status: 'idle', turnId: null }))
+        patchAgentSession(session.key, (current) => ({ ...current, status: 'done', turnId: null }))
         if (turn.error?.message) {
           appendAgentMessage(session.key, {
             id: `error-${turn.id}`,
@@ -1165,7 +1165,7 @@ export default function App(): React.JSX.Element {
           key: crypto.randomUUID(),
           threadId: demotedThreadId,
           title: demotedTitle,
-          status: demotedTurnId ? 'working' : 'idle',
+          status: demotedTurnId ? 'working' : demotedMessages.length ? 'done' : 'idle',
           turnId: demotedTurnId,
           messages: demotedMessages,
           watchesMain: false

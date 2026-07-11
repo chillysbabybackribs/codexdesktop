@@ -3355,27 +3355,39 @@ button {
   white-space: nowrap;
 }
 
-.agent-tab-dot {
+.agent-status {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+
+.agent-status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: #4c4f55;
 }
 
-.agent-tab-dot.is-working {
-  background: #6fb26f;
-  animation: agent-dot-pulse 1.4s ease-in-out infinite;
+.agent-status-spinner {
+  width: 10px;
+  height: 10px;
+  border: 1.6px solid #33363c;
+  border-top-color: #5865f2;
+  border-radius: 50%;
+  animation: agent-spin 0.8s linear infinite;
 }
 
-@keyframes agent-dot-pulse {
-  0%,
-  100% {
-    opacity: 1;
+@keyframes agent-spin {
+  to {
+    transform: rotate(360deg);
   }
-  50% {
-    opacity: 0.35;
-  }
+}
+
+.agent-status-check {
+  color: #5865f2;
 }
 
 .agent-new-button {
@@ -3434,8 +3446,8 @@ button {
 }
 
 .agent-watch-toggle.is-active {
-  color: #6fb26f;
-  background: #1c231c;
+  color: #5865f2;
+  background: transparent;
 }
 
 .agent-overlay-header {
