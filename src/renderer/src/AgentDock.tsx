@@ -64,6 +64,8 @@ export function AgentTabStrip({
 
 export function AgentColumn({
   sessions,
+  selectedKey,
+  onSelect,
   onMinimize,
   onCloseSession,
   onPromote,
@@ -72,6 +74,8 @@ export function AgentColumn({
   onStop
 }: {
   sessions: AgentSession[]
+  selectedKey: string | null
+  onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
@@ -135,6 +139,8 @@ export function AgentColumn({
           <AgentWindow
             key={session.key}
             session={session}
+            isSelected={session.key === selectedKey}
+            onSelect={onSelect}
             onMinimize={onMinimize}
             onCloseSession={onCloseSession}
             onPromote={onPromote}
@@ -177,6 +183,8 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
 
 function AgentWindow({
   session,
+  isSelected,
+  onSelect,
   onMinimize,
   onCloseSession,
   onPromote,
@@ -185,6 +193,8 @@ function AgentWindow({
   onStop
 }: {
   session: AgentSession
+  isSelected: boolean
+  onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
@@ -201,6 +211,12 @@ function AgentWindow({
     const node = scrollRef.current
     if (node) node.scrollTop = node.scrollHeight
   }, [session.messages, session.status])
+
+  // Selected windows come up text-ready.
+  useEffect(() => {
+    if (isSelected) textareaRef.current?.focus()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
@@ -222,11 +238,19 @@ function AgentWindow({
       if (!accepted) setValue((current) => (current ? `${text}\n${current}` : text))
     } finally {
       setIsSending(false)
+      // The composer stays text-ready: refocus once the textarea re-enables.
+      requestAnimationFrame(() => textareaRef.current?.focus())
     }
   }
 
   return (
-    <div className="agent-overlay" data-agent-key={session.key} role="dialog" aria-label={`Agent: ${session.title}`}>
+    <div
+      className={`agent-overlay ${isSelected ? 'is-selected' : ''}`}
+      data-agent-key={session.key}
+      role="dialog"
+      aria-label={`Agent: ${session.title}`}
+      onPointerDownCapture={() => onSelect(session.key)}
+    >
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
         <span className="agent-overlay-title">{session.title}</span>

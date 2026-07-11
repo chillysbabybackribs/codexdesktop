@@ -3476,12 +3476,17 @@ button {
   flex: 0 0 var(--agent-window-height);
   height: var(--agent-window-height);
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   overflow: hidden;
   border: 1px solid #232323;
   border-right: 0;
   border-radius: 12px 0 0 12px;
   background: #131313;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+}
+
+.agent-overlay.is-selected {
+  border-color: #4a4a4a;
 }
 
 .agent-overlay.is-flash {
@@ -3532,6 +3537,7 @@ button {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 10px 12px;
   display: flex;
   flex-direction: column;

@@ -264,6 +264,7 @@ export default function App(): React.JSX.Element {
   const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
   const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
+  const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
   const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
@@ -1040,6 +1041,7 @@ export default function App(): React.JSX.Element {
       }
     ])
     setOpenAgentKeys((current) => [...current, key])
+    setSelectedAgentKey(key)
   }
 
   // Tab click focuses: opens the window if closed. Scrolling/flashing to it is
@@ -1141,6 +1143,7 @@ export default function App(): React.JSX.Element {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+    setSelectedAgentKey((current) => (current === key ? null : current))
     if (session?.threadId && session.threadId !== activeThreadIdRef.current) {
       void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
     }
@@ -1174,6 +1177,7 @@ export default function App(): React.JSX.Element {
       return rest
     })
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+    setSelectedAgentKey((current) => (current === key ? null : current))
 
     setActiveTurnId(null)
     activeTurnIdRef.current = null
@@ -1966,6 +1970,8 @@ export default function App(): React.JSX.Element {
           onCompactThread={handleCompactThread}
           agentSessions={agentSessions}
           openAgentKeys={openAgentKeys}
+          selectedAgentKey={selectedAgentKey}
+          onSelectAgent={setSelectedAgentKey}
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
@@ -2044,6 +2050,8 @@ function ChatPane({
   onCompactThread,
   agentSessions,
   openAgentKeys,
+  selectedAgentKey,
+  onSelectAgent,
   onOpenAgent,
   onMinimizeAgent,
   onToggleWatchAgent,
@@ -2090,6 +2098,8 @@ function ChatPane({
   onCompactThread: () => Promise<void>
   agentSessions: AgentSession[]
   openAgentKeys: string[]
+  selectedAgentKey: string | null
+  onSelectAgent: (key: string) => void
   onOpenAgent: (key: string) => void
   onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
@@ -2176,27 +2186,36 @@ function ChatPane({
   const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
   const focusAgent = (key: string): void => {
+    onSelectAgent(key)
     onOpenAgent(key)
     // Align the window's top edge with the scroll container's top explicitly —
     // scrollIntoView(nearest) accepts partial visibility, and the overflow
-    // bars appearing mid-scroll shift the viewport. A settle pass re-corrects
-    // after the bars have toggled.
-    const align = (behavior: ScrollBehavior): void => {
+    // bars appearing mid-scroll shift the viewport. The window may not be in
+    // the DOM yet (it was just opened), so retry across frames; a settle pass
+    // re-corrects after the bars have toggled.
+    const align = (behavior: ScrollBehavior): boolean => {
       const node = document.querySelector(`[data-agent-key="${key}"]`)
       const scroller = node instanceof HTMLElement ? node.parentElement : null
-      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return
+      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return false
       const delta = node.getBoundingClientRect().top - scroller.getBoundingClientRect().top
       if (Math.abs(delta) > 4) scroller.scrollBy({ top: delta, behavior })
+      return true
     }
-    requestAnimationFrame(() => {
-      align('smooth')
+    let attempts = 0
+    const tryAlign = (): void => {
+      if (!align('smooth')) {
+        if (attempts++ < 12) requestAnimationFrame(tryAlign)
+        return
+      }
       const node = document.querySelector(`[data-agent-key="${key}"]`)
       if (node instanceof HTMLElement) {
         node.classList.add('is-flash')
         window.setTimeout(() => node.classList.remove('is-flash'), 750)
       }
       window.setTimeout(() => align('auto'), 450)
-    })
+      window.setTimeout(() => align('auto'), 900)
+    }
+    requestAnimationFrame(tryAlign)
   }
 
   return (
@@ -2271,6 +2290,8 @@ function ChatPane({
         {openAgentSessions.length ? (
           <AgentColumn
             sessions={openAgentSessions}
+            selectedKey={selectedAgentKey}
+            onSelect={onSelectAgent}
             onMinimize={onMinimizeAgent}
             onCloseSession={onCloseAgentSession}
             onPromote={onPromoteAgent}
