@@ -10,6 +10,7 @@ const taskShapingGuidance = [
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
   '- For public web research, use research_web for bounded discovery and saved page artifacts, then inspect only targeted passages from those artifacts.',
   '- Use browser_run for interactive or authenticated page state and browser_extract_page for one visible page. Do not dump full page bodies into model context.',
+  '- This conversation has its own dedicated browser tab: browser tools default to it, so parallel conversations never share page state. Pass an explicit `tab` only to work in another tab. Scripts using CODEX_BROWSER_SOCK have no per-conversation default — they must pass an explicit tab id (read `result.tabId` from a prior browser tool call, or create a tab).',
   '- A new thread may include the prior-chat-memory skill. When the opening request is ambiguous or appears to continue earlier work, use that skill before asking the user to restate context. Skip it for clearly standalone requests.',
   'Response formatting guidance:',
   '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
