@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-07-11T15:37:46.327Z",
+  "observedAt": "2026-07-11T15:38:29.383Z",
   "totalRecords": 178,
   "verified": 178,
   "exactMoney": 67,
@@ -28,6 +28,9 @@
     "stackexchange:homebrewing": 8,
     "hn_algolia_ask": 49
   },
+  "byWindow": {
+    "current": 178
+  },
   "byActor": {
     "unknown": 178
   },
@@ -52,5 +55,6 @@
     "remainingManualWork": 159
   },
   "queryCount": 27,
-  "failureCount": 1
+  "failureCount": 1,
+  "suspectedDuplicates": 0
 }
