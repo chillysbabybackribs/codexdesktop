@@ -1038,7 +1038,8 @@ export default function App(): React.JSX.Element {
         status: 'idle',
         turnId: null,
         messages: [],
-        watchesMain: false
+        watchesMain: false,
+        model: null
       }
     ])
     setOpenAgentKeys((current) => [...current, key])
@@ -1057,6 +1058,10 @@ export default function App(): React.JSX.Element {
 
   function handleToggleWatchAgent(key: string): void {
     patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
+  }
+
+  function handleSetAgentModel(key: string, model: string): void {
+    patchAgentSession(key, (session) => ({ ...session, model }))
   }
 
   // Compact digest of the focused conversation, prepended to helper-agent
@@ -1093,12 +1098,13 @@ export default function App(): React.JSX.Element {
     if (!session) return false
 
     try {
+      const agentModel = session.model ?? selectedModelRef.current
       let threadId = session.threadId
       if (!threadId) {
         agentStartQueueRef.current.push(key)
         const started = await window.api.codex.startThread({
           cwd: workspaceRef.current,
-          model: selectedModelRef.current
+          model: agentModel
         })
         threadId = started.thread.id
         agentStartQueueRef.current = agentStartQueueRef.current.filter((queued) => queued !== key)
@@ -1112,7 +1118,7 @@ export default function App(): React.JSX.Element {
         threadId,
         text: outgoingText,
         cwd: workspaceRef.current,
-        model: selectedModelRef.current
+        model: agentModel
       })
       patchAgentSession(key, (current) => ({
         ...current,
@@ -1172,7 +1178,8 @@ export default function App(): React.JSX.Element {
           status: demotedTurnId ? 'working' : demotedMessages.length ? 'done' : 'idle',
           turnId: demotedTurnId,
           messages: demotedMessages,
-          watchesMain: false
+          watchesMain: false,
+          model: selectedModel
         })
       }
       return rest
@@ -1976,6 +1983,7 @@ export default function App(): React.JSX.Element {
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
+          onSetAgentModel={handleSetAgentModel}
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
