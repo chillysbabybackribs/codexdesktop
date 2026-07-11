@@ -18,6 +18,8 @@ import type {
   CodexStartThreadParams,
   CodexSteerTurnParams,
   MemoryPersistParams,
+  OmniboxAnchor,
+  OmniboxSuggestion,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
@@ -57,6 +59,17 @@ export const api = {
     beginDividerDrag: () => ipcRenderer.invoke(ipcChannels.browserBeginDividerDrag),
     endDividerDrag: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserEndDividerDrag, bounds),
     setOverlayOpen: (open: boolean) => ipcRenderer.invoke(ipcChannels.browserSetOverlayOpen, open),
+    omniboxQuery: (text: string, anchor: OmniboxAnchor): Promise<OmniboxSuggestion[]> =>
+      ipcRenderer.invoke(ipcChannels.browserOmniboxQuery, text, anchor),
+    omniboxSelect: (index: number) => ipcRenderer.invoke(ipcChannels.browserOmniboxSelect, index),
+    omniboxClose: () => ipcRenderer.invoke(ipcChannels.browserOmniboxClose),
+    onFocusOmnibox: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.browserFocusOmnibox, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserFocusOmnibox, wrapped)
+      }
+    },
     onState: (listener: (state: BrowserState) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, state: BrowserState): void => listener(state)
       ipcRenderer.on(ipcChannels.browserState, wrapped)
