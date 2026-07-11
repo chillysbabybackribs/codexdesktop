@@ -3537,6 +3537,14 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
     return !query.trim() || haystack.includes(query.trim().toLowerCase())
   })
 
+  const pluginGroups = marketplaces.map((marketplace) => ({
+    marketplace,
+    plugins: plugins.filter((plugin) => {
+      const firstMarketplace = marketplaces.find((entry) => entry.plugins.some((candidate) => candidate.id === plugin.id))
+      return firstMarketplace === marketplace
+    })
+  })).filter((group) => group.plugins.length)
+
   const install = (plugin: PluginSummary, marketplace: PluginMarketplaceEntry | undefined): void => {
     setBusyId(plugin.id)
     void window.api.codex.installPlugin({ pluginName: plugin.name, marketplacePath: marketplace?.path ?? null, remoteMarketplaceName: marketplace?.path ? null : marketplace?.name ?? null }).then(load).finally(() => setBusyId(null))
@@ -3551,23 +3559,30 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
     <div className="plugin-browser-overlay" onPointerDown={onClose}>
       <section ref={modalRef} className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
         <header className="plugin-browser-header">
-          <div><span className="plugin-browser-eyebrow">Extend Codex Desktop</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
+          <div><span className="plugin-browser-eyebrow">Codex Desktop marketplace</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
           <button ref={closeRef} type="button" className="plugin-browser-close" aria-label="Close plugin browser" onClick={onClose}>×</button>
         </header>
-        <div className="plugin-browser-tools"><label><span aria-hidden="true">⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} plugins</span></div>
-        <div className="plugin-browser-grid">
+        <div className="plugin-browser-tools"><label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.7" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} {plugins.length === 1 ? 'plugin' : 'plugins'}</span></div>
+        <div className="plugin-browser-catalog">
           {state === 'loading' ? <div className="plugin-browser-state shimmer-text">Loading plugin catalog…</div> : null}
           {state === 'error' ? <div className="plugin-browser-state">The plugin catalog could not be loaded. <button type="button" onClick={load}>Try again</button></div> : null}
           {state === 'ready' && !plugins.length ? <div className="plugin-browser-state">No plugins match that search.</div> : null}
-          {state === 'ready' ? plugins.map((plugin) => {
-            const marketplace = marketplaces.find((entry) => entry.plugins.some((candidate) => candidate.id === plugin.id))
-            return <article className="plugin-browser-card" key={plugin.id}>
-              <div className="plugin-browser-card-top"><span className="plugin-glyph is-large"><PluginGlyph plugin={plugin} /></span><span className="plugin-source">{marketplace?.interface?.displayName || marketplace?.name || 'Plugin'}</span></div>
-              <div className="plugin-browser-card-copy"><h3>{plugin.interface?.displayName || plugin.name}</h3><p>{plugin.interface?.shortDescription || plugin.interface?.longDescription || 'Adds focused capabilities to Codex Desktop.'}</p></div>
-              <div className="plugin-capabilities">{(plugin.interface?.capabilities || plugin.keywords).slice(0, 3).map((capability) => <span key={capability}>{capability}</span>)}</div>
-              <button type="button" className={`plugin-install-button ${plugin.installed ? 'is-installed' : ''}`} disabled={busyId === plugin.id || plugin.availability !== 'AVAILABLE'} onClick={() => plugin.installed ? uninstall(plugin) : install(plugin, marketplace)}>{busyId === plugin.id ? 'Working…' : plugin.installed ? 'Installed · Remove' : plugin.availability === 'AVAILABLE' ? 'Install' : 'Unavailable'}</button>
-            </article>
-          }) : null}
+          {state === 'ready' ? pluginGroups.map(({ marketplace, plugins: marketplacePlugins }) => (
+            <section className="plugin-browser-group" key={marketplace.name}>
+              <h3>{marketplace.interface?.displayName || marketplace.name || 'Plugins'}</h3>
+              <div className="plugin-browser-grid">
+                {marketplacePlugins.map((plugin) => {
+                  const name = plugin.interface?.displayName || plugin.name
+                  const action = busyId === plugin.id ? 'Working…' : plugin.installed ? 'Remove' : plugin.availability === 'AVAILABLE' ? 'Get' : 'Unavailable'
+                  return <article className="plugin-browser-card" key={plugin.id}>
+                    <span className="plugin-glyph is-large"><PluginGlyph plugin={plugin} /></span>
+                    <div className="plugin-browser-card-copy"><h4>{name}</h4><p>{plugin.interface?.shortDescription || plugin.interface?.longDescription || 'Adds focused capabilities to Codex Desktop.'}</p></div>
+                    <button type="button" className={`plugin-install-button ${plugin.installed ? 'is-installed' : ''}`} aria-label={`${action} ${name}`} disabled={busyId === plugin.id || plugin.availability !== 'AVAILABLE'} onClick={() => plugin.installed ? uninstall(plugin) : install(plugin, marketplace)}>{action}</button>
+                  </article>
+                })}
+              </div>
+            </section>
+          )) : null}
         </div>
       </section>
     </div>
