@@ -204,6 +204,13 @@ function createWindow(): void {
     void restoreBrowserTabs()
   })
 
+  // The omnibox dropdown is a native view anchored to the toolbar. Renderer
+  // input onBlur can't catch OS window deactivation (the input stays
+  // document.activeElement), so dismiss it here when the window loses focus.
+  mainWindow.on('blur', () => {
+    omniboxPopup?.hide()
+  })
+
   mainWindow.on('closed', () => {
     omniboxPopup?.dispose()
     omniboxPopup = null
