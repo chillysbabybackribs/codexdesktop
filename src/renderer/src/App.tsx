@@ -875,6 +875,104 @@ export default function App(): React.JSX.Element {
     return watched !== null && incomingThreadId === watched
   }
 
+  function cancelAutoRecovery(): void {
+    const state = autoRecoveryRef.current
+    if (state?.timer !== null && state?.timer !== undefined) {
+      window.clearTimeout(state.timer)
+    }
+    autoRecoveryRef.current = null
+  }
+
+  function currentModelSlug(): string | null {
+    return (
+      selectedModelRef.current ??
+      modelsRef.current.find((model) => model.isDefault)?.model ??
+      null
+    )
+  }
+
+  // Next visible catalog entry after the current model, wrapping around. Falls
+  // back to the current model when the catalog has nothing else to offer.
+  function pickFallbackModel(currentModel: string | null): string | null {
+    const catalog = modelsRef.current.filter((model) => !model.hidden)
+    if (!catalog.length) return currentModel
+    const index = catalog.findIndex((model) => model.model === currentModel)
+    const next = catalog[(index + 1) % catalog.length]
+    return next.model === currentModel ? currentModel : next.model
+  }
+
+  function maybeScheduleAutoRecovery(threadId: string, turnId: string, error: TurnError | null): void {
+    if (!error || !isRecoverableTurnError(error.codexErrorInfo)) return
+
+    const existing = autoRecoveryRef.current?.threadId === threadId ? autoRecoveryRef.current : null
+    if (existing?.handledTurnIds.has(turnId)) return
+
+    const state: AutoRecoveryState = existing ?? {
+      threadId,
+      attempts: 0,
+      handledTurnIds: new Set<string>(),
+      timer: null
+    }
+    state.handledTurnIds.add(turnId)
+    autoRecoveryRef.current = state
+
+    if (state.attempts >= maxAutoRecoveryAttempts) {
+      // Keep the state so the duplicate failure event for this turn stays
+      // deduped; a user send or a completed turn resets it.
+      addSystemItem(
+        `Auto-recovery stopped after ${maxAutoRecoveryAttempts} attempts. Send a message to continue the task.`,
+        'error'
+      )
+      return
+    }
+
+    state.attempts += 1
+    const currentModel = currentModelSlug()
+    // First retry stays on the picked model (overload is often transient);
+    // later attempts walk the catalog.
+    const nextModel = state.attempts === 1 ? currentModel : pickFallbackModel(currentModel)
+    const switching = nextModel !== null && nextModel !== currentModel
+    const delaySeconds = Math.round(autoRecoveryDelayMs / 1000)
+    addSystemItem(
+      switching
+        ? `${currentModel ?? 'The model'} is under heavy load — continuing on ${nextModel} in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
+        : `The model is under heavy load — retrying in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`,
+      'warning'
+    )
+    state.timer = window.setTimeout(() => {
+      state.timer = null
+      void runAutoRecovery(threadId, nextModel)
+    }, autoRecoveryDelayMs)
+  }
+
+  async function runAutoRecovery(threadId: string, model: string | null): Promise<void> {
+    // Bail silently if the recovery was cancelled or the user took over
+    // (sent a message, started a turn, or switched threads) while waiting.
+    if (autoRecoveryRef.current?.threadId !== threadId) return
+    if (activeTurnIdRef.current || userTurnRequestPendingRef.current) return
+    if (activeThreadIdRef.current !== threadId) return
+
+    if (model && model !== selectedModelRef.current) {
+      selectedModelRef.current = model
+      setSelectedModel(model)
+      window.localStorage.setItem(modelStorageKey, model)
+    }
+
+    try {
+      // Turn bookkeeping (active turn id, telemetry, items) happens in the
+      // `turn/started` notification handler, same as goal-continuation turns.
+      await window.api.codex.sendMessage({
+        threadId,
+        text: autoRecoveryPrompt,
+        cwd: workspaceRef.current,
+        model
+      })
+    } catch (error) {
+      addSystemItem(`Auto-recovery could not restart the turn: ${(error as Error).message}`, 'error')
+      cancelAutoRecovery()
+    }
+  }
+
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
 
@@ -961,6 +1059,13 @@ export default function App(): React.JSX.Element {
           })
           if (activeTurnIdRef.current === turn.id) activeTurnIdRef.current = null
           setActiveTurnId((current) => (current === turn.id ? null : current))
+          if (turn.status === 'failed') {
+            maybeScheduleAutoRecovery(notification.params.threadId, turn.id, turn.error)
+          } else {
+            // The thread produced a healthy terminal turn (completed, or the
+            // user interrupted), so any recovery chain is over.
+            cancelAutoRecovery()
+          }
         }
         void refreshThreads()
         return
