@@ -3082,10 +3082,8 @@ function ContextPill({
   )
 }
 
-// Composer pill that shows the model turns run on and opens an upward popover
-// listing the full `model/list` catalog. Picks persist across restarts and are
-// sent as a per-turn override; before the first pick, turns follow the
-// CLI-configured default (the entry Codex marks `isDefault`).
+// Thread-scoped goal controls live in settings so the composer remains focused
+// on composing, while preserving the app-server goal lifecycle and usage data.
 function GoalSettings({
   goal,
   disabled,
@@ -3172,7 +3170,6 @@ function GoalSettings({
                 <button type="button" className="goal-clear" disabled={disabled} onClick={() => void onClear()}>Clear</button>
               ) : null}
             </div>
-          </form>
       </form>
     </div>
   )

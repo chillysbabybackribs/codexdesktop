@@ -2855,21 +2855,6 @@ button {
   margin-left: 2px;
 }
 
-.goal-control {
-  position: relative;
-  display: inline-flex;
-  min-width: 0;
-  margin-left: 2px;
-}
-
-.goal-pill {
-  max-width: 150px;
-}
-
-.goal-control.has-goal .goal-pill {
-  color: #c9d7c5;
-}
-
 .goal-status-dot {
   width: 6px;
   height: 6px;
@@ -2897,34 +2882,47 @@ button {
   background: #6e9db8;
 }
 
-.goal-menu {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 0;
-  z-index: 31;
-  width: min(340px, calc(100vw - 40px));
-  padding: 12px;
-  border: 1px solid rgb(255 255 255 / 9%);
-  border-radius: 8px;
-  background: rgb(30 30 32 / 98%);
-  box-shadow: 0 18px 48px -16px rgb(0 0 0 / 60%);
-  backdrop-filter: blur(22px) saturate(150%);
-  animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+.goal-settings {
+  display: grid;
+  gap: 14px;
 }
 
-.goal-menu form {
+.goal-settings-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.goal-settings-label {
+  margin: 0;
+  color: #aeb4b9;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.goal-settings-status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  color: #c9d7c5;
+  font-size: 12px;
+}
+
+.goal-settings form {
   display: grid;
   gap: 7px;
 }
 
-.goal-menu label {
+.goal-settings label {
   color: #aeb4b9;
   font-size: 12px;
   font-weight: 600;
 }
 
-.goal-menu textarea,
-.goal-menu input {
+.goal-settings textarea,
+.goal-settings input {
   width: 100%;
   border: 1px solid #3a3a3c;
   border-radius: 6px;
@@ -2934,26 +2932,26 @@ button {
   font: inherit;
 }
 
-.goal-menu textarea {
+.goal-settings textarea {
   min-height: 82px;
   padding: 9px 10px;
   resize: vertical;
   line-height: 1.4;
 }
 
-.goal-menu input {
+.goal-settings input {
   height: 34px;
   padding: 0 10px;
 }
 
-.goal-menu textarea:focus,
-.goal-menu input:focus {
+.goal-settings textarea:focus,
+.goal-settings input:focus {
   border-color: #6684b8;
   box-shadow: 0 0 0 2px rgb(102 132 184 / 14%);
 }
 
-.goal-menu textarea:disabled,
-.goal-menu input:disabled {
+.goal-settings textarea:disabled,
+.goal-settings input:disabled {
   opacity: 0.62;
 }
 
