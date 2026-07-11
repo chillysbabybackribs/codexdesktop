@@ -1,0 +1,161 @@
+Learning Center
+
+For most of the last decade, APIs were treated as plumbing — internal interfaces
+
+that connected services and quietly powered the apps your customers actually
+
+paid for. That framing is breaking down. In 2026, the fastest-growing companies
+
+treat their APIs as products in their own right: things you discover, sign up
+
+for, pay for, and build a business on top of.
+
+The market data backs this up. According to
+
+Fortune Business Insights,
+
+the global API management market is projected to grow from $8.77 billion in
+
+2026 to $37.43 billion by 2034, a 21.7% compound annual growth rate. A large
+
+share of that growth comes from organizations that have stopped treating APIs as
+
+cost centers and started treating them as profit centers.
+
+This guide breaks down what “API-as-a-Product” actually means, the five pillars
+
+that turn an endpoint into a product, and a concrete path from “internal API” to
+
+“revenue-generating product.” If you want the organizational and team side of
+
+this shift, pair this with our
+
+API product management guide.
+
+- The API-as-a-Product Shift: Why 2026 Is the Inflection Point
+
+- The Five Pillars of an API Product
+
+- Building Your API Storefront: Developer Portal Best Practices
+
+- Self-Service API Keys as a Product Feature
+
+- Usage-Based Pricing and Tiered Plans
+
+- Measuring API Product Success
+
+- From Internal API to Revenue-Generating Product
+
+- Build Your API Product on Zuplo
+
+## The API-as-a-Product Shift: Why 2026 Is the Inflection Point
+
+The “API as a product” idea isn’t new — companies like Stripe and Twilio have
+
+sold APIs as their core product for years. What’s new in 2026 is that the
+
+tooling and the organizational patterns have matured enough that any team can do
+
+it without assembling a dozen separate systems.
+
+Three shifts are converging:
+
+- Pricing has moved from flat-rate to usage-based. Tiered access and
+
+metered, pay-as-you-go billing are replacing the old “one price, unlimited
+
+calls” model, because they align what customers pay with the value they
+
+actually consume.
+
+- Developer portals have become storefronts. A portal used to be a
+
+documentation site. Now it’s where prospects discover your API, read the docs,
+
+generate a key, and self-serve their way to a paid plan — without ever talking
+
+to sales.
+
+- API key management became a product feature, not a security afterthought.
+
+How quickly a developer can get a working key, and how easily they can rotate
+
+or scope it, is now part of the onboarding experience you’re selling.
+
+The organizational signal is just as telling: leading companies now staff
+
+dedicated API product managers who own the API’s lifecycle, pricing, and
+
+developer ecosystem — the same way a traditional PM owns a SaaS product.
+
+## The Five Pillars of an API Product
+
+An internal API becomes a product when it has all five of these working
+
+together. Miss one and you have a leaky funnel — great docs but no way to pay,
+
+or great billing but a painful signup.
+
+### 1. A storefront (developer portal)
+
+Somewhere for developers to discover the API, read accurate docs, and try
+
+requests before committing. This is the top of your funnel.
+
+### 2. Frictionless access (self-service keys)
+
+A way for a developer to get a working credential in seconds, without a support
+
+ticket. Self-service key issuance is the difference between “I’ll try it now”
+
+and “I’ll come back later” (you won’t).
+
+### 3. A revenue engine (monetization)
+
+Plans, metering, and billing so usage turns into revenue automatically. If a
+
+human has to generate an invoice, you don’t have a product — you have a project.
+
+### 4. A contract (OpenAPI as source of truth)
+
+A machine-readable definition of the API that drives routing, validation, docs,
+
+and SDKs. When the contract is the source of truth, your storefront can never
+
+drift out of sync with the actual API.
+
+### 5. A lifecycle (dev → staging → production)
+
+A repeatable, version-controlled way to ship changes across environments without
+
+breaking your customers. Products evolve; the lifecycle is how they evolve
+
+safely.
+
+The rest of this guide walks through the four pillars that most teams
+
+underinvest in — portal, keys, monetization, and lifecycle — with the OpenAPI
+
+contract threaded throughout.
+
+## Building Your API Storefront: Developer Portal Best Practices
+
+Your developer portal is the storefront. It’s where a prospect forms their first
+
+impression, and where self-serve revenue either happens or stalls.
+
+Generate docs from your API contract, not by hand. Hand-written docs drift
+
+the moment an engineer ships a change. The fix is to make your OpenAPI
+
+specification the single source of truth and generate the portal from it. With
+
+Zuplo’s developer portal, the same OpenAPI file
+
+that powers the gateway also powers the portal — every new endpoint, schema
+
+change, and parameter update appears in the docs the moment the gateway ships.
+
+The portal is built on the open-source Zudoku framework,
+
+and Zuplo manages the build, deploy, and hosting for

@@ -1,0 +1,307 @@
+# Connect Business App and Builder Prime to power AI-driven automation
+
+- No-code AI automation
+
+- Full audit trails and controls
+
+- SOC 2 and GDPR compliant
+
+- Easy visual workflow builder
+
+- 9,000+ apps, 450+ AI tools
+
+- Free tier available
+
+Choose a Trigger
+
+Choose an Action
+
+Get started free
+
+Integrate for free
+
+Start with Google for free
+
+### Top companies trust Zapier to automate work that solves their unique business problems—no coding required.
+
+## How Zapier works
+
+Zapier makes it easy to integrate Business App with Builder Prime - no code necessary. See how you can get setup in minutes.
+
+100%Help
+
+Business AppBusiness App
+
+1. Choose trigger event
+
+Builder PrimeBuilder Prime
+
+2. Choose action
+
+1. Select the event
+
+Setup
+
+Test
+
+App
+
+Business App
+
+Trigger event
+
+Choose a trigger event
+
+### Choose a trigger
+
+A trigger is the event that starts your Zap—like a "Setup Business App as Trigger" from Business App.
+
+### Add your action
+
+An action happens after the trigger—such as "Create Client Record" in Builder Prime.
+
+### You’re connected!
+
+Zapier seamlessly connects Business App and Builder Prime, automating your workflow.
+
+## Supported triggers and actions
+
+Zapier helps you create workflows that connect your apps to automate repetitive tasks. A trigger is an event that starts a workflow, and an action is an event a Zap performs.
+
+triggers, actions, or triggers and actions
+
+- - Note for Business App as Trigger
+
+Trigger
+
+Polling
+
+Try It
+
+- - Automation ID
+
+Required
+
+Action
+
+Write
+
+- - Create or update note
+
+- External ID
+
+- Email
+
+- Phone Number
+
+- First Name
+
+- Last Name
+
+- Job Title
+
+- Additional Fields
+
+- Search note
+
+- Additional Search Fields
+
+- upsert_note
+
+- Overwrite Existing Data
+
+- Associate a Company
+
+- Company ID for Association (Optional)
+
+- Return note
+
+- Return Fields
+
+Action
+
+Write
+
+- - Company or Contact IDs
+
+Required
+
+- Choose activity type
+
+Required
+
+- Check for existing activity based on an external identifier
+
+- Add team members
+
+- Add tags
+
+Action
+
+Write
+
+- - Create or update note
+
+- External ID
+
+- Platform account group ID
+
+- Company name
+
+- Street address line 1
+
+- Street address line 2
+
+- City/locality
+
+- State/province/region
+
+- Country
+
+- Zip/postal code
+
+- Additional Fields
+
+- Search note
+
+- Additional Search Fields
+
+- upsert_note
+
+- Overwrite Existing Data
+
+- Associate a Contact
+
+- Contact IDs for Association (Optional)
+
+- Return note
+
+- Return Fields
+
+Action
+
+Write
+
+- - First Name
+
+- Last Name
+
+- Email Address
+
+- Company Name
+
+- Lead Status
+
+Required
+
+- Lead Source
+
+- Interested In
+
+- Class
+
+- Mobile Phone
+
+- Home Phone
+
+- Work Phone
+
+- Address Line 1
+
+- Address Line 2
+
+- City
+
+- State
+
+- Zip / Postal Code
+
+- Best Time to Contact
+
+- Preferred Contact Method
+
+- External System Identifier
+
+- Building Type
+
+- Notes
+
+Action
+
+Write
+
+For AI agents & developers
+
+## Use Business App and Builder Prime with AI agents and code
+
+Beyond Zap workflows. Call Business App and Builder Prime actions directly from your AI client or your codebase, using the same 9,000+ app integrations Zapier already runs.
+
+No code
+
+### Connect via Zapier MCP
+
+Expose Business App and Builder Prime actions as tools in any MCP client. Authenticate once, then call them in natural language.
+
+Example actions on this page
+
+- Create or Update CRM Activity
+
+- Create Client Record
+
+Works with
+
+Claude · ChatGPT · Cursor · any MCP-compatible client
+
+Connect Zapier MCP
+
+Typescript
+
+### Call from code with the Zapier SDK
+
+Trigger Business App and Builder Prime actions from backend services, scripts, or agent code.
+
+Install
+
+# TypeScript / Node
+
+npm install @zapier/zapier-sdk
+
+Run an action
+
+import { createZapierSdk } from '@zapier/zapier-sdk';
+
+const zapier = createZapierSdk();
+
+await zapier.runAction({ /* business-app / builder-prime action */ });
+
+Run the SDK docs
+
+There is no Python package yet. SDK is TypeScript-only (@zapier/zapier-sdk). The MCP server URL is personal to your account; get it at zapier.com/mcp.
+
+## Zapier is the automation platform of choice for 87% of Forbes Cloud 100 companies in 2023
+
+93%
+
+Customers who say using Zapier has made them better at their job
+
+25m
+
+Customers have created over 25 million Zaps on the platform
+
+6 mins
+
+The average user takes less than 6 minutes to set up a Zap
+
+## Connect Business App and Builder Prime to integrate crucial parts of your business
+
+With Zapier, you can integrate everything from basic data entry to end-to-end processes. Here are some of the business-critical workflows that people automate with Zapier.
+
+Integration categories
+
+## Automate your lead management and improve conversions
+
+With Zapier, you can automate every part of your lead funnel and give yourself the best chance at converting leads. Automate everything from lead capture to outreach to reporting—and close more deals as a result.
+
+## Create more impactful campaigns with automation
+
+Measuring campaign performance across platforms can get chaotic. Plus, digging up the right metrics costs you precious

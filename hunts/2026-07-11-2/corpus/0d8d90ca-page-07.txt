@@ -1,0 +1,131 @@
+- Features
+
+- Highlights
+
+- What customers say
+
+- How Carbonfact works
+
+- Pricing
+
+- DPP Resources
+
+##### Product-level impact data
+
+Carbonfact automates life cycle assessments across your entire catalogue to create LCA-based DPPs.
+
+##### 16 PEF indicators and Eco-Score
+
+Show all 16 environmental indicators and optionally display the French Eco-Score in your DPP.
+
+##### Brand-level customization
+
+Customize the look and feel of your DPP to match each of your brands' identities.
+
+##### Factory-level product journey
+
+Automatically maps the entire product journey across countries and the factories within, ensuring accurate emission traceability.
+
+##### Care Guide
+
+Upload a care guide to provide all the information your buyers need.
+
+##### Product-level impact data
+
+Carbonfact automates life cycle assessments across your entire catalogue to create LCA-based DPPs.
+
+Providing DPP Data for 200+ brands
+
+Case study
+
+"Shoes can consist of up to 1500 components. Before Carbonfact, we asked our developers to weigh every single piece but such a manual approach is not scalable. Carbonfact helped us in deriving rules to overcome data gaps by creating accurate assumptions."
+
+Philipp Engels
+
+Product Sustainability Lead at On
+
+Case study
+
+"With Carbonfact we can do full product LCAs on all of our products. Thanks to measuring things early on, we can simulate how a new product is going to have a different impact compared to the current version. For example, one of our new products is expected to decrease its footprint by a fourth just by designing it differently."
+
+Jessica Genta
+
+Strategy & Sustainability at La Sportiva
+
+Case study
+
+"We needed a solution that could handle the complexities of the apparel supply chain, provide year-to-date insights, and support with detailed scenario analyses for our supply chain. For us Carbonfact is not just a Carbon Management Software, but an extension of our sustainability team."
+
+Florence Degoy Vacher
+
+Secrétaire Générale at A.P.C.
+
+## DPPs, built on solid data
+
+Create consumer-facing Digital Product Passports based on product LCAs
+
+##### Build an audit-ready data foundation
+
+We run product LCAs across your entire catalogue to build a science-based data foundation — so you can publish DPPs with confidence.
+
+##### Publish consumer-facing DPPs from your LCAs
+
+Automatically turn your Carbonfact LCA data into ready-to-publish, beautiful Digital Product Passports.
+
+##### Go live fast with auto-generated pages and QR codes
+
+Carbonfact automatically creates QR codes and links for thousands of products, ready to share with your label provider.
+
+##### Deploy flexibly: host, embed, or export
+
+Control where and how your DPP data is hosted – your website, our servers or an external tool integrated with Carbonfact’s LCA data.
+
+## What Our Customers Say
+
+“Together with Carbonfact, we started the Digital Product Passport journey and co-developed ambitious features that enables Fusion to share product-level environmental information with our customers, which will also be a part of the upcoming European Union regulatory requirements. The best part is that Carbonfact is a great tool and we use it for carbon accounting, environmental reporting, and product LCAs. All in one place.”
+
+Troels Vest Jensen
+
+CCO at Fusion Sportswear System
+
+## Security and Compliance
+
+Built to meet the highest standards — so you’re always audit-ready.
+
+##### ISO 14040-44
+
+Methodology independently reviewed by PwC.
+
+##### EU PEFCR
+
+Meets EU standards for product-level disclosure.
+
+##### SOC 2 certified
+
+Enterprise data security, availability & confidentiality.
+
+##### French Eco-Score
+
+Calculates French environmental costs.
+
+### How Carbonfact Works
+
+Retrieve and Clean Data
+
+We’ll ingest all your existing product and supply chain data. Whether it lives in a PLM, ERP, Excel Sheet or a combination thereof, we’ll consolidate and clean it. We’ll do all the heavy lifting too – we can build a custom connector that integrates with your existing systems, automating future data import and creating a live connection to Carbonfact.
+
+Enrich and Fill Data Gaps
+
+Incomplete data? Not a problem – we’ll find and fill any data gaps. Our smart data engine - trained on extensive primary datasets - automatically fills in missing details such as component weights, dtex, and process-level steps.
+
+First Life Cycle Assessments
+
+Once your data is processed, our LCA engine automatically calculates the footprints for each of your products on an SKU level. Directly view the product footprint or break it down by any of the 16 PEFCR indicators.
+
+Improve Data Quality
+
+Carbonfact helps you identify emission hotspots and smartly prioritize your supplier data collection. By providing you with a concrete list of data points to gather from your suppliers, we save your team weeks of time and effort.
+
+Publish DPPs
+
+Publish your Digital Product Passports with a few clicks, directly embed them into your website, or create QR codes and share them directly with your label

@@ -1,0 +1,75 @@
+# Ecommerce Sales Tax 101: An Online Seller’s Guide to 2026
+
+As your business grows and gains customers in multiple states (and countries), it also takes on new responsibilities related to complying with the tax laws where those customers are located, even if your business has no physical presence there.
+
+Lizzie Davey
+
+Reviewed by
+
+Nate Matherson
+
+Published:
+
+June 25, 2026
+
+Compliance can be complicated because sales tax rates and laws vary by state (and country). What’s more, different cities or counties within a state may even have different rates and requirements. There’s a lot to keep track of, and there are many potential pitfalls.
+
+The penalties for mishandling sales tax can be steep, financially, legally, and reputationally. So, implementing a robust, reliable tax management strategy is vital.
+
+## How does e-commerce sales tax work?
+
+Understanding a few basic principles will help you avoid falling foul of sales tax rules and regulations.
+
+At a high level, these are the things that you need to get right:- Tracking “nexus” — that is, understanding where you need to collect sales tax.- Correctly classifying your products.- Registering for sales tax permits where necessary.- Collecting the right tax amounts.- Filing documents and remitting tax amounts on time.
+
+### Nexus and the 2018 South Dakota v. Wayfair, Inc. case
+
+An e-commerce business is said to have nexus in a state when it has established a presence there that creates an obligation to collect sales tax. There are two types of nexus: physical and economic. Nexus thresholds vary from state to state, so figuring out where you have nexus isn’t always straightforward.
+
+Physical nexus is simply a physical presence in a state. Having a store, an office, inventory, or employees or representatives in a state will likely establish physical nexus there.Physical nexus used to be the only type of nexus that businesses had to keep track of. But in 2018, the Supreme Court’s ruling inSouth Dakota v. Wayfair, Inc. allowed states to start setting economic thresholds for nexus — typically, a total amount in annual sales and/or a number of transactions in a year.
+
+This gives states more flexibility in how they define nexus, and it means that online sellers must pay attention to where their sales are happening and when they hit economic thresholds in the states where they do business.
+
+Complicating matters, these thresholds vary from state to state. For instance, in Nevada, the threshold for total sales is $100,000. Next door in California, it’s $500,000. In Arkansas, you establish economic nexus when you have 200 separate transactions there in a calendar year. In New York, there is a revenue and transaction threshold.
+
+Let us worry about sales tax.
+
+The fastest, easiest way to stay compliant with US sales tax and global VAT.
+
+Get started
+
+No credit card required.
+
+### Understanding sales tax rates and registering for permits
+
+Sales tax rates vary from state to state — and in many states, local jurisdictions also set their own sales tax rates. This means you might need to collect a base state tax andan additional county- or city-level tax on a sale, depending on where a buyer lives.
+
+For instance, Texas has a statewide sales tax rate of 6.25%, but some cities and counties add their own taxes on top, meaning the total rate for a sale in Texas could be as high as 8.25%.
+
+Once you know the amounts you need to collect, you must register for sales tax permits in every state where you have nexus.
+
+Registering usually requires submitting an application to a state’s Department of Revenue. After you’re registered, you need to start filing returns immediately — reporting and paying the sales tax you’ve collected.
+
+Filing frequency varies by state and usually depends on sales volume; it could be monthly, quarterly, or annually.
+
+## The importance of getting it right
+
+Not collecting or remitting sales tax in states where you have nexus can have serious consequences.
+
+If you fail to collect sales tax on eligible sales, a state can not only require you to pay what you should have collected, but also tack on interest fees and penalties for underpayment.
+
+Noncompliance might also lead to a costly, time-consuming audit by tax authorities.
+
+## 7 best practices for handling sales tax
+
+Keeping track of where you have nexus is probably the most complicated part of the process. Once you’ve done that, you can determine how much sales tax you need to collect in each location and when you need to file.
+
+Here are some tips for keeping it simple:
+
+### 1. Determine where you have nexus
+
+Start by reviewing each state’s nexus criteria and identifying the states where they apply to you. Each state sets its own thresholds, so check whether you meet them, based on factors like sales volume or transaction count.
+
+Another important aspect to consider is sourcing—whether sales are taxed based on your location (origin-sourced) or the customer’s location (destination-sourced).
+
+Origin-based sourcing is

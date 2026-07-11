@@ -1,0 +1,113 @@
+Skip to main contentLive policy intelligence
+
+# Platform Policy Tracker 2026Your team should know first.
+
+Right now, a platform is updating a policy that will silently flag accounts, take down content, or shift what's allowed in regulated markets. The EU's official DSA database logs roughly a billion moderation actions a month across the major platforms — and most operators only find out after enforcement has already hit their accounts. Don't be one of them.
+
+Recent Policy Changes
+
+## Latest Platform Updates.
+
+Verified policy changes across Meta, TikTok, Google Ads, LinkedIn, YouTube, X, and Snapchat — with real dates and real impact.
+
+Last updated July 10, 2026
+
+Why This Matters
+
+## Policy Changes Don't Wait. Neither Should You.
+
+The EU DSA Transparency Database logs roughly 1 billion moderation actionsper month across the major platforms — Meta's Facebook and Instagram alone account for hundreds of millions of them. Each one represents a content takedown, account flag, or visibility restriction.
+
+Most teams see a category spike only after their accounts are caught in it. The Policy Tracker surfaces the rule change that explains the spike — before it reaches you.
+
+~1B
+
+EU moderation actions / month (DSA)
+
+VLOPs tracked daily
+
+Violation categories mapped
+
+EU member states covered
+
+Source: EU DSA Transparency Database (CC BY 4.0). See the live feed at /enforcement.
+
+The full picture
+
+## Policy changes are the spine. Enforcement and early signals are the leading indicators.
+
+A rule change rarely arrives alone. A regulator often moves first, and enforcement can spike before the policy that explains it. Your dashboard connects all three streams and ranks them for your industry — so you see the whole story, not just one line of it.
+
+### Policy changes
+
+The official policy pages across 8 platforms — advertising, content, and account rules — version-controlled and severity-scored the moment they change. That's this page.
+
+### Enforcement spikes
+
+Live moderation volume from the EU DSA Transparency Database — roughly a billion decisions a month. When a category jumps week-over-week, you see it before the rule change that explains it.
+
+See the live feed### Early signals
+
+Moves from 25+ regulators across the US, EU, UK and Australia — surfaced as leading indicators, each with our read on what it may mean for the platforms you track.
+
+See early signals
+
+See it personalized in your dashboard — free
+
+## How It Works.
+
+From policy change to your inbox — a compliance workflow built for speed and accuracy.
+
+### Detect
+
+Official policy documentation across all 8 platforms is continuously monitored. Every revision — from wording updates to entirely new sections — is captured the moment it goes live.
+
+Version-controlled policy archive
+
+Change detection on every revision
+
+Full historical comparison
+
+### Classify
+
+Each change is reviewed by our compliance team — scored by severity, mapped to affected industries and regions, and corroborated against EU DSA enforcement data and early regulator signals from 25 official sources.
+
+Severity: Critical / High / Medium
+
+Industry & region impact mapping
+
+Corroborated with DSA enforcement + 25 regulator signals
+
+### Deliver
+
+Subscribers receive structured, actionable updates — Free members get a weekly digest, Pro members are notified as soon as a relevant change is confirmed.
+
+Free: weekly digest every Monday
+
+Pro: priority alerts on detection
+
+Industry-relevant changes highlighted
+
+Industry-Specific Impact
+
+## Policy Changes Hit Different Industries Differently.
+
+A healthcare policy update that doesn't affect e-commerce could shut down your entire pharma campaign overnight. Understanding sector-specific impact is critical.
+
+### Healthcare & Pharma
+
+Platform policy shifts on health claims, supplement advertising, and medical certification requirements directly impact ad approval rates.
+
+Compliance note:Healthcare and supplement advertising on major platforms is tightly restricted — dangerous ingredients, disease claims, and prohibited substances are common grounds for disapproval, and certain regulated healthcare categories require third-party certification before ads can run.
+
+View Industry Guide### Financial Services
+
+Crypto, lending, and insurance ad policies change frequently. Missing a single update can result in campaign-wide suspensions.
+
+Compliance note:TikTok restricts financial-services advertising and applies market-specific requirements, so operators running cross-border campaigns must hold the appropriate regional licenses and monitor for policy changes that can affect eligibility.
+
+View Industry Guide### Real Estate & Housing
+
+Fair housing laws intersect with platform targeting policies. Discriminatory targeting triggers result in both ad rejection and legal liability.
+
+Compliance note:Meta's Personal Attributes policy prohibits ad copy that implies knowledge of a user's financial status — a real risk for housing and real-estate advertisers, who should also note that
