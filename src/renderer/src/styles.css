@@ -3449,6 +3449,16 @@ button {
 
 .agent-overlay {
   position: relative;
+}
+
+/* Anchor windows to the bottom of the column (nearest the tabs/composer)
+   when they don't fill it; margin-top:auto keeps overflow scrollable, which
+   justify-content:flex-end would not. */
+.agent-overlay:first-child {
+  margin-top: auto;
+}
+
+.agent-overlay {
   display: flex;
   flex-direction: column;
   flex: 0 0 var(--agent-window-height);
