@@ -417,7 +417,10 @@ export class CodexClient extends EventEmitter {
         text_elements: []
       } satisfies UserInput] : []),
       ...attachments.map((attachment): UserInput => attachment.kind === 'image'
-        ? { type: 'localImage', path: attachment.path }
+        // `auto` maps to original-resolution processing on current GPT-5.5/5.6
+        // models. High retains screenshot fidelity while applying a finite
+        // image-token budget instead of carrying full-size pixels by default.
+        ? { type: 'localImage', path: attachment.path, detail: 'high' }
         : { type: 'mention', name: attachment.name, path: attachment.path }),
       ...skills.map((skill): UserInput => ({
         type: 'skill',

@@ -1096,15 +1096,15 @@ export default function App(): React.JSX.Element {
   function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
     const messages: AgentLiteMessage[] = []
     for (const item of source) {
-      if (item.type === 'userMessage' || item.type === 'agentMessage') {
-        const text = (item as { text?: string }).text
-        if (text) {
-          messages.push({
-            id: item.id,
-            role: item.type === 'userMessage' ? 'user' : 'assistant',
-            text
-          })
-        }
+      if (item.type === 'userMessage') {
+        const text = item.content
+          .filter((content) => content.type === 'text')
+          .map((content) => content.text)
+          .join('\n')
+        const attachments = attachmentsFromUserInput(item.content)
+        if (text || attachments.length) messages.push({ id: item.id, role: 'user', text, attachments })
+      } else if (item.type === 'agentMessage') {
+        if (item.text) messages.push({ id: item.id, role: 'assistant', text: item.text })
       }
     }
     return messages
@@ -1245,15 +1245,17 @@ export default function App(): React.JSX.Element {
             const messages: AgentLiteMessage[] = []
             for (const turn of turns) {
               for (const item of turn.items) {
-                if (item.type === 'userMessage' || item.type === 'agentMessage') {
-                  const text = (item as { text?: string }).text
-                  if (text) {
-                    messages.push({
-                      id: item.id,
-                      role: item.type === 'userMessage' ? 'user' : 'assistant',
-                      text: item.type === 'userMessage' ? stripMainChatContext(text) : text
-                    })
+                if (item.type === 'userMessage') {
+                  const text = item.content
+                    .filter((content) => content.type === 'text')
+                    .map((content) => content.text)
+                    .join('\n')
+                  const attachments = attachmentsFromUserInput(item.content)
+                  if (text || attachments.length) {
+                    messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
                   }
+                } else if (item.type === 'agentMessage' && item.text) {
+                  messages.push({ id: item.id, role: 'assistant', text: item.text })
                 }
               }
             }
