@@ -2271,6 +2271,7 @@ export default function App(): React.JSX.Element {
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
           onAgentSend={handleAgentSend}
+          onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
@@ -2352,6 +2353,7 @@ function ChatPane({
   onPromoteAgent,
   onCloseAgentSession,
   onAgentSend,
+  onAgentSteer,
   onAgentStop
 }: {
   items: ChatItem[]
@@ -2401,6 +2403,7 @@ function ChatPane({
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
   onAgentSend: (key: string, text: string) => Promise<boolean>
+  onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -2614,6 +2617,7 @@ function ChatPane({
             onPromote={onPromoteAgent}
             onToggleWatch={onToggleWatchAgent}
             onSend={onAgentSend}
+            onSteer={onAgentSteer}
             onStop={onAgentStop}
           />
         ) : null}
