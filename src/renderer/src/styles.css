@@ -2714,7 +2714,7 @@ button {
 
 .composer-new-chat {
   flex: 0 0 auto;
-  color: #d3d6da;
+  color: #ffffff;
 }
 
 .composer-new-chat:not(:disabled):hover {
@@ -3558,7 +3558,7 @@ button {
   border: 1px solid #262626;
   border-radius: 8px;
   background: #101010;
-  color: #5865f2;
+  color: #ffffff;
   cursor: pointer;
   transition:
     background 120ms ease,
@@ -3569,7 +3569,7 @@ button {
 .send-button:not(:disabled):hover {
   background: #14161f;
   border-color: #3a3f52;
-  color: #8b95ff;
+  color: #ffffff;
 }
 
 .send-button:disabled {
@@ -3578,13 +3578,13 @@ button {
 }
 
 .agent-new-chat-button {
-  color: #8b929a;
+  color: #ffffff;
 }
 
 .agent-new-chat-button:not(:disabled):hover {
   border-color: #454b52;
   background: #181a1c;
-  color: #e0e4e8;
+  color: #ffffff;
 }
 
 .agent-new-chat-button:focus-visible {
