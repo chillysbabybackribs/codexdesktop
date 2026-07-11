@@ -10,6 +10,10 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     build: {
       rollupOptions: {
+        input: {
+          index: resolve('src/preload/index.ts'),
+          'omnibox-popup': resolve('src/preload/omnibox-popup.ts')
+        },
         output: {
           format: 'cjs',
           entryFileNames: '[name].cjs'
@@ -19,6 +23,14 @@ export default defineConfig({
   },
   renderer: {
     root: resolve('src/renderer'),
-    plugins: [react()]
+    plugins: [react()],
+    build: {
+      rollupOptions: {
+        input: {
+          index: resolve('src/renderer/index.html'),
+          'omnibox-popup': resolve('src/renderer/omnibox-popup.html')
+        }
+      }
+    }
   }
 })

@@ -9,13 +9,18 @@ import type {
   AttachmentSaveInput,
   BackgroundTurnNotificationParams,
   BrowserBounds,
+  OmniboxAnchor,
+  OmniboxSuggestion,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
+import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
+import { OmniboxPopup } from './browser/omnibox-popup.js'
+import { buildSuggestions } from './browser/omnibox-suggestions.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
@@ -52,6 +57,7 @@ if (!hasSingleInstanceLock) {
 
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
+let omniboxPopup: OmniboxPopup | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
 const cdpArtifactStore = new CdpArtifactStore(() => join(app.getPath('userData'), 'cdp-artifacts'))
@@ -59,6 +65,7 @@ const attachmentStore = new AttachmentStore(() => join(app.getPath('userData'), 
 const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactStore)
 const researchRunner = new ResearchRunner(() => tabManager)
 const browserStateStore = new BrowserStateStore()
+const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 
 function scheduleBrowserPersist(): void {
