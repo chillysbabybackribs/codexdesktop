@@ -144,5 +144,5 @@ test('falls back to the default page when saved navigation is unsafe', async () 
 
   assert.deepEqual(navigations, ['https://www.google.com'])
   assert.equal(tab.url, 'https://www.google.com')
-  assert.equal(tab.title, 'https://www.google.com')
+  assert.equal(tab.title, 'New Tab')
 })

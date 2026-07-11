@@ -7,13 +7,15 @@ import { BrowserTargetRegistry } from './browser-target-registry.ts'
 
 class FakeWebContents extends EventEmitter {
   destroyed = false
+  readonly id: number
+  private readonly url: string
+  private readonly title: string
 
-  constructor(
-    readonly id: number,
-    private readonly url: string,
-    private readonly title: string
-  ) {
+  constructor(id: number, url: string, title: string) {
     super()
+    this.id = id
+    this.url = url
+    this.title = title
   }
 
   isDestroyed(): boolean {
