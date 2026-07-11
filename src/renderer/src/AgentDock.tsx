@@ -78,6 +78,7 @@ export function AgentColumn({
   onPromote,
   onToggleWatch,
   onSend,
+  onSteer,
   onStop
 }: {
   sessions: AgentSession[]
@@ -91,6 +92,7 @@ export function AgentColumn({
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string) => Promise<boolean>
+  onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -163,6 +165,7 @@ export function AgentColumn({
             onPromote={onPromote}
             onToggleWatch={onToggleWatch}
             onSend={onSend}
+            onSteer={onSteer}
             onStop={onStop}
           />
         ))}
