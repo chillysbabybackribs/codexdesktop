@@ -241,6 +241,10 @@ button {
   animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.model-menu::-webkit-scrollbar {
+  display: none;
+}
+
 .thread-select {
   display: inline-flex;
   align-items: center;
@@ -2859,6 +2863,7 @@ button {
   width: 300px;
   max-height: min(48vh, 380px);
   overflow-y: auto;
+  scrollbar-width: none;
   padding: 6px;
   border: 1px solid rgb(255 255 255 / 9%);
   border-radius: 12px;
@@ -3687,29 +3692,32 @@ button {
   display: none;
 }
 
-/* Compact model pill inside agent window headers; menu opens downward there
-   (the composer's opens upward). */
-.agent-overlay-header .workspace-pill {
-  height: 22px;
-  max-width: 130px;
-  padding: 0 7px;
-  font-size: 11.5px;
-  flex: 0 1 auto;
+/* Model selector row just above the agent composer, mirroring the main
+   chat's composer-context placement; the menu opens upward and stays inside
+   the window. */
+.agent-overlay-context {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 26px;
+  padding: 2px 6px 0;
 }
 
-.agent-overlay-header .workspace-pill-icon {
-  width: 13px;
-  height: 13px;
+.agent-overlay-context .workspace-pill {
+  height: 24px;
+  max-width: 200px;
+  padding: 0 8px;
+  font-size: 12px;
 }
 
-.agent-overlay-header .model-pill-wrap {
+.agent-overlay-context .model-pill-wrap {
   position: relative;
   min-width: 0;
 }
 
-.agent-overlay-header .model-menu {
-  bottom: auto;
-  top: calc(100% + 6px);
-  right: 0;
-  left: auto;
+.agent-overlay-context .model-menu {
+  left: 0;
+  bottom: calc(100% + 6px);
+  width: min(300px, 92vw);
+  max-height: min(38vh, 300px);
 }
