@@ -85,13 +85,21 @@ const browserRunSchema = {
 const browserCdpSchema = {
   type: 'object',
   properties: {
-    method: { type: 'string', description: 'Chrome DevTools Protocol method, such as Page.captureScreenshot.' },
-    params: { type: 'object', description: 'Optional CDP command parameters.' },
+    operation: {
+      type: 'string',
+      enum: ['command', 'capabilities', 'events', 'wait'],
+      description: 'Defaults to command. Use capabilities to inspect the live browser protocol, events to read the bounded journal, or wait to prepare and wait for a CDP event.'
+    },
+    method: { type: 'string', description: 'CDP command for operation command, or exact event name for events/wait, such as Page.captureScreenshot or Network.responseReceived.' },
+    params: { type: 'object', description: 'Optional CDP command parameters for operation command.' },
+    filter: { type: 'object', description: 'Optional nested exact-match filter for events/wait, such as {"name":"networkIdle"}.' },
+    contains: { type: 'object', additionalProperties: { type: 'string' }, description: 'Optional dot-path substring filter for events/wait, such as {"response.url":"/api/"}.' },
+    afterSequence: { type: 'number', description: 'For events/wait, return only events newer than this journal sequence.' },
+    limit: { type: 'number', description: 'For events, maximum matching records from 1 to 100; defaults to 30.' },
     tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
     timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
     maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
   },
-  required: ['method'],
   additionalProperties: false
 }
 
@@ -139,7 +147,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_cdp',
-    description: 'Send a targeted Chrome DevTools Protocol command to a browser tab through the shared per-tab operation queue. Use CDP directly for network, lifecycle, DOM snapshots, screenshots, input, storage, runtime, and other browser primitives.',
+    description: 'Use the live Chrome DevTools Protocol for a browser tab. Send a targeted command, inspect protocol capabilities, read a bounded event journal, or prepare and wait for a lifecycle/network/runtime/log event through the shared per-tab queue.',
     inputSchema: browserCdpSchema
   },
   {

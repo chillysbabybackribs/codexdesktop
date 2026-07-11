@@ -532,14 +532,32 @@ export class CodexClient extends EventEmitter {
           maxResultChars: readNumber(args.maxResultChars)
         })
       } else if (params.tool === 'browser_cdp') {
+        const operation = readString(args.operation) ?? 'command'
         const method = readString(args.method)
-        result = method
-          ? await this.browserAgent.cdp(method, asRecord(args.params), {
-              tabId: readString(args.tab),
-              timeoutMs: readNumber(args.timeoutMs),
-              maxResultChars: readNumber(args.maxResultChars)
-            })
-          : { ok: false, error: 'browser_cdp requires a string "method" argument' }
+        const options = {
+          tabId: readString(args.tab),
+          timeoutMs: readNumber(args.timeoutMs),
+          maxResultChars: readNumber(args.maxResultChars),
+          afterSequence: readNumber(args.afterSequence),
+          filter: asRecord(args.filter),
+          contains: readStringRecord(args.contains),
+          limit: readNumber(args.limit)
+        }
+        if (operation === 'capabilities') {
+          result = await this.browserAgent.cdpCapabilities(options)
+        } else if (operation === 'events') {
+          result = await this.browserAgent.cdpEvents(options, method)
+        } else if (operation === 'wait') {
+          result = method
+            ? await this.browserAgent.waitForCdpEvent(method, options)
+            : { ok: false, error: 'browser_cdp wait requires a string "method" event name' }
+        } else if (operation === 'command') {
+          result = method
+            ? await this.browserAgent.cdp(method, asRecord(args.params), options)
+            : { ok: false, error: 'browser_cdp command requires a string "method" argument' }
+        } else {
+          result = { ok: false, error: `unsupported browser_cdp operation: ${operation}` }
+        }
       } else if (params.tool === 'research_web') {
         result = await this.researchRunner.run({
           queries: readStringArray(args.queries),
@@ -615,4 +633,8 @@ function readNumber(value: unknown): number | undefined {
 
 function readStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+}
+
+function readStringRecord(value: unknown): Record<string, string> {
+  return Object.fromEntries(Object.entries(asRecord(value)).filter((entry): entry is [string, string] => typeof entry[1] === 'string'))
 }
