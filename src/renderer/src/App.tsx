@@ -2010,13 +2010,6 @@ function ChatPane({
               onSelectModelEffort={onSelectModelEffort}
             />
           ) : null}
-          <GoalControl
-            goal={activeGoal}
-            disabled={Boolean(activeTurnId) || isGoalUpdating}
-            onSave={onSaveGoal}
-            onSetStatus={onSetGoalStatus}
-            onClear={onClearGoal}
-          />
           <AgentTabStrip
             sessions={agentSessions}
             openKeys={openAgentKeys}
@@ -2061,6 +2054,11 @@ function ChatPane({
 
       {isSettingsOpen ? (
         <SettingsModal
+          goal={activeGoal}
+          isGoalUpdating={Boolean(activeTurnId) || isGoalUpdating}
+          onSaveGoal={onSaveGoal}
+          onSetGoalStatus={onSetGoalStatus}
+          onClearGoal={onClearGoal}
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
@@ -2488,8 +2486,18 @@ function NewChatIcon(): React.JSX.Element {
 }
 
 function SettingsModal({
+  goal,
+  isGoalUpdating,
+  onSaveGoal,
+  onSetGoalStatus,
+  onClearGoal,
   onClose
 }: {
+  goal: ThreadGoal | null
+  isGoalUpdating: boolean
+  onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
+  onSetGoalStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
+  onClearGoal: () => Promise<void>
   onClose: () => void
 }): React.JSX.Element {
   useEffect(() => {
@@ -2526,6 +2534,16 @@ function SettingsModal({
             ×
           </button>
         </header>
+        <section className="settings-section">
+          <h3 className="settings-section-title">Thread goal</h3>
+          <GoalSettings
+            goal={goal}
+            disabled={isGoalUpdating}
+            onSave={onSaveGoal}
+            onSetStatus={onSetGoalStatus}
+            onClear={onClearGoal}
+          />
+        </section>
       </div>
     </div>
   )
@@ -3068,7 +3086,7 @@ function ContextPill({
 // listing the full `model/list` catalog. Picks persist across restarts and are
 // sent as a per-turn override; before the first pick, turns follow the
 // CLI-configured default (the entry Codex marks `isDefault`).
-function GoalControl({
+function GoalSettings({
   goal,
   disabled,
   onSave,
@@ -3081,33 +3099,13 @@ function GoalControl({
   onSetStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
   onClear: () => Promise<void>
 }): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false)
   const [objective, setObjective] = useState(goal?.objective ?? '')
   const [tokenBudget, setTokenBudget] = useState(goal?.tokenBudget ? String(goal.tokenBudget) : '')
-  const wrapRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     setObjective(goal?.objective ?? '')
     setTokenBudget(goal?.tokenBudget ? String(goal.tokenBudget) : '')
   }, [goal?.objective, goal?.tokenBudget])
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handlePointerDown = (event: MouseEvent): void => {
-      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) setIsOpen(false)
-    }
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setIsOpen(false)
-    }
-
-    window.addEventListener('mousedown', handlePointerDown)
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('mousedown', handlePointerDown)
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
 
   const submitGoal = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -3118,25 +3116,22 @@ function GoalControl({
       objective,
       parsedBudget === null ? null : Math.floor(parsedBudget)
     )
-    if (saved) setIsOpen(false)
+    if (!saved) return
   }
 
   return (
-    <div ref={wrapRef} className={`goal-control ${goal ? 'has-goal' : ''}`}>
-      <button
-        type="button"
-        className="workspace-pill goal-pill"
-        title={goal?.objective ?? 'Set a thread goal'}
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        <GoalIcon />
-        <span className="workspace-pill-name">{goal ? goalStatusLabel(goal.status) : 'Goal'}</span>
-        {goal ? <span className={`goal-status-dot is-${goal.status}`} aria-hidden="true" /> : null}
-      </button>
-      {isOpen ? (
-        <div className="goal-menu" role="dialog" aria-label="Thread goal">
+    <div className="goal-settings">
+      <div className="goal-settings-heading">
+        <div>
+          <p className="goal-settings-label">Keep this thread working toward a persistent objective.</p>
+        </div>
+        {goal ? (
+          <span className="goal-settings-status">
+            <span className={`goal-status-dot is-${goal.status}`} aria-hidden="true" />
+            {goalStatusLabel(goal.status)}
+          </span>
+        ) : null}
+      </div>
           <form onSubmit={(event) => void submitGoal(event)}>
             <label htmlFor="goal-objective">Objective</label>
             <textarea
@@ -3178,8 +3173,7 @@ function GoalControl({
               ) : null}
             </div>
           </form>
-        </div>
-      ) : null}
+      </form>
     </div>
   )
 }
