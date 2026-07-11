@@ -289,13 +289,6 @@ function AgentWindow({
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
         <span className="agent-overlay-title">{session.title}</span>
-        {models.length ? (
-          <ModelPill
-            models={models}
-            selectedModel={session.model ?? mainModel}
-            onSelectModel={(model) => onSetModel(session.key, model)}
-          />
-        ) : null}
         <div className="agent-overlay-actions">
           <button
             type="button"
@@ -361,6 +354,16 @@ function AgentWindow({
         )}
         {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
       </div>
+
+      {models.length ? (
+        <div className="agent-overlay-context">
+          <ModelPill
+            models={models}
+            selectedModel={session.model ?? mainModel}
+            onSelectModel={(model) => onSetModel(session.key, model)}
+          />
+        </div>
+      ) : null}
 
       <form className="agent-overlay-composer" onSubmit={handleSubmit}>
         <textarea
