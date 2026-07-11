@@ -3245,6 +3245,9 @@ function GoalIcon(): React.JSX.Element {
 function Composer({
   docked,
   workspace,
+  installedPlugins,
+  onInstalledPluginsChange,
+  onBrowsePlugins,
   isLoading,
   isTurnActive,
   status,
@@ -3256,6 +3259,9 @@ function Composer({
 }: {
   docked: boolean
   workspace: string | null
+  installedPlugins: PluginSummary[]
+  onInstalledPluginsChange: (plugins: PluginSummary[]) => void
+  onBrowsePlugins: () => void
   isLoading: boolean
   isTurnActive: boolean
   status: string
@@ -3269,9 +3275,7 @@ function Composer({
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>('closed')
-  const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0)
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
@@ -3294,13 +3298,13 @@ function Composer({
     setPluginMenuState('loading')
     void window.api.codex.listInstalledPlugins({ cwd: workspace }).then((result) => {
       if (cancelled) return
-      setInstalledPlugins(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
+      onInstalledPluginsChange(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
       setPluginMenuState('ready')
     }, () => {
       if (!cancelled) setPluginMenuState('error')
     })
     return () => { cancelled = true }
-  }, [pluginQuery !== null, workspace, isLoading])
+  }, [pluginQuery !== null, workspace, isLoading, onInstalledPluginsChange])
 
   useEffect(() => setPluginSelectionIndex(0), [pluginQuery])
 
@@ -3316,11 +3320,6 @@ function Composer({
     const name = plugin.interface?.displayName || plugin.name
     setValue(`${value.slice(0, match.index)}${leadingSpace}@${name} `)
     setPluginMenuState('closed')
-    requestAnimationFrame(() => textareaRef.current?.focus())
-  }
-
-  const closePluginBrowser = (): void => {
-    setIsPluginBrowserOpen(false)
     requestAnimationFrame(() => textareaRef.current?.focus())
   }
 
@@ -3362,8 +3361,8 @@ function Composer({
           plugins={mentionPlugins}
           selectedIndex={pluginSelectionIndex}
           onChoose={choosePlugin}
-          onBrowse={() => { setPluginMenuState('closed'); setIsPluginBrowserOpen(true) }}
-          onUninstalled={(pluginId) => setInstalledPlugins((current) => current.filter((plugin) => plugin.id !== pluginId))}
+          onBrowse={() => { setPluginMenuState('closed'); onBrowsePlugins() }}
+          onUninstalled={(pluginId) => onInstalledPluginsChange(installedPlugins.filter((plugin) => plugin.id !== pluginId))}
         />
       ) : null}
       <AttachmentStrip attachments={attachments} removable onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
@@ -3453,13 +3452,6 @@ function Composer({
           </div>
         </div>
       </div>
-      {isPluginBrowserOpen ? (
-        <PluginBrowserModal
-          workspace={workspace}
-          onClose={closePluginBrowser}
-          onChanged={setInstalledPlugins}
-        />
-      ) : null}
     </form>
   )
 }
@@ -3526,7 +3518,7 @@ function PluginMentionMenu({ state, plugins, selectedIndex, onChoose, onBrowse, 
   )
 }
 
-function PluginBrowserModal({ workspace, onClose, onChanged }: {
+function PluginBrowserView({ workspace, onClose, onChanged }: {
   workspace: string | null
   onClose: () => void
   onChanged: (plugins: PluginSummary[]) => void
@@ -3536,7 +3528,6 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [busyId, setBusyId] = useState<string | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
-  const modalRef = useRef<HTMLElement | null>(null)
 
   const load = useCallback(() => {
     setState('loading')
@@ -3549,23 +3540,12 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
 
   useEffect(load, [load])
   useEffect(() => {
-    void window.api.browser.setOverlayOpen(true)
     closeRef.current?.focus()
     const handleKey = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        onClose()
-        return
-      }
-      if (event.key !== 'Tab' || !modalRef.current) return
-      const focusable = Array.from(modalRef.current.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])'))
-      if (!focusable.length) return
-      const first = focusable[0]
-      const last = focusable[focusable.length - 1]
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus() }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus() }
+      if (event.key === 'Escape') onClose()
     }
     window.addEventListener('keydown', handleKey)
-    return () => { window.removeEventListener('keydown', handleKey); void window.api.browser.setOverlayOpen(false) }
+    return () => window.removeEventListener('keydown', handleKey)
   }, [onClose])
 
   const plugins = flattenPlugins(marketplaces).filter((plugin) => {
@@ -3596,12 +3576,11 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
     void window.api.codex.uninstallPlugin(plugin.id).then(load).finally(() => setBusyId(null))
   }
 
-  return createPortal(
-    <div className="plugin-browser-overlay" onPointerDown={onClose}>
-      <section ref={modalRef} className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
+  return (
+      <section className="plugin-browser-view" aria-labelledby="plugin-browser-title">
         <header className="plugin-browser-header">
           <div><span className="plugin-browser-eyebrow">Codex Desktop marketplace</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
-          <button ref={closeRef} type="button" className="plugin-browser-close" aria-label="Close plugin browser" onClick={onClose}>×</button>
+          <button ref={closeRef} type="button" className="plugin-browser-back" onClick={onClose}><span aria-hidden="true">←</span> Back to chat</button>
         </header>
         <div className="plugin-browser-tools"><label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.7" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} {plugins.length === 1 ? 'plugin' : 'plugins'}</span></div>
         <div className="plugin-browser-catalog">
@@ -3626,8 +3605,6 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
           )) : null}
         </div>
       </section>
-    </div>,
-    document.body
   )
 }
 
