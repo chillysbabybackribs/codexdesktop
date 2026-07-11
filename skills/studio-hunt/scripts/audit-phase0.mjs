@@ -80,6 +80,14 @@ const scoreErrors = intersections.flatMap(x => {
 });
 const provenanceErrors = intersections.filter(x => !x.requirements || !Object.keys(x.requirements).length).map(x => x.intersectionId);
 const count = predicate => audited.filter(predicate).length;
+const qualificationFailures = [
+  ...(count(x=>x.lane==='commercial-motion' && x.retrievedVerified) < 75 ? ['commercial-motion retrieved coverage below 75'] : []),
+  ...(count(x=>x.lane==='formation-feedback' && x.retrievedVerified) < 100 ? ['formation/feedback retrieved coverage below 100'] : []),
+  ...(count(x=>x.lane==='buyer-reality' && x.qualifiedFirsthand) < 75 ? ['qualified buyer-reality coverage below 75'] : []),
+  ...(count(x=>x.qualifiedRepeatedWorkflow) < 25 ? ['qualified repeated workflows below 25'] : []),
+  ...(count(x=>x.qualifiedExactJobMoney) < 25 ? ['qualified exact-job money below 25'] : []),
+  ...(count(x=>x.lowConfidenceHeuristic) ? ['unaudited low-confidence heuristic records remain'] : [])
+];
 const byLane = Object.fromEntries(laneDirs.map(lane => [lane, {
   records: count(x => x.lane === lane),
   retrievedVerified: count(x => x.lane === lane && x.retrievedVerified),
@@ -94,13 +102,14 @@ const byLane = Object.fromEntries(laneDirs.map(lane => [lane, {
 const output = {
   schemaVersion:1, auditedAt:new Date().toISOString(), phase0:path.relative(workspaceRoot, phase0),
   totals:{records:audited.length,retrievedVerified:count(x=>x.retrievedVerified),qualifiedFirsthand:count(x=>x.qualifiedFirsthand),qualifiedRepeatedWorkflow:count(x=>x.qualifiedRepeatedWorkflow),currencyMentions:count(x=>x.collectorMoney),qualifiedExactJobMoney:count(x=>x.qualifiedExactJobMoney),completeJobSentences:count(x=>x.completeJobSentence),lowConfidenceHeuristic:count(x=>x.lowConfidenceHeuristic)},
-  byLane, scoreErrors, intersectionsMissingRequirementProvenance:provenanceErrors,
-  verdict: scoreErrors.length || provenanceErrors.length || count(x=>x.windowMismatch) ? 'FAIL' : 'PASS',
+  byLane, scoreErrors, intersectionsMissingRequirementProvenance:provenanceErrors, qualificationFailures,
+  verdict: scoreErrors.length || provenanceErrors.length || qualificationFailures.length || count(x=>x.windowMismatch) ? 'FAIL' : 'PASS',
   findings:[
     ...(count(x=>x.windowMismatch)?[` ${count(x=>x.windowMismatch)} records label old publications as current.`.trim()]:[]),
     ...(provenanceErrors.length?[`${provenanceErrors.length} intersections lack requirement-level supporting record IDs.`]:[]),
     ...(count(x=>x.collectorMoney) > count(x=>x.qualifiedExactJobMoney)?['Collector money counts exceed qualified exact-job money.']:[]),
     ...(count(x=>x.collectorFirsthand) > count(x=>x.qualifiedFirsthand)?['Collector firsthand counts exceed conservative audited firsthand counts.']:[])
+    ,...qualificationFailures
   ]
 };
 fs.writeFileSync(path.join(phase0, 'audit.json'), JSON.stringify(output, null, 2) + '\n');

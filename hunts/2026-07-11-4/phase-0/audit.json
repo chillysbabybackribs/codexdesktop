@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "auditedAt": "2026-07-11T15:59:03.331Z",
+  "auditedAt": "2026-07-11T16:00:06.331Z",
   "phase0": "hunts/2026-07-11-4/phase-0",
   "totals": {
     "records": 750,
@@ -49,10 +49,20 @@
   },
   "scoreErrors": [],
   "intersectionsMissingRequirementProvenance": [],
+  "qualificationFailures": [
+    "qualified buyer-reality coverage below 75",
+    "qualified repeated workflows below 25",
+    "qualified exact-job money below 25",
+    "unaudited low-confidence heuristic records remain"
+  ],
   "verdict": "FAIL",
   "findings": [
     "79 records label old publications as current.",
     "Collector money counts exceed qualified exact-job money.",
-    "Collector firsthand counts exceed conservative audited firsthand counts."
+    "Collector firsthand counts exceed conservative audited firsthand counts.",
+    "qualified buyer-reality coverage below 75",
+    "qualified repeated workflows below 25",
+    "qualified exact-job money below 25",
+    "unaudited low-confidence heuristic records remain"
   ]
 }
