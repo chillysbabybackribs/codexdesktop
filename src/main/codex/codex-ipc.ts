@@ -21,7 +21,7 @@ export function registerCodexIpc(
   researchRunner: ResearchRunner,
   memoryStore: MemoryStore
 ): CodexClient {
-  const client = new CodexClient(getWindow, browserAgent, researchRunner, memoryStore)
+  const client = new CodexClient(getWindow, browserAgent, researchRunner)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)

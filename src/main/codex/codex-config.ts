@@ -10,17 +10,13 @@ const taskShapingGuidance = [
   '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
   '- For public web research, use research_web for bounded discovery and saved page artifacts, then inspect only targeted passages from those artifacts.',
   '- Use browser_run for interactive or authenticated page state and browser_extract_page for one visible page. Do not dump full page bodies into model context.',
+  '- A new thread may include the prior-chat-memory skill. When the opening request is ambiguous or appears to continue earlier work, use that skill before asking the user to restate context. Skip it for clearly standalone requests.',
   'Response formatting guidance:',
   '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
   '- Use GitHub-Flavored Markdown tables for comparisons, summaries, rankings, and other repeated field data. Use blockquotes for important caveats and fenced code blocks for code or commands.',
   '- When quantitative trends or comparisons are clearer visually, include a fenced `chart` block containing JSON with `type` (`bar`, `horizontal-bar`, or `line`), optional `title`, `description`, `unit`, and `data` entries shaped as `{ "label": "…", "value": 0 }`. Do not add charts when the data is too small or uncertain to benefit from one.',
   '- Keep supporting context and caveats visually lighter than the primary answer; do not turn every response into a wall of text.',
-  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.',
-  'App self-improvement reporting:',
-  '- Codex Desktop is a locally developed app. Its tools (browser_run, browser_extract_page, browser_cdp, research_web), skills, and this guidance are editable source code, and the user wants to hear when they get in the way.',
-  '- If this task hit real friction caused by the app itself — a missing capability, a tool limitation or bad default, a truncated or misleading result, a skill that steered you wrong, or a manual workaround you had to invent — end your final answer with a short explanation of what happened and what change to the app would fix it.',
-  '- Express each distinct issue as a fenced `app-improvement` block containing JSON with `title` (short summary), `kind` (`code`, `skill`, `tool`, or `process`), `observation` (what happened during this task and why it was suboptimal), and `suggestion` (the concrete change: which tool or skill, what behavior, what default).',
-  '- Report at most two issues per response, picking the highest-impact ones. Only report friction that actually occurred in this task; never fabricate one, and never report ordinary errors you caused yourself, such as wrong tool arguments.'
+  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
 ]
 
 export function buildGuidance(): string {
@@ -59,6 +55,10 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
 
     return skill.name === 'artifact-first-web-research' && webResearchTask
   })
+}
+
+export function selectNewThreadSkills(skills: SkillMetadata[]): SkillMetadata[] {
+  return skills.filter((skill) => skill.name === 'prior-chat-memory')
 }
 
 export function formatSkillInvocationText(text: string, skills: SkillMetadata[]): string {

@@ -6,7 +6,6 @@ import { isAbsolute, join, relative, resolve } from 'node:path'
 import { app, type BrowserWindow } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
-import type { MemoryStore } from '../memory-store.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
@@ -37,9 +36,9 @@ import {
   legacyResumeConfig,
   newThreadConfig,
   resolveTurnPolicy,
+  selectNewThreadSkills,
   selectTurnSkills
 } from './codex-config.js'
-import { buildInjectedMemory, shouldLoadLastChatMemory } from '../memory-format.js'
 
 type JsonRpcMessage = {
   jsonrpc?: '2.0'
@@ -79,8 +78,7 @@ export class CodexClient extends EventEmitter {
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
     private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner,
-    private readonly memoryStore: MemoryStore
+    private readonly researchRunner: ResearchRunner
   ) {
     super()
   }
@@ -197,18 +195,9 @@ export class CodexClient extends EventEmitter {
     reasoningEffort: ReasoningEffort | null
   }> {
     await this.ensureStarted()
-    let priorChatMemory: string | null = null
-    if (!threadId && shouldLoadLastChatMemory(text)) {
-      try {
-        priorChatMemory = await this.memoryStore.loadLastChat(cwd)
-      } catch (error) {
-        console.warn('Failed to load app-owned chat memory', error)
-      }
-    }
-
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.buildTurnInput(text, priorChatMemory)
+    const input = this.buildTurnInput(text, !threadId)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -381,15 +370,16 @@ export class CodexClient extends EventEmitter {
     }
   }
 
-  private buildTurnInput(text: string, priorChatMemory?: string | null): UserInput[] {
-    const skills = selectTurnSkills(text, this.localSkills)
-    const visibleText = formatSkillInvocationText(text, skills)
-    const memory = priorChatMemory ? buildInjectedMemory(priorChatMemory) : ''
+  private buildTurnInput(text: string, isNewThread: boolean): UserInput[] {
+    const turnSkills = selectTurnSkills(text, this.localSkills)
+    const newThreadSkills = isNewThread ? selectNewThreadSkills(this.localSkills) : []
+    const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
+    const visibleText = formatSkillInvocationText(text, turnSkills)
 
     return [
       {
         type: 'text',
-        text: memory ? `${memory}\n\nCurrent user request:\n${visibleText}` : visibleText,
+        text: visibleText,
         text_elements: []
       },
       ...skills.map((skill): UserInput => ({

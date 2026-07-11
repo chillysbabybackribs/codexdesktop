@@ -205,7 +205,9 @@ async function restoreBrowserTabs(): Promise<void> {
 }
 
 function registerIpc(): void {
-  const memoryStore = new MemoryStore(join(app.getPath('userData'), 'memory'))
+  const memoryDirectory = join(app.getPath('userData'), 'memory')
+  process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
+  const memoryStore = new MemoryStore(memoryDirectory)
   codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
