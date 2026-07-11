@@ -636,6 +636,25 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
+    if (item.type === 'dynamicToolCall' && item.tool === 'browser_cdp') {
+      for (const content of item.contentItems ?? []) {
+        if (content.type !== 'inputText') continue
+        try {
+          const result = JSON.parse(content.text) as { screenshot?: { artifactPath?: unknown } }
+          if (typeof result.screenshot?.artifactPath === 'string') {
+            addTraceArtifact(artifacts, {
+              path: result.screenshot.artifactPath,
+              kind: 'generatedFile',
+              originEventId: item.id,
+              availability: 'pathOnly'
+            })
+          }
+        } catch {
+          // A failed or non-JSON CDP result is not an artifact.
+        }
+      }
+      continue
+    }
     if (item.type === 'dynamicToolCall' && item.tool === 'research_web') {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue

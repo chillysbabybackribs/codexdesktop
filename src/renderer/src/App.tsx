@@ -724,6 +724,9 @@ export default function App(): React.JSX.Element {
     const generation = ++resumeGenerationRef.current
     const previousThreadId = activeThreadIdRef.current
 
+    if (previousThreadId !== threadId) {
+      cancelAutoRecovery()
+    }
     setActiveGoal(null)
     activeGoalRef.current = null
     setActiveReasoningEffort(null)

@@ -321,6 +321,40 @@ test('research tool artifacts contribute to observed goal evidence', () => {
   assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
 })
 
+test('CDP screenshot artifacts are indexed without their image payload', () => {
+  const screenshotPath = '/home/dp/.config/codexdesktop/cdp-artifacts/screenshot-test.png'
+  const items: ThreadItem[] = [{
+    type: 'dynamicToolCall',
+    id: 'screenshot-1',
+    namespace: null,
+    tool: 'browser_cdp',
+    arguments: { method: 'Page.captureScreenshot' },
+    status: 'completed',
+    contentItems: [{
+      type: 'inputText',
+      text: JSON.stringify({
+        screenshot: { artifactPath: screenshotPath, bytes: 72, mediaType: 'image/png' }
+      })
+    }],
+    success: true
+  }]
+
+  const trace = buildTurnTrace({
+    threadId: 'thread-1',
+    threadTitle: 'Capture screenshot',
+    turnId: 'turn-1',
+    model: 'gpt-5.5',
+    workspace: '/workspace',
+    items,
+    itemMeta: { 'screenshot-1': { turnId: 'turn-1' } },
+    meta: { status: 'completed', origin: 'live', model: 'gpt-5.5' }
+  })
+
+  assert.deepEqual(trace.artifactIndex?.items.map(({ path, kind }) => ({ path, kind })), [
+    { path: screenshotPath, kind: 'generatedFile' }
+  ])
+})
+
 test('isTurnTrace accepts durable schema 2-4 snapshots and current schema 5 traces', () => {
   assert.equal(isTurnTrace({ schemaVersion: 2, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 3, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
