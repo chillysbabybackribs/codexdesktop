@@ -397,7 +397,7 @@ function AgentWindow({
             aria-label="Send to agent"
             disabled={isSending || !value.trim()}
           >
-            ↑
+            <SendArrowIcon />
           </button>
         )}
       </form>
@@ -431,6 +431,20 @@ function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.
     )
   }
   return <span className="agent-status agent-status-dot" aria-hidden="true" />
+}
+
+export function SendArrowIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 19V5M5.5 11.5L12 5l6.5 6.5"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
 
 function AgentPlusIcon(): React.JSX.Element {
