@@ -3928,7 +3928,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`}
         aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
         title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
-        disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)}
+        disabled={!activeTab}
         onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}
       >
         {activeTab?.isMuted ? '⊘' : '♪'}
