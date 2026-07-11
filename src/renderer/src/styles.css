@@ -116,6 +116,13 @@ button {
   align-items: center;
   gap: 12px;
   padding: 12px 22px;
+  transition: width 160ms ease;
+  width: 100%;
+}
+
+.chat-pane.has-agents .chat-toolbar {
+  width: calc(100% - 390px);
+  min-width: 240px;
 }
 
 .chat-toolbar .icon-button {
@@ -3380,7 +3387,7 @@ button {
   right: -22px;
   z-index: 8;
   width: min(400px, 75%);
-  height: calc(100vh - 108px);
+  height: calc(100vh - 64px);
 }
 
 .agent-column {

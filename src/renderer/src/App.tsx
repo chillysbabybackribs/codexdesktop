@@ -2190,7 +2190,9 @@ function ChatPane({
 
   return (
     <section
-      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
+      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
+        openAgentSessions.length ? 'has-agents' : ''
+      }`}
       aria-busy={isRestoring}
     >
       <div className="chat-toolbar">
