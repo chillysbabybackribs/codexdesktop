@@ -938,155 +938,44 @@ export default function App(): React.JSX.Element {
     cancelRecovery: cancelAgentRecovery
   })
 
+  const agentLifecycle = createAgentLifecycle({
+    store: {
+      sessionsRef: agentSessionsRef,
+      startQueueRef: agentStartQueueRef,
+      recoveryRef: agentRecoveryRef,
+      updateSessions: updateAgentSessions,
+      patchSession: patchAgentSession,
+      appendMessage: appendAgentMessage,
+      appendMessageOnce: appendAgentMessageOnce,
+      setOpenKeys: setOpenAgentKeys,
+      setSelectedKey: setSelectedAgentKey
+    },
+    maxRecoveryAttempts: maxAutoRecoveryAttempts,
+    recoveryDelayMs: autoRecoveryDelayMs,
+    recoveryPrompt: autoRecoveryPrompt,
+    isRecoverable: (error) => Boolean(error && isRecoverableTurnError(error.codexErrorInfo)),
+    getWorkspace: () => workspaceRef.current,
+    getSelectedModel: () => selectedModelRef.current,
+    getActiveThreadId: () => activeThreadIdRef.current,
+    pickFallbackModel,
+    selectMainModel: handleSelectModel,
+    clearActiveTurn: () => {
+      setActiveTurnId(null)
+      activeTurnIdRef.current = null
+    },
+    createMainThread: handleNewThread,
+    resumeMainThread: resumeThreadById
+  })
+
   function cancelAgentRecovery(key: string): void {
-    const state = agentRecoveryRef.current.get(key)
-    if (state?.timer !== null && state?.timer !== undefined) {
-      window.clearTimeout(state.timer)
-    }
-    agentRecoveryRef.current.delete(key)
+    agentLifecycle.cancelRecovery(key)
   }
 
-  // Dock mirror of maybeScheduleAutoRecovery: same attempt budget, delay, and
-  // model-fallback walk, but scoped to one session and reported through its
-  // lite transcript instead of system items.
   function maybeScheduleAgentRecovery(key: string, turnId: string, error: TurnError | null): void {
-    if (!error || !isRecoverableTurnError(error.codexErrorInfo)) return
-
-    const existing = agentRecoveryRef.current.get(key)
-    if (existing?.handledTurnIds.has(turnId)) return
-
-    const state = existing ?? { attempts: 0, handledTurnIds: new Set<string>(), timer: null }
-    state.handledTurnIds.add(turnId)
-    agentRecoveryRef.current.set(key, state)
-
-    if (state.attempts >= maxAutoRecoveryAttempts) {
-      appendAgentMessageOnce(key, {
-        id: `recovery-stopped-${turnId}`,
-        role: 'assistant',
-        text: `⚠ Auto-recovery stopped after ${maxAutoRecoveryAttempts} attempts. Send a message to continue the task.`
-      })
-      return
-    }
-
-    state.attempts += 1
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    const currentModel = session?.model ?? selectedModelRef.current
-    const nextModel = state.attempts === 1 ? currentModel : pickFallbackModel(currentModel)
-    const switching = nextModel !== null && nextModel !== currentModel
-    const delaySeconds = Math.round(autoRecoveryDelayMs / 1000)
-    appendAgentMessageOnce(key, {
-      id: `recovery-${turnId}`,
-      role: 'assistant',
-      text: switching
-        ? `${currentModel ?? 'The model'} is under heavy load — continuing on ${nextModel} in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
-        : `The model is under heavy load — retrying in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
-    })
-    state.timer = window.setTimeout(() => {
-      state.timer = null
-      void runAgentRecovery(key, nextModel)
-    }, autoRecoveryDelayMs)
+    agentLifecycle.scheduleRecovery(key, turnId, error)
   }
 
-  async function runAgentRecovery(key: string, model: string | null): Promise<void> {
-    // Bail silently if the recovery was cancelled or the session moved on
-    // (closed, promoted, or the user started another turn) while waiting.
-    if (!agentRecoveryRef.current.has(key)) return
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session?.threadId || session.turnId) return
-
-    // Surface the fallback in the window's model pill so the pill reflects
-    // what the thread is actually running on.
-    if (model && model !== session.model) {
-      patchAgentSession(key, (current) => ({ ...current, model }))
-    }
-
-    try {
-      const response = await window.api.codex.sendMessage({
-        threadId: session.threadId,
-        text: autoRecoveryPrompt,
-        cwd: workspaceRef.current,
-        model: model ?? session.model ?? selectedModelRef.current
-      })
-      patchAgentSession(key, (current) => ({
-        ...current,
-        status: 'working',
-        turnId: response.turn.id
-      }))
-    } catch (error) {
-      appendAgentMessage(key, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: `⚠ Auto-recovery could not restart the turn: ${(error as Error).message}`
-      })
-      cancelAgentRecovery(key)
-    }
-  }
-
-  function handleCloseAgentSession(key: string): void {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    cancelAgentRecovery(key)
-    updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
-    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
-    setSelectedAgentKey((current) => (current === key ? null : current))
-    if (session?.threadId && session.threadId !== activeThreadIdRef.current) {
-      // Stop the turn before unsubscribing: nobody is watching a closed agent,
-      // so a running turn would keep burning tokens (and editing the workspace)
-      // invisibly. Interrupt first, then drop the subscription.
-      if (session.turnId) {
-        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
-      }
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
-    }
-  }
-
-  function handleResetAgentSession(key: string): void {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session || session.status === 'working') return
-
-    cancelAgentRecovery(key)
-    agentStartQueueRef.current = agentStartQueueRef.current.filter((candidate) => candidate !== key)
-    patchAgentSession(key, resetAgentSession)
-    if (session.threadId && session.threadId !== activeThreadIdRef.current) {
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
-    }
-  }
-
-  // Promote: the agent's conversation takes over the main view and its window
-  // closes. The previous main chat is not demoted into the dock — it lands in
-  // thread history, exactly like switching threads from the history menu. If a
-  // turn was running there it keeps working server-side; results show when the
-  // thread is reopened.
-  async function handlePromoteAgent(key: string): Promise<void> {
-    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session) return
-
-    // The focused view's own recovery machinery owns this thread from here.
-    cancelAgentRecovery(key)
-
-    if (session.model && session.model !== selectedModelRef.current) {
-      selectedModelRef.current = session.model
-      handleSelectModel(session.model)
-    }
-
-    updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
-    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
-    setSelectedAgentKey((current) => (current === key ? null : current))
-
-    if (!session.threadId) {
-      // Blank agent (no message sent yet, so no thread): promoting it is just
-      // a fresh main chat on its model.
-      handleNewThread()
-      return
-    }
-
-    // hydrateThread (inside resumeThreadById) sets activeTurnId from the thread's
-    // actual inProgress turn. Do NOT re-assert the session's captured turnId: if
-    // the agent's turn completed while resume was in flight, re-marking it active
-    // soft-locks the main composer (handleSend refuses, Stop errors on a dead turn).
-    setActiveTurnId(null)
-    activeTurnIdRef.current = null
-    await resumeThreadById(session.threadId)
-  }
+  const { handleCloseAgentSession, handleResetAgentSession, handlePromoteAgent } = agentLifecycle
 
   // ---- End background agent sessions ---------------------------------------
 
