@@ -10,7 +10,7 @@ export class MemoryStore {
   private readonly chatsDirectory: string
   private readonly lastChatPath: string
 
-  constructor(private readonly directory: string) {
+  constructor(directory: string) {
     this.chatsDirectory = join(directory, 'chats')
     this.lastChatPath = join(directory, 'last-chat.md')
   }
