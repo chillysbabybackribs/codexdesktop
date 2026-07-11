@@ -1033,6 +1033,20 @@ export default function App(): React.JSX.Element {
         })
         return
       }
+      case 'error': {
+        const { turnId, error, willRetry } = notification.params
+        if (willRetry) return
+        appendAgentMessageOnce(session.key, {
+          id: `error-${turnId}`,
+          role: 'assistant',
+          text: `⚠ ${error.message}`
+        })
+        patchAgentSession(session.key, (current) =>
+          current.turnId === turnId ? { ...current, status: 'done', turnId: null } : current
+        )
+        maybeScheduleAgentRecovery(session.key, turnId, error)
+        return
+      }
       default:
         return
     }
