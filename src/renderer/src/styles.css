@@ -3386,13 +3386,19 @@ button {
   bottom: 0;
   right: -22px;
   z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   width: min(400px, 75%);
   height: calc(100vh - 64px);
 }
 
 .agent-column {
   --agent-window-height: max(calc(50% - 5px), 320px);
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -3403,10 +3409,7 @@ button {
 }
 
 .agent-column-chevron {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3426,13 +3429,6 @@ button {
   background: #ffffff;
 }
 
-.agent-column-chevron.is-up {
-  top: 4px;
-}
-
-.agent-column-chevron.is-down {
-  bottom: 4px;
-}
 
 /* With agents open, the composer retracts horizontally and the agent column
    runs the full right strip down to the composer's bottom edge. */
