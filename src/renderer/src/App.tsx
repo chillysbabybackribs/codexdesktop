@@ -3457,7 +3457,7 @@ const ChatItemView = memo(function ChatItemView({
     const attachments = attachmentsFromUserInput(item.content)
 
     return (
-      <article className="message message-user">
+      <article className="message message-user" data-turn-id={turnId ?? undefined}>
         {text ? <p>{text}</p> : null}
         <AttachmentStrip attachments={attachments} />
       </article>
