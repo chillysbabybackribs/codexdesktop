@@ -19,7 +19,7 @@ import type {
   CodexSteerTurnParams,
   MemoryPersistParams,
   OmniboxAnchor,
-  OmniboxSuggestion,
+  OmniboxQueryResult,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
@@ -59,7 +59,7 @@ export const api = {
     beginDividerDrag: () => ipcRenderer.invoke(ipcChannels.browserBeginDividerDrag),
     endDividerDrag: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserEndDividerDrag, bounds),
     setOverlayOpen: (open: boolean) => ipcRenderer.invoke(ipcChannels.browserSetOverlayOpen, open),
-    omniboxQuery: (text: string, anchor: OmniboxAnchor): Promise<OmniboxSuggestion[]> =>
+    omniboxQuery: (text: string, anchor: OmniboxAnchor): Promise<OmniboxQueryResult> =>
       ipcRenderer.invoke(ipcChannels.browserOmniboxQuery, text, anchor),
     omniboxSelect: (index: number) => ipcRenderer.invoke(ipcChannels.browserOmniboxSelect, index),
     omniboxClose: () => ipcRenderer.invoke(ipcChannels.browserOmniboxClose),
