@@ -3266,6 +3266,8 @@ function ThreadScroll({
   // turn's user message to the top. Skip the transition that coincides with a
   // thread switch/restore — that turn is being read, not just asked.
   useLayoutEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('[TURN-EFFECT]', JSON.stringify({ activeTurnId, prev: prevTurnRef.current, anchor: anchorTurnRef.current, absorbed: absorbedTurnRef.current }))
     if (
       activeTurnId !== null &&
       activeTurnId !== prevTurnRef.current &&
@@ -3281,11 +3283,9 @@ function ThreadScroll({
         anchorFrameRef.current = null
         anchorTop()
       })
-    } else if (activeTurnId === null) {
+    } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // eslint-disable-next-line no-console
-      console.log('[COMPLETE] activeTurnId->null, anchorTurnRef=', anchorTurnRef.current)
-    }
-    if (false && activeTurnId === null && anchorTurnRef.current !== null) {
+      console.log('[COMPLETE] freeze branch entered, anchorTurnRef=', anchorTurnRef.current)
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
       // spacer entirely would shrink scrollHeight below the current scrollTop and
