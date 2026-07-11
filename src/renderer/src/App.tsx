@@ -3538,13 +3538,18 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
     return !query.trim() || haystack.includes(query.trim().toLowerCase())
   })
 
-  const pluginGroups = marketplaces.map((marketplace) => ({
-    marketplace,
-    plugins: plugins.filter((plugin) => {
-      const firstMarketplace = marketplaces.find((entry) => entry.plugins.some((candidate) => candidate.id === plugin.id))
-      return firstMarketplace === marketplace
-    })
-  })).filter((group) => group.plugins.length)
+  const firstMarketplaceByPluginId = new Map<string, PluginMarketplaceEntry>()
+  for (const marketplace of marketplaces) {
+    for (const plugin of marketplace.plugins) {
+      if (!firstMarketplaceByPluginId.has(plugin.id)) firstMarketplaceByPluginId.set(plugin.id, marketplace)
+    }
+  }
+  const pluginsByMarketplace = new Map(marketplaces.map((marketplace) => [marketplace, [] as PluginSummary[]]))
+  for (const plugin of plugins) {
+    const marketplace = firstMarketplaceByPluginId.get(plugin.id)
+    if (marketplace) pluginsByMarketplace.get(marketplace)?.push(plugin)
+  }
+  const pluginGroups = marketplaces.map((marketplace) => ({ marketplace, plugins: pluginsByMarketplace.get(marketplace) ?? [] })).filter((group) => group.plugins.length)
 
   const install = (plugin: PluginSummary, marketplace: PluginMarketplaceEntry | undefined): void => {
     setBusyId(plugin.id)
