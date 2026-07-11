@@ -2186,25 +2186,32 @@ function ChatPane({
   const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
   const focusAgent = (key: string): void => {
+    const wasOpen = openAgentKeys.includes(key)
     onSelectAgent(key)
     onOpenAgent(key)
-    // Align the window's top edge with the scroll container's top explicitly —
-    // scrollIntoView(nearest) accepts partial visibility, and the overflow
-    // bars appearing mid-scroll shift the viewport. The window may not be in
-    // the DOM yet (it was just opened), so retry across frames; a settle pass
-    // re-corrects after the bars have toggled.
-    const align = (behavior: ScrollBehavior): boolean => {
+    // Alignment is an absolute, idempotent scrollTo — never a relative
+    // scrollBy, which compounds when fired mid-animation. Settle runs on the
+    // browser's scrollend event, not a guessed timeout, so it measures a
+    // finished layout. A freshly opened window aligns instantly (the column is
+    // reflowing anyway); an already-open one scrolls smoothly.
+    const alignOnce = (behavior: ScrollBehavior): 'missing' | 'aligned' | 'scrolling' => {
       const node = document.querySelector(`[data-agent-key="${key}"]`)
       const scroller = node instanceof HTMLElement ? node.parentElement : null
-      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return false
-      const delta = node.getBoundingClientRect().top - scroller.getBoundingClientRect().top
-      if (Math.abs(delta) > 4) scroller.scrollBy({ top: delta, behavior })
-      return true
+      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return 'missing'
+      const raw =
+        scroller.scrollTop +
+        node.getBoundingClientRect().top -
+        scroller.getBoundingClientRect().top
+      const target = Math.max(0, Math.min(raw, scroller.scrollHeight - scroller.clientHeight))
+      if (Math.abs(target - scroller.scrollTop) <= 4) return 'aligned'
+      scroller.scrollTo({ top: target, behavior })
+      return 'scrolling'
     }
     let attempts = 0
-    const tryAlign = (): void => {
-      if (!align('smooth')) {
-        if (attempts++ < 12) requestAnimationFrame(tryAlign)
+    const run = (): void => {
+      const state = alignOnce(wasOpen ? 'smooth' : 'auto')
+      if (state === 'missing') {
+        if (attempts++ < 12) requestAnimationFrame(run)
         return
       }
       const node = document.querySelector(`[data-agent-key="${key}"]`)
@@ -2212,10 +2219,23 @@ function ChatPane({
         node.classList.add('is-flash')
         window.setTimeout(() => node.classList.remove('is-flash'), 750)
       }
-      window.setTimeout(() => align('auto'), 450)
-      window.setTimeout(() => align('auto'), 900)
+      if (state === 'scrolling') {
+        const scroller = node instanceof HTMLElement ? node.parentElement : null
+        if (scroller instanceof HTMLElement) {
+          const settle = (): void => {
+            alignOnce('auto')
+          }
+          scroller.addEventListener('scrollend', settle, { once: true })
+          // Fallback in case scrollend never fires; alignOnce is idempotent,
+          // so a double settle is a no-op.
+          window.setTimeout(() => {
+            scroller.removeEventListener('scrollend', settle)
+            alignOnce('auto')
+          }, 900)
+        }
+      }
     }
-    requestAnimationFrame(tryAlign)
+    requestAnimationFrame(run)
   }
 
   return (

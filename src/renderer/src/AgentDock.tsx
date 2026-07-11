@@ -116,7 +116,11 @@ export function AgentColumn({
     if (!node) return
     const first = node.firstElementChild
     const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    node.scrollBy({ top: direction * slot, behavior: 'smooth' })
+    // Absolute target from the CURRENT slot index — repeated clicks land on
+    // exact snap points instead of compounding relative deltas mid-animation.
+    const index = Math.round(node.scrollTop / slot) + direction
+    const target = Math.max(0, Math.min(index * slot, node.scrollHeight - node.clientHeight))
+    node.scrollTo({ top: target, behavior: 'smooth' })
   }
 
   return (
@@ -243,6 +247,17 @@ function AgentWindow({
     }
   }
 
+  // Click-anywhere-to-type: clicking empty window space focuses the composer,
+  // but never when the click hit an interactive element or completed a text
+  // selection (so copying transcript text still works).
+  const handleWindowClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const target = event.target
+    if (target instanceof HTMLElement && target.closest('button, textarea, input, a')) return
+    const selection = window.getSelection()
+    if (selection && !selection.isCollapsed) return
+    textareaRef.current?.focus()
+  }
+
   return (
     <div
       className={`agent-overlay ${isSelected ? 'is-selected' : ''}`}
@@ -250,6 +265,7 @@ function AgentWindow({
       role="dialog"
       aria-label={`Agent: ${session.title}`}
       onPointerDownCapture={() => onSelect(session.key)}
+      onClick={handleWindowClick}
     >
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
