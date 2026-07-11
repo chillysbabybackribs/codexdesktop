@@ -270,7 +270,11 @@ export default function App(): React.JSX.Element {
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
+  const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
+  // Pending overload recovery for the watched thread; single slot because the
+  // notification handler only reacts to one relevant thread at a time.
+  const autoRecoveryRef = useRef<AutoRecoveryState | null>(null)
   const watchThreadIdRef = useRef<string | null>(null)
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
@@ -316,6 +320,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     selectedModelRef.current = selectedModel
   }, [selectedModel])
+
+  useEffect(() => {
+    modelsRef.current = models
+  }, [models])
 
   useEffect(() => {
     workspaceRef.current = workspace
