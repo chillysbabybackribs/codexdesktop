@@ -1,10 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  buildInjectedMemory,
   buildLastChatMarkdown,
   buildTranscriptMarkdown,
-  shouldLoadLastChatMemory,
   type MemorySnapshot
 } from './memory-format.ts'
 
@@ -25,13 +23,6 @@ const snapshot: MemorySnapshot = {
   ]
 }
 
-test('continuation detection stays narrow', () => {
-  assert.equal(shouldLoadLastChatMemory('Continue where we left off'), true)
-  assert.equal(shouldLoadLastChatMemory('What did we discuss in the previous chat?'), true)
-  assert.equal(shouldLoadLastChatMemory('Continue with the CSS refactor'), false)
-  assert.equal(shouldLoadLastChatMemory('Start a new unrelated task'), false)
-})
-
 test('last-chat memory keeps a recent progression and substantive earlier milestones', () => {
   const markdown = buildLastChatMarkdown(snapshot, '/memory/chats/thread-1.md')
   assert.match(markdown, /Latest request: Should we implement it\?/)
@@ -49,10 +40,4 @@ test('transcript uses unique turn markers and preserves completed text', () => {
   assert.match(markdown, /Keep a one-line milestone map and a full transcript\./)
   assert.match(markdown, /<!-- codexdesktop-turn:thread-1:C02:end -->/)
   assert.match(markdown, /### Completed work[\s\S]*5\/5 tests passed, 0 failed/)
-})
-
-test('injected memory states precedence explicitly', () => {
-  const injected = buildInjectedMemory('# Previous chat\nOld state')
-  assert.match(injected, /current user message and newer decisions always take precedence/i)
-  assert.match(injected, /# Previous chat/)
 })

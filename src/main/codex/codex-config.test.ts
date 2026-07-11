@@ -3,8 +3,10 @@ import test from 'node:test'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import {
   browserDynamicTools,
+  buildGuidance,
   formatSkillInvocationText,
   resolveTurnPolicy,
+  selectNewThreadSkills,
   selectTurnSkills
 } from './codex-config.js'
 
@@ -12,6 +14,14 @@ const webResearchSkill: SkillMetadata = {
   name: 'artifact-first-web-research',
   description: 'Research the web from saved artifacts',
   path: '/app/skills/artifact-first-web-research/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
+const priorChatMemorySkill: SkillMetadata = {
+  name: 'prior-chat-memory',
+  description: 'Recover relevant context from the previous chat',
+  path: '/app/skills/prior-chat-memory/SKILL.md',
   scope: 'user',
   enabled: true
 }
@@ -47,6 +57,21 @@ test('automatic skill invocation adds the app-server text marker', () => {
 test('explicit skill invocation does not duplicate its marker', () => {
   const text = '$artifact-first-web-research Research Electron navigation'
   assert.equal(formatSkillInvocationText(text, [webResearchSkill]), text)
+})
+
+test('new threads attach memory reasoning without classifying the prompt text', () => {
+  assert.deepEqual(selectNewThreadSkills([webResearchSkill, priorChatMemorySkill]), [priorChatMemorySkill])
+  assert.deepEqual(selectNewThreadSkills([priorChatMemorySkill]), [priorChatMemorySkill])
+})
+
+test('memory skill does not require a synthetic invocation marker', () => {
+  assert.equal(formatSkillInvocationText('lets continue', []), 'lets continue')
+})
+
+test('guidance nudges ambiguous continuation without requesting improvement cards', () => {
+  const guidance = buildGuidance()
+  assert.match(guidance, /opening request is ambiguous.*use that skill/i)
+  assert.doesNotMatch(guidance, /app-improvement|self-improvement reporting/i)
 })
 
 test('research turns keep the configured reasoning effort', () => {

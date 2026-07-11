@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import test from 'node:test'
 import { MemoryStore } from './memory-store.ts'
 
-test('MemoryStore writes Markdown and scopes retrieval to the workspace', async (context) => {
+test('MemoryStore writes the bounded checkpoint and full transcript', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'codexdesktop-memory-'))
   context.after(() => rm(root, { recursive: true, force: true }))
   const store = new MemoryStore(root)
@@ -18,9 +18,9 @@ test('MemoryStore writes Markdown and scopes retrieval to the workspace', async 
     turns: [{ user: 'Remember this?', assistant: 'The checkpoint was saved.' }]
   })
 
-  const lastChat = await store.loadLastChat('/tmp/project')
-  assert.match(lastChat ?? '', /# Simple memory/)
-  assert.equal(await store.loadLastChat('/tmp/other-project'), null)
+  const lastChat = await readFile(join(root, 'last-chat.md'), 'utf8')
+  assert.match(lastChat, /# Simple memory/)
+  assert.match(lastChat, /Workspace: \/tmp\/project/)
 
   const transcript = await readFile(join(root, 'chats', 'thread-1.md'), 'utf8')
   assert.match(transcript, /<!-- codexdesktop-turn:thread-1:C01:start -->/)
