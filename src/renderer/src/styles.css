@@ -3310,30 +3310,34 @@ button {
 .agent-tab {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   max-width: 150px;
   height: 26px;
-  padding: 0 9px;
+  padding: 0 11px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 8px;
   background: transparent;
-  color: #9aa0a6;
-  font-size: 12.5px;
+  color: #8f959c;
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: 0.01em;
   cursor: pointer;
   transition:
     background 120ms ease,
-    color 120ms ease;
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
 .agent-tab:hover {
-  background: #232323;
-  color: #e2e2e2;
+  background: #1d1d1d;
+  color: #d8d8d8;
 }
 
 .agent-tab.is-open {
-  background: #26282c;
-  border-color: #34363b;
-  color: #e2e2e2;
+  background: #1f1f1f;
+  border-color: #323232;
+  color: #f0f0f0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .agent-tab-title {
