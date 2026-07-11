@@ -3486,7 +3486,7 @@ button {
   width: 10px;
   height: 10px;
   border: 1.6px solid #33363c;
-  border-top-color: #5865f2;
+  border-top-color: #f28a31;
   border-radius: 50%;
   animation: agent-spin 0.8s linear infinite;
 }
@@ -3498,7 +3498,7 @@ button {
 }
 
 .agent-status-check {
-  color: #5865f2;
+  color: #f28a31;
 }
 
 .agent-new-button {
@@ -3647,7 +3647,7 @@ button {
 }
 
 .agent-watch-toggle.is-active {
-  color: #5865f2;
+  color: #f28a31;
   background: transparent;
 }
 
