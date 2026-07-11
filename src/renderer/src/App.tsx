@@ -4038,10 +4038,40 @@ function GlobeIcon(): React.JSX.Element {
 
 function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): React.JSX.Element {
   const [input, setInput] = useState('')
+  const [findOpen, setFindOpen] = useState(false)
+  const [findText, setFindText] = useState('')
+  const [findResult, setFindResult] = useState({ activeMatchOrdinal: 0, matches: 0 })
+  const findInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setInput(activeTab?.url ?? '')
   }, [activeTab?.url])
+
+  useEffect(() => window.api.browser.onFindRequested(() => setFindOpen(true)), [])
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') {
+        event.preventDefault()
+        setFindOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+  useEffect(() => {
+    if (findOpen) requestAnimationFrame(() => findInputRef.current?.focus())
+  }, [findOpen])
+
+  const runFind = async (forward: boolean): Promise<void> => {
+    if (!activeTab || !findText) return
+    setFindResult(await window.api.browser.find(activeTab.id, findText, forward))
+  }
+
+  const closeFind = (): void => {
+    if (activeTab) void window.api.browser.stopFind(activeTab.id, 'clearSelection')
+    setFindOpen(false)
+    setFindResult({ activeMatchOrdinal: 0, matches: 0 })
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
@@ -4052,7 +4082,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   }
 
   return (
-    <form className="browser-toolbar" onSubmit={handleSubmit}>
+    <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
       <button
         type="button"
         className="browser-nav-button"
@@ -4087,9 +4117,47 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         aria-label="Address"
         onChange={(event) => setInput(event.target.value)}
       />
+      <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}>⌕</button>
+      <button
+        type="button"
+        className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`}
+        aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
+        title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
+        disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)}
+        onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}
+      >
+        {activeTab?.isMuted ? '⊘' : '♪'}
+      </button>
+      <div className="browser-zoom" aria-label="Page zoom">
+        <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}>−</button>
+        <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
+        <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}>+</button>
+      </div>
       <button type="button" className="browser-nav-button close-ghost" aria-label="Clear address" onClick={() => setInput('')}>
         ×
       </button>
+      {findOpen ? (
+        <div className="browser-find" role="search">
+          <input
+            ref={findInputRef}
+            value={findText}
+            placeholder="Find in page"
+            aria-label="Find in page"
+            onChange={(event) => {
+              setFindText(event.target.value)
+              if (event.target.value && activeTab) void window.api.browser.find(activeTab.id, event.target.value, true).then(setFindResult)
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') closeFind()
+              if (event.key === 'Enter') void runFind(!event.shiftKey)
+            }}
+          />
+          <span aria-live="polite">{findText ? `${findResult.activeMatchOrdinal}/${findResult.matches}` : '0/0'}</span>
+          <button type="button" aria-label="Previous match" onClick={() => void runFind(false)}>↑</button>
+          <button type="button" aria-label="Next match" onClick={() => void runFind(true)}>↓</button>
+          <button type="button" aria-label="Close find" onClick={closeFind}>×</button>
+        </div>
+      ) : null}
     </form>
   )
 }
