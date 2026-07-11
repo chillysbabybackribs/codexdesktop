@@ -1436,6 +1436,7 @@ export default function App(): React.JSX.Element {
 
   function handleCloseAgentSession(key: string): void {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    cancelAgentRecovery(key)
     updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     setSelectedAgentKey((current) => (current === key ? null : current))
@@ -1452,6 +1453,9 @@ export default function App(): React.JSX.Element {
   async function handlePromoteAgent(key: string): Promise<void> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return
+
+    // The focused view's own recovery machinery owns this thread from here.
+    cancelAgentRecovery(key)
 
     if (session.model && session.model !== selectedModelRef.current) {
       selectedModelRef.current = session.model
