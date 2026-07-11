@@ -66,7 +66,7 @@ export function buildLastChatMarkdown(snapshot: MemorySnapshot, transcriptPath: 
     '',
     `Latest outcome:\n\n${clipHeadAndTail(latest.assistant, maxLatestAssistantChars)}`,
     ...(latest.completedWork?.length
-      ? ['', 'Latest completed work:', '', ...latest.completedWork.slice(0, 3).map((item) => `- ${brief(item, 220)}`)]
+      ? ['', 'Latest completed work:', '', ...latest.completedWork.slice(0, 2).map((item) => `- ${brief(item, 220)}`)]
       : []),
     '',
     '## Earlier milestones',
@@ -96,7 +96,7 @@ export function buildTranscriptMarkdown(snapshot: MemorySnapshot): string {
         '',
         turn.assistant.trim(),
         ...(turn.completedWork?.length
-          ? ['', '### Completed work', '', ...turn.completedWork.slice(0, 3).map((item) => `- ${item}`)]
+          ? ['', '### Completed work', '', ...turn.completedWork.slice(0, 2).map((item) => `- ${item}`)]
           : []),
         '',
         `<!-- ${marker}:end -->`
