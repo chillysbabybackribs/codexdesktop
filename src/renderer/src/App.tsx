@@ -31,7 +31,6 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { CodexErrorInfo } from '../../shared/codex-protocol/v2/CodexErrorInfo'
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
-import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
@@ -63,8 +62,13 @@ import { selectCompletedWork } from './memory-work'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
 import {
+  appendAgentMessageDelta,
+  appendCommandOutputDelta,
+  appendPlanDelta,
+  appendReasoningDelta,
   buildRows,
   isWorkItem,
+  replaceFileChanges,
   upsertMany,
   type ActivityItem,
   type ChatItem,
@@ -2108,103 +2112,25 @@ export default function App(): React.JSX.Element {
   }
 
   function patchItemText(itemId: string, delta: string, fallbackType: 'agentMessage'): void {
-    enqueueItemMutation((current) => {
-      const index = current.findIndex((item) => item.id === itemId)
-
-      if (index === -1) {
-        return [...current, { type: fallbackType, id: itemId, text: delta, phase: null, memoryCitation: null }]
-      }
-
-      return current.map((item) =>
-        item.id === itemId && item.type === 'agentMessage'
-          ? { ...item, text: `${item.text}${delta}` }
-          : item
-      )
-    })
+    enqueueItemMutation((current) => appendAgentMessageDelta(current, itemId, delta))
   }
 
   function patchCommandOutput(itemId: string, delta: string): void {
-    enqueueItemMutation((current) =>
-      current.map((item) => {
-        if (item.id !== itemId || item.type !== 'commandExecution') {
-          return item
-        }
-
-        return {
-          ...item,
-          aggregatedOutput: `${item.aggregatedOutput ?? ''}${delta}`
-        }
-      })
-    )
+    enqueueItemMutation((current) => appendCommandOutputDelta(current, itemId, delta))
   }
 
   // Live diff stream: item/fileChange/patchUpdated replaces the item's full
   // change set on every update (the diff grows as Codex writes the file).
-  function patchFileChanges(itemId: string, changes: FileUpdateChange[]): void {
-    enqueueItemMutation((current) => {
-      const index = current.findIndex((item) => item.id === itemId)
-
-      if (index === -1) {
-        return [...current, { type: 'fileChange', id: itemId, changes, status: 'inProgress' }]
-      }
-
-      return current.map((item) =>
-        item.id === itemId && item.type === 'fileChange' ? { ...item, changes } : item
-      )
-    })
+  function patchFileChanges(itemId: string, changes: Parameters<typeof replaceFileChanges>[2]): void {
+    enqueueItemMutation((current) => replaceFileChanges(current, itemId, changes))
   }
 
   function patchReasoningPart(itemId: string, field: 'summary' | 'content', partIndex: number, delta: string): void {
-    enqueueItemMutation((current) => {
-      const index = current.findIndex((item) => item.id === itemId)
-
-      if (index === -1) {
-        const item: Extract<ThreadItem, { type: 'reasoning' }> = {
-          type: 'reasoning',
-          id: itemId,
-          summary: [],
-          content: []
-        }
-        const target = field === 'summary' ? item.summary : item.content
-        while (target.length <= partIndex) {
-          target.push('')
-        }
-        target[partIndex] = delta
-        return [...current, item]
-      }
-
-      return current.map((item) => {
-        if (item.id !== itemId || item.type !== 'reasoning') {
-          return item
-        }
-
-        const target = field === 'summary' ? [...item.summary] : [...item.content]
-        while (target.length <= partIndex) {
-          target.push('')
-        }
-        target[partIndex] = `${target[partIndex]}${delta}`
-
-        return field === 'summary' ? { ...item, summary: target } : { ...item, content: target }
-      })
-    })
+    enqueueItemMutation((current) => appendReasoningDelta(current, itemId, field, partIndex, delta))
   }
 
   function patchPlan(itemId: string, delta: string): void {
-    enqueueItemMutation((current) => {
-      const index = current.findIndex((item) => item.id === itemId)
-
-      if (index === -1) {
-        return [...current, { type: 'plan', id: itemId, text: delta }]
-      }
-
-      return current.map((item) => {
-        if (item.id !== itemId || item.type !== 'plan') {
-          return item
-        }
-
-        return { ...item, text: `${item.text}${delta}` }
-      })
-    })
+    enqueueItemMutation((current) => appendPlanDelta(current, itemId, delta))
   }
 
   // The structured turn plan renders as a live checklist card that updates in

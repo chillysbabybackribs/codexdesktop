@@ -1,4 +1,5 @@
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
 import {
   workItemTypes,
   type ItemMeta,
@@ -120,6 +121,82 @@ export function upsertMany(current: ChatItem[], nextItems: ChatItem[]): ChatItem
   }
 
   return next
+}
+
+export function appendAgentMessageDelta(items: ChatItem[], itemId: string, delta: string): ChatItem[] {
+  const index = items.findIndex((item) => item.id === itemId)
+  if (index === -1) {
+    return [...items, { type: 'agentMessage', id: itemId, text: delta, phase: null, memoryCitation: null }]
+  }
+
+  return items.map((item) =>
+    item.id === itemId && item.type === 'agentMessage'
+      ? { ...item, text: `${item.text}${delta}` }
+      : item
+  )
+}
+
+export function appendCommandOutputDelta(items: ChatItem[], itemId: string, delta: string): ChatItem[] {
+  return items.map((item) =>
+    item.id === itemId && item.type === 'commandExecution'
+      ? { ...item, aggregatedOutput: `${item.aggregatedOutput ?? ''}${delta}` }
+      : item
+  )
+}
+
+export function replaceFileChanges(
+  items: ChatItem[],
+  itemId: string,
+  changes: FileUpdateChange[]
+): ChatItem[] {
+  const index = items.findIndex((item) => item.id === itemId)
+  if (index === -1) {
+    return [...items, { type: 'fileChange', id: itemId, changes, status: 'inProgress' }]
+  }
+
+  return items.map((item) =>
+    item.id === itemId && item.type === 'fileChange' ? { ...item, changes } : item
+  )
+}
+
+export function appendReasoningDelta(
+  items: ChatItem[],
+  itemId: string,
+  field: 'summary' | 'content',
+  partIndex: number,
+  delta: string
+): ChatItem[] {
+  const index = items.findIndex((item) => item.id === itemId)
+  if (index === -1) {
+    const item: Extract<ThreadItem, { type: 'reasoning' }> = {
+      type: 'reasoning',
+      id: itemId,
+      summary: [],
+      content: []
+    }
+    const target = field === 'summary' ? item.summary : item.content
+    while (target.length <= partIndex) target.push('')
+    target[partIndex] = delta
+    return [...items, item]
+  }
+
+  return items.map((item) => {
+    if (item.id !== itemId || item.type !== 'reasoning') return item
+
+    const target = field === 'summary' ? [...item.summary] : [...item.content]
+    while (target.length <= partIndex) target.push('')
+    target[partIndex] = `${target[partIndex]}${delta}`
+    return field === 'summary' ? { ...item, summary: target } : { ...item, content: target }
+  })
+}
+
+export function appendPlanDelta(items: ChatItem[], itemId: string, delta: string): ChatItem[] {
+  const index = items.findIndex((item) => item.id === itemId)
+  if (index === -1) return [...items, { type: 'plan', id: itemId, text: delta }]
+
+  return items.map((item) =>
+    item.id === itemId && item.type === 'plan' ? { ...item, text: `${item.text}${delta}` } : item
+  )
 }
 
 export function mergeChatItem(current: ChatItem, incoming: ChatItem): ChatItem {
