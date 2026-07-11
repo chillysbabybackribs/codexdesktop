@@ -1,9 +1,12 @@
 import { app, BrowserWindow, crashReporter, dialog, ipcMain, Notification } from 'electron'
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type {
   ArtifactReadImageParams,
   ArtifactReadImageResult,
+  AttachmentPreviewParams,
+  AttachmentPreviewResult,
+  AttachmentSaveInput,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   TraceLoadParams,
@@ -23,6 +26,7 @@ import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
+import { AttachmentStore } from './attachment-store.js'
 
 // Chromium locks profile storage (cookies, service workers, etc.). A second
 // instance against the same userData dir causes random IO errors like:
@@ -51,6 +55,7 @@ let tabManager: TabManager | null = null
 let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
 const cdpArtifactStore = new CdpArtifactStore(() => join(app.getPath('userData'), 'cdp-artifacts'))
+const attachmentStore = new AttachmentStore(() => join(app.getPath('userData'), 'chat-attachments'))
 const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactStore)
 const researchRunner = new ResearchRunner(() => tabManager)
 const browserStateStore = new BrowserStateStore()
@@ -250,6 +255,30 @@ function registerIpc(): void {
   })
   ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
     dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
+  }))
+  ipcMain.handle(ipcChannels.attachmentPick, async () => {
+    if (!mainWindow) return []
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Add images or files',
+      properties: ['openFile', 'multiSelections'],
+      filters: [{
+        name: 'Supported files',
+        extensions: ['png', 'jpg', 'jpeg', 'webp', 'gif', 'pdf', 'txt', 'md', 'csv', 'json', 'jsonl', 'yaml', 'yml', 'xml', 'html', 'css', 'js', 'jsx', 'ts', 'tsx', 'py', 'rb', 'go', 'rs', 'java', 'c', 'h', 'cpp', 'hpp', 'sh', 'sql', 'log', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf']
+      }]
+    })
+    if (result.canceled) return []
+    const inputs: AttachmentSaveInput[] = await Promise.all(result.filePaths.map(async (path) => ({
+      name: path.split(/[\\/]/).pop() ?? 'attachment',
+      mediaType: 'application/octet-stream',
+      data: new Uint8Array(await readFile(path))
+    })))
+    return attachmentStore.persistFiles(inputs)
+  })
+  ipcMain.handle(ipcChannels.attachmentSave, (_event, files: AttachmentSaveInput[]) =>
+    attachmentStore.persistFiles(files)
+  )
+  ipcMain.handle(ipcChannels.attachmentPreview, async (_event, params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> => ({
+    dataUrl: await attachmentStore.preview(params.path)
   }))
   ipcMain.handle(ipcChannels.browserNewTab, (_event, url?: string) => tabManager?.createTab(url))
   ipcMain.handle(ipcChannels.browserCloseTab, (_event, tabId: string) => tabManager?.closeTab(tabId))

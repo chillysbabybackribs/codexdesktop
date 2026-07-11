@@ -2,6 +2,9 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type {
   ArtifactReadImageParams,
   ArtifactReadImageResult,
+  AttachmentPreviewParams,
+  AttachmentPreviewResult,
+  AttachmentSaveInput,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   BrowserFindResult,
@@ -18,6 +21,7 @@ import type {
   TracePersistParams,
   TraceSaveParams,
   TraceSaveResult
+  , ChatAttachment
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 
@@ -97,6 +101,13 @@ export const api = {
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>
       ipcRenderer.invoke(ipcChannels.artifactReadImage, params)
+  },
+  attachments: {
+    pick: (): Promise<ChatAttachment[]> => ipcRenderer.invoke(ipcChannels.attachmentPick),
+    save: (files: AttachmentSaveInput[]): Promise<ChatAttachment[]> =>
+      ipcRenderer.invoke(ipcChannels.attachmentSave, files),
+    preview: (params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> =>
+      ipcRenderer.invoke(ipcChannels.attachmentPreview, params)
   },
   notifications: {
     backgroundTurn: (params: BackgroundTurnNotificationParams): Promise<void> =>
