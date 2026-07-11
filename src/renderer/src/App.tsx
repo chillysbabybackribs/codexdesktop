@@ -1298,36 +1298,30 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  // Focus swap: the tabbed agent takes over the full chat view and the current
-  // full-view conversation demotes into the dock, staying subscribed so its
-  // turn keeps streaming into the lite state.
+  // Promote: the agent's conversation takes over the main view and its window
+  // closes. The previous main chat is not demoted into the dock — it lands in
+  // thread history, exactly like switching threads from the history menu. If a
+  // turn was running there it keeps working server-side; results show when the
+  // thread is reopened.
   async function handlePromoteAgent(key: string): Promise<void> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session?.threadId) return
+    if (!session) return
 
-    const demotedThreadId = activeThreadIdRef.current
-    const demotedTurnId = activeTurnIdRef.current
-    const demotedTitle = activeThreadTitle
-    const demotedMessages = liteMessagesFromItems(items)
+    if (session.model && session.model !== selectedModelRef.current) {
+      selectedModelRef.current = session.model
+      handleSelectModel(session.model)
+    }
 
-    updateAgentSessions((sessions) => {
-      const rest = sessions.filter((candidate) => candidate.key !== key)
-      if (demotedThreadId) {
-        rest.push({
-          key: crypto.randomUUID(),
-          threadId: demotedThreadId,
-          title: demotedTitle,
-          status: demotedTurnId ? 'working' : demotedMessages.length ? 'done' : 'idle',
-          turnId: demotedTurnId,
-          messages: demotedMessages,
-          watchesMain: false,
-          model: selectedModel
-        })
-      }
-      return rest
-    })
+    updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     setSelectedAgentKey((current) => (current === key ? null : current))
+
+    if (!session.threadId) {
+      // Blank agent (no message sent yet, so no thread): promoting it is just
+      // a fresh main chat on its model.
+      handleNewThread()
+      return
+    }
 
     setActiveTurnId(null)
     activeTurnIdRef.current = null

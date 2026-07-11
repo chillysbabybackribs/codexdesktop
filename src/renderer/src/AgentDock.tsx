@@ -307,9 +307,8 @@ function AgentWindow({
           <button
             type="button"
             className="icon-button"
-            aria-label="Focus in main chat"
-            title="Focus in main chat (current chat moves to a tab)"
-            disabled={!session.threadId}
+            aria-label="Open in main chat"
+            title="Open in main chat (current chat is saved to history)"
             onClick={() => onPromote(session.key)}
           >
             <ExpandIcon />
