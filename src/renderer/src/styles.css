@@ -3598,12 +3598,12 @@ button {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
-  border: 1px solid rgba(88, 101, 242, 0.22);
+  border: 1px solid rgba(242, 138, 49, 0.38);
   border-right: 0;
   border-radius: 12px 0 0 12px;
   /* Glassy, translucent surface — visibly a different layer from the solid
-     main-chat canvas behind it. */
-  background: rgba(20, 21, 27, 0.58);
+     main-chat canvas behind it. Accent lives in the border, not the fill. */
+  background: rgba(21, 20, 19, 0.58);
   backdrop-filter: blur(16px) saturate(1.1);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
@@ -3615,8 +3615,8 @@ button {
 }
 
 .agent-overlay.is-selected {
-  border-color: rgba(88, 101, 242, 0.55);
-  background: rgba(24, 25, 33, 0.72);
+  border-color: rgba(242, 138, 49, 0.8);
+  background: rgba(21, 20, 19, 0.7);
 }
 
 /* While the user works in the main chat, agent windows recede: dimmer, less
@@ -3637,11 +3637,11 @@ button {
 
 @keyframes agent-flash {
   0% {
-    border-color: #4a90d9;
-    box-shadow: 0 0 0 1px #4a90d9, 0 3px 14px rgba(0, 0, 0, 0.22);
+    border-color: #f28a31;
+    box-shadow: 0 0 0 1px #f28a31, 0 3px 14px rgba(0, 0, 0, 0.22);
   }
   100% {
-    border-color: rgba(88, 101, 242, 0.22);
+    border-color: rgba(242, 138, 49, 0.38);
     box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
   }
 }
@@ -3657,8 +3657,8 @@ button {
   gap: 8px;
   flex: 0 0 auto;
   padding: 8px 10px;
-  background: rgba(88, 101, 242, 0.07);
-  border-bottom: 1px solid rgba(88, 101, 242, 0.14);
+  background: rgba(242, 138, 49, 0.04);
+  border-bottom: 1px solid rgba(242, 138, 49, 0.16);
 }
 
 .agent-overlay-title {
@@ -3854,7 +3854,7 @@ button {
 }
 
 .agent-overlay-composer textarea:focus {
-  border-color: rgba(88, 101, 242, 0.45);
+  border-color: rgba(242, 138, 49, 0.55);
 }
 
 .agent-overlay-composer textarea {
