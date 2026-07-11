@@ -1,10 +1,11 @@
 # Hunt state
 
 - Run: `2026-07-11-4`
-- Status: `phase-0-collection`
+- Status: `complete-at-phase-0`
 - Started: `2026-07-11`
 - Prior hunts reviewed: 3
 - Existing ideas excluded: 11
 - Snapshot baseline: unavailable (`market-motion/` did not exist at run start)
-- Current boundary: three isolated Phase 0 evidence lanes
-
+- Phase 0 result: `INSUFFICIENT COVERAGE`; zero GO, two WATCH, four NO-GO
+- Downstream phases: not run because the hard gate did not pass
+- Dossier: `hunts/2026-07-11-4/dossier.md` and `dossier.html`

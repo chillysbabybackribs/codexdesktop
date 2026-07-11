@@ -35,6 +35,8 @@ These sources direct the hunt; they do not independently satisfy buyer-demand, e
 | Startup-sale markets | attrition and exit pressure | public listings or authenticated browser where authorized | asking price, revenue claims, age, category density, sale timing | self-reported values and selection bias; high sale rate is often a negative signal | |
 | Indie Hackers products/interviews | traction and founder narrative | public product pages/interviews; prefer Stripe-verified records | revenue, founding narrative, channel, audience, failed attempts | founder-authored; require buyer-side corroboration | |
 
+Run `2026-07-11-4` calibration: `750→0→2→0→0`. TrustMRR API yielded 100 verified rows but rate-limited at 1.21% of the rank-ordered directory and lacked a longitudinal baseline. HN Algolia yielded 470 formation/feedback records but was source-concentrated. Stack Exchange plus Ask HN yielded 178 buyer records; precise Ask HN workflows were highest signal, while broad Stack Exchange money extraction overcounted percentages and adjacent costs. No source changed the hard gate to GO.
+
 For Phase 0, preserve immutable snapshots under `market-motion/`, compare cohorts longitudinally, and measure unique founders, commercial breadth, survival, concentration, and sale pressure. Use medians/proportions rather than summed revenue or the largest product.
 
 ## Marketplaces with visible numbers (plain fetch, sometimes browser)
