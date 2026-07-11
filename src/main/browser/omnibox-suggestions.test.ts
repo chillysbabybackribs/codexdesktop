@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { HistoryEntry } from './browser-history-store.ts'
-import { buildSuggestions, MAX_OMNIBOX_ROWS } from './omnibox-suggestions.ts'
+import { buildSuggestions, inlineCompletion, MAX_OMNIBOX_ROWS } from './omnibox-suggestions.ts'
 
 const NOW = 1_000_000_000_000
 
@@ -60,6 +60,37 @@ test('all tokens must match somewhere', () => {
 
   assert.equal(rows.length, 1)
   assert.equal(rows[0].kind, 'search')
+})
+
+test('inlineCompletion completes a host prefix, stripping www and preserving typed case', () => {
+  const entries = [entry('https://www.wikipedia.org/', 'Wikipedia', 5)]
+
+  assert.equal(inlineCompletion('wik', entries, NOW), 'wikipedia.org')
+  assert.equal(inlineCompletion('WIK', entries, NOW), 'WIKipedia.org')
+  assert.equal(inlineCompletion('www.wik', entries, NOW), 'www.wikipedia.org')
+})
+
+test('inlineCompletion completes deeper URL forms when typed past the host', () => {
+  const entries = [entry('https://news.ycombinator.com/item?id=1', 'HN', 3)]
+
+  assert.equal(inlineCompletion('news.ycombinator.com/it', entries, NOW), 'news.ycombinator.com/item?id=1')
+  assert.equal(inlineCompletion('https://news.y', entries, NOW), 'https://news.ycombinator.com/item?id=1')
+})
+
+test('inlineCompletion prefers the most frecent match', () => {
+  const entries = [entry('https://github.io/', 'Pages', 3, 24 * 30), entry('https://github.com/', 'GitHub', 30)]
+
+  assert.equal(inlineCompletion('git', entries, NOW), 'github.com')
+})
+
+test('inlineCompletion never fires for searches, single visits, or exact text', () => {
+  const entries = [entry('https://wikipedia.org/', 'Wikipedia', 1), entry('https://example.com/', 'Example', 9)]
+
+  assert.equal(inlineCompletion('wik', entries, NOW), null, 'single visit must not complete')
+  assert.equal(inlineCompletion('how to wik', entries, NOW), null, 'spaces mean search')
+  assert.equal(inlineCompletion('example.com', entries, NOW), null, 'nothing left to complete')
+  assert.equal(inlineCompletion('', entries, NOW), null)
+  assert.equal(inlineCompletion('wik ', entries, NOW), null, 'trailing space means the user is not typing a url')
 })
 
 test('row count is capped', () => {
