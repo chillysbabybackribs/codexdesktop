@@ -454,12 +454,12 @@ export class TabManager {
       Menu.buildFromTemplate(template).popup({ window: this.window })
     })
 
-    const syncAudioState = (): void => {
-      tab.isAudible = webContents.isCurrentlyAudible()
+    // media-started-playing/media-paused fire before Chromium updates the
+    // audible flag, so polling isCurrentlyAudible() there reads stale values.
+    webContents.on('audio-state-changed', (event) => {
+      tab.isAudible = event.audible
       this.pushState()
-    }
-    webContents.on('media-started-playing', syncAudioState)
-    webContents.on('media-paused', syncAudioState)
+    })
 
     webContents.on('enter-html-full-screen', () => this.window.setFullScreen(true))
     webContents.on('leave-html-full-screen', () => this.window.setFullScreen(false))
