@@ -15,12 +15,16 @@ type AppServerRequest = <T = unknown>(method: string, params?: unknown) => Promi
 
 export class LocalSkillRegistry {
   private skills: SkillMetadata[]
+  private readonly appPath: string
+  private readonly skillsRoot: string
 
   constructor(
-    private readonly appPath: string,
-    private readonly skillsRoot: string,
+    appPath: string,
+    skillsRoot: string,
     initialSkills: SkillMetadata[] = []
   ) {
+    this.appPath = appPath
+    this.skillsRoot = skillsRoot
     this.skills = initialSkills
   }
 
