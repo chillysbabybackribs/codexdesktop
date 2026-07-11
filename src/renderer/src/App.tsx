@@ -2177,14 +2177,25 @@ function ChatPane({
 
   const focusAgent = (key: string): void => {
     onOpenAgent(key)
-    // Scroll the column to the window once it exists in the DOM, with a brief
-    // highlight so the eye lands on the right agent.
-    requestAnimationFrame(() => {
+    // Align the window's top edge with the scroll container's top explicitly —
+    // scrollIntoView(nearest) accepts partial visibility, and the overflow
+    // bars appearing mid-scroll shift the viewport. A settle pass re-corrects
+    // after the bars have toggled.
+    const align = (behavior: ScrollBehavior): void => {
       const node = document.querySelector(`[data-agent-key="${key}"]`)
-      if (!(node instanceof HTMLElement)) return
-      node.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-      node.classList.add('is-flash')
-      window.setTimeout(() => node.classList.remove('is-flash'), 750)
+      const scroller = node instanceof HTMLElement ? node.parentElement : null
+      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return
+      const delta = node.getBoundingClientRect().top - scroller.getBoundingClientRect().top
+      if (Math.abs(delta) > 4) scroller.scrollBy({ top: delta, behavior })
+    }
+    requestAnimationFrame(() => {
+      align('smooth')
+      const node = document.querySelector(`[data-agent-key="${key}"]`)
+      if (node instanceof HTMLElement) {
+        node.classList.add('is-flash')
+        window.setTimeout(() => node.classList.remove('is-flash'), 750)
+      }
+      window.setTimeout(() => align('auto'), 450)
     })
   }
 
