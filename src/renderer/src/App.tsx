@@ -320,6 +320,12 @@ export default function App(): React.JSX.Element {
   // Background agent sessions. The ref mirrors state synchronously (via
   // updateAgentSessions) because the codex event handler routes on it.
   const agentSessionsRef = useRef<AgentSession[]>([])
+  // Buffered agent-message deltas keyed by session key → itemId → accumulated
+  // text, flushed into agent-session state on a 32ms timer. Without this, each
+  // streamed token was one root-App re-render (the main chat already batches
+  // this way via enqueueItemMutation).
+  const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
+  const agentDeltaTimerRef = useRef<number | null>(null)
   // Keys of agent sessions whose thread/start is in flight, so the
   // thread/started notification binds to the session instead of hijacking the
   // main view.
