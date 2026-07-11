@@ -3224,6 +3224,10 @@ function ThreadScroll({
     if (anchorTurnRef.current !== null) {
       anchorTurnRef.current = null
       setSpacerOn(false)
+      if (anchorFrameRef.current !== null) {
+        window.cancelAnimationFrame(anchorFrameRef.current)
+        anchorFrameRef.current = null
+      }
     }
 
     // A queued frame from a prior delta must never pull a reader back down
