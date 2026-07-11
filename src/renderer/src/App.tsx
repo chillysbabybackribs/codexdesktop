@@ -3223,8 +3223,6 @@ function ThreadScroll({
     // A deliberate scroll releases the top-anchor, exactly like it releases
     // bottom-follow — the reader is now driving.
     if (anchorTurnRef.current !== null) {
-      // eslint-disable-next-line no-console
-      console.log('[RELEASE] user scroll released anchor', JSON.stringify({ scrollTop: Math.round(el.scrollTop), dfb: Math.round(distanceFromBottom) }))
       anchorTurnRef.current = null
       setSpacerOn(false)
       if (anchorFrameRef.current !== null) {
