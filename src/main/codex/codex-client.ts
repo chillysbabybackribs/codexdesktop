@@ -1,8 +1,6 @@
 import { EventEmitter } from 'node:events'
-import { createInterface } from 'node:readline'
-import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { join } from 'node:path'
-import { app, type BrowserWindow } from 'electron'
+import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
@@ -31,6 +29,7 @@ import {
   type JsonRpcMessage,
   type JsonRpcRequestMessage
 } from './app-server-rpc.js'
+import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
@@ -47,8 +46,7 @@ import { LocalSkillRegistry } from './local-skill-registry.js'
 const autoCompactContextRatio = 0.8
 
 export class CodexClient extends EventEmitter {
-  private child: ChildProcessWithoutNullStreams | null = null
-  private startPromise: Promise<void> | null = null
+  private readonly appServer: AppServerProcess
   private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
   private readonly threadModels = new Map<string, string>()
@@ -56,13 +54,17 @@ export class CodexClient extends EventEmitter {
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
   constructor(
-    private readonly getWindow: () => BrowserWindow | null,
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner
   ) {
     super()
+    this.appServer = new AppServerProcess({
+      onLine: (line) => this.rpc.handleLine(line),
+      onStopped: (error) => this.rpc.rejectPending(error),
+      onStatus: (status, message) => this.emitStatus(status, message)
+    })
     this.rpc = new AppServerRpc({
-      write: (message) => this.writeToChild(message),
+      write: (message) => this.appServer.write(message),
       onNotification: (message) => this.handleNotification(message),
       onRequest: (message) => this.handleServerRequest(message)
     })
@@ -248,98 +250,38 @@ export class CodexClient extends EventEmitter {
   }
 
   dispose(): void {
-    this.rpc.rejectPending(new Error('Codex app-server stopped'))
-    this.child?.kill()
-    this.child = null
+    this.appServer.dispose()
   }
 
   private async ensureStarted(): Promise<void> {
-    if (this.startPromise) {
-      return this.startPromise
-    }
-
-    if (this.child && !this.child.killed) {
-      this.emitStatus('ready')
-      return
-    }
-
-    this.startPromise = this.start()
-
-    try {
-      await this.startPromise
-    } finally {
-      this.startPromise = null
-    }
+    return this.appServer.ensureStarted(() => this.initialize())
   }
 
-  private async start(): Promise<void> {
-    this.emitStatus('starting')
-
-    const child = spawn('codex', ['app-server', '--stdio'], {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      env: process.env
-    })
-
-    this.child = child
-
-    child.stderr.setEncoding('utf8')
-    child.stderr.on('data', (chunk) => {
-      const message = String(chunk).trim()
-
-      if (message) {
-        console.warn(`codex app-server: ${message}`)
+  private async initialize(): Promise<void> {
+    await this.request('initialize', {
+      clientInfo: {
+        name: 'codexdesktop',
+        title: 'Codex Desktop',
+        version: '0.1.0'
+      },
+      capabilities: {
+        experimentalApi: true,
+        requestAttestation: false,
+        optOutNotificationMethods: [
+          'rawResponseItem/completed',
+          'thread/realtime/started',
+          'thread/realtime/itemAdded',
+          'thread/realtime/transcript/delta',
+          'thread/realtime/transcript/done',
+          'thread/realtime/outputAudio/delta',
+          'thread/realtime/sdp',
+          'thread/realtime/error',
+          'thread/realtime/closed'
+        ]
       }
     })
-
-    child.on('exit', (code, signal) => {
-      this.child = null
-      const message = `codex app-server exited (${code ?? signal ?? 'unknown'})`
-      this.emitStatus('exited', message)
-      this.rpc.rejectPending(new Error(message))
-    })
-
-    child.on('error', (error) => {
-      this.child = null
-      this.emitStatus('error', error.message)
-      this.rpc.rejectPending(error)
-    })
-
-    const lines = createInterface({ input: child.stdout })
-    lines.on('line', (line) => this.rpc.handleLine(line))
-
-    try {
-      await this.request('initialize', {
-        clientInfo: {
-          name: 'codexdesktop',
-          title: 'Codex Desktop',
-          version: '0.1.0'
-        },
-        capabilities: {
-          experimentalApi: true,
-          requestAttestation: false,
-          optOutNotificationMethods: [
-            'rawResponseItem/completed',
-            'thread/realtime/started',
-            'thread/realtime/itemAdded',
-            'thread/realtime/transcript/delta',
-            'thread/realtime/transcript/done',
-            'thread/realtime/outputAudio/delta',
-            'thread/realtime/sdp',
-            'thread/realtime/error',
-            'thread/realtime/closed'
-          ]
-        }
-      })
-      this.rpc.notify('initialized')
-      await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
-      this.emitStatus('ready')
-    } catch (error) {
-      if (this.child === child) {
-        this.child = null
-        child.kill()
-      }
-      throw error
-    }
+    this.rpc.notify('initialized')
+    await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
@@ -430,14 +372,6 @@ export class CodexClient extends EventEmitter {
       researchRunner: this.researchRunner
     })
     this.rpc.respond(id, response)
-  }
-
-  private writeToChild(message: JsonRpcMessage): void {
-    if (!this.child) {
-      throw new Error('codex app-server is not running')
-    }
-
-    this.child.stdin.write(`${JSON.stringify(message)}\n`)
   }
 
   private emitStatus(status: CodexConnectionStatus, message?: string): void {

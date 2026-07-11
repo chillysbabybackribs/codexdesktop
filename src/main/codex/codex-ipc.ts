@@ -23,7 +23,7 @@ export function registerCodexIpc(
   memoryStore: MemoryStore,
   attachmentStore: AttachmentStore
 ): CodexClient {
-  const client = new CodexClient(getWindow, browserAgent, researchRunner)
+  const client = new CodexClient(browserAgent, researchRunner)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)
