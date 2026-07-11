@@ -112,6 +112,10 @@ export class BrowserAgentController {
     return this.getTabs()?.listTargets() ?? []
   }
 
+  async readScreenshotDataUrl(artifactPath: string): Promise<string | null> {
+    return this.artifactStore?.readImageDataUrl(artifactPath) ?? null
+  }
+
   // Returns a live tab dedicated to one agent thread: the existing mapping if
   // that tab is still open, otherwise a fresh tab. Creation activates the tab
   // once (so the user sees it appear); later calls never steal focus.

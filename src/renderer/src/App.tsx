@@ -4339,11 +4339,38 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         ↻
       </button>
       <input
+        ref={omniboxRef}
         className="omnibox"
         value={input}
         spellCheck={false}
+        autoComplete="off"
         aria-label="Address"
-        onChange={(event) => setInput(event.target.value)}
+        onFocus={(event) => {
+          setIsEditing(true)
+          typedTextRef.current = event.target.value
+          justFocusedRef.current = true
+          event.target.select()
+          runQuery('')
+        }}
+        onMouseUp={(event) => {
+          // Keep the select-all from the focus click; without this the mouseup
+          // collapses the selection to a caret.
+          if (justFocusedRef.current) {
+            event.preventDefault()
+            justFocusedRef.current = false
+          }
+        }}
+        onBlur={() => {
+          setIsEditing(false)
+          closePopup()
+        }}
+        onChange={(event) => {
+          const text = event.target.value
+          setInput(text)
+          typedTextRef.current = text
+          runQuery(text)
+        }}
+        onKeyDown={handleOmniboxKeyDown}
       />
       <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}>
         ⌕
@@ -4363,9 +4390,6 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
         <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}>+</button>
       </div>
-      <button type="button" className="browser-nav-button close-ghost" aria-label="Clear address" onClick={() => setInput('')}>
-        ×
-      </button>
       {findOpen ? (
         <div className="browser-find" role="search">
           <input
@@ -4381,7 +4405,11 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
             }}
             onKeyDown={(event) => {
               if (event.key === 'Escape') closeFind()
-              if (event.key === 'Enter') void runFind(!event.shiftKey)
+              if (event.key === 'Enter') {
+                // Stop the toolbar form from also submitting (which navigates).
+                event.preventDefault()
+                void runFind(!event.shiftKey)
+              }
             }}
           />
           <span aria-live="polite">{findText ? `${findResult.activeMatchOrdinal}/${findResult.matches}` : '0/0'}</span>

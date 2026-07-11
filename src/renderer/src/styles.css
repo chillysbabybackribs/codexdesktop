@@ -3434,7 +3434,7 @@ button {
 
 .browser-toolbar {
   display: grid;
-  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px auto 32px;
+  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px auto;
   position: relative;
   align-items: center;
   gap: 4px;
@@ -3549,10 +3549,6 @@ button {
 .omnibox:focus {
   border-color: #3b536a;
   background: #101820;
-}
-
-.close-ghost {
-  font-size: 16px;
 }
 
 .browser-frame {

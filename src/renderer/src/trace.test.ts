@@ -321,21 +321,24 @@ test('research tool artifacts contribute to observed goal evidence', () => {
   assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
 })
 
-test('CDP screenshot artifacts are indexed without their image payload', () => {
+test('dedicated browser screenshots are indexed without their image payload', () => {
   const screenshotPath = '/home/dp/.config/codexdesktop/cdp-artifacts/screenshot-test.png'
   const items: ThreadItem[] = [{
     type: 'dynamicToolCall',
     id: 'screenshot-1',
     namespace: null,
-    tool: 'browser_cdp',
-    arguments: { method: 'Page.captureScreenshot' },
+    tool: 'browser_screenshot',
+    arguments: {},
     status: 'completed',
-    contentItems: [{
-      type: 'inputText',
-      text: JSON.stringify({
-        screenshot: { artifactPath: screenshotPath, bytes: 72, mediaType: 'image/png' }
-      })
-    }],
+    contentItems: [
+      {
+        type: 'inputText',
+        text: JSON.stringify({
+          screenshot: { artifactPath: screenshotPath, bytes: 72, mediaType: 'image/png' }
+        })
+      },
+      { type: 'inputImage', imageUrl: 'data:image/png;base64,ignored-by-trace' }
+    ],
     success: true,
     durationMs: 12
   }]

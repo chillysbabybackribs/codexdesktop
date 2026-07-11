@@ -595,9 +595,22 @@ export class CodexClient extends EventEmitter {
     try {
       const args = asRecord(params.arguments)
       let result
+      let imageUrl: string | null = null
 
       if (params.namespace !== null) {
         result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace}` }
+      } else if (params.tool === 'browser_screenshot') {
+        result = await this.browserAgent.cdp('Page.captureScreenshot', { format: 'png' }, {
+          tabId: this.resolveAgentTab(params.threadId, readString(args.tab))
+        })
+        const screenshot = asRecord(asRecord(result.result).screenshot)
+        const artifactPath = readString(screenshot.artifactPath)
+        if (result.ok && artifactPath) {
+          imageUrl = await this.browserAgent.readScreenshotDataUrl(artifactPath)
+          if (!imageUrl) {
+            result = { ...result, ok: false, error: 'captured screenshot could not be loaded for model vision' }
+          }
+        }
       } else if (params.tool === 'browser_run') {
         const code = readString(args.code)
         result = code
@@ -678,7 +691,10 @@ export class CodexClient extends EventEmitter {
 
       const response: DynamicToolCallResponse = {
         success: result.ok,
-        contentItems: [{ type: 'inputText', text: JSON.stringify(result) }]
+        contentItems: [
+          { type: 'inputText', text: JSON.stringify(result) },
+          ...(imageUrl ? [{ type: 'inputImage' as const, imageUrl }] : [])
+        ]
       }
       this.respond(id, response)
     } catch (error) {

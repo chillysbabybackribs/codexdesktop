@@ -131,6 +131,14 @@ const browserExtractPageSchema = {
   additionalProperties: false
 }
 
+const browserScreenshotSchema = {
+  type: 'object',
+  properties: {
+    tab: { type: 'string', description: 'Optional tab id. Defaults to this thread\'s visible browser tab.' }
+  },
+  additionalProperties: false
+}
+
 const researchWebSchema = {
   type: 'object',
   properties: {
@@ -150,6 +158,12 @@ const researchWebSchema = {
 }
 
 export const browserDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'function',
+    name: 'browser_screenshot',
+    description: 'Capture the visible viewport of this thread\'s browser tab and view it directly. Returns the screenshot to the model as an image plus compact artifact metadata.',
+    inputSchema: browserScreenshotSchema
+  },
   {
     type: 'function',
     name: 'browser_run',
