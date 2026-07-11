@@ -2033,6 +2033,7 @@ function ChatPane({
           onSend={onSend}
           onSteer={onSteer}
           onStop={onStop}
+          onNewThread={onNewThread}
           footerExtras={
             <div className="composer-thread-controls">
               <ContextPill
@@ -2054,15 +2055,6 @@ function ChatPane({
                 onResumeThread={onResumeThread}
                 onLoadMoreThreads={onLoadMoreThreads}
               />
-              <button
-                type="button"
-                className="icon-button composer-new-chat"
-                aria-label="New chat"
-                title="New chat"
-                onClick={onNewThread}
-              >
-                <NewChatIcon />
-              </button>
             </div>
           }
         />
@@ -3230,6 +3222,7 @@ function Composer({
   onSend,
   onSteer,
   onStop,
+  onNewThread,
   footerExtras
 }: {
   docked: boolean
@@ -3239,12 +3232,14 @@ function Composer({
   onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
+  onNewThread: () => void
   footerExtras?: React.ReactNode
 }): React.JSX.Element {
   const [value, setValue] = useState('')
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const hasDraft = Boolean(value.trim() || attachments.length)
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
@@ -3327,15 +3322,27 @@ function Composer({
             >
               <span className="stop-square" aria-hidden="true" />
             </button>
-          ) : null}
-          <button
-            type="submit"
-            className="send-button"
-            aria-label={isTurnActive ? 'Add guidance to turn' : 'Send message'}
-            disabled={isLoading || (!value.trim() && !attachments.length)}
-          >
-            <SendArrowIcon />
-          </button>
+          ) : hasDraft ? (
+            <button
+              type="submit"
+              className="send-button"
+              aria-label="Send message"
+              disabled={isLoading}
+            >
+              <SendArrowIcon />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="send-button composer-new-chat"
+              aria-label="New chat"
+              title="New chat"
+              disabled={isLoading}
+              onClick={onNewThread}
+            >
+              <NewChatIcon />
+            </button>
+          )}
         </div>
       </div>
     </form>
