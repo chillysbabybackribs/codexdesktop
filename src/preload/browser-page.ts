@@ -1,5 +1,10 @@
 import { ipcRenderer } from 'electron'
-import { ipcChannels } from '../shared/ipc.js'
+
+// Channel name duplicated from shared/ipc.ts ipcChannels on purpose: preloads
+// run sandboxed and cannot require() the shared chunk rollup emits for a
+// cross-entry runtime import (it broke window.api in every preload), so each
+// preload entry must stay self-contained. Type-only imports are fine.
+const selectionCopyChannel = 'browser:selectionCopy'
 
 const dragThreshold = 4
 let pointerStart: { x: number; y: number } | null = null
@@ -22,7 +27,7 @@ window.addEventListener('pointerup', (event) => {
   if (Math.hypot(event.clientX - start.x, event.clientY - start.y) < dragThreshold) return
 
   const text = window.getSelection()?.toString() ?? ''
-  if (text.trim()) ipcRenderer.send(ipcChannels.browserSelectionCopy, text)
+  if (text.trim()) ipcRenderer.send(selectionCopyChannel, text)
 }, true)
 
 window.addEventListener('pointercancel', () => {
