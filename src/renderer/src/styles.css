@@ -139,6 +139,14 @@ button {
   grid-template-rows: minmax(0, 1fr);
 }
 
+.chat-pane-content {
+  display: contents;
+}
+
+.chat-pane-content.is-hidden {
+  display: none;
+}
+
 .chat-toolbar {
   position: relative;
   display: grid;

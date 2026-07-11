@@ -1936,7 +1936,8 @@ function ChatPane({
           onClose={closePluginBrowser}
           onChanged={setInstalledPlugins}
         />
-      ) : <>
+      ) : null}
+      <div className={`chat-pane-content ${isPluginBrowserOpen ? 'is-hidden' : ''}`}>
       <div className="chat-toolbar">
         <button
           type="button"
@@ -2093,7 +2094,7 @@ function ChatPane({
         setTraceTurnId(null)
         setStoredTrace(null)
       }} /> : null}
-      </>}
+      </div>
     </section>
   )
 }
