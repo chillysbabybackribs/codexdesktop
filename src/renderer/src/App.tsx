@@ -15,7 +15,8 @@ import {
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { AgentColumn, AgentTabStrip } from './AgentDock'
+import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
+import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
@@ -191,6 +192,7 @@ const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
+const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
@@ -310,6 +312,15 @@ export default function App(): React.JSX.Element {
   // thread/started notification binds to the session instead of hijacking the
   // main view.
   const agentStartQueueRef = useRef<string[]>([])
+  // Stable "Agent N" numbering (main chat is implicitly 1) that survives
+  // closes and restarts.
+  const agentCounterRef = useRef(2)
+  // Persistence only starts writing after restore has run, so a fresh mount
+  // can't wipe the stored dock.
+  const agentDockRestoredRef = useRef(false)
+  // Per-session overload recovery, keyed by session key — the dock equivalent
+  // of autoRecoveryRef (which only ever tracks the focused thread).
+  const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -487,9 +498,13 @@ export default function App(): React.JSX.Element {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
-        const restorePromise = lastThreadId
-          ? resumeThreadById(lastThreadId, { silent: true })
-          : Promise.resolve()
+        // Main thread first — it warms up the codex child, so the dock's
+        // resume calls don't race a cold start. The dock restore then skips
+        // any thread the main view already owns.
+        const restorePromise = (async () => {
+          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+          await restoreAgentDock()
+        })()
 
         await Promise.all([authPromise, threadsPromise, restorePromise])
         hasAutoRestoredRef.current = true
@@ -953,6 +968,16 @@ export default function App(): React.JSX.Element {
     patchAgentSession(key, (session) => ({ ...session, messages: [...session.messages, message] }))
   }
 
+  // Append unless a message with this id already exists — the `error`
+  // notification and the failed `turn/completed` carry the same turn error.
+  function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
+    patchAgentSession(key, (session) =>
+      session.messages.some((existing) => existing.id === message.id)
+        ? session
+        : { ...session, messages: [...session.messages, message] }
+    )
+  }
+
   // Lite reducer for threads living in the dock: track turn status and plain
   // chat text only. The full activity pipeline stays exclusive to the focused
   // thread.
@@ -975,11 +1000,18 @@ export default function App(): React.JSX.Element {
           message: turn.error?.message ?? null
         })
         if (turn.error?.message) {
-          appendAgentMessage(session.key, {
+          appendAgentMessageOnce(session.key, {
             id: `error-${turn.id}`,
             role: 'assistant',
             text: `⚠ ${turn.error.message}`
           })
+        }
+        if (turn.status === 'failed') {
+          maybeScheduleAgentRecovery(session.key, turn.id, turn.error)
+        } else {
+          // Healthy terminal turn (completed or user-interrupted) ends any
+          // recovery chain, mirroring the main chat.
+          cancelAgentRecovery(session.key)
         }
         return
       }
@@ -1008,6 +1040,20 @@ export default function App(): React.JSX.Element {
             : [...current.messages, { id: item.id, role: 'assistant' as const, text: item.text }]
           return { ...current, messages }
         })
+        return
+      }
+      case 'error': {
+        const { turnId, error, willRetry } = notification.params
+        if (willRetry) return
+        appendAgentMessageOnce(session.key, {
+          id: `error-${turnId}`,
+          role: 'assistant',
+          text: `⚠ ${error.message}`
+        })
+        patchAgentSession(session.key, (current) =>
+          current.turnId === turnId ? { ...current, status: 'done', turnId: null } : current
+        )
+        maybeScheduleAgentRecovery(session.key, turnId, error)
         return
       }
       default:
@@ -1039,11 +1085,12 @@ export default function App(): React.JSX.Element {
       {
         key,
         threadId: null,
-        title: `Agent ${sessions.length + 2}`,
+        title: `Agent ${agentCounterRef.current++}`,
         status: 'idle',
         turnId: null,
         messages: [],
-        watchesMain: false
+        watchesMain: false,
+        model: null
       }
     ])
     setOpenAgentKeys((current) => [...current, key])
@@ -1062,6 +1109,140 @@ export default function App(): React.JSX.Element {
 
   function handleToggleWatchAgent(key: string): void {
     patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
+  }
+
+  function handleSetAgentModel(key: string, model: string): void {
+    patchAgentSession(key, (session) => ({ ...session, model }))
+  }
+
+  // Dock persistence, mirroring the main chat's lastThreadId restore: session
+  // metadata lives in localStorage; transcripts rehydrate from the server.
+  useEffect(() => {
+    if (!agentDockRestoredRef.current) return
+    // Blank agents (no message sent yet, so no thread) persist too — they
+    // restore as blank windows.
+    const sessions = agentSessions.map((session) => ({
+      threadId: session.threadId,
+      title: session.title,
+      watchesMain: session.watchesMain,
+      model: session.model,
+      open: openAgentKeys.includes(session.key),
+      selected: session.key === selectedAgentKey
+    }))
+    window.localStorage.setItem(
+      agentDockStorageKey,
+      JSON.stringify({ counter: agentCounterRef.current, sessions })
+    )
+  }, [agentSessions, openAgentKeys, selectedAgentKey])
+
+  // Strip the helper-mode context preamble from persisted user messages so
+  // rehydrated transcripts show what the user actually typed.
+  function stripMainChatContext(text: string): string {
+    if (!text.startsWith('<main-chat-context>')) return text
+    const end = text.indexOf('</main-chat-context>')
+    return end === -1 ? text : text.slice(end + '</main-chat-context>'.length).trimStart()
+  }
+
+  async function restoreAgentDock(): Promise<void> {
+    try {
+      const raw = window.localStorage.getItem(agentDockStorageKey)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as {
+        counter?: number
+        sessions?: Array<{
+          threadId?: string | null
+          title?: string
+          watchesMain?: boolean
+          model?: string | null
+          open?: boolean
+          selected?: boolean
+        }>
+      }
+      if (typeof parsed.counter === 'number' && parsed.counter > agentCounterRef.current) {
+        agentCounterRef.current = parsed.counter
+      }
+      const entries = (parsed.sessions ?? []).filter(
+        (entry) =>
+          // The main view owns its restored thread; don't double-own it.
+          !entry.threadId || entry.threadId !== activeThreadIdRef.current
+      )
+      if (!entries.length) return
+
+      const restored: AgentSession[] = entries.map((entry) => ({
+        key: crypto.randomUUID(),
+        threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
+        title: entry.title || `Agent ${agentCounterRef.current++}`,
+        status: 'idle',
+        turnId: null,
+        messages: [],
+        watchesMain: Boolean(entry.watchesMain),
+        model: entry.model ?? null
+      }))
+
+      // Register before resuming so incoming events route to the dock and the
+      // main view's unsubscribe guards see these threads as dock-owned.
+      updateAgentSessions((current) => [...current, ...restored])
+      // Windows relaunch as they were left; if no open flags survived (legacy
+      // or corrupted storage), open everything rather than restoring a dock
+      // of invisible tabs.
+      const anyOpenFlag = entries.some((entry) => entry.open)
+      const openKeys = anyOpenFlag
+        ? restored.filter((_, index) => entries[index].open).map((s) => s.key)
+        : restored.map((s) => s.key)
+      if (openKeys.length) setOpenAgentKeys((current) => [...current, ...openKeys])
+      const selectedIndex = entries.findIndex((entry) => entry.selected)
+      if (selectedIndex >= 0) setSelectedAgentKey(restored[selectedIndex].key)
+
+      await Promise.all(
+        restored.map(async (session) => {
+          if (!session.threadId) return
+          try {
+            const resumed = await window.api.codex.resumeThread(session.threadId)
+            let turns =
+              resumed.thread.turns.length > 0
+                ? resumed.thread.turns
+                : resumed.initialTurnsPage?.data ?? []
+            if (!turns.length) {
+              const read = await window.api.codex.readThread(session.threadId!)
+              turns = read.thread.turns
+            }
+            const messages: AgentLiteMessage[] = []
+            for (const turn of turns) {
+              for (const item of turn.items) {
+                if (item.type === 'userMessage' || item.type === 'agentMessage') {
+                  const text = (item as { text?: string }).text
+                  if (text) {
+                    messages.push({
+                      id: item.id,
+                      role: item.type === 'userMessage' ? 'user' : 'assistant',
+                      text: item.type === 'userMessage' ? stripMainChatContext(text) : text
+                    })
+                  }
+                }
+              }
+            }
+            patchAgentSession(session.key, (current) => ({
+              ...current,
+              messages: messages.slice(-60)
+            }))
+          } catch (error) {
+            // Keep the session — a resume failure here is more often a
+            // cold-start hiccup than a deleted thread, and dropping it loses
+            // the user's dock. The window shows a note instead.
+            console.warn('Agent thread rehydration failed', session.threadId, error)
+            appendAgentMessage(session.key, {
+              id: `restore-${session.key}`,
+              role: 'assistant',
+              text: '⚠ Could not restore this conversation’s history. Sending a message will retry the thread; close this agent if it no longer exists.'
+            })
+          }
+        })
+      )
+    } catch (error) {
+      console.warn('Agent dock restore failed', error)
+    } finally {
+      agentDockRestoredRef.current = true
+    }
   }
 
   // Compact digest of the focused conversation, prepended to helper-agent
@@ -1085,11 +1266,12 @@ export default function App(): React.JSX.Element {
     ].join('\n')
   }
 
-  function bindAgentThread(key: string, threadId: string, title: string | null): void {
+  // Agent tabs keep their stable "Agent N" names — server thread names never
+  // overwrite them.
+  function bindAgentThread(key: string, threadId: string): void {
     patchAgentSession(key, (session) => ({
       ...session,
-      threadId: session.threadId ?? threadId,
-      title: title || session.title
+      threadId: session.threadId ?? threadId
     }))
   }
 
@@ -1097,18 +1279,22 @@ export default function App(): React.JSX.Element {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return false
 
+    // The user is driving this agent again — drop any pending recovery.
+    cancelAgentRecovery(key)
+
     try {
+      const agentModel = session.model ?? selectedModelRef.current
       let threadId = session.threadId
       if (!threadId) {
         agentStartQueueRef.current.push(key)
         const started = await window.api.codex.startThread({
           cwd: workspaceRef.current,
-          model: selectedModelRef.current
+          model: agentModel
         })
         threadId = started.thread.id
         agentStartQueueRef.current = agentStartQueueRef.current.filter((queued) => queued !== key)
         if (!threadId) throw new Error('Thread start returned no thread id')
-        bindAgentThread(key, threadId, threadTitle(started.thread))
+        bindAgentThread(key, threadId)
       }
 
       appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text })
@@ -1117,7 +1303,7 @@ export default function App(): React.JSX.Element {
         threadId,
         text: outgoingText,
         cwd: workspaceRef.current,
-        model: selectedModelRef.current
+        model: agentModel
       })
       patchAgentSession(key, (current) => ({
         ...current,
@@ -1145,8 +1331,118 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  // Mid-turn guidance for a dock agent, same turn/steer verb as the main
+  // composer. The steered text is appended locally because the lite reducer
+  // ignores userMessage items.
+  async function handleAgentSteer(key: string, text: string): Promise<boolean> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    const trimmed = text.trim()
+    if (!trimmed || !session?.threadId || !session.turnId) return false
+    try {
+      await window.api.codex.steerTurn({
+        threadId: session.threadId,
+        turnId: session.turnId,
+        text: trimmed
+      })
+      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text: trimmed })
+      return true
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Could not add guidance to the running turn: ${(error as Error).message}`
+      })
+      return false
+    }
+  }
+
+  function cancelAgentRecovery(key: string): void {
+    const state = agentRecoveryRef.current.get(key)
+    if (state?.timer !== null && state?.timer !== undefined) {
+      window.clearTimeout(state.timer)
+    }
+    agentRecoveryRef.current.delete(key)
+  }
+
+  // Dock mirror of maybeScheduleAutoRecovery: same attempt budget, delay, and
+  // model-fallback walk, but scoped to one session and reported through its
+  // lite transcript instead of system items.
+  function maybeScheduleAgentRecovery(key: string, turnId: string, error: TurnError | null): void {
+    if (!error || !isRecoverableTurnError(error.codexErrorInfo)) return
+
+    const existing = agentRecoveryRef.current.get(key)
+    if (existing?.handledTurnIds.has(turnId)) return
+
+    const state = existing ?? { attempts: 0, handledTurnIds: new Set<string>(), timer: null }
+    state.handledTurnIds.add(turnId)
+    agentRecoveryRef.current.set(key, state)
+
+    if (state.attempts >= maxAutoRecoveryAttempts) {
+      appendAgentMessageOnce(key, {
+        id: `recovery-stopped-${turnId}`,
+        role: 'assistant',
+        text: `⚠ Auto-recovery stopped after ${maxAutoRecoveryAttempts} attempts. Send a message to continue the task.`
+      })
+      return
+    }
+
+    state.attempts += 1
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    const currentModel = session?.model ?? selectedModelRef.current
+    const nextModel = state.attempts === 1 ? currentModel : pickFallbackModel(currentModel)
+    const switching = nextModel !== null && nextModel !== currentModel
+    const delaySeconds = Math.round(autoRecoveryDelayMs / 1000)
+    appendAgentMessageOnce(key, {
+      id: `recovery-${turnId}`,
+      role: 'assistant',
+      text: switching
+        ? `${currentModel ?? 'The model'} is under heavy load — continuing on ${nextModel} in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
+        : `The model is under heavy load — retrying in ${delaySeconds}s (attempt ${state.attempts}/${maxAutoRecoveryAttempts}).`
+    })
+    state.timer = window.setTimeout(() => {
+      state.timer = null
+      void runAgentRecovery(key, nextModel)
+    }, autoRecoveryDelayMs)
+  }
+
+  async function runAgentRecovery(key: string, model: string | null): Promise<void> {
+    // Bail silently if the recovery was cancelled or the session moved on
+    // (closed, promoted, or the user started another turn) while waiting.
+    if (!agentRecoveryRef.current.has(key)) return
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session?.threadId || session.turnId) return
+
+    // Surface the fallback in the window's model pill so the pill reflects
+    // what the thread is actually running on.
+    if (model && model !== session.model) {
+      patchAgentSession(key, (current) => ({ ...current, model }))
+    }
+
+    try {
+      const response = await window.api.codex.sendMessage({
+        threadId: session.threadId,
+        text: autoRecoveryPrompt,
+        cwd: workspaceRef.current,
+        model: model ?? session.model ?? selectedModelRef.current
+      })
+      patchAgentSession(key, (current) => ({
+        ...current,
+        status: 'working',
+        turnId: response.turn.id
+      }))
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Auto-recovery could not restart the turn: ${(error as Error).message}`
+      })
+      cancelAgentRecovery(key)
+    }
+  }
+
   function handleCloseAgentSession(key: string): void {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    cancelAgentRecovery(key)
     updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     setSelectedAgentKey((current) => (current === key ? null : current))
@@ -1155,35 +1451,33 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  // Focus swap: the tabbed agent takes over the full chat view and the current
-  // full-view conversation demotes into the dock, staying subscribed so its
-  // turn keeps streaming into the lite state.
+  // Promote: the agent's conversation takes over the main view and its window
+  // closes. The previous main chat is not demoted into the dock — it lands in
+  // thread history, exactly like switching threads from the history menu. If a
+  // turn was running there it keeps working server-side; results show when the
+  // thread is reopened.
   async function handlePromoteAgent(key: string): Promise<void> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
-    if (!session?.threadId) return
+    if (!session) return
 
-    const demotedThreadId = activeThreadIdRef.current
-    const demotedTurnId = activeTurnIdRef.current
-    const demotedTitle = activeThreadTitle
-    const demotedMessages = liteMessagesFromItems(items)
+    // The focused view's own recovery machinery owns this thread from here.
+    cancelAgentRecovery(key)
 
-    updateAgentSessions((sessions) => {
-      const rest = sessions.filter((candidate) => candidate.key !== key)
-      if (demotedThreadId) {
-        rest.push({
-          key: crypto.randomUUID(),
-          threadId: demotedThreadId,
-          title: demotedTitle,
-          status: demotedTurnId ? 'working' : demotedMessages.length ? 'done' : 'idle',
-          turnId: demotedTurnId,
-          messages: demotedMessages,
-          watchesMain: false
-        })
-      }
-      return rest
-    })
+    if (session.model && session.model !== selectedModelRef.current) {
+      selectedModelRef.current = session.model
+      handleSelectModel(session.model)
+    }
+
+    updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
     setSelectedAgentKey((current) => (current === key ? null : current))
+
+    if (!session.threadId) {
+      // Blank agent (no message sent yet, so no thread): promoting it is just
+      // a fresh main chat on its model.
+      handleNewThread()
+      return
+    }
 
     setActiveTurnId(null)
     activeTurnIdRef.current = null
@@ -1304,10 +1598,7 @@ export default function App(): React.JSX.Element {
       const backgroundSession = backgroundSessionForThread(incomingThreadId)
       if (backgroundSession) {
         if (notification.method === 'thread/name/updated') {
-          patchAgentSession(backgroundSession.key, (session) => ({
-            ...session,
-            title: notification.params.threadName || session.title
-          }))
+          // Dock titles stay "Agent N"; only the history list refreshes.
           void refreshThreads()
           return
         }
@@ -1329,7 +1620,7 @@ export default function App(): React.JSX.Element {
         }
         const pendingAgentKey = agentStartQueueRef.current.shift()
         if (pendingAgentKey) {
-          bindAgentThread(pendingAgentKey, startedThreadId, threadTitle(notification.params.thread))
+          bindAgentThread(pendingAgentKey, startedThreadId)
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
@@ -1981,10 +2272,12 @@ export default function App(): React.JSX.Element {
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
+          onSetAgentModel={handleSetAgentModel}
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
           onAgentSend={handleAgentSend}
+          onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
@@ -2061,10 +2354,12 @@ function ChatPane({
   onOpenAgent,
   onMinimizeAgent,
   onToggleWatchAgent,
+  onSetAgentModel,
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
   onAgentSend,
+  onAgentSteer,
   onAgentStop
 }: {
   items: ChatItem[]
@@ -2109,10 +2404,12 @@ function ChatPane({
   onOpenAgent: (key: string) => void
   onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
+  onSetAgentModel: (key: string, model: string) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
   onAgentSend: (key: string, text: string) => Promise<boolean>
+  onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -2317,12 +2614,16 @@ function ChatPane({
           <AgentColumn
             sessions={openAgentSessions}
             selectedKey={selectedAgentKey}
+            models={models}
+            mainModel={selectedModel}
+            onSetModel={onSetAgentModel}
             onSelect={onSelectAgent}
             onMinimize={onMinimizeAgent}
             onCloseSession={onCloseAgentSession}
             onPromote={onPromoteAgent}
             onToggleWatch={onToggleWatchAgent}
             onSend={onAgentSend}
+            onSteer={onAgentSteer}
             onStop={onAgentStop}
           />
         ) : null}
@@ -3408,91 +3709,6 @@ function ContextPill({
 // listing the full `model/list` catalog. Picks persist across restarts and are
 // sent as a per-turn override; before the first pick, turns follow the
 // CLI-configured default (the entry Codex marks `isDefault`).
-function ModelPill({
-  models,
-  selectedModel,
-  onSelectModel
-}: {
-  models: Model[]
-  selectedModel: string | null
-  onSelectModel: (model: string) => void
-}): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false)
-  const wrapRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    if (!isOpen) {
-      return
-    }
-
-    const handlePointerDown = (event: MouseEvent): void => {
-      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        setIsOpen(false)
-      }
-    }
-
-    window.addEventListener('mousedown', handlePointerDown)
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('mousedown', handlePointerDown)
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
-
-  const active =
-    models.find((model) => model.model === selectedModel) ??
-    models.find((model) => model.isDefault) ??
-    models[0]
-
-  return (
-    <div ref={wrapRef} className="model-pill-wrap">
-      <button
-        type="button"
-        className="workspace-pill"
-        title={active ? `${active.displayName} — ${active.description}` : 'Choose model'}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        <ModelIcon />
-        <span className="workspace-pill-name">{active?.displayName ?? 'Model'}</span>
-        <span className="workspace-pill-caret">⌄</span>
-      </button>
-      {isOpen ? (
-        <div className="model-menu" role="menu">
-          {models.map((model) => {
-            const isActive = model.model === active?.model
-            return (
-              <button
-                key={model.id}
-                type="button"
-                role="menuitemradio"
-                aria-checked={isActive}
-                className={`model-option ${isActive ? 'is-active' : ''}`}
-                onClick={() => {
-                  onSelectModel(model.model)
-                  setIsOpen(false)
-                }}
-              >
-                <span className="model-option-name">
-                  {model.displayName}
-                  {model.isDefault ? <span className="model-option-badge">CLI default</span> : null}
-                </span>
-                <span className="model-option-desc">{model.description}</span>
-              </button>
-            )
-          })}
-        </div>
-      ) : null}
-    </div>
-  )
-}
-
 function GoalControl({
   goal,
   disabled,
@@ -3636,19 +3852,6 @@ function GoalIcon(): React.JSX.Element {
   )
 }
 
-function ModelIcon(): React.JSX.Element {
-  return (
-    <svg className="workspace-pill-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M10 3.5v2M14 3.5v2M10 18.5v2M14 18.5v2M3.5 10h2M3.5 14h2M18.5 10h2M18.5 14h2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
 
 function Composer({
   docked,
@@ -3731,7 +3934,7 @@ function Composer({
             aria-label={isTurnActive ? 'Add guidance to turn' : 'Send message'}
             disabled={isLoading || !value.trim()}
           >
-            ↑
+            <SendArrowIcon />
           </button>
         </div>
       </div>
@@ -3885,7 +4088,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   }
 
   return (
-    <form className="browser-toolbar" onSubmit={handleSubmit}>
+    <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
       <button
         type="button"
         className="browser-nav-button"
@@ -3928,7 +4131,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`}
         aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
         title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'}
-        disabled={!activeTab}
+        disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)}
         onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}
       >
         {activeTab?.isMuted ? '⊘' : '♪'}

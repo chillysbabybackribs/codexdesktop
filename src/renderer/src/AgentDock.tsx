@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { ModelPill } from './ModelPill'
+import type { Model } from '../../shared/codex-protocol/v2/Model'
 
 export type AgentLiteMessage = {
   id: string
@@ -22,6 +24,8 @@ export type AgentSession = {
   // Optional helper mode: when true, each send includes a compact digest of
   // the main chat so the agent can answer questions about it.
   watchesMain: boolean
+  // Per-agent model override; null follows the main chat's selected model.
+  model: string | null
 }
 
 export function AgentTabStrip({
@@ -65,22 +69,30 @@ export function AgentTabStrip({
 export function AgentColumn({
   sessions,
   selectedKey,
+  models,
+  mainModel,
+  onSetModel,
   onSelect,
   onMinimize,
   onCloseSession,
   onPromote,
   onToggleWatch,
   onSend,
+  onSteer,
   onStop
 }: {
   sessions: AgentSession[]
   selectedKey: string | null
+  models: Model[]
+  mainModel: string | null
+  onSetModel: (key: string, model: string) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string) => Promise<boolean>
+  onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -144,12 +156,16 @@ export function AgentColumn({
             key={session.key}
             session={session}
             isSelected={session.key === selectedKey}
+            models={models}
+            mainModel={mainModel}
+            onSetModel={onSetModel}
             onSelect={onSelect}
             onMinimize={onMinimize}
             onCloseSession={onCloseSession}
             onPromote={onPromote}
             onToggleWatch={onToggleWatch}
             onSend={onSend}
+            onSteer={onSteer}
             onStop={onStop}
           />
         ))}
@@ -188,22 +204,30 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
 function AgentWindow({
   session,
   isSelected,
+  models,
+  mainModel,
+  onSetModel,
   onSelect,
   onMinimize,
   onCloseSession,
   onPromote,
   onToggleWatch,
   onSend,
+  onSteer,
   onStop
 }: {
   session: AgentSession
   isSelected: boolean
+  models: Model[]
+  mainModel: string | null
+  onSetModel: (key: string, model: string) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string) => Promise<boolean>
+  onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [value, setValue] = useState('')
@@ -234,11 +258,15 @@ function AgentWindow({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     const text = value.trim()
-    if (!text || isSending || working) return
+    if (!text || isSending) return
     setValue('')
     setIsSending(true)
     try {
-      const accepted = await onSend(session.key, text)
+      // While a turn runs, typed text steers it instead of starting a new turn
+      // — same routing as the main composer.
+      const accepted = working
+        ? await onSteer(session.key, text)
+        : await onSend(session.key, text)
       if (!accepted) setValue((current) => (current ? `${text}\n${current}` : text))
     } finally {
       setIsSending(false)
@@ -288,9 +316,8 @@ function AgentWindow({
           <button
             type="button"
             className="icon-button"
-            aria-label="Focus in main chat"
-            title="Focus in main chat (current chat moves to a tab)"
-            disabled={!session.threadId}
+            aria-label="Open in main chat"
+            title="Open in main chat (current chat is saved to history)"
             onClick={() => onPromote(session.key)}
           >
             <ExpandIcon />
@@ -336,12 +363,22 @@ function AgentWindow({
         {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
       </div>
 
+      {models.length ? (
+        <div className="agent-overlay-context">
+          <ModelPill
+            models={models}
+            selectedModel={session.model ?? mainModel}
+            onSelectModel={(model) => onSetModel(session.key, model)}
+          />
+        </div>
+      ) : null}
+
       <form className="agent-overlay-composer" onSubmit={handleSubmit}>
         <textarea
           ref={textareaRef}
           value={value}
           rows={1}
-          placeholder={working ? 'Agent is working…' : 'Message this agent…'}
+          placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
           disabled={isSending}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={(event) => {
@@ -368,7 +405,7 @@ function AgentWindow({
             aria-label="Send to agent"
             disabled={isSending || !value.trim()}
           >
-            ↑
+            <SendArrowIcon />
           </button>
         )}
       </form>
@@ -402,6 +439,20 @@ function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.
     )
   }
   return <span className="agent-status agent-status-dot" aria-hidden="true" />
+}
+
+export function SendArrowIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 19V5M5.5 11.5L12 5l6.5 6.5"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
 
 function AgentPlusIcon(): React.JSX.Element {

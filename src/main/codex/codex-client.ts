@@ -82,6 +82,10 @@ export class CodexClient extends EventEmitter {
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
+  // Each thread gets its own dedicated browser tab: tool calls that don't
+  // name a tab default to the calling thread's tab instead of the globally
+  // active one, so parallel agents can't stomp each other's pages.
+  private readonly threadTabs = new Map<string, string>()
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
@@ -499,6 +503,8 @@ export class CodexClient extends EventEmitter {
         this.threadReasoningEfforts.delete(notification.params.threadId)
         this.threadTokenUsage.delete(notification.params.threadId)
         this.compactionsInFlight.delete(notification.params.threadId)
+        // Mapping only — the tab itself stays open for the user.
+        this.threadTabs.delete(notification.params.threadId)
       }
 
       this.emit('event', {
@@ -572,6 +578,15 @@ export class CodexClient extends EventEmitter {
     }
   }
 
+  // Explicit tab arguments (including 'all') pass through untouched; only the
+  // default is redirected to the thread's dedicated tab.
+  private resolveAgentTab(threadId: string, explicitTab: string | null | undefined): string | null {
+    if (explicitTab) return explicitTab
+    const tabId = this.browserAgent.ensureDedicatedTab(this.threadTabs.get(threadId) ?? null)
+    if (tabId) this.threadTabs.set(threadId, tabId)
+    return tabId
+  }
+
   private async handleDynamicToolCall(id: string | number, params: DynamicToolCallParams): Promise<void> {
     try {
       const args = asRecord(params.arguments)
@@ -583,7 +598,7 @@ export class CodexClient extends EventEmitter {
         const code = readString(args.code)
         result = code
           ? await this.browserAgent.run(code, {
-              tabId: readString(args.tab),
+              tabId: this.resolveAgentTab(params.threadId, readString(args.tab)),
               frame: readString(args.frame),
               timeoutMs: readNumber(args.timeoutMs),
               maxResultChars: readNumber(args.maxResultChars)
@@ -591,7 +606,7 @@ export class CodexClient extends EventEmitter {
           : { ok: false, error: 'browser_run requires a string "code" argument' }
       } else if (params.tool === 'browser_extract_page') {
         result = await this.browserAgent.extractPage({
-          tabId: readString(args.tab),
+          tabId: this.resolveAgentTab(params.threadId, readString(args.tab)),
           frame: readString(args.frame),
           timeoutMs: readNumber(args.timeoutMs),
           maxResultChars: readNumber(args.maxResultChars)
@@ -600,7 +615,7 @@ export class CodexClient extends EventEmitter {
         const operation = readString(args.operation) ?? 'command'
         const method = readString(args.method)
         const options = {
-          tabId: readString(args.tab),
+          tabId: this.resolveAgentTab(params.threadId, readString(args.tab)),
           timeoutMs: readNumber(args.timeoutMs),
           maxResultChars: readNumber(args.maxResultChars),
           afterSequence: readNumber(args.afterSequence),
