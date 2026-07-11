@@ -1100,6 +1100,11 @@ export default function App(): React.JSX.Element {
     switch (notification.method) {
       case 'item/started':
       case 'item/completed':
+      case 'item/fileChange/patchUpdated':
+        // File-change notifications are full, growing snapshots rather than
+        // tiny append-only token deltas. Applying each snapshot immediately
+        // lets the live diff card visibly grow during long writes instead of
+        // collapsing a burst of patches into one update on the next frame.
         flushPendingItemMutations()
         setItems((current) => reduceItemNotificationItems(current, notification))
         break
