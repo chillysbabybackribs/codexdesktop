@@ -6,7 +6,12 @@ import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 import type { CodexConnectionStatus } from '../../shared/ipc.js'
 import { AppServerProcess } from './app-server-process.js'
 
-type FakeChild = ChildProcessWithoutNullStreams & { emit: EventEmitter['emit'] }
+type FakeChild = Omit<ChildProcessWithoutNullStreams, 'stdin' | 'stdout' | 'stderr'> & {
+  stdin: PassThrough
+  stdout: PassThrough
+  stderr: PassThrough
+  emit: EventEmitter['emit']
+}
 
 function createChild(): FakeChild {
   const child = Object.assign(new EventEmitter(), {
