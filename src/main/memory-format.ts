@@ -1,6 +1,7 @@
 export type MemoryTurn = {
   user: string
   assistant: string
+  completedWork?: string[]
 }
 
 export type MemorySnapshot = {
@@ -64,6 +65,9 @@ export function buildLastChatMarkdown(snapshot: MemorySnapshot, transcriptPath: 
     `Latest request: ${clipBlock(latest.user, maxLatestUserChars)}`,
     '',
     `Latest outcome:\n\n${clipHeadAndTail(latest.assistant, maxLatestAssistantChars)}`,
+    ...(latest.completedWork?.length
+      ? ['', 'Latest completed work:', '', ...latest.completedWork.slice(0, 3).map((item) => `- ${brief(item, 220)}`)]
+      : []),
     '',
     '## Earlier milestones',
     '',
@@ -79,8 +83,9 @@ export function buildTranscriptMarkdown(snapshot: MemorySnapshot): string {
     .filter((turn) => turn.user.trim() || turn.assistant.trim())
     .map((turn, index) => {
       const chapterNumber = String(index + 1).padStart(2, '0')
+      const marker = `codexdesktop-turn:${cleanLine(snapshot.threadId)}:C${chapterNumber}`
       return [
-        `<!-- codexdesktop-turn:C${chapterNumber}:start -->`,
+        `<!-- ${marker}:start -->`,
         `## Turn C${chapterNumber} — ${brief(turn.user, 100)}`,
         '',
         '### User',
@@ -90,8 +95,11 @@ export function buildTranscriptMarkdown(snapshot: MemorySnapshot): string {
         '### Assistant',
         '',
         turn.assistant.trim(),
+        ...(turn.completedWork?.length
+          ? ['', '### Completed work', '', ...turn.completedWork.slice(0, 3).map((item) => `- ${item}`)]
+          : []),
         '',
-        `<!-- codexdesktop-turn:C${chapterNumber}:end -->`
+        `<!-- ${marker}:end -->`
       ].join('\n')
     })
 

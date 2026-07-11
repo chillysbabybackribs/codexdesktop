@@ -77,6 +77,7 @@ export type MemoryPersistParams = {
   turns: Array<{
     user: string
     assistant: string
+    completedWork?: string[]
   }>
 }
 
