@@ -227,13 +227,12 @@ function AgentWindow({
         {working ? (
           <button
             type="button"
-            className="stop-button"
+            className="agent-stop-button"
             aria-label="Stop agent turn"
+            title="Stop"
             onClick={() => void onStop(session.key)}
           >
-            <span className="stop-button-icon" aria-hidden="true">
-              ■
-            </span>
+            <span className="agent-stop-square" aria-hidden="true" />
           </button>
         ) : (
           <button

@@ -3563,3 +3563,32 @@ button {
 .agent-overlay-composer textarea:focus {
   border-color: #383838;
 }
+
+.agent-stop-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  background: #101010;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.agent-stop-button:hover {
+  background: #1a1414;
+  border-color: #4a2a2a;
+}
+
+.agent-stop-square {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: #e0443e;
+}
