@@ -1244,11 +1244,13 @@ button {
 
 @media (max-height: 700px) {
   .task-activity-card {
-    height: 180px;
+    /* Content-sized with a shorter cap on small viewports; still no shrink on
+       completion since live and done share the cap. */
+    max-height: min(52vh, 360px);
+    contain-intrinsic-size: auto 180px;
   }
 
   .task-activity-card.is-live {
-    height: min(52vh, 360px);
     contain-intrinsic-size: auto 360px;
   }
 }
