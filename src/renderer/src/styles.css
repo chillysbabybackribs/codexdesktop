@@ -3767,10 +3767,12 @@ button {
   height: 34px;
   align-items: center;
   padding: 3px;
-  border: 1px solid #34383d;
+  border: 1px solid var(--hairline-strong);
   border-radius: 8px;
-  background: #181a1d;
-  box-shadow: 0 4px 14px rgb(0 0 0 / 28%);
+  background: #1a1a1b;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 4%),
+    0 4px 14px rgb(0 0 0 / 32%);
   color: #8f959b;
   font-size: 11px;
 }
@@ -4040,25 +4042,31 @@ button {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border: 1px solid rgb(255 255 255 / 11%);
   border-right: 0;
   border-radius: 12px 0 0 12px;
   /* Glassy, translucent surface — visibly a different layer from the solid
-     main-chat canvas behind it. Accent lives in the border, not the fill. */
-  background: rgba(21, 20, 19, 0.58);
-  backdrop-filter: blur(16px) saturate(1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
+     main-chat canvas behind it. Accent lives in the border, not the fill.
+     Grain over the blur keeps the glass reading as material, and the inset
+     top light + layered drop shadow give it the weight of a floating pane. */
+  background-color: rgba(19, 19, 20, 0.6);
+  background-image: var(--grain);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 5%),
+    0 2px 6px rgb(0 0 0 / 26%),
+    0 12px 32px rgb(0 0 0 / 34%);
   transition:
     opacity 180ms ease,
     filter 180ms ease,
     border-color 140ms ease,
-    background 140ms ease;
+    background-color 140ms ease;
 }
 
 .agent-overlay.is-selected {
   border-color: rgba(242, 138, 49, 0.8);
-  background: rgba(21, 20, 19, 0.7);
+  background-color: rgba(19, 19, 20, 0.72);
 }
 
 /* While the user works in the main chat, agent windows recede: dimmer, less
