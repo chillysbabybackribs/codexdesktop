@@ -10,6 +10,7 @@ import {
   useRef,
   useState
 } from 'react'
+import { createPortal } from 'react-dom'
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
@@ -3555,7 +3556,7 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
     void window.api.codex.uninstallPlugin(plugin.id).then(load).finally(() => setBusyId(null))
   }
 
-  return (
+  return createPortal(
     <div className="plugin-browser-overlay" onPointerDown={onClose}>
       <section ref={modalRef} className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
         <header className="plugin-browser-header">
@@ -3585,7 +3586,8 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
           )) : null}
         </div>
       </section>
-    </div>
+    </div>,
+    document.body
   )
 }
 
