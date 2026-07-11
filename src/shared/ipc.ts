@@ -29,6 +29,23 @@ export type BrowserState = {
   activeTabId: string | null
 }
 
+export type OmniboxSuggestion = {
+  kind: 'navigate' | 'search' | 'history'
+  /** Full URL this row navigates to when committed. */
+  url: string
+  /** Primary display text: page title, typed query, or the URL itself. */
+  text: string
+  /** Secondary display text: display URL for history rows, engine label for search. */
+  detail: string
+}
+
+/** Dropdown anchor in window content coordinates: the omnibox rect's bottom edge. */
+export type OmniboxAnchor = {
+  x: number
+  y: number
+  width: number
+}
+
 export type CodexConnectionStatus = 'idle' | 'starting' | 'ready' | 'exited' | 'error'
 
 export type CodexStatusEvent = {
@@ -171,6 +188,12 @@ export const ipcChannels = {
   browserEndDividerDrag: 'browser:endDividerDrag',
   browserSetOverlayOpen: 'browser:setOverlayOpen',
   browserState: 'browser:state',
+  browserOmniboxQuery: 'browser:omniboxQuery',
+  browserOmniboxSelect: 'browser:omniboxSelect',
+  browserOmniboxClose: 'browser:omniboxClose',
+  browserOmniboxCommit: 'browser:omniboxCommit',
+  browserOmniboxRender: 'browser:omniboxRender',
+  browserFocusOmnibox: 'browser:focusOmnibox',
   codexGetAuthStatus: 'codex:getAuthStatus',
   codexListModels: 'codex:listModels',
   codexListThreads: 'codex:listThreads',
