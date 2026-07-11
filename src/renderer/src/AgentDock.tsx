@@ -58,6 +58,7 @@ export function AgentColumn({
   onSelect,
   onMinimize,
   onCloseSession,
+  onResetSession,
   onPromote,
   onToggleWatch,
   onSend,
@@ -73,6 +74,7 @@ export function AgentColumn({
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
+  onResetSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -147,6 +149,7 @@ export function AgentColumn({
             onSelect={onSelect}
             onMinimize={onMinimize}
             onCloseSession={onCloseSession}
+            onResetSession={onResetSession}
             onPromote={onPromote}
             onToggleWatch={onToggleWatch}
             onSend={onSend}
@@ -196,6 +199,7 @@ function AgentWindow({
   onSelect,
   onMinimize,
   onCloseSession,
+  onResetSession,
   onPromote,
   onToggleWatch,
   onSend,
@@ -211,6 +215,7 @@ function AgentWindow({
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
+  onResetSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -244,6 +249,7 @@ function AgentWindow({
   }, [value])
 
   const working = session.status === 'working'
+  const hasDraft = Boolean(value.trim() || attachments.length)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -430,14 +436,25 @@ function AgentWindow({
           >
             <span className="stop-square" aria-hidden="true" />
           </button>
-        ) : (
+        ) : hasDraft ? (
           <button
             type="submit"
             className="send-button"
             aria-label="Send to agent"
-            disabled={isSending || (!value.trim() && !attachments.length)}
+            disabled={isSending}
           >
             <SendArrowIcon />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="send-button agent-new-chat-button"
+            aria-label="Start a new agent chat"
+            title="New chat"
+            disabled={isSending}
+            onClick={() => onResetSession(session.key)}
+          >
+            <AgentPlusIcon />
           </button>
         )}
       </form>

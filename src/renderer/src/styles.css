@@ -3537,6 +3537,21 @@ button {
   cursor: default;
 }
 
+.agent-new-chat-button {
+  color: #8b929a;
+}
+
+.agent-new-chat-button:not(:disabled):hover {
+  border-color: #454b52;
+  background: #181a1c;
+  color: #e0e4e8;
+}
+
+.agent-new-chat-button:focus-visible {
+  outline: 2px solid #667fa8;
+  outline-offset: 2px;
+}
+
 .composer .send-button {
   width: 28px;
   height: 28px;
