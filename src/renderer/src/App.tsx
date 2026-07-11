@@ -3223,6 +3223,8 @@ function ThreadScroll({
     // A deliberate scroll releases the top-anchor, exactly like it releases
     // bottom-follow — the reader is now driving.
     if (anchorTurnRef.current !== null) {
+      // eslint-disable-next-line no-console
+      console.log('[RELEASE] user scroll released anchor', JSON.stringify({ scrollTop: Math.round(el.scrollTop), dfb: Math.round(distanceFromBottom) }))
       anchorTurnRef.current = null
       setSpacerOn(false)
       if (anchorFrameRef.current !== null) {
@@ -3279,7 +3281,11 @@ function ThreadScroll({
         anchorFrameRef.current = null
         anchorTop()
       })
-    } else if (activeTurnId === null && anchorTurnRef.current !== null) {
+    } else if (activeTurnId === null) {
+      // eslint-disable-next-line no-console
+      console.log('[COMPLETE] activeTurnId->null, anchorTurnRef=', anchorTurnRef.current)
+    }
+    if (false && activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
       // spacer entirely would shrink scrollHeight below the current scrollTop and
