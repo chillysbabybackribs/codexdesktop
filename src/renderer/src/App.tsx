@@ -1122,7 +1122,10 @@ export default function App(): React.JSX.Element {
       }
       const entries = (parsed.sessions ?? []).filter(
         (entry): entry is typeof entry & { threadId: string } =>
-          typeof entry.threadId === 'string' && entry.threadId.length > 0
+          typeof entry.threadId === 'string' &&
+          entry.threadId.length > 0 &&
+          // The main view owns its restored thread; don't double-own it.
+          entry.threadId !== activeThreadIdRef.current
       )
       if (!entries.length) return
 
@@ -1140,7 +1143,13 @@ export default function App(): React.JSX.Element {
       // Register before resuming so incoming events route to the dock and the
       // main view's unsubscribe guards see these threads as dock-owned.
       updateAgentSessions((current) => [...current, ...restored])
-      const openKeys = restored.filter((_, index) => entries[index].open).map((s) => s.key)
+      // Windows relaunch as they were left; if no open flags survived (legacy
+      // or corrupted storage), open everything rather than restoring a dock
+      // of invisible tabs.
+      const anyOpenFlag = entries.some((entry) => entry.open)
+      const openKeys = anyOpenFlag
+        ? restored.filter((_, index) => entries[index].open).map((s) => s.key)
+        : restored.map((s) => s.key)
       if (openKeys.length) setOpenAgentKeys((current) => [...current, ...openKeys])
       const selectedIndex = entries.findIndex((entry) => entry.selected)
       if (selectedIndex >= 0) setSelectedAgentKey(restored[selectedIndex].key)
@@ -1176,12 +1185,16 @@ export default function App(): React.JSX.Element {
               ...current,
               messages: messages.slice(-60)
             }))
-          } catch {
-            // The thread no longer exists server-side — drop it quietly.
-            updateAgentSessions((current) =>
-              current.filter((candidate) => candidate.key !== session.key)
-            )
-            setOpenAgentKeys((current) => current.filter((candidate) => candidate !== session.key))
+          } catch (error) {
+            // Keep the session — a resume failure here is more often a
+            // cold-start hiccup than a deleted thread, and dropping it loses
+            // the user's dock. The window shows a note instead.
+            console.warn('Agent thread rehydration failed', session.threadId, error)
+            appendAgentMessage(session.key, {
+              id: `restore-${session.key}`,
+              role: 'assistant',
+              text: '⚠ Could not restore this conversation’s history. Sending a message will retry the thread; close this agent if it no longer exists.'
+            })
           }
         })
       )
