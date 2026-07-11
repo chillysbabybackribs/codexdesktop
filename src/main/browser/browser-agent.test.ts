@@ -365,6 +365,34 @@ test('browser agent returns screenshot artifact metadata instead of base64 image
   assert.match(await controller.readScreenshotDataUrl(screenshot.artifactPath) ?? '', /^data:image\/png;base64,/)
 })
 
+test('browser agent captures a model screenshot through Electron without CDP', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-screenshot-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/native-capture',
+    getTitle: () => 'Native capture',
+    capturePage: async () => ({ toPNG: () => Buffer.from(onePixelPng, 'base64') })
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-native',
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-native', url: 'https://example.com/native-capture', title: 'Native capture', active: true }]
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureScreenshot()
+  const screenshot = (result.result as { screenshot: { artifactPath: string; width: number; height: number } }).screenshot
+
+  assert.equal(result.ok, true)
+  assert.equal(debuggerApi.isAttached(), false)
+  assert.equal(screenshot.width, 1)
+  assert.equal(screenshot.height, 1)
+  assert.match(await controller.readScreenshotDataUrl(screenshot.artifactPath) ?? '', /^data:image\/png;base64,/)
+})
+
 test('browser agent returns PDF artifact metadata instead of base64 document data', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-agent-'))
   context.after(() => rm(root, { recursive: true, force: true }))

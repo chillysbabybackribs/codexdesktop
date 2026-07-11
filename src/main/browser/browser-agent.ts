@@ -287,6 +287,29 @@ export class BrowserAgentController {
     })
   }
 
+  async captureScreenshot(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'screenshot artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+
+    return this.runCdpOperation(options, async (_session, timeoutMs, context) => {
+      // This is intentionally Electron-native rather than Page.captureScreenshot:
+      // the app owns the WebContents, so no debugger attachment is necessary.
+      const image = await withTimeout(context.webContents.capturePage(), timeoutMs)
+      const buffer = image.toPNG()
+      const screenshot = await artifactStore.persistScreenshot(buffer.toString('base64'), 'png')
+      return {
+        screenshot: {
+          ...screenshot,
+          tabId: context.tabId,
+          url: context.url,
+          title: context.title
+        }
+      }
+    })
+  }
+
   async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
     return this.runCdpOperation(options, (session) => session.capabilities())
   }
