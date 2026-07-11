@@ -1,0 +1,1651 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44512763",
+    "window": "prior-year-comparable-90d",
+    "tag": "show_hn",
+    "score": 510
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "05"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's <i>microservices</i>, but for hardware."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_05",
+          "story_44512763"
+        ],
+        "author": "05",
+        "comment_text": "It&#x27;s <i>microservices</i>, but for hardware.",
+        "created_at": "2025-07-10T18:11:23Z",
+        "created_at_i": 1752171083,
+        "objectID": "44523862",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-11T01:39:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iraton"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i'm working on it but the nfc module that i use have some limitation,let's see what comes out"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iraton",
+          "story_44512763"
+        ],
+        "author": "iraton",
+        "comment_text": "i&#x27;m working on it but the nfc module that i use have some limitation,let&#x27;s see what comes out",
+        "created_at": "2025-07-10T16:49:33Z",
+        "created_at_i": 1752166173,
+        "objectID": "44522973",
+        "parent_id": 44517491,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T17:24:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iraton"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, you're nit the first telling me this. At first i wanted to make full custom pcb with smd components. But it cost me too much to make just one and some components were difficult to find, so i opted to make more like a shield so is more easy to find the componets and piu easier to solder than SMD for those who have never done it before. This is the same.The last one is also valid for the reason why it was written in Arduino and not in C, that at least even those who are not so familiar with it can modify it"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iraton",
+          "story_44512763"
+        ],
+        "author": "iraton",
+        "comment_text": "Yes, you&#x27;re nit the first telling me this. At first i wanted to make full custom pcb with smd components. But it cost me too much to make just one and some components were difficult to find, so i opted to make more like a shield so is more easy to find the componets and piu easier to solder than SMD for those who have never done it before. This is the same.The last one is also valid for the reason why it was written in Arduino and not in C, that at least even those who are not so familiar with it can modify it",
+        "created_at": "2025-07-10T16:48:44Z",
+        "created_at_i": 1752166124,
+        "objectID": "44522958",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-11T01:40:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "libraryatnight"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My brains the sort of a-hole that only understands if I reinvent it or break it in ways I was told not to."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_libraryatnight",
+          "story_44512763"
+        ],
+        "author": "libraryatnight",
+        "comment_text": "My brains the sort of a-hole that only understands if I reinvent it or break it in ways I was told not to.",
+        "created_at": "2025-07-10T16:32:25Z",
+        "created_at_i": 1752165145,
+        "objectID": "44522800",
+        "parent_id": 44515316,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T17:29:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "diggan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; The bluetooth-enabled devices are failing to connect to their devices<p>And that happens in lots of other cases too, when it's too far away, out of battery, damaged, does that mean their vital health devices stop working if that's happening? Sounds like they need to work on reliability if that was true."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_diggan",
+          "story_44512763"
+        ],
+        "author": "diggan",
+        "comment_text": "&gt; The bluetooth-enabled devices are failing to connect to their devices<p>And that happens in lots of other cases too, when it&#x27;s too far away, out of battery, damaged, does that mean their vital health devices stop working if that&#x27;s happening? Sounds like they need to work on reliability if that was true.",
+        "created_at": "2025-07-10T15:28:18Z",
+        "created_at_i": 1752161298,
+        "objectID": "44522093",
+        "parent_id": 44521437,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T15:31:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "opan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you stick to RockChip stuff, it's not bad."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_opan",
+          "story_44512763"
+        ],
+        "author": "opan",
+        "comment_text": "If you stick to RockChip stuff, it&#x27;s not bad.",
+        "created_at": "2025-07-10T14:51:21Z",
+        "created_at_i": 1752159081,
+        "objectID": "44521756",
+        "parent_id": 44515291,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:55:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "seanicus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Flipper Zero: Sweded Edition"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_seanicus",
+          "story_44512763"
+        ],
+        "author": "seanicus",
+        "comment_text": "Flipper Zero: Sweded Edition",
+        "created_at": "2025-07-10T14:31:26Z",
+        "created_at_i": 1752157886,
+        "objectID": "44521537",
+        "parent_id": 44514364,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T17:33:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "seanicus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone who's been an IT ops support on a hacker-firendly conference, from an admin perspective - not great! But at an operational level our team could just blame Kevin Mitnick (RIP to a real one) for any single thing that we wrong in the building,"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_seanicus",
+          "story_44512763"
+        ],
+        "author": "seanicus",
+        "comment_text": "As someone who&#x27;s been an IT ops support on a hacker-firendly conference, from an admin perspective - not great! But at an operational level our team could just blame Kevin Mitnick (RIP to a real one) for any single thing that we wrong in the building,",
+        "created_at": "2025-07-10T14:29:30Z",
+        "created_at_i": 1752157770,
+        "objectID": "44521516",
+        "parent_id": 44515777,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T18:02:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "voidUpdate"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The bluetooth-enabled devices are failing to connect to their devices because of deauth attacks. If you know how to prevent that, I'm sure they'd be happy to implement a fix"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_voidUpdate",
+          "story_44512763"
+        ],
+        "author": "voidUpdate",
+        "children": [
+          44522093
+        ],
+        "comment_text": "The bluetooth-enabled devices are failing to connect to their devices because of deauth attacks. If you know how to prevent that, I&#x27;m sure they&#x27;d be happy to implement a fix",
+        "created_at": "2025-07-10T14:22:24Z",
+        "created_at_i": 1752157344,
+        "objectID": "44521437",
+        "parent_id": 44519372,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T15:29:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nursie"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You’re not wrong, I guess my point is that “the community” that produces guides and tools may be wider than the specific popular device, whether deliberately or by accident.<p>Everyone does start somewhere, and as much as the breathlessness over Raspberry Pi in the early days irritated me (many people seemed to think there had been no Linux on ARM before then), you absolutely can’t fault them for building a community and getting people interested in the whole area,  and lowering the informational barriers to entry."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Nursie",
+          "story_44512763"
+        ],
+        "author": "Nursie",
+        "comment_text": "You’re not wrong, I guess my point is that “the community” that produces guides and tools may be wider than the specific popular device, whether deliberately or by accident.<p>Everyone does start somewhere, and as much as the breathlessness over Raspberry Pi in the early days irritated me (many people seemed to think there had been no Linux on ARM before then), you absolutely can’t fault them for building a community and getting people interested in the whole area,  and lowering the informational barriers to entry.",
+        "created_at": "2025-07-10T13:27:15Z",
+        "created_at_i": 1752154035,
+        "objectID": "44520792",
+        "parent_id": 44520584,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:49:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "idiotsecant"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're not the audience that is going to Google 'how to connect eBay humidity sensor to raspberry pi'. You have to remember that there is an experience gradient, and everyone starts somewhere."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_idiotsecant",
+          "story_44512763"
+        ],
+        "author": "idiotsecant",
+        "children": [
+          44520792
+        ],
+        "comment_text": "You&#x27;re not the audience that is going to Google &#x27;how to connect eBay humidity sensor to raspberry pi&#x27;. You have to remember that there is an experience gradient, and everyone starts somewhere.",
+        "created_at": "2025-07-10T13:08:08Z",
+        "created_at_i": 1752152888,
+        "objectID": "44520584",
+        "parent_id": 44517092,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T23:23:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "net01"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Similar project <a href=\"https://kiisu.io/kiisu-v4a/\" rel=\"nofollow\">https://kiisu.io/kiisu-v4a/</a>\nruns flipper code and modded flipper code"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_net01",
+          "story_44512763"
+        ],
+        "author": "net01",
+        "comment_text": "Similar project <a href=\"https:&#x2F;&#x2F;kiisu.io&#x2F;kiisu-v4a&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;kiisu.io&#x2F;kiisu-v4a&#x2F;</a>\nruns flipper code and modded flipper code",
+        "created_at": "2025-07-10T12:54:21Z",
+        "created_at_i": 1752152061,
+        "objectID": "44520465",
+        "parent_id": 44512763,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2026-01-21T14:46:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "diggan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "People ignoring laws isn't a new thing, does that mean things that could potentially be used for illegal things should be outright outlawed?<p>That article you shared seems to say the problem is bigger than the used hardware even:<p>&gt; Soon after, developer Simon Dankelmann ported the attack to an Android app, allowing people to launch Bluetooth spam attacks without needing a Flipper Zero.<p>How do you solve that without outlawing Android devices?<p>&gt; People using Bluetooth-enabled hearing aids and heart rate monitoring tools also reported disruption, which could put their well-being at risk.<p>This is probably the most bananas part of that article, and it's great that they managed to find these issues in relatively trivial conditions, since the company's own testing apparently doesn't include very basic security checks. If those devices are failing when they aren't connected to the main device, what makes these companies even remotely suitable for building critical devices like that?<p>Who knows how long time it would take to discover these security issues with <i>medical devices</i> if people weren't able to prototype these sort of attacks at home?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_diggan",
+          "story_44512763"
+        ],
+        "author": "diggan",
+        "children": [
+          44521437
+        ],
+        "comment_text": "People ignoring laws isn&#x27;t a new thing, does that mean things that could potentially be used for illegal things should be outright outlawed?<p>That article you shared seems to say the problem is bigger than the used hardware even:<p>&gt; Soon after, developer Simon Dankelmann ported the attack to an Android app, allowing people to launch Bluetooth spam attacks without needing a Flipper Zero.<p>How do you solve that without outlawing Android devices?<p>&gt; People using Bluetooth-enabled hearing aids and heart rate monitoring tools also reported disruption, which could put their well-being at risk.<p>This is probably the most bananas part of that article, and it&#x27;s great that they managed to find these issues in relatively trivial conditions, since the company&#x27;s own testing apparently doesn&#x27;t include very basic security checks. If those devices are failing when they aren&#x27;t connected to the main device, what makes these companies even remotely suitable for building critical devices like that?<p>Who knows how long time it would take to discover these security issues with <i>medical devices</i> if people weren&#x27;t able to prototype these sort of attacks at home?",
+        "created_at": "2025-07-10T10:25:41Z",
+        "created_at_i": 1752143141,
+        "objectID": "44519372",
+        "parent_id": 44519209,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-11T04:34:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "voidUpdate"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Because people obviously cant be trusted to follow their local laws when using flipper zero-esque devices <a href=\"https://www.bleepingcomputer.com/news/security/wall-of-flippers-detects-flipper-zero-bluetooth-spam-attacks/\" rel=\"nofollow\">https://www.bleepingcomputer.com/news/security/wall-of-flipp...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_voidUpdate",
+          "story_44512763"
+        ],
+        "author": "voidUpdate",
+        "children": [
+          44519372
+        ],
+        "comment_text": "Because people obviously cant be trusted to follow their local laws when using flipper zero-esque devices <a href=\"https:&#x2F;&#x2F;www.bleepingcomputer.com&#x2F;news&#x2F;security&#x2F;wall-of-flippers-detects-flipper-zero-bluetooth-spam-attacks&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.bleepingcomputer.com&#x2F;news&#x2F;security&#x2F;wall-of-flipp...</a>",
+        "created_at": "2025-07-10T09:53:39Z",
+        "created_at_i": 1752141219,
+        "objectID": "44519209",
+        "parent_id": 44519042,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-11T04:33:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "diggan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why not assume people are responsible for following their local laws instead? They're not selling anything, so kind of feels it has to fall on the user, not the person who shares a thing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_diggan",
+          "story_44512763"
+        ],
+        "author": "diggan",
+        "children": [
+          44519209
+        ],
+        "comment_text": "Why not assume people are responsible for following their local laws instead? They&#x27;re not selling anything, so kind of feels it has to fall on the user, not the person who shares a thing.",
+        "created_at": "2025-07-10T09:28:36Z",
+        "created_at_i": 1752139716,
+        "objectID": "44519042",
+        "parent_id": 44518259,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-11T14:12:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nic547"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've done the same thing for a few reasons.<p>- Certain things need good layouts - I think I can see a DC-DC Converter, you need to minimize certain loop areas, etc. You also need to ensure that you use the correct footprints for the chips. Way easier to just use a bunch of modules with a simple pcb.<p>- It reduces the components you need to aquire - you need to select a inductor with the correct specs for the dc-dc converter, a bunch of different resistors and capacitors for all sorts of uses or you just purchase a cheap module from china.<p>- It's easier to solder. Fancy chips with packages with no leads are not trivial to solder. LED's might be a bit sensitive to temperature and can get destroyed by a not-so-great solderer. Small pitches on IC make it easy to create solder bridges or bad connections."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nic547",
+          "story_44512763"
+        ],
+        "author": "nic547",
+        "comment_text": "I&#x27;ve done the same thing for a few reasons.<p>- Certain things need good layouts - I think I can see a DC-DC Converter, you need to minimize certain loop areas, etc. You also need to ensure that you use the correct footprints for the chips. Way easier to just use a bunch of modules with a simple pcb.<p>- It reduces the components you need to aquire - you need to select a inductor with the correct specs for the dc-dc converter, a bunch of different resistors and capacitors for all sorts of uses or you just purchase a cheap module from china.<p>- It&#x27;s easier to solder. Fancy chips with packages with no leads are not trivial to solder. LED&#x27;s might be a bit sensitive to temperature and can get destroyed by a not-so-great solderer. Small pitches on IC make it easy to create solder bridges or bad connections.",
+        "created_at": "2025-07-10T08:39:16Z",
+        "created_at_i": 1752136756,
+        "objectID": "44518736",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T16:18:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "0xEF"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "True, but while there <i>is</i> a decent sized Flipper Zero community, I found it to be significantly smaller and less prone to fresh development than the other two you mentioned by comparison. The Flipper Zero is stunted by a good portion of that community being individuals who want a pocket hack toy without having to do any work to make it go, resulting in perceived stagnation of the device.<p>Perhaps I missed something when I owned mine? So many people I encountered in said community really just wanted a wifi deauther, which could have been built or purchased in a variety of cheaper ways. I got bored with it quickly, and returned to doing interesting things with Arduino and ESP32, but YMMV."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_0xEF",
+          "story_44512763"
+        ],
+        "author": "0xEF",
+        "comment_text": "True, but while there <i>is</i> a decent sized Flipper Zero community, I found it to be significantly smaller and less prone to fresh development than the other two you mentioned by comparison. The Flipper Zero is stunted by a good portion of that community being individuals who want a pocket hack toy without having to do any work to make it go, resulting in perceived stagnation of the device.<p>Perhaps I missed something when I owned mine? So many people I encountered in said community really just wanted a wifi deauther, which could have been built or purchased in a variety of cheaper ways. I got bored with it quickly, and returned to doing interesting things with Arduino and ESP32, but YMMV.",
+        "created_at": "2025-07-10T08:31:25Z",
+        "created_at_i": 1752136285,
+        "objectID": "44518687",
+        "parent_id": 44515905,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T23:23:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "voidUpdate"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Read rf signal and emulate it or save it<p>I assume it checks that you actually have the licensing requirements to be transmitting on whatever frequency?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_voidUpdate",
+          "story_44512763"
+        ],
+        "author": "voidUpdate",
+        "children": [
+          44519042
+        ],
+        "comment_text": "&gt; Read rf signal and emulate it or save it<p>I assume it checks that you actually have the licensing requirements to be transmitting on whatever frequency?",
+        "created_at": "2025-07-10T07:22:39Z",
+        "created_at_i": 1752132159,
+        "objectID": "44518259",
+        "parent_id": 44512763,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:19:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "trq01758"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is like asking a painter why the hell he used ready made paints and did not create his own for each color he needed. Not everybody has a hobby of spending time and money fixing tracing mistakes of PCB revision 11, playing with working contraption is fine as it is."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_trq01758",
+          "story_44512763"
+        ],
+        "author": "trq01758",
+        "comment_text": "This is like asking a painter why the hell he used ready made paints and did not create his own for each color he needed. Not everybody has a hobby of spending time and money fixing tracing mistakes of PCB revision 11, playing with working contraption is fine as it is.",
+        "created_at": "2025-07-10T06:57:16Z",
+        "created_at_i": 1752130636,
+        "objectID": "44518105",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T12:39:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nextlevelwizard"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "considering it has no wifi or gsm capabilities that is going to be pretty hard trick to achieve"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nextlevelwizard",
+          "story_44512763"
+        ],
+        "author": "nextlevelwizard",
+        "comment_text": "considering it has no wifi or gsm capabilities that is going to be pretty hard trick to achieve",
+        "created_at": "2025-07-10T06:41:15Z",
+        "created_at_i": 1752129675,
+        "objectID": "44518006",
+        "parent_id": 44514781,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-13T00:36:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kevo1ution"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "really excited for the NFC support"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kevo1ution",
+          "story_44512763"
+        ],
+        "author": "kevo1ution",
+        "children": [
+          44522973
+        ],
+        "comment_text": "really excited for the NFC support",
+        "created_at": "2025-07-10T05:15:06Z",
+        "created_at_i": 1752124506,
+        "objectID": "44517491",
+        "parent_id": 44512763,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T16:50:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nursie"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "On the one hand, sure it has a big effect, especially with hardware addons.<p>But on the other, I think this is overstated, I lose count of how many &quot;How to X on Raspberry Pi&quot; pages I've seen that were really &quot;How to X on linux&quot; or at best &quot;How to X on embedded Linux&quot;. Often they were worse than existing &quot;How to X on linux&quot; resources but picked up traction because of the association with a popular board.<p>But then I'm just an old curmudgeon who's been messing with embedded linux since long before there was a RPi..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Nursie",
+          "story_44512763"
+        ],
+        "author": "Nursie",
+        "children": [
+          44520584
+        ],
+        "comment_text": "On the one hand, sure it has a big effect, especially with hardware addons.<p>But on the other, I think this is overstated, I lose count of how many &quot;How to X on Raspberry Pi&quot; pages I&#x27;ve seen that were really &quot;How to X on linux&quot; or at best &quot;How to X on embedded Linux&quot;. Often they were worse than existing &quot;How to X on linux&quot; resources but picked up traction because of the association with a popular board.<p>But then I&#x27;m just an old curmudgeon who&#x27;s been messing with embedded linux since long before there was a RPi...",
+        "created_at": "2025-07-10T04:12:03Z",
+        "created_at_i": 1752120723,
+        "objectID": "44517092",
+        "parent_id": 44515905,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:49:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thenthenthen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The name alone deserves a project hahah thanks for the laugh"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thenthenthen",
+          "story_44512763"
+        ],
+        "author": "thenthenthen",
+        "comment_text": "The name alone deserves a project hahah thanks for the laugh",
+        "created_at": "2025-07-10T03:34:14Z",
+        "created_at_i": 1752118454,
+        "objectID": "44516928",
+        "parent_id": 44514875,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T17:24:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dietr1ch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Terrible as in you will be stuck in the pretty much only kernel image that runs on it without being able to update things beyond the kernel"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dietr1ch",
+          "story_44512763"
+        ],
+        "author": "dietr1ch",
+        "comment_text": "Terrible as in you will be stuck in the pretty much only kernel image that runs on it without being able to update things beyond the kernel",
+        "created_at": "2025-07-10T03:06:22Z",
+        "created_at_i": 1752116782,
+        "objectID": "44516797",
+        "parent_id": 44516488,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-17T08:43:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bradyd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It is absolutely possible to DIY a custom board and it is extremely common."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bradyd",
+          "story_44512763"
+        ],
+        "author": "bradyd",
+        "comment_text": "It is absolutely possible to DIY a custom board and it is extremely common.",
+        "created_at": "2025-07-10T03:04:32Z",
+        "created_at_i": 1752116672,
+        "objectID": "44516790",
+        "parent_id": 44515104,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:58:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mrheosuper"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "what do you mean &quot;terrible software&quot;, as long as they have linux kernel for it, i don't see how it's more terrible than raspberry"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mrheosuper",
+          "story_44512763"
+        ],
+        "author": "mrheosuper",
+        "children": [
+          44516797
+        ],
+        "comment_text": "what do you mean &quot;terrible software&quot;, as long as they have linux kernel for it, i don&#x27;t see how it&#x27;s more terrible than raspberry",
+        "created_at": "2025-07-10T01:59:48Z",
+        "created_at_i": 1752112788,
+        "objectID": "44516488",
+        "parent_id": 44515291,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T12:23:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "general1726"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Having a SATA or M2 is something what I would consider definitely better, however software is usually garbage stuck on one specific Linux Kernel and that's the reason why better hardware will never catch on."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_general1726",
+          "story_44512763"
+        ],
+        "author": "general1726",
+        "comment_text": "Having a SATA or M2 is something what I would consider definitely better, however software is usually garbage stuck on one specific Linux Kernel and that&#x27;s the reason why better hardware will never catch on.",
+        "created_at": "2025-07-10T01:53:34Z",
+        "created_at_i": 1752112414,
+        "objectID": "44516457",
+        "parent_id": 44515291,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-17T08:43:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dylan604"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Okay, have you ever tried to &quot;become better&quot; to the point you researched what would be needed to have a custom PCB built with all of the components on a stock Arduino and any additional shields you might use? You'll see that you will need minimum orders. You'll also have a much more difficult time creating the PCB, as you'll have create all of the traces to connect everything. The method chosen allows for off the shelf components with a much more easily created PCB with minimum traces created connecting pins from shields/LEDs/etc. These will be dirt cheap and can be order in tiny quantities.<p>This is also a hobby project. To custom build a PCB with all of the components brings this into the Kickstarter world of something. So the person can buy &lt;5 PCBs to play with as hobby or attempt to fund say minimum 500-1000 pieces. From TFA: &quot;Important Notice: This is just a fun project, it was started to pass the time, it is not at all professional and is not intended to be. Is not an alternative for professional device.&quot;<p>Even with the method chosen, if you think the person did not become better after making the <i>simple</i> PCB or any of the other coding required, you're off your rocker. Every build like this comes with mistakes and learning how to correct them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dylan604",
+          "story_44512763"
+        ],
+        "author": "dylan604",
+        "comment_text": "Okay, have you ever tried to &quot;become better&quot; to the point you researched what would be needed to have a custom PCB built with all of the components on a stock Arduino and any additional shields you might use? You&#x27;ll see that you will need minimum orders. You&#x27;ll also have a much more difficult time creating the PCB, as you&#x27;ll have create all of the traces to connect everything. The method chosen allows for off the shelf components with a much more easily created PCB with minimum traces created connecting pins from shields&#x2F;LEDs&#x2F;etc. These will be dirt cheap and can be order in tiny quantities.<p>This is also a hobby project. To custom build a PCB with all of the components brings this into the Kickstarter world of something. So the person can buy &lt;5 PCBs to play with as hobby or attempt to fund say minimum 500-1000 pieces. From TFA: &quot;Important Notice: This is just a fun project, it was started to pass the time, it is not at all professional and is not intended to be. Is not an alternative for professional device.&quot;<p>Even with the method chosen, if you think the person did not become better after making the <i>simple</i> PCB or any of the other coding required, you&#x27;re off your rocker. Every build like this comes with mistakes and learning how to correct them.",
+        "created_at": "2025-07-10T00:31:26Z",
+        "created_at_i": 1752107486,
+        "objectID": "44516106",
+        "parent_id": 44515838,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-13T09:10:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vsviridov"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FlopperOne when? :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vsviridov",
+          "story_44512763"
+        ],
+        "author": "vsviridov",
+        "comment_text": "FlopperOne when? :)",
+        "created_at": "2025-07-10T00:14:56Z",
+        "created_at_i": 1752106496,
+        "objectID": "44516005",
+        "parent_id": 44512763,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:20:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tgsovlerkhgsel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A good reason to do it (IMO, as someone who has done it) that it's a lot faster, easier, and often <i>cheaper</i> than designing a fully custom board.<p>Not only would designing a fully custom board require a lot of error-prone effort, getting a lot of components in tiny quantities can be prohibitively expensive.<p>Good engineering includes optimizing for cost (monetary and non-monetary), and I'd argue that for many hobbyist one-off projects that won't be manufactured at scale, dev-boards-on-PCB is good engineering."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tgsovlerkhgsel",
+          "story_44512763"
+        ],
+        "author": "tgsovlerkhgsel",
+        "comment_text": "A good reason to do it (IMO, as someone who has done it) that it&#x27;s a lot faster, easier, and often <i>cheaper</i> than designing a fully custom board.<p>Not only would designing a fully custom board require a lot of error-prone effort, getting a lot of components in tiny quantities can be prohibitively expensive.<p>Good engineering includes optimizing for cost (monetary and non-monetary), and I&#x27;d argue that for many hobbyist one-off projects that won&#x27;t be manufactured at scale, dev-boards-on-PCB is good engineering.",
+        "created_at": "2025-07-10T00:00:01Z",
+        "created_at_i": 1752105601,
+        "objectID": "44515928",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T12:39:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tgsovlerkhgsel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The popularity and usefulness of many devices like the Arduino and the Raspberry Pi doesn't stem from the hardware capabilities, but the &quot;communities of scale&quot; (lots of people use it -&gt; it's much easier to find compatible software, hardware, guides etc.)<p>I would expect this to be the same for the Flipper Zero."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tgsovlerkhgsel",
+          "story_44512763"
+        ],
+        "author": "tgsovlerkhgsel",
+        "children": [
+          44517092,
+          44518687
+        ],
+        "comment_text": "The popularity and usefulness of many devices like the Arduino and the Raspberry Pi doesn&#x27;t stem from the hardware capabilities, but the &quot;communities of scale&quot; (lots of people use it -&gt; it&#x27;s much easier to find compatible software, hardware, guides etc.)<p>I would expect this to be the same for the Flipper Zero.",
+        "created_at": "2025-07-09T23:55:29Z",
+        "created_at_i": 1752105329,
+        "objectID": "44515905",
+        "parent_id": 44514787,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2026-02-23T20:59:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "the__alchemist"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If that is a boundary one sets up for him or herself, then I question <i>why set up that boundary?</i> Is it an identity matter? &quot;I'm a DIYer (maker?), not an engineer. I have have no interest in doing anything deeper.&quot; I was thrilled when I learned about the Maker movement; then disappointed after observing that so much of it is done without ambition to learn more, or become better at the craft."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_the__alchemist",
+          "story_44512763"
+        ],
+        "author": "the__alchemist",
+        "children": [
+          44516106
+        ],
+        "comment_text": "If that is a boundary one sets up for him or herself, then I question <i>why set up that boundary?</i> Is it an identity matter? &quot;I&#x27;m a DIYer (maker?), not an engineer. I have have no interest in doing anything deeper.&quot; I was thrilled when I learned about the Maker movement; then disappointed after observing that so much of it is done without ambition to learn more, or become better at the craft.",
+        "created_at": "2025-07-09T23:41:05Z",
+        "created_at_i": 1752104465,
+        "objectID": "44515838",
+        "parent_id": 44515104,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T12:35:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bigiain"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The FZ itself is very unlikely to even be capable of phoning home.<p>I do sometimes wonder how concerned I need to be about the companion app though."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bigiain",
+          "story_44512763"
+        ],
+        "author": "bigiain",
+        "comment_text": "The FZ itself is very unlikely to even be capable of phoning home.<p>I do sometimes wonder how concerned I need to be about the companion app though.",
+        "created_at": "2025-07-09T23:37:18Z",
+        "created_at_i": 1752104238,
+        "objectID": "44515814",
+        "parent_id": 44513423,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T15:00:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cogogo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m not sure I’ll ever understand HN aggression with certain downvotes. This is the OP from Italy and likely English is not their first language. Why is this comment so bad?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cogogo",
+          "story_44512763"
+        ],
+        "author": "cogogo",
+        "children": [
+          44516638
+        ],
+        "comment_text": "I’m not sure I’ll ever understand HN aggression with certain downvotes. This is the OP from Italy and likely English is not their first language. Why is this comment so bad?",
+        "created_at": "2025-07-09T23:33:39Z",
+        "created_at_i": 1752104019,
+        "objectID": "44515794",
+        "parent_id": 44514875,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T15:03:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "s-mon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wondering what the hotels in Vegas around Defcon will think of it this year lol."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_s-mon",
+          "story_44512763"
+        ],
+        "author": "s-mon",
+        "children": [
+          44521516
+        ],
+        "comment_text": "Wondering what the hotels in Vegas around Defcon will think of it this year lol.",
+        "created_at": "2025-07-09T23:32:15Z",
+        "created_at_i": 1752103935,
+        "objectID": "44515777",
+        "parent_id": 44512763,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:42:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Technetium"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The firmware repo was archived Apr 12, 2025. I don't think it's going to be revived or be feature-competitive."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Technetium",
+          "story_44512763"
+        ],
+        "author": "Technetium",
+        "comment_text": "The firmware repo was archived Apr 12, 2025. I don&#x27;t think it&#x27;s going to be revived or be feature-competitive.",
+        "created_at": "2025-07-09T23:05:25Z",
+        "created_at_i": 1752102325,
+        "objectID": "44515608",
+        "parent_id": 44513593,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T12:23:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "buzzerbetrayed"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Totally depends on what “better” means to you and your use case."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_buzzerbetrayed",
+          "story_44512763"
+        ],
+        "author": "buzzerbetrayed",
+        "comment_text": "Totally depends on what “better” means to you and your use case.",
+        "created_at": "2025-07-09T22:23:56Z",
+        "created_at_i": 1752099836,
+        "objectID": "44515318",
+        "parent_id": 44515291,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T14:18:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "boznz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Its sometimes fun re-inventing the wheel, at least you get to understand it all better."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_boznz",
+          "story_44512763"
+        ],
+        "author": "boznz",
+        "children": [
+          44522800
+        ],
+        "comment_text": "Its sometimes fun re-inventing the wheel, at least you get to understand it all better.",
+        "created_at": "2025-07-09T22:23:46Z",
+        "created_at_i": 1752099826,
+        "objectID": "44515316",
+        "parent_id": 44514875,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T16:33:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blacksmith_tb"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Except the RPi competition isn't better, only cheaper, because it has terrible software; and without a big community, no support?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_blacksmith_tb",
+          "story_44512763"
+        ],
+        "author": "blacksmith_tb",
+        "children": [
+          44516457,
+          44515318,
+          44516488,
+          44521756
+        ],
+        "comment_text": "Except the RPi competition isn&#x27;t better, only cheaper, because it has terrible software; and without a big community, no support?",
+        "created_at": "2025-07-09T22:20:39Z",
+        "created_at_i": 1752099639,
+        "objectID": "44515291",
+        "parent_id": 44514794,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-17T21:19:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dylan604"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I mean, yeah, why not? You take a bunch of off the shelf boards and put them together on the PCB as is. To make a PCB with all of the components on it would not be very DIY. That's a custom board and out of scope for DIY."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/lraton/FlopperZiro"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dylan604",
+          "story_44512763"
+        ],
+        "author": "dylan604",
+        "children": [
+          44515838,
+          44516790
+        ],
+        "comment_text": "I mean, yeah, why not? You take a bunch of off the shelf boards and put them together on the PCB as is. To make a PCB with all of the components on it would not be very DIY. That&#x27;s a custom board and out of scope for DIY.",
+        "created_at": "2025-07-09T21:54:59Z",
+        "created_at_i": 1752098099,
+        "objectID": "44515104",
+        "parent_id": 44514996,
+        "story_id": 44512763,
+        "story_title": "Show HN: FlopperZiro – A DIY open-source Flipper Zero clone",
+        "story_url": "https://github.com/lraton/FlopperZiro",
+        "updated_at": "2025-07-10T05:43:50Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 73,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44512763&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 21
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

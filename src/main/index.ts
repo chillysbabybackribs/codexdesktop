@@ -1,9 +1,10 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, crashReporter, dialog, ipcMain, Notification } from 'electron'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type {
   ArtifactReadImageParams,
   ArtifactReadImageResult,
+  BackgroundTurnNotificationParams,
   BrowserBounds,
   TraceLoadParams,
   TracePersistParams,
@@ -31,6 +32,7 @@ const hasSingleInstanceLock = app.requestSingleInstanceLock()
 if (!hasSingleInstanceLock) {
   app.quit()
 } else {
+  crashReporter.start({ uploadToServer: false })
   app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) {
@@ -119,6 +121,7 @@ function createWindow(): void {
 
   mainWindow.webContents.on('render-process-gone', (_event, details) => {
     console.error('Renderer process gone', details)
+    console.error('Local crash dumps are retained in', app.getPath('crashDumps'))
   })
 
   mainWindow.webContents.on('console-message', (event) => {
@@ -168,7 +171,11 @@ function bootstrap(): void {
   })
 
   void app.whenReady().then(async () => {
-    configureBrowserSession()
+    configureBrowserSession({
+      getWindow: () => mainWindow,
+      isUserVisibleWebContents: (webContents) =>
+        tabManager?.isUserVisibleWebContents(webContents) ?? false
+    })
     registerIpc()
     createWindow()
 
@@ -253,10 +260,37 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserBack, (_event, tabId: string) => tabManager?.goBack(tabId))
   ipcMain.handle(ipcChannels.browserForward, (_event, tabId: string) => tabManager?.goForward(tabId))
   ipcMain.handle(ipcChannels.browserReload, (_event, tabId: string) => tabManager?.reload(tabId))
+  ipcMain.handle(ipcChannels.browserFind, (_event, tabId: string, text: string, forward: boolean) =>
+    tabManager?.find(tabId, text, forward))
+  ipcMain.handle(ipcChannels.browserStopFind, (_event, tabId: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
+    tabManager?.stopFind(tabId, action))
+  ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
+    tabManager?.zoom(tabId, direction))
+  ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
+
+  ipcMain.handle(
+    ipcChannels.notificationBackgroundTurn,
+    (_event, params: BackgroundTurnNotificationParams): void => {
+      const window = mainWindow
+      if (!window || window.isFocused() || !Notification.isSupported()) return
+
+      const notification = new Notification({
+        title: params.status === 'failed' ? `${params.title} failed` : `${params.title} finished`,
+        body: params.message?.trim() || (params.status === 'failed' ? 'The background turn failed.' : 'The background turn completed.'),
+        silent: false
+      })
+      notification.on('click', () => {
+        if (window.isMinimized()) window.restore()
+        window.show()
+        window.focus()
+      })
+      notification.show()
+    }
+  )
 
   ipcMain.handle(ipcChannels.tracePersist, (_event, params: TracePersistParams) =>
     turnTraceStore.persist(params)

@@ -1,4 +1,4 @@
-import { BrowserWindow, WebContentsView, shell } from 'electron'
+import { app, BrowserWindow, Menu, WebContentsView, shell } from 'electron'
 import type { WebContents } from 'electron'
 import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
@@ -9,7 +9,7 @@ import { loadPageAndSettle } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 
 const defaultTabUrl = 'https://www.google.com'
-const browserBackgroundColor = '#181a1d'
+const browserBackgroundColor = '#181818'
 
 type BrowserStateListener = (state: BrowserState) => void
 
@@ -20,6 +20,8 @@ type BrowserTab = {
   url: string
   favicon: string | null
   isLoading: boolean
+  isAudible: boolean
+  isMuted: boolean
 }
 
 export type BrowserTarget = {
@@ -144,7 +146,9 @@ export class TabManager {
       title: 'New Tab',
       url,
       favicon: null,
-      isLoading: false
+      isLoading: false,
+      isAudible: false,
+      isMuted: false
     }
 
     this.tabs.set(id, tab)
@@ -175,7 +179,9 @@ export class TabManager {
       title: saved.title || 'New Tab',
       url: saved.url,
       favicon: saved.favicon ?? null,
-      isLoading: true
+      isLoading: true,
+      isAudible: false,
+      isMuted: false
     }
 
     this.tabs.set(id, tab)
@@ -320,6 +326,42 @@ export class TabManager {
     this.tabs.get(id)?.view.webContents.reload()
   }
 
+  find(id: string, text: string, forward = true): Promise<{ activeMatchOrdinal: number; matches: number; finalUpdate: boolean }> {
+    const webContents = this.tabs.get(id)?.view.webContents
+    if (!webContents || webContents.isDestroyed() || !text) {
+      return Promise.resolve({ activeMatchOrdinal: 0, matches: 0, finalUpdate: true })
+    }
+    return new Promise((resolve) => {
+      const requestId = webContents.findInPage(text, { forward, findNext: true })
+      const onResult = (_event: Electron.Event, result: Electron.FoundInPageResult): void => {
+        if (result.requestId !== requestId || !result.finalUpdate) return
+        webContents.off('found-in-page', onResult)
+        resolve({ activeMatchOrdinal: result.activeMatchOrdinal, matches: result.matches, finalUpdate: result.finalUpdate })
+      }
+      webContents.on('found-in-page', onResult)
+    })
+  }
+
+  stopFind(id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection'): void {
+    this.tabs.get(id)?.view.webContents.stopFindInPage(action)
+  }
+
+  zoom(id: string, direction: 'in' | 'out' | 'reset'): void {
+    const webContents = this.tabs.get(id)?.view.webContents
+    if (!webContents || webContents.isDestroyed()) return
+    const next = direction === 'reset' ? 0 : webContents.getZoomLevel() + (direction === 'in' ? 0.5 : -0.5)
+    webContents.setZoomLevel(Math.max(-3, Math.min(3, next)))
+    this.pushState()
+  }
+
+  toggleMute(id: string): void {
+    const tab = this.tabs.get(id)
+    if (!tab) return
+    tab.isMuted = !tab.isMuted
+    tab.view.webContents.setAudioMuted(tab.isMuted)
+    this.pushState()
+  }
+
   setBounds(bounds: BrowserBounds): void {
     this.bounds = sanitizeBounds(bounds)
     this.syncActiveBounds()
@@ -339,6 +381,15 @@ export class TabManager {
   setOverlayOpen(open: boolean): void {
     this.isOverlayOpen = open
     this.syncActiveBounds()
+  }
+
+  isUserVisibleWebContents(webContents: WebContents): boolean {
+    const active = this.getActiveTab()
+    if (active?.view.webContents === webContents) {
+      return !this.isDraggingDivider && !this.isOverlayOpen
+    }
+
+    return [...this.popupTargets.values()].some((popup) => popup.webContents === webContents)
   }
 
   // The active view is on-screen only when nothing renderer-side needs the
@@ -374,6 +425,44 @@ export class TabManager {
     const webContents = tab.view.webContents
 
     attachPopupWindowHandling(webContents, this.window, (popup) => this.registerPopupTarget(popup, tab.id))
+
+    webContents.on('before-input-event', (event, input) => {
+      if ((input.control || input.meta) && input.key.toLowerCase() === 'f') {
+        event.preventDefault()
+        this.window.webContents.send('browser:findRequested')
+      }
+    })
+
+    webContents.on('context-menu', (_event, params) => {
+      const template: Electron.MenuItemConstructorOptions[] = []
+      if (params.misspelledWord) {
+        for (const suggestion of params.dictionarySuggestions.slice(0, 5)) {
+          template.push({ label: suggestion, click: () => webContents.replaceMisspelling(suggestion) })
+        }
+        if (template.length) template.push({ type: 'separator' })
+      }
+      if (params.linkURL) template.push({ label: 'Open Link in New Tab', click: () => this.createTab(params.linkURL) })
+      template.push(
+        { role: 'copy', enabled: params.selectionText.length > 0 },
+        { role: 'paste', enabled: params.isEditable },
+        { type: 'separator' },
+        { label: 'Back', enabled: webContents.navigationHistory.canGoBack(), click: () => this.goBack(tab.id) },
+        { label: 'Forward', enabled: webContents.navigationHistory.canGoForward(), click: () => this.goForward(tab.id) },
+        { label: 'Reload', click: () => this.reload(tab.id) }
+      )
+      if (!app.isPackaged) template.push({ type: 'separator' }, { label: 'Inspect Element', click: () => webContents.inspectElement(params.x, params.y) })
+      Menu.buildFromTemplate(template).popup({ window: this.window })
+    })
+
+    const syncAudioState = (): void => {
+      tab.isAudible = webContents.isCurrentlyAudible()
+      this.pushState()
+    }
+    webContents.on('media-started-playing', syncAudioState)
+    webContents.on('media-paused', syncAudioState)
+
+    webContents.on('enter-html-full-screen', () => this.window.setFullScreen(true))
+    webContents.on('leave-html-full-screen', () => this.window.setFullScreen(false))
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'
@@ -584,7 +673,10 @@ export class TabManager {
           favicon: tab.favicon,
           isLoading: tab.isLoading,
           canGoBack: navigation.canGoBack,
-          canGoForward: navigation.canGoForward
+          canGoForward: navigation.canGoForward,
+          isAudible: tab.isAudible,
+          isMuted: tab.isMuted,
+          zoomPercent: Math.round(100 * Math.pow(1.2, tab.view.webContents.getZoomLevel()))
         }
       })
     })

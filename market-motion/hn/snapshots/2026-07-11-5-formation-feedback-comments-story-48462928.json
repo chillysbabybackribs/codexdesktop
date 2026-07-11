@@ -1,0 +1,1289 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48462928",
+    "window": "prior-30d",
+    "tag": "show_hn",
+    "score": 174
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hyde0395"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wonder why u used go? i thought Deno would use to rust/ts. is it because of ecosystem? i've touched some agent guardrails. and i used python"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hyde0395",
+          "story_48462928"
+        ],
+        "author": "hyde0395",
+        "comment_text": "I wonder why u used go? i thought Deno would use to rust&#x2F;ts. is it because of ecosystem? i&#x27;ve touched some agent guardrails. and i used python",
+        "created_at": "2026-06-15T02:38:59Z",
+        "created_at_i": 1781491139,
+        "objectID": "48535945",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-15T02:42:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bhargab_kalita"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gonna try it out"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bhargab_kalita",
+          "story_48462928"
+        ],
+        "author": "bhargab_kalita",
+        "comment_text": "Gonna try it out",
+        "created_at": "2026-06-14T09:23:28Z",
+        "created_at_i": 1781429008,
+        "objectID": "48525556",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-14T09:28:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "denn-gubsky"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nice library and fast Go code, which is nice to know. I'm solving the similar problem, but on different level. The agentic runtime (Go too) I'm developing, applying safety guards on different layers, including redaction and compression plugins. \nDo you only block the agentic request or you can redact it in the middle? How do you solve LLM caching problems? What your agent see when it's request is blocked? Does it try to reformulate the request or just stops?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_denn-gubsky",
+          "story_48462928"
+        ],
+        "author": "denn-gubsky",
+        "comment_text": "Nice library and fast Go code, which is nice to know. I&#x27;m solving the similar problem, but on different level. The agentic runtime (Go too) I&#x27;m developing, applying safety guards on different layers, including redaction and compression plugins. \nDo you only block the agentic request or you can redact it in the middle? How do you solve LLM caching problems? What your agent see when it&#x27;s request is blocked? Does it try to reformulate the request or just stops?",
+        "created_at": "2026-06-14T09:11:35Z",
+        "created_at_i": 1781428295,
+        "objectID": "48525510",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-14T09:13:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oulipo2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;The principle is that the agent doesn't need code changes, including skills/MCPs - it just accesses systems.&quot;<p>That's why you're having safety issues.<p>The real (and boring, and tedious) way to do it <i>IS</i> to create a unique way (API, MCP, whatever) for the agent to access your data / infra in a secure way.<p>Think about it as &quot;typing&quot; in language. Sure it's boring to have to put all the type info (even though in many case it makes dev easier too, because it forces to construct stuff cleanly), but then once it typechecks, you're relatively sure that it's doing what it's supposed to.<p>Here it would be the same. You build basic building blocks that you know are safe for the agent to access, and you let it compose them"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_oulipo2",
+          "story_48462928"
+        ],
+        "author": "oulipo2",
+        "comment_text": "&quot;The principle is that the agent doesn&#x27;t need code changes, including skills&#x2F;MCPs - it just accesses systems.&quot;<p>That&#x27;s why you&#x27;re having safety issues.<p>The real (and boring, and tedious) way to do it <i>IS</i> to create a unique way (API, MCP, whatever) for the agent to access your data &#x2F; infra in a secure way.<p>Think about it as &quot;typing&quot; in language. Sure it&#x27;s boring to have to put all the type info (even though in many case it makes dev easier too, because it forces to construct stuff cleanly), but then once it typechecks, you&#x27;re relatively sure that it&#x27;s doing what it&#x27;s supposed to.<p>Here it would be the same. You build basic building blocks that you know are safe for the agent to access, and you let it compose them",
+        "created_at": "2026-06-12T09:34:57Z",
+        "created_at_i": 1781256897,
+        "objectID": "48501882",
+        "parent_id": 48497402,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T15:36:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oulipo2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It would be able to spawn psql correctly, but wouldn't be able to connect to the database (if it's secured with user accounts). It would only be able to use the database through the MCP (which uses a read-only account to connect).<p>I understand the &quot;centralized registry&quot; thing, but it's also easy to &quot;forget about one case&quot;, and agents are good at circumventing stuff (&quot;oh, I cannot DROP table, let me just remove all rows&quot;, etc). So I'd rather trust the permissions of the original db (eg getting a read-only account) which I presume have been battle-tested for this"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_oulipo2",
+          "story_48462928"
+        ],
+        "author": "oulipo2",
+        "comment_text": "It would be able to spawn psql correctly, but wouldn&#x27;t be able to connect to the database (if it&#x27;s secured with user accounts). It would only be able to use the database through the MCP (which uses a read-only account to connect).<p>I understand the &quot;centralized registry&quot; thing, but it&#x27;s also easy to &quot;forget about one case&quot;, and agents are good at circumventing stuff (&quot;oh, I cannot DROP table, let me just remove all rows&quot;, etc). So I&#x27;d rather trust the permissions of the original db (eg getting a read-only account) which I presume have been battle-tested for this",
+        "created_at": "2026-06-12T09:32:28Z",
+        "created_at_i": 1781256748,
+        "objectID": "48501865",
+        "parent_id": 48497055,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T09:33:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's not about enforcing read-only - we want agents to do destructive things. Like rebooting a pod, rolling back a deployment, etc.<p>Plus a lot of these services are reached by tunneling through something else. We tunnel into k8s where it has dangerous credentials.<p>We also don't want to define MCPs for everything. The principle is that the agent doesn't need code changes, including skills/MCPs - it just accesses systems.<p>Claw Patrol lets us give agents more access because it's watching everything at the wire. `kubectl delete pod foo` waits for slack approval, SELECT on env_vars runs through an LLM judge to check if it actually returns secret data. For our setup this is security policy that is a single file, checked into git, that gates access across 14 k8s clusters, clickhouse, postgres, a dozen other HTTP APIs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "children": [
+          48501882
+        ],
+        "comment_text": "It&#x27;s not about enforcing read-only - we want agents to do destructive things. Like rebooting a pod, rolling back a deployment, etc.<p>Plus a lot of these services are reached by tunneling through something else. We tunnel into k8s where it has dangerous credentials.<p>We also don&#x27;t want to define MCPs for everything. The principle is that the agent doesn&#x27;t need code changes, including skills&#x2F;MCPs - it just accesses systems.<p>Claw Patrol lets us give agents more access because it&#x27;s watching everything at the wire. `kubectl delete pod foo` waits for slack approval, SELECT on env_vars runs through an LLM judge to check if it actually returns secret data. For our setup this is security policy that is a single file, checked into git, that gates access across 14 k8s clusters, clickhouse, postgres, a dozen other HTTP APIs.",
+        "created_at": "2026-06-11T22:41:17Z",
+        "created_at_i": 1781217677,
+        "objectID": "48497402",
+        "parent_id": 48496417,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T09:35:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Could work - but our agents (codex/claude/openclaw) spawn subprocesses  - imagine an engineer uses claude to debug an issue, it spawns psql directly, routing around MCP. Wire level interception is the only place a process tree can't escape.<p>Regarding reinventing permissions - scoped credentials solve this to some extent, but it's really nice to have a single place where we can define rules for all services (eg &quot;DROP TABLE&quot; never can occur), or you can SELECT unless it includes the env_vars.secrets column."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "children": [
+          48501865
+        ],
+        "comment_text": "Could work - but our agents (codex&#x2F;claude&#x2F;openclaw) spawn subprocesses  - imagine an engineer uses claude to debug an issue, it spawns psql directly, routing around MCP. Wire level interception is the only place a process tree can&#x27;t escape.<p>Regarding reinventing permissions - scoped credentials solve this to some extent, but it&#x27;s really nice to have a single place where we can define rules for all services (eg &quot;DROP TABLE&quot; never can occur), or you can SELECT unless it includes the env_vars.secrets column.",
+        "created_at": "2026-06-11T22:06:33Z",
+        "created_at_i": 1781215593,
+        "objectID": "48497055",
+        "parent_id": 48496437,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T09:33:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oulipo2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So, why not instead limit your agents to a few endpoints / MCP functions that you control, which give access to your db (or whatever) through read-only permissions?<p>It seems this is a bit like &quot;reinventing permissions&quot; no?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_oulipo2",
+          "story_48462928"
+        ],
+        "author": "oulipo2",
+        "children": [
+          48497055
+        ],
+        "comment_text": "So, why not instead limit your agents to a few endpoints &#x2F; MCP functions that you control, which give access to your db (or whatever) through read-only permissions?<p>It seems this is a bit like &quot;reinventing permissions&quot; no?",
+        "created_at": "2026-06-11T21:08:35Z",
+        "created_at_i": 1781212115,
+        "objectID": "48496437",
+        "parent_id": 48465858,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:07:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oulipo2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not sure why I would put another software to check that the agent doesn't do &quot;SQL writes&quot;, rather than providing them... with a read-only account?<p>It looks like those projects are trying to reinvent service-accounts and permissions... Just define the permissions for each of your APIs, and provide only endpoints to these (through MCP or whatever) to your agents..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_oulipo2",
+          "story_48462928"
+        ],
+        "author": "oulipo2",
+        "children": [
+          48497402
+        ],
+        "comment_text": "Not sure why I would put another software to check that the agent doesn&#x27;t do &quot;SQL writes&quot;, rather than providing them... with a read-only account?<p>It looks like those projects are trying to reinvent service-accounts and permissions... Just define the permissions for each of your APIs, and provide only endpoints to these (through MCP or whatever) to your agents...",
+        "created_at": "2026-06-11T21:06:59Z",
+        "created_at_i": 1781212019,
+        "objectID": "48496417",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:42:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes works at the wire level, not http. Have a look at the example config file <a href=\"https://github.com/denoland/clawpatrol/blob/d2e531d8cb0f1a3a214b5224757c90f7ca338820/examples/gateway.example.hcl#L374-L385\" rel=\"nofollow\">https://github.com/denoland/clawpatrol/blob/d2e531d8cb0f1a3a...</a><p>Claw Patrol holds credentials - so probably doesn't make sense to layer with AV - but it's true that AV has more sophisticated storage of creds (eg using 1p)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "comment_text": "Yes works at the wire level, not http. Have a look at the example config file <a href=\"https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;blob&#x2F;d2e531d8cb0f1a3a214b5224757c90f7ca338820&#x2F;examples&#x2F;gateway.example.hcl#L374-L385\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;blob&#x2F;d2e531d8cb0f1a3a...</a><p>Claw Patrol holds credentials - so probably doesn&#x27;t make sense to layer with AV - but it&#x27;s true that AV has more sophisticated storage of creds (eg using 1p)",
+        "created_at": "2026-06-11T20:51:17Z",
+        "created_at_i": 1781211077,
+        "objectID": "48496236",
+        "parent_id": 48494724,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T00:17:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If the operator isn't around, then it shouldn't be approved. But yes, this is a problem, we have to ask the agent to retry after approval if its timed out. Currently the design philosophy is that the agent doesn't need to know anything about the firewall - no skill files, no code changes, completely transparent. But we're soon introducing a discovery endpoint that will allow the agent to know which services it has credentials for and tell the agent how to poll for HITL approval. This is an area of active development: <a href=\"https://github.com/denoland/clawpatrol/pull/666\" rel=\"nofollow\">https://github.com/denoland/clawpatrol/pull/666</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "comment_text": "If the operator isn&#x27;t around, then it shouldn&#x27;t be approved. But yes, this is a problem, we have to ask the agent to retry after approval if its timed out. Currently the design philosophy is that the agent doesn&#x27;t need to know anything about the firewall - no skill files, no code changes, completely transparent. But we&#x27;re soon introducing a discovery endpoint that will allow the agent to know which services it has credentials for and tell the agent how to poll for HITL approval. This is an area of active development: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;pull&#x2F;666\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;pull&#x2F;666</a>",
+        "created_at": "2026-06-11T20:47:17Z",
+        "created_at_i": 1781210837,
+        "objectID": "48496189",
+        "parent_id": 48496129,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:54:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MadsRC"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The approval part is really interesting - No problems with timeouts or operators not being around to approve?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MadsRC",
+          "story_48462928"
+        ],
+        "author": "MadsRC",
+        "children": [
+          48496189
+        ],
+        "comment_text": "The approval part is really interesting - No problems with timeouts or operators not being around to approve?",
+        "created_at": "2026-06-11T20:41:32Z",
+        "created_at_i": 1781210492,
+        "objectID": "48496129",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T20:50:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "czbond"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Interesting project. I like the implementation, congratulations on shipping!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_czbond",
+          "story_48462928"
+        ],
+        "author": "czbond",
+        "comment_text": "Interesting project. I like the implementation, congratulations on shipping!",
+        "created_at": "2026-06-11T20:01:50Z",
+        "created_at_i": 1781208110,
+        "objectID": "48495662",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T20:06:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "satvikpendem"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Great name by the way, as someone who's been forced to watch the show by cousins."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_satvikpendem",
+          "story_48462928"
+        ],
+        "author": "satvikpendem",
+        "comment_text": "Great name by the way, as someone who&#x27;s been forced to watch the show by cousins.",
+        "created_at": "2026-06-11T19:25:38Z",
+        "created_at_i": 1781205938,
+        "objectID": "48495214",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T21:37:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mmcclure"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The product looks great and I'm really interested in trying it out. Very cool, congrats on shipping! Also...as a parent of young kids: this name made me laugh out loud. The OG image on the marketing site is a fun easter egg.<p>For those here without young kids in their life: <a href=\"https://en.wikipedia.org/wiki/Paw_Patrol\" rel=\"nofollow\">https://en.wikipedia.org/wiki/Paw_Patrol</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mmcclure",
+          "story_48462928"
+        ],
+        "author": "mmcclure",
+        "comment_text": "The product looks great and I&#x27;m really interested in trying it out. Very cool, congrats on shipping! Also...as a parent of young kids: this name made me laugh out loud. The OG image on the marketing site is a fun easter egg.<p>For those here without young kids in their life: <a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Paw_Patrol\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Paw_Patrol</a>",
+        "created_at": "2026-06-11T18:50:55Z",
+        "created_at_i": 1781203855,
+        "objectID": "48494778",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T20:51:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jameslk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think this sounds very cool! It sounds similar to Agent Vault (github.com/Infisical/agent-vault) but with an added feature of having security policies for denial/human-in-the-loop of traffic based on the contents of requests?<p>The nice thing about Agent Vault is the encryption of credentials and other ways they handle making sure those don't leak from storage. I suppose you could potentially wrap the two in layers as well (agent -&gt; Claw Patrol -&gt; Agent Vault -&gt; external network)<p>EDIT: looking at some of the comments, it sounds like Claw Patrol can work with protocols beyond HTTP/S, so potentially covers more surface area than AV"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jameslk",
+          "story_48462928"
+        ],
+        "author": "jameslk",
+        "children": [
+          48496236,
+          48501830
+        ],
+        "comment_text": "I think this sounds very cool! It sounds similar to Agent Vault (github.com&#x2F;Infisical&#x2F;agent-vault) but with an added feature of having security policies for denial&#x2F;human-in-the-loop of traffic based on the contents of requests?<p>The nice thing about Agent Vault is the encryption of credentials and other ways they handle making sure those don&#x27;t leak from storage. I suppose you could potentially wrap the two in layers as well (agent -&gt; Claw Patrol -&gt; Agent Vault -&gt; external network)<p>EDIT: looking at some of the comments, it sounds like Claw Patrol can work with protocols beyond HTTP&#x2F;S, so potentially covers more surface area than AV",
+        "created_at": "2026-06-11T18:47:01Z",
+        "created_at_i": 1781203621,
+        "objectID": "48494724",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T09:27:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thatsit"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Seems like a more general solution to a Tesla API Firewall that i was thinking about. My idea was to use some kind of gateway/firewall LLM to check commands that another agent would send to the Tesla API."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thatsit",
+          "story_48462928"
+        ],
+        "author": "thatsit",
+        "comment_text": "Seems like a more general solution to a Tesla API Firewall that i was thinking about. My idea was to use some kind of gateway&#x2F;firewall LLM to check commands that another agent would send to the Tesla API.",
+        "created_at": "2026-06-11T18:45:24Z",
+        "created_at_i": 1781203524,
+        "objectID": "48494708",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T18:47:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "undefined_void"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That’s great! IIUC Agent vault is an HTTPS proxy whereas Clawpatrol is a WG/Tailscale exit node so it can handle other protocols like\nPostgres and SSH without processes co-operating via HTTP_PROXY"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_undefined_void",
+          "story_48462928"
+        ],
+        "author": "undefined_void",
+        "comment_text": "That’s great! IIUC Agent vault is an HTTPS proxy whereas Clawpatrol is a WG&#x2F;Tailscale exit node so it can handle other protocols like\nPostgres and SSH without processes co-operating via HTTP_PROXY",
+        "created_at": "2026-06-11T18:23:45Z",
+        "created_at_i": 1781202225,
+        "objectID": "48494398",
+        "parent_id": 48494295,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T00:47:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dhavd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I did this"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dhavd",
+          "story_48462928"
+        ],
+        "author": "dhavd",
+        "comment_text": "I did this",
+        "created_at": "2026-06-11T18:21:34Z",
+        "created_at_i": 1781202094,
+        "objectID": "48494370",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-14T03:53:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "undefined_void"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "claw patrol runs on the network level. There’s no process being terminated - HTTP/SQL/etc are rejected based on rules that you define. it’s resilient to the agent making changes to its own hooks or bypassing a local sandbox."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_undefined_void",
+          "story_48462928"
+        ],
+        "author": "undefined_void",
+        "comment_text": "claw patrol runs on the network level. There’s no process being terminated - HTTP&#x2F;SQL&#x2F;etc are rejected based on rules that you define. it’s resilient to the agent making changes to its own hooks or bypassing a local sandbox.",
+        "created_at": "2026-06-11T18:19:12Z",
+        "created_at_i": 1781201952,
+        "objectID": "48494342",
+        "parent_id": 48493914,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T18:21:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "radku"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nice work shipping this.<p>Disclosure: author of a related tool here. I have create agent-vault-proxy for a very similar reason. It also can help keep credentials out of the agent process. The agent gets a placeholder, the proxy swaps in the real secret in transit.<p>I read them as complementary: action firewall in front, credential broker behind. \n<a href=\"https://github.com/inflightsec/agent-vault-proxy\" rel=\"nofollow\">https://github.com/inflightsec/agent-vault-proxy</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_radku",
+          "story_48462928"
+        ],
+        "author": "radku",
+        "children": [
+          48494398
+        ],
+        "comment_text": "Nice work shipping this.<p>Disclosure: author of a related tool here. I have create agent-vault-proxy for a very similar reason. It also can help keep credentials out of the agent process. The agent gets a placeholder, the proxy swaps in the real secret in transit.<p>I read them as complementary: action firewall in front, credential broker behind. \n<a href=\"https:&#x2F;&#x2F;github.com&#x2F;inflightsec&#x2F;agent-vault-proxy\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;inflightsec&#x2F;agent-vault-proxy</a>",
+        "created_at": "2026-06-11T18:15:59Z",
+        "created_at_i": 1781201759,
+        "objectID": "48494295",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T19:51:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "varmabudharaju"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "*abort"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_varmabudharaju",
+          "story_48462928"
+        ],
+        "author": "varmabudharaju",
+        "comment_text": "*abort",
+        "created_at": "2026-06-11T17:53:51Z",
+        "created_at_i": 1781200431,
+        "objectID": "48493921",
+        "parent_id": 48493914,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T17:55:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "varmabudharaju"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is very interesting. I build something like this but native to claude code and something that focus on just logging the violation. My question is if you are terminating  a process with in the workflow will that about all other things that executed before. anyway would love your feed back on this <a href=\"https://github.com/varmabudharaju/agent-pd\" rel=\"nofollow\">https://github.com/varmabudharaju/agent-pd</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_varmabudharaju",
+          "story_48462928"
+        ],
+        "author": "varmabudharaju",
+        "children": [
+          48494342,
+          48493921
+        ],
+        "comment_text": "This is very interesting. I build something like this but native to claude code and something that focus on just logging the violation. My question is if you are terminating  a process with in the workflow will that about all other things that executed before. anyway would love your feed back on this <a href=\"https:&#x2F;&#x2F;github.com&#x2F;varmabudharaju&#x2F;agent-pd\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;varmabudharaju&#x2F;agent-pd</a>",
+        "created_at": "2026-06-11T17:53:28Z",
+        "created_at_i": 1781200408,
+        "objectID": "48493914",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-15T12:01:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There's a plugin API <a href=\"https://clawpatrol.dev/docs/plugins/\" rel=\"nofollow\">https://clawpatrol.dev/docs/plugins/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "comment_text": "There&#x27;s a plugin API <a href=\"https:&#x2F;&#x2F;clawpatrol.dev&#x2F;docs&#x2F;plugins&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;clawpatrol.dev&#x2F;docs&#x2F;plugins&#x2F;</a>",
+        "created_at": "2026-06-11T17:42:17Z",
+        "created_at_i": 1781199737,
+        "objectID": "48493697",
+        "parent_id": 48490132,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:54:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can define different profiles that are associated with different credentials. Take a look here <a href=\"https://clawpatrol.dev/docs/credentials/#single-credential-the-common-case\" rel=\"nofollow\">https://clawpatrol.dev/docs/credentials/#single-credential-t...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "comment_text": "You can define different profiles that are associated with different credentials. Take a look here <a href=\"https:&#x2F;&#x2F;clawpatrol.dev&#x2F;docs&#x2F;credentials&#x2F;#single-credential-the-common-case\" rel=\"nofollow\">https:&#x2F;&#x2F;clawpatrol.dev&#x2F;docs&#x2F;credentials&#x2F;#single-credential-t...</a>",
+        "created_at": "2026-06-11T17:41:47Z",
+        "created_at_i": 1781199707,
+        "objectID": "48493685",
+        "parent_id": 48493610,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:54:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Jayakumark"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How will credentials be injected via Gateway for each user ? If we have 5 users with one gateway, how it knows whose github credential to inject ?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Jayakumark",
+          "story_48462928"
+        ],
+        "author": "Jayakumark",
+        "children": [
+          48493685
+        ],
+        "comment_text": "How will credentials be injected via Gateway for each user ? If we have 5 users with one gateway, how it knows whose github credential to inject ?",
+        "created_at": "2026-06-11T17:37:51Z",
+        "created_at_i": 1781199471,
+        "objectID": "48493610",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T17:42:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hans_Cui"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "really interesting work! i am curious how you handle rule configuration for different protocols such as Postgres or ssh.\nThanks for open-sourcing it under MIT."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Hans_Cui",
+          "story_48462928"
+        ],
+        "author": "Hans_Cui",
+        "children": [
+          48493697
+        ],
+        "comment_text": "really interesting work! i am curious how you handle rule configuration for different protocols such as Postgres or ssh.\nThanks for open-sourcing it under MIT.",
+        "created_at": "2026-06-11T13:32:49Z",
+        "created_at_i": 1781184769,
+        "objectID": "48490132",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:55:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! Don't forget wire level protocol parsing - this is important because agents usually can spawn subprocesses and if they have postgres credentials, you're just one psql call away from disaster if you only have MCP/HTTP proxies in place."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "children": [
+          48496437
+        ],
+        "comment_text": "Thanks! Don&#x27;t forget wire level protocol parsing - this is important because agents usually can spawn subprocesses and if they have postgres credentials, you&#x27;re just one psql call away from disaster if you only have MCP&#x2F;HTTP proxies in place.",
+        "created_at": "2026-06-09T18:57:15Z",
+        "created_at_i": 1781031435,
+        "objectID": "48465858",
+        "parent_id": 48465307,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:52:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rough-sea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes default allow and no rules by default. Some sort of default policy would be a great feature - I've been considering it. No one wants agents to DROP tables.<p>We have a big and detailed config file for our own internal use - but reluctant to release that exactly because it has information about our systems.<p>There's an example config file here that might be helpful <a href=\"https://github.com/denoland/clawpatrol/blob/main/examples/gateway.example.hcl\" rel=\"nofollow\">https://github.com/denoland/clawpatrol/blob/main/examples/ga...</a> - we use agents to write the config by pointing it at <a href=\"https://clawpatrol.dev/llms-full.txt\" rel=\"nofollow\">https://clawpatrol.dev/llms-full.txt</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rough-sea",
+          "story_48462928"
+        ],
+        "author": "rough-sea",
+        "comment_text": "Yes default allow and no rules by default. Some sort of default policy would be a great feature - I&#x27;ve been considering it. No one wants agents to DROP tables.<p>We have a big and detailed config file for our own internal use - but reluctant to release that exactly because it has information about our systems.<p>There&#x27;s an example config file here that might be helpful <a href=\"https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;blob&#x2F;main&#x2F;examples&#x2F;gateway.example.hcl\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;denoland&#x2F;clawpatrol&#x2F;blob&#x2F;main&#x2F;examples&#x2F;ga...</a> - we use agents to write the config by pointing it at <a href=\"https:&#x2F;&#x2F;clawpatrol.dev&#x2F;llms-full.txt\" rel=\"nofollow\">https:&#x2F;&#x2F;clawpatrol.dev&#x2F;llms-full.txt</a>",
+        "created_at": "2026-06-09T18:53:55Z",
+        "created_at_i": 1781031235,
+        "objectID": "48465800",
+        "parent_id": 48465256,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-11T22:54:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Apylon777"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a really cool library to look at even if you aren't running openclaw directly.<p>Lots of good concepts to seek inspiration from.<p>1. process-scoped egress policy<p>2. policy-as-code<p>3. explicit approval classes<p>4. normalized network/ guardrail receipts.<p>5. structured guardrail outcomes<p>6. centralized decision rules"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Apylon777",
+          "story_48462928"
+        ],
+        "author": "Apylon777",
+        "children": [
+          48465858
+        ],
+        "comment_text": "This is a really cool library to look at even if you aren&#x27;t running openclaw directly.<p>Lots of good concepts to seek inspiration from.<p>1. process-scoped egress policy<p>2. policy-as-code<p>3. explicit approval classes<p>4. normalized network&#x2F; guardrail receipts.<p>5. structured guardrail outcomes<p>6. centralized decision rules",
+        "created_at": "2026-06-09T18:23:43Z",
+        "created_at_i": 1781029423,
+        "objectID": "48465307",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-12T10:03:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pavelpilyak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Neat! Reading the docs - it's default-allow and ships with no rules? Any plans for a default rule set?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Claw Patrol, a security firewall for agents"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/denoland/clawpatrol"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pavelpilyak",
+          "story_48462928"
+        ],
+        "author": "pavelpilyak",
+        "children": [
+          48465800
+        ],
+        "comment_text": "Neat! Reading the docs - it&#x27;s default-allow and ships with no rules? Any plans for a default rule set?",
+        "created_at": "2026-06-09T18:20:57Z",
+        "created_at_i": 1781029257,
+        "objectID": "48465256",
+        "parent_id": 48462928,
+        "story_id": 48462928,
+        "story_title": "Show HN: Claw Patrol, a security firewall for agents",
+        "story_url": "https://github.com/denoland/clawpatrol",
+        "updated_at": "2026-06-09T18:55:08Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 31,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48462928&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 14
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

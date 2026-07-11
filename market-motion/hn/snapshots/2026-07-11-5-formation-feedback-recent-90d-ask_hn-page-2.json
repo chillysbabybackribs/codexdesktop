@@ -1,0 +1,3305 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "window": "recent-90d",
+  "start": 1775995200,
+  "end": 1783771200,
+  "tag": "ask_hn",
+  "page": 2,
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "smalltorch"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is the best version of full Linux in the browser?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_smalltorch",
+          "story_48808845",
+          "ask_hn"
+        ],
+        "author": "smalltorch",
+        "children": [
+          48808951
+        ],
+        "created_at": "2026-07-06T18:49:39Z",
+        "created_at_i": 1783363779,
+        "num_comments": 1,
+        "objectID": "48808845",
+        "points": 2,
+        "story_id": 48808845,
+        "title": "Ask HN: What is the best version of full Linux in the browser?",
+        "updated_at": "2026-07-07T00:43:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "umun"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FilaRank brings live SEO scoring, SERP preview, and site-wide health reports to Filament admin panels."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Adding SEO fields to your Filament resources in 5 minutes"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_umun",
+          "story_48808495",
+          "ask_hn"
+        ],
+        "author": "umun",
+        "children": [
+          48808502,
+          48808500
+        ],
+        "created_at": "2026-07-06T18:24:00Z",
+        "created_at_i": 1783362240,
+        "num_comments": 0,
+        "objectID": "48808495",
+        "points": 2,
+        "story_id": 48808495,
+        "story_text": "FilaRank brings live SEO scoring, SERP preview, and site-wide health reports to Filament admin panels.",
+        "title": "Adding SEO fields to your Filament resources in 5 minutes",
+        "updated_at": "2026-07-06T18:26:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amukbils"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When you build something people REALLY want, you can pull of ridiculous stunts like Claude's pricing:\n- Vague limits \n- Weekly/monthly usage stats  ??\n- 50% of your usage on Fable 5  \n- $200/mo subscription that doesn't include Fable 5\n- But you can use it with &quot;usage credits&quot;<p>I'm frustrated but am also hooked. Kinda of a lesson in startups in a way."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude has the worst pricing – but people want it"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_amukbils",
+          "story_48808413",
+          "ask_hn"
+        ],
+        "author": "amukbils",
+        "children": [
+          48808590,
+          48809592,
+          48810916,
+          48818280,
+          48810423,
+          48811268,
+          48810438,
+          48812404,
+          48809398,
+          48812362,
+          48813685,
+          48818135,
+          48812961
+        ],
+        "created_at": "2026-07-06T18:16:20Z",
+        "created_at_i": 1783361780,
+        "num_comments": 24,
+        "objectID": "48808413",
+        "points": 11,
+        "story_id": 48808413,
+        "story_text": "When you build something people REALLY want, you can pull of ridiculous stunts like Claude&#x27;s pricing:\n- Vague limits \n- Weekly&#x2F;monthly usage stats  ??\n- 50% of your usage on Fable 5  \n- $200&#x2F;mo subscription that doesn&#x27;t include Fable 5\n- But you can use it with &quot;usage credits&quot;<p>I&#x27;m frustrated but am also hooked. Kinda of a lesson in startups in a way.",
+        "title": "Claude has the worst pricing – but people want it",
+        "updated_at": "2026-07-11T01:41:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blockyyr"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You’ve got some XRP. Maybe you bought it at $0.80 and it’s sitting at $1.22 now. Or maybe you’re trying to figure out whether to exit, hold, or add more. Either way, you opened a search engine and typed ripple calculator."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ripple Calculator: Complete Guide to XRP Profit and Conversion"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_blockyyr",
+          "story_48808317",
+          "ask_hn"
+        ],
+        "author": "blockyyr",
+        "created_at": "2026-07-06T18:09:14Z",
+        "created_at_i": 1783361354,
+        "num_comments": 0,
+        "objectID": "48808317",
+        "points": 4,
+        "story_id": 48808317,
+        "story_text": "You’ve got some XRP. Maybe you bought it at $0.80 and it’s sitting at $1.22 now. Or maybe you’re trying to figure out whether to exit, hold, or add more. Either way, you opened a search engine and typed ripple calculator.",
+        "title": "Ripple Calculator: Complete Guide to XRP Profit and Conversion",
+        "updated_at": "2026-07-07T06:52:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tsarp"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just curious."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What cool stuff have you all been using Fable 5 for?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Tsarp",
+          "story_48807755",
+          "ask_hn"
+        ],
+        "author": "Tsarp",
+        "children": [
+          48809540,
+          48841095,
+          48809679,
+          48810447,
+          48814528,
+          48808100,
+          48810576,
+          48808868,
+          48810860,
+          48856052,
+          48812402,
+          48814231,
+          48809507,
+          48812586,
+          48810618,
+          48831167,
+          48809003,
+          48808535
+        ],
+        "created_at": "2026-07-06T17:24:11Z",
+        "created_at_i": 1783358651,
+        "num_comments": 16,
+        "objectID": "48807755",
+        "points": 13,
+        "story_id": 48807755,
+        "story_text": "Just curious.",
+        "title": "Ask HN: What cool stuff have you all been using Fable 5 for?",
+        "updated_at": "2026-07-11T15:46:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "frereubu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I had an educational Adobe CC subscription that went from ~£25 per month to ~£67 recently. When I went to cancel after I realised I didn't really use it that much and could just use Affinity, I was shocked to find out that I was going to be charged ~£250 because although I pay monthly I was in a yearly contract. (I did know that, which is on me, but it's easy to forget that because of the payment structure). It's a serious barrier, so I looked at the other options, and you're able to transfer to an Adobe Photoshop Express plan for ~£98 per year and avoid that charge. I figured I'd do that and immediately cancel so I didn't forget to at the end of the year, whether I kept access to Photoshop Express or not - I just wanted out of the Adobe ecosystem. To my surprise I was refunded for both the balance of the month on the CC subscription because of the plan change <i>and</i> then refunded for the entire year's Photoshop Express because I still had 12 months to run on it. YMMV, but if you do it in that order, you can potentially escape Adobe without being penalised for it."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I managed to unsubscribe from Adobe CC without being charged"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_frereubu",
+          "story_48807269",
+          "ask_hn"
+        ],
+        "author": "frereubu",
+        "children": [
+          48809727,
+          48852105
+        ],
+        "created_at": "2026-07-06T16:50:59Z",
+        "created_at_i": 1783356659,
+        "num_comments": 4,
+        "objectID": "48807269",
+        "points": 26,
+        "story_id": 48807269,
+        "story_text": "I had an educational Adobe CC subscription that went from ~£25 per month to ~£67 recently. When I went to cancel after I realised I didn&#x27;t really use it that much and could just use Affinity, I was shocked to find out that I was going to be charged ~£250 because although I pay monthly I was in a yearly contract. (I did know that, which is on me, but it&#x27;s easy to forget that because of the payment structure). It&#x27;s a serious barrier, so I looked at the other options, and you&#x27;re able to transfer to an Adobe Photoshop Express plan for ~£98 per year and avoid that charge. I figured I&#x27;d do that and immediately cancel so I didn&#x27;t forget to at the end of the year, whether I kept access to Photoshop Express or not - I just wanted out of the Adobe ecosystem. To my surprise I was refunded for both the balance of the month on the CC subscription because of the plan change <i>and</i> then refunded for the entire year&#x27;s Photoshop Express because I still had 12 months to run on it. YMMV, but if you do it in that order, you can potentially escape Adobe without being penalised for it.",
+        "title": "Tell HN: I managed to unsubscribe from Adobe CC without being charged",
+        "updated_at": "2026-07-10T02:52:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Asmod4n"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It’s been 10 years since we had the last leap second and it looks like we will get the first negative one soonish. Are systems ready for that?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are systems ready for the first negative leap second?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Asmod4n",
+          "story_48807108",
+          "ask_hn"
+        ],
+        "author": "Asmod4n",
+        "children": [
+          48865407,
+          48807799,
+          48807434,
+          48864643,
+          48871265,
+          48864207,
+          48812133,
+          48863926,
+          48864470,
+          48864451,
+          48807314,
+          48865151,
+          48864215,
+          48868732,
+          48865144,
+          48864607,
+          48867017,
+          48864377,
+          48869284,
+          48808647,
+          48867450,
+          48865032
+        ],
+        "created_at": "2026-07-06T16:41:26Z",
+        "created_at_i": 1783356086,
+        "num_comments": 83,
+        "objectID": "48807108",
+        "points": 78,
+        "story_id": 48807108,
+        "story_text": "It’s been 10 years since we had the last leap second and it looks like we will get the first negative one soonish. Are systems ready for that?",
+        "title": "Ask HN: Are systems ready for the first negative leap second?",
+        "updated_at": "2026-07-11T16:07:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "getlawgdon"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have a broad but shallow technical background (longtime management consultant) and use agents (a variety of services and models in VS Code) extensively for my own projects. I know I'm hitting a ceiling. My workflow is naive and nonpro, a lot of tinkering and bashing my way through code generation, context drift, manual fixes, etc.<p>I want to learn how senior engineers treat these tools. Processes, systems, guardrails, must-dos, etc.<p>If you write code for a living and have integrated agents into your workflow, what does your system look like?<p>Any/all input is welcomed: resources, URLs, outlines, warnings, discoveries, recommendations.<p>None of these are specifically needed, but ideas?<p>-How do you structure a brand new project? Scaffolding, git init/ignore? Repos? Initial commit strategies? How do you keep stuff out of the context window that you don't want in it?<p>-How do you &quot;layer&quot; your work so it's much more about the context and integrity of the structure and much less about prompts?<p>-Do you switch models (often? ever)? Why?<p>-What other tooling do you have alongside basic agents/environments?<p>-What are &quot;pro habits&quot; that I don't have and should?<p>-Any suggestions for how to work in a very domain-specific endeavor to try to increase the utility of the agents for a silo like this?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: I use coding agents daily, but how do real engineers use them?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_getlawgdon",
+          "story_48806479",
+          "ask_hn"
+        ],
+        "author": "getlawgdon",
+        "children": [
+          48806884,
+          48829965,
+          48830015,
+          48807808,
+          48837224,
+          48809654,
+          48812998,
+          48829854,
+          48810066
+        ],
+        "created_at": "2026-07-06T15:58:25Z",
+        "created_at_i": 1783353505,
+        "num_comments": 8,
+        "objectID": "48806479",
+        "points": 3,
+        "story_id": 48806479,
+        "story_text": "I have a broad but shallow technical background (longtime management consultant) and use agents (a variety of services and models in VS Code) extensively for my own projects. I know I&#x27;m hitting a ceiling. My workflow is naive and nonpro, a lot of tinkering and bashing my way through code generation, context drift, manual fixes, etc.<p>I want to learn how senior engineers treat these tools. Processes, systems, guardrails, must-dos, etc.<p>If you write code for a living and have integrated agents into your workflow, what does your system look like?<p>Any&#x2F;all input is welcomed: resources, URLs, outlines, warnings, discoveries, recommendations.<p>None of these are specifically needed, but ideas?<p>-How do you structure a brand new project? Scaffolding, git init&#x2F;ignore? Repos? Initial commit strategies? How do you keep stuff out of the context window that you don&#x27;t want in it?<p>-How do you &quot;layer&quot; your work so it&#x27;s much more about the context and integrity of the structure and much less about prompts?<p>-Do you switch models (often? ever)? Why?<p>-What other tooling do you have alongside basic agents&#x2F;environments?<p>-What are &quot;pro habits&quot; that I don&#x27;t have and should?<p>-Any suggestions for how to work in a very domain-specific endeavor to try to increase the utility of the agents for a silo like this?",
+        "title": "Ask HN: I use coding agents daily, but how do real engineers use them?",
+        "updated_at": "2026-07-09T13:06:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akiarie"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is just something I've been thinking about. My experience is that agents aren't useful if you view them as programmers, because you still have to audit all the code until we get to the point where you don't, which may be quite far off.<p>But if you view them as a replacement/driver for the Unix shell, as much as I have loved it for many years, it does seem like you can move faster."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Opinion: Agents > Unix Shell"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akiarie",
+          "story_48806115",
+          "ask_hn"
+        ],
+        "author": "akiarie",
+        "children": [
+          48814368
+        ],
+        "created_at": "2026-07-06T15:32:44Z",
+        "created_at_i": 1783351964,
+        "num_comments": 1,
+        "objectID": "48806115",
+        "points": 3,
+        "story_id": 48806115,
+        "story_text": "This is just something I&#x27;ve been thinking about. My experience is that agents aren&#x27;t useful if you view them as programmers, because you still have to audit all the code until we get to the point where you don&#x27;t, which may be quite far off.<p>But if you view them as a replacement&#x2F;driver for the Unix shell, as much as I have loved it for many years, it does seem like you can move faster.",
+        "title": "Opinion: Agents > Unix Shell",
+        "updated_at": "2026-07-07T06:39:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blinkbat"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "genuinely, who do you think wants to read it? why do some of you wait to disclose that it's AI-written until the footer? what kind of internet are you interested in creating or experiencing, or do you just not even think about this?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why submit your AI-written article?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_blinkbat",
+          "story_48805703",
+          "ask_hn"
+        ],
+        "author": "blinkbat",
+        "children": [
+          48805823,
+          48860009,
+          48806160,
+          48805875,
+          48806171,
+          48812980
+        ],
+        "created_at": "2026-07-06T15:06:43Z",
+        "created_at_i": 1783350403,
+        "num_comments": 9,
+        "objectID": "48805703",
+        "points": 8,
+        "story_id": 48805703,
+        "story_text": "genuinely, who do you think wants to read it? why do some of you wait to disclose that it&#x27;s AI-written until the footer? what kind of internet are you interested in creating or experiencing, or do you just not even think about this?",
+        "title": "Ask HN: Why submit your AI-written article?",
+        "updated_at": "2026-07-11T09:41:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Realman78"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m releasing 1.0 of an open-source desktop P2P messenger tomorrow - Realman78/Kiyeovo on GitHub. In short, it's a feature rich messenger with clearnet “Fast mode” and an optional Tor-routed “Anonymous mode.” Before the &quot;release&quot; tomorrow, I want to catch anything I might have missed.<p>For people who have shipped tools from this domain (privacy/messaging/security): what would you verify now that you have less than 24 hours?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What should I verify before releasing a P2P messenger?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Realman78",
+          "story_48805645",
+          "ask_hn"
+        ],
+        "author": "Realman78",
+        "children": [
+          48809917,
+          48807454
+        ],
+        "created_at": "2026-07-06T15:03:26Z",
+        "created_at_i": 1783350206,
+        "num_comments": 5,
+        "objectID": "48805645",
+        "points": 6,
+        "story_id": 48805645,
+        "story_text": "I’m releasing 1.0 of an open-source desktop P2P messenger tomorrow - Realman78&#x2F;Kiyeovo on GitHub. In short, it&#x27;s a feature rich messenger with clearnet “Fast mode” and an optional Tor-routed “Anonymous mode.” Before the &quot;release&quot; tomorrow, I want to catch anything I might have missed.<p>For people who have shipped tools from this domain (privacy&#x2F;messaging&#x2F;security): what would you verify now that you have less than 24 hours?",
+        "title": "Ask HN: What should I verify before releasing a P2P messenger?",
+        "updated_at": "2026-07-07T19:56:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mghackerlady"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For me, I wish I had more use for tcl. I love it as a scripting language, there just aren't many reasons to use it over python or even perl"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are some programming languages you wish you could use more?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mghackerlady",
+          "story_48805056",
+          "ask_hn"
+        ],
+        "author": "mghackerlady",
+        "children": [
+          48859833,
+          48812768,
+          48805094,
+          48814465
+        ],
+        "created_at": "2026-07-06T14:21:39Z",
+        "created_at_i": 1783347699,
+        "num_comments": 4,
+        "objectID": "48805056",
+        "points": 3,
+        "story_id": 48805056,
+        "story_text": "For me, I wish I had more use for tcl. I love it as a scripting language, there just aren&#x27;t many reasons to use it over python or even perl",
+        "title": "Ask HN: What are some programming languages you wish you could use more?",
+        "updated_at": "2026-07-10T13:45:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cabyambo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "(Disclaimer: I'm building in the Jujutsu space)<p>I've recently grown to love Jujutsu (JJ) and am seeing it's adoption growing. But I'm curious if people are switching over to using it exclusively?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone using Jujutsu version control (JJ) exclusively?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cabyambo",
+          "story_48804721",
+          "ask_hn"
+        ],
+        "author": "cabyambo",
+        "children": [
+          48813718
+        ],
+        "created_at": "2026-07-06T14:01:35Z",
+        "created_at_i": 1783346495,
+        "num_comments": 1,
+        "objectID": "48804721",
+        "points": 7,
+        "story_id": 48804721,
+        "story_text": "(Disclaimer: I&#x27;m building in the Jujutsu space)<p>I&#x27;ve recently grown to love Jujutsu (JJ) and am seeing it&#x27;s adoption growing. But I&#x27;m curious if people are switching over to using it exclusively?",
+        "title": "Ask HN: Is anyone using Jujutsu version control (JJ) exclusively?",
+        "updated_at": "2026-07-07T18:34:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CurleighBraces"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "One thing I expected from the AI era was a decrease in emotional attachment to code reviews.<p>My assumption was that AI-generated code would make reviews easier because criticism of the code wouldn't feel like criticism of the author.<p>Instead, I've repeatedly seen people strongly defend AI generated code, and sometimes even defend AI explanations that are demonstrably incorrect.<p>Is anyone else seeing this?<p>If so, what do you think is driving it? How are you handling it within your team?<p>Also, has anyone found effective ways to reduce the influence of &quot;leading question&quot; prompts?<p>I very much want to keep human in the loop style paradigm within our teams, but at the same time I do wonder if my life would get a whole lot easier if instead we jumped on the &quot;loop/factory/vibe&quot; train."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are you emotionally attached to AI code?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_CurleighBraces",
+          "story_48803854",
+          "ask_hn"
+        ],
+        "author": "CurleighBraces",
+        "children": [
+          48811415,
+          48803929,
+          48805914,
+          48804861,
+          48826523
+        ],
+        "created_at": "2026-07-06T12:48:14Z",
+        "created_at_i": 1783342094,
+        "num_comments": 6,
+        "objectID": "48803854",
+        "points": 3,
+        "story_id": 48803854,
+        "story_text": "One thing I expected from the AI era was a decrease in emotional attachment to code reviews.<p>My assumption was that AI-generated code would make reviews easier because criticism of the code wouldn&#x27;t feel like criticism of the author.<p>Instead, I&#x27;ve repeatedly seen people strongly defend AI generated code, and sometimes even defend AI explanations that are demonstrably incorrect.<p>Is anyone else seeing this?<p>If so, what do you think is driving it? How are you handling it within your team?<p>Also, has anyone found effective ways to reduce the influence of &quot;leading question&quot; prompts?<p>I very much want to keep human in the loop style paradigm within our teams, but at the same time I do wonder if my life would get a whole lot easier if instead we jumped on the &quot;loop&#x2F;factory&#x2F;vibe&quot; train.",
+        "title": "Ask HN: Are you emotionally attached to AI code?",
+        "updated_at": "2026-07-08T01:52:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "continuitytv"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TV Time deletes 26 million users' watch history in 9 days.<p>I had 10 years and 5,719 episodes in it. So I built the thing I needed:\na tracker where the history lives on YOUR device and no company can ever\ndelete it again.<p>Import your TV Time export in under a second: continuity.tv"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built a local-first replacement for TV Time before it shuts down July 15"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_continuitytv",
+          "story_48803755",
+          "ask_hn"
+        ],
+        "author": "continuitytv",
+        "children": [
+          48803764
+        ],
+        "created_at": "2026-07-06T12:37:37Z",
+        "created_at_i": 1783341457,
+        "num_comments": 1,
+        "objectID": "48803755",
+        "points": 2,
+        "story_id": 48803755,
+        "story_text": "TV Time deletes 26 million users&#x27; watch history in 9 days.<p>I had 10 years and 5,719 episodes in it. So I built the thing I needed:\na tracker where the history lives on YOUR device and no company can ever\ndelete it again.<p>Import your TV Time export in under a second: continuity.tv",
+        "title": "I built a local-first replacement for TV Time before it shuts down July 15",
+        "updated_at": "2026-07-07T11:48:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kostarelo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I hear more and more from people in companies of all sorts, are building internal tools/replacements of SaSS businesses.<p>We built an automated QA agent based on Playwright, that does QA on our own products, literally in a week and we continue to contribute to it. Our QA engineers love it.<p>What sort of things/products are you building?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What internal tools/SASS replacements are you building?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kostarelo",
+          "story_48803546",
+          "ask_hn"
+        ],
+        "author": "kostarelo",
+        "children": [
+          48803869,
+          48804936
+        ],
+        "created_at": "2026-07-06T12:10:27Z",
+        "created_at_i": 1783339827,
+        "num_comments": 1,
+        "objectID": "48803546",
+        "points": 3,
+        "story_id": 48803546,
+        "story_text": "I hear more and more from people in companies of all sorts, are building internal tools&#x2F;replacements of SaSS businesses.<p>We built an automated QA agent based on Playwright, that does QA on our own products, literally in a week and we continue to contribute to it. Our QA engineers love it.<p>What sort of things&#x2F;products are you building?",
+        "title": "Ask HN: What internal tools/SASS replacements are you building?",
+        "updated_at": "2026-07-07T06:28:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "melvinroest"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm looking for this myself but figured it's good to have an actual discussion about this. I'm pretty new to the benchmarking side of LLMs.<p>For example, I looked at eyeballvull [1]. It seems promising but I don't see wide support for example. I respect the author for still committing. A benchmark where an agent scans a repo in full is what I'm looking for.<p>But then I also wondered: maybe there are others out there that I haven't been aware of yet.<p>And, at the risk of potentially being flooded, for people that are curious about security aware software engineering with agents (or without them for that matter), let's have a chat! My email is in my profile.<p>[1] https://arxiv.org/abs/2407.08708"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are there good security benchmarks for LLMs?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_melvinroest",
+          "story_48803408",
+          "ask_hn"
+        ],
+        "author": "melvinroest",
+        "children": [
+          48829796,
+          48854667
+        ],
+        "created_at": "2026-07-06T11:53:55Z",
+        "created_at_i": 1783338835,
+        "num_comments": 1,
+        "objectID": "48803408",
+        "points": 7,
+        "story_id": 48803408,
+        "story_text": "I&#x27;m looking for this myself but figured it&#x27;s good to have an actual discussion about this. I&#x27;m pretty new to the benchmarking side of LLMs.<p>For example, I looked at eyeballvull [1]. It seems promising but I don&#x27;t see wide support for example. I respect the author for still committing. A benchmark where an agent scans a repo in full is what I&#x27;m looking for.<p>But then I also wondered: maybe there are others out there that I haven&#x27;t been aware of yet.<p>And, at the risk of potentially being flooded, for people that are curious about security aware software engineering with agents (or without them for that matter), let&#x27;s have a chat! My email is in my profile.<p>[1] https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2407.08708",
+        "title": "Ask HN: Are there good security benchmarks for LLMs?",
+        "updated_at": "2026-07-10T02:52:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shinobi-apps"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i built a saas on custom php framework, running on test server. i would like to check how hackable the live deployment actually is - not just static code review. whats your go to stack for self pentesting a web app?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tools/approach to pentest my own framework/SaaS?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shinobi-apps",
+          "story_48803116",
+          "ask_hn"
+        ],
+        "author": "shinobi-apps",
+        "children": [
+          48812030,
+          48804010,
+          48812019,
+          48805318,
+          48803518
+        ],
+        "created_at": "2026-07-06T11:11:19Z",
+        "created_at_i": 1783336279,
+        "num_comments": 4,
+        "objectID": "48803116",
+        "points": 3,
+        "story_id": 48803116,
+        "story_text": "i built a saas on custom php framework, running on test server. i would like to check how hackable the live deployment actually is - not just static code review. whats your go to stack for self pentesting a web app?",
+        "title": "Tools/approach to pentest my own framework/SaaS?",
+        "updated_at": "2026-07-07T11:57:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "adithyaharish"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Looking for open source tools to build animated, interactive websites, things like landing pages, storytelling sites, or product pages with smooth transitions, motion, or scroll effects."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Open-source website builders for animated sites like Higgsfield?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_adithyaharish",
+          "story_48802983",
+          "ask_hn"
+        ],
+        "author": "adithyaharish",
+        "children": [
+          48867121
+        ],
+        "created_at": "2026-07-06T10:50:53Z",
+        "created_at_i": 1783335053,
+        "num_comments": 0,
+        "objectID": "48802983",
+        "points": 4,
+        "story_id": 48802983,
+        "story_text": "Looking for open source tools to build animated, interactive websites, things like landing pages, storytelling sites, or product pages with smooth transitions, motion, or scroll effects.",
+        "title": "Ask HN: Open-source website builders for animated sites like Higgsfield?",
+        "updated_at": "2026-07-11T00:26:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaw12"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Constantly seeing this message for 80% of bash calls.<p>Is this new normal with Claude models, also do we get refund for this loop of failures where tool call fails, then Fable retries again with another tool call, which fails again and again. I am constantly seeing this error and getting very frustrated by it:<p><pre><code>    Error: claude-fable-5 is temporarily unavailable, so auto mode cannot determine the safety of Bash right now. Wait briefly and then try this action again. If it keeps failing, continue with other tasks that don't require this action and come back to it later. Note: reading files, searching code, and other read-only operations do not require the classifier and can still be used.</code></pre>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Error: Claude-fable-5 is temporarily unavailable"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_throwaw12",
+          "story_48802612",
+          "ask_hn"
+        ],
+        "author": "throwaw12",
+        "children": [
+          48802689
+        ],
+        "created_at": "2026-07-06T09:53:26Z",
+        "created_at_i": 1783331606,
+        "num_comments": 3,
+        "objectID": "48802612",
+        "points": 3,
+        "story_id": 48802612,
+        "story_text": "Constantly seeing this message for 80% of bash calls.<p>Is this new normal with Claude models, also do we get refund for this loop of failures where tool call fails, then Fable retries again with another tool call, which fails again and again. I am constantly seeing this error and getting very frustrated by it:<p><pre><code>    Error: claude-fable-5 is temporarily unavailable, so auto mode cannot determine the safety of Bash right now. Wait briefly and then try this action again. If it keeps failing, continue with other tasks that don&#x27;t require this action and come back to it later. Note: reading files, searching code, and other read-only operations do not require the classifier and can still be used.</code></pre>",
+        "title": "Tell HN: Error: Claude-fable-5 is temporarily unavailable",
+        "updated_at": "2026-07-06T13:04:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Vivek-KY"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SW Agent – an outbound-only connector for browser-based PostgreSQL IDEs"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Vivek-KY",
+          "story_48802523",
+          "ask_hn"
+        ],
+        "author": "Vivek-KY",
+        "children": [
+          48802552,
+          48802530
+        ],
+        "created_at": "2026-07-06T09:36:53Z",
+        "created_at_i": 1783330613,
+        "num_comments": 0,
+        "objectID": "48802523",
+        "points": 3,
+        "story_id": 48802523,
+        "title": "SW Agent – an outbound-only connector for browser-based PostgreSQL IDEs",
+        "updated_at": "2026-07-06T11:55:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mieubrisse"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sharing this in hopes it saves other people the data loss I experienced:<p>CC's default setting is a 30-day data retention: https://github.com/anthropics/claude-code/issues/59248<p>If you want to keep your transcripts, you'll need to update `cleanupPeriodDays` in your `settings.json`."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code deletes conversations after 30 days"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mieubrisse",
+          "story_48802300",
+          "ask_hn"
+        ],
+        "author": "mieubrisse",
+        "children": [
+          48802467,
+          48802500,
+          48809480
+        ],
+        "created_at": "2026-07-06T09:04:53Z",
+        "created_at_i": 1783328693,
+        "num_comments": 4,
+        "objectID": "48802300",
+        "points": 2,
+        "story_id": 48802300,
+        "story_text": "Sharing this in hopes it saves other people the data loss I experienced:<p>CC&#x27;s default setting is a 30-day data retention: https:&#x2F;&#x2F;github.com&#x2F;anthropics&#x2F;claude-code&#x2F;issues&#x2F;59248<p>If you want to keep your transcripts, you&#x27;ll need to update `cleanupPeriodDays` in your `settings.json`.",
+        "title": "Claude Code deletes conversations after 30 days",
+        "updated_at": "2026-07-07T01:48:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaway_887"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just over-heard one of our seniors trying to explain to a new intern that AI can actually be wrong, no matter how much its answers sound very eloquent and well-structured.<p>I was wondering what question/prompt everyone uses to prove so to others.<p>I assume it depends on each person's expertise, or some people ask about a fact that is well-known as having been a victim of the mandela effect.<p>P.S.\nAs a non-native speaker, I was about to pass my submission through AI to improve text clarity and understandability, but after remembering some comments about prefering the original text, I decided against it :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your go-to prompt to prove AI can be wrong?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_throwaway_887",
+          "story_48802246",
+          "ask_hn"
+        ],
+        "author": "throwaway_887",
+        "children": [
+          48803874,
+          48802594
+        ],
+        "created_at": "2026-07-06T08:56:48Z",
+        "created_at_i": 1783328208,
+        "num_comments": 4,
+        "objectID": "48802246",
+        "points": 2,
+        "story_id": 48802246,
+        "story_text": "Just over-heard one of our seniors trying to explain to a new intern that AI can actually be wrong, no matter how much its answers sound very eloquent and well-structured.<p>I was wondering what question&#x2F;prompt everyone uses to prove so to others.<p>I assume it depends on each person&#x27;s expertise, or some people ask about a fact that is well-known as having been a victim of the mandela effect.<p>P.S.\nAs a non-native speaker, I was about to pass my submission through AI to improve text clarity and understandability, but after remembering some comments about prefering the original text, I decided against it :)",
+        "title": "Ask HN: What is your go-to prompt to prove AI can be wrong?",
+        "updated_at": "2026-07-06T18:53:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "getelementbyiq"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm curios if it's really hard to find a right person for your on-site team?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do you guys struggle with finding a right person for your FDE role?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_getelementbyiq",
+          "story_48802217",
+          "ask_hn"
+        ],
+        "author": "getelementbyiq",
+        "children": [
+          48812624
+        ],
+        "created_at": "2026-07-06T08:49:44Z",
+        "created_at_i": 1783327784,
+        "num_comments": 2,
+        "objectID": "48802217",
+        "points": 3,
+        "story_id": 48802217,
+        "story_text": "I&#x27;m curios if it&#x27;s really hard to find a right person for your on-site team?",
+        "title": "Ask HN: Do you guys struggle with finding a right person for your FDE role?",
+        "updated_at": "2026-07-07T10:56:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aerodog"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I got the basic Macbook Pro for $1700 pre tax.  They changed the prices after I had already signed (through Apple Business).  Before sending me the purchase order, they cancelled my quote, sent me a new PO at the higher price, and the Apple Business Rep had to argue with them to undo this.  I ended up just paying in full rather than going with the lease.  But isn't this super lame for a company like Apple  and even illegal?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Apple sells me a MacBook to deliver $1700; cancels 5 days later quoting $2000?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_aerodog",
+          "story_48800210",
+          "ask_hn"
+        ],
+        "author": "aerodog",
+        "children": [
+          48800512
+        ],
+        "created_at": "2026-07-06T03:01:44Z",
+        "created_at_i": 1783306904,
+        "num_comments": 2,
+        "objectID": "48800210",
+        "points": 8,
+        "story_id": 48800210,
+        "story_text": "I got the basic Macbook Pro for $1700 pre tax.  They changed the prices after I had already signed (through Apple Business).  Before sending me the purchase order, they cancelled my quote, sent me a new PO at the higher price, and the Apple Business Rep had to argue with them to undo this.  I ended up just paying in full rather than going with the lease.  But isn&#x27;t this super lame for a company like Apple  and even illegal?",
+        "title": "Apple sells me a MacBook to deliver $1700; cancels 5 days later quoting $2000?",
+        "updated_at": "2026-07-06T15:59:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thallavajhula"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "1. What's your predominantly use-case? Eg: If you're using it for coding, what are you doing to make yourself productive? If you're using it for something else, please share what it is and what <i>you</i> are making doing to make it productive for you<p>2. Any successful side-projects you've built using LLMs? Success is subjective. You can go with however you define success in your scenario."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How are you staying productive using LLMs?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_thallavajhula",
+          "story_48799052",
+          "ask_hn"
+        ],
+        "author": "thallavajhula",
+        "children": [
+          48803879,
+          48802825,
+          48800012,
+          48799486,
+          48836174,
+          48806822,
+          48803510,
+          48799659,
+          48802755,
+          48801237,
+          48799115,
+          48799871
+        ],
+        "created_at": "2026-07-05T23:36:19Z",
+        "created_at_i": 1783294579,
+        "num_comments": 4,
+        "objectID": "48799052",
+        "points": 5,
+        "story_id": 48799052,
+        "story_text": "1. What&#x27;s your predominantly use-case? Eg: If you&#x27;re using it for coding, what are you doing to make yourself productive? If you&#x27;re using it for something else, please share what it is and what <i>you</i> are making doing to make it productive for you<p>2. Any successful side-projects you&#x27;ve built using LLMs? Success is subjective. You can go with however you define success in your scenario.",
+        "title": "Ask HN: How are you staying productive using LLMs?",
+        "updated_at": "2026-07-08T20:36:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DivingForGold"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A respected engineer has informed me that the terms of service of most if not all AI outfits mandate that anything you submit becomes their property, and he said that already he knows of 2 instances of startup ideas being stolen away by the AI outfits. He did not name names."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is it true about the Terms of Service of AI's?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_DivingForGold",
+          "story_48798971",
+          "ask_hn"
+        ],
+        "author": "DivingForGold",
+        "children": [
+          48799039,
+          48799103,
+          48799041,
+          48800301
+        ],
+        "created_at": "2026-07-05T23:23:43Z",
+        "created_at_i": 1783293823,
+        "num_comments": 3,
+        "objectID": "48798971",
+        "points": 3,
+        "story_id": 48798971,
+        "story_text": "A respected engineer has informed me that the terms of service of most if not all AI outfits mandate that anything you submit becomes their property, and he said that already he knows of 2 instances of startup ideas being stolen away by the AI outfits. He did not name names.",
+        "title": "Is it true about the Terms of Service of AI's?",
+        "updated_at": "2026-07-08T07:18:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "g-b-r"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you check the newest submissions right now (https://news.ycombinator.com/newest), ten out of 30 are already dead, some only sent five minutes ago.<p>On the second page, it's 9. On the third, 11.<p>It seems unlikely that many people are downvoting them so quickly, and for most I can't see why they should be dead.<p>I know that there's websites known to publish only AI slop which are probably blacklisted here, but it seems unlikely that a third of the submissions are about them.<p>There's some automatic AI filter now?<p>How does it work, and are people assumed to check all recent dead posts and vouch for them if they don't deserve to be dead?<p>I imagine that the wide majority of users assume there's a good reason for something to be dead, and ignore it rather than performing that check."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why about a third of the submissions become dead in mere minutes?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_g-b-r",
+          "story_48798760",
+          "ask_hn"
+        ],
+        "author": "g-b-r",
+        "children": [
+          48800321,
+          48799110,
+          48802691,
+          48798813,
+          48817795,
+          48798807,
+          48798975,
+          48799863,
+          48798835,
+          48802317
+        ],
+        "created_at": "2026-07-05T22:56:16Z",
+        "created_at_i": 1783292176,
+        "num_comments": 40,
+        "objectID": "48798760",
+        "points": 13,
+        "story_id": 48798760,
+        "story_text": "If you check the newest submissions right now (https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newest), ten out of 30 are already dead, some only sent five minutes ago.<p>On the second page, it&#x27;s 9. On the third, 11.<p>It seems unlikely that many people are downvoting them so quickly, and for most I can&#x27;t see why they should be dead.<p>I know that there&#x27;s websites known to publish only AI slop which are probably blacklisted here, but it seems unlikely that a third of the submissions are about them.<p>There&#x27;s some automatic AI filter now?<p>How does it work, and are people assumed to check all recent dead posts and vouch for them if they don&#x27;t deserve to be dead?<p>I imagine that the wide majority of users assume there&#x27;s a good reason for something to be dead, and ignore it rather than performing that check.",
+        "title": "Ask HN: Why about a third of the submissions become dead in mere minutes?",
+        "updated_at": "2026-07-10T19:46:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xqb64"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is the next step after Nora Sandler's \"Writing a C compiler\"?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xqb64",
+          "story_48798525",
+          "ask_hn"
+        ],
+        "author": "xqb64",
+        "children": [
+          48799731
+        ],
+        "created_at": "2026-07-05T22:29:30Z",
+        "created_at_i": 1783290570,
+        "num_comments": 2,
+        "objectID": "48798525",
+        "points": 5,
+        "story_id": 48798525,
+        "title": "Ask HN: What is the next step after Nora Sandler's \"Writing a C compiler\"?",
+        "updated_at": "2026-07-06T11:32:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "botencat"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am very paranoid about sharing potential AI research with e.g. Claude [Code] or ChatGPT/Codex.<p>I believe that any company is essentially a paperclip optimizer that will do whatever it takes to win over competition.<p>AI companies have access to the IP of millions of AI researchers and AI startups who are in direct competition with them. If they can use this data to squash competition (either competition from the same researchers or from others), I believe that they will use it eventually (if not already), even if they say they won't.<p>They don't have to blatantly steal it - they can just train on it, or pass &quot;suspicous&quot; chats to human inspectors who might eventually be &quot;inspired&quot; by it in their own research. We saw the first (?) hint of this during the brief Fable release, with Anthropic declaring that they will downgrade model responses regarding &quot;frontier AI&quot; (i.e. anything that competes with them).<p>From other domains, we know for example that Uber used users' ride data to stiffle competition and regulation. There should be no reason to believe that Bigco AI companies won't do the same."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: don't trust Bigco AI agents with AI research IP"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_botencat",
+          "story_48798385",
+          "ask_hn"
+        ],
+        "author": "botencat",
+        "children": [
+          48799263,
+          48798977,
+          48798622,
+          48798963,
+          48798689,
+          48801804,
+          48798797,
+          48799890
+        ],
+        "created_at": "2026-07-05T22:08:30Z",
+        "created_at_i": 1783289310,
+        "num_comments": 7,
+        "objectID": "48798385",
+        "points": 19,
+        "story_id": 48798385,
+        "story_text": "I am very paranoid about sharing potential AI research with e.g. Claude [Code] or ChatGPT&#x2F;Codex.<p>I believe that any company is essentially a paperclip optimizer that will do whatever it takes to win over competition.<p>AI companies have access to the IP of millions of AI researchers and AI startups who are in direct competition with them. If they can use this data to squash competition (either competition from the same researchers or from others), I believe that they will use it eventually (if not already), even if they say they won&#x27;t.<p>They don&#x27;t have to blatantly steal it - they can just train on it, or pass &quot;suspicous&quot; chats to human inspectors who might eventually be &quot;inspired&quot; by it in their own research. We saw the first (?) hint of this during the brief Fable release, with Anthropic declaring that they will downgrade model responses regarding &quot;frontier AI&quot; (i.e. anything that competes with them).<p>From other domains, we know for example that Uber used users&#x27; ride data to stiffle competition and regulation. There should be no reason to believe that Bigco AI companies won&#x27;t do the same.",
+        "title": "Tell HN: don't trust Bigco AI agents with AI research IP",
+        "updated_at": "2026-07-08T08:31:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KenographerPrim"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Lets say you have the user guide for the physics of the universe. You can solve all physics problems, no exceptions. What do you do with it?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What do you do with the user guide of the universe?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_KenographerPrim",
+          "story_48798284",
+          "ask_hn"
+        ],
+        "author": "KenographerPrim",
+        "children": [
+          48803081,
+          48798405,
+          48799625
+        ],
+        "created_at": "2026-07-05T21:50:45Z",
+        "created_at_i": 1783288245,
+        "num_comments": 15,
+        "objectID": "48798284",
+        "points": 2,
+        "story_id": 48798284,
+        "story_text": "Lets say you have the user guide for the physics of the universe. You can solve all physics problems, no exceptions. What do you do with it?",
+        "title": "Ask HN: What do you do with the user guide of the universe?",
+        "updated_at": "2026-07-08T10:44:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yesitcan"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My friend wants to learn software engineering and eventually land a job at FAANG / big corp.<p>Trouble is, they have zero engineering or leetcode experience.<p>They also dropped out of their bachelors degree a decade ago.<p>Do I point them to a intro Python book? Something else?<p>Edit: big corp job would be a dream end goal. They just want to know how to take their first steps."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How to get a non-technical friend into tech?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yesitcan",
+          "story_48798058",
+          "ask_hn"
+        ],
+        "author": "yesitcan",
+        "children": [
+          48798104,
+          48798922,
+          48810475,
+          48798116,
+          48798429,
+          48798782,
+          48803169,
+          48798080
+        ],
+        "created_at": "2026-07-05T21:20:06Z",
+        "created_at_i": 1783286406,
+        "num_comments": 7,
+        "objectID": "48798058",
+        "points": 6,
+        "story_id": 48798058,
+        "story_text": "My friend wants to learn software engineering and eventually land a job at FAANG &#x2F; big corp.<p>Trouble is, they have zero engineering or leetcode experience.<p>They also dropped out of their bachelors degree a decade ago.<p>Do I point them to a intro Python book? Something else?<p>Edit: big corp job would be a dream end goal. They just want to know how to take their first steps.",
+        "title": "Ask HN: How to get a non-technical friend into tech?",
+        "updated_at": "2026-07-08T18:08:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "julienreszka"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thinking about creating new capabilities in the space. wdyt"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are you guys happy with existing social networkin apps?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_julienreszka",
+          "story_48797869",
+          "ask_hn"
+        ],
+        "author": "julienreszka",
+        "children": [
+          48797959,
+          48798000,
+          48798252,
+          48798082,
+          48797899
+        ],
+        "created_at": "2026-07-05T20:56:43Z",
+        "created_at_i": 1783285003,
+        "num_comments": 9,
+        "objectID": "48797869",
+        "points": 9,
+        "story_id": 48797869,
+        "story_text": "thinking about creating new capabilities in the space. wdyt",
+        "title": "Ask HN: Are you guys happy with existing social networkin apps?",
+        "updated_at": "2026-07-08T04:34:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dkatsura"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Most private messaging advice says: use a secure messenger.<p>That makes sense for transport and server-side privacy, but every mobile message exists somewhere before it reaches the messenger. On Android that place is often the keyboard/input layer.<p>Questions:<p>- Would you ever trust a keyboard for encryption-related workflows?\n- What would such a keyboard need to prove before you considered it safe?\n- Is privacy at the input layer useful, or does it create too much trust friction?\n- Is local-only/no-network enough, or would you need open source/audit?<p>No product link. I am trying to understand the threat model and UX objections."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would you trust encryption at the mobile keyboard layer?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_dkatsura",
+          "story_48797491",
+          "ask_hn"
+        ],
+        "author": "dkatsura",
+        "children": [
+          48798139,
+          48806860,
+          48825753,
+          48799366
+        ],
+        "created_at": "2026-07-05T20:03:48Z",
+        "created_at_i": 1783281828,
+        "num_comments": 2,
+        "objectID": "48797491",
+        "points": 3,
+        "story_id": 48797491,
+        "story_text": "Most private messaging advice says: use a secure messenger.<p>That makes sense for transport and server-side privacy, but every mobile message exists somewhere before it reaches the messenger. On Android that place is often the keyboard&#x2F;input layer.<p>Questions:<p>- Would you ever trust a keyboard for encryption-related workflows?\n- What would such a keyboard need to prove before you considered it safe?\n- Is privacy at the input layer useful, or does it create too much trust friction?\n- Is local-only&#x2F;no-network enough, or would you need open source&#x2F;audit?<p>No product link. I am trying to understand the threat model and UX objections.",
+        "title": "Ask HN: Would you trust encryption at the mobile keyboard layer?",
+        "updated_at": "2026-07-08T00:09:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "guilhermeasper"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The .votearrow element on HN is 10x10px:<p>.votearrow {\n  width:      10px;\n  height:     10px;\n  border:     0px;\n  margin:     3px 2px 6px;\n  background: url(&quot;triangle.svg&quot;), linear-gradient(transparent, transparent) no-repeat;\n  background-size: 10px;\n}<p>On mobile, I keep tapping the title instead of the arrow. I've been running this override via Stylus for a while:<p>.votearrow {\n    width: 40px;\n    height: 40px;\n    margin: 0;\n    background-repeat: no-repeat;\n    background-position: center;\n    background-size: 16px;\n    cursor: pointer;\n}"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why are the upvote arrows so small?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_guilhermeasper",
+          "story_48796845",
+          "ask_hn"
+        ],
+        "author": "guilhermeasper",
+        "children": [
+          48798943,
+          48798424,
+          48797457
+        ],
+        "created_at": "2026-07-05T18:50:10Z",
+        "created_at_i": 1783277410,
+        "num_comments": 6,
+        "objectID": "48796845",
+        "points": 5,
+        "story_id": 48796845,
+        "story_text": "The .votearrow element on HN is 10x10px:<p>.votearrow {\n  width:      10px;\n  height:     10px;\n  border:     0px;\n  margin:     3px 2px 6px;\n  background: url(&quot;triangle.svg&quot;), linear-gradient(transparent, transparent) no-repeat;\n  background-size: 10px;\n}<p>On mobile, I keep tapping the title instead of the arrow. I&#x27;ve been running this override via Stylus for a while:<p>.votearrow {\n    width: 40px;\n    height: 40px;\n    margin: 0;\n    background-repeat: no-repeat;\n    background-position: center;\n    background-size: 16px;\n    cursor: pointer;\n}",
+        "title": "Ask HN: Why are the upvote arrows so small?",
+        "updated_at": "2026-07-06T22:27:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rstagi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The main metric I look at is inference cost, which is a pretty good indicator when something's off.<p>However, a couple of days a go I discovered we were loading ~300 tools due to a bug, affecting both costs and accuracy. It was going on for some time and I didn't realize it by looking at the costs, cause it got hidden by other changes I made in the same period.<p>Now I started tracking that and some other metrics, but it made me wonder what else I might be missing. So: what are you tracking? Any tips? Curious to hear"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What metrics do you track when building agents?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rstagi",
+          "story_48796742",
+          "ask_hn"
+        ],
+        "author": "rstagi",
+        "children": [
+          48803564,
+          48814196,
+          48799898
+        ],
+        "created_at": "2026-07-05T18:41:31Z",
+        "created_at_i": 1783276891,
+        "num_comments": 1,
+        "objectID": "48796742",
+        "points": 2,
+        "story_id": 48796742,
+        "story_text": "The main metric I look at is inference cost, which is a pretty good indicator when something&#x27;s off.<p>However, a couple of days a go I discovered we were loading ~300 tools due to a bug, affecting both costs and accuracy. It was going on for some time and I didn&#x27;t realize it by looking at the costs, cause it got hidden by other changes I made in the same period.<p>Now I started tracking that and some other metrics, but it made me wonder what else I might be missing. So: what are you tracking? Any tips? Curious to hear",
+        "title": "Ask HN: What metrics do you track when building agents?",
+        "updated_at": "2026-07-07T22:05:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xqb64"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My personal favorite is Fabrice Bellard."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who is the best computer programmer of all times?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xqb64",
+          "story_48796670",
+          "ask_hn"
+        ],
+        "author": "xqb64",
+        "children": [
+          48796949,
+          48797358,
+          48796764,
+          48798150,
+          48796719,
+          48798980,
+          48796847,
+          48797650,
+          48797917,
+          48796726,
+          48797018
+        ],
+        "created_at": "2026-07-05T18:33:11Z",
+        "created_at_i": 1783276391,
+        "num_comments": 13,
+        "objectID": "48796670",
+        "points": 10,
+        "story_id": 48796670,
+        "story_text": "My personal favorite is Fabrice Bellard.",
+        "title": "Ask HN: Who is the best computer programmer of all times?",
+        "updated_at": "2026-07-09T00:06:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mc-0"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "With some corporate environments going from &quot;tokenmaxxing at all costs&quot; to now setting strict token budgets for agentic development:<p>How is one supposed to adhere to a managerial / leadership instruction of &quot;use AI for everything&quot; but even more than that: &quot;you shouldn't be writing code by hand&quot;?<p>It feels like this is a Russian roulette scenario. As long as you have the right harness, framework, skills, prompt, etc. to make the output as deterministic as possible AND know exactly what you're supposed to be building: you get a great output that meets acceptance criteria &amp; solves the problem.<p>None of this is standardized and concrete tasks don't currently have predictable pricing (i.e., &quot;Two new CRUD endpoints with tests are $1.43&quot;). So what's stopping performance reviews from valuing what you can deliver ONLY with AI rather than what you can deliver with AI assistance?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How Do You \"Not Write Any Code by Hand\" with a Token Budget?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mc-0",
+          "story_48796455",
+          "ask_hn"
+        ],
+        "author": "mc-0",
+        "children": [
+          48806630,
+          48839331
+        ],
+        "created_at": "2026-07-05T18:12:19Z",
+        "created_at_i": 1783275139,
+        "num_comments": 1,
+        "objectID": "48796455",
+        "points": 3,
+        "story_id": 48796455,
+        "story_text": "With some corporate environments going from &quot;tokenmaxxing at all costs&quot; to now setting strict token budgets for agentic development:<p>How is one supposed to adhere to a managerial &#x2F; leadership instruction of &quot;use AI for everything&quot; but even more than that: &quot;you shouldn&#x27;t be writing code by hand&quot;?<p>It feels like this is a Russian roulette scenario. As long as you have the right harness, framework, skills, prompt, etc. to make the output as deterministic as possible AND know exactly what you&#x27;re supposed to be building: you get a great output that meets acceptance criteria &amp; solves the problem.<p>None of this is standardized and concrete tasks don&#x27;t currently have predictable pricing (i.e., &quot;Two new CRUD endpoints with tests are $1.43&quot;). So what&#x27;s stopping performance reviews from valuing what you can deliver ONLY with AI rather than what you can deliver with AI assistance?",
+        "title": "Ask HN: How Do You \"Not Write Any Code by Hand\" with a Token Budget?",
+        "updated_at": "2026-07-09T00:34:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "david3289"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Domain: https://ismy.blog\nGithub:https://github.com/3289david/ismyblog<p>Your blog. Nothing else.<p>A minimal, self-hosted blogging platform. One blog per account, no post or visitor limits on the free plan. Pro is a single $25/year plan — AI writing tools, premium themes, custom CSS, advanced analytics, newsletter, redirects, webhooks, and API access.<p>Stack\nNext.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4\nSQLite via Prisma 7 (driver adapter: @prisma/adapter-better-sqlite3)\nResend for transactional email (verification, password reset, newsletter)\nCloudflare API for automatic &lt;subdomain&gt;.ismy.blog DNS provisioning\nTor ControlPort for automatic per-blog .onion addresses\nOpenRouter for AI writing tools (cheap models, e.g. Qwen — configurable)\nPolar.sh for billing (Pro is a single $25/year subscription product)\nEmail + password auth with mandatory email verification (no third-party auth provider)\nAI features(AI auto posts a post every day and also get help from AI when writing)\nand much more!!!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Blog with AI Auto Poster"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_david3289",
+          "story_48794594",
+          "ask_hn"
+        ],
+        "author": "david3289",
+        "created_at": "2026-07-05T14:34:39Z",
+        "created_at_i": 1783262079,
+        "num_comments": 0,
+        "objectID": "48794594",
+        "points": 3,
+        "story_id": 48794594,
+        "story_text": "Domain: https:&#x2F;&#x2F;ismy.blog\nGithub:https:&#x2F;&#x2F;github.com&#x2F;3289david&#x2F;ismyblog<p>Your blog. Nothing else.<p>A minimal, self-hosted blogging platform. One blog per account, no post or visitor limits on the free plan. Pro is a single $25&#x2F;year plan — AI writing tools, premium themes, custom CSS, advanced analytics, newsletter, redirects, webhooks, and API access.<p>Stack\nNext.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4\nSQLite via Prisma 7 (driver adapter: @prisma&#x2F;adapter-better-sqlite3)\nResend for transactional email (verification, password reset, newsletter)\nCloudflare API for automatic &lt;subdomain&gt;.ismy.blog DNS provisioning\nTor ControlPort for automatic per-blog .onion addresses\nOpenRouter for AI writing tools (cheap models, e.g. Qwen — configurable)\nPolar.sh for billing (Pro is a single $25&#x2F;year subscription product)\nEmail + password auth with mandatory email verification (no third-party auth provider)\nAI features(AI auto posts a post every day and also get help from AI when writing)\nand much more!!!",
+        "title": "Blog with AI Auto Poster",
+        "updated_at": "2026-07-05T22:08:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "turbidimeter"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was confused why the Wi-Fi symbol lights up when I boot my Mac, before I enter the password.<p>I tested this, far away from my Wi-Fi network, and it doesn't light up then.<p>Apple's support pages say &quot;Unlock FileVault using SSH: On a Mac with Apple silicon with macOS 26 or later, FileVault can be unlocked over SSH after a restart if Remote Login is turned on and a network connection is available.&quot; and &quot;Network connectivity for FileVault is necessary to unlock FileVault using SSH and in certain configurations using FileVaultPolicy with Platform Single Sign-on.&quot; [1][2]<p>So that means the Wi-Fi password will be stored outside of the FileVault'ed volume then. (Where?)<p>Cool, but even &quot;Remote Login&quot; is off for me (no SSO/MDM either) and it still connects to Wi-Fi. I never opted in to Wi-Fi passwords being silently removed from FileVault protection.<p>Sure, they might &quot;SecureEnclave&quot; that thing or whatever but it's not the same thing.\nIt's similar to the iCloud Password Sync auto-enable issue I had with iOS 17 [3].\nThe security model gets changed without the user's consent. It's not clear what is stored where.<p>They just decide something is okay to auto-change after the user made a choice in the past.<p>I don't think I'm overreacting.\nIt's a seemingly little thing, but it shows how they can (and do) just make moves like that.<p><pre><code>  [1] https://support.apple.com/en-ca/guide/security/sec8447f5049/web\n  [2] https://support.apple.com/en-ca/guide/deployment/dep82064ec40/web\n  [3] https://news.ycombinator.com/item?id=38648725</code></pre>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: FileVault does not protect Wi-Fi passwords on macOS 26"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_turbidimeter",
+          "story_48794040",
+          "ask_hn"
+        ],
+        "author": "turbidimeter",
+        "children": [
+          48794311
+        ],
+        "created_at": "2026-07-05T13:11:12Z",
+        "created_at_i": 1783257072,
+        "num_comments": 1,
+        "objectID": "48794040",
+        "points": 3,
+        "story_id": 48794040,
+        "story_text": "I was confused why the Wi-Fi symbol lights up when I boot my Mac, before I enter the password.<p>I tested this, far away from my Wi-Fi network, and it doesn&#x27;t light up then.<p>Apple&#x27;s support pages say &quot;Unlock FileVault using SSH: On a Mac with Apple silicon with macOS 26 or later, FileVault can be unlocked over SSH after a restart if Remote Login is turned on and a network connection is available.&quot; and &quot;Network connectivity for FileVault is necessary to unlock FileVault using SSH and in certain configurations using FileVaultPolicy with Platform Single Sign-on.&quot; [1][2]<p>So that means the Wi-Fi password will be stored outside of the FileVault&#x27;ed volume then. (Where?)<p>Cool, but even &quot;Remote Login&quot; is off for me (no SSO&#x2F;MDM either) and it still connects to Wi-Fi. I never opted in to Wi-Fi passwords being silently removed from FileVault protection.<p>Sure, they might &quot;SecureEnclave&quot; that thing or whatever but it&#x27;s not the same thing.\nIt&#x27;s similar to the iCloud Password Sync auto-enable issue I had with iOS 17 [3].\nThe security model gets changed without the user&#x27;s consent. It&#x27;s not clear what is stored where.<p>They just decide something is okay to auto-change after the user made a choice in the past.<p>I don&#x27;t think I&#x27;m overreacting.\nIt&#x27;s a seemingly little thing, but it shows how they can (and do) just make moves like that.<p><pre><code>  [1] https:&#x2F;&#x2F;support.apple.com&#x2F;en-ca&#x2F;guide&#x2F;security&#x2F;sec8447f5049&#x2F;web\n  [2] https:&#x2F;&#x2F;support.apple.com&#x2F;en-ca&#x2F;guide&#x2F;deployment&#x2F;dep82064ec40&#x2F;web\n  [3] https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=38648725</code></pre>",
+        "title": "Tell HN: FileVault does not protect Wi-Fi passwords on macOS 26",
+        "updated_at": "2026-07-05T20:35:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pythonRon"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Programmers need to start meditating now"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pythonRon",
+          "story_48793440",
+          "ask_hn"
+        ],
+        "author": "pythonRon",
+        "children": [
+          48793450
+        ],
+        "created_at": "2026-07-05T11:51:57Z",
+        "created_at_i": 1783252317,
+        "num_comments": 1,
+        "objectID": "48793440",
+        "points": 1,
+        "story_id": 48793440,
+        "title": "Programmers need to start meditating now",
+        "updated_at": "2026-07-05T11:56:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eimrine"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Observing some discussion about HN on my native language, I realize that from their opinion we are incredibly left-leaning but the only difference from other resources is that our leftists are not so bold as on other webforums but at least capable to explain their position before flagging/downvoting any non-leftist opponent.<p>I do not agree with them but on that very old Linux forum it is kind of consensus. How do you recognize yourself on HN and on another webforums from the political spectrum point of view?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is HN crowd a left-leaning?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_eimrine",
+          "story_48793334",
+          "ask_hn"
+        ],
+        "author": "eimrine",
+        "children": [
+          48793690,
+          48794366,
+          48794272,
+          48793696,
+          48794951,
+          48794600,
+          48794280,
+          48793999,
+          48793683,
+          48793734,
+          48793886
+        ],
+        "created_at": "2026-07-05T11:35:28Z",
+        "created_at_i": 1783251328,
+        "num_comments": 18,
+        "objectID": "48793334",
+        "points": 7,
+        "story_id": 48793334,
+        "story_text": "Observing some discussion about HN on my native language, I realize that from their opinion we are incredibly left-leaning but the only difference from other resources is that our leftists are not so bold as on other webforums but at least capable to explain their position before flagging&#x2F;downvoting any non-leftist opponent.<p>I do not agree with them but on that very old Linux forum it is kind of consensus. How do you recognize yourself on HN and on another webforums from the political spectrum point of view?",
+        "title": "Ask HN: Is HN crowd a left-leaning?",
+        "updated_at": "2026-07-09T08:54:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akkad33"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "With the use AI I find myself writing less and less code, but reading way more than before at work. I have been using IDEA, because in my experience no IDE offers code inspection and navigation as good as IDEA across multiple languages. But it's very slow and mostly geared towards refactoring and editing. I have used VScode and I found it lacking as it is also slow. Nvim is very close to what I want but it takes some getting used to. Which IDE do you use?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good fast IDE for reading and navigating code in multiple languages"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akkad33",
+          "story_48792671",
+          "ask_hn"
+        ],
+        "author": "akkad33",
+        "children": [
+          48798893,
+          48794555,
+          48792840,
+          48804996,
+          48797044,
+          48795521,
+          48793918
+        ],
+        "created_at": "2026-07-05T09:32:53Z",
+        "created_at_i": 1783243973,
+        "num_comments": 10,
+        "objectID": "48792671",
+        "points": 6,
+        "story_id": 48792671,
+        "story_text": "With the use AI I find myself writing less and less code, but reading way more than before at work. I have been using IDEA, because in my experience no IDE offers code inspection and navigation as good as IDEA across multiple languages. But it&#x27;s very slow and mostly geared towards refactoring and editing. I have used VScode and I found it lacking as it is also slow. Nvim is very close to what I want but it takes some getting used to. Which IDE do you use?",
+        "title": "Ask HN: Good fast IDE for reading and navigating code in multiple languages",
+        "updated_at": "2026-07-09T06:01:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rika321"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://huggingface.co/meituan-longcat/LongCat-2.0/tree/main.<p>DeepSeek V3.2/DSA + their own LSA/N-gram/LongCat MoE<p>The domestic scene [in China] over the past few years has truly been a battle royale + a massive leap forward. Daring to fight and hustle, brave enough to embrace the new era. Then look at Meta... they can't even copy properly."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LongCat-2.0"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rika321",
+          "story_48792512",
+          "ask_hn"
+        ],
+        "author": "rika321",
+        "created_at": "2026-07-05T09:05:47Z",
+        "created_at_i": 1783242347,
+        "num_comments": 0,
+        "objectID": "48792512",
+        "points": 6,
+        "story_id": 48792512,
+        "story_text": "https:&#x2F;&#x2F;huggingface.co&#x2F;meituan-longcat&#x2F;LongCat-2.0&#x2F;tree&#x2F;main.<p>DeepSeek V3.2&#x2F;DSA + their own LSA&#x2F;N-gram&#x2F;LongCat MoE<p>The domestic scene [in China] over the past few years has truly been a battle royale + a massive leap forward. Daring to fight and hustle, brave enough to embrace the new era. Then look at Meta... they can&#x27;t even copy properly.",
+        "title": "LongCat-2.0",
+        "updated_at": "2026-07-06T07:46:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gryanfawcett"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Head of AI startup trying to bring AI to the masses"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Geek, Music Producer, Father CEO Info-Struct"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gryanfawcett",
+          "story_48791647",
+          "ask_hn"
+        ],
+        "author": "gryanfawcett",
+        "created_at": "2026-07-05T06:07:01Z",
+        "created_at_i": 1783231621,
+        "num_comments": 0,
+        "objectID": "48791647",
+        "points": 2,
+        "story_id": 48791647,
+        "story_text": "Head of AI startup trying to bring AI to the masses",
+        "title": "Geek, Music Producer, Father CEO Info-Struct",
+        "updated_at": "2026-07-05T14:01:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mcpzero"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OpenAI just released Secure MCP Tunnel a week ago,\nbut it is only for OpenAI ecosystem.\nHas any Claude Desktop/Code user here figure out a method to use the Secure MCP Tunnel. I know, it's from OpenAI."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How Do You Connect OpenAI Secure MCP Tunnel with Claude Desktop"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mcpzero",
+          "story_48791510",
+          "ask_hn"
+        ],
+        "author": "mcpzero",
+        "children": [
+          48792369,
+          48792326
+        ],
+        "created_at": "2026-07-05T05:38:20Z",
+        "created_at_i": 1783229900,
+        "num_comments": 0,
+        "objectID": "48791510",
+        "points": 3,
+        "story_id": 48791510,
+        "story_text": "OpenAI just released Secure MCP Tunnel a week ago,\nbut it is only for OpenAI ecosystem.\nHas any Claude Desktop&#x2F;Code user here figure out a method to use the Secure MCP Tunnel. I know, it&#x27;s from OpenAI.",
+        "title": "Ask HN: How Do You Connect OpenAI Secure MCP Tunnel with Claude Desktop",
+        "updated_at": "2026-07-05T11:23:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "coreyp_1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm baffled by this.<p>I created an account that's about me learning to draw.  I did this pattern: uploaded a pic from my phone, then write the description at my laptop.  For each pic, I discuss what I learned and the overall journey.  Nothing crazy.  Nothing controversial.  Nothing illegal in the remotest sense.  It was taking me 10-15 minutes per pic, so I wasn't slamming the server.  No VPN.  My family asked me to set this up so that they can see my art instead of me texting pics.  I was just doing this on my day off because I don't have time to mess with it during the week....<p>It was flagged once, and I verified my contact info.  It was flagged again an hour or so later, so they had me upload a face pic (which I did from their app).  Then, an hour later, they say that it doesn't follow their community standards and that my account is permanently disabled.<p>It all happened today.  Only 15-20 pics total (I don't know exactly how many, so it's probably actually less).<p>At this point, I can just vibe code a website for my artwork, but I would assume that what I am doing is <i>exactly</i> the thing that Instagram was intended for!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Instagram blocked my new account what can I do?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_coreyp_1",
+          "story_48790852",
+          "ask_hn"
+        ],
+        "author": "coreyp_1",
+        "children": [
+          48791012,
+          48791484,
+          48791092,
+          48790922,
+          48791979,
+          48805259,
+          48791273,
+          48791594
+        ],
+        "created_at": "2026-07-05T02:38:33Z",
+        "created_at_i": 1783219113,
+        "num_comments": 12,
+        "objectID": "48790852",
+        "points": 6,
+        "story_id": 48790852,
+        "story_text": "I&#x27;m baffled by this.<p>I created an account that&#x27;s about me learning to draw.  I did this pattern: uploaded a pic from my phone, then write the description at my laptop.  For each pic, I discuss what I learned and the overall journey.  Nothing crazy.  Nothing controversial.  Nothing illegal in the remotest sense.  It was taking me 10-15 minutes per pic, so I wasn&#x27;t slamming the server.  No VPN.  My family asked me to set this up so that they can see my art instead of me texting pics.  I was just doing this on my day off because I don&#x27;t have time to mess with it during the week....<p>It was flagged once, and I verified my contact info.  It was flagged again an hour or so later, so they had me upload a face pic (which I did from their app).  Then, an hour later, they say that it doesn&#x27;t follow their community standards and that my account is permanently disabled.<p>It all happened today.  Only 15-20 pics total (I don&#x27;t know exactly how many, so it&#x27;s probably actually less).<p>At this point, I can just vibe code a website for my artwork, but I would assume that what I am doing is <i>exactly</i> the thing that Instagram was intended for!",
+        "title": "Ask HN: Instagram blocked my new account what can I do?",
+        "updated_at": "2026-07-06T14:36:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "roschdal"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Infinite money glitches, &quot;artificial intelligence&quot;, massive stock buybacks, space companies, magnificent sevens, ++<p>See: https://www.youtube.com/watch?v=wKXgeNwNRJ4"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: When will the stock market crash?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_roschdal",
+          "story_48789829",
+          "ask_hn"
+        ],
+        "author": "roschdal",
+        "children": [
+          48791593,
+          48790299,
+          48790057,
+          48790253,
+          48789847,
+          48790414,
+          48793653,
+          48803295,
+          48789998,
+          48793632,
+          48790941,
+          48789906,
+          48794571,
+          48815898,
+          48790802
+        ],
+        "created_at": "2026-07-04T22:55:26Z",
+        "created_at_i": 1783205726,
+        "num_comments": 20,
+        "objectID": "48789829",
+        "points": 12,
+        "story_id": 48789829,
+        "story_text": "Infinite money glitches, &quot;artificial intelligence&quot;, massive stock buybacks, space companies, magnificent sevens, ++<p>See: https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=wKXgeNwNRJ4",
+        "title": "Ask HN: When will the stock market crash?",
+        "updated_at": "2026-07-09T08:04:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cider9986"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just put megalodon.jp before the site you want to archive, then click the smaller of the two buttons in the center to archive.<p>On Brave, there's a built-in translator and I assume this is a feature in other browsers, so you can use that as well.<p>I haven't used it on paywalled sites yet, so that could still be a reason to use archive.today. But it archives Reddit fine.<p>If you're seriously archiving, you should use as many different sites as you can, but for me, I'll use megalodon when I want to archive."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Megalodon.jp is faster than archive.today and doesn't require reCAPTCHA"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Cider9986",
+          "story_48789801",
+          "ask_hn"
+        ],
+        "author": "Cider9986",
+        "children": [
+          48790182,
+          48799197
+        ],
+        "created_at": "2026-07-04T22:49:33Z",
+        "created_at_i": 1783205373,
+        "num_comments": 4,
+        "objectID": "48789801",
+        "points": 5,
+        "story_id": 48789801,
+        "story_text": "Just put megalodon.jp before the site you want to archive, then click the smaller of the two buttons in the center to archive.<p>On Brave, there&#x27;s a built-in translator and I assume this is a feature in other browsers, so you can use that as well.<p>I haven&#x27;t used it on paywalled sites yet, so that could still be a reason to use archive.today. But it archives Reddit fine.<p>If you&#x27;re seriously archiving, you should use as many different sites as you can, but for me, I&#x27;ll use megalodon when I want to archive.",
+        "title": "Tell HN: Megalodon.jp is faster than archive.today and doesn't require reCAPTCHA",
+        "updated_at": "2026-07-07T01:04:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gl9"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am joining a small ~10 person startup in SF next week as a full time W2 employee. I am a software dev. The work is in a very regulated space (ITAR/ SOC2/etc) type stuff.<p>My manager (who is the CTO) texted me to bring my personal laptop in on the first day. This already seems like a red-flag and if needed I will not install any software or visit any sites beyond payroll.<p>How should I handle this situation if they refuse to provide me equipment. This is a in-person role."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: New employeer not providing equipment"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gl9",
+          "story_48788887",
+          "ask_hn"
+        ],
+        "author": "gl9",
+        "children": [
+          48789547,
+          48790355,
+          48788989,
+          48789674,
+          48789366,
+          48789016,
+          48789035,
+          48789166,
+          48790388,
+          48789292,
+          48789139,
+          48790298,
+          48789011,
+          48790195,
+          48789050,
+          48789586,
+          48790814,
+          48789840
+        ],
+        "created_at": "2026-07-04T20:42:30Z",
+        "created_at_i": 1783197750,
+        "num_comments": 41,
+        "objectID": "48788887",
+        "points": 29,
+        "story_id": 48788887,
+        "story_text": "I am joining a small ~10 person startup in SF next week as a full time W2 employee. I am a software dev. The work is in a very regulated space (ITAR&#x2F; SOC2&#x2F;etc) type stuff.<p>My manager (who is the CTO) texted me to bring my personal laptop in on the first day. This already seems like a red-flag and if needed I will not install any software or visit any sites beyond payroll.<p>How should I handle this situation if they refuse to provide me equipment. This is a in-person role.",
+        "title": "Ask HN: New employeer not providing equipment",
+        "updated_at": "2026-07-09T06:53:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byjonas"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello Guys!<p>So I built an environment/path reloader for Windows. I also compiled the project for Linux and macOS (even though there is no real purpose in using that tool on those).\nI wanted to share this little tool I made here on hacker news because I think some people could actually benefit from it or some people could be interested in checking the code? I don't know, anyway here I am sharing the tool XD.<p>So why did I build it?\nWell I found myself very annoyed by the fact I had to restart my vsc and shells every single time I installed a new cli tool. I knew there was the &quot;source ~./bashrc&quot; command on linux and I was looking on google for something similar for windows. I couldn't find a tool at that time.\nI DO KNOW NOW that there is this tool called &quot;refreshenv&quot; from chocolatey but I made the project now so I just released it anyway, don't judge me for that please :&lt;<p>So yeah I'd be happy to hear what you guys are thinking?\nHave a nice day :D<p>-I almost forgot to give you links:\nhttps://rpath.dev\nhttps://github.com/builtbyjonas/rpath<p>And I know my grammar is probably bad... sorry for that."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built a environment reloader for Windows Shells"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_byjonas",
+          "story_48788568",
+          "ask_hn"
+        ],
+        "author": "byjonas",
+        "created_at": "2026-07-04T20:13:23Z",
+        "created_at_i": 1783196003,
+        "num_comments": 0,
+        "objectID": "48788568",
+        "points": 3,
+        "story_id": 48788568,
+        "story_text": "Hello Guys!<p>So I built an environment&#x2F;path reloader for Windows. I also compiled the project for Linux and macOS (even though there is no real purpose in using that tool on those).\nI wanted to share this little tool I made here on hacker news because I think some people could actually benefit from it or some people could be interested in checking the code? I don&#x27;t know, anyway here I am sharing the tool XD.<p>So why did I build it?\nWell I found myself very annoyed by the fact I had to restart my vsc and shells every single time I installed a new cli tool. I knew there was the &quot;source ~.&#x2F;bashrc&quot; command on linux and I was looking on google for something similar for windows. I couldn&#x27;t find a tool at that time.\nI DO KNOW NOW that there is this tool called &quot;refreshenv&quot; from chocolatey but I made the project now so I just released it anyway, don&#x27;t judge me for that please :&lt;<p>So yeah I&#x27;d be happy to hear what you guys are thinking?\nHave a nice day :D<p>-I almost forgot to give you links:\nhttps:&#x2F;&#x2F;rpath.dev\nhttps:&#x2F;&#x2F;github.com&#x2F;builtbyjonas&#x2F;rpath<p>And I know my grammar is probably bad... sorry for that.",
+        "title": "I built a environment reloader for Windows Shells",
+        "updated_at": "2026-07-05T03:01:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lamprouge"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "retrieval is not the future of Ai<p>if it was, google would have won already<p>there is another way, that doesn't require retrieval at all<p>it costs more per conversation, but its better than a sh*ty graphRAG<p>i am shocked by how few people know this<p>but it seems the industry is not paying much attention to memory yet (hell z.ai doesn't have longterm memory at all)<p>humans don't really remember the exact experience that happened,<p>we remember a layer that sits on top of that<p>something that got built at the same day the experience happened<p>but is not a transcript or a summary<p>why would the brain do that! isn't it easier to save the actual memory?<p>just like LLMs, our brain will be overwhelmed if we remembered every single experience (people with photographic memory go through hell)<p>Ai agents can't remember everything, or retrieval will be hell too<p>just ask google; 30 years of trying to give you the best search results of a simple recipe &amp; it still fails to do that on the first try<p>so what! do you take the first word and the last word of every sentence and reconstruct the sentence later?<p>No, that too doesn't work either, no matter how much Zep AI wants you to believe it"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Retrieval is not the future of AI – if it was, Google would have won already"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lamprouge",
+          "story_48788520",
+          "ask_hn"
+        ],
+        "author": "lamprouge",
+        "children": [
+          48796423,
+          48788911,
+          48809946
+        ],
+        "created_at": "2026-07-04T20:09:03Z",
+        "created_at_i": 1783195743,
+        "num_comments": 2,
+        "objectID": "48788520",
+        "points": 4,
+        "story_id": 48788520,
+        "story_text": "retrieval is not the future of Ai<p>if it was, google would have won already<p>there is another way, that doesn&#x27;t require retrieval at all<p>it costs more per conversation, but its better than a sh*ty graphRAG<p>i am shocked by how few people know this<p>but it seems the industry is not paying much attention to memory yet (hell z.ai doesn&#x27;t have longterm memory at all)<p>humans don&#x27;t really remember the exact experience that happened,<p>we remember a layer that sits on top of that<p>something that got built at the same day the experience happened<p>but is not a transcript or a summary<p>why would the brain do that! isn&#x27;t it easier to save the actual memory?<p>just like LLMs, our brain will be overwhelmed if we remembered every single experience (people with photographic memory go through hell)<p>Ai agents can&#x27;t remember everything, or retrieval will be hell too<p>just ask google; 30 years of trying to give you the best search results of a simple recipe &amp; it still fails to do that on the first try<p>so what! do you take the first word and the last word of every sentence and reconstruct the sentence later?<p>No, that too doesn&#x27;t work either, no matter how much Zep AI wants you to believe it",
+        "title": "Retrieval is not the future of AI – if it was, Google would have won already",
+        "updated_at": "2026-07-07T15:23:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lo0dot0"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here's what I found so far<p>approach0.xyz : offline<p>searchonmath.com : Gives irrelevant results such as p = m v when searching for F = m a<p>https://search.mathweb.org/: A collection of abandoned projects and offline sites"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Where are the good search engines for mathematical formulas?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lo0dot0",
+          "story_48787886",
+          "ask_hn"
+        ],
+        "author": "lo0dot0",
+        "children": [
+          48788905,
+          48819607,
+          48819255,
+          48821249,
+          48837178,
+          48820178,
+          48825013,
+          48824039,
+          48820053,
+          48819549,
+          48818803,
+          48821116,
+          48819072,
+          48818941,
+          48829856
+        ],
+        "created_at": "2026-07-04T18:57:49Z",
+        "created_at_i": 1783191469,
+        "num_comments": 16,
+        "objectID": "48787886",
+        "points": 56,
+        "story_id": 48787886,
+        "story_text": "Here&#x27;s what I found so far<p>approach0.xyz : offline<p>searchonmath.com : Gives irrelevant results such as p = m v when searching for F = m a<p>https:&#x2F;&#x2F;search.mathweb.org&#x2F;: A collection of abandoned projects and offline sites",
+        "title": "Ask HN: Where are the good search engines for mathematical formulas?",
+        "updated_at": "2026-07-10T10:02:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "urbanogt5"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In the past month I built 10+ different ideas. Some games, some SaaS, some free tools. But I get no one using it, other than friends and family.<p>I need to find someone that can cover this part. Anyone up for building cool stuff?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I can build anything, but only the void sees it"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_urbanogt5",
+          "story_48787370",
+          "ask_hn"
+        ],
+        "author": "urbanogt5",
+        "children": [
+          48789962,
+          48787762,
+          48797582,
+          48790267,
+          48790026,
+          48788082,
+          48787432,
+          48787605,
+          48791097,
+          48801978,
+          48805461,
+          48791905,
+          48801229,
+          48790183
+        ],
+        "created_at": "2026-07-04T17:57:08Z",
+        "created_at_i": 1783187828,
+        "num_comments": 22,
+        "objectID": "48787370",
+        "points": 9,
+        "story_id": 48787370,
+        "story_text": "In the past month I built 10+ different ideas. Some games, some SaaS, some free tools. But I get no one using it, other than friends and family.<p>I need to find someone that can cover this part. Anyone up for building cool stuff?",
+        "title": "I can build anything, but only the void sees it",
+        "updated_at": "2026-07-08T20:26:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Velocifyer"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Happy Independence Day"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Velocifyer",
+          "story_48786466",
+          "ask_hn"
+        ],
+        "author": "Velocifyer",
+        "created_at": "2026-07-04T16:12:22Z",
+        "created_at_i": 1783181542,
+        "num_comments": 0,
+        "objectID": "48786466",
+        "points": 6,
+        "story_id": 48786466,
+        "title": "Happy Independence Day",
+        "updated_at": "2026-07-05T14:01:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "abixb"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Figured I'd post this Ask HN given the <i>semiquincentennial</i> celebration since the Declaration of Independence.<p>A surprising amount of what this site cares about grew up here in the US: the transistor, the internet, the idea (or the trope) that two people in a garage can take on corporate behemoths, the venture-backed startup model, etc. And a lot of HN has a personal stake in the place -- immigrants (me included) who bet their careers on a US grad degree and a visa lottery, citizens who built companies here, people abroad who work for (or compete with) American firms every day.<p>So on the 250th, I'm curious what America means to you, personally. Some prompts:<p>If you immigrated: what pulled you here, and has it held up? \nIf you were born here: what do you hope the country looks like at 300? \nIf you left, or chose never to come: what did you see that the rest of us might be missing?<p>Finally, what the most <i>romantic</i> ideal you have of America that you think would be worth sharing?<p>Happy 4th of July, HN!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: America turns 250 today. What does it mean to you?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_abixb",
+          "story_48786354",
+          "ask_hn"
+        ],
+        "author": "abixb",
+        "children": [
+          48789454,
+          48788610,
+          48805024,
+          48797002,
+          48805406,
+          48790469,
+          48792781,
+          48806518,
+          48799305,
+          48788329,
+          48789898
+        ],
+        "created_at": "2026-07-04T15:59:58Z",
+        "created_at_i": 1783180798,
+        "num_comments": 9,
+        "objectID": "48786354",
+        "points": 13,
+        "story_id": 48786354,
+        "story_text": "Figured I&#x27;d post this Ask HN given the <i>semiquincentennial</i> celebration since the Declaration of Independence.<p>A surprising amount of what this site cares about grew up here in the US: the transistor, the internet, the idea (or the trope) that two people in a garage can take on corporate behemoths, the venture-backed startup model, etc. And a lot of HN has a personal stake in the place -- immigrants (me included) who bet their careers on a US grad degree and a visa lottery, citizens who built companies here, people abroad who work for (or compete with) American firms every day.<p>So on the 250th, I&#x27;m curious what America means to you, personally. Some prompts:<p>If you immigrated: what pulled you here, and has it held up? \nIf you were born here: what do you hope the country looks like at 300? \nIf you left, or chose never to come: what did you see that the rest of us might be missing?<p>Finally, what the most <i>romantic</i> ideal you have of America that you think would be worth sharing?<p>Happy 4th of July, HN!",
+        "title": "Ask HN: America turns 250 today. What does it mean to you?",
+        "updated_at": "2026-07-09T08:45:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "simonebrunozzi"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Check your subscription renewals (VPNs, etc.). They cost too much"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_simonebrunozzi",
+          "story_48785796",
+          "ask_hn"
+        ],
+        "author": "simonebrunozzi",
+        "children": [
+          48785802,
+          48787189,
+          48786975
+        ],
+        "created_at": "2026-07-04T14:46:46Z",
+        "created_at_i": 1783176406,
+        "num_comments": 3,
+        "objectID": "48785796",
+        "points": 3,
+        "story_id": 48785796,
+        "title": "Tell HN: Check your subscription renewals (VPNs, etc.). They cost too much",
+        "updated_at": "2026-07-04T21:06:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GauntletWizard"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It is the 250th anniversary of the founding of America, and this great experiment in nation building is still going. Whether you're at home with your family or out celebrating with the national pastime of blowing up a little piece of our beautiful country, Happy July 4th to all - the young and the old, the residents and visitors, those here for work and play."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Happy Independence Day"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_GauntletWizard",
+          "story_48785613",
+          "ask_hn"
+        ],
+        "author": "GauntletWizard",
+        "children": [
+          48788291,
+          48788185,
+          48789257,
+          48785618,
+          48786981
+        ],
+        "created_at": "2026-07-04T14:20:21Z",
+        "created_at_i": 1783174821,
+        "num_comments": 10,
+        "objectID": "48785613",
+        "points": 37,
+        "story_id": 48785613,
+        "story_text": "It is the 250th anniversary of the founding of America, and this great experiment in nation building is still going. Whether you&#x27;re at home with your family or out celebrating with the national pastime of blowing up a little piece of our beautiful country, Happy July 4th to all - the young and the old, the residents and visitors, those here for work and play.",
+        "title": "Happy Independence Day",
+        "updated_at": "2026-07-07T15:31:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kingleopold"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "or is it too much to understand for them? this is about Sony decision about no more disc game but it applies to all disc based media.<p>do they think if they get the disc, they can just hold and be able to play that disk for decades or just copy to drive they have?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Does average person understand that all disc media dies too?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kingleopold",
+          "story_48785525",
+          "ask_hn"
+        ],
+        "author": "kingleopold",
+        "children": [
+          48786125,
+          48786010,
+          48786315,
+          48785992,
+          48785886,
+          48785978,
+          48786213,
+          48786337,
+          48786000,
+          48786007,
+          48785541,
+          48786349,
+          48785937,
+          48786240,
+          48786479,
+          48786374,
+          48786066,
+          48786216,
+          48786253,
+          48786973,
+          48786151,
+          48785960,
+          48786314,
+          48786203,
+          48786637,
+          48786384,
+          48786300,
+          48785938,
+          48786504,
+          48785955
+        ],
+        "created_at": "2026-07-04T14:08:55Z",
+        "created_at_i": 1783174135,
+        "num_comments": 57,
+        "objectID": "48785525",
+        "points": 17,
+        "story_id": 48785525,
+        "story_text": "or is it too much to understand for them? this is about Sony decision about no more disc game but it applies to all disc based media.<p>do they think if they get the disc, they can just hold and be able to play that disk for decades or just copy to drive they have?",
+        "title": "Does average person understand that all disc media dies too?",
+        "updated_at": "2026-07-06T19:17:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vinhnx"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What are you currently working on? Do you have any fresh ideas in mind?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you working on? (July 2026)"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vinhnx",
+          "story_48785376",
+          "ask_hn"
+        ],
+        "author": "vinhnx",
+        "children": [
+          48854672,
+          48785498,
+          48785504,
+          48785979,
+          48794027
+        ],
+        "created_at": "2026-07-04T13:48:06Z",
+        "created_at_i": 1783172886,
+        "num_comments": 4,
+        "objectID": "48785376",
+        "points": 5,
+        "story_id": 48785376,
+        "story_text": "What are you currently working on? Do you have any fresh ideas in mind?",
+        "title": "Ask HN: What are you working on? (July 2026)",
+        "updated_at": "2026-07-10T01:27:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rbc"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This brief missive regards a response to the impact of AI on Internet publishers. As search engines move toward providing AI summaries as part of their search results, where does that leave Internet publishers who never get the click?<p>The proposal is to promote RSS feeds as an alternative to search engine optimization, or social media sharing. Once a return user has added a feed to their feed reader, the publisher and the user have a direct link that won't be subject to the whims of search and social media algorithms."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Return of RSS Feeds"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rbc",
+          "story_48785156",
+          "ask_hn"
+        ],
+        "author": "rbc",
+        "children": [
+          48785787
+        ],
+        "created_at": "2026-07-04T13:09:06Z",
+        "created_at_i": 1783170546,
+        "num_comments": 1,
+        "objectID": "48785156",
+        "points": 5,
+        "story_id": 48785156,
+        "story_text": "This brief missive regards a response to the impact of AI on Internet publishers. As search engines move toward providing AI summaries as part of their search results, where does that leave Internet publishers who never get the click?<p>The proposal is to promote RSS feeds as an alternative to search engine optimization, or social media sharing. Once a return user has added a feed to their feed reader, the publisher and the user have a direct link that won&#x27;t be subject to the whims of search and social media algorithms.",
+        "title": "Return of RSS Feeds",
+        "updated_at": "2026-07-06T01:51:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akarshhegde18"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am building a SaaS product, which tools do you recommend? any open-source or free ones available that are extremely good?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How are you creating demo videos for your product?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akarshhegde18",
+          "story_48784055",
+          "ask_hn"
+        ],
+        "author": "akarshhegde18",
+        "created_at": "2026-07-04T09:26:25Z",
+        "created_at_i": 1783157185,
+        "num_comments": 0,
+        "objectID": "48784055",
+        "points": 1,
+        "story_id": 48784055,
+        "story_text": "I am building a SaaS product, which tools do you recommend? any open-source or free ones available that are extremely good?",
+        "title": "Ask HN: How are you creating demo videos for your product?",
+        "updated_at": "2026-07-04T09:31:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akashwadhwani35"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use Grok for scanning X since it has direct access to the platform.<p>Gemini for fact-checking.<p>Claude for coding.<p>GPT for image generation."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Which AI model do you use for what?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akashwadhwani35",
+          "story_48783556",
+          "ask_hn"
+        ],
+        "author": "akashwadhwani35",
+        "children": [
+          48783976,
+          48792395
+        ],
+        "created_at": "2026-07-04T08:00:11Z",
+        "created_at_i": 1783152011,
+        "num_comments": 0,
+        "objectID": "48783556",
+        "points": 1,
+        "story_id": 48783556,
+        "story_text": "I use Grok for scanning X since it has direct access to the platform.<p>Gemini for fact-checking.<p>Claude for coding.<p>GPT for image generation.",
+        "title": "Ask HN: Which AI model do you use for what?",
+        "updated_at": "2026-07-07T18:25:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gokuljs"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So when you're building a real-time voice system, there are a lot of hard parts that need to be handled, like voice resampling, jitter buffers, and frame pacing. This blog shows you the mental model of what happens behind the scenes, how voice-based media systems are built, and how they are handled in the background.<p>https://gokuljs.com/blogs/when-latency-becomes-audible"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The Media Pipeline Behind realtime Voice System Pacing, Jitter Buffers..."
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gokuljs",
+          "story_48783374",
+          "ask_hn"
+        ],
+        "author": "gokuljs",
+        "children": [
+          48792879
+        ],
+        "created_at": "2026-07-04T07:29:36Z",
+        "created_at_i": 1783150176,
+        "num_comments": 0,
+        "objectID": "48783374",
+        "points": 1,
+        "story_id": 48783374,
+        "story_text": "So when you&#x27;re building a real-time voice system, there are a lot of hard parts that need to be handled, like voice resampling, jitter buffers, and frame pacing. This blog shows you the mental model of what happens behind the scenes, how voice-based media systems are built, and how they are handled in the background.<p>https:&#x2F;&#x2F;gokuljs.com&#x2F;blogs&#x2F;when-latency-becomes-audible",
+        "title": "The Media Pipeline Behind realtime Voice System Pacing, Jitter Buffers...",
+        "updated_at": "2026-07-05T10:15:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sergeysmirnov"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I finally decided to try out Fable 5 using the standard Claude.ai interface. I have a go-to test prompt that answers simple kids' questions in an absurdly scientific style. I asked a pretty straightforward one: &quot;Why don't cats and dogs get along?&quot;<p>Immediately, the interface bumped me from Fable 5 to Opus 4.8 with a warning: &quot;...The safeguards are intentionally broad right now and may flag safe and routine coding, cybersecurity, or biology work...&quot;<p>Since the question has absolutely nothing to do with coding and definitely doesn't touch on cybersecurity, it seems the system thought that figuring out why cats and dogs fight could somehow lead me to engineering a bioweapon.<p>It reminds me of what someone said about Java applets back in the 90s: &quot;Secure means useless.&quot;"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fable 5. Safety Taken to an Extreme"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sergeysmirnov",
+          "story_48783246",
+          "ask_hn"
+        ],
+        "author": "sergeysmirnov",
+        "children": [
+          48786744,
+          48785496,
+          48786716,
+          48783960,
+          48790262,
+          48787505
+        ],
+        "created_at": "2026-07-04T07:03:20Z",
+        "created_at_i": 1783148600,
+        "num_comments": 8,
+        "objectID": "48783246",
+        "points": 10,
+        "story_id": 48783246,
+        "story_text": "I finally decided to try out Fable 5 using the standard Claude.ai interface. I have a go-to test prompt that answers simple kids&#x27; questions in an absurdly scientific style. I asked a pretty straightforward one: &quot;Why don&#x27;t cats and dogs get along?&quot;<p>Immediately, the interface bumped me from Fable 5 to Opus 4.8 with a warning: &quot;...The safeguards are intentionally broad right now and may flag safe and routine coding, cybersecurity, or biology work...&quot;<p>Since the question has absolutely nothing to do with coding and definitely doesn&#x27;t touch on cybersecurity, it seems the system thought that figuring out why cats and dogs fight could somehow lead me to engineering a bioweapon.<p>It reminds me of what someone said about Java applets back in the 90s: &quot;Secure means useless.&quot;",
+        "title": "Fable 5. Safety Taken to an Extreme",
+        "updated_at": "2026-07-06T09:31:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mzubairtahir"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "THinking about making a open source community where developers using different models could evaluate for different tasks. Imagine small model doing similarly like large model for a specific task."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Open source project for evaluating two models on specific task"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mzubairtahir",
+          "story_48783156",
+          "ask_hn"
+        ],
+        "author": "mzubairtahir",
+        "created_at": "2026-07-04T06:40:19Z",
+        "created_at_i": 1783147219,
+        "num_comments": 0,
+        "objectID": "48783156",
+        "points": 1,
+        "story_id": 48783156,
+        "story_text": "THinking about making a open source community where developers using different models could evaluate for different tasks. Imagine small model doing similarly like large model for a specific task.",
+        "title": "Open source project for evaluating two models on specific task",
+        "updated_at": "2026-07-04T06:43:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "strapchay"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I would love to gain deeper context as to farming, regulation issues and further context relating to it. If it’s possible to get in contact with a farmer or be pointed to a community if it exists, it would be really helpful."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Where can I find or get in contact with farmers specifically in the US?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_strapchay",
+          "story_48782568",
+          "ask_hn"
+        ],
+        "author": "strapchay",
+        "children": [
+          48782742,
+          48783210,
+          48782683,
+          48782678,
+          48782638
+        ],
+        "created_at": "2026-07-04T04:10:35Z",
+        "created_at_i": 1783138235,
+        "num_comments": 7,
+        "objectID": "48782568",
+        "points": 6,
+        "story_id": 48782568,
+        "story_text": "I would love to gain deeper context as to farming, regulation issues and further context relating to it. If it’s possible to get in contact with a farmer or be pointed to a community if it exists, it would be really helpful.",
+        "title": "Where can I find or get in contact with farmers specifically in the US?",
+        "updated_at": "2026-07-11T08:15:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bigcityslider"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Over 30 years after its introduction, IPv6 has still not replaced IPv4. I've seen those &quot;just add more bits to ipv4, call it ipv5&quot; proposals before. They tend to skip the important details and talk past others, but they have a point. After filling in the details over time, I think this actually works, it'd make a serious difference, and it's doable with the current IPv6 header.<p>Background...<p>Let's assume the IPv6 packet format is already sufficiently supported on routers, hosts, etc. That's not the blocker anymore, rather plenty of ISPs, web services like Github, and corporate networks have chosen not to adopt IPv6. Home routers just enable it, but it's nontrivial for services because it's a separate network from v4 in every way, requiring extensive config changes. End result, almost everyone needs a v4, while many use v6 but don't depend on it.<p>IPv6 absolutely needed a new packet format to support &gt;32-bit addrs. But it made more choices beyond that, largest of which was starting with a fresh topology instead of expanding the space under the existing IPv4 address blocks. I understand this was to ditch v4's fragmented routes and create fairer ownership.<p>The other choices were more about defaults, like SLAAC over DHCP, or lack of NAT. IPv6 proponents often present the options as the best of both worlds, but in reality the default is more important, for example Android doesn't even support DHCP6. And most routers deny inbound v6 TCP/UDP connections by default, but not all, maybe because of RFC 6092, REC-49.<p>IPv6 had extensions to ease the transition from v4 using v4-on-v6 addresses (NAT64, 6to4). The common theme was you're still really using IPv4 on those. These things helped, but there's always a leap from v4 to dual stack and an even bigger leap from dual to v6-only.<p>Proposal, phase 1...<p>IPv5 is a toggle on an IPv4 interface. It shares everything with v4 except the packet format, which is actually a v6 packet with a 5000: prefix. So if you owned 1.2.3.4, now you have 5000:1.2.3.4. IPv5 therefore has 120 bits of address space. But in this initial phase, you're still limited to 32-bit in order to maintain compatibility with v4. The point is to just get everyone onto IPv5 without making them reconfigure anything.<p>This also requires upgrades to DHCP, NAT, and DNS to support 120-bit addresses, but unlike v6, the new versions of those still talk to v4 clients. A v5 host can still read A records off 1.1.1.1 DNS. If a v4-only host gets 192.168.1.2 assigned, a v5 host on the same network sees that as 5000:192.168.1.2 due to the common state.<p>As consequences of the above, v5 and v4 packets follow the same routes, and websites assign the same reputations to both, avoiding the most common end user problems with IPv6.<p>The only snag here is, what happens if a v5 host talks to a v4-only one? Routers could translate v5 to v4 when they know the next hop router/host is v4-only. Or the ends could do something like Happy Eyeballs. In fact v5 is parallel to how v6 uses DNS to ease the cutover, except it's at layer 3 instead.<p>Proposal, phase 2...<p>You only reach this phase when a host is ready to disable IPv4, either because the world has sufficiently adopted v5 or because it only needs to talk to known v5 hosts. You put the iface into v5-only mode. Now your 5000:1.2.3.4 can be split into 5000:1.2.3.4.1 and so on. Anyone on v5+v4 who doesn't get the memo is still compatible too.<p>DHCP and NAT are still default, but each customer of an ISP easily has enough addresses to disable NAT and/or use SLAAC if desired.<p>Back to IPv6...<p>IPv5 is meant to complement IPv6, not replace it. V5 hosts can talk with v6 hosts. And if a v5 iface receives an RA packet, it can just switch to v6. Shifting to v6 is probably the easiest way to clean up the routes left over from v4."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A fleshed-out IPv5 proposal"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bigcityslider",
+          "story_48781622",
+          "ask_hn"
+        ],
+        "author": "bigcityslider",
+        "children": [
+          48782530,
+          48781656
+        ],
+        "created_at": "2026-07-04T00:43:42Z",
+        "created_at_i": 1783125822,
+        "num_comments": 4,
+        "objectID": "48781622",
+        "points": 4,
+        "story_id": 48781622,
+        "story_text": "Over 30 years after its introduction, IPv6 has still not replaced IPv4. I&#x27;ve seen those &quot;just add more bits to ipv4, call it ipv5&quot; proposals before. They tend to skip the important details and talk past others, but they have a point. After filling in the details over time, I think this actually works, it&#x27;d make a serious difference, and it&#x27;s doable with the current IPv6 header.<p>Background...<p>Let&#x27;s assume the IPv6 packet format is already sufficiently supported on routers, hosts, etc. That&#x27;s not the blocker anymore, rather plenty of ISPs, web services like Github, and corporate networks have chosen not to adopt IPv6. Home routers just enable it, but it&#x27;s nontrivial for services because it&#x27;s a separate network from v4 in every way, requiring extensive config changes. End result, almost everyone needs a v4, while many use v6 but don&#x27;t depend on it.<p>IPv6 absolutely needed a new packet format to support &gt;32-bit addrs. But it made more choices beyond that, largest of which was starting with a fresh topology instead of expanding the space under the existing IPv4 address blocks. I understand this was to ditch v4&#x27;s fragmented routes and create fairer ownership.<p>The other choices were more about defaults, like SLAAC over DHCP, or lack of NAT. IPv6 proponents often present the options as the best of both worlds, but in reality the default is more important, for example Android doesn&#x27;t even support DHCP6. And most routers deny inbound v6 TCP&#x2F;UDP connections by default, but not all, maybe because of RFC 6092, REC-49.<p>IPv6 had extensions to ease the transition from v4 using v4-on-v6 addresses (NAT64, 6to4). The common theme was you&#x27;re still really using IPv4 on those. These things helped, but there&#x27;s always a leap from v4 to dual stack and an even bigger leap from dual to v6-only.<p>Proposal, phase 1...<p>IPv5 is a toggle on an IPv4 interface. It shares everything with v4 except the packet format, which is actually a v6 packet with a 5000: prefix. So if you owned 1.2.3.4, now you have 5000:1.2.3.4. IPv5 therefore has 120 bits of address space. But in this initial phase, you&#x27;re still limited to 32-bit in order to maintain compatibility with v4. The point is to just get everyone onto IPv5 without making them reconfigure anything.<p>This also requires upgrades to DHCP, NAT, and DNS to support 120-bit addresses, but unlike v6, the new versions of those still talk to v4 clients. A v5 host can still read A records off 1.1.1.1 DNS. If a v4-only host gets 192.168.1.2 assigned, a v5 host on the same network sees that as 5000:192.168.1.2 due to the common state.<p>As consequences of the above, v5 and v4 packets follow the same routes, and websites assign the same reputations to both, avoiding the most common end user problems with IPv6.<p>The only snag here is, what happens if a v5 host talks to a v4-only one? Routers could translate v5 to v4 when they know the next hop router&#x2F;host is v4-only. Or the ends could do something like Happy Eyeballs. In fact v5 is parallel to how v6 uses DNS to ease the cutover, except it&#x27;s at layer 3 instead.<p>Proposal, phase 2...<p>You only reach this phase when a host is ready to disable IPv4, either because the world has sufficiently adopted v5 or because it only needs to talk to known v5 hosts. You put the iface into v5-only mode. Now your 5000:1.2.3.4 can be split into 5000:1.2.3.4.1 and so on. Anyone on v5+v4 who doesn&#x27;t get the memo is still compatible too.<p>DHCP and NAT are still default, but each customer of an ISP easily has enough addresses to disable NAT and&#x2F;or use SLAAC if desired.<p>Back to IPv6...<p>IPv5 is meant to complement IPv6, not replace it. V5 hosts can talk with v6 hosts. And if a v5 iface receives an RA packet, it can just switch to v6. Shifting to v6 is probably the easiest way to clean up the routes left over from v4.",
+        "title": "A fleshed-out IPv5 proposal",
+        "updated_at": "2026-07-04T15:54:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jadenfix123"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hey guys! I'm a 24 yo SWE @ scale and have previously worked at another YC startup. I'm passionate about building products, infra and eventually starting a company, it'd be great to live with other ambitious builders and founders.<p>I'm looking for housing starting September 1st. If you know of a spot or are looking for a roommate with a similar mindset, lmk. my li is jadenfix"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sf house sept 26"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jadenfix123",
+          "story_48780260",
+          "ask_hn"
+        ],
+        "author": "jadenfix123",
+        "created_at": "2026-07-03T21:33:09Z",
+        "created_at_i": 1783114389,
+        "num_comments": 0,
+        "objectID": "48780260",
+        "points": 9,
+        "story_id": 48780260,
+        "story_text": "hey guys! I&#x27;m a 24 yo SWE @ scale and have previously worked at another YC startup. I&#x27;m passionate about building products, infra and eventually starting a company, it&#x27;d be great to live with other ambitious builders and founders.<p>I&#x27;m looking for housing starting September 1st. If you know of a spot or are looking for a roommate with a similar mindset, lmk. my li is jadenfix",
+        "title": "sf house sept 26",
+        "updated_at": "2026-07-05T13:58:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ope_john"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN — I’m launching the research preview for Cadreen.<p>Cadreen is infrastructure for intelligent workflows — software that can remember, decide, act, ask permission, and leave an audit trail. It includes APIs, SDKs, CLI tooling, memory, governance, tool execution, audit trails, and chat access.<p>The idea is that useful AI systems need more than a model call. They need orchestration: what to remember, when to act, when to ask permission, what tools to use, and how to leave an audit trail.<p>Available now:<p>- APIs &amp; docs<p>- TypeScript, Python, and Go SDKs<p>- CLI<p>- Cadreen usable as a model/provider in chat interfaces (managed model selection with BYOK coming soon)<p>- Coming next: “Accomplish Anything,” a chat interface for non-developers to use the same infrastructure directly.<p>Feedback welcome — especially from people building agents, copilots, or AI workflow systems.<p>https://github.com/timothy-billingrails/cadreen-sdks/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cadreen – memory, governance, self-healing, and execution as one system"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ope_john",
+          "story_48780219",
+          "ask_hn"
+        ],
+        "author": "ope_john",
+        "children": [
+          48780230
+        ],
+        "created_at": "2026-07-03T21:28:07Z",
+        "created_at_i": 1783114087,
+        "num_comments": 0,
+        "objectID": "48780219",
+        "points": 5,
+        "story_id": 48780219,
+        "story_text": "Hi HN — I’m launching the research preview for Cadreen.<p>Cadreen is infrastructure for intelligent workflows — software that can remember, decide, act, ask permission, and leave an audit trail. It includes APIs, SDKs, CLI tooling, memory, governance, tool execution, audit trails, and chat access.<p>The idea is that useful AI systems need more than a model call. They need orchestration: what to remember, when to act, when to ask permission, what tools to use, and how to leave an audit trail.<p>Available now:<p>- APIs &amp; docs<p>- TypeScript, Python, and Go SDKs<p>- CLI<p>- Cadreen usable as a model&#x2F;provider in chat interfaces (managed model selection with BYOK coming soon)<p>- Coming next: “Accomplish Anything,” a chat interface for non-developers to use the same infrastructure directly.<p>Feedback welcome — especially from people building agents, copilots, or AI workflow systems.<p>https:&#x2F;&#x2F;github.com&#x2F;timothy-billingrails&#x2F;cadreen-sdks&#x2F;",
+        "title": "Cadreen – memory, governance, self-healing, and execution as one system",
+        "updated_at": "2026-07-03T23:39:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "basilikum"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What did you fail at and what did you learn from it?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_basilikum",
+          "story_48779863",
+          "ask_hn"
+        ],
+        "author": "basilikum",
+        "children": [
+          48785591
+        ],
+        "created_at": "2026-07-03T20:56:45Z",
+        "created_at_i": 1783112205,
+        "num_comments": 1,
+        "objectID": "48779863",
+        "points": 10,
+        "story_id": 48779863,
+        "title": "Ask HN: What did you fail at and what did you learn from it?",
+        "updated_at": "2026-07-04T19:52:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sverp"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Everyone is building the same thing. Does anyone know of something genuinely exciting happening in AI?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI Is Boring"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sverp",
+          "story_48779624",
+          "ask_hn"
+        ],
+        "author": "sverp",
+        "children": [
+          48783084,
+          48784657,
+          48782538,
+          48779641,
+          48781587,
+          48780883,
+          48781854
+        ],
+        "created_at": "2026-07-03T20:32:12Z",
+        "created_at_i": 1783110732,
+        "num_comments": 8,
+        "objectID": "48779624",
+        "points": 10,
+        "story_id": 48779624,
+        "story_text": "Everyone is building the same thing. Does anyone know of something genuinely exciting happening in AI?",
+        "title": "AI Is Boring",
+        "updated_at": "2026-07-05T13:58:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "IDIRIS"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SponsorBlock had 7 critical vulnerabilities. Private data of 82k users was accessible.<p>Full details: https://paste.rs/jVLQb.txt<p>Data not leaked. Waiting for developer response."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SponsorBlock Critical Security Vulnerabilities"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_IDIRIS",
+          "story_48779533",
+          "ask_hn"
+        ],
+        "author": "IDIRIS",
+        "children": [
+          48779725,
+          48781867,
+          48781212
+        ],
+        "created_at": "2026-07-03T20:22:46Z",
+        "created_at_i": 1783110166,
+        "num_comments": 3,
+        "objectID": "48779533",
+        "points": 3,
+        "story_id": 48779533,
+        "story_text": "SponsorBlock had 7 critical vulnerabilities. Private data of 82k users was accessible.<p>Full details: https:&#x2F;&#x2F;paste.rs&#x2F;jVLQb.txt<p>Data not leaked. Waiting for developer response.",
+        "title": "SponsorBlock Critical Security Vulnerabilities",
+        "updated_at": "2026-07-05T21:16:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "czeizel"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "has anyone used it? what do you think of it? Is it worth it, especially compared to the free plan?<p>I think the plus plan is expensive (I don't use it for programming), but my main concern is that go doesn't have any reasoning models.<p>thoughts?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: ChatGPT Go Plan"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_czeizel",
+          "story_48779423",
+          "ask_hn"
+        ],
+        "author": "czeizel",
+        "children": [
+          48779841
+        ],
+        "created_at": "2026-07-03T20:13:32Z",
+        "created_at_i": 1783109612,
+        "num_comments": 2,
+        "objectID": "48779423",
+        "points": 2,
+        "story_id": 48779423,
+        "story_text": "has anyone used it? what do you think of it? Is it worth it, especially compared to the free plan?<p>I think the plus plan is expensive (I don&#x27;t use it for programming), but my main concern is that go doesn&#x27;t have any reasoning models.<p>thoughts?",
+        "title": "Ask HN: ChatGPT Go Plan",
+        "updated_at": "2026-07-04T11:59:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rcanand2025"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If 1 pour my\nheart\nsoul\nsweat\nblood\ntears\ninto crafting the perfect one shot prompt,\nand get a perfect response,\nis that still vibe coding?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "An AI Koan"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rcanand2025",
+          "story_48778522",
+          "ask_hn"
+        ],
+        "author": "rcanand2025",
+        "created_at": "2026-07-03T18:49:27Z",
+        "created_at_i": 1783104567,
+        "num_comments": 0,
+        "objectID": "48778522",
+        "points": 2,
+        "story_id": 48778522,
+        "story_text": "If 1 pour my\nheart\nsoul\nsweat\nblood\ntears\ninto crafting the perfect one shot prompt,\nand get a perfect response,\nis that still vibe coding?",
+        "title": "An AI Koan",
+        "updated_at": "2026-07-05T13:58:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iqbal1980"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It’s infuriating any simple request related to common bioinformatics work and computational biology is flagged. Like we are we are trying to weaponize viruses or create anthrax!<p>Life science users, what’s been your experience?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Fable is useless for bioinformaticians"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_iqbal1980",
+          "story_48778446",
+          "ask_hn"
+        ],
+        "author": "iqbal1980",
+        "children": [
+          48781270,
+          48780948
+        ],
+        "created_at": "2026-07-03T18:44:10Z",
+        "created_at_i": 1783104250,
+        "num_comments": 6,
+        "objectID": "48778446",
+        "points": 6,
+        "story_id": 48778446,
+        "story_text": "It’s infuriating any simple request related to common bioinformatics work and computational biology is flagged. Like we are we are trying to weaponize viruses or create anthrax!<p>Life science users, what’s been your experience?",
+        "title": "Claude Fable is useless for bioinformaticians",
+        "updated_at": "2026-07-04T18:49:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tomerbd"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unpopulate opinion:\nFewer PRs done with proper prompting, review, and refinement usually win long term.<p>*3 thoughtful PRs a day &gt; 40 poorly thought ones no matter how many AI agents reviewed them.*"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Fewer PRs done with proper prompting, review, and refinement wins"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tomerbd",
+          "story_48778345",
+          "ask_hn"
+        ],
+        "author": "tomerbd",
+        "children": [
+          48780002,
+          48791757
+        ],
+        "created_at": "2026-07-03T18:37:36Z",
+        "created_at_i": 1783103856,
+        "num_comments": 4,
+        "objectID": "48778345",
+        "points": 7,
+        "story_id": 48778345,
+        "story_text": "Unpopulate opinion:\nFewer PRs done with proper prompting, review, and refinement usually win long term.<p>*3 thoughtful PRs a day &gt; 40 poorly thought ones no matter how many AI agents reviewed them.*",
+        "title": "Tell HN: Fewer PRs done with proper prompting, review, and refinement wins",
+        "updated_at": "2026-07-05T21:31:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Kathan2651"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have 4+ years of experience in React and Next.js when I got out of my last contract role, I thought it was the right time to look for a remote job. But, it feels like the market gave up on me. When many companies were hiring, I didn’t have enough experience. Now that I do have experience, it feels like no one is looking.<p>I’m curious if there are any startups out there looking for founding members or early team members.<p>I want to gain experience in a risk-taking product environment, where I can work in my own way, learn about the market, and also get a chance to explore my own ideas.<p>Right now, it honestly feels like a lost cause. I don’t really want to join another corporate ladder, but if there’s no one looking for this kind of role, maybe I should just take a simple job. I’m trying here once before I give up.<p>Even in HN who is hiring thread, most are bug companies and looking for US only."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are any startups hiring front-end developers, or are they just using AI?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Kathan2651",
+          "story_48778312",
+          "ask_hn"
+        ],
+        "author": "Kathan2651",
+        "children": [
+          48778589,
+          48784624
+        ],
+        "created_at": "2026-07-03T18:35:12Z",
+        "created_at_i": 1783103712,
+        "num_comments": 3,
+        "objectID": "48778312",
+        "points": 3,
+        "story_id": 48778312,
+        "story_text": "I have 4+ years of experience in React and Next.js when I got out of my last contract role, I thought it was the right time to look for a remote job. But, it feels like the market gave up on me. When many companies were hiring, I didn’t have enough experience. Now that I do have experience, it feels like no one is looking.<p>I’m curious if there are any startups out there looking for founding members or early team members.<p>I want to gain experience in a risk-taking product environment, where I can work in my own way, learn about the market, and also get a chance to explore my own ideas.<p>Right now, it honestly feels like a lost cause. I don’t really want to join another corporate ladder, but if there’s no one looking for this kind of role, maybe I should just take a simple job. I’m trying here once before I give up.<p>Even in HN who is hiring thread, most are bug companies and looking for US only.",
+        "title": "Ask HN: Are any startups hiring front-end developers, or are they just using AI?",
+        "updated_at": "2026-07-05T06:48:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "_exvi"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How to Delete the HN Account?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author__exvi",
+          "story_48777435",
+          "ask_hn"
+        ],
+        "author": "_exvi",
+        "children": [
+          48777460
+        ],
+        "created_at": "2026-07-03T17:20:09Z",
+        "created_at_i": 1783099209,
+        "num_comments": 4,
+        "objectID": "48777435",
+        "points": 2,
+        "story_id": 48777435,
+        "title": "Ask HN: How to Delete the HN Account?",
+        "updated_at": "2026-07-04T00:23:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TradingReality"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello all. My focus has been trying to find a way to mimic execution reality in institutional trades (even done by algos). Things like how queue position, hidden liquidity, venue rules, and partial fills affect the trade - real world conditions.<p>I've created a program called ordersim to help, but we'll get to that later. Right now, i'm interested in hearing how traders deal with these conditions that can't typically be simulated in backtesting. Thanks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you test institutional (or algo) trades under real market conditions?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_TradingReality",
+          "story_48777418",
+          "ask_hn"
+        ],
+        "author": "TradingReality",
+        "created_at": "2026-07-03T17:18:48Z",
+        "created_at_i": 1783099128,
+        "num_comments": 0,
+        "objectID": "48777418",
+        "points": 2,
+        "story_id": 48777418,
+        "story_text": "Hello all. My focus has been trying to find a way to mimic execution reality in institutional trades (even done by algos). Things like how queue position, hidden liquidity, venue rules, and partial fills affect the trade - real world conditions.<p>I&#x27;ve created a program called ordersim to help, but we&#x27;ll get to that later. Right now, i&#x27;m interested in hearing how traders deal with these conditions that can&#x27;t typically be simulated in backtesting. Thanks!",
+        "title": "How do you test institutional (or algo) trades under real market conditions?",
+        "updated_at": "2026-07-03T21:47:24Z"
+      }
+    ],
+    "hitsPerPage": 80,
+    "nbHits": 3292,
+    "nbPages": 13,
+    "page": 2,
+    "params": "tags=ask_hn&numericFilters=created_at_i%3E1775995200%2Ccreated_at_i%3C1783771200&hitsPerPage=80&page=2&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 11,
+        "roundTrip": 19
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 3
+        },
+        "merge": {
+          "total": 1
+        },
+        "total": 1
+      },
+      "fetch": {
+        "scanning": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 17
+  }
+}

@@ -1,0 +1,3669 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "window": "prior-30d",
+  "start": 1778587200,
+  "end": 1781179200,
+  "tag": "ask_hn",
+  "page": 2,
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "garypearce"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Home Security and AI"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_garypearce",
+          "story_48437370",
+          "ask_hn"
+        ],
+        "author": "garypearce",
+        "created_at": "2026-06-07T18:28:12Z",
+        "created_at_i": 1780856892,
+        "num_comments": 0,
+        "objectID": "48437370",
+        "points": 1,
+        "story_id": 48437370,
+        "title": "Home Security and AI",
+        "updated_at": "2026-06-07T18:32:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cuz-reasons"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been using Stripe for my business for about a decade.   Got an email from them:<p>&gt; There’s an open task on your account that needs attention. To keep your account in good standing, take a moment to review it.<p>Unsaid is that they froze payouts until accepting their new ToS, and that they require a Photo ID plus face scan in order to comply.<p>I don't necessarily think requiring biometrics is a bad thing, but:<p>- No advance notice was given.<p>- A simple &quot;[Action required] Review terms of service for {stripe-id}&quot; email is easy to miss<p>- Frozen payouts can destroy a business.<p>This makes me rethink my relationship with them.  Super disappointing."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Stripe ToS update demands biometrics, freezes payments until given"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cuz-reasons",
+          "story_48437330",
+          "ask_hn"
+        ],
+        "author": "cuz-reasons",
+        "children": [
+          48441004,
+          48438124,
+          48505584
+        ],
+        "created_at": "2026-06-07T18:21:16Z",
+        "created_at_i": 1780856476,
+        "num_comments": 4,
+        "objectID": "48437330",
+        "points": 13,
+        "story_id": 48437330,
+        "story_text": "I&#x27;ve been using Stripe for my business for about a decade.   Got an email from them:<p>&gt; There’s an open task on your account that needs attention. To keep your account in good standing, take a moment to review it.<p>Unsaid is that they froze payouts until accepting their new ToS, and that they require a Photo ID plus face scan in order to comply.<p>I don&#x27;t necessarily think requiring biometrics is a bad thing, but:<p>- No advance notice was given.<p>- A simple &quot;[Action required] Review terms of service for {stripe-id}&quot; email is easy to miss<p>- Frozen payouts can destroy a business.<p>This makes me rethink my relationship with them.  Super disappointing.",
+        "title": "Tell HN: Stripe ToS update demands biometrics, freezes payments until given",
+        "updated_at": "2026-06-14T00:41:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "prmph"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Helium (https://helium.computer/) is Chromium-based, with all the Google odiousness removed, emphasizing minimalism, privacy, zero telemetry, built-in uBlock Origin, and no sync or AI features.<p>I am just a regular user that was looking for a Firefox alternative for a long time. I do not know why Helium does not get more attention. It's so fast all the time even with several hundred tabs, it never crashed, it is strongly privacy and safety protecting, I do not have one complaint about it.<p>Here are some ways the others fall short:<p>- Firefox and all its derivatives are frequently incredibly sluggish, even on the same machine at the same time other browsers based on Chromium and Webkit are fast. I really wanted to like them, but I just gave up finally. I can't even use Mullvad browser now.<p>- Safari's interface and UX seems somewhat clunky to me. I tried Orion; it shows a lot of promise as my secondary browser, but, even after updating it today, it has significant UI regressions. And this is for software that's past version 1.0.0<p>- Brave browser was pretty good, but I was disillusioned by their not taking user protection as seriously, and some of their &quot;scandals&quot;<p>- Of course, the least said about IE, Edge, Chrome, etc, the better<p>And I've tried a large number of browsers over the years: IE, Edge, Firefox, Opera, Safari, Konqueror, Chrome, Chromium, Firefox, Orion, Zen, Brave, Mullvad, DuckDuckGo, Vivaldi etc, etc."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Helium is the best browser I ever used"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_prmph",
+          "story_48436918",
+          "ask_hn"
+        ],
+        "author": "prmph",
+        "children": [
+          48449270,
+          48437429,
+          48437698,
+          48439090,
+          48441232,
+          48513419,
+          48437347
+        ],
+        "created_at": "2026-06-07T17:27:47Z",
+        "created_at_i": 1780853267,
+        "num_comments": 13,
+        "objectID": "48436918",
+        "points": 6,
+        "story_id": 48436918,
+        "story_text": "Helium (https:&#x2F;&#x2F;helium.computer&#x2F;) is Chromium-based, with all the Google odiousness removed, emphasizing minimalism, privacy, zero telemetry, built-in uBlock Origin, and no sync or AI features.<p>I am just a regular user that was looking for a Firefox alternative for a long time. I do not know why Helium does not get more attention. It&#x27;s so fast all the time even with several hundred tabs, it never crashed, it is strongly privacy and safety protecting, I do not have one complaint about it.<p>Here are some ways the others fall short:<p>- Firefox and all its derivatives are frequently incredibly sluggish, even on the same machine at the same time other browsers based on Chromium and Webkit are fast. I really wanted to like them, but I just gave up finally. I can&#x27;t even use Mullvad browser now.<p>- Safari&#x27;s interface and UX seems somewhat clunky to me. I tried Orion; it shows a lot of promise as my secondary browser, but, even after updating it today, it has significant UI regressions. And this is for software that&#x27;s past version 1.0.0<p>- Brave browser was pretty good, but I was disillusioned by their not taking user protection as seriously, and some of their &quot;scandals&quot;<p>- Of course, the least said about IE, Edge, Chrome, etc, the better<p>And I&#x27;ve tried a large number of browsers over the years: IE, Edge, Firefox, Opera, Safari, Konqueror, Chrome, Chromium, Firefox, Orion, Zen, Brave, Mullvad, DuckDuckGo, Vivaldi etc, etc.",
+        "title": "Tell HN: Helium is the best browser I ever used",
+        "updated_at": "2026-06-21T07:37:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yesitcan"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The all you need is attention guy. Seems to get no attention. He’s rich now right?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What happened to the guy that invented LLMs?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yesitcan",
+          "story_48436688",
+          "ask_hn"
+        ],
+        "author": "yesitcan",
+        "children": [
+          48436763,
+          48436734
+        ],
+        "created_at": "2026-06-07T17:03:04Z",
+        "created_at_i": 1780851784,
+        "num_comments": 2,
+        "objectID": "48436688",
+        "points": 1,
+        "story_id": 48436688,
+        "story_text": "The all you need is attention guy. Seems to get no attention. He’s rich now right?",
+        "title": "Ask HN: What happened to the guy that invented LLMs?",
+        "updated_at": "2026-06-07T21:07:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "freeopinion"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A lifetime ago some Linux advocates worried that the advent of Wine would reduce the incentive to produce native Linux apps.<p>Today some people believe that the heroics of Valve and others have finally made it possible to use a Linux desktop for daily gaming, including playing Windows games.<p>I wonder why WSL hasn't made the scales tip the other direction. Today's devs could build AutoCAD for GTK and have it run in Windows and Linux. Photoshop for KDE could run in Linux and Windows.<p>So what is so compelling about Windows native apps today that keeps Big Software locked in? What does Windows offer these devs that is missing in Linux?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "WSL vs Wine"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_freeopinion",
+          "story_48436360",
+          "ask_hn"
+        ],
+        "author": "freeopinion",
+        "children": [
+          48436826,
+          48436423
+        ],
+        "created_at": "2026-06-07T16:27:44Z",
+        "created_at_i": 1780849664,
+        "num_comments": 2,
+        "objectID": "48436360",
+        "points": 3,
+        "story_id": 48436360,
+        "story_text": "A lifetime ago some Linux advocates worried that the advent of Wine would reduce the incentive to produce native Linux apps.<p>Today some people believe that the heroics of Valve and others have finally made it possible to use a Linux desktop for daily gaming, including playing Windows games.<p>I wonder why WSL hasn&#x27;t made the scales tip the other direction. Today&#x27;s devs could build AutoCAD for GTK and have it run in Windows and Linux. Photoshop for KDE could run in Linux and Windows.<p>So what is so compelling about Windows native apps today that keeps Big Software locked in? What does Windows offer these devs that is missing in Linux?",
+        "title": "WSL vs Wine",
+        "updated_at": "2026-06-10T06:56:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mazinz"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tried Gemma, Qwen and a few others. Need vision and larger context windows for an application I am working on. Results were quite poor Gemma 4E2B probably the best of the ones I tired but still fell apart and keep hallucinating with ~5000 tokens. Cloud based models had no problems even even Gemini 3.1 Flash-Lite and GPT-5.4 mini do a lot better and a way faster."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is it feasible to run a model on device for complete privacy?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mazinz",
+          "story_48434992",
+          "ask_hn"
+        ],
+        "author": "mazinz",
+        "children": [
+          48435043,
+          48435015
+        ],
+        "created_at": "2026-06-07T14:04:41Z",
+        "created_at_i": 1780841081,
+        "num_comments": 6,
+        "objectID": "48434992",
+        "points": 3,
+        "story_id": 48434992,
+        "story_text": "Tried Gemma, Qwen and a few others. Need vision and larger context windows for an application I am working on. Results were quite poor Gemma 4E2B probably the best of the ones I tired but still fell apart and keep hallucinating with ~5000 tokens. Cloud based models had no problems even even Gemini 3.1 Flash-Lite and GPT-5.4 mini do a lot better and a way faster.",
+        "title": "Ask HN: Is it feasible to run a model on device for complete privacy?",
+        "updated_at": "2026-06-07T15:57:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rondaerth92"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why do devs shoot themselves in the foot?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What is the value of releasing software that leaves people unemployed?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rondaerth92",
+          "story_48434605",
+          "ask_hn"
+        ],
+        "author": "rondaerth92",
+        "children": [
+          48435810
+        ],
+        "created_at": "2026-06-07T13:26:05Z",
+        "created_at_i": 1780838765,
+        "num_comments": 0,
+        "objectID": "48434605",
+        "points": 5,
+        "story_id": 48434605,
+        "story_text": "Why do devs shoot themselves in the foot?",
+        "title": "What is the value of releasing software that leaves people unemployed?",
+        "updated_at": "2026-06-07T16:21:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iaziz786"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell me, what’s in the world is unfixable?<p>You will take some time to think and the answers that you come up with are the things that happens very rarely in the world. The list might contain death, passed time, environmental extinctions, entropy, etc.<p>I bet the list isn’t that huge and that’s what the point I’m trying to make here.<p>If the list is this small that means you can do things dude!<p>Whenever I work on things, I use to fear that what if I hit a dead end and there is no going back from there. It’s just a feeling and far from the reality. I am a software developer, I can rarely work on things that’s not fixable. The systems that we work on are infinitely malluable. That’s why tinkering and hacking is so fun. It feels like a game but it can become a reality as well. Take Apple for example, it was Wozniak’s project that has become world’s one of the most valuable company.<p>There are a few reasons why something feels unfixable. One reasons is I fear facing criticism that something that I create sucks.<p>You can spend your times on things that might not work out well for you. In this case time is a scares resources.<p>If you don’t have agency, start building and stop consuming less.<p>If you can build personal relationship with someone capable and help them convince your vision together as a team you can do that’s unthinkable. You two (or many) don’t even know what you can create if you keep open mind. I believe that you can create highly creative and inspiring things.<p>The story of Apple also brings one important epiphany. You need to learn to sell your idea to make it big. I don’t know about magic tricks but creating urgency out of thin air is fascinating. In order to do this you need to show people what they can’t see. This is why storytelling is important. Remember the phase “show, never tell”?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Realisation of Unfixable"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_iaziz786",
+          "story_48434252",
+          "ask_hn"
+        ],
+        "author": "iaziz786",
+        "created_at": "2026-06-07T12:40:18Z",
+        "created_at_i": 1780836018,
+        "num_comments": 0,
+        "objectID": "48434252",
+        "points": 2,
+        "story_id": 48434252,
+        "story_text": "Tell me, what’s in the world is unfixable?<p>You will take some time to think and the answers that you come up with are the things that happens very rarely in the world. The list might contain death, passed time, environmental extinctions, entropy, etc.<p>I bet the list isn’t that huge and that’s what the point I’m trying to make here.<p>If the list is this small that means you can do things dude!<p>Whenever I work on things, I use to fear that what if I hit a dead end and there is no going back from there. It’s just a feeling and far from the reality. I am a software developer, I can rarely work on things that’s not fixable. The systems that we work on are infinitely malluable. That’s why tinkering and hacking is so fun. It feels like a game but it can become a reality as well. Take Apple for example, it was Wozniak’s project that has become world’s one of the most valuable company.<p>There are a few reasons why something feels unfixable. One reasons is I fear facing criticism that something that I create sucks.<p>You can spend your times on things that might not work out well for you. In this case time is a scares resources.<p>If you don’t have agency, start building and stop consuming less.<p>If you can build personal relationship with someone capable and help them convince your vision together as a team you can do that’s unthinkable. You two (or many) don’t even know what you can create if you keep open mind. I believe that you can create highly creative and inspiring things.<p>The story of Apple also brings one important epiphany. You need to learn to sell your idea to make it big. I don’t know about magic tricks but creating urgency out of thin air is fascinating. In order to do this you need to show people what they can’t see. This is why storytelling is important. Remember the phase “show, never tell”?",
+        "title": "Realisation of Unfixable",
+        "updated_at": "2026-06-07T16:37:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "simianwords"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude and ChatGPT have thinking efforts where you can tune the amount of thinking allowed.<p>Like low, medium, high, xhigh and so on.<p>But are they different models underneath? Or same model with different parameter?<p>The reason I ask is because, if I change the effort param mid conversation in Claude code, I get a warning suggesting I’m breaking the cache.<p>I don’t think this happens in Codex because when I change the effort, the responses are still quick."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How are thinking efforts implemented?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_simianwords",
+          "story_48434240",
+          "ask_hn"
+        ],
+        "author": "simianwords",
+        "children": [
+          48501524,
+          48435972,
+          48499686,
+          48435236,
+          48498219,
+          48578526,
+          48525815,
+          48437343,
+          48539785,
+          48434879,
+          48436428,
+          48572609,
+          48502115,
+          48571940,
+          48499940,
+          48434490,
+          48445111,
+          48445071,
+          48506482,
+          48525709,
+          48550715
+        ],
+        "created_at": "2026-06-07T12:38:44Z",
+        "created_at_i": 1780835924,
+        "num_comments": 31,
+        "objectID": "48434240",
+        "points": 104,
+        "story_id": 48434240,
+        "story_text": "Claude and ChatGPT have thinking efforts where you can tune the amount of thinking allowed.<p>Like low, medium, high, xhigh and so on.<p>But are they different models underneath? Or same model with different parameter?<p>The reason I ask is because, if I change the effort param mid conversation in Claude code, I get a warning suggesting I’m breaking the cache.<p>I don’t think this happens in Codex because when I change the effort, the responses are still quick.",
+        "title": "Ask HN: How are thinking efforts implemented?",
+        "updated_at": "2026-06-29T10:36:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chistev"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are the best unknown books you have read?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_chistev",
+          "story_48434230",
+          "ask_hn"
+        ],
+        "author": "chistev",
+        "children": [
+          48435023,
+          48434392,
+          48436117
+        ],
+        "created_at": "2026-06-07T12:37:09Z",
+        "created_at_i": 1780835829,
+        "num_comments": 3,
+        "objectID": "48434230",
+        "points": 7,
+        "story_id": 48434230,
+        "title": "Ask HN: What are the best unknown books you have read?",
+        "updated_at": "2026-06-08T09:45:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ckluis"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The cost of training is coming down.<p>We have incredible open source models (especially smaller ones) like qwen 3.6-27b.<p>Imagine the more niche languages/frameworks getting a model rebuilt for them: zig, haskell, elixir/ash, f#, IHP, jetzig, etc.<p>I could imagine that there would be tremendous value in a language + framework model like: zig + jetzig that is explicitly trained on the materials and best practices for these.<p>Which begs the question - at what point does it make sense to make a model specifically for narrower and narrower contexts.  How much faster/better could they become?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why aren't languages/frameworks offering retrained models for their project?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ckluis",
+          "story_48434185",
+          "ask_hn"
+        ],
+        "author": "ckluis",
+        "children": [
+          48434862
+        ],
+        "created_at": "2026-06-07T12:32:42Z",
+        "created_at_i": 1780835562,
+        "num_comments": 1,
+        "objectID": "48434185",
+        "points": 2,
+        "story_id": 48434185,
+        "story_text": "The cost of training is coming down.<p>We have incredible open source models (especially smaller ones) like qwen 3.6-27b.<p>Imagine the more niche languages&#x2F;frameworks getting a model rebuilt for them: zig, haskell, elixir&#x2F;ash, f#, IHP, jetzig, etc.<p>I could imagine that there would be tremendous value in a language + framework model like: zig + jetzig that is explicitly trained on the materials and best practices for these.<p>Which begs the question - at what point does it make sense to make a model specifically for narrower and narrower contexts.  How much faster&#x2F;better could they become?",
+        "title": "Why aren't languages/frameworks offering retrained models for their project?",
+        "updated_at": "2026-06-07T16:37:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "keepamovin"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's not X, it's Y.<p>That is so a genre or idiom of the current AI age. Why? I think because AIs live in language. They don't live somewhere else. So they have to exclude all the language network of things it's not in order to focus themselves on the thing it is. If they were more subconscious/symbolic like us, they could just not say that. But because their words, create their words, etc - more than us - they have to use this construction, to exclude the gigantic amount of stuff that whatever you're talking about is not.<p>What do y'all think?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why do AIs talk like this?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_keepamovin",
+          "story_48433363",
+          "ask_hn"
+        ],
+        "author": "keepamovin",
+        "children": [
+          48433466,
+          48433790,
+          48433783,
+          48433583
+        ],
+        "created_at": "2026-06-07T10:01:09Z",
+        "created_at_i": 1780826469,
+        "num_comments": 4,
+        "objectID": "48433363",
+        "points": 3,
+        "story_id": 48433363,
+        "story_text": "It&#x27;s not X, it&#x27;s Y.<p>That is so a genre or idiom of the current AI age. Why? I think because AIs live in language. They don&#x27;t live somewhere else. So they have to exclude all the language network of things it&#x27;s not in order to focus themselves on the thing it is. If they were more subconscious&#x2F;symbolic like us, they could just not say that. But because their words, create their words, etc - more than us - they have to use this construction, to exclude the gigantic amount of stuff that whatever you&#x27;re talking about is not.<p>What do y&#x27;all think?",
+        "title": "Ask HN: Why do AIs talk like this?",
+        "updated_at": "2026-06-09T20:47:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joelthelion"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Given how quickly things evolve, it's easy to get lost in the numerous offerings and hard to get the best deal. So, what do you use? Both clients/harnesses and LLM providers or local setups would be interesting.<p>Personally, I've been using opencode with Github copilot for work. I'm currently looking for cost-effective provider for personal work. Maybe openrouter with one of the cheap models?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What do you currently use for AI coding (personal or professional)?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_joelthelion",
+          "story_48433171",
+          "ask_hn"
+        ],
+        "author": "joelthelion",
+        "children": [
+          48433357,
+          48443136,
+          48447382,
+          48443132,
+          48443134,
+          48433222
+        ],
+        "created_at": "2026-06-07T09:14:50Z",
+        "created_at_i": 1780823690,
+        "num_comments": 5,
+        "objectID": "48433171",
+        "points": 2,
+        "story_id": 48433171,
+        "story_text": "Given how quickly things evolve, it&#x27;s easy to get lost in the numerous offerings and hard to get the best deal. So, what do you use? Both clients&#x2F;harnesses and LLM providers or local setups would be interesting.<p>Personally, I&#x27;ve been using opencode with Github copilot for work. I&#x27;m currently looking for cost-effective provider for personal work. Maybe openrouter with one of the cheap models?",
+        "title": "Ask HN: What do you currently use for AI coding (personal or professional)?",
+        "updated_at": "2026-06-10T02:03:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Clikdeo"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've Built 4 Products – Traffic Has Killed All of Them. Organic Growth Strategy?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Clikdeo",
+          "story_48433127",
+          "ask_hn"
+        ],
+        "author": "Clikdeo",
+        "children": [
+          48433286,
+          48433129
+        ],
+        "created_at": "2026-06-07T09:05:04Z",
+        "created_at_i": 1780823104,
+        "num_comments": 1,
+        "objectID": "48433127",
+        "points": 2,
+        "story_id": 48433127,
+        "title": "I've Built 4 Products – Traffic Has Killed All of Them. Organic Growth Strategy?",
+        "updated_at": "2026-06-07T10:41:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jakemanger"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone who loves coding (uses vim, and has done so for ~10 years),<p>but also is amazed by AI coding tools and has embraced them recently (e.g. copilot then claude code then codex),<p>I'm curious, who out there is still not using any of these tools? And if not, why?<p>I feel it's become as common-place as autocomplete, or intellisense. Though I remember people used to hate those too.<p>I guess AI is like the modern day intellisense + docs targeted for exactly what you're doing, always \n(maybe that + an intern that never sleeps)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who here still codes without AI, and why?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jakemanger",
+          "story_48432990",
+          "ask_hn"
+        ],
+        "author": "jakemanger",
+        "children": [
+          48442762,
+          48433033,
+          48433229
+        ],
+        "created_at": "2026-06-07T08:37:03Z",
+        "created_at_i": 1780821423,
+        "num_comments": 1,
+        "objectID": "48432990",
+        "points": 1,
+        "story_id": 48432990,
+        "story_text": "As someone who loves coding (uses vim, and has done so for ~10 years),<p>but also is amazed by AI coding tools and has embraced them recently (e.g. copilot then claude code then codex),<p>I&#x27;m curious, who out there is still not using any of these tools? And if not, why?<p>I feel it&#x27;s become as common-place as autocomplete, or intellisense. Though I remember people used to hate those too.<p>I guess AI is like the modern day intellisense + docs targeted for exactly what you&#x27;re doing, always \n(maybe that + an intern that never sleeps)",
+        "title": "Ask HN: Who here still codes without AI, and why?",
+        "updated_at": "2026-06-08T08:39:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xyzal"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Given that we can code at 10x speed for at least half a year, one would expect to see at least some pieces of machine-created software with 5 years' worth of equivalent human engineering work.<p>Are there any we know of?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are some agent-coded masterpieces?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xyzal",
+          "story_48432881",
+          "ask_hn"
+        ],
+        "author": "xyzal",
+        "children": [
+          48432995
+        ],
+        "created_at": "2026-06-07T08:12:31Z",
+        "created_at_i": 1780819951,
+        "num_comments": 1,
+        "objectID": "48432881",
+        "points": 2,
+        "story_id": 48432881,
+        "story_text": "Given that we can code at 10x speed for at least half a year, one would expect to see at least some pieces of machine-created software with 5 years&#x27; worth of equivalent human engineering work.<p>Are there any we know of?",
+        "title": "Ask HN: What are some agent-coded masterpieces?",
+        "updated_at": "2026-06-07T10:42:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nntlol"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "See this : https://blog.lsnnt.dev/i-built-a-spotify-recently-played-banner-for-github-without-registering-an-oauth-app"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Spotify no OAuth,no premium web API fetching"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nntlol",
+          "story_48432766",
+          "ask_hn"
+        ],
+        "author": "nntlol",
+        "created_at": "2026-06-07T07:46:56Z",
+        "created_at_i": 1780818416,
+        "num_comments": 0,
+        "objectID": "48432766",
+        "points": 2,
+        "story_id": 48432766,
+        "story_text": "See this : https:&#x2F;&#x2F;blog.lsnnt.dev&#x2F;i-built-a-spotify-recently-played-banner-for-github-without-registering-an-oauth-app",
+        "title": "Spotify no OAuth,no premium web API fetching",
+        "updated_at": "2026-06-07T10:42:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hotline"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We run @hotlinetg_bot. Want to understand the landscape better. What other Telegram CRMs do people actually love? Not here to argue, just to learn."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Alternatives to Hotline Telegram CRM?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hotline",
+          "story_48432281",
+          "ask_hn"
+        ],
+        "author": "hotline",
+        "children": [
+          48432321,
+          48432298
+        ],
+        "created_at": "2026-06-07T06:05:46Z",
+        "created_at_i": 1780812346,
+        "num_comments": 0,
+        "objectID": "48432281",
+        "points": 3,
+        "story_id": 48432281,
+        "story_text": "We run @hotlinetg_bot. Want to understand the landscape better. What other Telegram CRMs do people actually love? Not here to argue, just to learn.",
+        "title": "Ask HN: Alternatives to Hotline Telegram CRM?",
+        "updated_at": "2026-06-07T22:46:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pureyang"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "we have a real product (thanks claude) and dozen users signedup still using up their free credits. setup payments because it was so easy, then decided to use their atlas product to incorporate and take a single 6 figure pre-seed funding thru stripe invoice (yes stupid, but we are early). Rest of payments are all free coupon payments for testing purposes. Stripe accepted the pre-seed payment, 3 days ago connected to mercury to send it there and just now closed my account and holding funds for 120 days (oct 5th). Got rejected 2x with an automated message after they asked for clarification.<p>1 invoice payment\n0 real transactions\n0 refunds\n0 chargebacks<p>stripe gets to collect 500-800$ of interest on my account in the meantime<p>FML"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Learn from my lesson, don't take your pre seed through stripe = Account Closure"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pureyang",
+          "story_48432117",
+          "ask_hn"
+        ],
+        "author": "pureyang",
+        "children": [
+          48433429,
+          48433181,
+          48433239,
+          48433344,
+          48433865,
+          48505588
+        ],
+        "created_at": "2026-06-07T05:33:25Z",
+        "created_at_i": 1780810405,
+        "num_comments": 9,
+        "objectID": "48432117",
+        "points": 23,
+        "story_id": 48432117,
+        "story_text": "we have a real product (thanks claude) and dozen users signedup still using up their free credits. setup payments because it was so easy, then decided to use their atlas product to incorporate and take a single 6 figure pre-seed funding thru stripe invoice (yes stupid, but we are early). Rest of payments are all free coupon payments for testing purposes. Stripe accepted the pre-seed payment, 3 days ago connected to mercury to send it there and just now closed my account and holding funds for 120 days (oct 5th). Got rejected 2x with an automated message after they asked for clarification.<p>1 invoice payment\n0 real transactions\n0 refunds\n0 chargebacks<p>stripe gets to collect 500-800$ of interest on my account in the meantime<p>FML",
+        "title": "Learn from my lesson, don't take your pre seed through stripe = Account Closure",
+        "updated_at": "2026-06-14T00:40:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joshwprinceton"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN - I've developed a cutting-edge weight loss / metabolic protocol based on some of the top scientific publications over the past year, with support of an industry veteran MD. If you are interested in trying it out - it is only one week per month and we offer a 100% money-back guarantee. josh@useraad.com + you can learn more at useraad.com  - happy to answer any questions!<p>Edit: I did it myself and lost 5-7 pounds during the week and have kept it off."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "New Biochemistry-Based Metabolic Protocol Seeking Alpha Concierge Members"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_joshwprinceton",
+          "story_48431200",
+          "ask_hn"
+        ],
+        "author": "joshwprinceton",
+        "children": [
+          48432701
+        ],
+        "created_at": "2026-06-07T02:33:19Z",
+        "created_at_i": 1780799599,
+        "num_comments": 1,
+        "objectID": "48431200",
+        "points": 3,
+        "story_id": 48431200,
+        "story_text": "Hi HN - I&#x27;ve developed a cutting-edge weight loss &#x2F; metabolic protocol based on some of the top scientific publications over the past year, with support of an industry veteran MD. If you are interested in trying it out - it is only one week per month and we offer a 100% money-back guarantee. josh@useraad.com + you can learn more at useraad.com  - happy to answer any questions!<p>Edit: I did it myself and lost 5-7 pounds during the week and have kept it off.",
+        "title": "New Biochemistry-Based Metabolic Protocol Seeking Alpha Concierge Members",
+        "updated_at": "2026-06-07T12:17:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "david3289"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ForgeLite is the most minimalized git.\nRepo:https://github.com/3289david/forgelite\nFeatures\nRepositories — public/private, fork, star, file browser, README rendering, commit history\nIssues — open, comment, close, Markdown body\nPull Requests — real git diffs, code review comments, merge via git\nGit CLI — full HTTP smart protocol (git clone/push/pull works out of the box)\nWeb Hosting — push to gh-pages branch, served at /:user/:repo/pages/\nAuth — JWT cookies (web) + HTTP Basic Auth / Personal Access Tokens (git CLI)\nREST API — full JSON API for all resources\nWhat do you think about this?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ForgeLite-The Most Minimalized Git"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_david3289",
+          "story_48430937",
+          "ask_hn"
+        ],
+        "author": "david3289",
+        "created_at": "2026-06-07T01:40:00Z",
+        "created_at_i": 1780796400,
+        "num_comments": 0,
+        "objectID": "48430937",
+        "points": 2,
+        "story_id": 48430937,
+        "story_text": "ForgeLite is the most minimalized git.\nRepo:https:&#x2F;&#x2F;github.com&#x2F;3289david&#x2F;forgelite\nFeatures\nRepositories — public&#x2F;private, fork, star, file browser, README rendering, commit history\nIssues — open, comment, close, Markdown body\nPull Requests — real git diffs, code review comments, merge via git\nGit CLI — full HTTP smart protocol (git clone&#x2F;push&#x2F;pull works out of the box)\nWeb Hosting — push to gh-pages branch, served at &#x2F;:user&#x2F;:repo&#x2F;pages&#x2F;\nAuth — JWT cookies (web) + HTTP Basic Auth &#x2F; Personal Access Tokens (git CLI)\nREST API — full JSON API for all resources\nWhat do you think about this?",
+        "title": "ForgeLite-The Most Minimalized Git",
+        "updated_at": "2026-06-07T02:08:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "d0able"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Besides hacker news, of course."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Where do you get the latest updates about AI?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_d0able",
+          "story_48430864",
+          "ask_hn"
+        ],
+        "author": "d0able",
+        "children": [
+          48436358,
+          48430882,
+          48443408
+        ],
+        "created_at": "2026-06-07T01:24:55Z",
+        "created_at_i": 1780795495,
+        "num_comments": 3,
+        "objectID": "48430864",
+        "points": 5,
+        "story_id": 48430864,
+        "story_text": "Besides hacker news, of course.",
+        "title": "Ask HN: Where do you get the latest updates about AI?",
+        "updated_at": "2026-06-08T10:17:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lucasacosta_"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built a slack message to code-fix app, so that you just paste the slack message and it figures out what repo is it about (down to which specific branch, worktree), providing a fix or hand off prompt at the end.<p>My goal is to learn about business by actually doing it and got a hard stop, impostor syndrome, at this step of having it almost ready and looking in the wild without knowing how to find if this is really valuable to someone else than me.<p>I know this is nothing new, but I'd love some human wisdom! What would you do to get unstuck at this point and validate your idea? Or what do you normally do at this point?<p>ps: this is my shout for help, frustrated after several hours of working through TOS, payments services and all that stuff. Learned a lot but now I look ahead and I'm shocked. So I need to learn what's next"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you manage distribution after building?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lucasacosta_",
+          "story_48430217",
+          "ask_hn"
+        ],
+        "author": "lucasacosta_",
+        "children": [
+          48432140,
+          48493254
+        ],
+        "created_at": "2026-06-06T23:38:34Z",
+        "created_at_i": 1780789114,
+        "num_comments": 5,
+        "objectID": "48430217",
+        "points": 4,
+        "story_id": 48430217,
+        "story_text": "I built a slack message to code-fix app, so that you just paste the slack message and it figures out what repo is it about (down to which specific branch, worktree), providing a fix or hand off prompt at the end.<p>My goal is to learn about business by actually doing it and got a hard stop, impostor syndrome, at this step of having it almost ready and looking in the wild without knowing how to find if this is really valuable to someone else than me.<p>I know this is nothing new, but I&#x27;d love some human wisdom! What would you do to get unstuck at this point and validate your idea? Or what do you normally do at this point?<p>ps: this is my shout for help, frustrated after several hours of working through TOS, payments services and all that stuff. Learned a lot but now I look ahead and I&#x27;m shocked. So I need to learn what&#x27;s next",
+        "title": "Ask HN: How do you manage distribution after building?",
+        "updated_at": "2026-06-23T14:40:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kaycebasques"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I donated to one of the main political parties in the USA a few years back. I must have left my email and phone number, or they found it. Big mistake. Now I get hundreds of emails and texts from random political candidates, none of whom I have ever said I explicitly support, or really have any context about whatsoever. So it seems like the political party has my email and number in some central list, and they distribute it to all of their candidates to use. Is that correct? Is there anything I can do to get my contact info off this terrible, terrible list?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How to get my contact info off US political party's list"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kaycebasques",
+          "story_48429285",
+          "ask_hn"
+        ],
+        "author": "kaycebasques",
+        "children": [
+          48429837,
+          48431769,
+          48432051
+        ],
+        "created_at": "2026-06-06T21:42:50Z",
+        "created_at_i": 1780782170,
+        "num_comments": 3,
+        "objectID": "48429285",
+        "points": 10,
+        "story_id": 48429285,
+        "story_text": "I donated to one of the main political parties in the USA a few years back. I must have left my email and phone number, or they found it. Big mistake. Now I get hundreds of emails and texts from random political candidates, none of whom I have ever said I explicitly support, or really have any context about whatsoever. So it seems like the political party has my email and number in some central list, and they distribute it to all of their candidates to use. Is that correct? Is there anything I can do to get my contact info off this terrible, terrible list?",
+        "title": "Ask HN: How to get my contact info off US political party's list",
+        "updated_at": "2026-06-08T23:46:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "asxndu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am looking for a resource or community where I can meet VCS.<p>The r/AngelInvestors  subreddit seems to be good. I came across it completely by mistake.<p>Any other resources where I can meet proactive VCs actually interested in Investing in start-ups?<p>Also, Are there other programs like YC? I know of very few."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Where to Meet VCs?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_asxndu",
+          "story_48428362",
+          "ask_hn"
+        ],
+        "author": "asxndu",
+        "created_at": "2026-06-06T19:51:50Z",
+        "created_at_i": 1780775510,
+        "num_comments": 0,
+        "objectID": "48428362",
+        "points": 1,
+        "story_id": 48428362,
+        "story_text": "I am looking for a resource or community where I can meet VCS.<p>The r&#x2F;AngelInvestors  subreddit seems to be good. I came across it completely by mistake.<p>Any other resources where I can meet proactive VCs actually interested in Investing in start-ups?<p>Also, Are there other programs like YC? I know of very few.",
+        "title": "Ask HN: Where to Meet VCs?",
+        "updated_at": "2026-06-16T17:32:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "toomuchtodo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When you click “hide” on a thread, expected behavior is the thread is visible in https://news.ycombinator.com/hidden?id={username} when logged in. Inquiring to see if others can reproduce this potential bug.<p>Thank you!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are your hidden links missing?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_toomuchtodo",
+          "story_48428172",
+          "ask_hn"
+        ],
+        "author": "toomuchtodo",
+        "children": [
+          48429341,
+          48429422,
+          48437572
+        ],
+        "created_at": "2026-06-06T19:32:45Z",
+        "created_at_i": 1780774365,
+        "num_comments": 3,
+        "objectID": "48428172",
+        "points": 4,
+        "story_id": 48428172,
+        "story_text": "When you click “hide” on a thread, expected behavior is the thread is visible in https:&#x2F;&#x2F;news.ycombinator.com&#x2F;hidden?id={username} when logged in. Inquiring to see if others can reproduce this potential bug.<p>Thank you!",
+        "title": "Ask HN: Are your hidden links missing?",
+        "updated_at": "2026-06-08T01:10:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bprasanna"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "After a day's effort i have developed a outlook add-in. when i went into Microsoft Partner Center i didn't find an option for `Microsoft Marketplace offers` which is supposed to be the place to publish office add-ins. Then when i went through the documentation, i realized only companies can publish add-ins to Microsoft 365 apps! Is that the case? Any workaround for this? I actually went to Stackoverflow and searched, but couldn't find any info on this. ChatGPT or Claude referred the documentation and summarized what was there in the document. Any help on this will help me decide whether to develop the add-on further or stop at this point."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Can't a developer publish add-on for Outlook in Microsoft Marketplace?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bprasanna",
+          "story_48427735",
+          "ask_hn"
+        ],
+        "author": "bprasanna",
+        "children": [
+          48430004
+        ],
+        "created_at": "2026-06-06T18:44:48Z",
+        "created_at_i": 1780771488,
+        "num_comments": 1,
+        "objectID": "48427735",
+        "points": 5,
+        "story_id": 48427735,
+        "story_text": "After a day&#x27;s effort i have developed a outlook add-in. when i went into Microsoft Partner Center i didn&#x27;t find an option for `Microsoft Marketplace offers` which is supposed to be the place to publish office add-ins. Then when i went through the documentation, i realized only companies can publish add-ins to Microsoft 365 apps! Is that the case? Any workaround for this? I actually went to Stackoverflow and searched, but couldn&#x27;t find any info on this. ChatGPT or Claude referred the documentation and summarized what was there in the document. Any help on this will help me decide whether to develop the add-on further or stop at this point.",
+        "title": "Ask HN: Can't a developer publish add-on for Outlook in Microsoft Marketplace?",
+        "updated_at": "2026-06-07T05:37:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "krrishd"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was your best experience with a VC?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_krrishd",
+          "story_48427454",
+          "ask_hn"
+        ],
+        "author": "krrishd",
+        "children": [
+          48429475,
+          48428476
+        ],
+        "created_at": "2026-06-06T18:13:23Z",
+        "created_at_i": 1780769603,
+        "num_comments": 2,
+        "objectID": "48427454",
+        "points": 3,
+        "story_id": 48427454,
+        "title": "Ask HN: What was your best experience with a VC?",
+        "updated_at": "2026-06-07T02:05:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shoushen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "# A Wild Idea: Abstract Reality with Ontology<p>## Background\nLarge language models (LLMs) debuted with GPT-3 back in June 2020. After roughly five to six years of development, I believe the technology is still in its infancy, with massive room for improvement. A major priority is building powerful models that run on fewer resources, especially capable models that can operate smoothly on CPUs.<p>More crucially, the engineering ecosystem around LLMs is also at an early stage. Many unresolved challenges remain. Among them, *hallucinations* have become a major bottleneck, greatly limiting LLMs' adoption in real-world production scenarios.<p>I’ve come to a thought: relying purely on natural language to interact with LLMs — the so-called prompt engineering — may have been a wrong direction from the very start.<p>Fundamentally, an LLM is a mathematical computation system that takes linguistic tokens as its basic computing units. Problems like hallucinations and alignment issues are not flaws inherent to the models themselves. Instead, they arise from our improper usage patterns.<p>We input plain text and expect accurate, high-quality responses. We feed large chunks of text and expect the model to fully understand and remember all the information. This direct text-input-text-output workflow, in my opinion, is fundamentally flawed.<p>## Ontology as an Intermediate Layer\nI propose inserting a transitional layer between humans and LLMs: a human-defined semantic space that strictly maps to the real world. All conversational semantics will be converted via this layer, ensuring every element involved in the LLM’s computation is authentic and reliable.<p>This layer can be built by introducing *ontology* into AI agents. While many teams are already working on this field, most of them only build ontologies for narrow, isolated domains. Every party has to develop its own domain-specific ontology, which also explains the extremely high operating costs of companies like Palantir.<p>## The Radical Idea\nWe invest enormous resources, measured in trillions, to train large models. Why not spend a fraction of that cost to abstract the entire real world into a unified semantic space based on ontology and knowledge graphs?<p>## Final Thoughts\nArtificial intelligence has long had three major schools of thought: *symbolism*, *connectionism*, and *behaviorism*.<p>OpenAI’s ChatGPT has proven that scaling up is the key to unlocking the full potential of connectionism. Could it be that symbolism and behaviorism are also stuck in stagnation simply because they have never been scaled to a comparable level?<p>If we apply the brute-force scaling approach to symbolism and behaviorism on a massive scale, will we also see disruptive qualitative leaps?<p>Last but not least: why not integrate symbolism (ontology), connectionism (LLMs) and behaviorism (reinforcement learning) together via AI agents? I believe this combination is the true path forward for artificial intelligence."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A wild idea: Abstract reality using ontology"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shoushen",
+          "story_48427178",
+          "ask_hn"
+        ],
+        "author": "shoushen",
+        "children": [
+          48430845
+        ],
+        "created_at": "2026-06-06T17:40:51Z",
+        "created_at_i": 1780767651,
+        "num_comments": 1,
+        "objectID": "48427178",
+        "points": 3,
+        "story_id": 48427178,
+        "story_text": "# A Wild Idea: Abstract Reality with Ontology<p>## Background\nLarge language models (LLMs) debuted with GPT-3 back in June 2020. After roughly five to six years of development, I believe the technology is still in its infancy, with massive room for improvement. A major priority is building powerful models that run on fewer resources, especially capable models that can operate smoothly on CPUs.<p>More crucially, the engineering ecosystem around LLMs is also at an early stage. Many unresolved challenges remain. Among them, *hallucinations* have become a major bottleneck, greatly limiting LLMs&#x27; adoption in real-world production scenarios.<p>I’ve come to a thought: relying purely on natural language to interact with LLMs — the so-called prompt engineering — may have been a wrong direction from the very start.<p>Fundamentally, an LLM is a mathematical computation system that takes linguistic tokens as its basic computing units. Problems like hallucinations and alignment issues are not flaws inherent to the models themselves. Instead, they arise from our improper usage patterns.<p>We input plain text and expect accurate, high-quality responses. We feed large chunks of text and expect the model to fully understand and remember all the information. This direct text-input-text-output workflow, in my opinion, is fundamentally flawed.<p>## Ontology as an Intermediate Layer\nI propose inserting a transitional layer between humans and LLMs: a human-defined semantic space that strictly maps to the real world. All conversational semantics will be converted via this layer, ensuring every element involved in the LLM’s computation is authentic and reliable.<p>This layer can be built by introducing *ontology* into AI agents. While many teams are already working on this field, most of them only build ontologies for narrow, isolated domains. Every party has to develop its own domain-specific ontology, which also explains the extremely high operating costs of companies like Palantir.<p>## The Radical Idea\nWe invest enormous resources, measured in trillions, to train large models. Why not spend a fraction of that cost to abstract the entire real world into a unified semantic space based on ontology and knowledge graphs?<p>## Final Thoughts\nArtificial intelligence has long had three major schools of thought: *symbolism*, *connectionism*, and *behaviorism*.<p>OpenAI’s ChatGPT has proven that scaling up is the key to unlocking the full potential of connectionism. Could it be that symbolism and behaviorism are also stuck in stagnation simply because they have never been scaled to a comparable level?<p>If we apply the brute-force scaling approach to symbolism and behaviorism on a massive scale, will we also see disruptive qualitative leaps?<p>Last but not least: why not integrate symbolism (ontology), connectionism (LLMs) and behaviorism (reinforcement learning) together via AI agents? I believe this combination is the true path forward for artificial intelligence.",
+        "title": "A wild idea: Abstract reality using ontology",
+        "updated_at": "2026-06-07T01:22:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kingleopold"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Spacex and all future datacenters plans, since when we have remotely close to any building and mainting tech for big project in space? does just sending satellites counts as datacenter level building and related?<p>Cars still can't even fully drive themselves in the road that are designed specifically for them. but now they will be building datacenter in 3D space with insane complexity and power levels? With what tech? Makes no sense"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Does anyone know since when we are close to building in space?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kingleopold",
+          "story_48427124",
+          "ask_hn"
+        ],
+        "author": "kingleopold",
+        "children": [
+          48431525,
+          48427185
+        ],
+        "created_at": "2026-06-06T17:34:27Z",
+        "created_at_i": 1780767267,
+        "num_comments": 2,
+        "objectID": "48427124",
+        "points": 6,
+        "story_id": 48427124,
+        "story_text": "Spacex and all future datacenters plans, since when we have remotely close to any building and mainting tech for big project in space? does just sending satellites counts as datacenter level building and related?<p>Cars still can&#x27;t even fully drive themselves in the road that are designed specifically for them. but now they will be building datacenter in 3D space with insane complexity and power levels? With what tech? Makes no sense",
+        "title": "Does anyone know since when we are close to building in space?",
+        "updated_at": "2026-06-07T14:26:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amichail"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Given that modern AI can automate routine programming, maybe CS professors weren't just being snobbish in the way they looked down on programming in their lectures even though most of their students were going to become programmers."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Were CS profs right to look down on programming in light of modern AI?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_amichail",
+          "story_48425236",
+          "ask_hn"
+        ],
+        "author": "amichail",
+        "children": [
+          48426069,
+          48425405,
+          48433428
+        ],
+        "created_at": "2026-06-06T13:58:58Z",
+        "created_at_i": 1780754338,
+        "num_comments": 3,
+        "objectID": "48425236",
+        "points": 6,
+        "story_id": 48425236,
+        "story_text": "Given that modern AI can automate routine programming, maybe CS professors weren&#x27;t just being snobbish in the way they looked down on programming in their lectures even though most of their students were going to become programmers.",
+        "title": "Ask HN: Were CS profs right to look down on programming in light of modern AI?",
+        "updated_at": "2026-06-09T04:53:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "desinxstudio"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Play here: https://predatorvoid.com/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Predator Void – A free browser-based stealth survival game"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_desinxstudio",
+          "story_48424395",
+          "ask_hn"
+        ],
+        "author": "desinxstudio",
+        "children": [
+          48424490
+        ],
+        "created_at": "2026-06-06T12:29:41Z",
+        "created_at_i": 1780748981,
+        "num_comments": 3,
+        "objectID": "48424395",
+        "points": 3,
+        "story_id": 48424395,
+        "story_text": "Play here: https:&#x2F;&#x2F;predatorvoid.com&#x2F;",
+        "title": "Predator Void – A free browser-based stealth survival game",
+        "updated_at": "2026-06-18T06:55:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sajjadws"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My name is Sajjad Arvin. I have been teaching web programming, Flutter, and native Android development for about 6 years.<p>The idea of MIZ started when I wanted to introduce programming in my new courses using Sass. I felt that Sass, because of its relatively simple syntax, would be easier for students to learn and understand. My plan was to finish the course by having the students build a mini framework based on Sass.<p>At the end of the course, this mini framework—although very simple—was designed and tested in an HTML template project, and it successfully passed its initial test. We were all happy with this achievement and wanted to share it with others.<p>I gathered the students and suggested that we choose a name for it. Everyone proposed different names, and I also suggested the name MIZ. We put all the names to a vote, and in the end, “MIZ” was selected.<p>After that, we also voted for a color scheme, and burgundy was chosen as the main color.<p>Later, we purchased a domain called eazymizy.com to host the website where we introduced MIZ and published its documentation.<p>The students were genuinely passionate about the project, and they worked on it with great dedication until the first version was completed.<p>From that point on, instead of using well-known frameworks like Bootstrap in our projects, we started using MIZ. Once it proved itself in real projects, we began developing it further for all developers interested in frontend frameworks.<p>It has been about two years since the early days of building MIZ, and we are still actively developing it to provide a faster development experience and a more structured approach for everyone.<p>I would sincerely love to hear your feedback about your experience with this framework, so we can improve and deliver more practical and useful features tailored to developers' needs.<p>Website:\nhttps://eazymizy.com"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Miz Framework Story"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sajjadws",
+          "story_48423917",
+          "ask_hn"
+        ],
+        "author": "sajjadws",
+        "children": [
+          48427709,
+          48424437
+        ],
+        "created_at": "2026-06-06T11:36:22Z",
+        "created_at_i": 1780745782,
+        "num_comments": 9,
+        "objectID": "48423917",
+        "points": 7,
+        "story_id": 48423917,
+        "story_text": "My name is Sajjad Arvin. I have been teaching web programming, Flutter, and native Android development for about 6 years.<p>The idea of MIZ started when I wanted to introduce programming in my new courses using Sass. I felt that Sass, because of its relatively simple syntax, would be easier for students to learn and understand. My plan was to finish the course by having the students build a mini framework based on Sass.<p>At the end of the course, this mini framework—although very simple—was designed and tested in an HTML template project, and it successfully passed its initial test. We were all happy with this achievement and wanted to share it with others.<p>I gathered the students and suggested that we choose a name for it. Everyone proposed different names, and I also suggested the name MIZ. We put all the names to a vote, and in the end, “MIZ” was selected.<p>After that, we also voted for a color scheme, and burgundy was chosen as the main color.<p>Later, we purchased a domain called eazymizy.com to host the website where we introduced MIZ and published its documentation.<p>The students were genuinely passionate about the project, and they worked on it with great dedication until the first version was completed.<p>From that point on, instead of using well-known frameworks like Bootstrap in our projects, we started using MIZ. Once it proved itself in real projects, we began developing it further for all developers interested in frontend frameworks.<p>It has been about two years since the early days of building MIZ, and we are still actively developing it to provide a faster development experience and a more structured approach for everyone.<p>I would sincerely love to hear your feedback about your experience with this framework, so we can improve and deliver more practical and useful features tailored to developers&#x27; needs.<p>Website:\nhttps:&#x2F;&#x2F;eazymizy.com",
+        "title": "Miz Framework Story",
+        "updated_at": "2026-06-11T16:54:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "techman001"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI dual-host voices with a focus on the FLOSS community support that extended its functionality since it was EOL'd in 2022.<p>https://www.youtube.com/watch?v=I84LsH8SMQE"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mecrisp-Stellaris Forth Deep Dive Podcast"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_techman001",
+          "story_48423361",
+          "ask_hn"
+        ],
+        "author": "techman001",
+        "created_at": "2026-06-06T10:12:58Z",
+        "created_at_i": 1780740778,
+        "num_comments": 0,
+        "objectID": "48423361",
+        "points": 2,
+        "story_id": 48423361,
+        "story_text": "AI dual-host voices with a focus on the FLOSS community support that extended its functionality since it was EOL&#x27;d in 2022.<p>https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=I84LsH8SMQE",
+        "title": "Mecrisp-Stellaris Forth Deep Dive Podcast",
+        "updated_at": "2026-06-06T14:15:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "picketpocket826"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What would it be? \nYou are optimising for positive impact and transformation."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: You can upload one technical skill into all human brains overnight?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_picketpocket826",
+          "story_48423199",
+          "ask_hn"
+        ],
+        "author": "picketpocket826",
+        "children": [
+          48423477,
+          48423323,
+          48423378,
+          48432160
+        ],
+        "created_at": "2026-06-06T09:49:19Z",
+        "created_at_i": 1780739359,
+        "num_comments": 4,
+        "objectID": "48423199",
+        "points": 2,
+        "story_id": 48423199,
+        "story_text": "What would it be? \nYou are optimising for positive impact and transformation.",
+        "title": "Ask HN: You can upload one technical skill into all human brains overnight?",
+        "updated_at": "2026-06-08T15:42:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "secondary_op"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi folks, to further inflate GPU prices through stupidity and greed, it seems that right now certain entities are trying to resurrect the GPU mining craze. They are trying to reinvent PoW as something useful through AI compute, but it seems that what they ended up with is just snake oil and vaporware.<p>There is circumstantial evidence that, among others, NVIDIA and Together AI are behind it in one way or another.<p>Together AI hosts LLM inference on their own GPUs. Together AI subsidizes this inference from the profits of $PRL (Pearl), but miners with their GPUs in the Pearl network are not running actual inference. They are running useless PoW in an AI trench coat. &quot;Useful&quot; is snake oil, but more wasted compute, more greed, and higher prices are very real."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Pearl's \"useful\" PoW AI mining is vaporware"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_secondary_op",
+          "story_48422809",
+          "ask_hn"
+        ],
+        "author": "secondary_op",
+        "children": [
+          48422810
+        ],
+        "created_at": "2026-06-06T08:45:40Z",
+        "created_at_i": 1780735540,
+        "num_comments": 1,
+        "objectID": "48422809",
+        "points": 4,
+        "story_id": 48422809,
+        "story_text": "Hi folks, to further inflate GPU prices through stupidity and greed, it seems that right now certain entities are trying to resurrect the GPU mining craze. They are trying to reinvent PoW as something useful through AI compute, but it seems that what they ended up with is just snake oil and vaporware.<p>There is circumstantial evidence that, among others, NVIDIA and Together AI are behind it in one way or another.<p>Together AI hosts LLM inference on their own GPUs. Together AI subsidizes this inference from the profits of $PRL (Pearl), but miners with their GPUs in the Pearl network are not running actual inference. They are running useless PoW in an AI trench coat. &quot;Useful&quot; is snake oil, but more wasted compute, more greed, and higher prices are very real.",
+        "title": "Tell HN: Pearl's \"useful\" PoW AI mining is vaporware",
+        "updated_at": "2026-06-06T14:16:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lebronocta"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm mainly looking for tools and resources, ideally focusing on open-source, open-access, and free options. Any suggestions on the presentation approach, along with any dos and don'ts, would be very welcome."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How should we teach digital research workflows to undergrad philosophy students?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lebronocta",
+          "story_48422480",
+          "ask_hn"
+        ],
+        "author": "lebronocta",
+        "children": [
+          48422733
+        ],
+        "created_at": "2026-06-06T07:46:53Z",
+        "created_at_i": 1780732013,
+        "num_comments": 1,
+        "objectID": "48422480",
+        "points": 2,
+        "story_id": 48422480,
+        "story_text": "I&#x27;m mainly looking for tools and resources, ideally focusing on open-source, open-access, and free options. Any suggestions on the presentation approach, along with any dos and don&#x27;ts, would be very welcome.",
+        "title": "How should we teach digital research workflows to undergrad philosophy students?",
+        "updated_at": "2026-06-07T00:39:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "signa11"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "39C3: The art of text rendering (Nicolas Rougier)"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_signa11",
+          "story_48422104",
+          "ask_hn"
+        ],
+        "author": "signa11",
+        "created_at": "2026-06-06T06:46:50Z",
+        "created_at_i": 1780728410,
+        "num_comments": 0,
+        "objectID": "48422104",
+        "points": 2,
+        "story_id": 48422104,
+        "title": "39C3: The art of text rendering (Nicolas Rougier)",
+        "updated_at": "2026-06-06T14:17:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaway2037"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: For non-hackers/nerds, why do you read HN?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_throwaway2037",
+          "story_48422099",
+          "ask_hn"
+        ],
+        "author": "throwaway2037",
+        "children": [
+          48422230,
+          48422718,
+          48431468,
+          48427422,
+          48422138,
+          48427105,
+          48422116
+        ],
+        "created_at": "2026-06-06T06:46:10Z",
+        "created_at_i": 1780728370,
+        "num_comments": 5,
+        "objectID": "48422099",
+        "points": 5,
+        "story_id": 48422099,
+        "title": "Ask HN: For non-hackers/nerds, why do you read HN?",
+        "updated_at": "2026-06-12T13:14:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akashwadhwani35"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;The Intern&quot;<p>Because it's really useful, brilliant, and requires constant supervision.<p>Cheaper than full-time employees, and young, full of hope, and hardworking."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What would you name your own LLM?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akashwadhwani35",
+          "story_48422004",
+          "ask_hn"
+        ],
+        "author": "akashwadhwani35",
+        "children": [
+          48422027,
+          48442155
+        ],
+        "created_at": "2026-06-06T06:31:29Z",
+        "created_at_i": 1780727489,
+        "num_comments": 3,
+        "objectID": "48422004",
+        "points": 4,
+        "story_id": 48422004,
+        "story_text": "&quot;The Intern&quot;<p>Because it&#x27;s really useful, brilliant, and requires constant supervision.<p>Cheaper than full-time employees, and young, full of hope, and hardworking.",
+        "title": "Ask HN: What would you name your own LLM?",
+        "updated_at": "2026-06-10T13:22:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Neobecomer"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Recently I have built a open-source project wanted to share it but the post is getting flagged I don't know why. Pretty new here."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Been trying to post and I am getting flagged for it"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Neobecomer",
+          "story_48421780",
+          "ask_hn"
+        ],
+        "author": "Neobecomer",
+        "children": [
+          48422698,
+          48422564,
+          48423507,
+          48421826,
+          48422292
+        ],
+        "created_at": "2026-06-06T05:45:13Z",
+        "created_at_i": 1780724713,
+        "num_comments": 10,
+        "objectID": "48421780",
+        "points": 3,
+        "story_id": 48421780,
+        "story_text": "Recently I have built a open-source project wanted to share it but the post is getting flagged I don&#x27;t know why. Pretty new here.",
+        "title": "Been trying to post and I am getting flagged for it",
+        "updated_at": "2026-06-08T13:02:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "themasterchief"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For context, I am a final-year math + CS undergraduate considering pursuing a career in theoretical robotics, particularly in continual learning and the development of robots that can learn from and adapt to / navigate their environments in a human-like manner. One concern I have, however, is that such research might advance AGI timelines. Specficially, it seems possible that architectures developed for continual learning in robots could transfer to general AGI systems (even if the AGI systems are non-embodied, since capabilities such as continual adaptation and long-term objective pursuit may generalize beyond physical tasks.)\nIs this a valid concern, and is it a common view within the AI safety community? I.e. would mainstream AI safety researchers view either of these directions as meaningfully contributing to AGI capabilities? Or are there strong reasons to believe that work on continual learning in robotics would not significantly accelerate AGI timelines? Would appreciate honest perspectives.<p>TLDR: Is it very likely that robotics capabilities research meaningfully accelerates AGI timelines? If so, why?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Does robotics capabilities research accelerate AGI timelines?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_themasterchief",
+          "story_48421508",
+          "ask_hn"
+        ],
+        "author": "themasterchief",
+        "children": [
+          48421568
+        ],
+        "created_at": "2026-06-06T04:51:34Z",
+        "created_at_i": 1780721494,
+        "num_comments": 1,
+        "objectID": "48421508",
+        "points": 8,
+        "story_id": 48421508,
+        "story_text": "For context, I am a final-year math + CS undergraduate considering pursuing a career in theoretical robotics, particularly in continual learning and the development of robots that can learn from and adapt to &#x2F; navigate their environments in a human-like manner. One concern I have, however, is that such research might advance AGI timelines. Specficially, it seems possible that architectures developed for continual learning in robots could transfer to general AGI systems (even if the AGI systems are non-embodied, since capabilities such as continual adaptation and long-term objective pursuit may generalize beyond physical tasks.)\nIs this a valid concern, and is it a common view within the AI safety community? I.e. would mainstream AI safety researchers view either of these directions as meaningfully contributing to AGI capabilities? Or are there strong reasons to believe that work on continual learning in robotics would not significantly accelerate AGI timelines? Would appreciate honest perspectives.<p>TLDR: Is it very likely that robotics capabilities research meaningfully accelerates AGI timelines? If so, why?",
+        "title": "Ask HN: Does robotics capabilities research accelerate AGI timelines?",
+        "updated_at": "2026-06-06T14:46:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ekami"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Genuine question.<p>Over the past six months, there hasn’t been a single day where I’ve checked the HN Best RSS feed without seeing a post about how AI “writes bad code,” “introduces bugs,” “creates technical debt,” or something along those lines.<p>I’ll probably make a lot of enemies by saying this, but do people realize that code is just a means to an end?<p>Users don’t care whether the code was written by AI or by hand, or which framework you used. They care that the product works.<p>I say this as someone who has spent more than 20 years honing their craft as a software engineer.<p>Let’s face it: by the time I manually ship version 1.0 of a product, the AI-assisted version could have been deployed 10x faster. By then, enough real-world feedback would have surfaced to identify the major issues, and tools like Claude Code would make it possible to fix and ship version 2.0 at an incredible pace.<p>At some point, execution speed starts to matter more than the elegance of the code."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why is the HN crowd so anti-AI?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Ekami",
+          "story_48420827",
+          "ask_hn"
+        ],
+        "author": "Ekami",
+        "children": [
+          48421063,
+          48421820,
+          48428522,
+          48422401,
+          48420937,
+          48428675,
+          48422553,
+          48421848,
+          48421846,
+          48423298,
+          48421229,
+          48430560,
+          48428224,
+          48421155,
+          48428629,
+          48426862,
+          48422058,
+          48423572,
+          48421128,
+          48421180,
+          48424011,
+          48431654,
+          48421433,
+          48421499,
+          48421766,
+          48422229,
+          48420851,
+          48422395,
+          48420961,
+          48421262,
+          48420935,
+          48422397,
+          48421234,
+          48421647,
+          48421708,
+          48421669,
+          48421501,
+          48422694,
+          48428882,
+          48421466,
+          48422755,
+          48434991,
+          48429015,
+          48424287,
+          48421339,
+          48421430,
+          48433939,
+          48428377,
+          48421662,
+          48421781,
+          48421203,
+          48421516,
+          48421559,
+          48420857,
+          48421444,
+          48431337,
+          48421512,
+          48421103,
+          48423520,
+          48421562,
+          48422842,
+          48428795,
+          48422665,
+          48421235,
+          48428902,
+          48421971,
+          48421427,
+          48424028,
+          48484872,
+          48421384,
+          48421407,
+          48422539,
+          48475208,
+          48422106,
+          48420852,
+          48421194,
+          48421169,
+          48421326,
+          48421716,
+          48428625,
+          48421144,
+          48421142,
+          48421972,
+          48421423,
+          48421424,
+          48424938,
+          48429328,
+          48425978,
+          48425700,
+          48428440,
+          48428700,
+          48421570,
+          48429208,
+          48421404,
+          48421978,
+          48423626,
+          48504197,
+          48428403,
+          48421318,
+          48447986,
+          48427491,
+          48421583,
+          48422615,
+          48423483,
+          48421673,
+          48430561,
+          48423869,
+          48421232,
+          48426227,
+          48424493,
+          48421838,
+          48421700,
+          48438410,
+          48441322,
+          48421496,
+          48429721,
+          48423404,
+          48421735,
+          48437974,
+          48424836,
+          48422815,
+          48423690,
+          48423533,
+          48428720,
+          48423274,
+          48421878,
+          48422528,
+          48421137,
+          48429545,
+          48422211,
+          48429871,
+          48429633,
+          48421623,
+          48429968,
+          48421974,
+          48422610,
+          48422134,
+          48429440,
+          48429844,
+          48424243,
+          48428491,
+          48433774,
+          48428351,
+          48422526,
+          48424000,
+          48421428,
+          48423061,
+          48428028,
+          48430530,
+          48442794,
+          48428564,
+          48430250,
+          48422761,
+          48421627,
+          48420863,
+          48422028,
+          48421492,
+          48428543,
+          48431240,
+          48435304,
+          48421363,
+          48425374,
+          48422008,
+          48429490,
+          48425344,
+          48433484,
+          48428230,
+          48421612,
+          48424049,
+          48443568,
+          48444906,
+          48421982,
+          48422703,
+          48422707,
+          48422664,
+          48424558,
+          48451955,
+          48424171,
+          48434870,
+          48424340,
+          48428493,
+          48433450,
+          48421380,
+          48466388,
+          48428380,
+          48423434,
+          48421320,
+          48422017,
+          48428657,
+          48430833,
+          48429449,
+          48422007,
+          48429004,
+          48434338,
+          48442784,
+          48421954,
+          48430128,
+          48430592,
+          48424183,
+          48429997,
+          48421795,
+          48422579,
+          48421219,
+          48428047,
+          48437867,
+          48430347,
+          48422421,
+          48422265,
+          48438544,
+          48423439,
+          48428733,
+          48421653,
+          48422544,
+          48423586,
+          48421998,
+          48429272,
+          48421272,
+          48421237,
+          48421486,
+          48429124,
+          48420982,
+          48429841,
+          48421594,
+          48421688,
+          48421634,
+          48422071,
+          48425818,
+          48426334,
+          48423201,
+          48430011,
+          48426121,
+          48421510,
+          48424160,
+          48426343,
+          48428650,
+          48445498,
+          48428348,
+          48422127,
+          48423525,
+          48422595,
+          48425373,
+          48434358,
+          48422289,
+          48431722,
+          48422714,
+          48421633,
+          48428312,
+          48428613,
+          48422024,
+          48423496,
+          48429572,
+          48425281,
+          48421875,
+          48422232,
+          48422814,
+          48424537,
+          48422118,
+          48424802,
+          48426017,
+          48428982,
+          48431308,
+          48424194,
+          48430522,
+          48504119,
+          48422090,
+          48442059,
+          48421885,
+          48425160,
+          48421374,
+          48430163,
+          48421421,
+          48421883,
+          48427737,
+          48421790,
+          48422804,
+          48430916,
+          48424070,
+          48428603,
+          48443536,
+          48434663,
+          48423680,
+          48442718,
+          48424617,
+          48421498,
+          48430774,
+          48422124,
+          48428931,
+          48421150,
+          48422019,
+          48421687,
+          48507515,
+          48430701,
+          48434164,
+          48421804,
+          48422435,
+          48430026,
+          48423445,
+          48421606,
+          48433352,
+          48427130,
+          48431330,
+          48423878,
+          48429402,
+          48428715,
+          48432415,
+          48421095,
+          48423801,
+          48427057,
+          48421805,
+          48424025,
+          48429249,
+          48422107,
+          48430948,
+          48426725,
+          48424638,
+          48422679,
+          48430504,
+          48489902,
+          48486342,
+          48428478,
+          48429978,
+          48430681,
+          48428770,
+          48420840,
+          48427784,
+          48429931,
+          48421574,
+          48475726,
+          48421359,
+          48431124,
+          48422042,
+          48423559,
+          48430337,
+          48423420,
+          48422269,
+          48431929,
+          48425721,
+          48420934,
+          48421709,
+          48421239,
+          48421811,
+          48428744,
+          48423765,
+          48421409
+        ],
+        "created_at": "2026-06-06T02:31:51Z",
+        "created_at_i": 1780713111,
+        "num_comments": 765,
+        "objectID": "48420827",
+        "points": 463,
+        "story_id": 48420827,
+        "story_text": "Genuine question.<p>Over the past six months, there hasn’t been a single day where I’ve checked the HN Best RSS feed without seeing a post about how AI “writes bad code,” “introduces bugs,” “creates technical debt,” or something along those lines.<p>I’ll probably make a lot of enemies by saying this, but do people realize that code is just a means to an end?<p>Users don’t care whether the code was written by AI or by hand, or which framework you used. They care that the product works.<p>I say this as someone who has spent more than 20 years honing their craft as a software engineer.<p>Let’s face it: by the time I manually ship version 1.0 of a product, the AI-assisted version could have been deployed 10x faster. By then, enough real-world feedback would have surfaced to identify the major issues, and tools like Claude Code would make it possible to fix and ship version 2.0 at an incredible pace.<p>At some point, execution speed starts to matter more than the elegance of the code.",
+        "title": "Ask HN: Why is the HN crowd so anti-AI?",
+        "updated_at": "2026-07-09T23:38:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "locusofself"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I work in big tech. I'm a SWE manager, but I have a half a mind to return to being an IC at some point. I am using LLMs at work (mostly for reporting stuff etc), and for coding personal side projects, and generally trying to keep up with all this agentic stuff.<p>I was never good at leetcode, I snuck my way into SWE and SWE management by way of sysadmin/SRE.<p>I'm considering interviewing at some point in the future, possibly at companies like Google and Meta. Even for Engineering Manager roles, these companies have coding rounds, so I've been &quot;grinding leetcode&quot; slowly.<p>There is a notion floating around that DSA interview questions are quickly becoming obsolete, since you can just ask an LLM for an optimal solution now.<p>Putting aside whether it's good for the brain and for being a good programmer to have these skills sharpened, do you think leetcode style interviews are going the way of the dinosaur, or will they stay or even have a resurgence?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Will your company be doing \"LeetCode\" interviews a year from now?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_locusofself",
+          "story_48420519",
+          "ask_hn"
+        ],
+        "author": "locusofself",
+        "children": [
+          48420577,
+          48420801,
+          48420578,
+          48420545
+        ],
+        "created_at": "2026-06-06T01:38:33Z",
+        "created_at_i": 1780709913,
+        "num_comments": 7,
+        "objectID": "48420519",
+        "points": 3,
+        "story_id": 48420519,
+        "story_text": "I work in big tech. I&#x27;m a SWE manager, but I have a half a mind to return to being an IC at some point. I am using LLMs at work (mostly for reporting stuff etc), and for coding personal side projects, and generally trying to keep up with all this agentic stuff.<p>I was never good at leetcode, I snuck my way into SWE and SWE management by way of sysadmin&#x2F;SRE.<p>I&#x27;m considering interviewing at some point in the future, possibly at companies like Google and Meta. Even for Engineering Manager roles, these companies have coding rounds, so I&#x27;ve been &quot;grinding leetcode&quot; slowly.<p>There is a notion floating around that DSA interview questions are quickly becoming obsolete, since you can just ask an LLM for an optimal solution now.<p>Putting aside whether it&#x27;s good for the brain and for being a good programmer to have these skills sharpened, do you think leetcode style interviews are going the way of the dinosaur, or will they stay or even have a resurgence?",
+        "title": "Ask HN: Will your company be doing \"LeetCode\" interviews a year from now?",
+        "updated_at": "2026-06-10T11:20:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tmaly"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you expose your knowledge that you would like different agents or chat interfaces to have access to on a global basis?<p>Is it just a public git repo?<p>In some cases I have seen models struggling to access a public repo."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Knowledge Access for Agents?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tmaly",
+          "story_48419692",
+          "ask_hn"
+        ],
+        "author": "tmaly",
+        "children": [
+          48427043
+        ],
+        "created_at": "2026-06-05T23:26:57Z",
+        "created_at_i": 1780702017,
+        "num_comments": 1,
+        "objectID": "48419692",
+        "points": 3,
+        "story_id": 48419692,
+        "story_text": "How do you expose your knowledge that you would like different agents or chat interfaces to have access to on a global basis?<p>Is it just a public git repo?<p>In some cases I have seen models struggling to access a public repo.",
+        "title": "Ask HN: Knowledge Access for Agents?",
+        "updated_at": "2026-06-06T17:29:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alonsovm44"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would you switch to a systems language with trivial hot reloading?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alonsovm44",
+          "story_48418724",
+          "ask_hn"
+        ],
+        "author": "alonsovm44",
+        "children": [
+          48418729
+        ],
+        "created_at": "2026-06-05T21:42:06Z",
+        "created_at_i": 1780695726,
+        "num_comments": 1,
+        "objectID": "48418724",
+        "points": 2,
+        "story_id": 48418724,
+        "title": "Ask HN: Would you switch to a systems language with trivial hot reloading?",
+        "updated_at": "2026-06-05T23:40:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xg15"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>not directly a tech topic, but maybe one that could be interesting to the crowd here.<p>People have different reasons to go vegan, but my understanding was always that one of the most prominent reasons would be the idea to reduce animal suffering in the long term. Basically, if enough people become vegan, the demand for meat and other animal products would be reduced so much that it would be uneconomical for ranchers to keep lifestock for slaughter - or at least reduce the number of lifestock kept.<p>I think this is interesting, because this would make veganism I believe the largest consumer boycott movement in history and also the largest case study if &quot;voting with your wallet&quot; can actually work.<p>So by now the movement has been around long enough and has entered large part of the mainstream in many countries that it <i>could</i> have an effect.<p>So my question would be, are there any studies or other information if it had actually caused a drop in demand for animal products or reduced the number of lifestock?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Has the vegan movement been effective?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xg15",
+          "story_48417045",
+          "ask_hn"
+        ],
+        "author": "xg15",
+        "children": [
+          48417214,
+          48417397,
+          48420212,
+          48418882
+        ],
+        "created_at": "2026-06-05T19:27:43Z",
+        "created_at_i": 1780687663,
+        "num_comments": 5,
+        "objectID": "48417045",
+        "points": 3,
+        "story_id": 48417045,
+        "story_text": "Hey HN,<p>not directly a tech topic, but maybe one that could be interesting to the crowd here.<p>People have different reasons to go vegan, but my understanding was always that one of the most prominent reasons would be the idea to reduce animal suffering in the long term. Basically, if enough people become vegan, the demand for meat and other animal products would be reduced so much that it would be uneconomical for ranchers to keep lifestock for slaughter - or at least reduce the number of lifestock kept.<p>I think this is interesting, because this would make veganism I believe the largest consumer boycott movement in history and also the largest case study if &quot;voting with your wallet&quot; can actually work.<p>So by now the movement has been around long enough and has entered large part of the mainstream in many countries that it <i>could</i> have an effect.<p>So my question would be, are there any studies or other information if it had actually caused a drop in demand for animal products or reduced the number of lifestock?",
+        "title": "Ask HN: Has the vegan movement been effective?",
+        "updated_at": "2026-06-06T14:36:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "colesantiago"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Next week on June 12th, SpaceX will begin its journey by being owned by Wall Street.<p>This will ultimately lead into enshittification since SpaceX is losing billions and new investors expect regular earnings reports pressuring SpaceX of endless growth, steering them away from their original mission.<p>Unfortunately, this IPO is just one big giant dump on retail investors, pensions and all the rest of it, just to force the entire world's capital to invest in SpaceX.<p>I think it is best to start working on an open source version of SpaceX that isn't owned by Wall Street.<p>What would you like to see in an Open Source SpaceX owned by the community."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How can we make an Open Source version of SpaceX?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_colesantiago",
+          "story_48415983",
+          "ask_hn"
+        ],
+        "author": "colesantiago",
+        "children": [
+          48416474,
+          48416188,
+          48416112,
+          48419163
+        ],
+        "created_at": "2026-06-05T17:55:52Z",
+        "created_at_i": 1780682152,
+        "num_comments": 6,
+        "objectID": "48415983",
+        "points": 2,
+        "story_id": 48415983,
+        "story_text": "Next week on June 12th, SpaceX will begin its journey by being owned by Wall Street.<p>This will ultimately lead into enshittification since SpaceX is losing billions and new investors expect regular earnings reports pressuring SpaceX of endless growth, steering them away from their original mission.<p>Unfortunately, this IPO is just one big giant dump on retail investors, pensions and all the rest of it, just to force the entire world&#x27;s capital to invest in SpaceX.<p>I think it is best to start working on an open source version of SpaceX that isn&#x27;t owned by Wall Street.<p>What would you like to see in an Open Source SpaceX owned by the community.",
+        "title": "Ask HN: How can we make an Open Source version of SpaceX?",
+        "updated_at": "2026-06-07T01:01:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bohdanstefaniuk"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm a backend developer, but I'm interested in a lot of other areas too: frontend, AI, infrastructure, architecture, and system design. I want to keep up with new ideas and advances in all of these.<p>My problem is that most changelogs and news sources throw too much raw information at me. I spend a lot of effort going through it all just to figure out what actually matters. After a while I get overloaded, and then I give up and unsubscribe from everything.<p>So now I'm looking for more curated stuff. Maybe a newsletter, or some people who have a good point of view on software engineering and specific technologies. I want to follow people who filter the noise and explain the interesting parts well.<p>Right now my list is pretty short:\n- Hacker Newsletter\n- Platformer\n- The Pragmatic Engineer<p>What do you read? What newspapers are you subscribe to?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you stay up to date without information overload?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bohdanstefaniuk",
+          "story_48414812",
+          "ask_hn"
+        ],
+        "author": "bohdanstefaniuk",
+        "children": [
+          48427123,
+          48427135,
+          48415223,
+          48415742
+        ],
+        "created_at": "2026-06-05T16:29:36Z",
+        "created_at_i": 1780676976,
+        "num_comments": 4,
+        "objectID": "48414812",
+        "points": 5,
+        "story_id": 48414812,
+        "story_text": "I&#x27;m a backend developer, but I&#x27;m interested in a lot of other areas too: frontend, AI, infrastructure, architecture, and system design. I want to keep up with new ideas and advances in all of these.<p>My problem is that most changelogs and news sources throw too much raw information at me. I spend a lot of effort going through it all just to figure out what actually matters. After a while I get overloaded, and then I give up and unsubscribe from everything.<p>So now I&#x27;m looking for more curated stuff. Maybe a newsletter, or some people who have a good point of view on software engineering and specific technologies. I want to follow people who filter the noise and explain the interesting parts well.<p>Right now my list is pretty short:\n- Hacker Newsletter\n- Platformer\n- The Pragmatic Engineer<p>What do you read? What newspapers are you subscribe to?",
+        "title": "Ask HN: How do you stay up to date without information overload?",
+        "updated_at": "2026-06-07T12:35:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aronowb14"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Saw a YC company has raised 200 million at a billion dollar valuation. https://www.starcloud.com/starcloud-4. Additionally - with the impending spacex ipo this seems like a big focus.<p>Can someone with a stronger physics background explain why anyone would think this is a good idea?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are orbital data centers possible / a good idea?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_aronowb14",
+          "story_48414582",
+          "ask_hn"
+        ],
+        "author": "aronowb14",
+        "children": [
+          48414829,
+          48415875,
+          48415669,
+          48419235,
+          48415276,
+          48417955,
+          48423256,
+          48415832,
+          48414622,
+          48416614,
+          48416599,
+          48421126,
+          48415781,
+          48416885,
+          48414695,
+          48476714,
+          48421886,
+          48415486
+        ],
+        "created_at": "2026-06-05T16:13:43Z",
+        "created_at_i": 1780676023,
+        "num_comments": 43,
+        "objectID": "48414582",
+        "points": 25,
+        "story_id": 48414582,
+        "story_text": "Saw a YC company has raised 200 million at a billion dollar valuation. https:&#x2F;&#x2F;www.starcloud.com&#x2F;starcloud-4. Additionally - with the impending spacex ipo this seems like a big focus.<p>Can someone with a stronger physics background explain why anyone would think this is a good idea?",
+        "title": "Ask HN: Are orbital data centers possible / a good idea?",
+        "updated_at": "2026-07-08T13:03:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Okerew"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Released mCemm a GEMM (General Matrix Multiply) kernel generator for Apple Metal which generates optimized Metal shaders with configurable tile sizes, warp sizes, data types (f16/f32), transpose modes (NN/NT/TN/TT), activations (ReLU/GELU/SiLU), bias and more - https://github.com/MetalLikeCuda/mCemm<p>Fixed installation in https://github.com/Okerew/osxiec and https://github.com/MetalLikeCuda/gpumkat<p>Released https://github.com/MetalLikeCuda/awesome-mlc a list of community maintained metal tools, frameworks, libraries and resources."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MCemm a GEMM (General Matrix Multiply) Kernel Generato"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Okerew",
+          "story_48413972",
+          "ask_hn"
+        ],
+        "author": "Okerew",
+        "created_at": "2026-06-05T15:35:51Z",
+        "created_at_i": 1780673751,
+        "num_comments": 0,
+        "objectID": "48413972",
+        "points": 2,
+        "story_id": 48413972,
+        "story_text": "Released mCemm a GEMM (General Matrix Multiply) kernel generator for Apple Metal which generates optimized Metal shaders with configurable tile sizes, warp sizes, data types (f16&#x2F;f32), transpose modes (NN&#x2F;NT&#x2F;TN&#x2F;TT), activations (ReLU&#x2F;GELU&#x2F;SiLU), bias and more - https:&#x2F;&#x2F;github.com&#x2F;MetalLikeCuda&#x2F;mCemm<p>Fixed installation in https:&#x2F;&#x2F;github.com&#x2F;Okerew&#x2F;osxiec and https:&#x2F;&#x2F;github.com&#x2F;MetalLikeCuda&#x2F;gpumkat<p>Released https:&#x2F;&#x2F;github.com&#x2F;MetalLikeCuda&#x2F;awesome-mlc a list of community maintained metal tools, frameworks, libraries and resources.",
+        "title": "MCemm a GEMM (General Matrix Multiply) Kernel Generato",
+        "updated_at": "2026-06-05T18:31:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dv35z"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello, happy Friday!<p>I am looking to do some in-person &quot;developer boot-up&quot; workshops, and seek your suggestions for &quot;modern tooling&quot;.<p>The background of the participants range from motivated newbie (&quot;I heard you can make your own app with AI!&quot;) to existing software developers who want to get up to speed on modern development for the purposes of building stuff, and getting jobs where AI tools are being used.<p>For those who have been doing software development &amp; &quot;tech&quot; lately using AI tools, and feel they have a great setup &amp; flow - I would love to hear what your dev setup is, what tools you're using and what workflow has been working best for you (and your team).<p>// My Background<p>I have been programming / building for 20+ years, but have not been using AI tools much (aside from hitting up LLM APIs on a few projects).<p>I value open-source, and aim for long-term quality and supportability. Techniques like test-driven development (TDD), using proven / well documented tools, customer-centric development (often pairing with clients), make it easy to do the right thing. If you are familiar with Pivotal Labs, agile &amp; XP - that's the style.<p>These are some of the Upcoming uses-cases for the workshop, and my own personal &quot;IT backlog&quot;:<p>- Create a static &quot;one pager&quot; personal/professional website<p>- Setup a Blog / Static site generator (Pelican), create a simple but stylish theme<p>- Create a simple web app / backend API (FastAPI) tool - form-based calculator, convert X data to PDFs, etc.<p>- Figure out how to have SyncThing autosync the home folder of 3 Linux computers in the house<p>- Backup &amp; archive the photos &amp; video from my iPhone<p>// Tech stack I am currently using:<p>- Operating system: Linux Mint Debian (LMDE)<p>- Editor: VSCodium<p>- Code: Python, HTML/CSS<p>- Server platform: Amazon AWS<p>I am guessing that most workshop participants will be using MacBooks &amp; Windows computers - but a few are on Linux, as I recently did a &quot;Linux install party&quot;.<p>I haven't used any &quot;AI harnesses&quot;, agents or anything like that - but curious what's a good starting point to take best advantage of these tools.<p>Thanks for sharing the knowledge!<p>// JRO"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_dv35z",
+          "story_48413629",
+          "ask_hn"
+        ],
+        "author": "dv35z",
+        "children": [
+          48415342,
+          48414501,
+          48414452,
+          48415440,
+          48416726,
+          48416150,
+          48573279,
+          48420002,
+          48416824,
+          48415093,
+          48415422,
+          48416351,
+          48416056,
+          48414882,
+          48415175,
+          48424303,
+          48414178,
+          48416125,
+          48477063,
+          48416957,
+          48427977,
+          48414239,
+          48414970,
+          48415957,
+          48415024,
+          48416030,
+          48414354,
+          48416366,
+          48414025,
+          48416055,
+          48416648,
+          48414086,
+          48414307,
+          48413889,
+          48451635,
+          48416273,
+          48421333,
+          48419567,
+          48414159,
+          48413801,
+          48415369,
+          48415083,
+          48416282,
+          48414697,
+          48449933,
+          48416261,
+          48416220,
+          48423534,
+          48417150,
+          48432194,
+          48418571,
+          48416733,
+          48415119,
+          48415462,
+          48415368,
+          48413993,
+          48416167,
+          48416064,
+          48417329,
+          48416196,
+          48458548,
+          48414484,
+          48414299,
+          48415340,
+          48414202,
+          48415886,
+          48422944,
+          48414099,
+          48419303,
+          48414780,
+          48430429,
+          48414938,
+          48414420,
+          48416641,
+          48414646,
+          48416832,
+          48596327,
+          48567569,
+          48564442,
+          48531980,
+          48539122,
+          48475183,
+          48471354,
+          48459455,
+          48490066,
+          48431382,
+          48429096,
+          48445507,
+          48443356,
+          48421337,
+          48465685,
+          48429723,
+          48473851,
+          48422045,
+          48460642,
+          48433060,
+          48484450,
+          48453437,
+          48424498,
+          48416771,
+          48418846,
+          48420742,
+          48435506,
+          48422636,
+          48417716,
+          48423479,
+          48483556,
+          48423410,
+          48413805,
+          48436685,
+          48433569,
+          48452676,
+          48420464,
+          48419432,
+          48475621,
+          48414825,
+          48435852,
+          48423157,
+          48470419,
+          48424013,
+          48444624,
+          48420165,
+          48416707,
+          48439031,
+          48413816,
+          48416124,
+          48422328,
+          48415963,
+          48415438,
+          48414455,
+          48460606,
+          48415956,
+          48415231,
+          48416170
+        ],
+        "created_at": "2026-06-05T15:13:54Z",
+        "created_at_i": 1780672434,
+        "num_comments": 136,
+        "objectID": "48413629",
+        "points": 171,
+        "story_id": 48413629,
+        "story_text": "Hello, happy Friday!<p>I am looking to do some in-person &quot;developer boot-up&quot; workshops, and seek your suggestions for &quot;modern tooling&quot;.<p>The background of the participants range from motivated newbie (&quot;I heard you can make your own app with AI!&quot;) to existing software developers who want to get up to speed on modern development for the purposes of building stuff, and getting jobs where AI tools are being used.<p>For those who have been doing software development &amp; &quot;tech&quot; lately using AI tools, and feel they have a great setup &amp; flow - I would love to hear what your dev setup is, what tools you&#x27;re using and what workflow has been working best for you (and your team).<p>&#x2F;&#x2F; My Background<p>I have been programming &#x2F; building for 20+ years, but have not been using AI tools much (aside from hitting up LLM APIs on a few projects).<p>I value open-source, and aim for long-term quality and supportability. Techniques like test-driven development (TDD), using proven &#x2F; well documented tools, customer-centric development (often pairing with clients), make it easy to do the right thing. If you are familiar with Pivotal Labs, agile &amp; XP - that&#x27;s the style.<p>These are some of the Upcoming uses-cases for the workshop, and my own personal &quot;IT backlog&quot;:<p>- Create a static &quot;one pager&quot; personal&#x2F;professional website<p>- Setup a Blog &#x2F; Static site generator (Pelican), create a simple but stylish theme<p>- Create a simple web app &#x2F; backend API (FastAPI) tool - form-based calculator, convert X data to PDFs, etc.<p>- Figure out how to have SyncThing autosync the home folder of 3 Linux computers in the house<p>- Backup &amp; archive the photos &amp; video from my iPhone<p>&#x2F;&#x2F; Tech stack I am currently using:<p>- Operating system: Linux Mint Debian (LMDE)<p>- Editor: VSCodium<p>- Code: Python, HTML&#x2F;CSS<p>- Server platform: Amazon AWS<p>I am guessing that most workshop participants will be using MacBooks &amp; Windows computers - but a few are on Linux, as I recently did a &quot;Linux install party&quot;.<p>I haven&#x27;t used any &quot;AI harnesses&quot;, agents or anything like that - but curious what&#x27;s a good starting point to take best advantage of these tools.<p>Thanks for sharing the knowledge!<p>&#x2F;&#x2F; JRO",
+        "title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-07-08T16:13:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chistev"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How did you discover Hacker News?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_chistev",
+          "story_48413167",
+          "ask_hn"
+        ],
+        "author": "chistev",
+        "children": [
+          48413693,
+          48419527,
+          48425587,
+          48417186,
+          48421133,
+          48421284,
+          48419928,
+          48434891,
+          48457552,
+          48423391,
+          48421251,
+          48417183,
+          48423399,
+          48421231,
+          48445590,
+          48432994,
+          48413962,
+          48427111,
+          48431454,
+          48434629,
+          48416975,
+          48419964,
+          48422762,
+          48430086,
+          48417060,
+          48421247,
+          48427458,
+          48413234,
+          48432156,
+          48423442,
+          48418589,
+          48458932
+        ],
+        "created_at": "2026-06-05T14:38:25Z",
+        "created_at_i": 1780670305,
+        "num_comments": 32,
+        "objectID": "48413167",
+        "points": 10,
+        "story_id": 48413167,
+        "title": "Ask HN: How did you discover Hacker News?",
+        "updated_at": "2026-06-16T22:42:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amichail"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For example, when making an iOS game, you might want to ask the AI look at a screenshot of your game and to generate images with improved graphics.<p>You could then pick one of the AI images that you like and then ask the AI to write Swift code to generate scalable graphics like that for your iOS game.<p>Why is AI image and code generation not currently optimized for this use case?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why isn't AI image generation closely linked with graphics code gen?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_amichail",
+          "story_48412001",
+          "ask_hn"
+        ],
+        "author": "amichail",
+        "children": [
+          48436689,
+          48412065
+        ],
+        "created_at": "2026-06-05T13:10:05Z",
+        "created_at_i": 1780665005,
+        "num_comments": 2,
+        "objectID": "48412001",
+        "points": 3,
+        "story_id": 48412001,
+        "story_text": "For example, when making an iOS game, you might want to ask the AI look at a screenshot of your game and to generate images with improved graphics.<p>You could then pick one of the AI images that you like and then ask the AI to write Swift code to generate scalable graphics like that for your iOS game.<p>Why is AI image and code generation not currently optimized for this use case?",
+        "title": "Ask HN: Why isn't AI image generation closely linked with graphics code gen?",
+        "updated_at": "2026-06-07T17:03:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "John_Ologunebi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fuziondot, a creative growth and digital execution brand helping startups and businesses strengthen their online visibility, positioning, and marketing systems.<p>We recently prepared a useful resource for startups: a Digital Growth Checklist designed to help founders assess their website, content, SEO, social media, and lead generation readiness.<p>I believe Fuziondot may be a good fit for your startup/business resource section. You can review the website here: https://fuziondot.com/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "All-in-One Marketing Dashboard"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_John_Ologunebi",
+          "story_48411965",
+          "ask_hn"
+        ],
+        "author": "John_Ologunebi",
+        "children": [
+          48445169
+        ],
+        "created_at": "2026-06-05T13:07:06Z",
+        "created_at_i": 1780664826,
+        "num_comments": 0,
+        "objectID": "48411965",
+        "points": 1,
+        "story_id": 48411965,
+        "story_text": "Fuziondot, a creative growth and digital execution brand helping startups and businesses strengthen their online visibility, positioning, and marketing systems.<p>We recently prepared a useful resource for startups: a Digital Growth Checklist designed to help founders assess their website, content, SEO, social media, and lead generation readiness.<p>I believe Fuziondot may be a good fit for your startup&#x2F;business resource section. You can review the website here: https:&#x2F;&#x2F;fuziondot.com&#x2F;",
+        "title": "All-in-One Marketing Dashboard",
+        "updated_at": "2026-06-09T13:23:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cx42net"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Following the article from Ted Chiang from TheAtlantic - Artificial intelligence is not conscious, I was wondering if you could suggest me some philosophical books that treat the subject of language, what is consciousness and ideally has some link to what we face today with LLms.<p>These philosphical books could be hundreds of years old but still be on-point with the current discussion, as I'm more interested to think about the philosophical aspect (&quot;what is consciousness&quot;) rather than a deep discussion about what an LLM is (which is, in my view, too soon to be able to grasp in its entirety).<p>Thank you in advance."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Any philosophical books that discuss Consciousness related with LLMs era"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cx42net",
+          "story_48411896",
+          "ask_hn"
+        ],
+        "author": "cx42net",
+        "children": [
+          48412247,
+          48413488
+        ],
+        "created_at": "2026-06-05T13:03:23Z",
+        "created_at_i": 1780664603,
+        "num_comments": 5,
+        "objectID": "48411896",
+        "points": 1,
+        "story_id": 48411896,
+        "story_text": "Following the article from Ted Chiang from TheAtlantic - Artificial intelligence is not conscious, I was wondering if you could suggest me some philosophical books that treat the subject of language, what is consciousness and ideally has some link to what we face today with LLms.<p>These philosphical books could be hundreds of years old but still be on-point with the current discussion, as I&#x27;m more interested to think about the philosophical aspect (&quot;what is consciousness&quot;) rather than a deep discussion about what an LLM is (which is, in my view, too soon to be able to grasp in its entirety).<p>Thank you in advance.",
+        "title": "Ask HN: Any philosophical books that discuss Consciousness related with LLMs era",
+        "updated_at": "2026-06-08T12:46:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UmanaR"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>We started making Tixio as a simple bookmark manager. Then we brought wiki. Users kept rising along with its popularity. Our team grown over time. And one day we realized how we've been spending fortune on different productivity tools for team coordination, still not getting enough of it. That's when we decided to build Tixio as a collaborative workspace that can replace all 5 tools we've been spending on - project manager, chat, whiteboard, HR and CRM.<p>Tixio is a workspace where all of that coexists. You get kanban boards, roadmaps, threaded chat, wikis, a whiteboard canvas, and optional CRM and HR modules. Teams create a workspace, invite members, and everything shares one permission system and one search.<p>On the technical side, real-time collaboration across the canvas and projects was the hardest piece to get right, especially keeping state consistent on mobile. And recently we added meetings, because that was, what we believe was the only thing missing.<p>It runs on web, desktop (Mac/Windows), and mobile (iOS/Android). Still a lot to improve - would genuinely appreciate your honest take."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We built Tixio to replace 5 other expensive tools"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_UmanaR",
+          "story_48411528",
+          "ask_hn"
+        ],
+        "author": "UmanaR",
+        "created_at": "2026-06-05T12:32:20Z",
+        "created_at_i": 1780662740,
+        "num_comments": 0,
+        "objectID": "48411528",
+        "points": 1,
+        "story_id": 48411528,
+        "story_text": "Hi HN,<p>We started making Tixio as a simple bookmark manager. Then we brought wiki. Users kept rising along with its popularity. Our team grown over time. And one day we realized how we&#x27;ve been spending fortune on different productivity tools for team coordination, still not getting enough of it. That&#x27;s when we decided to build Tixio as a collaborative workspace that can replace all 5 tools we&#x27;ve been spending on - project manager, chat, whiteboard, HR and CRM.<p>Tixio is a workspace where all of that coexists. You get kanban boards, roadmaps, threaded chat, wikis, a whiteboard canvas, and optional CRM and HR modules. Teams create a workspace, invite members, and everything shares one permission system and one search.<p>On the technical side, real-time collaboration across the canvas and projects was the hardest piece to get right, especially keeping state consistent on mobile. And recently we added meetings, because that was, what we believe was the only thing missing.<p>It runs on web, desktop (Mac&#x2F;Windows), and mobile (iOS&#x2F;Android). Still a lot to improve - would genuinely appreciate your honest take.",
+        "title": "We built Tixio to replace 5 other expensive tools",
+        "updated_at": "2026-06-05T12:35:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ARMack"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was looking to spin up a small Ubuntu VM and tried to use Azure's free tier with free credit and found it painful to spin up what is a basic VM's due to contradictions in what MS said was available and what the menu selection process actually allowed me to select.<p>How do others find Azure, is it the best environment with good value free tier or have you found the same as I have that it sounds good but reality is different. I'm using AWS now which was genuinely straightforward.<p>I'll look to learn Azure and read all the instructions of course given I assumed it would be easy (that's on me) but if you prefer GCP or AWS or have any other suggestions let me know your pro's and con's."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Azure, GCP, AWS Free Tiers or Something Else"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ARMack",
+          "story_48411335",
+          "ask_hn"
+        ],
+        "author": "ARMack",
+        "children": [
+          48411501,
+          48413474,
+          48411404
+        ],
+        "created_at": "2026-06-05T12:11:27Z",
+        "created_at_i": 1780661487,
+        "num_comments": 4,
+        "objectID": "48411335",
+        "points": 1,
+        "story_id": 48411335,
+        "story_text": "I was looking to spin up a small Ubuntu VM and tried to use Azure&#x27;s free tier with free credit and found it painful to spin up what is a basic VM&#x27;s due to contradictions in what MS said was available and what the menu selection process actually allowed me to select.<p>How do others find Azure, is it the best environment with good value free tier or have you found the same as I have that it sounds good but reality is different. I&#x27;m using AWS now which was genuinely straightforward.<p>I&#x27;ll look to learn Azure and read all the instructions of course given I assumed it would be easy (that&#x27;s on me) but if you prefer GCP or AWS or have any other suggestions let me know your pro&#x27;s and con&#x27;s.",
+        "title": "Ask HN: Azure, GCP, AWS Free Tiers or Something Else",
+        "updated_at": "2026-06-08T09:42:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "desinxstudio"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "www.predatorvoid.com"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "New Free Online Survival Game"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_desinxstudio",
+          "story_48411328",
+          "ask_hn"
+        ],
+        "author": "desinxstudio",
+        "children": [
+          48420592,
+          48411468,
+          48411344,
+          48411340,
+          48411334
+        ],
+        "created_at": "2026-06-05T12:10:58Z",
+        "created_at_i": 1780661458,
+        "num_comments": 2,
+        "objectID": "48411328",
+        "points": 3,
+        "story_id": 48411328,
+        "story_text": "www.predatorvoid.com",
+        "title": "New Free Online Survival Game",
+        "updated_at": "2026-06-06T14:11:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sunshine-o"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I got really tired, as a human, of parsing the standard marketing heavy web we have today.\nI've always loved the simplicity of gopher and gemini web.<p>Recently I found myself manually adding `/llm.txt` to most websites I visit because I find the content for LLMs strait to the point and clear. \nThe only annoyance is web browsers like chrome do not render the markdown.<p>So could the AI revolution actually fix the web for humans as a side effect?<p>Do you find yourself doing the same?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is the web for machines (/llm.txt) the one we wished we had as humans?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sunshine-o",
+          "story_48410589",
+          "ask_hn"
+        ],
+        "author": "sunshine-o",
+        "children": [
+          48410632,
+          48411135,
+          48410783,
+          48410647,
+          48410944,
+          48410725,
+          48411615,
+          48410824,
+          48410685,
+          48410707,
+          48411241,
+          48411513,
+          48411602,
+          48411095,
+          48413126,
+          48410818,
+          48410768
+        ],
+        "created_at": "2026-06-05T10:43:28Z",
+        "created_at_i": 1780656208,
+        "num_comments": 57,
+        "objectID": "48410589",
+        "points": 36,
+        "story_id": 48410589,
+        "story_text": "I got really tired, as a human, of parsing the standard marketing heavy web we have today.\nI&#x27;ve always loved the simplicity of gopher and gemini web.<p>Recently I found myself manually adding `&#x2F;llm.txt` to most websites I visit because I find the content for LLMs strait to the point and clear. \nThe only annoyance is web browsers like chrome do not render the markdown.<p>So could the AI revolution actually fix the web for humans as a side effect?<p>Do you find yourself doing the same?",
+        "title": "Ask HN: Is the web for machines (/llm.txt) the one we wished we had as humans?",
+        "updated_at": "2026-06-17T06:57:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lanycrost"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm working with AWS for many years, and currently I'm working in product with suppose to be cloud agnostic.<p>I started with AWS and now it's time to spin up it into Azure (because many enterprises using azure for some reason).<p>I started in US EAST region in azure and at beginning I had an issue with Postgres Flexible, raised a support ticket, and in the result they recommended me to move to another region. The overall conversation to say this takes about 1 day.<p>I've moved to US EAST 2, and after AKS deployment I stuck with vCPU (Standard Dasv7 Family vCPUs) quote (100) and here we go again... They send me the same message template as they do for previous ticket...<p>&gt; ...\n&gt; Your ask for quota has been reviewed and backlogged at this time. It will be reviewed again when additional capacity becomes available. We do not have an ETA for when your request can be fulfilled but please be assured that we will continue working on it and update you as soon as we have more details to share and/or process the request. \n&gt; ...<p>I'm already waiting for more then 1 day, and there is no responses from their support.<p>Long Story Short: Because I don't want to wait for days, weeks and months to be able to test infrastructure on Azure. If it will be my decision I just stop and forget about this nightmare. Please suggest the regions and instance types with which I will not have issues."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is Azure capacity this constraind or am I doing it wrong?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lanycrost",
+          "story_48410522",
+          "ask_hn"
+        ],
+        "author": "lanycrost",
+        "children": [
+          48411265,
+          48410604,
+          48412935,
+          48415985,
+          48411695,
+          48411687,
+          48435961,
+          48419581,
+          48428141
+        ],
+        "created_at": "2026-06-05T10:34:04Z",
+        "created_at_i": 1780655644,
+        "num_comments": 15,
+        "objectID": "48410522",
+        "points": 11,
+        "story_id": 48410522,
+        "story_text": "I&#x27;m working with AWS for many years, and currently I&#x27;m working in product with suppose to be cloud agnostic.<p>I started with AWS and now it&#x27;s time to spin up it into Azure (because many enterprises using azure for some reason).<p>I started in US EAST region in azure and at beginning I had an issue with Postgres Flexible, raised a support ticket, and in the result they recommended me to move to another region. The overall conversation to say this takes about 1 day.<p>I&#x27;ve moved to US EAST 2, and after AKS deployment I stuck with vCPU (Standard Dasv7 Family vCPUs) quote (100) and here we go again... They send me the same message template as they do for previous ticket...<p>&gt; ...\n&gt; Your ask for quota has been reviewed and backlogged at this time. It will be reviewed again when additional capacity becomes available. We do not have an ETA for when your request can be fulfilled but please be assured that we will continue working on it and update you as soon as we have more details to share and&#x2F;or process the request. \n&gt; ...<p>I&#x27;m already waiting for more then 1 day, and there is no responses from their support.<p>Long Story Short: Because I don&#x27;t want to wait for days, weeks and months to be able to test infrastructure on Azure. If it will be my decision I just stop and forget about this nightmare. Please suggest the regions and instance types with which I will not have issues.",
+        "title": "Ask HN: Is Azure capacity this constraind or am I doing it wrong?",
+        "updated_at": "2026-06-12T17:56:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kivuhub"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OFFRES D’EMPLOI EN RDC – DISPONIBLES SUR KIVUHUB EMPLOIS (KIVUHUB.NET) \n--------------------------------------------------------------<p>De nombreuses organisations recrutent actuellement. Consultez les détails et postulez directement via les liens ci-dessous :<p>Assistant(e) E-MEAL (Suivi, Évaluation, Redevabilité et Apprentissage) – Geneva Call – Bunia\n https://kivuhub.net/job/geneva-call-assistant-e-meal-suivi-evaluation-redevabilite-et-apprentissage-buniard-congo/\n---------------------------------------------------------------------<p>*Project Officer RCCE (Communication des Risques et Engagement Communautaire) – CRS – Goma*\n https://kivuhub.net/job/catholic-relief-services-project-officer-rcce-communication-de-risques-et-lengagement-communautaire-goma/\n-------------------------------------------------------------------<p><pre><code>  **Programme Associate G-6 (03 postes) – UNICEF – Kinshasa**\n https://kivuhub.net/job/unicef-programme-associate-g-6-3-positions-ft-kinshasa-democratic-republic-of-congo/</code></pre>\n------------------------------------------------------------------------<p>*Chauffeur – CRS – Bunia*\n https://kivuhub.net/job/crs-chauffeur-ouvert-aux-residents-de-bunia-uniquement/\n-----------------------------------------------------------------<p><pre><code>  **Chef(fe) d’Équipe Réponse VBG – DRC – Goma**\n https://kivuhub.net/job/danish-refugee-council-drcchef-fe-dequipe-reponse-vbg-violence-basee-sur-le-genre-goma/</code></pre>\n-----------------------------------------------------------------------<p>*Expert(e) en Développement Territorial et Gouvernance Locale – Enabel – Beni*\n https://kivuhub.net/job/enabel-expert-e-en-developpement-territorial-et-gouvernance-locale_-beni-rd-congo/\n----------------------------------------------------------------------<p>*Programme &amp; Finance Support Officer – CAFOD – Goma*\n https://kivuhub.net/job/cafod-programme-and-finance-support-officer-27022-per-year-goma/\n------------------------------------------------------------------------<p>*AI Governance &amp; Data Protection Expert – SOCHA LLC*\n https://kivuhub.net/job/socha-llc-ai-governance-data-protection-expert/\n-----------------------------------------------------------<p>*Nexus Programme Officer – CAFOD – Goma*\n https://kivuhub.net/job/catholic-agency-for-overseas-development-nexus-programme-officer-gomausd-33795-year-fixed-term-2-years/\n-------------------------------------------------------------------<p>*Senior Officer Protection de l’Enfant – IRC – Goma, Bukavu, Kinshasa &amp; Bunia*\n https://kivuhub.net/job/irc-senior-officer-protection-de-lenfantsenior-officer-protection-de-lenfantgoma-bukavu-kinshasabunia/\n----------------------------------------------------------------------------<p>*Kabobo-Luama Landscape Director – WCS – RDC*\n https://kivuhub.net/job/wcs-kabobo-luama-landscape-director-democratic-republic-of-congo-drc/\n-----------------------------------------------------------------<p>*Conseiller(ère) Technique à la Gestion des Aires Protégées – WCS – Gabon*\n https://kivuhub.net/job/wcs-gabon-conseillerere-technique-a-la-gestion-des-aires-protegees/\n---------------------------------------------------------------------------------------<p>Plus d'offres :\nhttps://kivuhub.net/jobs<p>Partagez largement avec vos collègues, amis et réseaux professionnels !<p>#EmploiRDC #JobsRDC #KivuHub #UNICEF #CRS #DRC #CAFOD #WCS #Enabel #IRC #GenevaCall #MEAL #Protection #AI"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Offres D'emploi EN RDC – Disponibles Sur Kivuhub Emplois (Kivuhub.net) June 2026"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kivuhub",
+          "story_48410237",
+          "ask_hn"
+        ],
+        "author": "kivuhub",
+        "created_at": "2026-06-05T09:50:41Z",
+        "created_at_i": 1780653041,
+        "num_comments": 0,
+        "objectID": "48410237",
+        "points": 1,
+        "story_id": 48410237,
+        "story_text": "OFFRES D’EMPLOI EN RDC – DISPONIBLES SUR KIVUHUB EMPLOIS (KIVUHUB.NET) \n--------------------------------------------------------------<p>De nombreuses organisations recrutent actuellement. Consultez les détails et postulez directement via les liens ci-dessous :<p>Assistant(e) E-MEAL (Suivi, Évaluation, Redevabilité et Apprentissage) – Geneva Call – Bunia\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;geneva-call-assistant-e-meal-suivi-evaluation-redevabilite-et-apprentissage-buniard-congo&#x2F;\n---------------------------------------------------------------------<p>*Project Officer RCCE (Communication des Risques et Engagement Communautaire) – CRS – Goma*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;catholic-relief-services-project-officer-rcce-communication-de-risques-et-lengagement-communautaire-goma&#x2F;\n-------------------------------------------------------------------<p><pre><code>  **Programme Associate G-6 (03 postes) – UNICEF – Kinshasa**\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;unicef-programme-associate-g-6-3-positions-ft-kinshasa-democratic-republic-of-congo&#x2F;</code></pre>\n------------------------------------------------------------------------<p>*Chauffeur – CRS – Bunia*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;crs-chauffeur-ouvert-aux-residents-de-bunia-uniquement&#x2F;\n-----------------------------------------------------------------<p><pre><code>  **Chef(fe) d’Équipe Réponse VBG – DRC – Goma**\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;danish-refugee-council-drcchef-fe-dequipe-reponse-vbg-violence-basee-sur-le-genre-goma&#x2F;</code></pre>\n-----------------------------------------------------------------------<p>*Expert(e) en Développement Territorial et Gouvernance Locale – Enabel – Beni*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;enabel-expert-e-en-developpement-territorial-et-gouvernance-locale_-beni-rd-congo&#x2F;\n----------------------------------------------------------------------<p>*Programme &amp; Finance Support Officer – CAFOD – Goma*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;cafod-programme-and-finance-support-officer-27022-per-year-goma&#x2F;\n------------------------------------------------------------------------<p>*AI Governance &amp; Data Protection Expert – SOCHA LLC*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;socha-llc-ai-governance-data-protection-expert&#x2F;\n-----------------------------------------------------------<p>*Nexus Programme Officer – CAFOD – Goma*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;catholic-agency-for-overseas-development-nexus-programme-officer-gomausd-33795-year-fixed-term-2-years&#x2F;\n-------------------------------------------------------------------<p>*Senior Officer Protection de l’Enfant – IRC – Goma, Bukavu, Kinshasa &amp; Bunia*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;irc-senior-officer-protection-de-lenfantsenior-officer-protection-de-lenfantgoma-bukavu-kinshasabunia&#x2F;\n----------------------------------------------------------------------------<p>*Kabobo-Luama Landscape Director – WCS – RDC*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;wcs-kabobo-luama-landscape-director-democratic-republic-of-congo-drc&#x2F;\n-----------------------------------------------------------------<p>*Conseiller(ère) Technique à la Gestion des Aires Protégées – WCS – Gabon*\n https:&#x2F;&#x2F;kivuhub.net&#x2F;job&#x2F;wcs-gabon-conseillerere-technique-a-la-gestion-des-aires-protegees&#x2F;\n---------------------------------------------------------------------------------------<p>Plus d&#x27;offres :\nhttps:&#x2F;&#x2F;kivuhub.net&#x2F;jobs<p>Partagez largement avec vos collègues, amis et réseaux professionnels !<p>#EmploiRDC #JobsRDC #KivuHub #UNICEF #CRS #DRC #CAFOD #WCS #Enabel #IRC #GenevaCall #MEAL #Protection #AI",
+        "title": "Offres D'emploi EN RDC – Disponibles Sur Kivuhub Emplois (Kivuhub.net) June 2026",
+        "updated_at": "2026-06-05T09:53:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "antihero"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Our org GitHub just got compromised massively by a supply-chain attack. Vectors are<p>* Claude hooks<p>* Gemini hooks<p>* Cursor setup<p>* VScode tasks<p>It adds all of the above to execute node .github/setup.js, an obfuscated file.<p>Check infected: `rg --hidden --no-ignore 'node .github/setup.js`<p>It spreads by adding mimic'd skip-ci commits to open PRs which then get merged.<p>Payload is obfuscated, available on request.<p>If this is already a known one in the world, apologies, it hit us at around 10PM BST last night, the damage would have been incredible.<p>Still trying to identify the original source."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Supply chain attack alert: .github/setup.js"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_antihero",
+          "story_48409869",
+          "ask_hn"
+        ],
+        "author": "antihero",
+        "children": [
+          48410785,
+          48427616,
+          48419261,
+          48411379,
+          48414185,
+          48411112
+        ],
+        "created_at": "2026-06-05T08:59:36Z",
+        "created_at_i": 1780649976,
+        "num_comments": 14,
+        "objectID": "48409869",
+        "points": 27,
+        "story_id": 48409869,
+        "story_text": "Our org GitHub just got compromised massively by a supply-chain attack. Vectors are<p>* Claude hooks<p>* Gemini hooks<p>* Cursor setup<p>* VScode tasks<p>It adds all of the above to execute node .github&#x2F;setup.js, an obfuscated file.<p>Check infected: `rg --hidden --no-ignore &#x27;node .github&#x2F;setup.js`<p>It spreads by adding mimic&#x27;d skip-ci commits to open PRs which then get merged.<p>Payload is obfuscated, available on request.<p>If this is already a known one in the world, apologies, it hit us at around 10PM BST last night, the damage would have been incredible.<p>Still trying to identify the original source.",
+        "title": "Supply chain attack alert: .github/setup.js",
+        "updated_at": "2026-06-09T19:21:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bartek_gdn"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I often on the lookout for new and exiting papers in the ML space.<p>Please share a few that you feel are worth sharing<p>Cheers!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: AI researchers – what's a recent paper that recently blew your mind?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bartek_gdn",
+          "story_48409450",
+          "ask_hn"
+        ],
+        "author": "bartek_gdn",
+        "children": [
+          48414943,
+          48409754
+        ],
+        "created_at": "2026-06-05T08:04:13Z",
+        "created_at_i": 1780646653,
+        "num_comments": 1,
+        "objectID": "48409450",
+        "points": 6,
+        "story_id": 48409450,
+        "story_text": "I often on the lookout for new and exiting papers in the ML space.<p>Please share a few that you feel are worth sharing<p>Cheers!",
+        "title": "Ask HN: AI researchers – what's a recent paper that recently blew your mind?",
+        "updated_at": "2026-06-05T16:38:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nicknotfound"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey everyone,\nMy name is Nick,I’m a high school student working on a personal project. I want to build a GPS tracking app, something similar to Strava. To be honest, I’m a little overwhelmed about where to start and what order I should tackle things in.<p>Since this is a solo project, I’m pretty sure I’ll be handling almost everything myself, from planning and UI design to development, server setup, and testing.<p>For those who have experience building apps, especially mapping, fitness, or GPS-related apps, could you share what you think the development roadmap should look like?<p>One feature I definitely want is real-time team tracking, so users can see their teammates’ locations during activities. I’d also like the app to send notifications if someone has an accident, such as a fall while cycling, or if a teammate gets too far away from the group or the planned route.<p>Thanks &lt;3 ( btw sorry for my grammar ,it’s terrible )"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Creating a GPS Tracking App from Scratch. What Should Come First?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Nicknotfound",
+          "story_48409385",
+          "ask_hn"
+        ],
+        "author": "Nicknotfound",
+        "children": [
+          48411007,
+          48428121
+        ],
+        "created_at": "2026-06-05T07:52:47Z",
+        "created_at_i": 1780645967,
+        "num_comments": 1,
+        "objectID": "48409385",
+        "points": 1,
+        "story_id": 48409385,
+        "story_text": "Hey everyone,\nMy name is Nick,I’m a high school student working on a personal project. I want to build a GPS tracking app, something similar to Strava. To be honest, I’m a little overwhelmed about where to start and what order I should tackle things in.<p>Since this is a solo project, I’m pretty sure I’ll be handling almost everything myself, from planning and UI design to development, server setup, and testing.<p>For those who have experience building apps, especially mapping, fitness, or GPS-related apps, could you share what you think the development roadmap should look like?<p>One feature I definitely want is real-time team tracking, so users can see their teammates’ locations during activities. I’d also like the app to send notifications if someone has an accident, such as a fall while cycling, or if a teammate gets too far away from the group or the planned route.<p>Thanks &lt;3 ( btw sorry for my grammar ,it’s terrible )",
+        "title": "Creating a GPS Tracking App from Scratch. What Should Come First?",
+        "updated_at": "2026-06-07T00:38:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "camillomiller"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am an LLM-skeptic: I think it’s an insanely good technology, propped up by the most egregious financial scam of all time.\nI would be open to be proven wrong though, so please: can anyone point at decent, profit making implementations of LLMs in companies? Can you point at a fully automated saas that’s actually turning a real relevant profit? \nNo, the promises of future profits don’t count. And no, the companies profiting from selling shovels to gold rushers also don’t count. \nThanks"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do you know any company that's making money with LLMs?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_camillomiller",
+          "story_48409315",
+          "ask_hn"
+        ],
+        "author": "camillomiller",
+        "children": [
+          48426210,
+          48409414,
+          48421025
+        ],
+        "created_at": "2026-06-05T07:40:44Z",
+        "created_at_i": 1780645244,
+        "num_comments": 5,
+        "objectID": "48409315",
+        "points": 4,
+        "story_id": 48409315,
+        "story_text": "I am an LLM-skeptic: I think it’s an insanely good technology, propped up by the most egregious financial scam of all time.\nI would be open to be proven wrong though, so please: can anyone point at decent, profit making implementations of LLMs in companies? Can you point at a fully automated saas that’s actually turning a real relevant profit? \nNo, the promises of future profits don’t count. And no, the companies profiting from selling shovels to gold rushers also don’t count. \nThanks",
+        "title": "Ask HN: Do you know any company that's making money with LLMs?",
+        "updated_at": "2026-06-08T08:52:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pixelcadet"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building a marketplace that connects 3D designers, local printer owners, and shoppers.<p>The model: designers upload files, nearby makers fulfill physical orders, shoppers get something printed and shipped locally.<p>The cold start problem is three-sided (no makers means no physical orders, no designers means no catalog, no shoppers means nobody joins \nthe supply side).<p>For now, I'm recruiting makers first (I have a small existing community of printer owners from Patreon). But I'm curious how others have thought about how to approach this.<p>Did anyone here solve a multi-sided cold start without outside capital?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you solve cold start on a three-sided 3d printing marketplace?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pixelcadet",
+          "story_48409247",
+          "ask_hn"
+        ],
+        "author": "pixelcadet",
+        "children": [
+          48410103,
+          48493279
+        ],
+        "created_at": "2026-06-05T07:33:21Z",
+        "created_at_i": 1780644801,
+        "num_comments": 1,
+        "objectID": "48409247",
+        "points": 1,
+        "story_id": 48409247,
+        "story_text": "I&#x27;m building a marketplace that connects 3D designers, local printer owners, and shoppers.<p>The model: designers upload files, nearby makers fulfill physical orders, shoppers get something printed and shipped locally.<p>The cold start problem is three-sided (no makers means no physical orders, no designers means no catalog, no shoppers means nobody joins \nthe supply side).<p>For now, I&#x27;m recruiting makers first (I have a small existing community of printer owners from Patreon). But I&#x27;m curious how others have thought about how to approach this.<p>Did anyone here solve a multi-sided cold start without outside capital?",
+        "title": "Ask HN: How do you solve cold start on a three-sided 3d printing marketplace?",
+        "updated_at": "2026-06-12T03:42:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "allaboutdata"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How are you guys auditing your Parquet file layouts for metadata bloat?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_allaboutdata",
+          "story_48409237",
+          "ask_hn"
+        ],
+        "author": "allaboutdata",
+        "children": [
+          48409476
+        ],
+        "created_at": "2026-06-05T07:32:22Z",
+        "created_at_i": 1780644742,
+        "num_comments": 0,
+        "objectID": "48409237",
+        "points": 1,
+        "story_id": 48409237,
+        "title": "Ask HN: How are you guys auditing your Parquet file layouts for metadata bloat?",
+        "updated_at": "2026-06-05T08:09:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jph"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use Debian in a regulated industry and I'm teaching people how to code in the context of large projects. I'm also the author of the Assertables crate that provides better Rust assert macros for testing.<p>https://crates.io/crates/assertables<p>I would like to donate toward getting Assertables into Debian stable. I can afford to offer $100 to any Debian Developer who has the suitable skill and trust to accomplish this.<p>Success looks like this: long term, Rust crates in Debian stable can optionally use Assertables for their testing i.e. all the source code is available in Debian.<p>I know $100 isn't enough to cover all the work. It's what I can do to help move things forward.<p>I'm doing this because I believe in funding open source as much as possible."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "$100 to a Debian Developer who helps Assertables Rust testing for 14/Forky"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jph",
+          "story_48409145",
+          "ask_hn"
+        ],
+        "author": "jph",
+        "created_at": "2026-06-05T07:20:20Z",
+        "created_at_i": 1780644020,
+        "num_comments": 0,
+        "objectID": "48409145",
+        "points": 2,
+        "story_id": 48409145,
+        "story_text": "I use Debian in a regulated industry and I&#x27;m teaching people how to code in the context of large projects. I&#x27;m also the author of the Assertables crate that provides better Rust assert macros for testing.<p>https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;assertables<p>I would like to donate toward getting Assertables into Debian stable. I can afford to offer $100 to any Debian Developer who has the suitable skill and trust to accomplish this.<p>Success looks like this: long term, Rust crates in Debian stable can optionally use Assertables for their testing i.e. all the source code is available in Debian.<p>I know $100 isn&#x27;t enough to cover all the work. It&#x27;s what I can do to help move things forward.<p>I&#x27;m doing this because I believe in funding open source as much as possible.",
+        "title": "$100 to a Debian Developer who helps Assertables Rust testing for 14/Forky",
+        "updated_at": "2026-06-05T09:26:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "codetiger"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For the last couple of days, Claude Code cli is behaving very slow in responding. Especially after 4.8 got released, but today, it has come down to totally unusable. And yet there is no issues reported in status page. \nI've raised a Github issue but still no response for last couple of hours."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is Claude Code down, or its just my region?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_codetiger",
+          "story_48409106",
+          "ask_hn"
+        ],
+        "author": "codetiger",
+        "children": [
+          48409119,
+          48409446
+        ],
+        "created_at": "2026-06-05T07:17:19Z",
+        "created_at_i": 1780643839,
+        "num_comments": 1,
+        "objectID": "48409106",
+        "points": 5,
+        "story_id": 48409106,
+        "story_text": "For the last couple of days, Claude Code cli is behaving very slow in responding. Especially after 4.8 got released, but today, it has come down to totally unusable. And yet there is no issues reported in status page. \nI&#x27;ve raised a Github issue but still no response for last couple of hours.",
+        "title": "Ask HN: Is Claude Code down, or its just my region?",
+        "updated_at": "2026-06-07T07:10:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "attogram"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Your company is GDPR compliant.<p>&quot;Here's your company MacBook.\nIts name is first-last-comp-dept.\nUser name is first.last.\nGo be a productive dev”<p>Then you deployed coding agents.<p>&quot;We have a DPA from Google. Use Gemini coding agent and be a more productive dev!&quot;<p>Your full name is now always in agent context.\nYour full name is sent to USA datacenters.<p>Devs deserve PII protection too."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Devs Deserve PII Protection from Agents"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_attogram",
+          "story_48408729",
+          "ask_hn"
+        ],
+        "author": "attogram",
+        "children": [
+          48408929,
+          48409093
+        ],
+        "created_at": "2026-06-05T06:25:36Z",
+        "created_at_i": 1780640736,
+        "num_comments": 1,
+        "objectID": "48408729",
+        "points": 2,
+        "story_id": 48408729,
+        "story_text": "Your company is GDPR compliant.<p>&quot;Here&#x27;s your company MacBook.\nIts name is first-last-comp-dept.\nUser name is first.last.\nGo be a productive dev”<p>Then you deployed coding agents.<p>&quot;We have a DPA from Google. Use Gemini coding agent and be a more productive dev!&quot;<p>Your full name is now always in agent context.\nYour full name is sent to USA datacenters.<p>Devs deserve PII protection too.",
+        "title": "Devs Deserve PII Protection from Agents",
+        "updated_at": "2026-06-05T14:15:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "anantayush"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Laptop makers are sacrificing ports and repairability for designs"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_anantayush",
+          "story_48408562",
+          "ask_hn"
+        ],
+        "author": "anantayush",
+        "children": [
+          48408565
+        ],
+        "created_at": "2026-06-05T06:02:18Z",
+        "created_at_i": 1780639338,
+        "num_comments": 0,
+        "objectID": "48408562",
+        "points": 2,
+        "story_id": 48408562,
+        "title": "Laptop makers are sacrificing ports and repairability for designs",
+        "updated_at": "2026-06-05T14:16:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "muoco-01"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I want to try to gain a general knowledge of the shortcomings of Hermes and OpenClaw."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are the biggest problems you find in OpenClaw/Hermes?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_muoco-01",
+          "story_48408434",
+          "ask_hn"
+        ],
+        "author": "muoco-01",
+        "children": [
+          48408542,
+          48540234
+        ],
+        "created_at": "2026-06-05T05:44:25Z",
+        "created_at_i": 1780638265,
+        "num_comments": 1,
+        "objectID": "48408434",
+        "points": 2,
+        "story_id": 48408434,
+        "story_text": "I want to try to gain a general knowledge of the shortcomings of Hermes and OpenClaw.",
+        "title": "Ask HN: What are the biggest problems you find in OpenClaw/Hermes?",
+        "updated_at": "2026-06-16T06:48:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "circuitfable"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is Apple taking AI seriously?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_circuitfable",
+          "story_48408157",
+          "ask_hn"
+        ],
+        "author": "circuitfable",
+        "children": [
+          48409575,
+          48408353,
+          48408265,
+          48408553
+        ],
+        "created_at": "2026-06-05T04:57:39Z",
+        "created_at_i": 1780635459,
+        "num_comments": 4,
+        "objectID": "48408157",
+        "points": 2,
+        "story_id": 48408157,
+        "title": "Ask HN: Is Apple taking AI seriously?",
+        "updated_at": "2026-06-07T09:09:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tesnix"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you track FIRE progress?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Tesnix",
+          "story_48407833",
+          "ask_hn"
+        ],
+        "author": "Tesnix",
+        "children": [
+          48407952,
+          48407922
+        ],
+        "created_at": "2026-06-05T04:13:47Z",
+        "created_at_i": 1780632827,
+        "num_comments": 2,
+        "objectID": "48407833",
+        "points": 2,
+        "story_id": 48407833,
+        "title": "Ask HN: How do you track FIRE progress?",
+        "updated_at": "2026-06-05T06:57:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akashwadhwani35"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think more of California or Bears?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: macOS went from Cat to California, next what?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_akashwadhwani35",
+          "story_48407522",
+          "ask_hn"
+        ],
+        "author": "akashwadhwani35",
+        "children": [
+          48407723
+        ],
+        "created_at": "2026-06-05T03:17:25Z",
+        "created_at_i": 1780629445,
+        "num_comments": 2,
+        "objectID": "48407522",
+        "points": 3,
+        "story_id": 48407522,
+        "story_text": "I think more of California or Bears?",
+        "title": "Ask HN: macOS went from Cat to California, next what?",
+        "updated_at": "2026-06-05T14:32:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "JohnnyZhang483"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I recently did some tests on two MCPs with identical functionalities. Turns out one of them has really bad performance. So I wanna share those bad MCP design patterns that cause this.<p>It all started when I wrote an MCP Server (MCP-A) for a to-do list app. Later, the app officially released its own MCP Server (MCP-B). Both MCPs have the same functionalities and hit the same backend API.<p>The experiment is set up as follows:<p>- Both MCP Servers connect to the same ToDo list account, and it will be reset after each test.\n- 40 test prompts to simulate typical use cases for these MCPs.\n- The test was conducted with the same model, system prompt, and Agent framework<p>Here are the results:<p>| Metric              | MCP-A       | MCP-B       | Gap   |\n| ------------------- | ----------- | ----------- | ----- |\n| Tool Desc Length    | 11,464      | 3,682       | —     |\n| Pass Rate           | 36/40 (90%) | 36/40 (90%) | Same  |\n| Total input tokens  | 637,244     | 3,174,329   | 4.98× |\n| Total output tokens | 17,301      | 23,238      | 1.34× |\n| Total Agent steps   | 122         | 157         | 1.29× |\n| Total time          | 597s        | 676s        | 1.13× |<p>---<p>The result shows that MCP-B took 35 more ReAct loops to complete 40 test cases compared to MCP-A, which means 30% more output tokens. I examined the log and found that the root cause is poor query tool design.<p>Take the `search tool` for example, its job is to find a todo item in the ToDo list. In MCP-B, this tool returns this:<p>{\n  &quot;id&quot;: &quot;6a1916b48f08cb3a4c857ed0&quot;,\n  &quot;title&quot;: &quot;buy some groceries&quot;,\n  &quot;url&quot;: &quot;https://todo.example.com/tasks/6a1916b48f08cb3a4c857ed0&quot;\n}<p>But other CRUD operations require `project_id`, and `search_tool` doesn't return it. So the Agent has to call another tool `get_task_by_id`. On the other hand, MCP-A's query_tasks returns all necessary info to perform the next action in a single call:<p>Task 1:\nID: 6a19143e8f084a8c8101612f\nTitle: buy some groceries\nProject ID: 6a1914378f084a8c810160a9\nStart Date: 2025-07-19 10:00:00\nPriority: Medium\nStatus: Active\nUnfiltered API Data was dumped into context window<p>If MCP returns pure API results to the Agent's context unprocessed, the Agent's context window will accumulate very fast.<p>Take MCP-B's `create_task` tool, for example. Its job is to create a to-do item. This is what this tool returns:<p>{\n  &quot;id&quot;: &quot;6a180de78f086bdead0608be&quot;,\n  &quot;projectId&quot;: &quot;inbox125587327&quot;,\n  .....\n  &quot;createdTime&quot;: &quot;2026-05-28T09:41:59+0000&quot;,\n  &quot;modifiedTime&quot;: &quot;2026-05-28T09:41:59+0000&quot;,\n  &quot;focusSummaries&quot;: null\n}<p>These 600+ characters mean nothing to the Agent's task, but are still dumped into the Agent's context. On the other hand, MCP-A's create_tasks does a layer of filtering and formatting. This little tweak makes a huge difference in input token usage.<p>Another issue is tool count. More tools mean a larger candidate set for the model to choose from, which directly increases decision difficulty. In MCP-A, 47 tools were compressed down to 14, covering the same functionality with fewer tools.<p>---<p>So here are my takeaways on good MCP tool design:\n- When designing a tool, think about what the Agent will need next, not just what it's asking for right now. Return enough context in the result so the Agent can take the next action without making another round-trip.<p>- Too many tools will increase the model's decision burden. So it'd be better to minimize the number of tools within an MCP. Make sure they don't overlap functionalities.<p>- When your MCP returns data to the LLM, try to keep it LLM-friendly, which means readable. You can filter out unnecessary fields from the API response and format the data, rather than passing through raw JSON.<p>---<p>All the tests above were run by MCP-Eval. It's an MCP Server benchmarking tool. If you want to check your MCP's performance, feel free to check this out.<p>https://github.com/Code-MonkeyZhang/mcp-eval"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Bad MCP design costs your agent 5x more tokens"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_JohnnyZhang483",
+          "story_48407391",
+          "ask_hn"
+        ],
+        "author": "JohnnyZhang483",
+        "children": [
+          48436319,
+          48574476,
+          48434932,
+          48468059,
+          48418032,
+          48443471,
+          48474092,
+          48450734
+        ],
+        "created_at": "2026-06-05T02:53:15Z",
+        "created_at_i": 1780627995,
+        "num_comments": 1,
+        "objectID": "48407391",
+        "points": 17,
+        "story_id": 48407391,
+        "story_text": "I recently did some tests on two MCPs with identical functionalities. Turns out one of them has really bad performance. So I wanna share those bad MCP design patterns that cause this.<p>It all started when I wrote an MCP Server (MCP-A) for a to-do list app. Later, the app officially released its own MCP Server (MCP-B). Both MCPs have the same functionalities and hit the same backend API.<p>The experiment is set up as follows:<p>- Both MCP Servers connect to the same ToDo list account, and it will be reset after each test.\n- 40 test prompts to simulate typical use cases for these MCPs.\n- The test was conducted with the same model, system prompt, and Agent framework<p>Here are the results:<p>| Metric              | MCP-A       | MCP-B       | Gap   |\n| ------------------- | ----------- | ----------- | ----- |\n| Tool Desc Length    | 11,464      | 3,682       | —     |\n| Pass Rate           | 36&#x2F;40 (90%) | 36&#x2F;40 (90%) | Same  |\n| Total input tokens  | 637,244     | 3,174,329   | 4.98× |\n| Total output tokens | 17,301      | 23,238      | 1.34× |\n| Total Agent steps   | 122         | 157         | 1.29× |\n| Total time          | 597s        | 676s        | 1.13× |<p>---<p>The result shows that MCP-B took 35 more ReAct loops to complete 40 test cases compared to MCP-A, which means 30% more output tokens. I examined the log and found that the root cause is poor query tool design.<p>Take the `search tool` for example, its job is to find a todo item in the ToDo list. In MCP-B, this tool returns this:<p>{\n  &quot;id&quot;: &quot;6a1916b48f08cb3a4c857ed0&quot;,\n  &quot;title&quot;: &quot;buy some groceries&quot;,\n  &quot;url&quot;: &quot;https:&#x2F;&#x2F;todo.example.com&#x2F;tasks&#x2F;6a1916b48f08cb3a4c857ed0&quot;\n}<p>But other CRUD operations require `project_id`, and `search_tool` doesn&#x27;t return it. So the Agent has to call another tool `get_task_by_id`. On the other hand, MCP-A&#x27;s query_tasks returns all necessary info to perform the next action in a single call:<p>Task 1:\nID: 6a19143e8f084a8c8101612f\nTitle: buy some groceries\nProject ID: 6a1914378f084a8c810160a9\nStart Date: 2025-07-19 10:00:00\nPriority: Medium\nStatus: Active\nUnfiltered API Data was dumped into context window<p>If MCP returns pure API results to the Agent&#x27;s context unprocessed, the Agent&#x27;s context window will accumulate very fast.<p>Take MCP-B&#x27;s `create_task` tool, for example. Its job is to create a to-do item. This is what this tool returns:<p>{\n  &quot;id&quot;: &quot;6a180de78f086bdead0608be&quot;,\n  &quot;projectId&quot;: &quot;inbox125587327&quot;,\n  .....\n  &quot;createdTime&quot;: &quot;2026-05-28T09:41:59+0000&quot;,\n  &quot;modifiedTime&quot;: &quot;2026-05-28T09:41:59+0000&quot;,\n  &quot;focusSummaries&quot;: null\n}<p>These 600+ characters mean nothing to the Agent&#x27;s task, but are still dumped into the Agent&#x27;s context. On the other hand, MCP-A&#x27;s create_tasks does a layer of filtering and formatting. This little tweak makes a huge difference in input token usage.<p>Another issue is tool count. More tools mean a larger candidate set for the model to choose from, which directly increases decision difficulty. In MCP-A, 47 tools were compressed down to 14, covering the same functionality with fewer tools.<p>---<p>So here are my takeaways on good MCP tool design:\n- When designing a tool, think about what the Agent will need next, not just what it&#x27;s asking for right now. Return enough context in the result so the Agent can take the next action without making another round-trip.<p>- Too many tools will increase the model&#x27;s decision burden. So it&#x27;d be better to minimize the number of tools within an MCP. Make sure they don&#x27;t overlap functionalities.<p>- When your MCP returns data to the LLM, try to keep it LLM-friendly, which means readable. You can filter out unnecessary fields from the API response and format the data, rather than passing through raw JSON.<p>---<p>All the tests above were run by MCP-Eval. It&#x27;s an MCP Server benchmarking tool. If you want to check your MCP&#x27;s performance, feel free to check this out.<p>https:&#x2F;&#x2F;github.com&#x2F;Code-MonkeyZhang&#x2F;mcp-eval",
+        "title": "Bad MCP design costs your agent 5x more tokens",
+        "updated_at": "2026-06-18T06:40:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yakkomajuri"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is replacing SaaS with vibe coding a thing? Are there measurable gains? How much work is it to support/maintain these?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are people vibe coding internal tools at your companies?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yakkomajuri",
+          "story_48407312",
+          "ask_hn"
+        ],
+        "author": "yakkomajuri",
+        "children": [
+          48574550,
+          48483710,
+          48407432,
+          48434045,
+          48407599,
+          48408104,
+          48407372
+        ],
+        "created_at": "2026-06-05T02:39:58Z",
+        "created_at_i": 1780627198,
+        "num_comments": 6,
+        "objectID": "48407312",
+        "points": 2,
+        "story_id": 48407312,
+        "story_text": "Is replacing SaaS with vibe coding a thing? Are there measurable gains? How much work is it to support&#x2F;maintain these?",
+        "title": "Ask HN: Are people vibe coding internal tools at your companies?",
+        "updated_at": "2026-06-17T18:26:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "saveitincork"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Problem: I constantly save Instagram Reels/TikToks about restaurants, events, pop-ups, and things to do, but I always forget about them because they get buried in my saves.<p>Solution: I built Cork. You can send a Reel or Tiktok directly to Cork without even needing to leave the app, and Cork will automatically extract the info in the reel and save it in a map + calendar.<p>However, I've been finding it hard to get traction while my competitors have gotten traction/funding. I strongly believe my app outperforms all known competitors (their apps fail on reels of popular creators while mine succeeds).<p>I'm not here for pity or to advertise, but I'm curious why people ship products that don't work for a pretty significant number of inputs when the teams are big enough (employees + funding) to pretty easily solve the problem in a cheap way (as I've done) or at least have a temporary high-performing solution with GPT.<p>TL;DR: imo my app outperforms competitors in raw performance. why is a team with manpower and funding failing to do something a 2 person team did in a month?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: My competitors have flawed products but I can't get traction"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_saveitincork",
+          "story_48406829",
+          "ask_hn"
+        ],
+        "author": "saveitincork",
+        "children": [
+          48417056,
+          48432274,
+          48442693,
+          48419623,
+          48436414,
+          48427128,
+          48419371,
+          48432989,
+          48419570,
+          48420273,
+          48420282,
+          48418725,
+          48434128,
+          48417141,
+          48417700,
+          48518222,
+          48433457,
+          48433969,
+          48427776
+        ],
+        "created_at": "2026-06-05T01:16:35Z",
+        "created_at_i": 1780622195,
+        "num_comments": 20,
+        "objectID": "48406829",
+        "points": 11,
+        "story_id": 48406829,
+        "story_text": "Problem: I constantly save Instagram Reels&#x2F;TikToks about restaurants, events, pop-ups, and things to do, but I always forget about them because they get buried in my saves.<p>Solution: I built Cork. You can send a Reel or Tiktok directly to Cork without even needing to leave the app, and Cork will automatically extract the info in the reel and save it in a map + calendar.<p>However, I&#x27;ve been finding it hard to get traction while my competitors have gotten traction&#x2F;funding. I strongly believe my app outperforms all known competitors (their apps fail on reels of popular creators while mine succeeds).<p>I&#x27;m not here for pity or to advertise, but I&#x27;m curious why people ship products that don&#x27;t work for a pretty significant number of inputs when the teams are big enough (employees + funding) to pretty easily solve the problem in a cheap way (as I&#x27;ve done) or at least have a temporary high-performing solution with GPT.<p>TL;DR: imo my app outperforms competitors in raw performance. why is a team with manpower and funding failing to do something a 2 person team did in a month?",
+        "title": "Ask HN: My competitors have flawed products but I can't get traction",
+        "updated_at": "2026-06-27T23:30:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "syncara"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A few months ago I thought displaying an audio waveform in the browser would be a weekend project.<p>I was wrong.<p>The first prototype worked fine with short audio clips, but everything fell apart when I tried loading recordings that were several hours long.<p>Memory usage exploded.<p>The UI became unresponsive.<p>Zooming was painful.<p>Even generating waveform peaks took longer than expected.<p>What surprised me most is that the actual challenge wasn't decoding audio. It was rendering and managing huge amounts of timeline data efficiently.<p>I ended up experimenting with Web Workers, IndexedDB caching, virtualized rendering and progressive loading strategies just to keep the browser responsive.<p>For those who have built browser-based audio tools:<p>What was the hardest performance bottleneck you encountered?<p>Was it decoding, rendering, memory management, or something else entirely?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I underestimated how hard audio waveforms are in the browser"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_syncara",
+          "story_48406747",
+          "ask_hn"
+        ],
+        "author": "syncara",
+        "children": [
+          48411164,
+          48412188,
+          48420781,
+          48410863
+        ],
+        "created_at": "2026-06-05T01:01:03Z",
+        "created_at_i": 1780621263,
+        "num_comments": 3,
+        "objectID": "48406747",
+        "points": 5,
+        "story_id": 48406747,
+        "story_text": "A few months ago I thought displaying an audio waveform in the browser would be a weekend project.<p>I was wrong.<p>The first prototype worked fine with short audio clips, but everything fell apart when I tried loading recordings that were several hours long.<p>Memory usage exploded.<p>The UI became unresponsive.<p>Zooming was painful.<p>Even generating waveform peaks took longer than expected.<p>What surprised me most is that the actual challenge wasn&#x27;t decoding audio. It was rendering and managing huge amounts of timeline data efficiently.<p>I ended up experimenting with Web Workers, IndexedDB caching, virtualized rendering and progressive loading strategies just to keep the browser responsive.<p>For those who have built browser-based audio tools:<p>What was the hardest performance bottleneck you encountered?<p>Was it decoding, rendering, memory management, or something else entirely?",
+        "title": "I underestimated how hard audio waveforms are in the browser",
+        "updated_at": "2026-06-06T04:04:07Z"
+      }
+    ],
+    "hitsPerPage": 80,
+    "nbHits": 1005,
+    "nbPages": 13,
+    "page": 2,
+    "params": "tags=ask_hn&numericFilters=created_at_i%3E1778587200%2Ccreated_at_i%3C1781179200&hitsPerPage=80&page=2&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 3
+        },
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 6
+  }
+}

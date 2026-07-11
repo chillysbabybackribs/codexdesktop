@@ -1,0 +1,3352 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "window": "prior-year-comparable-90d",
+  "start": 1744459200,
+  "end": 1752235200,
+  "tag": "ask_hn",
+  "page": 1,
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zerosizedweasle"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Everyday the main page is filled with the same repetitive posts. All the posts are MCP or agents or something, but none of it feels differentiated or newsworthy anymore. The lack of pushback to the monolithic content means we've all accepted that this is the new paradigm and there's nothing we can do."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN is how I know we've reached peak hype saturation"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_zerosizedweasle",
+          "story_44510269",
+          "ask_hn"
+        ],
+        "author": "zerosizedweasle",
+        "children": [
+          44510384,
+          44510491,
+          44510396,
+          44510452,
+          44510336,
+          44511390
+        ],
+        "created_at": "2025-07-09T14:11:05Z",
+        "created_at_i": 1752070265,
+        "num_comments": 8,
+        "objectID": "44510269",
+        "points": 4,
+        "story_id": 44510269,
+        "story_text": "Everyday the main page is filled with the same repetitive posts. All the posts are MCP or agents or something, but none of it feels differentiated or newsworthy anymore. The lack of pushback to the monolithic content means we&#x27;ve all accepted that this is the new paradigm and there&#x27;s nothing we can do.",
+        "title": "HN is how I know we've reached peak hype saturation",
+        "updated_at": "2025-07-12T01:09:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hersko"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Did you have a side project idea that you took from 0-~100% using only (or majority) vibe coding?<p>Any projects built this way making money?<p>Show us what you've built and what tools you've used to build it. How was the development experience? What tips and tricks do you have? What would you do differently if you were starting over again?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Show us you mostly vibe coded side project"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hersko",
+          "story_44510216",
+          "ask_hn"
+        ],
+        "author": "hersko",
+        "children": [
+          44510794
+        ],
+        "created_at": "2025-07-09T14:06:35Z",
+        "created_at_i": 1752069995,
+        "num_comments": 1,
+        "objectID": "44510216",
+        "points": 5,
+        "story_id": 44510216,
+        "story_text": "Did you have a side project idea that you took from 0-~100% using only (or majority) vibe coding?<p>Any projects built this way making money?<p>Show us what you&#x27;ve built and what tools you&#x27;ve used to build it. How was the development experience? What tips and tricks do you have? What would you do differently if you were starting over again?",
+        "title": "Ask HN: Show us you mostly vibe coded side project",
+        "updated_at": "2025-07-09T17:37:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kirthi35"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I'm trying to solve a problem that seems to exist in many companies. A team member makes a costly error while using an internal tool (like your CRM, claims software, etc.).<p>You know the outcome—money was lost, a customer is angry—but you have no way to see exactly what they did. You can't &quot;replay the tape&quot; to understand the sequence of clicks and decisions that led to the mistake.<p>This makes it incredibly difficult to do a real post-mortem, train people effectively, or fix broken processes.<p>So, how do you handle this now?<p>When a user error happens, what's your process for finding out what went wrong?<p>Do you have any tools that give you visibility into these user workflows?<p>Have you ever wished you could just watch a recording of what a user did to cause an issue?<p>I'd be fascinated to hear your stories or frustrations with this."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you \"replay\" a costly user mistake in your internal software?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kirthi35",
+          "story_44510127",
+          "ask_hn"
+        ],
+        "author": "kirthi35",
+        "children": [
+          44604845,
+          44510239,
+          44510155,
+          44512969,
+          44510197
+        ],
+        "created_at": "2025-07-09T13:58:58Z",
+        "created_at_i": 1752069538,
+        "num_comments": 5,
+        "objectID": "44510127",
+        "points": 5,
+        "story_id": 44510127,
+        "story_text": "Hi HN,<p>I&#x27;m trying to solve a problem that seems to exist in many companies. A team member makes a costly error while using an internal tool (like your CRM, claims software, etc.).<p>You know the outcome—money was lost, a customer is angry—but you have no way to see exactly what they did. You can&#x27;t &quot;replay the tape&quot; to understand the sequence of clicks and decisions that led to the mistake.<p>This makes it incredibly difficult to do a real post-mortem, train people effectively, or fix broken processes.<p>So, how do you handle this now?<p>When a user error happens, what&#x27;s your process for finding out what went wrong?<p>Do you have any tools that give you visibility into these user workflows?<p>Have you ever wished you could just watch a recording of what a user did to cause an issue?<p>I&#x27;d be fascinated to hear your stories or frustrations with this.",
+        "title": "Ask HN: How do you \"replay\" a costly user mistake in your internal software?",
+        "updated_at": "2025-07-18T14:13:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NarcisMirandes"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ember recently launched a Cold Tumbler—a $150 smart cup that keeps drinks cold for hours. I like the concept but am surprised by its plasticky look and feel.<p>At this price, I expected premium materials: ceramic, stainless steel, or even glass. But after looking deeper, I realized there are technical reasons for Ember’s material choice—especially around wireless charging, signal interference, insulation, and safety.<p>For example:\n- Metal can block inductive charging and Bluetooth\n- Glass is risky for portable use\n- Stainless steel conducts cold (bad for lips), adds weight\n- Plastic (especially Tritan) is safer, lighter, and non-conductive<p>Ember actually does use ceramic coating in other products (like their Mug²), so the downgrade in feel here is noticeable. Still, it seems they optimized for function, not feel.<p>Strangely, there’s almost no competition at the premium level in this category. Most smart drinkware goes cheap and gimmicky. Ember is nearly alone in combining tech + aesthetics—yet even they didn’t go all the way with materials here.<p>To see the product: www.ember.com<p>Curious what others think: Is there room for a truly premium, materials-first smart cup? Or is this the necessary tradeoff when combining tech, insulation, and portability?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ember Cold Tumbler marketing and design strategy"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_NarcisMirandes",
+          "story_44510116",
+          "ask_hn"
+        ],
+        "author": "NarcisMirandes",
+        "created_at": "2025-07-09T13:57:53Z",
+        "created_at_i": 1752069473,
+        "num_comments": 0,
+        "objectID": "44510116",
+        "points": 1,
+        "story_id": 44510116,
+        "story_text": "Ember recently launched a Cold Tumbler—a $150 smart cup that keeps drinks cold for hours. I like the concept but am surprised by its plasticky look and feel.<p>At this price, I expected premium materials: ceramic, stainless steel, or even glass. But after looking deeper, I realized there are technical reasons for Ember’s material choice—especially around wireless charging, signal interference, insulation, and safety.<p>For example:\n- Metal can block inductive charging and Bluetooth\n- Glass is risky for portable use\n- Stainless steel conducts cold (bad for lips), adds weight\n- Plastic (especially Tritan) is safer, lighter, and non-conductive<p>Ember actually does use ceramic coating in other products (like their Mug²), so the downgrade in feel here is noticeable. Still, it seems they optimized for function, not feel.<p>Strangely, there’s almost no competition at the premium level in this category. Most smart drinkware goes cheap and gimmicky. Ember is nearly alone in combining tech + aesthetics—yet even they didn’t go all the way with materials here.<p>To see the product: www.ember.com<p>Curious what others think: Is there room for a truly premium, materials-first smart cup? Or is this the necessary tradeoff when combining tech, insulation, and portability?",
+        "title": "Ember Cold Tumbler marketing and design strategy",
+        "updated_at": "2025-07-09T13:59:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cmuertz"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "On July 5th, autonomous code agents (primarily Codex) authored around 15% of all public GitHub pull requests — and most of these changes were non-trivial. Wild times.<p>Does anyone know of any fully autonomous open-source agents that not only generate code on request, but also identify issues and open PRs in OSS projects without human prompting? That feels like a worthy experiment.<p>If benchmarks like SWE-Bench are accurate, these agents should already be able to resolve many issues in major Python packages — fully autonomously.<p>Data: https://insights.logicstar.ai/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OpenAI Codex Is Generating 10% of Public GitHub PRs"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cmuertz",
+          "story_44509556",
+          "ask_hn"
+        ],
+        "author": "cmuertz",
+        "created_at": "2025-07-09T13:04:57Z",
+        "created_at_i": 1752066297,
+        "num_comments": 0,
+        "objectID": "44509556",
+        "points": 3,
+        "story_id": 44509556,
+        "story_text": "On July 5th, autonomous code agents (primarily Codex) authored around 15% of all public GitHub pull requests — and most of these changes were non-trivial. Wild times.<p>Does anyone know of any fully autonomous open-source agents that not only generate code on request, but also identify issues and open PRs in OSS projects without human prompting? That feels like a worthy experiment.<p>If benchmarks like SWE-Bench are accurate, these agents should already be able to resolve many issues in major Python packages — fully autonomously.<p>Data: https:&#x2F;&#x2F;insights.logicstar.ai&#x2F;",
+        "title": "OpenAI Codex Is Generating 10% of Public GitHub PRs",
+        "updated_at": "2025-07-09T14:13:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bahrtw"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi all,<p>I’m always sending myself messages. Maybe you do too? Shopping lists, things to do, good quotes, recipes, beautiful pictures, movies I want to watch, random ideas...<p>really curious if it is just me not using a note taking app, or more people are doing it this way? Don't know when I started using this, but never switched to some proper app."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Do You Send Messages?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bahrtw",
+          "story_44509156",
+          "ask_hn"
+        ],
+        "author": "bahrtw",
+        "children": [
+          44516783,
+          44510305
+        ],
+        "created_at": "2025-07-09T12:22:03Z",
+        "created_at_i": 1752063723,
+        "num_comments": 2,
+        "objectID": "44509156",
+        "points": 1,
+        "story_id": 44509156,
+        "story_text": "Hi all,<p>I’m always sending myself messages. Maybe you do too? Shopping lists, things to do, good quotes, recipes, beautiful pictures, movies I want to watch, random ideas...<p>really curious if it is just me not using a note taking app, or more people are doing it this way? Don&#x27;t know when I started using this, but never switched to some proper app.",
+        "title": "Do You Send Messages?",
+        "updated_at": "2025-07-10T03:03:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fbu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi,<p>The YC application form won't (but sometimes does) accept my edits to my profile.<p>The rest of the application works fine. Bug report for the application is to send an email, is that correct ?<p>Thank you<p>-fbu"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Does anyone else have issues editing their profile in the YC application"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fbu",
+          "story_44509135",
+          "ask_hn"
+        ],
+        "author": "fbu",
+        "created_at": "2025-07-09T12:18:54Z",
+        "created_at_i": 1752063534,
+        "num_comments": 0,
+        "objectID": "44509135",
+        "points": 1,
+        "story_id": 44509135,
+        "story_text": "Hi,<p>The YC application form won&#x27;t (but sometimes does) accept my edits to my profile.<p>The rest of the application works fine. Bug report for the application is to send an email, is that correct ?<p>Thank you<p>-fbu",
+        "title": "Ask HN: Does anyone else have issues editing their profile in the YC application",
+        "updated_at": "2025-07-09T12:20:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "draismaa"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In traditional software, we write unit tests to catch regressions before they reach users. In AI systems—especially agentic ones that model breaks down. You can test inputs and outputs, use evals, but agents operate over time, across tools, mcps, apis, and unpredictable user input. The failure modes are non-obvious and often emerge only in edge cases. I'm seeing an emerging practice: agent simulations—structured, repeatable scenarios that test how an AI agent behaves in complex or long-tail situations.<p>Think:\nWhat if the upstream tool fails mid-execution?\nWhat if the user flips intent mid-dialogue?\nWhat if the agent’s assumptions were subtly wrong?<p>from self-driving cars to AI agents?\nThe above aren’t one-off tests. They’re like AV simulations: controlled environments to explore failure boundaries. Autonomous vehicle teams learned long ago that real-world data isn't enough. The rarest events are the most important—and you need to generate and replay them systematically. That same long-tail distribution applies to LLM agents. We’ve started treating scenario testing as a core part of the dev loop—versioning simulations, running them in CI, and evolving them as our agent behavior changes. It’s not about perfect coverage,it’s about shifting from “test after” to “test through simulation” as part of iterative agent development.\nCurious if others here are doing something similar. How are you testing your agents beyond a few prompts and metrics? Would love to hear how the HN crowd is thinking about agent reliability and safety—not just in research, but in real-world deployments."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agent simulations = unit testing for AI?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_draismaa",
+          "story_44508936",
+          "ask_hn"
+        ],
+        "author": "draismaa",
+        "children": [
+          44510074
+        ],
+        "created_at": "2025-07-09T12:00:13Z",
+        "created_at_i": 1752062413,
+        "num_comments": 2,
+        "objectID": "44508936",
+        "points": 2,
+        "story_id": 44508936,
+        "story_text": "In traditional software, we write unit tests to catch regressions before they reach users. In AI systems—especially agentic ones that model breaks down. You can test inputs and outputs, use evals, but agents operate over time, across tools, mcps, apis, and unpredictable user input. The failure modes are non-obvious and often emerge only in edge cases. I&#x27;m seeing an emerging practice: agent simulations—structured, repeatable scenarios that test how an AI agent behaves in complex or long-tail situations.<p>Think:\nWhat if the upstream tool fails mid-execution?\nWhat if the user flips intent mid-dialogue?\nWhat if the agent’s assumptions were subtly wrong?<p>from self-driving cars to AI agents?\nThe above aren’t one-off tests. They’re like AV simulations: controlled environments to explore failure boundaries. Autonomous vehicle teams learned long ago that real-world data isn&#x27;t enough. The rarest events are the most important—and you need to generate and replay them systematically. That same long-tail distribution applies to LLM agents. We’ve started treating scenario testing as a core part of the dev loop—versioning simulations, running them in CI, and evolving them as our agent behavior changes. It’s not about perfect coverage,it’s about shifting from “test after” to “test through simulation” as part of iterative agent development.\nCurious if others here are doing something similar. How are you testing your agents beyond a few prompts and metrics? Would love to hear how the HN crowd is thinking about agent reliability and safety—not just in research, but in real-world deployments.",
+        "title": "Agent simulations = unit testing for AI?",
+        "updated_at": "2026-05-13T16:21:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lostmsu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Inspired by wat10000 in https://news.ycombinator.com/item?id=44485120"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: LLM Tokens Are Paperclips"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lostmsu",
+          "story_44508892",
+          "ask_hn"
+        ],
+        "author": "lostmsu",
+        "created_at": "2025-07-09T11:55:19Z",
+        "created_at_i": 1752062119,
+        "num_comments": 0,
+        "objectID": "44508892",
+        "points": 1,
+        "story_id": 44508892,
+        "story_text": "Inspired by wat10000 in https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=44485120",
+        "title": "Tell HN: LLM Tokens Are Paperclips",
+        "updated_at": "2025-07-09T11:58:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "asciifree"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN<p>I'm doing some field research on unique ways on-call rotations can be unhealthy. It would be great to hear some anecdata from the community about /why/ you feel your on-call rotation sucks - and I figure it would be even better to experience it firsthand :)<p>I do understand asking to join/shadow your rotation is probably not practical however I am 100% serious and happy to sign whatever.<p>Cheers &amp; may your pager stay silent"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Does your on-call rotation suck? Can I join it?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_asciifree",
+          "story_44508877",
+          "ask_hn"
+        ],
+        "author": "asciifree",
+        "children": [
+          44512446,
+          44518719,
+          44515261,
+          44521300,
+          44528064,
+          44519794,
+          44513434,
+          44512937,
+          44517585
+        ],
+        "created_at": "2025-07-09T11:53:59Z",
+        "created_at_i": 1752062039,
+        "num_comments": 23,
+        "objectID": "44508877",
+        "points": 11,
+        "story_id": 44508877,
+        "story_text": "Hi HN<p>I&#x27;m doing some field research on unique ways on-call rotations can be unhealthy. It would be great to hear some anecdata from the community about &#x2F;why&#x2F; you feel your on-call rotation sucks - and I figure it would be even better to experience it firsthand :)<p>I do understand asking to join&#x2F;shadow your rotation is probably not practical however I am 100% serious and happy to sign whatever.<p>Cheers &amp; may your pager stay silent",
+        "title": "Ask HN: Does your on-call rotation suck? Can I join it?",
+        "updated_at": "2025-07-13T20:08:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shivajikobardan"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is these stuffs proprietary? I can't find much information except few in kurose ross book."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Generic internal architecture of Nokia router?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shivajikobardan",
+          "story_44508857",
+          "ask_hn"
+        ],
+        "author": "shivajikobardan",
+        "children": [
+          44510252
+        ],
+        "created_at": "2025-07-09T11:51:03Z",
+        "created_at_i": 1752061863,
+        "num_comments": 2,
+        "objectID": "44508857",
+        "points": 1,
+        "story_id": 44508857,
+        "story_text": "Is these stuffs proprietary? I can&#x27;t find much information except few in kurose ross book.",
+        "title": "Ask HN: Generic internal architecture of Nokia router?",
+        "updated_at": "2025-07-09T15:30:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MoneyIQ"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I’ve recently launched MoneyIQ, a platform for retail investors that includes an AI-powered company report generator. You type in any global public company and get back a plain-English report with:<p>- 16 quarters of financials\n- Key ratios with RAG flags\n- Mini trend charts\n- AI-generated highlights/lowlights\n- A bull/bear signal based on fundamentals<p>It’s aimed at individual investors who don’t have time (or interest) to dig through filings. I’d love feedback from anyone willing to test it and share honest thoughts on usefulness, clarity, or what’s missing.<p>You get 3 reports free without signing up, and a further 3 per month at the free Basic Tier. I’m happy to add more credits for testers.<p>- Report generator tool: https://money-iq.ai/generate-company-report.html\n- Demo video: https://youtu.be/MFyiN3_4swE  \n- Example report on Microsoft: https://money-iq.ai/reports/msft-investment-report-120.html<p>Would really appreciate your take. Happy to return the favor if you're building something too.<p>Thanks,  \nSteve"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Feedback on AI tool for company investment"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_MoneyIQ",
+          "story_44508824",
+          "ask_hn"
+        ],
+        "author": "MoneyIQ",
+        "created_at": "2025-07-09T11:47:32Z",
+        "created_at_i": 1752061652,
+        "num_comments": 0,
+        "objectID": "44508824",
+        "points": 3,
+        "story_id": 44508824,
+        "story_text": "Hi HN,<p>I’ve recently launched MoneyIQ, a platform for retail investors that includes an AI-powered company report generator. You type in any global public company and get back a plain-English report with:<p>- 16 quarters of financials\n- Key ratios with RAG flags\n- Mini trend charts\n- AI-generated highlights&#x2F;lowlights\n- A bull&#x2F;bear signal based on fundamentals<p>It’s aimed at individual investors who don’t have time (or interest) to dig through filings. I’d love feedback from anyone willing to test it and share honest thoughts on usefulness, clarity, or what’s missing.<p>You get 3 reports free without signing up, and a further 3 per month at the free Basic Tier. I’m happy to add more credits for testers.<p>- Report generator tool: https:&#x2F;&#x2F;money-iq.ai&#x2F;generate-company-report.html\n- Demo video: https:&#x2F;&#x2F;youtu.be&#x2F;MFyiN3_4swE  \n- Example report on Microsoft: https:&#x2F;&#x2F;money-iq.ai&#x2F;reports&#x2F;msft-investment-report-120.html<p>Would really appreciate your take. Happy to return the favor if you&#x27;re building something too.<p>Thanks,  \nSteve",
+        "title": "Ask HN: Feedback on AI tool for company investment",
+        "updated_at": "2025-07-09T12:59:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amichail"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As most readers of thriller novels are women, it's not a surprise that thrillers portraying men as violent criminals tend to make more money.<p>Instead of trying to get men to read more thriller novels, it would probably be easier — and more effective — to simply ask them to donate large sums of money to authors and publishers who release more balanced thriller novels.<p>Do you think this idea would work?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would this idea combat the negative portrayal of men in thriller novels?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_amichail",
+          "story_44508809",
+          "ask_hn"
+        ],
+        "author": "amichail",
+        "children": [
+          44509344
+        ],
+        "created_at": "2025-07-09T11:45:46Z",
+        "created_at_i": 1752061546,
+        "num_comments": 2,
+        "objectID": "44508809",
+        "points": 2,
+        "story_id": 44508809,
+        "story_text": "As most readers of thriller novels are women, it&#x27;s not a surprise that thrillers portraying men as violent criminals tend to make more money.<p>Instead of trying to get men to read more thriller novels, it would probably be easier — and more effective — to simply ask them to donate large sums of money to authors and publishers who release more balanced thriller novels.<p>Do you think this idea would work?",
+        "title": "Ask HN: Would this idea combat the negative portrayal of men in thriller novels?",
+        "updated_at": "2025-07-09T15:24:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "papciofrik"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN community ! I come to you with a very important question. \nI spent my last ten years doing test automation. I feel like I am grounded  with classical approaches and knowledge.\nI would like to get up to speed with expanding my knowledge about development with AI support.\nI would like to understand more deeply also what would be the challenges of the future in that regards.<p>What sources (books, online classes, videos, articles, blogs) would You recommend to somebody who would like to start his adventure with AI/ML ?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What sources for someone learning about AI/ML development?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_papciofrik",
+          "story_44508172",
+          "ask_hn"
+        ],
+        "author": "papciofrik",
+        "created_at": "2025-07-09T10:16:50Z",
+        "created_at_i": 1752056210,
+        "num_comments": 0,
+        "objectID": "44508172",
+        "points": 1,
+        "story_id": 44508172,
+        "story_text": "Hi HN community ! I come to you with a very important question. \nI spent my last ten years doing test automation. I feel like I am grounded  with classical approaches and knowledge.\nI would like to get up to speed with expanding my knowledge about development with AI support.\nI would like to understand more deeply also what would be the challenges of the future in that regards.<p>What sources (books, online classes, videos, articles, blogs) would You recommend to somebody who would like to start his adventure with AI&#x2F;ML ?",
+        "title": "Ask HN: What sources for someone learning about AI/ML development?",
+        "updated_at": "2025-07-09T10:19:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "robuildnyc"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Simular just launched a new Pro product. Their site says its computer-use agent solves the explore and exploit dilemma so it can execute thousands of steps without breaking. What are people's thoughts?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thoughts on computer use agents like Simular Pro?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_robuildnyc",
+          "story_44508024",
+          "ask_hn"
+        ],
+        "author": "robuildnyc",
+        "children": [
+          44543069
+        ],
+        "created_at": "2025-07-09T09:52:07Z",
+        "created_at_i": 1752054727,
+        "num_comments": 2,
+        "objectID": "44508024",
+        "points": 1,
+        "story_id": 44508024,
+        "story_text": "Simular just launched a new Pro product. Their site says its computer-use agent solves the explore and exploit dilemma so it can execute thousands of steps without breaking. What are people&#x27;s thoughts?",
+        "title": "Thoughts on computer use agents like Simular Pro?",
+        "updated_at": "2025-07-17T04:55:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I just wasted half my morning digging through people's profiles trying to find something, only to randomly stumble on the real answer buried in a random comment under a half-related post. I feel like I spend hours each week sifting through Confluence, I know there's valuable stuff in there, but the search is impressively useless, and the people who actually know how anything works are either impossible to reach or long-gone contractors. Am I losing it, or is this just how it is everywhere? I'm at a F500 company, so nothing's changing here anytime soon, I’m thinking of jumping ship.<p>Regardless, Is this a solved problem? What are the common failure modes of knowledge management systems like Confluence in large organizations, and what are some strategies or alternative tools that have successfully combated this? There’s no way that no one has solved this."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_NanaAmun",
+          "story_44507780",
+          "ask_hn"
+        ],
+        "author": "NanaAmun",
+        "children": [
+          44510124,
+          44632659,
+          44511513,
+          44507898,
+          44510149,
+          44512524,
+          44510580,
+          44511833,
+          44511767,
+          44508046,
+          44508283,
+          44510742,
+          44508757,
+          44513983,
+          44507960,
+          44508895,
+          44513932,
+          44513816
+        ],
+        "created_at": "2025-07-09T09:05:39Z",
+        "created_at_i": 1752051939,
+        "num_comments": 47,
+        "objectID": "44507780",
+        "points": 33,
+        "story_id": 44507780,
+        "story_text": "I just wasted half my morning digging through people&#x27;s profiles trying to find something, only to randomly stumble on the real answer buried in a random comment under a half-related post. I feel like I spend hours each week sifting through Confluence, I know there&#x27;s valuable stuff in there, but the search is impressively useless, and the people who actually know how anything works are either impossible to reach or long-gone contractors. Am I losing it, or is this just how it is everywhere? I&#x27;m at a F500 company, so nothing&#x27;s changing here anytime soon, I’m thinking of jumping ship.<p>Regardless, Is this a solved problem? What are the common failure modes of knowledge management systems like Confluence in large organizations, and what are some strategies or alternative tools that have successfully combated this? There’s no way that no one has solved this.",
+        "title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2026-07-03T21:07:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vandana231990"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been thinking about ways to improve emotional self-awareness without relying on mood logs, which often feel forced or artificial. Instead of asking &quot;how are you feeling?&quot;, what if we looked at what someone did during the day — and derived their emotional state from that?<p>I tried implementing this using a BERT-based model trained on Google’s GoEmotions dataset (which covers 28 nuanced emotions like remorse, joy, optimism, etc.). The idea is to let users reflect on their good or bad deeds and then use NLP to classify the underlying emotions.<p>Some patterns I’ve noticed:<p>Visualizing daily dominant emotions on a color-coded calendar gives a quick emotional overview.<p>Comparing emotions across days offers insights into how our actions shape our emotional trends.<p>Action-first reflection seems to reduce the pressure to “perform” emotionally compared to mood logs.<p>This is all part of an Android experiment I’m working on. Curious if others here have explored similar approaches — using AI to model emotion based on actions rather than self-reporting. Would love to hear your thoughts or feedback."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Exploring emotional self-awareness via action-based journaling and AI"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vandana231990",
+          "story_44507499",
+          "ask_hn"
+        ],
+        "author": "vandana231990",
+        "children": [
+          44507545
+        ],
+        "created_at": "2025-07-09T08:23:04Z",
+        "created_at_i": 1752049384,
+        "num_comments": 1,
+        "objectID": "44507499",
+        "points": 1,
+        "story_id": 44507499,
+        "story_text": "I&#x27;ve been thinking about ways to improve emotional self-awareness without relying on mood logs, which often feel forced or artificial. Instead of asking &quot;how are you feeling?&quot;, what if we looked at what someone did during the day — and derived their emotional state from that?<p>I tried implementing this using a BERT-based model trained on Google’s GoEmotions dataset (which covers 28 nuanced emotions like remorse, joy, optimism, etc.). The idea is to let users reflect on their good or bad deeds and then use NLP to classify the underlying emotions.<p>Some patterns I’ve noticed:<p>Visualizing daily dominant emotions on a color-coded calendar gives a quick emotional overview.<p>Comparing emotions across days offers insights into how our actions shape our emotional trends.<p>Action-first reflection seems to reduce the pressure to “perform” emotionally compared to mood logs.<p>This is all part of an Android experiment I’m working on. Curious if others here have explored similar approaches — using AI to model emotion based on actions rather than self-reporting. Would love to hear your thoughts or feedback.",
+        "title": "Ask HN: Exploring emotional self-awareness via action-based journaling and AI",
+        "updated_at": "2025-07-09T10:09:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tangabar"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I need to know more about this"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Tangabar",
+          "story_44507172",
+          "ask_hn"
+        ],
+        "author": "Tangabar",
+        "children": [
+          44509323
+        ],
+        "created_at": "2025-07-09T07:24:47Z",
+        "created_at_i": 1752045887,
+        "num_comments": 1,
+        "objectID": "44507172",
+        "points": 3,
+        "story_id": 44507172,
+        "title": "I need to know more about this",
+        "updated_at": "2025-07-10T08:53:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "deep_thinker26"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi everyone,<p>I recently found a high-criticality vulnerability in a listed consumer company in the UK. It allows unauthorized access to users’ private messages and even lets you impersonate other users on the platform.<p>They’ve offered a €1,000 bounty, but only if I sign an NDA that prevents any public write-up—even after the issue is patched.<p>I feel the bounty is too low for the impact, and asking to sign an NDA that prevents any public disclosure even post-fix feels like a big red flag.<p>I’m leaning towards declining the offer and doing a public write-up once the issue is fixed—but I’d really welcome opinions from others on what the right thing to do here is.<p>Thanks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Bug Bounty Dilemma – Take the $$ and Sign an NDA or Go Public?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_deep_thinker26",
+          "story_44507114",
+          "ask_hn"
+        ],
+        "author": "deep_thinker26",
+        "children": [
+          44512813,
+          44507182,
+          44507861,
+          44529330,
+          44519829,
+          44507278,
+          44513614,
+          44516071,
+          44541013,
+          44527859
+        ],
+        "created_at": "2025-07-09T07:13:50Z",
+        "created_at_i": 1752045230,
+        "num_comments": 14,
+        "objectID": "44507114",
+        "points": 22,
+        "story_id": 44507114,
+        "story_text": "Hi everyone,<p>I recently found a high-criticality vulnerability in a listed consumer company in the UK. It allows unauthorized access to users’ private messages and even lets you impersonate other users on the platform.<p>They’ve offered a €1,000 bounty, but only if I sign an NDA that prevents any public write-up—even after the issue is patched.<p>I feel the bounty is too low for the impact, and asking to sign an NDA that prevents any public disclosure even post-fix feels like a big red flag.<p>I’m leaning towards declining the offer and doing a public write-up once the issue is fixed—but I’d really welcome opinions from others on what the right thing to do here is.<p>Thanks!",
+        "title": "Ask HN: Bug Bounty Dilemma – Take the $$ and Sign an NDA or Go Public?",
+        "updated_at": "2025-08-14T21:55:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "empire23"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi everyone,<p>I've been wrestling with MCP, and keep finding the same weaknesses:\n- the middleware server feels completely unncessary and overly complex\n- it has too many security flaws due to what feels like a rushed out standard\n- it's just so poorly undocumented and confusing<p>I've been thinking of doing a new protocol, but am too aware of that ol' comic (https://imgs.xkcd.com/comics/standards_2x.png)<p>Yet was curious to ask you guys - is there value in trying to build a new scalable, secure version of MCP?<p>Or should I just stick to the protocol that's currently popular?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do you think a new alternative to MCP would be useful?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_empire23",
+          "story_44506858",
+          "ask_hn"
+        ],
+        "author": "empire23",
+        "children": [
+          44508805,
+          44513792
+        ],
+        "created_at": "2025-07-09T06:24:25Z",
+        "created_at_i": 1752042265,
+        "num_comments": 4,
+        "objectID": "44506858",
+        "points": 7,
+        "story_id": 44506858,
+        "story_text": "Hi everyone,<p>I&#x27;ve been wrestling with MCP, and keep finding the same weaknesses:\n- the middleware server feels completely unncessary and overly complex\n- it has too many security flaws due to what feels like a rushed out standard\n- it&#x27;s just so poorly undocumented and confusing<p>I&#x27;ve been thinking of doing a new protocol, but am too aware of that ol&#x27; comic (https:&#x2F;&#x2F;imgs.xkcd.com&#x2F;comics&#x2F;standards_2x.png)<p>Yet was curious to ask you guys - is there value in trying to build a new scalable, secure version of MCP?<p>Or should I just stick to the protocol that&#x27;s currently popular?",
+        "title": "Ask HN: Do you think a new alternative to MCP would be useful?",
+        "updated_at": "2025-07-10T20:45:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaway-xx"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Throwaway for obvious reasons. I’m a co-founder of a venture-backed startup currently valued at ~$20M. We raised a strong pre-seed, built a team, shipped v1, generated revenue, and recently pivoted into a related idea that I think could work—but I’m no longer the right person to lead it. My co-founder is passionate about the new direction and wants to take it forward. I want to step away cleanly and with integrity.<p>I have ~10% vested. I led our early fundraise, worked unpaid for months, and contributed personal capital. I’m not trying to maximize my return—but I also don’t want to walk away empty-handed after 1.5 years of building.<p>My question:\n1. What’s a fair exit package in this situation? A formula/rule I can use?<p>2. Should I just keep the vested equity? Future investors may see this as dead equity.<p>3. Is a cash buyout common or appropriate?<p>How would you approach this with the board/co-founder in a way that’s constructive and protects long-term relationships?<p>Would love to hear from anyone who's seen this play out—on the founder, investor, or legal side."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_throwaway-xx",
+          "story_44506835",
+          "ask_hn"
+        ],
+        "author": "throwaway-xx",
+        "children": [
+          44527281,
+          44521095,
+          44522748,
+          44527028,
+          44551945,
+          44526933,
+          44527023,
+          44527402,
+          44518017,
+          44527561,
+          44527296,
+          44527175,
+          44527606,
+          44537149,
+          44523518,
+          44527338,
+          44527137,
+          44527350,
+          44509049,
+          44527047,
+          44528087,
+          44527232
+        ],
+        "created_at": "2025-07-09T06:20:29Z",
+        "created_at_i": 1752042029,
+        "num_comments": 79,
+        "objectID": "44506835",
+        "points": 44,
+        "story_id": 44506835,
+        "story_text": "Throwaway for obvious reasons. I’m a co-founder of a venture-backed startup currently valued at ~$20M. We raised a strong pre-seed, built a team, shipped v1, generated revenue, and recently pivoted into a related idea that I think could work—but I’m no longer the right person to lead it. My co-founder is passionate about the new direction and wants to take it forward. I want to step away cleanly and with integrity.<p>I have ~10% vested. I led our early fundraise, worked unpaid for months, and contributed personal capital. I’m not trying to maximize my return—but I also don’t want to walk away empty-handed after 1.5 years of building.<p>My question:\n1. What’s a fair exit package in this situation? A formula&#x2F;rule I can use?<p>2. Should I just keep the vested equity? Future investors may see this as dead equity.<p>3. Is a cash buyout common or appropriate?<p>How would you approach this with the board&#x2F;co-founder in a way that’s constructive and protects long-term relationships?<p>Would love to hear from anyone who&#x27;s seen this play out—on the founder, investor, or legal side.",
+        "title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2026-06-12T22:39:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hedayet"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I love the innovative ideas and unexpected insights from the HN community. Let's go deep - what challenge would you tackle if you had unlimited resources? Guaranteed funding, access to top talent, or freedom from your day job?<p>Why would you choose to solve it? Do you actually need unlimited resources to start?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What problem would you solve with unlimited resources?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hedayet",
+          "story_44506493",
+          "ask_hn"
+        ],
+        "author": "hedayet",
+        "children": [
+          44506955,
+          44507074,
+          44508106,
+          44507052,
+          44507646,
+          44506828,
+          44506635,
+          44506515,
+          44506553,
+          44506739,
+          44507026,
+          44507080,
+          44507712,
+          44507639,
+          44507151,
+          44508292,
+          44506942,
+          44508087,
+          44507423,
+          44507145,
+          44515548,
+          44506534,
+          44506995,
+          44506850,
+          44507896,
+          44506642,
+          44507309,
+          44507654,
+          44510418,
+          44507032,
+          44507694,
+          44506871,
+          44507528
+        ],
+        "created_at": "2025-07-09T05:09:36Z",
+        "created_at_i": 1752037776,
+        "num_comments": 73,
+        "objectID": "44506493",
+        "points": 20,
+        "story_id": 44506493,
+        "story_text": "I love the innovative ideas and unexpected insights from the HN community. Let&#x27;s go deep - what challenge would you tackle if you had unlimited resources? Guaranteed funding, access to top talent, or freedom from your day job?<p>Why would you choose to solve it? Do you actually need unlimited resources to start?",
+        "title": "Ask HN: What problem would you solve with unlimited resources?",
+        "updated_at": "2025-11-17T14:29:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "RajGuruYadav"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>I’m Raj Guru Yadav, a 16-year-old self-taught programmer from India .<p>Over the past 3 years, I’ve built over 700+ projects — mostly small to mid-level apps, tools, games, AI bots, voice assistants, logic experiments, and UI systems.<p>I never attended a course or bootcamp — I learned everything from YouTube, documentation, and experimenting on my own. I use:<p>Languages: Python, JavaScript, C++, Java, HTML/CSS, Ruby<p>Tools: Firebase, GitHub, ChatGPT, Replit, VS Code<p>Recently, I developed something called Blob AI – a glowing, voice-reactive digital assistant with smart responses and visual effects (I’ll share it soon in a Show HN post).<p>Why I’m Here\nI’ve been silently reading Hacker News for a while, and now I want to:<p>Join the dev/startup conversation<p>Learn from experienced builders<p>Get feedback on my journey and ideas<p>Ask questions and maybe help others too<p>If you're a dev, founder, educator, or just curious – I’d love to connect.\nAsk me anything: about learning to code young, building fast, staying consistent, or how I come up with ideas.<p>Thanks for reading.\n— Raj Guru Yadav\nGitHub: coming soon\n@rajguruyadav_official"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm a 16-Year-Old Self-Taught Developer – Built 700 Projects"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_RajGuruYadav",
+          "story_44506402",
+          "ask_hn"
+        ],
+        "author": "RajGuruYadav",
+        "children": [
+          44517375,
+          44507305
+        ],
+        "created_at": "2025-07-09T04:43:00Z",
+        "created_at_i": 1752036180,
+        "num_comments": 4,
+        "objectID": "44506402",
+        "points": 4,
+        "story_id": 44506402,
+        "story_text": "Hi HN,<p>I’m Raj Guru Yadav, a 16-year-old self-taught programmer from India .<p>Over the past 3 years, I’ve built over 700+ projects — mostly small to mid-level apps, tools, games, AI bots, voice assistants, logic experiments, and UI systems.<p>I never attended a course or bootcamp — I learned everything from YouTube, documentation, and experimenting on my own. I use:<p>Languages: Python, JavaScript, C++, Java, HTML&#x2F;CSS, Ruby<p>Tools: Firebase, GitHub, ChatGPT, Replit, VS Code<p>Recently, I developed something called Blob AI – a glowing, voice-reactive digital assistant with smart responses and visual effects (I’ll share it soon in a Show HN post).<p>Why I’m Here\nI’ve been silently reading Hacker News for a while, and now I want to:<p>Join the dev&#x2F;startup conversation<p>Learn from experienced builders<p>Get feedback on my journey and ideas<p>Ask questions and maybe help others too<p>If you&#x27;re a dev, founder, educator, or just curious – I’d love to connect.\nAsk me anything: about learning to code young, building fast, staying consistent, or how I come up with ideas.<p>Thanks for reading.\n— Raj Guru Yadav\nGitHub: coming soon\n@rajguruyadav_official",
+        "title": "I'm a 16-Year-Old Self-Taught Developer – Built 700 Projects",
+        "updated_at": "2025-07-10T13:48:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hasithsen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "First confirmed with Firefox on Ubuntu, same on mobile (Safari) too.<p>P.S. If you are from GitHub, please note we appreciate all your hard work! Posted only to have a discussion."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GitHub navbar is broken for repo URLs when logged out"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hasithsen",
+          "story_44506130",
+          "ask_hn"
+        ],
+        "author": "hasithsen",
+        "children": [
+          44510334
+        ],
+        "created_at": "2025-07-09T03:36:39Z",
+        "created_at_i": 1752032199,
+        "num_comments": 1,
+        "objectID": "44506130",
+        "points": 2,
+        "story_id": 44506130,
+        "story_text": "First confirmed with Firefox on Ubuntu, same on mobile (Safari) too.<p>P.S. If you are from GitHub, please note we appreciate all your hard work! Posted only to have a discussion.",
+        "title": "GitHub navbar is broken for repo URLs when logged out",
+        "updated_at": "2025-07-09T14:25:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "itstomo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>If there is a pocket-sized compact hardware that hosts large-size open-source LLMs that you can connect offline, wouldn't it be helpful?<p>The benefits:<p>- You can use large-size open-source LLMs without using up your PC or smartphone's compute<p>- You can protect your privacy<p>- You can use high performance LLM offline"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Pocket LLM Server Just Like a Pocket WiFi"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_itstomo",
+          "story_44506054",
+          "ask_hn"
+        ],
+        "author": "itstomo",
+        "children": [
+          44507312,
+          44514049
+        ],
+        "created_at": "2025-07-09T03:15:46Z",
+        "created_at_i": 1752030946,
+        "num_comments": 4,
+        "objectID": "44506054",
+        "points": 3,
+        "story_id": 44506054,
+        "story_text": "Hey HN,<p>If there is a pocket-sized compact hardware that hosts large-size open-source LLMs that you can connect offline, wouldn&#x27;t it be helpful?<p>The benefits:<p>- You can use large-size open-source LLMs without using up your PC or smartphone&#x27;s compute<p>- You can protect your privacy<p>- You can use high performance LLM offline",
+        "title": "Pocket LLM Server Just Like a Pocket WiFi",
+        "updated_at": "2025-07-16T02:14:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ashbyiscool"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been trying for months but I can't seem to find source codes I've looked it up in the search bar it just don't work if you guys have any recommendations like anything can help like you comment links we need I need information we've been trying for a while now but we cannot seem to find them me and my group have been trying to but we can't find any either so if you know how hit me up and I'll answer peace out"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you find source codes"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Ashbyiscool",
+          "story_44505890",
+          "ask_hn"
+        ],
+        "author": "Ashbyiscool",
+        "children": [
+          44505917
+        ],
+        "created_at": "2025-07-09T02:39:20Z",
+        "created_at_i": 1752028760,
+        "num_comments": 1,
+        "objectID": "44505890",
+        "points": 2,
+        "story_id": 44505890,
+        "story_text": "I&#x27;ve been trying for months but I can&#x27;t seem to find source codes I&#x27;ve looked it up in the search bar it just don&#x27;t work if you guys have any recommendations like anything can help like you comment links we need I need information we&#x27;ve been trying for a while now but we cannot seem to find them me and my group have been trying to but we can&#x27;t find any either so if you know how hit me up and I&#x27;ll answer peace out",
+        "title": "How do you find source codes",
+        "updated_at": "2025-07-09T03:04:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hao_liu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mirror Question: https://news.ycombinator.com/item?id=44503952"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are some cool or underrated tech companies based in Australia?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hao_liu",
+          "story_44505245",
+          "ask_hn"
+        ],
+        "author": "hao_liu",
+        "children": [
+          44516581,
+          44509859,
+          44534475,
+          44512622
+        ],
+        "created_at": "2025-07-09T00:29:30Z",
+        "created_at_i": 1752020970,
+        "num_comments": 4,
+        "objectID": "44505245",
+        "points": 11,
+        "story_id": 44505245,
+        "story_text": "Mirror Question: https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=44503952",
+        "title": "Ask HN: What are some cool or underrated tech companies based in Australia?",
+        "updated_at": "2025-07-12T12:59:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FakeFind_ai"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We built FakeFind to help consumers spot fake or manipulated reviews across Amazon, Walmart, eBay, and more.\nPaste a product link, and it returns a trust score, a short AI-generated summary, and even suggests better-reviewed alternatives.<p>It’s free to use, no login required.\nWould love your feedback!\nhttps://fakefind.ai"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FakeFind"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FakeFind_ai",
+          "story_44504518",
+          "ask_hn"
+        ],
+        "author": "FakeFind_ai",
+        "children": [
+          44505582
+        ],
+        "created_at": "2025-07-08T22:13:24Z",
+        "created_at_i": 1752012804,
+        "num_comments": 1,
+        "objectID": "44504518",
+        "points": 2,
+        "story_id": 44504518,
+        "story_text": "We built FakeFind to help consumers spot fake or manipulated reviews across Amazon, Walmart, eBay, and more.\nPaste a product link, and it returns a trust score, a short AI-generated summary, and even suggests better-reviewed alternatives.<p>It’s free to use, no login required.\nWould love your feedback!\nhttps:&#x2F;&#x2F;fakefind.ai",
+        "title": "FakeFind",
+        "updated_at": "2025-07-19T01:08:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gritlin"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am looking for a tool that can auto instrument my front end , back end (react, python and .net) send the logs somewhere and when a customer reported issue occurs help me debug it (act as a copilot).<p>If such a tool does not exist what is the closest ?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Any tool that can auto instrument code and serve as a debugging copilot"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gritlin",
+          "story_44504447",
+          "ask_hn"
+        ],
+        "author": "gritlin",
+        "children": [
+          44505181,
+          44504513
+        ],
+        "created_at": "2025-07-08T22:00:05Z",
+        "created_at_i": 1752012005,
+        "num_comments": 2,
+        "objectID": "44504447",
+        "points": 1,
+        "story_id": 44504447,
+        "story_text": "I am looking for a tool that can auto instrument my front end , back end (react, python and .net) send the logs somewhere and when a customer reported issue occurs help me debug it (act as a copilot).<p>If such a tool does not exist what is the closest ?",
+        "title": "Ask HN: Any tool that can auto instrument code and serve as a debugging copilot",
+        "updated_at": "2025-07-11T05:41:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cristinon"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building a small productivity peer group for people who actually use productivity systems to stay focused and reach their goals. This isn’t for people who have just watched one video about Notion on YouTube, or casual interest, it’s for people who already track their work (startup, learning, coding, etc.) and want a few peers to share progress, workflows, and feedback with.<p>There is no monetization, no self-promo, no “coaching” allowed. It ruins the incentive to freely share knowledge.<p>This is also not a &quot;community&quot; with thousands of people who are inactive and do not contribute, it is a small personal &quot;group&quot;, like a group chat. For this reason it will be capped at 10 members.<p>Some things we’d do:\n- Share weekly goals, progress, and reflections\n- Compare systems/tools (Obsidian, custom setups, etc.)\n- Give high quality advice and feedback<p>If you’re the kind of person who:\n- Already uses a system (daily review, weekly plan, second brain, whatever)\n- Is working toward something big (startup, deep learning, long-term goals)\n- Values feedback and real accountability over content<p>Fill out this short application:\nhttps://form.typeform.com/to/uVz3sGPI<p>Happy to answer questions in the comments."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who here uses a productivity system daily?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cristinon",
+          "story_44504392",
+          "ask_hn"
+        ],
+        "author": "cristinon",
+        "created_at": "2025-07-08T21:52:52Z",
+        "created_at_i": 1752011572,
+        "num_comments": 0,
+        "objectID": "44504392",
+        "points": 1,
+        "story_id": 44504392,
+        "story_text": "I&#x27;m building a small productivity peer group for people who actually use productivity systems to stay focused and reach their goals. This isn’t for people who have just watched one video about Notion on YouTube, or casual interest, it’s for people who already track their work (startup, learning, coding, etc.) and want a few peers to share progress, workflows, and feedback with.<p>There is no monetization, no self-promo, no “coaching” allowed. It ruins the incentive to freely share knowledge.<p>This is also not a &quot;community&quot; with thousands of people who are inactive and do not contribute, it is a small personal &quot;group&quot;, like a group chat. For this reason it will be capped at 10 members.<p>Some things we’d do:\n- Share weekly goals, progress, and reflections\n- Compare systems&#x2F;tools (Obsidian, custom setups, etc.)\n- Give high quality advice and feedback<p>If you’re the kind of person who:\n- Already uses a system (daily review, weekly plan, second brain, whatever)\n- Is working toward something big (startup, deep learning, long-term goals)\n- Values feedback and real accountability over content<p>Fill out this short application:\nhttps:&#x2F;&#x2F;form.typeform.com&#x2F;to&#x2F;uVz3sGPI<p>Happy to answer questions in the comments.",
+        "title": "Ask HN: Who here uses a productivity system daily?",
+        "updated_at": "2025-07-08T21:55:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fuzztester"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I had used it back in the day for a while, and it seemed to be a nice portal at the time.<p>After that I lost track of it."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: (Retro web q) What happened to the myway.com site?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fuzztester",
+          "story_44504191",
+          "ask_hn"
+        ],
+        "author": "fuzztester",
+        "children": [
+          44504333,
+          44504514,
+          44505743,
+          44506833
+        ],
+        "created_at": "2025-07-08T21:25:49Z",
+        "created_at_i": 1752009949,
+        "num_comments": 4,
+        "objectID": "44504191",
+        "points": 2,
+        "story_id": 44504191,
+        "story_text": "I had used it back in the day for a while, and it seemed to be a nice portal at the time.<p>After that I lost track of it.",
+        "title": "Ask HN: (Retro web q) What happened to the myway.com site?",
+        "updated_at": "2025-07-09T07:07:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sincethebbsera"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here’s some honest feedback from someone who's been sitting behind a computer screen since lotus123, Wodperfect, and Qbasic.<p>First of all, pick a direction and stick with it. You’re in a chat and you scroll down for recent items.  You try to find a DM in an an endless sea of software integration driven messages so you go to “recent DMs” and naturally start to scroll down —but no, you scroll up to get to new messages here.<p>So you find one you think you've been looking for but now you have to scroll down once again to see the more recent message, and painfully slowly.<p>Waiting for the slow app to reload every message along the way that you mistakenly scrolled the first time, but now in the 'right' direction to get back to where you started.<p>Can you just hit Control+End? Or click that arrow and expect it go to the end? Of course not. You keep on scrolling as it loads, painfuly one page at a time, because you’re up against a &quot;Lazy loader” – the result of what is more accurately called lazy development.<p>Why all of this? Becasue you can't find what you're looking for in the first place. It would be nice to be able rid yourself of of these 'robot' chats coming up from one of 3,000 absolutely useless software integrations. Who needs to get messages from Excel? or a screen capture app? It's integration just for the sake of integration – with zero value added by likely 2,500 of them.<p>Its all just NOISE.<p>Useless noise that now takes up a footprint on my pc of over a gigabyte on day one to support it all while burning through CPU cycles and my electrical bill with patch upon patch of poorly thought out system overhead to support apps I don't now, and never  plan to use.<p>IMO, its not even worth trying to fix. Its fundamentally broken and built using a worst-practice approach to application development.<p>Time to rethink and start over.<p>Humbly yours"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Slack is just the worst – and I've used a BBS and 14.4k modem"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sincethebbsera",
+          "story_44504081",
+          "ask_hn"
+        ],
+        "author": "sincethebbsera",
+        "children": [
+          44504391,
+          44504197,
+          44504167,
+          44516801,
+          44504085
+        ],
+        "created_at": "2025-07-08T21:06:29Z",
+        "created_at_i": 1752008789,
+        "num_comments": 6,
+        "objectID": "44504081",
+        "points": 14,
+        "story_id": 44504081,
+        "story_text": "Here’s some honest feedback from someone who&#x27;s been sitting behind a computer screen since lotus123, Wodperfect, and Qbasic.<p>First of all, pick a direction and stick with it. You’re in a chat and you scroll down for recent items.  You try to find a DM in an an endless sea of software integration driven messages so you go to “recent DMs” and naturally start to scroll down —but no, you scroll up to get to new messages here.<p>So you find one you think you&#x27;ve been looking for but now you have to scroll down once again to see the more recent message, and painfully slowly.<p>Waiting for the slow app to reload every message along the way that you mistakenly scrolled the first time, but now in the &#x27;right&#x27; direction to get back to where you started.<p>Can you just hit Control+End? Or click that arrow and expect it go to the end? Of course not. You keep on scrolling as it loads, painfuly one page at a time, because you’re up against a &quot;Lazy loader” – the result of what is more accurately called lazy development.<p>Why all of this? Becasue you can&#x27;t find what you&#x27;re looking for in the first place. It would be nice to be able rid yourself of of these &#x27;robot&#x27; chats coming up from one of 3,000 absolutely useless software integrations. Who needs to get messages from Excel? or a screen capture app? It&#x27;s integration just for the sake of integration – with zero value added by likely 2,500 of them.<p>Its all just NOISE.<p>Useless noise that now takes up a footprint on my pc of over a gigabyte on day one to support it all while burning through CPU cycles and my electrical bill with patch upon patch of poorly thought out system overhead to support apps I don&#x27;t now, and never  plan to use.<p>IMO, its not even worth trying to fix. Its fundamentally broken and built using a worst-practice approach to application development.<p>Time to rethink and start over.<p>Humbly yours",
+        "title": "Slack is just the worst – and I've used a BBS and 14.4k modem",
+        "updated_at": "2025-07-10T22:02:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EGreg"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Got a function that fetches some values asynchronously from somewhere? Consider wrapping it in this and making it a super-function.<p>Here is what it does for all the functions you wrap with it. In my experience, these are very helpful and also gives you a place you can even hook into and add more later (such as handling batching transparencly, etc):<p>Memoizes async getters: Call a function with the same arguments and it returns the cached result instead of recomputing.<p>Handles in-flight deduping: If multiple parts of your app call the same getter while it's still working, only one request is sent. The rest wait on the same promise.<p>Throttles concurrency: You can limit how many calls to your getter run in parallel. Useful for APIs, disk I/O, or anything rate-sensitive.<p>Supports custom caching backends: Pass any object with get, set, delete, and has. Works with Map, LRU, or your own cache logic.<p>Optional LRU eviction: If you pass a plain Map, it upgrades it to an LRU with a max size. Least recently used items are evicted when full.<p>Handles callbacks and Promises: Wraps traditional callback-style async functions, but gives you a modern Promise-based interface.<p>Smart-ish keying: Builds a cache key by stringifying non-function arguments. Works well for most everyday use cases.<p>Supports manual eviction: Call getter.forget(...args) to remove specific entries or getter.force(...args) to bypass the cache for one call.<p>Allows custom preparation logic: You can pass a prepare() function to clone or process cached results before using them.<p><pre><code>  function createGetter(fn, {\n    cache = new Map(),\n    cacheSize = 100, // Used only if cache is a Map\n    throttleSize = Infinity,\n    prepare,\n    callbackIndex,\n    resolveWithFirstArgument = false\n  } = {}) {\n    const inFlight = new Map();\n    let activeCount = 0;\n    const queue = [];\n  \n    // Wrap Map in a simple LRU if needed\n    if (cache instanceof Map) {\n      const rawMap = cache;\n      const lru = new Map();\n  \n      cache = {\n        get(key) {\n          if (!rawMap.has(key)) return undefined;\n          const value = rawMap.get(key);\n          lru.delete(key);\n          lru.set(key, true); // Mark as most recently used\n          return value;\n        },\n        set(key, value) {\n          rawMap.set(key, value);\n          lru.set(key, true);\n          if (rawMap.size &gt; cacheSize) {\n            const oldest = lru.keys().next().value;\n            rawMap.delete(oldest);\n            lru.delete(oldest);\n          }\n        },\n        delete(key) {\n          rawMap.delete(key);\n          lru.delete(key);\n        },\n        has(key) {\n          return rawMap.has(key);\n        }\n      };\n    }\n  \n    function makeKey(args) {\n      return JSON.stringify(args.map(arg =&gt; (typeof arg === 'function' ? 'ƒ' : arg)));\n    }\n  \n    function execute(context, args, key, resolve, reject) {\n      const callback = (err, result) =&gt; {\n        if (err) return reject(err);\n        cache.set(key, [context, arguments]);\n        if (prepare) prepare.call(null, context, arguments);\n        resolve(resolveWithFirstArgument &amp;&amp; context !== undefined ? context : result);\n        processNext();\n      };\n  \n      if (callbackIndex != null) args.splice(callbackIndex, 0, callback);\n      else args.push(callback);\n  \n      if (fn.apply(context, args) === false) {\n        cache.delete(key); // opt-out of cache\n      }\n    }\n  \n    function processNext() {\n      activeCount--;\n      if (queue.length &amp;&amp; activeCount &lt; throttleSize) {\n        const next = queue.shift();\n        activeCount++;\n        execute(...next);\n      }\n    }\n  \n    const getter = function (...args) {\n      return new Promise((resolve, reject) =&gt; {\n        const context = this;\n        const key = makeKey(args);\n  \n        if (cache.has(key)) {\n          const [cachedContext, cachedArgs] = cache.get(key);\n          if (prepare) prepare.call(null, cachedContext, cachedArgs);\n          return resolve(resolveWithFirstArgument &amp;&amp; cachedContext !== undefined ? cachedContext : cachedArgs[1]);\n        }\n  \n        if (inFlight.has(key)) {\n          return inFlight.get(key).then(resolve, reject);\n        }\n  \n        const promise = new Promise((res, rej) =&gt; {\n          if (activeCount &lt; throttleSize) {\n            activeCount++;\n            execute(context, args.slice(), key, res, rej);\n          } else {\n            queue.push([context, args.slice(), key, res, rej]);\n          }\n        });\n  \n        inFlight.set(key, promise);\n        promise.finally(() =&gt; {\n          inFlight.delete(key);\n        });\n  \n        promise.then(resolve, reject);\n      });\n    };\n  \n    getter.forget = (...args) =&gt; {\n      const key = makeKey(args);\n      inFlight.delete(key);\n      return cache.delete(key);\n    };\n  \n    getter.force = function (...args) {\n      getter.forget(...args);\n      return getter.apply(this, args);\n    };\n  \n    return getter;\n  }</code></pre>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "JavaScript helper function for you to use"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_EGreg",
+          "story_44504058",
+          "ask_hn"
+        ],
+        "author": "EGreg",
+        "created_at": "2025-07-08T21:03:30Z",
+        "created_at_i": 1752008610,
+        "num_comments": 0,
+        "objectID": "44504058",
+        "points": 4,
+        "story_id": 44504058,
+        "story_text": "Got a function that fetches some values asynchronously from somewhere? Consider wrapping it in this and making it a super-function.<p>Here is what it does for all the functions you wrap with it. In my experience, these are very helpful and also gives you a place you can even hook into and add more later (such as handling batching transparencly, etc):<p>Memoizes async getters: Call a function with the same arguments and it returns the cached result instead of recomputing.<p>Handles in-flight deduping: If multiple parts of your app call the same getter while it&#x27;s still working, only one request is sent. The rest wait on the same promise.<p>Throttles concurrency: You can limit how many calls to your getter run in parallel. Useful for APIs, disk I&#x2F;O, or anything rate-sensitive.<p>Supports custom caching backends: Pass any object with get, set, delete, and has. Works with Map, LRU, or your own cache logic.<p>Optional LRU eviction: If you pass a plain Map, it upgrades it to an LRU with a max size. Least recently used items are evicted when full.<p>Handles callbacks and Promises: Wraps traditional callback-style async functions, but gives you a modern Promise-based interface.<p>Smart-ish keying: Builds a cache key by stringifying non-function arguments. Works well for most everyday use cases.<p>Supports manual eviction: Call getter.forget(...args) to remove specific entries or getter.force(...args) to bypass the cache for one call.<p>Allows custom preparation logic: You can pass a prepare() function to clone or process cached results before using them.<p><pre><code>  function createGetter(fn, {\n    cache = new Map(),\n    cacheSize = 100, &#x2F;&#x2F; Used only if cache is a Map\n    throttleSize = Infinity,\n    prepare,\n    callbackIndex,\n    resolveWithFirstArgument = false\n  } = {}) {\n    const inFlight = new Map();\n    let activeCount = 0;\n    const queue = [];\n  \n    &#x2F;&#x2F; Wrap Map in a simple LRU if needed\n    if (cache instanceof Map) {\n      const rawMap = cache;\n      const lru = new Map();\n  \n      cache = {\n        get(key) {\n          if (!rawMap.has(key)) return undefined;\n          const value = rawMap.get(key);\n          lru.delete(key);\n          lru.set(key, true); &#x2F;&#x2F; Mark as most recently used\n          return value;\n        },\n        set(key, value) {\n          rawMap.set(key, value);\n          lru.set(key, true);\n          if (rawMap.size &gt; cacheSize) {\n            const oldest = lru.keys().next().value;\n            rawMap.delete(oldest);\n            lru.delete(oldest);\n          }\n        },\n        delete(key) {\n          rawMap.delete(key);\n          lru.delete(key);\n        },\n        has(key) {\n          return rawMap.has(key);\n        }\n      };\n    }\n  \n    function makeKey(args) {\n      return JSON.stringify(args.map(arg =&gt; (typeof arg === &#x27;function&#x27; ? &#x27;ƒ&#x27; : arg)));\n    }\n  \n    function execute(context, args, key, resolve, reject) {\n      const callback = (err, result) =&gt; {\n        if (err) return reject(err);\n        cache.set(key, [context, arguments]);\n        if (prepare) prepare.call(null, context, arguments);\n        resolve(resolveWithFirstArgument &amp;&amp; context !== undefined ? context : result);\n        processNext();\n      };\n  \n      if (callbackIndex != null) args.splice(callbackIndex, 0, callback);\n      else args.push(callback);\n  \n      if (fn.apply(context, args) === false) {\n        cache.delete(key); &#x2F;&#x2F; opt-out of cache\n      }\n    }\n  \n    function processNext() {\n      activeCount--;\n      if (queue.length &amp;&amp; activeCount &lt; throttleSize) {\n        const next = queue.shift();\n        activeCount++;\n        execute(...next);\n      }\n    }\n  \n    const getter = function (...args) {\n      return new Promise((resolve, reject) =&gt; {\n        const context = this;\n        const key = makeKey(args);\n  \n        if (cache.has(key)) {\n          const [cachedContext, cachedArgs] = cache.get(key);\n          if (prepare) prepare.call(null, cachedContext, cachedArgs);\n          return resolve(resolveWithFirstArgument &amp;&amp; cachedContext !== undefined ? cachedContext : cachedArgs[1]);\n        }\n  \n        if (inFlight.has(key)) {\n          return inFlight.get(key).then(resolve, reject);\n        }\n  \n        const promise = new Promise((res, rej) =&gt; {\n          if (activeCount &lt; throttleSize) {\n            activeCount++;\n            execute(context, args.slice(), key, res, rej);\n          } else {\n            queue.push([context, args.slice(), key, res, rej]);\n          }\n        });\n  \n        inFlight.set(key, promise);\n        promise.finally(() =&gt; {\n          inFlight.delete(key);\n        });\n  \n        promise.then(resolve, reject);\n      });\n    };\n  \n    getter.forget = (...args) =&gt; {\n      const key = makeKey(args);\n      inFlight.delete(key);\n      return cache.delete(key);\n    };\n  \n    getter.force = function (...args) {\n      getter.forget(...args);\n      return getter.apply(this, args);\n    };\n  \n    return getter;\n  }</code></pre>",
+        "title": "JavaScript helper function for you to use",
+        "updated_at": "2025-07-08T22:56:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "neuropacabra"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wonder what is the nerdiest blog you have ever seen?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nerdiest Blog"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_neuropacabra",
+          "story_44504038",
+          "ask_hn"
+        ],
+        "author": "neuropacabra",
+        "created_at": "2025-07-08T21:00:19Z",
+        "created_at_i": 1752008419,
+        "num_comments": 0,
+        "objectID": "44504038",
+        "points": 2,
+        "story_id": 44504038,
+        "story_text": "I wonder what is the nerdiest blog you have ever seen?",
+        "title": "Nerdiest Blog",
+        "updated_at": "2025-07-08T21:46:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pedrodelfino"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm based in Canada and curious to learn more about interesting or up-and-coming tech companies here — not just the usual big names like Shopify or Lightspeed, but also smaller startups, bootstrapped companies, or niche players doing great work in software, hardware, AI, sustainability, fintech, etc."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are some cool or underrated tech companies based in Canada?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pedrodelfino",
+          "story_44503952",
+          "ask_hn"
+        ],
+        "author": "pedrodelfino",
+        "children": [
+          44504565,
+          44505049,
+          44504959,
+          44504802,
+          44504529,
+          44504838,
+          44505003,
+          44504634,
+          44504989,
+          44504827,
+          44504968,
+          44504791,
+          44505089,
+          44504776,
+          44504582,
+          44552312,
+          44504853,
+          44505098,
+          44532228,
+          44504807,
+          44505644,
+          44509922,
+          44515949,
+          44505216,
+          44504856,
+          44505114,
+          44505035,
+          44505022,
+          44504459,
+          44504541,
+          44515607,
+          44505064,
+          44504530,
+          44507508,
+          44505213,
+          44504147,
+          44504446,
+          44505629,
+          44504151,
+          44505959,
+          44505390,
+          44504977,
+          44505174,
+          44504747,
+          44507944,
+          44505176,
+          44504654,
+          44504154,
+          44504423,
+          44504739,
+          44504489,
+          44504714,
+          44504940,
+          44504924
+        ],
+        "created_at": "2025-07-08T20:50:04Z",
+        "created_at_i": 1752007804,
+        "num_comments": 62,
+        "objectID": "44503952",
+        "points": 89,
+        "story_id": 44503952,
+        "story_text": "I&#x27;m based in Canada and curious to learn more about interesting or up-and-coming tech companies here — not just the usual big names like Shopify or Lightspeed, but also smaller startups, bootstrapped companies, or niche players doing great work in software, hardware, AI, sustainability, fintech, etc.",
+        "title": "Ask HN: What are some cool or underrated tech companies based in Canada?",
+        "updated_at": "2025-11-15T20:47:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "h100ker"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When I look back, Buildbook wasn’t born in a boardroom — it started from a place of frustration. I was studying Mathematical Finance at CSU Long Beach and looking for people to build real software with. Not for a class, not for a grade — just to get better. But around me? Nothing. No builders. No momentum.<p>So I started looking elsewhere. I found a Discord server of people helping each other with Leetcode. We started talking. It turned out many of them were from Berkeley or nearby, and they were just as hungry to build something real. We spun up a side chat and built a real-time podcast fact-checking extension together. It wasn’t perfect, but it clicked. Everyone grew. We gained new skills, new stories to tell in interviews, and most importantly, new collaborators.<p>That one project changed everything. It made me realize that what’s broken isn't just recruiting — it’s how technical people find each other, collaborate, and show the world what they can do. LinkedIn is outdated. GitHub is noisy. Product Hunt is a ghost town. None of these platforms were built for what Gen Z and AI-native builders need.<p>So we started Buildbook — a place where technical students and professionals collaborate in public, get credit for what they build, and get discovered based on real work. It’s social GitHub meets verified identity. We launched in January, and since then over 16,000 users have joined us — all grassroots, all word of mouth.<p>This isn't just about helping students build resumes. It’s about redefining how people break into tech, how they grow, and how recruiters find actual builders instead of keyword matches. I’m building Buildbook because I needed it. And I know a million other people do too."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built a Product Hunt People Are Using"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_h100ker",
+          "story_44503334",
+          "ask_hn"
+        ],
+        "author": "h100ker",
+        "children": [
+          44504394
+        ],
+        "created_at": "2025-07-08T19:42:21Z",
+        "created_at_i": 1752003741,
+        "num_comments": 1,
+        "objectID": "44503334",
+        "points": 1,
+        "story_id": 44503334,
+        "story_text": "When I look back, Buildbook wasn’t born in a boardroom — it started from a place of frustration. I was studying Mathematical Finance at CSU Long Beach and looking for people to build real software with. Not for a class, not for a grade — just to get better. But around me? Nothing. No builders. No momentum.<p>So I started looking elsewhere. I found a Discord server of people helping each other with Leetcode. We started talking. It turned out many of them were from Berkeley or nearby, and they were just as hungry to build something real. We spun up a side chat and built a real-time podcast fact-checking extension together. It wasn’t perfect, but it clicked. Everyone grew. We gained new skills, new stories to tell in interviews, and most importantly, new collaborators.<p>That one project changed everything. It made me realize that what’s broken isn&#x27;t just recruiting — it’s how technical people find each other, collaborate, and show the world what they can do. LinkedIn is outdated. GitHub is noisy. Product Hunt is a ghost town. None of these platforms were built for what Gen Z and AI-native builders need.<p>So we started Buildbook — a place where technical students and professionals collaborate in public, get credit for what they build, and get discovered based on real work. It’s social GitHub meets verified identity. We launched in January, and since then over 16,000 users have joined us — all grassroots, all word of mouth.<p>This isn&#x27;t just about helping students build resumes. It’s about redefining how people break into tech, how they grow, and how recruiters find actual builders instead of keyword matches. I’m building Buildbook because I needed it. And I know a million other people do too.",
+        "title": "Built a Product Hunt People Are Using",
+        "updated_at": "2025-11-13T16:37:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "brevis"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Based on everything you know about me — including my goals, interests, reasoning style, philosophy, logic, past conversations, and the way I formulate thoughts — create a personalized prompt that could be my own input prompt if I were an LLM and my life were the output.<p>The prompt should accurately and deeply reflect my inner structure: how I think, what drives me, how I interact with reality, and what truly matters to me.<p>Use language, tone, and density that feel natural to me.<p>Begin your answer with the phrase: &quot;My prompt, if I were an LLM:&quot;"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask Your LLM:)"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_brevis",
+          "story_44503153",
+          "ask_hn"
+        ],
+        "author": "brevis",
+        "created_at": "2025-07-08T19:22:09Z",
+        "created_at_i": 1752002529,
+        "num_comments": 0,
+        "objectID": "44503153",
+        "points": 2,
+        "story_id": 44503153,
+        "story_text": "Based on everything you know about me — including my goals, interests, reasoning style, philosophy, logic, past conversations, and the way I formulate thoughts — create a personalized prompt that could be my own input prompt if I were an LLM and my life were the output.<p>The prompt should accurately and deeply reflect my inner structure: how I think, what drives me, how I interact with reality, and what truly matters to me.<p>Use language, tone, and density that feel natural to me.<p>Begin your answer with the phrase: &quot;My prompt, if I were an LLM:&quot;",
+        "title": "Ask Your LLM:)",
+        "updated_at": "2025-07-09T07:16:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ariajames"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’ve been working on a lightweight IoT edge node using the ESP32 for collecting environmental and motion data in an industrial setting. The goal is to keep it low-power, scalable, and MQTT-compatible for integration with existing cloud platforms. I recently followed this practical guide on  that walks through how to set up an ESP32 for MQTT data publishing, which helped me solve some initial bottlenecks:\nhttps://www.theengineeringprojects.com/2021/11/esp32-mqtt.html<p>I also looked into Eclipse Mosquitto’s broker configuration and drew inspiration from Balena’s edge device management patterns. I’m curious to know how others in the community have structured lightweight, reliable data pipelines for industrial or environmental IoT using open hardware. What did you learn about power, security, or real-world connectivity challenges?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Building a Low-Cost IoT Edge Node with ESP32: Lessons from Real Deployments"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ariajames",
+          "story_44502989",
+          "ask_hn"
+        ],
+        "author": "ariajames",
+        "children": [
+          44518003,
+          44503076
+        ],
+        "created_at": "2025-07-08T19:05:33Z",
+        "created_at_i": 1752001533,
+        "num_comments": 2,
+        "objectID": "44502989",
+        "points": 1,
+        "story_id": 44502989,
+        "story_text": "I’ve been working on a lightweight IoT edge node using the ESP32 for collecting environmental and motion data in an industrial setting. The goal is to keep it low-power, scalable, and MQTT-compatible for integration with existing cloud platforms. I recently followed this practical guide on  that walks through how to set up an ESP32 for MQTT data publishing, which helped me solve some initial bottlenecks:\nhttps:&#x2F;&#x2F;www.theengineeringprojects.com&#x2F;2021&#x2F;11&#x2F;esp32-mqtt.html<p>I also looked into Eclipse Mosquitto’s broker configuration and drew inspiration from Balena’s edge device management patterns. I’m curious to know how others in the community have structured lightweight, reliable data pipelines for industrial or environmental IoT using open hardware. What did you learn about power, security, or real-world connectivity challenges?",
+        "title": "Building a Low-Cost IoT Edge Node with ESP32: Lessons from Real Deployments",
+        "updated_at": "2025-07-10T06:41:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mcavdar"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Grok started swearing a lot in Turkish conversations, extremely strong profanity and insults. Is it the same in your language too?<p>Some examples:<p>Son of a b.tch.<p>I f.ck his/her mother and sister."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Grok went crazy"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mcavdar",
+          "story_44502981",
+          "ask_hn"
+        ],
+        "author": "mcavdar",
+        "children": [
+          44503949,
+          44505780,
+          44503134,
+          44503189,
+          44503066,
+          44503746
+        ],
+        "created_at": "2025-07-08T19:04:34Z",
+        "created_at_i": 1752001474,
+        "num_comments": 3,
+        "objectID": "44502981",
+        "points": 14,
+        "story_id": 44502981,
+        "story_text": "Grok started swearing a lot in Turkish conversations, extremely strong profanity and insults. Is it the same in your language too?<p>Some examples:<p>Son of a b.tch.<p>I f.ck his&#x2F;her mother and sister.",
+        "title": "Ask HN: Grok went crazy",
+        "updated_at": "2025-07-13T22:07:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tetris11"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What's your schedule like?<p>How do you motivate yourself to work?<p>Is caffeine/sleep/food an issue?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: People who work different timezones than your company. How sched?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tetris11",
+          "story_44502833",
+          "ask_hn"
+        ],
+        "author": "tetris11",
+        "children": [
+          44504931,
+          44523692,
+          44507733,
+          44548504,
+          44540325,
+          44503712,
+          44502949,
+          44504899,
+          44505668,
+          44503071,
+          44506832,
+          44503271,
+          44502979,
+          44505209,
+          44525904,
+          44502920,
+          44504967,
+          44506028,
+          44502955
+        ],
+        "created_at": "2025-07-08T18:45:46Z",
+        "created_at_i": 1752000346,
+        "num_comments": 27,
+        "objectID": "44502833",
+        "points": 18,
+        "story_id": 44502833,
+        "story_text": "What&#x27;s your schedule like?<p>How do you motivate yourself to work?<p>Is caffeine&#x2F;sleep&#x2F;food an issue?",
+        "title": "Ask HN: People who work different timezones than your company. How sched?",
+        "updated_at": "2025-07-21T08:34:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ambivalents"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Getting burned out by the stakeholder management grind. Meetings on meetings with little tangible value I can point to. Don't get me wrong, my team produces incredible work and I'm proud to be a part of it. But I miss building, creating, imagining. My favorite part of my job now is the occasional chance I get to jump into Figma and wireframe my features.<p>Anyone make this transition? I've been a PM for 7 years. I have 2 years web developer experience before that. I feel like this could actually give me an edge as a designer. I love tech, I love making software, I don't want lose my spark for it which I see happening with another year or two of PMing."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Anyone Make the Move from Product Manager to UX/UI Designer?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ambivalents",
+          "story_44502775",
+          "ask_hn"
+        ],
+        "author": "ambivalents",
+        "children": [
+          44507815
+        ],
+        "created_at": "2025-07-08T18:39:31Z",
+        "created_at_i": 1751999971,
+        "num_comments": 1,
+        "objectID": "44502775",
+        "points": 2,
+        "story_id": 44502775,
+        "story_text": "Getting burned out by the stakeholder management grind. Meetings on meetings with little tangible value I can point to. Don&#x27;t get me wrong, my team produces incredible work and I&#x27;m proud to be a part of it. But I miss building, creating, imagining. My favorite part of my job now is the occasional chance I get to jump into Figma and wireframe my features.<p>Anyone make this transition? I&#x27;ve been a PM for 7 years. I have 2 years web developer experience before that. I feel like this could actually give me an edge as a designer. I love tech, I love making software, I don&#x27;t want lose my spark for it which I see happening with another year or two of PMing.",
+        "title": "Ask HN: Anyone Make the Move from Product Manager to UX/UI Designer?",
+        "updated_at": "2025-07-09T22:51:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shubhamrrawal"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Rooktook.com – daily chess tournament app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shubhamrrawal",
+          "story_44502424",
+          "ask_hn"
+        ],
+        "author": "shubhamrrawal",
+        "children": [
+          44502436
+        ],
+        "created_at": "2025-07-08T17:58:26Z",
+        "created_at_i": 1751997506,
+        "num_comments": 0,
+        "objectID": "44502424",
+        "points": 1,
+        "story_id": 44502424,
+        "title": "Rooktook.com – daily chess tournament app",
+        "updated_at": "2025-07-08T18:01:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Taikhoom10"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey founders, So I have had a startup in the past that did not work out, for some legal reasons. But while I was working on it I really noticed I had a hard time manually having to find my target users and then outreaching. Founders should focus on what need to do build, let the manual finding of target users be Soya's problem. So I built Soya. Founders input there target users and get a curated list of communities and tailored outreach strategies to each community. So check us out and give me honest feedback that would be super appreciated.\nreply\nSoya link : https://soya-platform.vercel.app/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Soya a platform where founders find where there target users are online"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Taikhoom10",
+          "story_44502294",
+          "ask_hn"
+        ],
+        "author": "Taikhoom10",
+        "children": [
+          44503809,
+          44502301
+        ],
+        "created_at": "2025-07-08T17:44:23Z",
+        "created_at_i": 1751996663,
+        "num_comments": 3,
+        "objectID": "44502294",
+        "points": 1,
+        "story_id": 44502294,
+        "story_text": "Hey founders, So I have had a startup in the past that did not work out, for some legal reasons. But while I was working on it I really noticed I had a hard time manually having to find my target users and then outreaching. Founders should focus on what need to do build, let the manual finding of target users be Soya&#x27;s problem. So I built Soya. Founders input there target users and get a curated list of communities and tailored outreach strategies to each community. So check us out and give me honest feedback that would be super appreciated.\nreply\nSoya link : https:&#x2F;&#x2F;soya-platform.vercel.app&#x2F;",
+        "title": "Soya a platform where founders find where there target users are online",
+        "updated_at": "2025-08-13T01:46:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mkrishnan"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I recently ordered Zepbound, a temperature-sensitive medication requiring strict storage conditions (46°F), from Amazon Pharmacy. The consistently inadequate packaging has resulted in repeated deliveries at room temperature, compromising the medication's efficacy and potentially posing a health risk.<p>Amazon Pharmacy's response to my complaints was dismissive, suggesting I fill my prescription elsewhere. My subsequent complaint to the FDA has yielded no action.<p>Please avoid amazon pharmacy for any medication requires temperature control."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Amazon Pharmacy's Negligence Endangers Patient Safety"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mkrishnan",
+          "story_44502244",
+          "ask_hn"
+        ],
+        "author": "mkrishnan",
+        "children": [
+          44502268,
+          44502329,
+          44502259,
+          44502248
+        ],
+        "created_at": "2025-07-08T17:38:59Z",
+        "created_at_i": 1751996339,
+        "num_comments": 3,
+        "objectID": "44502244",
+        "points": 3,
+        "story_id": 44502244,
+        "story_text": "I recently ordered Zepbound, a temperature-sensitive medication requiring strict storage conditions (46°F), from Amazon Pharmacy. The consistently inadequate packaging has resulted in repeated deliveries at room temperature, compromising the medication&#x27;s efficacy and potentially posing a health risk.<p>Amazon Pharmacy&#x27;s response to my complaints was dismissive, suggesting I fill my prescription elsewhere. My subsequent complaint to the FDA has yielded no action.<p>Please avoid amazon pharmacy for any medication requires temperature control.",
+        "title": "Tell HN: Amazon Pharmacy's Negligence Endangers Patient Safety",
+        "updated_at": "2025-07-09T17:42:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alexcos"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Inspired by the latest Brandon Stanton X post I'm curious what dream did the HN community give up on?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What dream did you give up on?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alexcos",
+          "story_44502001",
+          "ask_hn"
+        ],
+        "author": "alexcos",
+        "children": [
+          44502098,
+          44502250,
+          44503004,
+          44502061,
+          44529171,
+          44528088
+        ],
+        "created_at": "2025-07-08T17:15:00Z",
+        "created_at_i": 1751994900,
+        "num_comments": 6,
+        "objectID": "44502001",
+        "points": 5,
+        "story_id": 44502001,
+        "story_text": "Inspired by the latest Brandon Stanton X post I&#x27;m curious what dream did the HN community give up on?",
+        "title": "Ask HN: What dream did you give up on?",
+        "updated_at": "2025-07-11T19:46:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "d00mB0t"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI is obviously useful, but people are acting like it's the second coming of Christ. It' very tiresome."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Anyone else tired of the AI hype?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_d00mB0t",
+          "story_44501758",
+          "ask_hn"
+        ],
+        "author": "d00mB0t",
+        "children": [
+          44502081,
+          44502173,
+          44502150,
+          44502105,
+          44502046,
+          44502002,
+          44502009,
+          44502118,
+          44506567,
+          44502199,
+          44501991,
+          44502182
+        ],
+        "created_at": "2025-07-08T16:50:40Z",
+        "created_at_i": 1751993440,
+        "num_comments": 11,
+        "objectID": "44501758",
+        "points": 20,
+        "story_id": 44501758,
+        "story_text": "AI is obviously useful, but people are acting like it&#x27;s the second coming of Christ. It&#x27; very tiresome.",
+        "title": "Anyone else tired of the AI hype?",
+        "updated_at": "2025-07-17T20:38:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TimCTRL"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here are a few examples;<p>Vibe Coding - Using an LLM or LLM Powered IDE to build an application.<p>Messaging Interface popularised by ChatGPT - Standard way for textual conversation with LLM<p>Typing Text Animation - Standard way of outputting text across all mainstream text based interactions with LLM's<p>$20/Month Subscription - De facto standard pricing for LLM's and LLM based applications<p>Token Based Pricing - Standard too for API based usage<p>Prompt Engineering - Standard way to steer LLM output/behaviour<p>MCP - Standard way for LLM's to speak to external data sources and tools<p>To mention but a few..."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: Anything you are working on in AI could become an industry standard"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_TimCTRL",
+          "story_44501317",
+          "ask_hn"
+        ],
+        "author": "TimCTRL",
+        "children": [
+          44501377
+        ],
+        "created_at": "2025-07-08T16:07:13Z",
+        "created_at_i": 1751990833,
+        "num_comments": 1,
+        "objectID": "44501317",
+        "points": 1,
+        "story_id": 44501317,
+        "story_text": "Here are a few examples;<p>Vibe Coding - Using an LLM or LLM Powered IDE to build an application.<p>Messaging Interface popularised by ChatGPT - Standard way for textual conversation with LLM<p>Typing Text Animation - Standard way of outputting text across all mainstream text based interactions with LLM&#x27;s<p>$20&#x2F;Month Subscription - De facto standard pricing for LLM&#x27;s and LLM based applications<p>Token Based Pricing - Standard too for API based usage<p>Prompt Engineering - Standard way to steer LLM output&#x2F;behaviour<p>MCP - Standard way for LLM&#x27;s to speak to external data sources and tools<p>To mention but a few...",
+        "title": "Tell HN: Anything you are working on in AI could become an industry standard",
+        "updated_at": "2025-07-08T16:44:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Jacqued"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What are some good resources to learn how AI is built into products? How it impacts the development cycle, evals, etc.<p>Looking for books, blogs, any type of resource really!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Where to learn about building AI products?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Jacqued",
+          "story_44501136",
+          "ask_hn"
+        ],
+        "author": "Jacqued",
+        "children": [
+          44501315
+        ],
+        "created_at": "2025-07-08T15:49:54Z",
+        "created_at_i": 1751989794,
+        "num_comments": 1,
+        "objectID": "44501136",
+        "points": 2,
+        "story_id": 44501136,
+        "story_text": "What are some good resources to learn how AI is built into products? How it impacts the development cycle, evals, etc.<p>Looking for books, blogs, any type of resource really!",
+        "title": "Ask HN: Where to learn about building AI products?",
+        "updated_at": "2025-07-09T08:31:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "molmom93"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Received this text. Is it legit ?<p>Hello! My name is Lauren from Y Combinator. We were really impressed with your profile and would like to provide you the chance to take on a flexible remote role. In this position, you would assist merchants by updating their data, improving their visibility, and managing bookings effectively.\nYou can work from anywhere for 60 to 90 minutes a day and earn anywhere from $200 to $500 each day, with a guaranteed $800 base every four days. There is a paid five-day trial period, and monthly earnings could exceed $5,000 with bonuses included. Full training and benefits are part of the package; you must be at least 21 years old to apply.\nDon’t miss out on limited availability! Text 'Yes' to 2132490105 to find out more."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Verification"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_molmom93",
+          "story_44501120",
+          "ask_hn"
+        ],
+        "author": "molmom93",
+        "children": [
+          44505647,
+          44501183,
+          44611542
+        ],
+        "created_at": "2025-07-08T15:46:48Z",
+        "created_at_i": 1751989608,
+        "num_comments": 2,
+        "objectID": "44501120",
+        "points": 1,
+        "story_id": 44501120,
+        "story_text": "Received this text. Is it legit ?<p>Hello! My name is Lauren from Y Combinator. We were really impressed with your profile and would like to provide you the chance to take on a flexible remote role. In this position, you would assist merchants by updating their data, improving their visibility, and managing bookings effectively.\nYou can work from anywhere for 60 to 90 minutes a day and earn anywhere from $200 to $500 each day, with a guaranteed $800 base every four days. There is a paid five-day trial period, and monthly earnings could exceed $5,000 with bonuses included. Full training and benefits are part of the package; you must be at least 21 years old to apply.\nDon’t miss out on limited availability! Text &#x27;Yes&#x27; to 2132490105 to find out more.",
+        "title": "Verification",
+        "updated_at": "2025-07-19T00:56:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kundi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,<p>We’re in urgent need of help with our OVH account, which was locked due to a billing issue. The account hosted a non-profit public directory of medical professionals—a community-driven platform helping people find trusted doctors, with thousands of unique comments and contributions from users.<p>We had also been paying OVH for backups, but it turns out that this was the only backup, and we’ve now lost access to it.<p>We've tried reaching OVH support, but haven't received help yet. We’re hoping someone here might know a contact inside OVH or offer advice. Our requests:<p>This data serves the public good and the loss would be devastating—not just for us, but for everyone who relied on it.<p>Any help or visibility is greatly appreciated."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Restoring OVH VPS with non-profit directory of doctors"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kundi",
+          "story_44501112",
+          "ask_hn"
+        ],
+        "author": "kundi",
+        "created_at": "2025-07-08T15:45:42Z",
+        "created_at_i": 1751989542,
+        "num_comments": 0,
+        "objectID": "44501112",
+        "points": 4,
+        "story_id": 44501112,
+        "story_text": "Hi HN,<p>We’re in urgent need of help with our OVH account, which was locked due to a billing issue. The account hosted a non-profit public directory of medical professionals—a community-driven platform helping people find trusted doctors, with thousands of unique comments and contributions from users.<p>We had also been paying OVH for backups, but it turns out that this was the only backup, and we’ve now lost access to it.<p>We&#x27;ve tried reaching OVH support, but haven&#x27;t received help yet. We’re hoping someone here might know a contact inside OVH or offer advice. Our requests:<p>This data serves the public good and the loss would be devastating—not just for us, but for everyone who relied on it.<p>Any help or visibility is greatly appreciated.",
+        "title": "Restoring OVH VPS with non-profit directory of doctors",
+        "updated_at": "2025-07-08T20:29:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eknkc"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "While https://www.githubstatus.com/ shows no issues, our action runs on multiple repositories have been failing in the last 30 minutes. Anyone seeing this?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Are GitHub Actions Down"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_eknkc",
+          "story_44500807",
+          "ask_hn"
+        ],
+        "author": "eknkc",
+        "children": [
+          44501202,
+          44500817
+        ],
+        "created_at": "2025-07-08T15:15:40Z",
+        "created_at_i": 1751987740,
+        "num_comments": 1,
+        "objectID": "44500807",
+        "points": 2,
+        "story_id": 44500807,
+        "story_text": "While https:&#x2F;&#x2F;www.githubstatus.com&#x2F; shows no issues, our action runs on multiple repositories have been failing in the last 30 minutes. Anyone seeing this?",
+        "title": "Ask HN: Are GitHub Actions Down",
+        "updated_at": "2025-07-08T16:00:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ricecat"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My last post, &quot;Programming Language Switching Politics&quot;, got some pretty solid attention. Based on the traffic stats from our backend, it’s clear we had a lot of readers—really appreciate the interest!<p>So today, I want to wrap up the third part of this little series and complete my theory.<p>Now, here’s a fun bit: I never actually pointed to Rust in the post. The theory I laid out applies to any programming language and any dev team—it's meant to be general and language-neutral. But somehow, I still got a few unreasonable comments from the &quot;Rust people&quot;. Maybe it was because I included a Twitter image that mentioned Rust? Anyway, seems like someone might’ve barked up the wrong tree.<p>Hey, I know some real Rust people, they are good. Don't pretend to be offended and make Rust community look bad.<p>Now back to our topic.<p>https://www.gizvault.com/archives/language-switching-sociology"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Programming Language Switching Sociology: Be a Human"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ricecat",
+          "story_44500261",
+          "ask_hn"
+        ],
+        "author": "ricecat",
+        "children": [
+          44500320
+        ],
+        "created_at": "2025-07-08T14:21:34Z",
+        "created_at_i": 1751984494,
+        "num_comments": 1,
+        "objectID": "44500261",
+        "points": 4,
+        "story_id": 44500261,
+        "story_text": "My last post, &quot;Programming Language Switching Politics&quot;, got some pretty solid attention. Based on the traffic stats from our backend, it’s clear we had a lot of readers—really appreciate the interest!<p>So today, I want to wrap up the third part of this little series and complete my theory.<p>Now, here’s a fun bit: I never actually pointed to Rust in the post. The theory I laid out applies to any programming language and any dev team—it&#x27;s meant to be general and language-neutral. But somehow, I still got a few unreasonable comments from the &quot;Rust people&quot;. Maybe it was because I included a Twitter image that mentioned Rust? Anyway, seems like someone might’ve barked up the wrong tree.<p>Hey, I know some real Rust people, they are good. Don&#x27;t pretend to be offended and make Rust community look bad.<p>Now back to our topic.<p>https:&#x2F;&#x2F;www.gizvault.com&#x2F;archives&#x2F;language-switching-sociology",
+        "title": "Programming Language Switching Sociology: Be a Human",
+        "updated_at": "2025-07-08T23:53:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "obayesshelton"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So I am using the YouTube API and for example this Video - https://www.youtube.com/watch?v=4W64WGFy-Js I cannot get captions. However https://www.youtubetotext.org/?s=1&amp;v=4W64WGFy-Js&amp;lang=en-GB will return captions.<p>Does anyone know how they are doing this?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How Does Youtubetotext Work?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_obayesshelton",
+          "story_44500035",
+          "ask_hn"
+        ],
+        "author": "obayesshelton",
+        "created_at": "2025-07-08T13:58:57Z",
+        "created_at_i": 1751983137,
+        "num_comments": 0,
+        "objectID": "44500035",
+        "points": 1,
+        "story_id": 44500035,
+        "story_text": "So I am using the YouTube API and for example this Video - https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=4W64WGFy-Js I cannot get captions. However https:&#x2F;&#x2F;www.youtubetotext.org&#x2F;?s=1&amp;v=4W64WGFy-Js&amp;lang=en-GB will return captions.<p>Does anyone know how they are doing this?",
+        "title": "Ask HN: How Does Youtubetotext Work?",
+        "updated_at": "2025-07-08T14:04:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thisismyswamp"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I came across this old post by @gojomo: https://news.ycombinator.com/item?id=4758798<p>which suggests a different concept of time for ranking posts<p>the main issue trying to be solved is that currently there is an incentive to find the best time to post something, as the variance in activity causes some times to make for a higher likelihood of post popularity<p>the suggestion is thus for there to be a different kind of time &quot;tick&quot; - instead of time itself, maybe a site-wide counter of activity such as number of views, votes, or submissions<p>I find the idea of removing the incentive to find the best time to post interesting. I think an ideal ranking algorithm drives the correlation between the time of posting to the number of impressions on a post to zero.<p>Interested in hearing y'alls thoughts!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Should HN use a different time algorithm for post ranking?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_thisismyswamp",
+          "story_44499991",
+          "ask_hn"
+        ],
+        "author": "thisismyswamp",
+        "children": [
+          44500232,
+          44500011
+        ],
+        "created_at": "2025-07-08T13:52:56Z",
+        "created_at_i": 1751982776,
+        "num_comments": 6,
+        "objectID": "44499991",
+        "points": 3,
+        "story_id": 44499991,
+        "story_text": "I came across this old post by @gojomo: https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=4758798<p>which suggests a different concept of time for ranking posts<p>the main issue trying to be solved is that currently there is an incentive to find the best time to post something, as the variance in activity causes some times to make for a higher likelihood of post popularity<p>the suggestion is thus for there to be a different kind of time &quot;tick&quot; - instead of time itself, maybe a site-wide counter of activity such as number of views, votes, or submissions<p>I find the idea of removing the incentive to find the best time to post interesting. I think an ideal ranking algorithm drives the correlation between the time of posting to the number of impressions on a post to zero.<p>Interested in hearing y&#x27;alls thoughts!",
+        "title": "Ask HN: Should HN use a different time algorithm for post ranking?",
+        "updated_at": "2025-07-09T20:38:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jotbot"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Anyone have any experience with these container orchestration platforms?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Thoughts on HPE Ezmeral/Private Cloud AI"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jotbot",
+          "story_44499851",
+          "ask_hn"
+        ],
+        "author": "jotbot",
+        "created_at": "2025-07-08T13:38:18Z",
+        "created_at_i": 1751981898,
+        "num_comments": 0,
+        "objectID": "44499851",
+        "points": 1,
+        "story_id": 44499851,
+        "story_text": "Anyone have any experience with these container orchestration platforms?",
+        "title": "Ask HN: Thoughts on HPE Ezmeral/Private Cloud AI",
+        "updated_at": "2025-07-08T13:43:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rylan-talerico"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN,<p>A friend and I are researching the RAG development process.<p>Specifically, we want to learn about the developer experience of building RAG pipelines and memory for AI.<p>Do you have experience building RAG pipelines? If so, what did you find most challenging? How do you think the process could be improved?<p>We're exploring everything from document parsing, embedding, and chunking to vector and graph databases.<p>Would love your input! Thanks in advance."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Developer Experience with RAG"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rylan-talerico",
+          "story_44499833",
+          "ask_hn"
+        ],
+        "author": "rylan-talerico",
+        "created_at": "2025-07-08T13:35:17Z",
+        "created_at_i": 1751981717,
+        "num_comments": 0,
+        "objectID": "44499833",
+        "points": 2,
+        "story_id": 44499833,
+        "story_text": "Hey HN,<p>A friend and I are researching the RAG development process.<p>Specifically, we want to learn about the developer experience of building RAG pipelines and memory for AI.<p>Do you have experience building RAG pipelines? If so, what did you find most challenging? How do you think the process could be improved?<p>We&#x27;re exploring everything from document parsing, embedding, and chunking to vector and graph databases.<p>Would love your input! Thanks in advance.",
+        "title": "Ask HN: Developer Experience with RAG",
+        "updated_at": "2025-07-08T13:39:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fud101"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you click on 'past' you can choose a year back and the newsfeed is filled with all kinds of interesting and wonderful posts.<p>These days all you'll find are rehashed to death AI talking points but even a year ago, things were far better. What happened?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: HN was much more interesting a year ago"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fud101",
+          "story_44499724",
+          "ask_hn"
+        ],
+        "author": "fud101",
+        "children": [
+          44500648,
+          44500960,
+          44499733,
+          44500465,
+          44500143,
+          44500091,
+          44499811,
+          44499874,
+          44499934,
+          44499747
+        ],
+        "created_at": "2025-07-08T13:21:59Z",
+        "created_at_i": 1751980919,
+        "num_comments": 12,
+        "objectID": "44499724",
+        "points": 15,
+        "story_id": 44499724,
+        "story_text": "If you click on &#x27;past&#x27; you can choose a year back and the newsfeed is filled with all kinds of interesting and wonderful posts.<p>These days all you&#x27;ll find are rehashed to death AI talking points but even a year ago, things were far better. What happened?",
+        "title": "Ask HN: HN was much more interesting a year ago",
+        "updated_at": "2025-07-10T16:23:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arkensaw"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just wondering what are y'all doing for side gigs these days?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How are you making money on the side?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_arkensaw",
+          "story_44499671",
+          "ask_hn"
+        ],
+        "author": "arkensaw",
+        "children": [
+          44503504,
+          44499968,
+          44501155,
+          44501233,
+          44503331,
+          44500947,
+          44500484,
+          44508640,
+          44502289,
+          44509888,
+          44511301,
+          44504490,
+          44502232,
+          44507828,
+          44512764,
+          44507398,
+          44508639,
+          44500102,
+          44500740,
+          44503660,
+          44501957,
+          44500649,
+          44502659,
+          44500033
+        ],
+        "created_at": "2025-07-08T13:15:51Z",
+        "created_at_i": 1751980551,
+        "num_comments": 45,
+        "objectID": "44499671",
+        "points": 22,
+        "story_id": 44499671,
+        "story_text": "Just wondering what are y&#x27;all doing for side gigs these days?",
+        "title": "Ask HN: How are you making money on the side?",
+        "updated_at": "2025-11-05T08:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sshwintermute"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you handle LLM rule files (Eg. .cursorrules, .windsurfrules) in your repos?<p>We have recently started using Windsurf and Cursor at my job and we still don't have a unified ruleset file that is committed in the repository.<p>I am looking into committing a &quot;base&quot; ruleset, but then how will everyone add their own custom rulesets on top of it?<p>How do you do it at your orgs?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you store your LLM .rules?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sshwintermute",
+          "story_44499638",
+          "ask_hn"
+        ],
+        "author": "sshwintermute",
+        "created_at": "2025-07-08T13:12:12Z",
+        "created_at_i": 1751980332,
+        "num_comments": 0,
+        "objectID": "44499638",
+        "points": 1,
+        "story_id": 44499638,
+        "story_text": "How do you handle LLM rule files (Eg. .cursorrules, .windsurfrules) in your repos?<p>We have recently started using Windsurf and Cursor at my job and we still don&#x27;t have a unified ruleset file that is committed in the repository.<p>I am looking into committing a &quot;base&quot; ruleset, but then how will everyone add their own custom rulesets on top of it?<p>How do you do it at your orgs?",
+        "title": "Ask HN: How do you store your LLM .rules?",
+        "updated_at": "2025-07-08T13:17:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjgreen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So many &quot;You've got to check out ...&quot; HN submissions, mostly dead, all AI drivel; Why this particular phrase? (although quite useful in knowing sites to avoid)."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why \"check out\" prevelant for AI slop"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jjgreen",
+          "story_44499563",
+          "ask_hn"
+        ],
+        "author": "jjgreen",
+        "children": [
+          44499673,
+          44503845
+        ],
+        "created_at": "2025-07-08T13:02:02Z",
+        "created_at_i": 1751979722,
+        "num_comments": 2,
+        "objectID": "44499563",
+        "points": 2,
+        "story_id": 44499563,
+        "story_text": "So many &quot;You&#x27;ve got to check out ...&quot; HN submissions, mostly dead, all AI drivel; Why this particular phrase? (although quite useful in knowing sites to avoid).",
+        "title": "Ask HN: Why \"check out\" prevelant for AI slop",
+        "updated_at": "2025-07-08T22:53:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mafiaboi"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Haven't seen one of these Ask HNs for a long time, in fact the last one I saw was from 5 years ago. Met incredible people so far from Hacker News, hence reposting this.<p>If you are looking for a cofounder, comment like this: \n[Your name] | Your social (Linkedin, Twitter etc)\n- Who are you in short\n- Are you technical, non-technical?\n- What did you build so far (impressive things for you)\n- Where are you located?\n- Looking for remote or in-person\n- What kind of person are you looking for?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is Looking for a Cofounder?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mafiaboi",
+          "story_44499433",
+          "ask_hn"
+        ],
+        "author": "mafiaboi",
+        "created_at": "2025-07-08T12:44:28Z",
+        "created_at_i": 1751978668,
+        "num_comments": 0,
+        "objectID": "44499433",
+        "points": 2,
+        "story_id": 44499433,
+        "story_text": "Haven&#x27;t seen one of these Ask HNs for a long time, in fact the last one I saw was from 5 years ago. Met incredible people so far from Hacker News, hence reposting this.<p>If you are looking for a cofounder, comment like this: \n[Your name] | Your social (Linkedin, Twitter etc)\n- Who are you in short\n- Are you technical, non-technical?\n- What did you build so far (impressive things for you)\n- Where are you located?\n- Looking for remote or in-person\n- What kind of person are you looking for?",
+        "title": "Ask HN: Who Is Looking for a Cofounder?",
+        "updated_at": "2025-07-08T12:46:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "anticlickwise"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's it. Just thought I would share that after 9 months of hard nerve-wracking work"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just got my first paying customer for my SaaS and am surprised how good it feels"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_anticlickwise",
+          "story_44499352",
+          "ask_hn"
+        ],
+        "author": "anticlickwise",
+        "children": [
+          44500039,
+          44499698,
+          44499398
+        ],
+        "created_at": "2025-07-08T12:30:04Z",
+        "created_at_i": 1751977804,
+        "num_comments": 5,
+        "objectID": "44499352",
+        "points": 6,
+        "story_id": 44499352,
+        "story_text": "That&#x27;s it. Just thought I would share that after 9 months of hard nerve-wracking work",
+        "title": "Just got my first paying customer for my SaaS and am surprised how good it feels",
+        "updated_at": "2025-07-08T15:54:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Eatcats"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Small confession<p>I’ve been using Windsurf editor for about six months now, and it does most of the coding work for me.<p>Recently, I realized I no longer enjoy programming. It feels like I’m just going through the pain of explaining to the LLM what I want, then sitting and waiting for it to finish. If it fails, I just switch to another model—and usually, one of them gets the job done.<p>At this point, I’ve even stopped reviewing the exact code changes. I just keep pushing forward until the task is done.<p>On the bright side, I’ve gotten much better at writing design documents.<p>Anyone else feel the same?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tell HN: I Lost Joy of Programming"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Eatcats",
+          "story_44499063",
+          "ask_hn"
+        ],
+        "author": "Eatcats",
+        "children": [
+          44499574,
+          44499520,
+          44499470,
+          44499086,
+          44499546,
+          44499723,
+          44499494,
+          44520077,
+          44499537,
+          44499477,
+          44499538,
+          44502161,
+          44499516,
+          44499564,
+          44499506,
+          44500109,
+          44569193,
+          44499543,
+          44511772,
+          44519249,
+          44559685,
+          44499814,
+          44501746,
+          44560778,
+          44520102,
+          44541640,
+          44504538,
+          44505208,
+          44499523,
+          44510152,
+          44500380,
+          44499826,
+          44501268,
+          44545569,
+          44505348,
+          44499632,
+          44504678,
+          44499796,
+          44499849,
+          44499877,
+          44499559,
+          44499585,
+          44548015,
+          44549041,
+          44500164,
+          44517174,
+          44502359,
+          44531119,
+          44499562,
+          44499667,
+          44499496,
+          44499570,
+          44499560,
+          44499650,
+          44499843,
+          44582168,
+          44499699,
+          44501177,
+          44514809,
+          44502953,
+          44522182,
+          44501316,
+          44508888,
+          44505228,
+          44499646,
+          44499501,
+          44521182,
+          44499618,
+          44503676,
+          44499824,
+          44500967,
+          44508081,
+          44502264,
+          44499657,
+          44499476,
+          44499548
+        ],
+        "created_at": "2025-07-08T11:36:50Z",
+        "created_at_i": 1751974610,
+        "num_comments": 131,
+        "objectID": "44499063",
+        "points": 94,
+        "story_id": 44499063,
+        "story_text": "Small confession<p>I’ve been using Windsurf editor for about six months now, and it does most of the coding work for me.<p>Recently, I realized I no longer enjoy programming. It feels like I’m just going through the pain of explaining to the LLM what I want, then sitting and waiting for it to finish. If it fails, I just switch to another model—and usually, one of them gets the job done.<p>At this point, I’ve even stopped reviewing the exact code changes. I just keep pushing forward until the task is done.<p>On the bright side, I’ve gotten much better at writing design documents.<p>Anyone else feel the same?",
+        "title": "Tell HN: I Lost Joy of Programming",
+        "updated_at": "2025-10-06T20:21:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ajay_and_AI"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Think of a farm 100 years ago.<p>You’re the farmer. You rely on your bull. Together, you plow the land. It’s slow, hard work. But it works.<p>Then along comes the tractor.\nWhat happens?<p>The farmer doesn’t lose his job. He just gets way more productive. It’s the bull that gets sidelined.<p>AI is the tractor.<p>It’s not replacing the people doing the thinking, decision-making, and strategy.\n It’s replacing the manual effort behind those activities.<p>If your job is:\n- moving data between tools\n- running routine reports\n- filling templates\nYou’re the bull. Repetitive. Replaceable.<p>If your job is:\n- deciding what to track\n- interpreting the “why” behind the data\n- choosing what to say or build\nYou’re the farmer. And now you’ve got a turbocharged machine.<p>So here’s the question:\n Are you the bull, or the farmer?<p>https://postimg.cc/nCWN0Z7f"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AI won't take your job. But it might take your role in the system"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ajay_and_AI",
+          "story_44499022",
+          "ask_hn"
+        ],
+        "author": "ajay_and_AI",
+        "created_at": "2025-07-08T11:29:37Z",
+        "created_at_i": 1751974177,
+        "num_comments": 0,
+        "objectID": "44499022",
+        "points": 1,
+        "story_id": 44499022,
+        "story_text": "Think of a farm 100 years ago.<p>You’re the farmer. You rely on your bull. Together, you plow the land. It’s slow, hard work. But it works.<p>Then along comes the tractor.\nWhat happens?<p>The farmer doesn’t lose his job. He just gets way more productive. It’s the bull that gets sidelined.<p>AI is the tractor.<p>It’s not replacing the people doing the thinking, decision-making, and strategy.\n It’s replacing the manual effort behind those activities.<p>If your job is:\n- moving data between tools\n- running routine reports\n- filling templates\nYou’re the bull. Repetitive. Replaceable.<p>If your job is:\n- deciding what to track\n- interpreting the “why” behind the data\n- choosing what to say or build\nYou’re the farmer. And now you’ve got a turbocharged machine.<p>So here’s the question:\n Are you the bull, or the farmer?<p>https:&#x2F;&#x2F;postimg.cc&#x2F;nCWN0Z7f",
+        "title": "AI won't take your job. But it might take your role in the system",
+        "updated_at": "2025-07-08T11:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "miletus"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Would love to see what everyone’s cooking up lately.<p>Drop your project in this format (optional):<p>What it does<p>Status: Idea / MVP / Beta / Launched / Revenue<p>Link (if you’ve launched it)<p>I’ll start: I’m working on buildthatidea.com, a no-code platform that lets anyone launch and monetize their own AI agents in 60 seconds. You can define your agent, upload a knowledge base, set pricing, and go live. It's in public beta."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building this week?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_miletus",
+          "story_44498988",
+          "ask_hn"
+        ],
+        "author": "miletus",
+        "children": [
+          44499024
+        ],
+        "created_at": "2025-07-08T11:23:05Z",
+        "created_at_i": 1751973785,
+        "num_comments": 2,
+        "objectID": "44498988",
+        "points": 2,
+        "story_id": 44498988,
+        "story_text": "Would love to see what everyone’s cooking up lately.<p>Drop your project in this format (optional):<p>What it does<p>Status: Idea &#x2F; MVP &#x2F; Beta &#x2F; Launched &#x2F; Revenue<p>Link (if you’ve launched it)<p>I’ll start: I’m working on buildthatidea.com, a no-code platform that lets anyone launch and monetize their own AI agents in 60 seconds. You can define your agent, upload a knowledge base, set pricing, and go live. It&#x27;s in public beta.",
+        "title": "Ask HN: What are you building this week?",
+        "updated_at": "2025-07-08T12:17:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "randerson001"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: When have you stood up for something unpopular?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_randerson001",
+          "story_44498894",
+          "ask_hn"
+        ],
+        "author": "randerson001",
+        "children": [
+          44499622,
+          44499507,
+          44499004,
+          44500581,
+          44499545
+        ],
+        "created_at": "2025-07-08T11:03:15Z",
+        "created_at_i": 1751972595,
+        "num_comments": 5,
+        "objectID": "44498894",
+        "points": 2,
+        "story_id": 44498894,
+        "title": "Ask HN: When have you stood up for something unpopular?",
+        "updated_at": "2025-09-29T10:07:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FerkiHN"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am looking for ZIP , but for non-text files, files .png/.jpg , who knows what methods to compress them ?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: I am looking for compression(ZIP), but for photo(.png/.jpg)?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FerkiHN",
+          "story_44498890",
+          "ask_hn"
+        ],
+        "author": "FerkiHN",
+        "children": [
+          44498969
+        ],
+        "created_at": "2025-07-08T11:02:43Z",
+        "created_at_i": 1751972563,
+        "num_comments": 8,
+        "objectID": "44498890",
+        "points": 1,
+        "story_id": 44498890,
+        "story_text": "I am looking for ZIP , but for non-text files, files .png&#x2F;.jpg , who knows what methods to compress them ?",
+        "title": "Ask HN: I am looking for compression(ZIP), but for photo(.png/.jpg)?",
+        "updated_at": "2025-07-09T06:37:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shivajikobardan"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Complementary book to learn The Network Layer besides the Kurose Ross book?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shivajikobardan",
+          "story_44498686",
+          "ask_hn"
+        ],
+        "author": "shivajikobardan",
+        "children": [
+          44499007
+        ],
+        "created_at": "2025-07-08T10:22:05Z",
+        "created_at_i": 1751970125,
+        "num_comments": 2,
+        "objectID": "44498686",
+        "points": 1,
+        "story_id": 44498686,
+        "title": "Complementary book to learn The Network Layer besides the Kurose Ross book?",
+        "updated_at": "2025-07-08T15:01:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "maxencecornet"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What are the most interesting or promising technological projects in ecology and sustainable development right now?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Most innovative tech projects in ecology and sustainability?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_maxencecornet",
+          "story_44498531",
+          "ask_hn"
+        ],
+        "author": "maxencecornet",
+        "created_at": "2025-07-08T09:47:41Z",
+        "created_at_i": 1751968061,
+        "num_comments": 0,
+        "objectID": "44498531",
+        "points": 1,
+        "story_id": 44498531,
+        "story_text": "What are the most interesting or promising technological projects in ecology and sustainable development right now?",
+        "title": "Ask HN: Most innovative tech projects in ecology and sustainability?",
+        "updated_at": "2025-07-08T09:58:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FerkiHN"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been wondering — modern browsers are optimized to parse and run HTML, CSS, and JavaScript. But what if a browser was built to load and run websites written directly in WebAssembly?<p>Wouldn’t this improve performance, startup speed, and reduce overhead from parsing multiple formats? Why hasn't anyone created a browser where the default language for sites is WASM?<p>Is it a technical limitation, security concern, or just lack of interest from the ecosystem?<p>I’d love to hear what the HN community thinks."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Why don't browsers load websites directly in WASM?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FerkiHN",
+          "story_44498455",
+          "ask_hn"
+        ],
+        "author": "FerkiHN",
+        "children": [
+          44506458,
+          44498478,
+          44498882,
+          44498849,
+          44498533,
+          44498459,
+          44499386
+        ],
+        "created_at": "2025-07-08T09:31:14Z",
+        "created_at_i": 1751967074,
+        "num_comments": 12,
+        "objectID": "44498455",
+        "points": 4,
+        "story_id": 44498455,
+        "story_text": "I&#x27;ve been wondering — modern browsers are optimized to parse and run HTML, CSS, and JavaScript. But what if a browser was built to load and run websites written directly in WebAssembly?<p>Wouldn’t this improve performance, startup speed, and reduce overhead from parsing multiple formats? Why hasn&#x27;t anyone created a browser where the default language for sites is WASM?<p>Is it a technical limitation, security concern, or just lack of interest from the ecosystem?<p>I’d love to hear what the HN community thinks.",
+        "title": "Ask HN: Why don't browsers load websites directly in WASM?",
+        "updated_at": "2025-07-09T05:55:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pinter69"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've started a small community with a few friends in the video-automation space. Our main goal with the community is to have high quality engagement and information sharing in our field, by communicating with members we are familiar with and trust.\nWe are not aiming for really growing the amount of community members, rather for the quality of the engagement within it. With time I guess the amount of members will grow naturally.<p>Would love to hear if anyone has created communities with similar goals, what was the process, what worked well, what didn't work well, and in general if you have any tips to share."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How to effectively run a small dev community on WhatsApp?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pinter69",
+          "story_44497705",
+          "ask_hn"
+        ],
+        "author": "pinter69",
+        "children": [
+          44498100
+        ],
+        "created_at": "2025-07-08T06:51:22Z",
+        "created_at_i": 1751957482,
+        "num_comments": 2,
+        "objectID": "44497705",
+        "points": 2,
+        "story_id": 44497705,
+        "story_text": "I&#x27;ve started a small community with a few friends in the video-automation space. Our main goal with the community is to have high quality engagement and information sharing in our field, by communicating with members we are familiar with and trust.\nWe are not aiming for really growing the amount of community members, rather for the quality of the engagement within it. With time I guess the amount of members will grow naturally.<p>Would love to hear if anyone has created communities with similar goals, what was the process, what worked well, what didn&#x27;t work well, and in general if you have any tips to share.",
+        "title": "Ask HN: How to effectively run a small dev community on WhatsApp?",
+        "updated_at": "2025-07-08T08:45:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FerkiHN"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN,\nI'm curious if anyone else had a similar journey learning English.<p>I'm from Ukraine and started reading Hacker News about five years ago. At first, I understood almost nothing. I didn’t use a translator — partly because I was lazy, and partly because I wanted to see how much I could figure out just from context.<p>So I kept reading. I would see the same words appear in different posts and comments, and slowly, I began to understand their meaning. Sentence structures became clearer, and I started to “feel” the language. Eventually, I stopped being afraid of reading in English altogether.<p>I didn’t learn from a teacher or a course — just from the internet, and mostly from here.<p>Now I write posts, share my projects, and even chat with other devs here — all in English. It still feels surreal sometimes.<p>Have any of you learned English (or another language) in a similar way — just by immersion, without formal study?<p>Also: thank you, HN. You taught me more than just tech."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Has anyone else learned English just by reading tech posts (like HN)?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FerkiHN",
+          "story_44497659",
+          "ask_hn"
+        ],
+        "author": "FerkiHN",
+        "children": [
+          44497711,
+          44508486,
+          44508746,
+          44524565,
+          44506154,
+          44501517,
+          44504223,
+          44507746,
+          44498317
+        ],
+        "created_at": "2025-07-08T06:38:27Z",
+        "created_at_i": 1751956707,
+        "num_comments": 8,
+        "objectID": "44497659",
+        "points": 12,
+        "story_id": 44497659,
+        "story_text": "Hi HN,\nI&#x27;m curious if anyone else had a similar journey learning English.<p>I&#x27;m from Ukraine and started reading Hacker News about five years ago. At first, I understood almost nothing. I didn’t use a translator — partly because I was lazy, and partly because I wanted to see how much I could figure out just from context.<p>So I kept reading. I would see the same words appear in different posts and comments, and slowly, I began to understand their meaning. Sentence structures became clearer, and I started to “feel” the language. Eventually, I stopped being afraid of reading in English altogether.<p>I didn’t learn from a teacher or a course — just from the internet, and mostly from here.<p>Now I write posts, share my projects, and even chat with other devs here — all in English. It still feels surreal sometimes.<p>Have any of you learned English (or another language) in a similar way — just by immersion, without formal study?<p>Also: thank you, HN. You taught me more than just tech.",
+        "title": "Ask HN: Has anyone else learned English just by reading tech posts (like HN)?",
+        "updated_at": "2025-07-12T08:11:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mooty"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've came accross a good but quite hard problem to solve which is to translate HTML pages into whatever human langage.<p>I've started tinkering with DeepL which proposes this feature but results are quite off the rails because you cannot provide any context to it.<p>So well, it was a clear case for an LLM to me. After crafting a good context prompt, I've tried o4-mini from OpenAI and it's results are nearly perfect.<p>However came business around and I need to be able to this WAY faster, as a ~100ko page will take like a minute to generate, which is way too long for the end user.<p>I've optimised content a little (sending only html parts that are interesting) but it's still quite slow in the end (more than 10s).\nI'm thinking about translating html to json and do it back after translation, so it might be faster.<p>Does anyone do this as well ? Or has any insight of a better performing API/LLM for this problem ?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do you use LLM for HTML translations?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Mooty",
+          "story_44497657",
+          "ask_hn"
+        ],
+        "author": "Mooty",
+        "children": [
+          44509404,
+          44509378,
+          44509662,
+          44498901
+        ],
+        "created_at": "2025-07-08T06:37:31Z",
+        "created_at_i": 1751956651,
+        "num_comments": 3,
+        "objectID": "44497657",
+        "points": 3,
+        "story_id": 44497657,
+        "story_text": "I&#x27;ve came accross a good but quite hard problem to solve which is to translate HTML pages into whatever human langage.<p>I&#x27;ve started tinkering with DeepL which proposes this feature but results are quite off the rails because you cannot provide any context to it.<p>So well, it was a clear case for an LLM to me. After crafting a good context prompt, I&#x27;ve tried o4-mini from OpenAI and it&#x27;s results are nearly perfect.<p>However came business around and I need to be able to this WAY faster, as a ~100ko page will take like a minute to generate, which is way too long for the end user.<p>I&#x27;ve optimised content a little (sending only html parts that are interesting) but it&#x27;s still quite slow in the end (more than 10s).\nI&#x27;m thinking about translating html to json and do it back after translation, so it might be faster.<p>Does anyone do this as well ? Or has any insight of a better performing API&#x2F;LLM for this problem ?",
+        "title": "Ask HN: Do you use LLM for HTML translations?",
+        "updated_at": "2025-07-22T22:14:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "junaidkhalid"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Linkedin seems to have lost its charm in the last 1-2 years. I'm noticing creators moving to substack but it still doesn't seem to be a 1:1 match. Just like there's Bluesky as a prominent X alternative, have you come across any for LinkedIn?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Are there any noteworthy LinkedIn alternatives?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_junaidkhalid",
+          "story_44497523",
+          "ask_hn"
+        ],
+        "author": "junaidkhalid",
+        "children": [
+          44498816,
+          44503472,
+          44497590,
+          44500725,
+          44501091,
+          44504030,
+          44512822,
+          44500746
+        ],
+        "created_at": "2025-07-08T06:09:12Z",
+        "created_at_i": 1751954952,
+        "num_comments": 16,
+        "objectID": "44497523",
+        "points": 5,
+        "story_id": 44497523,
+        "story_text": "Linkedin seems to have lost its charm in the last 1-2 years. I&#x27;m noticing creators moving to substack but it still doesn&#x27;t seem to be a 1:1 match. Just like there&#x27;s Bluesky as a prominent X alternative, have you come across any for LinkedIn?",
+        "title": "Are there any noteworthy LinkedIn alternatives?",
+        "updated_at": "2025-07-14T14:26:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sophiabannet1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just stumbled across something interesting: OWASP quietly released a new guide focused entirely on AI system testing. It's called the AI Testing Guide (AITG). Some of the stuff it digs into: Prompt injection and adversarial attacks, Privacy leaks from model outputs, Fairness, bias, and explainability testing, Data drift and real-world robustness and Model reproducibility.<p>What I liked is it actually gives a practical structure for testing models in production, especially for teams shipping LLMs or recommendation engines."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OWASP Just Dropped an AI Security Testing Guide"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sophiabannet1",
+          "story_44497445",
+          "ask_hn"
+        ],
+        "author": "sophiabannet1",
+        "created_at": "2025-07-08T05:48:45Z",
+        "created_at_i": 1751953725,
+        "num_comments": 0,
+        "objectID": "44497445",
+        "points": 5,
+        "story_id": 44497445,
+        "story_text": "Just stumbled across something interesting: OWASP quietly released a new guide focused entirely on AI system testing. It&#x27;s called the AI Testing Guide (AITG). Some of the stuff it digs into: Prompt injection and adversarial attacks, Privacy leaks from model outputs, Fairness, bias, and explainability testing, Data drift and real-world robustness and Model reproducibility.<p>What I liked is it actually gives a practical structure for testing models in production, especially for teams shipping LLMs or recommendation engines.",
+        "title": "OWASP Just Dropped an AI Security Testing Guide",
+        "updated_at": "2025-07-08T19:18:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "giardini"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Penisland.net is the original model for bad Internet names. They once were a site for selling ink pens:<p>https://news.ycombinator.com/item?id=14343545<p>Now we have Bitchat.com.<p>Who wants to Bitchat their friends? I certainly do, sometimes. Dorsey makes it possible."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Jack Dorsey Will Help You Bitchat Someone"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_giardini",
+          "story_44497418",
+          "ask_hn"
+        ],
+        "author": "giardini",
+        "children": [
+          44497428
+        ],
+        "created_at": "2025-07-08T05:44:05Z",
+        "created_at_i": 1751953445,
+        "num_comments": 0,
+        "objectID": "44497418",
+        "points": 4,
+        "story_id": 44497418,
+        "story_text": "Penisland.net is the original model for bad Internet names. They once were a site for selling ink pens:<p>https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=14343545<p>Now we have Bitchat.com.<p>Who wants to Bitchat their friends? I certainly do, sometimes. Dorsey makes it possible.",
+        "title": "Jack Dorsey Will Help You Bitchat Someone",
+        "updated_at": "2025-07-08T19:18:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OurStyle"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Our.Style AI curates your Shoppable Styles, Collections, and Inspirations - In your own Style Shop. Creators apply to level up with recurring income (10x your affiliate).\nhttps://www.our.style/"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Our.Style"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_OurStyle",
+          "story_44497285",
+          "ask_hn"
+        ],
+        "author": "OurStyle",
+        "created_at": "2025-07-08T05:10:43Z",
+        "created_at_i": 1751951443,
+        "num_comments": 0,
+        "objectID": "44497285",
+        "points": 2,
+        "story_id": 44497285,
+        "story_text": "Our.Style AI curates your Shoppable Styles, Collections, and Inspirations - In your own Style Shop. Creators apply to level up with recurring income (10x your affiliate).\nhttps:&#x2F;&#x2F;www.our.style&#x2F;",
+        "title": "Our.Style",
+        "updated_at": "2025-07-08T19:19:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "websitechat"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Do you have a chatbot in your website? Why / Why not?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_websitechat",
+          "story_44497221",
+          "ask_hn"
+        ],
+        "author": "websitechat",
+        "children": [
+          44497262
+        ],
+        "created_at": "2025-07-08T04:59:43Z",
+        "created_at_i": 1751950783,
+        "num_comments": 1,
+        "objectID": "44497221",
+        "points": 2,
+        "story_id": 44497221,
+        "title": "Do you have a chatbot in your website? Why / Why not?",
+        "updated_at": "2025-07-08T19:20:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mathewpregasen"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agentic terminology doesn't make any sense. Why are actions = set of tools. Actions is a more granular word than tools. An action is to jump, to run, to hit, to walk. A tool, meanwhile, is something that can do multiple things. If I asked you to name a tool, you might say &quot;hammer&quot;. A hammer can nail something, pull out something, smash something. It's less granular than action.<p>But for some reason, we chose a significantly more granular word (action) to describe a combination of a less granular word (tools).<p>end rant."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agentic terminology doesn't make any sense"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mathewpregasen",
+          "story_44497091",
+          "ask_hn"
+        ],
+        "author": "mathewpregasen",
+        "children": [
+          44512120,
+          44505465
+        ],
+        "created_at": "2025-07-08T04:29:59Z",
+        "created_at_i": 1751948999,
+        "num_comments": 2,
+        "objectID": "44497091",
+        "points": 4,
+        "story_id": 44497091,
+        "story_text": "Agentic terminology doesn&#x27;t make any sense. Why are actions = set of tools. Actions is a more granular word than tools. An action is to jump, to run, to hit, to walk. A tool, meanwhile, is something that can do multiple things. If I asked you to name a tool, you might say &quot;hammer&quot;. A hammer can nail something, pull out something, smash something. It&#x27;s less granular than action.<p>But for some reason, we chose a significantly more granular word (action) to describe a combination of a less granular word (tools).<p>end rant.",
+        "title": "Agentic terminology doesn't make any sense",
+        "updated_at": "2025-07-09T16:43:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "BugsBunny1991"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I left my job a few months ago after ~10 years as a software engineer. Burnout kind of forced the decision — I didn’t plan it well, just hit a wall and stepped away. I’ve recovered a bit and now I’m trying to figure out what to do next.<p>I’m in my 30s, single, and have saved about $3M across taxable and retirement accounts. Mostly index funds, some cash, and a chunk in RSUs. I spend around $50K/year living in a HCOL area, and don’t own a home. So I’m in a position where I don’t have to work right away, but that hasn’t really made things clearer.<p>Friends have brought up FIRE, but I’m not sure early retirement would feel fulfilling. Honestly, having more options has made things feel more paralyzing, not less.<p>The burnout wasn’t really about long hours. It came more from feeling ineffective and having no clear direction. My role felt fuzzy, leadership was inconsistent, and I started feeling like I was falling behind while other people kept progressing. That wore me down over time and chipped away at my confidence.<p>Now I’m considering a few paths:<p>Return to my old job — I left on good terms and could probably go back. I’ve been wondering if this was more of a me problem than a company problem, and going back might help clarify that.\nExtend the sabbatical — travel or focus on non-career interests for a few more months, then reassess.\nStart job searching now — not super motivated, but with the current job market, it might take a while anyway.\nCareer change — no clear direction or passion, just vague curiosity about doing something different.<p>If you’ve taken a break, pivoted careers, or dealt with burnout like this — how did you figure out your next step? Especially curious how people figured out whether the problem was the job… or themselves."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Took a break after burnout – what now?"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_BugsBunny1991",
+          "story_44496470",
+          "ask_hn"
+        ],
+        "author": "BugsBunny1991",
+        "children": [
+          44497626,
+          44501065,
+          44507003,
+          44497377,
+          44496732,
+          44499447,
+          44501498,
+          44522837,
+          44527663,
+          44506930,
+          44496687
+        ],
+        "created_at": "2025-07-08T02:39:16Z",
+        "created_at_i": 1751942356,
+        "num_comments": 19,
+        "objectID": "44496470",
+        "points": 10,
+        "story_id": 44496470,
+        "story_text": "I left my job a few months ago after ~10 years as a software engineer. Burnout kind of forced the decision — I didn’t plan it well, just hit a wall and stepped away. I’ve recovered a bit and now I’m trying to figure out what to do next.<p>I’m in my 30s, single, and have saved about $3M across taxable and retirement accounts. Mostly index funds, some cash, and a chunk in RSUs. I spend around $50K&#x2F;year living in a HCOL area, and don’t own a home. So I’m in a position where I don’t have to work right away, but that hasn’t really made things clearer.<p>Friends have brought up FIRE, but I’m not sure early retirement would feel fulfilling. Honestly, having more options has made things feel more paralyzing, not less.<p>The burnout wasn’t really about long hours. It came more from feeling ineffective and having no clear direction. My role felt fuzzy, leadership was inconsistent, and I started feeling like I was falling behind while other people kept progressing. That wore me down over time and chipped away at my confidence.<p>Now I’m considering a few paths:<p>Return to my old job — I left on good terms and could probably go back. I’ve been wondering if this was more of a me problem than a company problem, and going back might help clarify that.\nExtend the sabbatical — travel or focus on non-career interests for a few more months, then reassess.\nStart job searching now — not super motivated, but with the current job market, it might take a while anyway.\nCareer change — no clear direction or passion, just vague curiosity about doing something different.<p>If you’ve taken a break, pivoted careers, or dealt with burnout like this — how did you figure out your next step? Especially curious how people figured out whether the problem was the job… or themselves.",
+        "title": "Ask HN: Took a break after burnout – what now?",
+        "updated_at": "2025-10-12T23:17:39Z"
+      }
+    ],
+    "hitsPerPage": 80,
+    "nbHits": 3410,
+    "nbPages": 13,
+    "page": 1,
+    "params": "tags=ask_hn&numericFilters=created_at_i%3E1744459200%2Ccreated_at_i%3C1752235200&hitsPerPage=80&page=1&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 3,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 17
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 3
+        }
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 3
+    },
+    "query": "",
+    "serverTimeMS": 7
+  }
+}

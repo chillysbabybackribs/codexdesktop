@@ -13,6 +13,15 @@ export type BrowserTabState = {
   isLoading: boolean
   canGoBack: boolean
   canGoForward: boolean
+  isAudible: boolean
+  isMuted: boolean
+  zoomPercent: number
+}
+
+export type BrowserFindResult = {
+  activeMatchOrdinal: number
+  matches: number
+  finalUpdate: boolean
 }
 
 export type BrowserState = {
@@ -105,6 +114,13 @@ export type ArtifactReadImageResult = {
   dataUrl: string | null
 }
 
+export type BackgroundTurnNotificationParams = {
+  threadId: string
+  title: string
+  status: 'completed' | 'failed'
+  message?: string | null
+}
+
 export type TraceLoadParams = {
   threadId: string
   turnId: string
@@ -121,6 +137,11 @@ export const ipcChannels = {
   browserBack: 'browser:back',
   browserForward: 'browser:forward',
   browserReload: 'browser:reload',
+  browserFind: 'browser:find',
+  browserStopFind: 'browser:stopFind',
+  browserFindRequested: 'browser:findRequested',
+  browserZoom: 'browser:zoom',
+  browserToggleMute: 'browser:toggleMute',
   browserSetBounds: 'browser:setBounds',
   browserBeginDividerDrag: 'browser:beginDividerDrag',
   browserEndDividerDrag: 'browser:endDividerDrag',
@@ -146,6 +167,7 @@ export const ipcChannels = {
   traceLoad: 'trace:load',
   traceSave: 'trace:save',
   artifactReadImage: 'artifact:readImage',
+  notificationBackgroundTurn: 'notification:backgroundTurn',
   workspacePick: 'workspace:pick'
 } as const
 import type { ThreadGoalSetParams } from './codex-protocol/v2/ThreadGoalSetParams.js'

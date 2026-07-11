@@ -1,0 +1,1395 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44479519",
+    "window": "prior-year-comparable-90d",
+    "tag": "ask_hn",
+    "score": 146
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "swah"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just tried Bike again - reminded I need image pasting on those apps to &quot;run my workflows&quot; (work notes) properly. So mostly Logseq if I want local images..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_swah",
+          "story_44479519"
+        ],
+        "author": "swah",
+        "comment_text": "Just tried Bike again - reminded I need image pasting on those apps to &quot;run my workflows&quot; (work notes) properly. So mostly Logseq if I want local images...",
+        "created_at": "2025-07-11T13:34:07Z",
+        "created_at_i": 1752240847,
+        "objectID": "44531960",
+        "parent_id": 44481283,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-11T13:38:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kypro"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use Audacity a lot and it hasn't really changed much over the last 2 decades I've been using it. It's probably the oldest piece of software I still use at least weekly. It's simple and just works, plus I can use on my Mac, Linux and Windows machines.<p>The other is probably VLC, but I'm not really sure if that's what you're after since it's just a media player."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kypro",
+          "story_44479519"
+        ],
+        "author": "kypro",
+        "comment_text": "I use Audacity a lot and it hasn&#x27;t really changed much over the last 2 decades I&#x27;ve been using it. It&#x27;s probably the oldest piece of software I still use at least weekly. It&#x27;s simple and just works, plus I can use on my Mac, Linux and Windows machines.<p>The other is probably VLC, but I&#x27;m not really sure if that&#x27;s what you&#x27;re after since it&#x27;s just a media player.",
+        "created_at": "2025-07-08T13:59:29Z",
+        "created_at_i": 1751983169,
+        "objectID": "44500040",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-08T14:04:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Irongirl1"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FYI: found this while searching for dtp programs that maybe didn't suck...and it seems wonderful. I'm still searching for a book topic, but I thought I would share it here if it helps anyone<p><a href=\"http://pollenpub.com\" rel=\"nofollow\">http://pollenpub.com</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Irongirl1",
+          "story_44479519"
+        ],
+        "author": "Irongirl1",
+        "comment_text": "FYI: found this while searching for dtp programs that maybe didn&#x27;t suck...and it seems wonderful. I&#x27;m still searching for a book topic, but I thought I would share it here if it helps anyone<p><a href=\"http:&#x2F;&#x2F;pollenpub.com\" rel=\"nofollow\">http:&#x2F;&#x2F;pollenpub.com</a>",
+        "created_at": "2025-07-08T05:56:32Z",
+        "created_at_i": 1751954192,
+        "objectID": "44497478",
+        "parent_id": 44479805,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-08T08:27:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "adrianwaj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Textpipe Pro because it's so far never made it over to Linux.<p>Smartdraw too.. Dia isn't quite as good.<p>Question could be rephrased to mean Windows software."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_adrianwaj",
+          "story_44479519"
+        ],
+        "author": "adrianwaj",
+        "comment_text": "Textpipe Pro because it&#x27;s so far never made it over to Linux.<p>Smartdraw too.. Dia isn&#x27;t quite as good.<p>Question could be rephrased to mean Windows software.",
+        "created_at": "2025-07-07T19:24:40Z",
+        "created_at_i": 1751916280,
+        "objectID": "44493777",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T19:32:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "palata"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "IRC."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_palata",
+          "story_44479519"
+        ],
+        "author": "palata",
+        "comment_text": "IRC.",
+        "created_at": "2025-07-07T14:23:48Z",
+        "created_at_i": 1751898228,
+        "objectID": "44490695",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T14:24:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lproven"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am not a big fan of web apps, but this looks like it fits the org-mode use pattern of to-do lists and so on.<p>But there's no integration with formatting, stylesheets, or anything, right?<p>In 2017 or so I wrote the maintenance manual for an earlier version of this educational 3D printer:<p><a href=\"https://www.ysoft.com/be3d\" rel=\"nofollow\">https://www.ysoft.com/be3d</a><p>It was about 350 pages with lots of illustrations and diagrams.<p>The entire manual was a single giant Word outline. That meant all the headings, subheadings, sub-sub-headings etc. were automatically formatted for me, plus automatic generation of table of contents and index, all automatically linked to the structure of the steps in each chapter.<p>The first edition took me about 6-8 weeks, the second edition under a month.<p>Later on I spent 4 years working with DocBook XML and a professional documentation production system -- but I can state from personal experience that for a solo project, me and 1 engineer, Word in Outline Mode was <i>vastly</i> more productive and efficient.<p>To the client's amazement, the final stage of print-ready layout took part of one morning at the end. I took one of their leaflets, laid out in Word, removed all the text leaving only styles, and then merged that stylesheet with the manual.<p>Bingo, fully-formatted document, in corporate colours and fonts, with headers and footers and so on. Just a little layout tweaking, adding some page breaks and things.<p>The ability to collapse all the levels down to just headings is an amazing navigation tool: it's like zooming out to an overview, then zooming back in somewhere else, while the text remains readable throughout."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lproven",
+          "story_44479519"
+        ],
+        "author": "lproven",
+        "comment_text": "I am not a big fan of web apps, but this looks like it fits the org-mode use pattern of to-do lists and so on.<p>But there&#x27;s no integration with formatting, stylesheets, or anything, right?<p>In 2017 or so I wrote the maintenance manual for an earlier version of this educational 3D printer:<p><a href=\"https:&#x2F;&#x2F;www.ysoft.com&#x2F;be3d\" rel=\"nofollow\">https:&#x2F;&#x2F;www.ysoft.com&#x2F;be3d</a><p>It was about 350 pages with lots of illustrations and diagrams.<p>The entire manual was a single giant Word outline. That meant all the headings, subheadings, sub-sub-headings etc. were automatically formatted for me, plus automatic generation of table of contents and index, all automatically linked to the structure of the steps in each chapter.<p>The first edition took me about 6-8 weeks, the second edition under a month.<p>Later on I spent 4 years working with DocBook XML and a professional documentation production system -- but I can state from personal experience that for a solo project, me and 1 engineer, Word in Outline Mode was <i>vastly</i> more productive and efficient.<p>To the client&#x27;s amazement, the final stage of print-ready layout took part of one morning at the end. I took one of their leaflets, laid out in Word, removed all the text leaving only styles, and then merged that stylesheet with the manual.<p>Bingo, fully-formatted document, in corporate colours and fonts, with headers and footers and so on. Just a little layout tweaking, adding some page breaks and things.<p>The ability to collapse all the levels down to just headings is an amazing navigation tool: it&#x27;s like zooming out to an overview, then zooming back in somewhere else, while the text remains readable throughout.",
+        "created_at": "2025-07-07T11:25:24Z",
+        "created_at_i": 1751887524,
+        "objectID": "44489112",
+        "parent_id": 44482597,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T11:26:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lproven"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you are happy with the ribbon UI, then you are fine.<p>Personally, I can't stand it. So I use either Word 97, which has everything I need and a nicely minimal UI, and uses the same file formats as Office into the 21st century, or Word 2003.<p>Example (old) screenshot:<p><a href=\"https://imgur.com/gallery/word-97-word-2003-under-wine-on-ubuntu-AgKGOuS\" rel=\"nofollow\">https://imgur.com/gallery/word-97-word-2003-under-wine-on-ub...</a><p>Note that in 97 I've turned off <i>everything</i>. No ribbon, no ruler, no toolbars, just menus and scroll bars, and I normally turn off the horizontal scrollbar too.<p>In Word 2003 I've left some of the clutter turned on so you can see the difference: the ruler and one toolbar.<p>Word 97 can't handle big portrait screens, for instance."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lproven",
+          "story_44479519"
+        ],
+        "author": "lproven",
+        "comment_text": "If you are happy with the ribbon UI, then you are fine.<p>Personally, I can&#x27;t stand it. So I use either Word 97, which has everything I need and a nicely minimal UI, and uses the same file formats as Office into the 21st century, or Word 2003.<p>Example (old) screenshot:<p><a href=\"https:&#x2F;&#x2F;imgur.com&#x2F;gallery&#x2F;word-97-word-2003-under-wine-on-ubuntu-AgKGOuS\" rel=\"nofollow\">https:&#x2F;&#x2F;imgur.com&#x2F;gallery&#x2F;word-97-word-2003-under-wine-on-ub...</a><p>Note that in 97 I&#x27;ve turned off <i>everything</i>. No ribbon, no ruler, no toolbars, just menus and scroll bars, and I normally turn off the horizontal scrollbar too.<p>In Word 2003 I&#x27;ve left some of the clutter turned on so you can see the difference: the ruler and one toolbar.<p>Word 97 can&#x27;t handle big portrait screens, for instance.",
+        "created_at": "2025-07-07T11:18:20Z",
+        "created_at_i": 1751887100,
+        "objectID": "44489049",
+        "parent_id": 44480051,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T11:21:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mikewarot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Napster was amazing. There's never been anything to help me discover and then buy new music faster since."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mikewarot",
+          "story_44479519"
+        ],
+        "author": "mikewarot",
+        "comment_text": "Napster was amazing. There&#x27;s never been anything to help me discover and then buy new music faster since.",
+        "created_at": "2025-07-07T11:08:56Z",
+        "created_at_i": 1751886536,
+        "objectID": "44488973",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T19:11:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "markus_zhang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Reminds me of a Terminator Genesys quote: Old, not obsolete."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_markus_zhang",
+          "story_44479519"
+        ],
+        "author": "markus_zhang",
+        "comment_text": "Reminds me of a Terminator Genesys quote: Old, not obsolete.",
+        "created_at": "2025-07-07T10:44:17Z",
+        "created_at_i": 1751885057,
+        "objectID": "44488811",
+        "parent_id": 44479744,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T10:49:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "animesh"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Beyond Compare. There is nothing like it, even on Linux. I use WinMerge on Windows and vscode on Linux, but Beyond Compare was something else."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_animesh",
+          "story_44479519"
+        ],
+        "author": "animesh",
+        "comment_text": "Beyond Compare. There is nothing like it, even on Linux. I use WinMerge on Windows and vscode on Linux, but Beyond Compare was something else.",
+        "created_at": "2025-07-07T07:14:21Z",
+        "created_at_i": 1751872461,
+        "objectID": "44487534",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T07:16:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "prisenco"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Google Wave. One of the best &quot;collaborative thinking&quot; tools ever. It would even integrate well with LLMs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_prisenco",
+          "story_44479519"
+        ],
+        "author": "prisenco",
+        "comment_text": "Google Wave. One of the best &quot;collaborative thinking&quot; tools ever. It would even integrate well with LLMs.",
+        "created_at": "2025-07-06T21:50:10Z",
+        "created_at_i": 1751838610,
+        "objectID": "44484402",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T19:18:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "burnt-resistor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A Bodega Mac app, for a defunct app store, that checks every Sparkle framework enabled app for updates and can optionally install them. It's x86 only so it won't work whenever Apple decides in its infinite wisdom to break everyone's investment in x86 software when Rosetta 2 is purposefully obliterated."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_burnt-resistor",
+          "story_44479519"
+        ],
+        "author": "burnt-resistor",
+        "comment_text": "A Bodega Mac app, for a defunct app store, that checks every Sparkle framework enabled app for updates and can optionally install them. It&#x27;s x86 only so it won&#x27;t work whenever Apple decides in its infinite wisdom to break everyone&#x27;s investment in x86 software when Rosetta 2 is purposefully obliterated.",
+        "created_at": "2025-07-06T21:10:45Z",
+        "created_at_i": 1751836245,
+        "objectID": "44484081",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T21:13:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FerkiHN"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unfortunately, I have a Windows 8.1 PC and I downloaded the update for it from the official website, but unfortunately the installation LibreOfice failed , so I stayed with OpenOffice."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_FerkiHN",
+          "story_44479519"
+        ],
+        "author": "FerkiHN",
+        "comment_text": "Unfortunately, I have a Windows 8.1 PC and I downloaded the update for it from the official website, but unfortunately the installation LibreOfice failed , so I stayed with OpenOffice.",
+        "created_at": "2025-07-06T18:12:21Z",
+        "created_at_i": 1751825541,
+        "objectID": "44482826",
+        "parent_id": 44482134,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T18:15:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "6mian"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oh, you're right! We're definitely on the same page :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_6mian",
+          "story_44479519"
+        ],
+        "author": "6mian",
+        "comment_text": "Oh, you&#x27;re right! We&#x27;re definitely on the same page :)",
+        "created_at": "2025-07-06T17:53:19Z",
+        "created_at_i": 1751824399,
+        "objectID": "44482703",
+        "parent_id": 44480717,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T17:54:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "john-tells-all"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've had good luck with (service) Workflowy -- <a href=\"https://workflowy.com/\" rel=\"nofollow\">https://workflowy.com/</a><p>Type to create items at different levels. Drag and drop to rearrange. Click triangle to fold."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_john-tells-all",
+          "story_44479519"
+        ],
+        "author": "john-tells-all",
+        "children": [
+          44489112
+        ],
+        "comment_text": "I&#x27;ve had good luck with (service) Workflowy -- <a href=\"https:&#x2F;&#x2F;workflowy.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;workflowy.com&#x2F;</a><p>Type to create items at different levels. Drag and drop to rearrange. Click triangle to fold.",
+        "created_at": "2025-07-06T17:38:38Z",
+        "created_at_i": 1751823518,
+        "objectID": "44482597",
+        "parent_id": 44479805,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T11:26:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "austin-cheney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I stopped maintaining it because it required a stupendous amount of time.  That's fine except I had mostly stopped using it myself for the last 2 or 3 years I was maintaining it and I wanted the freedom to use that time to explore other unrelated projects.<p>Simultaneously the visibility around that project got me hired more than once, but my interest in doing JavaScript for employment was fading as well.  I still write JavaScript/TypeScript in personal projects to this day, but I do completely unrelated work now for employment."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_austin-cheney",
+          "story_44479519"
+        ],
+        "author": "austin-cheney",
+        "comment_text": "I stopped maintaining it because it required a stupendous amount of time.  That&#x27;s fine except I had mostly stopped using it myself for the last 2 or 3 years I was maintaining it and I wanted the freedom to use that time to explore other unrelated projects.<p>Simultaneously the visibility around that project got me hired more than once, but my interest in doing JavaScript for employment was fading as well.  I still write JavaScript&#x2F;TypeScript in personal projects to this day, but I do completely unrelated work now for employment.",
+        "created_at": "2025-07-06T17:37:34Z",
+        "created_at_i": 1751823454,
+        "objectID": "44482590",
+        "parent_id": 44481191,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T16:24:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mmh0000"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My software of choice for this has always been Autopano Giga, still &quot;outdated&quot;, but does its job very well:<p><a href=\"https://hdrmaps.com/blog/autopano-giga-is-now-free/\" rel=\"nofollow\">https://hdrmaps.com/blog/autopano-giga-is-now-free/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mmh0000",
+          "story_44479519"
+        ],
+        "author": "mmh0000",
+        "comment_text": "My software of choice for this has always been Autopano Giga, still &quot;outdated&quot;, but does its job very well:<p><a href=\"https:&#x2F;&#x2F;hdrmaps.com&#x2F;blog&#x2F;autopano-giga-is-now-free&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;hdrmaps.com&#x2F;blog&#x2F;autopano-giga-is-now-free&#x2F;</a>",
+        "created_at": "2025-07-06T17:29:37Z",
+        "created_at_i": 1751822977,
+        "objectID": "44482523",
+        "parent_id": 44482177,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-08-06T20:04:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Rotundo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "XFig"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Rotundo",
+          "story_44479519"
+        ],
+        "author": "Rotundo",
+        "comment_text": "XFig",
+        "created_at": "2025-07-06T17:12:37Z",
+        "created_at_i": 1751821957,
+        "objectID": "44482404",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T17:17:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alok-g"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have you tried Serif Panaroma Plus?  It's an outdated product, but worked the best for me, better than ICE as far as I recall."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alok-g",
+          "story_44479519"
+        ],
+        "author": "alok-g",
+        "comment_text": "Have you tried Serif Panaroma Plus?  It&#x27;s an outdated product, but worked the best for me, better than ICE as far as I recall.",
+        "created_at": "2025-07-06T17:07:53Z",
+        "created_at_i": 1751821673,
+        "objectID": "44482365",
+        "parent_id": 44482177,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-08-06T20:04:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bjourne"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Logisim Evolution. And I'm telling you, whoever can make a replacement addressing all its pain points, while being easy to use for students and <i>grading teachers</i> can become very very rich."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bjourne",
+          "story_44479519"
+        ],
+        "author": "bjourne",
+        "comment_text": "Logisim Evolution. And I&#x27;m telling you, whoever can make a replacement addressing all its pain points, while being easy to use for students and <i>grading teachers</i> can become very very rich.",
+        "created_at": "2025-07-06T16:57:40Z",
+        "created_at_i": 1751821060,
+        "objectID": "44482281",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-09T05:51:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nocoiner"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I cannot believe they didn’t replicate the Dark Sky functionality 1:1 in the Weather app."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nocoiner",
+          "story_44479519"
+        ],
+        "author": "nocoiner",
+        "comment_text": "I cannot believe they didn’t replicate the Dark Sky functionality 1:1 in the Weather app.",
+        "created_at": "2025-07-06T16:54:45Z",
+        "created_at_i": 1751820885,
+        "objectID": "44482254",
+        "parent_id": 44480913,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T16:56:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alok-g"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "WinSplit Revolution.  It's a minimalistic but powerful Window manager for Windows.  Some forks exist but all seem stalled.  <a href=\"https://github.com/dozius/winsplit-revolution\">https://github.com/dozius/winsplit-revolution</a>  There are many alternatives, but none as good.  WinSplit used to work fine until a few years back.<p>Microsoft Money.  I moved to GNUCash, but still miss Money.<p>Winamp, as another comment here noted, cannot be considered outdated.  I have tried many alternatives but find none to be as good.  Sonique was a good alternative which stalled a long time back.  Thankfully Winamp still works."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alok-g",
+          "story_44479519"
+        ],
+        "author": "alok-g",
+        "comment_text": "WinSplit Revolution.  It&#x27;s a minimalistic but powerful Window manager for Windows.  Some forks exist but all seem stalled.  <a href=\"https:&#x2F;&#x2F;github.com&#x2F;dozius&#x2F;winsplit-revolution\">https:&#x2F;&#x2F;github.com&#x2F;dozius&#x2F;winsplit-revolution</a>  There are many alternatives, but none as good.  WinSplit used to work fine until a few years back.<p>Microsoft Money.  I moved to GNUCash, but still miss Money.<p>Winamp, as another comment here noted, cannot be considered outdated.  I have tried many alternatives but find none to be as good.  Sonique was a good alternative which stalled a long time back.  Thankfully Winamp still works.",
+        "created_at": "2025-07-06T16:48:58Z",
+        "created_at_i": 1751820538,
+        "objectID": "44482219",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-09T05:52:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "duffyjp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Image Composite Editor.  It's a panorama maker from Microsoft Research.  I'm a hobbyist photographer and nothing I've tried can come close.<p><a href=\"https://www.microsoft.com/en-us/research/project/image-composite-editor/\" rel=\"nofollow\">https://www.microsoft.com/en-us/research/project/image-compo...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_duffyjp",
+          "story_44479519"
+        ],
+        "author": "duffyjp",
+        "children": [
+          44482523,
+          44482365
+        ],
+        "comment_text": "Image Composite Editor.  It&#x27;s a panorama maker from Microsoft Research.  I&#x27;m a hobbyist photographer and nothing I&#x27;ve tried can come close.<p><a href=\"https:&#x2F;&#x2F;www.microsoft.com&#x2F;en-us&#x2F;research&#x2F;project&#x2F;image-composite-editor&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.microsoft.com&#x2F;en-us&#x2F;research&#x2F;project&#x2F;image-compo...</a>",
+        "created_at": "2025-07-06T16:44:25Z",
+        "created_at_i": 1751820265,
+        "objectID": "44482177",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T17:30:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "duffyjp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have you given Libre Office a try?  I use their spreadsheet all the time.  You can paste in data and actually get it into cells the way you want.  Excel is terrible at this.<p>Development Comparison:\n<a href=\"https://www.libreoffice.org/discover/libreoffice-vs-openoffice/\" rel=\"nofollow\">https://www.libreoffice.org/discover/libreoffice-vs-openoffi...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_duffyjp",
+          "story_44479519"
+        ],
+        "author": "duffyjp",
+        "children": [
+          44482826
+        ],
+        "comment_text": "Have you given Libre Office a try?  I use their spreadsheet all the time.  You can paste in data and actually get it into cells the way you want.  Excel is terrible at this.<p>Development Comparison:\n<a href=\"https:&#x2F;&#x2F;www.libreoffice.org&#x2F;discover&#x2F;libreoffice-vs-openoffice&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.libreoffice.org&#x2F;discover&#x2F;libreoffice-vs-openoffi...</a>",
+        "created_at": "2025-07-06T16:37:41Z",
+        "created_at_i": 1751819861,
+        "objectID": "44482134",
+        "parent_id": 44480339,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-08T02:25:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cagey"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Technologically simple, was done well on MS-DOS in a few hundred kB of code and data.<p>Exactly. The outliner feature in Borland's Sidekick Plus was my all-time favorite, but its lifetime was brief (due to the entire product being a TSR), so I used Symantec's Grandview 2.0 sporadically over the decades, even in DOSbox out of desperation (as recently as 5-6 years ago!)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cagey",
+          "story_44479519"
+        ],
+        "author": "cagey",
+        "comment_text": "&gt; Technologically simple, was done well on MS-DOS in a few hundred kB of code and data.<p>Exactly. The outliner feature in Borland&#x27;s Sidekick Plus was my all-time favorite, but its lifetime was brief (due to the entire product being a TSR), so I used Symantec&#x27;s Grandview 2.0 sporadically over the decades, even in DOSbox out of desperation (as recently as 5-6 years ago!).",
+        "created_at": "2025-07-06T16:14:59Z",
+        "created_at_i": 1751818499,
+        "objectID": "44481979",
+        "parent_id": 44479805,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T11:14:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lobsterthief"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have you tried Whimsical? It’s the only one that’s ever made sense to me. It’s web-based though."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lobsterthief",
+          "story_44479519"
+        ],
+        "author": "lobsterthief",
+        "comment_text": "Have you tried Whimsical? It’s the only one that’s ever made sense to me. It’s web-based though.",
+        "created_at": "2025-07-06T16:01:03Z",
+        "created_at_i": 1751817663,
+        "objectID": "44481861",
+        "parent_id": 44481777,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T16:04:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pesoneto"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MacFlow by MainStay. The only flowcharting software with an intuitive user interface. Only works on original Mac OS. Don't try it, you will never be happy current products ever again."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pesoneto",
+          "story_44479519"
+        ],
+        "author": "pesoneto",
+        "children": [
+          44481861
+        ],
+        "comment_text": "MacFlow by MainStay. The only flowcharting software with an intuitive user interface. Only works on original Mac OS. Don&#x27;t try it, you will never be happy current products ever again.",
+        "created_at": "2025-07-06T15:52:02Z",
+        "created_at_i": 1751817122,
+        "objectID": "44481777",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T16:01:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pulvinar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Absolutely. I'm taking good care of the last hardware that still runs it.<p>Wonder what it would take to convince Apple to bring it back. It's not like there's a shortage of talent and money to do this now. And it would be immensely appreciated, unlike some of their other projects."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pulvinar",
+          "story_44479519"
+        ],
+        "author": "pulvinar",
+        "comment_text": "Absolutely. I&#x27;m taking good care of the last hardware that still runs it.<p>Wonder what it would take to convince Apple to bring it back. It&#x27;s not like there&#x27;s a shortage of talent and money to do this now. And it would be immensely appreciated, unlike some of their other projects.",
+        "created_at": "2025-07-06T15:11:06Z",
+        "created_at_i": 1751814666,
+        "objectID": "44481404",
+        "parent_id": 44480447,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T16:49:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "treetalker"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I broke down and bought Bike. I use it almost exclusively for drafting complex legal briefs: I like that it makes it easy to make any node at any level a heading. Its system of changing the format of nodes (to heading, body text, checkbox, unordered or ordered list, etc.) is fast, easy, and unique in the space. But printing leaves much to be desired.<p>Otherwise I end up using OmniOutliner. The filtering can be useful (and it's a feature not really available elsewhere) but often OmniOutliner can feel slow and overly feature-heavy. Printing is also not great."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_treetalker",
+          "story_44479519"
+        ],
+        "author": "treetalker",
+        "children": [
+          44531960
+        ],
+        "comment_text": "I broke down and bought Bike. I use it almost exclusively for drafting complex legal briefs: I like that it makes it easy to make any node at any level a heading. Its system of changing the format of nodes (to heading, body text, checkbox, unordered or ordered list, etc.) is fast, easy, and unique in the space. But printing leaves much to be desired.<p>Otherwise I end up using OmniOutliner. The filtering can be useful (and it&#x27;s a feature not really available elsewhere) but often OmniOutliner can feel slow and overly feature-heavy. Printing is also not great.",
+        "created_at": "2025-07-06T14:55:16Z",
+        "created_at_i": 1751813716,
+        "objectID": "44481283",
+        "parent_id": 44480484,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-11T13:34:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "browningstreet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Neat — I used to use that.<p>Out of curiosity, why did you stop maintaining it? Have you considered giving it to someone to keep up? Apologies if this is addressed in a blog somewhere."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_browningstreet",
+          "story_44479519"
+        ],
+        "author": "browningstreet",
+        "children": [
+          44482590
+        ],
+        "comment_text": "Neat — I used to use that.<p>Out of curiosity, why did you stop maintaining it? Have you considered giving it to someone to keep up? Apologies if this is addressed in a blog somewhere.",
+        "created_at": "2025-07-06T14:41:39Z",
+        "created_at_i": 1751812899,
+        "objectID": "44481191",
+        "parent_id": 44481012,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T17:38:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "seuraughty"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have you tried Tempest Rising?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_seuraughty",
+          "story_44479519"
+        ],
+        "author": "seuraughty",
+        "comment_text": "Have you tried Tempest Rising?",
+        "created_at": "2025-07-06T14:40:11Z",
+        "created_at_i": 1751812811,
+        "objectID": "44481180",
+        "parent_id": 44480800,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T15:01:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mikewarot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Picassa - Google took it over, and left a bug in it that renders it unusable. It randomly swaps face tags, so I can't use it. 8("
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mikewarot",
+          "story_44479519"
+        ],
+        "author": "mikewarot",
+        "comment_text": "Picassa - Google took it over, and left a bug in it that renders it unusable. It randomly swaps face tags, so I can&#x27;t use it. 8(",
+        "created_at": "2025-07-06T14:31:20Z",
+        "created_at_i": 1751812280,
+        "objectID": "44481115",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T20:26:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "austin-cheney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I stopped maintaining one of my personal applications 6 years ago and people still use it in the browser almost 5,000 times a month and download it more than 4,000 times a month. It’s called Pretty Diff."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_austin-cheney",
+          "story_44479519"
+        ],
+        "author": "austin-cheney",
+        "children": [
+          44481191
+        ],
+        "comment_text": "I stopped maintaining one of my personal applications 6 years ago and people still use it in the browser almost 5,000 times a month and download it more than 4,000 times a month. It’s called Pretty Diff.",
+        "created_at": "2025-07-06T14:17:17Z",
+        "created_at_i": 1751811437,
+        "objectID": "44481012",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T18:04:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fat_cantor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Dark Sky"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fat_cantor",
+          "story_44479519"
+        ],
+        "author": "fat_cantor",
+        "children": [
+          44482254
+        ],
+        "comment_text": "Dark Sky",
+        "created_at": "2025-07-06T14:03:46Z",
+        "created_at_i": 1751810626,
+        "objectID": "44480913",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T18:16:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "delduca"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Turbo C with conio.h"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_delduca",
+          "story_44479519"
+        ],
+        "author": "delduca",
+        "comment_text": "Turbo C with conio.h",
+        "created_at": "2025-07-06T14:00:42Z",
+        "created_at_i": 1751810442,
+        "objectID": "44480887",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-09T17:45:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kingkongjaffa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Command and conquer games, especially 3 tiberium wars,<p>There’s really no modern equivalent of build a base, gather ore in ore trucks, make base defenses and units, and fight in formations and garrisonned in buildings"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kingkongjaffa",
+          "story_44479519"
+        ],
+        "author": "kingkongjaffa",
+        "children": [
+          44481180
+        ],
+        "comment_text": "Command and conquer games, especially 3 tiberium wars,<p>There’s really no modern equivalent of build a base, gather ore in ore trucks, make base defenses and units, and fight in formations and garrisonned in buildings",
+        "created_at": "2025-07-06T13:48:23Z",
+        "created_at_i": 1751809703,
+        "objectID": "44480800",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T16:40:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ok1984"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Question was about old or outdated, total commander is old ;)<p>Don’t get me wrong, I love it! and I don’t think there is anything close to it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ok1984",
+          "story_44479519"
+        ],
+        "author": "ok1984",
+        "children": [
+          44482703
+        ],
+        "comment_text": "Question was about old or outdated, total commander is old ;)<p>Don’t get me wrong, I love it! and I don’t think there is anything close to it.",
+        "created_at": "2025-07-06T13:38:18Z",
+        "created_at_i": 1751809098,
+        "objectID": "44480717",
+        "parent_id": 44480159,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T03:34:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "devilbunny"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’ll see your Graffiti and raise you Swype."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_devilbunny",
+          "story_44479519"
+        ],
+        "author": "devilbunny",
+        "comment_text": "I’ll see your Graffiti and raise you Swype.",
+        "created_at": "2025-07-06T13:26:08Z",
+        "created_at_i": 1751808368,
+        "objectID": "44480620",
+        "parent_id": 44480042,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-06T20:08:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dialup_sounds"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Second!<p>Outliners are a very underserved space, eclipsed by overwrought note apps that treat outlining as formatting rather than a fundamental tool for organizing thought and communication.<p>Indigrid (<a href=\"https://innovationdilation.com/\" rel=\"nofollow\">https://innovationdilation.com/</a>) was extremely promising but is presumed dead.<p>Bike on Mac (<a href=\"https://www.hogbaysoftware.com/bike/\" rel=\"nofollow\">https://www.hogbaysoftware.com/bike/</a>) is probably the best living example.<p>...and there's not much else."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dialup_sounds",
+          "story_44479519"
+        ],
+        "author": "dialup_sounds",
+        "children": [
+          44481283
+        ],
+        "comment_text": "Second!<p>Outliners are a very underserved space, eclipsed by overwrought note apps that treat outlining as formatting rather than a fundamental tool for organizing thought and communication.<p>Indigrid (<a href=\"https:&#x2F;&#x2F;innovationdilation.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;innovationdilation.com&#x2F;</a>) was extremely promising but is presumed dead.<p>Bike on Mac (<a href=\"https:&#x2F;&#x2F;www.hogbaysoftware.com&#x2F;bike&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.hogbaysoftware.com&#x2F;bike&#x2F;</a>) is probably the best living example.<p>...and there&#x27;s not much else.",
+        "created_at": "2025-07-06T13:05:02Z",
+        "created_at_i": 1751807102,
+        "objectID": "44480484",
+        "parent_id": 44479805,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-11T13:30:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dradra67"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Apple Aperture.<p>Never liked Lightroom and it is subscription-only now.<p>I use DarkTable here and there but never recreated all the albums and metadata I had in Aperture.<p>Apple pulling the plug was a major punch in the gut and I'll never invest so much effort again in curating a digital collection with proprietary software."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What old or outdated software have you never found a replacement for?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dradra67",
+          "story_44479519"
+        ],
+        "author": "dradra67",
+        "children": [
+          44481404
+        ],
+        "comment_text": "Apple Aperture.<p>Never liked Lightroom and it is subscription-only now.<p>I use DarkTable here and there but never recreated all the albums and metadata I had in Aperture.<p>Apple pulling the plug was a major punch in the gut and I&#x27;ll never invest so much effort again in curating a digital collection with proprietary software.",
+        "created_at": "2025-07-06T12:59:37Z",
+        "created_at_i": 1751806777,
+        "objectID": "44480447",
+        "parent_id": 44479519,
+        "story_id": 44479519,
+        "story_title": "Ask HN: What old or outdated software have you never found a replacement for?",
+        "updated_at": "2025-07-07T03:30:23Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 56,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44479519&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 17
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

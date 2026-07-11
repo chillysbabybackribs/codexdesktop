@@ -1,0 +1,1403 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47665194",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 189
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaway5465"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's like HTMX but with zoom as the transition. I'm curious what could be done with the inner target."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwaway5465",
+          "story_47665194"
+        ],
+        "author": "throwaway5465",
+        "comment_text": "It&#x27;s like HTMX but with zoom as the transition. I&#x27;m curious what could be done with the inner target.",
+        "created_at": "2026-04-11T05:14:46Z",
+        "created_at_i": 1775884486,
+        "objectID": "47727620",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-11T05:17:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "khalic"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cool stuff!! Knowing CSS, the road must have been full of headaches and compromises."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_khalic",
+          "story_47665194"
+        ],
+        "author": "khalic",
+        "comment_text": "Cool stuff!! Knowing CSS, the road must have been full of headaches and compromises.",
+        "created_at": "2026-04-08T17:19:28Z",
+        "created_at_i": 1775668768,
+        "objectID": "47693300",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-08T18:37:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DrScientist"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Has anybody built a UI around the opposite? Shrinking?<p>ie rather that zooming in on the content of interest, shrinking the content not of interest?<p>Long time ago I used to use <a href=\"https://www.windowmaker.org/\" rel=\"nofollow\">https://www.windowmaker.org/</a> as my X11 window manager and one of the features I really liked was the ability to shrink a window to an icon and place that icon on the desktop for future retrieval ( a bit like having the whole desktop like the MacOS dock ).<p>I find such an interface easier to navigate than one where you zoom in and out - where the it's too easy to lose overall context, and where navigation is a bit too linear/hierarchical."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DrScientist",
+          "story_47665194"
+        ],
+        "author": "DrScientist",
+        "comment_text": "Has anybody built a UI around the opposite? Shrinking?<p>ie rather that zooming in on the content of interest, shrinking the content not of interest?<p>Long time ago I used to use <a href=\"https:&#x2F;&#x2F;www.windowmaker.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.windowmaker.org&#x2F;</a> as my X11 window manager and one of the features I really liked was the ability to shrink a window to an icon and place that icon on the desktop for future retrieval ( a bit like having the whole desktop like the MacOS dock ).<p>I find such an interface easier to navigate than one where you zoom in and out - where the it&#x27;s too easy to lose overall context, and where navigation is a bit too linear&#x2F;hierarchical.",
+        "created_at": "2026-04-07T09:45:56Z",
+        "created_at_i": 1775555156,
+        "objectID": "47672750",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-09T10:24:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can use driver none to avoid transitions. And I’m working on reduce motion"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "You can use driver none to avoid transitions. And I’m working on reduce motion",
+        "created_at": "2026-04-07T00:45:25Z",
+        "created_at_i": 1775522725,
+        "objectID": "47669320",
+        "parent_id": 47669128,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:53:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jareklupinski"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "very well made :) for documentation and specific dashboards this has a lot of great uses<p>i played with a similar concept back when everyone was starting to 'drill down into big data' on their ipads, and i never came up with a clever way of drilling 'sideways', or allowing people to go between one 'insight' from one deep level and tie it into another without zooming all the way back out and then back in, contextual 'wormholes' (all handmade), or breadcrumbs (messy after enough layers)<p>one thing i'd add to the demo is detecting where i'm hovering over while scrolling to scroll into that part (on a mouse), scroll out works"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jareklupinski",
+          "story_47665194"
+        ],
+        "author": "jareklupinski",
+        "comment_text": "very well made :) for documentation and specific dashboards this has a lot of great uses<p>i played with a similar concept back when everyone was starting to &#x27;drill down into big data&#x27; on their ipads, and i never came up with a clever way of drilling &#x27;sideways&#x27;, or allowing people to go between one &#x27;insight&#x27; from one deep level and tie it into another without zooming all the way back out and then back in, contextual &#x27;wormholes&#x27; (all handmade), or breadcrumbs (messy after enough layers)<p>one thing i&#x27;d add to the demo is detecting where i&#x27;m hovering over while scrolling to scroll into that part (on a mouse), scroll out works",
+        "created_at": "2026-04-07T00:39:00Z",
+        "created_at_i": 1775522340,
+        "objectID": "47669268",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:58:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "handfuloflight"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Maybe an icon on hover or a small static icon but the latter could get repetitive, the hover would solve the repetition."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_handfuloflight",
+          "story_47665194"
+        ],
+        "author": "handfuloflight",
+        "comment_text": "Maybe an icon on hover or a small static icon but the latter could get repetitive, the hover would solve the repetition.",
+        "created_at": "2026-04-07T00:29:49Z",
+        "created_at_i": 1775521789,
+        "objectID": "47669203",
+        "parent_id": 47667383,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:31:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "justinc8687"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone who suffers from vestibular migraines, unfortunately visiting the demo  site instantly made get dizzy.  I highly encourage you to implement the &quot;@media (prefers-reduced-motion: reduce)&quot; media query to handle accessibility [1].  I'd hopefully expect the zooms to turn into normal links or failing that, either slow down or have some kind of non-vestibular-attack-inducing flow.<p>Here are some other good resources: <a href=\"https://www.a11yproject.com/posts/understanding-vestibular-disorders/\" rel=\"nofollow\">https://www.a11yproject.com/posts/understanding-vestibular-d...</a> or <a href=\"https://web.dev/articles/prefers-reduced-motion\" rel=\"nofollow\">https://web.dev/articles/prefers-reduced-motion</a><p>I don't say this as criticism as I'm sure you've never heard of these issues before, but something I'd encourage you (or anyone who relies on animations) to implement into their package.<p>[1] <a href=\"https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion\" rel=\"nofollow\">https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/A...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_justinc8687",
+          "story_47665194"
+        ],
+        "author": "justinc8687",
+        "children": [
+          47669320,
+          47669382
+        ],
+        "comment_text": "As someone who suffers from vestibular migraines, unfortunately visiting the demo  site instantly made get dizzy.  I highly encourage you to implement the &quot;@media (prefers-reduced-motion: reduce)&quot; media query to handle accessibility [1].  I&#x27;d hopefully expect the zooms to turn into normal links or failing that, either slow down or have some kind of non-vestibular-attack-inducing flow.<p>Here are some other good resources: <a href=\"https:&#x2F;&#x2F;www.a11yproject.com&#x2F;posts&#x2F;understanding-vestibular-disorders&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.a11yproject.com&#x2F;posts&#x2F;understanding-vestibular-d...</a> or <a href=\"https:&#x2F;&#x2F;web.dev&#x2F;articles&#x2F;prefers-reduced-motion\" rel=\"nofollow\">https:&#x2F;&#x2F;web.dev&#x2F;articles&#x2F;prefers-reduced-motion</a><p>I don&#x27;t say this as criticism as I&#x27;m sure you&#x27;ve never heard of these issues before, but something I&#x27;d encourage you (or anyone who relies on animations) to implement into their package.<p>[1] <a href=\"https:&#x2F;&#x2F;developer.mozilla.org&#x2F;en-US&#x2F;docs&#x2F;Web&#x2F;CSS&#x2F;Reference&#x2F;At-rules&#x2F;@media&#x2F;prefers-reduced-motion\" rel=\"nofollow\">https:&#x2F;&#x2F;developer.mozilla.org&#x2F;en-US&#x2F;docs&#x2F;Web&#x2F;CSS&#x2F;Reference&#x2F;A...</a>",
+        "created_at": "2026-04-07T00:17:45Z",
+        "created_at_i": 1775521065,
+        "objectID": "47669128",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T05:08:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bschwindHN"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's extremely easy to break your landing page with the back swipe gesture on mobile safari."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bschwindHN",
+          "story_47665194"
+        ],
+        "author": "bschwindHN",
+        "comment_text": "It&#x27;s extremely easy to break your landing page with the back swipe gesture on mobile safari.",
+        "created_at": "2026-04-07T00:11:49Z",
+        "created_at_i": 1775520709,
+        "objectID": "47669094",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T01:08:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I turn of scroll events except on home assistant. You can enable or disable depending on your needs"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "I turn of scroll events except on home assistant. You can enable or disable depending on your needs",
+        "created_at": "2026-04-07T00:10:29Z",
+        "created_at_i": 1775520629,
+        "objectID": "47669088",
+        "parent_id": 47665786,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:15:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you!!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Thank you!!",
+        "created_at": "2026-04-07T00:08:28Z",
+        "created_at_i": 1775520508,
+        "objectID": "47669073",
+        "parent_id": 47668983,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:22:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "handfuloflight"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My jaw did drop. This could pair really well with a hybrid bread crumb + menu that gives you an escape hatch or granular on demand traversal. Love it!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_handfuloflight",
+          "story_47665194"
+        ],
+        "author": "handfuloflight",
+        "children": [
+          47669073
+        ],
+        "comment_text": "My jaw did drop. This could pair really well with a hybrid bread crumb + menu that gives you an escape hatch or granular on demand traversal. Love it!",
+        "created_at": "2026-04-06T23:57:09Z",
+        "created_at_i": 1775519829,
+        "objectID": "47668983",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:56:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "christoff12"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; remains the market leader in that space<p>TIL"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_christoff12",
+          "story_47665194"
+        ],
+        "author": "christoff12",
+        "comment_text": "&gt; remains the market leader in that space<p>TIL",
+        "created_at": "2026-04-06T22:45:20Z",
+        "created_at_i": 1775515520,
+        "objectID": "47668353",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T23:40:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ericmcer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Under the hood aren't you pushing things into the browser history as navigation happens? I wouldn't try to rewrite the history api myself but just make sure you `pushState()` as navigation happens."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ericmcer",
+          "story_47665194"
+        ],
+        "author": "ericmcer",
+        "comment_text": "Under the hood aren&#x27;t you pushing things into the browser history as navigation happens? I wouldn&#x27;t try to rewrite the history api myself but just make sure you `pushState()` as navigation happens.",
+        "created_at": "2026-04-06T22:22:30Z",
+        "created_at_i": 1775514150,
+        "objectID": "47668111",
+        "parent_id": 47667570,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T22:25:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "theflyinghorse"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HA! I Love it! It's a been a while since I felt this sort of joy exploring a new way to navigate"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_theflyinghorse",
+          "story_47665194"
+        ],
+        "author": "theflyinghorse",
+        "comment_text": "HA! I Love it! It&#x27;s a been a while since I felt this sort of joy exploring a new way to navigate",
+        "created_at": "2026-04-06T21:55:18Z",
+        "created_at_i": 1775512518,
+        "objectID": "47667763",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:59:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Good catch on forward navigation. Architecturally I don't keep a history of already-visited views, so forward has nowhere to go. It's something worth tackling though, especially for programmatic navigation flows. Open in new tab is on my radar too."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "children": [
+          47668111
+        ],
+        "comment_text": "Good catch on forward navigation. Architecturally I don&#x27;t keep a history of already-visited views, so forward has nowhere to go. It&#x27;s something worth tackling though, especially for programmatic navigation flows. Open in new tab is on my radar too.",
+        "created_at": "2026-04-06T21:41:06Z",
+        "created_at_i": 1775511666,
+        "objectID": "47667570",
+        "parent_id": 47667368,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T23:15:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! Both the depth indicator and the zoomable affordance are things I'm actively working on. Glad the spatial navigation idea resonates."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Thanks! Both the depth indicator and the zoomable affordance are things I&#x27;m actively working on. Glad the spatial navigation idea resonates.",
+        "created_at": "2026-04-06T21:36:09Z",
+        "created_at_i": 1775511369,
+        "objectID": "47667499",
+        "parent_id": 47667175,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:38:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Firefox issues are real and I want to fix them. On the &quot;why&quot;, fair to be skeptical, it's not for every UI. But I do think it makes sense when hierarchy needs to feel spatial."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Firefox issues are real and I want to fix them. On the &quot;why&quot;, fair to be skeptical, it&#x27;s not for every UI. But I do think it makes sense when hierarchy needs to feel spatial.",
+        "created_at": "2026-04-06T21:33:35Z",
+        "created_at_i": 1775511215,
+        "objectID": "47667462",
+        "parent_id": 47666069,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:38:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Good call, hash routing was the quick path. History API is on the list."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Good call, hash routing was the quick path. History API is on the list.",
+        "created_at": "2026-04-06T21:32:21Z",
+        "created_at_i": 1775511141,
+        "objectID": "47667450",
+        "parent_id": 47666012,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:22:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ha, noted. Pinch conflicts are a known pain point on touch devices, need to sort that out."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Ha, noted. Pinch conflicts are a known pain point on touch devices, need to sort that out.",
+        "created_at": "2026-04-06T21:31:14Z",
+        "created_at_i": 1775511074,
+        "objectID": "47667432",
+        "parent_id": 47665845,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:22:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah the scroll expectation comes up a lot. Scale of the Universe was scijs I think, different beast but a great example of zoom done right."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Yeah the scroll expectation comes up a lot. Scale of the Universe was scijs I think, different beast but a great example of zoom done right.",
+        "created_at": "2026-04-06T21:29:12Z",
+        "created_at_i": 1775510952,
+        "objectID": "47667406",
+        "parent_id": 47666237,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:56:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ericmcer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "that would be more on the consumer of the library than on the library imo.<p>Like I wouldn't expect any other frontend router library to decorate links for me in a certain way."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ericmcer",
+          "story_47665194"
+        ],
+        "author": "ericmcer",
+        "comment_text": "that would be more on the consumer of the library than on the library imo.<p>Like I wouldn&#x27;t expect any other frontend router library to decorate links for me in a certain way.",
+        "created_at": "2026-04-06T21:27:48Z",
+        "created_at_i": 1775510868,
+        "objectID": "47667390",
+        "parent_id": 47666636,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T23:00:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fair point. No visual cue for what's zoomable is a real gap. Thinking about how to handle that without cluttering the UI."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "children": [
+          47669203
+        ],
+        "comment_text": "Fair point. No visual cue for what&#x27;s zoomable is a real gap. Thinking about how to handle that without cluttering the UI.",
+        "created_at": "2026-04-06T21:27:07Z",
+        "created_at_i": 1775510827,
+        "objectID": "47667383",
+        "parent_id": 47666636,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:55:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ericmcer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Really cool, like others are saying this makes you feel like you are interacting with all the pages at once instead of one page at a time.<p>I did notice that forward doesn't seem to work. I.E. If I click into a page, it zooms in, press back it zooms back out, press forward it flickers the url but doesn't have normal forward behavior.<p>I also don't know if you want to support `open in new tab` but that would be a hard req for many people."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ericmcer",
+          "story_47665194"
+        ],
+        "author": "ericmcer",
+        "children": [
+          47667570
+        ],
+        "comment_text": "Really cool, like others are saying this makes you feel like you are interacting with all the pages at once instead of one page at a time.<p>I did notice that forward doesn&#x27;t seem to work. I.E. If I click into a page, it zooms in, press back it zooms back out, press forward it flickers the url but doesn&#x27;t have normal forward behavior.<p>I also don&#x27;t know if you want to support `open in new tab` but that would be a hard req for many people.",
+        "created_at": "2026-04-06T21:26:04Z",
+        "created_at_i": 1775510764,
+        "objectID": "47667368",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:53:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cjlm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think about this space a lot, see Eagle Mode: <a href=\"https://www.youtube.com/watch?v=G6yPQKt3mBA\" rel=\"nofollow\">https://www.youtube.com/watch?v=G6yPQKt3mBA</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cjlm",
+          "story_47665194"
+        ],
+        "author": "cjlm",
+        "comment_text": "I think about this space a lot, see Eagle Mode: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=G6yPQKt3mBA\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=G6yPQKt3mBA</a>",
+        "created_at": "2026-04-06T21:17:26Z",
+        "created_at_i": 1775510246,
+        "objectID": "47667264",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T23:27:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That means a lot, thanks. The iOS back gesture thing is tricky but would be really sweet to pull off."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "That means a lot, thanks. The iOS back gesture thing is tricky but would be really sweet to pull off.",
+        "created_at": "2026-04-06T21:15:33Z",
+        "created_at_i": 1775510133,
+        "objectID": "47667239",
+        "parent_id": 47666141,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:58:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Glad you liked it! That one was fun to build."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Glad you liked it! That one was fun to build.",
+        "created_at": "2026-04-06T21:12:41Z",
+        "created_at_i": 1775509961,
+        "objectID": "47667194",
+        "parent_id": 47666494,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:22:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TheTaytay"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is indeed seriously impressive. I keep wanting to keep my entire knowledgebase on a canvas so that I can &quot;think&quot; or navigate spatially. Thisis neat.<p>In the main landing page, as I was clicking around, I kept wishing to have a legend to show me either &quot;how deep I am&quot; or &quot;how do I get out of here?&quot;, and like someone else commented, I would love an affordance showing me what was clickable/zoomable."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TheTaytay",
+          "story_47665194"
+        ],
+        "author": "TheTaytay",
+        "children": [
+          47667499
+        ],
+        "comment_text": "This is indeed seriously impressive. I keep wanting to keep my entire knowledgebase on a canvas so that I can &quot;think&quot; or navigate spatially. Thisis neat.<p>In the main landing page, as I was clicking around, I kept wishing to have a legend to show me either &quot;how deep I am&quot; or &quot;how do I get out of here?&quot;, and like someone else commented, I would love an affordance showing me what was clickable&#x2F;zoomable.",
+        "created_at": "2026-04-06T21:11:12Z",
+        "created_at_i": 1775509872,
+        "objectID": "47667175",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:11:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! Yeah, immersive demos and dashboards are where it seems to click best."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Thanks! Yeah, immersive demos and dashboards are where it seems to click best.",
+        "created_at": "2026-04-06T21:11:00Z",
+        "created_at_i": 1775509860,
+        "objectID": "47667173",
+        "parent_id": 47666476,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:12:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! The a11y angle is something I want to tackle properly. Noted the bugs too, the car one is a known issue."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Thanks! The a11y angle is something I want to tackle properly. Noted the bugs too, the car one is a known issue.",
+        "created_at": "2026-04-06T21:09:21Z",
+        "created_at_i": 1775509761,
+        "objectID": "47667156",
+        "parent_id": 47665786,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T12:46:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Appreciate it! Breadcrumbs and back navigation are definitely on my radar."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Appreciate it! Breadcrumbs and back navigation are definitely on my radar.",
+        "created_at": "2026-04-06T21:07:44Z",
+        "created_at_i": 1775509664,
+        "objectID": "47667129",
+        "parent_id": 47665972,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:29:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tinchox6"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! Speed was a big focus, glad it comes through. Your app looks really cool btw."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tinchox6",
+          "story_47665194"
+        ],
+        "author": "tinchox6",
+        "comment_text": "Thanks! Speed was a big focus, glad it comes through. Your app looks really cool btw.",
+        "created_at": "2026-04-06T21:06:06Z",
+        "created_at_i": 1775509566,
+        "objectID": "47667105",
+        "parent_id": 47666296,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:28:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jvdvegt"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Weird, seems to work fine in Firefox on Android."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jvdvegt",
+          "story_47665194"
+        ],
+        "author": "jvdvegt",
+        "comment_text": "Weird, seems to work fine in Firefox on Android.",
+        "created_at": "2026-04-06T20:39:57Z",
+        "created_at_i": 1775507997,
+        "objectID": "47666739",
+        "parent_id": 47666069,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T20:40:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lateforwork"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Love it. But there is a significant usability issue: Lack of signifier (aka affordance). How do I known when something is zoomable? Because there is no signifier, I am frequently disappointed when I click on something and it turns out it is not zoomable."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lateforwork",
+          "story_47665194"
+        ],
+        "author": "lateforwork",
+        "children": [
+          47667390,
+          47667383
+        ],
+        "comment_text": "Love it. But there is a significant usability issue: Lack of signifier (aka affordance). How do I known when something is zoomable? Because there is no signifier, I am frequently disappointed when I click on something and it turns out it is not zoomable.",
+        "created_at": "2026-04-06T20:32:47Z",
+        "created_at_i": 1775507567,
+        "objectID": "47666636",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-09T17:57:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eisfresser"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The Home Assistant showcase looks fabulous."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_eisfresser",
+          "story_47665194"
+        ],
+        "author": "eisfresser",
+        "children": [
+          47667194
+        ],
+        "comment_text": "The Home Assistant showcase looks fabulous.",
+        "created_at": "2026-04-06T20:21:18Z",
+        "created_at_i": 1775506878,
+        "objectID": "47666494",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:13:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tzm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think zooming is effective when it's used in isolation for discrete things. It does add a sense of delight, but there is a functional usefulness of this that I'm trying to wrap my head around.. perhaps a transition effect for an immersive demo, etc.. nice work."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tzm",
+          "story_47665194"
+        ],
+        "author": "tzm",
+        "children": [
+          47667173
+        ],
+        "comment_text": "I think zooming is effective when it&#x27;s used in isolation for discrete things. It does add a sense of delight, but there is a functional usefulness of this that I&#x27;m trying to wrap my head around.. perhaps a transition effect for an immersive demo, etc.. nice work.",
+        "created_at": "2026-04-06T20:19:55Z",
+        "created_at_i": 1775506795,
+        "objectID": "47666476",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T17:58:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "epaga"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I really love this (and miss the days when Prezi was simple and straightforward).<p>I've written an app myself along sort-of similar lines, but it's less a presentation app and more a thought organizer (works on all Apple platforms). <a href=\"https://mindscopeapp.com\" rel=\"nofollow\">https://mindscopeapp.com</a><p>I think what proved key for my own &quot;zoomable&quot; UI was cross-linking, search, and speed/snappiness. Make the animations too heavy and it just slows you down. Zumly seems really great in this regard. Well done!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_epaga",
+          "story_47665194"
+        ],
+        "author": "epaga",
+        "children": [
+          47667105
+        ],
+        "comment_text": "I really love this (and miss the days when Prezi was simple and straightforward).<p>I&#x27;ve written an app myself along sort-of similar lines, but it&#x27;s less a presentation app and more a thought organizer (works on all Apple platforms). <a href=\"https:&#x2F;&#x2F;mindscopeapp.com\" rel=\"nofollow\">https:&#x2F;&#x2F;mindscopeapp.com</a><p>I think what proved key for my own &quot;zoomable&quot; UI was cross-linking, search, and speed&#x2F;snappiness. Make the animations too heavy and it just slows you down. Zumly seems really great in this regard. Well done!",
+        "created_at": "2026-04-06T20:07:05Z",
+        "created_at_i": 1775506025,
+        "objectID": "47666296",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:52:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mochidusk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'd say this is more of an interesting take on page transitions. I was expecting mouse wheel scroll to zoom, so I instinctively scrolled expecting some kind of zooming effect.<p>I remembered there was a website featured here on HN that had an interactive tour of the scale of the universe ranging from the very microscopic world (if I remember correctly I think it even went down to Planck length) all the way to the macroscopic (black holes, galaxies). I'd be interested in such a zooming library that achieves something like that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mochidusk",
+          "story_47665194"
+        ],
+        "author": "mochidusk",
+        "children": [
+          47667406
+        ],
+        "comment_text": "I&#x27;d say this is more of an interesting take on page transitions. I was expecting mouse wheel scroll to zoom, so I instinctively scrolled expecting some kind of zooming effect.<p>I remembered there was a website featured here on HN that had an interactive tour of the scale of the universe ranging from the very microscopic world (if I remember correctly I think it even went down to Planck length) all the way to the macroscopic (black holes, galaxies). I&#x27;d be interested in such a zooming library that achieves something like that.",
+        "created_at": "2026-04-06T20:03:21Z",
+        "created_at_i": 1775505801,
+        "objectID": "47666237",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-09T17:57:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "solarkraft"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have the exactly opposite view, possibly with the same amount of conviction. It feels <i>very</i> necessary to communicate hierarchy and where things are coming from and going. It communicates a lot of important information and continuity. In real life, you don’t have things suddenly appearing and disappearing all the time. That’s not how our brains are conditioned."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_solarkraft",
+          "story_47665194"
+        ],
+        "author": "solarkraft",
+        "comment_text": "I have the exactly opposite view, possibly with the same amount of conviction. It feels <i>very</i> necessary to communicate hierarchy and where things are coming from and going. It communicates a lot of important information and continuity. In real life, you don’t have things suddenly appearing and disappearing all the time. That’s not how our brains are conditioned.",
+        "created_at": "2026-04-06T20:00:43Z",
+        "created_at_i": 1775505643,
+        "objectID": "47666179",
+        "parent_id": 47666069,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T00:12:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "solarkraft"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have great respect for people pursuing their special interests with such perseverance - you clearly care about zooming UIs.<p>And so do I (just to a lesser extent)! It’s a great way to express hierarchy.<p>One thing I encountered is that  it becomes all buggy after using the slide-back navigation gesture in iOS Safari. Yet this being natively handles would be a really cool thing to me, like those iOS “close back to thumbnail” gestures you sometimes see when scrolling up/down that I haven’t really seen replicated anywhere else."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_solarkraft",
+          "story_47665194"
+        ],
+        "author": "solarkraft",
+        "children": [
+          47667239
+        ],
+        "comment_text": "I have great respect for people pursuing their special interests with such perseverance - you clearly care about zooming UIs.<p>And so do I (just to a lesser extent)! It’s a great way to express hierarchy.<p>One thing I encountered is that  it becomes all buggy after using the slide-back navigation gesture in iOS Safari. Yet this being natively handles would be a really cool thing to me, like those iOS “close back to thumbnail” gestures you sometimes see when scrolling up&#x2F;down that I haven’t really seen replicated anywhere else.",
+        "created_at": "2026-04-06T19:57:57Z",
+        "created_at_i": 1775505477,
+        "objectID": "47666141",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-06T21:16:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cynicalsecurity"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Doesn't work correctly in Firefox.<p>Feels sluggish, but maybe this could be fixed by reducing the transition time.<p>But why? People usually don't notice such transition effects and it doesn't affect user experience in any meaningful positive way. It feels absolutely unnecessary.<p>Maybe you could re-use it as a mod for some game engine. This feels appropriate for video games; not for web-sites."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cynicalsecurity",
+          "story_47665194"
+        ],
+        "author": "cynicalsecurity",
+        "children": [
+          47666179,
+          47667462,
+          47666739,
+          47671556
+        ],
+        "comment_text": "Doesn&#x27;t work correctly in Firefox.<p>Feels sluggish, but maybe this could be fixed by reducing the transition time.<p>But why? People usually don&#x27;t notice such transition effects and it doesn&#x27;t affect user experience in any meaningful positive way. It feels absolutely unnecessary.<p>Maybe you could re-use it as a mod for some game engine. This feels appropriate for video games; not for web-sites.",
+        "created_at": "2026-04-06T19:52:55Z",
+        "created_at_i": 1775505175,
+        "objectID": "47666069",
+        "parent_id": 47665194,
+        "story_id": 47665194,
+        "story_title": "Zooming UIs in 2026: Prezi, impress.js, and why I built something different",
+        "updated_at": "2026-04-07T10:40:08Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 44,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47665194&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 24
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

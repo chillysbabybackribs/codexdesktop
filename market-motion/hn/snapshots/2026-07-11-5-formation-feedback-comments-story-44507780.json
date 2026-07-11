@@ -1,0 +1,1422 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44507780",
+    "window": "prior-year-comparable-90d",
+    "tag": "ask_hn",
+    "score": 127
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LtdJorge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Documenting every piece of logic just because, I believe, is a code smell. However, look at Rust's documentation (or public crates, at varying levels), all the documentation is extracted from the code, with internal links and even external links between crates thanks to cargo doc (which I think is many times better than doxygen and what the Java and C# guys use, and let's not talk about the nonexistent alternative for JS/TS). Code examples in Rust docs can be made to reference the actual code in the crate, and the code block can be marked as &quot;it compiles&quot;, &quot;it doesn't compile&quot;, etc. And the compiler guarantees that's true. A block that doesn't compile is used as an example of incorrect code.<p>In the Unity game engine, they use docfx, and I heard from one developer that their system is done in a way that the code examples in the documentation import the actual code and the documentation fails a build if the code doesn't compile, similar to Rust."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_LtdJorge",
+          "story_44507780"
+        ],
+        "author": "LtdJorge",
+        "comment_text": "Documenting every piece of logic just because, I believe, is a code smell. However, look at Rust&#x27;s documentation (or public crates, at varying levels), all the documentation is extracted from the code, with internal links and even external links between crates thanks to cargo doc (which I think is many times better than doxygen and what the Java and C# guys use, and let&#x27;s not talk about the nonexistent alternative for JS&#x2F;TS). Code examples in Rust docs can be made to reference the actual code in the crate, and the code block can be marked as &quot;it compiles&quot;, &quot;it doesn&#x27;t compile&quot;, etc. And the compiler guarantees that&#x27;s true. A block that doesn&#x27;t compile is used as an example of incorrect code.<p>In the Unity game engine, they use docfx, and I heard from one developer that their system is done in a way that the code examples in the documentation import the actual code and the documentation fails a build if the code doesn&#x27;t compile, similar to Rust.",
+        "created_at": "2025-07-21T10:22:50Z",
+        "created_at_i": 1753093370,
+        "objectID": "44633554",
+        "parent_id": 44513975,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-21T10:25:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "trcullen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is what we did to improve our docs.<p>We built a tool that sets up screen recording links that, once the screen recording is complete, transcribes, AI processes and writes a page into our wiki with the video embedded into it.<p>The tool is pre-configured with standard meeting or documentation configurations so that the tool knows how to process each meeting or screen recording and transcript.<p>For instance, we'll have a documentation type called 'Infra/Terraform Notes' which once the screen recording is stopped generates a video, transcription, AI summary, keywords and writes it into the correct part of the wiki.<p>Further, we've introduced workflows so that you can chain multiple instances of this so that the AI can get smarter.  For example; we've got a workflow for Requirements Docs where;<p>* we record the discussion with the client where they explain what they want<p>* that is transcribed and the tool knows to generate a Requirements Doc<p>* the developer adds a recording where he/she records screen recording explaining their approach to the problem<p>* that generates the developer design doc (using all the transcripts/ai output so far)<p>* the developer finishes the feature and records a screen recording explaining the outcome<p>* that generates a test plan for the QA person (using all the transcripts/ai output so far)<p>* QA person records a video showing all the testing that was done<p>* that generates release notes (using all the transcripts/ai output so far)<p>All this is compiled into automatically into a 'chapter' in our Features book in our wiki.  The video and transcripts are added as attachments to the chapters.<p>It's nice to be able to go back through the whole history of a feature."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_trcullen",
+          "story_44507780"
+        ],
+        "author": "trcullen",
+        "comment_text": "This is what we did to improve our docs.<p>We built a tool that sets up screen recording links that, once the screen recording is complete, transcribes, AI processes and writes a page into our wiki with the video embedded into it.<p>The tool is pre-configured with standard meeting or documentation configurations so that the tool knows how to process each meeting or screen recording and transcript.<p>For instance, we&#x27;ll have a documentation type called &#x27;Infra&#x2F;Terraform Notes&#x27; which once the screen recording is stopped generates a video, transcription, AI summary, keywords and writes it into the correct part of the wiki.<p>Further, we&#x27;ve introduced workflows so that you can chain multiple instances of this so that the AI can get smarter.  For example; we&#x27;ve got a workflow for Requirements Docs where;<p>* we record the discussion with the client where they explain what they want<p>* that is transcribed and the tool knows to generate a Requirements Doc<p>* the developer adds a recording where he&#x2F;she records screen recording explaining their approach to the problem<p>* that generates the developer design doc (using all the transcripts&#x2F;ai output so far)<p>* the developer finishes the feature and records a screen recording explaining the outcome<p>* that generates a test plan for the QA person (using all the transcripts&#x2F;ai output so far)<p>* QA person records a video showing all the testing that was done<p>* that generates release notes (using all the transcripts&#x2F;ai output so far)<p>All this is compiled into automatically into a &#x27;chapter&#x27; in our Features book in our wiki.  The video and transcripts are added as attachments to the chapters.<p>It&#x27;s nice to be able to go back through the whole history of a feature.",
+        "created_at": "2025-07-21T07:37:18Z",
+        "created_at_i": 1753083438,
+        "objectID": "44632659",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-21T15:21:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpc0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don’t need permission but you need authority. Maybe you are US centric in a US state with weak employee protections so you can make those calls. In other jurisdictions it is a significant amount of paperwork and procedure to get rid of even an underperforming employee."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jpc0",
+          "story_44507780"
+        ],
+        "author": "jpc0",
+        "comment_text": "You don’t need permission but you need authority. Maybe you are US centric in a US state with weak employee protections so you can make those calls. In other jurisdictions it is a significant amount of paperwork and procedure to get rid of even an underperforming employee.",
+        "created_at": "2025-07-10T12:29:03Z",
+        "created_at_i": 1752150543,
+        "objectID": "44520244",
+        "parent_id": 44520085,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T13:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "koliber"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Motivation, education, and enforcements are key.<p>While support from HR and senior management is helpful, I've found that most of the work happens at lower levels. In the end, it comes down to working directly with people to help them do documentation well. In engineering departments I've led, I did not need permission or enforcement to do good documentation from company execs or HR.<p>The &quot;stick&quot; that HR provides is a tool of last resort. At the same time, companies are different and what works in one might not work in another."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_koliber",
+          "story_44507780"
+        ],
+        "author": "koliber",
+        "children": [
+          44520244
+        ],
+        "comment_text": "Motivation, education, and enforcements are key.<p>While support from HR and senior management is helpful, I&#x27;ve found that most of the work happens at lower levels. In the end, it comes down to working directly with people to help them do documentation well. In engineering departments I&#x27;ve led, I did not need permission or enforcement to do good documentation from company execs or HR.<p>The &quot;stick&quot; that HR provides is a tool of last resort. At the same time, companies are different and what works in one might not work in another.",
+        "created_at": "2025-07-10T12:10:35Z",
+        "created_at_i": 1752149435,
+        "objectID": "44520085",
+        "parent_id": 44515728,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T13:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpc0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you do not have backing from HR and senior management the issue will not change even if you tried.<p>Action without consequence causes these problems. If an employee is allowed to continually be late and rude it really does not matter in any way whatsoever if everyone shuns that employee culturally because the implicit statement is that that behaviour is acceptable but unwanted.<p>That is the exact situation you get into with lack of documentation, if a single employee never does correct documentation but there is no real repercussions it does not matter whether the “culture” is documentation, you have agreed by contract at that point documentation is not a requirement.<p>If you make it a matter of “Do the documentation correctly or we will be having talks to remove you” that clearly indicates it is not just lip service but is actually enforced culture.<p>Thinking the carrot will always work is part of the “documentation culture”. Make it a hard requirement or don’t do it at all."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jpc0",
+          "story_44507780"
+        ],
+        "author": "jpc0",
+        "children": [
+          44520085
+        ],
+        "comment_text": "If you do not have backing from HR and senior management the issue will not change even if you tried.<p>Action without consequence causes these problems. If an employee is allowed to continually be late and rude it really does not matter in any way whatsoever if everyone shuns that employee culturally because the implicit statement is that that behaviour is acceptable but unwanted.<p>That is the exact situation you get into with lack of documentation, if a single employee never does correct documentation but there is no real repercussions it does not matter whether the “culture” is documentation, you have agreed by contract at that point documentation is not a requirement.<p>If you make it a matter of “Do the documentation correctly or we will be having talks to remove you” that clearly indicates it is not just lip service but is actually enforced culture.<p>Thinking the carrot will always work is part of the “documentation culture”. Make it a hard requirement or don’t do it at all.",
+        "created_at": "2025-07-09T23:24:58Z",
+        "created_at_i": 1752103498,
+        "objectID": "44515728",
+        "parent_id": 44512370,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T13:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joshstrange"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Huh, I’d be interested to sit down with someone like that and better understand their viewpoint. I wonder if it’s just comments that describe what the code is doing (“what” not “why”) that they have a problem with and are just throwing the baby out with the bath water.<p>I’ve written mini-blog posts in comments before to explain a complex system or an odd bit of code that is the result of a massive bug in production that I want to document and explain the reasoning behind it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_joshstrange",
+          "story_44507780"
+        ],
+        "author": "joshstrange",
+        "comment_text": "Huh, I’d be interested to sit down with someone like that and better understand their viewpoint. I wonder if it’s just comments that describe what the code is doing (“what” not “why”) that they have a problem with and are just throwing the baby out with the bath water.<p>I’ve written mini-blog posts in comments before to explain a complex system or an odd bit of code that is the result of a massive bug in production that I want to document and explain the reasoning behind it.",
+        "created_at": "2025-07-09T19:40:39Z",
+        "created_at_i": 1752090039,
+        "objectID": "44514010",
+        "parent_id": 44513975,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T11:55:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iFire"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In godot engine we moved to the standard of every new feature requiring a godot engine proposal. It’s not much, but every little bit of documentation helps."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iFire",
+          "story_44507780"
+        ],
+        "author": "iFire",
+        "comment_text": "In godot engine we moved to the standard of every new feature requiring a godot engine proposal. It’s not much, but every little bit of documentation helps.",
+        "created_at": "2025-07-09T19:37:11Z",
+        "created_at_i": 1752089831,
+        "objectID": "44513983",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T07:40:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "breckenedge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You’re not wrong, it is insane.<p>I’ve been told by a few developers over my career that “comments are a code smell”. I believe this is well intentioned but ultimately harmful advice."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_breckenedge",
+          "story_44507780"
+        ],
+        "author": "breckenedge",
+        "children": [
+          44633554,
+          44514010
+        ],
+        "comment_text": "You’re not wrong, it is insane.<p>I’ve been told by a few developers over my career that “comments are a code smell”. I believe this is well intentioned but ultimately harmful advice.",
+        "created_at": "2025-07-09T19:36:35Z",
+        "created_at_i": 1752089795,
+        "objectID": "44513975",
+        "parent_id": 44513695,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-21T10:23:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aprdm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes. Use Glean. It's a very smart search across every knowledge base (Confluence, Slack, Google docs, Outlook etc)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aprdm",
+          "story_44507780"
+        ],
+        "author": "aprdm",
+        "comment_text": "Yes. Use Glean. It&#x27;s a very smart search across every knowledge base (Confluence, Slack, Google docs, Outlook etc)",
+        "created_at": "2025-07-09T19:31:00Z",
+        "created_at_i": 1752089460,
+        "objectID": "44513932",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T07:40:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joshstrange"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What??? Like no code comments? That sounds insane to me.<p>I don’t want comments saying “adding 1 to X” but I DO want comments that tell me WHY we are “adding 1 to X”."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_joshstrange",
+          "story_44507780"
+        ],
+        "author": "joshstrange",
+        "children": [
+          44513975
+        ],
+        "comment_text": "What??? Like no code comments? That sounds insane to me.<p>I don’t want comments saying “adding 1 to X” but I DO want comments that tell me WHY we are “adding 1 to X”.",
+        "created_at": "2025-07-09T19:05:45Z",
+        "created_at_i": 1752087945,
+        "objectID": "44513695",
+        "parent_id": 44511034,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-20T14:35:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was told by management they’d bake it into reviews to help drive adoption, but I don’t think they actually did."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_44507780"
+        ],
+        "author": "al_borland",
+        "comment_text": "I was told by management they’d bake it into reviews to help drive adoption, but I don’t think they actually did.",
+        "created_at": "2025-07-09T17:28:10Z",
+        "created_at_i": 1752082090,
+        "objectID": "44512703",
+        "parent_id": 44510353,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T17:31:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tra3"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I dont think this is a Confluence or a wiki problem. It's a knowledge management problem.<p>Here's how it works for me:<p>1. Solve a problem<p>2. Make a note in confluence and in my personal notes.<p>6 months later, same problem. I <i>know</i> I wrote it down. What follows is an hour of frantic searching both in confluence and my local notes.<p>I'm the only one that can be blamed in this case. But:<p>- I gave it what I thought was a good title<p>- Decent set of keywords<p>- Slotted it in the appropriate category in the confluence tree<p>I'm experimenting with Amazon Bedrock - search combined with chatbots - but so far it hasn't been the panacea I was hoping for."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tra3",
+          "story_44507780"
+        ],
+        "author": "tra3",
+        "comment_text": "I dont think this is a Confluence or a wiki problem. It&#x27;s a knowledge management problem.<p>Here&#x27;s how it works for me:<p>1. Solve a problem<p>2. Make a note in confluence and in my personal notes.<p>6 months later, same problem. I <i>know</i> I wrote it down. What follows is an hour of frantic searching both in confluence and my local notes.<p>I&#x27;m the only one that can be blamed in this case. But:<p>- I gave it what I thought was a good title<p>- Decent set of keywords<p>- Slotted it in the appropriate category in the confluence tree<p>I&#x27;m experimenting with Amazon Bedrock - search combined with chatbots - but so far it hasn&#x27;t been the panacea I was hoping for.",
+        "created_at": "2025-07-09T17:12:39Z",
+        "created_at_i": 1752081159,
+        "objectID": "44512524",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:38:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "koliber"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "All three are company and team culture issues. If you delegate all culture responsibility to HR you'll end up with a hot mess. Culture needs to be fostered on every level."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_koliber",
+          "story_44507780"
+        ],
+        "author": "koliber",
+        "children": [
+          44515728
+        ],
+        "comment_text": "All three are company and team culture issues. If you delegate all culture responsibility to HR you&#x27;ll end up with a hot mess. Culture needs to be fostered on every level.",
+        "created_at": "2025-07-09T17:00:51Z",
+        "created_at_i": 1752080451,
+        "objectID": "44512370",
+        "parent_id": 44512331,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T13:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpc0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; - Everyone is responsible for showing up on time\n&gt; - Everyone is responsible for being respectful<p>These two are usually an HR issue, the third isn’t. So unless your org makes lack of managing documentation an HR issue like the other two I don’t see the relevance."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jpc0",
+          "story_44507780"
+        ],
+        "author": "jpc0",
+        "children": [
+          44512370
+        ],
+        "comment_text": "&gt; - Everyone is responsible for showing up on time\n&gt; - Everyone is responsible for being respectful<p>These two are usually an HR issue, the third isn’t. So unless your org makes lack of managing documentation an HR issue like the other two I don’t see the relevance.",
+        "created_at": "2025-07-09T16:58:35Z",
+        "created_at_i": 1752080315,
+        "objectID": "44512331",
+        "parent_id": 44512252,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T13:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "koliber"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; What is everyone's responsibility is no one's responsibility.<p>On teams that I run there are many things that are everyone's responsibility. Here are some of them:<p>- Everyone is responsible for showing up on time<p>- Everyone is responsible for being respectful<p>- Everyone is responsible for maintaining documentation<p>I would not say that saying that everyone is responsible for something automatically makes it that no one will do it. Managers and peers need to work on supporting these responsibilities.<p>I agree that documentarians do pick up a lot of the slack, and one or more are needed to make documentation useful. However, it is not solely their responsibility to maintain documentation. Everyone is a domain expert in some area, and they need to own the relevant documentation."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_koliber",
+          "story_44507780"
+        ],
+        "author": "koliber",
+        "children": [
+          44512331
+        ],
+        "comment_text": "&gt; What is everyone&#x27;s responsibility is no one&#x27;s responsibility.<p>On teams that I run there are many things that are everyone&#x27;s responsibility. Here are some of them:<p>- Everyone is responsible for showing up on time<p>- Everyone is responsible for being respectful<p>- Everyone is responsible for maintaining documentation<p>I would not say that saying that everyone is responsible for something automatically makes it that no one will do it. Managers and peers need to work on supporting these responsibilities.<p>I agree that documentarians do pick up a lot of the slack, and one or more are needed to make documentation useful. However, it is not solely their responsibility to maintain documentation. Everyone is a domain expert in some area, and they need to own the relevant documentation.",
+        "created_at": "2025-07-09T16:51:59Z",
+        "created_at_i": 1752079919,
+        "objectID": "44512252",
+        "parent_id": 44511967,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T18:30:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "toast0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; People tend to think that documentation is someone else's responsibility, and it just isn't so.<p>What is everyone's responsibility is no one's responsibility.<p>I've been at places with good documentation and at places with bad documentation. The places with good documentation have someone (or maybe a team) with responsibility for documenation. It could be a developer, it's better IMHO if it's a technical writer. They don't need to write all the docs, but they're in charge of editing and organization, and checking to make sure docs are current and assigning people to update them/provide information so they can be updated.<p>If your org lacks a documentarian, you'll get chaos documentation, which tends towards poor documentation; this is a choice. If your org has a documentarian, but they don't have time to do it, your org has chosen other priorities over documentation. If your org doesn't include documentation in evaluations, it's not an org priority, and that's a choice, too. I've been at places with a self-appointed documentarian, and that can work too, as long as they can cajole others into doing the tasks that they assign."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_toast0",
+          "story_44507780"
+        ],
+        "author": "toast0",
+        "children": [
+          44512252
+        ],
+        "comment_text": "&gt; People tend to think that documentation is someone else&#x27;s responsibility, and it just isn&#x27;t so.<p>What is everyone&#x27;s responsibility is no one&#x27;s responsibility.<p>I&#x27;ve been at places with good documentation and at places with bad documentation. The places with good documentation have someone (or maybe a team) with responsibility for documenation. It could be a developer, it&#x27;s better IMHO if it&#x27;s a technical writer. They don&#x27;t need to write all the docs, but they&#x27;re in charge of editing and organization, and checking to make sure docs are current and assigning people to update them&#x2F;provide information so they can be updated.<p>If your org lacks a documentarian, you&#x27;ll get chaos documentation, which tends towards poor documentation; this is a choice. If your org has a documentarian, but they don&#x27;t have time to do it, your org has chosen other priorities over documentation. If your org doesn&#x27;t include documentation in evaluations, it&#x27;s not an org priority, and that&#x27;s a choice, too. I&#x27;ve been at places with a self-appointed documentarian, and that can work too, as long as they can cajole others into doing the tasks that they assign.",
+        "created_at": "2025-07-09T16:29:17Z",
+        "created_at_i": 1752078557,
+        "objectID": "44511967",
+        "parent_id": 44511513,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T17:55:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nlpnerd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Common failure mode is people. Most processes eventually fail when people start to slack on the little things, then the big things. Every part of knowledge management is tedious from capturing things to keeping them organized and discoverable. For any large organizations, there are a ton of knowledge that will remain tribal despite best efforts.<p>This is why knowledge management is such a popular use for POCs involving LLMs, and ironically also why POCs don't progress into something more permanent"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nlpnerd",
+          "story_44507780"
+        ],
+        "author": "nlpnerd",
+        "comment_text": "Common failure mode is people. Most processes eventually fail when people start to slack on the little things, then the big things. Every part of knowledge management is tedious from capturing things to keeping them organized and discoverable. For any large organizations, there are a ton of knowledge that will remain tribal despite best efforts.<p>This is why knowledge management is such a popular use for POCs involving LLMs, and ironically also why POCs don&#x27;t progress into something more permanent",
+        "created_at": "2025-07-09T16:17:36Z",
+        "created_at_i": 1752077856,
+        "objectID": "44511833",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:38:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dhussoe"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I find wikis to always rot. In-code class/function/library documentation and --help for CLI tools are more likely to be updated when anything changes."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dhussoe",
+          "story_44507780"
+        ],
+        "author": "dhussoe",
+        "comment_text": "I find wikis to always rot. In-code class&#x2F;function&#x2F;library documentation and --help for CLI tools are more likely to be updated when anything changes.",
+        "created_at": "2025-07-09T16:10:45Z",
+        "created_at_i": 1752077445,
+        "objectID": "44511767",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Totally agree, search is the real bottleneck. Linking from multiple places is such a simple but powerful habit, but again, I guess it comes down to people being lazy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "comment_text": "Totally agree, search is the real bottleneck. Linking from multiple places is such a simple but powerful habit, but again, I guess it comes down to people being lazy.",
+        "created_at": "2025-07-09T15:56:48Z",
+        "created_at_i": 1752076608,
+        "objectID": "44511632",
+        "parent_id": 44511513,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:38:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "koliber"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Documentation needs to be maintained. Period. There are no shortcuts.<p>When people join your team, stress this point. In the onboarding, require them to make at least one change to the documentation during their first week. People tend to think that documentation is someone else's responsibility, and it just isn't so.<p>The main problem is not a lack of documentation, but being able to find it. Search is woeful in all the documentation systems I've used. The only thing that can save the day is proper linking of related articles.<p>By default, people tend to throw documentation into a hierarchy. While that works for many things, it creates a structure that ultimately makes it hard to find things. Most documentation is related to a few different areas or domains, and with a hierarchy, you can only put it into a single &quot;folder.&quot;<p>Any time you add a piece of documentation, you should link to it from at least two different places. Spend a moment and think about the person who will look for the thing you just documented. Where are they likely to look for it? Link it there.<p>If you ever look for something like OP, and can not find it easily, but ultimately do find it, add links to it in the places you looked earlier.<p>Over time, if enough people do this, the documentation will get decent or even good.<p>It's a solved problem in the sense that there is a solution, but the solution is not automatic. It requires someone to manage the process and the people to keep the documentation in a good state.<p>I wrote an article about this some time ago: <a href=\"https://koliber.com/articles/engineering-documentation-best-practices\" rel=\"nofollow\">https://koliber.com/articles/engineering-documentation-best-...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_koliber",
+          "story_44507780"
+        ],
+        "author": "koliber",
+        "children": [
+          44511967,
+          44511632
+        ],
+        "comment_text": "Documentation needs to be maintained. Period. There are no shortcuts.<p>When people join your team, stress this point. In the onboarding, require them to make at least one change to the documentation during their first week. People tend to think that documentation is someone else&#x27;s responsibility, and it just isn&#x27;t so.<p>The main problem is not a lack of documentation, but being able to find it. Search is woeful in all the documentation systems I&#x27;ve used. The only thing that can save the day is proper linking of related articles.<p>By default, people tend to throw documentation into a hierarchy. While that works for many things, it creates a structure that ultimately makes it hard to find things. Most documentation is related to a few different areas or domains, and with a hierarchy, you can only put it into a single &quot;folder.&quot;<p>Any time you add a piece of documentation, you should link to it from at least two different places. Spend a moment and think about the person who will look for the thing you just documented. Where are they likely to look for it? Link it there.<p>If you ever look for something like OP, and can not find it easily, but ultimately do find it, add links to it in the places you looked earlier.<p>Over time, if enough people do this, the documentation will get decent or even good.<p>It&#x27;s a solved problem in the sense that there is a solution, but the solution is not automatic. It requires someone to manage the process and the people to keep the documentation in a good state.<p>I wrote an article about this some time ago: <a href=\"https:&#x2F;&#x2F;koliber.com&#x2F;articles&#x2F;engineering-documentation-best-practices\" rel=\"nofollow\">https:&#x2F;&#x2F;koliber.com&#x2F;articles&#x2F;engineering-documentation-best-...</a>",
+        "created_at": "2025-07-09T15:47:56Z",
+        "created_at_i": 1752076076,
+        "objectID": "44511513",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2026-07-03T21:07:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Imo this just leads to out of date docs within the code it self. We have a no comment policy at the place I work for this reason."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "children": [
+          44513695
+        ],
+        "comment_text": "Imo this just leads to out of date docs within the code it self. We have a no comment policy at the place I work for this reason.",
+        "created_at": "2025-07-09T15:13:39Z",
+        "created_at_i": 1752074019,
+        "objectID": "44511034",
+        "parent_id": 44510838,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T11:55:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "perrygeo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Out-of-date documentation can be worse than no documentation<p>One solution to this is to write structured and testable documentation. Easier said than done, but if your docs get regularly integration/e2e tested against reality, they stand a much better shot at staying up to date. I always recommend moving the docs as close to the development work as possible - ie docs get checked into git alongside the code and make sure tests fail if anything changes."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_perrygeo",
+          "story_44507780"
+        ],
+        "author": "perrygeo",
+        "children": [
+          44511034
+        ],
+        "comment_text": "&gt; Out-of-date documentation can be worse than no documentation<p>One solution to this is to write structured and testable documentation. Easier said than done, but if your docs get regularly integration&#x2F;e2e tested against reality, they stand a much better shot at staying up to date. I always recommend moving the docs as close to the development work as possible - ie docs get checked into git alongside the code and make sure tests fail if anything changes.",
+        "created_at": "2025-07-09T14:59:53Z",
+        "created_at_i": 1752073193,
+        "objectID": "44510838",
+        "parent_id": 44510470,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-10T11:55:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah, that makes sense, but that &quot;if you remember who wrote it or a snippet&quot; part is exactly the problem for me. If you’re not already in the loop, or new to the project, that context just isn’t there. Good search should work even when your memory doesn’t."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "comment_text": "Yeah, that makes sense, but that &quot;if you remember who wrote it or a snippet&quot; part is exactly the problem for me. If you’re not already in the loop, or new to the project, that context just isn’t there. Good search should work even when your memory doesn’t.",
+        "created_at": "2025-07-09T14:55:53Z",
+        "created_at_i": 1752072953,
+        "objectID": "44510777",
+        "parent_id": 44509630,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T14:57:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ferguess_k"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "None of the companies I worked for have decent documentation. I'd say either one needs to read comments in code, or hire someone specifically for writing docs, like the more traditional companies."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ferguess_k",
+          "story_44507780"
+        ],
+        "author": "ferguess_k",
+        "comment_text": "None of the companies I worked for have decent documentation. I&#x27;d say either one needs to read comments in code, or hire someone specifically for writing docs, like the more traditional companies.",
+        "created_at": "2025-07-09T14:53:05Z",
+        "created_at_i": 1752072785,
+        "objectID": "44510742",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Rastonbury"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'd say 2/3 of the time I find what I'm looking for on first page of search using Confluence, 2nd page is totally irrelevant. So I'd say it's not that it's broken, it's just that it isn't there and that tribal knowledge isn't written. So imo forcing tribal knowledge to be written documented is the issue. LLMs won't help here because a contractor or first line employee has conflicted incentives whether to document their tribal knowledge which loses them value"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Rastonbury",
+          "story_44507780"
+        ],
+        "author": "Rastonbury",
+        "comment_text": "I&#x27;d say 2&#x2F;3 of the time I find what I&#x27;m looking for on first page of search using Confluence, 2nd page is totally irrelevant. So I&#x27;d say it&#x27;s not that it&#x27;s broken, it&#x27;s just that it isn&#x27;t there and that tribal knowledge isn&#x27;t written. So imo forcing tribal knowledge to be written documented is the issue. LLMs won&#x27;t help here because a contractor or first line employee has conflicted incentives whether to document their tribal knowledge which loses them value",
+        "created_at": "2025-07-09T14:38:35Z",
+        "created_at_i": 1752071915,
+        "objectID": "44510580",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T19:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Exactly, If I can’t find 90% of the docs, chances are most other people can’t either, therefore no ones maintaining them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "children": [
+          44512688
+        ],
+        "comment_text": "Exactly, If I can’t find 90% of the docs, chances are most other people can’t either, therefore no ones maintaining them.",
+        "created_at": "2025-07-09T14:32:41Z",
+        "created_at_i": 1752071561,
+        "objectID": "44510523",
+        "parent_id": 44510470,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T17:27:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "freedomben"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I fully agree with your analysis here, but I would also add that documentation getting out of date is also a huge problem. Out-of-date documentation can be worse than no documentation at all when it is actively wrong. With the pace at which many software projects change, it can take almost no time at all for documentation to get out of date. Even just business processes often change quickly enough that information on the wiki becomes misleading.<p>Now that said, I have yet to actually use a platform with a good search functionality too. If stuff was easier to find, I strongly suspect that documentation would be better maintained, (provided that there is a cultural value around it)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_freedomben",
+          "story_44507780"
+        ],
+        "author": "freedomben",
+        "children": [
+          44510838,
+          44510523
+        ],
+        "comment_text": "I fully agree with your analysis here, but I would also add that documentation getting out of date is also a huge problem. Out-of-date documentation can be worse than no documentation at all when it is actively wrong. With the pace at which many software projects change, it can take almost no time at all for documentation to get out of date. Even just business processes often change quickly enough that information on the wiki becomes misleading.<p>Now that said, I have yet to actually use a platform with a good search functionality too. If stuff was easier to find, I strongly suspect that documentation would be better maintained, (provided that there is a cultural value around it)",
+        "created_at": "2025-07-09T14:28:40Z",
+        "created_at_i": 1752071320,
+        "objectID": "44510470",
+        "parent_id": 44510124,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-20T03:37:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sounds like we work at the same place."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "comment_text": "Sounds like we work at the same place.",
+        "created_at": "2025-07-09T14:27:58Z",
+        "created_at_i": 1752071278,
+        "objectID": "44510463",
+        "parent_id": 44510124,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T14:33:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dataflow"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Get people to be rewarded for it and they'll immediately care, I think? It's hard to blame people for not caring about something that has no impact on their performance reviews."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dataflow",
+          "story_44507780"
+        ],
+        "author": "dataflow",
+        "children": [
+          44512703
+        ],
+        "comment_text": "Get people to be rewarded for it and they&#x27;ll immediately care, I think? It&#x27;s hard to blame people for not caring about something that has no impact on their performance reviews.",
+        "created_at": "2025-07-09T14:17:47Z",
+        "created_at_i": 1752070667,
+        "objectID": "44510353",
+        "parent_id": 44510124,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-18T11:44:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "red-iron-pine"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "only one that i've seen that wasn't 100% borked was a doku wiki at the niche MSP I started at in IT.<p>literally every manager had &quot;documentation accuracy&quot; as a metric for their domain and they were generally good about things like &quot;did you check the wiki?&quot; when asked questions -- which usually led to a &quot;okay, once you find it, add it&quot;<p>every single company with confluence was a disaster of unreadable garbage.  one place got so bad the ops / support had their own &quot;secret server&quot; of internal docs which were mostly links to text files"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_red-iron-pine",
+          "story_44507780"
+        ],
+        "author": "red-iron-pine",
+        "comment_text": "only one that i&#x27;ve seen that wasn&#x27;t 100% borked was a doku wiki at the niche MSP I started at in IT.<p>literally every manager had &quot;documentation accuracy&quot; as a metric for their domain and they were generally good about things like &quot;did you check the wiki?&quot; when asked questions -- which usually led to a &quot;okay, once you find it, add it&quot;<p>every single company with confluence was a disaster of unreadable garbage.  one place got so bad the ops &#x2F; support had their own &quot;secret server&quot; of internal docs which were mostly links to text files",
+        "created_at": "2025-07-09T14:00:43Z",
+        "created_at_i": 1752069643,
+        "objectID": "44510149",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T17:10:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The big issue, regardless of the platform, has been getting people to care about documentation. Those who are most qualified to write it, are usually the ones least likely to care about, because they don’t need it. I tried to buck this trend, as up-skilling others, in ways that didn’t require my constant time, seemed like a win. I tried to lead my example, but no one else ever joined in. I tried putting something together to formalize the process of reviews and got nothing but lazy rubber stamps, even from people who typically did excellent work. Getting people to care is the hardest part, in my experience. The bigger the organization, the worse this problems seems to get.<p>After seeing some people delete some big docs I wrote, which I think were still good, and changing documentation platforms so many times (usually to platforms with higher friction), my motivation to be a champion for good documentation has waned significantly. I still do write good readme files for my code, and end user docs for its use, but all the other little nice to have stuff I mostly just keep to myself in my own system. I’m sick of the changes, the friction, and people blindly deleting my work out of ignorance."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_44507780"
+        ],
+        "author": "al_borland",
+        "children": [
+          44510470,
+          44510353,
+          44510463
+        ],
+        "comment_text": "The big issue, regardless of the platform, has been getting people to care about documentation. Those who are most qualified to write it, are usually the ones least likely to care about, because they don’t need it. I tried to buck this trend, as up-skilling others, in ways that didn’t require my constant time, seemed like a win. I tried to lead my example, but no one else ever joined in. I tried putting something together to formalize the process of reviews and got nothing but lazy rubber stamps, even from people who typically did excellent work. Getting people to care is the hardest part, in my experience. The bigger the organization, the worse this problems seems to get.<p>After seeing some people delete some big docs I wrote, which I think were still good, and changing documentation platforms so many times (usually to platforms with higher friction), my motivation to be a champion for good documentation has waned significantly. I still do write good readme files for my code, and end user docs for its use, but all the other little nice to have stuff I mostly just keep to myself in my own system. I’m sick of the changes, the friction, and people blindly deleting my work out of ignorance.",
+        "created_at": "2025-07-09T13:58:44Z",
+        "created_at_i": 1752069524,
+        "objectID": "44510124",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-22T15:45:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "muzani"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm not sure what you mean by dev/depl log, but there's architectural decision records in there. There's spike docs, which look into how long something would take - some have useful decision research, but they're generally not scrubbed out when done. Old stuff is swept into some &quot;Archives&quot; folder.<p>Search is the real value though. I never remember where a certain doc is stored. But if I can remember who wrote it or some snippet from it, I can find it. They link to each other well. Another pointer is from Slack; maybe it needs this kind of combo to work well together?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_muzani",
+          "story_44507780"
+        ],
+        "author": "muzani",
+        "children": [
+          44510777
+        ],
+        "comment_text": "I&#x27;m not sure what you mean by dev&#x2F;depl log, but there&#x27;s architectural decision records in there. There&#x27;s spike docs, which look into how long something would take - some have useful decision research, but they&#x27;re generally not scrubbed out when done. Old stuff is swept into some &quot;Archives&quot; folder.<p>Search is the real value though. I never remember where a certain doc is stored. But if I can remember who wrote it or some snippet from it, I can find it. They link to each other well. Another pointer is from Slack; maybe it needs this kind of combo to work well together?",
+        "created_at": "2025-07-09T13:10:56Z",
+        "created_at_i": 1752066656,
+        "objectID": "44509630",
+        "parent_id": 44508821,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T15:15:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "brudgers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<i>Is this a solved problem?</i><p>Your experience was the motivation for StackOverflow.<p>It's goal was to be better at surfacing information than forums and the Usenet."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_brudgers",
+          "story_44507780"
+        ],
+        "author": "brudgers",
+        "comment_text": "<i>Is this a solved problem?</i><p>Your experience was the motivation for StackOverflow.<p>It&#x27;s goal was to be better at surfacing information than forums and the Usenet.",
+        "created_at": "2025-07-09T11:55:38Z",
+        "created_at_i": 1752062138,
+        "objectID": "44508895",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T14:38:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Do you guys just dump all the dev/depl logs and docs into Confluence? Or is it more curated?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "children": [
+          44509630
+        ],
+        "comment_text": "Do you guys just dump all the dev&#x2F;depl logs and docs into Confluence? Or is it more curated?",
+        "created_at": "2025-07-09T11:47:01Z",
+        "created_at_i": 1752061621,
+        "objectID": "44508821",
+        "parent_id": 44508757,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T13:11:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "muzani"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Interesting. We argue that Confluence was the best tool we have and has some of the best search. People would rather write in GDocs, but ironically, the search has been much worse."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_muzani",
+          "story_44507780"
+        ],
+        "author": "muzani",
+        "children": [
+          44508821
+        ],
+        "comment_text": "Interesting. We argue that Confluence was the best tool we have and has some of the best search. People would rather write in GDocs, but ironically, the search has been much worse.",
+        "created_at": "2025-07-09T11:39:00Z",
+        "created_at_i": 1752061140,
+        "objectID": "44508757",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T12:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aidanferguson"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Recently worked at a large sized international corp. tbh I don't blame you, this was part of the reason I left for a smaller company. Best solution I found was to search by keywords and crawl thru results with GPT. Not exactly ideal but much better than navigating the insane hierarchy of pages littered with corporate buzzwords"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aidanferguson",
+          "story_44507780"
+        ],
+        "author": "aidanferguson",
+        "comment_text": "Recently worked at a large sized international corp. tbh I don&#x27;t blame you, this was part of the reason I left for a smaller company. Best solution I found was to search by keywords and crawl thru results with GPT. Not exactly ideal but much better than navigating the insane hierarchy of pages littered with corporate buzzwords",
+        "created_at": "2025-07-09T10:32:13Z",
+        "created_at_i": 1752057133,
+        "objectID": "44508283",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T11:53:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "flawstick"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For midsized corp it depends on if the company actually cares, i.e. their philosophy, which is horrid most of the time and doesn't even touch on wikis, and when it comes to larger corporations, it is broken whether anyone likes it or not, because the sheer amount of information becomes unnavigable and unorganizable really easily."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_flawstick",
+          "story_44507780"
+        ],
+        "author": "flawstick",
+        "comment_text": "For midsized corp it depends on if the company actually cares, i.e. their philosophy, which is horrid most of the time and doesn&#x27;t even touch on wikis, and when it comes to larger corporations, it is broken whether anyone likes it or not, because the sheer amount of information becomes unnavigable and unorganizable really easily.",
+        "created_at": "2025-07-09T09:56:17Z",
+        "created_at_i": 1752054977,
+        "objectID": "44508046",
+        "parent_id": 44507780,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T15:47:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shadag"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "that's insane though. On a team scale this can somehow be managed by company has like 5,000 engineers on the main Teams channel. Surely there is a better way"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_shadag",
+          "story_44507780"
+        ],
+        "author": "shadag",
+        "comment_text": "that&#x27;s insane though. On a team scale this can somehow be managed by company has like 5,000 engineers on the main Teams channel. Surely there is a better way",
+        "created_at": "2025-07-09T09:54:37Z",
+        "created_at_i": 1752054877,
+        "objectID": "44508039",
+        "parent_id": 44508022,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T11:54:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shadag"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're so right it's not about the tool it's about the culture and focus on excellence which translates to writing excellent internal docs for engineers to get things done. I'm not quite sure how recording everything would work. The real things we need are docs that are updated when there are issues with CI/CD after people read logs etc... recording things might work for more business or commercial teams but for us we just need people to keep everything up to date and well written."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_shadag",
+          "story_44507780"
+        ],
+        "author": "shadag",
+        "comment_text": "You&#x27;re so right it&#x27;s not about the tool it&#x27;s about the culture and focus on excellence which translates to writing excellent internal docs for engineers to get things done. I&#x27;m not quite sure how recording everything would work. The real things we need are docs that are updated when there are issues with CI&#x2F;CD after people read logs etc... recording things might work for more business or commercial teams but for us we just need people to keep everything up to date and well written.",
+        "created_at": "2025-07-09T09:52:32Z",
+        "created_at_i": 1752054752,
+        "objectID": "44508028",
+        "parent_id": 44507898,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T10:12:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NanaAmun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes! We just use MS Teams and keep a megathread of links honestly, it’s the best way we’ve found to manage it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is every company's internal wiki just broken by default?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NanaAmun",
+          "story_44507780"
+        ],
+        "author": "NanaAmun",
+        "children": [
+          44508039
+        ],
+        "comment_text": "Yes! We just use MS Teams and keep a megathread of links honestly, it’s the best way we’ve found to manage it.",
+        "created_at": "2025-07-09T09:52:00Z",
+        "created_at_i": 1752054720,
+        "objectID": "44508022",
+        "parent_id": 44507995,
+        "story_id": 44507780,
+        "story_title": "Ask HN: Is every company's internal wiki just broken by default?",
+        "updated_at": "2025-07-09T10:08:33Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 47,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44507780&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 6,
+        "roundTrip": 15
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 8
+  }
+}

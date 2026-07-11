@@ -1,0 +1,1387 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47662112",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 235
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tills13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I keep forgetting have a 3080 laying around... Gotta figure that out."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tills13",
+          "story_47662112"
+        ],
+        "author": "tills13",
+        "comment_text": "I keep forgetting have a 3080 laying around... Gotta figure that out.",
+        "created_at": "2026-04-09T04:38:15Z",
+        "created_at_i": 1775709495,
+        "objectID": "47699316",
+        "parent_id": 47662550,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-09T04:40:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kccqzy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; I've yet to find a model with those properties<p>You can just look at examples like Knuth Claude’s cycles that solved the problem. I have no doubt that if Claude didn’t exist perhaps Knuth would come up with a solution anyways, but given a limited amount of time/patience Claude came up with a solution while Knuth did not. That’s what I meant here.<p>Similarly the problems I give to Claude are also in that category where I myself did not come up with a solution within a set amount of time, and instead of keep working on it manually I decided to give them to Claude."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kccqzy",
+          "story_47662112"
+        ],
+        "author": "kccqzy",
+        "comment_text": "&gt; I&#x27;ve yet to find a model with those properties<p>You can just look at examples like Knuth Claude’s cycles that solved the problem. I have no doubt that if Claude didn’t exist perhaps Knuth would come up with a solution anyways, but given a limited amount of time&#x2F;patience Claude came up with a solution while Knuth did not. That’s what I meant here.<p>Similarly the problems I give to Claude are also in that category where I myself did not come up with a solution within a set amount of time, and instead of keep working on it manually I decided to give them to Claude.",
+        "created_at": "2026-04-08T15:10:13Z",
+        "created_at_i": 1775661013,
+        "objectID": "47691317",
+        "parent_id": 47662880,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-08T15:13:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EnthrallingEmil"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gemini had a partial outage on their status page and then once it was over after 10 days, it became a single day partial outage. For me, it was nearly two weeks of 95% failure rates."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_EnthrallingEmil",
+          "story_47662112"
+        ],
+        "author": "EnthrallingEmil",
+        "comment_text": "Gemini had a partial outage on their status page and then once it was over after 10 days, it became a single day partial outage. For me, it was nearly two weeks of 95% failure rates.",
+        "created_at": "2026-04-07T15:00:03Z",
+        "created_at_i": 1775574003,
+        "objectID": "47676464",
+        "parent_id": 47662709,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-07T15:30:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EnthrallingEmil"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "And again just now... Again nothing on status. Maybe they sould vibe code some probers and automatic testing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_EnthrallingEmil",
+          "story_47662112"
+        ],
+        "author": "EnthrallingEmil",
+        "comment_text": "And again just now... Again nothing on status. Maybe they sould vibe code some probers and automatic testing.",
+        "created_at": "2026-04-07T14:57:55Z",
+        "created_at_i": 1775573875,
+        "objectID": "47676441",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-07T15:01:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nickvec"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Does this post redirect to itself? Is that allowed on HN?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nickvec",
+          "story_47662112"
+        ],
+        "author": "nickvec",
+        "comment_text": "Does this post redirect to itself? Is that allowed on HN?",
+        "created_at": "2026-04-06T22:18:51Z",
+        "created_at_i": 1775513931,
+        "objectID": "47668078",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T22:20:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mstaoru"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What? But &quot;coding is largely solved&quot; isn't it?.."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mstaoru",
+          "story_47662112"
+        ],
+        "author": "mstaoru",
+        "comment_text": "What? But &quot;coding is largely solved&quot; isn&#x27;t it?..",
+        "created_at": "2026-04-06T18:42:14Z",
+        "created_at_i": 1775500934,
+        "objectID": "47665066",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T18:45:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cyanydeez"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I generally assume the differences could be minimized by tailoring the instructions to the models; that they're not incapable of doing the same things, but the way in which they're instructed matters because it needs to draw on training.<p>But I don't use any of the cloud stuff; I'm local4lyfe."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cyanydeez",
+          "story_47662112"
+        ],
+        "author": "cyanydeez",
+        "comment_text": "I generally assume the differences could be minimized by tailoring the instructions to the models; that they&#x27;re not incapable of doing the same things, but the way in which they&#x27;re instructed matters because it needs to draw on training.<p>But I don&#x27;t use any of the cloud stuff; I&#x27;m local4lyfe.",
+        "created_at": "2026-04-06T18:28:09Z",
+        "created_at_i": 1775500089,
+        "objectID": "47664871",
+        "parent_id": 47662895,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T18:29:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bhanuhai"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "any alternative guys?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bhanuhai",
+          "story_47662112"
+        ],
+        "author": "bhanuhai",
+        "comment_text": "any alternative guys?",
+        "created_at": "2026-04-06T18:07:00Z",
+        "created_at_i": 1775498820,
+        "objectID": "47664588",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T18:08:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kccqzy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; how you're able to determine if the solution was correct<p>I had hundreds of unit tests that did not trigger an assertion I added for idempotency. Claude wrote one that triggered an assertion failure. Simple as that. A counterexample suffices."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kccqzy",
+          "story_47662112"
+        ],
+        "author": "kccqzy",
+        "comment_text": "&gt; how you&#x27;re able to determine if the solution was correct<p>I had hundreds of unit tests that did not trigger an assertion I added for idempotency. Claude wrote one that triggered an assertion failure. Simple as that. A counterexample suffices.",
+        "created_at": "2026-04-06T17:30:30Z",
+        "created_at_i": 1775496630,
+        "objectID": "47664074",
+        "parent_id": 47663151,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T17:33:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hombre_fatal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Interesting. I don't think I've seen hallucinations at that level when it's referencing source code.<p>Though my workflow always starts in plan mode where Claude is clearly more thorough (which is the reason it takes 10x as long as going straight to impl). I rarely skip it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hombre_fatal",
+          "story_47662112"
+        ],
+        "author": "hombre_fatal",
+        "comment_text": "Interesting. I don&#x27;t think I&#x27;ve seen hallucinations at that level when it&#x27;s referencing source code.<p>Though my workflow always starts in plan mode where Claude is clearly more thorough (which is the reason it takes 10x as long as going straight to impl). I rarely skip it.",
+        "created_at": "2026-04-06T17:13:42Z",
+        "created_at_i": 1775495622,
+        "objectID": "47663817",
+        "parent_id": 47663683,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T17:16:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zekica"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "And it can fail in great ways. Last example: I asked claude for a non-trivial backup and recovery script using restic. I gave it the whole restic repo and it still made up parameters that don't exist in the code (but exist in a pull request that's been sitting not merged for 10+ months)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zekica",
+          "story_47662112"
+        ],
+        "author": "zekica",
+        "children": [
+          47663817
+        ],
+        "comment_text": "And it can fail in great ways. Last example: I asked claude for a non-trivial backup and recovery script using restic. I gave it the whole restic repo and it still made up parameters that don&#x27;t exist in the code (but exist in a pull request that&#x27;s been sitting not merged for 10+ months).",
+        "created_at": "2026-04-06T17:05:58Z",
+        "created_at_i": 1775495158,
+        "objectID": "47663683",
+        "parent_id": 47663258,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-08T05:20:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "incomingpain"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "They banned all third party.<p>Loads of people cancelled their subscriptions.<p>Should be the least load they have been under in months. Yet unreliable.<p>Crazy that people are going with their benchmaxxed models."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_incomingpain",
+          "story_47662112"
+        ],
+        "author": "incomingpain",
+        "comment_text": "They banned all third party.<p>Loads of people cancelled their subscriptions.<p>Should be the least load they have been under in months. Yet unreliable.<p>Crazy that people are going with their benchmaxxed models.",
+        "created_at": "2026-04-06T16:46:16Z",
+        "created_at_i": 1775493976,
+        "objectID": "47663373",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:50:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "boleary-gl"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you still need access we balance across Claude and AWS via <a href=\"https://kilo.ai/docs/gateway\" rel=\"nofollow\">https://kilo.ai/docs/gateway</a> - and you can BYOK for many providers"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_boleary-gl",
+          "story_47662112"
+        ],
+        "author": "boleary-gl",
+        "comment_text": "If you still need access we balance across Claude and AWS via <a href=\"https:&#x2F;&#x2F;kilo.ai&#x2F;docs&#x2F;gateway\" rel=\"nofollow\">https:&#x2F;&#x2F;kilo.ai&#x2F;docs&#x2F;gateway</a> - and you can BYOK for many providers",
+        "created_at": "2026-04-06T16:43:11Z",
+        "created_at_i": 1775493791,
+        "objectID": "47663317",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:45:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "efficax"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is pretty much every monday morning, so it's either scale issues with the busiest window of time (people getting started at work on monday) or it's intentional &quot;outage&quot; that only affects some % of people to take load off the system so that API users (who pay more) can be served during the heaviest usage time of the week."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_efficax",
+          "story_47662112"
+        ],
+        "author": "efficax",
+        "comment_text": "This is pretty much every monday morning, so it&#x27;s either scale issues with the busiest window of time (people getting started at work on monday) or it&#x27;s intentional &quot;outage&quot; that only affects some % of people to take load off the system so that API users (who pay more) can be served during the heaviest usage time of the week.",
+        "created_at": "2026-04-06T16:40:50Z",
+        "created_at_i": 1775493650,
+        "objectID": "47663287",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:45:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hombre_fatal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been working on a luks+btrfs+systemd tool (for managing an encrypted raid1 pool). While I have worked with each individually, it's not obvious what kind of cases you have to handle when composing them together. A lot of it is simply emergent, and the status quo has been to do your best and then see what actually happens at runtime.<p>Documentation is helpful to describe high-level intentions, but the beauty is when you have access to source code. Now a good model can derive behavior from implementation instead of docs which are inherently limited.<p>I implemented the luks+btrfs part by hand a few years ago, and I resurrected the project a couple months ago. Using source code for local reference, Claude discovered so many major cases I missed, especially in the unhappy-path scenarios. Even in my own hand-written tests. And it helped me set up an amazing NixOS VM test system include reproduction tests on the libraries to see what they do in weird undocumented cases.<p>So I think &quot;tasks beyond our intellect (and/or time and energy)&quot; can be fitting. Otherwise I'd only be capable of polishing this project if luks+btfs+systemd were specifically my day job. I just can't fit so much in my head and working memory."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hombre_fatal",
+          "story_47662112"
+        ],
+        "author": "hombre_fatal",
+        "children": [
+          47663683
+        ],
+        "comment_text": "I&#x27;ve been working on a luks+btrfs+systemd tool (for managing an encrypted raid1 pool). While I have worked with each individually, it&#x27;s not obvious what kind of cases you have to handle when composing them together. A lot of it is simply emergent, and the status quo has been to do your best and then see what actually happens at runtime.<p>Documentation is helpful to describe high-level intentions, but the beauty is when you have access to source code. Now a good model can derive behavior from implementation instead of docs which are inherently limited.<p>I implemented the luks+btrfs part by hand a few years ago, and I resurrected the project a couple months ago. Using source code for local reference, Claude discovered so many major cases I missed, especially in the unhappy-path scenarios. Even in my own hand-written tests. And it helped me set up an amazing NixOS VM test system include reproduction tests on the libraries to see what they do in weird undocumented cases.<p>So I think &quot;tasks beyond our intellect (and&#x2F;or time and energy)&quot; can be fitting. Otherwise I&#x27;d only be capable of polishing this project if luks+btfs+systemd were specifically my day job. I just can&#x27;t fit so much in my head and working memory.",
+        "created_at": "2026-04-06T16:39:17Z",
+        "created_at_i": 1775493557,
+        "objectID": "47663258",
+        "parent_id": 47662880,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T17:06:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hgoel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "IIRC threads that are just &quot;yup, seeing this too&quot; are not seen as being valuable here. There isn't (or at least wasn't) much discussion happening."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hgoel",
+          "story_47662112"
+        ],
+        "author": "hgoel",
+        "comment_text": "IIRC threads that are just &quot;yup, seeing this too&quot; are not seen as being valuable here. There isn&#x27;t (or at least wasn&#x27;t) much discussion happening.",
+        "created_at": "2026-04-06T16:33:46Z",
+        "created_at_i": 1775493226,
+        "objectID": "47663172",
+        "parent_id": 47662831,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-08T22:55:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Danielzzzz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Seems to be good now. Just logged in successfully. Can't live without Claude nowadays is the life learning I realized in the downtime retro to myself lol."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Danielzzzz",
+          "story_47662112"
+        ],
+        "author": "Danielzzzz",
+        "comment_text": "Seems to be good now. Just logged in successfully. Can&#x27;t live without Claude nowadays is the life learning I realized in the downtime retro to myself lol.",
+        "created_at": "2026-04-06T16:33:05Z",
+        "created_at_i": 1775493185,
+        "objectID": "47663163",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-07T02:07:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shimman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This says more about you than the &quot;intellect&quot; of these nondeterministic probability programs.<p>Can you provide actual context to what was beyond your ability and how you're able to determine if the solution was correct?<p>Finding out that all these comments that reference the &quot;magical incantation&quot; tend to be full of hot air. Maybe yours is different."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_shimman",
+          "story_47662112"
+        ],
+        "author": "shimman",
+        "children": [
+          47664074
+        ],
+        "comment_text": "This says more about you than the &quot;intellect&quot; of these nondeterministic probability programs.<p>Can you provide actual context to what was beyond your ability and how you&#x27;re able to determine if the solution was correct?<p>Finding out that all these comments that reference the &quot;magical incantation&quot; tend to be full of hot air. Maybe yours is different.",
+        "created_at": "2026-04-06T16:32:33Z",
+        "created_at_i": 1775493153,
+        "objectID": "47663151",
+        "parent_id": 47662614,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T17:31:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rhgraysonii"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "11 minutes elapsed between the comments. There is going to be some actual time before a report and the status page being live in a breaking system."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rhgraysonii",
+          "story_47662112"
+        ],
+        "author": "rhgraysonii",
+        "comment_text": "11 minutes elapsed between the comments. There is going to be some actual time before a report and the status page being live in a breaking system.",
+        "created_at": "2026-04-06T16:30:11Z",
+        "created_at_i": 1775493011,
+        "objectID": "47663105",
+        "parent_id": 47662644,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:34:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "user-"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; . you can run Claude models on AWS Bedrock giving you provider choice for the same model<p>Is anyone doing this for personal dev that isnt token fed by employers? Coding plans are subzidized for a reason right? If I did API usage from a cloud provider id be out tens of thousands already."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_user-",
+          "story_47662112"
+        ],
+        "author": "user-",
+        "comment_text": "&gt; . you can run Claude models on AWS Bedrock giving you provider choice for the same model<p>Is anyone doing this for personal dev that isnt token fed by employers? Coding plans are subzidized for a reason right? If I did API usage from a cloud provider id be out tens of thousands already.",
+        "created_at": "2026-04-06T16:20:57Z",
+        "created_at_i": 1775492457,
+        "objectID": "47662935",
+        "parent_id": 47662691,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:24:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "user-"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There are differences for sure. Claude models feel the most 'stable' in that I see less tool confusion messages and other mistakes like the one im looking at right now.<p>&quot;Wait, I'm editing the wrong sections. The edit tool tried to match but replaced with different prop names than what was in the file. Let me re-read the file and understand the current state properly.&quot;<p>And of course models are not 1-to-1 and have different strengths and weaknesses. I know I wont get the same quality plan mode output probably. Its a tradeoff."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_user-",
+          "story_47662112"
+        ],
+        "author": "user-",
+        "comment_text": "There are differences for sure. Claude models feel the most &#x27;stable&#x27; in that I see less tool confusion messages and other mistakes like the one im looking at right now.<p>&quot;Wait, I&#x27;m editing the wrong sections. The edit tool tried to match but replaced with different prop names than what was in the file. Let me re-read the file and understand the current state properly.&quot;<p>And of course models are not 1-to-1 and have different strengths and weaknesses. I know I wont get the same quality plan mode output probably. Its a tradeoff.",
+        "created_at": "2026-04-06T16:18:17Z",
+        "created_at_i": 1775492297,
+        "objectID": "47662895",
+        "parent_id": 47662685,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:18:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CoolGuySteve"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;give them difficult tasks beyond your own intellect?&quot;<p>Lol no, I've yet to find a model with those properties. Sounds like a fast track to AI psychosis.<p>The domain I work in doesn't have enough public documentation for these models to be particularly helpful without a lot of handholding though."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CoolGuySteve",
+          "story_47662112"
+        ],
+        "author": "CoolGuySteve",
+        "children": [
+          47663258,
+          47691317
+        ],
+        "comment_text": "&quot;give them difficult tasks beyond your own intellect?&quot;<p>Lol no, I&#x27;ve yet to find a model with those properties. Sounds like a fast track to AI psychosis.<p>The domain I work in doesn&#x27;t have enough public documentation for these models to be particularly helpful without a lot of handholding though.",
+        "created_at": "2026-04-06T16:17:29Z",
+        "created_at_i": 1775492249,
+        "objectID": "47662880",
+        "parent_id": 47662614,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-11T05:58:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chermi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wtf. Was this just scrubbed/pushed down from frontpage?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chermi",
+          "story_47662112"
+        ],
+        "author": "chermi",
+        "children": [
+          47663172
+        ],
+        "comment_text": "Wtf. Was this just scrubbed&#x2F;pushed down from frontpage?",
+        "created_at": "2026-04-06T16:13:21Z",
+        "created_at_i": 1775492001,
+        "objectID": "47662831",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:34:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NitpickLawyer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Probably the most damning fact about LLMs is just how poorly written their parent companies' systems are.<p>This seems like a popular take, but I think it's the other way around. Them dogfooding cc with cc is proof that it can work, and that &quot;code quality&quot; doesn't <i>really</i> matter in the end.<p>Before cc claude.ai (equivalent of chatgpt) was meh. They were behind in features, behind in users, behind in mindshare. cc took them from &quot;weirdos who use AI for coding&quot; to &quot;wait, you're NOT using cc? you freak&quot; in ~1 year. And cc is a very big part of them reaching 1-2B$ monthly revenue.<p>Yes, it's buggy. Yes, the code is a mess (as per the leak, etc). But they're also the most used coding harness. And, on a technical side, having had cc as early as they did, helped them immensely on having users, having real-usage data, real-usage signals and so on. They trained the models on that data, and trained the models in sync with the harness. And it shows, their models are consistently the highest ranked both on benchmarks and on &quot;vibes&quot; from coders. Had they not have that, they would have lacked that real-world data.<p>And if you look at the competition it's even more clear. Goog is kidna nowhere with their gemini-cli, is all over the place with their antigravity-ex-windsurf, and while having really good generalist models, the general mindshare is just not there for coding. Same for oAI. They have an open-source, rust-based, &quot;solid&quot; cli, they have solid models (esp in code review, planning, architecture, bug fixing, etc) but they are not #1. Claude is with their cc.<p>So yeah, I think it's really the other way around. Having a vibe-coded, buggy, bad code solution, but being the first to have it, the first to push it, and the first to keep iterating on it is really what sets them apart. Food for thought on the future, and where coding is headed."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NitpickLawyer",
+          "story_47662112"
+        ],
+        "author": "NitpickLawyer",
+        "comment_text": "&gt; Probably the most damning fact about LLMs is just how poorly written their parent companies&#x27; systems are.<p>This seems like a popular take, but I think it&#x27;s the other way around. Them dogfooding cc with cc is proof that it can work, and that &quot;code quality&quot; doesn&#x27;t <i>really</i> matter in the end.<p>Before cc claude.ai (equivalent of chatgpt) was meh. They were behind in features, behind in users, behind in mindshare. cc took them from &quot;weirdos who use AI for coding&quot; to &quot;wait, you&#x27;re NOT using cc? you freak&quot; in ~1 year. And cc is a very big part of them reaching 1-2B$ monthly revenue.<p>Yes, it&#x27;s buggy. Yes, the code is a mess (as per the leak, etc). But they&#x27;re also the most used coding harness. And, on a technical side, having had cc as early as they did, helped them immensely on having users, having real-usage data, real-usage signals and so on. They trained the models on that data, and trained the models in sync with the harness. And it shows, their models are consistently the highest ranked both on benchmarks and on &quot;vibes&quot; from coders. Had they not have that, they would have lacked that real-world data.<p>And if you look at the competition it&#x27;s even more clear. Goog is kidna nowhere with their gemini-cli, is all over the place with their antigravity-ex-windsurf, and while having really good generalist models, the general mindshare is just not there for coding. Same for oAI. They have an open-source, rust-based, &quot;solid&quot; cli, they have solid models (esp in code review, planning, architecture, bug fixing, etc) but they are not #1. Claude is with their cc.<p>So yeah, I think it&#x27;s really the other way around. Having a vibe-coded, buggy, bad code solution, but being the first to have it, the first to push it, and the first to keep iterating on it is really what sets them apart. Food for thought on the future, and where coding is headed.",
+        "created_at": "2026-04-06T16:13:11Z",
+        "created_at_i": 1775491991,
+        "objectID": "47662828",
+        "parent_id": 47662475,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:18:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jakeydus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I saw issues starting at least 45 minutes before their status page was updated."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jakeydus",
+          "story_47662112"
+        ],
+        "author": "jakeydus",
+        "comment_text": "I saw issues starting at least 45 minutes before their status page was updated.",
+        "created_at": "2026-04-06T16:12:30Z",
+        "created_at_i": 1775491950,
+        "objectID": "47662819",
+        "parent_id": 47662605,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:25:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bob1029"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I tried the agnostic thing for a while, but there are enough quirks between the providers that I gave up trying to normalize it. GPT5.x wipes the floor with other models for my specific tool calling scenarios. I am not going to waste time trying to bridge arbitrary and evolving gaps between providers.<p>I put my Amex details into OAI, I get tokens, it just works. I really don't understand what the hell is going on with Claude. The $200/m thing is so confusing to me. I'd rather just go buy however many tokens I plan to use. $200 worth of OAI tokens would go a really long way for me (much longer than a month), but perhaps I am holding it wrong."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bob1029",
+          "story_47662112"
+        ],
+        "author": "bob1029",
+        "comment_text": "I tried the agnostic thing for a while, but there are enough quirks between the providers that I gave up trying to normalize it. GPT5.x wipes the floor with other models for my specific tool calling scenarios. I am not going to waste time trying to bridge arbitrary and evolving gaps between providers.<p>I put my Amex details into OAI, I get tokens, it just works. I really don&#x27;t understand what the hell is going on with Claude. The $200&#x2F;m thing is so confusing to me. I&#x27;d rather just go buy however many tokens I plan to use. $200 worth of OAI tokens would go a really long way for me (much longer than a month), but perhaps I am holding it wrong.",
+        "created_at": "2026-04-06T16:11:56Z",
+        "created_at_i": 1775491916,
+        "objectID": "47662810",
+        "parent_id": 47662631,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:13:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "matheusmoreira"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Me too. Claude Code is running just fine on one of my virtual machines. On another, it logged me out saying the OAuth token expired, and it won't log me back in due to internal server errors. Weird."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_matheusmoreira",
+          "story_47662112"
+        ],
+        "author": "matheusmoreira",
+        "comment_text": "Me too. Claude Code is running just fine on one of my virtual machines. On another, it logged me out saying the OAuth token expired, and it won&#x27;t log me back in due to internal server errors. Weird.",
+        "created_at": "2026-04-06T16:05:51Z",
+        "created_at_i": 1775491551,
+        "objectID": "47662732",
+        "parent_id": 47662492,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:08:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CoolGuySteve"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've owned this GPU for 5 years already, it's fine"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CoolGuySteve",
+          "story_47662112"
+        ],
+        "author": "CoolGuySteve",
+        "comment_text": "I&#x27;ve owned this GPU for 5 years already, it&#x27;s fine",
+        "created_at": "2026-04-06T16:04:40Z",
+        "created_at_i": 1775491480,
+        "objectID": "47662723",
+        "parent_id": 47662573,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T17:07:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "theanonymousone"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How much is remaining until the last 9 is gone too?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_theanonymousone",
+          "story_47662112"
+        ],
+        "author": "theanonymousone",
+        "comment_text": "How much is remaining until the last 9 is gone too?",
+        "created_at": "2026-04-06T16:04:25Z",
+        "created_at_i": 1775491465,
+        "objectID": "47662722",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:28:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "matheusmoreira"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah. It's actually starting to make me anxious. I think I got addicted to these agents."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_matheusmoreira",
+          "story_47662112"
+        ],
+        "author": "matheusmoreira",
+        "comment_text": "Yeah. It&#x27;s actually starting to make me anxious. I think I got addicted to these agents.",
+        "created_at": "2026-04-06T16:04:03Z",
+        "created_at_i": 1775491443,
+        "objectID": "47662718",
+        "parent_id": 47662686,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:08:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chermi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This has consistently pissed me off. It seems like we all just accepted that whatever they define as &quot;functioning&quot;/&quot;OK&quot; is  suitable. I see the status now shows, but there should be a very loud third party ruthlessly running continuous tests against all of them.  Ideally it would also provide proof of the degradation we seem to all agree happens (looking at you Gemini). Like a leaderboard focused on actual live performance.  Of course they'd probably quickly game that too.  But something showing time to first response,  &quot;global capacity reached&quot; etc, effective throttling metric, a intelligence metric. Maybe like crowdsourced stats so they can't focus on improving the metrics for just the IPs associated with this hypothetical third party performance watchdog.<p>The one that pissed me off the most was Gemini API displaying very clearly 1) user cancelled request in Gemini chat app 2) API showing &quot;user quota reached&quot;. Both were blatant lies. In the latter case, you could find the actual global quota cause later in the error message.  I don't know why there isn't more outrage.  I'm guessing this sort of behavior is not new, but it's never been so visible to me."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chermi",
+          "story_47662112"
+        ],
+        "author": "chermi",
+        "children": [
+          47676464
+        ],
+        "comment_text": "This has consistently pissed me off. It seems like we all just accepted that whatever they define as &quot;functioning&quot;&#x2F;&quot;OK&quot; is  suitable. I see the status now shows, but there should be a very loud third party ruthlessly running continuous tests against all of them.  Ideally it would also provide proof of the degradation we seem to all agree happens (looking at you Gemini). Like a leaderboard focused on actual live performance.  Of course they&#x27;d probably quickly game that too.  But something showing time to first response,  &quot;global capacity reached&quot; etc, effective throttling metric, a intelligence metric. Maybe like crowdsourced stats so they can&#x27;t focus on improving the metrics for just the IPs associated with this hypothetical third party performance watchdog.<p>The one that pissed me off the most was Gemini API displaying very clearly 1) user cancelled request in Gemini chat app 2) API showing &quot;user quota reached&quot;. Both were blatant lies. In the latter case, you could find the actual global quota cause later in the error message.  I don&#x27;t know why there isn&#x27;t more outrage.  I&#x27;m guessing this sort of behavior is not new, but it&#x27;s never been so visible to me.",
+        "created_at": "2026-04-06T16:03:33Z",
+        "created_at_i": 1775491413,
+        "objectID": "47662709",
+        "parent_id": 47662462,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-08T17:39:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fastball"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Being model and provider agnostic are orthogonal concerns.<p>e.g. you can run Claude models on AWS Bedrock giving you provider choice for the same model. Whether or not you need model agnosticism at that point seems like a very different question."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fastball",
+          "story_47662112"
+        ],
+        "author": "fastball",
+        "children": [
+          47662935
+        ],
+        "comment_text": "Being model and provider agnostic are orthogonal concerns.<p>e.g. you can run Claude models on AWS Bedrock giving you provider choice for the same model. Whether or not you need model agnosticism at that point seems like a very different question.",
+        "created_at": "2026-04-06T16:02:34Z",
+        "created_at_i": 1775491354,
+        "objectID": "47662691",
+        "parent_id": 47662631,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:21:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rishabhaiover"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The downtime forces me to relook at my utterly dependent relationship with agentic assistance. The inertia to begin engaging with my code is higher than it has ever been."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rishabhaiover",
+          "story_47662112"
+        ],
+        "author": "rishabhaiover",
+        "children": [
+          47662718
+        ],
+        "comment_text": "The downtime forces me to relook at my utterly dependent relationship with agentic assistance. The inertia to begin engaging with my code is higher than it has ever been.",
+        "created_at": "2026-04-06T16:02:15Z",
+        "created_at_i": 1775491335,
+        "objectID": "47662686",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-07T02:07:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cyanydeez"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Interesting; do you find they actually react the same way to the harness?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cyanydeez",
+          "story_47662112"
+        ],
+        "author": "cyanydeez",
+        "children": [
+          47662895
+        ],
+        "comment_text": "Interesting; do you find they actually react the same way to the harness?",
+        "created_at": "2026-04-06T16:02:13Z",
+        "created_at_i": 1775491333,
+        "objectID": "47662685",
+        "parent_id": 47662631,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:18:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rvz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; The problem is that the status page doesn’t report anything, even if it has been impossible to log in during the past hour.<p>When Claude took an extra day off, he forgot to report his hours to the dashboard when he will be unavailable / unresponsive and this is probably why people here are complaining about no status update.<p>Wonder where I have seen that before?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rvz",
+          "story_47662112"
+        ],
+        "author": "rvz",
+        "comment_text": "&gt; The problem is that the status page doesn’t report anything, even if it has been impossible to log in during the past hour.<p>When Claude took an extra day off, he forgot to report his hours to the dashboard when he will be unavailable &#x2F; unresponsive and this is probably why people here are complaining about no status update.<p>Wonder where I have seen that before?",
+        "created_at": "2026-04-06T16:01:44Z",
+        "created_at_i": 1775491304,
+        "objectID": "47662680",
+        "parent_id": 47662462,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-13T16:36:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ChrisArchitect"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Link for up top: <a href=\"https://status.claude.com/incidents/vfjv5x6qkd4j\" rel=\"nofollow\">https://status.claude.com/incidents/vfjv5x6qkd4j</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ChrisArchitect",
+          "story_47662112"
+        ],
+        "author": "ChrisArchitect",
+        "comment_text": "Link for up top: <a href=\"https:&#x2F;&#x2F;status.claude.com&#x2F;incidents&#x2F;vfjv5x6qkd4j\" rel=\"nofollow\">https:&#x2F;&#x2F;status.claude.com&#x2F;incidents&#x2F;vfjv5x6qkd4j</a>",
+        "created_at": "2026-04-06T16:01:24Z",
+        "created_at_i": 1775491284,
+        "objectID": "47662676",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:47:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CoolGuySteve"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm using the qwen cli tool with a duckduckgo search skill that I made Claude write. It's like bootstrapping I guess<p>Once it can search for factual information online the smaller model size becomes less noticeable"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CoolGuySteve",
+          "story_47662112"
+        ],
+        "author": "CoolGuySteve",
+        "comment_text": "I&#x27;m using the qwen cli tool with a duckduckgo search skill that I made Claude write. It&#x27;s like bootstrapping I guess<p>Once it can search for factual information online the smaller model size becomes less noticeable",
+        "created_at": "2026-04-06T16:01:06Z",
+        "created_at_i": 1775491266,
+        "objectID": "47662667",
+        "parent_id": 47662617,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:03:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CharlieDigital"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<p><pre><code>    &gt; Probably the most damning fact about LLMs is just how poorly written their parent companies' systems are\n</code></pre>\nI have been working on some work related to MCP and found some gaps in implementation in Claude and Codex.  This is a relatively simple, well-defined spec and both Claude Code and Codex CLI have incomplete/incorrect implementations.<p>During this process of investigation, I checked the CC repo and noticed they had 5000+ issues open.  Out of curiosity, I skimmed through them and many point to regressions, real bugs, simple changes, etc.  Maybe they have some internal tracker they are using, but you would think that a company with functionally unlimited tokens and access to the best models would be able to use those tokens to get their own house in order.<p>My sense now is that there is a need for the industry to create a lot of hype right now so we see showmanship like the kernel compiler and the agent swarms building a semi-functional browser, etc....yet their own tooling has not fully implemented their own protocol (MCP) correctly.  They need <i>all of us</i> to believe that these agents are more capable than they actually are; the more piles of tangled code you write and the more discipline you cede to their LLMs, the more dependent you are on those LLMs to even know what the code is doing.  At some point, teams become incapable of teasing the code apart anymore because no one will understand it.<p>Peeking at the issues in the repos and seeing big gaps in functionality like Codex's missing support for MCP prompts and resources is like looking behind the curtain at reality."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CharlieDigital",
+          "story_47662112"
+        ],
+        "author": "CharlieDigital",
+        "comment_text": "<p><pre><code>    &gt; Probably the most damning fact about LLMs is just how poorly written their parent companies&#x27; systems are\n</code></pre>\nI have been working on some work related to MCP and found some gaps in implementation in Claude and Codex.  This is a relatively simple, well-defined spec and both Claude Code and Codex CLI have incomplete&#x2F;incorrect implementations.<p>During this process of investigation, I checked the CC repo and noticed they had 5000+ issues open.  Out of curiosity, I skimmed through them and many point to regressions, real bugs, simple changes, etc.  Maybe they have some internal tracker they are using, but you would think that a company with functionally unlimited tokens and access to the best models would be able to use those tokens to get their own house in order.<p>My sense now is that there is a need for the industry to create a lot of hype right now so we see showmanship like the kernel compiler and the agent swarms building a semi-functional browser, etc....yet their own tooling has not fully implemented their own protocol (MCP) correctly.  They need <i>all of us</i> to believe that these agents are more capable than they actually are; the more piles of tangled code you write and the more discipline you cede to their LLMs, the more dependent you are on those LLMs to even know what the code is doing.  At some point, teams become incapable of teasing the code apart anymore because no one will understand it.<p>Peeking at the issues in the repos and seeing big gaps in functionality like Codex&#x27;s missing support for MCP prompts and resources is like looking behind the curtain at reality.",
+        "created_at": "2026-04-06T16:00:55Z",
+        "created_at_i": 1775491255,
+        "objectID": "47662665",
+        "parent_id": 47662475,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-07T13:06:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kwertyoowiyop"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For older programmers: this is like when Stack Overflow would go down.<p>For really old programmers: this is like when Computer Literacy bookstore was closed."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kwertyoowiyop",
+          "story_47662112"
+        ],
+        "author": "kwertyoowiyop",
+        "comment_text": "For older programmers: this is like when Stack Overflow would go down.<p>For really old programmers: this is like when Computer Literacy bookstore was closed.",
+        "created_at": "2026-04-06T16:00:42Z",
+        "created_at_i": 1775491242,
+        "objectID": "47662663",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T19:14:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jgrahamc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here in my corner of Europe it seems to be working fine."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code Down"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jgrahamc",
+          "story_47662112"
+        ],
+        "author": "jgrahamc",
+        "comment_text": "Here in my corner of Europe it seems to be working fine.",
+        "created_at": "2026-04-06T16:00:38Z",
+        "created_at_i": 1775491238,
+        "objectID": "47662662",
+        "parent_id": 47662112,
+        "story_id": 47662112,
+        "story_title": "Claude Code Down",
+        "updated_at": "2026-04-06T16:03:06Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 76,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47662112&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 8,
+        "roundTrip": 22
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 10
+  }
+}

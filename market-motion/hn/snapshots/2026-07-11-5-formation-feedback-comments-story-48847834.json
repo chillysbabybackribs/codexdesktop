@@ -1,0 +1,1248 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48847834",
+    "window": "recent-90d",
+    "tag": "show_hn",
+    "score": 155
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "enos_feedler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Many years ago I wrote a simple script to periodically pull my aeroplan miles from Air Canada using an extracted auth token. I was building my own mobile app to track all kinds of important numbers in my life. One day I woke up to my air canada account being nuked without access. I was on the phone for 3 days talking to many layers of support. At one point they were not going to re-enable my account and would lose 400k points. I was devastated. Thankfully i was able to get it back eventually. This whole era of using LLMs to manipulate services on the client is not going to end well. We need proper business-level support or its just an irresponsible hack you are letting loose into the wild."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_enos_feedler",
+          "story_48847834"
+        ],
+        "author": "enos_feedler",
+        "comment_text": "Many years ago I wrote a simple script to periodically pull my aeroplan miles from Air Canada using an extracted auth token. I was building my own mobile app to track all kinds of important numbers in my life. One day I woke up to my air canada account being nuked without access. I was on the phone for 3 days talking to many layers of support. At one point they were not going to re-enable my account and would lose 400k points. I was devastated. Thankfully i was able to get it back eventually. This whole era of using LLMs to manipulate services on the client is not going to end well. We need proper business-level support or its just an irresponsible hack you are letting loose into the wild.",
+        "created_at": "2026-07-11T13:04:43Z",
+        "created_at_i": 1783775083,
+        "objectID": "48871719",
+        "parent_id": 48868318,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T15:52:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hahahaa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Or solve by allowing mcp to drive already authed session (using a legit user)?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hahahaa",
+          "story_48847834"
+        ],
+        "author": "hahahaa",
+        "comment_text": "Or solve by allowing mcp to drive already authed session (using a legit user)?",
+        "created_at": "2026-07-11T08:52:29Z",
+        "created_at_i": 1783759949,
+        "objectID": "48870144",
+        "parent_id": 48865971,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T08:57:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ikuminw"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The self-updating recipe concept is good. Way better than maintaining hardcoded API specs that break every time the app updates."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ikuminw",
+          "story_48847834"
+        ],
+        "author": "ikuminw",
+        "comment_text": "The self-updating recipe concept is good. Way better than maintaining hardcoded API specs that break every time the app updates.",
+        "created_at": "2026-07-11T08:01:31Z",
+        "created_at_i": 1783756891,
+        "objectID": "48869849",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T08:05:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hoppp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you make sure you are not violating terms and conditions if they forbid injecting third party javascript into the website explicitly?<p>Does your LLM ingest terms and conditions too?<p>In some cases in the past, finding and using auth tokens in the front end has resulted in hacking charges, in those cases alleged hacker found an api key in the front end and directly accessed the database, which resulted in a jail sentance.<p>How do you solve this issue that some companies may become hostile if injected code extracts  auth tokens and accesses backend?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hoppp",
+          "story_48847834"
+        ],
+        "author": "hoppp",
+        "children": [
+          48871719
+        ],
+        "comment_text": "How do you make sure you are not violating terms and conditions if they forbid injecting third party javascript into the website explicitly?<p>Does your LLM ingest terms and conditions too?<p>In some cases in the past, finding and using auth tokens in the front end has resulted in hacking charges, in those cases alleged hacker found an api key in the front end and directly accessed the database, which resulted in a jail sentance.<p>How do you solve this issue that some companies may become hostile if injected code extracts  auth tokens and accesses backend?",
+        "created_at": "2026-07-11T03:06:59Z",
+        "created_at_i": 1783739219,
+        "objectID": "48868318",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T13:05:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "quarkcarbon279"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm so surprised you didn't add your agent on your own website? And the same fundamentals of a browser agent why you can't achieve everything with APIs alone apply here too inside a website. What's your take?<p>We have been building in the space balancing both with priority to GUI tools currently building on top of the great GUI experiences of a product, rtrvr.ai/rover"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_quarkcarbon279",
+          "story_48847834"
+        ],
+        "author": "quarkcarbon279",
+        "comment_text": "I&#x27;m so surprised you didn&#x27;t add your agent on your own website? And the same fundamentals of a browser agent why you can&#x27;t achieve everything with APIs alone apply here too inside a website. What&#x27;s your take?<p>We have been building in the space balancing both with priority to GUI tools currently building on top of the great GUI experiences of a product, rtrvr.ai&#x2F;rover",
+        "created_at": "2026-07-11T01:39:13Z",
+        "created_at_i": 1783733953,
+        "objectID": "48867682",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T01:42:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "teravor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "are you asking if it will magically allow you to bypass authentication? only if the service is vulnerable to auth bypass and you don't mind breaking multiple laws."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_teravor",
+          "story_48847834"
+        ],
+        "author": "teravor",
+        "children": [
+          48870144
+        ],
+        "comment_text": "are you asking if it will magically allow you to bypass authentication? only if the service is vulnerable to auth bypass and you don&#x27;t mind breaking multiple laws.",
+        "created_at": "2026-07-10T22:11:47Z",
+        "created_at_i": 1783721507,
+        "objectID": "48865971",
+        "parent_id": 48865930,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T08:53:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This works for non-authenticated sites but wouldn't work for anything behind a login wall that requires a JWT or similar - right?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "children": [
+          48865971
+        ],
+        "comment_text": "This works for non-authenticated sites but wouldn&#x27;t work for anything behind a login wall that requires a JWT or similar - right?",
+        "created_at": "2026-07-10T22:07:45Z",
+        "created_at_i": 1783721265,
+        "objectID": "48865930",
+        "parent_id": 48865800,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T22:13:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "teravor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "it's more useful when you don't need permissions from anyone.<p>1) get firefox MCP<p>2) visit target site<p>3) point GLM 5.2 to MCP   (maybe grok 4.5 will also work here? haven't tested their guardrails yet)<p>4) instruct model to create userscript that augments/breaks whatever you want, or just break it with devtools for the one session.<p>between 3 and 4 you may want to coax the model into instrumenting the client to understand it, write a report/skill for future sessions etc<p>you can also use the above to create a custom client or just a bot using web API. you can also easily break bot checks without puppeteered browsers now: &quot;the above script aims to determine if it's executed on an allowed web browser, map out all its interactions with web browser APIs to fake adequate responses while using the Deno runtime&quot;. it's generally better to augment Deno to pass for Chrome and fool all the checks and their future versions then to just break a single check that may change soon."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_teravor",
+          "story_48847834"
+        ],
+        "author": "teravor",
+        "children": [
+          48865930
+        ],
+        "comment_text": "it&#x27;s more useful when you don&#x27;t need permissions from anyone.<p>1) get firefox MCP<p>2) visit target site<p>3) point GLM 5.2 to MCP   (maybe grok 4.5 will also work here? haven&#x27;t tested their guardrails yet)<p>4) instruct model to create userscript that augments&#x2F;breaks whatever you want, or just break it with devtools for the one session.<p>between 3 and 4 you may want to coax the model into instrumenting the client to understand it, write a report&#x2F;skill for future sessions etc<p>you can also use the above to create a custom client or just a bot using web API. you can also easily break bot checks without puppeteered browsers now: &quot;the above script aims to determine if it&#x27;s executed on an allowed web browser, map out all its interactions with web browser APIs to fake adequate responses while using the Deno runtime&quot;. it&#x27;s generally better to augment Deno to pass for Chrome and fool all the checks and their future versions then to just break a single check that may change soon.",
+        "created_at": "2026-07-10T21:53:47Z",
+        "created_at_i": 1783720427,
+        "objectID": "48865800",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T02:43:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yup just another user account. It can work without this as well (we support ingesting other resources such as help center articles, pdfs, etc.) but at that point it's no different from any other (dumb) AI chatbot out there that just spits out a bunch of itemized bullets."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "Yup just another user account. It can work without this as well (we support ingesting other resources such as help center articles, pdfs, etc.) but at that point it&#x27;s no different from any other (dumb) AI chatbot out there that just spits out a bunch of itemized bullets.",
+        "created_at": "2026-07-10T21:29:07Z",
+        "created_at_i": 1783718947,
+        "objectID": "48865541",
+        "parent_id": 48865323,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:31:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "johnpaulkiser"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah the auth angle and unobtrusive integration path seems like the real neat thing here. From your customers eyes its just another user account right?<p>Is that a requirement to integrate it? your app has to essentially have &quot;teams&quot; or at least shared resources?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_johnpaulkiser",
+          "story_48847834"
+        ],
+        "author": "johnpaulkiser",
+        "children": [
+          48865541
+        ],
+        "comment_text": "Yeah the auth angle and unobtrusive integration path seems like the real neat thing here. From your customers eyes its just another user account right?<p>Is that a requirement to integrate it? your app has to essentially have &quot;teams&quot; or at least shared resources?",
+        "created_at": "2026-07-10T21:10:27Z",
+        "created_at_i": 1783717827,
+        "objectID": "48865323",
+        "parent_id": 48864966,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:29:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Even with an API spec it wouldn't &quot;just work&quot;. You'd still need to handle authentication and have a place to manage which APIs you want the in-app agent to have access to / when to call a given tool.<p>And believe it or not, even big companies with big eng teams don't have API specs available for their applications ¯\\_(ツ)_/¯"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "children": [
+          48865323
+        ],
+        "comment_text": "Even with an API spec it wouldn&#x27;t &quot;just work&quot;. You&#x27;d still need to handle authentication and have a place to manage which APIs you want the in-app agent to have access to &#x2F; when to call a given tool.<p>And believe it or not, even big companies with big eng teams don&#x27;t have API specs available for their applications ¯\\_(ツ)_&#x2F;¯",
+        "created_at": "2026-07-10T20:42:42Z",
+        "created_at_i": 1783716162,
+        "objectID": "48864966",
+        "parent_id": 48864872,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T14:02:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arjunchint"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am not following a couple of things:<p>- you sell to websites an in-app agent<p>- why not just have them give you API spec, why reverse engineer their APIs?<p>A bit longer term, would you see yourself competing with WebMCP then? Because the website can just expose those APIs to any browser agent"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_arjunchint",
+          "story_48847834"
+        ],
+        "author": "arjunchint",
+        "children": [
+          48864966
+        ],
+        "comment_text": "I am not following a couple of things:<p>- you sell to websites an in-app agent<p>- why not just have them give you API spec, why reverse engineer their APIs?<p>A bit longer term, would you see yourself competing with WebMCP then? Because the website can just expose those APIs to any browser agent",
+        "created_at": "2026-07-10T20:34:23Z",
+        "created_at_i": 1783715663,
+        "objectID": "48864872",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:17:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We can either replace an intercom widget entirely or do a hand off with context to a live intercom chat agent."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "children": [
+          48864831
+        ],
+        "comment_text": "We can either replace an intercom widget entirely or do a hand off with context to a live intercom chat agent.",
+        "created_at": "2026-07-10T20:09:32Z",
+        "created_at_i": 1783714172,
+        "objectID": "48864625",
+        "parent_id": 48864234,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:37:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nixus76"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Got it- so it is &quot;inside-out&quot;, not &quot;outside-in&quot; kind of product. Very impressive either case, congrats!<p>How does it work with the intercom widget though?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nixus76",
+          "story_48847834"
+        ],
+        "author": "nixus76",
+        "children": [
+          48864625
+        ],
+        "comment_text": "Got it- so it is &quot;inside-out&quot;, not &quot;outside-in&quot; kind of product. Very impressive either case, congrats!<p>How does it work with the intercom widget though?",
+        "created_at": "2026-07-10T19:36:37Z",
+        "created_at_i": 1783712197,
+        "objectID": "48864234",
+        "parent_id": 48862949,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T20:10:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dodobirdy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Now this is something truly agentic."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dodobirdy",
+          "story_48847834"
+        ],
+        "author": "dodobirdy",
+        "comment_text": "Now this is something truly agentic.",
+        "created_at": "2026-07-10T18:52:08Z",
+        "created_at_i": 1783709528,
+        "objectID": "48863740",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T18:53:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here's a more thorough explanation of how it works under the hood: <a href=\"https://frigade.com/features/skills\">https://frigade.com/features/skills</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "Here&#x27;s a more thorough explanation of how it works under the hood: <a href=\"https:&#x2F;&#x2F;frigade.com&#x2F;features&#x2F;skills\">https:&#x2F;&#x2F;frigade.com&#x2F;features&#x2F;skills</a>",
+        "created_at": "2026-07-10T18:00:42Z",
+        "created_at_i": 1783706442,
+        "objectID": "48863155",
+        "parent_id": 48858571,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-11T07:52:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agreed - and especially when the API changes.."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "Agreed - and especially when the API changes..",
+        "created_at": "2026-07-10T17:43:43Z",
+        "created_at_i": 1783705423,
+        "objectID": "48862959",
+        "parent_id": 48857177,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T20:06:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We use a browser-based agent to learn all the APIs and turn them into skills. Most users will run this in a staging/test account to create all the recipes/blueprints. Our agent is also instructed to not take any destructive actions - but of course LLMs make mistakes (hence the test account :) ).<p>You can see more about how it works in detail here: <a href=\"https://frigade.com/how-it-works\">https://frigade.com/how-it-works</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "children": [
+          48864234
+        ],
+        "comment_text": "We use a browser-based agent to learn all the APIs and turn them into skills. Most users will run this in a staging&#x2F;test account to create all the recipes&#x2F;blueprints. Our agent is also instructed to not take any destructive actions - but of course LLMs make mistakes (hence the test account :) ).<p>You can see more about how it works in detail here: <a href=\"https:&#x2F;&#x2F;frigade.com&#x2F;how-it-works\">https:&#x2F;&#x2F;frigade.com&#x2F;how-it-works</a>",
+        "created_at": "2026-07-10T17:43:11Z",
+        "created_at_i": 1783705391,
+        "objectID": "48862949",
+        "parent_id": 48862326,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T20:05:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nixus76"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Very cool! Does it require some kind of scraping of a third party web app, like clicking through with a browser agent? If so, how can I be sure it does not delete my account or subscribe to another plan or make some other destructive actions if I allow it to do that with my authed acct?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nixus76",
+          "story_48847834"
+        ],
+        "author": "nixus76",
+        "children": [
+          48862949
+        ],
+        "comment_text": "Very cool! Does it require some kind of scraping of a third party web app, like clicking through with a browser agent? If so, how can I be sure it does not delete my account or subscribe to another plan or make some other destructive actions if I allow it to do that with my authed acct?",
+        "created_at": "2026-07-10T16:45:43Z",
+        "created_at_i": 1783701943,
+        "objectID": "48862326",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T20:06:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Works with any frontier LLM model"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "Works with any frontier LLM model",
+        "created_at": "2026-07-10T15:28:03Z",
+        "created_at_i": 1783697283,
+        "objectID": "48861286",
+        "parent_id": 48857021,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T17:19:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No definitely not!<p>Our customers run the training on their own applications using a demo or staging environment. Then they install the in-app agent you see in the demos and turn on the tool calls they like. All the API calls are executed client side and never touches any of our servers."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "No definitely not!<p>Our customers run the training on their own applications using a demo or staging environment. Then they install the in-app agent you see in the demos and turn on the tool calls they like. All the API calls are executed client side and never touches any of our servers.",
+        "created_at": "2026-07-10T15:27:35Z",
+        "created_at_i": 1783697255,
+        "objectID": "48861275",
+        "parent_id": 48858427,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T22:53:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "katemaster009"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "But maybe we if have more clarity on how it is working under the hood, then maybe we trust it. For me its kind of pattern - too many if's but's and maybe's on all the new tools i want to use."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_katemaster009",
+          "story_48847834"
+        ],
+        "author": "katemaster009",
+        "children": [
+          48863155
+        ],
+        "comment_text": "But maybe we if have more clarity on how it is working under the hood, then maybe we trust it. For me its kind of pattern - too many if&#x27;s but&#x27;s and maybe&#x27;s on all the new tools i want to use.",
+        "created_at": "2026-07-10T11:40:34Z",
+        "created_at_i": 1783683634,
+        "objectID": "48858571",
+        "parent_id": 48858427,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T18:01:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "spzb"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You want me to run a closed source, LLM agent <i>inside my browser</i> with access to <i>authenticated API endpoints</i> ?! Thanks but no thanks."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_spzb",
+          "story_48847834"
+        ],
+        "author": "spzb",
+        "children": [
+          48861275,
+          48858571
+        ],
+        "comment_text": "You want me to run a closed source, LLM agent <i>inside my browser</i> with access to <i>authenticated API endpoints</i> ?! Thanks but no thanks.",
+        "created_at": "2026-07-10T11:21:33Z",
+        "created_at_i": 1783682493,
+        "objectID": "48858427",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:16:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hajimuz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is really helpful. I usually manually do this with chrome dev tools, it’s kind of tedious especially the header and cookies handling."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hajimuz",
+          "story_48847834"
+        ],
+        "author": "hajimuz",
+        "children": [
+          48862959
+        ],
+        "comment_text": "This is really helpful. I usually manually do this with chrome dev tools, it’s kind of tedious especially the header and cookies handling.",
+        "created_at": "2026-07-10T08:13:55Z",
+        "created_at_i": 1783671235,
+        "objectID": "48857177",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T21:46:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akash91"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Which LLM model is it using?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_akash91",
+          "story_48847834"
+        ],
+        "author": "akash91",
+        "children": [
+          48861286
+        ],
+        "comment_text": "Which LLM model is it using?",
+        "created_at": "2026-07-10T07:52:35Z",
+        "created_at_i": 1783669955,
+        "objectID": "48857021",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T15:28:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Priyansh7"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cool project"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Priyansh7",
+          "story_48847834"
+        ],
+        "author": "Priyansh7",
+        "comment_text": "Cool project",
+        "created_at": "2026-07-10T07:30:26Z",
+        "created_at_i": 1783668626,
+        "objectID": "48856836",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T07:32:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "west_subject"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "make product demo videos, plus extend the functionality to save and contain repetitive task inside any app and have that run at some trigger."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_west_subject",
+          "story_48847834"
+        ],
+        "author": "west_subject",
+        "comment_text": "make product demo videos, plus extend the functionality to save and contain repetitive task inside any app and have that run at some trigger.",
+        "created_at": "2026-07-10T05:59:37Z",
+        "created_at_i": 1783663177,
+        "objectID": "48856268",
+        "parent_id": 48855416,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T17:19:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Synthetic7346"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gas and energy utility portal"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Synthetic7346",
+          "story_48847834"
+        ],
+        "author": "Synthetic7346",
+        "comment_text": "Gas and energy utility portal",
+        "created_at": "2026-07-10T04:42:38Z",
+        "created_at_i": 1783658558,
+        "objectID": "48855831",
+        "parent_id": 48855416,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T18:41:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not at this point - but we’re considering it! What would you use it for?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "children": [
+          48855831,
+          48856268
+        ],
+        "comment_text": "Not at this point - but we’re considering it! What would you use it for?",
+        "created_at": "2026-07-10T03:27:17Z",
+        "created_at_i": 1783654037,
+        "objectID": "48855416",
+        "parent_id": 48855219,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T17:19:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "west_subject"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is this opensource ? like the tool itself ? in it's entirety ??"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_west_subject",
+          "story_48847834"
+        ],
+        "author": "west_subject",
+        "children": [
+          48855416
+        ],
+        "comment_text": "Is this opensource ? like the tool itself ? in it&#x27;s entirety ??",
+        "created_at": "2026-07-10T02:53:48Z",
+        "created_at_i": 1783652028,
+        "objectID": "48855219",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T17:19:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zenniskayy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Very cool project. Looking forward to trying it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zenniskayy",
+          "story_48847834"
+        ],
+        "author": "zenniskayy",
+        "comment_text": "Very cool project. Looking forward to trying it.",
+        "created_at": "2026-07-09T23:42:36Z",
+        "created_at_i": 1783640556,
+        "objectID": "48853950",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T02:59:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you! Along those lines, we did Airbnb too: <a href=\"https://demo.frigade.com/\">https://demo.frigade.com/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "Thank you! Along those lines, we did Airbnb too: <a href=\"https:&#x2F;&#x2F;demo.frigade.com&#x2F;\">https:&#x2F;&#x2F;demo.frigade.com&#x2F;</a>",
+        "created_at": "2026-07-09T18:09:56Z",
+        "created_at_i": 1783620596,
+        "objectID": "48850136",
+        "parent_id": 48849775,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T03:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "robszumski"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Really cool. It would be interesting to see a demo of an app that is clearly more bespoke, like your Tesla account, online banking, movie theatre ticketing, etc."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_robszumski",
+          "story_48847834"
+        ],
+        "author": "robszumski",
+        "children": [
+          48850136
+        ],
+        "comment_text": "Really cool. It would be interesting to see a demo of an app that is clearly more bespoke, like your Tesla account, online banking, movie theatre ticketing, etc.",
+        "created_at": "2026-07-09T17:46:18Z",
+        "created_at_i": 1783619178,
+        "objectID": "48849775",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T03:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pancomplex"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thank you!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pancomplex",
+          "story_48847834"
+        ],
+        "author": "pancomplex",
+        "comment_text": "thank you!",
+        "created_at": "2026-07-09T17:17:13Z",
+        "created_at_i": 1783617433,
+        "objectID": "48849291",
+        "parent_id": 48848614,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T03:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "reaganhsu"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "so cool!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Reverse-engineering web apps into agent tools"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_reaganhsu",
+          "story_48847834"
+        ],
+        "author": "reaganhsu",
+        "children": [
+          48849291
+        ],
+        "comment_text": "so cool!",
+        "created_at": "2026-07-09T16:34:43Z",
+        "created_at_i": 1783614883,
+        "objectID": "48848614",
+        "parent_id": 48847834,
+        "story_id": 48847834,
+        "story_title": "Show HN: Reverse-engineering web apps into agent tools",
+        "updated_at": "2026-07-10T03:00:01Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 35,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48847834&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 11,
+        "roundTrip": 17
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 12
+  }
+}

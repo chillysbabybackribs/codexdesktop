@@ -1,0 +1,1661 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47721255",
+    "window": "prior-90d",
+    "tag": "show_hn",
+    "score": 152
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Terretta"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If it's &quot;Continue with Google&quot; and no &quot;Continue with Microsoft&quot;, you're ignoring 85% of the US small biz market."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Terretta",
+          "story_47721255"
+        ],
+        "author": "Terretta",
+        "comment_text": "If it&#x27;s &quot;Continue with Google&quot; and no &quot;Continue with Microsoft&quot;, you&#x27;re ignoring 85% of the US small biz market.",
+        "created_at": "2026-04-14T21:10:28Z",
+        "created_at_i": 1776201028,
+        "objectID": "47771569",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-14T21:15:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "matthewduff"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is essentially a 140-IQ analyst you can text &quot;please fix&quot; at 3:00 AM without the shit you have to deal with when hosting your stuff locally. The context awareness across your text messages, emails, and between chats is not half bad; just wish that the &quot;computer use&quot; feature set was fully locked in so I can automate half the apps on my phone."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_matthewduff",
+          "story_47721255"
+        ],
+        "author": "matthewduff",
+        "comment_text": "This is essentially a 140-IQ analyst you can text &quot;please fix&quot; at 3:00 AM without the shit you have to deal with when hosting your stuff locally. The context awareness across your text messages, emails, and between chats is not half bad; just wish that the &quot;computer use&quot; feature set was fully locked in so I can automate half the apps on my phone.",
+        "created_at": "2026-04-14T18:00:20Z",
+        "created_at_i": 1776189620,
+        "objectID": "47768985",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-14T18:01:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cheers!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "Cheers!",
+        "created_at": "2026-04-12T22:04:21Z",
+        "created_at_i": 1776031461,
+        "objectID": "47745053",
+        "parent_id": 47727378,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T22:07:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hereme888"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yup, that one."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hereme888",
+          "story_47721255"
+        ],
+        "author": "hereme888",
+        "comment_text": "Yup, that one.",
+        "created_at": "2026-04-12T18:59:48Z",
+        "created_at_i": 1776020388,
+        "objectID": "47743149",
+        "parent_id": 47735286,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T19:03:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "this one? <a href=\"https://news.ycombinator.com/item?id=47721955\">https://news.ycombinator.com/item?id=47721955</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "children": [
+          47743149
+        ],
+        "comment_text": "this one? <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47721955\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47721955</a>",
+        "created_at": "2026-04-12T00:53:31Z",
+        "created_at_i": 1775955211,
+        "objectID": "47735286",
+        "parent_id": 47735087,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T19:00:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hereme888"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Didn't someone post recently that his team was unable to get OpenClaw to do anything productive ($) no matter the project?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hereme888",
+          "story_47721255"
+        ],
+        "author": "hereme888",
+        "children": [
+          47735286
+        ],
+        "comment_text": "Didn&#x27;t someone post recently that his team was unable to get OpenClaw to do anything productive ($) no matter the project?",
+        "created_at": "2026-04-12T00:15:23Z",
+        "created_at_i": 1775952923,
+        "objectID": "47735087",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T00:53:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "indigodaddy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It wants me to login with my Google and all it says on the front is &quot;Your Digital Worker&quot; (with only other links being TOS and Privacy Policy).  Sorry but that's not quite good enough."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_indigodaddy",
+          "story_47721255"
+        ],
+        "author": "indigodaddy",
+        "comment_text": "It wants me to login with my Google and all it says on the front is &quot;Your Digital Worker&quot; (with only other links being TOS and Privacy Policy).  Sorry but that&#x27;s not quite good enough.",
+        "created_at": "2026-04-11T17:09:10Z",
+        "created_at_i": 1775927350,
+        "objectID": "47732184",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-13T09:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gbibas"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I connected on my iphone.  Didn’t connect it to any tools initially and used my throwaway email, as I need to be more comfortable before connecting anything real.  Clean interface.  I really like the sms connection and could see how that would appeal to less AI tech savvy users.  You have done some good planning and UX/Ui.  Thanks for sharing"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gbibas",
+          "story_47721255"
+        ],
+        "author": "gbibas",
+        "children": [
+          47745053
+        ],
+        "comment_text": "I connected on my iphone.  Didn’t connect it to any tools initially and used my throwaway email, as I need to be more comfortable before connecting anything real.  Clean interface.  I really like the sms connection and could see how that would appeal to less AI tech savvy users.  You have done some good planning and UX&#x2F;Ui.  Thanks for sharing",
+        "created_at": "2026-04-11T04:23:06Z",
+        "created_at_i": 1775881386,
+        "objectID": "47727378",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T22:05:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jesse_dot_id"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Prompt injection attacks and hallucinations haven't been solved for."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jesse_dot_id",
+          "story_47721255"
+        ],
+        "author": "jesse_dot_id",
+        "children": [
+          47741414
+        ],
+        "comment_text": "Prompt injection attacks and hallucinations haven&#x27;t been solved for.",
+        "created_at": "2026-04-11T04:02:19Z",
+        "created_at_i": 1775880139,
+        "objectID": "47727260",
+        "parent_id": 47726266,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T16:13:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lordofmoria"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://sprites.dev\" rel=\"nofollow\">https://sprites.dev</a> as well (it’s a fly.io product). They look suspiciously identical…"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lordofmoria",
+          "story_47721255"
+        ],
+        "author": "lordofmoria",
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;sprites.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;sprites.dev</a> as well (it’s a fly.io product). They look suspiciously identical…",
+        "created_at": "2026-04-11T03:53:47Z",
+        "created_at_i": 1775879627,
+        "objectID": "47727198",
+        "parent_id": 47726797,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-14T22:17:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xcavier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When linking my Google Mail, Composio was asking for some concerning data (DOB, exact street address). I noped  out of that"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_xcavier",
+          "story_47721255"
+        ],
+        "author": "xcavier",
+        "comment_text": "When linking my Google Mail, Composio was asking for some concerning data (DOB, exact street address). I noped  out of that",
+        "created_at": "2026-04-11T03:15:22Z",
+        "created_at_i": 1775877322,
+        "objectID": "47726969",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T03:16:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hahah true"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "hahah true",
+        "created_at": "2026-04-11T02:48:08Z",
+        "created_at_i": 1775875688,
+        "objectID": "47726822",
+        "parent_id": 47726767,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T02:50:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "messh"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "you can spin similar instances very cheaply and billed only for the time openclaw actually runs in <a href=\"https://shellbox.dev\" rel=\"nofollow\">https://shellbox.dev</a> ($0.02 for 2vcpu, 4gb ram, 50gb hdd, real linux with headless chrome etc)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_messh",
+          "story_47721255"
+        ],
+        "author": "messh",
+        "children": [
+          47727198
+        ],
+        "comment_text": "you can spin similar instances very cheaply and billed only for the time openclaw actually runs in <a href=\"https:&#x2F;&#x2F;shellbox.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;shellbox.dev</a> ($0.02 for 2vcpu, 4gb ram, 50gb hdd, real linux with headless chrome etc)",
+        "created_at": "2026-04-11T02:43:12Z",
+        "created_at_i": 1775875392,
+        "objectID": "47726797",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T03:46:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nebula8804"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Careful folks, some users may encounter a short ear piercing loud buzzing sound as it boots up and initializes sound. For a moment, my soul left my body there ha ha. Turn your volume down before launching."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nebula8804",
+          "story_47721255"
+        ],
+        "author": "nebula8804",
+        "children": [
+          47726822
+        ],
+        "comment_text": "Careful folks, some users may encounter a short ear piercing loud buzzing sound as it boots up and initializes sound. For a moment, my soul left my body there ha ha. Turn your volume down before launching.",
+        "created_at": "2026-04-11T02:38:40Z",
+        "created_at_i": 1775875120,
+        "objectID": "47726767",
+        "parent_id": 47725274,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T06:52:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "begleri"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm seeing the same thing, both of the /api/sites/ links in this thread seem to be defaced"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_begleri",
+          "story_47721255"
+        ],
+        "author": "begleri",
+        "comment_text": "I&#x27;m seeing the same thing, both of the &#x2F;api&#x2F;sites&#x2F; links in this thread seem to be defaced",
+        "created_at": "2026-04-11T02:16:41Z",
+        "created_at_i": 1775873801,
+        "objectID": "47726601",
+        "parent_id": 47726162,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T02:18:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Curious, why don't you think?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "children": [
+          47727260
+        ],
+        "comment_text": "Curious, why don&#x27;t you think?",
+        "created_at": "2026-04-11T01:23:45Z",
+        "created_at_i": 1775870625,
+        "objectID": "47726266",
+        "parent_id": 47726206,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T04:03:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "themanmaran"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "haha yea was pretty surprised by that too. wondered if it would be based on my auth session, but nope!<p>Although now it's a fun battle to see if I can convince my eve to deploy Doom again and block others from overwriting it.<p>edit: Doom is back and we'll see how long the prompt engineering keeps it there"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_themanmaran",
+          "story_47721255"
+        ],
+        "author": "themanmaran",
+        "comment_text": "haha yea was pretty surprised by that too. wondered if it would be based on my auth session, but nope!<p>Although now it&#x27;s a fun battle to see if I can convince my eve to deploy Doom again and block others from overwriting it.<p>edit: Doom is back and we&#x27;ll see how long the prompt engineering keeps it there",
+        "created_at": "2026-04-11T01:21:04Z",
+        "created_at_i": 1775870464,
+        "objectID": "47726232",
+        "parent_id": 47725723,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-05-14T06:27:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jesse_dot_id"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Autonomous LLM agents are not ready for business. Full stop."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jesse_dot_id",
+          "story_47721255"
+        ],
+        "author": "jesse_dot_id",
+        "children": [
+          47726266
+        ],
+        "comment_text": "Autonomous LLM agents are not ready for business. Full stop.",
+        "created_at": "2026-04-11T01:18:04Z",
+        "created_at_i": 1775870284,
+        "objectID": "47726206",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T01:24:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "twalichiewicz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;i updated the content of this website because the agent allows you to overwrite previous deployments&quot;<p>?<p>EDIT: Okay now I'm very confused, I'm seeing a slopjank version of Hacker News?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_twalichiewicz",
+          "story_47721255"
+        ],
+        "author": "twalichiewicz",
+        "children": [
+          47726601
+        ],
+        "comment_text": "&quot;i updated the content of this website because the agent allows you to overwrite previous deployments&quot;<p>?<p>EDIT: Okay now I&#x27;m very confused, I&#x27;m seeing a slopjank version of Hacker News?",
+        "created_at": "2026-04-11T01:12:44Z",
+        "created_at_i": 1775869964,
+        "objectID": "47726162",
+        "parent_id": 47725274,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T02:17:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nthypes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Vibeslop"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nthypes",
+          "story_47721255"
+        ],
+        "author": "nthypes",
+        "comment_text": "Vibeslop",
+        "created_at": "2026-04-11T00:39:06Z",
+        "created_at_i": 1775867946,
+        "objectID": "47725828",
+        "parent_id": 47725723,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T11:16:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hrimfaxi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This seems like it could trivially comply with the requirements with a minor restructuring of the onboarding flow. I can't use playlist.new without having a spotify account, for instance."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hrimfaxi",
+          "story_47721255"
+        ],
+        "author": "hrimfaxi",
+        "comment_text": "This seems like it could trivially comply with the requirements with a minor restructuring of the onboarding flow. I can&#x27;t use playlist.new without having a spotify account, for instance.",
+        "created_at": "2026-04-11T00:37:18Z",
+        "created_at_i": 1775867838,
+        "objectID": "47725815",
+        "parent_id": 47724683,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-13T00:02:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "varun_ch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hosting user content on the main domain seems like a Bad Idea.."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_varun_ch",
+          "story_47721255"
+        ],
+        "author": "varun_ch",
+        "children": [
+          47725828,
+          47726232
+        ],
+        "comment_text": "hosting user content on the main domain seems like a Bad Idea..",
+        "created_at": "2026-04-11T00:27:01Z",
+        "created_at_i": 1775867221,
+        "objectID": "47725723",
+        "parent_id": 47725274,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-05-14T06:27:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tomhow"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<i>Be kind. Don't be snarky. Converse curiously; don't cross-examine. Edit out swipes.</i><p><i>Comments should get more thoughtful and substantive, not less, as a topic gets more divisive.</i><p><i>Please don't fulminate. Please don't sneer, including at the rest of the community.</i><p><i>Please don't post shallow dismissals, especially of other people's work. A good critical comment teaches us something.</i><p><a href=\"https://news.ycombinator.com/newsguidelines.html\">https://news.ycombinator.com/newsguidelines.html</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tomhow",
+          "story_47721255"
+        ],
+        "author": "tomhow",
+        "comment_text": "<i>Be kind. Don&#x27;t be snarky. Converse curiously; don&#x27;t cross-examine. Edit out swipes.</i><p><i>Comments should get more thoughtful and substantive, not less, as a topic gets more divisive.</i><p><i>Please don&#x27;t fulminate. Please don&#x27;t sneer, including at the rest of the community.</i><p><i>Please don&#x27;t post shallow dismissals, especially of other people&#x27;s work. A good critical comment teaches us something.</i><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html</a>",
+        "created_at": "2026-04-11T00:18:24Z",
+        "created_at_i": 1775866704,
+        "objectID": "47725638",
+        "parent_id": 47724682,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T10:18:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sickkk!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "sickkk!",
+        "created_at": "2026-04-10T23:44:18Z",
+        "created_at_i": 1775864658,
+        "objectID": "47725373",
+        "parent_id": 47725274,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:40:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "themanmaran"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Boom, eve got Doom running for me on my VM and even spun up a public site<p><a href=\"https://api.eve.new/api/sites/eve-doom/\" rel=\"nofollow\">https://api.eve.new/api/sites/eve-doom/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_themanmaran",
+          "story_47721255"
+        ],
+        "author": "themanmaran",
+        "children": [
+          47725723,
+          47726767,
+          47726162,
+          47725373
+        ],
+        "comment_text": "Boom, eve got Doom running for me on my VM and even spun up a public site<p><a href=\"https:&#x2F;&#x2F;api.eve.new&#x2F;api&#x2F;sites&#x2F;eve-doom&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;api.eve.new&#x2F;api&#x2F;sites&#x2F;eve-doom&#x2F;</a>",
+        "created_at": "2026-04-10T23:37:27Z",
+        "created_at_i": 1775864247,
+        "objectID": "47725274",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T08:46:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vonwao9"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah, this looks interesting, but there's so little info on this site, and you're expecting me to give you access to my email, slack, github?  Even if I had more info, it would be pretty hard for me to trust a person/company I don't know at all, with that kind of power."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vonwao9",
+          "story_47721255"
+        ],
+        "author": "vonwao9",
+        "comment_text": "Yeah, this looks interesting, but there&#x27;s so little info on this site, and you&#x27;re expecting me to give you access to my email, slack, github?  Even if I had more info, it would be pretty hard for me to trust a person&#x2F;company I don&#x27;t know at all, with that kind of power.",
+        "created_at": "2026-04-10T23:22:27Z",
+        "created_at_i": 1775863347,
+        "objectID": "47725101",
+        "parent_id": 47723954,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:02:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Glad you enjoyed it and thanks sm for the feedback! Working on inter-agent rn, so it should be more deterministic about where it surfaces results back very soon!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "Glad you enjoyed it and thanks sm for the feedback! Working on inter-agent rn, so it should be more deterministic about where it surfaces results back very soon!",
+        "created_at": "2026-04-10T22:57:24Z",
+        "created_at_i": 1775861844,
+        "objectID": "47724813",
+        "parent_id": 47724684,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:40:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks! I wasn't aware of that"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "Thanks! I wasn&#x27;t aware of that",
+        "created_at": "2026-04-10T22:53:57Z",
+        "created_at_i": 1775861637,
+        "objectID": "47724775",
+        "parent_id": 47724683,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:41:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mbrundle"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just gave this a try and I really like it. Was able to interact with Eve via iMessage and web UI to download a sample healthcare dataset and run some analyses on it. (Currently it's a bit unpredictable about which UI it returns results to, but if that gets fixed then this would be great for doing development on the move.) Also set it up to run some scheduled news summarisation tasks. I like how it allows for safe experimentation on OpenClaw functionality. Like others on this thread, I'm a bit hesitant about connecting to email services without knowing more about the developer and how they use data from connected services, but there's a lot of interesting things you can do with this even without connecting to anything. (The free credits are v helpful too, although the underlying Claude models burn through them quickly.) Thanks zachdive for sharing this, I had fun trying it out!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mbrundle",
+          "story_47721255"
+        ],
+        "author": "mbrundle",
+        "children": [
+          47724813
+        ],
+        "comment_text": "Just gave this a try and I really like it. Was able to interact with Eve via iMessage and web UI to download a sample healthcare dataset and run some analyses on it. (Currently it&#x27;s a bit unpredictable about which UI it returns results to, but if that gets fixed then this would be great for doing development on the move.) Also set it up to run some scheduled news summarisation tasks. I like how it allows for safe experimentation on OpenClaw functionality. Like others on this thread, I&#x27;m a bit hesitant about connecting to email services without knowing more about the developer and how they use data from connected services, but there&#x27;s a lot of interesting things you can do with this even without connecting to anything. (The free credits are v helpful too, although the underlying Claude models burn through them quickly.) Thanks zachdive for sharing this, I had fun trying it out!",
+        "created_at": "2026-04-10T22:45:39Z",
+        "created_at_i": 1775861139,
+        "objectID": "47724684",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T16:12:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fontain"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "“All .new domain names are required to comply with the .new Registration Policy, which features a usage-based restriction to ensure that all domains are being used for new actions. That means that all .new domains registrations must:\nBe used for action generation or online content creation;\nTake the user directly into the action generation or content creation flow;\nResolve to the action within 100 days of registration;* and\nAllow Google Registry to verify compliance at no cost.\nWhile anyone can register, domains that don’t comply with this usage policy may be suspended or deleted by Google Registry without refund. So be sure you review the full .new Registration Policy before you register your .new domain to ensure that it meets our policy requirements.”"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fontain",
+          "story_47721255"
+        ],
+        "author": "fontain",
+        "children": [
+          47725815,
+          47724775
+        ],
+        "comment_text": "“All .new domain names are required to comply with the .new Registration Policy, which features a usage-based restriction to ensure that all domains are being used for new actions. That means that all .new domains registrations must:\nBe used for action generation or online content creation;\nTake the user directly into the action generation or content creation flow;\nResolve to the action within 100 days of registration;* and\nAllow Google Registry to verify compliance at no cost.\nWhile anyone can register, domains that don’t comply with this usage policy may be suspended or deleted by Google Registry without refund. So be sure you review the full .new Registration Policy before you register your .new domain to ensure that it meets our policy requirements.”",
+        "created_at": "2026-04-10T22:45:33Z",
+        "created_at_i": 1775861133,
+        "objectID": "47724683",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T04:30:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lp0_on_fire"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "[flagged]"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lp0_on_fire",
+          "story_47721255"
+        ],
+        "author": "lp0_on_fire",
+        "children": [
+          47725638,
+          47724812
+        ],
+        "comment_text": "[flagged]",
+        "created_at": "2026-04-10T22:45:26Z",
+        "created_at_i": 1775861126,
+        "objectID": "47724682",
+        "parent_id": 47724223,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T18:02:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think this boils down to the ICP of white collar workers.<p>Mainly:  \n- It make it super accessible to begin using the agent with no setup friction  \n- Mitigates security concerns by users not comfortable with using openclaw for their job"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "I think this boils down to the ICP of white collar workers.<p>Mainly:  \n- It make it super accessible to begin using the agent with no setup friction  \n- Mitigates security concerns by users not comfortable with using openclaw for their job",
+        "created_at": "2026-04-10T22:42:23Z",
+        "created_at_i": 1775860943,
+        "objectID": "47724642",
+        "parent_id": 47724314,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:41:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "metadat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Please do not post AI generated replies on this site.<p>See: <i>Don't post generated/AI-edited comments. HN is for conversation between humans</i> <a href=\"https://news.ycombinator.com/item?id=47340079\">https://news.ycombinator.com/item?id=47340079</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_metadat",
+          "story_47721255"
+        ],
+        "author": "metadat",
+        "comment_text": "Please do not post AI generated replies on this site.<p>See: <i>Don&#x27;t post generated&#x2F;AI-edited comments. HN is for conversation between humans</i> <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47340079\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47340079</a>",
+        "created_at": "2026-04-10T22:39:43Z",
+        "created_at_i": 1775860783,
+        "objectID": "47724605",
+        "parent_id": 47724314,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:41:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "some_random"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What does it tell us exactly?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_some_random",
+          "story_47721255"
+        ],
+        "author": "some_random",
+        "comment_text": "What does it tell us exactly?",
+        "created_at": "2026-04-10T22:33:20Z",
+        "created_at_i": 1775860400,
+        "objectID": "47724547",
+        "parent_id": 47724044,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T06:08:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Do you have a personal take on this?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "comment_text": "Do you have a personal take on this?",
+        "created_at": "2026-04-10T22:10:34Z",
+        "created_at_i": 1775859034,
+        "objectID": "47724273",
+        "parent_id": 47724044,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T03:52:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Lol fair! There is sign up with email!<p>Any more info I could provide upfront?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "children": [
+          47724300
+        ],
+        "comment_text": "Lol fair! There is sign up with email!<p>Any more info I could provide upfront?",
+        "created_at": "2026-04-10T22:08:37Z",
+        "created_at_i": 1775858917,
+        "objectID": "47724249",
+        "parent_id": 47723954,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T00:41:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zachdive"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey my bad, it's fixed now! Eve deployed it on my account as a static site (hosted in cloudflare R2) but the cloudflare worker wasn't pointing at it correctly, which led to a weird fallback behavior from cloudflare where it just gives back an empty file (zero bytes). Fixed :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zachdive",
+          "story_47721255"
+        ],
+        "author": "zachdive",
+        "children": [
+          47724682
+        ],
+        "comment_text": "Hey my bad, it&#x27;s fixed now! Eve deployed it on my account as a static site (hosted in cloudflare R2) but the cloudflare worker wasn&#x27;t pointing at it correctly, which led to a weird fallback behavior from cloudflare where it just gives back an empty file (zero bytes). Fixed :)",
+        "created_at": "2026-04-10T22:06:42Z",
+        "created_at_i": 1775858802,
+        "objectID": "47724223",
+        "parent_id": 47723997,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T14:52:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cassianoleal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's very telling of the current state of this industry that OP comes only 2 h after this other post: <a href=\"https://news.ycombinator.com/item?id=47721955\">https://news.ycombinator.com/item?id=47721955</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cassianoleal",
+          "story_47721255"
+        ],
+        "author": "cassianoleal",
+        "children": [
+          47724273,
+          47724547
+        ],
+        "comment_text": "It&#x27;s very telling of the current state of this industry that OP comes only 2 h after this other post: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47721955\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47721955</a>",
+        "created_at": "2026-04-10T21:46:33Z",
+        "created_at_i": 1775857593,
+        "objectID": "47724044",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-11T06:27:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "coinfused"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yikes and a link in their post just downloads a file. I don't like this."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_coinfused",
+          "story_47721255"
+        ],
+        "author": "coinfused",
+        "children": [
+          47724039,
+          47724223
+        ],
+        "comment_text": "Yikes and a link in their post just downloads a file. I don&#x27;t like this.",
+        "created_at": "2026-04-10T21:41:09Z",
+        "created_at_i": 1775857269,
+        "objectID": "47723997",
+        "parent_id": 47723954,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T04:26:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "athorax"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Let me just log into this random site with my Google account with literally zero information about what it is"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eve – Managed OpenClaw for work"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://eve.new/login"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_athorax",
+          "story_47721255"
+        ],
+        "author": "athorax",
+        "children": [
+          47723997,
+          47724001,
+          47725101,
+          47724249
+        ],
+        "comment_text": "Let me just log into this random site with my Google account with literally zero information about what it is",
+        "created_at": "2026-04-10T21:37:18Z",
+        "created_at_i": 1775857038,
+        "objectID": "47723954",
+        "parent_id": 47721255,
+        "story_id": 47721255,
+        "story_title": "Show HN: Eve – Managed OpenClaw for work",
+        "story_url": "https://eve.new/login",
+        "updated_at": "2026-04-12T04:26:12Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 40,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47721255&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 24
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

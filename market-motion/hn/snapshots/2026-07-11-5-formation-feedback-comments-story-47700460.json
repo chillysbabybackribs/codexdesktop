@@ -1,0 +1,1385 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47700460",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 610
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "boricj"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wrote an analyzer to do that, you can find it here: <a href=\"https://github.com/boricj/ghidra-delinker-extension/blob/master/src/main/java/ghidra/app/analyzers/relocations/MipsCodeRelocationSynthesizer.java#L156\" rel=\"nofollow\">https://github.com/boricj/ghidra-delinker-extension/blob/mas...</a><p>It uses register dependency graph traversal and code block flow analysis to try and find which two instructions are the likely targets of a HI16/LO16 for a given reference. It also uses an unhealthy amount of recursion and has been rewritten multiple times in order to deal with all these edge cases.<p>Unfortunately, my extension is only set up for one HI16 relocation having one or many LO16 child relocations. There's an undocumented GNU extension that allows multiple HI16 relocations to be shared by a single LO16 relocation, and I have a really ugly hack that shifts branch targets to &quot;normalize&quot; this into the standard pattern. I don't know why this hack works (I didn't even know about the GNU extension, I thought it was an assembler peephole optimization), but with it my extension can delink the whole of <i>Tenchu: Stealth Assassins</i> without any manual annotations, just the regular references from the cleaned-up Ghidra database."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_boricj",
+          "story_47700460"
+        ],
+        "author": "boricj",
+        "comment_text": "I wrote an analyzer to do that, you can find it here: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;boricj&#x2F;ghidra-delinker-extension&#x2F;blob&#x2F;master&#x2F;src&#x2F;main&#x2F;java&#x2F;ghidra&#x2F;app&#x2F;analyzers&#x2F;relocations&#x2F;MipsCodeRelocationSynthesizer.java#L156\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;boricj&#x2F;ghidra-delinker-extension&#x2F;blob&#x2F;mas...</a><p>It uses register dependency graph traversal and code block flow analysis to try and find which two instructions are the likely targets of a HI16&#x2F;LO16 for a given reference. It also uses an unhealthy amount of recursion and has been rewritten multiple times in order to deal with all these edge cases.<p>Unfortunately, my extension is only set up for one HI16 relocation having one or many LO16 child relocations. There&#x27;s an undocumented GNU extension that allows multiple HI16 relocations to be shared by a single LO16 relocation, and I have a really ugly hack that shifts branch targets to &quot;normalize&quot; this into the standard pattern. I don&#x27;t know why this hack works (I didn&#x27;t even know about the GNU extension, I thought it was an assembler peephole optimization), but with it my extension can delink the whole of <i>Tenchu: Stealth Assassins</i> without any manual annotations, just the regular references from the cleaned-up Ghidra database.",
+        "created_at": "2026-04-21T17:20:23Z",
+        "created_at_i": 1776792023,
+        "objectID": "47851725",
+        "parent_id": 47831810,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-21T17:25:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "paulmooreparks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's good advice. I just added that to the new project site, <a href=\"https://telaproject.org/\" rel=\"nofollow\">https://telaproject.org/</a> ."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_paulmooreparks",
+          "story_47700460"
+        ],
+        "author": "paulmooreparks",
+        "comment_text": "That&#x27;s good advice. I just added that to the new project site, <a href=\"https:&#x2F;&#x2F;telaproject.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;telaproject.org&#x2F;</a> .",
+        "created_at": "2026-04-21T05:13:32Z",
+        "created_at_i": 1776748412,
+        "objectID": "47844780",
+        "parent_id": 47768547,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-21T05:15:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KurSix"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm curious how your analyzers handle those tricky MIPS edge cases like split address loads via lui and addiu where you have interleaved instructions in between. If Ghidra fails to collapse those into a single reference, does your math check just flag it as an error and bail, or does it actually try to reconstruct the instruction chain itself?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_KurSix",
+          "story_47700460"
+        ],
+        "author": "KurSix",
+        "children": [
+          47851725
+        ],
+        "comment_text": "I&#x27;m curious how your analyzers handle those tricky MIPS edge cases like split address loads via lui and addiu where you have interleaved instructions in between. If Ghidra fails to collapse those into a single reference, does your math check just flag it as an error and bail, or does it actually try to reconstruct the instruction chain itself?",
+        "created_at": "2026-04-20T08:59:30Z",
+        "created_at_i": 1776675570,
+        "objectID": "47831810",
+        "parent_id": 47714777,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-21T17:21:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "irvingprime"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Well, I'm writing a science fiction novel. There are references in it to AI but just as a tool people use. It's not about that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_irvingprime",
+          "story_47700460"
+        ],
+        "author": "irvingprime",
+        "comment_text": "Well, I&#x27;m writing a science fiction novel. There are references in it to AI but just as a tool people use. It&#x27;s not about that.",
+        "created_at": "2026-04-17T04:02:47Z",
+        "created_at_i": 1776398567,
+        "objectID": "47802340",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-17T04:06:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ewf"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Embed Workflow (<a href=\"https://embedworkflow.com\" rel=\"nofollow\">https://embedworkflow.com</a>). Embeddable workflow builder for SaaS platforms. Your users design and run their own workflows inside your product.<p>5+ years now, bootstrapped. I still write most of the code. The product itself isn't AI, it's orchestration. Visual builder, triggers, delays, webhooks, execution logic. Some of our users do wire up AI models or agents through it, but the core is just helping non-technical people build automations for our clients product."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ewf",
+          "story_47700460"
+        ],
+        "author": "ewf",
+        "comment_text": "Embed Workflow (<a href=\"https:&#x2F;&#x2F;embedworkflow.com\" rel=\"nofollow\">https:&#x2F;&#x2F;embedworkflow.com</a>). Embeddable workflow builder for SaaS platforms. Your users design and run their own workflows inside your product.<p>5+ years now, bootstrapped. I still write most of the code. The product itself isn&#x27;t AI, it&#x27;s orchestration. Visual builder, triggers, delays, webhooks, execution logic. Some of our users do wire up AI models or agents through it, but the core is just helping non-technical people build automations for our clients product.",
+        "created_at": "2026-04-16T16:28:55Z",
+        "created_at_i": 1776356935,
+        "objectID": "47795831",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-16T16:33:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chromaport"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m building Chromaport — a low-latency remote desktop for gaming, work, and collaboration. It lets you stream your own PC or cloud machine to other devices with a focus on responsiveness and input feel.<p>It’s still early, but the goal is basically making remote machines feel local, especially for interactive use cases like gaming and creative work.<p><a href=\"https://chromaport.com\" rel=\"nofollow\">https://chromaport.com</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chromaport",
+          "story_47700460"
+        ],
+        "author": "chromaport",
+        "comment_text": "I’m building Chromaport — a low-latency remote desktop for gaming, work, and collaboration. It lets you stream your own PC or cloud machine to other devices with a focus on responsiveness and input feel.<p>It’s still early, but the goal is basically making remote machines feel local, especially for interactive use cases like gaming and creative work.<p><a href=\"https:&#x2F;&#x2F;chromaport.com\" rel=\"nofollow\">https:&#x2F;&#x2F;chromaport.com</a>",
+        "created_at": "2026-04-16T09:53:08Z",
+        "created_at_i": 1776333188,
+        "objectID": "47790882",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-16T09:54:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sinansari"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Simplyhra.com<p>When I was early in my startup, health insurance terminology and finding company sponsored health insurance as a founder of 2 employee company sucked.<p>So I launched Simplyhra, it basically helps you reimburse your personal marketplace health insurance premium, cobra premium if you are in your old employers plan and your eligible expenses like pharmacy, copays, coinsurance, blood tests, imaging etc.<p>It's very straight forward, especially when compared to navigating group plan landscape.<p>PS: DM me for discount code if anyone needs health coverage or wants your company to pay for your existing coverage."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sinansari",
+          "story_47700460"
+        ],
+        "author": "sinansari",
+        "comment_text": "Simplyhra.com<p>When I was early in my startup, health insurance terminology and finding company sponsored health insurance as a founder of 2 employee company sucked.<p>So I launched Simplyhra, it basically helps you reimburse your personal marketplace health insurance premium, cobra premium if you are in your old employers plan and your eligible expenses like pharmacy, copays, coinsurance, blood tests, imaging etc.<p>It&#x27;s very straight forward, especially when compared to navigating group plan landscape.<p>PS: DM me for discount code if anyone needs health coverage or wants your company to pay for your existing coverage.",
+        "created_at": "2026-04-15T19:38:55Z",
+        "created_at_i": 1776281935,
+        "objectID": "47784146",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-15T19:51:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "virtyaluk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Building ghostly - a fast, modular, and configurable linter with built-in LSP support (already faster and more robust than golangci-linter). Also building Kartiteka - an inventory management system for the home with document support, etc. Both are private for now. Hopefully will release both this year."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_virtyaluk",
+          "story_47700460"
+        ],
+        "author": "virtyaluk",
+        "comment_text": "Building ghostly - a fast, modular, and configurable linter with built-in LSP support (already faster and more robust than golangci-linter). Also building Kartiteka - an inventory management system for the home with document support, etc. Both are private for now. Hopefully will release both this year.",
+        "created_at": "2026-04-14T23:12:49Z",
+        "created_at_i": 1776208369,
+        "objectID": "47772658",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T23:15:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "noodlebreak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You should add this comment in your project's readme - because this is far easier to understand why the project even exists."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_noodlebreak",
+          "story_47700460"
+        ],
+        "author": "noodlebreak",
+        "children": [
+          47844780
+        ],
+        "comment_text": "You should add this comment in your project&#x27;s readme - because this is far easier to understand why the project even exists.",
+        "created_at": "2026-04-14T17:28:47Z",
+        "created_at_i": 1776187727,
+        "objectID": "47768547",
+        "parent_id": 47701105,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-21T05:15:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "edelind"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A new habit tracker, which aims to cover any possible need a user can have <a href=\"https://tapastracker.app/\" rel=\"nofollow\">https://tapastracker.app/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_edelind",
+          "story_47700460"
+        ],
+        "author": "edelind",
+        "comment_text": "A new habit tracker, which aims to cover any possible need a user can have <a href=\"https:&#x2F;&#x2F;tapastracker.app&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;tapastracker.app&#x2F;</a>",
+        "created_at": "2026-04-14T17:08:11Z",
+        "created_at_i": 1776186491,
+        "objectID": "47768320",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T22:58:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "K0IN"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "flotte.sh<p>A ssh ca (that issues short lived &lt; 5 min certs) that is easy to setup and operate, focusing on oidc as a auth provider (entra keycloak for now), to authorize users not keys.<p>Using 2fa to guard servers and keys from compromises."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_K0IN",
+          "story_47700460"
+        ],
+        "author": "K0IN",
+        "comment_text": "flotte.sh<p>A ssh ca (that issues short lived &lt; 5 min certs) that is easy to setup and operate, focusing on oidc as a auth provider (entra keycloak for now), to authorize users not keys.<p>Using 2fa to guard servers and keys from compromises.",
+        "created_at": "2026-04-14T17:05:30Z",
+        "created_at_i": 1776186330,
+        "objectID": "47768292",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T17:09:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "smetannik"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Building the Better Go Playground - <a href=\"https://goplay.tools\" rel=\"nofollow\">https://goplay.tools</a><p>Tool to run, test or bench Go code online. An alternative frontend to official Go playground, but supports WebAssembly, syntax highlighting and basic autocomplete."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_smetannik",
+          "story_47700460"
+        ],
+        "author": "smetannik",
+        "comment_text": "Building the Better Go Playground - <a href=\"https:&#x2F;&#x2F;goplay.tools\" rel=\"nofollow\">https:&#x2F;&#x2F;goplay.tools</a><p>Tool to run, test or bench Go code online. An alternative frontend to official Go playground, but supports WebAssembly, syntax highlighting and basic autocomplete.",
+        "created_at": "2026-04-14T16:21:35Z",
+        "created_at_i": 1776183695,
+        "objectID": "47767657",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T23:14:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "exitplanetary"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Well, repeating the previous answer\n&gt; Game Boy app to explore 4-bit synthesis and &quot;modular&quot; sequencing, smth similar to <a href=\"https://roberthenke.com/technology/inside8032av.html\" rel=\"nofollow\">https://roberthenke.com/technology/inside8032av.html</a> but for Game Boy instead of Commodore PC"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_exitplanetary",
+          "story_47700460"
+        ],
+        "author": "exitplanetary",
+        "comment_text": "Well, repeating the previous answer\n&gt; Game Boy app to explore 4-bit synthesis and &quot;modular&quot; sequencing, smth similar to <a href=\"https:&#x2F;&#x2F;roberthenke.com&#x2F;technology&#x2F;inside8032av.html\" rel=\"nofollow\">https:&#x2F;&#x2F;roberthenke.com&#x2F;technology&#x2F;inside8032av.html</a> but for Game Boy instead of Commodore PC",
+        "created_at": "2026-04-14T16:07:14Z",
+        "created_at_i": 1776182834,
+        "objectID": "47767486",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T16:11:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "skor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That does sound really cool!! Would really like to see that in action!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_skor",
+          "story_47700460"
+        ],
+        "author": "skor",
+        "comment_text": "That does sound really cool!! Would really like to see that in action!",
+        "created_at": "2026-04-14T13:54:22Z",
+        "created_at_i": 1776174862,
+        "objectID": "47765698",
+        "parent_id": 47756513,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-15T18:21:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "skor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yes! with pleasure, I think its a great question ;)<p>Tidal/Strudel is awesome, the visual feedback, the simplicity of musical expression, that to me makes it a wonderful instrument. They are (broadly speaking) DSLs around functional pattern composition that abstract timing, structure, etc<p>Audion for comparison is a general-purpose imperative scripting language, a &quot;for&quot; loop is your sequencer, a &quot;thread&quot; is your separate instrument/voice, and timing is a primitive you control directly. Hence the &quot;let's hack music&quot; in the readme. So essentially its the inverse of Tidal/Strudel :) more like a brain than just an instrument.<p>With Audion, the intention is to provide a few things I was missing in other tools<p>1. An obvious way to program music/video/lighting/other-events, e.g. use a &quot;for&quot; or an infinite &quot;loop&quot; to trigger sounds &amp; lighting, or a separate &quot;thread&quot; to read sensors on a performer<p>2. A full-stack: full access to the OS: Network, File I/O, Serial, OSC, MIDI, DMX, et.al., and the freedom to build your own abstractions on top<p>3. The freedom to mutate state and compose objects, your sounds can evolve and remember what happened before<p>4. Tight timing: beat-accurate scheduling in control-rate land (Max/MSP needs special care when sequencing outside audio rate), Audion now comes with Ableton Link sync, so it plays well with a full live setup<p>Right now Audion does not have a UI or visual feedback for seeing what is going on while live-coding, but the plan is to make a separate project/binary &quot;audion-window&quot; which will let you design any user interface you can think of for your audion project."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_skor",
+          "story_47700460"
+        ],
+        "author": "skor",
+        "comment_text": "yes! with pleasure, I think its a great question ;)<p>Tidal&#x2F;Strudel is awesome, the visual feedback, the simplicity of musical expression, that to me makes it a wonderful instrument. They are (broadly speaking) DSLs around functional pattern composition that abstract timing, structure, etc<p>Audion for comparison is a general-purpose imperative scripting language, a &quot;for&quot; loop is your sequencer, a &quot;thread&quot; is your separate instrument&#x2F;voice, and timing is a primitive you control directly. Hence the &quot;let&#x27;s hack music&quot; in the readme. So essentially its the inverse of Tidal&#x2F;Strudel :) more like a brain than just an instrument.<p>With Audion, the intention is to provide a few things I was missing in other tools<p>1. An obvious way to program music&#x2F;video&#x2F;lighting&#x2F;other-events, e.g. use a &quot;for&quot; or an infinite &quot;loop&quot; to trigger sounds &amp; lighting, or a separate &quot;thread&quot; to read sensors on a performer<p>2. A full-stack: full access to the OS: Network, File I&#x2F;O, Serial, OSC, MIDI, DMX, et.al., and the freedom to build your own abstractions on top<p>3. The freedom to mutate state and compose objects, your sounds can evolve and remember what happened before<p>4. Tight timing: beat-accurate scheduling in control-rate land (Max&#x2F;MSP needs special care when sequencing outside audio rate), Audion now comes with Ableton Link sync, so it plays well with a full live setup<p>Right now Audion does not have a UI or visual feedback for seeing what is going on while live-coding, but the plan is to make a separate project&#x2F;binary &quot;audion-window&quot; which will let you design any user interface you can think of for your audion project.",
+        "created_at": "2026-04-14T13:41:20Z",
+        "created_at_i": 1776174080,
+        "objectID": "47765538",
+        "parent_id": 47759727,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-20T15:48:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "biswajitkar01"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you. The website works in with or without www.<p><a href=\"https://minusplus.app\" rel=\"nofollow\">https://minusplus.app</a> works now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_biswajitkar01",
+          "story_47700460"
+        ],
+        "author": "biswajitkar01",
+        "comment_text": "Thank you. The website works in with or without www.<p><a href=\"https:&#x2F;&#x2F;minusplus.app\" rel=\"nofollow\">https:&#x2F;&#x2F;minusplus.app</a> works now.",
+        "created_at": "2026-04-14T06:48:42Z",
+        "created_at_i": 1776149322,
+        "objectID": "47762107",
+        "parent_id": 47748490,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-15T14:35:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mettamage"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Perhaps a silly question but any thoughts on Strudel?<p><a href=\"https://strudel.cc/\" rel=\"nofollow\">https://strudel.cc/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mettamage",
+          "story_47700460"
+        ],
+        "author": "mettamage",
+        "children": [
+          47765538
+        ],
+        "comment_text": "Perhaps a silly question but any thoughts on Strudel?<p><a href=\"https:&#x2F;&#x2F;strudel.cc&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;strudel.cc&#x2F;</a>",
+        "created_at": "2026-04-14T00:28:09Z",
+        "created_at_i": 1776126489,
+        "objectID": "47759727",
+        "parent_id": 47701095,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-20T15:48:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kevin00001011"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've built a microcontroller firmware orchestrator and control surface."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kevin00001011",
+          "story_47700460"
+        ],
+        "author": "kevin00001011",
+        "comment_text": "I&#x27;ve built a microcontroller firmware orchestrator and control surface.",
+        "created_at": "2026-04-14T00:26:03Z",
+        "created_at_i": 1776126363,
+        "objectID": "47759717",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T00:26:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "melvinroest"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "library.aliceindataland.com<p>I'm having fun writing a sequel on the books that Lewis Carroll wrote and mixing it with a SQL course. My hope is that SQL will be more fun to learn that way. And it's fun to write a few pages that will hopefully evoke <i>some</i> narrative transportation and immersion vibes.<p>I'm still very much at the beginning though.<p>In the story Alice enters an Infinite Library. You (yes you!) are STAR: a magical sentient typewriter that can only write in SQL queries. When Alice finds you, you'll slowly both find out why this library exists and the secrets that it holds.<p>Course-wise: I'm trying to have tight lesson scaffolding, which is a fun challenge."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_melvinroest",
+          "story_47700460"
+        ],
+        "author": "melvinroest",
+        "comment_text": "library.aliceindataland.com<p>I&#x27;m having fun writing a sequel on the books that Lewis Carroll wrote and mixing it with a SQL course. My hope is that SQL will be more fun to learn that way. And it&#x27;s fun to write a few pages that will hopefully evoke <i>some</i> narrative transportation and immersion vibes.<p>I&#x27;m still very much at the beginning though.<p>In the story Alice enters an Infinite Library. You (yes you!) are STAR: a magical sentient typewriter that can only write in SQL queries. When Alice finds you, you&#x27;ll slowly both find out why this library exists and the secrets that it holds.<p>Course-wise: I&#x27;m trying to have tight lesson scaffolding, which is a fun challenge.",
+        "created_at": "2026-04-14T00:22:00Z",
+        "created_at_i": 1776126120,
+        "objectID": "47759688",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T00:27:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mettamage"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fun, thought of creating something similar. Didn't pull the trigger ultimately"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mettamage",
+          "story_47700460"
+        ],
+        "author": "mettamage",
+        "comment_text": "Fun, thought of creating something similar. Didn&#x27;t pull the trigger ultimately",
+        "created_at": "2026-04-14T00:20:07Z",
+        "created_at_i": 1776126007,
+        "objectID": "47759669",
+        "parent_id": 47757879,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T04:35:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danish00111"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Building Questly — story-driven practice for real-world conversations which you play like a game. The core insight: people know what to do in hard situations. They freeze because they've never practiced the actual moment. Questly is the reps. <a href=\"https://questly.academy/\" rel=\"nofollow\">https://questly.academy/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danish00111",
+          "story_47700460"
+        ],
+        "author": "danish00111",
+        "children": [
+          47759669
+        ],
+        "comment_text": "Building Questly — story-driven practice for real-world conversations which you play like a game. The core insight: people know what to do in hard situations. They freeze because they&#x27;ve never practiced the actual moment. Questly is the reps. <a href=\"https:&#x2F;&#x2F;questly.academy&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;questly.academy&#x2F;</a>",
+        "created_at": "2026-04-13T21:11:52Z",
+        "created_at_i": 1776114712,
+        "objectID": "47757879",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T10:09:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tuvix"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is awesome! Last year I was working on a VST using NIH-Plug in Rust that could load in synth voices and effects written in Lua (executed using LuaJIT), this kind of reminds me of some of what I was doing (this is way cooler though)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tuvix",
+          "story_47700460"
+        ],
+        "author": "tuvix",
+        "children": [
+          47765698
+        ],
+        "comment_text": "This is awesome! Last year I was working on a VST using NIH-Plug in Rust that could load in synth voices and effects written in Lua (executed using LuaJIT), this kind of reminds me of some of what I was doing (this is way cooler though).",
+        "created_at": "2026-04-13T19:05:07Z",
+        "created_at_i": 1776107107,
+        "objectID": "47756513",
+        "parent_id": 47701095,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T13:55:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "recursivedoubts"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Released today:<p><a href=\"https://hyperscript.org\" rel=\"nofollow\">https://hyperscript.org</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_recursivedoubts",
+          "story_47700460"
+        ],
+        "author": "recursivedoubts",
+        "comment_text": "Released today:<p><a href=\"https:&#x2F;&#x2F;hyperscript.org\" rel=\"nofollow\">https:&#x2F;&#x2F;hyperscript.org</a>",
+        "created_at": "2026-04-13T18:30:49Z",
+        "created_at_i": 1776105049,
+        "objectID": "47756096",
+        "parent_id": 47716295,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-16T13:38:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pawelkomarnicki"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I see your point and connecting places and people (and of course the ultimate goal of opening my own place) is on the roadmap. The thing is that I don’t want to either tie myself to a specific place or be dependent on specific area (apart from starting up in Berlin of course)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pawelkomarnicki",
+          "story_47700460"
+        ],
+        "author": "pawelkomarnicki",
+        "comment_text": "I see your point and connecting places and people (and of course the ultimate goal of opening my own place) is on the roadmap. The thing is that I don’t want to either tie myself to a specific place or be dependent on specific area (apart from starting up in Berlin of course).",
+        "created_at": "2026-04-13T17:18:21Z",
+        "created_at_i": 1776100701,
+        "objectID": "47755154",
+        "parent_id": 47724422,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T17:21:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tetek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building a skateboarding company in Europe.<p><a href=\"https://axiomsskateboards.com\" rel=\"nofollow\">https://axiomsskateboards.com</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tetek",
+          "story_47700460"
+        ],
+        "author": "tetek",
+        "comment_text": "I&#x27;m building a skateboarding company in Europe.<p><a href=\"https:&#x2F;&#x2F;axiomsskateboards.com\" rel=\"nofollow\">https:&#x2F;&#x2F;axiomsskateboards.com</a>",
+        "created_at": "2026-04-13T09:12:13Z",
+        "created_at_i": 1776071533,
+        "objectID": "47749587",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T10:57:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "codexetreme"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm currently developing a dapo star. Trying to get fabrics , designs and make a nice lil group where we can teach and learn tricks :)))<p>It's not software, but that's what I enjoy making right now"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_codexetreme",
+          "story_47700460"
+        ],
+        "author": "codexetreme",
+        "comment_text": "I&#x27;m currently developing a dapo star. Trying to get fabrics , designs and make a nice lil group where we can teach and learn tricks :)))<p>It&#x27;s not software, but that&#x27;s what I enjoy making right now",
+        "created_at": "2026-04-13T08:17:41Z",
+        "created_at_i": 1776068261,
+        "objectID": "47749242",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T08:21:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pona-a"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone interested in cryptography, I'd also recommend a VDF. A Wesolowski VDF isn't that hard to hand-roll [0] [1] and will make parallel attacks much harder while penalizing low-power devices less.<p>[0] <a href=\"https://reading.supply/@whyrusleeping/a-vdf-explainer-5S6Ect\" rel=\"nofollow\">https://reading.supply/@whyrusleeping/a-vdf-explainer-5S6Ect</a>\n[1] <a href=\"https://eprint.iacr.org/2018/623\" rel=\"nofollow\">https://eprint.iacr.org/2018/623</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pona-a",
+          "story_47700460"
+        ],
+        "author": "pona-a",
+        "comment_text": "As someone interested in cryptography, I&#x27;d also recommend a VDF. A Wesolowski VDF isn&#x27;t that hard to hand-roll [0] [1] and will make parallel attacks much harder while penalizing low-power devices less.<p>[0] <a href=\"https:&#x2F;&#x2F;reading.supply&#x2F;@whyrusleeping&#x2F;a-vdf-explainer-5S6Ect\" rel=\"nofollow\">https:&#x2F;&#x2F;reading.supply&#x2F;@whyrusleeping&#x2F;a-vdf-explainer-5S6Ect</a>\n[1] <a href=\"https:&#x2F;&#x2F;eprint.iacr.org&#x2F;2018&#x2F;623\" rel=\"nofollow\">https:&#x2F;&#x2F;eprint.iacr.org&#x2F;2018&#x2F;623</a>",
+        "created_at": "2026-04-13T08:06:50Z",
+        "created_at_i": 1776067610,
+        "objectID": "47749168",
+        "parent_id": 47715183,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T08:17:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "labarilem"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building a manually curated catalog of videogames made by HN users. The UI is done and I'm in the phase of adding data to catch up to today's games.\nCheck it out: <a href=\"https://hn-games.marcolabarile.me/\" rel=\"nofollow\">https://hn-games.marcolabarile.me/</a> (includes games up to October 2024 atm)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_labarilem",
+          "story_47700460"
+        ],
+        "author": "labarilem",
+        "comment_text": "I&#x27;m building a manually curated catalog of videogames made by HN users. The UI is done and I&#x27;m in the phase of adding data to catch up to today&#x27;s games.\nCheck it out: <a href=\"https:&#x2F;&#x2F;hn-games.marcolabarile.me&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;hn-games.marcolabarile.me&#x2F;</a> (includes games up to October 2024 atm).",
+        "created_at": "2026-04-13T07:12:03Z",
+        "created_at_i": 1776064323,
+        "objectID": "47748724",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T07:13:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yellow_lead"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I suggest you make the URL work without the www! For instance, as you wrote it here"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_yellow_lead",
+          "story_47700460"
+        ],
+        "author": "yellow_lead",
+        "children": [
+          47762107
+        ],
+        "comment_text": "I suggest you make the URL work without the www! For instance, as you wrote it here",
+        "created_at": "2026-04-13T06:43:55Z",
+        "created_at_i": 1776062635,
+        "objectID": "47748490",
+        "parent_id": 47746836,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T06:49:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yogeshmali82"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am building an expense tracker for small business owners - <a href=\"https://xpenses.co\" rel=\"nofollow\">https://xpenses.co</a>.<p>I am actually solving my own problem. This should not only help small business owners in tracking expenses, but also prepare Schedule C report for tax forms. Business owners can just download this report and take it to accountant."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_yogeshmali82",
+          "story_47700460"
+        ],
+        "author": "yogeshmali82",
+        "comment_text": "I am building an expense tracker for small business owners - <a href=\"https:&#x2F;&#x2F;xpenses.co\" rel=\"nofollow\">https:&#x2F;&#x2F;xpenses.co</a>.<p>I am actually solving my own problem. This should not only help small business owners in tracking expenses, but also prepare Schedule C report for tax forms. Business owners can just download this report and take it to accountant.",
+        "created_at": "2026-04-13T05:47:44Z",
+        "created_at_i": 1776059264,
+        "objectID": "47748081",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T05:49:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "philipnee"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "just an anonymous public billboard :)<p><a href=\"https://www.litboard.net/\" rel=\"nofollow\">https://www.litboard.net/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_philipnee",
+          "story_47700460"
+        ],
+        "author": "philipnee",
+        "comment_text": "just an anonymous public billboard :)<p><a href=\"https:&#x2F;&#x2F;www.litboard.net&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.litboard.net&#x2F;</a>",
+        "created_at": "2026-04-13T04:45:33Z",
+        "created_at_i": 1776055533,
+        "objectID": "47747694",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T04:46:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vincentli2010"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "personalized neoantigen cancer therapy for pets"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vincentli2010",
+          "story_47700460"
+        ],
+        "author": "vincentli2010",
+        "comment_text": "personalized neoantigen cancer therapy for pets",
+        "created_at": "2026-04-13T03:06:48Z",
+        "created_at_i": 1776049608,
+        "objectID": "47747090",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-13T03:12:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "biswajitkar01"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am working on an interesting calculator called minusplus.app ( -+ ).<p>This is an infinite canvas calculator. Where you click anywhere and type numbers, \nPress space or enter, and it will automatically calculate. \nYou can tag, add comments, and MinusPlus has some great shortcuts, which make it efficient to calculate.<p>I am an SAP Finance consultant, and have to do a lot of calculations daily. \nAnd after using this, I can't go back to any other normal calculator."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_biswajitkar01",
+          "story_47700460"
+        ],
+        "author": "biswajitkar01",
+        "children": [
+          47748490,
+          47768754
+        ],
+        "comment_text": "I am working on an interesting calculator called minusplus.app ( -+ ).<p>This is an infinite canvas calculator. Where you click anywhere and type numbers, \nPress space or enter, and it will automatically calculate. \nYou can tag, add comments, and MinusPlus has some great shortcuts, which make it efficient to calculate.<p>I am an SAP Finance consultant, and have to do a lot of calculations daily. \nAnd after using this, I can&#x27;t go back to any other normal calculator.",
+        "created_at": "2026-04-13T02:23:04Z",
+        "created_at_i": 1776046984,
+        "objectID": "47746836",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T17:44:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bhu1st"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building a low-tech work tracker for my brother who is a consultant with small team.<p>LP: <a href=\"https://www.dodolr.com\" rel=\"nofollow\">https://www.dodolr.com</a><p>Beta: <a href=\"https://beta.dodolr.com\" rel=\"nofollow\">https://beta.dodolr.com</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bhu1st",
+          "story_47700460"
+        ],
+        "author": "bhu1st",
+        "comment_text": "I&#x27;m building a low-tech work tracker for my brother who is a consultant with small team.<p>LP: <a href=\"https:&#x2F;&#x2F;www.dodolr.com\" rel=\"nofollow\">https:&#x2F;&#x2F;www.dodolr.com</a><p>Beta: <a href=\"https:&#x2F;&#x2F;beta.dodolr.com\" rel=\"nofollow\">https:&#x2F;&#x2F;beta.dodolr.com</a>",
+        "created_at": "2026-04-12T22:38:36Z",
+        "created_at_i": 1776033516,
+        "objectID": "47745282",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-12T22:44:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "poolnoodle"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Maybe knife and fork could be the hands in the app icon."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_poolnoodle",
+          "story_47700460"
+        ],
+        "author": "poolnoodle",
+        "comment_text": "Maybe knife and fork could be the hands in the app icon.",
+        "created_at": "2026-04-12T19:57:07Z",
+        "created_at_i": 1776023827,
+        "objectID": "47743774",
+        "parent_id": 47701125,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-12T20:01:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DamnInteresting"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm happy she's enjoying the game! If you hit the Menu button on the top right, you should see a &quot;reset puzzle&quot; button in the lower right quadrant of the menu."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DamnInteresting",
+          "story_47700460"
+        ],
+        "author": "DamnInteresting",
+        "comment_text": "I&#x27;m happy she&#x27;s enjoying the game! If you hit the Menu button on the top right, you should see a &quot;reset puzzle&quot; button in the lower right quadrant of the menu.",
+        "created_at": "2026-04-12T16:12:37Z",
+        "created_at_i": 1776010357,
+        "objectID": "47741413",
+        "parent_id": 47732516,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-12T16:16:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "myniqx"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i'm building my own orm framework. <a href=\"https://datrix.dev/\" rel=\"nofollow\">https://datrix.dev/</a>\nin fact, i supervise and claude wrote most of it. but still it took 3 months.<p>it has the all superpowers from strapi, payload and prisma. but no-ui dashboard (i ll add a cli command but it ll be optional) and almost no dependecy in core. its lightweight. well tested. tell me more.<p><a href=\"https://github.com/myniqx/datrix\" rel=\"nofollow\">https://github.com/myniqx/datrix</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_myniqx",
+          "story_47700460"
+        ],
+        "author": "myniqx",
+        "comment_text": "i&#x27;m building my own orm framework. <a href=\"https:&#x2F;&#x2F;datrix.dev&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;datrix.dev&#x2F;</a>\nin fact, i supervise and claude wrote most of it. but still it took 3 months.<p>it has the all superpowers from strapi, payload and prisma. but no-ui dashboard (i ll add a cli command but it ll be optional) and almost no dependecy in core. its lightweight. well tested. tell me more.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;myniqx&#x2F;datrix\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;myniqx&#x2F;datrix</a>",
+        "created_at": "2026-04-12T11:51:10Z",
+        "created_at_i": 1775994670,
+        "objectID": "47738606",
+        "parent_id": 47700460,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-12T11:53:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "InfraScaler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Very nice!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_InfraScaler",
+          "story_47700460"
+        ],
+        "author": "InfraScaler",
+        "comment_text": "Very nice!",
+        "created_at": "2026-04-12T09:50:58Z",
+        "created_at_i": 1775987458,
+        "objectID": "47737790",
+        "parent_id": 47735659,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-12T09:52:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wuschel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a precious tool that unlocks freedom of choice by reducing the barrier to leave an ecosystem. Thank you for that!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wuschel",
+          "story_47700460"
+        ],
+        "author": "wuschel",
+        "comment_text": "This is a precious tool that unlocks freedom of choice by reducing the barrier to leave an ecosystem. Thank you for that!",
+        "created_at": "2026-04-12T06:16:24Z",
+        "created_at_i": 1775974584,
+        "objectID": "47736645",
+        "parent_id": 47712085,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T00:22:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "paulmooreparks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No, it doesn't create an L3 like Tailscale. A client (a machine running the tela CLI) connects to an agent (a machine running telad) via a hub (a machine running telahubd), but once they connect they negotiate a P2P route if they can. That's all managed by Wireguard an gVisor. The remote service is forwarded to a port on localhost, so SSH to a VM somewhere else would just be ssh to, say, localhost:10022. I'm investigating a local DNS so that users can instead type `ssh paul@dev-vm` instead of `ssh -p 10022 paul@localhost`."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What are you building that's not AI related?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_paulmooreparks",
+          "story_47700460"
+        ],
+        "author": "paulmooreparks",
+        "children": [
+          47737790
+        ],
+        "comment_text": "No, it doesn&#x27;t create an L3 like Tailscale. A client (a machine running the tela CLI) connects to an agent (a machine running telad) via a hub (a machine running telahubd), but once they connect they negotiate a P2P route if they can. That&#x27;s all managed by Wireguard an gVisor. The remote service is forwarded to a port on localhost, so SSH to a VM somewhere else would just be ssh to, say, localhost:10022. I&#x27;m investigating a local DNS so that users can instead type `ssh paul@dev-vm` instead of `ssh -p 10022 paul@localhost`.",
+        "created_at": "2026-04-12T02:26:21Z",
+        "created_at_i": 1775960781,
+        "objectID": "47735659",
+        "parent_id": 47728743,
+        "story_id": 47700460,
+        "story_title": "Ask HN: What are you building that's not AI related?",
+        "updated_at": "2026-04-14T22:01:53Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 227,
+    "nbPages": 6,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47700460&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 26
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        },
+        "total": 1
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

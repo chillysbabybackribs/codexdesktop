@@ -2547,6 +2547,24 @@ button {
   transform: translate(-50%, -50%);
 }
 
+/* Keep the agent column on the same full-pane anchor when New Chat moves the
+   empty composer to center stage. Only the main-chat controls are centered in
+   the remaining chat space; agent windows retain their docked x/y placement. */
+.composer-dock.is-centered.has-agents {
+  inset: 0 22px 14px;
+  width: auto;
+  padding-right: 390px;
+  box-sizing: border-box;
+  justify-content: center;
+  transform: none;
+}
+
+.composer-dock.is-centered.has-agents .composer,
+.composer-dock.is-centered.has-agents .composer-context {
+  align-self: center;
+  width: min(100%, 608px);
+}
+
 .composer-dock.is-docked {
   position: sticky;
   bottom: 14px;
@@ -3131,7 +3149,7 @@ button {
   min-width: 0;
   min-height: 0;
   padding: 10px 8px 10px 0;
-  background: #111111;
+  background: #181818;
 }
 
 .tab-strip {
@@ -3223,7 +3241,8 @@ button {
 
 .browser-toolbar {
   display: grid;
-  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px;
+  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px auto 32px;
+  position: relative;
   align-items: center;
   gap: 4px;
   min-width: 0;
@@ -3231,6 +3250,75 @@ button {
   border-right: 1px solid #2f2f2f;
   border-left: 1px solid #2f2f2f;
   background: #151515;
+}
+
+.browser-nav-button.is-active {
+  background: #2b2119;
+  color: #f2a45e;
+}
+
+.browser-zoom {
+  display: grid;
+  grid-template-columns: 24px 42px 24px;
+  height: 26px;
+  align-items: center;
+  border: 1px solid #292929;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.browser-zoom button,
+.browser-find button {
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: #92989e;
+}
+
+.browser-zoom button:hover,
+.browser-find button:hover {
+  background: #262626;
+  color: #e0e0e0;
+}
+
+.browser-zoom .zoom-value {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.browser-find {
+  grid-column: 4 / -1;
+  justify-self: end;
+  display: grid;
+  grid-template-columns: minmax(150px, 240px) 44px 28px 28px 28px;
+  height: 34px;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #34383d;
+  border-radius: 8px;
+  background: #181a1d;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 28%);
+  color: #8f959b;
+  font-size: 11px;
+}
+
+.browser-toolbar.has-find {
+  padding-bottom: 5px;
+}
+
+.browser-find input {
+  min-width: 0;
+  height: 26px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ededed;
+  padding: 0 8px;
+}
+
+.browser-find span {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .browser-nav-button {

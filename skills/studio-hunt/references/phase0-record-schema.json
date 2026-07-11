@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Studio Hunt Phase 0 Record",
+  "title": "Studio Hunt Discovery Signal",
   "type": "object",
-  "required": ["recordId", "source", "url", "observedAt", "sourceLane", "retrievalStatus", "actorType", "statementType", "firsthand", "independenceKey"],
+  "required": ["recordId", "source", "url", "observedAt", "sourceLane", "retrievalStatus"],
   "properties": {
     "recordId": {"type": "string"},
     "source": {"type": "string"},
@@ -12,6 +12,10 @@
     "window": {"type": ["string", "null"]},
     "sourceLane": {"enum": ["commercial_motion", "formation_feedback", "buyer_reality", "catalyst"]},
     "retrievalStatus": {"enum": ["verified", "discovered", "blocked", "thin", "duplicate", "stale"]},
+    "signalType": {"enum": ["market_motion", "buyer_work", "catalyst", "pricing", "complaint", "workaround", "distribution", "edge_case", "other"]},
+    "sourcedFact": {"type": ["string", "null"]},
+    "agentInference": {"type": ["string", "null"]},
+    "opportunityTheme": {"type": ["string", "null"]},
     "actorType": {"enum": ["buyer_operator", "service_provider", "startup_founder", "competitor_vendor", "enthusiast_nonbuyer", "unknown"]},
     "actorEvidence": {"type": ["string", "null"]},
     "statementType": {"enum": ["own_workflow", "own_purchase", "own_workaround", "own_implementation", "feature_request", "product_pitch", "market_opinion", "promotion", "secondhand_claim", "unknown"]},
