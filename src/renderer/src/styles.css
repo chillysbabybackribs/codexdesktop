@@ -1084,6 +1084,8 @@ button {
      the turn is live or done, so completion (which only removes .is-live)
      never shrinks the card — no retraction. Short runs stay short; long runs
      grow to the cap and scroll internally past it. */
+  display: flex;
+  flex-direction: column;
   height: auto;
   max-height: min(60vh, 620px);
   max-width: min(920px, 100%);
@@ -1097,7 +1099,11 @@ button {
 }
 
 .task-activity-card-scroll {
-  height: 100%;
+  /* Grow with content; scroll only once the card reaches its max-height cap.
+     min-height:0 lets the flex child shrink so overflow scrolls instead of
+     stretching the card past the cap. */
+  flex: 1 1 auto;
+  min-height: 0;
   padding-right: 5px;
   overflow-x: hidden;
   overflow-y: auto;
