@@ -3651,9 +3651,14 @@ function Composer({
         <div className="composer-actions">
           {footerExtras}
           {isTurnActive ? (
-            <button type="button" className="stop-button" aria-label="Stop turn" onClick={() => void onStop()}>
-              <span className="stop-button-icon" aria-hidden="true">■</span>
-              <span>Stop</span>
+            <button
+              type="button"
+              className="stop-square-button"
+              aria-label="Stop turn"
+              title="Stop"
+              onClick={() => void onStop()}
+            >
+              <span className="stop-square" aria-hidden="true" />
             </button>
           ) : null}
           <button
