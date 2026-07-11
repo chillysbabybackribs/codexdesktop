@@ -66,12 +66,14 @@ type QueuedOperation<T> = Promise<T>
 export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
   private readonly getTabs: () => TabManager | null
+  private readonly artifactStore?: CdpArtifactStore
 
   constructor(
     getTabs: () => TabManager | null,
-    private readonly artifactStore?: CdpArtifactStore
+    artifactStore?: CdpArtifactStore
   ) {
     this.getTabs = getTabs
+    this.artifactStore = artifactStore
   }
 
   listTabs(): ReturnType<TabManager['listTabs']> {
@@ -264,7 +266,8 @@ export class BrowserAgentController {
     const data = asRecord(result).data
     if (typeof data !== 'string') return result
 
-    const requestedFormat = typeof asRecord(params).format === 'string' ? asRecord(params).format : null
+    const format = asRecord(params).format
+    const requestedFormat = typeof format === 'string' ? format : null
     const screenshot = await this.artifactStore.persistScreenshot(data, requestedFormat)
     return {
       screenshot: {

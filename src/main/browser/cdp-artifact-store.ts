@@ -18,7 +18,11 @@ export type CdpScreenshotArtifact = {
 }
 
 export class CdpArtifactStore {
-  constructor(private readonly directory: string | (() => string)) {}
+  private readonly directory: string | (() => string)
+
+  constructor(directory: string | (() => string)) {
+    this.directory = directory
+  }
 
   async persistScreenshot(data: string, requestedFormat?: string | null): Promise<CdpScreenshotArtifact> {
     const buffer = decodeBase64(data)

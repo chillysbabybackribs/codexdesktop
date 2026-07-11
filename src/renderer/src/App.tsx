@@ -600,6 +600,8 @@ export default function App(): React.JSX.Element {
       return false
     }
 
+    // The user is driving again — drop any pending overload recovery.
+    cancelAutoRecovery()
     setIsSending(true)
     userTurnRequestPendingRef.current = true
     watchThreadIdRef.current = activeThreadId
@@ -665,6 +667,7 @@ export default function App(): React.JSX.Element {
   }
 
   const handleSelectModel = (model: string): void => {
+    cancelAutoRecovery()
     setSelectedModel(model)
     window.localStorage.setItem(modelStorageKey, model)
   }
@@ -684,6 +687,7 @@ export default function App(): React.JSX.Element {
   const handleNewThread = (): void => {
     const previousThreadId = activeThreadIdRef.current
 
+    cancelAutoRecovery()
     setIsThreadMenuOpen(false)
     resumeGenerationRef.current += 1
     watchThreadIdRef.current = null
@@ -1199,6 +1203,11 @@ export default function App(): React.JSX.Element {
             if (activeTurnIdRef.current === notification.params.turnId) activeTurnIdRef.current = null
             setActiveTurnId((current) =>
               current === notification.params.turnId ? null : current
+            )
+            maybeScheduleAutoRecovery(
+              notification.params.threadId,
+              notification.params.turnId,
+              notification.params.error
             )
           }
         }
