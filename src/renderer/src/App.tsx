@@ -1275,14 +1275,17 @@ export default function App(): React.JSX.Element {
     switch (notification.method) {
       case 'thread/started': {
         // A thread started for a dock agent binds to its session instead of
-        // taking over the main view.
+        // taking over the main view. Two orderings are possible: if the
+        // startThread IPC response resolved first, the thread is already bound
+        // (check by id); if this notification arrived first, the pending queue
+        // holds the session key.
+        const startedThreadId = notification.params.thread.id
+        if (startedThreadId && backgroundSessionForThread(startedThreadId)) {
+          return
+        }
         const pendingAgentKey = agentStartQueueRef.current.shift()
         if (pendingAgentKey) {
-          bindAgentThread(
-            pendingAgentKey,
-            notification.params.thread.id,
-            threadTitle(notification.params.thread)
-          )
+          bindAgentThread(pendingAgentKey, startedThreadId, threadTitle(notification.params.thread))
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
