@@ -2550,6 +2550,7 @@ function ChatPane({
               key={row.item.id}
               item={row.item}
               meta={itemMeta[row.item.id]}
+              turnId={row.turnId}
               streaming={row.item.id === streamingMessageId}
             />
           )
