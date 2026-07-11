@@ -10,7 +10,6 @@ import {
   useRef,
   useState
 } from 'react'
-import { createPortal } from 'react-dom'
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
@@ -1770,6 +1769,8 @@ function ChatPane({
   onAgentCompact: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
+  const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
   // Which region the user is working in: the main chat (default) or the agent
   // column. Drives the dim/unfocus treatment on agent windows via CSS.
   const [isMainFocused, setIsMainFocused] = useState(true)
@@ -1848,6 +1849,16 @@ function ChatPane({
 
   const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
 
+  const openPluginBrowser = (): void => {
+    setIsSettingsOpen(false)
+    setIsPluginBrowserOpen(true)
+  }
+
+  const closePluginBrowser = (): void => {
+    setIsPluginBrowserOpen(false)
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+  }
+
   // Pointer-downs and focus moves decide the active region: anything inside
   // the agent column or tab strip counts as agent territory, everything else
   // is the main chat.
@@ -1912,13 +1923,20 @@ function ChatPane({
 
   return (
     <section
-      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
-        openAgentSessions.length ? 'has-agents' : ''
+      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
+        !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
       } ${isMainFocused ? 'is-main-focused' : ''}`}
       aria-busy={isRestoring}
       onPointerDownCapture={(event) => updateFocusRegion(event.target)}
       onFocusCapture={(event) => updateFocusRegion(event.target)}
     >
+      {isPluginBrowserOpen ? (
+        <PluginBrowserView
+          workspace={workspace}
+          onClose={closePluginBrowser}
+          onChanged={setInstalledPlugins}
+        />
+      ) : <>
       <div className="chat-toolbar">
         <button
           type="button"
@@ -2023,6 +2041,9 @@ function ChatPane({
         <Composer
           docked={hasThreadContent}
           workspace={workspace}
+          installedPlugins={installedPlugins}
+          onInstalledPluginsChange={setInstalledPlugins}
+          onBrowsePlugins={openPluginBrowser}
           isLoading={isRestoring || isBusy && !activeTurnId}
           isTurnActive={Boolean(activeTurnId)}
           status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
@@ -2063,6 +2084,7 @@ function ChatPane({
           onSaveGoal={onSaveGoal}
           onSetGoalStatus={onSetGoalStatus}
           onClearGoal={onClearGoal}
+          onOpenPlugins={openPluginBrowser}
           onClose={() => setIsSettingsOpen(false)}
         />
       ) : null}
@@ -2071,6 +2093,7 @@ function ChatPane({
         setTraceTurnId(null)
         setStoredTrace(null)
       }} /> : null}
+      </>}
     </section>
   )
 }
@@ -2495,6 +2518,7 @@ function SettingsModal({
   onSaveGoal,
   onSetGoalStatus,
   onClearGoal,
+  onOpenPlugins,
   onClose
 }: {
   goal: ThreadGoal | null
@@ -2502,6 +2526,7 @@ function SettingsModal({
   onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
   onSetGoalStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
   onClearGoal: () => Promise<void>
+  onOpenPlugins: () => void
   onClose: () => void
 }): React.JSX.Element {
   useEffect(() => {
@@ -2547,6 +2572,16 @@ function SettingsModal({
             onSetStatus={onSetGoalStatus}
             onClear={onClearGoal}
           />
+        </section>
+        <section className="settings-section">
+          <h3 className="settings-section-title">Extensions</h3>
+          <button type="button" className="settings-navigation-row" onClick={onOpenPlugins}>
+            <span className="settings-row-text">
+              <span className="settings-row-label">Plugin Settings</span>
+              <span className="settings-row-hint">Browse, install, and remove plugins available through @ mentions.</span>
+            </span>
+            <span className="settings-navigation-arrow" aria-hidden="true">→</span>
+          </button>
         </section>
       </div>
     </div>
