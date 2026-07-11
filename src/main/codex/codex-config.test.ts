@@ -108,7 +108,7 @@ test('self-hosted guidance protects the exact host session and routes live check
 
   assert.match(guidance, /session session-123 \(role=host, Electron PID=4100, parent\/dev-server PID=4000\)/)
   assert.match(guidance, /process tree as protected infrastructure/)
-  assert.match(guidance, /never signal, terminate, restart, replace/)
+  assert.match(guidance, /never signal, terminate, restart, replace/i)
   assert.match(guidance, /npm run verify:app/)
   assert.match(guidance, /do not run `npm run dev` or `npm run dev:app`/i)
 })
