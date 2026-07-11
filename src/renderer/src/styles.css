@@ -116,6 +116,13 @@ button {
   align-items: center;
   gap: 12px;
   padding: 12px 22px;
+  transition: width 160ms ease;
+  width: 100%;
+}
+
+.chat-pane.has-agents .chat-toolbar {
+  width: calc(100% - 390px);
+  min-width: 240px;
 }
 
 .chat-toolbar .icon-button {
@@ -3087,8 +3094,7 @@ button {
   accent-color: #4a90d9;
 }
 
-.send-button,
-.stop-button {
+.send-button {
   display: grid;
   width: 28px;
   height: 28px;
@@ -3100,32 +3106,13 @@ button {
   cursor: pointer;
 }
 
-.send-button:not(:disabled):hover,
-.stop-button:hover {
+.send-button:not(:disabled):hover {
   background: #333a40;
 }
 
 .send-button:disabled {
   color: #60666c;
   cursor: default;
-}
-
-.stop-button {
-  display: inline-flex;
-  width: auto;
-  min-width: 62px;
-  padding: 0 10px;
-  gap: 6px;
-  border-color: #473434;
-  border-radius: 999px;
-  background: #302323;
-  color: #e1b2b2;
-  font-size: 12px;
-  font-weight: 620;
-}
-
-.stop-button-icon {
-  font-size: 8px;
 }
 
 .split-divider {
@@ -3307,4 +3294,395 @@ button {
   border: 1px solid #282828;
   border-radius: 10px;
   background: #202329;
+}
+
+/* ---- Agent dock: tab strip + overlay window ---- */
+
+.agent-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.agent-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 150px;
+  height: 26px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #8f959c;
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.agent-tab:hover {
+  background: #1d1d1d;
+  color: #d8d8d8;
+}
+
+.agent-tab.is-open {
+  background: #1f1f1f;
+  border-color: #323232;
+  color: #f0f0f0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.agent-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-status {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+
+.agent-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4c4f55;
+}
+
+.agent-status-spinner {
+  width: 10px;
+  height: 10px;
+  border: 1.6px solid #33363c;
+  border-top-color: #5865f2;
+  border-radius: 50%;
+  animation: agent-spin 0.8s linear infinite;
+}
+
+@keyframes agent-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.agent-status-check {
+  color: #5865f2;
+}
+
+.agent-new-button {
+  flex: 0 0 auto;
+}
+
+.agent-column-shell {
+  position: absolute;
+  bottom: 0;
+  right: -22px;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: min(400px, 75%);
+  height: calc(100vh - 64px);
+}
+
+.agent-column {
+  --agent-window-height: max(calc(50% - 5px), 320px);
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+
+.agent-scroll-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #d8d8d8;
+  font-size: 11.5px;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.agent-scroll-bar:hover {
+  color: #ffffff;
+}
+
+.agent-scroll-bar svg {
+  flex: 0 0 auto;
+}
+
+
+/* With agents open, the composer retracts horizontally and the agent column
+   runs the full right strip down to the composer's bottom edge. */
+.composer-dock.is-docked .composer,
+.composer-dock.is-docked .composer-context {
+  transition: width 160ms ease;
+}
+
+.composer-dock.is-docked.has-agents .composer,
+.composer-dock.is-docked.has-agents .composer-context {
+  width: calc(100% - 390px);
+  min-width: 220px;
+}
+
+.agent-column::-webkit-scrollbar {
+  display: none;
+}
+
+.agent-overlay {
+  position: relative;
+}
+
+/* Anchor windows to the bottom of the column (nearest the tabs/composer)
+   when they don't fill it; margin-top:auto keeps overflow scrollable, which
+   justify-content:flex-end would not. */
+.agent-overlay:first-child {
+  margin-top: auto;
+}
+
+.agent-overlay {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 var(--agent-window-height);
+  height: var(--agent-window-height);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  border: 1px solid #232323;
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+  background: #131313;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+}
+
+.agent-overlay.is-selected {
+  border-color: #4a4a4a;
+}
+
+.agent-overlay.is-flash {
+  animation: agent-flash 750ms ease-out;
+}
+
+@keyframes agent-flash {
+  0% {
+    border-color: #4a90d9;
+    box-shadow: 0 0 0 1px #4a90d9, 0 3px 14px rgba(0, 0, 0, 0.18);
+  }
+  100% {
+    border-color: #232323;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+  }
+}
+
+.agent-watch-toggle.is-active {
+  color: #5865f2;
+  background: transparent;
+}
+
+.agent-overlay-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-bottom: 1px solid #222222;
+}
+
+.agent-overlay-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: #c9cdd2;
+}
+
+.agent-overlay-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.agent-overlay-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-overlay-empty {
+  margin: auto 8px;
+  color: #7b8087;
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.agent-mini-message {
+  max-width: 100%;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.agent-mini-message.is-user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #1f1f1f;
+  color: #dcdfe3;
+  white-space: pre-wrap;
+}
+
+.agent-mini-message.is-assistant {
+  align-self: stretch;
+  color: #c4c8cd;
+}
+
+.agent-mini-message.is-assistant > :first-child {
+  margin-top: 0;
+}
+
+.agent-mini-message.is-assistant > :last-child {
+  margin-bottom: 0;
+}
+
+.agent-mini-message.is-assistant pre {
+  overflow-x: auto;
+  padding: 8px;
+  border-radius: 8px;
+  background: #0f0f0f;
+  font-size: 12px;
+}
+
+.agent-overlay-working {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: #8a8f96;
+}
+
+.agent-overlay-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 8px;
+  border-top: 1px solid #222222;
+}
+
+.agent-overlay-composer textarea {
+  flex: 1;
+  min-height: 34px;
+  max-height: 120px;
+  resize: none;
+  padding: 7px 9px;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  background: #101010;
+  color: #d8d8d8;
+  font-size: 13px;
+  line-height: 1.4;
+  outline: none;
+}
+
+.agent-overlay-composer textarea:focus {
+  border-color: #383838;
+}
+
+.agent-overlay-composer textarea {
+  scrollbar-width: none;
+}
+
+.agent-overlay-composer textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.stop-square-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  background: #101010;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.stop-square-button:hover {
+  background: #1a1414;
+  border-color: #4a2a2a;
+}
+
+.stop-square {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: #e0443e;
+}
+
+.composer .stop-square-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border-color: #2c2c2c;
+  background: #1c1c1c;
+}
+
+.composer .stop-square-button:hover {
+  background: #241a1a;
+  border-color: #4a2a2a;
+}
+
+.composer .stop-square-button .stop-square {
+  width: 9px;
+  height: 9px;
+}
+
+.agent-overlay-scroll {
+  scrollbar-width: none;
+}
+
+.agent-overlay-scroll::-webkit-scrollbar {
+  display: none;
 }

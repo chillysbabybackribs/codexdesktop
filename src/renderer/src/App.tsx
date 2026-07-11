@@ -15,6 +15,8 @@ import {
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { AgentColumn, AgentTabStrip } from './AgentDock'
+import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
   BrowserState,
@@ -260,6 +262,9 @@ export default function App(): React.JSX.Element {
   const [turnMeta, setTurnMeta] = useState<Record<string, TurnMeta>>({})
   // Latest thread-level usage snapshot; `last` sizes the current context.
   const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
+  const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
+  const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
+  const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
   const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
@@ -298,6 +303,13 @@ export default function App(): React.JSX.Element {
   // started from, so the compaction turn's token update can record the shrink.
   const activeCompactionRef = useRef<{ itemId: string; turnId: string; beforeTokens: number | null } | null>(null)
   const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
+  // Background agent sessions. The ref mirrors state synchronously (via
+  // updateAgentSessions) because the codex event handler routes on it.
+  const agentSessionsRef = useRef<AgentSession[]>([])
+  // Keys of agent sessions whose thread/start is in flight, so the
+  // thread/started notification binds to the session instead of hijacking the
+  // main view.
+  const agentStartQueueRef = useRef<string[]>([])
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -734,7 +746,7 @@ export default function App(): React.JSX.Element {
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
 
-    if (previousThreadId) {
+    if (previousThreadId && !backgroundSessionForThread(previousThreadId)) {
       void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
     }
   }
@@ -751,6 +763,10 @@ export default function App(): React.JSX.Element {
     const generation = ++resumeGenerationRef.current
     const previousThreadId = activeThreadIdRef.current
 
+    // If the target thread lives in the agent dock, the focused view absorbs
+    // it — one owner per thread.
+    updateAgentSessions((sessions) => sessions.filter((session) => session.threadId !== threadId))
+
     if (previousThreadId !== threadId) {
       cancelAutoRecovery()
     }
@@ -759,7 +775,11 @@ export default function App(): React.JSX.Element {
     setActiveReasoningEffort(null)
     activeReasoningEffortRef.current = null
 
-    if (previousThreadId && previousThreadId !== threadId) {
+    if (
+      previousThreadId &&
+      previousThreadId !== threadId &&
+      !backgroundSessionForThread(previousThreadId)
+    ) {
       void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
     }
 
@@ -909,6 +929,267 @@ export default function App(): React.JSX.Element {
     return watched !== null && incomingThreadId === watched
   }
 
+  // ---- Background agent sessions -------------------------------------------
+
+  // State and ref must stay in sync within the same tick: the codex event
+  // handler routes on the ref, and promote/demote swaps subscribe state
+  // immediately after mutating the list.
+  function updateAgentSessions(updater: (sessions: AgentSession[]) => AgentSession[]): void {
+    agentSessionsRef.current = updater(agentSessionsRef.current)
+    setAgentSessions(agentSessionsRef.current)
+  }
+
+  function backgroundSessionForThread(threadId: string): AgentSession | null {
+    return agentSessionsRef.current.find((session) => session.threadId === threadId) ?? null
+  }
+
+  function patchAgentSession(key: string, patch: (session: AgentSession) => AgentSession): void {
+    updateAgentSessions((sessions) =>
+      sessions.map((session) => (session.key === key ? patch(session) : session))
+    )
+  }
+
+  function appendAgentMessage(key: string, message: AgentLiteMessage): void {
+    patchAgentSession(key, (session) => ({ ...session, messages: [...session.messages, message] }))
+  }
+
+  // Lite reducer for threads living in the dock: track turn status and plain
+  // chat text only. The full activity pipeline stays exclusive to the focused
+  // thread.
+  function handleAgentNotification(session: AgentSession, notification: ServerNotification): void {
+    switch (notification.method) {
+      case 'turn/started':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'working',
+          turnId: notification.params.turn.id
+        }))
+        return
+      case 'turn/completed': {
+        const turn = notification.params.turn
+        patchAgentSession(session.key, (current) => ({ ...current, status: 'done', turnId: null }))
+        if (turn.error?.message) {
+          appendAgentMessage(session.key, {
+            id: `error-${turn.id}`,
+            role: 'assistant',
+            text: `⚠ ${turn.error.message}`
+          })
+        }
+        return
+      }
+      case 'item/agentMessage/delta': {
+        const { itemId, delta } = notification.params
+        patchAgentSession(session.key, (current) => {
+          const existing = current.messages.find((message) => message.id === itemId)
+          const messages = existing
+            ? current.messages.map((message) =>
+                message.id === itemId ? { ...message, text: `${message.text}${delta}` } : message
+              )
+            : [...current.messages, { id: itemId, role: 'assistant' as const, text: delta }]
+          return { ...current, messages }
+        })
+        return
+      }
+      case 'item/completed': {
+        const item = notification.params.item
+        if (item.type !== 'agentMessage') return
+        patchAgentSession(session.key, (current) => {
+          const existing = current.messages.find((message) => message.id === item.id)
+          const messages = existing
+            ? current.messages.map((message) =>
+                message.id === item.id ? { ...message, text: item.text } : message
+              )
+            : [...current.messages, { id: item.id, role: 'assistant' as const, text: item.text }]
+          return { ...current, messages }
+        })
+        return
+      }
+      default:
+        return
+    }
+  }
+
+  function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
+    const messages: AgentLiteMessage[] = []
+    for (const item of source) {
+      if (item.type === 'userMessage' || item.type === 'agentMessage') {
+        const text = (item as { text?: string }).text
+        if (text) {
+          messages.push({
+            id: item.id,
+            role: item.type === 'userMessage' ? 'user' : 'assistant',
+            text
+          })
+        }
+      }
+    }
+    return messages
+  }
+
+  function handleNewAgent(): void {
+    const key = crypto.randomUUID()
+    updateAgentSessions((sessions) => [
+      ...sessions,
+      {
+        key,
+        threadId: null,
+        title: `Agent ${sessions.length + 2}`,
+        status: 'idle',
+        turnId: null,
+        messages: [],
+        watchesMain: false
+      }
+    ])
+    setOpenAgentKeys((current) => [...current, key])
+    setSelectedAgentKey(key)
+  }
+
+  // Tab click focuses: opens the window if closed. Scrolling/flashing to it is
+  // handled where the DOM lives (ChatPane).
+  function handleOpenAgent(key: string): void {
+    setOpenAgentKeys((current) => (current.includes(key) ? current : [...current, key]))
+  }
+
+  function handleMinimizeAgent(key: string): void {
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+  }
+
+  function handleToggleWatchAgent(key: string): void {
+    patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
+  }
+
+  // Compact digest of the focused conversation, prepended to helper-agent
+  // sends. Built from renderer state — no extra IPC or token-heavy replay.
+  function buildMainChatContext(): string {
+    const recent = liteMessagesFromItems(items).slice(-8)
+    const lines = recent.map((message) => {
+      const text = message.text.length > 600 ? `${message.text.slice(0, 600)}…` : message.text
+      return `${message.role === 'user' ? 'User' : 'Assistant'}: ${text}`
+    })
+    return [
+      '<main-chat-context>',
+      "You are an optional helper agent running beside the user's main conversation.",
+      'Recent main-chat messages follow. Use them as context for the message after the closing tag.',
+      'Do not modify workspace files or take actions unless the user explicitly asks you to.',
+      '',
+      ...lines,
+      '',
+      `Main chat status: ${activeTurnIdRef.current ? 'a turn is currently running' : 'idle'}.`,
+      '</main-chat-context>'
+    ].join('\n')
+  }
+
+  function bindAgentThread(key: string, threadId: string, title: string | null): void {
+    patchAgentSession(key, (session) => ({
+      ...session,
+      threadId: session.threadId ?? threadId,
+      title: title || session.title
+    }))
+  }
+
+  async function handleAgentSend(key: string, text: string): Promise<boolean> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session) return false
+
+    try {
+      let threadId = session.threadId
+      if (!threadId) {
+        agentStartQueueRef.current.push(key)
+        const started = await window.api.codex.startThread({
+          cwd: workspaceRef.current,
+          model: selectedModelRef.current
+        })
+        threadId = started.thread.id
+        agentStartQueueRef.current = agentStartQueueRef.current.filter((queued) => queued !== key)
+        if (!threadId) throw new Error('Thread start returned no thread id')
+        bindAgentThread(key, threadId, threadTitle(started.thread))
+      }
+
+      appendAgentMessage(key, { id: crypto.randomUUID(), role: 'user', text })
+      const outgoingText = session.watchesMain ? `${buildMainChatContext()}\n\n${text}` : text
+      const response = await window.api.codex.sendMessage({
+        threadId,
+        text: outgoingText,
+        cwd: workspaceRef.current,
+        model: selectedModelRef.current
+      })
+      patchAgentSession(key, (current) => ({
+        ...current,
+        status: 'working',
+        turnId: response.turn.id
+      }))
+      return true
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Agent turn failed to start: ${(error as Error).message}`
+      })
+      return false
+    }
+  }
+
+  async function handleAgentStop(key: string): Promise<void> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session?.threadId || !session.turnId) return
+    try {
+      await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+    } catch {
+      // The turn may have already finished; the lite state settles via events.
+    }
+  }
+
+  function handleCloseAgentSession(key: string): void {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    updateAgentSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+    setSelectedAgentKey((current) => (current === key ? null : current))
+    if (session?.threadId && session.threadId !== activeThreadIdRef.current) {
+      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+    }
+  }
+
+  // Focus swap: the tabbed agent takes over the full chat view and the current
+  // full-view conversation demotes into the dock, staying subscribed so its
+  // turn keeps streaming into the lite state.
+  async function handlePromoteAgent(key: string): Promise<void> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session?.threadId) return
+
+    const demotedThreadId = activeThreadIdRef.current
+    const demotedTurnId = activeTurnIdRef.current
+    const demotedTitle = activeThreadTitle
+    const demotedMessages = liteMessagesFromItems(items)
+
+    updateAgentSessions((sessions) => {
+      const rest = sessions.filter((candidate) => candidate.key !== key)
+      if (demotedThreadId) {
+        rest.push({
+          key: crypto.randomUUID(),
+          threadId: demotedThreadId,
+          title: demotedTitle,
+          status: demotedTurnId ? 'working' : demotedMessages.length ? 'done' : 'idle',
+          turnId: demotedTurnId,
+          messages: demotedMessages,
+          watchesMain: false
+        })
+      }
+      return rest
+    })
+    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
+    setSelectedAgentKey((current) => (current === key ? null : current))
+
+    setActiveTurnId(null)
+    activeTurnIdRef.current = null
+    await resumeThreadById(session.threadId)
+    if (session.turnId) {
+      setActiveTurnId(session.turnId)
+      activeTurnIdRef.current = session.turnId
+    }
+  }
+
+  // ---- End background agent sessions ---------------------------------------
+
   function cancelAutoRecovery(): void {
     const state = autoRecoveryRef.current
     if (state?.timer !== null && state?.timer !== undefined) {
@@ -1010,13 +1291,47 @@ export default function App(): React.JSX.Element {
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
 
+    // Threads owned by background agent sessions route to the lite reducer and
+    // never touch the focused view's state.
+    const incomingThreadId = (notification.params as { threadId?: string } | undefined)?.threadId
+    if (incomingThreadId && !isRelevantThread(incomingThreadId)) {
+      const backgroundSession = backgroundSessionForThread(incomingThreadId)
+      if (backgroundSession) {
+        if (notification.method === 'thread/name/updated') {
+          patchAgentSession(backgroundSession.key, (session) => ({
+            ...session,
+            title: notification.params.threadName || session.title
+          }))
+          void refreshThreads()
+          return
+        }
+        handleAgentNotification(backgroundSession, notification)
+        return
+      }
+    }
+
     switch (notification.method) {
-      case 'thread/started':
+      case 'thread/started': {
+        // A thread started for a dock agent binds to its session instead of
+        // taking over the main view. Two orderings are possible: if the
+        // startThread IPC response resolved first, the thread is already bound
+        // (check by id); if this notification arrived first, the pending queue
+        // holds the session key.
+        const startedThreadId = notification.params.thread.id
+        if (startedThreadId && backgroundSessionForThread(startedThreadId)) {
+          return
+        }
+        const pendingAgentKey = agentStartQueueRef.current.shift()
+        if (pendingAgentKey) {
+          bindAgentThread(pendingAgentKey, startedThreadId, threadTitle(notification.params.thread))
+          return
+        }
         watchThreadIdRef.current = notification.params.thread.id
         persistLastThreadId(notification.params.thread.id)
         setActiveThreadId(notification.params.thread.id)
         setActiveThreadTitle(threadTitle(notification.params.thread))
         return
+      }
       case 'thread/goal/updated':
         if (isRelevantThread(notification.params.threadId)) {
           const goal = cloneGoal(notification.params.goal)
@@ -1653,6 +1968,18 @@ export default function App(): React.JSX.Element {
           contextUsage={contextUsage}
           isCompacting={isCompacting}
           onCompactThread={handleCompactThread}
+          agentSessions={agentSessions}
+          openAgentKeys={openAgentKeys}
+          selectedAgentKey={selectedAgentKey}
+          onSelectAgent={setSelectedAgentKey}
+          onOpenAgent={handleOpenAgent}
+          onMinimizeAgent={handleMinimizeAgent}
+          onToggleWatchAgent={handleToggleWatchAgent}
+          onNewAgent={handleNewAgent}
+          onPromoteAgent={(key) => void handlePromoteAgent(key)}
+          onCloseAgentSession={handleCloseAgentSession}
+          onAgentSend={handleAgentSend}
+          onAgentStop={handleAgentStop}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -1720,7 +2047,19 @@ function ChatPane({
   onClearGoal,
   contextUsage,
   isCompacting,
-  onCompactThread
+  onCompactThread,
+  agentSessions,
+  openAgentKeys,
+  selectedAgentKey,
+  onSelectAgent,
+  onOpenAgent,
+  onMinimizeAgent,
+  onToggleWatchAgent,
+  onNewAgent,
+  onPromoteAgent,
+  onCloseAgentSession,
+  onAgentSend,
+  onAgentStop
 }: {
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
@@ -1757,6 +2096,18 @@ function ChatPane({
   contextUsage: ThreadTokenUsage | null
   isCompacting: boolean
   onCompactThread: () => Promise<void>
+  agentSessions: AgentSession[]
+  openAgentKeys: string[]
+  selectedAgentKey: string | null
+  onSelectAgent: (key: string) => void
+  onOpenAgent: (key: string) => void
+  onMinimizeAgent: (key: string) => void
+  onToggleWatchAgent: (key: string) => void
+  onNewAgent: () => void
+  onPromoteAgent: (key: string) => void
+  onCloseAgentSession: (key: string) => void
+  onAgentSend: (key: string, text: string) => Promise<boolean>
+  onAgentStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
@@ -1832,9 +2183,66 @@ function ChatPane({
     return null
   }, [items, itemMeta, activeTurnId])
 
+  const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
+
+  const focusAgent = (key: string): void => {
+    const wasOpen = openAgentKeys.includes(key)
+    onSelectAgent(key)
+    onOpenAgent(key)
+    // Alignment is an absolute, idempotent scrollTo — never a relative
+    // scrollBy, which compounds when fired mid-animation. Settle runs on the
+    // browser's scrollend event, not a guessed timeout, so it measures a
+    // finished layout. A freshly opened window aligns instantly (the column is
+    // reflowing anyway); an already-open one scrolls smoothly.
+    const alignOnce = (behavior: ScrollBehavior): 'missing' | 'aligned' | 'scrolling' => {
+      const node = document.querySelector(`[data-agent-key="${key}"]`)
+      const scroller = node instanceof HTMLElement ? node.parentElement : null
+      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return 'missing'
+      const raw =
+        scroller.scrollTop +
+        node.getBoundingClientRect().top -
+        scroller.getBoundingClientRect().top
+      const target = Math.max(0, Math.min(raw, scroller.scrollHeight - scroller.clientHeight))
+      if (Math.abs(target - scroller.scrollTop) <= 4) return 'aligned'
+      scroller.scrollTo({ top: target, behavior })
+      return 'scrolling'
+    }
+    let attempts = 0
+    const run = (): void => {
+      const state = alignOnce(wasOpen ? 'smooth' : 'auto')
+      if (state === 'missing') {
+        if (attempts++ < 12) requestAnimationFrame(run)
+        return
+      }
+      const node = document.querySelector(`[data-agent-key="${key}"]`)
+      if (node instanceof HTMLElement) {
+        node.classList.add('is-flash')
+        window.setTimeout(() => node.classList.remove('is-flash'), 750)
+      }
+      if (state === 'scrolling') {
+        const scroller = node instanceof HTMLElement ? node.parentElement : null
+        if (scroller instanceof HTMLElement) {
+          const settle = (): void => {
+            alignOnce('auto')
+          }
+          scroller.addEventListener('scrollend', settle, { once: true })
+          // Fallback in case scrollend never fires; alignOnce is idempotent,
+          // so a double settle is a no-op.
+          window.setTimeout(() => {
+            scroller.removeEventListener('scrollend', settle)
+            alignOnce('auto')
+          }, 900)
+        }
+      }
+    }
+    requestAnimationFrame(run)
+  }
+
   return (
     <section
-      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
+      className={`chat-pane ${hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
+        openAgentSessions.length ? 'has-agents' : ''
+      }`}
       aria-busy={isRestoring}
     >
       <div className="chat-toolbar">
@@ -1894,7 +2302,24 @@ function ChatPane({
         })}
       </ThreadScroll>
 
-      <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+      <div
+        className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'} ${
+          openAgentSessions.length ? 'has-agents' : ''
+        }`}
+      >
+        {openAgentSessions.length ? (
+          <AgentColumn
+            sessions={openAgentSessions}
+            selectedKey={selectedAgentKey}
+            onSelect={onSelectAgent}
+            onMinimize={onMinimizeAgent}
+            onCloseSession={onCloseAgentSession}
+            onPromote={onPromoteAgent}
+            onToggleWatch={onToggleWatchAgent}
+            onSend={onAgentSend}
+            onStop={onAgentStop}
+          />
+        ) : null}
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
           {models.length ? (
@@ -1907,36 +2332,12 @@ function ChatPane({
             onSetStatus={onSetGoalStatus}
             onClear={onClearGoal}
           />
-          <div className="composer-thread-controls">
-            <ContextPill
-              usage={contextUsage}
-              disabled={Boolean(activeTurnId)}
-              compacting={isCompacting}
-              onCompact={onCompactThread}
-            />
-            <ThreadMenu
-              placement="composer"
-              title={title}
-              threads={threads}
-              activeThreadId={activeThreadId}
-              isOpen={isThreadMenuOpen}
-              threadsNextCursor={threadsNextCursor}
-              threadsLoading={threadsLoading}
-              threadsError={threadsError}
-              onToggle={onToggleThreadMenu}
-              onResumeThread={onResumeThread}
-              onLoadMoreThreads={onLoadMoreThreads}
-            />
-            <button
-              type="button"
-              className="icon-button composer-new-chat"
-              aria-label="New chat"
-              title="New chat"
-              onClick={onNewThread}
-            >
-              <NewChatIcon />
-            </button>
-          </div>
+          <AgentTabStrip
+            sessions={agentSessions}
+            openKeys={openAgentKeys}
+            onFocus={focusAgent}
+            onNewAgent={onNewAgent}
+          />
         </div>
         <Composer
           docked={hasThreadContent}
@@ -1946,6 +2347,38 @@ function ChatPane({
           onSend={onSend}
           onSteer={onSteer}
           onStop={onStop}
+          footerExtras={
+            <div className="composer-thread-controls">
+              <ContextPill
+                usage={contextUsage}
+                disabled={Boolean(activeTurnId)}
+                compacting={isCompacting}
+                onCompact={onCompactThread}
+              />
+              <ThreadMenu
+                placement="composer"
+                title={title}
+                threads={threads}
+                activeThreadId={activeThreadId}
+                isOpen={isThreadMenuOpen}
+                threadsNextCursor={threadsNextCursor}
+                threadsLoading={threadsLoading}
+                threadsError={threadsError}
+                onToggle={onToggleThreadMenu}
+                onResumeThread={onResumeThread}
+                onLoadMoreThreads={onLoadMoreThreads}
+              />
+              <button
+                type="button"
+                className="icon-button composer-new-chat"
+                aria-label="New chat"
+                title="New chat"
+                onClick={onNewThread}
+              >
+                <NewChatIcon />
+              </button>
+            </div>
+          }
         />
       </div>
 
@@ -3218,7 +3651,8 @@ function Composer({
   status,
   onSend,
   onSteer,
-  onStop
+  onStop,
+  footerExtras
 }: {
   docked: boolean
   isLoading: boolean
@@ -3227,6 +3661,7 @@ function Composer({
   onSend: (text: string) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
+  footerExtras?: React.ReactNode
 }): React.JSX.Element {
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -3272,10 +3707,16 @@ function Composer({
       <div className="composer-footer">
         <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{status}</span>
         <div className="composer-actions">
+          {footerExtras}
           {isTurnActive ? (
-            <button type="button" className="stop-button" aria-label="Stop turn" onClick={() => void onStop()}>
-              <span className="stop-button-icon" aria-hidden="true">■</span>
-              <span>Stop</span>
+            <button
+              type="button"
+              className="stop-square-button"
+              aria-label="Stop turn"
+              title="Stop"
+              onClick={() => void onStop()}
+            >
+              <span className="stop-square" aria-hidden="true" />
             </button>
           ) : null}
           <button
