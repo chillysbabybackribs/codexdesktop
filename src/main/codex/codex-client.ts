@@ -580,7 +580,7 @@ export class CodexClient extends EventEmitter {
 
   // Explicit tab arguments (including 'all') pass through untouched; only the
   // default is redirected to the thread's dedicated tab.
-  private resolveAgentTab(threadId: string, explicitTab: string | null): string | null {
+  private resolveAgentTab(threadId: string, explicitTab: string | null | undefined): string | null {
     if (explicitTab) return explicitTab
     const tabId = this.browserAgent.ensureDedicatedTab(this.threadTabs.get(threadId) ?? null)
     if (tabId) this.threadTabs.set(threadId, tabId)
