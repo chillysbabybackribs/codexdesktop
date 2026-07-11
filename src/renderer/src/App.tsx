@@ -3262,14 +3262,18 @@ function ThreadScroll({
     if (
       activeTurnId !== null &&
       activeTurnId !== prevTurnRef.current &&
-      !justResetRef.current
+      activeTurnId !== absorbedTurnRef.current
     ) {
       anchorTurnRef.current = activeTurnId
       pinnedRef.current = false
       cancelScheduledFollow()
       setSpacerOn(true)
       // The new user row + spacer land next commit; anchor once they exist.
-      window.requestAnimationFrame(anchorTop)
+      // Tracked so a reset/unmount before it fires can cancel it.
+      anchorFrameRef.current = window.requestAnimationFrame(() => {
+        anchorFrameRef.current = null
+        anchorTop()
+      })
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
