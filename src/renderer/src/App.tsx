@@ -991,6 +991,51 @@ export default function App(): React.JSX.Element {
     patchAgentSession(key, (session) => ({ ...session, messages: [...session.messages, message] }))
   }
 
+  // Apply every buffered agent delta in one state update per frame. Mirrors the
+  // main chat's flushPendingItemMutations so a burst of tokens across all open
+  // agents collapses into a single agent-session render.
+  function flushAgentDeltas(): void {
+    if (agentDeltaTimerRef.current !== null) {
+      window.clearTimeout(agentDeltaTimerRef.current)
+      agentDeltaTimerRef.current = null
+    }
+
+    const buffer = agentDeltaBufferRef.current
+    if (buffer.size === 0) return
+    agentDeltaBufferRef.current = new Map()
+
+    updateAgentSessions((sessions) =>
+      sessions.map((session) => {
+        const perItem = buffer.get(session.key)
+        if (!perItem || perItem.size === 0) return session
+
+        let messages = session.messages
+        for (const [itemId, delta] of perItem) {
+          const existing = messages.find((message) => message.id === itemId)
+          messages = existing
+            ? messages.map((message) =>
+                message.id === itemId ? { ...message, text: `${message.text}${delta}` } : message
+              )
+            : [...messages, { id: itemId, role: 'assistant' as const, text: delta }]
+        }
+        return { ...session, messages }
+      })
+    )
+  }
+
+  function enqueueAgentDelta(key: string, itemId: string, delta: string): void {
+    let perItem = agentDeltaBufferRef.current.get(key)
+    if (!perItem) {
+      perItem = new Map()
+      agentDeltaBufferRef.current.set(key, perItem)
+    }
+    perItem.set(itemId, `${perItem.get(itemId) ?? ''}${delta}`)
+
+    if (agentDeltaTimerRef.current === null) {
+      agentDeltaTimerRef.current = window.setTimeout(flushAgentDeltas, 32)
+    }
+  }
+
   // Append unless a message with this id already exists — the `error`
   // notification and the failed `turn/completed` carry the same turn error.
   function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
@@ -1045,15 +1090,7 @@ export default function App(): React.JSX.Element {
       }
       case 'item/agentMessage/delta': {
         const { itemId, delta } = notification.params
-        patchAgentSession(session.key, (current) => {
-          const existing = current.messages.find((message) => message.id === itemId)
-          const messages = existing
-            ? current.messages.map((message) =>
-                message.id === itemId ? { ...message, text: `${message.text}${delta}` } : message
-              )
-            : [...current.messages, { id: itemId, role: 'assistant' as const, text: delta }]
-          return { ...current, messages }
-        })
+        enqueueAgentDelta(session.key, itemId, delta)
         return
       }
       case 'item/completed': {
