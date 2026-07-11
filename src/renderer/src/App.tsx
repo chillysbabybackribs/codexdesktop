@@ -965,6 +965,16 @@ export default function App(): React.JSX.Element {
     patchAgentSession(key, (session) => ({ ...session, messages: [...session.messages, message] }))
   }
 
+  // Append unless a message with this id already exists — the `error`
+  // notification and the failed `turn/completed` carry the same turn error.
+  function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
+    patchAgentSession(key, (session) =>
+      session.messages.some((existing) => existing.id === message.id)
+        ? session
+        : { ...session, messages: [...session.messages, message] }
+    )
+  }
+
   // Lite reducer for threads living in the dock: track turn status and plain
   // chat text only. The full activity pipeline stays exclusive to the focused
   // thread.
@@ -981,11 +991,18 @@ export default function App(): React.JSX.Element {
         const turn = notification.params.turn
         patchAgentSession(session.key, (current) => ({ ...current, status: 'done', turnId: null }))
         if (turn.error?.message) {
-          appendAgentMessage(session.key, {
+          appendAgentMessageOnce(session.key, {
             id: `error-${turn.id}`,
             role: 'assistant',
             text: `⚠ ${turn.error.message}`
           })
+        }
+        if (turn.status === 'failed') {
+          maybeScheduleAgentRecovery(session.key, turn.id, turn.error)
+        } else {
+          // Healthy terminal turn (completed or user-interrupted) ends any
+          // recovery chain, mirroring the main chat.
+          cancelAgentRecovery(session.key)
         }
         return
       }
