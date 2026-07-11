@@ -583,6 +583,14 @@ button {
   min-height: 1px;
 }
 
+/* Reserves scroll room below the newest turn so its user message can sit at
+   the top of the viewport while the answer streams in. Height is sized in JS
+   (ThreadScroll.anchorTop) to the exact shortfall; 0 by default. */
+.thread-scroll-anchor-spacer {
+  flex: none;
+  height: 0;
+}
+
 .message {
   max-width: 920px;
   margin: 0 0 24px;
