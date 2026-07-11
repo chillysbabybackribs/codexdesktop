@@ -6,12 +6,15 @@
     "formation-feedback": 470,
     "buyer-reality": 178
   },
-  "verifiedRecords": 750,
+  "retrievedVerifiedRecords": 750,
   "uniqueIndependenceKeys": 685,
   "sourceDomains": 74,
   "exactCurrencyMentionsBeforeJobAudit": 53,
   "completeJobSentences": 0,
-  "firsthandWithRepeatedAction": 235,
+  "heuristicFirsthandWithRepeatedAction": 235,
+  "qualifiedFirsthandRecords": 0,
+  "qualifiedRepeatedWorkflowRecords": 0,
+  "qualifiedExactJobMoneyRecords": 0,
   "trustMrrCoverage": {
     "captured": 100,
     "available": 8272,
@@ -24,7 +27,8 @@
     "TrustMRR capture stopped at 100 of 8,272 rows due rate limits and is rank-ordered/top-heavy.",
     "Formation/feedback is HN-only; buyer reality is Stack Exchange plus Ask HN.",
     "Most buyer records omit buyer/input fields; exact job sentences are therefore rarely complete.",
-    "Automated money extraction included percentages and adjacent costs; parent audit did not treat them as exact-job spend."
+    "Automated money extraction included percentages and adjacent costs; parent audit did not treat them as exact-job spend.",
+    "All heuristic classifications lacked explicit confidence and reason fields, so none count toward qualified evidence floors in the eval audit."
   ],
   "adaptiveStopping": {
     "satisfied": false,
