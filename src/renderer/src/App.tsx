@@ -3437,11 +3437,13 @@ function singleLineClip(value: string, maxChars: number): string {
 const ChatItemView = memo(function ChatItemView({
   item,
   meta,
-  streaming
+  streaming,
+  turnId
 }: {
   item: ChatItem
   meta?: ItemMeta
   streaming: boolean
+  turnId?: string | null
 }): React.JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
