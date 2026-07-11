@@ -32,7 +32,6 @@ import {
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
-  resolveTurnPolicy,
   resolveTurnPolicy
 } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
@@ -193,7 +192,7 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.buildTurnInput(text, !threadId, attachments)
+    const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -227,7 +226,7 @@ export class CodexClient extends EventEmitter {
     return this.request('turn/steer', {
       threadId,
       expectedTurnId: turnId,
-      input: this.buildTurnInput(text, false)
+      input: this.localSkills.buildTurnInput(text, false)
     })
   }
 
@@ -340,7 +339,7 @@ export class CodexClient extends EventEmitter {
         }
       })
       this.notify('initialized')
-      await this.registerLocalSkills()
+      await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
       this.emitStatus('ready')
     } catch (error) {
       if (this.child === child) {
@@ -349,64 +348,6 @@ export class CodexClient extends EventEmitter {
       }
       throw error
     }
-  }
-
-  private async registerLocalSkills(): Promise<void> {
-    const skillsRoot = localSkillsRoot()
-
-    if (!existsSync(skillsRoot)) {
-      this.localSkills = []
-      console.warn(`Local Codex skills root not found: ${skillsRoot}`)
-      return
-    }
-
-    try {
-      await this.request('skills/extraRoots/set', {
-        extraRoots: [skillsRoot]
-      })
-      await this.refreshLocalSkills(true)
-    } catch (error) {
-      this.localSkills = []
-      console.warn('Failed to register local Codex skills root', error)
-    }
-  }
-
-  private async refreshLocalSkills(forceReload = false): Promise<void> {
-    const skillsRoot = resolve(localSkillsRoot())
-
-    try {
-      const result = await this.request<SkillsListResponse>('skills/list', {
-        cwds: [app.getAppPath()],
-        forceReload
-      })
-
-      this.localSkills = result.data
-        .flatMap((entry) => entry.skills)
-        .filter((skill) => skill.enabled && isPathWithin(skillsRoot, skill.path))
-    } catch (error) {
-      console.warn('Failed to refresh local Codex skills', error)
-    }
-  }
-
-  private buildTurnInput(text: string, isNewThread: boolean, attachments: ChatAttachment[] = []): UserInput[] {
-    const turnSkills = selectTurnSkills(text, this.localSkills)
-    const newThreadSkills = isNewThread ? selectNewThreadSkills(this.localSkills) : []
-    const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
-    const visibleText = formatSkillInvocationText(text, turnSkills)
-
-    return [
-      ...(visibleText.trim() ? [{
-        type: 'text',
-        text: visibleText,
-        text_elements: []
-      } satisfies UserInput] : []),
-      ...attachmentTurnInputs(attachments),
-      ...skills.map((skill): UserInput => ({
-        type: 'skill',
-        name: skill.name,
-        path: skill.path
-      }))
-    ]
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
@@ -471,7 +412,7 @@ export class CodexClient extends EventEmitter {
       const notification = message as ServerNotification
 
       if (notification.method === 'skills/changed') {
-        void this.refreshLocalSkills(true)
+        void this.localSkills.refresh(<T>(method: string, params?: unknown) => this.request<T>(method, params), true)
       }
 
       if (notification.method === 'model/rerouted') {
