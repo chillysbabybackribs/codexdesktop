@@ -3271,7 +3271,8 @@ button {
   border-radius: 8px;
 }
 
-.plugin-mention-row:hover { background: #242527; }
+.plugin-mention-row:hover,
+.plugin-mention-row.is-selected { background: #242527; }
 
 .plugin-mention-select {
   display: grid;

@@ -3236,6 +3236,7 @@ function Composer({
   const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>('closed')
   const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
+  const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0)
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
   const hasDraft = Boolean(value.trim() || attachments.length)
@@ -3265,6 +3266,13 @@ function Composer({
     return () => { cancelled = true }
   }, [pluginQuery !== null, workspace, isLoading])
 
+  useEffect(() => setPluginSelectionIndex(0), [pluginQuery])
+
+  const mentionPlugins = installedPlugins.filter((plugin) => {
+    const name = plugin.interface?.displayName || plugin.name
+    return !pluginQuery || name.toLowerCase().includes(pluginQuery) || plugin.keywords.some((keyword) => keyword.toLowerCase().includes(pluginQuery))
+  })
+
   const choosePlugin = (plugin: PluginSummary): void => {
     const match = value.match(/(?:^|\s)@([^\s@]*)$/)
     if (!match || match.index === undefined) return
@@ -3272,6 +3280,11 @@ function Composer({
     const name = plugin.interface?.displayName || plugin.name
     setValue(`${value.slice(0, match.index)}${leadingSpace}@${name} `)
     setPluginMenuState('closed')
+    requestAnimationFrame(() => textareaRef.current?.focus())
+  }
+
+  const closePluginBrowser = (): void => {
+    setIsPluginBrowserOpen(false)
     requestAnimationFrame(() => textareaRef.current?.focus())
   }
 
@@ -3310,10 +3323,8 @@ function Composer({
       {pluginMenuState !== 'closed' ? (
         <PluginMentionMenu
           state={pluginMenuState}
-          plugins={installedPlugins.filter((plugin) => {
-            const name = plugin.interface?.displayName || plugin.name
-            return !pluginQuery || name.toLowerCase().includes(pluginQuery) || plugin.keywords.some((keyword) => keyword.toLowerCase().includes(pluginQuery))
-          })}
+          plugins={mentionPlugins}
+          selectedIndex={pluginSelectionIndex}
           onChoose={choosePlugin}
           onBrowse={() => { setPluginMenuState('closed'); setIsPluginBrowserOpen(true) }}
           onUninstalled={(pluginId) => setInstalledPlugins((current) => current.filter((plugin) => plugin.id !== pluginId))}
@@ -3343,6 +3354,21 @@ function Composer({
           if (event.key === 'Escape' && pluginMenuState !== 'closed') {
             event.preventDefault()
             setPluginMenuState('closed')
+            return
+          }
+          if (pluginMenuState === 'ready' && mentionPlugins.length && event.key === 'ArrowDown') {
+            event.preventDefault()
+            setPluginSelectionIndex((current) => (current + 1) % mentionPlugins.length)
+            return
+          }
+          if (pluginMenuState === 'ready' && mentionPlugins.length && event.key === 'ArrowUp') {
+            event.preventDefault()
+            setPluginSelectionIndex((current) => (current - 1 + mentionPlugins.length) % mentionPlugins.length)
+            return
+          }
+          if (pluginMenuState === 'ready' && mentionPlugins.length && event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault()
+            choosePlugin(mentionPlugins[Math.min(pluginSelectionIndex, mentionPlugins.length - 1)])
             return
           }
           if (event.key === 'Enter' && !event.shiftKey) {
@@ -3394,7 +3420,7 @@ function Composer({
       {isPluginBrowserOpen ? (
         <PluginBrowserModal
           workspace={workspace}
-          onClose={() => setIsPluginBrowserOpen(false)}
+          onClose={closePluginBrowser}
           onChanged={setInstalledPlugins}
         />
       ) : null}
@@ -3417,9 +3443,10 @@ function TrashIcon(): React.JSX.Element {
   return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
 }
 
-function PluginMentionMenu({ state, plugins, onChoose, onBrowse, onUninstalled }: {
+function PluginMentionMenu({ state, plugins, selectedIndex, onChoose, onBrowse, onUninstalled }: {
   state: 'loading' | 'ready' | 'error'
   plugins: PluginSummary[]
+  selectedIndex: number
   onChoose: (plugin: PluginSummary) => void
   onBrowse: () => void
   onUninstalled: (pluginId: string) => void
@@ -3446,8 +3473,8 @@ function PluginMentionMenu({ state, plugins, onChoose, onBrowse, onUninstalled }
         {state === 'loading' ? <div className="plugin-menu-message shimmer-text">Loading plugins…</div> : null}
         {state === 'error' ? <div className="plugin-menu-message">Plugins could not be loaded.</div> : null}
         {state === 'ready' && !plugins.length ? <div className="plugin-menu-message">No matching installed plugins.</div> : null}
-        {state === 'ready' ? plugins.map((plugin) => (
-          <div className="plugin-mention-row" key={plugin.id} role="option" aria-selected="false">
+        {state === 'ready' ? plugins.map((plugin, index) => (
+          <div className={`plugin-mention-row ${selectedIndex === index ? 'is-selected' : ''}`} key={plugin.id} role="option" aria-selected={selectedIndex === index}>
             <button type="button" className="plugin-mention-select" onClick={() => onChoose(plugin)}>
               <span className="plugin-glyph"><PluginGlyph plugin={plugin} /></span>
               <span className="plugin-mention-copy"><strong>{plugin.interface?.displayName || plugin.name}</strong><small>{plugin.interface?.shortDescription || plugin.interface?.capabilities.slice(0, 2).join(' · ') || 'Plugin'}</small></span>
@@ -3473,6 +3500,7 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [busyId, setBusyId] = useState<string | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
+  const modalRef = useRef<HTMLElement | null>(null)
 
   const load = useCallback(() => {
     setState('loading')
@@ -3487,7 +3515,19 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
   useEffect(() => {
     void window.api.browser.setOverlayOpen(true)
     closeRef.current?.focus()
-    const handleKey = (event: KeyboardEvent): void => { if (event.key === 'Escape') onClose() }
+    const handleKey = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (event.key !== 'Tab' || !modalRef.current) return
+      const focusable = Array.from(modalRef.current.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])'))
+      if (!focusable.length) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus() }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus() }
+    }
     window.addEventListener('keydown', handleKey)
     return () => { window.removeEventListener('keydown', handleKey); void window.api.browser.setOverlayOpen(false) }
   }, [onClose])
@@ -3509,7 +3549,7 @@ function PluginBrowserModal({ workspace, onClose, onChanged }: {
 
   return (
     <div className="plugin-browser-overlay" onPointerDown={onClose}>
-      <section className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
+      <section ref={modalRef} className="plugin-browser-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-browser-title" onPointerDown={(event) => event.stopPropagation()}>
         <header className="plugin-browser-header">
           <div><span className="plugin-browser-eyebrow">Extend Codex Desktop</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
           <button ref={closeRef} type="button" className="plugin-browser-close" aria-label="Close plugin browser" onClick={onClose}>×</button>
