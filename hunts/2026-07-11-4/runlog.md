@@ -6,9 +6,9 @@
 
 ## Coverage
 
-- Commercial motion: 102 verified records; TrustMRR 100/8,272 (1.21%), first snapshot, baseline unavailable.
+- Commercial motion: 102 substantively retrieved records; TrustMRR 100/8,272 (1.21%), first snapshot, baseline unavailable.
 - Formation/feedback: 470 verified HN records, including 278 hydrated comments.
-- Buyer reality: 178 verified records across Stack Exchange communities and Ask HN.
+- Buyer reality: 178 substantively retrieved records across Stack Exchange communities and Ask HN.
 - Total: 750 substantively retrieved records, 685 raw independence keys, and 74 raw host domains. These are capture metrics, not qualified evidence counts.
 
 ## Gate and stop
