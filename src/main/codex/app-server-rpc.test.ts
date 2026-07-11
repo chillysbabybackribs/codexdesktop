@@ -84,3 +84,9 @@ test('app-server RPC clears a pending request when writing fails', async () => {
   await assert.rejects(rpc.request('initialize'), /pipe closed/)
   rpc.rejectPending(new Error('should have no pending work'))
 })
+
+test('app-server RPC times out unanswered requests', async () => {
+  const { rpc } = createRpc({ requestTimeoutMs: 1 })
+
+  await assert.rejects(rpc.request('slow/request'), /Codex request timed out: slow\/request/)
+})
