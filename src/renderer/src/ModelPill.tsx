@@ -51,6 +51,9 @@ export function ModelPill({
     models.find((model) => model.model === selectedModel) ??
     models.find((model) => model.isDefault) ??
     models[0]
+  const expandedIndex = models.findIndex((model) => model.model === expandedModel)
+  const expanded = expandedIndex >= 0 ? models[expandedIndex] : null
+  const expandedEfforts = expanded?.supportedReasoningEfforts ?? []
 
   return (
     <div ref={wrapRef} className="model-pill-wrap">
@@ -67,73 +70,74 @@ export function ModelPill({
         <span className="workspace-pill-caret">⌄</span>
       </button>
       {isOpen ? (
-        <div className="model-menu" role="menu">
-          {models.map((model, index) => {
-            const isActive = model.model === active?.model
-            const efforts = model.supportedReasoningEfforts ?? []
-            const hasEfforts = Boolean(onSelectModelEffort && efforts.length)
-            const isExpanded = expandedModel === model.model && hasEfforts
-            return (
-              <div
-                key={model.id}
-                className="model-option-wrap"
-                onMouseEnter={() => setExpandedModel(model.model)}
-                onMouseLeave={() => setExpandedModel((current) => current === model.model ? null : current)}
-              >
-                <button
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={isActive}
-                  aria-haspopup={hasEfforts ? 'menu' : undefined}
-                  aria-expanded={hasEfforts ? isExpanded : undefined}
-                  className={`model-option ${isActive ? 'is-active' : ''}`}
-                  onFocus={() => setExpandedModel(model.model)}
-                  onClick={() => {
-                    onSelectModel(model.model)
-                    if (!hasEfforts) setIsOpen(false)
-                  }}
+        <div className="model-menu-shell" onMouseLeave={() => setExpandedModel(null)}>
+          <div className="model-menu" role="menu">
+            {models.map((model) => {
+              const isActive = model.model === active?.model
+              const efforts = model.supportedReasoningEfforts ?? []
+              const hasEfforts = Boolean(onSelectModelEffort && efforts.length)
+              const isExpanded = expandedModel === model.model && hasEfforts
+              return (
+                <div
+                  key={model.id}
+                  className="model-option-wrap"
+                  onMouseEnter={() => setExpandedModel(model.model)}
                 >
-                  <span className="model-option-copy">
-                    <span className="model-option-name">
-                      {model.displayName}
-                      {model.isDefault ? <span className="model-option-badge">CLI default</span> : null}
-                    </span>
-                    <span className="model-option-desc">{model.description}</span>
-                  </span>
-                  {hasEfforts ? <span className="model-option-submenu-caret" aria-hidden="true">›</span> : null}
-                </button>
-                {isExpanded ? (
-                  <div
-                    className={`reasoning-menu ${index >= Math.ceil(models.length / 2) ? 'align-bottom' : 'align-top'}`}
-                    role="menu"
-                    aria-label={`${model.displayName} reasoning effort`}
+                  <button
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={isActive}
+                    aria-haspopup={hasEfforts ? 'menu' : undefined}
+                    aria-expanded={hasEfforts ? isExpanded : undefined}
+                    className={`model-option ${isActive ? 'is-active' : ''}`}
+                    onFocus={() => setExpandedModel(model.model)}
+                    onClick={() => {
+                      onSelectModel(model.model)
+                      if (!hasEfforts) setIsOpen(false)
+                    }}
                   >
-                    <div className="reasoning-menu-label">Reasoning effort</div>
-                    {efforts.map((option) => {
-                      const isSelected = isActive && option.reasoningEffort === selectedEffort
-                      return (
-                        <button
-                          key={option.reasoningEffort}
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={isSelected}
-                          className={`reasoning-option ${isSelected ? 'is-active' : ''}`}
-                          onClick={() => {
-                            onSelectModelEffort?.(model.model, option.reasoningEffort)
-                            setExpandedModel(null)
-                            setIsOpen(false)
-                          }}
-                        >
-                          <span>{reasoningEffortLabel(option.reasoningEffort)}</span>
-                          <span className="reasoning-option-desc">{option.description}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            )
-          })}
+                    <span className="model-option-copy">
+                      <span className="model-option-name">
+                        {model.displayName}
+                        {model.isDefault ? <span className="model-option-badge">CLI default</span> : null}
+                      </span>
+                      <span className="model-option-desc">{model.description}</span>
+                    </span>
+                    {hasEfforts ? <span className="model-option-submenu-caret" aria-hidden="true">›</span> : null}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+          {expanded && onSelectModelEffort && expandedEfforts.length ? (
+            <div
+              className={`reasoning-menu ${expandedIndex >= Math.ceil(models.length / 2) ? 'align-bottom' : 'align-top'}`}
+              role="menu"
+              aria-label={`${expanded.displayName} reasoning effort`}
+            >
+              <div className="reasoning-menu-label">Reasoning effort</div>
+              {expandedEfforts.map((option) => {
+                const isSelected = expanded.model === active?.model && option.reasoningEffort === selectedEffort
+                return (
+                  <button
+                    key={option.reasoningEffort}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={isSelected}
+                    className={`reasoning-option ${isSelected ? 'is-active' : ''}`}
+                    onClick={() => {
+                      onSelectModelEffort(expanded.model, option.reasoningEffort)
+                      setExpandedModel(null)
+                      setIsOpen(false)
+                    }}
+                  >
+                    <span>{reasoningEffortLabel(option.reasoningEffort)}</span>
+                    <span className="reasoning-option-desc">{option.description}</span>
+                  </button>
+                )
+              })}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
