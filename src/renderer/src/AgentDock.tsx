@@ -213,6 +213,7 @@ function AgentWindow({
   onPromote,
   onToggleWatch,
   onSend,
+  onSteer,
   onStop
 }: {
   session: AgentSession
@@ -226,6 +227,7 @@ function AgentWindow({
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string) => Promise<boolean>
+  onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [value, setValue] = useState('')
@@ -256,11 +258,15 @@ function AgentWindow({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     const text = value.trim()
-    if (!text || isSending || working) return
+    if (!text || isSending) return
     setValue('')
     setIsSending(true)
     try {
-      const accepted = await onSend(session.key, text)
+      // While a turn runs, typed text steers it instead of starting a new turn
+      // — same routing as the main composer.
+      const accepted = working
+        ? await onSteer(session.key, text)
+        : await onSend(session.key, text)
       if (!accepted) setValue((current) => (current ? `${text}\n${current}` : text))
     } finally {
       setIsSending(false)
@@ -372,7 +378,7 @@ function AgentWindow({
           ref={textareaRef}
           value={value}
           rows={1}
-          placeholder={working ? 'Agent is working…' : 'Message this agent…'}
+          placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
           disabled={isSending}
           onChange={(event) => setValue(event.target.value)}
           onKeyDown={(event) => {
