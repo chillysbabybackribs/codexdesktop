@@ -495,9 +495,12 @@ export default function App(): React.JSX.Element {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
-        const restorePromise = lastThreadId
-          ? resumeThreadById(lastThreadId, { silent: true })
-          : Promise.resolve()
+        // Agents restore first so the main resume's duplicate-thread absorb
+        // sees them registered.
+        const restorePromise = (async () => {
+          await restoreAgentDock()
+          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+        })()
 
         await Promise.all([authPromise, threadsPromise, restorePromise])
         hasAutoRestoredRef.current = true
@@ -1069,6 +1072,124 @@ export default function App(): React.JSX.Element {
 
   function handleSetAgentModel(key: string, model: string): void {
     patchAgentSession(key, (session) => ({ ...session, model }))
+  }
+
+  // Dock persistence, mirroring the main chat's lastThreadId restore: session
+  // metadata lives in localStorage; transcripts rehydrate from the server.
+  useEffect(() => {
+    if (!agentDockRestoredRef.current) return
+    const sessions = agentSessions
+      .filter((session) => session.threadId)
+      .map((session) => ({
+        threadId: session.threadId,
+        title: session.title,
+        watchesMain: session.watchesMain,
+        model: session.model,
+        open: openAgentKeys.includes(session.key),
+        selected: session.key === selectedAgentKey
+      }))
+    window.localStorage.setItem(
+      agentDockStorageKey,
+      JSON.stringify({ counter: agentCounterRef.current, sessions })
+    )
+  }, [agentSessions, openAgentKeys, selectedAgentKey])
+
+  // Strip the helper-mode context preamble from persisted user messages so
+  // rehydrated transcripts show what the user actually typed.
+  function stripMainChatContext(text: string): string {
+    if (!text.startsWith('<main-chat-context>')) return text
+    const end = text.indexOf('</main-chat-context>')
+    return end === -1 ? text : text.slice(end + '</main-chat-context>'.length).trimStart()
+  }
+
+  async function restoreAgentDock(): Promise<void> {
+    try {
+      const raw = window.localStorage.getItem(agentDockStorageKey)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as {
+        counter?: number
+        sessions?: Array<{
+          threadId?: string | null
+          title?: string
+          watchesMain?: boolean
+          model?: string | null
+          open?: boolean
+          selected?: boolean
+        }>
+      }
+      if (typeof parsed.counter === 'number' && parsed.counter > agentCounterRef.current) {
+        agentCounterRef.current = parsed.counter
+      }
+      const entries = (parsed.sessions ?? []).filter(
+        (entry): entry is typeof entry & { threadId: string } =>
+          typeof entry.threadId === 'string' && entry.threadId.length > 0
+      )
+      if (!entries.length) return
+
+      const restored: AgentSession[] = entries.map((entry) => ({
+        key: crypto.randomUUID(),
+        threadId: entry.threadId,
+        title: entry.title || `Agent ${agentCounterRef.current++}`,
+        status: 'idle',
+        turnId: null,
+        messages: [],
+        watchesMain: Boolean(entry.watchesMain),
+        model: entry.model ?? null
+      }))
+
+      // Register before resuming so incoming events route to the dock and the
+      // main view's unsubscribe guards see these threads as dock-owned.
+      updateAgentSessions((current) => [...current, ...restored])
+      const openKeys = restored.filter((_, index) => entries[index].open).map((s) => s.key)
+      if (openKeys.length) setOpenAgentKeys((current) => [...current, ...openKeys])
+      const selectedIndex = entries.findIndex((entry) => entry.selected)
+      if (selectedIndex >= 0) setSelectedAgentKey(restored[selectedIndex].key)
+
+      await Promise.all(
+        restored.map(async (session) => {
+          try {
+            const resumed = await window.api.codex.resumeThread(session.threadId!)
+            let turns =
+              resumed.thread.turns.length > 0
+                ? resumed.thread.turns
+                : resumed.initialTurnsPage?.data ?? []
+            if (!turns.length) {
+              const read = await window.api.codex.readThread(session.threadId!)
+              turns = read.thread.turns
+            }
+            const messages: AgentLiteMessage[] = []
+            for (const turn of turns) {
+              for (const item of turn.items) {
+                if (item.type === 'userMessage' || item.type === 'agentMessage') {
+                  const text = (item as { text?: string }).text
+                  if (text) {
+                    messages.push({
+                      id: item.id,
+                      role: item.type === 'userMessage' ? 'user' : 'assistant',
+                      text: item.type === 'userMessage' ? stripMainChatContext(text) : text
+                    })
+                  }
+                }
+              }
+            }
+            patchAgentSession(session.key, (current) => ({
+              ...current,
+              messages: messages.slice(-60)
+            }))
+          } catch {
+            // The thread no longer exists server-side — drop it quietly.
+            updateAgentSessions((current) =>
+              current.filter((candidate) => candidate.key !== session.key)
+            )
+            setOpenAgentKeys((current) => current.filter((candidate) => candidate !== session.key))
+          }
+        })
+      )
+    } catch (error) {
+      console.warn('Agent dock restore failed', error)
+    } finally {
+      agentDockRestoredRef.current = true
+    }
   }
 
   // Compact digest of the focused conversation, prepended to helper-agent
