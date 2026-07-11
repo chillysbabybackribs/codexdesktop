@@ -362,6 +362,7 @@ test('browser agent returns screenshot artifact metadata instead of base64 image
   assert.equal(screenshot.bytes > 0, true)
   assert.equal(screenshot.width, 1)
   assert.equal(screenshot.height, 1)
+  assert.match(await controller.readScreenshotDataUrl(screenshot.artifactPath) ?? '', /^data:image\/png;base64,/)
 })
 
 test('browser agent returns PDF artifact metadata instead of base64 document data', async (context) => {

@@ -1,11 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { OmniboxSuggestion } from '../shared/ipc.js'
+import type { OmniboxRenderPayload } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
-
-export type OmniboxRenderPayload = {
-  suggestions: OmniboxSuggestion[]
-  selectedIndex: number
-}
 
 export const omniboxPopupApi = {
   onRender: (listener: (payload: OmniboxRenderPayload) => void) => {

@@ -1,8 +1,13 @@
-import type { omniboxPopupApi, OmniboxRenderPayload } from '../../preload/omnibox-popup'
+import type { OmniboxRenderPayload } from '../../shared/ipc'
 
+// Mirrors omniboxPopupApi in src/preload/omnibox-popup.ts (the preload project
+// isn't part of the web tsconfig, so the shape is declared structurally).
 declare global {
   interface Window {
-    omniboxPopup: typeof omniboxPopupApi
+    omniboxPopup: {
+      onRender: (listener: (payload: OmniboxRenderPayload) => void) => () => void
+      commit: (url: string) => void
+    }
   }
 }
 

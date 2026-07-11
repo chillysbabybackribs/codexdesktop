@@ -46,6 +46,11 @@ export type OmniboxAnchor = {
   width: number
 }
 
+export type OmniboxRenderPayload = {
+  suggestions: OmniboxSuggestion[]
+  selectedIndex: number
+}
+
 export type CodexConnectionStatus = 'idle' | 'starting' | 'ready' | 'exited' | 'error'
 
 export type CodexStatusEvent = {
