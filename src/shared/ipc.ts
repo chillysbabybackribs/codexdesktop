@@ -13,6 +13,15 @@ export type BrowserTabState = {
   isLoading: boolean
   canGoBack: boolean
   canGoForward: boolean
+  isAudible: boolean
+  isMuted: boolean
+  zoomPercent: number
+}
+
+export type BrowserFindResult = {
+  activeMatchOrdinal: number
+  matches: number
+  finalUpdate: boolean
 }
 
 export type BrowserState = {
@@ -121,6 +130,11 @@ export const ipcChannels = {
   browserBack: 'browser:back',
   browserForward: 'browser:forward',
   browserReload: 'browser:reload',
+  browserFind: 'browser:find',
+  browserStopFind: 'browser:stopFind',
+  browserFindRequested: 'browser:findRequested',
+  browserZoom: 'browser:zoom',
+  browserToggleMute: 'browser:toggleMute',
   browserSetBounds: 'browser:setBounds',
   browserBeginDividerDrag: 'browser:beginDividerDrag',
   browserEndDividerDrag: 'browser:endDividerDrag',

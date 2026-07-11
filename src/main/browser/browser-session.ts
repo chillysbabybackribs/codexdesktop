@@ -8,5 +8,7 @@ export function chromeLikeUserAgent(): string {
 }
 
 export function configureBrowserSession(): void {
-  session.fromPartition(browserPartition).setUserAgent(chromeLikeUserAgent())
+  const browserSession = session.fromPartition(browserPartition)
+  browserSession.setUserAgent(chromeLikeUserAgent())
+  browserSession.setSpellCheckerLanguages(['en-US'])
 }

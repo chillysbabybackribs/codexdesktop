@@ -253,6 +253,13 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserBack, (_event, tabId: string) => tabManager?.goBack(tabId))
   ipcMain.handle(ipcChannels.browserForward, (_event, tabId: string) => tabManager?.goForward(tabId))
   ipcMain.handle(ipcChannels.browserReload, (_event, tabId: string) => tabManager?.reload(tabId))
+  ipcMain.handle(ipcChannels.browserFind, (_event, tabId: string, text: string, forward: boolean) =>
+    tabManager?.find(tabId, text, forward))
+  ipcMain.handle(ipcChannels.browserStopFind, (_event, tabId: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
+    tabManager?.stopFind(tabId, action))
+  ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
+    tabManager?.zoom(tabId, direction))
+  ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))

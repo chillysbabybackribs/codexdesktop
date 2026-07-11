@@ -3,6 +3,7 @@ import type {
   ArtifactReadImageParams,
   ArtifactReadImageResult,
   BrowserBounds,
+  BrowserFindResult,
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
@@ -33,6 +34,20 @@ export const api = {
     back: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserBack, tabId),
     forward: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserForward, tabId),
     reload: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserReload, tabId),
+    find: (tabId: string, text: string, forward = true): Promise<BrowserFindResult> =>
+      ipcRenderer.invoke(ipcChannels.browserFind, tabId, text, forward),
+    stopFind: (tabId: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection' = 'keepSelection') =>
+      ipcRenderer.invoke(ipcChannels.browserStopFind, tabId, action),
+    zoom: (tabId: string, direction: 'in' | 'out' | 'reset') =>
+      ipcRenderer.invoke(ipcChannels.browserZoom, tabId, direction),
+    toggleMute: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserToggleMute, tabId),
+    onFindRequested: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.browserFindRequested, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserFindRequested, wrapped)
+      }
+    },
     setBounds: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserSetBounds, bounds),
     beginDividerDrag: () => ipcRenderer.invoke(ipcChannels.browserBeginDividerDrag),
     endDividerDrag: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserEndDividerDrag, bounds),
