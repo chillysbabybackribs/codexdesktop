@@ -15,7 +15,11 @@ const allowedFileExtensions = new Set([
 ])
 
 export class AttachmentStore {
-  constructor(private readonly directory: string | (() => string)) {}
+  private readonly directory: string | (() => string)
+
+  constructor(directory: string | (() => string)) {
+    this.directory = directory
+  }
 
   async persistFiles(inputs: AttachmentSaveInput[]): Promise<ChatAttachment[]> {
     if (inputs.length === 0) return []

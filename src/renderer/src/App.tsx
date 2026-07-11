@@ -70,6 +70,11 @@ type ChatItem = ThreadItem | SystemItem | TurnPlanItem
 type AgentMessageItem = Extract<ThreadItem, { type: 'agentMessage' }>
 type ActivityItem = WorkItem | AgentMessageItem
 
+function modelAcceptsImages(models: Model[], model: string | null): boolean {
+  const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
+  return !selected || selected.inputModalities.includes('image')
+}
+
 // Item types that represent Codex "working" — streamed thinking, tool calls,
 // file edits, and searches. They stay in a compact per-turn activity feed;
 // user and completed assistant messages render in the main conversation.
@@ -634,6 +639,10 @@ export default function App(): React.JSX.Element {
     const trimmed = text.trim()
 
     if ((!trimmed && !attachments.length) || isSending || activeTurnId) {
+      return false
+    }
+    if (attachments.some((attachment) => attachment.kind === 'image') && !modelAcceptsImages(models, selectedModel)) {
+      addSystemItem('The selected model does not accept image inputs. Choose an image-capable model or remove the image.', 'warning')
       return false
     }
 
@@ -1287,6 +1296,14 @@ export default function App(): React.JSX.Element {
 
     try {
       const agentModel = session.model ?? selectedModelRef.current
+      if (attachments.some((attachment) => attachment.kind === 'image') && !modelAcceptsImages(models, agentModel)) {
+        appendAgentMessage(key, {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          text: '⚠ The selected model does not accept image inputs. Choose an image-capable model or remove the image.'
+        })
+        return false
+      }
       let threadId = session.threadId
       if (!threadId) {
         agentStartQueueRef.current.push(key)
