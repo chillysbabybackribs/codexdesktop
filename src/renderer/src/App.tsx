@@ -3580,7 +3580,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
       <section className="plugin-browser-view" aria-labelledby="plugin-browser-title">
         <header className="plugin-browser-header">
           <div><span className="plugin-browser-eyebrow">Codex Desktop marketplace</span><h2 id="plugin-browser-title">Browse plugins</h2><p>Add focused workflows and connected tools without changing the way you work.</p></div>
-          <button ref={closeRef} type="button" className="plugin-browser-back" onClick={onClose}><span aria-hidden="true">←</span> Back to chat</button>
+          <button ref={closeRef} type="button" className="plugin-browser-back" onClick={onClose}><span aria-hidden="true">←</span><span>Back to chat</span></button>
         </header>
         <div className="plugin-browser-tools"><label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.7" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search plugins and capabilities" aria-label="Search plugins" /></label><span>{plugins.length} {plugins.length === 1 ? 'plugin' : 'plugins'}</span></div>
         <div className="plugin-browser-catalog">
