@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 
@@ -29,6 +30,8 @@ export type AgentSession = {
   watchesMain: boolean
   // Per-agent model override; null follows the main chat's selected model.
   model: string | null
+  contextUsage: ThreadTokenUsage | null
+  isCompacting: boolean
 }
 
 export function AgentTabStrip({
@@ -82,7 +85,8 @@ export function AgentColumn({
   onToggleWatch,
   onSend,
   onSteer,
-  onStop
+  onStop,
+  onCompact
 }: {
   sessions: AgentSession[]
   selectedKey: string | null
@@ -97,6 +101,7 @@ export function AgentColumn({
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
+  onCompact: (key: string) => Promise<void>
 }): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const [hiddenAbove, setHiddenAbove] = useState(0)
@@ -170,6 +175,7 @@ export function AgentColumn({
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
+            onCompact={onCompact}
           />
         ))}
       </div>
@@ -217,7 +223,8 @@ function AgentWindow({
   onToggleWatch,
   onSend,
   onSteer,
-  onStop
+  onStop,
+  onCompact
 }: {
   session: AgentSession
   isSelected: boolean
@@ -232,6 +239,7 @@ function AgentWindow({
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
+  onCompact: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [value, setValue] = useState('')
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
@@ -373,12 +381,20 @@ function AgentWindow({
         {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
       </div>
 
-      {models.length ? (
+      {models.length || session.contextUsage ? (
         <div className="agent-overlay-context">
-          <ModelPill
-            models={models}
-            selectedModel={session.model ?? mainModel}
-            onSelectModel={(model) => onSetModel(session.key, model)}
+          {models.length ? (
+            <ModelPill
+              models={models}
+              selectedModel={session.model ?? mainModel}
+              onSelectModel={(model) => onSetModel(session.key, model)}
+            />
+          ) : null}
+          <AgentContextPill
+            usage={session.contextUsage}
+            disabled={working || !session.threadId}
+            compacting={session.isCompacting}
+            onCompact={() => onCompact(session.key)}
           />
         </div>
       ) : null}
@@ -449,6 +465,42 @@ function AgentWindow({
         )}
       </form>
     </div>
+  )
+}
+
+function AgentContextPill({
+  usage,
+  disabled,
+  compacting,
+  onCompact
+}: {
+  usage: ThreadTokenUsage | null
+  disabled: boolean
+  compacting: boolean
+  onCompact: () => Promise<void>
+}): React.JSX.Element | null {
+  const window = usage?.modelContextWindow
+  const contextTokens = usage?.last.totalTokens ?? 0
+  if (!usage || !window || contextTokens <= 0) return null
+
+  const percent = Math.min(100, Math.round((contextTokens / window) * 100))
+  const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : ''
+
+  return (
+    <button
+      type="button"
+      className={`context-pill agent-context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
+      disabled={disabled}
+      title={compacting
+        ? 'Compacting this agent conversation…'
+        : `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact this agent conversation.`}
+      onClick={() => void onCompact()}
+    >
+      <span className="context-pill-track" aria-hidden="true">
+        <span className="context-pill-fill" style={{ width: `${percent}%` }} />
+      </span>
+      <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
+    </button>
   )
 }
 

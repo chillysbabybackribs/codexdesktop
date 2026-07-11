@@ -4141,6 +4141,13 @@ button {
   min-width: 0;
 }
 
+.agent-overlay-context .agent-context-pill {
+  height: 24px;
+  margin-left: auto;
+  padding: 0 7px;
+  font-size: 12px;
+}
+
 .agent-overlay-context .model-menu {
   left: 0;
   bottom: calc(100% + 6px);

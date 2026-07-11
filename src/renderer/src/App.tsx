@@ -1004,7 +1004,12 @@ export default function App(): React.JSX.Element {
         return
       case 'turn/completed': {
         const turn = notification.params.turn
-        patchAgentSession(session.key, (current) => ({ ...current, status: 'done', turnId: null }))
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'done',
+          turnId: null,
+          isCompacting: false
+        }))
         void window.api.notifications.backgroundTurn({
           threadId: notification.params.threadId,
           title: session.title || 'Background agent',
@@ -1042,6 +1047,10 @@ export default function App(): React.JSX.Element {
       }
       case 'item/completed': {
         const item = notification.params.item
+        if (item.type === 'contextCompaction') {
+          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: false }))
+          return
+        }
         if (item.type !== 'agentMessage') return
         patchAgentSession(session.key, (current) => {
           const existing = current.messages.find((message) => message.id === item.id)
@@ -1054,6 +1063,17 @@ export default function App(): React.JSX.Element {
         })
         return
       }
+      case 'item/started':
+        if (notification.params.item.type === 'contextCompaction') {
+          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: true }))
+        }
+        return
+      case 'thread/tokenUsage/updated':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          contextUsage: notification.params.tokenUsage
+        }))
+        return
       case 'error': {
         const { turnId, error, willRetry } = notification.params
         if (willRetry) return
@@ -1102,7 +1122,9 @@ export default function App(): React.JSX.Element {
         turnId: null,
         messages: [],
         watchesMain: false,
-        model: null
+        model: null,
+        contextUsage: null,
+        isCompacting: false
       }
     ])
     setOpenAgentKeys((current) => [...current, key])
@@ -1188,7 +1210,9 @@ export default function App(): React.JSX.Element {
         turnId: null,
         messages: [],
         watchesMain: Boolean(entry.watchesMain),
-        model: entry.model ?? null
+        model: entry.model ?? null,
+        contextUsage: null,
+        isCompacting: false
       }))
 
       // Register before resuming so incoming events route to the dock and the
@@ -1349,6 +1373,21 @@ export default function App(): React.JSX.Element {
       await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
     } catch {
       // The turn may have already finished; the lite state settles via events.
+    }
+  }
+
+  async function handleAgentCompact(key: string): Promise<void> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session?.threadId || session.turnId || session.isCompacting) return
+
+    try {
+      await window.api.codex.compactThread(session.threadId)
+    } catch (error) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Compaction failed: ${(error as Error).message}`
+      })
     }
   }
 
@@ -2300,6 +2339,7 @@ export default function App(): React.JSX.Element {
           onAgentSend={handleAgentSend}
           onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
+          onAgentCompact={handleAgentCompact}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -2381,7 +2421,8 @@ function ChatPane({
   onCloseAgentSession,
   onAgentSend,
   onAgentSteer,
-  onAgentStop
+  onAgentStop,
+  onAgentCompact
 }: {
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
@@ -2432,6 +2473,7 @@ function ChatPane({
   onAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
+  onAgentCompact: (key: string) => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   // Which region the user is working in: the main chat (default) or the agent
@@ -2660,6 +2702,7 @@ function ChatPane({
             onSend={onAgentSend}
             onSteer={onAgentSteer}
             onStop={onAgentStop}
+            onCompact={onAgentCompact}
           />
         ) : null}
         <div className="composer-context">
