@@ -3230,6 +3230,17 @@ function ThreadScroll({
       setSpacerOn(true)
       // The new user row + spacer land next commit; anchor once they exist.
       window.requestAnimationFrame(anchorTop)
+    } else if (activeTurnId === null && anchorTurnRef.current !== null) {
+      // The turn finished. Release the anchor and collapse the spacer so no
+      // reserved room is left as dead space below the answer. Dropping the
+      // spacer shrinks scrollHeight without moving scrollTop, so the message
+      // and answer stay exactly where they are — the reader just no longer has
+      // empty space beneath them.
+      anchorTurnRef.current = null
+      setSpacerOn(false)
+      // A short answer can no longer hold the message at the top; let the next
+      // bottom-follow tick settle naturally rather than forcing a jump.
+      pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
     justResetRef.current = false
