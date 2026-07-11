@@ -3060,6 +3060,11 @@ function ThreadScroll({
   const pinnedRef = useRef(true)
   const frameRef = useRef<number | null>(null)
   const settleFrameRef = useRef<number | null>(null)
+  // The rAF scheduled on a live send to run anchorTop once the new user row has
+  // committed. Tracked so the reset effect and unmount cleanup can cancel it
+  // (like frameRef/settleFrameRef) — otherwise it can fire against a torn-down
+  // or reset component.
+  const anchorFrameRef = useRef<number | null>(null)
   // While non-null, this turn's user message is anchored to the top of the
   // viewport (the answer streams into the space below). This mode overrides
   // bottom-follow and releases the moment the reader scrolls.
@@ -3082,6 +3087,10 @@ function ThreadScroll({
     if (settleFrameRef.current !== null) {
       window.cancelAnimationFrame(settleFrameRef.current)
       settleFrameRef.current = null
+    }
+    if (anchorFrameRef.current !== null) {
+      window.cancelAnimationFrame(anchorFrameRef.current)
+      anchorFrameRef.current = null
     }
   }, [])
 
@@ -3229,7 +3238,11 @@ function ThreadScroll({
       cancelScheduledFollow()
       setSpacerOn(true)
       // The new user row + spacer land next commit; anchor once they exist.
-      window.requestAnimationFrame(anchorTop)
+      // Tracked so reset/unmount can cancel it before it fires.
+      anchorFrameRef.current = window.requestAnimationFrame(() => {
+        anchorFrameRef.current = null
+        anchorTop()
+      })
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
