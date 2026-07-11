@@ -15,7 +15,9 @@ const snapshot: MemorySnapshot = {
   updatedAt: '2026-07-11T12:00:00.000Z',
   turns: [
     { user: 'How should memory work?', assistant: 'Use a compact Markdown checkpoint.' },
-    { user: 'Can older chapters be found?', assistant: 'Keep a one-line chapter map and a full transcript.' }
+    { user: 'Can older chapters be found?', assistant: 'Yes. Keep a one-line milestone map and a full transcript.' },
+    { user: 'What is the current decision?', assistant: 'The formatter will preserve a detailed recent tail.' },
+    { user: 'Should we implement it?', assistant: 'Implemented the small formatter change.' }
   ]
 }
 
@@ -26,17 +28,21 @@ test('continuation detection stays narrow', () => {
   assert.equal(shouldLoadLastChatMemory('Start a new unrelated task'), false)
 })
 
-test('last-chat memory emphasizes the tail and points to earlier chapters', () => {
+test('last-chat memory keeps a recent progression and substantive earlier milestones', () => {
   const markdown = buildLastChatMarkdown(snapshot, '/memory/chats/thread-1.md')
-  assert.match(markdown, /The latest request was: Can older chapters be found\?/)
-  assert.match(markdown, /C01 — How should memory work\?/)
+  assert.match(markdown, /Latest request: Should we implement it\?/)
+  assert.match(markdown, /T02 — Can older chapters be found\?.*Keep a one-line milestone map/)
+  assert.doesNotMatch(markdown, /Can older chapters be found\?.*:\*\* Yes\./)
+  assert.match(markdown, /## Earlier milestones/)
   assert.match(markdown, /Full transcript: \/memory\/chats\/thread-1\.md/)
 })
 
-test('transcript preserves completed user and assistant text', () => {
+test('transcript uses unique turn markers and preserves completed text', () => {
   const markdown = buildTranscriptMarkdown(snapshot)
-  assert.match(markdown, /## C02 — Can older chapters be found\?/)
-  assert.match(markdown, /Keep a one-line chapter map and a full transcript\./)
+  assert.match(markdown, /<!-- codexdesktop-turn:C02:start -->/)
+  assert.match(markdown, /## Turn C02 — Can older chapters be found\?/)
+  assert.match(markdown, /Keep a one-line milestone map and a full transcript\./)
+  assert.match(markdown, /<!-- codexdesktop-turn:C02:end -->/)
 })
 
 test('injected memory states precedence explicitly', () => {

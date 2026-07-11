@@ -23,5 +23,6 @@ test('MemoryStore writes Markdown and scopes retrieval to the workspace', async 
   assert.equal(await store.loadLastChat('/tmp/other-project'), null)
 
   const transcript = await readFile(join(root, 'chats', 'thread-1.md'), 'utf8')
-  assert.match(transcript, /## C01 — Remember this\?/)
+  assert.match(transcript, /<!-- codexdesktop-turn:C01:start -->/)
+  assert.match(transcript, /## Turn C01 — Remember this\?/)
 })
