@@ -1,9 +1,7 @@
 import {
-  Children,
   FormEvent,
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent,
-  isValidElement,
   memo,
   useCallback,
   useEffect,
@@ -12,20 +10,15 @@ import {
   useRef,
   useState
 } from 'react'
-import ReactMarkdown from 'react-markdown'
-import type { Components } from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
   BrowserState,
-  BrowserTabState,
   CodexEvent,
   MemoryPersistParams,
-  OmniboxAnchor,
-  OmniboxSuggestion
+  MemoryPersistParams
 } from '../../shared/ipc'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
@@ -75,6 +68,8 @@ import {
   reduceItemNotificationMeta,
   type ItemNotification
 } from './item-notifications'
+import { BrowserPane } from './BrowserPane'
+import { MarkdownContent } from './MarkdownContent'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
