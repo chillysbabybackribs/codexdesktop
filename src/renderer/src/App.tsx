@@ -4230,14 +4230,28 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
     return rect ? { x: rect.left - 2, y: rect.bottom + 4, width: rect.width + 4 } : null
   }
 
-  const runQuery = (text: string): void => {
+  const runQuery = (text: string, allowInline = false): void => {
     const anchor = measureAnchor()
     if (!anchor) return
     const seq = ++querySeqRef.current
-    void window.api.browser.omniboxQuery(text, anchor).then((rows) => {
-      if (seq === querySeqRef.current) {
-        setSuggestions(rows)
-        setSelectedIndex(-1)
+    void window.api.browser.omniboxQuery(text, anchor).then((result) => {
+      if (seq !== querySeqRef.current) return
+      setSuggestions(result.suggestions)
+      setSelectedIndex(-1)
+
+      // Inline autocomplete: extend the input with the best history match and
+      // select the appended remainder so the next keystroke replaces it.
+      // Guarded to forward typing only — completing while the user deletes
+      // would fight the deletion.
+      if (
+        allowInline &&
+        result.inline &&
+        text === typedTextRef.current &&
+        result.inline.length > text.length &&
+        result.inline.toLowerCase().startsWith(text.toLowerCase())
+      ) {
+        setInput(result.inline)
+        pendingInlineRef.current = { start: text.length, end: result.inline.length }
       }
     })
   }
