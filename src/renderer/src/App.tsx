@@ -369,6 +369,13 @@ export default function App(): React.JSX.Element {
         setSelectedModel((current) =>
           current && list.some((model) => model.model === current) ? current : null
         )
+        const active = list.find((model) => model.model === selectedModel) ?? list.find((model) => model.isDefault) ?? list[0]
+        setSelectedReasoningEffort((current) => {
+          const supported = active.supportedReasoningEfforts.map((option) => option.reasoningEffort)
+          const next = current && supported.includes(current) ? current : active.defaultReasoningEffort
+          window.localStorage.setItem(reasoningEffortStorageKey, next)
+          return next
+        })
       },
       (error: Error) => console.warn('Failed to load Codex model list', error)
     )
