@@ -3294,8 +3294,10 @@ button {
 }
 
 .browser-find {
-  grid-column: 4 / -1;
-  justify-self: end;
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  right: 12px;
   display: grid;
   grid-template-columns: minmax(150px, 240px) 44px 28px 28px 28px;
   height: 34px;
@@ -3307,10 +3309,6 @@ button {
   box-shadow: 0 4px 14px rgb(0 0 0 / 28%);
   color: #8f959b;
   font-size: 11px;
-}
-
-.browser-toolbar.has-find {
-  padding-bottom: 5px;
 }
 
 .browser-find input {
