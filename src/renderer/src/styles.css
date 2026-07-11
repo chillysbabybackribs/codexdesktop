@@ -4200,7 +4200,7 @@ button {
 }
 .auto-copy-toast {
   position: fixed;
-  right: 18px;
+  left: 18px;
   bottom: 18px;
   z-index: 10000;
   padding: 7px 11px;
