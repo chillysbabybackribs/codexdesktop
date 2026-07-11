@@ -1,0 +1,12 @@
+{
+  "runId": "2026-07-11-5",
+  "mode": "unbiased-market-motion-observatory",
+  "startedOn": "2026-07-11",
+  "priorRun": "2026-07-11-4",
+  "constraints": [
+    "Do not carry prior heuristic classifications forward as qualified evidence",
+    "Every qualified claim requires verbatim evidence and exact artifact provenance",
+    "Unknown fields remain null",
+    "No app ideas before a Phase 0 GO"
+  ]
+}
