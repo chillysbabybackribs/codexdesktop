@@ -9,7 +9,6 @@ import type { CodexConnectionStatus, CodexEvent } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
-import type { ServerRequest } from '../../shared/codex-protocol/ServerRequest.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
@@ -448,5 +447,4 @@ export class CodexClient extends EventEmitter {
       message
     } satisfies CodexEvent)
   }
-
 }
