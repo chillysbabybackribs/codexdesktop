@@ -4184,6 +4184,9 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   const typedTextRef = useRef('')
   const justFocusedRef = useRef(false)
   const querySeqRef = useRef(0)
+  // Selection range for an inline autocomplete, applied after React commits
+  // the completed value to the controlled input.
+  const pendingInlineRef = useRef<{ start: number; end: number } | null>(null)
 
   // Mirror the page URL into the bar ONLY while the user isn't editing —
   // redirects and pushState-heavy sites must not clobber typing mid-edit.
@@ -4192,6 +4195,14 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
       setInput(activeTab?.url ?? '')
     }
   }, [activeTab?.url, isEditing])
+
+  useLayoutEffect(() => {
+    const range = pendingInlineRef.current
+    if (range && omniboxRef.current) {
+      omniboxRef.current.setSelectionRange(range.start, range.end)
+    }
+    pendingInlineRef.current = null
+  }, [input])
 
   // Switching tabs always ends the edit in the old tab's context.
   useEffect(() => {
