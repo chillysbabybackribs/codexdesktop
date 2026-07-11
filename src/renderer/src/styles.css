@@ -3657,9 +3657,13 @@ button {
 }
 
 .agent-mini-message.is-assistant a {
-  color: #dfe2e6;
+  color: #5865f2;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.agent-mini-message.is-assistant a:hover {
+  color: #8b95ff;
 }
 
 .agent-mini-message.is-assistant table {
@@ -3694,7 +3698,6 @@ button {
   gap: 6px;
   flex: 0 0 auto;
   padding: 8px;
-  border-top: 1px solid #222222;
 }
 
 .agent-overlay-composer textarea {
