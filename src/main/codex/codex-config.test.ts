@@ -124,3 +124,11 @@ test('the dynamic tool surface includes verified research primitives', () => {
     'code', 'tab', 'frame', 'timeoutMs', 'maxResultChars'
   ])
 })
+
+test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {
+  const guidance = buildGuidance()
+
+  assert.match(guidance, /default to the currently active visible tab/)
+  assert.match(guidance, /never create a tab merely because a browser tool was called/)
+  assert.doesNotMatch(guidance, /dedicated browser tab/)
+})
