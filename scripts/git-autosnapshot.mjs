@@ -13,6 +13,7 @@ const emptyTreeSha = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 const pathChunkSize = 100
 const pollIntervalMs = numberEnv('CODEXDESKTOP_AUTOGIT_INTERVAL_MS', 5_000)
 const stableMs = numberEnv('CODEXDESKTOP_AUTOGIT_STABLE_MS', 6_000)
+const pushEnabled = process.env.CODEXDESKTOP_AUTOGIT_PUSH !== '0'
 
 let lockHandle = null
 let lockPath = null
@@ -144,6 +145,9 @@ async function autoSnapshot(repo) {
       const identityEnv = await readCommitIdentityEnv(repo.repoRoot)
       const commitSha = await createCommit(repo, treeSha, headSha, identityEnv, prepared)
       await updateHead(repo.repoRoot, commitSha, headSha)
+      if (pushEnabled) {
+        await pushSnapshot(repo, branch)
+      }
       await gitResetIndexPaths(repo.repoRoot, prepared.safePaths)
 
       return {
@@ -384,6 +388,17 @@ async function updateHead(repoRoot, commitSha, previousHeadSha) {
   }
 
   await requireGit(runGit(repoRoot, args), 'Updating git HEAD')
+}
+
+async function pushSnapshot(repo, branch) {
+  if (!branch || branch.startsWith('detached@')) {
+    throw new Error('cannot push an autosnapshot from a detached HEAD')
+  }
+
+  await requireGit(
+    runGit(repo.repoRoot, ['push', 'origin', `HEAD:${branch}`]),
+    `Pushing autosnapshot to origin/${branch}`
+  )
 }
 
 async function gitAddPaths(repoRoot, paths, env) {

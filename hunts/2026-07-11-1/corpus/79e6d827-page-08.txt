@@ -1,0 +1,361 @@
+# Buffer Integrations
+
+Social Media Marketing
+
+## Put Buffer to work with AI and enterprise-grade automation
+
+Automate smarter with Buffer and scale with confidence. Zapier is built for enterprise-grade security, compliance, and performance.
+
+Start free with email
+
+Continue with Google
+
+Start free with email
+
+Continue with Google
+
+- No-code AI automation
+
+- Full audit trails and controls
+
+- SOC 2 and GDPR compliant
+
+- Easy visual workflow builder
+
+- 9,000+ apps, 450+ AI tools
+
+- Free tier available
+
+Or pick an app to pair with
+
+Google Drive
+
+File Management & Storage,Google
+
+Airtable
+
+Databases
+
+WordPress
+
+Website Builders,WordPress
+
+Notion
+
+Task Management
+
+Instagram for Business
+
+Facebook,Social Media Accounts
+
+Trello
+
+Project Management
+
+Dropbox
+
+File Management & Storage
+
+YouTube
+
+Google,Video & Audio
+
+Gmail
+
+Email,Google
+
+Google Drive
+
+File Management & Storage,Google
+
+Airtable
+
+Databases
+
+WordPress
+
+Website Builders,WordPress
+
+Notion
+
+Task Management
+
+Instagram for Business
+
+Facebook,Social Media Accounts
+
+Trello
+
+Project Management
+
+Google Drive
+
+File Management & Storage,Google
+
+Airtable
+
+Databases
+
+WordPress
+
+Website Builders,WordPress
+
+Notion
+
+Task Management
+
+Instagram for Business
+
+Facebook,Social Media Accounts
+
+Trello
+
+Project Management
+
+Dropbox
+
+File Management & Storage
+
+YouTube
+
+Google,Video & Audio
+
+Gmail
+
+Email,Google
+
+### Top companies trust Zapier to automate work and free up time
+
+## Join millions worldwide who automate their work using Zapier
+
+Sign up with Google
+
+Buffer + Zapier
+
+## How it works
+
+Buffer connects with Zapier to automate social publishing workflows. Teams use this integration to queue posts, publish announcements, and repurpose content.
+
+## When to use Buffer with Zapier
+
+### Reacting to Buffer activity
+
+Notify your team when items are queued, drafts are added, or posts are sent
+
+### Scheduling posts from other tools
+
+Queue updates from blogs, forms, or databases
+
+### Publishing urgent updates
+
+Share time-sensitive messages immediately
+
+### Coordinating multi-channel posting
+
+Trigger posts to multiple profiles from one event
+
+## Launch your first automated workflow
+
+- ### Buffer new items in an RSS feed
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer
+
+- ### Share new posts from Ghost to Buffer
+
+Details
+
+Try it
+
+Ghost + Buffer
+
+- ### Buffer your WordPress posts
+
+Details
+
+Try it
+
+WordPress + Buffer
+
+- ### Add new items in RSS feeds to Buffer as scheduled items
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer
+
+- ### Add items to Buffer for new or updated Google Sheet rows
+
+Details
+
+Try it
+
+Google Sheets + Buffer
+
+- ### Add new items in Notion databases to Buffer schedules
+
+Details
+
+Try it
+
+Notion + Buffer
+
+- ### Buffer new items in an RSS feed
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer
+
+- ### Share new posts from Ghost to Buffer
+
+Details
+
+Try it
+
+Ghost + Buffer- ### Buffer your WordPress posts
+
+Details
+
+Try it
+
+WordPress + Buffer
+
+- ### Add new items in RSS feeds to Buffer as scheduled items
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer- ### Add items to Buffer for new or updated Google Sheet rows
+
+Details
+
+Try it
+
+Google Sheets + Buffer
+
+- ### Add new items in Notion databases to Buffer schedules
+
+Details
+
+Try it
+
+Notion + Buffer- ### Share new Buffer queue items in Slack
+
+Details
+
+Try it
+
+Buffer + Slack
+
+- ### Add new Google Drive files in a folder to a Buffer queue
+
+Details
+
+Try it
+
+Google Drive + Buffer- ### Add new YouTube videos to Buffer
+
+Details
+
+Try it
+
+YouTube + Buffer
+
+- ### Update Buffer from Google Sheets rows
+
+Details
+
+Try it
+
+Google Sheets + Buffer- ### Create posts in Buffer queues when new articles are added to UpContent collections
+
+Details
+
+Try it
+
+UpContent + Buffer
+
+- ### Add new articles from The Open Mic to Buffer automatically
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer
+
+- ### Share new Buffer queue items in Slack
+
+Details
+
+Try it
+
+Buffer + Slack
+
+- ### Add new Google Drive files in a folder to a Buffer queue
+
+Details
+
+Try it
+
+Google Drive + Buffer
+
+- ### Add new YouTube videos to Buffer
+
+Details
+
+Try it
+
+YouTube + Buffer
+
+- ### Update Buffer from Google Sheets rows
+
+Details
+
+Try it
+
+Google Sheets + Buffer
+
+- ### Create posts in Buffer queues when new articles are added to UpContent collections
+
+Details
+
+Try it
+
+UpContent + Buffer
+
+- ### Add new articles from The Open Mic to Buffer automatically
+
+Details
+
+Try it
+
+RSS by Zapier + Buffer
+
+## Popular ways to use Buffer + Zapier
+
+### Notify the team when something is queued or sent
+
+When a Buffer queue item is added, or a post is sent, post to Slack or log in a sheet.
+
+### Update your content calendar
+
+Keep your content calendar updated every time a post is sent from Buffer.
+
+### Share new blog posts on social
+
+When new items publish in RSS by Zapier, add them to Buffer queue to keep channels updated and reduce manual copying.
+
+### Publish urgent announcements
+
+When a critical incident is raised in PagerDuty, add to Buffer and share now to reach followers quickly during outages.
+
+### Promote new content from a CMS
+
+When a

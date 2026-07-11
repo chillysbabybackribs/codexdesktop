@@ -1,0 +1,119 @@
+# Email Campaign Tracker Spreadsheet Template
+
+Keeps track of email marketing campaigns, including recipients, send dates, and performance metrics.
+
+Email Campaign Tracker
+
+Purpose: | This spreadsheet helps track email marketing campaigns, their recipients, scheduling dates, and performance metrics like open and click rates.
+
+Campaign Overview
+
+Campaign Name: | {campaignName}
+
+Campaign Owner: | {campaignOwner}
+
+Start Date: | {startDate}
+
+End Date: | {endDate}
+
+Target Audience: | {targetAudience}
+
+Campaign Details
+
+Recipient Name | Email | Date Sent | Opened | Clicked | Open Rate | Click Rate
+
+{#recipients.name} | {#recipients.email} | {#recipients.dateSent} | {#recipients.opened} | {#recipients.clicked} | {#recipients.openRate} | {#recipients.clickRate}
+
+Performance Summary
+
+Total Emails Sent | =COUNTA(recipients[Email])
+
+Total Opens | =SUM(recipients[Opened])
+
+Total Clicks | =SUM(recipients[Clicked])
+
+Average Open Rate | =AVERAGE(recipients[Open Rate])
+
+Average Click Rate | =AVERAGE(recipients[Click Rate])
+
+This document template includes dynamic placeholders for automated document generation with Documentero.com. Excel Template - Free download
+
+Download Excel Template (.XLSX)
+
+#### Customize Template
+
+Download the Email Campaign Tracker template in .XLSX format. Customize it to suit your needs using your preferred editor (Excel, Google Sheets...).
+
+#### Upload & Configure
+
+Upload the template to Documentero - Document Generation Service, then map and configure template fields for your automated workflow.
+
+#### Generate Documents
+
+Populate templates with your data and generate Excel (XLSX) documents using data collected from shareable web Forms, APIs, or Integrations.
+
+### Use Cases
+
+#### Automate Email Campaign Tracker Using Forms
+
+collect email campaign performance metrics via web form
+
+gather email recipient feedback using shareable form for campaign tracking
+
+track email outreach details from sales reps through fillable online form
+
+collect newsletter opt-in campaign results with auto-generated spreadsheet
+
+log marketing campaign contact data with embeddable form linked to Excel
+
+#### Generate Email Campaign Tracker Using APIs
+
+trigger email campaign tracker spreadsheet generation from CRM system
+
+generate email performance report in Excel via API after campaign ends
+
+auto-create campaign tracking sheet from new email broadcast via API
+
+populate email campaign metrics in Excel file using REST API
+
+create dynamic spreadsheet of email campaigns from third-party platform via API
+
+#### Integrations / Automations
+
+automatically generate email campaign tracker from Mailchimp using Zapier
+
+create Excel spreadsheet of email sends from HubSpot campaign via Make
+
+sync email performance data to tracking spreadsheet using ActiveCampaign and Zapier
+
+auto-generate Excel report when email campaign is launched via Constant Contact
+
+build email tracking spreadsheets from Zoho Campaigns using automation tools
+
+### Other templates in Sales & Marketing
+
+Advertising Copy
+
+DocumentDOCX
+
+A guide to crafting compelling ad headlines, descriptions, and CTAs.
+
+Video Script
+
+DocumentDOCX
+
+A scriptwriting layout for producing promotional or explainer videos.
+
+Marketing KPI Dashboard
+
+DocumentDOCX
+
+A visual Excel dashboard to track marketing performance metrics.
+
+Social Media Content Planner
+
+SpreadsheetXLSX
+
+Plans posts and content for social media campaigns with dates and platforms.
+
+Sales & Marketing Templates

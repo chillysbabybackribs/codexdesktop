@@ -138,6 +138,7 @@ export const ipcChannels = {
   codexSendMessage: 'codex:sendMessage',
   codexSteerTurn: 'codex:steerTurn',
   codexInterruptTurn: 'codex:interruptTurn',
+  codexCompactThread: 'codex:compactThread',
   codexUnsubscribeThread: 'codex:unsubscribeThread',
   codexEvent: 'codex:event',
   memoryPersist: 'memory:persist',

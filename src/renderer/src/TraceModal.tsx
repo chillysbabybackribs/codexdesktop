@@ -407,7 +407,7 @@ function TraceTextSection({ title, text }: { title: string; text: string }): Rea
   )
 }
 
-function formatTokens(value: number): string {
+export function formatTokens(value: number): string {
   if (value < 1_000) return value.toLocaleString()
   if (value < 1_000_000) return `${(value / 1_000).toFixed(value >= 100_000 ? 0 : 1)}k`
   return `${(value / 1_000_000).toFixed(1)}m`

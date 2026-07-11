@@ -1,8 +1,107 @@
 import type { WebContents } from 'electron'
+import { NetworkJournal, type NetworkJournalPage, type NetworkJournalQuery, type NetworkRequestSummary } from './network-journal.js'
+import {
+  PERFORMANCE_TIMELINE_EVENT_TYPES,
+  PerformanceDiagnostics,
+  type PerformanceDiagnosticsPage
+} from './performance-diagnostics.js'
 
 const maxBufferedEvents = 256
 const maxEventParamsChars = 8_000
 const maxEventPageChars = 16_000
+const performanceNavigationExpression = `(() => {
+  const entries = performance.getEntriesByType('navigation');
+  const entry = entries.length > 0 ? entries[entries.length - 1] : null;
+  if (!entry) return null;
+  const number = (key) => typeof entry[key] === 'number' && Number.isFinite(entry[key]) ? Math.round(entry[key] * 1000) / 1000 : null;
+  return {
+    timeOriginMs: Math.round(performance.timeOrigin * 1000) / 1000,
+    pageAgeMs: Math.round(performance.now() * 1000) / 1000,
+    type: typeof entry.type === 'string' ? entry.type : null,
+    durationMs: number('duration'),
+    redirectCount: number('redirectCount'),
+    fetchStartMs: number('fetchStart'),
+    requestStartMs: number('requestStart'),
+    responseStartMs: number('responseStart'),
+    responseEndMs: number('responseEnd'),
+    domInteractiveMs: number('domInteractive'),
+    domContentLoadedMs: number('domContentLoadedEventEnd'),
+    loadEventMs: number('loadEventEnd'),
+    transferSize: number('transferSize'),
+    encodedBodySize: number('encodedBodySize'),
+    decodedBodySize: number('decodedBodySize')
+  };
+})()`
+const installPerformanceObserverExpression = (includeLongTasks: boolean): string => `(() => {
+  if (typeof PerformanceObserver !== 'function') return { collectionStartedAtPageMs: performance.now(), longTasks: false, interactions: false };
+  const key = '__codexPerformanceDiagnosticsV1';
+  const existing = globalThis[key];
+  if (existing && Array.isArray(existing.observers)) {
+    for (const observer of existing.observers) observer.disconnect();
+  }
+  try { delete globalThis[key]; } catch {}
+  const supported = PerformanceObserver.supportedEntryTypes || [];
+  const state = {
+    collectionStartedAtPageMs: performance.now(),
+    longTasks: [],
+    interactions: [],
+    observers: [],
+    support: null
+  };
+  const support = {
+    collectionStartedAtPageMs: state.collectionStartedAtPageMs,
+    longTasks: ${includeLongTasks ? 'true' : 'false'} && supported.includes('longtask'),
+    interactions: supported.includes('event')
+  };
+  state.support = support;
+  if (support.longTasks) {
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        state.longTasks.push({ name: entry.name, startTime: entry.startTime, duration: entry.duration });
+      }
+      if (state.longTasks.length > 96) state.longTasks.splice(0, state.longTasks.length - 96);
+    });
+    observer.observe({ type: 'longtask', buffered: true });
+    state.observers.push(observer);
+  }
+  if (support.interactions) {
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (!entry.interactionId) continue;
+        state.interactions.push({
+          interactionId: entry.interactionId,
+          name: entry.name,
+          startTime: entry.startTime,
+          duration: entry.duration,
+          processingStart: entry.processingStart,
+          processingEnd: entry.processingEnd
+        });
+      }
+      if (state.interactions.length > 96) state.interactions.splice(0, state.interactions.length - 96);
+    });
+    observer.observe({ type: 'event', buffered: true, durationThreshold: 16 });
+    state.observers.push(observer);
+  }
+  Object.defineProperty(globalThis, key, { value: state, configurable: true });
+  return support;
+})()`
+const drainPerformanceObserverExpression = `(() => {
+  const state = globalThis.__codexPerformanceDiagnosticsV1;
+  if (!state) return { longTasks: [], interactions: [] };
+  return {
+    longTasks: Array.isArray(state.longTasks) ? state.longTasks.splice(0, state.longTasks.length) : [],
+    interactions: Array.isArray(state.interactions) ? state.interactions.splice(0, state.interactions.length) : []
+  };
+})()`
+const stopPerformanceObserverExpression = `(() => {
+  const key = '__codexPerformanceDiagnosticsV1';
+  const state = globalThis[key];
+  if (state && Array.isArray(state.observers)) {
+    for (const observer of state.observers) observer.disconnect();
+  }
+  try { delete globalThis[key]; } catch {}
+  return true;
+})()`
 
 export type CdpDomainCapability = {
   name: string
@@ -61,6 +160,8 @@ export class CdpSession {
   private readonly waiters = new Set<EventWaiter>()
   private eventSequence = 0
   private droppedEvents = 0
+  private readonly networkJournal = new NetworkJournal()
+  private readonly performanceDiagnostics = new PerformanceDiagnostics()
 
   constructor(webContents: WebContents) {
     this.webContents = webContents
@@ -147,6 +248,129 @@ export class CdpSession {
     }
   }
 
+  async startNetworkJournal(): Promise<void> {
+    this.networkJournal.start()
+    try {
+      await this.send('Network.enable')
+    } catch (error) {
+      this.networkJournal.stop()
+      throw error
+    }
+  }
+
+  stopNetworkJournal(): NetworkJournalPage {
+    this.networkJournal.stop()
+    return this.networkJournal.page()
+  }
+
+  networkJournalPage(query: NetworkJournalQuery = {}): NetworkJournalPage {
+    return this.networkJournal.page(query)
+  }
+
+  networkRequest(requestId: string): NetworkRequestSummary | null {
+    return this.networkJournal.request(requestId)
+  }
+
+  async startPerformanceDiagnostics(): Promise<PerformanceDiagnosticsPage> {
+    this.performanceDiagnostics.start()
+    try {
+      await this.send('Performance.enable', { timeDomain: 'timeTicks' })
+      await this.send('Page.enable')
+      await this.send('Page.setLifecycleEventsEnabled', { enabled: true })
+    } catch (error) {
+      this.performanceDiagnostics.stop()
+      throw error
+    }
+
+    const preferredTypes = [...PERFORMANCE_TIMELINE_EVENT_TYPES]
+    let longTaskTimelineError: string | null = null
+    try {
+      await this.send('PerformanceTimeline.enable', { eventTypes: preferredTypes })
+      this.performanceDiagnostics.setTimelineSupport(preferredTypes)
+    } catch (error) {
+      longTaskTimelineError = errorMessage(error)
+      const fallbackTypes = preferredTypes.filter((type) => type !== 'longtask')
+      try {
+        await this.send('PerformanceTimeline.enable', { eventTypes: fallbackTypes })
+        this.performanceDiagnostics.setTimelineSupport(fallbackTypes)
+      } catch (fallbackError) {
+        this.performanceDiagnostics.addWarning(`performance timeline unavailable: ${errorMessage(fallbackError)}`)
+      }
+    }
+
+    try {
+      const evaluated = asRecord(await this.send('Runtime.evaluate', {
+        expression: installPerformanceObserverExpression(longTaskTimelineError !== null),
+        returnByValue: true
+      }))
+      const support = asRecord(evaluated.result).value
+      this.performanceDiagnostics.setObserverSupport(support)
+      const supportRecord = asRecord(support)
+      if (longTaskTimelineError && supportRecord.longTasks === true) {
+        this.performanceDiagnostics.addWarning('CDP long-task timeline unavailable; using page PerformanceObserver')
+      } else if (longTaskTimelineError) {
+        this.performanceDiagnostics.addWarning(`long-task diagnostics unavailable: ${longTaskTimelineError}`)
+      }
+      if (supportRecord.interactions !== true) {
+        this.performanceDiagnostics.addWarning('Event Timing observer unavailable; local INP cannot be measured')
+      }
+    } catch (error) {
+      this.performanceDiagnostics.addWarning(`page performance observers unavailable: ${errorMessage(error)}`)
+    }
+
+    return this.readPerformanceDiagnostics()
+  }
+
+  async readPerformanceDiagnostics(): Promise<PerformanceDiagnosticsPage> {
+    const metrics = await this.send('Performance.getMetrics')
+    try {
+      const evaluated = asRecord(await this.send('Runtime.evaluate', {
+        expression: drainPerformanceObserverExpression,
+        returnByValue: true
+      }))
+      this.performanceDiagnostics.recordObservedData(asRecord(evaluated.result).value)
+    } catch {
+      // The observer is an optional fallback and can disappear after navigation.
+    }
+    let navigation: Record<string, unknown> | null = null
+    try {
+      const evaluated = asRecord(await this.send('Runtime.evaluate', {
+        expression: performanceNavigationExpression,
+        returnByValue: true,
+        awaitPromise: false
+      }))
+      const result = asRecord(evaluated.result)
+      navigation = asNullableRecord(result.value)
+      if (evaluated.exceptionDetails) {
+        this.performanceDiagnostics.addWarning('navigation timing evaluation failed')
+      }
+    } catch (error) {
+      this.performanceDiagnostics.addWarning(`navigation timing unavailable: ${errorMessage(error)}`)
+    }
+    return this.performanceDiagnostics.page(metrics, navigation)
+  }
+
+  async stopPerformanceDiagnostics(): Promise<PerformanceDiagnosticsPage> {
+    const page = await this.readPerformanceDiagnostics()
+    this.performanceDiagnostics.stop()
+    try {
+      await this.send('Performance.disable')
+    } catch {
+      // Best-effort cleanup; the target may already be navigating or closing.
+    }
+    try {
+      await this.send('PerformanceTimeline.enable', { eventTypes: [] })
+    } catch {
+      // PerformanceTimeline is experimental and may not exist on this Chromium build.
+    }
+    try {
+      await this.send('Runtime.evaluate', { expression: stopPerformanceObserverExpression, returnByValue: true })
+    } catch {
+      // The page may have navigated since the observer was installed.
+    }
+    return { ...page, active: false }
+  }
+
   async terminateExecution(): Promise<void> {
     if (this.webContents.isDestroyed()) return
 
@@ -228,6 +452,8 @@ export class CdpSession {
   }
 
   private recordEvent(method: string, params: unknown, sessionId?: string): void {
+    this.networkJournal.record(method, params)
+    this.performanceDiagnostics.record(method, params)
     const event: CdpEventRecord = {
       sequence: ++this.eventSequence,
       timestamp: new Date().toISOString(),
@@ -322,6 +548,10 @@ function boundedEventPage(events: CdpEventRecord[]): CdpEventRecord[] {
 
 function asRecord(value: unknown): Record<string, unknown> {
   return isRecord(value) ? value : {}
+}
+
+function asNullableRecord(value: unknown): Record<string, unknown> | null {
+  return isRecord(value) ? value : null
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

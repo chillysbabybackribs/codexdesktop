@@ -26,6 +26,7 @@ import type { ThreadGoalSetResponse } from '../../shared/codex-protocol/v2/Threa
 import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
 import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js'
 import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
 import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
@@ -57,6 +58,11 @@ type PendingRequest = {
 
 const requestTimeoutMs = 30_000
 
+// Compact between turns once the last model call's context reaches this share
+// of the model window, well before codex-core's own end-of-window handling, so
+// long threads stay responsive instead of riding the limit.
+const autoCompactContextRatio = 0.8
+
 function localSkillsRoot(): string {
   return join(app.getAppPath(), 'skills')
 }
@@ -74,6 +80,8 @@ export class CodexClient extends EventEmitter {
   private localSkills: SkillMetadata[] = []
   private readonly threadModels = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
+  private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
+  private readonly compactionsInFlight = new Set<string>()
 
   constructor(
     private readonly getWindow: () => BrowserWindow | null,
@@ -231,6 +239,26 @@ export class CodexClient extends EventEmitter {
       expectedTurnId: turnId,
       input: this.buildTurnInput(text, false)
     })
+  }
+
+  // Kicks off server-side history compaction (codex summarizes the thread and
+  // drops old items). Deduped per thread; the guard clears when token usage
+  // reports the context back under the auto-compact threshold.
+  async compactThread(threadId: string): Promise<{ started: boolean }> {
+    await this.ensureStarted()
+
+    if (this.compactionsInFlight.has(threadId)) {
+      return { started: false }
+    }
+
+    this.compactionsInFlight.add(threadId)
+    try {
+      await this.request('thread/compact/start', { threadId })
+      return { started: true }
+    } catch (error) {
+      this.compactionsInFlight.delete(threadId)
+      throw error
+    }
   }
 
   async unsubscribeThread(threadId: string): Promise<ThreadUnsubscribeResponse> {
@@ -457,12 +485,20 @@ export class CodexClient extends EventEmitter {
 
       if (notification.method === 'model/rerouted') {
         this.threadModels.set(notification.params.threadId, notification.params.toModel)
+      } else if (notification.method === 'thread/tokenUsage/updated') {
+        this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
+      } else if (notification.method === 'turn/completed') {
+        this.maybeAutoCompact(notification.params.threadId)
+      } else if (notification.method === 'thread/compacted') {
+        this.compactionsInFlight.delete(notification.params.threadId)
       } else if (
         notification.method === 'thread/deleted' ||
         notification.method === 'thread/closed'
       ) {
         this.threadModels.delete(notification.params.threadId)
         this.threadReasoningEfforts.delete(notification.params.threadId)
+        this.threadTokenUsage.delete(notification.params.threadId)
+        this.compactionsInFlight.delete(notification.params.threadId)
       }
 
       this.emit('event', {
@@ -470,6 +506,33 @@ export class CodexClient extends EventEmitter {
         notification
       } satisfies CodexEvent)
     }
+  }
+
+  private noteThreadTokenUsage(threadId: string, tokenUsage: ThreadTokenUsage): void {
+    this.threadTokenUsage.set(threadId, tokenUsage)
+
+    // Compaction shows up here as the next model call reporting a much
+    // smaller context, so this is also where the dedupe guard clears.
+    const window = tokenUsage.modelContextWindow
+    if (window && tokenUsage.last.totalTokens < window * autoCompactContextRatio) {
+      this.compactionsInFlight.delete(threadId)
+    }
+  }
+
+  // `last` is the most recent model call, so its token count is the current
+  // size of the thread's context. Fired from turn/completed so compaction
+  // never races an in-flight turn.
+  private maybeAutoCompact(threadId: string): void {
+    const usage = this.threadTokenUsage.get(threadId)
+    const window = usage?.modelContextWindow
+
+    if (!usage || !window || usage.last.totalTokens < window * autoCompactContextRatio) {
+      return
+    }
+
+    void this.compactThread(threadId).catch((error) => {
+      console.warn(`Auto-compaction failed for thread ${threadId}`, error)
+    })
   }
 
   private handleResponse(message: JsonRpcMessage): void {
@@ -521,6 +584,7 @@ export class CodexClient extends EventEmitter {
         result = code
           ? await this.browserAgent.run(code, {
               tabId: readString(args.tab),
+              frame: readString(args.frame),
               timeoutMs: readNumber(args.timeoutMs),
               maxResultChars: readNumber(args.maxResultChars)
             })
@@ -528,6 +592,7 @@ export class CodexClient extends EventEmitter {
       } else if (params.tool === 'browser_extract_page') {
         result = await this.browserAgent.extractPage({
           tabId: readString(args.tab),
+          frame: readString(args.frame),
           timeoutMs: readNumber(args.timeoutMs),
           maxResultChars: readNumber(args.maxResultChars)
         })
@@ -551,6 +616,29 @@ export class CodexClient extends EventEmitter {
           result = method
             ? await this.browserAgent.waitForCdpEvent(method, options)
             : { ok: false, error: 'browser_cdp wait requires a string "method" event name' }
+        } else if (operation === 'traceStart') {
+          result = await this.browserAgent.startCdpTrace(asRecord(args.params), options)
+        } else if (operation === 'traceStop') {
+          result = await this.browserAgent.stopCdpTrace(options)
+        } else if (operation === 'snapshot') {
+          result = await this.browserAgent.captureDomSnapshot(asRecord(args.params), options)
+        } else if (operation === 'networkStart') {
+          result = await this.browserAgent.startNetworkJournal(options)
+        } else if (operation === 'network') {
+          result = await this.browserAgent.readNetworkJournal(asRecord(args.params), options)
+        } else if (operation === 'networkBody') {
+          const requestId = readString(args.requestId)
+          result = requestId
+            ? await this.browserAgent.captureNetworkResponseBody(requestId, options)
+            : { ok: false, error: 'browser_cdp networkBody requires a string "requestId"' }
+        } else if (operation === 'networkStop') {
+          result = await this.browserAgent.stopNetworkJournal(options)
+        } else if (operation === 'performanceStart') {
+          result = await this.browserAgent.startPerformanceDiagnostics(options)
+        } else if (operation === 'performance') {
+          result = await this.browserAgent.readPerformanceDiagnostics(options)
+        } else if (operation === 'performanceStop') {
+          result = await this.browserAgent.stopPerformanceDiagnostics(options)
         } else if (operation === 'command') {
           result = method
             ? await this.browserAgent.cdp(method, asRecord(args.params), options)

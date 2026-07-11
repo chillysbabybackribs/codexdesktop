@@ -611,6 +611,14 @@ button {
   line-height: 1.5;
 }
 
+/* Compaction status renders as quiet inline text, not a boxed system row. */
+.message-compaction {
+  max-width: min(860px, 92%);
+  color: #7f858b;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
 .message-system-error {
   border-color: #5b2b2b;
   color: #f0b5b5;
@@ -2612,6 +2620,79 @@ button {
   margin-left: -1px;
   color: #6a7076;
   font-size: 11px;
+}
+
+.context-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #9aa0a6;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+
+.context-pill:hover:not(:disabled) {
+  background: #232323;
+  color: #e2e2e2;
+}
+
+.context-pill:disabled {
+  opacity: 0.6;
+}
+
+.context-pill:focus-visible {
+  outline: 2px solid #4a90d9;
+  outline-offset: 1px;
+}
+
+.context-pill-track {
+  width: 34px;
+  height: 4px;
+  border-radius: 2px;
+  background: #2e2e2e;
+  overflow: hidden;
+}
+
+.context-pill-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: #6a7076;
+  transition: width 200ms ease;
+}
+
+.context-pill.is-warm .context-pill-fill {
+  background: #d9a441;
+}
+
+.context-pill.is-compacting {
+  opacity: 1;
+}
+
+.context-pill.is-compacting .context-pill-fill {
+  animation: context-pill-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes context-pill-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.context-pill.is-high .context-pill-fill {
+  background: #d96b4a;
+}
+
+.context-pill.is-high .context-pill-label {
+  color: #d96b4a;
 }
 
 .model-pill-wrap {

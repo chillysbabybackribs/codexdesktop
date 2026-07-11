@@ -1,17 +1,42 @@
-import type { WebContents } from 'electron'
+import type { WebContents, WebFrameMain } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore } from './cdp-artifact-store.js'
+import { buildDomSnapshotModel } from './dom-snapshot.js'
+import type { NetworkJournalQuery } from './network-journal.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
 export const MAX_BROWSER_TIMEOUT_MS = 60_000
 export const DEFAULT_BROWSER_RESULT_CHARS = 24_000
 export const MAX_BROWSER_RESULT_CHARS = 100_000
+export const MAX_PARALLEL_BROWSER_TARGETS = 8
+export const MAX_PARALLEL_BROWSER_FRAMES = 12
+
+export type BrowserFailureCode =
+  | 'timeout'
+  | 'targetClosed'
+  | 'targetChanged'
+  | 'frameDetached'
+  | 'frameNotFound'
+  | 'executionError'
 
 export type BrowserAgentOptions = {
   tabId?: string | null
   timeoutMs?: number | null
   maxResultChars?: number | null
+}
+
+export type BrowserRunOptions = BrowserAgentOptions & {
+  frame?: string | null
+}
+
+export type BrowserFrameDescriptor = {
+  frameId: string
+  parentFrameId: string | null
+  name: string
+  url: string
+  origin: string
+  isMainFrame: boolean
 }
 
 export type BrowserCdpEventOptions = BrowserAgentOptions & {
@@ -25,6 +50,7 @@ type CdpOperationContext = {
   tabId: string
   url: string
   title: string
+  webContents: WebContents
 }
 
 export type BrowserAgentResult = {
@@ -37,6 +63,8 @@ export type BrowserAgentResult = {
   durationMs?: number
   resultChars?: number
   truncated?: boolean
+  errorCode?: BrowserFailureCode
+  targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
 }
 
 type BrowserAgentSuccess = BrowserAgentResult & {
@@ -80,7 +108,11 @@ export class BrowserAgentController {
     return this.getTabs()?.listTabs() ?? []
   }
 
-  async run(code: string, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+  listTargets(): ReturnType<TabManager['listTargets']> {
+    return this.getTabs()?.listTargets() ?? []
+  }
+
+  async run(code: string, options: BrowserRunOptions = {}): Promise<BrowserAgentResult> {
     if (!code.trim()) {
       return { ok: false, error: 'browser.run requires non-empty JavaScript' } satisfies BrowserAgentFailure
     }
@@ -88,6 +120,10 @@ export class BrowserAgentController {
     const tabs = this.getTabs()
     if (!tabs) {
       return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    if (options.tabId === 'all') {
+      return this.runAcrossTargets(code, options)
     }
 
     const tabId = options.tabId ?? tabs.getActiveTabId()
@@ -107,11 +143,16 @@ export class BrowserAgentController {
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
-        return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
+        return {
+          ok: false,
+          error: `no browser target with id ${tabId}`,
+          errorCode: 'targetClosed',
+          targetState: { targets: tabs.listTargets() }
+        } satisfies BrowserAgentFailure
       }
 
       const startedAt = Date.now()
-      const execution = executePageProgram(webContents, code)
+      const execution = executePageProgram(webContents, code, options.frame, maxResultChars)
 
       try {
         const rawResult = await withTimeout(
@@ -120,6 +161,9 @@ export class BrowserAgentController {
           () => cdpSessionFor(webContents).terminateExecution()
         )
         const bounded = boundResult(rawResult, maxResultChars)
+        const rawMetadata = asRecord(rawResult)
+        const nestedTruncated = rawMetadata.truncated === true
+        const originalChars = typeof rawMetadata.originalChars === 'number' ? rawMetadata.originalChars : bounded.chars
         return {
           ok: true,
           result: bounded.value,
@@ -127,17 +171,20 @@ export class BrowserAgentController {
           url: safeUrl(webContents),
           title: safeTitle(webContents),
           durationMs: Date.now() - startedAt,
-          resultChars: bounded.chars,
-          truncated: bounded.truncated
+          resultChars: originalChars,
+          truncated: bounded.truncated || nestedTruncated
         } satisfies BrowserAgentSuccess
       } catch (error) {
+        const errorCode = classifyBrowserFailure(error)
         return {
           ok: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: errorMessage(error),
+          errorCode,
           tabId,
           url: safeUrl(webContents),
           title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt
+          durationMs: Date.now() - startedAt,
+          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
         } satisfies BrowserAgentFailure
       }
     })
@@ -156,6 +203,49 @@ export class BrowserAgentController {
     return operation
   }
 
+  private async runAcrossTargets(code: string, options: BrowserRunOptions): Promise<BrowserAgentResult> {
+    const targets = this.listTargets()
+    if (targets.length === 0) {
+      return { ok: false, error: 'no browser targets are available' } satisfies BrowserAgentFailure
+    }
+    const startedAt = Date.now()
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+    const perTargetBudget = fanoutItemBudget(maxResultChars, targets.length, 700)
+    const results = await mapWithConcurrency(targets, MAX_PARALLEL_BROWSER_TARGETS, async (target) => {
+      const result = await this.run(code, { ...options, tabId: target.id, maxResultChars: perTargetBudget })
+      return {
+        target,
+        ok: result.ok,
+        ...(result.ok
+          ? { result: result.result, resultChars: result.resultChars ?? 0 }
+          : { error: result.error, errorCode: result.errorCode }),
+        durationMs: result.durationMs ?? 0,
+        truncated: result.truncated === true
+      }
+    })
+    const governed = fitFanoutEnvelope('targets', results, {
+      targetCount: results.length,
+      succeeded: results.filter(({ ok }) => ok).length,
+      failed: results.filter(({ ok }) => !ok).length,
+      maxConcurrency: Math.min(MAX_PARALLEL_BROWSER_TARGETS, results.length)
+    }, maxResultChars)
+    return {
+      ok: true,
+      result: governed.value,
+      tabId: 'all',
+      url: '',
+      title: 'All browser targets',
+      durationMs: Date.now() - startedAt,
+      resultChars: governed.originalChars,
+      truncated: governed.truncated
+    } satisfies BrowserAgentSuccess
+  }
+
   async cdp(
     method: string,
     params: object = {},
@@ -166,7 +256,17 @@ export class BrowserAgentController {
     }
 
     return this.runCdpOperation(options, async (session, timeoutMs, context) => {
-      const result = await withTimeout(session.send(method, params), timeoutMs)
+      let result: unknown
+      try {
+        result = await withTimeout(session.send(method, params), timeoutMs)
+      } catch (error) {
+        if (method !== 'Page.printToPDF' || !isUnsupportedCdpCommand(error)) throw error
+        const pdf = await withTimeout(
+          context.webContents.printToPDF(params as Parameters<WebContents['printToPDF']>[0]),
+          timeoutMs
+        )
+        result = { data: pdf.toString('base64') }
+      }
       return this.materializeCdpResult(method, params, result, context)
     })
   }
@@ -190,6 +290,152 @@ export class BrowserAgentController {
     return this.runCdpOperation(options, async (session, timeoutMs) => {
       await session.prepareForEvent(method)
       return session.waitForEvent(toEventQuery(options, method), timeoutMs)
+    })
+  }
+
+  async startCdpTrace(params: object = {}, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    if (!this.artifactStore) {
+      return { ok: false, error: 'CDP artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+    return this.runCdpOperation(options, async (session, timeoutMs) => {
+      const traceParams = { ...asRecord(params), transferMode: 'ReturnAsStream' }
+      await withTimeout(session.send('Tracing.start', traceParams), timeoutMs)
+      return { tracing: 'started', transferMode: 'ReturnAsStream' }
+    })
+  }
+
+  async stopCdpTrace(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'CDP artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+      const afterSequence = session.eventPage({ limit: 1 }).latestSequence
+      await withTimeout(session.send('Tracing.end'), timeoutMs)
+      const completed = await session.waitForEvent({
+        method: 'Tracing.tracingComplete',
+        afterSequence
+      }, timeoutMs)
+      const stream = asRecord(completed.params).stream
+      if (typeof stream !== 'string' || !stream) throw new Error('Tracing completed without a stream handle')
+
+      try {
+        const trace = await artifactStore.persistTraceStream(async () => {
+          const response = asRecord(await withTimeout(session.send('IO.read', { handle: stream, size: 1_000_000 }), timeoutMs))
+          return {
+            data: typeof response.data === 'string' ? response.data : '',
+            base64Encoded: response.base64Encoded === true,
+            eof: response.eof === true
+          }
+        })
+        return { trace: { ...trace, tabId: context.tabId, url: context.url, title: context.title } }
+      } finally {
+        try {
+          await session.send('IO.close', { handle: stream })
+        } catch {
+          // Chromium may close the stream automatically after EOF.
+        }
+      }
+    })
+  }
+
+  async captureDomSnapshot(params: object = {}, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'CDP artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+      const { maxNodes: requestedMaxNodes, ...provided } = asRecord(params)
+      const computedStyles = Array.isArray(provided.computedStyles)
+        ? provided.computedStyles.filter((value): value is string => typeof value === 'string')
+        : []
+      const snapshot = await withTimeout(session.send('DOMSnapshot.captureSnapshot', {
+        ...provided,
+        computedStyles,
+        includeDOMRects: provided.includeDOMRects !== false,
+        includePaintOrder: provided.includePaintOrder === true
+      }), timeoutMs)
+      const artifact = await artifactStore.persistSnapshot(snapshot)
+      const maxNodes = typeof requestedMaxNodes === 'number' ? requestedMaxNodes : 100
+      return {
+        snapshot: {
+          ...artifact,
+          model: buildDomSnapshotModel(snapshot, maxNodes),
+          tabId: context.tabId,
+          url: context.url,
+          title: context.title
+        }
+      }
+    })
+  }
+
+  async startNetworkJournal(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => {
+      await session.startNetworkJournal()
+      return { network: { active: true, startedAt: session.networkJournalPage().startedAt } }
+    })
+  }
+
+  async readNetworkJournal(params: object = {}, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => {
+      await session.capabilities()
+      return { network: session.networkJournalPage(toNetworkJournalQuery(params)) }
+    })
+  }
+
+  async stopNetworkJournal(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => ({ network: session.stopNetworkJournal() }))
+  }
+
+  async startPerformanceDiagnostics(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => ({
+      performance: await session.startPerformanceDiagnostics()
+    }))
+  }
+
+  async readPerformanceDiagnostics(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => ({
+      performance: await session.readPerformanceDiagnostics()
+    }))
+  }
+
+  async stopPerformanceDiagnostics(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    return this.runCdpOperation(options, async (session) => ({
+      performance: await session.stopPerformanceDiagnostics()
+    }))
+  }
+
+  async captureNetworkResponseBody(requestId: string, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'CDP artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+    if (!requestId.trim()) {
+      return { ok: false, error: 'browser.cdp networkBody requires a requestId' } satisfies BrowserAgentFailure
+    }
+    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+      const request = session.networkRequest(requestId)
+      if (!request) throw new Error(`network journal has no request with id ${requestId}`)
+      const response = asRecord(await withTimeout(session.send('Network.getResponseBody', { requestId }), timeoutMs))
+      const body = response.body
+      if (typeof body !== 'string') throw new Error('Network.getResponseBody returned no body')
+      const artifact = await artifactStore.persistResponseBody(
+        body,
+        response.base64Encoded === true,
+        request.mimeType,
+        request.url
+      )
+      return {
+        responseBody: {
+          ...artifact,
+          requestId,
+          requestUrl: request.url,
+          status: request.status,
+          tabId: context.tabId,
+          pageUrl: context.url,
+          title: context.title
+        }
+      }
     })
   }
 
@@ -219,7 +465,7 @@ export class BrowserAgentController {
 
       const startedAt = Date.now()
       try {
-        const context = { tabId, url: safeUrl(webContents), title: safeTitle(webContents) }
+        const context = { tabId, url: safeUrl(webContents), title: safeTitle(webContents), webContents }
         const rawResult = await execute(cdpSessionFor(webContents), timeoutMs, context)
         const bounded = boundResult(rawResult, maxResultChars)
         return {
@@ -262,9 +508,15 @@ export class BrowserAgentController {
     result: unknown,
     context: CdpOperationContext
   ): Promise<unknown> {
-    if (method !== 'Page.captureScreenshot' || !this.artifactStore) return result
+    if (!this.artifactStore) return result
     const data = asRecord(result).data
     if (typeof data !== 'string') return result
+
+    if (method === 'Page.printToPDF') {
+      const pdf = await this.artifactStore.persistPdf(data)
+      return { pdf: { ...pdf, tabId: context.tabId, url: context.url, title: context.title } }
+    }
+    if (method !== 'Page.captureScreenshot') return result
 
     const format = asRecord(params).format
     const requestedFormat = typeof format === 'string' ? format : null
@@ -279,7 +531,7 @@ export class BrowserAgentController {
     }
   }
 
-  async extractPage(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+  async extractPage(options: BrowserRunOptions = {}): Promise<BrowserAgentResult> {
     const maxResultChars = clampNumber(
       options.maxResultChars,
       DEFAULT_BROWSER_RESULT_CHARS,
@@ -382,9 +634,104 @@ export function buildPageExtractionProgram(maxChars: number): string {
 `
 }
 
-async function executePageProgram(webContents: WebContents, code: string): Promise<unknown> {
+async function executePageProgram(
+  webContents: WebContents,
+  code: string,
+  frameSelector: string | null | undefined,
+  maxResultChars: number
+): Promise<unknown> {
   const wrapped = `(async () => { ${code}\n})()`
-  return webContents.executeJavaScript(wrapped, true)
+  const selector = frameSelector?.trim()
+  if (!selector || selector === 'main') return webContents.executeJavaScript(wrapped, true)
+
+  const mainFrame = webContents.mainFrame
+  const frames = liveFrames(mainFrame)
+  if (selector === 'all') {
+    const perFrameBudget = fanoutItemBudget(maxResultChars, frames.length, 550)
+    const results = await mapWithConcurrency(frames, MAX_PARALLEL_BROWSER_FRAMES, async (frame) => {
+      const descriptor = describeFrame(frame, mainFrame)
+      try {
+        const result = await frame.executeJavaScript(wrapped, true)
+        const bounded = boundResult(result, perFrameBudget)
+        return {
+          frame: descriptor,
+          ok: true,
+          result: bounded.value,
+          resultChars: bounded.chars,
+          truncated: bounded.truncated
+        }
+      } catch (error) {
+        return {
+          frame: descriptor,
+          ok: false,
+          error: errorMessage(error),
+          errorCode: classifyBrowserFailure(error),
+          truncated: false
+        }
+      }
+    })
+    const hasLifecycleFailure = results.some((result) => !result.ok && isLifecycleFailure(result.errorCode))
+    return fitFanoutEnvelope('frames', results, {
+      frameCount: results.length,
+      succeeded: results.filter(({ ok }) => ok).length,
+      failed: results.filter(({ ok }) => !ok).length,
+      maxConcurrency: Math.min(MAX_PARALLEL_BROWSER_FRAMES, results.length),
+      ...(hasLifecycleFailure ? { frameInventory: frameInventory(webContents) } : {})
+    }, maxResultChars).value
+  }
+
+  const frame = frames.find((candidate) => String(candidate.frameTreeNodeId) === selector)
+  if (!frame) throw new Error(`no live frame with id ${selector}`)
+  return {
+    frame: describeFrame(frame, mainFrame),
+    result: await frame.executeJavaScript(wrapped, true)
+  }
+}
+
+function liveFrames(mainFrame: WebFrameMain): WebFrameMain[] {
+  try {
+    return mainFrame.framesInSubtree.filter((frame) => !frame.isDestroyed() && !frame.detached)
+  } catch {
+    return mainFrame.isDestroyed() || mainFrame.detached ? [] : [mainFrame]
+  }
+}
+
+function describeFrame(frame: WebFrameMain, mainFrame: WebFrameMain): BrowserFrameDescriptor {
+  return {
+    frameId: String(frame.frameTreeNodeId),
+    parentFrameId: frame.parent ? String(frame.parent.frameTreeNodeId) : null,
+    name: frame.name,
+    url: frame.url,
+    origin: frame.origin,
+    isMainFrame: frame === mainFrame
+  }
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
+}
+
+function classifyBrowserFailure(error: unknown): BrowserFailureCode {
+  const message = errorMessage(error)
+  if (/timed out/i.test(message)) return 'timeout'
+  if (/no live frame with id/i.test(message)) return 'frameNotFound'
+  if (/frame.*(?:disposed|detached|destroyed)|render frame was disposed/i.test(message)) return 'frameDetached'
+  if (/execution context was destroyed|cannot find context|navigat(?:e|ed|ion)|target changed/i.test(message)) return 'targetChanged'
+  if (/target.*(?:closed|destroyed)|webcontents.*destroyed/i.test(message)) return 'targetClosed'
+  return 'executionError'
+}
+
+function isLifecycleFailure(code: BrowserFailureCode | undefined): boolean {
+  return code === 'timeout' || code === 'targetClosed' || code === 'targetChanged' || code === 'frameDetached' || code === 'frameNotFound'
+}
+
+function frameInventory(webContents: WebContents): BrowserFrameDescriptor[] {
+  try {
+    const mainFrame = webContents.mainFrame
+    return liveFrames(mainFrame).map((frame) => describeFrame(frame, mainFrame))
+  } catch {
+    return []
+  }
 }
 
 function withTimeout<T>(
@@ -420,10 +767,86 @@ function boundResult(value: unknown, maxChars: number): { value: unknown; chars:
   }
 
   return {
-    value: serialized.slice(0, maxChars).replace(/\s+\S*$/, ''),
+    value: structuredPreview(serialized, maxChars),
     chars: serialized.length,
     truncated: true
   }
+}
+
+function structuredPreview(serialized: string, maxChars: number): { truncated: true; originalChars: number; preview: string } {
+  const originalChars = serialized.length
+  const empty = { truncated: true as const, originalChars, preview: '' }
+  const overhead = JSON.stringify(empty).length
+  let preview = serialized.slice(0, Math.max(0, maxChars - overhead - 4))
+  let value = { ...empty, preview }
+  while (preview.length > 0 && JSON.stringify(value).length > maxChars) {
+    const excess = JSON.stringify(value).length - maxChars
+    preview = preview.slice(0, Math.max(0, preview.length - Math.max(1, excess)))
+    value = { ...empty, preview }
+  }
+  return value
+}
+
+function fanoutItemBudget(maxChars: number, itemCount: number, metadataAllowance: number): number {
+  const available = Math.max(256, maxChars - 600)
+  return Math.max(256, Math.floor(available / Math.max(1, itemCount)) - metadataAllowance)
+}
+
+function fitFanoutEnvelope<T>(
+  key: 'targets' | 'frames',
+  items: T[],
+  summary: Record<string, unknown>,
+  maxChars: number
+): { value: Record<string, unknown>; originalChars: number; truncated: boolean } {
+  const original = { ...summary, [key]: items }
+  const originalChars = JSON.stringify(original).length
+  const visible: T[] = []
+  let omitted = 0
+
+  for (const item of items) {
+    const candidate = {
+      ...summary,
+      [key]: [...visible, item],
+      omittedItems: items.length - visible.length - 1,
+      truncated: items.some((entry) => asRecord(entry).truncated === true) || items.length - visible.length - 1 > 0,
+      originalChars
+    }
+    if (JSON.stringify(candidate).length <= maxChars) {
+      visible.push(item)
+    } else {
+      omitted += 1
+    }
+  }
+
+  const childTruncated = items.some((item) => asRecord(item).truncated === true)
+  const value = {
+    ...summary,
+    [key]: visible,
+    omittedItems: omitted,
+    truncated: childTruncated || omitted > 0,
+    originalChars
+  }
+  const bounded = boundResult(value, maxChars)
+  return {
+    value: asRecord(bounded.value),
+    originalChars,
+    truncated: childTruncated || omitted > 0 || bounded.truncated
+  }
+}
+
+async function mapWithConcurrency<T, R>(items: T[], concurrency: number, mapper: (item: T, index: number) => Promise<R>): Promise<R[]> {
+  const results = new Array<R>(items.length)
+  let nextIndex = 0
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    for (;;) {
+      const index = nextIndex
+      nextIndex += 1
+      if (index >= items.length) return
+      results[index] = await mapper(items[index], index)
+    }
+  })
+  await Promise.all(workers)
+  return results
 }
 
 function toEventQuery(options: BrowserCdpEventOptions, method?: string | null): CdpEventQuery {
@@ -436,8 +859,25 @@ function toEventQuery(options: BrowserCdpEventOptions, method?: string | null): 
   }
 }
 
+function toNetworkJournalQuery(value: object): NetworkJournalQuery {
+  const params = asRecord(value)
+  return {
+    limit: typeof params.limit === 'number' ? params.limit : null,
+    urlContains: typeof params.urlContains === 'string' ? params.urlContains : null,
+    resourceType: typeof params.resourceType === 'string' ? params.resourceType : null,
+    statusMin: typeof params.statusMin === 'number' ? params.statusMin : null,
+    statusMax: typeof params.statusMax === 'number' ? params.statusMax : null,
+    failedOnly: params.failedOnly === true
+  }
+}
+
 function asRecord(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+
+function isUnsupportedCdpCommand(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return /wasn't found|method not found|not supported/i.test(message)
 }
 
 function clampNumber(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {

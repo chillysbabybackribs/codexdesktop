@@ -29,6 +29,9 @@ export type ItemMeta = {
   completedAtMs?: number
   // Latest item/mcpToolCall/progress messages, newest last.
   progress?: string[]
+  // For contextCompaction items: thread context size (tokens) entering the
+  // compaction, and the size the compaction turn reported after shrinking.
+  compaction?: { beforeTokens: number | null; afterTokens: number | null }
 }
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
@@ -46,6 +49,14 @@ type CdpScreenshotArtifact = {
   bytes: number
   width: number | null
   height: number | null
+}
+
+type CdpFileArtifact = {
+  artifactPath: string
+  fileName: string
+  mediaType: string
+  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
+  bytes: number
 }
 
 export const workItemTypes = [
@@ -835,6 +846,7 @@ function DynamicToolBlock({
   const args = previewJson(item.arguments, 80)
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool
   const screenshot = cdpScreenshotArtifact(item)
+  const fileArtifact = cdpFileArtifact(item)
 
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
@@ -850,6 +862,19 @@ function DynamicToolBlock({
         />
         <CdpScreenshotPreview artifact={screenshot} />
       </div>
+    )
+  }
+
+  if (fileArtifact) {
+    return (
+      <ToolRow
+        icon={<FilePenIcon />}
+        status={item.success === false ? 'failed' : status}
+        verb={fileArtifact.kind === 'pdf' ? 'Saved PDF' : fileArtifact.kind === 'trace' ? 'Saved trace' : fileArtifact.kind === 'snapshot' ? 'Saved DOM snapshot' : 'Saved response body'}
+        detail={fileArtifact.fileName}
+        detailTitle={fileArtifact.artifactPath}
+        meta={formatBytes(fileArtifact.bytes)}
+      />
     )
   }
 
@@ -897,7 +922,9 @@ function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact
   for (const content of item.contentItems ?? []) {
     if (content.type !== 'inputText') continue
     try {
-      const screenshot = (JSON.parse(content.text) as { screenshot?: Partial<CdpScreenshotArtifact> }).screenshot
+      const parsed = JSON.parse(content.text) as { result?: unknown; screenshot?: Partial<CdpScreenshotArtifact> }
+      const payload = parsed.result && typeof parsed.result === 'object' ? parsed.result as { screenshot?: Partial<CdpScreenshotArtifact> } : parsed
+      const screenshot = payload.screenshot
       if (!screenshot || typeof screenshot.artifactPath !== 'string' || typeof screenshot.fileName !== 'string') continue
       if (typeof screenshot.mediaType !== 'string' || typeof screenshot.bytes !== 'number') continue
       return {
@@ -910,6 +937,39 @@ function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact
       }
     } catch {
       // A failed or non-JSON CDP result is not an image artifact.
+    }
+  }
+  return null
+}
+
+function cdpFileArtifact(item: DynamicToolCallItem): CdpFileArtifact | null {
+  if (item.tool !== 'browser_cdp') return null
+
+  for (const content of item.contentItems ?? []) {
+    if (content.type !== 'inputText') continue
+    try {
+      const parsed = JSON.parse(content.text) as {
+        result?: unknown
+        pdf?: Partial<CdpFileArtifact>
+        trace?: Partial<CdpFileArtifact>
+        snapshot?: Partial<CdpFileArtifact>
+        responseBody?: Partial<CdpFileArtifact>
+      }
+      const result = parsed.result && typeof parsed.result === 'object'
+        ? parsed.result as typeof parsed
+        : parsed
+      const artifact = result.pdf ?? result.trace ?? result.snapshot ?? result.responseBody
+      if (!artifact || typeof artifact.artifactPath !== 'string' || typeof artifact.fileName !== 'string') continue
+      if ((artifact.kind !== 'pdf' && artifact.kind !== 'trace' && artifact.kind !== 'snapshot' && artifact.kind !== 'response-body') || typeof artifact.bytes !== 'number') continue
+      return {
+        artifactPath: artifact.artifactPath,
+        fileName: artifact.fileName,
+        mediaType: typeof artifact.mediaType === 'string' ? artifact.mediaType : '',
+        kind: artifact.kind,
+        bytes: artifact.bytes
+      }
+    } catch {
+      // A failed or non-JSON CDP result is not a file artifact.
     }
   }
   return null

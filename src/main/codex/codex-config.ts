@@ -23,6 +23,13 @@ export function buildGuidance(): string {
   return taskShapingGuidance.join('\n')
 }
 
+// Note on compaction: `compact_prompt` exists in codex config but only feeds
+// the LOCAL compaction path, and codex routes every OpenAI/Azure provider to
+// REMOTE (server-side) compaction unconditionally (model-provider-info
+// `supports_remote_compaction`). On this app's setup the custom prompt would
+// never run — remote compaction keeps user/developer/system messages plus an
+// encrypted server summary, and is not client-customizable.
+
 export const newThreadConfig = {
   web_search: 'disabled'
 }
@@ -74,7 +81,8 @@ const browserRunSchema = {
   type: 'object',
   properties: {
     code: { type: 'string', description: 'JavaScript program. Top-level return and await are supported.' },
-    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    tab: { type: 'string', description: 'Optional tab or popup target id. Defaults to the active visible tab; use all to run the program across every live target in parallel.' },
+    frame: { type: 'string', description: 'Optional frame target. Defaults to main; use all to run the same program across every live frame in parallel, or pass a frameId returned by an all-frame run.' },
     timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
     maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
   },
@@ -87,16 +95,17 @@ const browserCdpSchema = {
   properties: {
     operation: {
       type: 'string',
-      enum: ['command', 'capabilities', 'events', 'wait'],
-      description: 'Defaults to command. Use capabilities to inspect the live browser protocol, events to read the bounded journal, or wait to prepare and wait for a CDP event.'
+      enum: ['command', 'capabilities', 'events', 'wait', 'traceStart', 'traceStop', 'snapshot', 'networkStart', 'network', 'networkBody', 'networkStop', 'performanceStart', 'performance', 'performanceStop'],
+      description: 'Defaults to command. Use capabilities/events/wait for raw protocol inspection, traceStart/traceStop for a trace artifact, snapshot for a compact DOM model, networkStart/network/networkBody/networkStop for task-scoped network diagnostics, or performanceStart/performance/performanceStop for rated runtime, navigation, lifecycle, Web Vitals, interaction, long-task, and trace-escalation diagnostics.'
     },
     method: { type: 'string', description: 'CDP command for operation command, or exact event name for events/wait, such as Page.captureScreenshot or Network.responseReceived.' },
-    params: { type: 'object', description: 'Optional CDP command parameters for operation command.' },
+    requestId: { type: 'string', description: 'Network request id for operation networkBody. The request must still be present in the bounded journal.' },
+    params: { type: 'object', description: 'Operation parameters. For network, supports limit, urlContains, resourceType, statusMin, statusMax, and failedOnly. Trace, raw snapshot, and response-body output are artifact-backed.' },
     filter: { type: 'object', description: 'Optional nested exact-match filter for events/wait, such as {"name":"networkIdle"}.' },
     contains: { type: 'object', additionalProperties: { type: 'string' }, description: 'Optional dot-path substring filter for events/wait, such as {"response.url":"/api/"}.' },
     afterSequence: { type: 'number', description: 'For events/wait, return only events newer than this journal sequence.' },
     limit: { type: 'number', description: 'For events, maximum matching records from 1 to 100; defaults to 30.' },
-    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab; pass an explicit id for deterministic network or performance diagnostics.' },
     timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
     maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
   },
@@ -107,6 +116,7 @@ const browserExtractPageSchema = {
   type: 'object',
   properties: {
     tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    frame: { type: 'string', description: 'Optional frame target: main, all, or a frameId returned by browser_run.' },
     timeoutMs: { type: 'number', description: 'Optional extraction timeout from 250 to 60000 milliseconds.' },
     maxResultChars: { type: 'number', description: 'Optional extracted content limit from 1000 to 100000 characters.' }
   },
@@ -135,7 +145,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_run',
-    description: 'Run a batched JavaScript program in a visible browser tab. Inspect, act, wait, and verify in one call; return compact JSON. Page-origin CORS rules apply, so navigate the tab before reading another origin.',
+    description: 'Run a batched JavaScript program in a visible browser target. Inspect, act, wait, and verify in one call. Use tab or frame all for parallel target/frame execution; return compact JSON. Page-origin CORS rules apply within each frame.',
     inputSchema: browserRunSchema
   },
   {
@@ -147,7 +157,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_cdp',
-    description: 'Use the live Chrome DevTools Protocol for a browser tab. Send a targeted command, inspect protocol capabilities, read a bounded event journal, or prepare and wait for a lifecycle/network/runtime/log event through the shared per-tab queue.',
+    description: 'Use the live Chrome DevTools Protocol for a browser tab. Send a targeted command, inspect protocol capabilities, read a bounded event journal, prepare and wait for lifecycle/network/runtime/log events, save a streamed Chromium trace, or capture a raw DOM snapshot with a compact interaction model.',
     inputSchema: browserCdpSchema
   },
   {

@@ -32,9 +32,10 @@ import type { Thread } from '../../shared/codex-protocol/v2/Thread'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
 import type { ThreadGoalStatus } from '../../shared/codex-protocol/v2/ThreadGoalStatus'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
-import { TraceModal } from './TraceModal'
+import { TraceModal, formatTokens } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
 import {
   modelCallAttributionForItem,
@@ -257,6 +258,9 @@ export default function App(): React.JSX.Element {
   const [itemMeta, setItemMeta] = useState<Record<string, ItemMeta>>({})
   // Per-turn status, timing, token usage, and diff stats for the tail rows.
   const [turnMeta, setTurnMeta] = useState<Record<string, TurnMeta>>({})
+  // Latest thread-level usage snapshot; `last` sizes the current context.
+  const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
+  const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
   const pendingBoundsRef = useRef<BrowserBounds | null>(null)
@@ -290,6 +294,10 @@ export default function App(): React.JSX.Element {
   const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map())
   const precedingModelInputByTurnRef = useRef<Map<string, ModelCallAttribution>>(new Map())
   const pendingCompactionByTurnRef = useRef<Set<string>>(new Set())
+  // The contextCompaction item currently running, with the context size it
+  // started from, so the compaction turn's token update can record the shrink.
+  const activeCompactionRef = useRef<{ itemId: string; turnId: string; beforeTokens: number | null } | null>(null)
+  const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
@@ -684,6 +692,21 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  const handleCompactThread = async (): Promise<void> => {
+    const threadId = activeThreadIdRef.current
+    if (!threadId || activeTurnIdRef.current) {
+      return
+    }
+
+    try {
+      // No optimistic message: the server's contextCompaction item arrives
+      // within ~100ms and renders the live progress row itself.
+      await window.api.codex.compactThread(threadId)
+    } catch (error) {
+      addSystemItem(`Compaction failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
   const handleNewThread = (): void => {
     const previousThreadId = activeThreadIdRef.current
 
@@ -704,6 +727,10 @@ export default function App(): React.JSX.Element {
     setItems([])
     setItemMeta({})
     setTurnMeta({})
+    setContextUsage(null)
+    contextUsageRef.current = null
+    setIsCompacting(false)
+    activeCompactionRef.current = null
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
 
@@ -1079,9 +1106,18 @@ export default function App(): React.JSX.Element {
       case 'item/started':
         if (isRelevantThread(notification.params.threadId)) {
           rememberModelCallInput(notification.params.turnId, notification.params.item)
-          noteItem(notification.params.item.id, notification.params.turnId, {
-            startedAtMs: notification.params.startedAtMs
-          })
+          const startPatch: Partial<ItemMeta> = { startedAtMs: notification.params.startedAtMs }
+          if (notification.params.item.type === 'contextCompaction') {
+            const beforeTokens = contextUsageRef.current?.last.totalTokens ?? null
+            activeCompactionRef.current = {
+              itemId: notification.params.item.id,
+              turnId: notification.params.turnId,
+              beforeTokens
+            }
+            startPatch.compaction = { beforeTokens, afterTokens: null }
+            setIsCompacting(true)
+          }
+          noteItem(notification.params.item.id, notification.params.turnId, startPatch)
           upsertItem(notification.params.item)
         }
         return
@@ -1092,6 +1128,12 @@ export default function App(): React.JSX.Element {
             completedAtMs: notification.params.completedAtMs
           })
           upsertItem(notification.params.item)
+          if (notification.params.item.type === 'contextCompaction') {
+            if (activeCompactionRef.current?.itemId === notification.params.item.id) {
+              activeCompactionRef.current = null
+            }
+            setIsCompacting(false)
+          }
         }
         return
       case 'item/agentMessage/delta':
@@ -1123,6 +1165,19 @@ export default function App(): React.JSX.Element {
         return
       case 'thread/tokenUsage/updated':
         if (isRelevantThread(notification.params.threadId)) {
+          contextUsageRef.current = notification.params.tokenUsage
+          setContextUsage(notification.params.tokenUsage)
+          const activeCompaction = activeCompactionRef.current
+          if (activeCompaction && activeCompaction.turnId === notification.params.turnId) {
+            // The compaction turn reports the shrunken context before its
+            // item completes; pin both sizes on the item for the transcript.
+            noteItem(activeCompaction.itemId, activeCompaction.turnId, {
+              compaction: {
+                beforeTokens: activeCompaction.beforeTokens,
+                afterTokens: notification.params.tokenUsage.last.totalTokens
+              }
+            })
+          }
           setTurnMeta((current) => {
             const existing = current[notification.params.turnId]?.tokens
             const isNewCall = existing
@@ -1349,6 +1404,11 @@ export default function App(): React.JSX.Element {
 
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
+    // No usage snapshot until the resumed thread's next model call reports in.
+    setContextUsage(null)
+    contextUsageRef.current = null
+    setIsCompacting(false)
+    activeCompactionRef.current = null
 
     watchThreadIdRef.current = thread.id
     setActiveThreadId(thread.id)
@@ -1590,6 +1650,9 @@ export default function App(): React.JSX.Element {
           onSaveGoal={handleSaveGoal}
           onSetGoalStatus={handleSetGoalStatus}
           onClearGoal={handleClearGoal}
+          contextUsage={contextUsage}
+          isCompacting={isCompacting}
+          onCompactThread={handleCompactThread}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -1654,7 +1717,10 @@ function ChatPane({
   onPickWorkspace,
   onSaveGoal,
   onSetGoalStatus,
-  onClearGoal
+  onClearGoal,
+  contextUsage,
+  isCompacting,
+  onCompactThread
 }: {
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
@@ -1688,6 +1754,9 @@ function ChatPane({
   onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
   onSetGoalStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>
   onClearGoal: () => Promise<void>
+  contextUsage: ThreadTokenUsage | null
+  isCompacting: boolean
+  onCompactThread: () => Promise<void>
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
@@ -1818,6 +1887,7 @@ function ChatPane({
             <ChatItemView
               key={row.item.id}
               item={row.item}
+              meta={itemMeta[row.item.id]}
               streaming={row.item.id === streamingMessageId}
             />
           )
@@ -1838,6 +1908,12 @@ function ChatPane({
             onClear={onClearGoal}
           />
           <div className="composer-thread-controls">
+            <ContextPill
+              usage={contextUsage}
+              disabled={Boolean(activeTurnId)}
+              compacting={isCompacting}
+              onCompact={onCompactThread}
+            />
             <ThreadMenu
               placement="composer"
               title={title}
@@ -2560,7 +2636,15 @@ function singleLineClip(value: string, maxChars: number): string {
   return line.length > maxChars ? `${line.slice(0, maxChars).trimEnd()}…` : line
 }
 
-const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: ChatItem; streaming: boolean }): React.JSX.Element | null {
+const ChatItemView = memo(function ChatItemView({
+  item,
+  meta,
+  streaming
+}: {
+  item: ChatItem
+  meta?: ItemMeta
+  streaming: boolean
+}): React.JSX.Element | null {
   if (item.type === 'system') {
     return <article className={`message message-system message-system-${item.level}`}>{item.text}</article>
   }
@@ -2587,7 +2671,32 @@ const ChatItemView = memo(function ChatItemView({ item, streaming }: { item: Cha
   }
 
   if (item.type === 'contextCompaction') {
-    return <article className="message message-system message-system-info">Context compacted</article>
+    const inProgress = Boolean(meta?.startedAtMs) && !meta?.completedAtMs
+    const before = meta?.compaction?.beforeTokens ?? null
+    const after = meta?.compaction?.afterTokens ?? null
+
+    if (inProgress) {
+      return (
+        <article className="message message-compaction">
+          <span className="shimmer-text">
+            {before
+              ? `Compacting context — summarizing ${formatTokens(before)} tokens…`
+              : 'Compacting context…'}
+          </span>
+        </article>
+      )
+    }
+
+    // Compactions restored from history carry no token metadata; only live
+    // ones can show the real shrink.
+    const shrank = before !== null && after !== null && after < before
+    return (
+      <article className="message message-compaction">
+        {shrank
+          ? `Context compacted — ${formatTokens(before)} → ${formatTokens(after)} tokens (${Math.round((1 - after / before) * 100)}% smaller)`
+          : 'Context compacted'}
+      </article>
+    )
   }
 
   if (item.type === 'enteredReviewMode' || item.type === 'exitedReviewMode') {
@@ -2809,6 +2918,49 @@ function WorkspacePill({
       <FolderIcon />
       <span className="workspace-pill-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
       <span className="workspace-pill-caret">⌄</span>
+    </button>
+  )
+}
+
+// Composer pill showing how full the thread's model context is (the last
+// model call's tokens against the model window). Clicking it asks the
+// app-server to compact the thread; auto-compaction also runs at 80% from the
+// main process, so this is the "clean up now" affordance.
+function ContextPill({
+  usage,
+  disabled,
+  compacting,
+  onCompact
+}: {
+  usage: ThreadTokenUsage | null
+  disabled: boolean
+  compacting: boolean
+  onCompact: () => Promise<void>
+}): React.JSX.Element | null {
+  const window = usage?.modelContextWindow
+  const contextTokens = usage?.last.totalTokens ?? 0
+
+  if (!usage || !window || contextTokens <= 0) {
+    return null
+  }
+
+  const percent = Math.min(100, Math.round((contextTokens / window) * 100))
+  const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : ''
+
+  return (
+    <button
+      type="button"
+      className={`context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
+      disabled={disabled}
+      title={compacting
+        ? 'Compacting the conversation…'
+        : `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact the conversation.`}
+      onClick={() => void onCompact()}
+    >
+      <span className="context-pill-track" aria-hidden="true">
+        <span className="context-pill-fill" style={{ width: `${percent}%` }} />
+      </span>
+      <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
     </button>
   )
 }

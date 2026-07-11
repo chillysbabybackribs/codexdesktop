@@ -49,6 +49,9 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
   )
+  ipcMain.handle(ipcChannels.codexCompactThread, (_event, threadId: string) =>
+    client.compactThread(threadId)
+  )
   ipcMain.handle(ipcChannels.codexUnsubscribeThread, (_event, threadId: string) =>
     client.unsubscribeThread(threadId)
   )

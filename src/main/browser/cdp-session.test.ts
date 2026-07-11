@@ -35,6 +35,12 @@ class FakeDebugger extends EventEmitter {
     if (method === 'Schema.getDomains') {
       return { domains: [{ name: 'Page', version: '1.2' }, { name: 'Network', version: '1.2' }] }
     }
+    if (method === 'Performance.getMetrics') {
+      return { metrics: [{ name: 'TaskDuration', value: 0.25 }, { name: 'Nodes', value: 80 }] }
+    }
+    if (method === 'Runtime.evaluate') {
+      return { result: { value: { type: 'navigate', loadEventMs: 320 } } }
+    }
     return { method, params }
   }
 }
@@ -132,5 +138,33 @@ test('preparing lifecycle and network events enables their domains', async () =>
     'Page.enable',
     'Page.setLifecycleEventsEnabled',
     'Network.enable'
+  ])
+})
+
+test('performance diagnostics collect compact metrics, lifecycle, and timeline events', async () => {
+  const { session, contents } = fixture()
+
+  const started = await session.startPerformanceDiagnostics()
+  contents.debugger.emit('message', {}, 'Page.lifecycleEvent', {
+    name: 'networkIdle', frameId: 'main', loaderId: 'loader', timestamp: 2
+  })
+  contents.debugger.emit('message', {}, 'PerformanceTimeline.timelineEventAdded', {
+    event: { type: 'longtask', name: 'self', frameId: 'main', time: 2.1, duration: 0.06 }
+  })
+  const page = await session.readPerformanceDiagnostics()
+  const stopped = await session.stopPerformanceDiagnostics()
+
+  assert.equal(started.active, true)
+  assert.equal(page.runtime.nodes, 80)
+  assert.equal(page.runtime.durationsMs.task, 250)
+  assert.equal(page.navigation?.loadEventMs, 320)
+  assert.equal(page.lifecycle[0].name, 'networkIdle')
+  assert.equal(page.webVitals.longTaskCount, 1)
+  assert.deepEqual(page.support.eventTypes, ['largest-contentful-paint', 'layout-shift', 'longtask'])
+  assert.equal(stopped.active, false)
+  assert.deepEqual(contents.debugger.commands.slice(2, 5).map(({ method }) => method), [
+    'Performance.enable',
+    'Page.enable',
+    'Page.setLifecycleEventsEnabled'
   ])
 })

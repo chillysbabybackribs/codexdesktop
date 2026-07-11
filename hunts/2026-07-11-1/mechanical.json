@@ -1,0 +1,1453 @@
+{
+  "generatedAt": "2026-07-11T14:30:37.039Z",
+  "totals": {
+    "bookkeeping": 194,
+    "contractor1099": 196,
+    "attribution": 170,
+    "performance": 207,
+    "scheduling": 248,
+    "creatorMarketing": 202,
+    "pricingInventory": 114,
+    "compliance": 82
+  },
+  "records": [
+    {
+      "file": "de55620b-page-01.txt",
+      "title": "1099 Independent Contractor Spreadsheet",
+      "dollars": [
+        "$28.20",
+        "$14.75",
+        "$27.99",
+        "$8.95",
+        "$9.58",
+        "$7.99",
+        "$39.00",
+        "$11.28",
+        "$8.00",
+        "$5.99",
+        "$16.49",
+        "$17.99"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(3.3k)",
+        "(8.8k)",
+        "(1.7k)",
+        "(3.1k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 9,
+        "contractor1099": 41,
+        "attribution": 4,
+        "performance": 2,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 2,
+        "compliance": 1
+      },
+      "score": 6
+    },
+    {
+      "file": "de55620b-page-07.txt",
+      "title": "1099 Template Excel",
+      "dollars": [
+        "$16.49",
+        "$16.60",
+        "$8.95",
+        "$27.99",
+        "$7.76",
+        "$10.90",
+        "$14.86",
+        "$4.00",
+        "$5.99",
+        "$5.38",
+        "$7.99",
+        "$23.27"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(1.7k)",
+        "(5.4k)",
+        "(3.3k)",
+        "(10.6k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 14,
+        "contractor1099": 26,
+        "attribution": 1,
+        "performance": 1,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 1,
+        "compliance": 2
+      },
+      "score": 6
+    },
+    {
+      "file": "979aa05a-page-01.txt",
+      "title": "Best Payroll Software for Small Business in 2026",
+      "dollars": [
+        "$100,000",
+        "$184.5"
+      ],
+      "counts": [
+        "184.5K"
+      ],
+      "dates": [
+        "May",
+        "2026",
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 39,
+        "contractor1099": 1,
+        "attribution": 1,
+        "performance": 0,
+        "scheduling": 3,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 2
+      },
+      "score": 5
+    },
+    {
+      "file": "de55620b-page-05.txt",
+      "title": "Tracker for 1099",
+      "dollars": [
+        "$16.49",
+        "$19.99",
+        "$8.99",
+        "$27.99",
+        "$8.95",
+        "$7.76",
+        "$29.99",
+        "$10.99",
+        "$4.00",
+        "$5.99",
+        "$7.99",
+        "$18.99"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(3.1k)",
+        "(1.7k)",
+        "(2k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 9,
+        "contractor1099": 40,
+        "attribution": 4,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 1,
+        "compliance": 1
+      },
+      "score": 5
+    },
+    {
+      "file": "de55620b-page-08.txt",
+      "title": "1099 Google Sheet Tracker",
+      "dollars": [
+        "$16.49",
+        "$6.64",
+        "$7.76",
+        "$27.99",
+        "$8.95",
+        "$8.99",
+        "$23.27",
+        "$11.28",
+        "$5.99",
+        "$4.00",
+        "$10.90",
+        "$17.97"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(1.7k)",
+        "(3.1k)",
+        "(10.6k)",
+        "(3.3k)",
+        "(5.4k)",
+        "(2k)",
+        "(1.4k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 9,
+        "contractor1099": 26,
+        "attribution": 1,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 1,
+        "compliance": 1
+      },
+      "score": 5
+    },
+    {
+      "file": "f0f65b05-page-08.txt",
+      "title": "Shopify Dashboard Templates",
+      "dollars": [
+        "$15.46",
+        "$5.99",
+        "$3.86",
+        "$49.99",
+        "$2.62",
+        "$2.99",
+        "$80.00",
+        "$8.76",
+        "$10.99",
+        "$1.90",
+        "$6.50",
+        "$3.12"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(3.3k)",
+        "(1.4k)",
+        "(10.8k)",
+        "(8.5k)"
+      ],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 3,
+        "contractor1099": 0,
+        "attribution": 22,
+        "performance": 6,
+        "scheduling": 0,
+        "creatorMarketing": 2,
+        "pricingInventory": 5,
+        "compliance": 0
+      },
+      "score": 5
+    },
+    {
+      "file": "3b6e5bc4-page-03.txt",
+      "title": "Email Campaign Tracker Spreadsheet Template",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 4,
+        "performance": 1,
+        "scheduling": 1,
+        "creatorMarketing": 14,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 4
+    },
+    {
+      "file": "79e6d827-page-03.txt",
+      "title": "Digital Product Business Spreadsheet",
+      "dollars": [
+        "$14.75",
+        "$15.46",
+        "$3.89",
+        "$1.00",
+        "$1.18",
+        "$3.49",
+        "$14.40",
+        "$14.54",
+        "$8.76",
+        "$3.50",
+        "$1.99",
+        "$15.97"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(3.3k)",
+        "(9.2k)",
+        "(3.1k)",
+        "(5.4k)",
+        "(1.8k)",
+        "(1.1k)",
+        "(1.7k)",
+        "(1.3k)",
+        "(4.9k)"
+      ],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 9,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 2,
+        "pricingInventory": 31,
+        "compliance": 0
+      },
+      "score": 4
+    },
+    {
+      "file": "303931a7-page-02.txt",
+      "title": "Etsy Seller Pricing Calculator",
+      "dollars": [
+        "$14.75",
+        "$5.48",
+        "$1.00",
+        "$4.67",
+        "$1.18",
+        "$0.92",
+        "$19.97",
+        "$4.71",
+        "$4.94",
+        "$8.56",
+        "$2.30",
+        "$8.76"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(1.1k)",
+        "(9.2k)",
+        "(3.3k)",
+        "(5.4k)",
+        "(3k)",
+        "(2.4k)",
+        "(3.1k)"
+      ],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 5,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 38,
+        "compliance": 0
+      },
+      "score": 3
+    },
+    {
+      "file": "3b6e5bc4-page-06.txt",
+      "title": "Plan your 2026 campaigns with an email marketing planner template",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "2026",
+        "2025"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 1,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 4,
+        "pricingInventory": 0,
+        "compliance": 1
+      },
+      "score": 3
+    },
+    {
+      "file": "6c69a0e3-page-01.txt",
+      "title": "Untitled",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 7,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 1
+      },
+      "score": 3
+    },
+    {
+      "file": "6c69a0e3-page-02.txt",
+      "title": "Small business 1099: Complete guide for 2026",
+      "dollars": [
+        "$2,000",
+        "$600",
+        "$2,000.",
+        "$20,000"
+      ],
+      "counts": [],
+      "dates": [
+        "2026",
+        "February",
+        "2025",
+        "January",
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 9,
+        "contractor1099": 41,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 4
+      },
+      "score": 3
+    },
+    {
+      "file": "79e6d827-page-05.txt",
+      "title": "Digital Product Spreadsheet",
+      "dollars": [
+        "$14.75",
+        "$15.46",
+        "$1.00",
+        "$1.67",
+        "$3.89",
+        "$12.61",
+        "$8.76",
+        "$9.99",
+        "$3.49",
+        "$11.91",
+        "$1.18",
+        "$13.69"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(3.3k)",
+        "(9.2k)",
+        "(11.3k)",
+        "(3.1k)",
+        "(5.4k)",
+        "(1.5k)",
+        "(29k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 5,
+        "contractor1099": 0,
+        "attribution": 1,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 30,
+        "compliance": 0
+      },
+      "score": 3
+    },
+    {
+      "file": "79e6d827-page-08.txt",
+      "title": "Buffer Integrations",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 1,
+        "creatorMarketing": 64,
+        "pricingInventory": 0,
+        "compliance": 1
+      },
+      "score": 3
+    },
+    {
+      "file": "979aa05a-page-03.txt",
+      "title": "10 best payroll software providers for small businesses in 2026",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "May",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 23,
+        "contractor1099": 2,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 9
+      },
+      "score": 3
+    },
+    {
+      "file": "9e7cceb1-page-03.txt",
+      "title": "QuickBooks Online Is Raising Prices August 1 — Plan Costs & What to Do",
+      "dollars": [
+        "$99",
+        "$140",
+        "$200",
+        "$340",
+        "$3",
+        "$60",
+        "$85"
+      ],
+      "counts": [],
+      "dates": [
+        "August",
+        "2026",
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 17,
+        "contractor1099": 0,
+        "attribution": 3,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 1,
+        "compliance": 0
+      },
+      "score": 3
+    },
+    {
+      "file": "de55620b-page-02.txt",
+      "title": "1099-NEC Tracker Spreadsheet Google Sheets, Subcontractor Payment Tracker, Contractor Tracking Template, CPA-Created, Small Business 2026",
+      "dollars": [
+        "$27.99",
+        "$44.99",
+        "$19.99",
+        "$97.00",
+        "$29.99"
+      ],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 6,
+        "contractor1099": 5,
+        "attribution": 2,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 3
+    },
+    {
+      "file": "303931a7-page-01.txt",
+      "title": "Etsy Profit Margin Calculator, Seller Fee and Pricing Tool, Etsy Bookkeeping Profit per Sale Sheet",
+      "dollars": [
+        "$11.97"
+      ],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 4,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "303931a7-page-03.txt",
+      "title": "Untitled",
+      "dollars": [
+        "$20",
+        "$17",
+        "$0"
+      ],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 1,
+        "creatorMarketing": 1,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "3b6e5bc4-page-01.txt",
+      "title": "The Best Social Media Scheduling Tools in 2026 (+ How to Find the Perfect Fit)",
+      "dollars": [
+        "$199"
+      ],
+      "counts": [],
+      "dates": [
+        "2026",
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 14,
+        "creatorMarketing": 24,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "3b6e5bc4-page-05.txt",
+      "title": "Buffer Review 2025: Best Social Media Management Tool?",
+      "dollars": [
+        "$6"
+      ],
+      "counts": [],
+      "dates": [
+        "2025"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 8,
+        "creatorMarketing": 38,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "3b6e5bc4-page-07.txt",
+      "title": "Buffer",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "2026",
+        "2025"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 8,
+        "creatorMarketing": 41,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "6c69a0e3-page-04.txt",
+      "title": "Untitled",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "May",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 0,
+        "scheduling": 59,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "6c69a0e3-page-06.txt",
+      "title": "New Laws & Regulations for Small Business Owners in 2025",
+      "dollars": [
+        "$16.50"
+      ],
+      "counts": [],
+      "dates": [
+        "2025",
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 2,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 7
+      },
+      "score": 2
+    },
+    {
+      "file": "6c69a0e3-page-07.txt",
+      "title": "6 best appointment scheduling software solutions of 2026",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 51,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "79e6d827-page-07.txt",
+      "title": "Top Scheduling & Booking Apps",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 29,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "81144b68-page-02.txt",
+      "title": "Employee Performance Review Spreadsheet (Online Template)",
+      "dollars": [
+        "$8.99",
+        "$9.99",
+        "$4.00",
+        "$5.95"
+      ],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 1,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "81144b68-page-03.txt",
+      "title": "Employee Performance Review Template",
+      "dollars": [
+        "$10",
+        "$14.99",
+        "$3.00",
+        "$3.56",
+        "$1.49",
+        "$1.99",
+        "$6.49",
+        "$37.49",
+        "$29.00",
+        "$8.99",
+        "$5.11",
+        "$4.00"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(1.5k)",
+        "(1k)",
+        "(1.7k)",
+        "(3.3k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 40,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "81144b68-page-06.txt",
+      "title": "Performance Review Template",
+      "dollars": [
+        "$10",
+        "$14.99",
+        "$3.00",
+        "$3.56",
+        "$4.25",
+        "$8.99",
+        "$37.49",
+        "$19.97",
+        "$6.49",
+        "$1.99",
+        "$4.00",
+        "$5.09"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(1k)",
+        "(1.7k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 42,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "81144b68-page-08.txt",
+      "title": "Excel Performance Review",
+      "dollars": [
+        "$37.49",
+        "$6.64",
+        "$3.56",
+        "$3.38",
+        "$33.99",
+        "$3.00",
+        "$19.97",
+        "$7.49",
+        "$12.00",
+        "$8.99",
+        "$4.27",
+        "$5.16"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(3.3k)",
+        "(1.7k)"
+      ],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 1,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 44,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "979aa05a-page-02.txt",
+      "title": "Untitled",
+      "dollars": [
+        "$75",
+        "$30",
+        "$200",
+        "$3,100",
+        "$4,300",
+        "$750",
+        "$3,500",
+        "$1,500",
+        "$29",
+        "$49"
+      ],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 15,
+        "contractor1099": 1,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "a1c8d981-page-01.txt",
+      "title": "Scheduling Software Made for Small Businesses",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 42,
+        "creatorMarketing": 1,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "de55620b-page-03.txt",
+      "title": "1099 Self-Employed Bookkeeping Spreadsheet | Income and Expense Tracker | Profit and Loss | Excel | Google Sheets | Accounting | Tax Tracker",
+      "dollars": [
+        "$16.49",
+        "$11.54",
+        "$6.99",
+        "$26.48",
+        "$18.53",
+        "$24.99",
+        "$9.99"
+      ],
+      "counts": [
+        "2.2k"
+      ],
+      "dates": [
+        "May",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 8,
+        "contractor1099": 8,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "de55620b-page-04.txt",
+      "title": "1099 Vendor Tracker Template | Digital Organizer for Year-End Tax Prep | Small Business Bookkeeping Tool",
+      "dollars": [
+        "$4.00",
+        "$10.00",
+        "$5.00"
+      ],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 3,
+        "contractor1099": 5,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "f0f65b05-page-03.txt",
+      "title": "Untitled",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 36,
+        "performance": 1,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 2
+    },
+    {
+      "file": "f0f65b05-page-07.txt",
+      "title": "Untitled",
+      "dollars": [
+        "$52",
+        "$129",
+        "$279",
+        "$45"
+      ],
+      "counts": [
+        "45K"
+      ],
+      "dates": [
+        "may"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 33,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 1
+      },
+      "score": 2
+    },
+    {
+      "file": "3b6e5bc4-page-08.txt",
+      "title": "Email Marketing Planning Template",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 3,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "6c69a0e3-page-05.txt",
+      "title": "Best Appointment Scheduling Software That Feeds Your Sales Pipeline",
+      "dollars": [
+        "$546",
+        "$1.9",
+        "$10",
+        "$20",
+        "$16",
+        "$15",
+        "$12",
+        "$6.95",
+        "$5",
+        "$49",
+        "$7",
+        "$19.99"
+      ],
+      "counts": [],
+      "dates": [
+        "2026",
+        "2025",
+        "2034",
+        "April"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 31,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "6c69a0e3-page-08.txt",
+      "title": "Small business lending rulemaking",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "May",
+        "2026",
+        "January",
+        "2028",
+        "November",
+        "2025",
+        "December",
+        "2024",
+        "June",
+        "October",
+        "March",
+        "September"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 23
+      },
+      "score": 1
+    },
+    {
+      "file": "79e6d827-page-04.txt",
+      "title": "Email Marketing Tracker, Email Content Planner Spreadsheet, Google Sheets Email Idea Organizer Template, Digital Email Marketing Calendar",
+      "dollars": [
+        "$5.48",
+        "$6.45",
+        "$8.29",
+        "$6.80"
+      ],
+      "counts": [
+        "14.1k"
+      ],
+      "dates": [
+        "July",
+        "2026",
+        "2024"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 8,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "79e6d827-page-06.txt",
+      "title": "Small Improvements Integrations",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 1
+      },
+      "score": 1
+    },
+    {
+      "file": "81144b68-page-01.txt",
+      "title": "Employee Performance Review Template: HR Appraisal Excel & Google Sheets",
+      "dollars": [
+        "$3.56",
+        "$5.48",
+        "$9.30",
+        "$11.62",
+        "$3.95"
+      ],
+      "counts": [],
+      "dates": [
+        "2025",
+        "2024",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 4,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "81144b68-page-04.txt",
+      "title": "Performance Review Excel Template: Employee Evaluation Tracker",
+      "dollars": [
+        "$12.50",
+        "$7.50",
+        "$12.30",
+        "$45.50",
+        "$27.30",
+        "$20.50"
+      ],
+      "counts": [
+        "2.5k"
+      ],
+      "dates": [
+        "2025",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 8,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "81144b68-page-05.txt",
+      "title": "Google Sheets Employee Performance Review",
+      "dollars": [
+        "$14.99",
+        "$6.64",
+        "$3.00",
+        "$3.56",
+        "$4.27",
+        "$3.38",
+        "$16.80",
+        "$8.00",
+        "$4.00",
+        "$8.99",
+        "$33.99",
+        "$4.25"
+      ],
+      "counts": [
+        "5,000+ items",
+        "(10.8k)",
+        "(3.3k)",
+        "(1.7k)",
+        "(1k)"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 39,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "81144b68-page-07.txt",
+      "title": "Employee Performance Review Tracker with Ratings Charts (Excel & Google Sheets)",
+      "dollars": [
+        "$3.89",
+        "$6.49",
+        "$3.71",
+        "$18.85",
+        "$11.31",
+        "$4.27",
+        "$3.76",
+        "$4.07",
+        "$1.50"
+      ],
+      "counts": [
+        "5.2k"
+      ],
+      "dates": [
+        "2025",
+        "2024",
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 11,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "9e7cceb1-page-01.txt",
+      "title": "Untitled",
+      "dollars": [
+        "$250.",
+        "$530",
+        "$689",
+        "$999"
+      ],
+      "counts": [],
+      "dates": [
+        "April",
+        "2025",
+        "2024"
+      ],
+      "hits": {
+        "bookkeeping": 3,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "a1c8d981-page-02.txt",
+      "title": "Triple Whale",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "April",
+        "2026",
+        "June",
+        "July",
+        "February",
+        "December",
+        "2025",
+        "May",
+        "March",
+        "January"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 11,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "a1c8d981-page-03.txt",
+      "title": "Triple Whale Review 2026: What DTC Operators Actually Get (and Where It Falls Short)",
+      "dollars": [
+        "$15",
+        "$50",
+        "$10,000",
+        "$30,000"
+      ],
+      "counts": [
+        "15k+",
+        "50k"
+      ],
+      "dates": [
+        "2026",
+        "May",
+        "April"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 34,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "ca2a2a49-page-01.txt",
+      "title": "Small Business Lending Data Collection under the Equal Credit Opportunity Act (Regulation B)",
+      "dollars": [],
+      "counts": [],
+      "dates": [
+        "2025"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 4
+      },
+      "score": 1
+    },
+    {
+      "file": "ca2a2a49-page-02.txt",
+      "title": "1071 Compliance Software for Small Business Lending",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 23
+      },
+      "score": 1
+    },
+    {
+      "file": "f0f65b05-page-05.txt",
+      "title": "Complete Shopify Business Dashboard Excel Template | Ecommerce Tracker | Shopify Analytics Spreadsheet",
+      "dollars": [
+        "$5.99",
+        "$3.49",
+        "$3.99"
+      ],
+      "counts": [],
+      "dates": [
+        "2026"
+      ],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 2,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 1
+    },
+    {
+      "file": "3b6e5bc4-page-02.txt",
+      "title": "Untitled",
+      "dollars": [],
+      "counts": [],
+      "dates": [],
+      "hits": {
+        "bookkeeping": 0,
+        "contractor1099": 0,
+        "attribution": 0,
+        "performance": 0,
+        "scheduling": 0,
+        "creatorMarketing": 0,
+        "pricingInventory": 0,
+        "compliance": 0
+      },
+      "score": 0
+    }
+  ]
+}

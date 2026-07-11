@@ -22,11 +22,21 @@ type BrowserTab = {
   isLoading: boolean
 }
 
+export type BrowserTarget = {
+  id: string
+  kind: 'tab' | 'popup'
+  url: string
+  title: string
+  active: boolean
+  openerTabId: string | null
+}
+
 const hiddenBounds: BrowserBounds = { x: -10000, y: -10000, width: 10, height: 10 }
 
 export class TabManager {
   private readonly tabs = new Map<string, BrowserTab>()
   private readonly navigationControllers = new Map<string, AbortController>()
+  private readonly popupTargets = new Map<string, { webContents: WebContents; openerTabId: string }>()
   private activeTabId: string | null = null
   private bounds: BrowserBounds = hiddenBounds
   private isDraggingDivider = false
@@ -363,7 +373,7 @@ export class TabManager {
   private attachEvents(tab: BrowserTab): void {
     const webContents = tab.view.webContents
 
-    attachPopupWindowHandling(webContents, this.window)
+    attachPopupWindowHandling(webContents, this.window, (popup) => this.registerPopupTarget(popup, tab.id))
 
     webContents.on('page-title-updated', (_event, title) => {
       tab.title = title || tab.url || 'New Tab'
@@ -503,7 +513,7 @@ export class TabManager {
   // Resolve the WebContents to run against. No id → the visible active tab.
   resolveWebContents(tabId?: string | null): WebContents | null {
     const tab = tabId ? this.tabs.get(tabId) : this.getActiveTab()
-    const webContents = tab?.view.webContents
+    const webContents = tab?.view.webContents ?? (tabId ? this.popupTargets.get(tabId)?.webContents : null)
 
     if (!webContents || webContents.isDestroyed()) {
       return null
@@ -520,6 +530,43 @@ export class TabManager {
       title: tab.title,
       active: tab.id === this.activeTabId
     }))
+  }
+
+  listTargets(): BrowserTarget[] {
+    this.removeDeadTargets()
+    return [
+      ...Array.from(this.tabs.values()).map((tab): BrowserTarget => ({
+        id: tab.id,
+        kind: 'tab',
+        url: safeWebContentsUrl(tab.view.webContents) || tab.url,
+        title: safeWebContentsTitle(tab.view.webContents) || tab.title,
+        active: tab.id === this.activeTabId,
+        openerTabId: null
+      })),
+      ...Array.from(this.popupTargets.entries()).map(([id, popup]): BrowserTarget => ({
+        id,
+        kind: 'popup',
+        url: safeWebContentsUrl(popup.webContents),
+        title: safeWebContentsTitle(popup.webContents) || 'Popup',
+        active: false,
+        openerTabId: popup.openerTabId
+      }))
+    ]
+  }
+
+  private registerPopupTarget(webContents: WebContents, openerTabId: string): void {
+    if (webContents.isDestroyed()) return
+    const id = `popup-${webContents.id}`
+    this.popupTargets.set(id, { webContents, openerTabId })
+    webContents.once('destroyed', () => {
+      this.popupTargets.delete(id)
+    })
+  }
+
+  private removeDeadTargets(): void {
+    for (const [id, popup] of this.popupTargets) {
+      if (popup.webContents.isDestroyed()) this.popupTargets.delete(id)
+    }
   }
 
   private pushState(): void {
@@ -658,6 +705,18 @@ function safeWebContentsUrl(webContents: WebContents): string {
 
   try {
     return webContents.getURL()
+  } catch {
+    return ''
+  }
+}
+
+function safeWebContentsTitle(webContents: WebContents): string {
+  if (webContents.isDestroyed()) {
+    return ''
+  }
+
+  try {
+    return webContents.getTitle()
   } catch {
     return ''
   }

@@ -5,7 +5,11 @@ import { isUnsafePopupUrl } from './window-open-policy.js'
 // Google Sign-In popups call window.opener.postMessage(). Converting popups
 // into in-app tabs breaks that link and leaves a blank gsi/iframe page.
 // Real child BrowserWindows keep the opener relationship while staying in-app.
-export function attachPopupWindowHandling(webContents: WebContents, parent: BrowserWindow): void {
+export function attachPopupWindowHandling(
+  webContents: WebContents,
+  parent: BrowserWindow,
+  onPopupCreated?: (webContents: WebContents) => void
+): void {
   webContents.setUserAgent(chromeLikeUserAgent())
 
   webContents.setWindowOpenHandler((details) => {
@@ -32,6 +36,7 @@ export function attachPopupWindowHandling(webContents: WebContents, parent: Brow
   })
 
   webContents.on('did-create-window', (childWindow) => {
-    attachPopupWindowHandling(childWindow.webContents, parent)
+    onPopupCreated?.(childWindow.webContents)
+    attachPopupWindowHandling(childWindow.webContents, parent, onPopupCreated)
   })
 }

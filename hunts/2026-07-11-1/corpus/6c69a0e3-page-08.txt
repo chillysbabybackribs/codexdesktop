@@ -1,0 +1,49 @@
+# Small business lending rulemaking
+
+In the Dodd-Frank Wall Street Reform and Consumer Protection Act, Congress directed the Bureau to adopt regulations governing the collection of small business lending data. Section 1071 of the Dodd-Frank Act amended the Equal Credit Opportunity Act (ECOA) to require financial institutions to compile, maintain, and submit to the Bureau certain data on applications for credit for women-owned, minority-owned, and small businesses.
+
+Congress enacted section 1071 for the purpose of:
+
+- Facilitating enforcement of fair lending laws
+
+- Enabling communities, governmental entities, and creditors to identify business and community development needs and opportunities for women-owned, minority-owned, and small businesses
+
+## Final reconsideration rule
+
+On May 1, 2026, we issued a final rule revising Regulation B, subpart B, which implements changes to ECOA made by section 1071 of the Dodd-Frank Act. The Bureau has amended coverage of certain credit transactions and financial institutions; the small business definition; inclusion of certain data points and how others are collected; and the compliance date, which is extended to January 1, 2028, and offers additional flexibility where needed. The Bureau believes these changes will streamline the rule, reduce complexity for lenders, improve data quality, and advance the purposes of section 1071.
+
+We also compiled an unofficial redline showing the changes the final rule makes to the regulatory text and commentary of existing Regulation B.
+
+## Notice of proposed rulemaking - reconsideration rule
+
+On November 13, 2025, we issued a proposed rule that would revise certain provisions of Regulation B, subpart B. We also compiled an unofficial redlineshowing the changes the proposed rule would make to the regulatory text and commentary of existing Regulation B.
+
+The comment period for the proposed rule ended on December 15, 2025. We received approximately 410 comments on the proposal.
+
+## Compliance date extensions
+
+The CFPB extended compliance deadlines for the small business lending rule. Challenges to the 2023 final rule filed by some lenders remain ongoing in three jurisdictions; each of those courts have stayed the rule’s compliance deadlines, as amended by a 2024 interim final rule, for some market participants. However, compliance dates have not been stayed for those who are not plaintiffs or intervenors in those cases. To facilitate consistent compliance across all covered financial institutions, the CFPB extended the compliance dates set forth in the 2024 interim final rule by approximately one year.
+
+On June 18, 2025, the CFPB issued an interim final rule to extend compliance deadlines by approximately one year. We received approximately 20 comments on this interim final rule. On October 2, 2025, the CFPB issued a rule finalizing its extension of compliance deadlines by approximately one year.
+
+## Final rule and compliance resources
+
+On March 30, 2023, we issued a final rule amending Regulation B to implement changes to ECOA made by section 1071 of the Dodd-Frank Act. Consistent with section 1071, covered financial institutions are required to collect and report to the CFPB data on applications for credit for small businesses, including those that are owned by women or minorities. The rule also addresses our approach to privacy interests and the publication of section 1071 data; shielding certain demographic data from underwriters and other persons; recordkeeping requirements; enforcement provisions; and the rule’s effective and compliance dates.
+
+The CFPB is providing materials and tools to help explain the rule. And we have issued a Filing Instructions Guide for the first year of data collection.
+
+We also released a document describing our methodology for estimating how many banks will be required to report under the rule and for producing market-level estimates of associated costs.
+
+CFPB staff can provide informal guidance in response to questions you submit about the rule.
+
+## Notice of proposed rulemaking
+
+On September 1, 2021, we issued a proposed rule amending Regulation B to implement changes to ECOA made by section 1071 of the Dodd-Frank Act.
+
+We released a table of contentsfor this notice as well as a summary of the proposed rule and chart of proposed data points to assist the public in reviewing our proposal. We also released a document describing our methodology for estimating how many banks would be required to report under the proposed rule and for producing market-level estimates of associated costs.
+
+We received approximately 2,100 comments on its proposal.
+
+## SBREFA Outline of proposals and Panel report
+
+Under the process established by Congress in the Small Business Regulatory Enforcement Fairness Act of 1996 (SBREFA), we are required to consult with representatives of small entities likely to be affected directly by the regulations we are considering proposing and to obtain feedback on the likely impacts the rules

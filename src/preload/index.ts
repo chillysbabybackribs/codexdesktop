@@ -59,6 +59,8 @@ export const api = {
     sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
     steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.codexSteerTurn, params),
     interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
+    compactThread: (threadId: string): Promise<{ started: boolean }> =>
+      ipcRenderer.invoke(ipcChannels.codexCompactThread, threadId),
     unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
     onEvent: (listener: (event: CodexEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)

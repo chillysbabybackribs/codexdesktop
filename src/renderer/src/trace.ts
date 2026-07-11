@@ -640,10 +640,21 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
-          const result = JSON.parse(content.text) as { screenshot?: { artifactPath?: unknown } }
-          if (typeof result.screenshot?.artifactPath === 'string') {
+          const parsed = JSON.parse(content.text) as {
+            result?: unknown
+            screenshot?: { artifactPath?: unknown }
+            pdf?: { artifactPath?: unknown }
+            trace?: { artifactPath?: unknown }
+            snapshot?: { artifactPath?: unknown }
+            responseBody?: { artifactPath?: unknown }
+          }
+          const result = parsed.result && typeof parsed.result === 'object'
+            ? parsed.result as typeof parsed
+            : parsed
+          for (const artifact of [result.screenshot, result.pdf, result.trace, result.snapshot, result.responseBody]) {
+            if (typeof artifact?.artifactPath !== 'string') continue
             addTraceArtifact(artifacts, {
-              path: result.screenshot.artifactPath,
+              path: artifact.artifactPath,
               kind: 'generatedFile',
               originEventId: item.id,
               availability: 'pathOnly'

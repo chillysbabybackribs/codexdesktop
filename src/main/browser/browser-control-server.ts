@@ -84,6 +84,18 @@ function tabParam(req: IncomingMessage): string | null {
   return url.searchParams.get('tab')
 }
 
+function frameParam(req: IncomingMessage): string | null {
+  const url = new URL(req.url ?? '/', 'http://x')
+  return url.searchParams.get('frame')
+}
+
+function numberParam(req: IncomingMessage, name: string): number | null {
+  const raw = new URL(req.url ?? '/', 'http://x').searchParams.get(name)
+  if (raw === null || raw.trim() === '') return null
+  const value = Number(raw)
+  return Number.isFinite(value) ? value : null
+}
+
 function pathOf(req: IncomingMessage): string {
   return new URL(req.url ?? '/', 'http://x').pathname
 }
@@ -108,36 +120,96 @@ async function route(
       return
     }
 
+
+    // Includes visible tabs and opener-preserving popup BrowserWindows.
+    if (req.method === 'GET' && path === '/targets') {
+      sendJson(res, 200, { ok: true, targets: browserAgent.listTargets() })
+      return
+    }
+
     if (req.method === 'POST' && path === '/eval') {
       const code = await readBody(req)
       if (!code.trim()) {
         sendJson(res, 400, { ok: false, error: 'empty body; POST JS as the request body' })
         return
       }
-      sendJson(res, 200, await browserAgent.run(code, { tabId: tabParam(req) }))
+      sendJson(res, 200, await browserAgent.run(code, {
+        tabId: tabParam(req),
+        frame: frameParam(req),
+        timeoutMs: numberParam(req, 'timeoutMs'),
+        maxResultChars: numberParam(req, 'maxResultChars')
+      }))
       return
     }
 
     if (req.method === 'POST' && path === '/cdp') {
       const body = await readBody(req)
-      let parsed: { method?: string; params?: unknown; tab?: string }
+      let parsed: {
+        operation?: string
+        method?: string
+        params?: unknown
+        tab?: string
+        timeoutMs?: number
+        maxResultChars?: number
+        afterSequence?: number
+        filter?: unknown
+        contains?: unknown
+        limit?: number
+        requestId?: string
+      }
       try {
         parsed = JSON.parse(body)
       } catch {
         sendJson(res, 400, { ok: false, error: 'body must be JSON {method, params, tab?}' })
         return
       }
-      if (!parsed.method) {
-        sendJson(res, 400, { ok: false, error: '"method" is required' })
-        return
+      const operation = parsed.operation ?? 'command'
+      const options = {
+        tabId: parsed.tab ?? tabParam(req),
+        timeoutMs: parsed.timeoutMs,
+        maxResultChars: parsed.maxResultChars,
+        afterSequence: parsed.afterSequence,
+        filter: asRecord(parsed.filter),
+        contains: stringRecord(parsed.contains),
+        limit: parsed.limit
       }
-      sendJson(res, 200, await browserAgent.cdp(
-        parsed.method,
-        parsed.params && typeof parsed.params === 'object' && !Array.isArray(parsed.params)
-          ? parsed.params as object
-          : {},
-        { tabId: parsed.tab ?? tabParam(req) }
-      ))
+      if (operation === 'capabilities') {
+        sendJson(res, 200, await browserAgent.cdpCapabilities(options))
+      } else if (operation === 'events') {
+        sendJson(res, 200, await browserAgent.cdpEvents(options, parsed.method))
+      } else if (operation === 'wait') {
+        sendJson(res, 200, parsed.method
+          ? await browserAgent.waitForCdpEvent(parsed.method, options)
+          : { ok: false, error: 'wait requires "method" event name' })
+      } else if (operation === 'traceStart') {
+        sendJson(res, 200, await browserAgent.startCdpTrace(asRecord(parsed.params), options))
+      } else if (operation === 'traceStop') {
+        sendJson(res, 200, await browserAgent.stopCdpTrace(options))
+      } else if (operation === 'snapshot') {
+        sendJson(res, 200, await browserAgent.captureDomSnapshot(asRecord(parsed.params), options))
+      } else if (operation === 'networkStart') {
+        sendJson(res, 200, await browserAgent.startNetworkJournal(options))
+      } else if (operation === 'network') {
+        sendJson(res, 200, await browserAgent.readNetworkJournal(asRecord(parsed.params), options))
+      } else if (operation === 'networkBody') {
+        sendJson(res, 200, parsed.requestId
+          ? await browserAgent.captureNetworkResponseBody(parsed.requestId, options)
+          : { ok: false, error: 'networkBody requires "requestId"' })
+      } else if (operation === 'networkStop') {
+        sendJson(res, 200, await browserAgent.stopNetworkJournal(options))
+      } else if (operation === 'performanceStart') {
+        sendJson(res, 200, await browserAgent.startPerformanceDiagnostics(options))
+      } else if (operation === 'performance') {
+        sendJson(res, 200, await browserAgent.readPerformanceDiagnostics(options))
+      } else if (operation === 'performanceStop') {
+        sendJson(res, 200, await browserAgent.stopPerformanceDiagnostics(options))
+      } else if (operation === 'command') {
+        sendJson(res, 200, parsed.method
+          ? await browserAgent.cdp(parsed.method, asRecord(parsed.params), options)
+          : { ok: false, error: 'command requires "method"' })
+      } else {
+        sendJson(res, 400, { ok: false, error: `unsupported operation: ${operation}` })
+      }
       return
     }
 
@@ -150,6 +222,14 @@ async function route(
   } catch (error) {
     sendJson(res, 500, { ok: false, error: error instanceof Error ? error.message : String(error) })
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+
+function stringRecord(value: unknown): Record<string, string> {
+  return Object.fromEntries(Object.entries(asRecord(value)).filter((entry): entry is [string, string] => typeof entry[1] === 'string'))
 }
 
 export function startBrowserControlServer(
