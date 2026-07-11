@@ -224,7 +224,7 @@ function registerIpc(): void {
   const memoryDirectory = join(app.getPath('userData'), 'memory')
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore)
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())

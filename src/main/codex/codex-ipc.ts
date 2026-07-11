@@ -14,12 +14,14 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { CodexClient } from './codex-client.js'
 import type { MemoryStore } from '../memory-store.js'
+import type { AttachmentStore } from '../attachment-store.js'
 
 export function registerCodexIpc(
   getWindow: () => BrowserWindow | null,
   browserAgent: BrowserAgentController,
   researchRunner: ResearchRunner,
-  memoryStore: MemoryStore
+  memoryStore: MemoryStore,
+  attachmentStore: AttachmentStore
 ): CodexClient {
   const client = new CodexClient(getWindow, browserAgent, researchRunner)
 
@@ -40,9 +42,10 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexGetGoal, (_event, threadId: string) => client.getGoal(threadId))
   ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
   ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
-  ipcMain.handle(ipcChannels.codexSendMessage, (_event, params: CodexSendMessageParams) =>
-    client.sendMessage(params.threadId, params.text, params.cwd, params.model, params.attachments)
-  )
+  ipcMain.handle(ipcChannels.codexSendMessage, async (_event, params: CodexSendMessageParams) => {
+    const attachments = await attachmentStore.verify(params.attachments ?? [])
+    return client.sendMessage(params.threadId, params.text, params.cwd, params.model, attachments)
+  })
   ipcMain.handle(ipcChannels.codexSteerTurn, (_event, params: CodexSteerTurnParams) =>
     client.steerTurn(params.threadId, params.turnId, params.text)
   )

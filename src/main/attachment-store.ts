@@ -67,6 +67,34 @@ export class AttachmentStore {
     }
   }
 
+  async verify(attachments: ChatAttachment[]): Promise<ChatAttachment[]> {
+    if (attachments.length > maxAttachments) throw new Error(`You can attach up to ${maxAttachments} files at once`)
+    if (attachments.filter((item) => item.kind === 'image').length > maxImages) {
+      throw new Error(`You can attach up to ${maxImages} images at once`)
+    }
+    let total = 0
+    const verified: ChatAttachment[] = []
+    for (const attachment of attachments) {
+      if (!this.owns(attachment.path)) throw new Error('Attachment path is not owned by the application')
+      const info = await stat(attachment.path)
+      if (!info.isFile()) throw new Error('Attachment is not a regular file')
+      total += info.size
+      const stored = basename(attachment.path)
+      if (!stored.startsWith(`${attachment.id}--`)) throw new Error('Attachment identity does not match its stored path')
+      const buffer = await readFile(attachment.path)
+      const image = detectImage(buffer)
+      if ((attachment.kind === 'image') !== Boolean(image)) throw new Error('Attachment type does not match its contents')
+      verified.push({
+        ...attachment,
+        name: safeName(stored.slice(attachment.id.length + 2)),
+        mediaType: image?.mediaType ?? attachment.mediaType,
+        size: info.size
+      })
+    }
+    if (total > maxMessageBytes) throw new Error('Attachments exceed the 50 MB combined limit')
+    return verified
+  }
+
   private root(): string {
     return typeof this.directory === 'function' ? this.directory() : this.directory
   }
