@@ -2507,6 +2507,52 @@ const markdownComponents: Components = {
   }
 }
 
+type ImprovementNote = {
+  title: string
+  kind?: 'code' | 'skill' | 'tool' | 'process'
+  observation?: string
+  suggestion?: string
+}
+
+const improvementKinds = ['code', 'skill', 'tool', 'process'] as const
+
+function parseImprovementNote(value: string): ImprovementNote | null {
+  try {
+    const parsed = JSON.parse(value) as Partial<ImprovementNote>
+
+    if (typeof parsed.title !== 'string' || !parsed.title.trim()) {
+      return null
+    }
+
+    return {
+      title: parsed.title.trim(),
+      kind: improvementKinds.find((kind) => kind === parsed.kind),
+      observation: typeof parsed.observation === 'string' ? parsed.observation : undefined,
+      suggestion: typeof parsed.suggestion === 'string' ? parsed.suggestion : undefined
+    }
+  } catch {
+    return null
+  }
+}
+
+function ImprovementBlock({ note }: { note: ImprovementNote }): React.JSX.Element {
+  return (
+    <aside className="markdown-improvement" aria-label="App improvement suggestion">
+      <div className="markdown-improvement-header">
+        <span className="markdown-improvement-badge">App improvement</span>
+        {note.kind ? <span className="markdown-improvement-kind">{note.kind}</span> : null}
+      </div>
+      <p className="markdown-improvement-title">{note.title}</p>
+      {note.observation ? <p className="markdown-improvement-body">{note.observation}</p> : null}
+      {note.suggestion ? (
+        <p className="markdown-improvement-body">
+          <strong>Suggested change:</strong> {note.suggestion}
+        </p>
+      ) : null}
+    </aside>
+  )
+}
+
 function parseChartConfig(value: string): ChartConfig | null {
   try {
     const parsed = JSON.parse(value) as ChartConfig
