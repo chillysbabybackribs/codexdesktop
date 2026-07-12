@@ -101,7 +101,7 @@ export class ClaudeClient extends EventEmitter {
       runtime.model = model
     }
     if (effort && runtime.effort !== effort) {
-      await runtime.query.applyFlagSettings({ effortLevel: effort })
+      await runtime.query.applyFlagSettings({ effortLevel: effort === 'max' ? 'xhigh' : effort })
       runtime.effort = effort
     }
 
@@ -186,7 +186,7 @@ export class ClaudeClient extends EventEmitter {
       rejectInitialized = reject
     })
 
-    const runtime = {
+    const runtime: ClaudeRuntime = {
       key,
       sessionId: options.resume,
       cwd: options.cwd,
@@ -199,7 +199,7 @@ export class ClaudeClient extends EventEmitter {
       initialized,
       resolveInitialized,
       rejectInitialized
-    } satisfies ClaudeRuntime
+    }
 
     const mcpServer = createClaudeBrowserMcpServer(
       { browserAgent: this.browserAgent, researchRunner: this.researchRunner },
@@ -448,7 +448,7 @@ async function buildUserMessage(text: string, attachments: ChatAttachment[]): Pr
 
   return {
     type: 'user',
-    message: { role: 'user', content } as SDKUserMessage['message'],
+    message: { role: 'user', content } as unknown as SDKUserMessage['message'],
     parent_tool_use_id: null,
     uuid: crypto.randomUUID()
   }

@@ -39,7 +39,7 @@ export function createClaudeBrowserMcpServer(
       }
     },
     { annotations: definition.annotations }
-  )) as SdkMcpToolDefinition[]
+  )) as unknown as SdkMcpToolDefinition<any>[]
 
   return createSdkMcpServer({
     name: claudeBrowserMcpServerName,
@@ -56,4 +56,3 @@ function dataUrlToImageContent(dataUrl: string): Array<{
   const match = /^data:([^;,]+);base64,(.+)$/s.exec(dataUrl)
   return match ? [{ type: 'image', mimeType: match[1], data: match[2] }] : []
 }
-
