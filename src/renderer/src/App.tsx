@@ -861,9 +861,15 @@ export default function App(): React.JSX.Element {
     window.location.reload()
   }
 
+  function catalogForProvider(sessionProvider: AgentProvider): Model[] {
+    return sessionProvider === provider ? modelsRef.current : crossModelsRef.current
+  }
+
   const handleSelectAgentModel = (key: string, model: string): void => {
-    const selected = modelsRef.current.find((candidate) => candidate.model === model)
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    const selected = session
+      ? catalogForProvider(session.provider).find((candidate) => candidate.model === model)
+      : null
     if (!selected || !session) {
       handleSetAgentModel(key, model)
       return
@@ -881,6 +887,31 @@ export default function App(): React.JSX.Element {
     effort: ReasoningEffort
   ): void => {
     handleSetAgentModel(key, model, effort)
+  }
+
+  // Picking a model from the other provider's section re-homes the tab: the
+  // next send starts a fresh thread on that provider's runtime, no app reload.
+  const handleSelectAgentCrossModel = (key: string, model: string): void => {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session) return
+    if (session.status === 'working') {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: '⚠ Stop the running turn before switching this agent to another provider.'
+      })
+      return
+    }
+    const nextProvider: AgentProvider = session.provider === 'codex' ? 'claude' : 'codex'
+    const selected = catalogForProvider(nextProvider).find((candidate) => candidate.model === model)
+    handleSetAgentModel(key, model, selected?.defaultReasoningEffort, nextProvider)
+    if (session.threadId) {
+      appendAgentMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `Switched to ${nextProvider === 'claude' ? 'Anthropic Claude' : 'OpenAI Codex'} — the next message starts a fresh conversation for this agent.`
+      })
+    }
   }
 
   const handleStop = async (): Promise<void> => {
