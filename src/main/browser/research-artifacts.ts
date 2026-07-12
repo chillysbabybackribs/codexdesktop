@@ -1,0 +1,79 @@
+import { mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+
+const RESEARCH_MAX_AGE_MS = 7 * 24 * 60 * 60_000
+const RESEARCH_MAX_BYTES = 250 * 1024 * 1024
+
+export type ResearchArtifactPaths = {
+  artifactPath: string
+  htmlPath: string
+}
+
+export async function writeResearchPageArtifacts(
+  artifactDir: string,
+  baseName: string,
+  content: string,
+  html: string
+): Promise<ResearchArtifactPaths> {
+  await mkdir(artifactDir, { recursive: true })
+  const artifactPath = join(artifactDir, `${baseName}.txt`)
+  const htmlPath = join(artifactDir, `${baseName}.html`)
+  await Promise.all([
+    writeFile(artifactPath, content.endsWith('\n') ? content : `${content}\n`, 'utf8'),
+    writeFile(htmlPath, html, 'utf8')
+  ])
+  return { artifactPath, htmlPath }
+}
+
+export class ResearchPruneGate {
+  private lastStartedAt = Number.NEGATIVE_INFINITY
+  private running: Promise<void> | null = null
+
+  constructor(
+    private readonly cooldownMs: number,
+    private readonly prune: (root: string) => Promise<void> = pruneResearchArtifacts,
+    private readonly now: () => number = Date.now
+  ) {}
+
+  schedule(root: string): Promise<void> | null {
+    if (this.running) return this.running
+    const now = this.now()
+    if (now - this.lastStartedAt < this.cooldownMs) return null
+    this.lastStartedAt = now
+    const running = this.prune(root).finally(() => {
+      if (this.running === running) this.running = null
+    })
+    this.running = running
+    return running
+  }
+}
+
+export async function pruneResearchArtifacts(root: string): Promise<void> {
+  try {
+    const entries = await readdir(root, { withFileTypes: true })
+    const directories = await Promise.all(entries
+      .filter((entry) => entry.isDirectory())
+      .map(async (entry) => {
+        const path = join(root, entry.name)
+        const info = await stat(path)
+        const children = await readdir(path, { withFileTypes: true })
+        const sizes = await Promise.all(children
+          .filter((child) => child.isFile())
+          .map(async (child) => (await stat(join(path, child.name))).size))
+        return { path, modifiedAt: info.mtimeMs, size: sizes.reduce((sum, size) => sum + size, 0) }
+      }))
+
+    directories.sort((left, right) => right.modifiedAt - left.modifiedAt)
+    let retainedBytes = 0
+    const now = Date.now()
+
+    for (const directory of directories) {
+      retainedBytes += directory.size
+      if (now - directory.modifiedAt > RESEARCH_MAX_AGE_MS || retainedBytes > RESEARCH_MAX_BYTES) {
+        await rm(directory.path, { recursive: true, force: true })
+      }
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
+}
