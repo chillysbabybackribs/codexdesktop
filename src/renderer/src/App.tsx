@@ -1194,9 +1194,12 @@ export default function App(): React.JSX.Element {
       appendMessage: appendAgentMessage
     },
     getWorkspace: () => workspaceRef.current,
-    getSelectedModel: () => selectedModelRef.current,
+    getDefaultModel: (sessionProvider) =>
+      sessionProvider === provider
+        ? selectedModelRef.current
+        : (crossModelsRef.current.find((model) => model.isDefault) ?? crossModelsRef.current[0])?.model ?? null,
     getSelectedEffort: () => selectedReasoningEffort,
-    acceptsImages: (model) => modelAcceptsImages(models, model),
+    acceptsImages: (model) => modelAcceptsImages([...models, ...crossModels], model),
     buildMainChatContext,
     cancelRecovery: cancelAgentRecovery
   })
@@ -1218,6 +1221,7 @@ export default function App(): React.JSX.Element {
     isRecoverable: (error) => Boolean(error && isRecoverableTurnError(error.codexErrorInfo)),
     getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
+    getMainProvider: () => provider,
     getActiveThreadId: () => activeThreadIdRef.current,
     pickFallbackModel,
     selectMainModel: handleSelectModel,
@@ -1226,7 +1230,16 @@ export default function App(): React.JSX.Element {
       activeTurnIdRef.current = null
     },
     createMainThread: handleNewThread,
-    resumeMainThread: resumeThreadById
+    resumeMainThread: resumeThreadById,
+    // The whole app is keyed on its boot-time provider, so promoting a tab
+    // from the other provider persists the pick and reloads into it — the
+    // same handoff the cross-provider model picker uses.
+    promoteCrossProvider: (session) => {
+      if (session.model) window.localStorage.setItem(modelStorageKey, session.model)
+      window.localStorage.setItem(providerStorageKey, session.provider)
+      persistLastThreadId(session.threadId, session.provider)
+      window.location.reload()
+    }
   })
 
   function cancelAgentRecovery(key: string): void {
