@@ -149,14 +149,16 @@ function bestDocumentPassage(
 
   for (const [lineIndex, line] of lines.entries()) {
     const lineTokens = new Set(tokenize(line))
-    const matchedTerms = focusTokens.filter((token) => lineTokens.has(token))
+    const localMatches = focusTokens.filter((token) => lineTokens.has(token))
+    if (localMatches.length === 0) continue
+    const windowTokens = new Set(tokenize(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')))
+    const matchedTerms = focusTokens.filter((token) => windowTokens.has(token))
     if (matchedTerms.length < requiredMatches) continue
 
-    const normalizedLine = normalizeText(line)
+    const normalizedLine = normalizeText(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' '))
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
-    const neighborMatches = countNeighborMatches(lines, lineIndex, focusTokens)
-    const score = matchedTerms.length * 30 + neighborMatches * 6 + (exactPhrase ? 100 : 0)
+    const score = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
     if (!best || score > best.score) best = { lineIndex, score, matchedTerms }
   }
 
@@ -231,11 +233,6 @@ function buildPassageWindow(
     text: lines.slice(start, end + 1).join('\n'),
     truncated: start > 0 || end < lines.length - 1
   }
-}
-
-function countNeighborMatches(lines: string[], lineIndex: number, focusTokens: string[]): number {
-  const nearby = new Set(tokenize(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')))
-  return focusTokens.reduce((count, token) => count + (nearby.has(token) ? 1 : 0), 0)
 }
 
 function compareCandidates(left: PassageCandidate, right: PassageCandidate): number {

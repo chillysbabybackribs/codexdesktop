@@ -210,7 +210,7 @@ export class ResearchRunner {
       MAX_TARGET_PAGES
     )
     const maxAttempts = clamp(request.maxAttempts, DEFAULT_MAX_ATTEMPTS, targetPages, MAX_MAX_ATTEMPTS)
-    const snippetChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
+    const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
     const researchId = crypto.randomUUID()
     const artifactRoot = join(app.getPath('userData'), 'research')
     const artifactDir = join(artifactRoot, researchId)
@@ -240,9 +240,16 @@ export class ResearchRunner {
     const pages: ResearchPage[] = []
     const evidenceDocuments: ResearchEvidenceDocument[] = []
     let pageAttempts = 0
+    let evidenceRevision = -1
+    let cachedEvidence: ReturnType<typeof selectResearchEvidence> = { passages: [], gaps: [] }
 
-    const evidence = (): ReturnType<typeof selectResearchEvidence> =>
-      selectResearchEvidence(focus, evidenceDocuments, snippetChars)
+    const evidence = (): ReturnType<typeof selectResearchEvidence> => {
+      if (evidenceRevision !== evidenceDocuments.length) {
+        cachedEvidence = selectResearchEvidence(focus, evidenceDocuments, passageChars)
+        evidenceRevision = evidenceDocuments.length
+      }
+      return cachedEvidence
+    }
     const goalMet = (): boolean => focus.length > 0
       ? evidence().gaps.length === 0
       : pages.length >= targetPages

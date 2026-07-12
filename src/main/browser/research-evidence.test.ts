@@ -55,7 +55,7 @@ test('evidence selection returns an exact bounded passage with artifact line loc
   assert.equal(passage.lineStart, 4)
   assert.equal(passage.lineEnd, 8)
   assert.equal(passage.text, lines.slice(passage.lineStart - 1, passage.lineEnd).join('\n'))
-  assert.deepEqual(passage.matchedTerms, ['annual', 'discount'])
+  assert.deepEqual(passage.matchedTerms, ['enterprise', 'annual', 'discount'])
 })
 
 test('evidence selection finds claims beyond the former artifact prefix', () => {
