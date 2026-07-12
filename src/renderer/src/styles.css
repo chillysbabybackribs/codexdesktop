@@ -4057,12 +4057,12 @@ button {
 .attachment-button {
   display: grid;
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   padding: 0;
   border: 0;
-  border-radius: 7px;
+  border-radius: 8px;
   background: transparent;
   color: #9ba1a7;
   cursor: pointer;
@@ -4079,8 +4079,8 @@ button {
 }
 
 .attachment-button svg {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
 }
 
 .attachment-button:focus-visible,
@@ -4335,11 +4335,16 @@ button {
 
 .composer .composer-primary-action .send-button,
 .composer .composer-primary-action .stop-square-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border-color: #2c2c2c;
   background: #1c1c1c;
+}
+
+.composer .composer-primary-action .send-button svg {
+  width: 18px;
+  height: 18px;
 }
 
 .composer .send-button:not(:disabled):hover {
