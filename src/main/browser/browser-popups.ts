@@ -1,7 +1,7 @@
 import type { BrowserWindow, WebContents } from 'electron'
 import { join } from 'node:path'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
-import { isUnsafePopupUrl } from './window-open-policy.js'
+import { resolveWindowOpenAction } from './window-open-policy.js'
 
 // Google Sign-In popups call window.opener.postMessage(). Converting popups
 // into in-app tabs breaks that link and leaves a blank gsi/iframe page.
@@ -14,7 +14,14 @@ export function attachPopupWindowHandling(
   webContents.setUserAgent(chromeLikeUserAgent())
 
   webContents.setWindowOpenHandler((details) => {
-    if (isUnsafePopupUrl(details.url)) {
+    const action = resolveWindowOpenAction(details)
+
+    if (action === 'deny') {
+      return { action: 'deny' }
+    }
+
+    if (action === 'current-page') {
+      void webContents.loadURL(details.url.trim()).catch(() => undefined)
       return { action: 'deny' }
     }
 
