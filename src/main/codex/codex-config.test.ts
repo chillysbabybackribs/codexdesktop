@@ -34,6 +34,14 @@ const polishedUiSkill: SkillMetadata = {
   enabled: true
 }
 
+const imagegenSkill: SkillMetadata = {
+  name: 'imagegen',
+  description: 'Generate or edit project-bound raster assets',
+  path: '/app/skills/imagegen/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('web research turns attach the extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Research the latest Electron navigation guidance', [webResearchSkill]),
@@ -51,6 +59,20 @@ test('unrelated implementation turns do not load the extraction skill', () => {
 test('frontend design turns automatically attach the polished UI skill', () => {
   assert.deepEqual(
     selectTurnSkills('Build a polished responsive dashboard UI', [polishedUiSkill]),
+    [polishedUiSkill]
+  )
+})
+
+test('media-led website turns attach both polished UI and image generation guidance', () => {
+  assert.deepEqual(
+    selectTurnSkills('Create a premium responsive coffee shop website', [polishedUiSkill, imagegenSkill]),
+    [polishedUiSkill, imagegenSkill]
+  )
+})
+
+test('product dashboards do not attach image generation guidance by default', () => {
+  assert.deepEqual(
+    selectTurnSkills('Design a responsive operations dashboard UI', [polishedUiSkill, imagegenSkill]),
     [polishedUiSkill]
   )
 })

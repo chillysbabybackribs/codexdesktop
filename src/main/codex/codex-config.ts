@@ -76,6 +76,8 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   const polishedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
+  const mediaLedUiTask = polishedUiTask &&
+    /\b(landing page|website|marketing|brand|shop|store|restaurant|cafe|coffee|hotel|travel|fashion|beauty|food|product page|portfolio|editorial|event)\b/.test(normalized)
 
   return skills.filter((skill) => {
     if (normalized.includes(`$${skill.name.toLowerCase()}`)) {
@@ -84,6 +86,10 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
 
     if (skill.name === 'artifact-first-web-research') {
       return webResearchTask
+    }
+
+    if (skill.name === 'imagegen') {
+      return mediaLedUiTask
     }
 
     return skill.name === 'build-polished-ui' && polishedUiTask
