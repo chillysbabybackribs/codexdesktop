@@ -3372,7 +3372,8 @@ function Composer({
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
   const hasDraft = Boolean(value.trim() || attachments.length)
-  const visibleStatus = attachmentError ?? (isTurnActive ? null : status)
+  const isQuietStatus = status === 'idle' || status === 'ready'
+  const visibleStatus = attachmentError ?? (isTurnActive || isQuietStatus ? null : status)
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
