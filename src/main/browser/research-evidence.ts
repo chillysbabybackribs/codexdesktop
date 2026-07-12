@@ -161,6 +161,8 @@ function bestDocumentPassage(
     const windowTokens = new Set(tokenize(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')))
     const matchedTerms = focusTokens.filter((token) => windowTokens.has(token))
     if (matchedTerms.length < requiredMatches) continue
+    const requiredExactTerms = focusTokens.filter((token) => /\d/.test(token))
+    if (requiredExactTerms.some((token) => !windowTokens.has(token))) continue
 
     const normalizedLine = normalizeText(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' '))
     const normalizedNeed = normalizeText(focusTokens.join(' '))
@@ -174,6 +176,7 @@ function bestDocumentPassage(
   const visibleTokens = new Set(tokenize(window.text))
   const visibleMatchedTerms = focusTokens.filter((token) => visibleTokens.has(token))
   if (visibleMatchedTerms.length < requiredMatches) return null
+  if (focusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) return null
   return {
     sourceId: document.sourceId,
     lineStart: window.lineStart,
@@ -181,7 +184,7 @@ function bestDocumentPassage(
     text: window.text,
     matchedTerms: visibleMatchedTerms,
     truncated: window.truncated,
-    score: best.score,
+    score: scorePassageText(window.text, focusTokens),
     documentFingerprint: fingerprint(document.content),
     canonicalUrl: document.url
   }
@@ -260,9 +263,14 @@ function tokenizeFocus(value: string): string[] {
 }
 
 function tokenize(value: string): string[] {
-  return (value.toLowerCase().match(/[a-z0-9]+(?:\.[a-z0-9]+)*/g) ?? [])
-    .map((token) => /^v\d/.test(token) ? token.slice(1) : token)
+  return (value.toLowerCase().match(/[\p{L}\p{N}]+(?:\.[\p{L}\p{N}]+)*/gu) ?? [])
+    .map((token) => normalizeToken(/^v\d/.test(token) ? token.slice(1) : token))
     .filter((token) => token.length >= 2)
+}
+
+function normalizeToken(value: string): string {
+  if (value.length > 3 && value.endsWith('s') && !/(ss|us|is)$/.test(value)) return value.slice(0, -1)
+  return value
 }
 
 function normalizeText(value: string): string {
@@ -280,6 +288,12 @@ function unique(values: string[]): string[] {
 function countTokenMatches(value: string, tokens: string[]): number {
   const values = new Set(tokenize(value))
   return tokens.reduce((count, token) => count + (values.has(token) ? 1 : 0), 0)
+}
+
+function scorePassageText(value: string, focusTokens: string[]): number {
+  const matched = countTokenMatches(value, focusTokens)
+  const exactPhrase = normalizeText(value).includes(normalizeText(focusTokens.join(' ')))
+  return matched * 30 + (exactPhrase ? 100 : 0)
 }
 
 function clampInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {

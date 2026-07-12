@@ -116,6 +116,14 @@ test('focus matching uses whole tokens and treats stopword-only needs as gaps', 
     [{ id: 'empty', need: 'the and of', minSources: 1 }],
     [source]
   ).gaps[0]?.reason, 'no-relevant-passage')
+  assert.equal(selectResearchEvidence(
+    [{ id: 'refund', need: 'refund window', minSources: 1 }],
+    [document('page-02', 'Browser window dimensions are restored on startup.')]
+  ).passages.length, 0)
+  assert.equal(selectResearchEvidence(
+    [{ id: 'kernel', need: 'Linux kernel version 6.8', minSources: 1 }],
+    [document('page-03', 'Linux requires kernel version 5.4 for this feature.')]
+  ).passages.length, 0)
 })
 
 test('the combined evidence text stays inside the requested result budget', () => {

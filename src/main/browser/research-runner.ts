@@ -504,7 +504,6 @@ export class ResearchRunner {
       message: `Finalizing ${pages.length} verified ${pages.length === 1 ? 'page' : 'pages'}…`,
       pagesAttempted: pageAttempts,
       pagesVerified: pages.length,
-      pageCacheHits,
       targetPages
     })
     const finalizationStartedAt = Date.now()
@@ -524,6 +523,7 @@ export class ResearchRunner {
       queriesAttempted: searchQueries.length,
       pagesAttempted: pageAttempts,
       pagesVerified: pages.length,
+      pageCacheHits,
       targetMet: goalMet(),
       navigation
     }
