@@ -1956,12 +1956,8 @@ function ChatPane({
 
   return (
     <section
-      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
-        !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
-      } ${isMainFocused ? 'is-main-focused' : ''}`}
+      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : selectedAgentKey ? 'is-agent-view' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
       aria-busy={isRestoring}
-      onPointerDownCapture={(event) => updateFocusRegion(event.target)}
-      onFocusCapture={(event) => updateFocusRegion(event.target)}
     >
       {isPluginBrowserOpen ? (
         <PluginBrowserView
@@ -1981,8 +1977,25 @@ function ChatPane({
         >
           <SettingsIcon />
         </button>
+        <ConversationTabStrip
+          sessions={agentSessions}
+          selectedKey={selectedAgentKey}
+          mainWorking={Boolean(activeTurnId)}
+          onSelectMain={onSelectMain}
+          onSelectAgent={onSelectAgent}
+          onNewAgent={onNewAgent}
+          onCloseAgent={closeAgent}
+        />
       </div>
 
+      <div className="conversation-panels">
+      <div
+        id="conversation-panel-main"
+        className="conversation-panel main-conversation-panel"
+        role="tabpanel"
+        aria-labelledby="conversation-tab-main"
+        hidden={selectedAgentKey !== null}
+      >
       <ThreadScroll
         resetKey={activeThreadId}
         activeTurnId={activeTurnId}
@@ -2030,32 +2043,7 @@ function ChatPane({
         })}
       </ThreadScroll>
 
-      <div
-        className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'} ${
-          openAgentSessions.length ? 'has-agents' : ''
-        }`}
-      >
-        {openAgentSessions.length ? (
-          <AgentColumn
-            sessions={openAgentSessions}
-            selectedKey={selectedAgentKey}
-            models={models}
-            mainModel={selectedModel}
-            mainReasoningEffort={selectedReasoningEffort}
-            onSetModel={onSetAgentModel}
-            onSetModelEffort={onSetAgentModelEffort}
-            onSelect={onSelectAgent}
-            onMinimize={onMinimizeAgent}
-            onCloseSession={onCloseAgentSession}
-            onResetSession={onResetAgentSession}
-            onPromote={onPromoteAgent}
-            onToggleWatch={onToggleWatchAgent}
-            onSend={onAgentSend}
-            onSteer={onAgentSteer}
-            onStop={onAgentStop}
-            onCompact={onAgentCompact}
-          />
-        ) : null}
+      <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
         <div className="composer-context">
           <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
           {models.length ? (
@@ -2071,12 +2059,6 @@ function ChatPane({
             active={collaborationMode === 'plan'}
             disabled={isBusy}
             onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
-          />
-          <AgentTabStrip
-            sessions={agentSessions}
-            openKeys={openAgentKeys}
-            onFocus={focusAgent}
-            onNewAgent={onNewAgent}
           />
         </div>
         <Composer
@@ -2116,6 +2098,29 @@ function ChatPane({
             </div>
           }
         />
+      </div>
+      </div>
+
+      {agentSessions.map((session) => (
+        <AgentConversationPanel
+          key={session.key}
+          session={session}
+          active={selectedAgentKey === session.key}
+          models={models}
+          mainModel={selectedModel}
+          mainReasoningEffort={selectedReasoningEffort}
+          onSetModel={onSetAgentModel}
+          onSetModelEffort={onSetAgentModelEffort}
+          onCloseSession={closeAgent}
+          onResetSession={onResetAgentSession}
+          onPromote={promoteAgent}
+          onToggleWatch={onToggleWatchAgent}
+          onSend={onAgentSend}
+          onSteer={onAgentSteer}
+          onStop={onAgentStop}
+          onCompact={onAgentCompact}
+        />
+      ))}
       </div>
 
       {isSettingsOpen ? (
