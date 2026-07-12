@@ -10,6 +10,8 @@ import {
   BrowserAgentController,
   MAX_PARALLEL_BROWSER_FRAMES,
   MAX_PARALLEL_BROWSER_TARGETS,
+  PAGE_EXTRACTION_LOW_VALUE_PATTERN,
+  PAGE_EXTRACTION_REMOVE_SELECTORS,
   buildPageExtractionProgram
 } from './browser-agent.ts'
 import { CdpArtifactStore } from './cdp-artifact-store.ts'
@@ -48,12 +50,47 @@ function fakeTabs(executeJavaScript: WebContents['executeJavaScript']): TabManag
 
 test('page extraction program removes media and low-value components', () => {
   const program = buildPageExtractionProgram(1_200)
+  const lowValuePattern = new RegExp(PAGE_EXTRACTION_LOW_VALUE_PATTERN, 'i')
 
   assert.match(program, /const maxChars = 1200/)
   assert.match(program, /script.*style.*img.*nav.*footer/s)
   assert.match(program, /removedImages: true/)
   assert.match(program, /return \{\n    title/)
+  assert.equal((PAGE_EXTRACTION_REMOVE_SELECTORS as readonly string[]).includes('header'), false)
+  assert.equal(lowValuePattern.test('commentary'), false)
+  assert.equal(lowValuePattern.test('social-share'), true)
   assert.doesNotThrow(() => new Function(program))
+})
+
+test('page extraction can capture raw html in the same bounded program', () => {
+  const program = buildPageExtractionProgram(100_000, 2_000_000)
+
+  assert.match(program, /const maxChars = 100000/)
+  assert.match(program, /outerHTML.*slice\(0, 2000000\)/)
+  assert.match(program, /html: rawHtml/)
+  assert.doesNotThrow(() => new Function(program))
+})
+
+test('browser page extraction verifies substantial content before reporting success', async () => {
+  const valid = new BrowserAgentController(() => fakeTabs(async () => ({
+    title: 'Detailed report',
+    url: 'https://example.com/report',
+    content: 'Concrete reproduction details and observed results. '.repeat(20),
+    wordCount: 100,
+    truncated: false
+  })))
+  const invalid = new BrowserAgentController(() => fakeTabs(async () => ({
+    title: 'Loading',
+    url: 'https://example.com/report',
+    content: 'Loading...',
+    wordCount: 1,
+    truncated: false
+  })))
+
+  assert.equal((await valid.extractPage()).ok, true)
+  const rejected = await invalid.extractPage()
+  assert.equal(rejected.ok, false)
+  assert.match(rejected.error ?? '', /page verification failed: insufficient-content/)
 })
 
 test('browser agent runs a program against the active tab', async () => {
