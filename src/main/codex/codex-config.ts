@@ -77,17 +77,6 @@ export function isWebResearchTask(text: string): boolean {
   return explicitWebAction || publicSource || (freshnessRequirement && /\b(find|check|verify|compare|price|version|release)\b/.test(normalized))
 }
 
-export function shouldAttachPriorChatMemory(text: string): boolean {
-  const normalized = text.trim().toLowerCase()
-  if (!normalized) return false
-
-  return (
-    /^(let'?s\s+)?(continue|resume|carry on|keep going|pick (?:it|this|that) back up)\b/.test(normalized) ||
-    /\b(previous|prior|last) (chat|thread|conversation|session|work)\b/.test(normalized) ||
-    /\b(where (?:did|were) we|what were we doing|same as before|from where we left off|left off)\b/.test(normalized)
-  )
-}
-
 export function buildCollaborationMode(
   mode: 'default' | 'plan',
   model: string,
@@ -144,11 +133,6 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
 
     return skill.name === 'build-polished-ui' && polishedUiTask
   })
-}
-
-export function selectNewThreadSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
-  if (!shouldAttachPriorChatMemory(text)) return []
-  return skills.filter((skill) => skill.name === 'prior-chat-memory')
 }
 
 export function formatSkillInvocationText(text: string, skills: SkillMetadata[]): string {
