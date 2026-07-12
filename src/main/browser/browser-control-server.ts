@@ -62,6 +62,10 @@ async function handleTabsAction(tabs: TabManager, body: string): Promise<unknown
       if (!parsed.tab) return { ok: false, error: 'close requires "tab"' }
       tabs.closeTab(parsed.tab)
       return { ok: true }
+    case 'cleanup': {
+      const tab = tabs.cleanupTabs(parsed.url)
+      return { ok: true, tab }
+    }
     case 'activate':
       if (!parsed.tab) return { ok: false, error: 'activate requires "tab"' }
       tabs.activateTab(parsed.tab)
