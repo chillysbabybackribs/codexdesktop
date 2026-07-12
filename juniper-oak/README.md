@@ -20,9 +20,9 @@ npm run dev
 
 ## Image provenance
 
-- `assets/juniper-oak-hero.png` — generated with the built-in OpenAI image tool for this project; 1536 × 1024. Responsive focal point stays near 64% horizontally. Replace at the same aspect ratio if real café photography becomes available.
-- `assets/featured-drinks.png` — generated with the built-in OpenAI image tool for this project; 1700 × 925. Cropped as a wide group image, with all three drinks retained at supported breakpoints.
+- `assets/juniper-oak-hero.webp` — generated with the built-in OpenAI image tool for this project; 1536 × 1024. Responsive focal point stays near 64% horizontally. Replace at the same aspect ratio if real café photography becomes available.
+- `assets/featured-drinks.webp` — generated with the built-in OpenAI image tool for this project; 1701 × 925. Cropped as a wide group image, with all three drinks retained at supported breakpoints.
 
-Both images have fixed intrinsic dimensions and meaningful alternative text in `index.html`. Production optimization can convert them to responsive AVIF/WebP sources when the deployment target is known.
+Both images have fixed intrinsic dimensions, WebP compression, and meaningful alternative text in `index.html`. A later deployment can add responsive AVIF sources if its browser-support target allows it.
 
 The address and testimonial quotes are explicitly marked as concept content and should be replaced with verified business information before launch.
