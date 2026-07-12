@@ -229,7 +229,7 @@ const researchWebSchema = {
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
           need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
-          minSources: { type: 'number', minimum: 1, maximum: 3, description: 'Independent matching source target. Defaults to 1.' }
+          minSources: { type: 'number', minimum: 1, maximum: 3, description: 'Distinct matching source target. Defaults to 1; the model must still judge source independence.' }
         },
         required: ['id', 'need'],
         additionalProperties: false

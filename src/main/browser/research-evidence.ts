@@ -152,7 +152,14 @@ function bestDocumentPassage(
 ): PassageCandidate | null {
   const lines = document.content.split('\n')
   const requiredMatches = Math.min(3, Math.max(1, Math.ceil(focusTokens.length * 0.6)))
-  let best: { lineIndex: number; score: number; matchedTerms: string[] } | null = null
+  let best: {
+    lineStart: number
+    lineEnd: number
+    text: string
+    truncated: boolean
+    score: number
+    matchedTerms: string[]
+  } | null = null
 
   for (const [lineIndex, line] of lines.entries()) {
     const lineTokens = new Set(tokenize(line))
@@ -167,24 +174,25 @@ function bestDocumentPassage(
     const normalizedLine = normalizeText(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' '))
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
-    const score = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
-    if (!best || score > best.score) best = { lineIndex, score, matchedTerms }
+    const preliminaryScore = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
+    const window = buildPassageWindow(lines, lineIndex, focusTokens, maxChars)
+    const visibleTokens = new Set(tokenize(window.text))
+    const visibleMatchedTerms = focusTokens.filter((token) => visibleTokens.has(token))
+    if (visibleMatchedTerms.length < requiredMatches) continue
+    if (focusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) continue
+    const score = scorePassageText(window.text, focusTokens) + preliminaryScore / 100
+    if (!best || score > best.score) best = { ...window, score, matchedTerms: visibleMatchedTerms }
   }
 
   if (!best) return null
-  const window = buildPassageWindow(lines, best.lineIndex, focusTokens, maxChars)
-  const visibleTokens = new Set(tokenize(window.text))
-  const visibleMatchedTerms = focusTokens.filter((token) => visibleTokens.has(token))
-  if (visibleMatchedTerms.length < requiredMatches) return null
-  if (focusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) return null
   return {
     sourceId: document.sourceId,
-    lineStart: window.lineStart,
-    lineEnd: window.lineEnd,
-    text: window.text,
-    matchedTerms: visibleMatchedTerms,
-    truncated: window.truncated,
-    score: scorePassageText(window.text, focusTokens),
+    lineStart: best.lineStart,
+    lineEnd: best.lineEnd,
+    text: best.text,
+    matchedTerms: best.matchedTerms,
+    truncated: best.truncated,
+    score: best.score,
     documentFingerprint: fingerprint(document.content),
     canonicalUrl: document.url
   }
