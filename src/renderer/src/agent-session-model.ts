@@ -76,8 +76,14 @@ export function resetAgentSession(session: AgentSession): AgentSession {
   }
 }
 
-export function findAgentSessionByThread(sessions: AgentSession[], threadId: string): AgentSession | null {
-  return sessions.find((session) => session.threadId === threadId) ?? null
+export function findAgentSessionByThread(
+  sessions: AgentSession[],
+  threadId: string,
+  provider?: AgentProvider
+): AgentSession | null {
+  return sessions.find(
+    (session) => session.threadId === threadId && (!provider || session.provider === provider)
+  ) ?? null
 }
 
 export function nextAgentSelectionAfterClose(
