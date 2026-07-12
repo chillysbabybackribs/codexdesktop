@@ -135,7 +135,7 @@ type NavigationMetrics = ResearchMetrics['navigation']
 /**
  * A compact, adaptive research pipeline. Work is serialized per thread with a
  * small global concurrency bound. Source lanes and page candidates stop as soon
- * as the verified-page target is satisfied.
+ * as the requested page or focused-evidence target is satisfied.
  */
 export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()

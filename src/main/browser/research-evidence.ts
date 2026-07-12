@@ -257,7 +257,7 @@ function normalizeText(value: string): string {
 }
 
 function fingerprint(value: string): string {
-  return normalizeText(value).slice(0, 20_000)
+  return normalizeText(value)
 }
 
 function unique(values: string[]): string[] {
