@@ -55,6 +55,15 @@ type PassageCandidate = Omit<ResearchPassage, 'focusId'> & {
   canonicalUrl: string
 }
 
+type IndexedEvidenceDocument = {
+  document: ResearchEvidenceDocument
+  lines: string[]
+  lineTokens: Array<Set<string>>
+  windowTokens: Array<Set<string>>
+  windowText: string[]
+  fingerprint: string
+}
+
 export function normalizeResearchFocus(
   values: Array<{ id?: unknown; need?: unknown; minSources?: unknown }> | null | undefined
 ): ResearchFocus[] {
@@ -96,6 +105,7 @@ export function selectResearchEvidence(
   const passageBudget = clampInteger(maxChars, DEFAULT_EVIDENCE_CHARS, MIN_EVIDENCE_CHARS, MAX_EVIDENCE_CHARS)
   const passages: ResearchPassage[] = []
   const gaps: ResearchGap[] = []
+  const indexedDocuments = documents.map(indexEvidenceDocument)
 
   for (const item of focus) {
     const tokens = tokenizeFocus(item.need)
@@ -104,7 +114,7 @@ export function selectResearchEvidence(
       Math.min(MAX_PASSAGE_CHARS, Math.floor(passageBudget / focus.length / item.minSources))
     )
     const candidates = tokens.length > 0
-      ? documents
+      ? indexedDocuments
           .map((document) => bestDocumentPassage(document, tokens, perPassageChars))
           .filter((candidate): candidate is PassageCandidate => candidate !== null)
           .sort(compareCandidates)
@@ -146,11 +156,11 @@ export function selectResearchEvidence(
 }
 
 function bestDocumentPassage(
-  document: ResearchEvidenceDocument,
+  indexed: IndexedEvidenceDocument,
   focusTokens: string[],
   maxChars: number
 ): PassageCandidate | null {
-  const lines = document.content.split('\n')
+  const { document, lines } = indexed
   const requiredMatches = Math.min(3, Math.max(1, Math.ceil(focusTokens.length * 0.6)))
   let best: {
     lineStart: number
@@ -161,17 +171,17 @@ function bestDocumentPassage(
     matchedTerms: string[]
   } | null = null
 
-  for (const [lineIndex, line] of lines.entries()) {
-    const lineTokens = new Set(tokenize(line))
+  for (const lineIndex of lines.keys()) {
+    const lineTokens = indexed.lineTokens[lineIndex] ?? new Set<string>()
     const localMatches = focusTokens.filter((token) => lineTokens.has(token))
     if (localMatches.length === 0) continue
-    const windowTokens = new Set(tokenize(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')))
+    const windowTokens = indexed.windowTokens[lineIndex] ?? new Set<string>()
     const matchedTerms = focusTokens.filter((token) => windowTokens.has(token))
     if (matchedTerms.length < requiredMatches) continue
     const requiredExactTerms = focusTokens.filter((token) => /\d/.test(token))
     if (requiredExactTerms.some((token) => !windowTokens.has(token))) continue
 
-    const normalizedLine = normalizeText(lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' '))
+    const normalizedLine = indexed.windowText[lineIndex] ?? ''
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
     const preliminaryScore = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
@@ -193,8 +203,24 @@ function bestDocumentPassage(
     matchedTerms: best.matchedTerms,
     truncated: best.truncated,
     score: best.score,
-    documentFingerprint: fingerprint(document.content),
+    documentFingerprint: indexed.fingerprint,
     canonicalUrl: document.url
+  }
+}
+
+function indexEvidenceDocument(document: ResearchEvidenceDocument): IndexedEvidenceDocument {
+  const lines = document.content.split('\n')
+  const lineTokens = lines.map((line) => new Set(tokenize(line)))
+  const windows = lines.map((_line, lineIndex) =>
+    lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')
+  )
+  return {
+    document,
+    lines,
+    lineTokens,
+    windowTokens: windows.map((value) => new Set(tokenize(value))),
+    windowText: windows.map(normalizeText),
+    fingerprint: fingerprint(document.content)
   }
 }
 
