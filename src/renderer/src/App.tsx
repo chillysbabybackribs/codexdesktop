@@ -74,7 +74,7 @@ import {
   type ChatItem,
   type SystemItem
 } from './transcript-model'
-import { startClaudeToolItem, patchClaudeToolItem } from './claude-items'
+import { startClaudeToolItem, patchClaudeToolItem, asClaudeEffort } from './claude-items'
 import {
   isImmediateItemNotification,
   isItemNotification,
@@ -222,9 +222,11 @@ export default function App(): React.JSX.Element {
     appendAgentMessageOnce,
     backgroundSessionForThread,
     handleAgentNotification,
+    handleClaudeAgentEvent,
     handleNewAgent,
     handleToggleWatchAgent,
-    handleSetAgentModel
+    handleSetAgentModel,
+    takeQueuedStart
   } = useAgentSessions(agentDockStorageKey, {
     schedule: maybeScheduleAgentRecovery,
     cancel: cancelAgentRecovery
@@ -3411,12 +3413,6 @@ function singleLineClip(value: string, maxChars: number): string {
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
-}
-
-function asClaudeEffort(value: ReasoningEffort | null): ClaudeEffort | null {
-  return value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max'
-    ? value
-    : null
 }
 
 // Map Claude's per-turn usage into the telemetry shape the TurnTail reads.
