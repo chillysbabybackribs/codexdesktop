@@ -85,6 +85,11 @@ import {
   safePluginAuthUrl,
   unresolvedPluginApps
 } from './plugin-lifecycle'
+import {
+  buildOptimisticUserMessage,
+  hasAuthoritativeUserMessage,
+  stripOptimisticUserMessage
+} from './optimistic-user-message'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -210,6 +215,7 @@ export default function App(): React.JSX.Element {
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
+  const optimisticUserMessageIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
@@ -573,6 +579,9 @@ export default function App(): React.JSX.Element {
     setIsSending(true)
     userTurnRequestPendingRef.current = true
     watchThreadIdRef.current = activeThreadId
+    const optimisticId = `optimistic-user-${crypto.randomUUID()}`
+    optimisticUserMessageIdRef.current = optimisticId
+    setItems((current) => [...current, buildOptimisticUserMessage(optimisticId, trimmed, attachments)])
 
     try {
       const response = await window.api.codex.sendMessage({
@@ -610,6 +619,10 @@ export default function App(): React.JSX.Element {
       mergeItems(response.turn.items)
       return true
     } catch (error) {
+      if (optimisticUserMessageIdRef.current === optimisticId) {
+        optimisticUserMessageIdRef.current = null
+        setItems((current) => current.filter((item) => item.id !== optimisticId))
+      }
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
@@ -699,6 +712,7 @@ export default function App(): React.JSX.Element {
     setActiveTurnId(null)
     activeTurnIdRef.current = null
     userRequestedTurnIdRef.current = null
+    optimisticUserMessageIdRef.current = null
     setActiveGoal(null)
     activeGoalRef.current = null
     setActiveReasoningEffort(null)
@@ -729,6 +743,7 @@ export default function App(): React.JSX.Element {
   ): Promise<void> {
     const generation = ++resumeGenerationRef.current
     const previousThreadId = activeThreadIdRef.current
+    optimisticUserMessageIdRef.current = null
 
     // If the target thread lives in the agent dock, the focused view absorbs
     // it — one owner per thread.
@@ -1120,7 +1135,17 @@ export default function App(): React.JSX.Element {
       // lets the live diff card visibly grow during long writes instead of
       // collapsing a burst of patches into one update on the next frame.
       flushPendingItemMutations()
-      setItems((current) => reduceItemNotificationItems(current, notification))
+      const incomingItems = notification.method === 'item/started' || notification.method === 'item/completed'
+        ? [notification.params.item]
+        : []
+      const optimisticId = optimisticUserMessageIdRef.current
+      if (optimisticId && hasAuthoritativeUserMessage(incomingItems)) {
+        optimisticUserMessageIdRef.current = null
+      }
+      setItems((current) => reduceItemNotificationItems(
+        stripOptimisticUserMessage(current, optimisticId, incomingItems),
+        notification
+      ))
     } else if (notification.method !== 'item/mcpToolCall/progress') {
       enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
     }
@@ -1360,7 +1385,14 @@ export default function App(): React.JSX.Element {
 
   function mergeItems(nextItems: ThreadItem[]): void {
     flushPendingItemMutations()
-    setItems((current) => upsertMany(current, nextItems))
+    const optimisticId = optimisticUserMessageIdRef.current
+    if (optimisticId && hasAuthoritativeUserMessage(nextItems)) {
+      optimisticUserMessageIdRef.current = null
+    }
+    setItems((current) => upsertMany(
+      stripOptimisticUserMessage(current, optimisticId, nextItems),
+      nextItems
+    ))
   }
 
   // Record lifecycle metadata for an item. The incoming turnId wins when
