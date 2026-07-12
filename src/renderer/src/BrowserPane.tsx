@@ -28,10 +28,12 @@ export function BrowserPane({
 }): React.JSX.Element {
   return (
     <section className="browser-pane">
-      <TabStrip state={state} />
-      <BrowserToolbar activeTab={activeTab} />
-      <div className="browser-frame">
-        <div ref={viewHostRef} className="browser-view-host" data-ready={viewBounds ? 'true' : 'false'} />
+      <div className="browser-shell">
+        <TabStrip state={state} />
+        <BrowserToolbar activeTab={activeTab} />
+        <div className="browser-frame">
+          <div ref={viewHostRef} className="browser-view-host" data-ready={viewBounds ? 'true' : 'false'} />
+        </div>
       </div>
     </section>
   )
