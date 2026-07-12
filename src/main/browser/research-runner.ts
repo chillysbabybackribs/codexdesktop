@@ -58,6 +58,7 @@ export type ResearchPage = {
   url: string
   title: string
   observedAt: string
+  status?: number
   charCount: number
   wordCount: number
   artifactPath: string
@@ -300,6 +301,7 @@ export class ResearchRunner {
               url: string
               content: string
               wordCount: number
+              status: number
               truncated: boolean
               html: string
             }>(view.webContents, buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS))
@@ -319,6 +321,7 @@ export class ResearchRunner {
                 url,
                 title,
                 observedAt,
+                ...(extracted.status > 0 ? { status: extracted.status } : {}),
                 charCount: extracted.content.length,
                 wordCount: extracted.wordCount,
                 ...paths,

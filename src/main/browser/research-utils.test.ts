@@ -143,4 +143,23 @@ test('page assessment accepts substantial content and rejects extraction failure
     }),
     { verified: false, reason: 'insufficient-content' }
   )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Documentation',
+      url: 'https://example.com/missing',
+      content: 'A verbose branded error page with navigation and support links. '.repeat(20),
+      wordCount: 120,
+      status: 404
+    }),
+    { verified: false, reason: 'http-error' }
+  )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: '404: Page not found',
+      url: 'https://example.com/missing',
+      content: 'A verbose branded error page with navigation and support links. '.repeat(20),
+      wordCount: 120
+    }),
+    { verified: false, reason: 'error-page' }
+  )
 })

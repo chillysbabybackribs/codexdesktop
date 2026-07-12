@@ -593,7 +593,8 @@ export class BrowserAgentController {
       title: typeof page.title === 'string' ? page.title : '',
       url: typeof page.url === 'string' ? page.url : '',
       content: typeof page.content === 'string' ? page.content : '',
-      wordCount: typeof page.wordCount === 'number' ? page.wordCount : 0
+      wordCount: typeof page.wordCount === 'number' ? page.wordCount : 0,
+      status: typeof page.status === 'number' ? page.status : undefined
     })
     if (assessment.verified) return result
     return {
@@ -617,9 +618,11 @@ export function buildPageExtractionProgram(maxChars: number, htmlMaxChars = 0): 
   const maxChars = ${safeMaxChars};
   const pageUrl = location.href;
   const title = document.title.trim();
+  const navigationEntry = globalThis.performance?.getEntriesByType?.('navigation')?.[0];
+  const status = Number.isFinite(navigationEntry?.responseStatus) ? navigationEntry.responseStatus : 0;
   const rawHtml = ${safeHtmlMaxChars > 0 ? `(document.documentElement?.outerHTML || '').slice(0, ${safeHtmlMaxChars})` : "''"};
   const body = document.body;
-  if (!body) return { title, url: pageUrl, content: '', wordCount: 0, truncated: false, reason: 'page has no body'${htmlField} };
+  if (!body) return { title, url: pageUrl, status, content: '', wordCount: 0, truncated: false, reason: 'page has no body'${htmlField} };
 
   const clone = body.cloneNode(true);
   const removeSelectors = ${JSON.stringify(PAGE_EXTRACTION_REMOVE_SELECTORS)};
@@ -675,6 +678,7 @@ export function buildPageExtractionProgram(maxChars: number, htmlMaxChars = 0): 
   return {
     title,
     url: pageUrl,
+    status,
     content: bounded,
     wordCount: bounded ? bounded.split(/\\s+/).length : 0,
     truncated: bounded.length < content.length,

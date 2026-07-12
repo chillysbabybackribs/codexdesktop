@@ -23,7 +23,7 @@ export type RankedSerpCandidate = SerpCandidate & {
 
 export type ExtractedPageAssessment = {
   verified: boolean
-  reason?: 'invalid-url' | 'challenge-page' | 'insufficient-content'
+  reason?: 'invalid-url' | 'http-error' | 'challenge-page' | 'error-page' | 'insufficient-content'
 }
 
 export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] {
@@ -175,6 +175,7 @@ export function assessExtractedPage(page: {
   url: string
   content: string
   wordCount: number
+  status?: number
 }): ExtractedPageAssessment {
   let url: URL
   try {
@@ -183,10 +184,20 @@ export function assessExtractedPage(page: {
     return { verified: false, reason: 'invalid-url' }
   }
   if (!/^https?:$/.test(url.protocol)) return { verified: false, reason: 'invalid-url' }
+  if (typeof page.status === 'number' && page.status >= 400) {
+    return { verified: false, reason: 'http-error' }
+  }
 
   const sample = `${page.title}\n${page.content.slice(0, 1_500)}`.toLowerCase()
   if (/captcha|verify you are human|access denied|sign in to continue|checking your browser|just a moment/.test(sample)) {
     return { verified: false, reason: 'challenge-page' }
+  }
+  const normalizedTitle = page.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+  if (
+    page.wordCount < 200 &&
+    /^(404|403|500|502|503|page not found|not found|internal server error|bad gateway|service unavailable|deployment not found)\b/.test(normalizedTitle)
+  ) {
+    return { verified: false, reason: 'error-page' }
   }
   if (page.wordCount < 40 || page.content.trim().length < 240) {
     return { verified: false, reason: 'insufficient-content' }
