@@ -7,6 +7,16 @@ const scriptDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(scriptDir, '..')
 const binExt = process.platform === 'win32' ? '.cmd' : ''
 const electronViteBin = join(repoRoot, 'node_modules', '.bin', `electron-vite${binExt}`)
+const autogitDisabled = ['0', 'false', 'off'].includes(
+  String(process.env.CODEXDESKTOP_AUTOGIT ?? '').toLowerCase()
+)
+const appEnv = {
+  ...process.env,
+  CODEX_DESKTOP_AUTOGIT_ACTIVE: autogitDisabled ? '0' : '1',
+  CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED:
+    !autogitDisabled && process.env.CODEXDESKTOP_AUTOGIT_PUSH !== '0' ? '1' : '0',
+  CODEX_DESKTOP_AUTOGIT_ROOT: repoRoot
+}
 
 // Forward any extra args to electron-vite (e.g. --remote-debugging-port=9222).
 // npm passes them after a literal `--`; drop that one separator if present so
@@ -27,7 +37,7 @@ const autogit = spawn(process.execPath, [join(scriptDir, 'git-autosnapshot.mjs')
 // electron-vite needs a `--` before flags meant for the Electron app itself.
 const app = spawn(electronViteBin, ['dev', ...(forwardedArgs.length ? ['--', ...forwardedArgs] : [])], {
   cwd: repoRoot,
-  env: process.env,
+  env: appEnv,
   stdio: 'inherit'
 })
 

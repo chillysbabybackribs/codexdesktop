@@ -144,7 +144,32 @@ test('global guidance stays limited to product-wide behavior', () => {
 
   assert.match(guidance, /reuse the active visible browser tab/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
+  assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
   assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|browser_run|multi-part answers/i)
+})
+
+test('active autosnapshot guidance describes concurrent commit and push behavior', () => {
+  const guidance = buildGuidance({
+    CODEX_DESKTOP_AUTOGIT_ACTIVE: '1',
+    CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED: '1',
+    CODEX_DESKTOP_AUTOGIT_ROOT: '/workspace/codexdesktop'
+  })
+
+  assert.match(guidance, /automatic git snapshotting is active/i)
+  assert.match(guidance, /monitors `\/workspace\/codexdesktop`/)
+  assert.match(guidance, /commits settled safe changes.*pushes each autosnapshot.*`origin`/i)
+  assert.match(guidance, /re-read `git status`, `HEAD`, and the current branch/i)
+  assert.match(guidance, /let the watcher own routine staging, commits, and pushes/i)
+})
+
+test('active autosnapshot guidance reports when automatic push is disabled', () => {
+  const guidance = buildGuidance({
+    CODEX_DESKTOP_AUTOGIT_ACTIVE: '1',
+    CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED: '0'
+  })
+
+  assert.match(guidance, /automatic pushing is disabled/i)
+  assert.doesNotMatch(guidance, /pushes each autosnapshot/i)
 })
 
 test('self-hosted guidance protects the exact host session and routes live checks to an isolated instance', () => {

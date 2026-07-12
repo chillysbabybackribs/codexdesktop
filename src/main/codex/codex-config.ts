@@ -11,6 +11,20 @@ const taskShapingGuidance = [
 export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
   const guidance = [...taskShapingGuidance]
 
+  if (env.CODEX_DESKTOP_AUTOGIT_ACTIVE === '1') {
+    const repoRoot = env.CODEX_DESKTOP_AUTOGIT_ROOT || 'the Codex Desktop source checkout'
+    const pushBehavior = env.CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED === '1'
+      ? ' and then pushes each autosnapshot to the current branch on `origin`'
+      : '; automatic pushing is disabled'
+
+    guidance.push(
+      'Automatic Git snapshotting is active for the Codex Desktop development checkout:',
+      `- A separate watcher monitors \`${repoRoot}\`, automatically commits settled safe changes${pushBehavior}.`,
+      '- Git state can change between commands. Re-read `git status`, `HEAD`, and the current branch before Git-sensitive actions or final reporting; a clean tree or autosnapshot commit does not by itself mean the task is finished.',
+      '- Let the watcher own routine staging, commits, and pushes. Do not manually stage, commit, push, rewrite history, or disable the watcher unless the user explicitly requests that Git operation.'
+    )
+  }
+
   if (env.CODEX_DESKTOP_SELF_HOSTED === '1') {
     const hostPid = env.CODEX_DESKTOP_HOST_PID || 'unknown'
     const parentPid = env.CODEX_DESKTOP_DEV_SERVER_PID || 'unknown'
