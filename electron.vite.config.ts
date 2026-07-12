@@ -29,6 +29,7 @@ export default defineConfig({
       rollupOptions: {
         input: {
           index: resolve('src/renderer/index.html'),
+          landing: resolve('src/renderer/landing.html'),
           'omnibox-popup': resolve('src/renderer/omnibox-popup.html')
         }
       }
