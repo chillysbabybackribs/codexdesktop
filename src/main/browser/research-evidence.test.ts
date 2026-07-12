@@ -110,3 +110,21 @@ test('focus matching uses whole tokens and treats stopword-only needs as gaps', 
     [source]
   ).gaps[0]?.reason, 'no-relevant-passage')
 })
+
+test('the combined evidence text stays inside the requested result budget', () => {
+  const focus = Array.from({ length: 6 }, (_, index) => ({
+    id: `claim-${index}`,
+    need: `claim${index} evidence`,
+    minSources: 3
+  }))
+  const sources = Array.from({ length: 3 }, (_, sourceIndex) => document(
+    `page-0${sourceIndex + 1}`,
+    `${focus.map((item) => `${item.need} from independent source ${sourceIndex}.`).join('\n')}\nUnique ${sourceIndex}.`
+  ))
+
+  const packet = selectResearchEvidence(focus, sources, 1_000)
+
+  assert.deepEqual(packet.gaps, [])
+  assert.equal(packet.passages.length, 18)
+  assert.ok(packet.passages.reduce((total, passage) => total + passage.text.length, 0) <= 1_000)
+})
