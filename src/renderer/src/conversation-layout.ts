@@ -211,12 +211,11 @@ export function serializeLayoutNode(layout: LayoutNode): SerializedLayoutNode {
   }
 }
 
-export function parseLayoutNode(value: unknown, validTargets: Set<ConversationTarget>): LayoutNode | null {
+export function parseLayoutNode(value: unknown): LayoutNode | null {
   if (!value || typeof value !== 'object') return null
   const record = value as Partial<SerializedLayoutNode>
   if (record.type === 'leaf') {
     if (typeof record.id !== 'string' || typeof record.target !== 'string') return null
-    if (record.target !== 'main' && !validTargets.has(record.target)) return null
     return { type: 'leaf', id: record.id, target: record.target }
   }
   if (record.type === 'split') {
@@ -226,8 +225,8 @@ export function parseLayoutNode(value: unknown, validTargets: Set<ConversationTa
       || typeof record.ratio !== 'number'
       || !Number.isFinite(record.ratio)
     ) return null
-    const first = parseLayoutNode(record.first, validTargets)
-    const second = parseLayoutNode(record.second, validTargets)
+    const first = parseLayoutNode(record.first)
+    const second = parseLayoutNode(record.second)
     if (!first || !second) return null
     return {
       type: 'split',

@@ -1043,9 +1043,7 @@ export default function App(): React.JSX.Element {
         setSelectedKey: setSelectedAgentKey,
         restoreLayout: (layout, nextFocusedLeafId, fallbackTarget) => {
           restoreConversationLayout(
-            layout && typeof layout === 'object'
-              ? parseStoredConversationLayout(layout, new Set(['main', ...agentSessionsRef.current.map((session) => session.key)]))
-              : null,
+            layout && typeof layout === 'object' ? parseStoredConversationLayout(layout) : null,
             nextFocusedLeafId,
             fallbackTarget
           )
@@ -1869,6 +1867,13 @@ export default function App(): React.JSX.Element {
       <TitleBar />
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
+          provider={provider}
+          onSetProvider={(nextProvider) => {
+            if (nextProvider === provider) return
+            window.localStorage.setItem(providerStorageKey, nextProvider)
+            window.localStorage.removeItem(lastThreadStorageKey)
+            window.location.reload()
+          }}
           items={items}
           itemMeta={itemMeta}
           turnMeta={turnMeta}
@@ -1968,6 +1973,8 @@ function TitleBar(): React.JSX.Element {
 }
 
 function ChatPane({
+  provider,
+  onSetProvider,
   items,
   itemMeta,
   turnMeta,
@@ -2028,6 +2035,8 @@ function ChatPane({
   onAgentStop,
   onAgentCompact
 }: {
+  provider: AgentProvider
+  onSetProvider: (provider: AgentProvider) => void
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
   turnMeta: Record<string, TurnMeta>
@@ -2377,6 +2386,8 @@ function ChatPane({
 
       {isSettingsOpen ? (
         <SettingsModal
+          provider={provider}
+          onSetProvider={onSetProvider}
           goal={activeGoal}
           isGoalUpdating={Boolean(activeTurnId) || isGoalUpdating}
           onSaveGoal={onSaveGoal}
@@ -2811,6 +2822,8 @@ function NewChatIcon(): React.JSX.Element {
 }
 
 function SettingsModal({
+  provider,
+  onSetProvider,
   goal,
   isGoalUpdating,
   onSaveGoal,
@@ -2819,6 +2832,8 @@ function SettingsModal({
   onOpenPlugins,
   onClose
 }: {
+  provider: AgentProvider
+  onSetProvider: (provider: AgentProvider) => void
   goal: ThreadGoal | null
   isGoalUpdating: boolean
   onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
@@ -2862,16 +2877,43 @@ function SettingsModal({
           </button>
         </header>
         <section className="settings-section">
-          <h3 className="settings-section-title">Thread goal</h3>
-          <GoalSettings
-            goal={goal}
-            disabled={isGoalUpdating}
-            onSave={onSaveGoal}
-            onSetStatus={onSetGoalStatus}
-            onClear={onClearGoal}
-          />
+          <h3 className="settings-section-title">Model provider</h3>
+          <button
+            type="button"
+            className="settings-navigation-row"
+            aria-pressed={provider === 'codex'}
+            onClick={() => onSetProvider('codex')}
+          >
+            <span className="settings-row-text">
+              <span className="settings-row-label">OpenAI Codex {provider === 'codex' ? '✓' : ''}</span>
+              <span className="settings-row-hint">Codex app-server, Codex plugins, goals, and the shared browser harness.</span>
+            </span>
+          </button>
+          <button
+            type="button"
+            className="settings-navigation-row"
+            aria-pressed={provider === 'claude'}
+            onClick={() => onSetProvider('claude')}
+          >
+            <span className="settings-row-text">
+              <span className="settings-row-label">Anthropic Claude {provider === 'claude' ? '✓' : ''}</span>
+              <span className="settings-row-hint">Claude Agent SDK with the same embedded browser and research tools.</span>
+            </span>
+          </button>
         </section>
         <section className="settings-section">
+          <h3 className="settings-section-title">Thread goal</h3>
+          {provider === 'codex' ? (
+            <GoalSettings
+              goal={goal}
+              disabled={isGoalUpdating}
+              onSave={onSaveGoal}
+              onSetStatus={onSetGoalStatus}
+              onClear={onClearGoal}
+            />
+          ) : <p className="settings-row-hint">Persistent thread goals are currently a Codex capability.</p>}
+        </section>
+        {provider === 'codex' ? <section className="settings-section">
           <h3 className="settings-section-title">Extensions</h3>
           <button type="button" className="settings-navigation-row" onClick={onOpenPlugins}>
             <span className="settings-row-text">
@@ -2880,7 +2922,7 @@ function SettingsModal({
             </span>
             <span className="settings-navigation-arrow" aria-hidden="true">→</span>
           </button>
-        </section>
+        </section> : null}
       </div>
     </div>
   )

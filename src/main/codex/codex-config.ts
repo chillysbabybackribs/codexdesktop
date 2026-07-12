@@ -98,17 +98,14 @@ export function buildCollaborationMode(
       '- Independently evaluate the user\'s ideas and assumptions. Speak up clearly when an idea is incorrect, risky, unnecessarily complex, or not the strongest option; explain why and recommend a better alternative.',
       '- Brainstorm meaningful alternatives and tradeoffs with the user. Ask only questions that materially change the design and cannot be answered from the workspace or authoritative sources.',
       '- Keep the proposed plan structured and revise it as decisions change. Do not treat a plan as agreed until the user explicitly approves it or directly asks to implement it.',
-      '- Before agreement, gather evidence and refine the plan without making implementation edits. After agreement, remain in this mode and implement the agreed plan autonomously: edit files, run the narrowest relevant checks, validate behavior, inspect failures, and self-correct until the result is proven or a concrete blocker remains.',
-      '- Do not stop after presenting an agreed plan when the user has authorized implementation. Carry the work through implementation, testing, validation, and a concise evidence-backed handoff.'
+      '- Before agreement, gather evidence without making implementation edits.',
+      '- When the plan is decision-complete, call submit_plan with the structured plan. Natural-language prose alone is not an approvable plan.',
+      '- After submit_plan, stop and wait for the application approval checkpoint.'
     ].join('\n'))
   }
 
   return {
-    // The native Plan preset is intentionally not used here: it is a
-    // planning-only collaboration contract. This product mode keeps Codex in
-    // its normal execution-capable agent loop and supplies our collaborative
-    // plan -> agreement -> implementation contract as developer instructions.
-    mode: 'default',
+    mode,
     settings: {
       model,
       reasoning_effort: effort,
@@ -157,9 +154,30 @@ export function formatSkillInvocationText(text: string, skills: SkillMetadata[])
   return missingMarkers.length > 0 ? `${missingMarkers.join(' ')}\n${text}` : text
 }
 
-export const browserDynamicTools: DynamicToolSpec[] = browserToolDefinitions.map((definition) => ({
+export const codexDynamicTools: DynamicToolSpec[] = [
+  ...browserToolDefinitions.map((definition) => ({
   type: 'function',
   name: definition.name,
   description: definition.description,
   inputSchema: z.toJSONSchema(browserToolInputSchema(definition)) as JsonValue
-}))
+  } satisfies DynamicToolSpec)),
+  {
+    type: 'function',
+    name: 'submit_plan',
+    description: 'Submit a decision-complete structured plan for explicit application approval. This does not authorize implementation.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['objective', 'steps', 'acceptanceCriteria'],
+      properties: {
+        objective: { type: 'string', minLength: 1 },
+        decisions: { type: 'array', items: { type: 'string', minLength: 1 } },
+        steps: { type: 'array', minItems: 1, items: { type: 'string', minLength: 1 } },
+        affectedFiles: { type: 'array', items: { type: 'string', minLength: 1 } },
+        nonGoals: { type: 'array', items: { type: 'string', minLength: 1 } },
+        acceptanceCriteria: { type: 'array', minItems: 1, items: { type: 'string', minLength: 1 } },
+        risks: { type: 'array', items: { type: 'string', minLength: 1 } }
+      }
+    }
+  }
+]

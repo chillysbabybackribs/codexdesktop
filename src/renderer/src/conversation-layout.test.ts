@@ -48,16 +48,16 @@ test('layout persistence round-trips and drops unknown agent targets', () => {
   const base = createDefaultLayout('main')
   const split = splitLeafAtEdge(base, base.id, 'bottom', 'agent-d')
   const raw = serializeLayoutNode(split)
-  const parsed = parseLayoutNode(raw, new Set(['agent-d']))
+  const parsed = parseLayoutNode(raw)
   assert.ok(parsed)
-  assert.deepEqual(collectTargets(parsed!).sort(), ['agent-d', 'main'])
+  assert.deepEqual(collectTargets(normalizeLayout(parsed, new Set(['agent-d']))).sort(), ['agent-d', 'main'])
 
-  const normalized = normalizeLayout(parsed!, new Set(['agent-d']))
+  const normalized = normalizeLayout(parsed, new Set(['agent-d']))
   assert.deepEqual(collectTargets(normalized).sort(), ['agent-d', 'main'])
 
-  const stale = parseLayoutNode(raw, new Set())
+  const stale = parseLayoutNode(raw)
   assert.ok(stale)
-  assert.ok(collectTargets(normalizeLayout(stale!, new Set())).every((target) => target === 'main'))
+  assert.ok(collectTargets(normalizeLayout(stale, new Set())).every((target) => target === 'main'))
 })
 
 test('assignTarget keeps a single main pane when swapping onto main', () => {

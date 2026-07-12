@@ -314,9 +314,6 @@ export function useAgentSessions(
   }
 }
 
-export function parseStoredConversationLayout(
-  raw: unknown,
-  validTargets: Set<ConversationTarget>
-): LayoutNode | null {
-  return parseLayoutNode(raw, validTargets)
+export function parseStoredConversationLayout(raw: unknown): LayoutNode | null {
+  return parseLayoutNode(raw)
 }

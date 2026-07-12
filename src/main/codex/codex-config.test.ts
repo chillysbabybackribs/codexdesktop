@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import {
-  browserDynamicTools,
+  codexDynamicTools,
   buildCollaborationMode,
   buildGuidance,
   formatSkillInvocationText,
@@ -179,7 +179,7 @@ test('implementation turns use automatic reasoning summaries', () => {
 test('collaborative planning preserves execution capability and requires evidence-backed agreement', () => {
   const collaboration = buildCollaborationMode('plan', 'gpt-test', 'high', {})
 
-  assert.equal(collaboration.mode, 'default')
+  assert.equal(collaboration.mode, 'plan')
   assert.equal(collaboration.settings.model, 'gpt-test')
   assert.equal(collaboration.settings.reasoning_effort, 'high')
   assert.match(collaboration.settings.developer_instructions ?? '', /explicit.*plan agreed with the user/i)
@@ -198,21 +198,21 @@ test('default collaboration preserves desktop guidance without planning-only beh
   assert.doesNotMatch(instructions, /Collaborative planning mode/i)
 })
 
-test('the dynamic tool surface includes verified research primitives', () => {
+test('the dynamic tool surface includes verified research primitives and structured plan submission', () => {
   assert.deepEqual(
-    browserDynamicTools.map((tool) => tool.name),
-    ['browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    codexDynamicTools.map((tool) => tool.name),
+    ['browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web', 'submit_plan']
   )
-  const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
+  const browserScreenshot = codexDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
   assert.deepEqual(Object.keys((browserScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), ['tab'])
   assert.deepEqual((browserScreenshot.inputSchema as { required?: string[] }).required, undefined)
-  const uiReview = browserDynamicTools.find(({ name }) => name === 'ui_review')
+  const uiReview = codexDynamicTools.find(({ name }) => name === 'ui_review')
   assert.equal(uiReview?.type, 'function')
   if (!uiReview || uiReview.type !== 'function') assert.fail('ui_review function tool is missing')
   assert.deepEqual(Object.keys((uiReview.inputSchema as { properties: Record<string, unknown> }).properties), ['tab', 'viewports'])
-  const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
+  const browserRun = codexDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')
   assert.deepEqual(Object.keys((browserRun.inputSchema as { properties: Record<string, unknown> }).properties), [

@@ -66,6 +66,29 @@ export type OmniboxQueryResult = {
 
 export type CodexConnectionStatus = 'idle' | 'starting' | 'ready' | 'exited' | 'error'
 
+export type PlanningPhase = 'discovery' | 'awaitingApproval' | 'executing' | 'completed' | 'needsReplan'
+
+export type StructuredPlan = {
+  objective: string
+  decisions: string[]
+  steps: string[]
+  affectedFiles: string[]
+  nonGoals: string[]
+  acceptanceCriteria: string[]
+  risks: string[]
+}
+
+export type PlanningState = {
+  threadId: string
+  phase: PlanningPhase
+  plan: StructuredPlan | null
+  revision: number
+  approvedRevision: number | null
+  approvedAt: number | null
+}
+
+export type PlanningRevisionParams = { threadId: string; revision: number }
+
 export type CodexStatusEvent = {
   type: 'status'
   status: CodexConnectionStatus
@@ -300,6 +323,10 @@ export const ipcChannels = {
   codexInstallPlugin: 'codex:installPlugin',
   codexUninstallPlugin: 'codex:uninstallPlugin',
   codexEvent: 'codex:event',
+  planningGetState: 'planning:getState',
+  planningApprove: 'planning:approve',
+  planningRequestChanges: 'planning:requestChanges',
+  planningState: 'planning:state',
   claudeGetAuthStatus: 'claude:getAuthStatus',
   claudeListModels: 'claude:listModels',
   claudeListThreads: 'claude:listThreads',
