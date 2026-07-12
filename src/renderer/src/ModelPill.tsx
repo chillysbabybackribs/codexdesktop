@@ -166,7 +166,7 @@ export function ModelPill({
       >
         <ModelIcon />
         <span className="workspace-pill-name">{active?.displayName ?? 'Model'}</span>
-        <span className="workspace-pill-caret">⌄</span>
+        <span className="workspace-pill-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 10 6 5 6-5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
       </button>
       {isOpen ? (
         <div
