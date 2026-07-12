@@ -182,8 +182,8 @@ test('non-Latin evidence remains matchable and distinct', () => {
   const packet = selectResearchEvidence(
     [{ id: 'pricing', need: '価格 年間 割引', minSources: 2 }],
     [
-      document('page-01', '法人向けの 価格 には 年間 契約の 割引 があります。 東京。'),
-      document('page-02', '価格 と 年間 プランの 割引 を案内します。 大阪。')
+      document('page-01', '法人向けの価格には年間契約の割引があります。東京。'),
+      document('page-02', '価格と年間プランの割引を案内します。大阪。')
     ]
   )
 

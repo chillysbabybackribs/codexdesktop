@@ -10,6 +10,7 @@ const MAX_EVIDENCE_CHARS = 8_000
 const MIN_PASSAGE_CHARS = 50
 const MAX_PASSAGE_CHARS = 1_500
 const MAX_FOCUS_ITEMS = 6
+const WORD_SEGMENTER = new Intl.Segmenter('und', { granularity: 'word' })
 
 export type ResearchFocus = {
   id: string
@@ -314,8 +315,9 @@ function tokenizeFocus(value: string): string[] {
 }
 
 function tokenize(value: string): string[] {
-  return (value.toLowerCase().match(/[\p{L}\p{N}]+(?:\.[\p{L}\p{N}]+)*/gu) ?? [])
-    .map((token) => normalizeToken(/^v\d/.test(token) ? token.slice(1) : token))
+  return [...WORD_SEGMENTER.segment(value.normalize('NFKC').toLowerCase())]
+    .filter((segment) => segment.isWordLike)
+    .map(({ segment }) => normalizeToken(/^v\d/.test(segment) ? segment.slice(1) : segment))
     .filter((token) => token.length >= 2)
 }
 
