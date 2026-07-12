@@ -1,7 +1,10 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
+import type { JsonValue } from '../../shared/codex-protocol/serde_json/JsonValue.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import type { CollaborationMode } from '../../shared/codex-protocol/CollaborationMode.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
+import { z } from 'zod'
+import { browserToolDefinitions, browserToolInputSchema } from '../agent-tools/browser-tool-registry.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
@@ -154,129 +157,9 @@ export function formatSkillInvocationText(text: string, skills: SkillMetadata[])
   return missingMarkers.length > 0 ? `${missingMarkers.join(' ')}\n${text}` : text
 }
 
-const browserRunSchema = {
-  type: 'object',
-  properties: {
-    code: { type: 'string', description: 'JavaScript program. Top-level return and await are supported.' },
-    tab: { type: 'string', description: 'Optional tab or popup target id. Defaults to the active visible tab; use all to run the program across every live target in parallel.' },
-    frame: { type: 'string', description: 'Optional frame target. Defaults to main; use all to run the same program across every live frame in parallel, or pass a frameId returned by an all-frame run.' },
-    timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
-    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
-  },
-  required: ['code'],
-  additionalProperties: false
-}
-
-const browserCdpSchema = {
-  type: 'object',
-  properties: {
-    operation: {
-      type: 'string',
-      enum: ['command', 'capabilities', 'events', 'wait', 'traceStart', 'traceStop', 'snapshot', 'networkStart', 'network', 'networkBody', 'networkStop', 'performanceStart', 'performance', 'performanceStop'],
-      description: 'Defaults to command. Use capabilities/events/wait for raw protocol inspection, traceStart/traceStop for a trace artifact, snapshot for a compact DOM model, networkStart/network/networkBody/networkStop for task-scoped network diagnostics, or performanceStart/performance/performanceStop for rated runtime, navigation, lifecycle, Web Vitals, interaction, long-task, and trace-escalation diagnostics.'
-    },
-    method: { type: 'string', description: 'CDP command for operation command, or exact event name for events/wait, such as Page.captureScreenshot or Network.responseReceived.' },
-    requestId: { type: 'string', description: 'Network request id for operation networkBody. The request must still be present in the bounded journal.' },
-    params: { type: 'object', description: 'Operation parameters. For network, supports limit, urlContains, resourceType, statusMin, statusMax, and failedOnly. Trace, raw snapshot, and response-body output are artifact-backed.' },
-    filter: { type: 'object', description: 'Optional nested exact-match filter for events/wait, such as {"name":"networkIdle"}.' },
-    contains: { type: 'object', additionalProperties: { type: 'string' }, description: 'Optional dot-path substring filter for events/wait, such as {"response.url":"/api/"}.' },
-    afterSequence: { type: 'number', description: 'For events/wait, return only events newer than this journal sequence.' },
-    limit: { type: 'number', description: 'For events, maximum matching records from 1 to 100; defaults to 30.' },
-    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab; pass an explicit id for deterministic network or performance diagnostics.' },
-    timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
-    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
-  },
-  additionalProperties: false
-}
-
-const browserExtractPageSchema = {
-  type: 'object',
-  properties: {
-    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
-    frame: { type: 'string', description: 'Optional frame target: main, all, or a frameId returned by browser_run.' },
-    timeoutMs: { type: 'number', description: 'Optional extraction timeout from 250 to 60000 milliseconds.' },
-    maxResultChars: { type: 'number', description: 'Optional extracted content limit from 1000 to 100000 characters.' }
-  },
-  additionalProperties: false
-}
-
-const browserScreenshotSchema = {
-  type: 'object',
-  properties: {
-    tab: { type: 'string', description: 'Optional tab id. Defaults to this thread\'s visible browser tab.' }
-  },
-  additionalProperties: false
-}
-
-const uiReviewSchema = {
-  type: 'object',
-  properties: {
-    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
-    viewports: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 3,
-      uniqueItems: true,
-      items: { type: 'string', enum: ['desktop', 'tablet', 'mobile'] },
-      description: 'Responsive viewports to capture and audit. Defaults to desktop, tablet, and mobile.'
-    }
-  },
-  additionalProperties: false
-}
-
-const researchWebSchema = {
-  type: 'object',
-  properties: {
-    queries: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 3,
-      items: { type: 'string' },
-      description: 'One to three focused discovery queries covering the strongest relevant source lanes.'
-    },
-    maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', description: 'Optional verified pages to save, from 1 to 8. Defaults to 3.' },
-    snippetChars: { type: 'number', description: 'Optional cleaned text saved per page, from 1000 to 8000 characters.' }
-  },
-  required: ['queries'],
-  additionalProperties: false
-}
-
-export const browserDynamicTools: DynamicToolSpec[] = [
-  {
-    type: 'function',
-    name: 'browser_screenshot',
-    description: 'Capture the visible viewport of this thread\'s browser tab and view it directly. Returns the screenshot to the model as an image plus compact artifact metadata.',
-    inputSchema: browserScreenshotSchema
-  },
-  {
-    type: 'function',
-    name: 'ui_review',
-    description: 'Capture desktop, tablet, and mobile screenshots for model vision while auditing overflow, clipped content, headings, landmarks, touch targets, images, fonts, runtime exceptions, and failed requests. Restores normal viewport emulation afterward.',
-    inputSchema: uiReviewSchema
-  },
-  {
-    type: 'function',
-    name: 'browser_run',
-    description: 'Run a batched JavaScript program in a visible browser target. Inspect, act, wait, and verify in one call. Use tab or frame all for parallel target/frame execution; return compact JSON. Page-origin CORS rules apply within each frame.',
-    inputSchema: browserRunSchema
-  },
-  {
-    type: 'function',
-    name: 'browser_extract_page',
-    description: 'Extract bounded useful text from one visible page after verifying it is real content rather than an empty shell, login wall, or challenge page.',
-    inputSchema: browserExtractPageSchema
-  },
-  {
-    type: 'function',
-    name: 'browser_cdp',
-    description: 'Use the live Chrome DevTools Protocol for a browser tab. Send a targeted command, inspect protocol capabilities, read a bounded event journal, prepare and wait for lifecycle/network/runtime/log events, save a streamed Chromium trace, or capture a raw DOM snapshot with a compact interaction model.',
-    inputSchema: browserCdpSchema
-  },
-  {
-    type: 'function',
-    name: 'research_web',
-    description: 'Discover, rank, verify, and save a bounded set of public web pages. Returns compact metadata and artifact paths without loading page bodies into model context.',
-    inputSchema: researchWebSchema
-  }
-]
+export const browserDynamicTools: DynamicToolSpec[] = browserToolDefinitions.map((definition) => ({
+  type: 'function',
+  name: definition.name,
+  description: definition.description,
+  inputSchema: z.toJSONSchema(browserToolInputSchema(definition)) as JsonValue
+}))
