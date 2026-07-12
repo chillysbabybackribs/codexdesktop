@@ -31,6 +31,8 @@ export type ResearchPassage = {
   sourceId: string
   lineStart: number
   lineEnd: number
+  columnStart: number
+  columnEnd: number
   text: string
   matchedTerms: string[]
   truncated: boolean
@@ -165,6 +167,8 @@ function bestDocumentPassage(
   let best: {
     lineStart: number
     lineEnd: number
+    columnStart: number
+    columnEnd: number
     text: string
     truncated: boolean
     score: number
@@ -199,6 +203,8 @@ function bestDocumentPassage(
     sourceId: document.sourceId,
     lineStart: best.lineStart,
     lineEnd: best.lineEnd,
+    columnStart: best.columnStart,
+    columnEnd: best.columnEnd,
     text: best.text,
     matchedTerms: best.matchedTerms,
     truncated: best.truncated,
@@ -229,7 +235,14 @@ function buildPassageWindow(
   matchIndex: number,
   focusTokens: string[],
   maxChars: number
-): { lineStart: number; lineEnd: number; text: string; truncated: boolean } {
+): {
+  lineStart: number
+  lineEnd: number
+  columnStart: number
+  columnEnd: number
+  text: string
+  truncated: boolean
+} {
   const matchedLine = lines[matchIndex] ?? ''
   if (matchedLine.length > maxChars) {
     const normalized = matchedLine.toLowerCase()
@@ -247,6 +260,8 @@ function buildPassageWindow(
     return {
       lineStart: matchIndex + 1,
       lineEnd: matchIndex + 1,
+      columnStart: start,
+      columnEnd: start + maxChars,
       text: matchedLine.slice(start, start + maxChars),
       truncated: true
     }
@@ -281,6 +296,8 @@ function buildPassageWindow(
   return {
     lineStart: start + 1,
     lineEnd: end + 1,
+    columnStart: 0,
+    columnEnd: lines[end]?.length ?? 0,
     text: lines.slice(start, end + 1).join('\n'),
     truncated: start > 0 || end < lines.length - 1
   }

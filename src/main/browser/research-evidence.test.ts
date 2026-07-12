@@ -173,5 +173,6 @@ test('matched terms always occur in a truncated long-line passage', () => {
 
   assert.ok(passage)
   assert.ok(passage.text.length <= 1_000)
+  assert.equal(passage.text, content.slice(passage.columnStart, passage.columnEnd))
   for (const term of passage.matchedTerms) assert.match(passage.text.toLowerCase(), new RegExp(`\\b${term}\\b`))
 })
