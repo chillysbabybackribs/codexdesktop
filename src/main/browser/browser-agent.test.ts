@@ -12,6 +12,7 @@ import {
   MAX_PARALLEL_BROWSER_TARGETS,
   PAGE_EXTRACTION_LOW_VALUE_PATTERN,
   PAGE_EXTRACTION_REMOVE_SELECTORS,
+  assessBrowserExtractionResult,
   buildPageExtractionProgram
 } from './browser-agent.ts'
 import { CdpArtifactStore } from './cdp-artifact-store.ts'
@@ -91,6 +92,26 @@ test('browser page extraction verifies substantial content before reporting succ
   const rejected = await invalid.extractPage()
   assert.equal(rejected.ok, false)
   assert.match(rejected.error ?? '', /page verification failed: insufficient-content/)
+})
+
+test('browser extraction verification accepts verified frame and target envelopes', () => {
+  const extracted = {
+    title: 'Frame report',
+    url: 'https://example.com/frame',
+    content: 'Concrete frame evidence with reproduction details. '.repeat(20),
+    wordCount: 100
+  }
+
+  assert.equal(assessBrowserExtractionResult({
+    frames: [
+      { ok: false, error: 'detached' },
+      { ok: true, result: extracted }
+    ]
+  }).verified, true)
+  assert.equal(assessBrowserExtractionResult({
+    targets: [{ ok: true, result: { frame: { frameId: '2' }, result: extracted } }]
+  }).verified, true)
+  assert.equal(assessBrowserExtractionResult({ frames: [{ ok: true, result: { content: 'Loading...' } }] }).verified, false)
 })
 
 test('browser agent runs a program against the active tab', async () => {

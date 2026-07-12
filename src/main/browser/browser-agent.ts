@@ -588,14 +588,7 @@ export class BrowserAgentController {
     })
     if (!result.ok) return result
 
-    const page = asRecord(result.result)
-    const assessment = assessExtractedPage({
-      title: typeof page.title === 'string' ? page.title : '',
-      url: typeof page.url === 'string' ? page.url : '',
-      content: typeof page.content === 'string' ? page.content : '',
-      wordCount: typeof page.wordCount === 'number' ? page.wordCount : 0,
-      status: typeof page.status === 'number' ? page.status : undefined
-    })
+    const assessment = assessBrowserExtractionResult(result.result)
     if (assessment.verified) return result
     return {
       ...result,
@@ -604,6 +597,43 @@ export class BrowserAgentController {
       errorCode: 'executionError'
     }
   }
+}
+
+export function assessBrowserExtractionResult(value: unknown): { verified: boolean; reason?: string } {
+  return assessBrowserExtractionValue(value, 0)
+}
+
+function assessBrowserExtractionValue(value: unknown, depth: number): { verified: boolean; reason?: string } {
+  if (depth > 3) return { verified: false, reason: 'invalid extraction envelope' }
+  const page = asRecord(value)
+  if (typeof page.content === 'string' || typeof page.url === 'string') {
+    return assessExtractedPage({
+      title: typeof page.title === 'string' ? page.title : '',
+      url: typeof page.url === 'string' ? page.url : '',
+      content: typeof page.content === 'string' ? page.content : '',
+      wordCount: typeof page.wordCount === 'number' ? page.wordCount : 0,
+      status: typeof page.status === 'number' ? page.status : undefined
+    })
+  }
+
+  if ('result' in page) {
+    const nested = assessBrowserExtractionValue(page.result, depth + 1)
+    if (nested.verified) return nested
+  }
+  for (const key of ['frames', 'targets']) {
+    const entries = page[key]
+    if (!Array.isArray(entries)) continue
+    let lastReason = 'no verified extraction result'
+    for (const entry of entries) {
+      const record = asRecord(entry)
+      if (record.ok === false) continue
+      const nested = assessBrowserExtractionValue(record.result, depth + 1)
+      if (nested.verified) return nested
+      if (nested.reason) lastReason = nested.reason
+    }
+    return { verified: false, reason: lastReason }
+  }
+  return { verified: false, reason: 'invalid extraction envelope' }
 }
 
 export function buildPageExtractionProgram(maxChars: number, htmlMaxChars = 0): string {
