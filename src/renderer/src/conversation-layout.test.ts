@@ -12,8 +12,8 @@ import {
   removeTarget,
   serializeLayoutNode,
   splitLeafAtEdge,
-  type LayoutNode,
-  dropEdgeFromPoint
+  dropEdgeFromGrid,
+  type LayoutNode
 } from './conversation-layout.ts'
 
 test('assignTarget swaps conversations instead of duplicating them', () => {
@@ -67,37 +67,36 @@ test('assignTarget keeps a single main pane when swapping onto main', () => {
   assert.deepEqual(collectTargets(next), ['main'])
 })
 
-test('dropEdgeFromPoint resolves left/right on tall panes and top/bottom on wide pans', () => {
-  const tall = {
-    left: 0,
-    top: 0,
-    width: 420,
-    height: 900,
-    right: 420,
-    bottom: 900,
-    x: 0,
-    y: 0,
-    toJSON: () => ({})
-  } as DOMRect
-
-  assert.equal(dropEdgeFromPoint(tall, 24, 450), 'left')
-  assert.equal(dropEdgeFromPoint(tall, 396, 450), 'right')
-  assert.equal(dropEdgeFromPoint(tall, 210, 24), 'top')
-  assert.equal(dropEdgeFromPoint(tall, 210, 450), 'center')
-
-  const wide = {
+test('dropEdgeFromGrid maps left/right to side-by-side and top/bottom to stacked splits', () => {
+  const pane = {
     left: 0,
     top: 0,
     width: 900,
-    height: 420,
+    height: 600,
     right: 900,
-    bottom: 420,
+    bottom: 600,
     x: 0,
     y: 0,
     toJSON: () => ({})
   } as DOMRect
 
-  assert.equal(dropEdgeFromPoint(wide, 450, 24), 'top')
-  assert.equal(dropEdgeFromPoint(wide, 450, 396), 'bottom')
-  assert.equal(dropEdgeFromPoint(wide, 24, 210), 'left')
+  assert.equal(dropEdgeFromGrid(pane, 120, 300), 'left')
+  assert.equal(dropEdgeFromGrid(pane, 780, 300), 'right')
+  assert.equal(dropEdgeFromGrid(pane, 450, 80), 'top')
+  assert.equal(dropEdgeFromGrid(pane, 450, 520), 'bottom')
+  assert.equal(dropEdgeFromGrid(pane, 450, 300), 'center')
+})
+
+test('right split creates a side-by-side row layout', () => {
+  const base = createDefaultLayout('main')
+  const split = splitLeafAtEdge(base, base.id, 'right', 'agent-side')
+  assert.equal(split.type, 'split')
+  if (split.type === 'split') assert.equal(split.direction, 'row')
+})
+
+test('bottom split creates a stacked column layout', () => {
+  const base = createDefaultLayout('main')
+  const split = splitLeafAtEdge(base, base.id, 'bottom', 'agent-stack')
+  assert.equal(split.type, 'split')
+  if (split.type === 'split') assert.equal(split.direction, 'column')
 })

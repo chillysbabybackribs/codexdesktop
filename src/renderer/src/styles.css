@@ -242,81 +242,97 @@ button {
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
+.conversation-drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  background: rgb(8 8 8 / 72%);
+  pointer-events: auto;
+}
+
+.conversation-drop-zone {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px dashed rgb(255 255 255 / 10%);
+  color: rgb(255 255 255 / 0%);
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.conversation-drop-zone span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0%);
+}
+
+.conversation-drop-zone.is-left {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-zone.is-right {
+  grid-column: 3;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-zone.is-top {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.conversation-drop-zone.is-bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.conversation-drop-zone.is-center {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.conversation-drop-overlay[data-active-edge='left'] .conversation-drop-zone.is-left,
+.conversation-drop-overlay[data-active-edge='right'] .conversation-drop-zone.is-right,
+.conversation-drop-overlay[data-active-edge='top'] .conversation-drop-zone.is-top,
+.conversation-drop-overlay[data-active-edge='bottom'] .conversation-drop-zone.is-bottom,
+.conversation-drop-overlay[data-active-edge='center'] .conversation-drop-zone.is-center {
+  border-color: rgb(242 138 49 / 72%);
+  background: rgb(242 138 49 / 16%);
+  color: #ffd9b8;
+}
+
+.conversation-drop-overlay[data-active-edge='left'] .conversation-drop-zone.is-left span,
+.conversation-drop-overlay[data-active-edge='right'] .conversation-drop-zone.is-right span,
+.conversation-drop-overlay[data-active-edge='top'] .conversation-drop-zone.is-top span,
+.conversation-drop-overlay[data-active-edge='bottom'] .conversation-drop-zone.is-bottom span,
+.conversation-drop-overlay[data-active-edge='center'] .conversation-drop-zone.is-center span {
+  background: rgb(0 0 0 / 28%);
+}
+
 .conversation-layout-pane.is-focused {
   border-color: rgb(255 255 255 / 8%);
   box-shadow: inset 0 0 0 1px rgb(242 138 49 / 18%);
 }
 
-.conversation-layout-pane.is-drop-target {
-  border-color: rgb(242 138 49 / 55%);
-  box-shadow: inset 0 0 0 1px rgb(242 138 49 / 35%);
+.conversation-tab-drag {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  cursor: grab;
 }
 
-.conversation-layout-pane[data-drop-edge='left'] {
-  box-shadow: inset 3px 0 0 rgb(242 138 49 / 72%);
+.conversation-tab-drag:active {
+  cursor: grabbing;
 }
 
-.conversation-layout-pane[data-drop-edge='left']::before {
-  position: absolute;
-  inset: 0 auto 0 0;
-  z-index: 1;
-  width: 28%;
-  background: rgb(242 138 49 / 10%);
-  pointer-events: none;
-  content: '';
-}
-
-.conversation-layout-pane[data-drop-edge='right'] {
-  box-shadow: inset -3px 0 0 rgb(242 138 49 / 72%);
-}
-
-.conversation-layout-pane[data-drop-edge='right']::before {
-  position: absolute;
-  inset: 0 0 0 auto;
-  z-index: 1;
-  width: 28%;
-  background: rgb(242 138 49 / 10%);
-  pointer-events: none;
-  content: '';
-}
-
-.conversation-layout-pane[data-drop-edge='top'] {
-  box-shadow: inset 0 3px 0 rgb(242 138 49 / 72%);
-}
-
-.conversation-layout-pane[data-drop-edge='top']::before {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 1;
-  height: 28%;
-  background: rgb(242 138 49 / 10%);
-  pointer-events: none;
-  content: '';
-}
-
-.conversation-layout-pane[data-drop-edge='bottom'] {
-  box-shadow: inset 0 -3px 0 rgb(242 138 49 / 72%);
-}
-
-.conversation-layout-pane[data-drop-edge='bottom']::before {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 1;
-  height: 28%;
-  background: rgb(242 138 49 / 10%);
-  pointer-events: none;
-  content: '';
-}
-
-.conversation-layout-pane[data-drop-edge='center']::before {
-  position: absolute;
-  inset: 18%;
-  z-index: 1;
-  border: 1px dashed rgb(242 138 49 / 45%);
-  border-radius: 12px;
-  background: rgb(242 138 49 / 6%);
-  pointer-events: none;
-  content: '';
+.conversation-tab-drag.is-dragging {
+  opacity: 0.55;
 }
 
 .conversation-layout-divider {
@@ -5195,18 +5211,6 @@ button {
 
 .conversation-tab-item.is-visible:not(.is-active) {
   border-color: rgb(255 255 255 / 5%);
-}
-
-.conversation-tab.is-dragging {
-  opacity: 0.55;
-}
-
-.conversation-tab[draggable='true'] {
-  cursor: grab;
-}
-
-.conversation-tab[draggable='true']:active {
-  cursor: grabbing;
 }
 
 .conversation-tab-item.is-active {

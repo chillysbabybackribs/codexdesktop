@@ -35,6 +35,7 @@ type ClaudeRuntime = {
   cwd: string
   model: string | null
   effort: ClaudeEffort | null
+  collaborationMode: 'default' | 'plan'
   input: AsyncMessageQueue<SDKUserMessage>
   query: Query
   pendingTurns: PendingTurn[]
@@ -120,6 +121,11 @@ export class ClaudeClient extends EventEmitter {
     collaborationMode: 'default' | 'plan' = 'default'
   ): Promise<{ threadId: string; turnId: string; model: string | null; effort: ClaudeEffort | null }> {
     const runtime = await this.ensureRuntime(threadId, cwd, model, effort, collaborationMode)
+
+    if (runtime.collaborationMode !== collaborationMode) {
+      await runtime.query.setPermissionMode(collaborationMode === 'plan' ? 'plan' : 'bypassPermissions')
+      runtime.collaborationMode = collaborationMode
+    }
 
     if (model && runtime.model !== model) {
       await runtime.query.setModel(model)
@@ -228,6 +234,7 @@ export class ClaudeClient extends EventEmitter {
       cwd: options.cwd,
       model: options.model,
       effort: options.effort,
+      collaborationMode: options.collaborationMode,
       input,
       query: null as unknown as Query,
       pendingTurns: [],
