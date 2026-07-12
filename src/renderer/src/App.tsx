@@ -15,7 +15,6 @@ import { ConversationLayoutTree } from './ConversationLayout'
 import type { ConversationTarget, LayoutNode } from './conversation-layout'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
-import { nextAgentSelectionAfterClose } from './agent-session-model'
 import type {
   BrowserBounds,
   BrowserState,
@@ -1283,6 +1282,130 @@ export default function App(): React.JSX.Element {
         activeCompactionRef.current = null
       }
       setIsCompacting(false)
+    }
+  }
+
+  function handleClaudeEvent(event: AgentEvent): void {
+    if (event.provider !== 'claude') return
+    if (event.type === 'status') {
+      setCodexStatus(event.status)
+      if (event.status === 'error' || event.status === 'exited') {
+        addSystemItem(event.message ?? 'Claude Agent SDK is not available.', event.status === 'error' ? 'error' : 'warning')
+      }
+      return
+    }
+
+    if (event.type === 'session.started') {
+      watchThreadIdRef.current = event.sessionId
+      setActiveThreadId(event.sessionId)
+      setActiveThreadTitle('Claude session')
+      persistLastThreadId(event.sessionId)
+      return
+    }
+
+    if (!isRelevantThread(event.sessionId)) return
+
+    if (event.type === 'turn.started') {
+      setActiveTurnId(event.turnId)
+      activeTurnIdRef.current = event.turnId
+      noteTurn(event.turnId, {
+        status: 'inProgress',
+        origin: 'live',
+        model: selectedModelRef.current,
+        reasoningEffort: activeReasoningEffortRef.current,
+        workspace: workspaceRef.current,
+        startedAtMs: Date.now()
+      })
+      return
+    }
+
+    if (event.type === 'message.delta') {
+      const itemId = `claude-answer-${event.turnId}`
+      noteItem(itemId, event.turnId)
+      setItems((current) => appendAgentMessageDelta(current, itemId, event.text))
+      return
+    }
+
+    if (event.type === 'message.completed') {
+      const text = event.blocks
+        .map(asRecord)
+        .filter((block) => block.type === 'text' && typeof block.text === 'string')
+        .map((block) => block.text as string)
+        .join('\n')
+      if (text) {
+        const itemId = `claude-answer-${event.turnId}`
+        noteItem(itemId, event.turnId, { completedAtMs: Date.now() })
+        setItems((current) => upsertMany(current, [{
+          type: 'agentMessage',
+          id: itemId,
+          text,
+          phase: null,
+          memoryCitation: null
+        }]))
+      }
+      return
+    }
+
+    if (event.type === 'tool.started') {
+      const item: ThreadItem = {
+        type: 'dynamicToolCall',
+        id: event.callId,
+        namespace: 'claude',
+        tool: event.name,
+        arguments: event.input as never,
+        status: 'inProgress',
+        contentItems: null,
+        success: null,
+        durationMs: null
+      }
+      noteItem(event.callId, event.turnId, { startedAtMs: Date.now() })
+      setItems((current) => upsertMany(current, [item]))
+      return
+    }
+
+    if (event.type === 'tool.completed') {
+      const current = items.find((item) => item.id === event.callId && item.type === 'dynamicToolCall')
+      const item: ThreadItem = {
+        type: 'dynamicToolCall',
+        id: event.callId,
+        namespace: 'claude',
+        tool: current?.type === 'dynamicToolCall' ? current.tool : 'tool',
+        arguments: current?.type === 'dynamicToolCall' ? current.arguments : {},
+        status: event.failed ? 'failed' : 'completed',
+        contentItems: [{ type: 'inputText', text: stringifyUnknown(event.content) }],
+        success: !event.failed,
+        durationMs: null
+      }
+      noteItem(event.callId, event.turnId, { completedAtMs: Date.now() })
+      setItems((existing) => upsertMany(existing, [item]))
+      return
+    }
+
+    if (event.type === 'tool.progress') {
+      noteItem(event.callId, event.turnId, { progress: [`Running for ${Math.round(event.elapsedSeconds)}s`] })
+      return
+    }
+
+    if (event.type === 'compaction.completed') {
+      const itemId = `claude-compaction-${crypto.randomUUID()}`
+      noteItem(itemId, activeTurnIdRef.current, {
+        completedAtMs: Date.now(),
+        compaction: { beforeTokens: event.beforeTokens, afterTokens: event.afterTokens }
+      })
+      setItems((current) => [...current, { type: 'contextCompaction', id: itemId }])
+      return
+    }
+
+    if (event.type === 'turn.completed') {
+      if (optimisticUserMessageIdRef.current) optimisticUserMessageIdRef.current = null
+      noteTurn(event.turnId, {
+        status: event.status,
+        completedAtMs: Date.now(),
+        errorMessage: event.error ?? undefined
+      })
+      if (event.error) addSystemItem(event.error, 'error')
+      if (activeTurnIdRef.current === event.turnId) activeTurnIdRef.current = null
+      setActiveTurnId((current) => current === event.turnId ? null : current)
     }
   }
 

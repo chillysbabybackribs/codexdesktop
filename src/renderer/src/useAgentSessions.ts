@@ -72,6 +72,7 @@ export function useAgentSessions(
   const agentStartQueueRef = useRef<string[]>([])
   const agentCounterRef = useRef(2)
   const agentDockRestoredRef = useRef(false)
+  const focusedLeafIdRef = useRef(focusedLeafId)
 
   const focusedTarget = findLeaf(conversationLayout, focusedLeafId)?.target ?? 'main'
   const selectedAgentKey = legacySelectionFromTarget(focusedTarget)
@@ -102,13 +103,17 @@ export function useAgentSessions(
     return findAgentSessionByThread(agentSessionsRef.current, threadId)
   }
 
+  useEffect(() => {
+    focusedLeafIdRef.current = focusedLeafId
+  }, [focusedLeafId])
+
   function handleSelectConversation(target: ConversationTarget): void {
     const existing = findLeafForTarget(conversationLayout, target)
     if (existing) {
       setFocusedLeafId(existing.id)
       return
     }
-    setConversationLayout((current) => assignTarget(current, focusedLeafId, target))
+    setConversationLayout((current) => assignTarget(current, focusedLeafIdRef.current, target))
   }
 
   function handleRemoveConversationTarget(target: ConversationTarget): void {
@@ -250,7 +255,7 @@ export function useAgentSessions(
       ...sessions,
       createAgentSession(key, `Agent ${agentCounterRef.current++}`)
     ])
-    setConversationLayout((current) => assignTarget(current, focusedLeafId, key))
+    setConversationLayout((current) => assignTarget(current, focusedLeafIdRef.current, key))
   }
 
   function handleToggleWatchAgent(key: string): void {
