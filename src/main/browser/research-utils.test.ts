@@ -5,6 +5,7 @@ import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
+  isPublicResearchAddress,
   normalizeResearchUrls,
   rankSerpCandidates,
   type SerpCandidate
@@ -18,9 +19,16 @@ test('direct research URLs are canonicalized, bounded, and restricted to public 
     'javascript:alert(1)',
     'http://127.0.0.1/private',
     'http://localhost/private',
+    'http://[::ffff:7f00:1]/private',
     'https://user:secret@example.com/private',
     42
   ]), ['https://example.com/docs?version=2'])
+  assert.equal(isPublicResearchAddress('8.8.8.8'), true)
+  assert.equal(isPublicResearchAddress('127.0.0.1'), false)
+  assert.equal(isPublicResearchAddress('::ffff:7f00:1'), false)
+  assert.equal(isPublicResearchAddress('::ffff:0808:0808'), true)
+  assert.equal(isPublicResearchAddress('2606:4700:4700::1111'), true)
+  assert.equal(isPublicResearchAddress('fd00::1'), false)
 })
 
 test('research search URLs are deterministic and encoded', () => {

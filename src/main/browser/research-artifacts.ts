@@ -13,14 +13,15 @@ export async function writeResearchPageArtifacts(
   artifactDir: string,
   baseName: string,
   content: string,
-  html: string
+  html: string,
+  signal?: AbortSignal
 ): Promise<ResearchArtifactPaths> {
   await mkdir(artifactDir, { recursive: true })
   const artifactPath = join(artifactDir, `${baseName}.txt`)
   const htmlPath = join(artifactDir, `${baseName}.html`)
   await Promise.all([
-    writeFile(artifactPath, content.endsWith('\n') ? content : `${content}\n`, 'utf8'),
-    writeFile(htmlPath, html, 'utf8')
+    writeFile(artifactPath, content.endsWith('\n') ? content : `${content}\n`, { encoding: 'utf8', signal }),
+    writeFile(htmlPath, html, { encoding: 'utf8', signal })
   ])
   return { artifactPath, htmlPath }
 }

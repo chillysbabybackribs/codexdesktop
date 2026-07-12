@@ -78,3 +78,27 @@ test('navigation can settle against a targeted readiness selector', async () => 
   assert.match(contents.executedPrograms[0], /const readySelector = "a\[href\] h3"/)
   assert.match(contents.executedPrograms[0], /document\.querySelector\(readySelector\)/)
 })
+
+test('navigation can block an unsafe main-frame redirect before following it', async () => {
+  const contents = new FakeWebContents()
+  let prevented = false
+  contents.loadURL = (url: string) => {
+    contents.loadedUrl = url
+    setImmediate(() => contents.emit('will-redirect', {
+      url: 'http://127.0.0.1/private',
+      isMainFrame: true,
+      preventDefault: () => { prevented = true }
+    }, 'http://127.0.0.1/private', false, true, 0, 0))
+    return new Promise<void>(() => {})
+  }
+
+  await assert.rejects(loadPageAndSettle(
+    contents as unknown as WebContents,
+    'https://example.com/start',
+    {
+      timeoutMs: 1_000,
+      allowRedirect: (_from, to) => to.startsWith('https://example.com/')
+    }
+  ), /page redirect blocked/)
+  assert.equal(prevented, true)
+})

@@ -647,7 +647,8 @@ async function loadPage(
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
     userAgent: chromeLikeUserAgent(),
-    signal
+    signal,
+    allowRedirect: allowResearchRedirect
   })
 }
 
@@ -667,6 +668,15 @@ function formatError(error: unknown): string {
 function formatDuration(durationMs: number): string {
   if (durationMs < 1_000) return `${Math.max(0, Math.round(durationMs))}ms`
   return `${(durationMs / 1_000).toFixed(durationMs < 10_000 ? 1 : 0)}s`
+}
+
+function allowResearchRedirect(fromValue: string, toValue: string): boolean {
+  const from = normalizeResearchUrls([fromValue], 1)[0]
+  const to = normalizeResearchUrls([toValue], 1)[0]
+  if (!from || !to) return false
+  const fromHost = new URL(from).hostname.replace(/^www\./, '')
+  const toHost = new URL(to).hostname.replace(/^www\./, '')
+  return fromHost === toHost
 }
 
 function throwIfAborted(signal: AbortSignal): void {

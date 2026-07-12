@@ -10,6 +10,7 @@ export type PageNavigationOptions = {
   quietMs?: number
   maxSettleMs?: number
   readySelector?: string
+  allowRedirect?: (fromUrl: string, toUrl: string) => boolean
 }
 
 export type PageNavigationResult = {
@@ -36,7 +37,7 @@ export async function loadPageAndSettle(
 
   const startedAt = Date.now()
   const deadline = startedAt + options.timeoutMs
-  const domReady = waitForMainDocument(webContents, options.signal)
+  const domReady = waitForMainDocument(webContents, options.signal, url, options.allowRedirect)
 
   webContents.stop()
   const load = webContents.loadURL(url, {
@@ -75,11 +76,17 @@ export async function loadPageAndSettle(
   }
 }
 
-function waitForMainDocument(webContents: WebContents, signal?: AbortSignal): Promise<void> {
+function waitForMainDocument(
+  webContents: WebContents,
+  signal?: AbortSignal,
+  requestedUrl = '',
+  allowRedirect?: (fromUrl: string, toUrl: string) => boolean
+): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const cleanup = (): void => {
       webContents.removeListener('dom-ready', onReady)
       webContents.removeListener('did-fail-load', onFailed)
+      webContents.removeListener('will-redirect', onRedirect)
       webContents.removeListener('destroyed', onDestroyed)
       signal?.removeEventListener('abort', onAborted)
     }
@@ -102,9 +109,22 @@ function waitForMainDocument(webContents: WebContents, signal?: AbortSignal): Pr
     }
     const onDestroyed = (): void => finish(new Error('page was closed during navigation'))
     const onAborted = (): void => finish(abortError())
+    const onRedirect = (
+      event: Electron.Event<Electron.WebContentsWillRedirectEventParams>,
+      deprecatedUrl: string,
+      _isInPlace: boolean,
+      isMainFrame: boolean
+    ): void => {
+      const nextUrl = event.url || deprecatedUrl
+      if ((event.isMainFrame ?? isMainFrame) && allowRedirect && !allowRedirect(requestedUrl, nextUrl)) {
+        event.preventDefault()
+        finish(new Error(`page redirect blocked: ${nextUrl}`))
+      }
+    }
 
     webContents.once('dom-ready', onReady)
     webContents.on('did-fail-load', onFailed)
+    webContents.on('will-redirect', onRedirect)
     webContents.once('destroyed', onDestroyed)
     signal?.addEventListener('abort', onAborted, { once: true })
 
