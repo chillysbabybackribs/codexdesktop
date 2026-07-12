@@ -110,7 +110,7 @@ type BrowserToolDefinition = {
 }
 
 export function browserToolInputSchema(definition: BrowserToolDefinition): z.ZodObject<z.ZodRawShape> {
-  return z.object(definition.inputShape)
+  return z.object(definition.inputShape).strict()
 }
 
 export function findBrowserToolDefinition(name: string): BrowserToolDefinition | undefined {
