@@ -19,6 +19,12 @@ export type AgentSessionSummary = {
   updatedAt: number
 }
 
+export type AgentTranscriptMessage = {
+  id: string
+  role: 'user' | 'assistant'
+  text: string
+}
+
 export type AgentUsage = {
   inputTokens: number
   outputTokens: number

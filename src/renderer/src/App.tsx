@@ -465,6 +465,23 @@ export default function App(): React.JSX.Element {
           }
           if (lastThreadId) {
             await window.api.claude.resumeThread(lastThreadId, workspaceRef.current)
+            const transcript = await window.api.claude.readThread(lastThreadId, workspaceRef.current)
+            setItems((transcript as Array<{ id: string; role: 'user' | 'assistant'; text: string }>).map((message) =>
+              message.role === 'user'
+                ? {
+                    type: 'userMessage' as const,
+                    id: message.id,
+                    clientId: null,
+                    content: [{ type: 'text' as const, text: message.text, text_elements: [] }]
+                  }
+                : {
+                    type: 'agentMessage' as const,
+                    id: message.id,
+                    text: message.text,
+                    phase: null,
+                    memoryCitation: null
+                  }
+            ))
             setActiveThreadId(lastThreadId)
             watchThreadIdRef.current = lastThreadId
           }
@@ -2341,6 +2358,14 @@ function ChatPane({
                   </ThreadScroll>
 
                   <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+                    {planningState?.phase === 'awaitingApproval' && planningState.plan ? (
+                      <PlanningApprovalCard
+                        state={planningState}
+                        disabled={isBusy}
+                        onApprove={onApprovePlan}
+                        onRequestChanges={onRequestPlanChanges}
+                      />
+                    ) : null}
                     <div className="composer-context">
                       <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
                       {models.length ? (
@@ -2354,6 +2379,7 @@ function ChatPane({
                       ) : null}
                       <PlanModePill
                         active={collaborationMode === 'plan'}
+                        phase={planningState?.phase ?? null}
                         disabled={isBusy}
                         onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
                       />
@@ -3513,10 +3539,12 @@ function WorkspacePill({
 
 function PlanModePill({
   active,
+  phase,
   disabled,
   onToggle
 }: {
   active: boolean
+  phase: PlanningState['phase'] | null
   disabled: boolean
   onToggle: () => void
 }): React.JSX.Element {
@@ -3535,8 +3563,36 @@ function PlanModePill({
         <path d="M5.5 5.25h9M5.5 10h9M5.5 14.75h5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         <path d="m2.75 5.25.85.85 1.45-1.7M2.75 10l.85.85 1.45-1.7M2.75 14.75l.85.85 1.45-1.7" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <span>Plan</span>
+      <span>{phase === 'awaitingApproval' ? 'Review plan' : phase === 'executing' ? 'Executing' : 'Plan'}</span>
     </button>
+  )
+}
+
+function PlanningApprovalCard({
+  state,
+  disabled,
+  onApprove,
+  onRequestChanges
+}: {
+  state: PlanningState
+  disabled: boolean
+  onApprove: () => void
+  onRequestChanges: () => void
+}): React.JSX.Element {
+  const plan = state.plan
+  if (!plan) return <></>
+  return (
+    <section className="planning-approval-card" aria-label={`Plan revision ${state.revision} awaiting approval`}>
+      <div className="planning-approval-copy">
+        <span className="planning-approval-kicker">Plan ready · revision {state.revision}</span>
+        <strong>{plan.objective}</strong>
+        <span>{plan.steps.length} steps · {plan.acceptanceCriteria.length} acceptance checks</span>
+      </div>
+      <div className="planning-approval-actions">
+        <button type="button" disabled={disabled} onClick={onRequestChanges}>Request changes</button>
+        <button type="button" className="is-primary" disabled={disabled} onClick={onApprove}>Approve &amp; implement</button>
+      </div>
+    </section>
   )
 }
 

@@ -11,7 +11,7 @@ import {
   type SDKUserMessage
 } from '@anthropic-ai/claude-agent-sdk'
 import type { ChatAttachment } from '../../shared/ipc.js'
-import type { AgentEvent, AgentModel, AgentSessionSummary, AgentUsage } from '../../shared/agent.js'
+import type { AgentEvent, AgentModel, AgentSessionSummary, AgentTranscriptMessage, AgentUsage } from '../../shared/agent.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { buildGuidance } from '../codex/codex-config.js'
@@ -81,8 +81,14 @@ export class ClaudeClient extends EventEmitter {
     }
   }
 
-  async readThread(threadId: string, cwd?: string | null): Promise<unknown[]> {
-    return getSessionMessages(threadId, { ...(cwd ? { dir: cwd } : {}) })
+  async readThread(threadId: string, cwd?: string | null): Promise<AgentTranscriptMessage[]> {
+    const messages = await getSessionMessages(threadId, { ...(cwd ? { dir: cwd } : {}) })
+    return messages.flatMap((entry) => {
+      if (entry.type !== 'user' && entry.type !== 'assistant') return []
+      const message = asRecord(entry.message)
+      const text = extractText(message.content)
+      return text ? [{ id: entry.uuid, role: entry.type, text }] : []
+    })
   }
 
   async startThread(
@@ -440,6 +446,7 @@ function buildClaudeOptions(
   },
   mcpServer?: ReturnType<typeof createClaudeBrowserMcpServer>
 ): Options {
+  assertSupportedClaudeAuthentication()
   return {
     cwd: options.cwd,
     ...(options.resume ? { resume: options.resume } : {}),
@@ -466,6 +473,22 @@ function buildClaudeOptions(
       ...process.env,
       CLAUDE_AGENT_SDK_CLIENT_APP: 'codexdesktop/0.1.0'
     }
+  }
+}
+
+function assertSupportedClaudeAuthentication(): void {
+  const hasApiKey = Boolean(process.env.ANTHROPIC_API_KEY?.trim())
+  const usesDocumentedCloudProvider = [
+    'CLAUDE_CODE_USE_BEDROCK',
+    'CLAUDE_CODE_USE_ANTHROPIC_AWS',
+    'CLAUDE_CODE_USE_VERTEX',
+    'CLAUDE_CODE_USE_FOUNDRY'
+  ].some((name) => process.env[name] === '1')
+
+  if (!hasApiKey && !usesDocumentedCloudProvider) {
+    throw new Error(
+      'Claude requires ANTHROPIC_API_KEY or a configured Anthropic-supported cloud provider. Claude.ai subscription login is not used by this third-party application.'
+    )
   }
 }
 
@@ -538,4 +561,19 @@ function emptyUsage(): AgentUsage {
 
 function normalizeError(error: unknown): Error {
   return error instanceof Error ? error : new Error(String(error))
+}
+
+function extractText(content: unknown): string {
+  if (typeof content === 'string') return content.trim()
+  if (!Array.isArray(content)) return ''
+  return content
+    .map(asRecord)
+    .filter((block) => block.type === 'text' && typeof block.text === 'string')
+    .map((block) => (block.text as string).trim())
+    .filter(Boolean)
+    .join('\n')
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
 }

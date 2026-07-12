@@ -165,7 +165,9 @@ export const api = {
     onEvent: (listener: (event: ClaudeEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: ClaudeEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.claudeEvent, wrapped)
-      return () => ipcRenderer.off(ipcChannels.claudeEvent, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.claudeEvent, wrapped)
+      }
     }
   },
   memory: {
