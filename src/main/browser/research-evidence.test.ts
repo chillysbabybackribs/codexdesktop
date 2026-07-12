@@ -177,3 +177,16 @@ test('matched terms always occur in a truncated long-line passage', () => {
   assert.equal(passage.text, content.slice(passage.columnStart, passage.columnEnd))
   for (const term of passage.matchedTerms) assert.match(passage.text.toLowerCase(), new RegExp(`\\b${term}\\b`))
 })
+
+test('non-Latin evidence remains matchable and distinct', () => {
+  const packet = selectResearchEvidence(
+    [{ id: 'pricing', need: '価格 年間 割引', minSources: 2 }],
+    [
+      document('page-01', '法人向けの 価格 には 年間 契約の 割引 があります。 東京。'),
+      document('page-02', '価格 と 年間 プランの 割引 を案内します。 大阪。')
+    ]
+  )
+
+  assert.deepEqual(packet.gaps, [])
+  assert.equal(packet.passages.length, 2)
+})
