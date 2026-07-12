@@ -1,15 +1,12 @@
 import assert from 'node:assert/strict'
-import { createHash } from 'node:crypto'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
-import { MemoryStore } from './memory-store.ts'
+import { memoryWorkspaceKey, MemoryStore } from './memory-store.ts'
 
 function workspaceDirectory(root: string, workspace: string | null): string {
-  const identity = workspace ?? 'no-workspace'
-  const key = createHash('sha256').update(identity).digest('hex')
-  return join(root, 'workspaces', key)
+  return join(root, 'workspaces', memoryWorkspaceKey(workspace))
 }
 
 test('MemoryStore writes the bounded checkpoint and full transcript', async (context) => {

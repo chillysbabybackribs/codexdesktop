@@ -65,9 +65,9 @@ function validateSnapshot(snapshot: MemorySnapshot): void {
   if (snapshot.surface !== 'main' && snapshot.surface !== 'agent') {
     throw new Error('invalid memory surface')
   }
-    if (!/^[a-zA-Z0-9_-]+$/.test(snapshot.threadId)) {
-      throw new Error('invalid memory thread id')
-    }
+  if (!/^[a-zA-Z0-9_-]+$/.test(snapshot.threadId)) {
+    throw new Error('invalid memory thread id')
+  }
 }
 
 async function atomicWrite(path: string, content: string): Promise<void> {
