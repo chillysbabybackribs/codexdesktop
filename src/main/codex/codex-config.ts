@@ -60,7 +60,7 @@ export function isWebResearchTask(text: string): boolean {
   const explicitWebAction =
     /\b(search|research|browse|look up|find online|search online|on the web|from the web|web search)\b/.test(normalized)
   const publicSource =
-    /\b(official (docs?|documentation)|public sources?|online sources?|citations?|news|pricing|reddit|forums?|reviews?|release notes?|website|webpage|web page)\b/.test(normalized)
+    /\b(official (docs?|documentation)|public sources?|online sources?|citations?|news|pricing|reddit|forums?|customer reviews?|user reviews?|app store reviews?|release notes?|website|webpage|web page)\b/.test(normalized)
   const freshnessRequirement = /\b(current|currently|latest|recent|today|this week|this month|this year|up[- ]to[- ]date)\b/.test(normalized)
 
   return explicitWebAction || publicSource || (freshnessRequirement && /\b(find|check|verify|compare|price|version|release)\b/.test(normalized))
