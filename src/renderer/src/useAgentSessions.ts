@@ -254,11 +254,72 @@ export function useAgentSessions(
     }
   }
 
-  function handleNewAgent(): void {
+  // Claude dock turns speak the provider-agnostic AgentEvent stream instead of
+  // Codex ServerNotifications; both reduce into the same lite session state.
+  function handleClaudeAgentEvent(session: AgentSession, event: AgentEvent): void {
+    if (event.type !== 'message.delta' && agentDeltaBufferRef.current.size > 0) {
+      flushAgentDeltas()
+    }
+
+    switch (event.type) {
+      case 'turn.started':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'working',
+          turnId: event.turnId
+        }))
+        return
+      // Claude streams deltas per message uuid but the final assistant message
+      // arrives under a different uuid, so both key on the turn (same
+      // fill-at-completion tradeoff as the main Claude view).
+      case 'message.delta':
+        enqueueAgentDelta(session.key, `claude-answer-${event.turnId}`, event.text)
+        return
+      case 'message.completed': {
+        const text = event.blocks
+          .map((block) => (block && typeof block === 'object' ? block as Record<string, unknown> : {}))
+          .filter((block) => block.type === 'text' && typeof block.text === 'string')
+          .map((block) => block.text as string)
+          .join('\n')
+        if (text) {
+          updateAgentSessions((sessions) =>
+            completeAgentMessage(sessions, session.key, `claude-answer-${event.turnId}`, text)
+          )
+        }
+        return
+      }
+      case 'turn.completed': {
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          status: 'done',
+          turnId: null,
+          isCompacting: false
+        }))
+        void window.api.notifications.backgroundTurn({
+          threadId: event.sessionId,
+          title: session.title || 'Background agent',
+          status: event.status === 'failed' ? 'failed' : 'completed',
+          message: event.error
+        })
+        if (event.error) {
+          appendAgentMessageOnce(session.key, {
+            id: `error-${event.turnId}`,
+            role: 'assistant',
+            text: `⚠ ${event.error}`
+          })
+        }
+        return
+      }
+      default:
+        return
+    }
+  }
+
+  function handleNewAgent(provider: AgentProvider = 'codex'): void {
     const key = crypto.randomUUID()
     updateAgentSessions((sessions) => [
       ...sessions,
-      createAgentSession(key, `Agent ${agentCounterRef.current++}`)
+      createAgentSession(key, `Agent ${agentCounterRef.current++}`, provider)
     ])
     setConversationLayout((current) => assignTarget(current, focusedLeafIdRef.current, key))
   }
@@ -329,6 +390,7 @@ export function useAgentSessions(
     appendAgentMessageOnce,
     backgroundSessionForThread,
     handleAgentNotification,
+    handleClaudeAgentEvent,
     handleNewAgent,
     handleToggleWatchAgent,
     handleSetAgentModel
