@@ -11,7 +11,9 @@ import type {
   CodexSendMessageParams,
   CodexSetGoalParams,
   CodexStartThreadParams,
-  CodexSteerTurnParams
+  CodexSteerTurnParams,
+  PlanningRevisionParams,
+  PlanningState
 } from '../../shared/ipc.js'
 import { ipcChannels } from '../../shared/ipc.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
@@ -32,6 +34,9 @@ export function registerCodexIpc(
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)
   })
+  client.on('planningState', (state: PlanningState) => {
+    getWindow()?.webContents.send(ipcChannels.planningState, state)
+  })
 
   ipcMain.handle(ipcChannels.codexGetAuthStatus, () => client.getAuthStatus())
   ipcMain.handle(ipcChannels.codexListModels, () => client.listModels())
@@ -46,6 +51,9 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexGetGoal, (_event, threadId: string) => client.getGoal(threadId))
   ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
   ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
+  ipcMain.handle(ipcChannels.planningGetState, (_event, threadId: string) => client.getPlanningState(threadId))
+  ipcMain.handle(ipcChannels.planningApprove, (_event, params: PlanningRevisionParams) => client.approvePlanning(params))
+  ipcMain.handle(ipcChannels.planningRequestChanges, (_event, params: PlanningRevisionParams) => client.requestPlanningChanges(params))
   ipcMain.handle(ipcChannels.codexSendMessage, async (_event, params: CodexSendMessageParams) => {
     const attachments = await attachmentStore.verify(params.attachments ?? [])
     return client.sendMessage(

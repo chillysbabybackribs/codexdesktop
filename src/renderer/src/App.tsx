@@ -18,6 +18,7 @@ import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
   BrowserState,
+  ClaudeEffort,
   CodexEvent,
   CodexPluginAppStatus,
   MemoryPersistParams
@@ -646,9 +647,7 @@ export default function App(): React.JSX.Element {
           attachments,
           cwd: workspace,
           model: selectedModel,
-          effort: selectedReasoningEffort === 'minimal' || selectedReasoningEffort === 'ultra'
-            ? null
-            : selectedReasoningEffort,
+          effort: asClaudeEffort(selectedReasoningEffort),
           collaborationMode
         })
         watchThreadIdRef.current = response.threadId
@@ -3305,6 +3304,12 @@ function stringifyUnknown(value: unknown): string {
   } catch {
     return String(value)
   }
+}
+
+function asClaudeEffort(value: ReasoningEffort | null): ClaudeEffort | null {
+  return value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max'
+    ? value
+    : null
 }
 
 function claudeModelToUiModel(model: AgentModel, index: number): Model {

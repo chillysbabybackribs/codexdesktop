@@ -31,6 +31,8 @@ import type {
   MemoryPersistParams,
   OmniboxAnchor,
   OmniboxQueryResult,
+  PlanningRevisionParams,
+  PlanningState,
   TraceLoadParams,
   TracePersistParams,
   TraceSaveParams,
@@ -135,6 +137,17 @@ export const api = {
       return () => {
         ipcRenderer.off(ipcChannels.codexEvent, wrapped)
       }
+    },
+    getPlanningState: (threadId: string): Promise<PlanningState | null> =>
+      ipcRenderer.invoke(ipcChannels.planningGetState, threadId),
+    approvePlan: (params: PlanningRevisionParams): Promise<PlanningState> =>
+      ipcRenderer.invoke(ipcChannels.planningApprove, params),
+    requestPlanChanges: (params: PlanningRevisionParams): Promise<PlanningState> =>
+      ipcRenderer.invoke(ipcChannels.planningRequestChanges, params),
+    onPlanningState: (listener: (state: PlanningState) => void) => {
+      const wrapped = (_event: Electron.IpcRendererEvent, state: PlanningState): void => listener(state)
+      ipcRenderer.on(ipcChannels.planningState, wrapped)
+      return () => ipcRenderer.off(ipcChannels.planningState, wrapped)
     }
   },
   claude: {
