@@ -5,9 +5,21 @@ import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
+  normalizeResearchUrls,
   rankSerpCandidates,
   type SerpCandidate
 } from './research-utils.ts'
+
+test('direct research URLs are canonicalized, bounded, and restricted to public web schemes', () => {
+  assert.deepEqual(normalizeResearchUrls([
+    ' https://example.com/docs?utm_source=test&version=2#install ',
+    'https://example.com/docs?version=2',
+    'file:///tmp/private.txt',
+    'javascript:alert(1)',
+    'https://user:secret@example.com/private',
+    42
+  ]), ['https://example.com/docs?version=2'])
+})
 
 test('research search URLs are deterministic and encoded', () => {
   assert.equal(
