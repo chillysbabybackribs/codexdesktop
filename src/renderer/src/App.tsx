@@ -684,6 +684,28 @@ export default function App(): React.JSX.Element {
     window.localStorage.setItem(reasoningEffortStorageKey, effort)
   }
 
+  const handleSelectAgentModel = (key: string, model: string): void => {
+    const selected = modelsRef.current.find((candidate) => candidate.model === model)
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!selected || !session) {
+      handleSetAgentModel(key, model)
+      return
+    }
+    const supported = selected.supportedReasoningEfforts.map((option) => option.reasoningEffort)
+    const nextEffort = session.reasoningEffort && supported.includes(session.reasoningEffort)
+      ? session.reasoningEffort
+      : selected.defaultReasoningEffort
+    handleSetAgentModel(key, model, nextEffort)
+  }
+
+  const handleSelectAgentModelEffort = (
+    key: string,
+    model: string,
+    effort: ReasoningEffort
+  ): void => {
+    handleSetAgentModel(key, model, effort)
+  }
+
   const handleStop = async (): Promise<void> => {
     if (!activeThreadId || !activeTurnId) {
       return
@@ -1678,7 +1700,8 @@ export default function App(): React.JSX.Element {
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
-          onSetAgentModel={handleSetAgentModel}
+          onSetAgentModel={handleSelectAgentModel}
+          onSetAgentModelEffort={handleSelectAgentModelEffort}
           onNewAgent={handleNewAgent}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
@@ -1771,6 +1794,7 @@ function ChatPane({
   onMinimizeAgent,
   onToggleWatchAgent,
   onSetAgentModel,
+  onSetAgentModelEffort,
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
@@ -1827,6 +1851,7 @@ function ChatPane({
   onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
+  onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
@@ -2076,7 +2101,9 @@ function ChatPane({
             selectedKey={selectedAgentKey}
             models={models}
             mainModel={selectedModel}
+            mainReasoningEffort={selectedReasoningEffort}
             onSetModel={onSetAgentModel}
+            onSetModelEffort={onSetAgentModelEffort}
             onSelect={onSelectAgent}
             onMinimize={onMinimizeAgent}
             onCloseSession={onCloseAgentSession}

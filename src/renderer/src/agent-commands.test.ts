@@ -22,6 +22,7 @@ function commandHarness(acceptsImages = true): {
     },
     getWorkspace: () => '/workspace',
     getSelectedModel: () => 'test-model',
+    getSelectedEffort: () => 'high',
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
     cancelRecovery: () => {}

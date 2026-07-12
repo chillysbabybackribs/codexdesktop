@@ -67,7 +67,13 @@ test('buffered deltas append in order and create missing assistant messages', ()
 })
 
 test('agent dock persistence keeps only durable metadata', () => {
-  const session = { ...createAgentSession('one', 'Research'), threadId: 'thread-1', watchesMain: true, model: 'gpt-5' }
+  const session = {
+    ...createAgentSession('one', 'Research'),
+    threadId: 'thread-1',
+    watchesMain: true,
+    model: 'gpt-5',
+    reasoningEffort: 'high'
+  }
   const raw = serializeAgentDock(4, [session], ['one'], 'one')
 
   assert.deepEqual(parseAgentDock(raw), {
@@ -77,6 +83,7 @@ test('agent dock persistence keeps only durable metadata', () => {
       title: 'Research',
       watchesMain: true,
       model: 'gpt-5',
+      reasoningEffort: 'high',
       open: true,
       selected: true
     }]
