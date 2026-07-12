@@ -79,7 +79,8 @@ export async function restoreAgentDock(options: {
           // Registers the runtime so later sends resume this session; the
           // transcript comes from the session file rather than a turns page.
           await window.api.claude.resumeThread(session.threadId, options.workspace)
-          const transcript = await window.api.claude.readThread(session.threadId, options.workspace)
+          const transcript = await window.api.claude.readThread(session.threadId, options.workspace) as
+            Array<{ id: string; role: 'user' | 'assistant'; text: string }>
           const messages: AgentLiteMessage[] = transcript.map((message) => ({
             id: message.id,
             role: message.role,

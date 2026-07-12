@@ -57,8 +57,8 @@ export function createAgentLifecycle(options: {
   function scheduleRecovery(key: string, turnId: string, error: TurnError | null): void {
     // Overload auto-recovery is built on Codex's error taxonomy and send API;
     // Claude sessions surface the failure and wait for the user.
-    const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
-    if (session && session.provider !== 'codex') return
+    const owningSession = store.sessionsRef.current.find((candidate) => candidate.key === key)
+    if (owningSession && owningSession.provider !== 'codex') return
     if (!options.isRecoverable(error)) return
     const existing = store.recoveryRef.current.get(key)
     if (existing?.handledTurnIds.has(turnId)) return
