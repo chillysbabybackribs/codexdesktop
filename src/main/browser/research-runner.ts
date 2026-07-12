@@ -1,9 +1,18 @@
 import { app, WebContentsView } from 'electron'
-import { mkdir, readdir, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
+import { ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
+import {
+  normalizeResearchFocus,
+  selectResearchEvidence,
+  type ResearchEvidenceDocument,
+  type ResearchFocus,
+  type ResearchGap,
+  type ResearchPassage
+} from './research-evidence.js'
 import { collectWithConcurrencyUntil, KeyedTaskScheduler } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import {
@@ -11,11 +20,11 @@ import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
+  normalizeResearchUrls,
   rankSerpCandidates,
   type RankedSerpCandidate,
   type SerpCandidate
 } from './research-utils.js'
-import type { TabManager } from './tab-manager.js'
 
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
@@ -28,13 +37,15 @@ const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
 const PAGE_WORKER_CONCURRENCY = 2
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
+const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
-const RESEARCH_MAX_AGE_MS = 7 * 24 * 60 * 60_000
-const RESEARCH_MAX_BYTES = 250 * 1024 * 1024
+const RESEARCH_PRUNE_COOLDOWN_MS = 30 * 60_000
 
 export type ResearchRequest = {
-  queries: string[]
+  queries?: string[]
+  urls?: string[]
+  focus?: Array<{ id?: unknown; need?: unknown; minSources?: unknown }>
   maxResults?: number | null
   maxPages?: number | null
   maxAttempts?: number | null
@@ -42,16 +53,20 @@ export type ResearchRequest = {
 }
 
 export type ResearchPage = {
+  sourceId: string
   rank: number
   url: string
   title: string
+  observedAt: string
+  charCount: number
   wordCount: number
   artifactPath: string
   htmlPath: string
-  visibleTabId?: string
   sourceQuery?: string
+  sourceKind: 'direct' | 'search'
   sourceTier?: string
   score?: number
+  artifactTruncated: boolean
   verified: true
 }
 
@@ -81,12 +96,15 @@ export type ResearchResult = {
   ok: boolean
   researchId?: string
   queries?: string[]
+  urls?: string[]
+  focus?: ResearchFocus[]
   searchQueries?: string[]
   artifactDir?: string
   pages?: ResearchPage[]
+  passages?: ResearchPassage[]
+  gaps?: ResearchGap[]
   discoveredUrls?: string[]
   discoveredCount?: number
-  visibleTabId?: string
   metrics?: ResearchMetrics
   errors?: Array<{ url?: string; error: string }>
   error?: string
@@ -100,14 +118,11 @@ export type ResearchRunContext = {
 }
 
 type ResearchPageDraft = {
-  rank: number
-  candidate: RankedSerpCandidate
-  title: string
-  url: string
+  page: ResearchPage
   content: string
-  wordCount: number
-  html: string
 }
+
+type ResearchCandidate = RankedSerpCandidate & { sourceKind: 'direct' | 'search' }
 
 type ActiveResearchRun = {
   turnId: string
@@ -126,9 +141,7 @@ export class ResearchRunner {
   private readonly activeRuns = new Map<string, ActiveResearchRun>()
   private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
-  private stagingTabId: string | null = null
-
-  constructor(private readonly getTabs: () => TabManager | null) {}
+  private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
   run(request: ResearchRequest, context: ResearchRunContext = {}): Promise<ResearchResult> {
     const runId = context.runId ?? crypto.randomUUID()
