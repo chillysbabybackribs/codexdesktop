@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { mkdir, rename, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import {
   buildLastChatMarkdown,
@@ -25,6 +25,16 @@ export class MemoryStore {
       .then(() => this.persistSnapshot(snapshot))
     this.writeQueue = operation
     return operation
+  }
+
+  async readWorkspaceCheckpoint(workspace: string | null): Promise<string | null> {
+    const path = join(this.directory, 'workspaces', memoryWorkspaceKey(workspace), 'last-chat.md')
+    try {
+      return await readFile(path, 'utf8')
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
+      throw error
+    }
   }
 
   private async persistSnapshot(snapshot: MemorySnapshot): Promise<void> {

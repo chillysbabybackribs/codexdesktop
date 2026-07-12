@@ -7,7 +7,6 @@ import type { ChatAttachment } from '../../shared/ipc.js'
 import { attachmentTurnInputs } from './attachment-input.js'
 import {
   formatSkillInvocationText,
-  selectNewThreadSkills,
   selectTurnSkills
 } from './codex-config.js'
 
@@ -61,20 +60,24 @@ export class LocalSkillRegistry {
 
   buildTurnInput(
     text: string,
-    isNewThread: boolean,
+    _isNewThread: boolean,
     attachments: ChatAttachment[] = [],
-    _collaborationMode: 'default' | 'plan' = 'default'
+    _collaborationMode: 'default' | 'plan' = 'default',
+    preparedText?: string
   ): UserInput[] {
     const turnSkills = selectTurnSkills(text, this.skills)
-    const newThreadSkills = isNewThread ? selectNewThreadSkills(text, this.skills) : []
-    const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
-    const visibleText = formatSkillInvocationText(text, turnSkills)
+    const skills = turnSkills
+    const visibleText = preparedText ?? this.visibleText(text)
 
     return [
       ...(visibleText.trim() ? [{ type: 'text', text: visibleText, text_elements: [] } satisfies UserInput] : []),
       ...attachmentTurnInputs(attachments),
       ...skills.map((skill): UserInput => ({ type: 'skill', name: skill.name, path: skill.path }))
     ]
+  }
+
+  visibleText(text: string): string {
+    return formatSkillInvocationText(text, selectTurnSkills(text, this.skills))
   }
 }
 

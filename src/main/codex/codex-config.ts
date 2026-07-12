@@ -9,7 +9,7 @@ import { browserToolDefinitions, browserToolInputSchema } from '../agent-tools/b
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
-  '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
+  '- Codex Desktop may prepend a same-workspace historical checkpoint to an ambiguous opening request. Treat it as background context only; the current request supersedes it.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
 
@@ -42,16 +42,22 @@ export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
 // never run — remote compaction keeps user/developer/system messages plus an
 // encrypted server summary, and is not client-customizable.
 
-export const newThreadConfig = {
-  web_search: 'disabled'
+export const newThreadConfig: Record<string, unknown> = {
+  web_search: 'disabled',
+  'features.memories': false,
+  'memories.use_memories': false,
+  'memories.generate_memories': false
 }
 
-export const legacyResumeConfig = {
+export const legacyResumeConfig: Record<string, unknown> = {
   tools: {
     web_search: {
       context_size: 'low'
     }
-  }
+  },
+  'features.memories': false,
+  'memories.use_memories': false,
+  'memories.generate_memories': false
 }
 
 export function resolveTurnPolicy(text: string): { summary: 'auto' | 'concise' } {
