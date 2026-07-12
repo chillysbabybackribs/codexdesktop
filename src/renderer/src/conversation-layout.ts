@@ -169,28 +169,23 @@ export function setSplitRatio(layout: LayoutNode, splitId: string, ratio: number
   }
 }
 
+function removeTargetFromNode(node: LayoutNode, target: ConversationTarget): LayoutNode | null {
+  if (node.type === 'leaf') {
+    return node.target === target ? null : node
+  }
+
+  const first = removeTargetFromNode(node.first, target)
+  const second = removeTargetFromNode(node.second, target)
+  if (!first && !second) return null
+  if (!first) return second
+  if (!second) return first
+  return { ...node, first, second }
+}
+
 export function removeTarget(layout: LayoutNode, target: ConversationTarget): LayoutNode {
-  const leaves = collectLeaves(layout)
-  if (leaves.length <= 1) {
-    const only = leaves[0]
-    return only ? createLayoutLeaf(only.target === target ? 'main' : only.target, only.id) : createDefaultLayout()
-  }
-
-  const without = leaves.filter((leaf) => leaf.target !== target)
-  if (!without.length) return createDefaultLayout('main')
-
-  let next: LayoutNode = createLayoutLeaf(without[0].target, without[0].id)
-  for (let index = 1; index < without.length; index += 1) {
-    const leaf = without[index]
-    next = {
-      type: 'split',
-      id: crypto.randomUUID(),
-      direction: 'row',
-      ratio: 1 - index / without.length,
-      first: next,
-      second: createLayoutLeaf(leaf.target, leaf.id)
-    }
-  }
+  if (target === 'main') return layout
+  const next = removeTargetFromNode(layout, target)
+  if (!next) return createDefaultLayout('main')
   return next
 }
 

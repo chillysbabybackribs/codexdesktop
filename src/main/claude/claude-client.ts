@@ -477,7 +477,6 @@ function buildClaudeOptions(
   },
   mcpServer?: ReturnType<typeof createClaudeBrowserMcpServer>
 ): Options {
-  assertSupportedClaudeAuthentication()
   return {
     cwd: options.cwd,
     ...(options.resume ? { resume: options.resume } : {}),
@@ -504,22 +503,6 @@ function buildClaudeOptions(
       ...process.env,
       CLAUDE_AGENT_SDK_CLIENT_APP: 'codexdesktop/0.1.0'
     }
-  }
-}
-
-function assertSupportedClaudeAuthentication(): void {
-  const hasApiKey = Boolean(process.env.ANTHROPIC_API_KEY?.trim())
-  const usesDocumentedCloudProvider = [
-    'CLAUDE_CODE_USE_BEDROCK',
-    'CLAUDE_CODE_USE_ANTHROPIC_AWS',
-    'CLAUDE_CODE_USE_VERTEX',
-    'CLAUDE_CODE_USE_FOUNDRY'
-  ].some((name) => process.env[name] === '1')
-
-  if (!hasApiKey && !usesDocumentedCloudProvider) {
-    throw new Error(
-      'Claude requires ANTHROPIC_API_KEY or a configured Anthropic-supported cloud provider. Claude.ai subscription login is not used by this third-party application.'
-    )
   }
 }
 

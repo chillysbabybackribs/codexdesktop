@@ -119,8 +119,10 @@ export function useAgentSessions(
   function handleRemoveConversationTarget(target: ConversationTarget): void {
     setConversationLayout((current) => {
       const next = removeTarget(current, target)
-      const nextFocused = findLeaf(next, focusedLeafId) ?? findFirstLeaf(next)
-      setFocusedLeafId(nextFocused.id)
+      setFocusedLeafId((currentFocused) => {
+        const nextFocused = findLeaf(next, currentFocused) ?? findFirstLeaf(next)
+        return nextFocused.id
+      })
       return next
     })
   }

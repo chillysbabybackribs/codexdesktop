@@ -8,6 +8,8 @@ import {
   dropEdgeFromProfile,
   dropProfileForRect,
   findLeaf,
+  findFirstLeaf,
+  findLeafForTarget,
   isTiledLayout,
   normalizeLayout,
   parseLayoutNode,
@@ -44,6 +46,30 @@ test('removeTarget collapses a closed agent back to main in its pane', () => {
   const split = splitLeafAtEdge(base, base.id, 'right', 'agent-c')
   const next = removeTarget(split, 'agent-c')
   assert.deepEqual(collectTargets(next), ['main'])
+})
+
+test('removeTarget preserves a main column beside a stacked agent column', () => {
+  let layout: LayoutNode = createDefaultLayout('main')
+  const mainLeaf = findFirstLeaf(layout)
+  layout = splitLeafAtEdge(layout, mainLeaf.id, 'right', 'agent-1')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-1')!.id, 'bottom', 'agent-2')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-2')!.id, 'bottom', 'agent-3')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-3')!.id, 'bottom', 'agent-4')
+
+  assert.deepEqual(collectTargets(layout).sort(), ['agent-1', 'agent-2', 'agent-3', 'agent-4', 'main'])
+
+  const next = removeTarget(layout, 'agent-2')
+  assert.deepEqual(collectTargets(next).sort(), ['agent-1', 'agent-3', 'agent-4', 'main'])
+
+  const root = next.type === 'split' ? next : null
+  assert.ok(root && root.direction === 'row')
+  assert.equal(root.first.type === 'leaf' ? root.first.target : null, 'main')
+
+  const stack = root.second
+  assert.equal(stack.type, 'split')
+  if (stack.type !== 'split') return
+  assert.equal(stack.direction, 'column')
+  assert.deepEqual(collectTargets(stack).sort(), ['agent-1', 'agent-3', 'agent-4'])
 })
 
 test('layout persistence round-trips and drops unknown agent targets', () => {
