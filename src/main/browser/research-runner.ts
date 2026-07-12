@@ -428,13 +428,14 @@ export class ResearchRunner {
           preflight.dispose()
           if (stopSignal.aborted) return null
           browserPageLoads += 1
+          const browserUrl = staticResult.finalUrl ?? candidate.url
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           const closeOnAbort = (): void => this.closeHiddenView(view)
           if (linked.signal.aborted) closeOnAbort()
           else linked.signal.addEventListener('abort', closeOnAbort, { once: true })
           try {
-            const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
+            const navigationResult = await loadPage(view.webContents, browserUrl, linked.signal)
             recordNavigation(navigation, navigationResult)
             throwIfAborted(linked.signal)
             const result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(

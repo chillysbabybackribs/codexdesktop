@@ -25,6 +25,7 @@ export type StaticResearchResult = {
   durationMs: number
   bytes: number
   redirects: number
+  finalUrl?: string
 }
 
 export type StaticResearchFetchOptions = {
@@ -56,13 +57,13 @@ export async function fetchStaticResearchPage(
   const maxRedirects = clamp(options.maxRedirects, DEFAULT_MAX_REDIRECTS, 0, 8)
   let bytes = 0
   let redirects = 0
-  let currentUrl: string
+  let currentUrl = initialUrl
 
   try {
     currentUrl = await options.validateUrl(initialUrl, options.signal)
   } catch (error) {
     if (options.signal.aborted) throw error
-    return result('blocked', startedAt, bytes, redirects, formatError(error))
+    return result('blocked', startedAt, bytes, redirects, formatError(error), currentUrl)
   }
 
   while (true) {
@@ -79,20 +80,20 @@ export async function fetchStaticResearchPage(
       })
     } catch (error) {
       if (options.signal.aborted) throw error
-      return result('fallback', startedAt, bytes, redirects, `static fetch failed: ${formatError(error)}`)
+      return result('fallback', startedAt, bytes, redirects, `static fetch failed: ${formatError(error)}`, currentUrl)
     }
 
     if (response.status >= 300 && response.status < 400) {
       const location = response.headers.get('location')
-      if (!location) return result('fallback', startedAt, bytes, redirects, 'redirect response has no location')
-      if (redirects >= maxRedirects) return result('fallback', startedAt, bytes, redirects, 'redirect limit exceeded')
+      if (!location) return result('fallback', startedAt, bytes, redirects, 'redirect response has no location', currentUrl)
+      if (redirects >= maxRedirects) return result('fallback', startedAt, bytes, redirects, 'redirect limit exceeded', currentUrl)
       let redirectUrl: string
       try {
         redirectUrl = new URL(location, currentUrl).href
         currentUrl = await options.validateUrl(redirectUrl, options.signal)
       } catch (error) {
         if (options.signal.aborted) throw error
-        return result('blocked', startedAt, bytes, redirects, `redirect blocked: ${formatError(error)}`)
+        return result('blocked', startedAt, bytes, redirects, `redirect blocked: ${formatError(error)}`, currentUrl)
       }
       redirects += 1
       continue
@@ -100,22 +101,22 @@ export async function fetchStaticResearchPage(
 
     const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
     if (!/^text\/html\b|^application\/xhtml\+xml\b/.test(contentType)) {
-      return result('fallback', startedAt, bytes, redirects, `unsupported static content type: ${contentType || 'unknown'}`)
+      return result('fallback', startedAt, bytes, redirects, `unsupported static content type: ${contentType || 'unknown'}`, currentUrl)
     }
     const charset = /charset=([^;\s]+)/i.exec(contentType)?.[1]?.replace(/["']/g, '').toLowerCase()
     if (charset && charset !== 'utf-8' && charset !== 'utf8') {
-      return result('fallback', startedAt, bytes, redirects, `unsupported static charset: ${charset}`)
+      return result('fallback', startedAt, bytes, redirects, `unsupported static charset: ${charset}`, currentUrl)
     }
 
     const body = await readBoundedBody(response, maxBytes, options.signal)
     bytes = body.bytes
-    if (body.tooLarge) return result('fallback', startedAt, bytes, redirects, 'static response exceeded byte limit')
-    if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body')
+    if (body.tooLarge) return result('fallback', startedAt, bytes, redirects, 'static response exceeded byte limit', currentUrl)
+    if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body', currentUrl)
 
     try {
       const { document, Node } = parseHTML(body.text)
       if (!document.querySelector('article, main, [role="main"], [itemprop="articleBody"]')) {
-        return result('fallback', startedAt, bytes, redirects, 'static document has no confident content root')
+        return result('fallback', startedAt, bytes, redirects, 'static document has no confident content root', currentUrl)
       }
       const extracted = runStaticExtraction(document, { href: currentUrl }, Node)
       const page: StaticResearchPage = {
@@ -126,21 +127,22 @@ export async function fetchStaticResearchPage(
       }
       const assessment = assessExtractedPage(page)
       if (!assessment.verified) {
-        return result('fallback', startedAt, bytes, redirects, `static verification failed: ${assessment.reason}`)
+        return result('fallback', startedAt, bytes, redirects, `static verification failed: ${assessment.reason}`, currentUrl)
       }
       if (page.wordCount < MIN_STATIC_WORDS || page.content.length < MIN_STATIC_CONTENT_CHARS) {
-        return result('fallback', startedAt, bytes, redirects, 'static extraction confidence is too low')
+        return result('fallback', startedAt, bytes, redirects, 'static extraction confidence is too low', currentUrl)
       }
       return {
         kind: 'accepted',
         page,
         durationMs: Date.now() - startedAt,
         bytes,
-        redirects
+        redirects,
+        finalUrl: currentUrl
       }
     } catch (error) {
       if (options.signal.aborted) throw error
-      return result('fallback', startedAt, bytes, redirects, `static extraction failed: ${formatError(error)}`)
+      return result('fallback', startedAt, bytes, redirects, `static extraction failed: ${formatError(error)}`, currentUrl)
     }
   }
 }
@@ -183,9 +185,10 @@ function result(
   startedAt: number,
   bytes: number,
   redirects: number,
-  reason: string
+  reason: string,
+  finalUrl: string
 ): StaticResearchResult {
-  return { kind, reason: reason.slice(0, 300), durationMs: Date.now() - startedAt, bytes, redirects }
+  return { kind, reason: reason.slice(0, 300), durationMs: Date.now() - startedAt, bytes, redirects, finalUrl }
 }
 
 function clamp(value: number | undefined, fallback: number, minimum: number, maximum: number): number {
