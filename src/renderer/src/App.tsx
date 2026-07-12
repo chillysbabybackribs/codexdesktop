@@ -21,6 +21,7 @@ import type {
   CodexPluginAppStatus,
   MemoryPersistParams
 } from '../../shared/ipc'
+import type { AgentEvent, AgentModel, AgentProvider } from '../../shared/agent'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { CodexErrorInfo } from '../../shared/codex-protocol/v2/CodexErrorInfo'
@@ -61,6 +62,7 @@ import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowse
 import type { ChatAttachment } from '../../shared/ipc'
 import {
   buildRows,
+  appendAgentMessageDelta,
   isWorkItem,
   upsertMany,
   type ActivityItem,
@@ -79,7 +81,7 @@ import { MarkdownContent } from './MarkdownContent'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
-import { useAgentSessions } from './useAgentSessions'
+import { useAgentSessions, parseStoredConversationLayout } from './useAgentSessions'
 import {
   pluginInstallParams,
   pluginUninstallId,
@@ -106,6 +108,7 @@ const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
 const collaborationModeStorageKey = 'codexdesktop.collaborationMode'
+const providerStorageKey = 'codexdesktop.provider'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
@@ -139,6 +142,9 @@ function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
 }
 
 export default function App(): React.JSX.Element {
+  const [provider] = useState<AgentProvider>(() =>
+    window.localStorage.getItem(providerStorageKey) === 'claude' ? 'claude' : 'codex'
+  )
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'))
     return Number.isFinite(stored) && stored > 20 && stored < 70 ? stored : 37
@@ -186,6 +192,15 @@ export default function App(): React.JSX.Element {
     agentSessions,
     selectedAgentKey,
     setSelectedAgentKey,
+    conversationLayout,
+    setConversationLayout,
+    focusedLeafId,
+    setFocusedLeafId,
+    focusedTarget,
+    visibleTargets,
+    handleSelectConversation,
+    handleRemoveConversationTarget,
+    restoreConversationLayout,
     agentSessionsRef,
     agentStartQueueRef,
     agentCounterRef,
@@ -375,7 +390,7 @@ export default function App(): React.JSX.Element {
   // same list (and default) the CLI's own /model picker shows. Loaded once the
   // server is ready; if it fails, sends simply omit the override.
   useEffect(() => {
-    if (codexStatus !== 'ready' || models.length) {
+    if (provider !== 'codex' || codexStatus !== 'ready' || models.length) {
       return
     }
 
@@ -405,9 +420,40 @@ export default function App(): React.JSX.Element {
     return () => {
       cancelled = true
     }
-  }, [codexStatus, models.length])
+  }, [provider, codexStatus, models.length])
 
   useEffect(() => {
+    if (provider === 'claude') {
+      const dispose = window.api.claude.onEvent((event) => handleClaudeEvent(event))
+      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+      initializationPromiseRef.current = (async () => {
+        try {
+          const [catalog] = await Promise.all([
+            window.api.claude.listModels(workspaceRef.current),
+            window.api.claude.getAuthStatus(workspaceRef.current)
+          ])
+          const mapped = (catalog as AgentModel[]).map(claudeModelToUiModel)
+          setModels(mapped)
+          const active = mapped.find((model) => model.model === selectedModelRef.current) ?? mapped[0]
+          if (active) {
+            setSelectedModel(active.model)
+            selectedModelRef.current = active.model
+            setSelectedReasoningEffort(active.defaultReasoningEffort)
+          }
+          if (lastThreadId) {
+            await window.api.claude.resumeThread(lastThreadId, workspaceRef.current)
+            setActiveThreadId(lastThreadId)
+            watchThreadIdRef.current = lastThreadId
+          }
+        } catch (error) {
+          addSystemItem(`Claude initialization failed: ${(error as Error).message}`, 'error')
+        } finally {
+          setIsRestoring(false)
+        }
+      })()
+      return dispose
+    }
+
     const dispose = window.api.codex.onEvent((event) => {
       if (event.type === 'status') {
         setCodexStatus(event.status)
@@ -446,7 +492,7 @@ export default function App(): React.JSX.Element {
     void initializationPromiseRef.current
 
     return dispose
-  }, [])
+  }, [provider])
 
   const measureBrowserBounds = useCallback((): BrowserBounds | null => {
     const host = viewHostRef.current
@@ -953,6 +999,15 @@ export default function App(): React.JSX.Element {
         restoredRef: agentDockRestoredRef,
         updateSessions: updateAgentSessions,
         setSelectedKey: setSelectedAgentKey,
+        restoreLayout: (layout, nextFocusedLeafId, fallbackTarget) => {
+          restoreConversationLayout(
+            layout && typeof layout === 'object'
+              ? parseStoredConversationLayout(layout, new Set(['main', ...agentSessionsRef.current.map((session) => session.key)]))
+              : null,
+            nextFocusedLeafId,
+            fallbackTarget
+          )
+        },
         patchSession: patchAgentSession,
         appendMessage: appendAgentMessage
       }

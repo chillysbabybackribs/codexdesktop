@@ -13,6 +13,22 @@ import {
   type AgentLiteMessage,
   type AgentSession
 } from './agent-session-model'
+import {
+  assignTarget,
+  collectTargets,
+  createDefaultLayout,
+  findFirstLeaf,
+  findLeaf,
+  findLeafForTarget,
+  legacySelectionFromTarget,
+  normalizeLayout,
+  parseLayoutNode,
+  removeTarget,
+  serializeLayoutNode,
+  targetFromLegacySelection,
+  type ConversationTarget,
+  type LayoutNode
+} from './conversation-layout'
 
 export function useAgentSessions(
   storageKey: string,
@@ -24,6 +40,15 @@ export function useAgentSessions(
   agentSessions: AgentSession[]
   selectedAgentKey: string | null
   setSelectedAgentKey: React.Dispatch<React.SetStateAction<string | null>>
+  conversationLayout: LayoutNode
+  setConversationLayout: React.Dispatch<React.SetStateAction<LayoutNode>>
+  focusedLeafId: string
+  setFocusedLeafId: React.Dispatch<React.SetStateAction<string>>
+  focusedTarget: ConversationTarget
+  visibleTargets: ConversationTarget[]
+  handleSelectConversation: (target: ConversationTarget) => void
+  handleRemoveConversationTarget: (target: ConversationTarget) => void
+  restoreConversationLayout: (layout: LayoutNode | null, focusedLeafId: string | null, fallbackTarget: ConversationTarget) => void
   agentSessionsRef: React.MutableRefObject<AgentSession[]>
   agentStartQueueRef: React.MutableRefObject<string[]>
   agentCounterRef: React.MutableRefObject<number>
@@ -39,13 +64,22 @@ export function useAgentSessions(
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
-  const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
+  const [conversationLayout, setConversationLayout] = useState<LayoutNode>(() => createDefaultLayout())
+  const [focusedLeafId, setFocusedLeafId] = useState<string>(() => findFirstLeaf(createDefaultLayout()).id)
   const agentSessionsRef = useRef<AgentSession[]>([])
   const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
   const agentDeltaTimerRef = useRef<number | null>(null)
   const agentStartQueueRef = useRef<string[]>([])
   const agentCounterRef = useRef(2)
   const agentDockRestoredRef = useRef(false)
+
+  const focusedTarget = findLeaf(conversationLayout, focusedLeafId)?.target ?? 'main'
+  const selectedAgentKey = legacySelectionFromTarget(focusedTarget)
+  const visibleTargets = collectTargets(conversationLayout)
+
+  function validTargets(sessions: AgentSession[]): Set<ConversationTarget> {
+    return new Set(['main', ...sessions.map((session) => session.key)])
+  }
 
   function updateAgentSessions(update: (sessions: AgentSession[]) => AgentSession[]): void {
     agentSessionsRef.current = update(agentSessionsRef.current)
@@ -66,6 +100,45 @@ export function useAgentSessions(
 
   function backgroundSessionForThread(threadId: string): AgentSession | null {
     return findAgentSessionByThread(agentSessionsRef.current, threadId)
+  }
+
+  function handleSelectConversation(target: ConversationTarget): void {
+    const existing = findLeafForTarget(conversationLayout, target)
+    if (existing) {
+      setFocusedLeafId(existing.id)
+      return
+    }
+    setConversationLayout((current) => assignTarget(current, focusedLeafId, target))
+  }
+
+  function handleRemoveConversationTarget(target: ConversationTarget): void {
+    setConversationLayout((current) => {
+      const next = removeTarget(current, target)
+      const nextFocused = findLeaf(next, focusedLeafId) ?? findFirstLeaf(next)
+      setFocusedLeafId(nextFocused.id)
+      return next
+    })
+  }
+
+  function restoreConversationLayout(
+    layout: LayoutNode | null,
+    nextFocusedLeafId: string | null,
+    fallbackTarget: ConversationTarget
+  ): void {
+    const targets = validTargets(agentSessionsRef.current)
+    const restored = layout
+      ? normalizeLayout(layout, targets)
+      : createDefaultLayout(fallbackTarget)
+    setConversationLayout(restored)
+    const focused = (nextFocusedLeafId && findLeaf(restored, nextFocusedLeafId))
+      ?? findLeafForTarget(restored, fallbackTarget)
+      ?? findFirstLeaf(restored)
+    setFocusedLeafId(focused.id)
+  }
+
+  function setSelectedAgentKey(value: React.SetStateAction<string | null>): void {
+    const next = typeof value === 'function' ? value(selectedAgentKey) : value
+    handleSelectConversation(targetFromLegacySelection(next))
   }
 
   function flushAgentDeltas(): void {
@@ -177,7 +250,7 @@ export function useAgentSessions(
       ...sessions,
       createAgentSession(key, `Agent ${agentCounterRef.current++}`)
     ])
-    setSelectedAgentKey(key)
+    setConversationLayout((current) => assignTarget(current, focusedLeafId, key))
   }
 
   function handleToggleWatchAgent(key: string): void {
@@ -201,14 +274,25 @@ export function useAgentSessions(
     window.localStorage.setItem(storageKey, serializeAgentDock(
       agentCounterRef.current,
       agentSessions,
-      selectedAgentKey
+      selectedAgentKey,
+      serializeLayoutNode(conversationLayout),
+      focusedLeafId
     ))
-  }, [agentSessions, selectedAgentKey, storageKey])
+  }, [agentSessions, selectedAgentKey, conversationLayout, focusedLeafId, storageKey])
 
   return {
     agentSessions,
     selectedAgentKey,
     setSelectedAgentKey,
+    conversationLayout,
+    setConversationLayout,
+    focusedLeafId,
+    setFocusedLeafId,
+    focusedTarget,
+    visibleTargets,
+    handleSelectConversation,
+    handleRemoveConversationTarget,
+    restoreConversationLayout,
     agentSessionsRef,
     agentStartQueueRef,
     agentCounterRef,
@@ -223,4 +307,11 @@ export function useAgentSessions(
     handleToggleWatchAgent,
     handleSetAgentModel
   }
+}
+
+export function parseStoredConversationLayout(
+  raw: unknown,
+  validTargets: Set<ConversationTarget>
+): LayoutNode | null {
+  return parseLayoutNode(raw, validTargets)
 }
