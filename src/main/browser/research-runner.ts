@@ -371,6 +371,9 @@ export class ResearchRunner {
               view.webContents,
               buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
             )
+            const safeFinalUrl = normalizeResearchUrls([result.url], 1)[0]
+            if (!safeFinalUrl) throw new Error('page verification failed: invalid or non-public final URL')
+            result.url = safeFinalUrl
             const assessment = assessExtractedPage(result)
             if (!assessment.verified) {
               throw new Error(`page verification failed: ${assessment.reason}`)
@@ -564,6 +567,28 @@ export class ResearchRunner {
     view.webContents.setUserAgent(chromeLikeUserAgent())
     this.searchViews.add(view)
     return view
+  }
+
+  private readPageCache(url: string): CachedResearchPage | null {
+    const cached = this.pageCache.get(url)
+    if (!cached) return null
+    if (cached.expiresAt <= Date.now()) {
+      this.pageCache.delete(url)
+      return null
+    }
+    this.pageCache.delete(url)
+    this.pageCache.set(url, cached)
+    return cached
+  }
+
+  private cachePage(url: string, page: ExtractedResearchPage): void {
+    this.pageCache.delete(url)
+    this.pageCache.set(url, { ...page, expiresAt: Date.now() + PAGE_CACHE_TTL_MS })
+    while (this.pageCache.size > MAX_PAGE_CACHE_ENTRIES) {
+      const oldest = this.pageCache.keys().next().value
+      if (typeof oldest !== 'string') break
+      this.pageCache.delete(oldest)
+    }
   }
 
   private closeHiddenView(view: WebContentsView): void {
