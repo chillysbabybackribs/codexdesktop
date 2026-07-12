@@ -1551,7 +1551,7 @@ export default function App(): React.JSX.Element {
     // never touch the focused view's state.
     const incomingThreadId = (notification.params as { threadId?: string } | undefined)?.threadId
     if (incomingThreadId && !isRelevantThread(incomingThreadId)) {
-      const backgroundSession = backgroundSessionForThread(incomingThreadId)
+      const backgroundSession = backgroundSessionForThread(incomingThreadId, 'codex')
       if (backgroundSession) {
         if (notification.method === 'thread/name/updated') {
           // Dock titles stay "Agent N"; only the history list refreshes.
@@ -1561,6 +1561,19 @@ export default function App(): React.JSX.Element {
         handleAgentNotification(backgroundSession, notification)
         return
       }
+    }
+
+    // With Claude as the main provider, codex events exist only to serve dock
+    // agents: bind freshly started threads to their tabs and drop the rest.
+    if (provider !== 'codex') {
+      if (notification.method === 'thread/started') {
+        const startedThreadId = notification.params.thread.id
+        if (startedThreadId && !backgroundSessionForThread(startedThreadId, 'codex')) {
+          const pendingAgentKey = takeQueuedStart('codex')
+          if (pendingAgentKey) bindAgentThread(pendingAgentKey, startedThreadId)
+        }
+      }
+      return
     }
 
     if (isItemNotification(notification)) {
@@ -1576,10 +1589,10 @@ export default function App(): React.JSX.Element {
         // (check by id); if this notification arrived first, the pending queue
         // holds the session key.
         const startedThreadId = notification.params.thread.id
-        if (startedThreadId && backgroundSessionForThread(startedThreadId)) {
+        if (startedThreadId && backgroundSessionForThread(startedThreadId, 'codex')) {
           return
         }
-        const pendingAgentKey = agentStartQueueRef.current.shift()
+        const pendingAgentKey = takeQueuedStart('codex')
         if (pendingAgentKey) {
           bindAgentThread(pendingAgentKey, startedThreadId)
           return
