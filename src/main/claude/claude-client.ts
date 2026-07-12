@@ -164,7 +164,7 @@ export class ClaudeClient extends EventEmitter {
     const preparedText = await this.conversationMemory.prepareOpeningText({
       requestText: text,
       visibleText: text,
-      workspace: cwd ?? runtime.cwd,
+      workspace: cwd ?? null,
       isNewSession: !threadId
     })
     runtime.input.push(await buildUserMessage(preparedText, attachments))
