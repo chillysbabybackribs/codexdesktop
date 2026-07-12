@@ -3,6 +3,7 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { AgentEvent, AgentProvider } from '../../shared/agent'
+import { agentTokenUsage } from './agent-token-usage'
 import {
   appendAgentSessionMessage,
   applyAgentDeltas,
@@ -289,6 +290,12 @@ export function useAgentSessions(
         }
         return
       }
+      case 'tokenUsage.updated':
+        patchAgentSession(session.key, (current) => ({
+          ...current,
+          contextUsage: agentTokenUsage(event.usage, event.totalUsage, event.context)
+        }))
+        return
       case 'turn.completed': {
         patchAgentSession(session.key, (current) => ({
           ...current,
