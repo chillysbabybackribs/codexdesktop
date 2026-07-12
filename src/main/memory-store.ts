@@ -28,13 +28,15 @@ export class MemoryStore {
   }
 
   async readWorkspaceCheckpoint(workspace: string | null): Promise<string | null> {
-    const path = join(this.directory, 'workspaces', memoryWorkspaceKey(workspace), 'last-chat.md')
-    try {
-      return await readFile(path, 'utf8')
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
-      throw error
-    }
+    const scopedPath = join(this.directory, 'workspaces', memoryWorkspaceKey(workspace), 'last-chat.md')
+    const scoped = await readTextIfPresent(scopedPath)
+    if (scoped !== null) return scoped
+
+    // Upgrade path for checkpoints written before workspace-scoped storage.
+    // Never accept the legacy global pointer unless its header identifies the
+    // exact requested workspace; the most recently used workspace may differ.
+    const legacy = await readTextIfPresent(this.legacyLastChatPath)
+    return legacy && checkpointMatchesWorkspace(legacy, workspace) ? legacy : null
   }
 
   private async persistSnapshot(snapshot: MemorySnapshot): Promise<void> {
@@ -54,8 +56,8 @@ export class MemoryStore {
     if (snapshot.surface === 'main') {
       await Promise.all([
         atomicWrite(join(workspaceDirectory, 'last-chat.md'), lastChat),
-        // Compatibility pointer for the current prior-chat-memory skill. The
-        // provider-neutral reader will switch to the workspace checkpoint.
+        // Compatibility pointer for older installs and the explicit fallback
+        // skill. New reads prefer the workspace-scoped checkpoint above.
         atomicWrite(this.legacyLastChatPath, lastChat)
       ])
     }
@@ -63,9 +65,29 @@ export class MemoryStore {
 }
 
 export function memoryWorkspaceKey(workspace: string | null): string {
+  return createHash('sha256').update(normalizeWorkspace(workspace)).digest('hex')
+}
+
+function normalizeWorkspace(workspace: string | null): string {
   let identity = workspace ? resolve(workspace) : 'no-workspace'
   if (process.platform === 'win32') identity = identity.toLowerCase()
-  return createHash('sha256').update(identity).digest('hex')
+  return identity
+}
+
+function checkpointMatchesWorkspace(checkpoint: string, workspace: string | null): boolean {
+  const header = checkpoint.match(/^Workspace:[ \t]*(.*)$/m)?.[1]?.trim()
+  if (!header) return false
+  const checkpointWorkspace = header === 'Not selected' ? null : header
+  return normalizeWorkspace(checkpointWorkspace) === normalizeWorkspace(workspace)
+}
+
+async function readTextIfPresent(path: string): Promise<string | null> {
+  try {
+    return await readFile(path, 'utf8')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
+    throw error
+  }
 }
 
 function validateSnapshot(snapshot: MemorySnapshot): void {

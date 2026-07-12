@@ -11,10 +11,12 @@ export type PrepareOpeningTextRequest = {
   isNewSession: boolean
 }
 
-export class ConversationMemoryService {
-  private readonly store: MemoryStore
+type ConversationMemoryStore = Pick<MemoryStore, 'persist' | 'readWorkspaceCheckpoint'>
 
-  constructor(store: MemoryStore) {
+export class ConversationMemoryService {
+  private readonly store: ConversationMemoryStore
+
+  constructor(store: ConversationMemoryStore) {
     this.store = store
   }
 
