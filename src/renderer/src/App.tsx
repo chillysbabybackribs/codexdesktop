@@ -106,6 +106,7 @@ const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
+const claudeLastThreadStorageKey = 'codexdesktop.claude.lastThreadId'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
@@ -427,7 +428,7 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     if (provider === 'claude') {
       const dispose = window.api.claude.onEvent((event) => handleClaudeEvent(event))
-      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+      const lastThreadId = window.localStorage.getItem(threadStorageKey(provider))
       initializationPromiseRef.current = (async () => {
         try {
           const [catalog] = await Promise.all([
@@ -471,7 +472,7 @@ export default function App(): React.JSX.Element {
     })
 
     if (!initializationPromiseRef.current) {
-      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+      const lastThreadId = window.localStorage.getItem(threadStorageKey(provider))
       initializationPromiseRef.current = (async () => {
         const authPromise = window.api.codex.getAuthStatus().catch((error) => {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
