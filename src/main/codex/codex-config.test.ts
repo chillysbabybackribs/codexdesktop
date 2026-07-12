@@ -3,6 +3,7 @@ import test from 'node:test'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import {
   browserDynamicTools,
+  buildCollaborationMode,
   buildGuidance,
   formatSkillInvocationText,
   isWebResearchTask,
@@ -173,6 +174,18 @@ test('research turns keep the configured reasoning effort', () => {
 test('implementation turns use automatic reasoning summaries', () => {
   assert.deepEqual(resolveTurnPolicy('Refactor the tab manager and run its tests'), { summary: 'auto' })
   assert.deepEqual(resolveTurnPolicy('Review this local patch'), { summary: 'auto' })
+})
+
+test('native collaboration modes use app-server instructions and preset effort', () => {
+  assert.deepEqual(buildCollaborationMode('plan', 'gpt-test', 'high'), {
+    mode: 'plan',
+    settings: {
+      model: 'gpt-test',
+      reasoning_effort: 'medium',
+      developer_instructions: null
+    }
+  })
+  assert.equal(buildCollaborationMode('default', 'gpt-test', 'high').settings.reasoning_effort, 'high')
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {

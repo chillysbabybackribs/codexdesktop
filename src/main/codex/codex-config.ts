@@ -1,5 +1,8 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
+import type { CollaborationMode } from '../../shared/codex-protocol/CollaborationMode.js'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
+import type { CollaborationModeMask } from '../../shared/codex-protocol/v2/CollaborationModeMask.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
@@ -75,6 +78,26 @@ export function shouldAttachPriorChatMemory(text: string): boolean {
     /\b(previous|prior|last) (chat|thread|conversation|session|work)\b/.test(normalized) ||
     /\b(where (?:did|were) we|what were we doing|same as before|from where we left off|left off)\b/.test(normalized)
   )
+}
+
+export function buildCollaborationMode(
+  mode: 'default' | 'plan',
+  model: string,
+  effort: ReasoningEffort | null,
+  presets: CollaborationModeMask[] = []
+): CollaborationMode {
+  const presetEffort = presets.find((preset) => preset.mode === mode)?.reasoning_effort
+
+  return {
+    mode,
+    settings: {
+      model,
+      reasoning_effort: presetEffort ?? (mode === 'plan' ? 'medium' : effort),
+      // Null selects app-server's model-specific built-in instructions for
+      // this mode instead of freezing a copied prompt in the desktop client.
+      developer_instructions: null
+    }
+  }
 }
 
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {

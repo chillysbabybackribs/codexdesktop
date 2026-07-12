@@ -48,7 +48,15 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
   ipcMain.handle(ipcChannels.codexSendMessage, async (_event, params: CodexSendMessageParams) => {
     const attachments = await attachmentStore.verify(params.attachments ?? [])
-    return client.sendMessage(params.threadId, params.text, params.cwd, params.model, attachments, params.effort)
+    return client.sendMessage(
+      params.threadId,
+      params.text,
+      params.cwd,
+      params.model,
+      attachments,
+      params.effort,
+      params.collaborationMode
+    )
   })
   ipcMain.handle(ipcChannels.codexSteerTurn, (_event, params: CodexSteerTurnParams) =>
     client.steerTurn(params.threadId, params.turnId, params.text)

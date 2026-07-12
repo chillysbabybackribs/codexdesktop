@@ -14,6 +14,8 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
+import type { CollaborationModeListResponse } from '../../shared/codex-protocol/v2/CollaborationModeListResponse.js'
+import type { CollaborationModeMask } from '../../shared/codex-protocol/v2/CollaborationModeMask.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
 import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js'
@@ -43,6 +45,7 @@ import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
+  buildCollaborationMode,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
@@ -63,6 +66,7 @@ export class CodexClient extends EventEmitter {
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
+  private collaborationModePresets: CollaborationModeMask[] = []
   constructor(
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner
@@ -255,7 +259,8 @@ export class CodexClient extends EventEmitter {
     cwd?: string | null,
     model?: string | null,
     attachments: ChatAttachment[] = [],
-    effort?: ReasoningEffort | null
+    effort?: ReasoningEffort | null,
+    collaborationMode?: 'default' | 'plan'
   ): Promise<TurnStartResponse & {
     threadId: string
     model: string | null
@@ -265,6 +270,11 @@ export class CodexClient extends EventEmitter {
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
     const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
+    const effectiveModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
+    const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
+    const effectiveEffort = collaborationMode === 'plan'
+      ? buildCollaborationMode('plan', effectiveModel ?? '', requestedEffort, this.collaborationModePresets).settings.reasoning_effort
+      : requestedEffort
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -273,17 +283,20 @@ export class CodexClient extends EventEmitter {
       input,
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
+      ...(collaborationMode && effectiveModel
+        ? { collaborationMode: buildCollaborationMode(collaborationMode, effectiveModel, requestedEffort, this.collaborationModePresets) }
+        : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
     if (model) this.threadModels.set(activeThreadId, model)
-    if (effort) this.threadReasoningEfforts.set(activeThreadId, effort)
+    if (effectiveEffort) this.threadReasoningEfforts.set(activeThreadId, effectiveEffort)
 
     return {
       ...response,
       threadId: activeThreadId,
       model: model ?? this.threadModels.get(activeThreadId) ?? null,
-      reasoningEffort: effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
+      reasoningEffort: effectiveEffort
     }
   }
 
@@ -360,6 +373,13 @@ export class CodexClient extends EventEmitter {
     })
     this.rpc.notify('initialized')
     await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
+    try {
+      const modes = await this.request<CollaborationModeListResponse>('collaborationMode/list')
+      this.collaborationModePresets = modes.data
+    } catch (error) {
+      this.collaborationModePresets = []
+      console.warn('Failed to load collaboration mode presets; using stable fallbacks', error)
+    }
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
