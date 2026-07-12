@@ -59,14 +59,15 @@ export class ClaudeClient extends EventEmitter {
   }
 
   async getAuthStatus(cwd?: string | null): Promise<{ authenticated: boolean; source: string | null }> {
-    const discovery = await this.sharedDiscovery(cwd)
-    return { authenticated: true, source: discovery.apiKeySource }
+    // A resolving model list is our proxy for a working, authenticated SDK.
+    await this.sharedDiscovery(cwd)
+    return { authenticated: true, source: null }
   }
 
   async listModels(cwd?: string | null): Promise<AgentModel[]> {
     if (this.cachedModels) return this.cachedModels
-    const discovery = await this.sharedDiscovery(cwd)
-    this.cachedModels = discovery.models.map(toAgentModel)
+    const models = await this.sharedDiscovery(cwd)
+    this.cachedModels = models.map(toAgentModel)
     return this.cachedModels
   }
 
@@ -421,7 +422,7 @@ export class ClaudeClient extends EventEmitter {
     return runtime
   }
 
-  private async discover(cwd?: string | null): Promise<{ models: ModelInfo[]; apiKeySource: string | null }> {
+  private async discover(cwd?: string | null): Promise<ModelInfo[]> {
     const input = new AsyncMessageQueue<SDKUserMessage>()
     const discovery = query({
       prompt: input,
@@ -435,21 +436,19 @@ export class ClaudeClient extends EventEmitter {
     })
 
     try {
-      const first = await discovery.next()
-      if (first.done || first.value.type !== 'system' || first.value.subtype !== 'init') {
-        throw new Error('Claude Agent SDK did not return initialization metadata')
-      }
-      return {
-        models: await discovery.supportedModels(),
-        apiKeySource: first.value.apiKeySource ?? null
-      }
+      // Do NOT wait for a `system/init` message here: the vendored claude CLI
+      // only emits init once it receives its first user message on stdin, and
+      // this discovery query never sends one — so awaiting next() hangs forever
+      // and the model list never loads. supportedModels() pumps the query on its
+      // own and resolves without any input.
+      return await discovery.supportedModels()
     } finally {
       input.close()
       discovery.close()
     }
   }
 
-  private sharedDiscovery(cwd?: string | null): Promise<{ models: ModelInfo[]; apiKeySource: string | null }> {
+  private sharedDiscovery(cwd?: string | null): Promise<ModelInfo[]> {
     if (!this.discoveryInFlight) {
       this.discoveryInFlight = this.discover(cwd).finally(() => {
         this.discoveryInFlight = null
