@@ -3413,15 +3413,6 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
 }
 
-function stringifyUnknown(value: unknown): string {
-  if (typeof value === 'string') return value
-  try {
-    return JSON.stringify(value)
-  } catch {
-    return String(value)
-  }
-}
-
 function asClaudeEffort(value: ReasoningEffort | null): ClaudeEffort | null {
   return value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max'
     ? value
