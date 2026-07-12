@@ -536,9 +536,13 @@ export default function App(): React.JSX.Element {
       setSplit(nextSplit)
     }
 
-    const handleUp = (): void => {
+    let dragFinished = false
+    const finishDrag = (): void => {
+      if (dragFinished) return
+      dragFinished = true
       window.removeEventListener('pointermove', handleMove)
-      window.removeEventListener('pointerup', handleUp)
+      window.removeEventListener('pointerup', finishDrag)
+      window.removeEventListener('pointercancel', finishDrag)
       window.localStorage.setItem('codexdesktop.split', String(splitRef.current))
       isDraggingDividerRef.current = false
       const latestBounds = measureBrowserBounds() ?? pendingBoundsRef.current
@@ -549,7 +553,8 @@ export default function App(): React.JSX.Element {
     }
 
     window.addEventListener('pointermove', handleMove)
-    window.addEventListener('pointerup', handleUp, { once: true })
+    window.addEventListener('pointerup', finishDrag, { once: true })
+    window.addEventListener('pointercancel', finishDrag, { once: true })
   }
 
   const handleSend = async (text: string, attachments: ChatAttachment[] = []): Promise<boolean> => {

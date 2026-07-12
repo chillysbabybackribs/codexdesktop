@@ -4,11 +4,11 @@ import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.j
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import {
   clampTabIndex,
+  fitBrowserBounds,
   hiddenBrowserBounds,
   nextActiveTabId,
   readTabNavigation,
   safeWebContentsUrl,
-  sanitizeBrowserBounds,
   type ManagedBrowserTab
 } from './browser-tab-model.js'
 import {
@@ -48,7 +48,12 @@ export class TabManager {
   private persistListener: (() => void) | null = null
   private visitListener: BrowserVisitListener | null = null
 
-  constructor(private readonly window: BrowserWindow) {}
+  constructor(private readonly window: BrowserWindow) {
+    window.on('resize', () => {
+      this.bounds = this.fitBoundsToWindow(this.bounds)
+      this.syncActiveBounds()
+    })
+  }
 
   onState(listener: BrowserStateListener): void {
     this.stateListener = listener
@@ -257,7 +262,7 @@ export class TabManager {
   }
 
   setBounds(bounds: BrowserBounds): void {
-    this.bounds = sanitizeBrowserBounds(bounds)
+    this.bounds = this.fitBoundsToWindow(bounds)
     this.syncActiveBounds()
   }
 
@@ -267,7 +272,7 @@ export class TabManager {
   }
 
   endDividerDrag(bounds: BrowserBounds): void {
-    this.bounds = sanitizeBrowserBounds(bounds)
+    this.bounds = this.fitBoundsToWindow(bounds)
     this.isDraggingDivider = false
     this.syncActiveBounds()
   }
@@ -352,6 +357,11 @@ export class TabManager {
     const active = this.getActiveTab()
     active?.view.setVisible(!hidden)
     active?.view.setBounds(hidden ? hiddenBrowserBounds : this.bounds)
+  }
+
+  private fitBoundsToWindow(bounds: BrowserBounds): BrowserBounds {
+    const contentBounds = this.window.getContentBounds()
+    return fitBrowserBounds(bounds, contentBounds.width, contentBounds.height)
   }
 
   private async startNavigation(

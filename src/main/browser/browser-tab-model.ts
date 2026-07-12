@@ -43,6 +43,25 @@ export function sanitizeBrowserBounds(bounds: BrowserBounds): BrowserBounds {
   }
 }
 
+export function fitBrowserBounds(
+  bounds: BrowserBounds,
+  containerWidth: number,
+  containerHeight: number
+): BrowserBounds {
+  const sanitized = sanitizeBrowserBounds(bounds)
+  const width = Math.max(1, Math.round(containerWidth))
+  const height = Math.max(1, Math.round(containerHeight))
+  const x = Math.min(sanitized.x, width - 1)
+  const y = Math.min(sanitized.y, height - 1)
+
+  return {
+    x,
+    y,
+    width: Math.min(sanitized.width, width - x),
+    height: Math.min(sanitized.height, height - y)
+  }
+}
+
 export function safeWebContentsUrl(webContents: WebContents): string {
   if (webContents.isDestroyed()) {
     return ''
