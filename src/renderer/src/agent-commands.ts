@@ -49,7 +49,7 @@ export function createAgentCommands(options: {
     options.cancelRecovery(key)
 
     try {
-      const agentModel = session.model ?? options.getSelectedModel()
+      const agentModel = session.model ?? options.getDefaultModel(session.provider)
       if (attachments.some((attachment) => attachment.kind === 'image') && !options.acceptsImages(agentModel)) {
         store.appendMessage(key, {
           id: crypto.randomUUID(),
@@ -57,6 +57,40 @@ export function createAgentCommands(options: {
           text: '⚠ The selected model does not accept image inputs. Choose an image-capable model or remove the image.'
         })
         return false
+      }
+
+      const outgoing = (): string =>
+        session.watchesMain ? `${options.buildMainChatContext()}\n\n${text}` : text
+
+      if (session.provider === 'claude') {
+        // Claude has no separate startThread: the first sendMessage creates the
+        // session and returns its id. Queue the key so a session.started event
+        // that beats the IPC response still binds to this tab.
+        const needsThread = !session.threadId
+        if (needsThread) store.startQueueRef.current.push(key)
+        store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
+        try {
+          const response = await window.api.claude.sendMessage({
+            threadId: session.threadId,
+            text: outgoing(),
+            attachments,
+            cwd: options.getWorkspace(),
+            model: agentModel,
+            effort: asClaudeEffort(session.reasoningEffort ?? options.getSelectedEffort()),
+            collaborationMode: 'default'
+          })
+          bindAgentThread(key, response.threadId)
+          store.patchSession(key, (current) => ({
+            ...current,
+            status: 'working',
+            turnId: response.turnId
+          }))
+        } finally {
+          if (needsThread) {
+            store.startQueueRef.current = store.startQueueRef.current.filter((queued) => queued !== key)
+          }
+        }
+        return true
       }
 
       let threadId = session.threadId
@@ -73,10 +107,9 @@ export function createAgentCommands(options: {
       }
 
       store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
-      const outgoingText = session.watchesMain ? `${options.buildMainChatContext()}\n\n${text}` : text
       const response = await window.api.codex.sendMessage({
         threadId,
-        text: outgoingText,
+        text: outgoing(),
         attachments,
         cwd: options.getWorkspace(),
         model: agentModel,
