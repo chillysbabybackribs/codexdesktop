@@ -74,10 +74,8 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   const webResearchTask =
     /https?:\/\//.test(normalized) ||
     /\b(research|browse|look ?up|google|online|on the web|web search|news|pricing|reddit|forum|reviews|citations?)\b/.test(normalized)
-  const polishedUiTask =
+  const mediaLedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
-    /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
-  const mediaLedUiTask = polishedUiTask &&
     /\b(landing page|website|marketing|brand|shop|store|restaurant|cafe|coffee|hotel|travel|fashion|beauty|food|product page|portfolio|editorial|event)\b/.test(normalized)
 
   return skills.filter((skill) => {
@@ -93,7 +91,7 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
       return mediaLedUiTask
     }
 
-    return skill.name === 'build-polished-ui' && polishedUiTask
+    return false
   })
 }
 

@@ -76,7 +76,12 @@ export async function restoreAgentDock(options: {
       if (!session.threadId) return
       try {
         const resumed = await window.api.codex.resumeThread(session.threadId)
-        let turns = resumed.thread.turns.length > 0 ? resumed.thread.turns : resumed.initialTurnsPage?.data ?? []
+        let turns = resumed.thread.turns.length > 0
+          ? resumed.thread.turns
+          // The shared resume request asks for newest-first to keep startup
+          // payloads small. Rebuild the compact agent transcript in reading
+          // order before taking its recent tail.
+          : [...(resumed.initialTurnsPage?.data ?? [])].reverse()
         if (!turns.length) turns = (await window.api.codex.readThread(session.threadId)).thread.turns
 
         const messages: AgentLiteMessage[] = []

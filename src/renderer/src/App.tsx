@@ -430,15 +430,17 @@ export default function App(): React.JSX.Element {
         const threadsPromise = refreshThreads()
         // Main thread first — it warms up the codex child, so the dock's
         // resume calls don't race a cold start. The dock restore then skips
-        // any thread the main view already owns.
-        const restorePromise = (async () => {
+        // any thread the main view already owns. Dock history is deliberately
+        // not part of the interactive startup gate: a stale collection of
+        // helpers must not hold the focused conversation hostage.
+        const restoreMainThreadPromise = (async () => {
           if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
-          await restoreAgentDock()
         })()
 
-        await Promise.all([authPromise, threadsPromise, restorePromise])
+        await Promise.all([authPromise, threadsPromise, restoreMainThreadPromise])
         hasAutoRestoredRef.current = true
         setIsRestoring(false)
+        void restoreAgentDock()
       })()
     }
 
@@ -1476,7 +1478,11 @@ export default function App(): React.JSX.Element {
       reasoningEffort: ReasoningEffort | null
     }
   ): void {
-    const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
+    const turns = thread.turns.length > 0
+      ? thread.turns
+      // Codex returns the bounded bootstrap page newest-first so it can show
+      // recent work immediately. Transcript rendering remains chronological.
+      : [...(fallbackTurns ?? [])].reverse()
 
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()

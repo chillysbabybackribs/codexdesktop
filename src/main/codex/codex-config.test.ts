@@ -25,14 +25,6 @@ const priorChatMemorySkill: SkillMetadata = {
   enabled: true
 }
 
-const polishedUiSkill: SkillMetadata = {
-  name: 'build-polished-ui',
-  description: 'Design and build polished responsive interfaces',
-  path: '/app/skills/build-polished-ui/SKILL.md',
-  scope: 'user',
-  enabled: true
-}
-
 const imagegenSkill: SkillMetadata = {
   name: 'imagegen',
   description: 'Generate or edit project-bound raster assets',
@@ -55,30 +47,16 @@ test('unrelated implementation turns do not load the extraction skill', () => {
   )
 })
 
-test('frontend design turns automatically attach the polished UI skill', () => {
+test('media-led website turns attach image generation guidance', () => {
   assert.deepEqual(
-    selectTurnSkills('Build a polished responsive dashboard UI', [polishedUiSkill]),
-    [polishedUiSkill]
-  )
-})
-
-test('media-led website turns attach both polished UI and image generation guidance', () => {
-  assert.deepEqual(
-    selectTurnSkills('Create a premium responsive coffee shop website', [polishedUiSkill, imagegenSkill]),
-    [polishedUiSkill, imagegenSkill]
+    selectTurnSkills('Create a premium responsive coffee shop website', [imagegenSkill]),
+    [imagegenSkill]
   )
 })
 
 test('product dashboards do not attach image generation guidance by default', () => {
   assert.deepEqual(
-    selectTurnSkills('Design a responsive operations dashboard UI', [polishedUiSkill, imagegenSkill]),
-    [polishedUiSkill]
-  )
-})
-
-test('unrelated coding turns do not load the polished UI skill', () => {
-  assert.deepEqual(
-    selectTurnSkills('Refactor the tab manager and run its tests', [polishedUiSkill]),
+    selectTurnSkills('Design a responsive operations dashboard UI', [imagegenSkill]),
     []
   )
 })

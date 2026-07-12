@@ -49,6 +49,10 @@ import { LocalSkillRegistry } from './local-skill-registry.js'
 // of the model window, well before codex-core's own end-of-window handling, so
 // long threads stay responsive instead of riding the limit.
 const autoCompactContextRatio = 0.8
+// The renderer needs enough history to orient the user, not an unbounded
+// transcript before it can become interactive. Request the newest turns; the
+// app-server still owns the complete thread context for the next turn.
+const initialResumeTurnsLimit = 60
 
 // Threads without a chosen workspace must never run against $HOME: codex
 // permanently records the cwd as a trusted project in the user's
@@ -229,8 +233,8 @@ export class CodexClient extends EventEmitter {
       // duplicates that history and makes large persisted chats feel frozen.
       excludeTurns: true,
       initialTurnsPage: {
-        limit: 500,
-        sortDirection: 'asc',
+        limit: initialResumeTurnsLimit,
+        sortDirection: 'desc',
         itemsView: 'full'
       }
     })

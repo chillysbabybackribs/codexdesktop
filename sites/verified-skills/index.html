@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>Verified Skills — Codex Desktop</title>
+    <meta
+      name="description"
+      content="A functional prototype for discovering, inspecting, testing, and installing verified agent skills."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalog">Skip to catalog</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="Verified Skills home">
+        <span class="wordmark-mark" aria-hidden="true">V</span>
+        <span>Verified Skills</span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="#catalog">Registry</a>
+        <a href="#method">How verification works</a>
+        <button class="saved-button" type="button" aria-label="View saved skills">
+          Saved <span id="savedCount">0</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="edition-line"><span>Registry No. 01</span><span>Reviewed July 2026</span></p>
+          <h1 id="hero-title">Add capability.<br /><em>Keep control.</em></h1>
+          <p class="hero-deck">
+            A quieter kind of marketplace: every skill opens with its source,
+            scan, files, and behavior before it reaches your workspace.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#catalog">Browse verified skills <span aria-hidden="true">↓</span></a>
+            <button class="text-action" type="button" data-open-method>Read the verification note</button>
+          </div>
+          <dl class="registry-proof" aria-label="Registry proof points">
+            <div><dt>Security</dt><dd>Scanned before install</dd></div>
+            <div><dt>Source</dt><dd>Pinned to a commit</dd></div>
+            <div><dt>Removal</dt><dd>File-level inventory</dd></div>
+          </dl>
+        </div>
+
+        <article class="passport" aria-labelledby="passport-name">
+          <header class="passport-header">
+            <div>
+              <p>Skill passport <span>VS—0042</span></p>
+              <h2 id="passport-name">Frontend Design Principles</h2>
+            </div>
+            <div class="verified-seal" aria-label="Security scan passed">
+              <span aria-hidden="true">✓</span>
+              <small>Scan<br />passed</small>
+            </div>
+          </header>
+
+          <div class="passport-source">
+            <span class="source-avatar" aria-hidden="true">JT</span>
+            <div><strong>joshuadavidthomas / agent-skills</strong><span>Publisher source</span></div>
+            <code>d5d3760</code>
+          </div>
+
+          <div class="passport-score" aria-label="Quality score 92 out of 100">
+            <div><span>Quality evidence</span><strong>92</strong><small>/ 100</small></div>
+            <div class="score-track"><i style="--score: 92%"></i></div>
+            <p>Average across three task evaluations</p>
+          </div>
+
+          <div class="passport-ledger">
+            <div><span>01</span><strong>Instructions</strong><small>SKILL.md</small></div>
+            <div><span>02</span><strong>Context guide</strong><small>marketing.md</small></div>
+            <div><span>03</span><strong>Principles</strong><small>references/</small></div>
+          </div>
+
+          <footer class="passport-footer">
+            <button class="button button-ink" type="button" data-open-test>Test in a clean chat</button>
+            <button class="bookmark" type="button" aria-pressed="false" aria-label="Save Frontend Design Principles">
+              <span aria-hidden="true">＋</span> Save
+            </button>
+          </footer>
+          <p class="passport-caption">Nothing installs until you approve the manifest.</p>
+        </article>
+      </section>
+
+      <section class="catalog" id="catalog" aria-labelledby="catalog-title">
+        <div class="catalog-heading">
+          <div>
+            <p class="section-index">The registry / 001—006</p>
+            <h2 id="catalog-title">Skills worth<br />letting in.</h2>
+          </div>
+          <p>
+            Six test records for this prototype. Search and filtering work locally;
+            installation and scans are clearly simulated.
+          </p>
+        </div>
+
+        <div class="catalog-tools">
+          <label class="search-field" for="skillSearch">
+            <span>Search the ledger</span>
+            <input id="skillSearch" type="search" placeholder="Try “design” or “research”" autocomplete="off" />
+          </label>
+          <div class="filters" role="group" aria-label="Filter skills">
+            <button type="button" class="filter is-active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="filter" data-filter="design" aria-pressed="false">Design</button>
+            <button type="button" class="filter" data-filter="research" aria-pressed="false">Research</button>
+            <button type="button" class="filter" data-filter="workflow" aria-pressed="false">Workflow</button>
+          </div>
+        </div>
+
+        <div class="skill-ledger" id="skillLedger" aria-live="polite"></div>
+        <div class="empty-state" id="emptyState" hidden>
+          <span aria-hidden="true">∅</span>
+          <h3>No matching record</h3>
+          <p>Try a broader term or clear the active category.</p>
+          <button class="text-action" type="button" id="clearSearch">Clear search and filters</button>
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <p class="section-index">Verification note / methodology</p>
+        <div class="method-grid">
+          <h2 id="method-title">Trust is a trail,<br />not a badge.</h2>
+          <div class="method-copy">
+            <p>
+              A scan can reduce risk; it cannot make an instruction package harmless.
+              Verified Skills keeps the evidence close to the decision and preserves the
+              exact version you reviewed.
+            </p>
+            <ol>
+              <li><span>01</span><div><strong>Read the behavior</strong><p>Inspect instructions, scripts, external access, and requested tools.</p></div></li>
+              <li><span>02</span><div><strong>Pin the source</strong><p>Install the reviewed commit—not a moving branch or mutable download.</p></div></li>
+              <li><span>03</span><div><strong>Test in isolation</strong><p>Try a representative prompt before enabling the skill in daily work.</p></div></li>
+              <li><span>04</span><div><strong>Remove cleanly</strong><p>Keep a file inventory so uninstall touches only what the skill added.</p></div></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div><span class="wordmark-mark" aria-hidden="true">V</span><strong>Verified Skills</strong></div>
+      <p>Functional design prototype · No live marketplace transactions</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+
+    <dialog class="test-dialog" id="testDialog" aria-labelledby="test-title">
+      <form method="dialog" class="dialog-frame">
+        <header>
+          <div><p>Isolated test / Frontend Design Principles</p><h2 id="test-title">Try the behavior before the install.</h2></div>
+          <button class="dialog-close" value="cancel" aria-label="Close test dialog">×</button>
+        </header>
+        <div class="test-terminal">
+          <label for="testPrompt">Test prompt</label>
+          <textarea id="testPrompt" rows="4">Design a premium skills registry landing page where trust comes from evidence, not star ratings.</textarea>
+          <div class="test-meta"><span>Clean temporary chat</span><span>No workspace files attached</span></div>
+          <button class="button button-primary run-test" type="button">Run simulated test <span aria-hidden="true">→</span></button>
+          <div class="test-result" role="status" aria-live="polite" hidden>
+            <span class="result-mark" aria-hidden="true">✓</span>
+            <div><strong>Test completed</strong><p>The skill produced a domain, color world, signature device, and rejected defaults before implementation.</p></div>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>
