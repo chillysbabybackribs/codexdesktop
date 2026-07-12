@@ -42,7 +42,7 @@ import {
 import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
-  browserDynamicTools,
+  codexDynamicTools,
   buildCollaborationMode,
   buildGuidance,
   legacyResumeConfig,
@@ -50,6 +50,8 @@ import {
   resolveTurnPolicy
 } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
+import { PlanningCoordinator } from './planning/planning-coordinator.js'
+import type { PlanningState } from '../../shared/ipc.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
@@ -60,6 +62,7 @@ export class CodexClient extends EventEmitter {
   private readonly appServer: AppServerProcess
   private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
+  private readonly planning = new PlanningCoordinator((state) => this.emit('planningState', state))
   private readonly threadModels = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
@@ -194,7 +197,7 @@ export class CodexClient extends EventEmitter {
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
       config: newThreadConfig,
-      dynamicTools: browserDynamicTools,
+      dynamicTools: codexDynamicTools,
       developerInstructions: buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)
@@ -266,6 +269,9 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
+    if (collaborationMode === 'plan') this.planning.begin(activeThreadId)
+    const planningReadOnly = collaborationMode === 'plan' && this.planning.isReadOnly(activeThreadId)
+    const effectiveCollaborationMode = planningReadOnly ? 'plan' : 'default'
     const input = this.localSkills.buildTurnInput(
       text,
       !threadId,
@@ -275,6 +281,7 @@ export class CodexClient extends EventEmitter {
     const effectiveModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     const effectiveEffort = requestedEffort
+    const approvedPlan = this.planning.approvedPlanContext(activeThreadId)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -284,7 +291,13 @@ export class CodexClient extends EventEmitter {
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
       ...(collaborationMode && effectiveModel
-        ? { collaborationMode: buildCollaborationMode(collaborationMode, effectiveModel, requestedEffort) }
+        ? { collaborationMode: buildCollaborationMode(effectiveCollaborationMode, effectiveModel, requestedEffort) }
+        : {}),
+      ...(planningReadOnly
+        ? { sandboxPolicy: { type: 'readOnly' as const, networkAccess: false } }
+        : {}),
+      ...(approvedPlan
+        ? { additionalContext: { approvedPlan: { kind: 'application' as const, value: approvedPlan } } }
         : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
@@ -304,6 +317,18 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     this.researchRunner.cancel(turnId)
     return this.request('turn/interrupt', { threadId, turnId })
+  }
+
+  getPlanningState(threadId: string): PlanningState | null {
+    return this.planning.get(threadId)
+  }
+
+  approvePlanning(params: { threadId: string; revision: number }): PlanningState {
+    return this.planning.approve(params.threadId, params.revision)
+  }
+
+  requestPlanningChanges(params: { threadId: string; revision: number }): PlanningState {
+    return this.planning.requestChanges(params.threadId, params.revision)
   }
 
   async steerTurn(threadId: string, turnId: string, text: string): Promise<unknown> {
@@ -391,9 +416,14 @@ export class CodexClient extends EventEmitter {
     } else if (notification.method === 'thread/tokenUsage/updated') {
       this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
     } else if (notification.method === 'turn/completed') {
+      this.planning.finishExecution(
+        notification.params.threadId,
+        notification.params.turn.status === 'completed'
+      )
       this.maybeAutoCompact(notification.params.threadId)
     } else if (notification.method === 'thread/compacted') {
       this.compactionsInFlight.delete(notification.params.threadId)
+      this.planning.clear(notification.params.threadId)
     } else if (
       notification.method === 'thread/deleted' ||
       notification.method === 'thread/closed'
@@ -458,6 +488,39 @@ export class CodexClient extends EventEmitter {
   }
 
   private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
+    if (!this.planning.allowsDynamicTool(params.threadId, params.tool)) {
+      this.rpc.respond(id, {
+        success: false,
+        contentItems: [{
+          type: 'inputText',
+          text: JSON.stringify({ ok: false, error: `${params.tool} is unavailable until the current plan is approved.` })
+        }]
+      })
+      return
+    }
+
+    if (params.tool === 'submit_plan') {
+      try {
+        const state = this.planning.submit(params.threadId, params.arguments)
+        this.rpc.respond(id, {
+          success: true,
+          contentItems: [{
+            type: 'inputText',
+            text: JSON.stringify({ ok: true, revision: state.revision, phase: state.phase })
+          }]
+        })
+      } catch (error) {
+        this.rpc.respond(id, {
+          success: false,
+          contentItems: [{
+            type: 'inputText',
+            text: JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) })
+          }]
+        })
+      }
+      return
+    }
+
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
       researchRunner: this.researchRunner
