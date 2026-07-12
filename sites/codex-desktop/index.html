@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Codex Desktop — The coding agent, at home on your desktop</title>
+    <meta
+      name="description"
+      content="Codex Desktop puts the conversation beside the files, tools, and a real Chromium browser the work depends on. A local-first desktop client for Codex and Claude. Download for macOS, Windows, and Linux."
+    />
+    <meta property="og:title" content="Codex Desktop" />
+    <meta
+      property="og:description"
+      content="Work with a coding agent in one focused desktop app — chat beside your files, tools, and a real browser."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0c0c0d" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#download">Skip to download</a>
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="site-header" id="top">
+      <a class="wordmark" href="#top" aria-label="Codex Desktop home">
+        <span class="wordmark-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5.5 6.5h13v9h-7l-4.5 3v-3H5.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span class="wordmark-text">Codex Desktop</span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="#workspace">Workspace</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#download">Download</a>
+      </nav>
+      <a class="header-download" href="#download">
+        Download
+        <span aria-hidden="true">↓</span>
+      </a>
+    </header>
+
+    <main>
+      <!-- ── HERO ─────────────────────────────────────────────── -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span>Desktop client · v0.1</p>
+            <h1 id="hero-title">The coding agent,<br /><em>at home on your desktop.</em></h1>
+            <p class="hero-deck">
+              Codex Desktop keeps the conversation beside the context the work
+              depends on — your files, your tools, and a real Chromium browser.
+              One window. Local-first. No tab-hopping.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" id="hero-download" href="#download" data-download-primary>
+                <span class="button-os-icon" data-os-icon aria-hidden="true"></span>
+                <span data-download-label>Download</span>
+                <span class="button-sub" data-download-sub></span>
+              </a>
+              <a class="text-action" href="#workspace">See the workspace <span aria-hidden="true">↓</span></a>
+            </div>
+            <dl class="hero-proof" aria-label="At a glance">
+              <div><dt>Runs</dt><dd>macOS · Windows · Linux</dd></div>
+              <div><dt>Model</dt><dd>Codex &amp; Claude</dd></div>
+              <div><dt>Data</dt><dd>Local-first, your keys</dd></div>
+            </dl>
+          </div>
+
+          <!-- Product shell — a faithful, static render of the real app -->
+          <div class="shell" role="img" aria-label="A render of the Codex Desktop app: a chat conversation beside an embedded browser.">
+            <div class="shell-glow" aria-hidden="true"></div>
+            <div class="window" aria-hidden="true">
+              <div class="titlebar">
+                <div class="traffic"><i></i><i></i><i></i></div>
+                <span class="titlebar-title">Codex Desktop</span>
+                <div class="titlebar-spacer"></div>
+              </div>
+              <div class="window-body">
+                <aside class="sidebar">
+                  <div class="brand">
+                    <span class="brand-mark">
+                      <svg viewBox="0 0 24 24" fill="none"><path d="M5.5 6.5h13v9h-7l-4.5 3v-3H5.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /></svg>
+                    </span>
+                    Codex
+                  </div>
+                  <div class="new-chat"><span>+</span> New chat</div>
+                  <p class="sidebar-label">Recent</p>
+                  <div class="thread active"><span class="thread-dot"></span>Landing page direction</div>
+                  <div class="thread"><span class="thread-dot"></span>Embed the browser pane</div>
+                  <div class="thread"><span class="thread-dot"></span>Review the diff</div>
+                  <p class="sidebar-label">Workspace</p>
+                  <div class="workspace"><span class="workspace-dot"></span>codexdesktop</div>
+                </aside>
+
+                <section class="chat">
+                  <header class="chat-head">
+                    <div>
+                      <strong>Landing page direction</strong>
+                      <span>codexdesktop · main</span>
+                    </div>
+                    <em>Local</em>
+                  </header>
+                  <div class="conversation">
+                    <div class="msg-user">Make the demo the focal point and keep it calm and on-brand.</div>
+                    <div class="msg-agent">
+                      <span class="agent-mark">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M5.5 6.5h13v9h-7l-4.5 3v-3H5.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /></svg>
+                      </span>
+                      <div>
+                        <strong>Codex</strong>
+                        <p>On it — I'll match the app's surface ramp and verify every breakpoint.</p>
+                        <div class="activity"><span class="activity-dot"></span>Editing styles.css<time>2s</time></div>
+                        <div class="file-change"><b>+128</b><b>−12</b><span>sites/codex-desktop/styles.css</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="composer"><span>Ask Codex to change this project…</span><b>↑</b></div>
+                </section>
+
+                <aside class="browser">
+                  <div class="browserbar"><span>⌕</span><div>localhost:5173/landing.html</div><b>⋯</b></div>
+                  <div class="browserpage">
+                    <div class="browsernav"><span>Codex Desktop</span><i>Download</i></div>
+                    <div class="browserhero">
+                      <small>PREVIEW</small>
+                      <h3>The coding agent, at home on your desktop.</h3>
+                      <p>Chat beside your files, tools, and a real browser.</p>
+                      <span>Download →</span>
+                    </div>
+                    <div class="browsermedia"><i></i></div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MARQUEE / TRUST ──────────────────────────────────── -->
+      <section class="strip" aria-label="Principles">
+        <ul>
+          <li>Local-first</li>
+          <li aria-hidden="true">·</li>
+          <li>Bring your own keys</li>
+          <li aria-hidden="true">·</li>
+          <li>Native Chromium</li>
+          <li aria-hidden="true">·</li>
+          <li>Durable memory</li>
+          <li aria-hidden="true">·</li>
+          <li>Open releases</li>
+        </ul>
+      </section>
+
+      <!-- ── WORKSPACE ────────────────────────────────────────── -->
+      <section class="feature-lead" id="workspace" aria-labelledby="workspace-title">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>One focused workspace</p>
+        <h2 id="workspace-title">Keep the work in view.</h2>
+        <p class="lead-deck">
+          A chat panel is only half the job. Codex Desktop puts the conversation
+          next to the things the work actually touches — so context never leaves
+          the window.
+        </p>
+      </section>
+
+      <!-- ── CAPABILITIES GRID ────────────────────────────────── -->
+      <section class="capabilities" id="capabilities" aria-label="Capabilities">
+        <article class="cap cap-wide" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 8.5h19M6 6.4h.01M8.5 6.4h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 8.5v11" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>A real browser, right beside the chat</h3>
+          <p>
+            The browser pane is a native Chromium surface — not a screenshot, not
+            an iframe. The agent can open pages, research, and drive the web while
+            you watch it happen in the same window.
+          </p>
+        </article>
+
+        <article class="cap" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H13l3 3h1.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-11Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Beside your files</h3>
+          <p>Point it at a workspace and it edits in place — diffs, file changes, and reviews stay attached to the thread.</p>
+        </article>
+
+        <article class="cap" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Durable memory</h3>
+          <p>Provider-neutral long-term memory carries context between conversations, so it recalls what you told it last week.</p>
+        </article>
+
+        <article class="cap" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6.5v5c0 4.5 3.2 7.6 8 9 4.8-1.4 8-4.5 8-9v-5L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Local-first, your keys</h3>
+          <p>Runs on your machine and talks to the providers you choose. Your workspace and credentials stay yours.</p>
+        </article>
+
+        <article class="cap" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="6.5" width="13" height="11" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 11h5M10 8.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M17.5 4.5v5M15 7h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Codex &amp; Claude</h3>
+          <p>Switch the engine behind the same interface — Codex or Claude — without leaving the app you already have open.</p>
+        </article>
+
+        <article class="cap cap-wide cap-quiet" data-reveal>
+          <div class="cap-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 4.5h9l4 4v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 4.5V9h4.5M8.5 13h7M8.5 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Skills, discovered locally</h3>
+          <p>
+            Drop reusable workflows into your project and Codex Desktop finds and
+            attaches them automatically — no registry round-trip, no copy-paste
+            into a prompt.
+          </p>
+        </article>
+      </section>
+
+      <!-- ── DOWNLOAD ─────────────────────────────────────────── -->
+      <section class="download" id="download" aria-labelledby="download-title">
+        <div class="download-head">
+          <p class="eyebrow"><span class="eyebrow-dot"></span>Get the app</p>
+          <h2 id="download-title">Download Codex Desktop.</h2>
+          <p class="download-deck" data-detected-note>Free, and open on GitHub. Pick your platform.</p>
+        </div>
+
+        <div class="platforms">
+          <article class="platform" data-platform="mac">
+            <div class="platform-top">
+              <span class="platform-glyph" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.3 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.4-.9-2.4-3.9ZM14.1 5.6c.6-.8 1-1.9.9-3-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.8-1 2.8 1 .1 2-.5 2.7-1.2Z"/></svg>
+              </span>
+              <div>
+                <h3>macOS</h3>
+                <p>Apple silicon &amp; Intel</p>
+              </div>
+              <span class="platform-badge" data-badge hidden>Your platform</span>
+            </div>
+            <a class="button button-platform" href="https://github.com/chillysbabybackribs/codexdesktop/releases/latest" data-dl="mac">
+              Download <b>.dmg</b>
+            </a>
+            <p class="platform-meta">Universal disk image · macOS 12+</p>
+          </article>
+
+          <article class="platform" data-platform="windows">
+            <div class="platform-top">
+              <span class="platform-glyph" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.4 10.5 4.3v7.2H3V5.4Zm0 13.2L10.5 19.7v-7.1H3v6ZM11.5 4.1 21 2.8v8.7h-9.5V4.1Zm0 8.4H21v8.7l-9.5-1.3v-7.4Z"/></svg>
+              </span>
+              <div>
+                <h3>Windows</h3>
+                <p>x64 installer</p>
+              </div>
+              <span class="platform-badge" data-badge hidden>Your platform</span>
+            </div>
+            <a class="button button-platform" href="https://github.com/chillysbabybackribs/codexdesktop/releases/latest" data-dl="windows">
+              Download <b>.exe</b>
+            </a>
+            <p class="platform-meta">NSIS installer · Windows 10+</p>
+          </article>
+
+          <article class="platform" data-platform="linux">
+            <div class="platform-top">
+              <span class="platform-glyph" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c-2 0-3.2 1.7-3.2 3.9 0 1.3.2 2-.5 3.2-.8 1.3-2.4 2.9-2.4 5.3 0 .8.2 1.4.2 1.9-.4.4-1.1 1-.9 1.7.2.6 1 .6 1.8.8.8.2 1.4.7 2.2.8.6.1 1.2-.3 1.4-.9h2.8c.2.6.8 1 1.4.9.8-.1 1.4-.6 2.2-.8.8-.2 1.6-.2 1.8-.8.2-.7-.5-1.3-.9-1.7 0-.5.2-1.1.2-1.9 0-2.4-1.6-4-2.4-5.3-.7-1.2-.5-1.9-.5-3.2 0-2.2-1.2-3.9-3.2-3.9Zm-1.5 4.1c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9Zm3 0c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9Z"/></svg>
+              </span>
+              <div>
+                <h3>Linux</h3>
+                <p>AppImage</p>
+              </div>
+              <span class="platform-badge" data-badge hidden>Your platform</span>
+            </div>
+            <a class="button button-platform" href="https://github.com/chillysbabybackribs/codexdesktop/releases/latest" data-dl="linux">
+              Download <b>.AppImage</b>
+            </a>
+            <p class="platform-meta">Portable · glibc 2.31+</p>
+          </article>
+        </div>
+
+        <p class="download-foot">
+          All builds are published on
+          <a href="https://github.com/chillysbabybackribs/codexdesktop/releases">GitHub Releases</a>.
+          Prefer to build from source? <a href="https://github.com/chillysbabybackribs/codexdesktop">Read the repo</a>.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a class="wordmark" href="#top" aria-label="Codex Desktop home">
+          <span class="wordmark-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5.5 6.5h13v9h-7l-4.5 3v-3H5.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /></svg>
+          </span>
+          <span class="wordmark-text">Codex Desktop</span>
+        </a>
+        <nav aria-label="Footer">
+          <a href="#workspace">Workspace</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#download">Download</a>
+          <a href="https://github.com/chillysbabybackribs/codexdesktop">GitHub ↗</a>
+        </nav>
+        <p class="colophon">An Electron client for Codex and Claude. Local-first.</p>
+      </div>
+    </footer>
+  </body>
+</html>
