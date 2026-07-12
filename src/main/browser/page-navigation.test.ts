@@ -8,6 +8,7 @@ class FakeWebContents extends EventEmitter {
   stopCalls = 0
   loadedUrl = ''
   destroyed = false
+  executedPrograms: string[] = []
 
   stop(): void {
     this.stopCalls += 1
@@ -21,7 +22,8 @@ class FakeWebContents extends EventEmitter {
     return new Promise<void>(() => {})
   }
 
-  executeJavaScript(): Promise<{ reason: string }> {
+  executeJavaScript(program: string): Promise<{ reason: string }> {
+    this.executedPrograms.push(program)
     return Promise.resolve({ reason: 'dom-quiet' })
   }
 
@@ -63,4 +65,16 @@ test('aborting navigation stops the underlying page load', async () => {
 
   await assert.rejects(navigation, /navigation aborted/)
   assert.ok(contents.stopCalls >= 2)
+})
+
+test('navigation can settle against a targeted readiness selector', async () => {
+  const contents = new FakeWebContents()
+  await loadPageAndSettle(
+    contents as unknown as WebContents,
+    'https://www.google.com/search?q=research',
+    { timeoutMs: 1_000, readySelector: 'a[href] h3', quietMs: 100, maxSettleMs: 750 }
+  )
+
+  assert.match(contents.executedPrograms[0], /const readySelector = "a\[href\] h3"/)
+  assert.match(contents.executedPrograms[0], /document\.querySelector\(readySelector\)/)
 })
