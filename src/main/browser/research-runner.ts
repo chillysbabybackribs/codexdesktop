@@ -287,11 +287,20 @@ export class ResearchRunner {
       rank: number,
       sourceId: string,
       extracted: ExtractedResearchPage,
-      cacheHit: boolean
+      cacheHit: boolean,
+      operationSignal: AbortSignal
     ): Promise<ResearchPageDraft> => {
+      throwIfAborted(operationSignal)
       const title = extracted.title || candidate.title
       const url = extracted.url || candidate.url
-      const paths = await writeResearchPageArtifacts(artifactDir, sourceId, extracted.content, extracted.html)
+      const paths = await writeResearchPageArtifacts(
+        artifactDir,
+        sourceId,
+        extracted.content,
+        extracted.html,
+        operationSignal
+      )
+      throwIfAborted(operationSignal)
       return {
         page: {
           sourceId,
@@ -355,9 +364,12 @@ export class ResearchRunner {
           const cached = this.readPageCache(candidate.url)
           if (cached) {
             try {
+              if (stopSignal.aborted) return null
+              const draft = await materializePage(candidate, rank, sourceId, cached, true, stopSignal)
               pageCacheHits += 1
-              return await materializePage(candidate, rank, sourceId, cached, true)
+              return draft
             } catch (error) {
+              if (stopSignal.aborted) return null
               errors.push({ url: candidate.url, error: `cached artifact write failed: ${formatError(error)}` })
               return null
             }
@@ -372,9 +384,12 @@ export class ResearchRunner {
           }
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
+          const closeOnAbort = (): void => this.closeHiddenView(view)
+          linked.signal.addEventListener('abort', closeOnAbort, { once: true })
           try {
             const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
             recordNavigation(navigation, navigationResult)
+            throwIfAborted(linked.signal)
             const result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
               view.webContents,
               buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
@@ -386,17 +401,20 @@ export class ResearchRunner {
             if (!assessment.verified) {
               throw new Error(`page verification failed: ${assessment.reason}`)
             }
+            throwIfAborted(linked.signal)
 
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
+            const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
-            return materializePage(candidate, rank, sourceId, extracted, false)
+            return draft
           } catch (error) {
             if (signal.aborted) throw error
             if (stopSignal.aborted) return null
             errors.push({ url: candidate.url, error: formatError(error) })
             return null
           } finally {
+            linked.signal.removeEventListener('abort', closeOnAbort)
             linked.dispose()
             this.closeHiddenView(view)
           }
