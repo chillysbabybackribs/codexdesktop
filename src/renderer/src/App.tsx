@@ -2133,28 +2133,28 @@ function ChatPane({
           onSteer={onSteer}
           onStop={onStop}
           onNewThread={onNewThread}
-          footerExtras={
-            <div className="composer-thread-controls">
-              <ContextPill
-                usage={contextUsage}
-                disabled={Boolean(activeTurnId)}
-                compacting={isCompacting}
-                onCompact={onCompactThread}
-              />
-              <ThreadMenu
-                placement="composer"
-                title={title}
-                threads={threads}
-                activeThreadId={activeThreadId}
-                isOpen={isThreadMenuOpen}
-                threadsNextCursor={threadsNextCursor}
-                threadsLoading={threadsLoading}
-                threadsError={threadsError}
-                onToggle={onToggleThreadMenu}
-                onResumeThread={onResumeThread}
-                onLoadMoreThreads={onLoadMoreThreads}
-              />
-            </div>
+          footerLeading={
+            <ThreadMenu
+              placement="composer"
+              title={title}
+              threads={threads}
+              activeThreadId={activeThreadId}
+              isOpen={isThreadMenuOpen}
+              threadsNextCursor={threadsNextCursor}
+              threadsLoading={threadsLoading}
+              threadsError={threadsError}
+              onToggle={onToggleThreadMenu}
+              onResumeThread={onResumeThread}
+              onLoadMoreThreads={onLoadMoreThreads}
+            />
+          }
+          footerTrailing={
+            <ContextPill
+              usage={contextUsage}
+              disabled={Boolean(activeTurnId)}
+              compacting={isCompacting}
+              onCompact={onCompactThread}
+            />
           }
         />
       </div>
@@ -3337,7 +3337,8 @@ function Composer({
   onSteer,
   onStop,
   onNewThread,
-  footerExtras
+  footerLeading,
+  footerTrailing
 }: {
   docked: boolean
   workspace: string | null
@@ -3351,7 +3352,8 @@ function Composer({
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
   onNewThread: () => void
-  footerExtras?: React.ReactNode
+  footerLeading?: React.ReactNode
+  footerTrailing?: React.ReactNode
 }): React.JSX.Element {
   const [value, setValue] = useState('')
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
@@ -3362,6 +3364,7 @@ function Composer({
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
   const hasDraft = Boolean(value.trim() || attachments.length)
+  const visibleStatus = attachmentError ?? (isTurnActive ? null : status)
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
@@ -3495,43 +3498,46 @@ function Composer({
         }}
       />
       <div className="composer-footer">
-        <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{attachmentError ?? status}</span>
-        <div className="composer-actions">
+        <div className="composer-leading-actions">
           <AttachmentButton disabled={isLoading || isTurnActive} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
-          {footerExtras}
-          <div className="composer-primary-action">
-            {isTurnActive ? (
-              <button
-                type="button"
-                className="stop-square-button"
-                aria-label="Stop turn"
-                title="Stop"
-                onClick={() => void onStop()}
-              >
-                <span className="stop-square" aria-hidden="true" />
-              </button>
-            ) : hasDraft ? (
-              <button
-                type="submit"
-                className="send-button"
-                aria-label="Send message"
-                disabled={isLoading}
-              >
-                <SendArrowIcon />
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="send-button composer-new-chat"
-                aria-label="New chat"
-                title="New chat"
-                disabled={isLoading}
-                onClick={onNewThread}
-              >
-                <NewChatIcon />
-              </button>
-            )}
-          </div>
+          {footerLeading}
+        </div>
+        {visibleStatus ? (
+          <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
+        ) : null}
+        {footerTrailing ? <div className="composer-trailing-actions">{footerTrailing}</div> : null}
+        <div className="composer-primary-action">
+          {isTurnActive ? (
+            <button
+              type="button"
+              className="stop-square-button"
+              aria-label="Stop turn"
+              title="Stop"
+              onClick={() => void onStop()}
+            >
+              <span className="stop-square" aria-hidden="true" />
+            </button>
+          ) : hasDraft ? (
+            <button
+              type="submit"
+              className="send-button"
+              aria-label="Send message"
+              disabled={isLoading}
+            >
+              <SendArrowIcon />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="send-button composer-new-chat"
+              aria-label="New chat"
+              title="New chat"
+              disabled={isLoading}
+              onClick={onNewThread}
+            >
+              <NewChatIcon />
+            </button>
+          )}
         </div>
       </div>
     </form>

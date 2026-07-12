@@ -286,13 +286,13 @@ button {
 
 .thread-select-wrap.is-composer .thread-menu {
   top: auto;
-  right: 0;
+  right: auto;
   bottom: calc(100% + 8px);
-  left: auto;
+  left: 0;
   width: min(620px, calc(100vw - 80px));
   max-height: min(56vh, 520px);
   transform: none;
-  transform-origin: bottom right;
+  transform-origin: bottom left;
   animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -2732,13 +2732,6 @@ button {
   padding: 0 2px;
 }
 
-.composer-thread-controls {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  margin-left: auto;
-}
-
 .composer-new-chat {
   flex: 0 0 auto;
   color: #ffffff;
@@ -3785,9 +3778,9 @@ button {
 .composer-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 58px 12px 14px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0 70px 12px 14px;
 }
 
 .composer-status {
@@ -3804,10 +3797,20 @@ button {
   color: #aeb5bc;
 }
 
-.composer-actions {
+.composer-leading-actions,
+.composer-trailing-actions {
   display: flex;
   align-items: center;
-  gap: 7px;
+}
+
+.composer-leading-actions {
+  flex: 0 0 auto;
+  gap: 3px;
+}
+
+.composer-trailing-actions {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .composer-primary-action {
@@ -4003,11 +4006,18 @@ button {
   outline-offset: 2px;
 }
 
-.composer .composer-primary-action .send-button,
-.composer .composer-primary-action .stop-square-button {
+.composer .composer-primary-action .send-button {
   width: 36px;
   height: 36px;
   border-radius: 9px;
+  border-color: #2c2c2c;
+  background: #1c1c1c;
+}
+
+.composer .composer-primary-action .stop-square-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
   border-color: #2c2c2c;
   background: #1c1c1c;
 }
@@ -4886,22 +4896,19 @@ button {
   background: #e0443e;
 }
 
-.composer .stop-square-button {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  border-color: #2c2c2c;
-  background: #1c1c1c;
-}
-
 .composer .stop-square-button:hover {
   background: #241a1a;
   border-color: #4a2a2a;
 }
 
+.composer .stop-square-button:focus-visible {
+  outline: 2px solid #8da9ef;
+  outline-offset: 2px;
+}
+
 .composer .stop-square-button .stop-square {
-  width: 9px;
-  height: 9px;
+  width: 11px;
+  height: 11px;
 }
 
 .agent-overlay-scroll {
