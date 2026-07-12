@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 
@@ -22,12 +23,29 @@ export function ModelPill({
   const [expandedModel, setExpandedModel] = useState<string | null>(null)
   const [reasoningMenuPlacement, setReasoningMenuPlacement] = useState<{
     side: 'left' | 'right'
+    left: number
     top: number
   } | null>(null)
   const wrapRef = useRef<HTMLDivElement | null>(null)
   const menuShellRef = useRef<HTMLDivElement | null>(null)
   const expandedOptionRef = useRef<HTMLDivElement | null>(null)
   const reasoningMenuRef = useRef<HTMLDivElement | null>(null)
+  const hoverCloseTimerRef = useRef<number | null>(null)
+
+  const cancelHoverClose = (): void => {
+    if (hoverCloseTimerRef.current !== null) {
+      window.clearTimeout(hoverCloseTimerRef.current)
+      hoverCloseTimerRef.current = null
+    }
+  }
+
+  const scheduleHoverClose = (): void => {
+    cancelHoverClose()
+    hoverCloseTimerRef.current = window.setTimeout(() => {
+      hoverCloseTimerRef.current = null
+      setExpandedModel(null)
+    }, 180)
+  }
 
   useEffect(() => {
     if (!isOpen) {
@@ -35,8 +53,14 @@ export function ModelPill({
     }
 
     const handlePointerDown = (event: MouseEvent): void => {
-      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) {
+      const target = event.target as Node
+      if (
+        wrapRef.current &&
+        !wrapRef.current.contains(target) &&
+        !reasoningMenuRef.current?.contains(target)
+      ) {
         setIsOpen(false)
+        setExpandedModel(null)
       }
     }
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -53,6 +77,8 @@ export function ModelPill({
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [isOpen])
+
+  useEffect(() => () => cancelHoverClose(), [])
 
   const active =
     models.find((model) => model.model === selectedModel) ??
@@ -89,8 +115,15 @@ export function ModelPill({
       const side = roomOnRight >= menuRect.width + submenuGap || roomOnRight >= roomOnLeft
         ? 'right'
         : 'left'
+      const preferredLeft = side === 'right'
+        ? shellRect.right + submenuGap
+        : shellRect.left - menuRect.width - submenuGap
+      const viewportLeft = Math.min(
+        Math.max(preferredLeft, viewportPadding),
+        Math.max(viewportPadding, window.innerWidth - menuRect.width - viewportPadding)
+      )
 
-      setReasoningMenuPlacement({ side, top: viewportTop - shellRect.top })
+      setReasoningMenuPlacement({ side, left: viewportLeft, top: viewportTop })
     }
 
     placeMenu()
@@ -117,7 +150,12 @@ export function ModelPill({
         <span className="workspace-pill-caret">⌄</span>
       </button>
       {isOpen ? (
-        <div ref={menuShellRef} className="model-menu-shell" onMouseLeave={() => setExpandedModel(null)}>
+        <div
+          ref={menuShellRef}
+          className="model-menu-shell"
+          onMouseEnter={cancelHoverClose}
+          onMouseLeave={scheduleHoverClose}
+        >
           <div className="model-menu" role="menu">
             {models.map((model) => {
               const isActive = model.model === active?.model
@@ -129,6 +167,7 @@ export function ModelPill({
                   key={model.id}
                   className="model-option-wrap"
                   onMouseEnter={(event) => {
+                    cancelHoverClose()
                     expandedOptionRef.current = event.currentTarget
                     setExpandedModel(model.model)
                   }}
@@ -162,15 +201,18 @@ export function ModelPill({
               )
             })}
           </div>
-          {expanded && onSelectModelEffort && expandedEfforts.length ? (
+          {expanded && onSelectModelEffort && expandedEfforts.length ? createPortal(
             <div
               ref={reasoningMenuRef}
               className="reasoning-menu"
               data-side={reasoningMenuPlacement?.side ?? 'right'}
               role="menu"
               aria-label={`${expanded.displayName} reasoning effort`}
+              onMouseEnter={cancelHoverClose}
+              onMouseLeave={scheduleHoverClose}
               style={{
                 top: reasoningMenuPlacement?.top ?? 0,
+                left: reasoningMenuPlacement?.left ?? 0,
                 visibility: reasoningMenuPlacement ? 'visible' : 'hidden'
               }}
             >
@@ -195,7 +237,8 @@ export function ModelPill({
                   </button>
                 )
               })}
-            </div>
+            </div>,
+            document.body
           ) : null}
         </div>
       ) : null}
