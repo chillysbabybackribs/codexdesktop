@@ -5,9 +5,11 @@ import {
   browserDynamicTools,
   buildGuidance,
   formatSkillInvocationText,
+  isWebResearchTask,
   resolveTurnPolicy,
   selectNewThreadSkills,
-  selectTurnSkills
+  selectTurnSkills,
+  shouldAttachPriorChatMemory
 } from './codex-config.js'
 
 const webResearchSkill: SkillMetadata = {
@@ -54,6 +56,18 @@ test('unrelated implementation turns do not load the extraction skill', () => {
     selectTurnSkills('Refactor the tab manager and run its tests', [webResearchSkill]),
     []
   )
+})
+
+test('local review and explanation requests do not load web research', () => {
+  assert.deepEqual(selectTurnSkills('Review this patch for regressions', [webResearchSkill]), [])
+  assert.deepEqual(selectTurnSkills('What is this module responsible for?', [webResearchSkill]), [])
+  assert.deepEqual(selectTurnSkills('Compare these two local config files', [webResearchSkill]), [])
+})
+
+test('fresh public-source requests load web research', () => {
+  assert.equal(isWebResearchTask('Check the latest official Electron documentation'), true)
+  assert.equal(isWebResearchTask('Find current pricing from public sources'), true)
+  assert.equal(isWebResearchTask('Review this local patch'), false)
 })
 
 test('frontend design turns automatically attach the polished UI skill', () => {
@@ -103,9 +117,15 @@ test('explicit skill invocation does not duplicate its marker', () => {
   assert.equal(formatSkillInvocationText(text, [webResearchSkill]), text)
 })
 
-test('new threads attach memory reasoning without classifying the prompt text', () => {
-  assert.deepEqual(selectNewThreadSkills([webResearchSkill, priorChatMemorySkill]), [priorChatMemorySkill])
-  assert.deepEqual(selectNewThreadSkills([priorChatMemorySkill]), [priorChatMemorySkill])
+test('ambiguous continuation threads attach prior chat memory', () => {
+  assert.equal(shouldAttachPriorChatMemory('lets continue'), true)
+  assert.equal(shouldAttachPriorChatMemory('Pick this back up from where we left off'), true)
+  assert.deepEqual(selectNewThreadSkills('lets continue', [webResearchSkill, priorChatMemorySkill]), [priorChatMemorySkill])
+})
+
+test('standalone new threads do not attach prior chat memory', () => {
+  assert.equal(shouldAttachPriorChatMemory('Build a settings page'), false)
+  assert.deepEqual(selectNewThreadSkills('Build a settings page', [priorChatMemorySkill]), [])
 })
 
 test('memory skill does not require a synthetic invocation marker', () => {
@@ -152,6 +172,7 @@ test('research turns keep the configured reasoning effort', () => {
 
 test('implementation turns use automatic reasoning summaries', () => {
   assert.deepEqual(resolveTurnPolicy('Refactor the tab manager and run its tests'), { summary: 'auto' })
+  assert.deepEqual(resolveTurnPolicy('Review this local patch'), { summary: 'auto' })
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {

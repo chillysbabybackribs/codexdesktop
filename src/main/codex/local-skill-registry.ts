@@ -61,7 +61,7 @@ export class LocalSkillRegistry {
 
   buildTurnInput(text: string, isNewThread: boolean, attachments: ChatAttachment[] = []): UserInput[] {
     const turnSkills = selectTurnSkills(text, this.skills)
-    const newThreadSkills = isNewThread ? selectNewThreadSkills(this.skills) : []
+    const newThreadSkills = isNewThread ? selectNewThreadSkills(text, this.skills) : []
     const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
     const visibleText = formatSkillInvocationText(text, turnSkills)
 

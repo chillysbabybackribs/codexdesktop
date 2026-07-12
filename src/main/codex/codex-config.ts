@@ -50,17 +50,36 @@ export const legacyResumeConfig = {
 }
 
 export function resolveTurnPolicy(text: string): { summary: 'auto' | 'concise' } {
-  const normalized = text.trim().toLowerCase()
-  const researchTask = /\b(current|latest|review|compare|research|pricing|news|sources|overall|what is|who is|when is)\b/.test(normalized)
+  return { summary: isWebResearchTask(text) ? 'concise' : 'auto' }
+}
 
-  return { summary: researchTask ? 'concise' : 'auto' }
+export function isWebResearchTask(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (/https?:\/\//.test(normalized)) return true
+
+  const explicitWebAction =
+    /\b(search|research|browse|look up|find online|search online|on the web|from the web|web search)\b/.test(normalized)
+  const publicSource =
+    /\b(official (docs?|documentation)|public sources?|online sources?|citations?|news|pricing|reddit|forums?|reviews?|release notes?|website|webpage|web page)\b/.test(normalized)
+  const freshnessRequirement = /\b(current|currently|latest|recent|today|this week|this month|this year|up[- ]to[- ]date)\b/.test(normalized)
+
+  return explicitWebAction || publicSource || (freshnessRequirement && /\b(find|check|verify|compare|price|version|release)\b/.test(normalized))
+}
+
+export function shouldAttachPriorChatMemory(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (!normalized) return false
+
+  return (
+    /^(let'?s\s+)?(continue|resume|carry on|keep going|pick (?:it|this|that) back up)\b/.test(normalized) ||
+    /\b(previous|prior|last) (chat|thread|conversation|session|work)\b/.test(normalized) ||
+    /\b(where (?:did|were) we|what were we doing|same as before|from where we left off|left off)\b/.test(normalized)
+  )
 }
 
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
   const normalized = text.trim().toLowerCase()
-  const webResearchTask =
-    /https?:\/\//.test(normalized) ||
-    /\b(search|research|browse|look up|find online|on the web|website|webpage|web page|source|sources|citation|citations|current|latest|news|pricing|reddit|forum|reviews?|compare|comparison)\b/.test(normalized)
+  const webResearchTask = isWebResearchTask(text)
   const polishedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
@@ -84,7 +103,8 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   })
 }
 
-export function selectNewThreadSkills(skills: SkillMetadata[]): SkillMetadata[] {
+export function selectNewThreadSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
+  if (!shouldAttachPriorChatMemory(text)) return []
   return skills.filter((skill) => skill.name === 'prior-chat-memory')
 }
 
