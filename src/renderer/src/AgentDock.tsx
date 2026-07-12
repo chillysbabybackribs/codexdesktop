@@ -13,34 +13,109 @@ import { browserLinkComponents } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
-export function AgentTabStrip({
+export function ConversationTabStrip({
   sessions,
-  openKeys,
-  onFocus,
-  onNewAgent
+  selectedKey,
+  mainWorking,
+  onSelectMain,
+  onSelectAgent,
+  onNewAgent,
+  onCloseAgent
 }: {
   sessions: AgentSession[]
-  openKeys: string[]
-  onFocus: (key: string) => void
+  selectedKey: string | null
+  mainWorking: boolean
+  onSelectMain: () => void
+  onSelectAgent: (key: string) => void
   onNewAgent: () => void
+  onCloseAgent: (key: string) => void
 }): React.JSX.Element {
+  const tabRefs = useRef(new Map<string, HTMLButtonElement>())
+  const selectedId = selectedKey ?? 'main'
+
+  useEffect(() => {
+    tabRefs.current.get(selectedId)?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [selectedId, sessions.length])
+
+  const selectByKeyboard = (event: React.KeyboardEvent<HTMLButtonElement>, currentId: string): void => {
+    const ids = ['main', ...sessions.map((session) => session.key)]
+    const currentIndex = Math.max(0, ids.indexOf(currentId))
+    let nextIndex = currentIndex
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % ids.length
+    else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + ids.length) % ids.length
+    else if (event.key === 'Home') nextIndex = 0
+    else if (event.key === 'End') nextIndex = ids.length - 1
+    else return
+
+    event.preventDefault()
+    const nextId = ids[nextIndex]
+    if (nextId === 'main') onSelectMain()
+    else onSelectAgent(nextId)
+    requestAnimationFrame(() => tabRefs.current.get(nextId)?.focus())
+  }
+
+  const registerTab = (id: string, node: HTMLButtonElement | null): void => {
+    if (node) tabRefs.current.set(id, node)
+    else tabRefs.current.delete(id)
+  }
+
   return (
-    <div className="agent-tabs">
-      {sessions.map((session) => (
+    <div className="conversation-tabs" role="tablist" aria-label="Conversations">
+      <div className={`conversation-tab-item is-main ${selectedKey === null ? 'is-active' : ''}`}>
         <button
           type="button"
-          key={session.key}
-          className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''}`}
-          title={session.title}
-          onClick={() => onFocus(session.key)}
+          ref={(node) => registerTab('main', node)}
+          id="conversation-tab-main"
+          className="conversation-tab"
+          role="tab"
+          aria-selected={selectedKey === null}
+          aria-controls="conversation-panel-main"
+          tabIndex={selectedKey === null ? 0 : -1}
+          title="Main chat"
+          onClick={onSelectMain}
+          onKeyDown={(event) => selectByKeyboard(event, 'main')}
         >
-          <AgentStatusIcon status={session.status} />
-          <span className="agent-tab-title">{session.title}</span>
+          {mainWorking ? <span className="agent-status agent-status-spinner" role="status" aria-label="Working" /> : <MainChatIcon />}
+          <span className="conversation-tab-title">Main chat</span>
         </button>
-      ))}
+      </div>
+      <div className="conversation-agent-tabs">
+        {sessions.map((session) => {
+          const active = selectedKey === session.key
+          return (
+            <div className={`conversation-tab-item ${active ? 'is-active' : ''}`} key={session.key}>
+              <button
+                type="button"
+                ref={(node) => registerTab(session.key, node)}
+                id={`conversation-tab-${session.key}`}
+                className="conversation-tab"
+                role="tab"
+                aria-selected={active}
+                aria-controls={`conversation-panel-${session.key}`}
+                tabIndex={active ? 0 : -1}
+                title={session.title}
+                onClick={() => onSelectAgent(session.key)}
+                onKeyDown={(event) => selectByKeyboard(event, session.key)}
+              >
+                <AgentStatusIcon status={session.status} />
+                <span className="conversation-tab-title">{session.title}</span>
+              </button>
+              <button
+                type="button"
+                className="conversation-tab-close"
+                aria-label={`Close ${session.title}`}
+                title="Close agent"
+                onClick={() => onCloseAgent(session.key)}
+              >
+                ×
+              </button>
+            </div>
+          )
+        })}
+      </div>
       <button
         type="button"
-        className="icon-button agent-new-button"
+        className="conversation-new-agent"
         aria-label="New agent"
         title="New agent"
         onClick={onNewAgent}
@@ -51,163 +126,14 @@ export function AgentTabStrip({
   )
 }
 
-export function AgentColumn({
-  sessions,
-  selectedKey,
-  models,
-  mainModel,
-  mainReasoningEffort,
-  onSetModel,
-  onSetModelEffort,
-  onSelect,
-  onMinimize,
-  onCloseSession,
-  onResetSession,
-  onPromote,
-  onToggleWatch,
-  onSend,
-  onSteer,
-  onStop,
-  onCompact
-}: {
-  sessions: AgentSession[]
-  selectedKey: string | null
-  models: Model[]
-  mainModel: string | null
-  mainReasoningEffort: ReasoningEffort | null
-  onSetModel: (key: string, model: string) => void
-  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
-  onSelect: (key: string) => void
-  onMinimize: (key: string) => void
-  onCloseSession: (key: string) => void
-  onResetSession: (key: string) => void
-  onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
-  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
-  onSteer: (key: string, text: string) => Promise<boolean>
-  onStop: (key: string) => Promise<void>
-  onCompact: (key: string) => Promise<void>
-}): React.JSX.Element {
-  const scrollRef = useRef<HTMLDivElement | null>(null)
-  const [hiddenAbove, setHiddenAbove] = useState(0)
-  const [hiddenBelow, setHiddenBelow] = useState(0)
-
-  const updateChevrons = (): void => {
-    const node = scrollRef.current
-    if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    const above = Math.max(0, Math.round(node.scrollTop / slot))
-    const below = Math.max(
-      0,
-      Math.round((node.scrollHeight - node.scrollTop - node.clientHeight) / slot)
-    )
-    setHiddenAbove(above)
-    setHiddenBelow(below)
-  }
-
-  useEffect(() => {
-    updateChevrons()
-  }, [sessions.length])
-
-  useEffect(() => {
-    const handler = (): void => updateChevrons()
-    window.addEventListener('resize', handler)
-    return () => window.removeEventListener('resize', handler)
-  }, [])
-
-  const scrollByWindow = (direction: 1 | -1): void => {
-    const node = scrollRef.current
-    if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    // Absolute target from the CURRENT slot index — repeated clicks land on
-    // exact snap points instead of compounding relative deltas mid-animation.
-    const index = Math.round(node.scrollTop / slot) + direction
-    const target = Math.max(0, Math.min(index * slot, node.scrollHeight - node.clientHeight))
-    node.scrollTo({ top: target, behavior: 'smooth' })
-  }
-
-  return (
-    <div className="agent-column-shell">
-      {hiddenAbove > 0 ? (
-        <button
-          type="button"
-          className="agent-scroll-bar"
-          aria-label={`${hiddenAbove} more agent${hiddenAbove > 1 ? 's' : ''} above`}
-          onClick={() => scrollByWindow(-1)}
-        >
-          <ChevronIcon direction="up" />
-          <span>
-            {hiddenAbove} more {hiddenAbove > 1 ? 'agents' : 'agent'}
-          </span>
-        </button>
-      ) : null}
-      <div ref={scrollRef} className="agent-column" onScroll={updateChevrons}>
-        {sessions.map((session) => (
-          <AgentWindow
-            key={session.key}
-            session={session}
-            isSelected={session.key === selectedKey}
-            models={models}
-            mainModel={mainModel}
-            mainReasoningEffort={mainReasoningEffort}
-            onSetModel={onSetModel}
-            onSetModelEffort={onSetModelEffort}
-            onSelect={onSelect}
-            onMinimize={onMinimize}
-            onCloseSession={onCloseSession}
-            onResetSession={onResetSession}
-            onPromote={onPromote}
-            onToggleWatch={onToggleWatch}
-            onSend={onSend}
-            onSteer={onSteer}
-            onStop={onStop}
-            onCompact={onCompact}
-          />
-        ))}
-      </div>
-      {hiddenBelow > 0 ? (
-        <button
-          type="button"
-          className="agent-scroll-bar"
-          aria-label={`${hiddenBelow} more agent${hiddenBelow > 1 ? 's' : ''} below`}
-          onClick={() => scrollByWindow(1)}
-        >
-          <ChevronIcon direction="down" />
-          <span>
-            {hiddenBelow} more {hiddenBelow > 1 ? 'agents' : 'agent'}
-          </span>
-        </button>
-      ) : null}
-    </div>
-  )
-}
-
-function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Element {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d={direction === 'up' ? 'M5 15l7-7 7 7' : 'M5 9l7 7 7-7'}
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function AgentWindow({
+export function AgentConversationPanel({
   session,
-  isSelected,
+  active,
   models,
   mainModel,
   mainReasoningEffort,
   onSetModel,
   onSetModelEffort,
-  onSelect,
-  onMinimize,
   onCloseSession,
   onResetSession,
   onPromote,
@@ -218,14 +144,12 @@ function AgentWindow({
   onCompact
 }: {
   session: AgentSession
-  isSelected: boolean
+  active: boolean
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
   onSetModel: (key: string, model: string) => void
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
-  onSelect: (key: string) => void
-  onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
@@ -247,11 +171,11 @@ function AgentWindow({
     if (node) node.scrollTop = node.scrollHeight
   }, [session.messages, session.status])
 
-  // Selected windows come up text-ready.
+  // Selected conversations come up text-ready without losing drafts when the
+  // user switches away and back; every panel remains mounted.
   useEffect(() => {
-    if (isSelected) textareaRef.current?.focus()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (active) textareaRef.current?.focus()
+  }, [active])
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
@@ -291,7 +215,7 @@ function AgentWindow({
   // Click-anywhere-to-type: clicking empty window space focuses the composer,
   // but never when the click hit an interactive element or completed a text
   // selection (so copying transcript text still works).
-  const handleWindowClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+  const handleWindowClick = (event: React.MouseEvent<HTMLElement>): void => {
     const target = event.target
     if (target instanceof HTMLElement && target.closest('button, textarea, input, a')) return
     const selection = window.getSelection()
@@ -300,12 +224,13 @@ function AgentWindow({
   }
 
   return (
-    <div
-      className={`agent-overlay ${isSelected ? 'is-selected' : ''}`}
+    <section
+      className="agent-conversation-panel"
       data-agent-key={session.key}
-      role="dialog"
-      aria-label={`Agent: ${session.title}`}
-      onPointerDownCapture={() => onSelect(session.key)}
+      id={`conversation-panel-${session.key}`}
+      role="tabpanel"
+      aria-labelledby={`conversation-tab-${session.key}`}
+      hidden={!active}
       onClick={handleWindowClick}
     >
       <div className="agent-overlay-header">
@@ -334,15 +259,6 @@ function AgentWindow({
             onClick={() => onPromote(session.key)}
           >
             <ExpandIcon />
-          </button>
-          <button
-            type="button"
-            className="icon-button"
-            aria-label="Minimize to tab"
-            title="Minimize to tab"
-            onClick={() => onMinimize(session.key)}
-          >
-            <MinimizeIcon />
           </button>
           <button
             type="button"
@@ -473,7 +389,7 @@ function AgentWindow({
           </button>
         )}
       </form>
-    </div>
+    </section>
   )
 }
 

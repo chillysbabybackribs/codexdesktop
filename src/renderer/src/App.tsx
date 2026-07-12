@@ -10,7 +10,7 @@ import {
   useRef,
   useState
 } from 'react'
-import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
+import { AgentConversationPanel, ConversationTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
@@ -183,7 +183,6 @@ export default function App(): React.JSX.Element {
   const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
   const {
     agentSessions,
-    openAgentKeys,
     selectedAgentKey,
     setOpenAgentKeys,
     setSelectedAgentKey,
@@ -198,8 +197,6 @@ export default function App(): React.JSX.Element {
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
-    handleOpenAgent,
-    handleMinimizeAgent,
     handleToggleWatchAgent,
     handleSetAgentModel
   } = useAgentSessions(agentDockStorageKey, {
@@ -1694,11 +1691,8 @@ export default function App(): React.JSX.Element {
           isCompacting={isCompacting}
           onCompactThread={handleCompactThread}
           agentSessions={agentSessions}
-          openAgentKeys={openAgentKeys}
           selectedAgentKey={selectedAgentKey}
           onSelectAgent={setSelectedAgentKey}
-          onOpenAgent={handleOpenAgent}
-          onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
@@ -1787,11 +1781,8 @@ function ChatPane({
   isCompacting,
   onCompactThread,
   agentSessions,
-  openAgentKeys,
   selectedAgentKey,
   onSelectAgent,
-  onOpenAgent,
-  onMinimizeAgent,
   onToggleWatchAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
@@ -1844,11 +1835,8 @@ function ChatPane({
   isCompacting: boolean
   onCompactThread: () => Promise<void>
   agentSessions: AgentSession[]
-  openAgentKeys: string[]
   selectedAgentKey: string | null
   onSelectAgent: (key: string) => void
-  onOpenAgent: (key: string) => void
-  onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
