@@ -373,6 +373,13 @@ button {
   padding: 4px;
 }
 
+.conversation-drop-zone span {
+  padding: 5px 9px;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .conversation-drop-overlay[data-active-edge='left'] .conversation-drop-zone.is-left,
 .conversation-drop-overlay[data-active-edge='right'] .conversation-drop-zone.is-right,
 .conversation-drop-overlay[data-active-edge='top'] .conversation-drop-zone.is-top,
