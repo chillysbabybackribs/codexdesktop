@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { selectCompletedWork } from './memory-work.ts'
+import { selectCompletedWork, stripInjectedMemory } from './memory-work.ts'
 
 test('completed work keeps only the two highest-value results', () => {
   assert.deepEqual(selectCompletedWork([
@@ -24,4 +24,15 @@ test('failures and test results outrank browser activity', () => {
     '47/47 tests passed, 0 failed: npm test',
     'Command failed with exit 1: npm run build'
   ])
+})
+
+test('injected historical context stays out of the visible and persisted user request', () => {
+  assert.equal(stripInjectedMemory([
+    '<codexdesktop-prior-chat-memory>',
+    'Historical context',
+    '</codexdesktop-prior-chat-memory>',
+    '',
+    'Current user request:',
+    'continue from here'
+  ].join('\n')), 'continue from here')
 })

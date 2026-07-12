@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { agentTokenUsage } from './agent-token-usage'
+import { agentTokenUsage } from './agent-token-usage.ts'
 
 test('maps Anthropic cache writes as input but not cache hits', () => {
   const tokenUsage = agentTokenUsage(

@@ -11,6 +11,14 @@ const researchSkill: SkillMetadata = {
   enabled: true
 }
 
+const priorChatMemorySkill: SkillMetadata = {
+  name: 'prior-chat-memory',
+  description: 'Recover relevant context from the previous chat',
+  path: '/app/skills/prior-chat-memory/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('local skill path containment rejects siblings and traversal', () => {
   assert.equal(isPathWithin('/app/skills', '/app/skills/research/SKILL.md'), true)
   assert.equal(isPathWithin('/app/skills', '/app/skills-other/research/SKILL.md'), false)
@@ -44,4 +52,25 @@ test('plan collaboration mode does not inject a generic planning skill', () => {
 
   assert.deepEqual(input.map((item) => item.type), ['text'])
   assert.equal(input[0]?.type === 'text' && input[0].text, 'Help me decide how to approach this')
+})
+
+test('new threads do not attach the provider-specific prior-chat skill automatically', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [priorChatMemorySkill])
+  const input = registry.buildTurnInput('lets continue', true)
+
+  assert.deepEqual(input.map((item) => item.type), ['text'])
+})
+
+test('prepared opening text does not change skill classification', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [researchSkill])
+  const input = registry.buildTurnInput(
+    'Research the latest Electron guidance',
+    true,
+    [],
+    'default',
+    '<memory>prepared visible text</memory>'
+  )
+
+  assert.equal(input[0]?.type === 'text' && input[0].text, '<memory>prepared visible text</memory>')
+  assert.equal(input[1]?.type === 'skill' && input[1].name, researchSkill.name)
 })

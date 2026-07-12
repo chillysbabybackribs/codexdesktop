@@ -7,24 +7,16 @@ import {
   buildGuidance,
   formatSkillInvocationText,
   isWebResearchTask,
+  legacyResumeConfig,
+  newThreadConfig,
   resolveTurnPolicy,
-  selectNewThreadSkills,
-  selectTurnSkills,
-  shouldAttachPriorChatMemory
+  selectTurnSkills
 } from './codex-config.js'
 
 const webResearchSkill: SkillMetadata = {
   name: 'artifact-first-web-research',
   description: 'Research the web from saved artifacts',
   path: '/app/skills/artifact-first-web-research/SKILL.md',
-  scope: 'user',
-  enabled: true
-}
-
-const priorChatMemorySkill: SkillMetadata = {
-  name: 'prior-chat-memory',
-  description: 'Recover relevant context from the previous chat',
-  path: '/app/skills/prior-chat-memory/SKILL.md',
   scope: 'user',
   enabled: true
 }
@@ -118,26 +110,20 @@ test('explicit skill invocation does not duplicate its marker', () => {
   assert.equal(formatSkillInvocationText(text, [webResearchSkill]), text)
 })
 
-test('ambiguous continuation threads attach prior chat memory', () => {
-  assert.equal(shouldAttachPriorChatMemory('lets continue'), true)
-  assert.equal(shouldAttachPriorChatMemory('Pick this back up from where we left off'), true)
-  assert.deepEqual(selectNewThreadSkills('lets continue', [webResearchSkill, priorChatMemorySkill]), [priorChatMemorySkill])
-})
-
-test('standalone new threads do not attach prior chat memory', () => {
-  assert.equal(shouldAttachPriorChatMemory('Build a settings page'), false)
-  assert.deepEqual(selectNewThreadSkills('Build a settings page', [priorChatMemorySkill]), [])
-})
-
-test('memory skill does not require a synthetic invocation marker', () => {
-  assert.equal(formatSkillInvocationText('lets continue', []), 'lets continue')
-})
-
-test('guidance nudges ambiguous continuation without requesting improvement cards', () => {
+test('guidance describes app-supplied historical context without a provider-specific skill', () => {
   const guidance = buildGuidance({})
-  assert.match(guidance, /ambiguous opening requests.*use the prior-chat-memory skill/i)
+  assert.match(guidance, /may prepend a same-workspace historical checkpoint/i)
+  assert.doesNotMatch(guidance, /use the prior-chat-memory skill/i)
   assert.doesNotMatch(guidance, /app-improvement|self-improvement reporting/i)
   assert.doesNotMatch(guidance, /protected codex desktop host session/i)
+})
+
+test('Codex start and resume configs disable provider-native long-term memory', () => {
+  for (const config of [newThreadConfig, legacyResumeConfig]) {
+    assert.equal(config['features.memories'], false)
+    assert.equal(config['memories.use_memories'], false)
+    assert.equal(config['memories.generate_memories'], false)
+  }
 })
 
 test('global guidance stays limited to product-wide behavior', () => {
