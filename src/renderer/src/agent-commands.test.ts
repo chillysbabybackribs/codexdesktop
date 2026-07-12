@@ -21,7 +21,7 @@ function commandHarness(acceptsImages = true): {
       appendMessage: (_key, message) => messages.push(message)
     },
     getWorkspace: () => '/workspace',
-    getSelectedModel: () => 'test-model',
+    getDefaultModel: (provider) => provider === 'claude' ? 'claude-test-model' : 'test-model',
     getSelectedEffort: () => 'high',
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
@@ -78,6 +78,45 @@ test('agent send forwards the agent reasoning effort', async () => {
 
     assert.equal(sent, true)
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
+
+test('claude agent send routes through the claude API and binds the returned session id', async () => {
+  const previousWindow = globalThis.window
+  const sentParams: unknown[] = []
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        claude: {
+          sendMessage: async (params: unknown) => {
+            sentParams.push(params)
+            return { threadId: 'claude-session-1', turnId: 'turn-1', model: 'claude-test-model', effort: 'high' }
+          }
+        }
+      }
+    }
+  })
+
+  try {
+    const { sessions, commands } = commandHarness()
+    sessions[0] = { ...sessions[0], provider: 'claude', reasoningEffort: 'high' }
+    const sent = await commands.handleAgentSend('agent-1', 'Solve this')
+
+    assert.equal(sent, true)
+    const params = sentParams[0] as { threadId?: string | null; model?: string; effort?: string }
+    assert.equal(params.threadId, null)
+    assert.equal(params.model, 'claude-test-model')
+    assert.equal(params.effort, 'high')
+    assert.equal(sessions[0]?.threadId, 'claude-session-1')
+    assert.equal(sessions[0]?.turnId, 'turn-1')
+    assert.equal(sessions[0]?.status, 'working')
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
