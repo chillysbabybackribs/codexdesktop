@@ -1,4 +1,5 @@
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
+import type { AgentProvider } from '../../shared/agent'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }
@@ -28,12 +29,16 @@ export function createAgentLifecycle(options: {
   isRecoverable: (error: TurnError | null) => boolean
   getWorkspace: () => string | null
   getSelectedModel: () => string | null
+  getMainProvider: () => AgentProvider
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
   selectMainModel: (model: string) => void
   clearActiveTurn: () => void
   createMainThread: () => void
   resumeMainThread: (threadId: string) => Promise<void>
+  // Hands a session from the other provider off to the main view (the app is
+  // keyed on its boot-time provider, so this persists the pick and reloads).
+  promoteCrossProvider: (session: AgentSession) => void
 }): {
   cancelRecovery: (key: string) => void
   scheduleRecovery: (key: string, turnId: string, error: TurnError | null) => void
@@ -50,6 +55,10 @@ export function createAgentLifecycle(options: {
   }
 
   function scheduleRecovery(key: string, turnId: string, error: TurnError | null): void {
+    // Overload auto-recovery is built on Codex's error taxonomy and send API;
+    // Claude sessions surface the failure and wait for the user.
+    const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
+    if (session && session.provider !== 'codex') return
     if (!options.isRecoverable(error)) return
     const existing = store.recoveryRef.current.get(key)
     if (existing?.handledTurnIds.has(turnId)) return
