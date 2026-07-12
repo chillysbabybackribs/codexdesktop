@@ -2551,6 +2551,7 @@ function ChatPane({
                         onRequestChanges={onRequestPlanChanges}
                       />
                     ) : null}
+                    <div className="composer-surface">
                     <div className="composer-context">
                       <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
                       {models.length || crossModels.length ? (
@@ -2613,6 +2614,7 @@ function ChatPane({
                         </div>
                       }
                     />
+                    </div>
                   </div>
                 </div>
               )
