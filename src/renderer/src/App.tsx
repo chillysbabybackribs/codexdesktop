@@ -2630,9 +2630,11 @@ function ThreadScroll({
   // bottom-follow and releases the moment the reader scrolls.
   const anchorTurnRef = useRef<string | null>(null)
   const prevTurnRef = useRef<string | null>(null)
-  // A fresh/restored thread may arrive with activeTurnId already set for an
-  // in-progress turn; that must NOT yank it to the top — only a live send does.
-  const justResetRef = useRef(false)
+  // A fresh thread usually arrives in two notifications: thread/started first,
+  // then turn/started. Keep this armed across the temporary null turn so the
+  // first message does not trigger the mid-thread top-anchor/spacer machinery
+  // while the composer is docking from the empty state.
+  const skipNextTurnAnchorRef = useRef(false)
   // Programmatic scrollTop writes fire onScroll; without this guard the first
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
@@ -2772,7 +2774,7 @@ function ThreadScroll({
     cancelScheduledFollow()
     anchorTurnRef.current = null
     prevTurnRef.current = null
-    justResetRef.current = true
+    skipNextTurnAnchorRef.current = true
     setSpacerOn(false)
     pinnedRef.current = true
     followTail()
@@ -2785,24 +2787,25 @@ function ThreadScroll({
   }, dependencies)
 
   // A live send (activeTurnId transitions to a new non-null value) anchors that
-  // turn's user message to the top. Skip the transition that coincides with a
-  // thread switch/restore — that turn is being read, not just asked.
+  // turn's user message to the top. Skip the first turn after a thread reset:
+  // thread/started and turn/started are separate notifications, so the skip
+  // must survive the intermediate render where activeTurnId is still null.
   useLayoutEffect(() => {
-    if (
-      activeTurnId !== null &&
-      activeTurnId !== prevTurnRef.current &&
-      !justResetRef.current
-    ) {
-      anchorTurnRef.current = activeTurnId
-      pinnedRef.current = false
-      cancelScheduledFollow()
-      setSpacerOn(true)
-      // The new user row + spacer land next commit; anchor once they exist.
-      // Tracked so reset/unmount can cancel it before it fires.
-      anchorFrameRef.current = window.requestAnimationFrame(() => {
-        anchorFrameRef.current = null
-        anchorTop()
-      })
+    if (activeTurnId !== null && activeTurnId !== prevTurnRef.current) {
+      if (skipNextTurnAnchorRef.current) {
+        skipNextTurnAnchorRef.current = false
+      } else {
+        anchorTurnRef.current = activeTurnId
+        pinnedRef.current = false
+        cancelScheduledFollow()
+        setSpacerOn(true)
+        // The new user row + spacer land next commit; anchor once they exist.
+        // Tracked so reset/unmount can cancel it before it fires.
+        anchorFrameRef.current = window.requestAnimationFrame(() => {
+          anchorFrameRef.current = null
+          anchorTop()
+        })
+      }
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
@@ -2830,7 +2833,6 @@ function ThreadScroll({
       pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
-    justResetRef.current = false
   }, [activeTurnId, anchorTop, cancelScheduledFollow])
 
   useEffect(() => {
