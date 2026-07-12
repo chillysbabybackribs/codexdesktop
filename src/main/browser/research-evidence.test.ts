@@ -11,7 +11,6 @@ function document(sourceId: string, content: string): ResearchEvidenceDocument {
     sourceId,
     title: `Source ${sourceId}`,
     url: `https://example.com/${sourceId}`,
-    artifactPath: `/research/${sourceId}.txt`,
     content,
     observedAt: '2026-07-12T12:00:00.000Z',
     sourceTier: 'primary'

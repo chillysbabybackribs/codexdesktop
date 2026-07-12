@@ -401,7 +401,6 @@ export class ResearchRunner {
           sourceId: draft.page.sourceId,
           title: draft.page.title,
           url: draft.page.url,
-          artifactPath: draft.page.artifactPath,
           content: draft.content,
           observedAt: draft.page.observedAt,
           ...(draft.page.sourceTier ? { sourceTier: draft.page.sourceTier } : {})

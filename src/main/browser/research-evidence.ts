@@ -21,7 +21,6 @@ export type ResearchEvidenceDocument = {
   sourceId: string
   title: string
   url: string
-  artifactPath: string
   content: string
   observedAt: string
   sourceTier?: string
@@ -30,11 +29,6 @@ export type ResearchEvidenceDocument = {
 export type ResearchPassage = {
   focusId: string
   sourceId: string
-  title: string
-  url: string
-  artifactPath: string
-  observedAt: string
-  sourceTier?: string
   lineStart: number
   lineEnd: number
   text: string
@@ -58,6 +52,7 @@ export type ResearchEvidencePacket = {
 type PassageCandidate = Omit<ResearchPassage, 'focusId'> & {
   score: number
   documentFingerprint: string
+  canonicalUrl: string
 }
 
 export function normalizeResearchFocus(
@@ -117,14 +112,21 @@ export function selectResearchEvidence(
 
     const selected: PassageCandidate[] = []
     const fingerprints = new Set<string>()
+    const urls = new Set<string>()
     for (const candidate of candidates) {
-      if (fingerprints.has(candidate.documentFingerprint)) continue
+      if (fingerprints.has(candidate.documentFingerprint) || urls.has(candidate.canonicalUrl)) continue
       fingerprints.add(candidate.documentFingerprint)
+      urls.add(candidate.canonicalUrl)
       selected.push(candidate)
       if (selected.length >= item.minSources) break
     }
 
-    passages.push(...selected.map(({ score: _score, documentFingerprint: _fingerprint, ...passage }) => ({
+    passages.push(...selected.map(({
+      score: _score,
+      documentFingerprint: _fingerprint,
+      canonicalUrl: _canonicalUrl,
+      ...passage
+    }) => ({
       focusId: item.id,
       ...passage
     })))
@@ -149,7 +151,7 @@ function bestDocumentPassage(
   maxChars: number
 ): PassageCandidate | null {
   const lines = document.content.split('\n')
-  const requiredMatches = focusTokens.length <= 2 ? 1 : Math.min(2, Math.ceil(focusTokens.length * 0.3))
+  const requiredMatches = Math.min(3, Math.max(1, Math.ceil(focusTokens.length * 0.6)))
   let best: { lineIndex: number; score: number; matchedTerms: string[] } | null = null
 
   for (const [lineIndex, line] of lines.entries()) {
@@ -174,18 +176,14 @@ function bestDocumentPassage(
   if (visibleMatchedTerms.length < requiredMatches) return null
   return {
     sourceId: document.sourceId,
-    title: document.title,
-    url: document.url,
-    artifactPath: document.artifactPath,
-    observedAt: document.observedAt,
-    ...(document.sourceTier ? { sourceTier: document.sourceTier } : {}),
     lineStart: window.lineStart,
     lineEnd: window.lineEnd,
     text: window.text,
     matchedTerms: visibleMatchedTerms,
     truncated: window.truncated,
     score: best.score,
-    documentFingerprint: fingerprint(document.content)
+    documentFingerprint: fingerprint(document.content),
+    canonicalUrl: document.url
   }
 }
 
@@ -258,11 +256,13 @@ function compareCandidates(left: PassageCandidate, right: PassageCandidate): num
 }
 
 function tokenizeFocus(value: string): string[] {
-  return unique(tokenize(value).filter((token) => !FOCUS_STOP_WORDS.has(token)))
+  return unique(tokenize(value).filter((token) => !FOCUS_STOP_WORDS.has(token))).slice(0, 16)
 }
 
 function tokenize(value: string): string[] {
-  return value.toLowerCase().match(/[a-z0-9]{2,}/g) ?? []
+  return (value.toLowerCase().match(/[a-z0-9]+(?:\.[a-z0-9]+)*/g) ?? [])
+    .map((token) => /^v\d/.test(token) ? token.slice(1) : token)
+    .filter((token) => token.length >= 2)
 }
 
 function normalizeText(value: string): string {
