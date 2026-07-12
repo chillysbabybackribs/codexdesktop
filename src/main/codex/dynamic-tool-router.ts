@@ -1,12 +1,17 @@
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
+import type { ResearchProgress } from '../../shared/ipc.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { DynamicToolCallResponse } from '../../shared/codex-protocol/v2/DynamicToolCallResponse.js'
 import { runUiReview } from './ui-review.js'
 
 export async function routeDynamicToolCall(
   params: DynamicToolCallParams,
-  dependencies: { browserAgent: BrowserAgentController; researchRunner: ResearchRunner }
+  dependencies: {
+    browserAgent: BrowserAgentController
+    researchRunner: ResearchRunner
+    onResearchProgress?: (progress: ResearchProgress) => void
+  }
 ): Promise<DynamicToolCallResponse> {
   try {
     const args = asRecord(params.arguments)
@@ -59,8 +64,14 @@ export async function routeDynamicToolCall(
         queries: readStringArray(args.queries),
         maxResults: readNumber(args.maxResults),
         maxPages: readNumber(args.maxPages),
+        maxAttempts: readNumber(args.maxAttempts),
         snippetChars: readNumber(args.snippetChars)
-      }, params.turnId)
+      }, {
+        runId: params.callId,
+        threadId: params.threadId,
+        turnId: params.turnId,
+        onProgress: dependencies.onResearchProgress
+      })
     } else {
       result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
     }

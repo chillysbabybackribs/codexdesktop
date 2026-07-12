@@ -449,7 +449,16 @@ export class CodexClient extends EventEmitter {
   private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
-      researchRunner: this.researchRunner
+      researchRunner: this.researchRunner,
+      onResearchProgress: (progress) => {
+        this.emit('event', {
+          type: 'researchProgress',
+          threadId: params.threadId,
+          turnId: params.turnId,
+          itemId: params.callId,
+          progress
+        } satisfies CodexEvent)
+      }
     })
     this.rpc.respond(id, response)
   }
