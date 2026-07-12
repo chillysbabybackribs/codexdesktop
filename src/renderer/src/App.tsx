@@ -2139,7 +2139,8 @@ export default function App(): React.JSX.Element {
           onToggleWatchAgent={handleToggleWatchAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
-          onNewAgent={handleNewAgent}
+          onSetAgentCrossModel={handleSelectAgentCrossModel}
+          onNewAgent={() => handleNewAgent(provider)}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
           onResetAgentSession={handleResetAgentSession}
@@ -2241,6 +2242,7 @@ function ChatPane({
   onToggleWatchAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
+  onSetAgentCrossModel,
   onNewAgent,
   onPromoteAgent,
   onCloseAgentSession,
@@ -2307,6 +2309,7 @@ function ChatPane({
   onToggleWatchAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
+  onSetAgentCrossModel: (key: string, model: string) => void
   onNewAgent: () => void
   onPromoteAgent: (key: string) => void
   onCloseAgentSession: (key: string) => void
