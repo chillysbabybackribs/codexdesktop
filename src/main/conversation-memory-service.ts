@@ -12,7 +12,11 @@ export type PrepareOpeningTextRequest = {
 }
 
 export class ConversationMemoryService {
-  constructor(private readonly store: MemoryStore) {}
+  private readonly store: MemoryStore
+
+  constructor(store: MemoryStore) {
+    this.store = store
+  }
 
   async prepareOpeningText(request: PrepareOpeningTextRequest): Promise<string> {
     if (!request.isNewSession || !shouldAttachPriorChatMemory(request.requestText)) {
