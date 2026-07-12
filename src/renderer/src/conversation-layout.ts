@@ -28,7 +28,7 @@ const MAX_SPLIT_RATIO = 0.82
 
 export { MIN_SPLIT_RATIO, MAX_SPLIT_RATIO }
 
-export function createLayoutLeaf(target: ConversationTarget = 'main', id = crypto.randomUUID()): LayoutLeaf {
+export function createLayoutLeaf(target: ConversationTarget = 'main', id: string = crypto.randomUUID()): LayoutLeaf {
   return { type: 'leaf', id, target }
 }
 

@@ -147,7 +147,9 @@ export const api = {
     onPlanningState: (listener: (state: PlanningState) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, state: PlanningState): void => listener(state)
       ipcRenderer.on(ipcChannels.planningState, wrapped)
-      return () => ipcRenderer.off(ipcChannels.planningState, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.planningState, wrapped)
+      }
     }
   },
   claude: {

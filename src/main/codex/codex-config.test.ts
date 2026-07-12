@@ -185,8 +185,8 @@ test('collaborative planning preserves execution capability and requires evidenc
   assert.match(collaboration.settings.developer_instructions ?? '', /explicit.*plan agreed with the user/i)
   assert.match(collaboration.settings.developer_instructions ?? '', /verify local claims against source, tests, or runtime evidence/i)
   assert.match(collaboration.settings.developer_instructions ?? '', /Speak up clearly when an idea is incorrect, risky, unnecessarily complex/i)
-  assert.match(collaboration.settings.developer_instructions ?? '', /After agreement.*implement the agreed plan autonomously/i)
-  assert.match(collaboration.settings.developer_instructions ?? '', /self-correct until the result is proven/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /call submit_plan with the structured plan/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /wait for the application approval checkpoint/i)
 })
 
 test('default collaboration preserves desktop guidance without planning-only behavior', () => {
