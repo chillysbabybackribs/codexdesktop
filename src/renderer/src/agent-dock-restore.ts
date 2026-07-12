@@ -58,6 +58,7 @@ export async function restoreAgentDock(options: {
       messages: [],
       watchesMain: Boolean(entry.watchesMain),
       model: entry.model ?? null,
+      reasoningEffort: entry.reasoningEffort ?? null,
       contextUsage: null,
       isCompacting: false
     }))
@@ -99,7 +100,11 @@ export async function restoreAgentDock(options: {
             }
           }
         }
-        store.patchSession(session.key, (current) => ({ ...current, messages: messages.slice(-4) }))
+        store.patchSession(session.key, (current) => ({
+          ...current,
+          messages: messages.slice(-4),
+          reasoningEffort: resumed.reasoningEffort ?? current.reasoningEffort
+        }))
       } catch (error) {
         console.warn('Agent thread rehydration failed', session.threadId, error)
         store.appendMessage(session.key, {

@@ -1,4 +1,5 @@
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { ChatAttachment } from '../../shared/ipc'
 
 export type AgentLiteMessage = {
@@ -17,6 +18,7 @@ export type AgentSession = {
   messages: AgentLiteMessage[]
   watchesMain: boolean
   model: string | null
+  reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
   isCompacting: boolean
 }
@@ -26,6 +28,7 @@ export type PersistedAgentSession = {
   title?: string
   watchesMain?: boolean
   model?: string | null
+  reasoningEffort?: ReasoningEffort | null
   open?: boolean
   selected?: boolean
 }
@@ -47,6 +50,7 @@ export function createAgentSession(key: string, title: string): AgentSession {
     messages: [],
     watchesMain: false,
     model: null,
+    reasoningEffort: null,
     contextUsage: null,
     isCompacting: false
   }
@@ -132,6 +136,7 @@ export function serializeAgentDock(
       title: session.title,
       watchesMain: session.watchesMain,
       model: session.model,
+      reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
       selected: session.key === selectedKey
     }))

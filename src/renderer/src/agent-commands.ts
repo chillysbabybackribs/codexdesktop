@@ -1,4 +1,5 @@
 import type { ChatAttachment } from '../../shared/ipc'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }
@@ -14,6 +15,7 @@ export function createAgentCommands(options: {
   store: AgentCommandStore
   getWorkspace: () => string | null
   getSelectedModel: () => string | null
+  getSelectedEffort: () => ReasoningEffort | null
   acceptsImages: (model: string | null) => boolean
   buildMainChatContext: () => string
   cancelRecovery: (key: string) => void
@@ -73,7 +75,8 @@ export function createAgentCommands(options: {
         text: outgoingText,
         attachments,
         cwd: options.getWorkspace(),
-        model: agentModel
+        model: agentModel,
+        effort: session.reasoningEffort ?? options.getSelectedEffort()
       })
       store.patchSession(key, (current) => ({
         ...current,

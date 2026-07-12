@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
@@ -54,7 +55,9 @@ export function AgentColumn({
   selectedKey,
   models,
   mainModel,
+  mainReasoningEffort,
   onSetModel,
+  onSetModelEffort,
   onSelect,
   onMinimize,
   onCloseSession,
@@ -70,7 +73,9 @@ export function AgentColumn({
   selectedKey: string | null
   models: Model[]
   mainModel: string | null
+  mainReasoningEffort: ReasoningEffort | null
   onSetModel: (key: string, model: string) => void
+  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
@@ -145,7 +150,9 @@ export function AgentColumn({
             isSelected={session.key === selectedKey}
             models={models}
             mainModel={mainModel}
+            mainReasoningEffort={mainReasoningEffort}
             onSetModel={onSetModel}
+            onSetModelEffort={onSetModelEffort}
             onSelect={onSelect}
             onMinimize={onMinimize}
             onCloseSession={onCloseSession}
@@ -195,7 +202,9 @@ function AgentWindow({
   isSelected,
   models,
   mainModel,
+  mainReasoningEffort,
   onSetModel,
+  onSetModelEffort,
   onSelect,
   onMinimize,
   onCloseSession,
@@ -211,7 +220,9 @@ function AgentWindow({
   isSelected: boolean
   models: Model[]
   mainModel: string | null
+  mainReasoningEffort: ReasoningEffort | null
   onSetModel: (key: string, model: string) => void
+  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
   onMinimize: (key: string) => void
   onCloseSession: (key: string) => void
@@ -370,7 +381,9 @@ function AgentWindow({
             <ModelPill
               models={models}
               selectedModel={session.model ?? mainModel}
+              selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
               onSelectModel={(model) => onSetModel(session.key, model)}
+              onSelectModelEffort={(model, effort) => onSetModelEffort(session.key, model, effort)}
             />
           ) : null}
           <AgentContextPill

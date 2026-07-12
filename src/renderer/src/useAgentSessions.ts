@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import {
   appendAgentSessionMessage,
   applyAgentDeltas,
@@ -39,7 +40,7 @@ export function useAgentSessions(
   handleOpenAgent: (key: string) => void
   handleMinimizeAgent: (key: string) => void
   handleToggleWatchAgent: (key: string) => void
-  handleSetAgentModel: (key: string, model: string) => void
+  handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
   const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
@@ -197,8 +198,12 @@ export function useAgentSessions(
     patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
   }
 
-  function handleSetAgentModel(key: string, model: string): void {
-    patchAgentSession(key, (session) => ({ ...session, model }))
+  function handleSetAgentModel(key: string, model: string, effort?: ReasoningEffort): void {
+    patchAgentSession(key, (session) => ({
+      ...session,
+      model,
+      ...(effort ? { reasoningEffort: effort } : {})
+    }))
   }
 
   useEffect(() => () => {

@@ -977,6 +977,7 @@ export default function App(): React.JSX.Element {
     },
     getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
+    getSelectedEffort: () => selectedReasoningEffort,
     acceptsImages: (model) => modelAcceptsImages(models, model),
     buildMainChatContext,
     cancelRecovery: cancelAgentRecovery
