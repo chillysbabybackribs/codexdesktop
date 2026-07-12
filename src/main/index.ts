@@ -35,6 +35,7 @@ import { registerClaudeIpc } from './claude/claude-ipc.js'
 import type { ClaudeClient } from './claude/claude-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
+import { ConversationMemoryService } from './conversation-memory-service.js'
 import { AttachmentStore } from './attachment-store.js'
 
 // Dev/testing hook: point userData somewhere else so a verification instance
@@ -315,8 +316,9 @@ function registerIpc(): void {
   const memoryDirectory = join(app.getPath('userData'), 'memory')
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
-  claudeClient = registerClaudeIpc(() => mainWindow, browserAgent, researchRunner, attachmentStore)
+  const conversationMemory = new ConversationMemoryService(memoryStore)
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, conversationMemory)
+  claudeClient = registerClaudeIpc(() => mainWindow, browserAgent, researchRunner, attachmentStore, conversationMemory)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())

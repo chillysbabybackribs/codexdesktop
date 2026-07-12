@@ -21,15 +21,17 @@ import type { ResearchRunner } from '../browser/research-runner.js'
 import { CodexClient } from './codex-client.js'
 import type { MemoryStore } from '../memory-store.js'
 import type { AttachmentStore } from '../attachment-store.js'
+import type { ConversationMemoryService } from '../conversation-memory-service.js'
 
 export function registerCodexIpc(
   getWindow: () => BrowserWindow | null,
   browserAgent: BrowserAgentController,
   researchRunner: ResearchRunner,
   memoryStore: MemoryStore,
-  attachmentStore: AttachmentStore
+  attachmentStore: AttachmentStore,
+  conversationMemory: ConversationMemoryService
 ): CodexClient {
-  const client = new CodexClient(browserAgent, researchRunner)
+  const client = new CodexClient(browserAgent, researchRunner, conversationMemory)
 
   client.on('event', (event: CodexEvent) => {
     getWindow()?.webContents.send(ipcChannels.codexEvent, event)

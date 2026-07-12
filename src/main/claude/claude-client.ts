@@ -24,6 +24,7 @@ import { AsyncMessageQueue } from './async-message-queue.js'
 import { buildClaudeOptions, type ClaudeEffort } from './claude-options.js'
 import { createClaudeBrowserMcpServer } from './claude-tools.js'
 import { normalizeClaudeCompletion } from './claude-turn-completion.js'
+import type { ConversationMemoryService } from '../conversation-memory-service.js'
 
 type PendingTurn = {
   id: string
@@ -57,7 +58,8 @@ export class ClaudeClient extends EventEmitter {
 
   constructor(
     private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner
+    private readonly researchRunner: ResearchRunner,
+    private readonly conversationMemory: ConversationMemoryService
   ) {
     super()
   }
@@ -159,7 +161,13 @@ export class ClaudeClient extends EventEmitter {
 
     const turn = { id: crypto.randomUUID(), interrupted: false }
     runtime.pendingTurns.push(turn)
-    runtime.input.push(await buildUserMessage(text, attachments))
+    const preparedText = await this.conversationMemory.prepareOpeningText({
+      requestText: text,
+      visibleText: text,
+      workspace: cwd ?? runtime.cwd,
+      isNewSession: !threadId
+    })
+    runtime.input.push(await buildUserMessage(preparedText, attachments))
 
     // Now that a message is in flight, the CLI will emit init; wait for it so we
     // can report the real session id back to the renderer.

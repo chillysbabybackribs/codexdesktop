@@ -9,6 +9,13 @@ export function selectCompletedWork(items: string[]): string[] {
     .map(({ item }) => item)
 }
 
+export function stripInjectedMemory(text: string): string {
+  return text.replace(
+    /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
+    ''
+  )
+}
+
 function completedWorkScore(item: string): number {
   if (/\btests? passed\b/i.test(item)) return 5
   if (/\bfailed\b|\bdeclined\b/i.test(item)) return 6

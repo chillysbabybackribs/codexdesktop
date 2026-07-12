@@ -52,6 +52,7 @@ import {
 import { LocalSkillRegistry } from './local-skill-registry.js'
 import { PlanningCoordinator } from './planning/planning-coordinator.js'
 import type { PlanningState } from '../../shared/ipc.js'
+import type { ConversationMemoryService } from '../conversation-memory-service.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
@@ -69,7 +70,8 @@ export class CodexClient extends EventEmitter {
   private readonly compactionsInFlight = new Set<string>()
   constructor(
     private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner
+    private readonly researchRunner: ResearchRunner,
+    private readonly conversationMemory: ConversationMemoryService
   ) {
     super()
     this.appServer = new AppServerProcess({
@@ -272,11 +274,18 @@ export class CodexClient extends EventEmitter {
     if (collaborationMode === 'plan') this.planning.begin(activeThreadId)
     const planningReadOnly = collaborationMode === 'plan' && this.planning.isReadOnly(activeThreadId)
     const effectiveCollaborationMode = planningReadOnly ? 'plan' : 'default'
+    const preparedText = await this.conversationMemory.prepareOpeningText({
+      requestText: text,
+      visibleText: this.localSkills.visibleText(text),
+      workspace: cwd ?? null,
+      isNewSession: !threadId
+    })
     const input = this.localSkills.buildTurnInput(
       text,
       !threadId,
       attachments,
-      collaborationMode ?? 'default'
+      collaborationMode ?? 'default',
+      preparedText
     )
     const effectiveModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null

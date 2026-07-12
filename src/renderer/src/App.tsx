@@ -60,7 +60,7 @@ import {
   type TurnPlanItem,
   type WorkItem
 } from './TaskActivity'
-import { selectCompletedWork } from './memory-work'
+import { selectCompletedWork, stripInjectedMemory } from './memory-work'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
 import {
@@ -3458,13 +3458,6 @@ function ThreadScroll({
 
 function stripAutomaticSkillMarker(text: string): string {
   return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
-}
-
-function stripInjectedMemory(text: string): string {
-  return text.replace(
-    /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
-    ''
-  )
 }
 
 function completedMemoryTurns(

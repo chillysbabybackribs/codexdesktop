@@ -12,14 +12,16 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { AttachmentStore } from '../attachment-store.js'
 import { ClaudeClient } from './claude-client.js'
+import type { ConversationMemoryService } from '../conversation-memory-service.js'
 
 export function registerClaudeIpc(
   getWindow: () => BrowserWindow | null,
   browserAgent: BrowserAgentController,
   researchRunner: ResearchRunner,
-  attachmentStore: AttachmentStore
+  attachmentStore: AttachmentStore,
+  conversationMemory: ConversationMemoryService
 ): ClaudeClient {
-  const client = new ClaudeClient(browserAgent, researchRunner)
+  const client = new ClaudeClient(browserAgent, researchRunner, conversationMemory)
 
   client.on('event', (event: ClaudeEvent) => {
     getWindow()?.webContents.send(ipcChannels.claudeEvent, event)
