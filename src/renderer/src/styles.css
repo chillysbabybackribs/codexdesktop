@@ -3452,6 +3452,20 @@ button {
   text-transform: uppercase;
 }
 
+.model-menu-group-label {
+  padding: 7px 9px 4px;
+  color: #747b83;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.model-menu-group-label:not(:first-child) {
+  margin-top: 4px;
+  border-top: 1px solid rgb(255 255 255 / 7%);
+}
+
 .reasoning-option {
   display: flex;
   flex-direction: column;
