@@ -21,6 +21,7 @@ import {
   claudeBrowserToolNames,
   createClaudeBrowserMcpServer
 } from './claude-tools.js'
+import { normalizeClaudeCompletion } from './claude-turn-completion.js'
 
 type ClaudeEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
 
@@ -442,18 +443,15 @@ export class ClaudeClient extends EventEmitter {
     error: string | null,
     usage: AgentUsage
   ): void {
-    const interrupted = turn.interrupted
+    const completion = normalizeClaudeCompletion(turn.interrupted, error)
     this.emitEvent({
       type: 'turn.completed',
       provider: 'claude',
       sessionId: runtime.sessionId!,
       turnId: turn.id,
-      status: interrupted ? 'interrupted' : error ? 'failed' : 'completed',
+      status: completion.status,
       result,
-      // The SDK reports an internal diagnostic result when interrupt() lands
-      // during tool use. Cancellation is an expected user action, not a
-      // transcript error, so do not expose that provider diagnostic downstream.
-      error: interrupted ? null : error,
+      error: completion.error,
       usage
     })
   }
