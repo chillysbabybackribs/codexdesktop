@@ -169,6 +169,38 @@ export function setSplitRatio(layout: LayoutNode, splitId: string, ratio: number
   }
 }
 
+function pruneInvalidTargets(layout: LayoutNode, validTargets: Set<ConversationTarget>): LayoutNode | null {
+  if (layout.type === 'leaf') {
+    if (layout.target !== 'main' && !validTargets.has(layout.target)) return null
+    return layout
+  }
+
+  const first = pruneInvalidTargets(layout.first, validTargets)
+  const second = pruneInvalidTargets(layout.second, validTargets)
+  if (!first && !second) return null
+  if (!first) return second
+  if (!second) return first
+  return { ...layout, first, second }
+}
+
+function dedupeTargets(layout: LayoutNode): LayoutNode {
+  const seen = new Set<ConversationTarget>()
+  return mapLayoutOrPrune(layout, (leaf) => {
+    if (seen.has(leaf.target)) return null
+    seen.add(leaf.target)
+    return leaf
+  }) ?? createDefaultLayout('main')
+}
+
+export function sanitizeLayout(
+  layout: LayoutNode,
+  validTargets: Set<ConversationTarget>
+): LayoutNode {
+  const valid = new Set<ConversationTarget>(['main', ...validTargets])
+  const pruned = pruneInvalidTargets(layout, valid)
+  return dedupeTargets(pruned ?? createDefaultLayout('main'))
+}
+
 function removeTargetFromNode(node: LayoutNode, target: ConversationTarget): LayoutNode | null {
   if (node.type === 'leaf') {
     return node.target === target ? null : node
