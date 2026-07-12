@@ -59,6 +59,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   z-index: 20;
 }
 .brand {
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
