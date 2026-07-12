@@ -6,6 +6,7 @@ import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAc
 import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
 import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
 import { workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
+import { browserLinkComponents } from './MarkdownContent'
 
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
 export { workItemTypes } from './activity-model'
@@ -441,7 +442,7 @@ function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boo
 
   const body = (
     <div className="thought-text">
-      <ReactMarkdown>{text}</ReactMarkdown>
+      <ReactMarkdown components={browserLinkComponents}>{text}</ReactMarkdown>
     </div>
   )
 
@@ -1004,7 +1005,7 @@ function PlanTextBlock({ item, streaming }: { item: PlanItem; streaming: boolean
 
   const body = (
     <div className="thought-text">
-      <ReactMarkdown>{item.text}</ReactMarkdown>
+      <ReactMarkdown components={browserLinkComponents}>{item.text}</ReactMarkdown>
     </div>
   )
 

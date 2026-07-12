@@ -9,6 +9,7 @@ import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadToke
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
+import { browserLinkComponents } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
@@ -365,7 +366,7 @@ function AgentWindow({
           session.messages.map((message) => (
             <div key={message.id} className={`agent-mini-message is-${message.role}`}>
               {message.role === 'assistant' ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={browserLinkComponents}>{message.text}</ReactMarkdown>
               ) : (
                 <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
               )}

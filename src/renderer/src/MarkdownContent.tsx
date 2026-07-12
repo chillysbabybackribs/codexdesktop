@@ -2,6 +2,7 @@ import { Children, isValidElement, memo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { classifyMarkdownHref } from './markdown-link'
 
 type ChartDatum = {
   label: string
@@ -42,18 +43,7 @@ const markdownComponents: Components = {
   thead: ({ children }) => <thead>{children}</thead>,
   blockquote: ({ children }) => <blockquote className="markdown-quote">{children}</blockquote>,
   hr: () => <hr className="markdown-rule" />,
-  a: ({ children, href }) => (
-    <a
-      href={href}
-      onClick={(event) => {
-        if (!href || !/^https?:\/\//i.test(href)) return
-        event.preventDefault()
-        void window.api.browser.newTab(href)
-      }}
-    >
-      {children}
-    </a>
-  ),
+  a: BrowserMarkdownLink,
   pre: ({ children, ...props }) => {
     const child = Children.toArray(children)[0]
     if (isValidElement(child) && child.type === ChartBlock) return child
@@ -73,6 +63,24 @@ const markdownComponents: Components = {
     )
   }
 }
+
+export const BrowserMarkdownLink: NonNullable<Components['a']> = ({ children, href, node: _node, ...props }) => (
+  <a
+    {...props}
+    href={href}
+    onClick={(event) => {
+      const destination = classifyMarkdownHref(href)
+      if (destination === 'anchor') return
+
+      event.preventDefault()
+      if (destination === 'browser' && href) void window.api.browser.newTab(href)
+    }}
+  >
+    {children}
+  </a>
+)
+
+export const browserLinkComponents: Components = { a: BrowserMarkdownLink }
 
 function parseChartConfig(value: string): ChartConfig | null {
   try {
