@@ -3166,7 +3166,9 @@ function PlanModePill({
       className={`plan-mode-pill ${active ? 'is-active' : ''}`}
       aria-pressed={active}
       disabled={disabled}
-      title={active ? 'Plan mode is on. Click to return to implementation mode.' : 'Investigate and propose a plan before editing.'}
+      title={active
+        ? 'Collaborative planning is on: research, challenge assumptions, agree on a plan, then implement and validate.'
+        : 'Collaborate on an evidence-backed plan before implementation.'}
       onClick={onToggle}
     >
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">

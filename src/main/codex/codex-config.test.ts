@@ -176,16 +176,26 @@ test('implementation turns use automatic reasoning summaries', () => {
   assert.deepEqual(resolveTurnPolicy('Review this local patch'), { summary: 'auto' })
 })
 
-test('native collaboration modes use app-server instructions and preset effort', () => {
-  assert.deepEqual(buildCollaborationMode('plan', 'gpt-test', 'high'), {
-    mode: 'plan',
-    settings: {
-      model: 'gpt-test',
-      reasoning_effort: 'medium',
-      developer_instructions: null
-    }
-  })
-  assert.equal(buildCollaborationMode('default', 'gpt-test', 'high').settings.reasoning_effort, 'high')
+test('collaborative planning preserves execution capability and requires evidence-backed agreement', () => {
+  const collaboration = buildCollaborationMode('plan', 'gpt-test', 'high', {})
+
+  assert.equal(collaboration.mode, 'default')
+  assert.equal(collaboration.settings.model, 'gpt-test')
+  assert.equal(collaboration.settings.reasoning_effort, 'high')
+  assert.match(collaboration.settings.developer_instructions ?? '', /explicit.*plan agreed with the user/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /verify local claims against source, tests, or runtime evidence/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /Speak up clearly when an idea is incorrect, risky, unnecessarily complex/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /After agreement.*implement the agreed plan autonomously/i)
+  assert.match(collaboration.settings.developer_instructions ?? '', /self-correct until the result is proven/i)
+})
+
+test('default collaboration preserves desktop guidance without planning-only behavior', () => {
+  const collaboration = buildCollaborationMode('default', 'gpt-test', 'medium', {})
+  const instructions = collaboration.settings.developer_instructions ?? ''
+
+  assert.equal(collaboration.mode, 'default')
+  assert.match(instructions, /Reuse the active visible browser tab/i)
+  assert.doesNotMatch(instructions, /Collaborative planning mode/i)
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {
