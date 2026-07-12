@@ -122,25 +122,37 @@ export class ClaudeClient extends EventEmitter {
     effort?: ClaudeEffort | null,
     collaborationMode: 'default' | 'plan' = 'default'
   ): Promise<{ threadId: string; turnId: string; model: string | null; effort: ClaudeEffort | null }> {
-    const runtime = await this.ensureRuntime(threadId, cwd, model, effort, collaborationMode)
+    // getRuntime does NOT wait for init: the vendored claude CLI only emits its
+    // `system/init` message after it receives the first user message on stdin,
+    // so blocking on init before we push a message would deadlock (init waits
+    // for a message, the message waits for init). We push the turn first, then
+    // await init to learn the real session id.
+    const runtime = this.getRuntime(threadId, cwd, model, effort, collaborationMode)
+    const alreadyInitialized = runtime.sessionId !== null && runtime.initializedSettled
 
-    if (runtime.collaborationMode !== collaborationMode) {
-      await runtime.query.setPermissionMode(collaborationMode === 'plan' ? 'plan' : 'bypassPermissions')
-      runtime.collaborationMode = collaborationMode
-    }
-
-    if (model && runtime.model !== model) {
-      await runtime.query.setModel(model)
-      runtime.model = model
-    }
-    if (effort && runtime.effort !== effort) {
-      await runtime.query.applyFlagSettings({ effortLevel: effort === 'max' ? 'xhigh' : effort })
-      runtime.effort = effort
+    if (alreadyInitialized) {
+      if (runtime.collaborationMode !== collaborationMode) {
+        await runtime.query.setPermissionMode(collaborationMode === 'plan' ? 'plan' : 'bypassPermissions')
+        runtime.collaborationMode = collaborationMode
+      }
+      if (model && runtime.model !== model) {
+        await runtime.query.setModel(model)
+        runtime.model = model
+      }
+      if (effort && runtime.effort !== effort) {
+        await runtime.query.applyFlagSettings({ effortLevel: effort === 'max' ? 'xhigh' : effort })
+        runtime.effort = effort
+      }
     }
 
     const turn = { id: crypto.randomUUID(), interrupted: false }
     runtime.pendingTurns.push(turn)
     runtime.input.push(await buildUserMessage(text, attachments))
+
+    // Now that a message is in flight, the CLI will emit init; wait for it so we
+    // can report the real session id back to the renderer.
+    await runtime.initialized
+
     this.emitEvent({
       type: 'turn.started',
       provider: 'claude',
