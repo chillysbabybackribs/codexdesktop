@@ -1484,10 +1484,12 @@ export default function App(): React.JSX.Element {
 
     if (event.type === 'turn.completed') {
       if (optimisticUserMessageIdRef.current) optimisticUserMessageIdRef.current = null
+      claudeToolInputRef.current.clear()
       noteTurn(event.turnId, {
         status: event.status,
         completedAtMs: Date.now(),
-        errorMessage: event.error ?? undefined
+        errorMessage: event.error ?? undefined,
+        tokens: claudeTurnTokens(event.usage)
       })
       if (event.error) addSystemItem(event.error, 'error')
       if (activeTurnIdRef.current === event.turnId) activeTurnIdRef.current = null
