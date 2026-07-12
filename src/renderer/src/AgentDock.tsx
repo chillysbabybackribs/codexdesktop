@@ -11,11 +11,15 @@ import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachmen
 import type { AgentSession } from './agent-session-model'
 import { browserLinkComponents } from './MarkdownContent'
 
+import { writeConversationDragTarget } from './ConversationLayout'
+import type { ConversationTarget } from './conversation-layout'
+
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
 export function ConversationTabStrip({
   sessions,
-  selectedKey,
+  focusedTarget,
+  visibleTargets,
   mainWorking,
   onSelectMain,
   onSelectAgent,
@@ -23,7 +27,8 @@ export function ConversationTabStrip({
   onCloseAgent
 }: {
   sessions: AgentSession[]
-  selectedKey: string | null
+  focusedTarget: ConversationTarget
+  visibleTargets: ConversationTarget[]
   mainWorking: boolean
   onSelectMain: () => void
   onSelectAgent: (key: string) => void
@@ -31,11 +36,21 @@ export function ConversationTabStrip({
   onCloseAgent: (key: string) => void
 }): React.JSX.Element {
   const tabRefs = useRef(new Map<string, HTMLButtonElement>())
-  const selectedId = selectedKey ?? 'main'
+  const selectedId = focusedTarget === 'main' ? 'main' : focusedTarget
+  const visible = new Set(visibleTargets)
 
   useEffect(() => {
     tabRefs.current.get(selectedId)?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   }, [selectedId, sessions.length])
+
+  const startTabDrag = (event: React.DragEvent<HTMLButtonElement>, target: ConversationTarget): void => {
+    writeConversationDragTarget(event.dataTransfer, target)
+    event.currentTarget.classList.add('is-dragging')
+  }
+
+  const endTabDrag = (event: React.DragEvent<HTMLButtonElement>): void => {
+    event.currentTarget.classList.remove('is-dragging')
+  }
 
   const selectByKeyboard = (event: React.KeyboardEvent<HTMLButtonElement>, currentId: string): void => {
     const ids = ['main', ...sessions.map((session) => session.key)]
@@ -61,18 +76,21 @@ export function ConversationTabStrip({
 
   return (
     <div className="conversation-tabs" role="tablist" aria-label="Conversations">
-      <div className={`conversation-tab-item is-main ${selectedKey === null ? 'is-active' : ''}`}>
+      <div className={`conversation-tab-item is-main ${focusedTarget === 'main' ? 'is-active' : ''} ${visible.has('main') ? 'is-visible' : ''}`}>
         <button
           type="button"
           ref={(node) => registerTab('main', node)}
           id="conversation-tab-main"
           className="conversation-tab"
           role="tab"
-          aria-selected={selectedKey === null}
+          aria-selected={focusedTarget === 'main'}
           aria-controls="conversation-panel-main"
-          tabIndex={selectedKey === null ? 0 : -1}
-          title="Main chat"
+          tabIndex={focusedTarget === 'main' ? 0 : -1}
+          title="Main chat — drag to split or stack"
+          draggable
           onClick={onSelectMain}
+          onDragStart={(event) => startTabDrag(event, 'main')}
+          onDragEnd={endTabDrag}
           onKeyDown={(event) => selectByKeyboard(event, 'main')}
         >
           {mainWorking ? <span className="agent-status agent-status-spinner" role="status" aria-label="Working" /> : <MainChatIcon />}
@@ -81,9 +99,9 @@ export function ConversationTabStrip({
       </div>
       <div className="conversation-agent-tabs">
         {sessions.map((session) => {
-          const active = selectedKey === session.key
+          const active = focusedTarget === session.key
           return (
-            <div className={`conversation-tab-item ${active ? 'is-active' : ''}`} key={session.key}>
+            <div className={`conversation-tab-item ${active ? 'is-active' : ''} ${visible.has(session.key) ? 'is-visible' : ''}`} key={session.key}>
               <button
                 type="button"
                 ref={(node) => registerTab(session.key, node)}
@@ -93,8 +111,11 @@ export function ConversationTabStrip({
                 aria-selected={active}
                 aria-controls={`conversation-panel-${session.key}`}
                 tabIndex={active ? 0 : -1}
-                title={session.title}
+                title={`${session.title} — drag to split or stack`}
+                draggable
                 onClick={() => onSelectAgent(session.key)}
+                onDragStart={(event) => startTabDrag(event, session.key)}
+                onDragEnd={endTabDrag}
                 onKeyDown={(event) => selectByKeyboard(event, session.key)}
               >
                 <AgentStatusIcon status={session.status} />
@@ -230,7 +251,6 @@ export function AgentConversationPanel({
       id={`conversation-panel-${session.key}`}
       role="tabpanel"
       aria-labelledby={`conversation-tab-${session.key}`}
-      hidden={!active}
       onClick={handleWindowClick}
     >
       <div className="agent-overlay-header">

@@ -11,6 +11,8 @@ import {
   useState
 } from 'react'
 import { AgentConversationPanel, ConversationTabStrip, SendArrowIcon } from './AgentDock'
+import { ConversationLayoutTree } from './ConversationLayout'
+import type { ConversationTarget, LayoutNode } from './conversation-layout'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import { nextAgentSelectionAfterClose } from './agent-session-model'
@@ -638,6 +640,35 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, buildOptimisticUserMessage(optimisticId, trimmed, attachments)])
 
     try {
+      if (provider === 'claude') {
+        const response = await window.api.claude.sendMessage({
+          threadId: activeThreadId,
+          text: trimmed,
+          attachments,
+          cwd: workspace,
+          model: selectedModel,
+          effort: selectedReasoningEffort === 'minimal' || selectedReasoningEffort === 'ultra'
+            ? null
+            : selectedReasoningEffort,
+          collaborationMode
+        })
+        watchThreadIdRef.current = response.threadId
+        setActiveThreadId(response.threadId)
+        persistLastThreadId(response.threadId)
+        setActiveTurnId(response.turnId)
+        activeTurnIdRef.current = response.turnId
+        noteTurn(response.turnId, {
+          status: 'inProgress',
+          origin: 'live',
+          requestedModel: selectedModel,
+          model: response.model,
+          reasoningEffort: response.effort,
+          workspace,
+          startedAtMs: Date.now()
+        })
+        return true
+      }
+
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
         text: trimmed,
@@ -678,7 +709,7 @@ export default function App(): React.JSX.Element {
         optimisticUserMessageIdRef.current = null
         setItems((current) => current.filter((item) => item.id !== optimisticId))
       }
-      addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
+      addSystemItem(`${provider === 'claude' ? 'Claude' : 'Codex'} turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
       userTurnRequestPendingRef.current = false
@@ -696,7 +727,11 @@ export default function App(): React.JSX.Element {
     }
 
     try {
-      await window.api.codex.steerTurn({ threadId, turnId, text: trimmed })
+      if (provider === 'claude') {
+        await window.api.claude.steerTurn({ threadId, turnId, text: trimmed })
+      } else {
+        await window.api.codex.steerTurn({ threadId, turnId, text: trimmed })
+      }
       return true
     } catch (error) {
       addSystemItem(`Could not add guidance to the active turn: ${(error as Error).message}`, 'error')
@@ -755,7 +790,11 @@ export default function App(): React.JSX.Element {
     }
 
     try {
-      await window.api.codex.interruptTurn({ threadId: activeThreadId, turnId: activeTurnId })
+      if (provider === 'claude') {
+        await window.api.claude.interruptTurn({ threadId: activeThreadId, turnId: activeTurnId })
+      } else {
+        await window.api.codex.interruptTurn({ threadId: activeThreadId, turnId: activeTurnId })
+      }
     } catch (error) {
       addSystemItem(`Stop failed: ${(error as Error).message}`, 'error')
     }
@@ -768,6 +807,10 @@ export default function App(): React.JSX.Element {
     }
 
     try {
+      if (provider === 'claude') {
+        addSystemItem('Claude manages context compaction automatically in this integration.', 'info')
+        return
+      }
       // No optimistic message: the server's contextCompaction item arrives
       // within ~100ms and renders the live progress row itself.
       await window.api.codex.compactThread(threadId)
@@ -1744,9 +1787,14 @@ export default function App(): React.JSX.Element {
           isCompacting={isCompacting}
           onCompactThread={handleCompactThread}
           agentSessions={agentSessions}
-          selectedAgentKey={selectedAgentKey}
-          onSelectAgent={setSelectedAgentKey}
-          onSelectMain={() => setSelectedAgentKey(null)}
+          focusedTarget={focusedTarget}
+          visibleTargets={visibleTargets}
+          conversationLayout={conversationLayout}
+          onConversationLayoutChange={setConversationLayout}
+          focusedLeafId={focusedLeafId}
+          onFocusedLeafChange={setFocusedLeafId}
+          onSelectConversation={handleSelectConversation}
+          onRemoveConversationTarget={handleRemoveConversationTarget}
           onToggleWatchAgent={handleToggleWatchAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
@@ -1835,9 +1883,14 @@ function ChatPane({
   isCompacting,
   onCompactThread,
   agentSessions,
-  selectedAgentKey,
-  onSelectAgent,
-  onSelectMain,
+  focusedTarget,
+  visibleTargets,
+  conversationLayout,
+  onConversationLayoutChange,
+  focusedLeafId,
+  onFocusedLeafChange,
+  onSelectConversation,
+  onRemoveConversationTarget,
   onToggleWatchAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
@@ -1890,9 +1943,14 @@ function ChatPane({
   isCompacting: boolean
   onCompactThread: () => Promise<void>
   agentSessions: AgentSession[]
-  selectedAgentKey: string | null
-  onSelectAgent: (key: string) => void
-  onSelectMain: () => void
+  focusedTarget: ConversationTarget
+  visibleTargets: ConversationTarget[]
+  conversationLayout: LayoutNode
+  onConversationLayoutChange: (layout: LayoutNode) => void
+  focusedLeafId: string
+  onFocusedLeafChange: (leafId: string) => void
+  onSelectConversation: (target: ConversationTarget) => void
+  onRemoveConversationTarget: (target: ConversationTarget) => void
   onToggleWatchAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
@@ -1992,20 +2050,20 @@ function ChatPane({
   }
 
   const closeAgent = (key: string): void => {
-    const next = nextAgentSelectionAfterClose(agentSessions, selectedAgentKey, key)
-    if (next) onSelectAgent(next)
-    else if (selectedAgentKey === key) onSelectMain()
+    onRemoveConversationTarget(key)
     onCloseAgentSession(key)
   }
 
   const promoteAgent = (key: string): void => {
-    onSelectMain()
+    onSelectConversation('main')
     onPromoteAgent(key)
   }
 
+  const isTiled = visibleTargets.length > 1
+
   return (
     <section
-      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : selectedAgentKey ? 'is-agent-view' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''}`}
+      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : focusedTarget !== 'main' ? 'is-agent-view' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isTiled ? 'is-tiled' : ''} ${isRestoring ? 'is-hydrating' : ''}`}
       aria-busy={isRestoring}
     >
       {isPluginBrowserOpen ? (
@@ -2028,148 +2086,168 @@ function ChatPane({
         </button>
         <ConversationTabStrip
           sessions={agentSessions}
-          selectedKey={selectedAgentKey}
+          focusedTarget={focusedTarget}
+          visibleTargets={visibleTargets}
           mainWorking={Boolean(activeTurnId)}
-          onSelectMain={onSelectMain}
-          onSelectAgent={onSelectAgent}
+          onSelectMain={() => onSelectConversation('main')}
+          onSelectAgent={onSelectConversation}
           onNewAgent={onNewAgent}
           onCloseAgent={closeAgent}
         />
       </div>
 
       <div className="conversation-panels">
-      <div
-        id="conversation-panel-main"
-        className="conversation-panel main-conversation-panel"
-        role="tabpanel"
-        aria-labelledby="conversation-tab-main"
-        hidden={selectedAgentKey !== null}
-      >
-      <ThreadScroll
-        resetKey={activeThreadId}
-        activeTurnId={activeTurnId}
-        dependencies={[items, itemMeta, activeTurnId]}
-      >
-        {isRestoring ? (
-          <div className="chat-restore-status" role="status" aria-live="polite">
-            <span className="shimmer-text">Restoring conversation…</span>
-          </div>
-        ) : null}
-        {rows.map((row) => {
-          if (row.kind === 'activity') {
+        <ConversationLayoutTree
+          layout={conversationLayout}
+          focusedLeafId={focusedLeafId}
+          onLayoutChange={onConversationLayoutChange}
+          onFocusedLeafChange={onFocusedLeafChange}
+          renderPane={(target, _leafId, focused) => {
+            if (target === 'main') {
+              return (
+                <div
+                  id="conversation-panel-main"
+                  className="conversation-panel main-conversation-panel"
+                  role="tabpanel"
+                  aria-labelledby="conversation-tab-main"
+                >
+                  <ThreadScroll
+                    resetKey={activeThreadId}
+                    activeTurnId={activeTurnId}
+                    dependencies={[items, itemMeta, activeTurnId]}
+                  >
+                    {isRestoring ? (
+                      <div className="chat-restore-status" role="status" aria-live="polite">
+                        <span className="shimmer-text">Restoring conversation…</span>
+                      </div>
+                    ) : null}
+                    {rows.map((row) => {
+                      if (row.kind === 'activity') {
+                        return (
+                          <TaskActivityCard
+                            key={row.id}
+                            items={row.items}
+                            itemMeta={itemMeta}
+                            live={Boolean(activeTurnId) && row.turnId === activeTurnId}
+                            workspace={workspace}
+                          />
+                        )
+                      }
+                      if (row.kind === 'tail') {
+                        return (
+                          <TurnTail
+                            key={row.id}
+                            live={row.turnId === activeTurnId}
+                            items={turnWork.get(row.turnId) ?? []}
+                            itemMeta={itemMeta}
+                            meta={turnMeta[row.turnId]}
+                            streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
+                            onOpenTrace={() => openTrace(row.turnId)}
+                          />
+                        )
+                      }
+                      return (
+                        <ChatItemView
+                          key={row.item.id}
+                          item={row.item}
+                          meta={itemMeta[row.item.id]}
+                          turnId={row.turnId}
+                          streaming={row.item.id === streamingMessageId}
+                        />
+                      )
+                    })}
+                  </ThreadScroll>
+
+                  <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
+                    <div className="composer-context">
+                      <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
+                      {models.length ? (
+                        <ModelPill
+                          models={models}
+                          selectedModel={selectedModel}
+                          selectedEffort={selectedReasoningEffort}
+                          onSelectModel={onSelectModel}
+                          onSelectModelEffort={onSelectModelEffort}
+                        />
+                      ) : null}
+                      <PlanModePill
+                        active={collaborationMode === 'plan'}
+                        disabled={isBusy}
+                        onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
+                      />
+                    </div>
+                    <Composer
+                      docked={hasThreadContent}
+                      workspace={workspace}
+                      installedPlugins={installedPlugins}
+                      onInstalledPluginsChange={setInstalledPlugins}
+                      onBrowsePlugins={openPluginBrowser}
+                      isLoading={isRestoring || isBusy && !activeTurnId}
+                      isTurnActive={Boolean(activeTurnId)}
+                      status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
+                      onSend={onSend}
+                      onSteer={onSteer}
+                      onStop={onStop}
+                      onNewThread={onNewThread}
+                      footerExtras={
+                        <div className="composer-thread-controls">
+                          <ContextPill
+                            usage={contextUsage}
+                            disabled={Boolean(activeTurnId)}
+                            compacting={isCompacting}
+                            onCompact={onCompactThread}
+                          />
+                          <ThreadMenu
+                            placement="composer"
+                            title={title}
+                            threads={threads}
+                            activeThreadId={activeThreadId}
+                            isOpen={isThreadMenuOpen}
+                            threadsNextCursor={threadsNextCursor}
+                            threadsLoading={threadsLoading}
+                            threadsError={threadsError}
+                            onToggle={onToggleThreadMenu}
+                            onResumeThread={onResumeThread}
+                            onLoadMoreThreads={onLoadMoreThreads}
+                          />
+                        </div>
+                      }
+                    />
+                  </div>
+                </div>
+              )
+            }
+
+            const session = agentSessions.find((entry) => entry.key === target)
+            if (!session) {
+              return (
+                <div className="conversation-panel conversation-panel-empty">
+                  <div className="agent-overlay-empty">This agent tab was closed.</div>
+                </div>
+              )
+            }
+
             return (
-              <TaskActivityCard
-                key={row.id}
-                items={row.items}
-                itemMeta={itemMeta}
-                live={Boolean(activeTurnId) && row.turnId === activeTurnId}
-                workspace={workspace}
+              <AgentConversationPanel
+                session={session}
+                active={focused}
+                models={models}
+                mainModel={selectedModel}
+                mainReasoningEffort={selectedReasoningEffort}
+                onSetModel={onSetAgentModel}
+                onSetModelEffort={onSetAgentModelEffort}
+                onCloseSession={closeAgent}
+                onResetSession={onResetAgentSession}
+                onPromote={promoteAgent}
+                onToggleWatch={onToggleWatchAgent}
+                onSend={onAgentSend}
+                onSteer={onAgentSteer}
+                onStop={onAgentStop}
+                onCompact={onAgentCompact}
               />
             )
-          }
-          if (row.kind === 'tail') {
-            return (
-              <TurnTail
-                key={row.id}
-                live={row.turnId === activeTurnId}
-                items={turnWork.get(row.turnId) ?? []}
-                itemMeta={itemMeta}
-                meta={turnMeta[row.turnId]}
-                streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
-                onOpenTrace={() => openTrace(row.turnId)}
-              />
-            )
-          }
-          return (
-            <ChatItemView
-              key={row.item.id}
-              item={row.item}
-              meta={itemMeta[row.item.id]}
-              turnId={row.turnId}
-              streaming={row.item.id === streamingMessageId}
-            />
-          )
-        })}
-      </ThreadScroll>
-
-      <div className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'}`}>
-        <div className="composer-context">
-          <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
-          {models.length ? (
-            <ModelPill
-              models={models}
-              selectedModel={selectedModel}
-              selectedEffort={selectedReasoningEffort}
-              onSelectModel={onSelectModel}
-              onSelectModelEffort={onSelectModelEffort}
-            />
-          ) : null}
-          <PlanModePill
-            active={collaborationMode === 'plan'}
-            disabled={isBusy}
-            onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
-          />
-        </div>
-        <Composer
-          docked={hasThreadContent}
-          workspace={workspace}
-          installedPlugins={installedPlugins}
-          onInstalledPluginsChange={setInstalledPlugins}
-          onBrowsePlugins={openPluginBrowser}
-          isLoading={isRestoring || isBusy && !activeTurnId}
-          isTurnActive={Boolean(activeTurnId)}
-          status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
-          onSend={onSend}
-          onSteer={onSteer}
-          onStop={onStop}
-          onNewThread={onNewThread}
-          footerExtras={
-            <div className="composer-thread-controls">
-              <ContextPill
-                usage={contextUsage}
-                disabled={Boolean(activeTurnId)}
-                compacting={isCompacting}
-                onCompact={onCompactThread}
-              />
-              <ThreadMenu
-                placement="composer"
-                title={title}
-                threads={threads}
-                activeThreadId={activeThreadId}
-                isOpen={isThreadMenuOpen}
-                threadsNextCursor={threadsNextCursor}
-                threadsLoading={threadsLoading}
-                threadsError={threadsError}
-                onToggle={onToggleThreadMenu}
-                onResumeThread={onResumeThread}
-                onLoadMoreThreads={onLoadMoreThreads}
-              />
-            </div>
-          }
+          }}
         />
-      </div>
-      </div>
-
-      {agentSessions.map((session) => (
-        <AgentConversationPanel
-          key={session.key}
-          session={session}
-          active={selectedAgentKey === session.key}
-          models={models}
-          mainModel={selectedModel}
-          mainReasoningEffort={selectedReasoningEffort}
-          onSetModel={onSetAgentModel}
-          onSetModelEffort={onSetAgentModelEffort}
-          onCloseSession={closeAgent}
-          onResetSession={onResetAgentSession}
-          onPromote={promoteAgent}
-          onToggleWatch={onToggleWatchAgent}
-          onSend={onAgentSend}
-          onSteer={onAgentSteer}
-          onStop={onAgentStop}
-          onCompact={onAgentCompact}
-        />
-      ))}
       </div>
 
       {isSettingsOpen ? (
