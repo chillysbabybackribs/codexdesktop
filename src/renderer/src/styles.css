@@ -4831,13 +4831,11 @@ button {
 
 /* With agents open, the composer retracts horizontally and the agent column
    runs the full right strip down to the composer's bottom edge. */
-.composer-dock.is-docked .composer,
-.composer-dock.is-docked .composer-context {
-  transition: width 160ms ease;
+.composer-dock.is-docked .composer-surface {
+  transition: width 160ms ease, border-color 120ms ease;
 }
 
-.composer-dock.is-docked.has-agents .composer,
-.composer-dock.is-docked.has-agents .composer-context {
+.composer-dock.is-docked.has-agents .composer-surface {
   width: calc(100% - 390px);
   min-width: 220px;
 }
