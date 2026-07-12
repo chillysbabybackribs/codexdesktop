@@ -622,9 +622,9 @@ export class ResearchRunner {
       ...(focus.length > 0 ? { focus } : {}),
       searchQueries,
       artifactDir,
-      discoveredUrls: [...discoveredUrls].slice(0, 20),
+      discoveredUrls: [...discoveredUrls].slice(0, 10),
       discoveredCount: discoveredUrls.size,
-      ...(discoveredUrls.size > 20 ? { discoveredTruncated: true } : {}),
+      ...(discoveredUrls.size > 10 ? { discoveredTruncated: true } : {}),
       pages,
       ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),
       metrics,
@@ -727,7 +727,7 @@ function recordResearchError(
   errors: Array<{ url?: string; error: string }>,
   value: { url?: string; error: string }
 ): void {
-  if (errors.length >= 12) return
+  if (errors.length >= 8) return
   errors.push({
     ...(value.url ? { url: value.url.slice(0, 2_048) } : {}),
     error: value.error.slice(0, 500)
