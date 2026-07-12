@@ -442,14 +442,18 @@ export class ClaudeClient extends EventEmitter {
     error: string | null,
     usage: AgentUsage
   ): void {
+    const interrupted = turn.interrupted
     this.emitEvent({
       type: 'turn.completed',
       provider: 'claude',
       sessionId: runtime.sessionId!,
       turnId: turn.id,
-      status: turn.interrupted ? 'interrupted' : error ? 'failed' : 'completed',
+      status: interrupted ? 'interrupted' : error ? 'failed' : 'completed',
       result,
-      error,
+      // The SDK reports an internal diagnostic result when interrupt() lands
+      // during tool use. Cancellation is an expected user action, not a
+      // transcript error, so do not expose that provider diagnostic downstream.
+      error: interrupted ? null : error,
       usage
     })
   }
