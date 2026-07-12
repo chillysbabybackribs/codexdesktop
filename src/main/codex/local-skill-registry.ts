@@ -63,15 +63,12 @@ export class LocalSkillRegistry {
     text: string,
     isNewThread: boolean,
     attachments: ChatAttachment[] = [],
-    collaborationMode: 'default' | 'plan' = 'default'
+    _collaborationMode: 'default' | 'plan' = 'default'
   ): UserInput[] {
     const turnSkills = selectTurnSkills(text, this.skills)
     const newThreadSkills = isNewThread ? selectNewThreadSkills(text, this.skills) : []
-    const modeSkills = collaborationMode === 'plan'
-      ? this.skills.filter((skill) => skill.name === 'planning')
-      : []
-    const skills = [...new Map([...newThreadSkills, ...turnSkills, ...modeSkills].map((skill) => [skill.name, skill])).values()]
-    const visibleText = formatSkillInvocationText(text, [...turnSkills, ...modeSkills])
+    const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
+    const visibleText = formatSkillInvocationText(text, turnSkills)
 
     return [
       ...(visibleText.trim() ? [{ type: 'text', text: visibleText, text_elements: [] } satisfies UserInput] : []),
