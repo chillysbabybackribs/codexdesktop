@@ -1936,7 +1936,7 @@ function ChatPane({
 
   const closePluginBrowser = (): void => {
     setIsPluginBrowserOpen(false)
-    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.conversation-panel:not([hidden]) textarea')?.focus())
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.conversation-panel:not([hidden]) textarea, .agent-conversation-panel:not([hidden]) textarea')?.focus())
   }
 
   const closeAgent = (key: string): void => {
