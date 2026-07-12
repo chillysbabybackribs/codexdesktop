@@ -4094,11 +4094,12 @@ function Composer({
         }}
       />
       <div className="composer-footer">
-        <span className={`composer-status ${isLoading || isTurnActive ? 'is-active' : ''}`}>{attachmentError ?? status}</span>
-        <div className="composer-actions">
+        <div className="composer-tools">
           <AttachmentButton disabled={isLoading || isTurnActive} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
           {footerExtras}
-          <div className="composer-primary-action">
+        </div>
+        {attachmentError ? <span className="composer-error" role="alert">{attachmentError}</span> : null}
+        <div className="composer-primary-action">
             {isTurnActive ? (
               <button
                 type="button"
