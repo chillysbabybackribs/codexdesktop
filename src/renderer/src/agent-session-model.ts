@@ -1,5 +1,6 @@
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { AgentProvider } from '../../shared/agent'
 import type { ChatAttachment } from '../../shared/ipc'
 
 import type { SerializedLayoutNode } from './conversation-layout.js'
@@ -13,6 +14,7 @@ export type AgentLiteMessage = {
 
 export type AgentSession = {
   key: string
+  provider: AgentProvider
   threadId: string | null
   title: string
   status: 'idle' | 'working' | 'done'
@@ -26,6 +28,7 @@ export type AgentSession = {
 }
 
 export type PersistedAgentSession = {
+  provider?: AgentProvider
   threadId?: string | null
   title?: string
   watchesMain?: boolean
@@ -44,9 +47,10 @@ export type PersistedAgentDock = {
 
 export type AgentDeltaBuffer = ReadonlyMap<string, ReadonlyMap<string, string>>
 
-export function createAgentSession(key: string, title: string): AgentSession {
+export function createAgentSession(key: string, title: string, provider: AgentProvider = 'codex'): AgentSession {
   return {
     key,
+    provider,
     threadId: null,
     title,
     status: 'idle',
@@ -149,6 +153,7 @@ export function serializeAgentDock(
   return JSON.stringify({
     counter,
     sessions: sessions.map((session) => ({
+      provider: session.provider,
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,
