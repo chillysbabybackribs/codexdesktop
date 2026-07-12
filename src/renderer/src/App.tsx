@@ -3345,6 +3345,7 @@ function Composer({
   onSteer,
   onStop,
   onNewThread,
+  onNewAgent,
   footerLeading,
   footerTrailing
 }: {
@@ -3360,6 +3361,7 @@ function Composer({
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
   onNewThread: () => void
+  onNewAgent: () => void
   footerLeading?: React.ReactNode
   footerTrailing?: React.ReactNode
 }): React.JSX.Element {
@@ -3367,7 +3369,9 @@ function Composer({
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const createMenuRef = useRef<HTMLDivElement | null>(null)
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>('closed')
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0)
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
@@ -3402,6 +3406,28 @@ function Composer({
 
   useEffect(() => setPluginSelectionIndex(0), [pluginQuery])
 
+  useEffect(() => {
+    if (!isCreateMenuOpen) return
+
+    const handlePointerDown = (event: MouseEvent): void => {
+      if (createMenuRef.current && !createMenuRef.current.contains(event.target as Node)) {
+        setIsCreateMenuOpen(false)
+      }
+    }
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        setIsCreateMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('mousedown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('mousedown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isCreateMenuOpen])
+
   const mentionPlugins = installedPlugins.filter((plugin) => {
     const name = plugin.interface?.displayName || plugin.name
     return !pluginQuery || name.toLowerCase().includes(pluginQuery) || plugin.keywords.some((keyword) => keyword.toLowerCase().includes(pluginQuery))
@@ -3433,6 +3459,11 @@ function Composer({
       setValue((current) => current ? `${text}\n${current}` : text)
       if (!isTurnActive) setAttachments(submittedAttachments)
     }
+  }
+
+  const runCreateCommand = (command: () => void): void => {
+    setIsCreateMenuOpen(false)
+    command()
   }
 
   return (
@@ -3515,7 +3546,7 @@ function Composer({
           <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
         ) : null}
         {footerTrailing ? <div className="composer-trailing-actions">{footerTrailing}</div> : null}
-        <div className="composer-primary-action">
+        <div className="composer-primary-action" ref={createMenuRef}>
           {isTurnActive ? (
             <button
               type="button"
@@ -3536,16 +3567,32 @@ function Composer({
               <SendArrowIcon />
             </button>
           ) : (
-            <button
-              type="button"
-              className="send-button composer-new-chat"
-              aria-label="New chat"
-              title="New chat"
-              disabled={isLoading}
-              onClick={onNewThread}
-            >
-              <NewChatIcon />
-            </button>
+            <>
+              {isCreateMenuOpen ? (
+                <div className="composer-create-menu" role="menu">
+                  <button type="button" role="menuitem" className="composer-create-item" onClick={() => runCreateCommand(onNewThread)}>
+                    <span className="composer-create-item-icon" aria-hidden="true"><ChatBubbleIcon /></span>
+                    <span>New chat</span>
+                  </button>
+                  <button type="button" role="menuitem" className="composer-create-item" onClick={() => runCreateCommand(onNewAgent)}>
+                    <span className="composer-create-item-icon" aria-hidden="true"><NewAgentIcon /></span>
+                    <span>New agent</span>
+                  </button>
+                </div>
+              ) : null}
+              <button
+                type="button"
+                className={`send-button composer-new-chat ${isCreateMenuOpen ? 'is-open' : ''}`}
+                aria-label="Create"
+                title="Create"
+                aria-haspopup="menu"
+                aria-expanded={isCreateMenuOpen}
+                disabled={isLoading}
+                onClick={() => setIsCreateMenuOpen((open) => !open)}
+              >
+                <NewChatIcon />
+              </button>
+            </>
           )}
         </div>
       </div>
