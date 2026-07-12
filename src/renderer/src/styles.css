@@ -142,12 +142,8 @@ button {
   background: #181818;
 }
 
-.chat-pane.is-empty {
-  grid-template-rows: 72px 1fr;
-}
-
-.chat-pane.is-thread {
-  grid-template-rows: 50px 1fr auto;
+.chat-pane:not(.is-plugin-browser) {
+  grid-template-rows: 50px minmax(0, 1fr);
 }
 
 .chat-pane.is-plugin-browser {
@@ -165,23 +161,42 @@ button {
 .chat-toolbar {
   position: relative;
   display: grid;
-  /* Symmetric side columns keep the thread selector centered in the pane while
-     the settings gear stays pinned to the left. */
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 28px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
-  padding: 12px 22px;
-  transition: width 160ms ease;
+  gap: 10px;
+  min-width: 0;
+  padding: 7px 14px 6px;
+  border-bottom: 1px solid rgb(255 255 255 / 5%);
   width: 100%;
-}
-
-.chat-pane.has-agents .chat-toolbar {
-  width: calc(100% - 390px);
-  min-width: 240px;
 }
 
 .chat-toolbar .icon-button {
   justify-self: start;
+}
+
+.conversation-panels {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+.conversation-panel,
+.agent-conversation-panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.conversation-panel[hidden],
+.agent-conversation-panel[hidden] {
+  display: none;
+}
+
+.main-conversation-panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .icon-button,
