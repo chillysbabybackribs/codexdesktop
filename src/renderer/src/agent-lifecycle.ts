@@ -143,7 +143,7 @@ export function createAgentLifecycle(options: {
       if (session.turnId) {
         void providerApi(session).interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
       }
-      void Promise.resolve(providerApi(session).unsubscribeThread(session.threadId)).catch(() => {})
+      void providerApi(session).unsubscribeThread(session.threadId).catch(() => {})
     }
   }
 
@@ -162,7 +162,7 @@ export function createAgentLifecycle(options: {
       isCompacting: false
     }))
     if (session.threadId && session.threadId !== options.getActiveThreadId()) {
-      void Promise.resolve(providerApi(session).unsubscribeThread(session.threadId)).catch(() => {})
+      void providerApi(session).unsubscribeThread(session.threadId).catch(() => {})
     }
   }
 
