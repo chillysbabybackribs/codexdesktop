@@ -93,6 +93,7 @@ export function ModelPill({
 
   useEffect(() => () => cancelHoverClose(), [])
 
+  const hasSecondarySection = Boolean(secondaryModels?.length && onSelectSecondaryModel)
   const active =
     models.find((model) => model.model === selectedModel) ??
     models.find((model) => model.isDefault) ??

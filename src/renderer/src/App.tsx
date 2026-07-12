@@ -172,6 +172,9 @@ export default function App(): React.JSX.Element {
   )
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
   const [models, setModels] = useState<Model[]>([])
+  // The other provider's catalog, shown as a second section in the model
+  // picker so switching provider is a model pick rather than a settings trip.
+  const [crossModels, setCrossModels] = useState<Model[]>([])
   // Model slug sent with every turn. `null` = no explicit pick yet, so turns
   // omit the override and run on the CLI-configured default.
   const [selectedModel, setSelectedModel] = useState<string | null>(
@@ -534,6 +537,34 @@ export default function App(): React.JSX.Element {
     return dispose
   }, [provider])
 
+  // Load the other provider's catalog once the active provider has settled.
+  // Both backends self-start on listModels; if the other one is unavailable
+  // the picker simply omits its section.
+  useEffect(() => {
+    if (isRestoring || crossModels.length) {
+      return
+    }
+
+    let cancelled = false
+
+    const load: Promise<Model[]> = provider === 'codex'
+      ? window.api.claude
+          .listModels(workspaceRef.current)
+          .then((catalog) => (catalog as AgentModel[]).map(claudeModelToUiModel))
+      : window.api.codex.listModels()
+
+    load.then(
+      (list) => {
+        if (!cancelled && list.length) setCrossModels(list)
+      },
+      (error: Error) => console.warn('Failed to load cross-provider model list', error)
+    )
+
+    return () => {
+      cancelled = true
+    }
+  }, [provider, isRestoring, crossModels.length])
+
   const measureBrowserBounds = useCallback((): BrowserBounds | null => {
     const host = viewHostRef.current
 
@@ -796,6 +827,15 @@ export default function App(): React.JSX.Element {
     setSelectedReasoningEffort(effort)
     window.localStorage.setItem(modelStorageKey, model)
     window.localStorage.setItem(reasoningEffortStorageKey, effort)
+  }
+
+  // Picking a model from the other provider's section. Everything in the app
+  // is keyed on the boot-time provider, so persist the pick and reload — the
+  // same mechanism the old settings toggle used.
+  const handleSelectCrossModel = (model: string): void => {
+    window.localStorage.setItem(modelStorageKey, model)
+    window.localStorage.setItem(providerStorageKey, provider === 'codex' ? 'claude' : 'codex')
+    window.location.reload()
   }
 
   const handleSelectAgentModel = (key: string, model: string): void => {
