@@ -11,6 +11,8 @@ Codex Desktop is an Electron client with a React renderer, a native Chromium bro
 | Electron lifecycle and IPC wiring | `src/main/index.ts`, `src/shared/ipc.ts`, `src/preload/index.ts` |
 | Codex app-server lifecycle and requests | `src/main/codex/codex-client.ts`, `src/main/codex/app-server-process.ts`, `src/main/codex/app-server-rpc.ts` |
 | Codex configuration, dynamic tools, and prompt overlay | `src/main/codex/codex-config.ts` |
+| Anthropic SDK lifecycle, options, and IPC | `src/main/claude/claude-client.ts`, `src/main/claude/claude-options.ts`, `src/main/claude/claude-ipc.ts` |
+| Provider-neutral durable memory and opening recall | `src/main/conversation-memory-service.ts`, `src/main/memory-store.ts`, `src/main/memory-format.ts`, `src/main/memory-ipc.ts` |
 | Local skill discovery and attachment | `src/main/codex/local-skill-registry.ts` |
 | Browser tabs and native views | `src/main/browser/tab-manager.ts`, `src/main/browser/browser-tab-view.ts`, `src/main/browser/browser-target-registry.ts` |
 | Agent-facing browser execution | `src/main/browser/browser-agent.ts`, `src/main/browser/browser-control-server.ts`, `src/main/browser/research-runner.ts` |
@@ -25,6 +27,7 @@ Before adding a helper or abstraction, search for an existing implementation and
 - Keep reusable task workflows in `skills/<name>/SKILL.md`; do not copy a skill's workflow into the global Codex prompt.
 - Keep tool inputs, outputs, defaults, and error behavior in the tool description and schema beside the implementation.
 - Keep `buildGuidance()` in `src/main/codex/codex-config.ts` limited to product-wide behavior that must apply in every workspace plus dynamic host-session safety.
+- Route cross-provider durable memory through `ConversationMemoryService`. Keep provider transcript resume and context compaction separate from app-owned long-term memory.
 - Generated browser scripts that use `CODEX_BROWSER_SOCK` must target an explicit existing tab id obtained from `GET /tabs` or an earlier browser result. Do not create a tab unless the user explicitly requested one.
 
 ## Generated code and source shadows
@@ -58,4 +61,3 @@ npm run verify:app
 ```
 
 `verify:app` builds and launches a visibly labelled disposable instance with isolated user data. When the current checkout is hosting the active Codex Desktop conversation, do not run `npm run dev`, `npm run dev:app`, terminate the host process tree, or close the host window as verification.
-
