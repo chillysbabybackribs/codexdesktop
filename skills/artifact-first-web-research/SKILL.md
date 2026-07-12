@@ -10,7 +10,8 @@ Treat research as a claim-coverage problem. Define the evidence needed for the r
 ## Execution Budget
 
 - Keep the initial user update to one or two sentences: evidence target, source lanes, and output shape.
-- Prefer one `research_web` call with one to three focused queries for public discovery and extraction. It saves verified page artifacts without putting full page bodies in model context.
+- Prefer one `research_web` call that starts with one focused primary query. Add a second or third query only as a distinct fallback source lane; the tool evaluates fallbacks only when the verified-page target is not met.
+- Leave `maxPages` omitted so the call targets three verified pages, and normally leave `maxAttempts` omitted so it stops after at most six candidates. Use a focused follow-up call for a material evidence gap instead of increasing the page target.
 - Inspect artifacts with targeted `rg`, `sed`, or similarly bounded reads. Do not load every saved page in full.
 - Use `browser_extract_page` for one visible page and `browser_run` for interactive, authenticated, or client-rendered state.
 - Use Node (`node` / `.mjs`) only when an exact structured API or repeated custom extraction cannot be expressed by the built-in tools. Do not probe other runtimes unless the task requires them.
@@ -25,7 +26,7 @@ Pick the cheapest reliable lane before opening pages:
 - Official documentation or release notes: exact official URL, feed, or API when known; otherwise discover it with `research_web`.
 - GitHub issues, discussions, pull requests, or releases: prefer the GitHub page or API record that exposes the required metadata and comments.
 - Dynamic, authenticated, interactive, or client-rendered content: embedded browser session.
-- Broad public discovery: `research_web`, then targeted reads of the selected artifacts.
+- Broad public discovery: one primary `research_web` query with optional fallback lanes, then targeted reads of the selected artifacts.
 
 Do not begin with a broad search when the task clearly names a structured primary source. Reuse existing tabs and the visible authenticated profile. Serialize navigation rather than creating request or tab bursts.
 
