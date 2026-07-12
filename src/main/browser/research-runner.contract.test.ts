@@ -9,4 +9,6 @@ test('research runner stays artifact-first without creating or activating visibl
   assert.match(source, /normalizeResearchUrls/)
   assert.match(source, /buildPageExtractionProgram\(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS\)/)
   assert.match(source, /selectResearchEvidence/)
+  assert.match(source, /targetPages - pages\.length/)
+  assert.doesNotMatch(source, /pages\.length < MAX_TARGET_PAGES/)
 })

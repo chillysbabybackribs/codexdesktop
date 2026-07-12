@@ -278,7 +278,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Verify direct public URLs or adaptively discover, rank, and save up to three public web pages. With focus items, returns bounded exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
+    description: 'Verify direct public URLs or adaptively discover, rank, and save up to three public web pages. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]
