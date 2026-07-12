@@ -41,12 +41,12 @@ test('dynamic tool router validates required browser_run code', async () => {
 
 test('dynamic tool router normalizes research arguments and forwards run context and progress', async () => {
   let request: ResearchRequest | null = null
-  let context: ResearchRunContext | null = null
+  const contexts: ResearchRunContext[] = []
   let progressMessage: string | null = null
   const researchRunner = {
     run: async (next: ResearchRequest, nextContext: ResearchRunContext) => {
       request = next
-      context = nextContext
+      contexts.push(nextContext)
       nextContext.onProgress?.({ stage: 'discovering', message: 'Searching source lane 1/1…' })
       return { ok: true }
     }
@@ -65,6 +65,8 @@ test('dynamic tool router normalizes research arguments and forwards run context
 
   assert.equal(response.success, true)
   assert.deepEqual(request, { queries: ['one', 'two'], maxResults: 4, maxPages: 2, maxAttempts: 3, snippetChars: 1200 })
+  const context = contexts[0]
+  assert.ok(context)
   assert.equal(context?.runId, 'call-1')
   assert.equal(context?.threadId, 'thread-1')
   assert.equal(context?.turnId, 'turn-1')
