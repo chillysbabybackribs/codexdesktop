@@ -106,10 +106,10 @@ export class ClaudeClient extends EventEmitter {
   }
 
   async startThread(
-    cwd?: string | null,
+    _cwd?: string | null,
     model?: string | null,
     effort?: ClaudeEffort | null,
-    collaborationMode: 'default' | 'plan' = 'default'
+    _collaborationMode: 'default' | 'plan' = 'default'
   ): Promise<{ threadId: string | null; model: string | null; effort: ClaudeEffort | null }> {
     // Claude assigns the real session id on the first message. Keep this call
     // metadata-only so opening a new conversation does not spawn a CLI process.
@@ -118,7 +118,7 @@ export class ClaudeClient extends EventEmitter {
 
   async resumeThread(
     threadId: string,
-    cwd?: string | null
+    _cwd?: string | null
   ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
     // Session files are sufficient for restore. Defer the CLI process until a
     // new turn is actually sent to this thread.
@@ -283,8 +283,8 @@ export class ClaudeClient extends EventEmitter {
       rejectInitialized,
       closing: false,
       seenModelMessageIds: new Set(),
-      totalUsage: emptyUsage()
-      ,idleTimer: null
+      totalUsage: emptyUsage(),
+      idleTimer: null
     }
 
     const mcpServer = createClaudeBrowserMcpServer(

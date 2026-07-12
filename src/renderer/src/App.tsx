@@ -1475,6 +1475,9 @@ export default function App(): React.JSX.Element {
   function handleClaudeEvent(event: AgentEvent): void {
     if (event.type === 'status' || event.type === 'session.started') return
     if (!isRelevantThread(event.sessionId)) return
+    if (event.type !== 'message.delta' && event.type !== 'reasoning.delta') {
+      flushPendingItemMutations()
+    }
 
     if (event.type === 'turn.started') {
       setActiveTurnId(event.turnId)
@@ -1493,7 +1496,7 @@ export default function App(): React.JSX.Element {
     if (event.type === 'message.delta') {
       const itemId = `claude-answer-${event.turnId}`
       noteItem(itemId, event.turnId)
-      setItems((current) => appendAgentMessageDelta(current, itemId, event.text))
+      enqueueItemMutation((current) => appendAgentMessageDelta(current, itemId, event.text))
       return
     }
 
@@ -1522,7 +1525,7 @@ export default function App(): React.JSX.Element {
       // into a `reasoning` item keyed on the block so it groups into the turn's
       // activity card.
       noteItem(event.itemId, event.turnId)
-      setItems((current) => appendReasoningDelta(current, event.itemId, 'content', 0, event.text))
+      enqueueItemMutation((current) => appendReasoningDelta(current, event.itemId, 'content', 0, event.text))
       return
     }
 
