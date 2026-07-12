@@ -15,6 +15,7 @@ import {
 } from './research-evidence.js'
 import { collectWithConcurrencyUntil, KeyedTaskScheduler } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
+import { fetchStaticResearchPage } from './research-static-fetch.js'
 import {
   assessExtractedPage,
   buildResearchQueryVariants,
@@ -89,6 +90,10 @@ export type ResearchMetrics = {
   pagesAttempted: number
   pagesVerified: number
   pageCacheHits: number
+  staticFetchAttempts: number
+  staticFetchHits: number
+  staticFetchMs: number
+  browserPageLoads: number
   targetMet: boolean
   navigation: {
     count: number
@@ -260,6 +265,10 @@ export class ResearchRunner {
     const evidenceDocuments: ResearchEvidenceDocument[] = []
     let pageAttempts = 0
     let pageCacheHits = 0
+    let staticFetchAttempts = 0
+    let staticFetchHits = 0
+    let staticFetchMs = 0
+    let browserPageLoads = 0
     let evidenceRevision = -1
     let cachedEvidence: ReturnType<typeof selectResearchEvidence> = { passages: [], gaps: [] }
 
