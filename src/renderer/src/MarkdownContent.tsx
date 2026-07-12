@@ -31,6 +31,24 @@ export const MarkdownContent = memo(function MarkdownContent({ text }: { text: s
   )
 })
 
+export const BrowserMarkdownLink: NonNullable<Components['a']> = ({ children, href, node: _node, ...props }) => (
+  <a
+    {...props}
+    href={href}
+    onClick={(event) => {
+      const destination = classifyMarkdownHref(href)
+      if (destination === 'anchor') return
+
+      event.preventDefault()
+      if (destination === 'browser' && href) void window.api.browser.newTab(href)
+    }}
+  >
+    {children}
+  </a>
+)
+
+export const browserLinkComponents: Components = { a: BrowserMarkdownLink }
+
 const markdownComponents: Components = {
   h1: ({ children }) => <h1 className="markdown-title">{children}</h1>,
   h2: ({ children }) => <h2 className="markdown-section-title">{children}</h2>,
@@ -63,24 +81,6 @@ const markdownComponents: Components = {
     )
   }
 }
-
-export const BrowserMarkdownLink: NonNullable<Components['a']> = ({ children, href, node: _node, ...props }) => (
-  <a
-    {...props}
-    href={href}
-    onClick={(event) => {
-      const destination = classifyMarkdownHref(href)
-      if (destination === 'anchor') return
-
-      event.preventDefault()
-      if (destination === 'browser' && href) void window.api.browser.newTab(href)
-    }}
-  >
-    {children}
-  </a>
-)
-
-export const browserLinkComponents: Components = { a: BrowserMarkdownLink }
 
 function parseChartConfig(value: string): ChartConfig | null {
   try {
