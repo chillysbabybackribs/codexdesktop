@@ -17,7 +17,6 @@ type AgentLifecycleStore = {
   patchSession: (key: string, update: (session: AgentSession) => AgentSession) => void
   appendMessage: (key: string, message: AgentLiteMessage) => void
   appendMessageOnce: (key: string, message: AgentLiteMessage) => void
-  setOpenKeys: (update: (keys: string[]) => string[]) => void
   setSelectedKey: (update: (key: string | null) => string | null) => void
 }
 
@@ -121,7 +120,6 @@ export function createAgentLifecycle(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key) ?? null
     cancelRecovery(key)
     store.updateSessions((sessions) => sessions.filter((candidate) => candidate.key !== key))
-    store.setOpenKeys((current) => current.filter((candidate) => candidate !== key))
     store.setSelectedKey((current) => current === key ? null : current)
     return session
   }

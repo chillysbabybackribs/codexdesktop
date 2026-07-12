@@ -22,9 +22,7 @@ export function useAgentSessions(
   }
 ): {
   agentSessions: AgentSession[]
-  openAgentKeys: string[]
   selectedAgentKey: string | null
-  setOpenAgentKeys: React.Dispatch<React.SetStateAction<string[]>>
   setSelectedAgentKey: React.Dispatch<React.SetStateAction<string | null>>
   agentSessionsRef: React.MutableRefObject<AgentSession[]>
   agentStartQueueRef: React.MutableRefObject<string[]>
@@ -37,13 +35,10 @@ export function useAgentSessions(
   backgroundSessionForThread: (threadId: string) => AgentSession | null
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
   handleNewAgent: () => void
-  handleOpenAgent: (key: string) => void
-  handleMinimizeAgent: (key: string) => void
   handleToggleWatchAgent: (key: string) => void
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
-  const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
   const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
   const agentSessionsRef = useRef<AgentSession[]>([])
   const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
@@ -182,16 +177,7 @@ export function useAgentSessions(
       ...sessions,
       createAgentSession(key, `Agent ${agentCounterRef.current++}`)
     ])
-    setOpenAgentKeys((current) => [...current, key])
     setSelectedAgentKey(key)
-  }
-
-  function handleOpenAgent(key: string): void {
-    setOpenAgentKeys((current) => current.includes(key) ? current : [...current, key])
-  }
-
-  function handleMinimizeAgent(key: string): void {
-    setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key))
   }
 
   function handleToggleWatchAgent(key: string): void {
@@ -215,16 +201,13 @@ export function useAgentSessions(
     window.localStorage.setItem(storageKey, serializeAgentDock(
       agentCounterRef.current,
       agentSessions,
-      openAgentKeys,
       selectedAgentKey
     ))
-  }, [agentSessions, openAgentKeys, selectedAgentKey, storageKey])
+  }, [agentSessions, selectedAgentKey, storageKey])
 
   return {
     agentSessions,
-    openAgentKeys,
     selectedAgentKey,
-    setOpenAgentKeys,
     setSelectedAgentKey,
     agentSessionsRef,
     agentStartQueueRef,
@@ -237,8 +220,6 @@ export function useAgentSessions(
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
-    handleOpenAgent,
-    handleMinimizeAgent,
     handleToggleWatchAgent,
     handleSetAgentModel
   }

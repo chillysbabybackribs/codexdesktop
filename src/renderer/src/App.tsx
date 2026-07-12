@@ -185,7 +185,6 @@ export default function App(): React.JSX.Element {
   const {
     agentSessions,
     selectedAgentKey,
-    setOpenAgentKeys,
     setSelectedAgentKey,
     agentSessionsRef,
     agentStartQueueRef,
@@ -953,7 +952,6 @@ export default function App(): React.JSX.Element {
         counterRef: agentCounterRef,
         restoredRef: agentDockRestoredRef,
         updateSessions: updateAgentSessions,
-        setOpenKeys: setOpenAgentKeys,
         setSelectedKey: setSelectedAgentKey,
         patchSession: patchAgentSession,
         appendMessage: appendAgentMessage
@@ -1012,7 +1010,6 @@ export default function App(): React.JSX.Element {
       patchSession: patchAgentSession,
       appendMessage: appendAgentMessage,
       appendMessageOnce: appendAgentMessageOnce,
-      setOpenKeys: setOpenAgentKeys,
       setSelectedKey: setSelectedAgentKey
     },
     maxRecoveryAttempts: maxAutoRecoveryAttempts,

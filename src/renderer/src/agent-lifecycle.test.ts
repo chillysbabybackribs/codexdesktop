@@ -14,7 +14,6 @@ function lifecycleHarness(session: AgentSession): {
   const messages: AgentLiteMessage[] = []
   const selectedModels: string[] = []
   const createdMainThreads: string[] = []
-  const openKeys = [session.key]
   let selectedKey: string | null = session.key
   const recoveryRef = { current: new Map<string, AgentRecoveryState>() }
 
@@ -32,7 +31,6 @@ function lifecycleHarness(session: AgentSession): {
       appendMessageOnce: (_key, message) => {
         if (!messages.some((existing) => existing.id === message.id)) messages.push(message)
       },
-      setOpenKeys: (update) => openKeys.splice(0, openKeys.length, ...update(openKeys)),
       setSelectedKey: (update) => { selectedKey = update(selectedKey) }
     },
     maxRecoveryAttempts: 3,

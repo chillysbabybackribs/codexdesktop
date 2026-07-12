@@ -138,7 +138,6 @@ export function completeAgentMessage(
 export function serializeAgentDock(
   counter: number,
   sessions: AgentSession[],
-  openKeys: string[],
   selectedKey: string | null
 ): string {
   return JSON.stringify({
@@ -149,7 +148,6 @@ export function serializeAgentDock(
       watchesMain: session.watchesMain,
       model: session.model,
       reasoningEffort: session.reasoningEffort,
-      open: openKeys.includes(session.key),
       selected: session.key === selectedKey
     }))
   })

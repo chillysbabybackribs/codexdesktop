@@ -9,7 +9,6 @@ type AgentDockStore = {
   counterRef: MutableRef<number>
   restoredRef: MutableRef<boolean>
   updateSessions: (update: (sessions: AgentSession[]) => AgentSession[]) => void
-  setOpenKeys: (update: (keys: string[]) => string[]) => void
   setSelectedKey: (update: (key: string | null) => string | null) => void
   patchSession: (key: string, update: (session: AgentSession) => AgentSession) => void
   appendMessage: (key: string, message: AgentLiteMessage) => void
@@ -65,11 +64,6 @@ export async function restoreAgentDock(options: {
 
     // Register before resuming so incoming events route to the dock.
     store.updateSessions((current) => [...current, ...restored])
-    const anyOpenFlag = entries.some((entry) => entry.open)
-    const openKeys = anyOpenFlag
-      ? restored.filter((_, index) => entries[index].open).map((session) => session.key)
-      : restored.map((session) => session.key)
-    if (openKeys.length) store.setOpenKeys((current) => [...current, ...openKeys])
     const selectedIndex = entries.findIndex((entry) => entry.selected)
     if (selectedIndex >= 0) store.setSelectedKey(() => restored[selectedIndex].key)
 

@@ -89,7 +89,7 @@ test('agent dock persistence keeps only durable metadata', () => {
     model: 'gpt-5',
     reasoningEffort: 'high'
   }
-  const raw = serializeAgentDock(4, [session], ['one'], 'one')
+  const raw = serializeAgentDock(4, [session], 'one')
 
   assert.deepEqual(parseAgentDock(raw), {
     counter: 4,
@@ -99,7 +99,6 @@ test('agent dock persistence keeps only durable metadata', () => {
       watchesMain: true,
       model: 'gpt-5',
       reasoningEffort: 'high',
-      open: true,
       selected: true
     }]
   })
