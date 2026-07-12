@@ -2737,8 +2737,83 @@ button {
   color: #ffffff;
 }
 
-.composer-new-chat:not(:disabled):hover {
+.composer-new-chat:not(:disabled):hover,
+.composer-new-chat.is-open {
   color: #ffffff;
+}
+
+.composer-create-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: 176px;
+  padding: 5px;
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 10px;
+  background: rgb(30 30 32 / 97%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 40%),
+    0 16px 42px -18px rgb(0 0 0 / 68%);
+  backdrop-filter: blur(18px) saturate(140%);
+  transform-origin: bottom right;
+  animation: composer-create-menu-in 130ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.composer-create-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #e4e7ea;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 550;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 100ms ease,
+    color 100ms ease;
+}
+
+.composer-create-item:hover,
+.composer-create-item:focus-visible {
+  background: rgb(255 255 255 / 7%);
+  color: #ffffff;
+  outline: none;
+}
+
+.composer-create-item-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: #9aa0a7;
+}
+
+.composer-create-item:hover .composer-create-item-icon,
+.composer-create-item:focus-visible .composer-create-item-icon {
+  color: #d0d5da;
+}
+
+@keyframes composer-create-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .workspace-pill {
@@ -4430,10 +4505,6 @@ button {
 
 .agent-status-check {
   color: #f28a31;
-}
-
-.agent-new-button {
-  flex: 0 0 auto;
 }
 
 .agent-column-shell {
