@@ -2610,13 +2610,25 @@ function ChatPane({
               )
             }
 
+            // The tab's model menu is grouped by the session's own provider:
+            // its catalog is primary, the other provider's is the secondary
+            // section (picking from it re-homes the tab, not the app).
+            const sameProvider = session.provider === provider
+            const sessionModels = sameProvider ? models : crossModels
+            const sessionFallbackModel = sameProvider
+              ? selectedModel
+              : (sessionModels.find((model) => model.isDefault) ?? sessionModels[0])?.model ?? null
             return (
               <AgentConversationPanel
                 session={session}
                 active={focused}
-                models={models}
-                mainModel={selectedModel}
-                mainReasoningEffort={selectedReasoningEffort}
+                models={sessionModels}
+                secondaryModels={sameProvider ? crossModels : models}
+                primaryLabel={session.provider === 'codex' ? 'OpenAI Codex' : 'Anthropic Claude'}
+                secondaryLabel={session.provider === 'codex' ? 'Anthropic Claude' : 'OpenAI Codex'}
+                onSelectSecondaryModel={onSetAgentCrossModel}
+                mainModel={sessionFallbackModel}
+                mainReasoningEffort={sameProvider ? selectedReasoningEffort : null}
                 onSetModel={onSetAgentModel}
                 onSetModelEffort={onSetAgentModelEffort}
                 onCloseSession={closeAgent}
