@@ -24,7 +24,7 @@ import type {
   MemoryPersistParams,
   PlanningState
 } from '../../shared/ipc'
-import type { AgentEvent, AgentModel, AgentProvider } from '../../shared/agent'
+import type { AgentEvent, AgentModel, AgentProvider, AgentUsage } from '../../shared/agent'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { CodexErrorInfo } from '../../shared/codex-protocol/v2/CodexErrorInfo'
