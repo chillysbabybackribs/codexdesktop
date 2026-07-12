@@ -137,7 +137,7 @@ export function splitLeafAtEdge(
     const existingTarget = layout.target
     const first = createLayoutLeaf(placeTargetIn === 'first' ? target : existingTarget)
     const second = createLayoutLeaf(placeTargetIn === 'second' ? target : existingTarget)
-    let split: LayoutSplit = {
+    let split: LayoutNode = {
       type: 'split',
       id: crypto.randomUUID(),
       direction,

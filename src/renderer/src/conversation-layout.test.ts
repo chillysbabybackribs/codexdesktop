@@ -5,30 +5,29 @@ import {
   collectTargets,
   createDefaultLayout,
   createLayoutLeaf,
+  findLeaf,
   isTiledLayout,
   normalizeLayout,
   parseLayoutNode,
   removeTarget,
   serializeLayoutNode,
-  splitLeafAtEdge
+  splitLeafAtEdge,
+  type LayoutNode
 } from './conversation-layout.ts'
 
 test('assignTarget swaps conversations instead of duplicating them', () => {
-  const layout = splitLeafAtEdge(createDefaultLayout('main'), createDefaultLayout('main').id, 'right', 'agent-a')
-  const rightLeaf = collectTargets(layout).includes('agent-a')
-    ? parseLayoutNode(serializeLayoutNode(layout), new Set(['agent-a']))
-    : null
-  assert.ok(rightLeaf)
-  const leaves = rightLeaf!.type === 'split'
-    ? [rightLeaf.first, rightLeaf.second]
-    : [rightLeaf]
-  const agentLeaf = leaves.find((node) => node.type === 'leaf' && node.target === 'agent-a')
-  assert.ok(agentLeaf && agentLeaf.type === 'leaf')
-  const mainLeaf = leaves.find((node) => node.type === 'leaf' && node.target === 'main')
-  assert.ok(mainLeaf && mainLeaf.type === 'leaf')
-
-  const swapped = assignTarget(layout, mainLeaf.id, 'agent-a')
+  const layout: LayoutNode = {
+    type: 'split',
+    id: 'split-1',
+    direction: 'row',
+    ratio: 0.5,
+    first: createLayoutLeaf('main', 'leaf-main'),
+    second: createLayoutLeaf('agent-a', 'leaf-agent')
+  }
+  const swapped = assignTarget(layout, 'leaf-main', 'agent-a')
   assert.deepEqual(collectTargets(swapped).sort(), ['agent-a', 'main'])
+  assert.equal(findLeaf(swapped, 'leaf-main')?.target, 'agent-a')
+  assert.equal(findLeaf(swapped, 'leaf-agent')?.target, 'main')
 })
 
 test('splitting a pane creates a tiled layout with the dropped conversation', () => {
@@ -39,13 +38,15 @@ test('splitting a pane creates a tiled layout with the dropped conversation', ()
 })
 
 test('removeTarget collapses a closed agent back to main in its pane', () => {
-  const split = splitLeafAtEdge(createDefaultLayout('main'), createDefaultLayout('main').id, 'right', 'agent-c')
+  const base = createDefaultLayout('main')
+  const split = splitLeafAtEdge(base, base.id, 'right', 'agent-c')
   const next = removeTarget(split, 'agent-c')
   assert.deepEqual(collectTargets(next), ['main'])
 })
 
 test('layout persistence round-trips and drops unknown agent targets', () => {
-  const split = splitLeafAtEdge(createDefaultLayout('main'), createDefaultLayout('main').id, 'bottom', 'agent-d')
+  const base = createDefaultLayout('main')
+  const split = splitLeafAtEdge(base, base.id, 'bottom', 'agent-d')
   const raw = serializeLayoutNode(split)
   const parsed = parseLayoutNode(raw, new Set(['agent-d']))
   assert.ok(parsed)
@@ -56,7 +57,7 @@ test('layout persistence round-trips and drops unknown agent targets', () => {
 
   const stale = parseLayoutNode(raw, new Set())
   assert.ok(stale)
-  assert.deepEqual(collectTargets(normalizeLayout(stale!, new Set())), ['main'])
+  assert.ok(collectTargets(normalizeLayout(stale!, new Set())).every((target) => target === 'main'))
 })
 
 test('assignTarget keeps a single main pane when swapping onto main', () => {

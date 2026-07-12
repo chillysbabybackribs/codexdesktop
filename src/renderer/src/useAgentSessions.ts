@@ -135,7 +135,7 @@ export function useAgentSessions(
       ? normalizeLayout(layout, targets)
       : createDefaultLayout(fallbackTarget)
     setConversationLayout(restored)
-    const focused = (nextFocusedLeafId && findLeaf(restored, nextFocusedLeafId))
+    const focused = (nextFocusedLeafId ? findLeaf(restored, nextFocusedLeafId) : null)
       ?? findLeafForTarget(restored, fallbackTarget)
       ?? findFirstLeaf(restored)
     setFocusedLeafId(focused.id)

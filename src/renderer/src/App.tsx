@@ -1364,20 +1364,22 @@ export default function App(): React.JSX.Element {
     }
 
     if (event.type === 'tool.completed') {
-      const current = items.find((item) => item.id === event.callId && item.type === 'dynamicToolCall')
-      const item: ThreadItem = {
-        type: 'dynamicToolCall',
-        id: event.callId,
-        namespace: 'claude',
-        tool: current?.type === 'dynamicToolCall' ? current.tool : 'tool',
-        arguments: current?.type === 'dynamicToolCall' ? current.arguments : {},
-        status: event.failed ? 'failed' : 'completed',
-        contentItems: [{ type: 'inputText', text: stringifyUnknown(event.content) }],
-        success: !event.failed,
-        durationMs: null
-      }
       noteItem(event.callId, event.turnId, { completedAtMs: Date.now() })
-      setItems((existing) => upsertMany(existing, [item]))
+      setItems((existing) => {
+        const current = existing.find((item) => item.id === event.callId && item.type === 'dynamicToolCall')
+        const item: ThreadItem = {
+          type: 'dynamicToolCall',
+          id: event.callId,
+          namespace: 'claude',
+          tool: current?.type === 'dynamicToolCall' ? current.tool : 'tool',
+          arguments: current?.type === 'dynamicToolCall' ? current.arguments : {},
+          status: event.failed ? 'failed' : 'completed',
+          contentItems: [{ type: 'inputText', text: stringifyUnknown(event.content) }],
+          success: !event.failed,
+          durationMs: null
+        }
+        return upsertMany(existing, [item])
+      })
       return
     }
 
@@ -3248,6 +3250,45 @@ function commandTestOutcome(output: string | null): string | null {
 function singleLineClip(value: string, maxChars: number): string {
   const line = value.replace(/\s+/g, ' ').trim()
   return line.length > maxChars ? `${line.slice(0, maxChars).trimEnd()}…` : line
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
+}
+
+function stringifyUnknown(value: unknown): string {
+  if (typeof value === 'string') return value
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return String(value)
+  }
+}
+
+function claudeModelToUiModel(model: AgentModel, index: number): Model {
+  const efforts = model.supportedEfforts.filter((effort) => effort !== 'max')
+  const defaultEffort = efforts.includes('high') ? 'high' : efforts[0] ?? 'high'
+  return {
+    id: model.id,
+    model: model.id,
+    upgrade: null,
+    upgradeInfo: null,
+    availabilityNux: null,
+    displayName: model.displayName,
+    description: model.description,
+    hidden: false,
+    supportedReasoningEfforts: efforts.map((reasoningEffort) => ({
+      reasoningEffort,
+      description: `${reasoningEffort} Claude effort`
+    })),
+    defaultReasoningEffort: defaultEffort,
+    inputModalities: model.inputModalities,
+    supportsPersonality: false,
+    additionalSpeedTiers: [],
+    serviceTiers: [],
+    defaultServiceTier: null,
+    isDefault: model.isDefault || index === 0
+  }
 }
 
 const ChatItemView = memo(function ChatItemView({
