@@ -11,7 +11,17 @@
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
 import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ClaudeEffort } from '../../shared/ipc'
 import type { TurnPlanItem } from './activity-model'
+
+// Codex reasoning efforts that map 1:1 onto Claude effort levels; anything
+// else (e.g. 'minimal') sends no override so the SDK default applies.
+export function asClaudeEffort(value: ReasoningEffort | null): ClaudeEffort | null {
+  return value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max'
+    ? value
+    : null
+}
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
