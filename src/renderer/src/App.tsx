@@ -62,6 +62,7 @@ import {
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
+import { decideTurnAnchor } from './thread-scroll-state'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
 import {
@@ -2791,21 +2792,24 @@ function ThreadScroll({
   // thread/started and turn/started are separate notifications, so the skip
   // must survive the intermediate render where activeTurnId is still null.
   useLayoutEffect(() => {
-    if (activeTurnId !== null && activeTurnId !== prevTurnRef.current) {
-      if (skipNextTurnAnchorRef.current) {
-        skipNextTurnAnchorRef.current = false
-      } else {
-        anchorTurnRef.current = activeTurnId
-        pinnedRef.current = false
-        cancelScheduledFollow()
-        setSpacerOn(true)
-        // The new user row + spacer land next commit; anchor once they exist.
-        // Tracked so reset/unmount can cancel it before it fires.
-        anchorFrameRef.current = window.requestAnimationFrame(() => {
-          anchorFrameRef.current = null
-          anchorTop()
-        })
-      }
+    const decision = decideTurnAnchor(
+      activeTurnId,
+      prevTurnRef.current,
+      skipNextTurnAnchorRef.current
+    )
+    skipNextTurnAnchorRef.current = decision.skipNext
+
+    if (decision.anchor && activeTurnId !== null) {
+      anchorTurnRef.current = activeTurnId
+      pinnedRef.current = false
+      cancelScheduledFollow()
+      setSpacerOn(true)
+      // The new user row + spacer land next commit; anchor once they exist.
+      // Tracked so reset/unmount can cancel it before it fires.
+      anchorFrameRef.current = window.requestAnimationFrame(() => {
+        anchorFrameRef.current = null
+        anchorTop()
+      })
     } else if (activeTurnId === null && anchorTurnRef.current !== null) {
       // The turn finished. Stop actively re-anchoring, but FREEZE the current
       // scroll position so the message/answer don't snap back down. Removing the
