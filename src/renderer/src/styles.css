@@ -4099,12 +4099,44 @@ button {
   outline-offset: 2px;
 }
 
+/* Claude Code composer: the active send button is a light, near-white
+   rounded square with a dark arrow — the one bright accent in the bar. */
 .composer .composer-primary-action .send-button {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 9px;
+  border-color: #e6e6e6;
+  background: #ececec;
+  color: #1a1a1a;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 22%);
+}
+
+.composer .composer-primary-action .send-button:not(:disabled):hover {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #101010;
+}
+
+.composer .composer-primary-action .send-button:disabled {
   border-color: #2c2c2c;
   background: #1c1c1c;
+  color: #4a4d52;
+  box-shadow: none;
+}
+
+/* The "+" create button stays a quiet ghost square, matching the leading
+   icons rather than competing with the send accent. */
+.composer .composer-primary-action .send-button.composer-new-chat {
+  border-color: #2c2c2c;
+  background: #1c1c1c;
+  color: #cfcfcf;
+  box-shadow: none;
+}
+
+.composer .composer-primary-action .send-button.composer-new-chat:not(:disabled):hover {
+  border-color: #3a3f52;
+  background: #262629;
+  color: #ececec;
 }
 
 .composer .composer-primary-action .stop-square-button {
