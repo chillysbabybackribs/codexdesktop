@@ -63,7 +63,7 @@ export function useAgentSessions(
   backgroundSessionForThread: (threadId: string, provider?: AgentProvider) => AgentSession | null
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
   handleClaudeAgentEvent: (session: AgentSession, event: AgentEvent) => void
-  handleNewAgent: (provider?: AgentProvider) => void
+  handleNewAgent: (provider?: AgentProvider, model?: string | null) => string
   handleToggleWatchAgent: (key: string) => void
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort, provider?: AgentProvider) => void
   takeQueuedStart: (provider: AgentProvider) => string | null
@@ -323,13 +323,14 @@ export function useAgentSessions(
     }
   }
 
-  function handleNewAgent(provider: AgentProvider = 'codex'): void {
+  function handleNewAgent(provider: AgentProvider = 'codex', model: string | null = null): string {
     const key = crypto.randomUUID()
     updateAgentSessions((sessions) => [
       ...sessions,
-      createAgentSession(key, `Agent ${agentCounterRef.current++}`, provider)
+      { ...createAgentSession(key, `Chat ${agentCounterRef.current++}`, provider), model }
     ])
     setConversationLayout((current) => assignTarget(current, focusedLeafIdRef.current, key))
+    return key
   }
 
   function handleToggleWatchAgent(key: string): void {

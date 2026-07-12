@@ -8,14 +8,14 @@ function lifecycleHarness(session: AgentSession): {
   messages: AgentLiteMessage[]
   selectedModels: string[]
   createdMainThreads: string[]
-  crossPromotions: AgentSession[]
+  crossProviderFocuses: AgentSession[]
   lifecycle: ReturnType<typeof createAgentLifecycle>
 } {
   const sessions = [session]
   const messages: AgentLiteMessage[] = []
   const selectedModels: string[] = []
   const createdMainThreads: string[] = []
-  const crossPromotions: AgentSession[] = []
+  const crossProviderFocuses: AgentSession[] = []
   let selectedKey: string | null = session.key
   const recoveryRef = { current: new Map<string, AgentRecoveryState>() }
 
@@ -48,10 +48,10 @@ function lifecycleHarness(session: AgentSession): {
     clearActiveTurn: () => {},
     createMainThread: () => createdMainThreads.push('created'),
     resumeMainThread: async () => {},
-    promoteCrossProvider: (promoted) => crossPromotions.push(promoted)
+    focusCrossProvider: (focused) => crossProviderFocuses.push(focused)
   })
 
-  return { sessions, messages, selectedModels, createdMainThreads, crossPromotions, lifecycle }
+  return { sessions, messages, selectedModels, createdMainThreads, crossProviderFocuses, lifecycle }
 }
 
 test('reset agent session clears conversation state but keeps its window', () => {
@@ -79,17 +79,17 @@ test('promoting a blank agent selects its model and creates a main thread', asyn
   assert.deepEqual(sessions, [])
 })
 
-test('promoting a claude agent while codex owns the main view hands off cross-provider', async () => {
+test('promoting a claude chat while codex owns the main view keeps and focuses its tab', async () => {
   const session = {
     ...createAgentSession('agent-1', 'Agent 2', 'claude'),
     threadId: 'claude-session-1',
     model: 'claude-model'
   }
-  const { sessions, selectedModels, createdMainThreads, crossPromotions, lifecycle } = lifecycleHarness(session)
+  const { sessions, selectedModels, createdMainThreads, crossProviderFocuses, lifecycle } = lifecycleHarness(session)
   await lifecycle.handlePromoteAgent('agent-1')
 
   assert.deepEqual(selectedModels, [])
   assert.deepEqual(createdMainThreads, [])
-  assert.equal(crossPromotions[0]?.threadId, 'claude-session-1')
-  assert.deepEqual(sessions, [])
+  assert.equal(crossProviderFocuses[0]?.threadId, 'claude-session-1')
+  assert.equal(sessions[0]?.threadId, 'claude-session-1')
 })

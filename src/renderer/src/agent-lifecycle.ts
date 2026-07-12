@@ -36,9 +36,9 @@ export function createAgentLifecycle(options: {
   clearActiveTurn: () => void
   createMainThread: () => void
   resumeMainThread: (threadId: string) => Promise<void>
-  // Hands a session from the other provider off to the main view (the app is
-  // keyed on its boot-time provider, so this persists the pick and reloads).
-  promoteCrossProvider: (session: AgentSession) => void
+  // Cross-provider conversations are already first-class tabs. Keep the tab
+  // selected instead of reloading the app into a provider-specific shell.
+  focusCrossProvider: (session: AgentSession) => void
 }): {
   cancelRecovery: (key: string) => void
   scheduleRecovery: (key: string, turnId: string, error: TurnError | null) => void
@@ -172,8 +172,7 @@ export function createAgentLifecycle(options: {
     cancelRecovery(key)
 
     if (session.provider !== options.getMainProvider()) {
-      removeSession(key)
-      options.promoteCrossProvider(session)
+      options.focusCrossProvider(session)
       return
     }
 
