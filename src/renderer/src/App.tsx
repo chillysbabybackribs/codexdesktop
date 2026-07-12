@@ -2602,6 +2602,16 @@ function NewChatIcon(): React.JSX.Element {
   )
 }
 
+function NewAgentIcon(): React.JSX.Element {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3.75" y="6.75" width="12.5" height="10.5" rx="2.25" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M7.5 11.5h5M10 9v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M17.5 4.5v5M15 7h5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function SettingsModal({
   goal,
   isGoalUpdating,
@@ -3405,6 +3415,12 @@ function Composer({
   }, [pluginQuery !== null, workspace, isLoading, onInstalledPluginsChange])
 
   useEffect(() => setPluginSelectionIndex(0), [pluginQuery])
+
+  useEffect(() => {
+    if (hasDraft || isTurnActive || isLoading) {
+      setIsCreateMenuOpen(false)
+    }
+  }, [hasDraft, isTurnActive, isLoading])
 
   useEffect(() => {
     if (!isCreateMenuOpen) return
