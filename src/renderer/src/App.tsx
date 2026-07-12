@@ -2125,7 +2125,6 @@ function ChatPane({
             sessions={agentSessions}
             openKeys={openAgentKeys}
             onFocus={focusAgent}
-            onNewAgent={onNewAgent}
           />
         </div>
         <Composer
@@ -2141,6 +2140,7 @@ function ChatPane({
           onSteer={onSteer}
           onStop={onStop}
           onNewThread={onNewThread}
+          onNewAgent={onNewAgent}
           footerLeading={
             <ThreadMenu
               placement="composer"

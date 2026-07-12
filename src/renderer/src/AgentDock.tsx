@@ -16,13 +16,11 @@ export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 export function AgentTabStrip({
   sessions,
   openKeys,
-  onFocus,
-  onNewAgent
+  onFocus
 }: {
   sessions: AgentSession[]
   openKeys: string[]
   onFocus: (key: string) => void
-  onNewAgent: () => void
 }): React.JSX.Element {
   return (
     <div className="agent-tabs">
@@ -38,15 +36,6 @@ export function AgentTabStrip({
           <span className="agent-tab-title">{session.title}</span>
         </button>
       ))}
-      <button
-        type="button"
-        className="icon-button agent-new-button"
-        aria-label="New agent"
-        title="New agent"
-        onClick={onNewAgent}
-      >
-        <AgentPlusIcon />
-      </button>
     </div>
   )
 }
@@ -551,16 +540,6 @@ export function SendArrowIcon(): React.JSX.Element {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  )
-}
-
-function AgentPlusIcon(): React.JSX.Element {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3.5" y="6.5" width="13" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M7.5 11h5M10 8.5v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M17.5 4.5v5M15 7h5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   )
 }
