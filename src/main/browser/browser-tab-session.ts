@@ -153,8 +153,11 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () =>
 
   const timeout = new Promise<never>((_resolve, reject) => {
     timer = setTimeout(() => {
-      onTimeout()
-      reject(new Error(`history restore timed out after ${safeTimeoutMs}ms`))
+      try {
+        onTimeout()
+      } finally {
+        reject(new Error(`history restore timed out after ${safeTimeoutMs}ms`))
+      }
     }, safeTimeoutMs)
   })
 
