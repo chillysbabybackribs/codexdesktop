@@ -195,11 +195,12 @@ const researchWebSchema = {
       minItems: 1,
       maxItems: 3,
       items: { type: 'string' },
-      description: 'One to three focused discovery queries covering the strongest relevant source lanes.'
+      description: 'One primary discovery query, optionally followed by up to two fallback source lanes. Fallbacks run only if the verified-page target is not met.'
     },
-    maxResults: { type: 'number', description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', description: 'Optional verified pages to save, from 1 to 8. Defaults to 3.' },
-    snippetChars: { type: 'number', description: 'Optional cleaned text saved per page, from 1000 to 8000 characters.' }
+    maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
+    maxPages: { type: 'number', minimum: 1, maximum: 3, description: 'Verified-page target, from 1 to 3. Defaults to 3; use a focused follow-up call for a material evidence gap.' },
+    maxAttempts: { type: 'number', minimum: 1, maximum: 8, description: 'Optional candidate-attempt ceiling, from 1 to 8. Defaults to 6 and stops early when maxPages is met.' },
+    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional cleaned text saved per page, from 1000 to 8000 characters.' }
   },
   required: ['queries'],
   additionalProperties: false
@@ -239,7 +240,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Discover, rank, verify, and save a bounded set of public web pages. Returns compact metadata and artifact paths without loading page bodies into model context.',
+    description: 'Adaptively discover, rank, verify, and save up to three public web pages. Starts with the primary query, uses fallback lanes only when needed, and returns compact metadata, timings, and artifact paths without loading page bodies into model context.',
     inputSchema: researchWebSchema
   }
 ]

@@ -1,5 +1,6 @@
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
+import type { CodexResearchProgressEvent } from '../../shared/ipc.js'
 
 export type TurnPlanItem = {
   type: 'turnPlan'
@@ -33,3 +34,19 @@ export const workItemTypes = [
 ] as const
 
 export type WorkItem = Extract<ThreadItem, { type: (typeof workItemTypes)[number] }> | TurnPlanItem
+
+export function reduceResearchProgressMeta(
+  current: Record<string, ItemMeta>,
+  event: CodexResearchProgressEvent
+): Record<string, ItemMeta> {
+  const existing = current[event.itemId]
+  const progress = [...(existing?.progress ?? []), event.progress.message].slice(-5)
+  return {
+    ...current,
+    [event.itemId]: {
+      ...existing,
+      turnId: event.turnId,
+      progress
+    }
+  }
+}
