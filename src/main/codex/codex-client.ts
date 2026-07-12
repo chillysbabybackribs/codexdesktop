@@ -374,7 +374,7 @@ export class CodexClient extends EventEmitter {
     this.rpc.notify('initialized')
     await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
     try {
-      const modes = await this.request<CollaborationModeListResponse>('collaborationMode/list')
+      const modes = await this.request<CollaborationModeListResponse>('collaborationMode/list', {})
       this.collaborationModePresets = modes.data
     } catch (error) {
       this.collaborationModePresets = []
