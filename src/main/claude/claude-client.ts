@@ -41,6 +41,7 @@ type ClaudeRuntime = {
   pendingTurns: PendingTurn[]
   activeTurn: PendingTurn | null
   initialized: Promise<void>
+  initializedSettled: boolean
   resolveInitialized: () => void
   rejectInitialized: (error: Error) => void
   closing: boolean
@@ -202,13 +203,17 @@ export class ClaudeClient extends EventEmitter {
     this.runtimes.clear()
   }
 
-  private async ensureRuntime(
+  // Get (or lazily create) a runtime WITHOUT waiting for initialization. The
+  // caller is responsible for priming a new runtime with a user message before
+  // awaiting `runtime.initialized`, since the CLI won't emit `system/init` until
+  // it has a message to process.
+  private getRuntime(
     threadId?: string | null,
     cwd?: string | null,
     model?: string | null,
     effort?: ClaudeEffort | null,
     collaborationMode: 'default' | 'plan' = 'default'
-  ): Promise<ClaudeRuntime> {
+  ): ClaudeRuntime {
     if (threadId) {
       const existing = this.runtimes.get(threadId)
       if (existing) return existing
@@ -222,7 +227,6 @@ export class ClaudeClient extends EventEmitter {
       collaborationMode
     })
     this.runtimes.set(runtime.key, runtime)
-    await runtime.initialized
     return runtime
   }
 
@@ -254,6 +258,7 @@ export class ClaudeClient extends EventEmitter {
       pendingTurns: [],
       activeTurn: null,
       initialized,
+      initializedSettled: false,
       resolveInitialized,
       rejectInitialized,
       closing: false
@@ -298,6 +303,7 @@ export class ClaudeClient extends EventEmitter {
       runtime.model = message.model
       this.runtimes.delete(runtime.key)
       this.runtimes.set(message.session_id, runtime)
+      runtime.initializedSettled = true
       runtime.resolveInitialized()
       this.emitStatus('ready')
       this.emitEvent({
