@@ -169,6 +169,7 @@ export function AgentConversationPanel({
   primaryLabel,
   secondaryLabel,
   onSelectSecondaryModel,
+  onRequestSecondaryModels,
   mainModel,
   mainReasoningEffort,
   onSetModel,
@@ -190,6 +191,7 @@ export function AgentConversationPanel({
   primaryLabel?: string
   secondaryLabel?: string
   onSelectSecondaryModel?: (key: string, model: string) => void
+  onRequestSecondaryModels?: () => void
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
   onSetModel: (key: string, model: string) => void
@@ -353,6 +355,7 @@ export function AgentConversationPanel({
                   ? (model) => onSelectSecondaryModel(session.key, model)
                   : undefined
               }
+              onOpen={onRequestSecondaryModels}
             />
           ) : null}
           <AgentContextPill

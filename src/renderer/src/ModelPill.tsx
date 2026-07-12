@@ -16,7 +16,8 @@ export function ModelPill({
   primaryLabel,
   secondaryLabel,
   secondaryModels,
-  onSelectSecondaryModel
+  onSelectSecondaryModel,
+  onOpen
 }: {
   models: Model[]
   selectedModel: string | null
@@ -31,6 +32,7 @@ export function ModelPill({
   secondaryLabel?: string
   secondaryModels?: Model[]
   onSelectSecondaryModel?: (model: string) => void
+  onOpen?: () => void
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedModel, setExpandedModel] = useState<string | null>(null)
@@ -157,7 +159,10 @@ export function ModelPill({
         title={active ? `${active.displayName} — ${active.description}` : 'Choose model'}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={() => setIsOpen((open) => {
+          if (!open) onOpen?.()
+          return !open
+        })}
       >
         <ModelIcon />
         <span className="workspace-pill-name">{active?.displayName ?? 'Model'}</span>

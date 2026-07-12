@@ -247,6 +247,7 @@ export default function App(): React.JSX.Element {
   const selectedModelRef = useRef<string | null>(selectedModel)
   const modelsRef = useRef<Model[]>(models)
   const crossModelsRef = useRef<Model[]>(crossModels)
+  const crossModelsLoadRef = useRef<Promise<void> | null>(null)
   const workspaceRef = useRef<string | null>(workspace)
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
@@ -562,15 +563,10 @@ export default function App(): React.JSX.Element {
     }
   }, [provider])
 
-  // Load the other provider's catalog once the active provider has settled.
-  // Both backends self-start on listModels; if the other one is unavailable
-  // the picker simply omits its section.
-  useEffect(() => {
-    if (isRestoring || crossModels.length) {
-      return
-    }
-
-    let cancelled = false
+  // Model discovery can start the other provider's child runtime. Keep that
+  // work off the boot path and pay for it only when a picker is opened.
+  function requestCrossModels(): void {
+    if (crossModelsRef.current.length || crossModelsLoadRef.current) return
 
     const load: Promise<Model[]> = provider === 'codex'
       ? window.api.claude
@@ -578,17 +574,15 @@ export default function App(): React.JSX.Element {
           .then((catalog) => (catalog as AgentModel[]).map(claudeModelToUiModel))
       : window.api.codex.listModels()
 
-    load.then(
+    crossModelsLoadRef.current = load.then(
       (list) => {
-        if (!cancelled && list.length) setCrossModels(list)
+        if (list.length) setCrossModels(list)
       },
       (error: Error) => console.warn('Failed to load cross-provider model list', error)
-    )
-
-    return () => {
-      cancelled = true
-    }
-  }, [provider, isRestoring, crossModels.length])
+    ).finally(() => {
+      crossModelsLoadRef.current = null
+    })
+  }
 
   const measureBrowserBounds = useCallback((): BrowserBounds | null => {
     const host = viewHostRef.current
@@ -2097,6 +2091,7 @@ export default function App(): React.JSX.Element {
         <ChatPane
           provider={provider}
           crossModels={crossModels}
+          onRequestCrossModels={requestCrossModels}
           onSelectCrossModel={handleSelectCrossModel}
           items={items}
           itemMeta={itemMeta}
@@ -2203,6 +2198,7 @@ function TitleBar(): React.JSX.Element {
 function ChatPane({
   provider,
   crossModels,
+  onRequestCrossModels,
   onSelectCrossModel,
   items,
   itemMeta,
@@ -2270,6 +2266,7 @@ function ChatPane({
 }: {
   provider: AgentProvider
   crossModels: Model[]
+  onRequestCrossModels: () => void
   onSelectCrossModel: (model: string) => void
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
@@ -2564,6 +2561,7 @@ function ChatPane({
                           secondaryLabel={provider === 'codex' ? 'Anthropic Claude' : 'OpenAI Codex'}
                           secondaryModels={crossModels}
                           onSelectSecondaryModel={onSelectCrossModel}
+                          onOpen={onRequestCrossModels}
                         />
                       ) : null}
                       <PlanModePill
@@ -2643,6 +2641,7 @@ function ChatPane({
                 primaryLabel={session.provider === 'codex' ? 'OpenAI Codex' : 'Anthropic Claude'}
                 secondaryLabel={session.provider === 'codex' ? 'Anthropic Claude' : 'OpenAI Codex'}
                 onSelectSecondaryModel={onSetAgentCrossModel}
+                onRequestSecondaryModels={onRequestCrossModels}
                 mainModel={sessionFallbackModel}
                 mainReasoningEffort={sameProvider ? selectedReasoningEffort : null}
                 onSetModel={onSetAgentModel}
