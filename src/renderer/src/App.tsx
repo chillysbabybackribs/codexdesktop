@@ -2387,9 +2387,11 @@ function ChatPane({
                     <Composer
                       docked={hasThreadContent}
                       workspace={workspace}
-                      installedPlugins={installedPlugins}
+                      installedPlugins={provider === 'codex' ? installedPlugins : []}
                       onInstalledPluginsChange={setInstalledPlugins}
                       onBrowsePlugins={openPluginBrowser}
+                      extensionsEnabled={provider === 'codex'}
+                      providerLabel={provider === 'claude' ? 'Claude' : 'Codex'}
                       isLoading={isRestoring || isBusy && !activeTurnId}
                       isTurnActive={Boolean(activeTurnId)}
                       status={isRestoring ? 'Restoring conversation' : activeTurnId ? 'Working' : status}
@@ -3766,6 +3768,8 @@ function Composer({
   installedPlugins,
   onInstalledPluginsChange,
   onBrowsePlugins,
+  extensionsEnabled,
+  providerLabel,
   isLoading,
   isTurnActive,
   status,
@@ -3780,6 +3784,8 @@ function Composer({
   installedPlugins: PluginSummary[]
   onInstalledPluginsChange: (plugins: PluginSummary[]) => void
   onBrowsePlugins: () => void
+  extensionsEnabled: boolean
+  providerLabel: string
   isLoading: boolean
   isTurnActive: boolean
   status: string
@@ -3795,7 +3801,7 @@ function Composer({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>('closed')
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0)
-  const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/)
+  const pluginMention = extensionsEnabled ? value.match(/(?:^|\s)@([^\s@]*)$/) : null
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null
   const hasDraft = Boolean(value.trim() || attachments.length)
 
@@ -3822,7 +3828,7 @@ function Composer({
       if (!cancelled) setPluginMenuState('error')
     })
     return () => { cancelled = true }
-  }, [pluginQuery !== null, workspace, isLoading, onInstalledPluginsChange])
+  }, [pluginQuery !== null, workspace, isLoading, onInstalledPluginsChange, extensionsEnabled])
 
   useEffect(() => setPluginSelectionIndex(0), [pluginQuery])
 
@@ -3888,7 +3894,9 @@ function Composer({
         ref={textareaRef}
         value={value}
         rows={1}
-        placeholder={isTurnActive ? 'Add guidance while Codex works…' : docked ? 'Reply…' : 'Plan, build, or ask anything…'}
+        placeholder={isTurnActive
+          ? providerLabel === 'Claude' ? 'Queue guidance for Claude…' : 'Add guidance while Codex works…'
+          : docked ? 'Reply…' : 'Plan, build, or ask anything…'}
         disabled={isLoading}
         onChange={(event) => setValue(event.target.value)}
         onPaste={(event) => {
