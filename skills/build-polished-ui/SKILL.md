@@ -17,12 +17,14 @@ Produce intentional product design, not decorated boilerplate. Establish what â€
 - Build the complete interaction, including empty, hover, focus, active, loading, error, reduced-motion, and responsive states when applicable.
 - Treat generated concepts, running previews, and deployments as different artifacts. Never present a concept image as implemented UI or a local preview as shipped work.
 - Never claim visual parity without inspecting rendered output.
+- Treat premium visual quality and enterprise readiness as separate gates. The result must pass both; a beautiful concept cannot compensate for a brittle implementation, and a correct implementation cannot compensate for generic art direction.
+- Do not claim image generation was used merely because an image appears in the result. Confirm the generation tool call or image-generation trace item, record the resulting workspace asset, and ensure the active reasoning model can inspect image inputs.
 
 ## Choose the workflow
 
 Use the **direct path** when the user supplies a complete visual direction, selected mockup, detailed brand system, or asks to skip exploration. Extract the visual contract and implement.
 
-Use the **direction path** when the desired feeling or visual language is materially unresolved. Create three first-viewport design directions, let the user select one unless they asked Codex to decide, then implement.
+Use the **direction path** when the desired feeling or visual language is materially unresolved. Create three first-viewport design directions. Let the user select one when the options represent materially different brand positions; when the user delegated the decision, score the directions against the premium rubric and implement the strongest without adding an unnecessary pause.
 
 Use the **reference-matching path** when an image, existing page, or design is supplied. Inspect it at high detail, record observable properties, and implement against a comparison checklist. Do not invent details that contradict the reference.
 
@@ -46,6 +48,14 @@ Inspect the existing project before changing it. Preserve its package manager, a
 
 Do not browse for generic inspiration. Use external retrieval only for factual assets, real products, real people, documented APIs, or when the user requests research.
 
+### Calibrate to examples and taste
+
+Before establishing directions, retrieve at most two relevant good examples and one paired counterexample from `examples/manifest.json`. Prefer product, audience, composition, and media-strategy matches over palette matches. Run `node scripts/select-examples.mjs "<product and desired visual direction>"` from this skill directory when the relevant examples are not obvious.
+
+Read each selected example's brief and critique, then inspect its reference image. Extract reusable decisions; do not copy its brand name, copy, distinctive asset, or exact geometry. Use the counterexample to name the failure mode that the new result must avoid.
+
+If a confirmed `.codex/ui-taste.json` exists in the workspace, use it to rank directions. Never infer or persist a durable taste profile without user confirmation, and never let a taste profile override product suitability. See [taste-profile.md](references/taste-profile.md).
+
 ## Phase 2: Establish a visual contract
 
 ### Direction path
@@ -68,6 +78,8 @@ Each direction must show only what belongs in the first viewport:
 
 Use image generation for expressive mockups when available. Generate clean page concepts without browser chrome, device montages, unrelated logos, or watermarks. If image generation is unavailable, provide implementation-ready written directions and ask the user to choose; do not pretend they are visual previews.
 
+Before using supplied references or generated concepts, confirm that the active reasoning model accepts image input. Before claiming image generation is available, confirm that the `image_gen` tool is callable. The reasoning model and image-generation model are separate capability boundaries: the former must inspect references and renders; the latter creates raster assets.
+
 Inspect every generated concept before presenting it. Reject or regenerate concepts with malformed text, inconsistent shared content, impossible interface geometry, missing primary actions, or obvious divergence from the product brief. A compelling image that cannot reasonably guide implementation is not a valid direction.
 
 For each option, record:
@@ -82,6 +94,8 @@ For each option, record:
 - tablet and mobile adaptation.
 
 Present the three previews as numbered options with minimal prose. Wait for selection unless the user explicitly delegated the choice.
+
+Score each direction using [evaluation-rubric.md](references/evaluation-rubric.md). Require at least 82/100 and no category below 3/5. If no direction passes, revise the weakest category before presenting or selecting a direction.
 
 ### Reference-matching or direct path
 
@@ -105,6 +119,16 @@ Implement the selected direction as a coherent system rather than a screenshot t
 Build the complete requested experience, not only the hero or selected first viewport. Implement every requested route, section, form, interaction, and applicable loading, empty, success, confirmation, disabled, and error state. Keep simulated behavior explicit; never imply that a backend, payment flow, authentication system, upload pipeline, or external integration works unless it is implemented and verified.
 
 Write realistic, product-specific copy. Do not leave placeholder prose, unexplained sample data, or vague claims. Do not fabricate customers, testimonials, usage statistics, performance results, certifications, or endorsements.
+
+### Asset escalation
+
+Decide the dominant-media strategy before writing the hero implementation:
+
+- When the product promise depends on place, people, atmosphere, physical materials, food, craft, fashion, architecture, or lifestyle, use supplied photography, generated raster imagery, or a deliberately chosen illustration asset. A CSS shape or generic gradient is not an equivalent substitute.
+- Use code-native SVG, CSS, or canvas when illustration, diagram, data, interface structure, or geometric identity is the intended brand medium.
+- Do not generate raster UI text that should remain editable, responsive, searchable, or accessible. Generate the underlying scene or product asset and implement typography and controls in code.
+- Record asset provenance, intended crop, responsive focal point, dimensions, alternative text, optimization plan, and replacement boundary.
+- For project-bound generated imagery, copy the selected output into the workspace before referencing it. Never leave a consumed asset only in a tool cache or generated-images directory.
 
 ### Foundation
 
@@ -215,6 +239,9 @@ Compare the render with the visual contract in descending impact order:
 Record the largest visible mismatches, fix them in impact order, render again at the same viewport, and compare again. Complete at least one correction pass whenever a material mismatch is present. Continue until no high-impact mismatch remains; do not spend time tuning tiny shadows while the hero proportions are wrong.
 
 Use [quality-gates.md](references/quality-gates.md) as the final acceptance checklist.
+Use [evaluation-rubric.md](references/evaluation-rubric.md) to score premium visual quality separately from enterprise readiness. Require the same 82/100 threshold for the rendered implementation, not only the selected concept.
+
+When the `ui_review` tool is available, use it for the desktop, tablet, and mobile pass so viewport screenshots and deterministic DOM/runtime diagnostics are gathered together. The model must still inspect the screenshots; deterministic checks do not judge taste.
 
 ## Phase 5: Validate and hand off
 
@@ -245,3 +272,7 @@ Do not expose internal process noise. Do not claim pixel-perfect or identical ou
 - [visual-contract.md](references/visual-contract.md): extraction and implementation schema for selected previews and references.
 - [interaction-patterns.md](references/interaction-patterns.md): accessible zoomable video and application-preview behavior.
 - [quality-gates.md](references/quality-gates.md): visual, responsive, accessibility, and production acceptance criteria.
+- [evaluation-rubric.md](references/evaluation-rubric.md): weighted premium score and separate enterprise readiness gates.
+- [taste-profile.md](references/taste-profile.md): opt-in workspace taste preferences and persistence rules.
+- [examples/manifest.json](examples/manifest.json): contrastive example index and bounded retrieval policy.
+- [evals/benchmark-prompts.json](evals/benchmark-prompts.json): cross-category regression prompt set.

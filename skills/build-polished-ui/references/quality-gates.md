@@ -4,6 +4,7 @@ Do not hand off until every applicable required gate passes.
 
 ## Visual direction
 
+- [ ] The concept and rendered implementation each score at least 82/100 on the premium rubric, with no category below 3/5.
 - [ ] The page has one clear focal point and primary action.
 - [ ] The implemented result follows the selected visual contract.
 - [ ] Every generated direction was inspected before presentation and is coherent enough to implement.
@@ -12,6 +13,7 @@ Do not hand off until every applicable required gate passes.
 - [ ] Colors have semantic roles and adequate contrast.
 - [ ] Surfaces, radii, borders, and shadows follow a consistent vocabulary.
 - [ ] Product visuals look credible rather than like generic placeholders.
+- [ ] The dominant-media strategy fits the product promise; atmosphere- or craft-led products do not fall back to cheap CSS decoration.
 - [ ] Decorative elements support the composition without competing with content.
 
 ## Content
@@ -66,6 +68,8 @@ Do not hand off until every applicable required gate passes.
 - [ ] No console errors, missing keys, broken assets, or failed requests remain.
 - [ ] The production build, types, and relevant tests pass.
 - [ ] Placeholder media is isolated and straightforward to replace.
+- [ ] Every supplied or generated raster asset has provenance, fixed dimensions, responsive crop behavior, alternative text or decorative treatment, and an optimization path.
+- [ ] Any claim that image generation was used is backed by a tool call or trace item and a workspace-bound resulting asset.
 - [ ] A running implementation was visually inspected; a concept image or passing build was not used as a substitute.
 - [ ] Material visual mismatches were recorded and at least one correction pass was completed when needed.
 - [ ] No high-impact mismatch remains at the validated viewports.
