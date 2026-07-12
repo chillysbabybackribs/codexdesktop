@@ -597,6 +597,10 @@ export class ResearchRunner {
       pagesAttempted: pageAttempts,
       pagesVerified: pages.length,
       pageCacheHits,
+      staticFetchAttempts,
+      staticFetchHits,
+      staticFetchMs,
+      browserPageLoads,
       targetMet: goalMet(),
       navigation
     }
