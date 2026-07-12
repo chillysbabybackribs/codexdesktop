@@ -127,13 +127,17 @@ test('implementation turns use automatic reasoning summaries', () => {
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_screenshot', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
   assert.deepEqual(Object.keys((browserScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), ['tab'])
   assert.deepEqual((browserScreenshot.inputSchema as { required?: string[] }).required, undefined)
+  const uiReview = browserDynamicTools.find(({ name }) => name === 'ui_review')
+  assert.equal(uiReview?.type, 'function')
+  if (!uiReview || uiReview.type !== 'function') assert.fail('ui_review function tool is missing')
+  assert.deepEqual(Object.keys((uiReview.inputSchema as { properties: Record<string, unknown> }).properties), ['tab', 'viewports'])
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')

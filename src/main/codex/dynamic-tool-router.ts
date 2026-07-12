@@ -2,6 +2,7 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { DynamicToolCallResponse } from '../../shared/codex-protocol/v2/DynamicToolCallResponse.js'
+import { runUiReview } from './ui-review.js'
 
 export async function routeDynamicToolCall(
   params: DynamicToolCallParams,
@@ -10,7 +11,7 @@ export async function routeDynamicToolCall(
   try {
     const args = asRecord(params.arguments)
     let result
-    let imageUrl: string | null = null
+    let imageUrls: string[] = []
 
     if (params.namespace !== null) {
       result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace}` }
@@ -20,11 +21,20 @@ export async function routeDynamicToolCall(
       const screenshot = asRecord(asRecord(result.result).screenshot)
       const artifactPath = readString(screenshot.artifactPath)
       if (result.ok && artifactPath) {
-        imageUrl = await dependencies.browserAgent.readScreenshotDataUrl(artifactPath)
-        if (!imageUrl) {
+        const imageUrl = await dependencies.browserAgent.readScreenshotDataUrl(artifactPath)
+        if (imageUrl) imageUrls = [imageUrl]
+        else {
           result = { ...result, ok: false, error: 'captured screenshot could not be loaded for model vision' }
         }
       }
+    } else if (params.tool === 'ui_review') {
+      const review = await runUiReview(
+        dependencies.browserAgent,
+        args.viewports,
+        resolveAgentTab(readString(args.tab)) ?? undefined
+      )
+      result = review.result
+      imageUrls = review.imageUrls
     } else if (params.tool === 'browser_run') {
       const code = readString(args.code)
       result = code
@@ -59,7 +69,7 @@ export async function routeDynamicToolCall(
       success: result.ok,
       contentItems: [
         { type: 'inputText', text: JSON.stringify(result) },
-        ...(imageUrl ? [{ type: 'inputImage' as const, imageUrl }] : [])
+        ...imageUrls.map((imageUrl) => ({ type: 'inputImage' as const, imageUrl }))
       ]
     }
   } catch (error) {

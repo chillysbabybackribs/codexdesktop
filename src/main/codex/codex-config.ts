@@ -157,6 +157,22 @@ const browserScreenshotSchema = {
   additionalProperties: false
 }
 
+const uiReviewSchema = {
+  type: 'object',
+  properties: {
+    tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
+    viewports: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 3,
+      uniqueItems: true,
+      items: { type: 'string', enum: ['desktop', 'tablet', 'mobile'] },
+      description: 'Responsive viewports to capture and audit. Defaults to desktop, tablet, and mobile.'
+    }
+  },
+  additionalProperties: false
+}
+
 const researchWebSchema = {
   type: 'object',
   properties: {
@@ -181,6 +197,12 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_screenshot',
     description: 'Capture the visible viewport of this thread\'s browser tab and view it directly. Returns the screenshot to the model as an image plus compact artifact metadata.',
     inputSchema: browserScreenshotSchema
+  },
+  {
+    type: 'function',
+    name: 'ui_review',
+    description: 'Capture desktop, tablet, and mobile screenshots for model vision while auditing overflow, clipped content, headings, landmarks, touch targets, images, fonts, runtime exceptions, and failed requests. Restores normal viewport emulation afterward.',
+    inputSchema: uiReviewSchema
   },
   {
     type: 'function',
