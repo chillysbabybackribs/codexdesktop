@@ -66,12 +66,14 @@ import type { ChatAttachment } from '../../shared/ipc'
 import {
   buildRows,
   appendAgentMessageDelta,
+  appendReasoningDelta,
   isWorkItem,
   upsertMany,
   type ActivityItem,
   type ChatItem,
   type SystemItem
 } from './transcript-model'
+import { startClaudeToolItem, patchClaudeToolItem } from './claude-items'
 import {
   isImmediateItemNotification,
   isItemNotification,
