@@ -7,6 +7,8 @@ import {
 } from './memory-format.ts'
 
 const snapshot: MemorySnapshot = {
+  provider: 'codex',
+  surface: 'main',
   threadId: 'thread-1',
   title: 'Memory design',
   workspace: '/tmp/project',
@@ -32,13 +34,15 @@ test('last-chat memory keeps a recent progression and substantive earlier milest
   assert.match(markdown, /## Earlier milestones/)
   assert.match(markdown, /Latest completed work:[\s\S]*5\/5 tests passed, 0 failed/)
   assert.match(markdown, /Full transcript: \/memory\/chats\/thread-1\.md/)
+  assert.match(markdown, /Provider: codex/)
 })
 
 test('transcript uses unique turn markers and preserves completed text', () => {
   const markdown = buildTranscriptMarkdown(snapshot)
-  assert.match(markdown, /<!-- codexdesktop-turn:thread-1:C02:start -->/)
+  assert.match(markdown, /<!-- codexdesktop-turn:codex:thread-1:C02:start -->/)
   assert.match(markdown, /## Turn C02 — Can older chapters be found\?/)
   assert.match(markdown, /Keep a one-line milestone map and a full transcript\./)
-  assert.match(markdown, /<!-- codexdesktop-turn:thread-1:C02:end -->/)
+  assert.match(markdown, /<!-- codexdesktop-turn:codex:thread-1:C02:end -->/)
   assert.match(markdown, /### Completed work[\s\S]*5\/5 tests passed, 0 failed/)
+  assert.match(markdown, /Provider: codex/)
 })
