@@ -4994,10 +4994,12 @@ button {
 
 .conversation-agent-tabs {
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   align-items: center;
   gap: 3px;
   min-width: 0;
+  width: max-content;
+  max-width: calc(100% - 150px);
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scrollbar-width: none;
