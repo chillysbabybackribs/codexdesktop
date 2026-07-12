@@ -1,5 +1,5 @@
 import type { ReasoningEffort } from './codex-protocol/ReasoningEffort'
-import type { AgentEvent } from './agent'
+import type { AgentEvent, AgentProvider } from './agent'
 
 export type BrowserBounds = {
   x: number
@@ -226,6 +226,8 @@ export type CodexPluginAppStatusResponse = {
 }
 
 export type MemoryPersistParams = {
+  provider: AgentProvider
+  surface: 'main' | 'agent'
   threadId: string
   title: string
   workspace: string | null

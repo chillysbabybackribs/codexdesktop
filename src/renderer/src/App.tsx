@@ -405,6 +405,8 @@ export default function App(): React.JSX.Element {
       .filter((value): value is number => typeof value === 'number')
     const completedAtMs = completionTimes.length ? Math.max(...completionTimes) : Date.now()
     const params: MemoryPersistParams = {
+      provider,
+      surface: 'main',
       threadId: activeThreadId,
       title: activeThreadTitle,
       workspace,

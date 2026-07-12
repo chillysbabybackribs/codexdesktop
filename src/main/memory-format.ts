@@ -1,3 +1,5 @@
+import type { AgentProvider } from '../shared/agent.js'
+
 export type MemoryTurn = {
   user: string
   assistant: string
@@ -5,6 +7,8 @@ export type MemoryTurn = {
 }
 
 export type MemorySnapshot = {
+  provider: AgentProvider
+  surface: 'main' | 'agent'
   threadId: string
   title: string
   workspace: string | null
@@ -53,6 +57,8 @@ export function buildLastChatMarkdown(snapshot: MemorySnapshot, transcriptPath: 
     '',
     `Updated: ${cleanLine(snapshot.updatedAt)}`,
     `Workspace: ${workspace}`,
+    `Provider: ${snapshot.provider}`,
+    `Surface: ${snapshot.surface}`,
     `Source thread: ${cleanLine(snapshot.threadId)}`,
     `Full transcript: ${cleanLine(transcriptPath)}`,
     '',
@@ -80,7 +86,7 @@ export function buildTranscriptMarkdown(snapshot: MemorySnapshot): string {
     .filter((turn) => turn.user.trim() || turn.assistant.trim())
     .map((turn, index) => {
       const chapterNumber = String(index + 1).padStart(2, '0')
-      const marker = `codexdesktop-turn:${cleanLine(snapshot.threadId)}:C${chapterNumber}`
+      const marker = `codexdesktop-turn:${snapshot.provider}:${cleanLine(snapshot.threadId)}:C${chapterNumber}`
       return [
         `<!-- ${marker}:start -->`,
         `## Turn C${chapterNumber} — ${brief(turn.user, 100)}`,
@@ -105,6 +111,8 @@ export function buildTranscriptMarkdown(snapshot: MemorySnapshot): string {
     '',
     `Updated: ${cleanLine(snapshot.updatedAt)}`,
     `Workspace: ${cleanLine(snapshot.workspace ?? 'Not selected')}`,
+    `Provider: ${snapshot.provider}`,
+    `Surface: ${snapshot.surface}`,
     `Source thread: ${cleanLine(snapshot.threadId)}`,
     '',
     ...sections,
