@@ -49,6 +49,7 @@ type ClaudeRuntime = {
 export class ClaudeClient extends EventEmitter {
   private readonly runtimes = new Map<string, ClaudeRuntime>()
   private cachedModels: AgentModel[] | null = null
+  private discoveryInFlight: Promise<{ models: ModelInfo[]; apiKeySource: string | null }> | null = null
 
   constructor(
     private readonly browserAgent: BrowserAgentController,
@@ -58,13 +59,13 @@ export class ClaudeClient extends EventEmitter {
   }
 
   async getAuthStatus(cwd?: string | null): Promise<{ authenticated: boolean; source: string | null }> {
-    const discovery = await this.discover(cwd)
+    const discovery = await this.sharedDiscovery(cwd)
     return { authenticated: true, source: discovery.apiKeySource }
   }
 
   async listModels(cwd?: string | null): Promise<AgentModel[]> {
     if (this.cachedModels) return this.cachedModels
-    const discovery = await this.discover(cwd)
+    const discovery = await this.sharedDiscovery(cwd)
     this.cachedModels = discovery.models.map(toAgentModel)
     return this.cachedModels
   }
@@ -448,6 +449,15 @@ export class ClaudeClient extends EventEmitter {
     }
   }
 
+  private sharedDiscovery(cwd?: string | null): Promise<{ models: ModelInfo[]; apiKeySource: string | null }> {
+    if (!this.discoveryInFlight) {
+      this.discoveryInFlight = this.discover(cwd).finally(() => {
+        this.discoveryInFlight = null
+      })
+    }
+    return this.discoveryInFlight
+  }
+
   private emitStatus(status: 'starting' | 'ready' | 'exited' | 'error', message?: string): void {
     this.emitEvent({ type: 'status', provider: 'claude', status, message })
   }
@@ -482,10 +492,10 @@ function buildClaudeOptions(
     },
     tools: { type: 'preset', preset: 'claude_code' },
     settingSources: ['project'],
+    strictMcpConfig: true,
     ...(mcpServer ? {
       mcpServers: { [claudeBrowserMcpServerName]: mcpServer },
-      allowedTools: claudeBrowserToolNames,
-      strictMcpConfig: true
+      allowedTools: claudeBrowserToolNames
     } : {}),
     disallowedTools: ['WebSearch', 'WebFetch', 'Agent'],
     permissionMode: options.collaborationMode === 'plan' ? 'plan' : 'bypassPermissions',
