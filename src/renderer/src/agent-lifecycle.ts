@@ -133,13 +133,17 @@ export function createAgentLifecycle(options: {
     return session
   }
 
+  function providerApi(session: AgentSession): Pick<typeof window.api.codex, 'interruptTurn' | 'unsubscribeThread'> {
+    return session.provider === 'claude' ? window.api.claude : window.api.codex
+  }
+
   function handleCloseAgentSession(key: string): void {
     const session = removeSession(key)
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
-        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
+        void providerApi(session).interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
       }
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void Promise.resolve(providerApi(session).unsubscribeThread(session.threadId)).catch(() => {})
     }
   }
 
@@ -158,7 +162,7 @@ export function createAgentLifecycle(options: {
       isCompacting: false
     }))
     if (session.threadId && session.threadId !== options.getActiveThreadId()) {
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void Promise.resolve(providerApi(session).unsubscribeThread(session.threadId)).catch(() => {})
     }
   }
 
@@ -166,6 +170,13 @@ export function createAgentLifecycle(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return
     cancelRecovery(key)
+
+    if (session.provider !== options.getMainProvider()) {
+      removeSession(key)
+      options.promoteCrossProvider(session)
+      return
+    }
+
     if (session.model && session.model !== options.getSelectedModel()) options.selectMainModel(session.model)
     removeSession(key)
 
