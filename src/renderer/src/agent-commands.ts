@@ -135,7 +135,9 @@ export function createAgentCommands(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || !session.turnId) return
     try {
-      await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+      const params = { threadId: session.threadId, turnId: session.turnId }
+      if (session.provider === 'claude') await window.api.claude.interruptTurn(params)
+      else await window.api.codex.interruptTurn(params)
     } catch {
       // The turn may have already finished; notifications settle the state.
     }
@@ -144,6 +146,14 @@ export function createAgentCommands(options: {
   async function handleAgentCompact(key: string): Promise<void> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || session.turnId || session.isCompacting) return
+    if (session.provider === 'claude') {
+      store.appendMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: 'Claude manages context compaction automatically in this integration.'
+      })
+      return
+    }
     try {
       await window.api.codex.compactThread(session.threadId)
     } catch (error) {
@@ -160,11 +170,13 @@ export function createAgentCommands(options: {
     const trimmed = text.trim()
     if (!trimmed || !session?.threadId || !session.turnId) return false
     try {
-      await window.api.codex.steerTurn({
+      const params = {
         threadId: session.threadId,
         turnId: session.turnId,
         text: trimmed
-      })
+      }
+      if (session.provider === 'claude') await window.api.claude.steerTurn(params)
+      else await window.api.codex.steerTurn(params)
       store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text: trimmed })
       return true
     } catch (error) {
