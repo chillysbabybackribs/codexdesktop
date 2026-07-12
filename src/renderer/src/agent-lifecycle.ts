@@ -99,7 +99,8 @@ export function createAgentLifecycle(options: {
         threadId: session.threadId,
         text: options.recoveryPrompt,
         cwd: options.getWorkspace(),
-        model: model ?? session.model ?? options.getSelectedModel()
+        model: model ?? session.model ?? options.getSelectedModel(),
+        effort: session.reasoningEffort
       })
       store.patchSession(key, (current) => ({
         ...current,

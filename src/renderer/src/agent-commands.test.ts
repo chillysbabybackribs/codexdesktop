@@ -52,3 +52,37 @@ test('agent send rejects unsupported images before starting a thread', async () 
   assert.equal(sent, false)
   assert.match(messages[0]?.text ?? '', /does not accept image inputs/)
 })
+
+test('agent send forwards the agent reasoning effort', async () => {
+  const previousWindow = globalThis.window
+  const sentParams: unknown[] = []
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        codex: {
+          startThread: async () => ({ thread: { id: 'thread-1' } }),
+          sendMessage: async (params: unknown) => {
+            sentParams.push(params)
+            return { turn: { id: 'turn-1' } }
+          }
+        }
+      }
+    }
+  })
+
+  try {
+    const { sessions, commands } = commandHarness()
+    sessions[0].reasoningEffort = 'xhigh'
+    const sent = await commands.handleAgentSend('agent-1', 'Solve this')
+
+    assert.equal(sent, true)
+    assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
