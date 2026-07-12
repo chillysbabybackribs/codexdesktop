@@ -58,13 +58,19 @@ export class ClaudeClient extends EventEmitter {
   private readonly runtimes = new Map<string, ClaudeRuntime>()
   private cachedModels: AgentModel[] | null = null
   private discoveryInFlight: Promise<ModelInfo[]> | null = null
+  private readonly browserAgent: BrowserAgentController
+  private readonly researchRunner: ResearchRunner
+  private readonly conversationMemory: ConversationMemoryService
 
   constructor(
-    private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner,
-    private readonly conversationMemory: ConversationMemoryService
+    browserAgent: BrowserAgentController,
+    researchRunner: ResearchRunner,
+    conversationMemory: ConversationMemoryService
   ) {
     super()
+    this.browserAgent = browserAgent
+    this.researchRunner = researchRunner
+    this.conversationMemory = conversationMemory
   }
 
   async getAuthStatus(cwd?: string | null): Promise<{ authenticated: boolean; source: string | null }> {
