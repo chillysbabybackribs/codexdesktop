@@ -461,56 +461,16 @@ export default function App(): React.JSX.Element {
   }, [provider, codexStatus, models.length])
 
   useEffect(() => {
-    if (provider === 'claude') {
-      const dispose = window.api.claude.onEvent((event) => handleClaudeEvent(event))
-      const lastThreadId = window.localStorage.getItem(threadStorageKey(provider))
-      initializationPromiseRef.current = (async () => {
-        try {
-          const [catalog] = await Promise.all([
-            window.api.claude.listModels(workspaceRef.current),
-            window.api.claude.getAuthStatus(workspaceRef.current)
-          ])
-          const mapped = (catalog as AgentModel[]).map(claudeModelToUiModel)
-          setModels(mapped)
-          const active = mapped.find((model) => model.model === selectedModelRef.current) ?? mapped[0]
-          if (active) {
-            setSelectedModel(active.model)
-            selectedModelRef.current = active.model
-            setSelectedReasoningEffort(active.defaultReasoningEffort)
-          }
-          if (lastThreadId) {
-            await window.api.claude.resumeThread(lastThreadId, workspaceRef.current)
-            const transcript = await window.api.claude.readThread(lastThreadId, workspaceRef.current)
-            setItems((transcript as Array<{ id: string; role: 'user' | 'assistant'; text: string }>).map((message) =>
-              message.role === 'user'
-                ? {
-                    type: 'userMessage' as const,
-                    id: message.id,
-                    clientId: null,
-                    content: [{ type: 'text' as const, text: message.text, text_elements: [] }]
-                  }
-                : {
-                    type: 'agentMessage' as const,
-                    id: message.id,
-                    text: message.text,
-                    phase: null,
-                    memoryCitation: null
-                  }
-            ))
-            setActiveThreadId(lastThreadId)
-            watchThreadIdRef.current = lastThreadId
-          }
-        } catch (error) {
-          addSystemItem(`Claude initialization failed: ${(error as Error).message}`, 'error')
-        } finally {
-          setIsRestoring(false)
-        }
-      })()
-      return dispose
-    }
-
-    const dispose = window.api.codex.onEvent((event) => {
+    // Both providers stay subscribed regardless of which one owns the main
+    // view: dock tabs can run on either runtime, so the router below decides
+    // per event whether it belongs to the main chat or a background agent.
+    const disposeClaude = window.api.claude.onEvent((event) => routeClaudeEvent(event))
+    const disposeCodex = window.api.codex.onEvent((event) => {
       if (event.type === 'status') {
+        // Claude-main boots keep their own status line; codex child health
+        // only matters there once a codex dock agent hits an actual turn
+        // error, which arrives via the notification path.
+        if (provider !== 'codex') return
         setCodexStatus(event.status)
 
         if (event.status === 'exited' || event.status === 'error') {
@@ -525,28 +485,79 @@ export default function App(): React.JSX.Element {
 
     if (!initializationPromiseRef.current) {
       const lastThreadId = window.localStorage.getItem(threadStorageKey(provider))
-      initializationPromiseRef.current = (async () => {
-        const authPromise = window.api.codex.getAuthStatus().catch((error) => {
-          addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
-        })
-        const threadsPromise = refreshThreads()
-        // Main thread first — it warms up the codex child, so the dock's
-        // resume calls don't race a cold start. The dock restore then skips
-        // any thread the main view already owns.
-        const restorePromise = (async () => {
-          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
-          await restoreAgentDock()
-        })()
 
-        await Promise.all([authPromise, threadsPromise, restorePromise])
-        hasAutoRestoredRef.current = true
-        setIsRestoring(false)
-      })()
+      if (provider === 'claude') {
+        initializationPromiseRef.current = (async () => {
+          try {
+            const [catalog] = await Promise.all([
+              window.api.claude.listModels(workspaceRef.current),
+              window.api.claude.getAuthStatus(workspaceRef.current)
+            ])
+            const mapped = (catalog as AgentModel[]).map(claudeModelToUiModel)
+            setModels(mapped)
+            const active = mapped.find((model) => model.model === selectedModelRef.current) ?? mapped[0]
+            if (active) {
+              setSelectedModel(active.model)
+              selectedModelRef.current = active.model
+              setSelectedReasoningEffort(active.defaultReasoningEffort)
+            }
+            if (lastThreadId) {
+              await window.api.claude.resumeThread(lastThreadId, workspaceRef.current)
+              const transcript = await window.api.claude.readThread(lastThreadId, workspaceRef.current)
+              setItems((transcript as Array<{ id: string; role: 'user' | 'assistant'; text: string }>).map((message) =>
+                message.role === 'user'
+                  ? {
+                      type: 'userMessage' as const,
+                      id: message.id,
+                      clientId: null,
+                      content: [{ type: 'text' as const, text: message.text, text_elements: [] }]
+                    }
+                  : {
+                      type: 'agentMessage' as const,
+                      id: message.id,
+                      text: message.text,
+                      phase: null,
+                      memoryCitation: null
+                    }
+              ))
+              setActiveThreadId(lastThreadId)
+              watchThreadIdRef.current = lastThreadId
+            }
+            await restoreAgentDock(lastThreadId)
+          } catch (error) {
+            addSystemItem(`Claude initialization failed: ${(error as Error).message}`, 'error')
+          } finally {
+            hasAutoRestoredRef.current = true
+            setIsRestoring(false)
+          }
+        })()
+      } else {
+        initializationPromiseRef.current = (async () => {
+          const authPromise = window.api.codex.getAuthStatus().catch((error) => {
+            addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
+          })
+          const threadsPromise = refreshThreads()
+          // Main thread first — it warms up the codex child, so the dock's
+          // resume calls don't race a cold start. The dock restore then skips
+          // any thread the main view already owns.
+          const restorePromise = (async () => {
+            if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+            await restoreAgentDock()
+          })()
+
+          await Promise.all([authPromise, threadsPromise, restorePromise])
+          hasAutoRestoredRef.current = true
+          setIsRestoring(false)
+        })()
+      }
     }
 
     void initializationPromiseRef.current
 
-    return dispose
+    return () => {
+      disposeClaude()
+      disposeCodex()
+    }
   }, [provider])
 
   // Load the other provider's catalog once the active provider has settled.
@@ -1125,10 +1136,11 @@ export default function App(): React.JSX.Element {
 
   // ---- Background agent sessions -------------------------------------------
 
-  function restoreAgentDock(): Promise<void> {
+  function restoreAgentDock(activeThreadOverride?: string | null): Promise<void> {
     return restorePersistedAgentDock({
       storageKey: agentDockStorageKey,
-      activeThreadId: activeThreadIdRef.current,
+      activeThreadId: activeThreadOverride ?? activeThreadIdRef.current,
+      workspace: workspaceRef.current,
       store: {
         counterRef: agentCounterRef,
         restoredRef: agentDockRestoredRef,
