@@ -64,7 +64,8 @@ export function useAgentSessions(
   handleClaudeAgentEvent: (session: AgentSession, event: AgentEvent) => void
   handleNewAgent: (provider?: AgentProvider) => void
   handleToggleWatchAgent: (key: string) => void
-  handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
+  handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort, provider?: AgentProvider) => void
+  takeQueuedStart: (provider: AgentProvider) => string | null
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
   const [conversationLayout, setConversationLayout] = useState<LayoutNode>(() => createDefaultLayout())
@@ -328,12 +329,40 @@ export function useAgentSessions(
     patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }))
   }
 
-  function handleSetAgentModel(key: string, model: string, effort?: ReasoningEffort): void {
-    patchAgentSession(key, (session) => ({
-      ...session,
-      model,
-      ...(effort ? { reasoningEffort: effort } : {})
-    }))
+  function handleSetAgentModel(key: string, model: string, effort?: ReasoningEffort, provider?: AgentProvider): void {
+    patchAgentSession(key, (session) => {
+      const nextProvider = provider ?? session.provider
+      const providerChanged = nextProvider !== session.provider
+      return {
+        ...session,
+        provider: nextProvider,
+        model,
+        ...(effort ? { reasoningEffort: effort } : providerChanged ? { reasoningEffort: null } : {}),
+        // A thread cannot move between providers: switching starts fresh on
+        // the next send while the visible transcript stays for reference.
+        ...(providerChanged
+          ? { threadId: null, turnId: null, status: 'idle' as const, contextUsage: null, isCompacting: false }
+          : {})
+      }
+    })
+  }
+
+  // Pop the oldest queued thread-start belonging to the given provider, so a
+  // codex thread/started never binds to a tab awaiting a claude session id
+  // (and vice versa). Keys whose sessions are gone are dropped in passing.
+  function takeQueuedStart(provider: AgentProvider): string | null {
+    const queue = agentStartQueueRef.current
+    let taken: string | null = null
+    agentStartQueueRef.current = queue.filter((key) => {
+      const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+      if (!session) return false
+      if (taken === null && session.provider === provider) {
+        taken = key
+        return false
+      }
+      return true
+    })
+    return taken
   }
 
   const agentSessionKeys = useMemo(
@@ -393,7 +422,8 @@ export function useAgentSessions(
     handleClaudeAgentEvent,
     handleNewAgent,
     handleToggleWatchAgent,
-    handleSetAgentModel
+    handleSetAgentModel,
+    takeQueuedStart
   }
 }
 
