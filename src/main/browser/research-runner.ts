@@ -383,18 +383,51 @@ export class ResearchRunner {
             }
           }
 
-          const validation = linkAbortSignals(signal, stopSignal)
+          const preflight = linkAbortSignals(signal, stopSignal)
+          let staticResult: Awaited<ReturnType<typeof fetchStaticResearchPage>>
           try {
-            await assertPublicResearchUrl(candidate.url, validation.signal)
+            staticFetchAttempts += 1
+            staticResult = await fetchStaticResearchPage(candidate.url, {
+              fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
+              validateUrl: assertPublicResearchUrl,
+              signal: preflight.signal
+            })
+            staticFetchMs += staticResult.durationMs
           } catch (error) {
+            preflight.dispose()
             if (signal.aborted) throw error
             if (stopSignal.aborted) return null
             recordResearchError(errors, { url: candidate.url, error: formatError(error) })
             return null
-          } finally {
-            validation.dispose()
           }
+          if (staticResult.kind === 'blocked') {
+            preflight.dispose()
+            recordResearchError(errors, { url: candidate.url, error: staticResult.reason ?? 'static source blocked' })
+            return null
+          }
+          if (staticResult.kind === 'accepted' && staticResult.page) {
+            try {
+              const extracted: ExtractedResearchPage = {
+                ...staticResult.page,
+                observedAt: new Date().toISOString()
+              }
+              const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
+              this.cachePage(candidate.url, extracted)
+              if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
+              staticFetchHits += 1
+              return draft
+            } catch (error) {
+              if (signal.aborted) throw error
+              if (stopSignal.aborted) return null
+              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
+              return null
+            } finally {
+              preflight.dispose()
+            }
+          }
+          preflight.dispose()
           if (stopSignal.aborted) return null
+          browserPageLoads += 1
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           const closeOnAbort = (): void => this.closeHiddenView(view)
