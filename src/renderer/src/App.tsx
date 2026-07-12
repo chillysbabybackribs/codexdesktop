@@ -18,7 +18,6 @@ import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
   BrowserState,
-  ClaudeEffort,
   CodexEvent,
   CodexPluginAppStatus,
   MemoryPersistParams,
@@ -247,6 +246,7 @@ export default function App(): React.JSX.Element {
   const optimisticUserMessageIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const modelsRef = useRef<Model[]>(models)
+  const crossModelsRef = useRef<Model[]>(crossModels)
   const workspaceRef = useRef<string | null>(workspace)
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
@@ -328,6 +328,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     modelsRef.current = models
   }, [models])
+
+  useEffect(() => {
+    crossModelsRef.current = crossModels
+  }, [crossModels])
 
   useEffect(() => {
     workspaceRef.current = workspace
