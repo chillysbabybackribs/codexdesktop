@@ -35,6 +35,7 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
 export async function restoreAgentDock(options: {
   storageKey: string
   activeThreadId: string | null
+  workspace: string | null
   store: AgentDockStore
 }): Promise<void> {
   const { storageKey, activeThreadId, store } = options
@@ -51,6 +52,7 @@ export async function restoreAgentDock(options: {
 
     const restored: AgentSession[] = entries.map((entry) => ({
       key: crypto.randomUUID(),
+      provider: entry.provider === 'claude' ? 'claude' : 'codex',
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
       status: 'idle',
@@ -73,6 +75,23 @@ export async function restoreAgentDock(options: {
     await Promise.all(restored.map(async (session) => {
       if (!session.threadId) return
       try {
+        if (session.provider === 'claude') {
+          // Registers the runtime so later sends resume this session; the
+          // transcript comes from the session file rather than a turns page.
+          await window.api.claude.resumeThread(session.threadId, options.workspace)
+          const transcript = await window.api.claude.readThread(session.threadId, options.workspace)
+          const messages: AgentLiteMessage[] = transcript.map((message) => ({
+            id: message.id,
+            role: message.role,
+            text: message.role === 'user' ? stripMainChatContext(message.text) : message.text
+          }))
+          store.patchSession(session.key, (current) => ({
+            ...current,
+            messages: messages.slice(-4)
+          }))
+          return
+        }
+
         const resumed = await window.api.codex.resumeThread(session.threadId)
         let turns = resumed.thread.turns.length > 0
           ? resumed.thread.turns
