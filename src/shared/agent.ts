@@ -39,6 +39,7 @@ export type AgentEvent =
   | { type: 'turn.started'; provider: AgentProvider; sessionId: string; turnId: string }
   | { type: 'message.delta'; provider: AgentProvider; sessionId: string; turnId: string; itemId: string; text: string }
   | { type: 'message.completed'; provider: AgentProvider; sessionId: string; turnId: string; itemId: string; blocks: unknown[]; parentToolUseId: string | null }
+  | { type: 'reasoning.delta'; provider: AgentProvider; sessionId: string; turnId: string; itemId: string; text: string }
   | { type: 'tool.started'; provider: AgentProvider; sessionId: string; turnId: string; callId: string; name: string; input: unknown }
   | { type: 'tool.completed'; provider: AgentProvider; sessionId: string; turnId: string; callId: string; failed: boolean; content: unknown }
   | { type: 'tool.progress'; provider: AgentProvider; sessionId: string; turnId: string; callId: string; name: string; elapsedSeconds: number }
