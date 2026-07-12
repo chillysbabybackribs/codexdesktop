@@ -108,6 +108,27 @@ test('MemoryStore keeps last-chat checkpoints isolated by workspace', async (con
   assert.doesNotMatch(workspaceB, /Workspace A/)
 })
 
+test('MemoryStore only falls back to a legacy checkpoint for the same workspace', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-memory-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const store = new MemoryStore(root)
+  const workspace = '/tmp/legacy-project'
+
+  await store.persist({
+    provider: 'codex',
+    surface: 'main',
+    threadId: 'legacy-thread',
+    title: 'Legacy checkpoint',
+    workspace,
+    updatedAt: '2026-07-11T12:00:00.000Z',
+    turns: [{ user: 'Old request', assistant: 'Old result' }]
+  })
+  await rm(join(workspaceDirectory(root, workspace), 'last-chat.md'))
+
+  assert.match(await store.readWorkspaceCheckpoint(workspace) ?? '', /# Legacy checkpoint/)
+  assert.equal(await store.readWorkspaceCheckpoint('/tmp/different-project'), null)
+})
+
 test('background agent transcripts do not replace the main last-chat checkpoint', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'codexdesktop-memory-'))
   context.after(() => rm(root, { recursive: true, force: true }))
