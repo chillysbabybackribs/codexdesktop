@@ -520,7 +520,6 @@ export class ResearchRunner {
     this.searchViews.delete(view)
     if (!view.webContents.isDestroyed()) view.webContents.close()
   }
-
 }
 
 async function loadSearchPage(
@@ -618,38 +617,6 @@ function linkAbortSignals(...signals: AbortSignal[]): { signal: AbortSignal; dis
     signal: controller.signal,
     dispose: () => {
       for (const signal of signals) signal.removeEventListener('abort', onAbort)
-    }
-  }
-}
-
-async function pruneResearchArtifacts(root: string): Promise<void> {
-  try {
-    const entries = await readdir(root, { withFileTypes: true })
-    const directories = await Promise.all(entries
-      .filter((entry) => entry.isDirectory())
-      .map(async (entry) => {
-        const path = join(root, entry.name)
-        const info = await stat(path)
-        const children = await readdir(path, { withFileTypes: true })
-        const sizes = await Promise.all(children
-          .filter((child) => child.isFile())
-          .map(async (child) => (await stat(join(path, child.name))).size))
-        return { path, modifiedAt: info.mtimeMs, size: sizes.reduce((sum, size) => sum + size, 0) }
-      }))
-
-    directories.sort((left, right) => right.modifiedAt - left.modifiedAt)
-    let retainedBytes = 0
-    const now = Date.now()
-
-    for (const directory of directories) {
-      retainedBytes += directory.size
-      if (now - directory.modifiedAt > RESEARCH_MAX_AGE_MS || retainedBytes > RESEARCH_MAX_BYTES) {
-        await rm(directory.path, { recursive: true, force: true })
-      }
-    }
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-      console.warn('Failed to prune research artifacts', error)
     }
   }
 }

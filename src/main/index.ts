@@ -82,7 +82,7 @@ let quitReady = false
 const cdpArtifactStore = new CdpArtifactStore(() => join(app.getPath('userData'), 'cdp-artifacts'))
 const attachmentStore = new AttachmentStore(() => join(app.getPath('userData'), 'chat-attachments'))
 const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactStore)
-const researchRunner = new ResearchRunner(() => tabManager)
+const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore()
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
