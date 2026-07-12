@@ -104,6 +104,7 @@ const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
+const collaborationModeStorageKey = 'codexdesktop.collaborationMode'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
@@ -167,6 +168,9 @@ export default function App(): React.JSX.Element {
   )
   const [selectedReasoningEffort, setSelectedReasoningEffort] = useState<ReasoningEffort | null>(
     () => window.localStorage.getItem(reasoningEffortStorageKey)
+  )
+  const [collaborationMode, setCollaborationMode] = useState<'default' | 'plan'>(() =>
+    window.localStorage.getItem(collaborationModeStorageKey) === 'plan' ? 'plan' : 'default'
   )
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
@@ -590,7 +594,8 @@ export default function App(): React.JSX.Element {
         attachments,
         cwd: workspace,
         model: selectedModel,
-        effort: selectedReasoningEffort
+        effort: selectedReasoningEffort,
+        collaborationMode
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -1637,6 +1642,11 @@ export default function App(): React.JSX.Element {
           models={models}
           selectedModel={selectedModel}
           selectedReasoningEffort={selectedReasoningEffort}
+          collaborationMode={collaborationMode}
+          onSetCollaborationMode={(mode) => {
+            setCollaborationMode(mode)
+            window.localStorage.setItem(collaborationModeStorageKey, mode)
+          }}
           onSelectModel={handleSelectModel}
           onSelectModelEffort={handleSelectModelEffort}
           onSend={handleSend}
@@ -1727,6 +1737,8 @@ function ChatPane({
   models,
   selectedModel,
   selectedReasoningEffort,
+  collaborationMode,
+  onSetCollaborationMode,
   onSelectModel,
   onSelectModelEffort,
   onSend,
@@ -1781,6 +1793,8 @@ function ChatPane({
   models: Model[]
   selectedModel: string | null
   selectedReasoningEffort: ReasoningEffort | null
+  collaborationMode: 'default' | 'plan'
+  onSetCollaborationMode: (mode: 'default' | 'plan') => void
   onSelectModel: (model: string) => void
   onSelectModelEffort: (model: string, effort: ReasoningEffort) => void
   onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -2078,6 +2092,11 @@ function ChatPane({
               onSelectModelEffort={onSelectModelEffort}
             />
           ) : null}
+          <PlanModePill
+            active={collaborationMode === 'plan'}
+            disabled={isBusy}
+            onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
+          />
           <AgentTabStrip
             sessions={agentSessions}
             openKeys={openAgentKeys}
