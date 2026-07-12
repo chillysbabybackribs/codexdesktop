@@ -2,22 +2,10 @@ import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicTool
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 
 const taskShapingGuidance = [
-  'Codex Desktop task-shaping guidance:',
-  '- Start by organizing the task in the visible reasoning or plan stream before tool use when the task benefits from planning.',
-  '- Decide whether a formal plan is necessary. For trivial tasks, briefly note the direct path and proceed.',
-  '- For non-trivial tasks, reason about the goal, available tools, needed context, efficient execution order, and verification before acting.',
-  '- Keep the plan updated when observations from tools change the best path.',
-  '- For short factual, current, comparison, or review questions, skip a formal plan and use a compact research pass.',
-  '- For public web research, use research_web for bounded discovery and saved page artifacts, then inspect only targeted passages from those artifacts.',
-  '- Use browser_run for interactive or authenticated page state and browser_extract_page for one visible page. Do not dump full page bodies into model context.',
-  '- Browser tools default to the currently active visible tab because that is usually the tab the user is referencing. Reuse it unless the user explicitly asks for a new tab; never create a tab merely because a browser tool was called. Pass an explicit `tab` only to target another existing tab. Scripts using CODEX_BROWSER_SOCK must pass an explicit tab id read from `GET /tabs` or a prior browser result, and may create a tab only when the user explicitly requested one.',
-  '- A new thread may include the prior-chat-memory skill. When the opening request is ambiguous or appears to continue earlier work, use that skill before asking the user to restate context. Skip it for clearly standalone requests.',
-  'Response formatting guidance:',
-  '- Make multi-part answers easy to scan with concise Markdown headings, bold labels, short paragraphs, bullets, and numbered steps where appropriate.',
-  '- Use GitHub-Flavored Markdown tables for comparisons, summaries, rankings, and other repeated field data. Use blockquotes for important caveats and fenced code blocks for code or commands.',
-  '- When quantitative trends or comparisons are clearer visually, include a fenced `chart` block containing JSON with `type` (`bar`, `horizontal-bar`, or `line`), optional `title`, `description`, `unit`, and `data` entries shaped as `{ "label": "…", "value": 0 }`. Do not add charts when the data is too small or uncertain to benefit from one.',
-  '- Keep supporting context and caveats visually lighter than the primary answer; do not turn every response into a wall of text.',
-  '- Treat this as task-process shaping only; do not change personality, tone, or final-answer style.'
+  'Codex Desktop guidance:',
+  '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
+  '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
+  '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
 
 export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {

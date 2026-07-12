@@ -114,9 +114,17 @@ test('memory skill does not require a synthetic invocation marker', () => {
 
 test('guidance nudges ambiguous continuation without requesting improvement cards', () => {
   const guidance = buildGuidance({})
-  assert.match(guidance, /opening request is ambiguous.*use that skill/i)
+  assert.match(guidance, /ambiguous opening requests.*use the prior-chat-memory skill/i)
   assert.doesNotMatch(guidance, /app-improvement|self-improvement reporting/i)
   assert.doesNotMatch(guidance, /protected codex desktop host session/i)
+})
+
+test('global guidance stays limited to product-wide behavior', () => {
+  const guidance = buildGuidance({})
+
+  assert.match(guidance, /reuse the active visible browser tab/i)
+  assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
+  assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|browser_run|multi-part answers/i)
 })
 
 test('self-hosted guidance protects the exact host session and routes live checks to an isolated instance', () => {
@@ -171,7 +179,8 @@ test('the dynamic tool surface includes verified research primitives', () => {
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {
   const guidance = buildGuidance()
 
-  assert.match(guidance, /default to the currently active visible tab/)
-  assert.match(guidance, /never create a tab merely because a browser tool was called/)
+  assert.match(guidance, /reuse the active visible browser tab/i)
+  assert.match(guidance, /create a new tab only when the user explicitly requests one/i)
+  assert.match(guidance, /CODEX_BROWSER_SOCK must target an existing tab id/i)
   assert.doesNotMatch(guidance, /dedicated browser tab/)
 })
