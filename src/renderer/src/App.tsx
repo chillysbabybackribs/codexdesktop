@@ -3009,31 +3009,6 @@ function SettingsModal({
           </button>
         </header>
         <section className="settings-section">
-          <h3 className="settings-section-title">Model provider</h3>
-          <button
-            type="button"
-            className="settings-navigation-row"
-            aria-pressed={provider === 'codex'}
-            onClick={() => onSetProvider('codex')}
-          >
-            <span className="settings-row-text">
-              <span className="settings-row-label">OpenAI Codex {provider === 'codex' ? '✓' : ''}</span>
-              <span className="settings-row-hint">Codex app-server, Codex plugins, goals, and the shared browser harness.</span>
-            </span>
-          </button>
-          <button
-            type="button"
-            className="settings-navigation-row"
-            aria-pressed={provider === 'claude'}
-            onClick={() => onSetProvider('claude')}
-          >
-            <span className="settings-row-text">
-              <span className="settings-row-label">Anthropic Claude {provider === 'claude' ? '✓' : ''}</span>
-              <span className="settings-row-hint">Claude Agent SDK with the same embedded browser and research tools.</span>
-            </span>
-          </button>
-        </section>
-        <section className="settings-section">
           <h3 className="settings-section-title">Thread goal</h3>
           {provider === 'codex' ? (
             <GoalSettings
