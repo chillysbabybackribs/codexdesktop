@@ -162,6 +162,7 @@ export const api = {
     sendMessage: (params: ClaudeSendMessageParams) => ipcRenderer.invoke(ipcChannels.claudeSendMessage, params),
     steerTurn: (params: ClaudeSteerTurnParams) => ipcRenderer.invoke(ipcChannels.claudeSteerTurn, params),
     interruptTurn: (params: ClaudeInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.claudeInterruptTurn, params),
+    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.claudeUnsubscribeThread, threadId),
     onEvent: (listener: (event: ClaudeEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: ClaudeEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.claudeEvent, wrapped)

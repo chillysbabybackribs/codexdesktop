@@ -57,6 +57,9 @@ export function registerClaudeIpc(
   ipcMain.handle(ipcChannels.claudeInterruptTurn, (_event, params: ClaudeInterruptTurnParams) =>
     client.interruptTurn(params.threadId, params.turnId)
   )
+  ipcMain.handle(ipcChannels.claudeUnsubscribeThread, (_event, threadId: string) =>
+    client.unsubscribeThread(threadId)
+  )
 
   return client
 }

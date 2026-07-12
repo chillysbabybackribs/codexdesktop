@@ -336,6 +336,7 @@ export const ipcChannels = {
   claudeSendMessage: 'claude:sendMessage',
   claudeSteerTurn: 'claude:steerTurn',
   claudeInterruptTurn: 'claude:interruptTurn',
+  claudeUnsubscribeThread: 'claude:unsubscribeThread',
   claudeEvent: 'claude:event',
   memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',

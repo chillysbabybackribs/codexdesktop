@@ -1,8 +1,8 @@
-import { useRef, type ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import {
   assignTarget,
   conversationDragMime,
-  dropEdgeFromPoint,
+  dropEdgeFromGrid,
   MAX_SPLIT_RATIO,
   MIN_SPLIT_RATIO,
   replaceLayoutNode,
@@ -16,6 +16,7 @@ import {
 type ConversationLayoutTreeProps = {
   layout: LayoutNode
   focusedLeafId: string
+  tabDragTarget: ConversationTarget | null
   onLayoutChange: (layout: LayoutNode) => void
   onFocusedLeafChange: (leafId: string) => void
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
@@ -24,6 +25,7 @@ type ConversationLayoutTreeProps = {
 export function ConversationLayoutTree({
   layout,
   focusedLeafId,
+  tabDragTarget,
   onLayoutChange,
   onFocusedLeafChange,
   renderPane
@@ -33,10 +35,11 @@ export function ConversationLayoutTree({
   }
 
   return (
-    <div className="conversation-layout-root">
+    <div className={`conversation-layout-root ${tabDragTarget ? 'is-tab-dragging' : ''}`}>
       <LayoutBranch
         node={layout}
         focusedLeafId={focusedLeafId}
+        tabDragTarget={tabDragTarget}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
@@ -48,12 +51,14 @@ export function ConversationLayoutTree({
 function LayoutBranch({
   node,
   focusedLeafId,
+  tabDragTarget,
   replaceNode,
   onFocusedLeafChange,
   renderPane
 }: {
   node: LayoutNode
   focusedLeafId: string
+  tabDragTarget: ConversationTarget | null
   replaceNode: (nodeId: string, replacement: LayoutNode) => void
   onFocusedLeafChange: (leafId: string) => void
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
@@ -64,6 +69,7 @@ function LayoutBranch({
         leafId={node.id}
         target={node.target}
         focused={focusedLeafId === node.id}
+        tabDragTarget={tabDragTarget}
         onFocus={() => onFocusedLeafChange(node.id)}
         onAssign={(target, edge) => {
           if (edge === 'center') {
@@ -93,6 +99,7 @@ function LayoutBranch({
       <LayoutBranch
         node={node.first}
         focusedLeafId={focusedLeafId}
+        tabDragTarget={tabDragTarget}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
@@ -104,6 +111,7 @@ function LayoutBranch({
       <LayoutBranch
         node={node.second}
         focusedLeafId={focusedLeafId}
+        tabDragTarget={tabDragTarget}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
@@ -116,6 +124,7 @@ function ConversationPane({
   leafId,
   target,
   focused,
+  tabDragTarget,
   onFocus,
   onAssign,
   renderPane
@@ -123,61 +132,78 @@ function ConversationPane({
   leafId: string
   target: ConversationTarget
   focused: boolean
+  tabDragTarget: ConversationTarget | null
   onFocus: () => void
   onAssign: (target: ConversationTarget, edge: DropEdge) => void
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
 }): React.JSX.Element {
-  const paneRef = useRef<HTMLDivElement | null>(null)
-  const dragDepthRef = useRef(0)
+  return (
+    <div
+      className={`conversation-layout-pane ${focused ? 'is-focused' : ''}`}
+      data-leaf-id={leafId}
+      onMouseDown={onFocus}
+    >
+      {renderPane(target, leafId, focused)}
+      {tabDragTarget ? (
+        <ConversationDropOverlay
+          onAssign={(edge) => onAssign(tabDragTarget, edge)}
+        />
+      ) : null}
+    </div>
+  )
+}
 
-  const handleDragEnter = (event: React.DragEvent<HTMLDivElement>): void => {
-    if (!event.dataTransfer.types.includes(conversationDragMime)) return
-    event.preventDefault()
-    dragDepthRef.current += 1
-    event.currentTarget.classList.add('is-drop-target')
-  }
-
-  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>): void => {
-    if (!event.dataTransfer.types.includes(conversationDragMime)) return
-    dragDepthRef.current = Math.max(0, dragDepthRef.current - 1)
-    if (dragDepthRef.current === 0) event.currentTarget.classList.remove('is-drop-target')
-  }
+function ConversationDropOverlay({
+  onAssign
+}: {
+  onAssign: (edge: DropEdge) => void
+}): React.JSX.Element {
+  const overlayRef = useRef<HTMLDivElement | null>(null)
+  const [activeEdge, setActiveEdge] = useState<DropEdge>('center')
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     if (!event.dataTransfer.types.includes(conversationDragMime)) return
     event.preventDefault()
+    event.stopPropagation()
     event.dataTransfer.dropEffect = 'move'
-    const rect = paneRef.current?.getBoundingClientRect()
+    const rect = overlayRef.current?.getBoundingClientRect()
     if (!rect) return
-    const edge = dropEdgeFromPoint(rect, event.clientX, event.clientY)
-    event.currentTarget.dataset.dropEdge = edge
+    setActiveEdge(dropEdgeFromGrid(rect, event.clientX, event.clientY))
   }
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
     if (!event.dataTransfer.types.includes(conversationDragMime)) return
     event.preventDefault()
-    dragDepthRef.current = 0
-    event.currentTarget.classList.remove('is-drop-target')
-    delete event.currentTarget.dataset.dropEdge
-    const dragged = event.dataTransfer.getData(conversationDragMime)
-    if (!dragged) return
-    const rect = paneRef.current?.getBoundingClientRect()
-    const edge = rect ? dropEdgeFromPoint(rect, event.clientX, event.clientY) : 'center'
-    onAssign(dragged, edge)
+    event.stopPropagation()
+    const rect = overlayRef.current?.getBoundingClientRect()
+    const edge = rect ? dropEdgeFromGrid(rect, event.clientX, event.clientY) : activeEdge
+    onAssign(edge)
   }
 
   return (
     <div
-      ref={paneRef}
-      className={`conversation-layout-pane ${focused ? 'is-focused' : ''}`}
-      data-leaf-id={leafId}
-      onMouseDown={onFocus}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
+      ref={overlayRef}
+      className="conversation-drop-overlay"
+      data-active-edge={activeEdge}
+      onDragEnter={handleDragOver}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      {renderPane(target, leafId, focused)}
+      <div className="conversation-drop-zone is-left">
+        <span>Side by side</span>
+      </div>
+      <div className="conversation-drop-zone is-right">
+        <span>Side by side</span>
+      </div>
+      <div className="conversation-drop-zone is-top">
+        <span>Add above</span>
+      </div>
+      <div className="conversation-drop-zone is-bottom">
+        <span>Add below</span>
+      </div>
+      <div className="conversation-drop-zone is-center">
+        <span>Open here</span>
+      </div>
     </div>
   )
 }

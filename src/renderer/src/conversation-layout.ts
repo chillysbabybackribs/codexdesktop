@@ -253,28 +253,30 @@ export function normalizeLayout(layout: LayoutNode, validTargets: Set<Conversati
   })
 }
 
+export function dropEdgeFromGrid(
+  rect: DOMRect,
+  clientX: number,
+  clientY: number
+): DropEdge {
+  const x = (clientX - rect.left) / Math.max(rect.width, 1)
+  const y = (clientY - rect.top) / Math.max(rect.height, 1)
+
+  const col = x < 1 / 3 ? 0 : x > 2 / 3 ? 2 : 1
+  const row = y < 1 / 3 ? 0 : y > 2 / 3 ? 2 : 1
+
+  if (col === 0) return 'left'
+  if (col === 2) return 'right'
+  if (row === 0) return 'top'
+  if (row === 2) return 'bottom'
+  return 'center'
+}
+
 export function dropEdgeFromPoint(
   rect: DOMRect,
   clientX: number,
-  clientY: number,
-  edgePixels = 56
+  clientY: number
 ): DropEdge {
-  const x = clientX - rect.left
-  const y = clientY - rect.top
-  const width = Math.max(rect.width, 1)
-  const height = Math.max(rect.height, 1)
-
-  const candidates: Array<{ edge: Exclude<DropEdge, 'center'>; dist: number }> = [
-    { edge: 'left', dist: x },
-    { edge: 'right', dist: width - x },
-    { edge: 'top', dist: y },
-    { edge: 'bottom', dist: height - y }
-  ]
-
-  candidates.sort((left, right) => left.dist - right.dist)
-  const closest = candidates[0]
-  if (!closest || closest.dist > edgePixels) return 'center'
-  return closest.edge
+  return dropEdgeFromGrid(rect, clientX, clientY)
 }
 
 export const conversationDragMime = 'application/x-codex-conversation-target'

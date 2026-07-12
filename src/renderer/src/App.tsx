@@ -884,7 +884,11 @@ export default function App(): React.JSX.Element {
     pendingCompactionByTurnRef.current.clear()
 
     if (previousThreadId && !backgroundSessionForThread(previousThreadId)) {
-      void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+      if (provider === 'claude') {
+        void window.api.claude.unsubscribeThread(previousThreadId).catch(() => {})
+      } else {
+        void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+      }
     }
   }
 
@@ -2164,6 +2168,7 @@ function ChatPane({
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
+  const [tabDragTarget, setTabDragTarget] = useState<ConversationTarget | null>(null)
   const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null)
@@ -2188,6 +2193,12 @@ function ChatPane({
     [traceTurnId, activeThreadId, title, selectedModel, workspace, items, itemMeta, turnMeta]
   )
   const trace = storedTrace?.turn.id === traceTurnId ? storedTrace : currentTrace
+
+  useEffect(() => {
+    const clearTabDrag = (): void => setTabDragTarget(null)
+    document.addEventListener('dragend', clearTabDrag)
+    return () => document.removeEventListener('dragend', clearTabDrag)
+  }, [])
 
   function openTrace(turnId: string): void {
     const generation = ++traceLoadGenerationRef.current
@@ -2283,22 +2294,27 @@ function ChatPane({
         >
           <SettingsIcon />
         </button>
-        <ConversationTabStrip
-          sessions={agentSessions}
-          focusedTarget={focusedTarget}
-          visibleTargets={visibleTargets}
-          mainWorking={Boolean(activeTurnId)}
-          onSelectMain={() => onSelectConversation('main')}
-          onSelectAgent={onSelectConversation}
-          onNewAgent={onNewAgent}
-          onCloseAgent={closeAgent}
-        />
+        {provider === 'codex' ? (
+          <ConversationTabStrip
+            sessions={agentSessions}
+            focusedTarget={focusedTarget}
+            visibleTargets={visibleTargets}
+            mainWorking={Boolean(activeTurnId)}
+            onSelectMain={() => onSelectConversation('main')}
+            onSelectAgent={onSelectConversation}
+            onNewAgent={onNewAgent}
+            onCloseAgent={closeAgent}
+            onTabDragStart={setTabDragTarget}
+            onTabDragEnd={() => setTabDragTarget(null)}
+          />
+        ) : <span className="workspace-pill">Claude Agent SDK</span>}
       </div>
 
       <div className="conversation-panels">
         <ConversationLayoutTree
           layout={conversationLayout}
           focusedLeafId={focusedLeafId}
+          tabDragTarget={tabDragTarget}
           onLayoutChange={onConversationLayoutChange}
           onFocusedLeafChange={onFocusedLeafChange}
           renderPane={(target, _leafId, focused) => {

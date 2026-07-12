@@ -42,6 +42,7 @@ type ClaudeRuntime = {
   initialized: Promise<void>
   resolveInitialized: () => void
   rejectInitialized: (error: Error) => void
+  closing: boolean
 }
 
 export class ClaudeClient extends EventEmitter {
@@ -162,8 +163,19 @@ export class ClaudeClient extends EventEmitter {
     await runtime.query.interrupt()
   }
 
+  unsubscribeThread(threadId: string): void {
+    const runtime = this.runtimes.get(threadId)
+    if (!runtime) return
+    runtime.closing = true
+    runtime.input.close()
+    runtime.query.close()
+    this.runtimes.delete(threadId)
+    this.runtimes.delete(runtime.key)
+  }
+
   dispose(): void {
     for (const runtime of this.runtimes.values()) {
+      runtime.closing = true
       runtime.input.close()
       runtime.query.close()
     }
@@ -222,7 +234,8 @@ export class ClaudeClient extends EventEmitter {
       activeTurn: null,
       initialized,
       resolveInitialized,
-      rejectInitialized
+      rejectInitialized,
+      closing: false
     }
 
     const mcpServer = createClaudeBrowserMcpServer(
@@ -244,8 +257,9 @@ export class ClaudeClient extends EventEmitter {
       for await (const message of runtime.query) {
         this.handleMessage(runtime, message)
       }
-      this.emitStatus('exited')
+      if (!runtime.closing) this.emitStatus('exited')
     } catch (error) {
+      if (runtime.closing) return
       const normalized = normalizeError(error)
       runtime.rejectInitialized(normalized)
       this.emitStatus('error', normalized.message)

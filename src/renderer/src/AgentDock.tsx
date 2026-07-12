@@ -24,7 +24,9 @@ export function ConversationTabStrip({
   onSelectMain,
   onSelectAgent,
   onNewAgent,
-  onCloseAgent
+  onCloseAgent,
+  onTabDragStart,
+  onTabDragEnd
 }: {
   sessions: AgentSession[]
   focusedTarget: ConversationTarget
@@ -34,6 +36,8 @@ export function ConversationTabStrip({
   onSelectAgent: (key: string) => void
   onNewAgent: () => void
   onCloseAgent: (key: string) => void
+  onTabDragStart: (target: ConversationTarget) => void
+  onTabDragEnd: () => void
 }): React.JSX.Element {
   const tabRefs = useRef(new Map<string, HTMLButtonElement>())
   const selectedId = focusedTarget === 'main' ? 'main' : focusedTarget
@@ -43,13 +47,15 @@ export function ConversationTabStrip({
     tabRefs.current.get(selectedId)?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   }, [selectedId, sessions.length])
 
-  const startTabDrag = (event: React.DragEvent<HTMLButtonElement>, target: ConversationTarget): void => {
+  const startTabDrag = (event: React.DragEvent<HTMLDivElement>, target: ConversationTarget): void => {
     writeConversationDragTarget(event.dataTransfer, target)
+    onTabDragStart(target)
     event.currentTarget.classList.add('is-dragging')
   }
 
-  const endTabDrag = (event: React.DragEvent<HTMLButtonElement>): void => {
+  const endTabDrag = (event: React.DragEvent<HTMLDivElement>): void => {
     event.currentTarget.classList.remove('is-dragging')
+    onTabDragEnd()
   }
 
   const selectByKeyboard = (event: React.KeyboardEvent<HTMLButtonElement>, currentId: string): void => {
@@ -77,50 +83,58 @@ export function ConversationTabStrip({
   return (
     <div className="conversation-tabs" role="tablist" aria-label="Conversations">
       <div className={`conversation-tab-item is-main ${focusedTarget === 'main' ? 'is-active' : ''} ${visible.has('main') ? 'is-visible' : ''}`}>
-        <button
-          type="button"
-          ref={(node) => registerTab('main', node)}
-          id="conversation-tab-main"
-          className="conversation-tab"
-          role="tab"
-          aria-selected={focusedTarget === 'main'}
-          aria-controls="conversation-panel-main"
-          tabIndex={focusedTarget === 'main' ? 0 : -1}
-          title="Main chat — drag to split or stack"
+        <div
+          className="conversation-tab-drag"
           draggable
-          onClick={onSelectMain}
           onDragStart={(event) => startTabDrag(event, 'main')}
           onDragEnd={endTabDrag}
-          onKeyDown={(event) => selectByKeyboard(event, 'main')}
         >
-          {mainWorking ? <span className="agent-status agent-status-spinner" role="status" aria-label="Working" /> : <MainChatIcon />}
-          <span className="conversation-tab-title">Main chat</span>
-        </button>
+          <button
+            type="button"
+            ref={(node) => registerTab('main', node)}
+            id="conversation-tab-main"
+            className="conversation-tab"
+            role="tab"
+            aria-selected={focusedTarget === 'main'}
+            aria-controls="conversation-panel-main"
+            tabIndex={focusedTarget === 'main' ? 0 : -1}
+            title="Main chat — drag into the chat area to tile"
+            onClick={onSelectMain}
+            onKeyDown={(event) => selectByKeyboard(event, 'main')}
+          >
+            {mainWorking ? <span className="agent-status agent-status-spinner" role="status" aria-label="Working" /> : <MainChatIcon />}
+            <span className="conversation-tab-title">Main chat</span>
+          </button>
+        </div>
       </div>
       <div className="conversation-agent-tabs">
         {sessions.map((session) => {
           const active = focusedTarget === session.key
           return (
             <div className={`conversation-tab-item ${active ? 'is-active' : ''} ${visible.has(session.key) ? 'is-visible' : ''}`} key={session.key}>
-              <button
-                type="button"
-                ref={(node) => registerTab(session.key, node)}
-                id={`conversation-tab-${session.key}`}
-                className="conversation-tab"
-                role="tab"
-                aria-selected={active}
-                aria-controls={`conversation-panel-${session.key}`}
-                tabIndex={active ? 0 : -1}
-                title={`${session.title} — drag to split or stack`}
+              <div
+                className="conversation-tab-drag"
                 draggable
-                onClick={() => onSelectAgent(session.key)}
                 onDragStart={(event) => startTabDrag(event, session.key)}
                 onDragEnd={endTabDrag}
-                onKeyDown={(event) => selectByKeyboard(event, session.key)}
               >
-                <AgentStatusIcon status={session.status} />
-                <span className="conversation-tab-title">{session.title}</span>
-              </button>
+                <button
+                  type="button"
+                  ref={(node) => registerTab(session.key, node)}
+                  id={`conversation-tab-${session.key}`}
+                  className="conversation-tab"
+                  role="tab"
+                  aria-selected={active}
+                  aria-controls={`conversation-panel-${session.key}`}
+                  tabIndex={active ? 0 : -1}
+                  title={`${session.title} — drag into the chat area to tile`}
+                  onClick={() => onSelectAgent(session.key)}
+                  onKeyDown={(event) => selectByKeyboard(event, session.key)}
+                >
+                  <AgentStatusIcon status={session.status} />
+                  <span className="conversation-tab-title">{session.title}</span>
+                </button>
+              </div>
               <button
                 type="button"
                 className="conversation-tab-close"
