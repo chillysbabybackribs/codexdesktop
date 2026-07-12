@@ -340,6 +340,17 @@ export class ClaudeClient extends EventEmitter {
           itemId: message.uuid,
           text: event.delta.text
         })
+      } else if (event.type === 'content_block_delta' && event.delta.type === 'thinking_delta') {
+        // Reasoning lives in its own block; key the item on the block index so a
+        // turn's thinking and answer stream into separate transcript items.
+        this.emitEvent({
+          type: 'reasoning.delta',
+          provider: 'claude',
+          sessionId: runtime.sessionId,
+          turnId: turn.id,
+          itemId: `${message.uuid}-think-${event.index}`,
+          text: event.delta.thinking
+        })
       }
       return
     }
