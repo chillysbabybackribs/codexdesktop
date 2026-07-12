@@ -3191,6 +3191,11 @@ button {
   animation: reasoning-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.reasoning-menu[data-side="left"] {
+  right: calc(100% + 8px);
+  left: auto;
+}
+
 .reasoning-menu::before {
   position: absolute;
   top: 0;
@@ -3198,14 +3203,6 @@ button {
   width: 10px;
   height: 100%;
   content: "";
-}
-
-.reasoning-menu.align-top {
-  top: -6px;
-}
-
-.reasoning-menu.align-bottom {
-  bottom: -6px;
 }
 
 .reasoning-menu-label {

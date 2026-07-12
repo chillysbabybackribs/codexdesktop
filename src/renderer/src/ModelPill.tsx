@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 
@@ -20,7 +20,14 @@ export function ModelPill({
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedModel, setExpandedModel] = useState<string | null>(null)
+  const [reasoningMenuPlacement, setReasoningMenuPlacement] = useState<{
+    side: 'left' | 'right'
+    top: number
+  } | null>(null)
   const wrapRef = useRef<HTMLDivElement | null>(null)
+  const menuShellRef = useRef<HTMLDivElement | null>(null)
+  const expandedOptionRef = useRef<HTMLDivElement | null>(null)
+  const reasoningMenuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!isOpen) {
@@ -55,6 +62,46 @@ export function ModelPill({
   const expanded = expandedIndex >= 0 ? models[expandedIndex] : null
   const expandedEfforts = expanded?.supportedReasoningEfforts ?? []
 
+  useLayoutEffect(() => {
+    if (!expandedModel || !expandedEfforts.length) {
+      setReasoningMenuPlacement(null)
+      return
+    }
+
+    const placeMenu = (): void => {
+      const shell = menuShellRef.current
+      const option = expandedOptionRef.current
+      const menu = reasoningMenuRef.current
+      if (!shell || !option || !menu) return
+
+      const viewportPadding = 8
+      const submenuGap = 8
+      const shellRect = shell.getBoundingClientRect()
+      const optionRect = option.getBoundingClientRect()
+      const menuRect = menu.getBoundingClientRect()
+      const preferredTop = optionRect.top - 6
+      const viewportTop = Math.min(
+        Math.max(preferredTop, viewportPadding),
+        Math.max(viewportPadding, window.innerHeight - menuRect.height - viewportPadding)
+      )
+      const roomOnRight = window.innerWidth - shellRect.right - viewportPadding
+      const roomOnLeft = shellRect.left - viewportPadding
+      const side = roomOnRight >= menuRect.width + submenuGap || roomOnRight >= roomOnLeft
+        ? 'right'
+        : 'left'
+
+      setReasoningMenuPlacement({ side, top: viewportTop - shellRect.top })
+    }
+
+    placeMenu()
+    window.addEventListener('resize', placeMenu)
+    window.addEventListener('scroll', placeMenu, true)
+    return () => {
+      window.removeEventListener('resize', placeMenu)
+      window.removeEventListener('scroll', placeMenu, true)
+    }
+  }, [expandedModel, expandedEfforts.length])
+
   return (
     <div ref={wrapRef} className="model-pill-wrap">
       <button
@@ -70,7 +117,7 @@ export function ModelPill({
         <span className="workspace-pill-caret">⌄</span>
       </button>
       {isOpen ? (
-        <div className="model-menu-shell" onMouseLeave={() => setExpandedModel(null)}>
+        <div ref={menuShellRef} className="model-menu-shell" onMouseLeave={() => setExpandedModel(null)}>
           <div className="model-menu" role="menu">
             {models.map((model) => {
               const isActive = model.model === active?.model
@@ -81,7 +128,10 @@ export function ModelPill({
                 <div
                   key={model.id}
                   className="model-option-wrap"
-                  onMouseEnter={() => setExpandedModel(model.model)}
+                  onMouseEnter={(event) => {
+                    expandedOptionRef.current = event.currentTarget
+                    setExpandedModel(model.model)
+                  }}
                 >
                   <button
                     type="button"
@@ -90,7 +140,10 @@ export function ModelPill({
                     aria-haspopup={hasEfforts ? 'menu' : undefined}
                     aria-expanded={hasEfforts ? isExpanded : undefined}
                     className={`model-option ${isActive ? 'is-active' : ''}`}
-                    onFocus={() => setExpandedModel(model.model)}
+                    onFocus={(event) => {
+                      expandedOptionRef.current = event.currentTarget.parentElement as HTMLDivElement | null
+                      setExpandedModel(model.model)
+                    }}
                     onClick={() => {
                       onSelectModel(model.model)
                       if (!hasEfforts) setIsOpen(false)
@@ -111,9 +164,15 @@ export function ModelPill({
           </div>
           {expanded && onSelectModelEffort && expandedEfforts.length ? (
             <div
-              className={`reasoning-menu ${expandedIndex >= Math.ceil(models.length / 2) ? 'align-bottom' : 'align-top'}`}
+              ref={reasoningMenuRef}
+              className="reasoning-menu"
+              data-side={reasoningMenuPlacement?.side ?? 'right'}
               role="menu"
               aria-label={`${expanded.displayName} reasoning effort`}
+              style={{
+                top: reasoningMenuPlacement?.top ?? 0,
+                visibility: reasoningMenuPlacement ? 'visible' : 'hidden'
+              }}
             >
               <div className="reasoning-menu-label">Reasoning effort</div>
               {expandedEfforts.map((option) => {
