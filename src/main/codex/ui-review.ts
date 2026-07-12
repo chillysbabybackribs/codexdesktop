@@ -28,7 +28,7 @@ const interactive = [...document.querySelectorAll('a, button, input, select, tex
     const rect = element.getBoundingClientRect();
     return { label: label(element), tag: element.tagName.toLowerCase(), width: Math.round(rect.width), height: Math.round(rect.height) };
   });
-const clipped = [...document.body.querySelectorAll('*')]
+const clipped = [...document.body.querySelectorAll('*')].slice(0, 5000)
   .filter(visible)
   .map((element) => ({ element, rect: element.getBoundingClientRect() }))
   .filter(({ rect }) => rect.right > document.documentElement.clientWidth + 1 || rect.left < -1)
@@ -36,7 +36,7 @@ const clipped = [...document.body.querySelectorAll('*')]
   .map(({ element, rect }) => ({ label: label(element), tag: element.tagName.toLowerCase(), left: Math.round(rect.left), right: Math.round(rect.right) }));
 const images = [...document.images].map((image) => ({
   alt: image.getAttribute('alt'),
-  src: image.currentSrc || image.src,
+  src: (image.currentSrc || image.src).slice(0, 240),
   complete: image.complete,
   naturalWidth: image.naturalWidth,
   naturalHeight: image.naturalHeight,
@@ -52,7 +52,11 @@ return {
   horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   headings: [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].slice(0, 80).map((heading) => ({ level: Number(heading.tagName.slice(1)), text: label(heading) })),
   landmarks: [...document.querySelectorAll('header,nav,main,aside,footer,[role="banner"],[role="navigation"],[role="main"],[role="complementary"],[role="contentinfo"]')].slice(0, 40).map((element) => ({ tag: element.tagName.toLowerCase(), role: element.getAttribute('role'), label: element.getAttribute('aria-label') })),
-  controls: { count: interactive.length, undersized: interactive.filter(({ width, height }) => width < 44 || height < 44).slice(0, 40) },
+  controls: {
+    count: interactive.length,
+    touchViewport: innerWidth <= 820,
+    undersizedTouchTargets: innerWidth <= 820 ? interactive.filter(({ width, height }) => width < 44 || height < 44).slice(0, 40) : []
+  },
   clipped,
   images: {
     count: images.length,
