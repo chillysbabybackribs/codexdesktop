@@ -204,30 +204,23 @@ function buildPassageWindow(
   let start = matchIndex
   let end = matchIndex
   let text = matchedLine
-  let nextLeft = matchIndex - 1
-  let nextRight = matchIndex + 1
-  while (nextLeft >= 0 || nextRight < lines.length) {
-    let expanded = false
+  for (let distance = 1; distance <= 2; distance += 1) {
+    const nextLeft = matchIndex - distance
+    const nextRight = matchIndex + distance
     if (nextLeft >= 0) {
       const candidate = `${lines[nextLeft]}\n${text}`
       if (candidate.length <= maxChars) {
         start = nextLeft
         text = candidate
-        expanded = true
       }
-      nextLeft -= 1
     }
     if (nextRight < lines.length) {
       const candidate = `${text}\n${lines[nextRight]}`
       if (candidate.length <= maxChars) {
         end = nextRight
         text = candidate
-        expanded = true
       }
-      nextRight += 1
     }
-    if (!expanded) break
-    if (matchIndex - start >= 2 && end - matchIndex >= 2) break
   }
 
   while (start < end && !lines[start]?.trim()) start += 1

@@ -28,12 +28,19 @@ export async function writeResearchPageArtifacts(
 export class ResearchPruneGate {
   private lastStartedAt = Number.NEGATIVE_INFINITY
   private running: Promise<void> | null = null
+  private readonly cooldownMs: number
+  private readonly prune: (root: string) => Promise<void>
+  private readonly now: () => number
 
   constructor(
-    private readonly cooldownMs: number,
-    private readonly prune: (root: string) => Promise<void> = pruneResearchArtifacts,
-    private readonly now: () => number = Date.now
-  ) {}
+    cooldownMs: number,
+    prune: (root: string) => Promise<void> = pruneResearchArtifacts,
+    now: () => number = Date.now
+  ) {
+    this.cooldownMs = cooldownMs
+    this.prune = prune
+    this.now = now
+  }
 
   schedule(root: string): Promise<void> | null {
     if (this.running) return this.running
