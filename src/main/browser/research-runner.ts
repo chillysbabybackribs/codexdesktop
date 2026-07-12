@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
-import { ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
+import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
 import {
   normalizeResearchFocus,
   selectResearchEvidence,
@@ -140,8 +140,6 @@ type ExtractedResearchPage = {
   observedAt: string
 }
 
-type CachedResearchPage = ExtractedResearchPage & { expiresAt: number }
-
 type ResearchCandidate = RankedSerpCandidate & { sourceKind: 'direct' | 'search' }
 
 type ActiveResearchRun = {
@@ -160,7 +158,7 @@ export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()
   private readonly activeRuns = new Map<string, ActiveResearchRun>()
   private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
-  private readonly pageCache = new Map<string, CachedResearchPage>()
+  private readonly pageCache = new ResearchMemoryCache<ExtractedResearchPage>(PAGE_CACHE_TTL_MS, MAX_PAGE_CACHE_ENTRIES)
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
   private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
@@ -602,26 +600,12 @@ export class ResearchRunner {
     return view
   }
 
-  private readPageCache(url: string): CachedResearchPage | null {
-    const cached = this.pageCache.get(url)
-    if (!cached) return null
-    if (cached.expiresAt <= Date.now()) {
-      this.pageCache.delete(url)
-      return null
-    }
-    this.pageCache.delete(url)
-    this.pageCache.set(url, cached)
-    return cached
+  private readPageCache(url: string): ExtractedResearchPage | null {
+    return this.pageCache.get(url)
   }
 
   private cachePage(url: string, page: ExtractedResearchPage): void {
-    this.pageCache.delete(url)
-    this.pageCache.set(url, { ...page, expiresAt: Date.now() + PAGE_CACHE_TTL_MS })
-    while (this.pageCache.size > MAX_PAGE_CACHE_ENTRIES) {
-      const oldest = this.pageCache.keys().next().value
-      if (typeof oldest !== 'string') break
-      this.pageCache.delete(oldest)
-    }
+    this.pageCache.set(url, page)
   }
 
   private closeHiddenView(view: WebContentsView): void {
