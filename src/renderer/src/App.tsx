@@ -1855,9 +1855,6 @@ function ChatPane({
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
   const [installedPlugins, setInstalledPlugins] = useState<PluginSummary[]>([])
-  // Which region the user is working in: the main chat (default) or the agent
-  // column. Drives the dim/unfocus treatment on agent windows via CSS.
-  const [isMainFocused, setIsMainFocused] = useState(true)
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null)
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null)
   const traceLoadGenerationRef = useRef(0)
@@ -1931,8 +1928,6 @@ function ChatPane({
     return null
   }, [items, itemMeta, activeTurnId])
 
-  const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key))
-
   const openPluginBrowser = (): void => {
     setIsSettingsOpen(false)
     setIsPluginBrowserOpen(true)
@@ -1940,69 +1935,23 @@ function ChatPane({
 
   const closePluginBrowser = (): void => {
     setIsPluginBrowserOpen(false)
-    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.conversation-panel:not([hidden]) textarea')?.focus())
   }
 
-  // Pointer-downs and focus moves decide the active region: anything inside
-  // the agent column or tab strip counts as agent territory, everything else
-  // is the main chat.
-  const updateFocusRegion = (target: EventTarget | null): void => {
-    const inAgents =
-      target instanceof HTMLElement && Boolean(target.closest('.agent-column-shell, .agent-tabs'))
-    setIsMainFocused(!inAgents)
+  const closeAgent = (key: string): void => {
+    if (selectedAgentKey === key) {
+      const index = agentSessions.findIndex((session) => session.key === key)
+      const remaining = agentSessions.filter((session) => session.key !== key)
+      const fallback = remaining[index] ?? remaining[index - 1] ?? null
+      if (fallback) onSelectAgent(fallback.key)
+      else onSelectMain()
+    }
+    onCloseAgentSession(key)
   }
 
-  const focusAgent = (key: string): void => {
-    const wasOpen = openAgentKeys.includes(key)
-    onSelectAgent(key)
-    onOpenAgent(key)
-    // Alignment is an absolute, idempotent scrollTo — never a relative
-    // scrollBy, which compounds when fired mid-animation. Settle runs on the
-    // browser's scrollend event, not a guessed timeout, so it measures a
-    // finished layout. A freshly opened window aligns instantly (the column is
-    // reflowing anyway); an already-open one scrolls smoothly.
-    const alignOnce = (behavior: ScrollBehavior): 'missing' | 'aligned' | 'scrolling' => {
-      const node = document.querySelector(`[data-agent-key="${key}"]`)
-      const scroller = node instanceof HTMLElement ? node.parentElement : null
-      if (!(node instanceof HTMLElement) || !(scroller instanceof HTMLElement)) return 'missing'
-      const raw =
-        scroller.scrollTop +
-        node.getBoundingClientRect().top -
-        scroller.getBoundingClientRect().top
-      const target = Math.max(0, Math.min(raw, scroller.scrollHeight - scroller.clientHeight))
-      if (Math.abs(target - scroller.scrollTop) <= 4) return 'aligned'
-      scroller.scrollTo({ top: target, behavior })
-      return 'scrolling'
-    }
-    let attempts = 0
-    const run = (): void => {
-      const state = alignOnce(wasOpen ? 'smooth' : 'auto')
-      if (state === 'missing') {
-        if (attempts++ < 12) requestAnimationFrame(run)
-        return
-      }
-      const node = document.querySelector(`[data-agent-key="${key}"]`)
-      if (node instanceof HTMLElement) {
-        node.classList.add('is-flash')
-        window.setTimeout(() => node.classList.remove('is-flash'), 750)
-      }
-      if (state === 'scrolling') {
-        const scroller = node instanceof HTMLElement ? node.parentElement : null
-        if (scroller instanceof HTMLElement) {
-          const settle = (): void => {
-            alignOnce('auto')
-          }
-          scroller.addEventListener('scrollend', settle, { once: true })
-          // Fallback in case scrollend never fires; alignOnce is idempotent,
-          // so a double settle is a no-op.
-          window.setTimeout(() => {
-            scroller.removeEventListener('scrollend', settle)
-            alignOnce('auto')
-          }, 900)
-        }
-      }
-    }
-    requestAnimationFrame(run)
+  const promoteAgent = (key: string): void => {
+    onSelectMain()
+    onPromoteAgent(key)
   }
 
   return (
