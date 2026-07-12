@@ -3,6 +3,7 @@ import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-sessio
 import type { CdpArtifactStore } from './cdp-artifact-store.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
+import { assessExtractedPage } from './research-utils.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -11,6 +12,16 @@ export const DEFAULT_BROWSER_RESULT_CHARS = 24_000
 export const MAX_BROWSER_RESULT_CHARS = 100_000
 export const MAX_PARALLEL_BROWSER_TARGETS = 8
 export const MAX_PARALLEL_BROWSER_FRAMES = 12
+export const PAGE_EXTRACTION_REMOVE_SELECTORS = [
+  'script', 'style', 'noscript', 'template', 'svg', 'canvas', 'img', 'picture',
+  'video', 'audio', 'iframe', 'object', 'embed', 'source', 'track', 'form',
+  'input', 'button', 'select', 'textarea', 'nav', 'footer', 'aside', '[hidden]',
+  '[aria-hidden="true"]', '[role="navigation"]', '[role="banner"]',
+  '[role="contentinfo"]', '[role="complementary"]', '[role="dialog"]',
+  '[role="menu"]', '[role="toolbar"]'
+] as const
+export const PAGE_EXTRACTION_LOW_VALUE_PATTERN =
+  '(^|[-_\\s])(advert|ad|banner|cookie|consent|modal|dialog|popup|newsletter|subscribe|social|share|related|recommend|breadcrumb|pagination|sidebar|toolbar|menu|promo|sponsor)([-_\\s]|$)'
 
 export type BrowserFailureCode =
   | 'timeout'
@@ -571,15 +582,33 @@ export class BrowserAgentController {
     // serialization of the whole envelope.
     const contentMaxChars = Math.max(1_000, maxResultChars - 1_000)
 
-    return this.run(buildPageExtractionProgram(contentMaxChars), {
+    const result = await this.run(buildPageExtractionProgram(contentMaxChars), {
       ...options,
       maxResultChars
     })
+    if (!result.ok) return result
+
+    const page = asRecord(result.result)
+    const assessment = assessExtractedPage({
+      title: typeof page.title === 'string' ? page.title : '',
+      url: typeof page.url === 'string' ? page.url : '',
+      content: typeof page.content === 'string' ? page.content : '',
+      wordCount: typeof page.wordCount === 'number' ? page.wordCount : 0
+    })
+    if (assessment.verified) return result
+    return {
+      ...result,
+      ok: false,
+      error: `page verification failed: ${assessment.reason ?? 'unknown'}`,
+      errorCode: 'executionError'
+    }
   }
 }
 
-export function buildPageExtractionProgram(maxChars: number): string {
+export function buildPageExtractionProgram(maxChars: number, htmlMaxChars = 0): string {
   const safeMaxChars = clampNumber(maxChars, DEFAULT_BROWSER_RESULT_CHARS, 1_000, MAX_BROWSER_RESULT_CHARS)
+  const safeHtmlMaxChars = clampNumber(htmlMaxChars, 0, 0, 2_000_000)
+  const htmlField = safeHtmlMaxChars > 0 ? ',\n    html: rawHtml' : ''
 
   // This is deliberately a deterministic, page-local extraction pipeline:
   // choose the most article-like root, remove non-content components, render
@@ -588,21 +617,15 @@ export function buildPageExtractionProgram(maxChars: number): string {
   const maxChars = ${safeMaxChars};
   const pageUrl = location.href;
   const title = document.title.trim();
+  const rawHtml = ${safeHtmlMaxChars > 0 ? `(document.documentElement?.outerHTML || '').slice(0, ${safeHtmlMaxChars})` : "''"};
   const body = document.body;
-  if (!body) return { title, url: pageUrl, content: '', wordCount: 0, truncated: false, reason: 'page has no body' };
+  if (!body) return { title, url: pageUrl, content: '', wordCount: 0, truncated: false, reason: 'page has no body'${htmlField} };
 
   const clone = body.cloneNode(true);
-  const removeSelectors = [
-    'script', 'style', 'noscript', 'template', 'svg', 'canvas', 'img', 'picture',
-    'video', 'audio', 'iframe', 'object', 'embed', 'source', 'track', 'form',
-    'input', 'button', 'select', 'textarea', 'nav', 'header', 'footer', 'aside',
-    '[hidden]', '[aria-hidden="true"]', '[role="navigation"]', '[role="banner"]',
-    '[role="contentinfo"]', '[role="complementary"]', '[role="dialog"]',
-    '[role="menu"]', '[role="toolbar"]'
-  ];
+  const removeSelectors = ${JSON.stringify(PAGE_EXTRACTION_REMOVE_SELECTORS)};
   clone.querySelectorAll(removeSelectors.join(',')).forEach((node) => node.remove());
 
-  const lowValuePattern = /(advert|^ad$|banner|cookie|consent|modal|dialog|popup|newsletter|subscribe|social|share|related|recommend|breadcrumb|pagination|sidebar|toolbar|menu|promo|sponsor|comment)/i;
+  const lowValuePattern = new RegExp(${JSON.stringify(PAGE_EXTRACTION_LOW_VALUE_PATTERN)}, 'i');
   clone.querySelectorAll('*').forEach((node) => {
     const label = ((node.id || '') + ' ' + (typeof node.className === 'string' ? node.className : '')).trim();
     if (label && lowValuePattern.test(label)) node.remove();
@@ -656,7 +679,7 @@ export function buildPageExtractionProgram(maxChars: number): string {
     wordCount: bounded ? bounded.split(/\\s+/).length : 0,
     truncated: bounded.length < content.length,
     removedImages: true,
-    removedComponents: true
+    removedComponents: true${htmlField}
   };
 `
 }
