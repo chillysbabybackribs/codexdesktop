@@ -4040,19 +4040,53 @@ button {
   border-color: #3a3f52;
 }
 
-/* Recessed channel between the chat surface and the browser chassis; both
-   neighbours read as raised panels either side of it. */
+/* Keep an 8px drag target without drawing an 8px trench. The hairline marks
+   the pane boundary; the short grip only appears when the seam is actionable. */
 .split-divider {
+  position: relative;
   width: 8px;
   cursor: col-resize;
-  background: var(--chassis-well);
-  box-shadow:
-    inset 1px 0 0 rgb(0 0 0 / 45%),
-    inset -1px 0 0 rgb(0 0 0 / 45%);
+  background: var(--surface-chrome);
 }
 
-.split-divider:hover {
-  background: #17171a;
+.split-divider::before,
+.split-divider::after {
+  position: absolute;
+  left: 50%;
+  content: '';
+  transform: translateX(-50%);
+  transition:
+    background 140ms ease,
+    opacity 140ms ease;
+}
+
+.split-divider::before {
+  inset-block: 0;
+  width: 1px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.split-divider::after {
+  top: 50%;
+  width: 2px;
+  height: 28px;
+  border-radius: 2px;
+  background: #696b70;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.split-divider:hover::before {
+  background: rgb(255 255 255 / 14%);
+}
+
+.split-divider:hover::after,
+.split-divider:active::after {
+  opacity: 0.72;
+}
+
+.split-divider:active::after {
+  background: #f28a31;
 }
 
 /* Browser section: the darkest of the three — machined chassis with a faint
