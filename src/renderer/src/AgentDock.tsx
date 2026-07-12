@@ -457,6 +457,19 @@ function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.
   return <span className="agent-status agent-status-dot" aria-hidden="true" />
 }
 
+function MainChatIcon(): React.JSX.Element {
+  return (
+    <svg className="conversation-main-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5.5 6.5h13v9h-7l-4.5 3v-3H5.5v-9Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export function SendArrowIcon(): React.JSX.Element {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -513,14 +526,6 @@ function ExpandIcon(): React.JSX.Element {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  )
-}
-
-function MinimizeIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 19h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   )
 }
