@@ -111,6 +111,7 @@ export type ResearchResult = {
   gaps?: ResearchGap[]
   discoveredUrls?: string[]
   discoveredCount?: number
+  discoveredTruncated?: boolean
   metrics?: ResearchMetrics
   errors?: Array<{ url?: string; error: string }>
   error?: string
@@ -578,6 +579,7 @@ export class ResearchRunner {
       artifactDir,
       discoveredUrls: [...discoveredUrls].slice(0, 20),
       discoveredCount: discoveredUrls.size,
+      ...(discoveredUrls.size > 20 ? { discoveredTruncated: true } : {}),
       pages,
       ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),
       metrics,
@@ -686,7 +688,18 @@ function clamp(value: number | null | undefined, fallback: number, minimum: numb
 }
 
 function formatError(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
+  return (error instanceof Error ? error.message : String(error)).slice(0, 500)
+}
+
+function recordResearchError(
+  errors: Array<{ url?: string; error: string }>,
+  value: { url?: string; error: string }
+): void {
+  if (errors.length >= 12) return
+  errors.push({
+    ...(value.url ? { url: value.url.slice(0, 2_048) } : {}),
+    error: value.error.slice(0, 500)
+  })
 }
 
 function formatDuration(durationMs: number): string {
