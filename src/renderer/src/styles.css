@@ -4098,7 +4098,7 @@ button {
   min-width: 0;
   min-height: 54px;
   max-height: 190px;
-  padding: 18px 16px 0;
+  padding: 14px 16px 2px;
   resize: none;
   overflow-y: auto;
   border: 0;
@@ -4113,40 +4113,39 @@ button {
   color: #8f8f8f;
 }
 
+/* One action rail: utilities on the left, the single primary action on the
+   right. No absolute-positioned button, so no reserved padding hole. */
 .composer-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 58px 12px 14px;
+  gap: 10px;
+  padding: 2px 12px 12px;
 }
 
-.composer-status {
+.composer-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.composer-footer .context-pill {
+  height: 34px;
+}
+
+.composer-error {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  color: #737a80;
-  font-size: 13px;
+  color: #e18a80;
+  font-size: 12.5px;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.composer-status.is-active {
-  color: #aeb5bc;
-}
-
-.composer-actions {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
 .composer-primary-action {
-  position: absolute;
-  top: 50%;
-  right: 14px;
   display: flex;
-  transform: translateY(-50%);
+  margin-left: auto;
 }
 
 .settings-overlay {
