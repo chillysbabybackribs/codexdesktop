@@ -101,17 +101,24 @@ export class ClaudeClient extends EventEmitter {
     model?: string | null,
     effort?: ClaudeEffort | null,
     collaborationMode: 'default' | 'plan' = 'default'
-  ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
-    const runtime = await this.ensureRuntime(null, cwd, model, effort, collaborationMode)
-    return { threadId: runtime.sessionId!, model: runtime.model, effort: runtime.effort }
+  ): Promise<{ threadId: string | null; model: string | null; effort: ClaudeEffort | null }> {
+    // A brand-new session gets no real id until the first message is sent (that
+    // is what makes the CLI emit `system/init`). Spin the runtime up now so it is
+    // warm, but return a null id — the first sendMessage() reports the real one.
+    const runtime = this.getRuntime(null, cwd, model, effort, collaborationMode)
+    return { threadId: runtime.sessionId, model: runtime.model, effort: runtime.effort }
   }
 
   async resumeThread(
     threadId: string,
     cwd?: string | null
   ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
-    const runtime = await this.ensureRuntime(threadId, cwd)
-    return { threadId: runtime.sessionId!, model: runtime.model, effort: runtime.effort }
+    // Register the runtime so a later sendMessage(threadId) resumes this session,
+    // but do NOT await init: the CLI won't emit `system/init` on resume until it
+    // receives a message, so blocking here would hang boot. The thread id is
+    // already known (it is the resume id).
+    const runtime = this.getRuntime(threadId, cwd)
+    return { threadId, model: runtime.model, effort: runtime.effort }
   }
 
   async sendMessage(
