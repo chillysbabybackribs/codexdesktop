@@ -26,6 +26,8 @@ export type DropEdge = 'left' | 'right' | 'top' | 'bottom' | 'center'
 const MIN_SPLIT_RATIO = 0.18
 const MAX_SPLIT_RATIO = 0.82
 
+export { MIN_SPLIT_RATIO, MAX_SPLIT_RATIO }
+
 export function createLayoutLeaf(target: ConversationTarget = 'main', id = crypto.randomUUID()): LayoutLeaf {
   return { type: 'leaf', id, target }
 }
@@ -255,15 +257,24 @@ export function dropEdgeFromPoint(
   rect: DOMRect,
   clientX: number,
   clientY: number,
-  edgeSize = 0.22
+  edgePixels = 56
 ): DropEdge {
-  const x = (clientX - rect.left) / rect.width
-  const y = (clientY - rect.top) / rect.height
-  if (x < edgeSize) return 'left'
-  if (x > 1 - edgeSize) return 'right'
-  if (y < edgeSize) return 'top'
-  if (y > 1 - edgeSize) return 'bottom'
-  return 'center'
+  const x = clientX - rect.left
+  const y = clientY - rect.top
+  const width = Math.max(rect.width, 1)
+  const height = Math.max(rect.height, 1)
+
+  const candidates: Array<{ edge: Exclude<DropEdge, 'center'>; dist: number }> = [
+    { edge: 'left', dist: x },
+    { edge: 'right', dist: width - x },
+    { edge: 'top', dist: y },
+    { edge: 'bottom', dist: height - y }
+  ]
+
+  candidates.sort((left, right) => left.dist - right.dist)
+  const closest = candidates[0]
+  if (!closest || closest.dist > edgePixels) return 'center'
+  return closest.edge
 }
 
 export const conversationDragMime = 'application/x-codex-conversation-target'

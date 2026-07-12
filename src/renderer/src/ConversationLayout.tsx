@@ -3,6 +3,8 @@ import {
   assignTarget,
   conversationDragMime,
   dropEdgeFromPoint,
+  MAX_SPLIT_RATIO,
+  MIN_SPLIT_RATIO,
   replaceLayoutNode,
   setSplitRatio,
   splitLeafAtEdge,
@@ -78,13 +80,15 @@ function LayoutBranch({
   }
 
   const isRow = node.direction === 'row'
+  const firstShare = Math.min(MAX_SPLIT_RATIO, Math.max(MIN_SPLIT_RATIO, node.ratio))
+  const secondShare = 1 - firstShare
 
   return (
     <div
       className={`conversation-layout-split is-${node.direction}`}
       style={isRow
-        ? { gridTemplateColumns: `${node.ratio * 100}% 5px 1fr` }
-        : { gridTemplateRows: `${node.ratio * 100}% 5px 1fr` }}
+        ? { gridTemplateColumns: `minmax(0, ${firstShare}fr) 5px minmax(0, ${secondShare}fr)` }
+        : { gridTemplateRows: `minmax(0, ${firstShare}fr) 5px minmax(0, ${secondShare}fr)` }}
     >
       <LayoutBranch
         node={node.first}

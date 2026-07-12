@@ -12,7 +12,8 @@ import {
   removeTarget,
   serializeLayoutNode,
   splitLeafAtEdge,
-  type LayoutNode
+  type LayoutNode,
+  dropEdgeFromPoint
 } from './conversation-layout.ts'
 
 test('assignTarget swaps conversations instead of duplicating them', () => {
@@ -64,4 +65,39 @@ test('assignTarget keeps a single main pane when swapping onto main', () => {
   const layout = createLayoutLeaf('agent-x')
   const next = assignTarget(layout, layout.id, 'main')
   assert.deepEqual(collectTargets(next), ['main'])
+})
+
+test('dropEdgeFromPoint resolves left/right on tall panes and top/bottom on wide pans', () => {
+  const tall = {
+    left: 0,
+    top: 0,
+    width: 420,
+    height: 900,
+    right: 420,
+    bottom: 900,
+    x: 0,
+    y: 0,
+    toJSON: () => ({})
+  } as DOMRect
+
+  assert.equal(dropEdgeFromPoint(tall, 24, 450), 'left')
+  assert.equal(dropEdgeFromPoint(tall, 396, 450), 'right')
+  assert.equal(dropEdgeFromPoint(tall, 210, 24), 'top')
+  assert.equal(dropEdgeFromPoint(tall, 210, 450), 'center')
+
+  const wide = {
+    left: 0,
+    top: 0,
+    width: 900,
+    height: 420,
+    right: 900,
+    bottom: 420,
+    x: 0,
+    y: 0,
+    toJSON: () => ({})
+  } as DOMRect
+
+  assert.equal(dropEdgeFromPoint(wide, 450, 24), 'top')
+  assert.equal(dropEdgeFromPoint(wide, 450, 396), 'bottom')
+  assert.equal(dropEdgeFromPoint(wide, 24, 210), 'left')
 })

@@ -21,7 +21,8 @@ import type {
   ClaudeEffort,
   CodexEvent,
   CodexPluginAppStatus,
-  MemoryPersistParams
+  MemoryPersistParams,
+  PlanningState
 } from '../../shared/ipc'
 import type { AgentEvent, AgentModel, AgentProvider } from '../../shared/agent'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
@@ -182,6 +183,7 @@ export default function App(): React.JSX.Element {
   const [collaborationMode, setCollaborationMode] = useState<'default' | 'plan'>(() =>
     window.localStorage.getItem(collaborationModeStorageKey) === 'plan' ? 'plan' : 'default'
   )
+  const [planningState, setPlanningState] = useState<PlanningState | null>(null)
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
   // Lifecycle data the item payloads don't carry: which turn an item belongs
@@ -267,6 +269,24 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
   }, [])
+
+  useEffect(() => window.api.codex.onPlanningState((state) => {
+    if (!activeThreadIdRef.current || state.threadId === activeThreadIdRef.current) {
+      setPlanningState(state)
+    }
+  }), [])
+
+  useEffect(() => {
+    if (!activeThreadId) {
+      setPlanningState(null)
+      return
+    }
+    let active = true
+    void window.api.codex.getPlanningState(activeThreadId).then((state) => {
+      if (active) setPlanningState(state)
+    })
+    return () => { active = false }
+  }, [activeThreadId])
 
   useEffect(() => () => {
     if (itemMutationFrameRef.current !== null) {
@@ -653,7 +673,7 @@ export default function App(): React.JSX.Element {
         })
         watchThreadIdRef.current = response.threadId
         setActiveThreadId(response.threadId)
-        persistLastThreadId(response.threadId)
+        persistLastThreadId(response.threadId, provider)
         setActiveTurnId(response.turnId)
         activeTurnIdRef.current = response.turnId
         noteTurn(response.turnId, {
@@ -679,7 +699,7 @@ export default function App(): React.JSX.Element {
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
-      persistLastThreadId(response.threadId)
+      persistLastThreadId(response.threadId, provider)
       const turnAlreadyObserved = activeTurnIdRef.current === response.turn.id
       if (!turnAlreadyObserved) userRequestedTurnIdRef.current = response.turn.id
       setActiveTurnId(response.turn.id)
@@ -825,7 +845,7 @@ export default function App(): React.JSX.Element {
     setIsThreadMenuOpen(false)
     resumeGenerationRef.current += 1
     watchThreadIdRef.current = null
-    persistLastThreadId(null)
+    persistLastThreadId(null, provider)
     setActiveThreadId(null)
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
@@ -921,7 +941,7 @@ export default function App(): React.JSX.Element {
         console.warn('Failed to restore thread goal', error)
       }
 
-      persistLastThreadId(threadId)
+      persistLastThreadId(threadId, provider)
     } catch (error) {
       if (generation !== resumeGenerationRef.current) {
         return
@@ -932,7 +952,7 @@ export default function App(): React.JSX.Element {
       if (!options.silent) {
         addSystemItem(`Thread resume failed: ${(error as Error).message}`, 'error')
       } else {
-        persistLastThreadId(null)
+        persistLastThreadId(null, provider)
       }
     }
   }
@@ -963,7 +983,7 @@ export default function App(): React.JSX.Element {
     setActiveThreadTitle(threadTitle(started.thread))
     setActiveReasoningEffort(started.reasoningEffort)
     activeReasoningEffortRef.current = started.reasoningEffort
-    persistLastThreadId(threadId)
+    persistLastThreadId(threadId, provider)
     return threadId
   }
 
@@ -1297,7 +1317,7 @@ export default function App(): React.JSX.Element {
       watchThreadIdRef.current = event.sessionId
       setActiveThreadId(event.sessionId)
       setActiveThreadTitle('Claude session')
-      persistLastThreadId(event.sessionId)
+      persistLastThreadId(event.sessionId, provider)
       return
     }
 
@@ -1450,7 +1470,7 @@ export default function App(): React.JSX.Element {
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
-        persistLastThreadId(notification.params.thread.id)
+        persistLastThreadId(notification.params.thread.id, provider)
         setActiveThreadId(notification.params.thread.id)
         setActiveThreadTitle(threadTitle(notification.params.thread))
         return
@@ -1487,7 +1507,7 @@ export default function App(): React.JSX.Element {
       case 'turn/started':
         if (!watchThreadIdRef.current && !activeThreadIdRef.current) {
           watchThreadIdRef.current = notification.params.threadId
-          persistLastThreadId(notification.params.threadId)
+          persistLastThreadId(notification.params.threadId, provider)
         }
 
         if (isRelevantThread(notification.params.threadId)) {
@@ -1702,8 +1722,8 @@ export default function App(): React.JSX.Element {
   function removeThreadFromList(threadId: string): void {
     setThreads((current) => current.filter((thread) => thread.id !== threadId))
 
-    if (window.localStorage.getItem(lastThreadStorageKey) === threadId) {
-      persistLastThreadId(null)
+    if (window.localStorage.getItem(threadStorageKey(provider)) === threadId) {
+      persistLastThreadId(null, provider)
     }
   }
 
@@ -1862,6 +1882,26 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, { type: 'system', id: crypto.randomUUID(), level, text }])
   }
 
+  async function approvePlanningPlan(): Promise<void> {
+    if (!activeThreadId || !planningState || planningState.phase !== 'awaitingApproval') return
+    try {
+      await window.api.codex.approvePlan({ threadId: activeThreadId, revision: planningState.revision })
+      await handleSend('Implement the approved plan.')
+    } catch (error) {
+      addSystemItem(`Plan approval failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
+  async function requestPlanningChanges(): Promise<void> {
+    if (!activeThreadId || !planningState || planningState.phase !== 'awaitingApproval') return
+    try {
+      await window.api.codex.requestPlanChanges({ threadId: activeThreadId, revision: planningState.revision })
+      requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.main-conversation-panel textarea')?.focus())
+    } catch (error) {
+      addSystemItem(`Could not reopen the plan: ${(error as Error).message}`, 'error')
+    }
+  }
+
   return (
     <div ref={appRef} className="app-shell">
       <TitleBar />
@@ -1871,7 +1911,6 @@ export default function App(): React.JSX.Element {
           onSetProvider={(nextProvider) => {
             if (nextProvider === provider) return
             window.localStorage.setItem(providerStorageKey, nextProvider)
-            window.localStorage.removeItem(lastThreadStorageKey)
             window.location.reload()
           }}
           items={items}
@@ -1896,6 +1935,9 @@ export default function App(): React.JSX.Element {
           selectedModel={selectedModel}
           selectedReasoningEffort={selectedReasoningEffort}
           collaborationMode={collaborationMode}
+          planningState={planningState}
+          onApprovePlan={() => void approvePlanningPlan()}
+          onRequestPlanChanges={() => void requestPlanningChanges()}
           onSetCollaborationMode={(mode) => {
             setCollaborationMode(mode)
             window.localStorage.setItem(collaborationModeStorageKey, mode)
@@ -1997,6 +2039,9 @@ function ChatPane({
   selectedModel,
   selectedReasoningEffort,
   collaborationMode,
+  planningState,
+  onApprovePlan,
+  onRequestPlanChanges,
   onSetCollaborationMode,
   onSelectModel,
   onSelectModelEffort,
@@ -2059,6 +2104,9 @@ function ChatPane({
   selectedModel: string | null
   selectedReasoningEffort: ReasoningEffort | null
   collaborationMode: 'default' | 'plan'
+  planningState: PlanningState | null
+  onApprovePlan: () => void
+  onRequestPlanChanges: () => void
   onSetCollaborationMode: (mode: 'default' | 'plan') => void
   onSelectModel: (model: string) => void
   onSelectModelEffort: (model: string, effort: ReasoningEffort) => void
@@ -4285,12 +4333,17 @@ function PluginSetupPanel({ setup, checking, onConnect, onCheck, onRetry, onDism
   )
 }
 
-function persistLastThreadId(threadId: string | null): void {
+function persistLastThreadId(threadId: string | null, provider: AgentProvider): void {
+  const storageKey = threadStorageKey(provider)
   if (threadId) {
-    window.localStorage.setItem(lastThreadStorageKey, threadId)
+    window.localStorage.setItem(storageKey, threadId)
   } else {
-    window.localStorage.removeItem(lastThreadStorageKey)
+    window.localStorage.removeItem(storageKey)
   }
+}
+
+function threadStorageKey(provider: AgentProvider): string {
+  return provider === 'claude' ? claudeLastThreadStorageKey : lastThreadStorageKey
 }
 
 function threadTitle(thread: Thread): string {
