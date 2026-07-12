@@ -10,7 +10,14 @@ import {
   type SDKUserMessage
 } from '@anthropic-ai/claude-agent-sdk'
 import type { ChatAttachment } from '../../shared/ipc.js'
-import type { AgentEvent, AgentModel, AgentSessionSummary, AgentTranscriptMessage, AgentUsage } from '../../shared/agent.js'
+import type {
+  AgentContextUsage,
+  AgentEvent,
+  AgentModel,
+  AgentSessionSummary,
+  AgentTranscriptMessage,
+  AgentUsage
+} from '../../shared/agent.js'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { AsyncMessageQueue } from './async-message-queue.js'
@@ -39,6 +46,8 @@ type ClaudeRuntime = {
   resolveInitialized: () => void
   rejectInitialized: (error: Error) => void
   closing: boolean
+  seenModelMessageIds: Set<string>
+  totalUsage: AgentUsage
 }
 
 export class ClaudeClient extends EventEmitter {
@@ -263,7 +272,9 @@ export class ClaudeClient extends EventEmitter {
       initializedSettled: false,
       resolveInitialized,
       rejectInitialized,
-      closing: false
+      closing: false,
+      seenModelMessageIds: new Set(),
+      totalUsage: emptyUsage()
     }
 
     const mcpServer = createClaudeBrowserMcpServer(
@@ -283,7 +294,7 @@ export class ClaudeClient extends EventEmitter {
   private async consume(runtime: ClaudeRuntime): Promise<void> {
     try {
       for await (const message of runtime.query) {
-        this.handleMessage(runtime, message)
+        await this.handleMessage(runtime, message)
       }
       if (!runtime.closing) this.emitStatus('exited')
     } catch (error) {
@@ -300,7 +311,7 @@ export class ClaudeClient extends EventEmitter {
     }
   }
 
-  private handleMessage(runtime: ClaudeRuntime, message: SDKMessage): void {
+  private async handleMessage(runtime: ClaudeRuntime, message: SDKMessage): Promise<void> {
     if (message.type === 'system' && message.subtype === 'init') {
       runtime.sessionId = message.session_id
       runtime.model = message.model
@@ -372,6 +383,7 @@ export class ClaudeClient extends EventEmitter {
           input: block.input
         })
       }
+      await this.emitTokenUsage(runtime, turn, message.message.id, message.message.usage)
       return
     }
 
@@ -427,6 +439,48 @@ export class ClaudeClient extends EventEmitter {
       )
       runtime.activeTurn = null
     }
+  }
+
+  private async emitTokenUsage(
+    runtime: ClaudeRuntime,
+    turn: PendingTurn,
+    callId: string,
+    rawUsage: Record<string, unknown>
+  ): Promise<void> {
+    // The SDK can deliver multiple assistant envelopes for one API response.
+    // The Anthropic message id is stable across those envelopes; the SDK uuid is not.
+    if (runtime.seenModelMessageIds.has(callId)) return
+    runtime.seenModelMessageIds.add(callId)
+
+    const usage = toAgentUsage(rawUsage, 0)
+    runtime.totalUsage = addAgentUsage(runtime.totalUsage, usage)
+
+    let context: AgentContextUsage | null = null
+    try {
+      const current = await runtime.query.getContextUsage()
+      context = {
+        currentTokens: current.totalTokens,
+        maxTokens: current.maxTokens,
+        rawMaxTokens: current.rawMaxTokens,
+        percentage: current.percentage,
+        autoCompactThreshold: current.autoCompactThreshold ?? null,
+        isAutoCompactEnabled: current.isAutoCompactEnabled
+      }
+    } catch {
+      // Per-call usage remains valuable if an older CLI does not support the
+      // optional context-usage control request.
+    }
+
+    this.emitEvent({
+      type: 'tokenUsage.updated',
+      provider: 'claude',
+      sessionId: runtime.sessionId!,
+      turnId: turn.id,
+      callId,
+      usage,
+      totalUsage: runtime.totalUsage,
+      context
+    })
   }
 
   private emitTurnCompleted(
@@ -564,6 +618,16 @@ function emptyUsage(): AgentUsage {
     cacheReadInputTokens: 0,
     cacheCreationInputTokens: 0,
     costUsd: 0
+  }
+}
+
+function addAgentUsage(left: AgentUsage, right: AgentUsage): AgentUsage {
+  return {
+    inputTokens: left.inputTokens + right.inputTokens,
+    outputTokens: left.outputTokens + right.outputTokens,
+    cacheReadInputTokens: left.cacheReadInputTokens + right.cacheReadInputTokens,
+    cacheCreationInputTokens: left.cacheCreationInputTokens + right.cacheCreationInputTokens,
+    costUsd: left.costUsd + right.costUsd
   }
 }
 
