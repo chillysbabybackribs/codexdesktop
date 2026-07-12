@@ -1430,18 +1430,18 @@ export default function App(): React.JSX.Element {
       return
     }
 
+    if (event.type === 'reasoning.delta') {
+      // Reasoning renders through the same ThoughtBlock as Codex; stream deltas
+      // into a `reasoning` item keyed on the block so it groups into the turn's
+      // activity card.
+      noteItem(event.itemId, event.turnId)
+      setItems((current) => appendReasoningDelta(current, event.itemId, 'content', 0, event.text))
+      return
+    }
+
     if (event.type === 'tool.started') {
-      const item: ThreadItem = {
-        type: 'dynamicToolCall',
-        id: event.callId,
-        namespace: 'claude',
-        tool: event.name,
-        arguments: event.input as never,
-        status: 'inProgress',
-        contentItems: null,
-        success: null,
-        durationMs: null
-      }
+      claudeToolInputRef.current.set(event.callId, { tool: event.name, input: event.input })
+      const item = startClaudeToolItem(event.callId, event.name, event.input)
       noteItem(event.callId, event.turnId, { startedAtMs: Date.now() })
       setItems((current) => upsertMany(current, [item]))
       return
@@ -1449,19 +1449,19 @@ export default function App(): React.JSX.Element {
 
     if (event.type === 'tool.completed') {
       noteItem(event.callId, event.turnId, { completedAtMs: Date.now() })
+      const stashed = claudeToolInputRef.current.get(event.callId)
+      claudeToolInputRef.current.delete(event.callId)
+      const tool = stashed?.tool ?? 'tool'
+      const input = stashed?.input ?? {}
       setItems((existing) => {
-        const current = existing.find((item) => item.id === event.callId && item.type === 'dynamicToolCall')
-        const item: ThreadItem = {
-          type: 'dynamicToolCall',
-          id: event.callId,
-          namespace: 'claude',
-          tool: current?.type === 'dynamicToolCall' ? current.tool : 'tool',
-          arguments: current?.type === 'dynamicToolCall' ? current.arguments : {},
-          status: event.failed ? 'failed' : 'completed',
-          contentItems: [{ type: 'inputText', text: stringifyUnknown(event.content) }],
-          success: !event.failed,
-          durationMs: null
-        }
+        const current = existing.find((item) => item.id === event.callId)
+        const item = patchClaudeToolItem(
+          current && isWorkItem(current) ? (current as never) : undefined,
+          tool,
+          input,
+          event.failed,
+          event.content
+        )
         return upsertMany(existing, [item])
       })
       return
