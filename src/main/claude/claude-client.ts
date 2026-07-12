@@ -49,7 +49,7 @@ type ClaudeRuntime = {
 export class ClaudeClient extends EventEmitter {
   private readonly runtimes = new Map<string, ClaudeRuntime>()
   private cachedModels: AgentModel[] | null = null
-  private discoveryInFlight: Promise<{ models: ModelInfo[]; apiKeySource: string | null }> | null = null
+  private discoveryInFlight: Promise<ModelInfo[]> | null = null
 
   constructor(
     private readonly browserAgent: BrowserAgentController,
