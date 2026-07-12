@@ -62,6 +62,11 @@ import {
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
+import {
+  buildOptimisticUserMessage,
+  hasAuthoritativeUserMessage,
+  stripOptimisticUserMessage
+} from './optimistic-user-message'
 import { decideTurnAnchor } from './thread-scroll-state'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
@@ -217,6 +222,7 @@ export default function App(): React.JSX.Element {
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
+  const optimisticUserItemIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
@@ -578,6 +584,19 @@ export default function App(): React.JSX.Element {
     userTurnRequestPendingRef.current = true
     watchThreadIdRef.current = activeThreadId
 
+    // The first app-server thread/start can take a moment. Move the composer
+    // and show the submitted row in the same local render instead of leaving
+    // the cleared composer stranded in the empty-state center until the server
+    // returns its authoritative userMessage item.
+    if (!items.length) {
+      const optimisticId = `optimistic-user-${crypto.randomUUID()}`
+      optimisticUserItemIdRef.current = optimisticId
+      setItems((current) => [
+        ...current,
+        buildOptimisticUserMessage(optimisticId, trimmed, attachments)
+      ])
+    }
+
     try {
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
@@ -614,6 +633,11 @@ export default function App(): React.JSX.Element {
       mergeItems(response.turn.items)
       return true
     } catch (error) {
+      const optimisticId = optimisticUserItemIdRef.current
+      optimisticUserItemIdRef.current = null
+      if (optimisticId) {
+        setItems((current) => current.filter((item) => item.id !== optimisticId))
+      }
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
@@ -703,6 +727,7 @@ export default function App(): React.JSX.Element {
     setActiveTurnId(null)
     activeTurnIdRef.current = null
     userRequestedTurnIdRef.current = null
+    optimisticUserItemIdRef.current = null
     setActiveGoal(null)
     activeGoalRef.current = null
     setActiveReasoningEffort(null)
@@ -1108,15 +1133,25 @@ export default function App(): React.JSX.Element {
 
     setItemMeta((current) => reduceItemNotificationMeta(current, notification, { compactionBeforeTokens }))
 
+    const authoritativeUserMessage = notification.params.item.type === 'userMessage'
+    const optimisticId = optimisticUserItemIdRef.current
+    if (authoritativeUserMessage) optimisticUserItemIdRef.current = null
+
     if (isImmediateItemNotification(notification)) {
       // File-change notifications are full, growing snapshots rather than
       // tiny append-only token deltas. Applying each snapshot immediately
       // lets the live diff card visibly grow during long writes instead of
       // collapsing a burst of patches into one update on the next frame.
       flushPendingItemMutations()
-      setItems((current) => reduceItemNotificationItems(current, notification))
+      setItems((current) => reduceItemNotificationItems(
+        stripOptimisticUserMessage(current, optimisticId, [notification.params.item]),
+        notification
+      ))
     } else if (notification.method !== 'item/mcpToolCall/progress') {
-      enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
+      enqueueItemMutation((current) => reduceItemNotificationItems(
+        stripOptimisticUserMessage(current, optimisticId, [notification.params.item]),
+        notification
+      ))
     }
 
     if (notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction') {
@@ -1354,7 +1389,12 @@ export default function App(): React.JSX.Element {
 
   function mergeItems(nextItems: ThreadItem[]): void {
     flushPendingItemMutations()
-    setItems((current) => upsertMany(current, nextItems))
+    const optimisticId = optimisticUserItemIdRef.current
+    if (hasAuthoritativeUserMessage(nextItems)) optimisticUserItemIdRef.current = null
+    setItems((current) => upsertMany(
+      stripOptimisticUserMessage(current, optimisticId, nextItems),
+      nextItems
+    ))
   }
 
   // Record lifecycle metadata for an item. The incoming turnId wins when
