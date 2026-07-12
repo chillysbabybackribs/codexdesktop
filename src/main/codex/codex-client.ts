@@ -266,7 +266,12 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
+    const input = this.localSkills.buildTurnInput(
+      text,
+      !threadId,
+      attachments,
+      collaborationMode ?? 'default'
+    )
     const effectiveModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     const effectiveEffort = requestedEffort

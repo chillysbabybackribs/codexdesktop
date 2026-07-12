@@ -11,6 +11,14 @@ const researchSkill: SkillMetadata = {
   enabled: true
 }
 
+const planningSkill: SkillMetadata = {
+  name: 'planning',
+  description: 'Create plans for technical and non-technical work',
+  path: '/app/skills/planning/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('local skill path containment rejects siblings and traversal', () => {
   assert.equal(isPathWithin('/app/skills', '/app/skills/research/SKILL.md'), true)
   assert.equal(isPathWithin('/app/skills', '/app/skills-other/research/SKILL.md'), false)
@@ -36,4 +44,21 @@ test('local skill registry composes visible text, attachments, and one skill inp
   assert.equal(input[0]?.type === 'text' && input[0].text, '$artifact-first-web-research Research this image')
   assert.equal(input[1]?.type === 'localImage' && input[1].detail, 'high')
   assert.equal(input[2]?.type === 'skill' && input[2].name, researchSkill.name)
+})
+
+test('plan collaboration mode force-attaches the universal planning skill', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [researchSkill, planningSkill])
+  const input = registry.buildTurnInput('Help me decide how to approach this', false, [], 'plan')
+
+  assert.deepEqual(input.map((item) => item.type), ['text', 'skill'])
+  assert.equal(input[0]?.type === 'text' && input[0].text, '$planning\nHelp me decide how to approach this')
+  assert.equal(input[1]?.type === 'skill' && input[1].name, planningSkill.name)
+})
+
+test('default collaboration mode does not force the planning skill', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [planningSkill])
+  const input = registry.buildTurnInput('Help me decide how to approach this', false)
+
+  assert.deepEqual(input.map((item) => item.type), ['text'])
+  assert.equal(input[0]?.type === 'text' && input[0].text, 'Help me decide how to approach this')
 })
