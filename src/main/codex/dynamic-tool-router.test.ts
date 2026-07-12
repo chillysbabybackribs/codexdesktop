@@ -53,6 +53,12 @@ test('dynamic tool router normalizes research arguments and forwards run context
   } as ResearchRunner
   const response = await routeDynamicToolCall(params('research_web', {
     queries: ['one', 2, 'two'],
+    urls: ['https://example.com/docs', false],
+    focus: [
+      { id: 'official', need: 'official behavior', minSources: 2 },
+      { id: 'bad', need: '   ' },
+      { id: 'current', need: 'current version', minSources: Number.NaN }
+    ],
     maxResults: 4,
     maxPages: 2,
     maxAttempts: 3,
@@ -64,7 +70,18 @@ test('dynamic tool router normalizes research arguments and forwards run context
   })
 
   assert.equal(response.success, true)
-  assert.deepEqual(request, { queries: ['one', 'two'], maxResults: 4, maxPages: 2, maxAttempts: 3, snippetChars: 1200 })
+  assert.deepEqual(request, {
+    queries: ['one', 'two'],
+    urls: ['https://example.com/docs'],
+    focus: [
+      { id: 'official', need: 'official behavior', minSources: 2 },
+      { id: 'current', need: 'current version' }
+    ],
+    maxResults: 4,
+    maxPages: 2,
+    maxAttempts: 3,
+    snippetChars: 1200
+  })
   const context = contexts[0]
   assert.ok(context)
   assert.equal(context?.runId, 'call-1')
