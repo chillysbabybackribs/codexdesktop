@@ -118,11 +118,12 @@ export function buildSerpExtractionProgram(maxResults: number): string {
     if (/google\\.com$/i.test(parsed.hostname) || /(^|\\.)google\\./i.test(parsed.hostname)) continue;
     parsed.hash = '';
     const normalizedUrl = parsed.href;
+    if (normalizedUrl.length > 4096) continue;
     if (seen.has(normalizedUrl)) continue;
     const card = anchor.closest('div.MjjYud, div.g, [data-snhf], [data-hveid]') || anchor.parentElement;
-    const title = (heading.innerText || heading.textContent || '').replace(/\\s+/g, ' ').trim();
+    const title = (heading.innerText || heading.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 300);
     const snippetNode = card?.querySelector('.VwiC3b, [data-sncf], .yXK7lf, .kb0PBd');
-    const snippet = (snippetNode?.innerText || snippetNode?.textContent || '').replace(/\\s+/g, ' ').trim();
+    const snippet = (snippetNode?.innerText || snippetNode?.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 500);
     if (!title || title.length < 3) continue;
     seen.add(normalizedUrl);
     results.push({ url: normalizedUrl, title, snippet, rank: results.length + 1 });
