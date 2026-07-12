@@ -62,6 +62,8 @@ export async function routeDynamicToolCall(
     } else if (params.tool === 'research_web') {
       result = await dependencies.researchRunner.run({
         queries: readStringArray(args.queries),
+        urls: readStringArray(args.urls),
+        focus: readResearchFocus(args.focus),
         maxResults: readNumber(args.maxResults),
         maxPages: readNumber(args.maxPages),
         maxAttempts: readNumber(args.maxAttempts),
@@ -158,6 +160,18 @@ function readNumber(value: unknown): number | undefined {
 
 function readStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+}
+
+function readResearchFocus(value: unknown): Array<{ id: string; need: string; minSources?: number }> {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((item) => {
+    const record = asRecord(item)
+    const id = readString(record.id)
+    const need = readString(record.need)
+    if (!id || !need) return []
+    const minSources = readNumber(record.minSources)
+    return [{ id, need, ...(minSources === undefined ? {} : { minSources }) }]
+  })
 }
 
 function readStringRecord(value: unknown): Record<string, string> {

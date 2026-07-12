@@ -211,12 +211,36 @@ const researchWebSchema = {
       items: { type: 'string' },
       description: 'One primary discovery query, optionally followed by up to two fallback source lanes. Fallbacks run only if the verified-page target is not met.'
     },
+    urls: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 8,
+      uniqueItems: true,
+      items: { type: 'string' },
+      description: 'Optional known public HTTP(S) source URLs. Direct sources are verified before search discovery, so exact official pages can bypass the SERP.'
+    },
+    focus: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 6,
+      description: 'Optional evidence needs. The tool returns bounded exact passage windows and explicit coverage gaps for each item.',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
+          need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
+          minSources: { type: 'number', minimum: 1, maximum: 3, description: 'Independent matching source target. Defaults to 1.' }
+        },
+        required: ['id', 'need'],
+        additionalProperties: false
+      }
+    },
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', minimum: 1, maximum: 3, description: 'Verified-page target, from 1 to 3. Defaults to 3; use a focused follow-up call for a material evidence gap.' },
+    maxPages: { type: 'number', minimum: 1, maximum: 3, description: 'Verified-page target, from 1 to 3. Defaults to the focus/direct-source need when supplied, otherwise 3.' },
     maxAttempts: { type: 'number', minimum: 1, maximum: 8, description: 'Optional candidate-attempt ceiling, from 1 to 8. Defaults to 6 and stops early when maxPages is met.' },
-    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional cleaned text saved per page, from 1000 to 8000 characters.' }
+    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Saved text uses a separate larger artifact bound.' }
   },
-  required: ['queries'],
+  anyOf: [{ required: ['queries'] }, { required: ['urls'] }],
   additionalProperties: false
 }
 
@@ -254,7 +278,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Adaptively discover, rank, verify, and save up to three public web pages. Starts with the primary query, uses fallback lanes only when needed, and returns compact metadata, timings, and artifact paths without loading page bodies into model context.',
+    description: 'Verify direct public URLs or adaptively discover, rank, and save up to three public web pages. With focus items, returns bounded exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]
