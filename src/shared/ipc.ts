@@ -113,8 +113,6 @@ export type CodexSendMessageParams = {
   model?: string | null
   /** Reasoning effort override for this turn and subsequent turns. */
   effort?: ReasoningEffort | null
-  /** Native app-server collaboration mode for this turn and subsequent turns. */
-  collaborationMode?: 'default' | 'plan'
 }
 
 export type CodexStartThreadParams = {

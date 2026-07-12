@@ -104,7 +104,6 @@ const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
-const collaborationModeStorageKey = 'codexdesktop.collaborationMode'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
@@ -168,9 +167,6 @@ export default function App(): React.JSX.Element {
   )
   const [selectedReasoningEffort, setSelectedReasoningEffort] = useState<ReasoningEffort | null>(
     () => window.localStorage.getItem(reasoningEffortStorageKey)
-  )
-  const [collaborationMode, setCollaborationMode] = useState<'default' | 'plan'>(() =>
-    window.localStorage.getItem(collaborationModeStorageKey) === 'plan' ? 'plan' : 'default'
   )
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
@@ -601,8 +597,7 @@ export default function App(): React.JSX.Element {
         attachments,
         cwd: workspace,
         model: selectedModel,
-        effort: selectedReasoningEffort,
-        collaborationMode
+        effort: selectedReasoningEffort
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -1672,11 +1667,6 @@ export default function App(): React.JSX.Element {
           models={models}
           selectedModel={selectedModel}
           selectedReasoningEffort={selectedReasoningEffort}
-          collaborationMode={collaborationMode}
-          onSetCollaborationMode={(mode) => {
-            setCollaborationMode(mode)
-            window.localStorage.setItem(collaborationModeStorageKey, mode)
-          }}
           onSelectModel={handleSelectModel}
           onSelectModelEffort={handleSelectModelEffort}
           onSend={handleSend}
@@ -1768,8 +1758,6 @@ function ChatPane({
   models,
   selectedModel,
   selectedReasoningEffort,
-  collaborationMode,
-  onSetCollaborationMode,
   onSelectModel,
   onSelectModelEffort,
   onSend,
@@ -1825,8 +1813,6 @@ function ChatPane({
   models: Model[]
   selectedModel: string | null
   selectedReasoningEffort: ReasoningEffort | null
-  collaborationMode: 'default' | 'plan'
-  onSetCollaborationMode: (mode: 'default' | 'plan') => void
   onSelectModel: (model: string) => void
   onSelectModelEffort: (model: string, effort: ReasoningEffort) => void
   onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -2127,11 +2113,6 @@ function ChatPane({
               onSelectModelEffort={onSelectModelEffort}
             />
           ) : null}
-          <PlanModePill
-            active={collaborationMode === 'plan'}
-            disabled={isBusy}
-            onToggle={() => onSetCollaborationMode(collaborationMode === 'plan' ? 'default' : 'plan')}
-          />
           <AgentTabStrip
             sessions={agentSessions}
             openKeys={openAgentKeys}
@@ -3175,35 +3156,6 @@ function WorkspacePill({
       <FolderIcon />
       <span className="workspace-pill-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
       <span className="workspace-pill-caret">⌄</span>
-    </button>
-  )
-}
-
-function PlanModePill({
-  active,
-  disabled,
-  onToggle
-}: {
-  active: boolean
-  disabled: boolean
-  onToggle: () => void
-}): React.JSX.Element {
-  return (
-    <button
-      type="button"
-      className={`plan-mode-pill ${active ? 'is-active' : ''}`}
-      aria-pressed={active}
-      disabled={disabled}
-      title={active
-        ? 'Collaborative planning is on: research, challenge assumptions, agree on a plan, then implement and validate.'
-        : 'Collaborate on an evidence-backed plan before implementation.'}
-      onClick={onToggle}
-    >
-      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M5.5 5.25h9M5.5 10h9M5.5 14.75h5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        <path d="m2.75 5.25.85.85 1.45-1.7M2.75 10l.85.85 1.45-1.7M2.75 14.75l.85.85 1.45-1.7" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <span>Plan</span>
     </button>
   )
 }

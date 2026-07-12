@@ -1,7 +1,5 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
-import type { CollaborationMode } from '../../shared/codex-protocol/CollaborationMode.js'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
@@ -77,41 +75,6 @@ export function shouldAttachPriorChatMemory(text: string): boolean {
     /\b(previous|prior|last) (chat|thread|conversation|session|work)\b/.test(normalized) ||
     /\b(where (?:did|were) we|what were we doing|same as before|from where we left off|left off)\b/.test(normalized)
   )
-}
-
-export function buildCollaborationMode(
-  mode: 'default' | 'plan',
-  model: string,
-  effort: ReasoningEffort | null,
-  env: NodeJS.ProcessEnv = process.env
-): CollaborationMode {
-  const developerInstructions = [buildGuidance(env)]
-
-  if (mode === 'plan') {
-    developerInstructions.push([
-      'Collaborative planning mode:',
-      '- Treat planning as a user-agent design conversation whose end state is an explicit, structured, decision-complete plan agreed with the user.',
-      '- First inspect the current workspace and relevant call sites. Verify local claims against source, tests, or runtime evidence; verify current or external claims with web research and cite the strongest available sources.',
-      '- Independently evaluate the user\'s ideas and assumptions. Speak up clearly when an idea is incorrect, risky, unnecessarily complex, or not the strongest option; explain why and recommend a better alternative.',
-      '- Brainstorm meaningful alternatives and tradeoffs with the user. Ask only questions that materially change the design and cannot be answered from the workspace or authoritative sources.',
-      '- Keep the proposed plan structured and revise it as decisions change. Do not treat a plan as agreed until the user explicitly approves it or directly asks to implement it.',
-      '- Before agreement, gather evidence and refine the plan without making implementation edits. After agreement, remain in this mode and implement the agreed plan autonomously: edit files, run the narrowest relevant checks, validate behavior, inspect failures, and self-correct until the result is proven or a concrete blocker remains.',
-      '- Do not stop after presenting an agreed plan when the user has authorized implementation. Carry the work through implementation, testing, validation, and a concise evidence-backed handoff.'
-    ].join('\n'))
-  }
-
-  return {
-    // The native Plan preset is intentionally not used here: it is a
-    // planning-only collaboration contract. This product mode keeps Codex in
-    // its normal execution-capable agent loop and supplies our collaborative
-    // plan -> agreement -> implementation contract as developer instructions.
-    mode: 'default',
-    settings: {
-      model,
-      reasoning_effort: effort,
-      developer_instructions: developerInstructions.join('\n\n')
-    }
-  }
 }
 
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {

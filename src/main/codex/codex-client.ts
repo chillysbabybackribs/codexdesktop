@@ -43,7 +43,6 @@ import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
   browserDynamicTools,
-  buildCollaborationMode,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
@@ -256,8 +255,7 @@ export class CodexClient extends EventEmitter {
     cwd?: string | null,
     model?: string | null,
     attachments: ChatAttachment[] = [],
-    effort?: ReasoningEffort | null,
-    collaborationMode?: 'default' | 'plan'
+    effort?: ReasoningEffort | null
   ): Promise<TurnStartResponse & {
     threadId: string
     model: string | null
@@ -266,12 +264,7 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.localSkills.buildTurnInput(
-      text,
-      !threadId,
-      attachments,
-      collaborationMode ?? 'default'
-    )
+    const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
     const effectiveModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     const effectiveEffort = requestedEffort
@@ -283,9 +276,6 @@ export class CodexClient extends EventEmitter {
       input,
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
-      ...(collaborationMode && effectiveModel
-        ? { collaborationMode: buildCollaborationMode(collaborationMode, effectiveModel, requestedEffort) }
-        : {}),
       ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
