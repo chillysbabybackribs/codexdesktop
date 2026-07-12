@@ -86,3 +86,8 @@ test('auth completion requires every bundled app to be accessible', () => {
     { id: 'one', name: 'One', installUrl: apps[0].installUrl, isAccessible: true, isEnabled: true }
   ]), [apps[1]])
 })
+
+test('apps without an authentication destination do not create a dead-end connection prompt', () => {
+  const apps = [{ id: 'local', name: 'Local', description: null, installUrl: null, category: null }]
+  assert.deepEqual(unresolvedPluginApps(apps, []), [])
+})

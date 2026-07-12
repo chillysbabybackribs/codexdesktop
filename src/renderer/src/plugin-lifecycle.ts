@@ -3,15 +3,15 @@ import type { AppSummary } from '../../shared/codex-protocol/v2/AppSummary'
 import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry'
 import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary'
 
-export function isRemotePlugin(plugin: PluginSummary, marketplace?: PluginMarketplaceEntry): boolean {
-  return plugin.source.type === 'remote' || (!marketplace?.path && Boolean(plugin.remotePluginId))
+export function isRemotePlugin(plugin: PluginSummary): boolean {
+  return plugin.source.type === 'remote'
 }
 
 export function pluginInstallParams(
   plugin: PluginSummary,
   marketplace?: PluginMarketplaceEntry
 ): CodexPluginInstallParams | null {
-  const remote = isRemotePlugin(plugin, marketplace)
+  const remote = isRemotePlugin(plugin)
   const pluginName = remote ? plugin.remotePluginId : plugin.name
   if (!pluginName) return null
 
@@ -45,5 +45,5 @@ export function unresolvedPluginApps(
   statuses: CodexPluginAppStatus[]
 ): AppSummary[] {
   const statusById = new Map(statuses.map((status) => [status.id, status]))
-  return apps.filter((app) => !statusById.get(app.id)?.isAccessible)
+  return apps.filter((app) => Boolean(app.installUrl) && !statusById.get(app.id)?.isAccessible)
 }
