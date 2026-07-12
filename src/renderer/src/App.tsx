@@ -3689,7 +3689,7 @@ function WorkspacePill({
     >
       <FolderIcon />
       <span className="workspace-pill-name">{workspace ? workspaceName(workspace) : 'Choose workspace'}</span>
-      <span className="workspace-pill-caret">⌄</span>
+      <span className="workspace-pill-caret" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m6 10 6 5 6-5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg></span>
     </button>
   )
 }
@@ -3927,7 +3927,6 @@ function Composer({
   providerLabel,
   isLoading,
   isTurnActive,
-  status,
   onSend,
   onSteer,
   onStop,
@@ -4131,7 +4130,6 @@ function Composer({
                 <NewChatIcon />
               </button>
             )}
-          </div>
         </div>
       </div>
     </form>
