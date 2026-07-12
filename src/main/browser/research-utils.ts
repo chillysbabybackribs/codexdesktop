@@ -26,6 +26,22 @@ export type ExtractedPageAssessment = {
   reason?: 'invalid-url' | 'challenge-page' | 'insufficient-content'
 }
 
+export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] {
+  const urls: string[] = []
+  const seen = new Set<string>()
+  for (const value of values) {
+    if (typeof value !== 'string') continue
+    const normalized = canonicalizeUrl(value.trim())
+    if (!normalized || seen.has(normalized)) continue
+    const parsed = new URL(normalized)
+    if (parsed.username || parsed.password) continue
+    seen.add(normalized)
+    urls.push(normalized)
+    if (urls.length >= Math.max(1, Math.min(8, Math.round(maxUrls)))) break
+  }
+  return urls
+}
+
 export function googleSearchUrl(query: string, maxResults: number): string {
   return `https://www.google.com/search?num=${maxResults * 2}&q=${encodeURIComponent(query)}`
 }
