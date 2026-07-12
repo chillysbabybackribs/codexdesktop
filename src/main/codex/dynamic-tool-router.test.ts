@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
-import type { ResearchRequest, ResearchRunner } from '../browser/research-runner.js'
+import type { ResearchRequest, ResearchRunContext, ResearchRunner } from '../browser/research-runner.js'
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 
@@ -39,13 +39,15 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
-test('dynamic tool router normalizes research arguments and forwards the turn id', async () => {
+test('dynamic tool router normalizes research arguments and forwards run context and progress', async () => {
   let request: ResearchRequest | null = null
-  let runId: string | null = null
+  let context: ResearchRunContext | null = null
+  let progressMessage: string | null = null
   const researchRunner = {
-    run: async (next: ResearchRequest, nextRunId: string) => {
+    run: async (next: ResearchRequest, nextContext: ResearchRunContext) => {
       request = next
-      runId = nextRunId
+      context = nextContext
+      nextContext.onProgress?.({ stage: 'discovering', message: 'Searching source lane 1/1…' })
       return { ok: true }
     }
   } as ResearchRunner
@@ -53,10 +55,18 @@ test('dynamic tool router normalizes research arguments and forwards the turn id
     queries: ['one', 2, 'two'],
     maxResults: 4,
     maxPages: 2,
+    maxAttempts: 3,
     snippetChars: 1200
-  }), { browserAgent: unusedBrowser, researchRunner })
+  }), {
+    browserAgent: unusedBrowser,
+    researchRunner,
+    onResearchProgress: (progress) => { progressMessage = progress.message }
+  })
 
   assert.equal(response.success, true)
-  assert.deepEqual(request, { queries: ['one', 'two'], maxResults: 4, maxPages: 2, snippetChars: 1200 })
-  assert.equal(runId, 'turn-1')
+  assert.deepEqual(request, { queries: ['one', 'two'], maxResults: 4, maxPages: 2, maxAttempts: 3, snippetChars: 1200 })
+  assert.equal(context?.runId, 'call-1')
+  assert.equal(context?.threadId, 'thread-1')
+  assert.equal(context?.turnId, 'turn-1')
+  assert.equal(progressMessage, 'Searching source lane 1/1…')
 })

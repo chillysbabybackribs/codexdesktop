@@ -195,6 +195,16 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(Object.keys((browserRun.inputSchema as { properties: Record<string, unknown> }).properties), [
     'code', 'tab', 'frame', 'timeoutMs', 'maxResultChars'
   ])
+  const researchWeb = browserDynamicTools.find(({ name }) => name === 'research_web')
+  assert.equal(researchWeb?.type, 'function')
+  if (!researchWeb || researchWeb.type !== 'function') assert.fail('research_web function tool is missing')
+  const researchProperties = (researchWeb.inputSchema as {
+    properties: Record<string, { minimum?: number; maximum?: number; description?: string }>
+  }).properties
+  assert.deepEqual(Object.keys(researchProperties), ['queries', 'maxResults', 'maxPages', 'maxAttempts', 'snippetChars'])
+  assert.equal(researchProperties.maxPages?.maximum, 3)
+  assert.equal(researchProperties.maxAttempts?.maximum, 8)
+  assert.match(researchProperties.queries?.description ?? '', /primary discovery query/i)
 })
 
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {
