@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Juniper & Oak is a warm neighborhood coffee shop serving thoughtful drinks and fresh bakes." />
+    <meta name="theme-color" content="#f2eadb" />
+    <title>Juniper & Oak — Coffee for slow mornings</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/script.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="Juniper and Oak, home">
+        <svg class="brand-mark" viewBox="0 0 36 44" aria-hidden="true">
+          <path d="M18 41V17M18 25C10 25 6 19 6 12c8 0 12 5 12 13Zm0-5c0-8 4-14 12-16 1 8-3 14-12 16Z" />
+          <circle cx="18" cy="32" r="2.2" />
+        </svg>
+        <span>Juniper <i>&</i> Oak</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Toggle navigation</span>
+        <span></span><span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+        <a href="#drinks">Drinks</a>
+        <a href="#hours">Hours</a>
+        <a href="#stories">Kind words</a>
+        <a class="nav-cta" href="#visit">Come say hello <span aria-hidden="true">↘</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span></span>Your neighborhood coffee room</p>
+          <h1 id="hero-title">Coffee for <em>slow mornings</em> and good company.</h1>
+          <p class="hero-intro">Thoughtful coffee, warm pastries, and a little room to linger—right around the corner.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#visit">Plan your visit <span aria-hidden="true">↓</span></a>
+            <p><span>Open today</span> <strong>7am–5pm</strong></p>
+          </div>
+        </div>
+
+        <figure class="hero-media reveal delay-1">
+          <img src="/assets/juniper-oak-hero.png" width="1536" height="1024" alt="A sunlit corner of Juniper and Oak with green tile, oak tables, and a ceramic latte." />
+          <figcaption><span>01</span> Morning light on Willow Street</figcaption>
+          <div class="hero-stamp" aria-hidden="true">Poured<br />with care</div>
+        </figure>
+
+        <div class="hero-footnote" aria-hidden="true">
+          <span>Small-batch coffee</span>
+          <svg viewBox="0 0 120 18"><path d="M2 10c12-12 22 10 34 0s22 10 34 0 22 10 48 0" /></svg>
+          <span>Pastries every morning</span>
+        </div>
+      </section>
+
+      <section class="drinks section" id="drinks" aria-labelledby="drinks-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow light"><span></span>What we're pouring</p>
+          <h2 id="drinks-title">Three house favorites, each with a little twist.</h2>
+          <p>Familiar, carefully made, and rooted in the season. Oat milk is always on us.</p>
+        </div>
+
+        <div class="drinks-layout">
+          <div class="drinks-photo reveal">
+            <img src="/assets/featured-drinks.png" width="1700" height="925" alt="A honey oat cortado, juniper tonic cold brew, and rosemary mocha in morning light." />
+            <span class="photo-note">Brewed here, enjoyed here</span>
+          </div>
+
+          <ol class="drink-list reveal delay-1">
+            <li>
+              <span class="drink-number">01</span>
+              <div><h3>Honey Oat Cortado</h3><p>Double espresso, oat milk, local honey, sea salt</p></div>
+              <strong>$5.50</strong>
+            </li>
+            <li>
+              <span class="drink-number">02</span>
+              <div><h3>Juniper Tonic</h3><p>Cold brew, house tonic, juniper, orange</p></div>
+              <strong>$6</strong>
+            </li>
+            <li>
+              <span class="drink-number">03</span>
+              <div><h3>Rosemary Mocha</h3><p>Dark chocolate, espresso, rosemary, steamed milk</p></div>
+              <strong>$6.25</strong>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="hours section" id="hours" aria-labelledby="hours-title">
+        <div class="hours-art" aria-hidden="true">
+          <svg viewBox="0 0 240 360">
+            <path d="M119 350V95M119 188C71 188 39 154 38 106c50 0 79 31 81 82Zm1-45c0-57 30-102 83-117 4 59-25 103-83 117ZM119 267c-36 0-63-24-69-59 38-2 65 21 69 59Zm1-31c7-37 32-62 69-64-1 39-26 63-69 64Z" />
+            <circle cx="119" cy="305" r="7" /><circle cx="119" cy="325" r="7" />
+          </svg>
+        </div>
+        <div class="hours-copy reveal">
+          <p class="eyebrow"><span></span>Open seven days</p>
+          <h2 id="hours-title">Come early.<br /><em>Stay awhile.</em></h2>
+          <p>There’s always a sunny seat, a fresh pot, and something warm from the oven.</p>
+        </div>
+        <dl class="hours-list reveal delay-1">
+          <div><dt>Monday–Friday</dt><dd>7am–5pm</dd></div>
+          <div><dt>Saturday</dt><dd>8am–5pm</dd></div>
+          <div><dt>Sunday</dt><dd>8am–3pm</dd></div>
+        </dl>
+      </section>
+
+      <section class="stories section" id="stories" aria-labelledby="stories-title">
+        <div class="stories-heading reveal">
+          <p class="eyebrow"><span></span>Kind words</p>
+          <h2 id="stories-title">The neighborhood has <em>good taste.</em></h2>
+        </div>
+
+        <div class="quote-grid">
+          <figure class="quote-featured reveal">
+            <div class="quote-mark" aria-hidden="true">“</div>
+            <blockquote>My favorite kind of place: the coffee is taken seriously, but nothing else feels too serious.</blockquote>
+            <figcaption>Sample guest quote</figcaption>
+          </figure>
+          <figure class="reveal delay-1">
+            <blockquote>Quiet enough to read, friendly enough to lose track of time.</blockquote>
+            <figcaption>Sample guest quote</figcaption>
+          </figure>
+          <figure class="reveal delay-2">
+            <blockquote>I came for the cortado and stayed for the rosemary shortbread.</blockquote>
+            <figcaption>Sample guest quote</figcaption>
+          </figure>
+        </div>
+        <p class="content-note">Illustrative testimonial copy for this concept; replace with verified guest feedback before launch.</p>
+      </section>
+
+      <section class="visit section" id="visit" aria-labelledby="visit-title">
+        <div class="visit-inner reveal">
+          <div>
+            <p class="eyebrow light"><span></span>See you soon</p>
+            <h2 id="visit-title">Your table is<br /><em>by the window.</em></h2>
+          </div>
+          <div class="visit-details">
+            <address>18 Willow Street<br />Brookdale</address>
+            <p>Two blocks from the town green.<br />Bike rack out front.</p>
+            <a class="button button-light" href="https://maps.google.com/?q=18+Willow+Street+Brookdale" target="_blank" rel="noreferrer">Get directions <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="visit-marquee" aria-hidden="true">Coffee · Neighbors · Good Days ·</div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="#top">
+        <svg class="brand-mark" viewBox="0 0 36 44" aria-hidden="true"><path d="M18 41V17M18 25C10 25 6 19 6 12c8 0 12 5 12 13Zm0-5c0-8 4-14 12-16 1 8-3 14-12 16Z" /><circle cx="18" cy="32" r="2.2" /></svg>
+        <span>Juniper <i>&</i> Oak</span>
+      </a>
+      <p>Made for slow mornings.</p>
+      <p class="concept-note">Concept site · address and testimonials are demonstration content.</p>
+      <p>© <span data-year></span> Juniper & Oak</p>
+    </footer>
+  </body>
+</html>

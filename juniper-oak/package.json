@@ -1,0 +1,10 @@
+{
+  "name": "juniper-oak-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "../node_modules/.bin/vite --host 127.0.0.1",
+    "build": "../node_modules/.bin/vite build"
+  }
+}
