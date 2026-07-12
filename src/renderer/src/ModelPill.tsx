@@ -12,7 +12,11 @@ export function ModelPill({
   onSelectModel,
   selectedEffort,
   onSelectModelEffort,
-  reasoningMenuSide = 'auto'
+  reasoningMenuSide = 'auto',
+  primaryLabel,
+  secondaryLabel,
+  secondaryModels,
+  onSelectSecondaryModel
 }: {
   models: Model[]
   selectedModel: string | null
@@ -20,6 +24,13 @@ export function ModelPill({
   selectedEffort?: ReasoningEffort | null
   onSelectModelEffort?: (model: string, effort: ReasoningEffort) => void
   reasoningMenuSide?: 'auto' | 'left' | 'right'
+  // Optional second provider section: picking one of these models hands off
+  // to onSelectSecondaryModel instead of onSelectModel (the app switches
+  // provider). Group labels only render when the second section is present.
+  primaryLabel?: string
+  secondaryLabel?: string
+  secondaryModels?: Model[]
+  onSelectSecondaryModel?: (model: string) => void
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedModel, setExpandedModel] = useState<string | null>(null)
@@ -159,6 +170,9 @@ export function ModelPill({
           onMouseLeave={scheduleHoverClose}
         >
           <div className="model-menu" role="menu">
+            {hasSecondarySection && primaryLabel ? (
+              <div className="model-menu-group-label">{primaryLabel}</div>
+            ) : null}
             {models.map((model) => {
               const isActive = model.model === active?.model
               const efforts = model.supportedReasoningEfforts ?? []
@@ -202,6 +216,37 @@ export function ModelPill({
                 </div>
               )
             })}
+            {hasSecondarySection ? (
+              <>
+                {secondaryLabel ? <div className="model-menu-group-label">{secondaryLabel}</div> : null}
+                {secondaryModels!.map((model) => (
+                  <div
+                    key={model.id}
+                    className="model-option-wrap"
+                    onMouseEnter={() => {
+                      cancelHoverClose()
+                      setExpandedModel(null)
+                    }}
+                  >
+                    <button
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={false}
+                      className="model-option"
+                      onClick={() => {
+                        onSelectSecondaryModel!(model.model)
+                        setIsOpen(false)
+                      }}
+                    >
+                      <span className="model-option-copy">
+                        <span className="model-option-name">{model.displayName}</span>
+                        <span className="model-option-desc">{model.description}</span>
+                      </span>
+                    </button>
+                  </div>
+                ))}
+              </>
+            ) : null}
           </div>
           {expanded && onSelectModelEffort && expandedEfforts.length ? createPortal(
             <div
