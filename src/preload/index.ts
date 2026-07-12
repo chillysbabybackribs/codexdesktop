@@ -10,6 +10,12 @@ import type {
   BrowserBounds,
   BrowserFindResult,
   BrowserState,
+  ClaudeEvent,
+  ClaudeInterruptTurnParams,
+  ClaudeListThreadsParams,
+  ClaudeSendMessageParams,
+  ClaudeStartThreadParams,
+  ClaudeSteerTurnParams,
   CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
@@ -129,6 +135,24 @@ export const api = {
       return () => {
         ipcRenderer.off(ipcChannels.codexEvent, wrapped)
       }
+    }
+  },
+  claude: {
+    getAuthStatus: (cwd?: string | null) => ipcRenderer.invoke(ipcChannels.claudeGetAuthStatus, cwd),
+    listModels: (cwd?: string | null) => ipcRenderer.invoke(ipcChannels.claudeListModels, cwd),
+    listThreads: (params?: ClaudeListThreadsParams) => ipcRenderer.invoke(ipcChannels.claudeListThreads, params),
+    startThread: (params?: ClaudeStartThreadParams) => ipcRenderer.invoke(ipcChannels.claudeStartThread, params),
+    resumeThread: (threadId: string, cwd?: string | null) =>
+      ipcRenderer.invoke(ipcChannels.claudeResumeThread, threadId, cwd),
+    readThread: (threadId: string, cwd?: string | null) =>
+      ipcRenderer.invoke(ipcChannels.claudeReadThread, threadId, cwd),
+    sendMessage: (params: ClaudeSendMessageParams) => ipcRenderer.invoke(ipcChannels.claudeSendMessage, params),
+    steerTurn: (params: ClaudeSteerTurnParams) => ipcRenderer.invoke(ipcChannels.claudeSteerTurn, params),
+    interruptTurn: (params: ClaudeInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.claudeInterruptTurn, params),
+    onEvent: (listener: (event: ClaudeEvent) => void) => {
+      const wrapped = (_event: Electron.IpcRendererEvent, event: ClaudeEvent): void => listener(event)
+      ipcRenderer.on(ipcChannels.claudeEvent, wrapped)
+      return () => ipcRenderer.off(ipcChannels.claudeEvent, wrapped)
     }
   },
   memory: {

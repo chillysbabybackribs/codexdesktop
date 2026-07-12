@@ -1,4 +1,5 @@
 import type { ReasoningEffort } from './codex-protocol/ReasoningEffort'
+import type { AgentEvent } from './agent'
 
 export type BrowserBounds = {
   x: number
@@ -116,6 +117,38 @@ export type CodexSendMessageParams = {
   /** Native app-server collaboration mode for this turn and subsequent turns. */
   collaborationMode?: 'default' | 'plan'
 }
+
+export type ClaudeEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+
+export type ClaudeSendMessageParams = {
+  threadId?: string | null
+  text: string
+  attachments?: ChatAttachment[]
+  cwd?: string | null
+  model?: string | null
+  effort?: ClaudeEffort | null
+  collaborationMode?: 'default' | 'plan'
+}
+
+export type ClaudeStartThreadParams = {
+  cwd?: string | null
+  model?: string | null
+  effort?: ClaudeEffort | null
+  collaborationMode?: 'default' | 'plan'
+}
+
+export type ClaudeListThreadsParams = {
+  cwd?: string | null
+}
+
+export type ClaudeInterruptTurnParams = {
+  threadId: string
+  turnId: string
+}
+
+export type ClaudeSteerTurnParams = ClaudeInterruptTurnParams & { text: string }
+
+export type ClaudeEvent = AgentEvent & { provider: 'claude' }
 
 export type CodexStartThreadParams = {
   cwd?: string | null
@@ -267,6 +300,16 @@ export const ipcChannels = {
   codexInstallPlugin: 'codex:installPlugin',
   codexUninstallPlugin: 'codex:uninstallPlugin',
   codexEvent: 'codex:event',
+  claudeGetAuthStatus: 'claude:getAuthStatus',
+  claudeListModels: 'claude:listModels',
+  claudeListThreads: 'claude:listThreads',
+  claudeStartThread: 'claude:startThread',
+  claudeResumeThread: 'claude:resumeThread',
+  claudeReadThread: 'claude:readThread',
+  claudeSendMessage: 'claude:sendMessage',
+  claudeSteerTurn: 'claude:steerTurn',
+  claudeInterruptTurn: 'claude:interruptTurn',
+  claudeEvent: 'claude:event',
   memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',

@@ -85,6 +85,24 @@ export class ClaudeClient extends EventEmitter {
     return getSessionMessages(threadId, { ...(cwd ? { dir: cwd } : {}) })
   }
 
+  async startThread(
+    cwd?: string | null,
+    model?: string | null,
+    effort?: ClaudeEffort | null,
+    collaborationMode: 'default' | 'plan' = 'default'
+  ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
+    const runtime = await this.ensureRuntime(null, cwd, model, effort, collaborationMode)
+    return { threadId: runtime.sessionId!, model: runtime.model, effort: runtime.effort }
+  }
+
+  async resumeThread(
+    threadId: string,
+    cwd?: string | null
+  ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
+    const runtime = await this.ensureRuntime(threadId, cwd)
+    return { threadId: runtime.sessionId!, model: runtime.model, effort: runtime.effort }
+  }
+
   async sendMessage(
     threadId: string | null | undefined,
     text: string,

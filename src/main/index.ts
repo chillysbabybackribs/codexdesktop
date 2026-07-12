@@ -31,6 +31,8 @@ import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
+import { registerClaudeIpc } from './claude/claude-ipc.js'
+import type { ClaudeClient } from './claude/claude-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
@@ -76,6 +78,7 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
 let codexClient: CodexClient | null = null
+let claudeClient: ClaudeClient | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
 let quitReady = false
@@ -247,6 +250,8 @@ function bootstrap(): void {
     researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null
+    claudeClient?.dispose()
+    claudeClient = null
     const closingBrowserControl = browserControl?.close()
     browserControl = null
 
@@ -311,6 +316,7 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
+  claudeClient = registerClaudeIpc(() => mainWindow, browserAgent, researchRunner, attachmentStore)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
