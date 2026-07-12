@@ -385,6 +385,7 @@ function AgentWindow({
               selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
               onSelectModel={(model) => onSetModel(session.key, model)}
               onSelectModelEffort={(model, effort) => onSetModelEffort(session.key, model, effort)}
+              reasoningMenuSide="left"
             />
           ) : null}
           <AgentContextPill

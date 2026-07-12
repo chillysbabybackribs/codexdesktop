@@ -11,13 +11,15 @@ export function ModelPill({
   selectedModel,
   onSelectModel,
   selectedEffort,
-  onSelectModelEffort
+  onSelectModelEffort,
+  reasoningMenuSide = 'auto'
 }: {
   models: Model[]
   selectedModel: string | null
   onSelectModel: (model: string) => void
   selectedEffort?: ReasoningEffort | null
   onSelectModelEffort?: (model: string, effort: ReasoningEffort) => void
+  reasoningMenuSide?: 'auto' | 'left' | 'right'
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedModel, setExpandedModel] = useState<string | null>(null)
@@ -112,9 +114,9 @@ export function ModelPill({
       )
       const roomOnRight = window.innerWidth - shellRect.right - viewportPadding
       const roomOnLeft = shellRect.left - viewportPadding
-      const side = roomOnRight >= menuRect.width + submenuGap || roomOnRight >= roomOnLeft
-        ? 'right'
-        : 'left'
+      const side = reasoningMenuSide === 'auto'
+        ? (roomOnRight >= menuRect.width + submenuGap || roomOnRight >= roomOnLeft ? 'right' : 'left')
+        : reasoningMenuSide
       const preferredLeft = side === 'right'
         ? shellRect.right + submenuGap
         : shellRect.left - menuRect.width - submenuGap
@@ -133,7 +135,7 @@ export function ModelPill({
       window.removeEventListener('resize', placeMenu)
       window.removeEventListener('scroll', placeMenu, true)
     }
-  }, [expandedModel, expandedEfforts.length])
+  }, [expandedModel, expandedEfforts.length, reasoningMenuSide])
 
   return (
     <div ref={wrapRef} className="model-pill-wrap">
