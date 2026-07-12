@@ -26,6 +26,7 @@ const snapshot: MemorySnapshot = {
 test('last-chat memory keeps a recent progression and substantive earlier milestones', () => {
   const markdown = buildLastChatMarkdown(snapshot, '/memory/chats/thread-1.md')
   assert.match(markdown, /Latest request: Should we implement it\?/)
+  assert.match(markdown, /Recent progression:[\s\S]*T03 — What is the current decision\?/)
   assert.match(markdown, /T02 — Can older chapters be found\?.*Keep a one-line milestone map/)
   assert.doesNotMatch(markdown, /Can older chapters be found\?.*:\*\* Yes\./)
   assert.match(markdown, /## Earlier milestones/)

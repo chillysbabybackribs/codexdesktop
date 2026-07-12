@@ -66,6 +66,11 @@ export const threadConfig = {
   'features.tool_suggest': false
 }
 
+// Transcript hydration is a UI concern, not model context. Keep it deliberately
+// tiny: fresh startup does not resume a thread, and an explicit resume shows
+// only the two most recent turns while older context remains in app memory.
+export const resumeBootstrapTurnLimit = 2
+
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
   const normalized = text.trim().toLowerCase()
   // Require clear web intent: bare tokens common in local coding chat

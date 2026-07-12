@@ -4,6 +4,7 @@ import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata
 import {
   browserDynamicTools,
   buildGuidance,
+  resumeBootstrapTurnLimit,
   selectNewThreadSkills,
   selectTurnSkills,
   threadConfig
@@ -109,6 +110,10 @@ test('thread config pins host-varying state off for start and resume', () => {
   assert.equal(threadConfig['memories.use_memories'], false)
   assert.equal(threadConfig['memories.generate_memories'], false)
   assert.equal(threadConfig['features.tool_suggest'], false)
+})
+
+test('explicit thread resume bootstraps at most two recent turns', () => {
+  assert.equal(resumeBootstrapTurnLimit, 2)
 })
 
 test('self-hosted guidance protects the exact host session and routes live checks to an isolated instance', () => {

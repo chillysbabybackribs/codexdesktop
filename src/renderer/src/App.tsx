@@ -422,22 +422,17 @@ export default function App(): React.JSX.Element {
     })
 
     if (!initializationPromiseRef.current) {
-      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
       initializationPromiseRef.current = (async () => {
         const authPromise = window.api.codex.getAuthStatus().catch((error) => {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
-        // Main thread first — it warms up the codex child, so the dock's
-        // resume calls don't race a cold start. The dock restore then skips
-        // any thread the main view already owns. Dock history is deliberately
-        // not part of the interactive startup gate: a stale collection of
-        // helpers must not hold the focused conversation hostage.
-        const restoreMainThreadPromise = (async () => {
-          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
-        })()
-
-        await Promise.all([authPromise, threadsPromise, restoreMainThreadPromise])
+        // Do not eagerly resume the last model thread. Loading a long rollout
+        // at launch makes startup and the first response inherit its complete
+        // context. A fresh send starts a bounded thread and the attached
+        // prior-chat-memory skill reads app memory only when the request needs
+        // it. Users can still explicitly resume a thread from history.
+        await Promise.all([authPromise, threadsPromise])
         hasAutoRestoredRef.current = true
         setIsRestoring(false)
         void restoreAgentDock()
@@ -775,16 +770,6 @@ export default function App(): React.JSX.Element {
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
-
-      if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
-        const read = await window.api.codex.readThread(threadId)
-
-        if (generation !== resumeGenerationRef.current) {
-          return
-        }
-
-        hydrateThread(read.thread, undefined, environment)
-      }
 
       try {
         const goal = await window.api.codex.getGoal(threadId)

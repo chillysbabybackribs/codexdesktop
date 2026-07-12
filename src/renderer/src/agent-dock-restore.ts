@@ -82,7 +82,6 @@ export async function restoreAgentDock(options: {
           // payloads small. Rebuild the compact agent transcript in reading
           // order before taking its recent tail.
           : [...(resumed.initialTurnsPage?.data ?? [])].reverse()
-        if (!turns.length) turns = (await window.api.codex.readThread(session.threadId)).thread.turns
 
         const messages: AgentLiteMessage[] = []
         for (const turn of turns) {
@@ -100,7 +99,7 @@ export async function restoreAgentDock(options: {
             }
           }
         }
-        store.patchSession(session.key, (current) => ({ ...current, messages: messages.slice(-60) }))
+        store.patchSession(session.key, (current) => ({ ...current, messages: messages.slice(-4) }))
       } catch (error) {
         console.warn('Agent thread rehydration failed', session.threadId, error)
         store.appendMessage(session.key, {

@@ -12,7 +12,9 @@ export type MemorySnapshot = {
   turns: MemoryTurn[]
 }
 
-const recentTurnCount = 3
+// Keep only two recent exchanges in the bounded checkpoint. Older details are
+// discoverable through milestone search and the full transcript fallback.
+const recentTurnCount = 2
 const maxMilestones = 6
 const maxTitleChars = 120
 const maxLatestUserChars = 800
