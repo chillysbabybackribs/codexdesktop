@@ -23,7 +23,7 @@ import type {
   MemoryPersistParams,
   PlanningState
 } from '../../shared/ipc'
-import type { AgentEvent, AgentModel, AgentProvider, AgentUsage } from '../../shared/agent'
+import type { AgentEvent, AgentModel, AgentProvider } from '../../shared/agent'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { CodexErrorInfo } from '../../shared/codex-protocol/v2/CodexErrorInfo'
@@ -46,9 +46,9 @@ import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
-  type ModelCallAttribution,
-  type TurnTokenTelemetry
+  type ModelCallAttribution
 } from './turn-telemetry'
+import { agentTokenUsage } from './agent-token-usage'
 import {
   AutoFollow,
   CdpScreenshotPreview,
@@ -1565,6 +1565,21 @@ export default function App(): React.JSX.Element {
       return
     }
 
+    if (event.type === 'tokenUsage.updated') {
+      const tokenUsage = agentTokenUsage(event.usage, event.totalUsage, event.context)
+      contextUsageRef.current = tokenUsage
+      setContextUsage(tokenUsage)
+      setTurnMeta((current) => reduceTurnTelemetry(current, {
+        type: 'tokenUsage',
+        turnId: event.turnId,
+        tokenUsage,
+        atMs: Date.now(),
+        precedingItem: precedingModelInputByTurnRef.current.get(event.turnId) ?? null,
+        compactedBeforeCall: pendingCompactionByTurnRef.current.delete(event.turnId)
+      }))
+      return
+    }
+
     if (event.type === 'compaction.completed') {
       const itemId = `claude-compaction-${crypto.randomUUID()}`
       noteItem(itemId, activeTurnIdRef.current, {
@@ -1581,8 +1596,7 @@ export default function App(): React.JSX.Element {
       noteTurn(event.turnId, {
         status: event.status,
         completedAtMs: Date.now(),
-        errorMessage: event.error ?? undefined,
-        tokens: claudeTurnTokens(event.usage)
+        errorMessage: event.error ?? undefined
       })
       if (event.error) addSystemItem(event.error, 'error')
       if (activeTurnIdRef.current === event.turnId) activeTurnIdRef.current = null
@@ -3531,31 +3545,6 @@ function singleLineClip(value: string, maxChars: number): string {
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
-}
-
-// Map Claude's per-turn usage into the telemetry shape the TurnTail reads.
-// Claude reports a single cumulative usage per turn (not per model call), so we
-// record it as one call: turn == latestCall, and cache-creation + cache-read
-// both count as cached input.
-function claudeTurnTokens(usage: AgentUsage): TurnTokenTelemetry {
-  const cachedInputTokens = usage.cacheReadInputTokens + usage.cacheCreationInputTokens
-  const inputTokens = usage.inputTokens + cachedInputTokens
-  const breakdown = {
-    totalTokens: inputTokens + usage.outputTokens,
-    inputTokens,
-    cachedInputTokens,
-    outputTokens: usage.outputTokens,
-    reasoningOutputTokens: 0
-  }
-  return {
-    turn: breakdown,
-    latestCall: breakdown,
-    threadTotalAtEnd: breakdown,
-    modelContextWindow: null,
-    modelCallCount: breakdown.totalTokens > 0 ? 1 : 0,
-    modelCalls: [],
-    droppedModelCallSamples: 0
-  }
 }
 
 function claudeModelToUiModel(model: AgentModel, index: number): Model {

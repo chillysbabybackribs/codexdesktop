@@ -445,14 +445,14 @@ export class ClaudeClient extends EventEmitter {
     runtime: ClaudeRuntime,
     turn: PendingTurn,
     callId: string,
-    rawUsage: Record<string, unknown>
+    rawUsage: unknown
   ): Promise<void> {
     // The SDK can deliver multiple assistant envelopes for one API response.
     // The Anthropic message id is stable across those envelopes; the SDK uuid is not.
     if (runtime.seenModelMessageIds.has(callId)) return
     runtime.seenModelMessageIds.add(callId)
 
-    const usage = toAgentUsage(rawUsage, 0)
+    const usage = toAgentUsage(asRecord(rawUsage), 0)
     runtime.totalUsage = addAgentUsage(runtime.totalUsage, usage)
 
     let context: AgentContextUsage | null = null
