@@ -375,17 +375,23 @@ export class ResearchRunner {
             }
           }
 
+          const validation = linkAbortSignals(signal, stopSignal)
           try {
-            await assertPublicResearchUrl(candidate.url, signal)
+            await assertPublicResearchUrl(candidate.url, validation.signal)
           } catch (error) {
             if (signal.aborted) throw error
+            if (stopSignal.aborted) return null
             errors.push({ url: candidate.url, error: formatError(error) })
             return null
+          } finally {
+            validation.dispose()
           }
+          if (stopSignal.aborted) return null
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           const closeOnAbort = (): void => this.closeHiddenView(view)
-          linked.signal.addEventListener('abort', closeOnAbort, { once: true })
+          if (linked.signal.aborted) closeOnAbort()
+          else linked.signal.addEventListener('abort', closeOnAbort, { once: true })
           try {
             const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
             recordNavigation(navigation, navigationResult)
