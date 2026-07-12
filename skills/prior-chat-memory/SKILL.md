@@ -5,7 +5,7 @@ description: Recover relevant context from Codex Desktop's previous-chat Markdow
 
 # Prior Chat Memory
 
-Use this skill as a judgment aid, not as unconditional context injection. It is attached to the opening turn of a new Codex Desktop thread so you can decide whether the user's request actually depends on the previous chat.
+Codex Desktop normally handles ambiguous new-chat continuity through its provider-neutral memory service. Use this skill only as an explicit or legacy fallback when the opening request has no `<codexdesktop-prior-chat-memory>` block. Never load the checkpoint a second time when that block is already present.
 
 ## Decide Before Reading
 
