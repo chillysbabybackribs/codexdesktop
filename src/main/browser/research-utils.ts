@@ -33,8 +33,9 @@ export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] 
   const seen = new Set<string>()
   for (const value of values) {
     if (typeof value !== 'string') continue
+    if (value.trim().length > 4_096) continue
     const normalized = canonicalizeUrl(value.trim())
-    if (!normalized || seen.has(normalized)) continue
+    if (!normalized || normalized.length > 4_096 || seen.has(normalized)) continue
     const parsed = new URL(normalized)
     if (parsed.username || parsed.password || isObviousPrivateHost(parsed.hostname)) continue
     seen.add(normalized)
@@ -141,8 +142,8 @@ export function rankSerpCandidates(candidates: SerpCandidate[], queries: string[
     if (!normalizedUrl) continue
 
     const parsed = new URL(normalizedUrl)
-    const title = candidate.title.trim()
-    const snippet = candidate.snippet.trim()
+    const title = candidate.title.trim().slice(0, 300)
+    const snippet = candidate.snippet.trim().slice(0, 500)
     const domain = parsed.hostname.replace(/^www\./i, '').toLowerCase()
     const titleTokens = tokenize(title)
     const snippetTokens = tokenize(snippet)

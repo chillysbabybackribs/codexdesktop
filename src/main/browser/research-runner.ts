@@ -210,7 +210,7 @@ export class ResearchRunner {
   ): Promise<ResearchResult> {
     const queries = (request.queries ?? [])
       .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
-      .map((query) => query.trim())
+      .map((query) => query.trim().slice(0, 500))
       .slice(0, 3)
     const urls = normalizeResearchUrls(request.urls ?? [])
     const focus = normalizeResearchFocus(request.focus)
@@ -370,7 +370,7 @@ export class ResearchRunner {
               return draft
             } catch (error) {
               if (stopSignal.aborted) return null
-              errors.push({ url: candidate.url, error: `cached artifact write failed: ${formatError(error)}` })
+              recordResearchError(errors, { url: candidate.url, error: `cached artifact write failed: ${formatError(error)}` })
               return null
             }
           }
@@ -381,7 +381,7 @@ export class ResearchRunner {
           } catch (error) {
             if (signal.aborted) throw error
             if (stopSignal.aborted) return null
-            errors.push({ url: candidate.url, error: formatError(error) })
+            recordResearchError(errors, { url: candidate.url, error: formatError(error) })
             return null
           } finally {
             validation.dispose()
@@ -417,7 +417,7 @@ export class ResearchRunner {
           } catch (error) {
             if (signal.aborted) throw error
             if (stopSignal.aborted) return null
-            errors.push({ url: candidate.url, error: formatError(error) })
+            recordResearchError(errors, { url: candidate.url, error: formatError(error) })
             return null
           } finally {
             linked.signal.removeEventListener('abort', closeOnAbort)
@@ -517,7 +517,7 @@ export class ResearchRunner {
             for (const result of queryResults) discoveredUrls.add(result.url)
           } catch (error) {
             if (signal.aborted) throw error
-            errors.push({ error: `SERP query failed for "${query}": ${formatError(error)}` })
+            recordResearchError(errors, { error: `SERP query failed for "${query}": ${formatError(error)}` })
           } finally {
             discoveryMs += Date.now() - discoveryStartedAt
           }
@@ -576,7 +576,7 @@ export class ResearchRunner {
       ...(focus.length > 0 ? { focus } : {}),
       searchQueries,
       artifactDir,
-      discoveredUrls: [...discoveredUrls],
+      discoveredUrls: [...discoveredUrls].slice(0, 20),
       discoveredCount: discoveredUrls.size,
       pages,
       ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),

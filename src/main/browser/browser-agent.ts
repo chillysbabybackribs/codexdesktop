@@ -647,7 +647,7 @@ export function buildPageExtractionProgram(maxChars: number, htmlMaxChars = 0): 
   return `
   const maxChars = ${safeMaxChars};
   const pageUrl = location.href;
-  const title = document.title.trim();
+  const title = document.title.trim().slice(0, 300);
   const navigationEntry = globalThis.performance?.getEntriesByType?.('navigation')?.[0];
   const status = Number.isFinite(navigationEntry?.responseStatus) ? navigationEntry.responseStatus : 0;
   const rawHtml = ${safeHtmlMaxChars > 0 ? `(document.documentElement?.outerHTML || '').slice(0, ${safeHtmlMaxChars})` : "''"};
