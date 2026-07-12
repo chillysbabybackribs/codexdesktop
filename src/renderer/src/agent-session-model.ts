@@ -2,6 +2,8 @@ import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadToke
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { ChatAttachment } from '../../shared/ipc'
 
+import type { SerializedLayoutNode } from './conversation-layout.js'
+
 export type AgentLiteMessage = {
   id: string
   role: 'user' | 'assistant'
@@ -36,6 +38,8 @@ export type PersistedAgentSession = {
 export type PersistedAgentDock = {
   counter?: number
   sessions: PersistedAgentSession[]
+  layout?: SerializedLayoutNode
+  focusedLeafId?: string
 }
 
 export type AgentDeltaBuffer = ReadonlyMap<string, ReadonlyMap<string, string>>
@@ -138,7 +142,9 @@ export function completeAgentMessage(
 export function serializeAgentDock(
   counter: number,
   sessions: AgentSession[],
-  selectedKey: string | null
+  selectedKey: string | null,
+  layout?: SerializedLayoutNode,
+  focusedLeafId?: string
 ): string {
   return JSON.stringify({
     counter,
@@ -149,7 +155,9 @@ export function serializeAgentDock(
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       selected: session.key === selectedKey
-    }))
+    })),
+    ...(layout ? { layout } : {}),
+    ...(focusedLeafId ? { focusedLeafId } : {})
   })
 }
 
@@ -157,12 +165,14 @@ export function parseAgentDock(raw: string): PersistedAgentDock | null {
   try {
     const value: unknown = JSON.parse(raw)
     if (!value || typeof value !== 'object') return null
-    const record = value as { counter?: unknown; sessions?: unknown }
+    const record = value as { counter?: unknown; sessions?: unknown; layout?: unknown; focusedLeafId?: unknown }
     return {
       ...(typeof record.counter === 'number' && Number.isFinite(record.counter) ? { counter: record.counter } : {}),
       sessions: Array.isArray(record.sessions)
         ? record.sessions.filter((entry): entry is PersistedAgentSession => Boolean(entry) && typeof entry === 'object')
-        : []
+        : [],
+      ...(record.layout && typeof record.layout === 'object' ? { layout: record.layout as SerializedLayoutNode } : {}),
+      ...(typeof record.focusedLeafId === 'string' ? { focusedLeafId: record.focusedLeafId } : {})
     }
   } catch {
     return null
