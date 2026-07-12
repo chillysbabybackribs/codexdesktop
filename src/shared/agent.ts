@@ -2,21 +2,58 @@ export type AgentProvider = 'codex' | 'claude'
 
 export type AgentConnectionStatus = 'idle' | 'starting' | 'ready' | 'exited' | 'error'
 
+export type AgentEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+
+/** A model identity that remains unambiguous when multiple providers are live. */
+export type AgentModelRef = {
+  provider: AgentProvider
+  model: string
+}
+
+/** A persisted provider session. Session ids are only unique within a provider. */
+export type AgentSessionRef = {
+  provider: AgentProvider
+  sessionId: string
+}
+
+/** A turn identity scoped through its owning provider session. */
+export type AgentTurnRef = AgentSessionRef & {
+  turnId: string
+}
+
 export type AgentModel = {
+  provider: AgentProvider
   id: string
   displayName: string
   description: string
   isDefault: boolean
   inputModalities: Array<'text' | 'image'>
-  supportedEfforts: Array<'low' | 'medium' | 'high' | 'xhigh' | 'max'>
+  supportedEfforts: AgentEffort[]
 }
 
 export type AgentSessionSummary = {
+  provider: AgentProvider
   id: string
   title: string
   cwd: string | null
   createdAt: number | null
   updatedAt: number
+}
+
+export function agentModelKey(ref: AgentModelRef): string {
+  return JSON.stringify([ref.provider, ref.model])
+}
+
+export function parseAgentModelKey(value: string): AgentModelRef | null {
+  try {
+    const parsed: unknown = JSON.parse(value)
+    if (!Array.isArray(parsed) || parsed.length !== 2) return null
+    const [provider, model] = parsed
+    if ((provider !== 'codex' && provider !== 'claude') || typeof model !== 'string' || !model) return null
+    return { provider, model }
+  } catch {
+    return null
+  }
 }
 
 export type AgentTranscriptMessage = {

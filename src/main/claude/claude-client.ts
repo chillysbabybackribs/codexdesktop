@@ -76,6 +76,7 @@ export class ClaudeClient extends EventEmitter {
     const sessions = await listSessions({ ...(cwd ? { dir: cwd } : {}), limit: 30 })
     return {
       data: sessions.map((session) => ({
+        provider: 'claude',
         id: session.sessionId,
         title: session.summary,
         cwd: session.cwd ?? null,
@@ -576,6 +577,7 @@ async function buildUserMessage(text: string, attachments: ChatAttachment[]): Pr
 
 function toAgentModel(model: ModelInfo, index: number): AgentModel {
   return {
+    provider: 'claude',
     id: model.value,
     displayName: model.displayName,
     description: model.description,
