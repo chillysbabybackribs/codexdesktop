@@ -40,6 +40,8 @@ const MAX_CONCURRENT_RESEARCH_RUNS = 2
 const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
+const PAGE_CACHE_TTL_MS = 5 * 60_000
+const MAX_PAGE_CACHE_ENTRIES = 12
 const RESEARCH_PRUNE_COOLDOWN_MS = 30 * 60_000
 
 export type ResearchRequest = {
@@ -59,6 +61,7 @@ export type ResearchPage = {
   title: string
   observedAt: string
   status?: number
+  cacheHit: boolean
   charCount: number
   wordCount: number
   artifactPath: string
@@ -84,6 +87,7 @@ export type ResearchMetrics = {
   queriesAttempted: number
   pagesAttempted: number
   pagesVerified: number
+  pageCacheHits: number
   targetMet: boolean
   navigation: {
     count: number
@@ -123,6 +127,19 @@ type ResearchPageDraft = {
   content: string
 }
 
+type ExtractedResearchPage = {
+  title: string
+  url: string
+  content: string
+  wordCount: number
+  status: number
+  truncated: boolean
+  html: string
+  observedAt: string
+}
+
+type CachedResearchPage = ExtractedResearchPage & { expiresAt: number }
+
 type ResearchCandidate = RankedSerpCandidate & { sourceKind: 'direct' | 'search' }
 
 type ActiveResearchRun = {
@@ -141,6 +158,7 @@ export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()
   private readonly activeRuns = new Map<string, ActiveResearchRun>()
   private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
+  private readonly pageCache = new Map<string, CachedResearchPage>()
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
   private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
@@ -176,6 +194,7 @@ export class ResearchRunner {
   dispose(): void {
     for (const active of this.activeRuns.values()) active.controller.abort()
     this.activeRuns.clear()
+    this.pageCache.clear()
     for (const view of this.searchViews) {
       if (!view.webContents.isDestroyed()) view.webContents.close()
     }
