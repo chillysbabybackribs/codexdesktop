@@ -1133,9 +1133,13 @@ export default function App(): React.JSX.Element {
 
     setItemMeta((current) => reduceItemNotificationMeta(current, notification, { compactionBeforeTokens }))
 
-    const authoritativeUserMessage = notification.params.item.type === 'userMessage'
+    const notificationItem = notification.method === 'item/started' || notification.method === 'item/completed'
+      ? notification.params.item
+      : null
+    const authoritativeUserMessage = notificationItem?.type === 'userMessage'
     const optimisticId = optimisticUserItemIdRef.current
     if (authoritativeUserMessage) optimisticUserItemIdRef.current = null
+    const authoritativeItems = notificationItem ? [notificationItem] : []
 
     if (isImmediateItemNotification(notification)) {
       // File-change notifications are full, growing snapshots rather than
@@ -1144,12 +1148,12 @@ export default function App(): React.JSX.Element {
       // collapsing a burst of patches into one update on the next frame.
       flushPendingItemMutations()
       setItems((current) => reduceItemNotificationItems(
-        stripOptimisticUserMessage(current, optimisticId, [notification.params.item]),
+        stripOptimisticUserMessage(current, optimisticId, authoritativeItems),
         notification
       ))
     } else if (notification.method !== 'item/mcpToolCall/progress') {
       enqueueItemMutation((current) => reduceItemNotificationItems(
-        stripOptimisticUserMessage(current, optimisticId, [notification.params.item]),
+        stripOptimisticUserMessage(current, optimisticId, authoritativeItems),
         notification
       ))
     }
