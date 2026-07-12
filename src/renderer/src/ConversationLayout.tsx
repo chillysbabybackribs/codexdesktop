@@ -1,8 +1,10 @@
-import { useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   assignTarget,
   conversationDragMime,
-  dropEdgeFromGrid,
+  dropEdgeFromProfile,
+  dropProfileForRect,
+  findLeaf,
   MAX_SPLIT_RATIO,
   MIN_SPLIT_RATIO,
   replaceLayoutNode,
@@ -10,6 +12,7 @@ import {
   splitLeafAtEdge,
   type ConversationTarget,
   type DropEdge,
+  type DropProfile,
   type LayoutNode
 } from './conversation-layout'
 
@@ -22,6 +25,12 @@ type ConversationLayoutTreeProps = {
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
 }
 
+type DropTargetState = {
+  leafId: string
+  rect: DOMRect
+  profile: DropProfile
+}
+
 export function ConversationLayoutTree({
   layout,
   focusedLeafId,
@@ -30,20 +39,128 @@ export function ConversationLayoutTree({
   onFocusedLeafChange,
   renderPane
 }: ConversationLayoutTreeProps): React.JSX.Element {
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const [dropTarget, setDropTarget] = useState<DropTargetState | null>(null)
+  const [activeEdge, setActiveEdge] = useState<DropEdge>('center')
+
   const replaceNode = (nodeId: string, replacement: LayoutNode): void => {
     onLayoutChange(replaceLayoutNode(layout, nodeId, replacement))
   }
 
+  const assignToLeaf = (leafId: string, target: ConversationTarget, edge: DropEdge): void => {
+    const leaf = findLeaf(layout, leafId)
+    if (!leaf) return
+    if (edge === 'center') {
+      replaceNode(leafId, assignTarget(leaf, leafId, target))
+    } else {
+      replaceNode(leafId, splitLeafAtEdge(leaf, leafId, edge, target))
+    }
+    onFocusedLeafChange(leafId)
+  }
+
+  const resolveDropTarget = (clientX: number, clientY: number): DropTargetState | null => {
+    const root = rootRef.current
+    if (!root) return null
+
+    const panes = root.querySelectorAll<HTMLElement>('.conversation-layout-pane[data-leaf-id]')
+    for (const pane of panes) {
+      const rect = pane.getBoundingClientRect()
+      if (
+        clientX >= rect.left
+        && clientX <= rect.right
+        && clientY >= rect.top
+        && clientY <= rect.bottom
+      ) {
+        const leafId = pane.dataset.leafId
+        if (!leafId) return null
+        return { leafId, rect, profile: dropProfileForRect(rect) }
+      }
+    }
+
+    return null
+  }
+
+  useEffect(() => {
+    if (!tabDragTarget) {
+      setDropTarget(null)
+      setActiveEdge('center')
+      return
+    }
+
+    const handleDragOver = (event: DragEvent): void => {
+      if (!event.dataTransfer?.types.includes(conversationDragMime)) return
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
+
+      const nextTarget = resolveDropTarget(event.clientX, event.clientY)
+      if (!nextTarget) {
+        setDropTarget(null)
+        return
+      }
+
+      setDropTarget(nextTarget)
+      setActiveEdge(dropEdgeFromProfile(nextTarget.rect, event.clientX, event.clientY, nextTarget.profile))
+    }
+
+    const handleDrop = (event: DragEvent): void => {
+      if (!event.dataTransfer?.types.includes(conversationDragMime)) return
+      event.preventDefault()
+      const nextTarget = resolveDropTarget(event.clientX, event.clientY)
+      if (!nextTarget) return
+      const edge = dropEdgeFromProfile(nextTarget.rect, event.clientX, event.clientY, nextTarget.profile)
+      assignToLeaf(nextTarget.leafId, tabDragTarget, edge)
+      setDropTarget(null)
+      setActiveEdge('center')
+    }
+
+    const handleDragLeave = (event: DragEvent): void => {
+      if (event.relatedTarget instanceof Node && rootRef.current?.contains(event.relatedTarget)) return
+      setDropTarget(null)
+    }
+
+    window.addEventListener('dragover', handleDragOver)
+    window.addEventListener('drop', handleDrop)
+    window.addEventListener('dragleave', handleDragLeave)
+    return () => {
+      window.removeEventListener('dragover', handleDragOver)
+      window.removeEventListener('drop', handleDrop)
+      window.removeEventListener('dragleave', handleDragLeave)
+    }
+  }, [tabDragTarget, layout])
+
+  const overlayStyle = dropTarget && rootRef.current
+    ? (() => {
+        const rootRect = rootRef.current.getBoundingClientRect()
+        return {
+          top: dropTarget.rect.top - rootRect.top,
+          left: dropTarget.rect.left - rootRect.left,
+          width: dropTarget.rect.width,
+          height: dropTarget.rect.height
+        }
+      })()
+    : null
+
   return (
-    <div className={`conversation-layout-root ${tabDragTarget ? 'is-tab-dragging' : ''}`}>
+    <div
+      ref={rootRef}
+      className={`conversation-layout-root ${tabDragTarget ? 'is-tab-dragging' : ''}`}
+    >
       <LayoutBranch
         node={layout}
         focusedLeafId={focusedLeafId}
-        tabDragTarget={tabDragTarget}
+        dropTargetLeafId={dropTarget?.leafId ?? null}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
       />
+      {tabDragTarget && dropTarget && overlayStyle ? (
+        <ConversationDropOverlay
+          profile={dropTarget.profile}
+          activeEdge={activeEdge}
+          compact={dropTarget.rect.width < 260 || dropTarget.rect.height < 220}
+          style={overlayStyle}
+        />
+      ) : null}
     </div>
   )
 }
@@ -51,14 +168,14 @@ export function ConversationLayoutTree({
 function LayoutBranch({
   node,
   focusedLeafId,
-  tabDragTarget,
+  dropTargetLeafId,
   replaceNode,
   onFocusedLeafChange,
   renderPane
 }: {
   node: LayoutNode
   focusedLeafId: string
-  tabDragTarget: ConversationTarget | null
+  dropTargetLeafId: string | null
   replaceNode: (nodeId: string, replacement: LayoutNode) => void
   onFocusedLeafChange: (leafId: string) => void
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
@@ -69,17 +186,9 @@ function LayoutBranch({
         leafId={node.id}
         target={node.target}
         focused={focusedLeafId === node.id}
-        tabDragTarget={tabDragTarget}
+        isDropTarget={dropTargetLeafId === node.id}
+        isDragging={dropTargetLeafId !== null}
         onFocus={() => onFocusedLeafChange(node.id)}
-        onAssign={(target, edge) => {
-          if (edge === 'center') {
-            replaceNode(node.id, assignTarget(node, node.id, target))
-            onFocusedLeafChange(node.id)
-            return
-          }
-          replaceNode(node.id, splitLeafAtEdge(node, node.id, edge, target))
-          onFocusedLeafChange(node.id)
-        }}
         renderPane={renderPane}
       />
     )
@@ -99,7 +208,7 @@ function LayoutBranch({
       <LayoutBranch
         node={node.first}
         focusedLeafId={focusedLeafId}
-        tabDragTarget={tabDragTarget}
+        dropTargetLeafId={dropTargetLeafId}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
@@ -111,7 +220,7 @@ function LayoutBranch({
       <LayoutBranch
         node={node.second}
         focusedLeafId={focusedLeafId}
-        tabDragTarget={tabDragTarget}
+        dropTargetLeafId={dropTargetLeafId}
         replaceNode={replaceNode}
         onFocusedLeafChange={onFocusedLeafChange}
         renderPane={renderPane}
@@ -124,85 +233,67 @@ function ConversationPane({
   leafId,
   target,
   focused,
-  tabDragTarget,
+  isDropTarget,
+  isDragging,
   onFocus,
-  onAssign,
   renderPane
 }: {
   leafId: string
   target: ConversationTarget
   focused: boolean
-  tabDragTarget: ConversationTarget | null
+  isDropTarget: boolean
+  isDragging: boolean
   onFocus: () => void
-  onAssign: (target: ConversationTarget, edge: DropEdge) => void
   renderPane: (target: ConversationTarget, leafId: string, focused: boolean) => ReactNode
 }): React.JSX.Element {
   return (
     <div
-      className={`conversation-layout-pane ${focused ? 'is-focused' : ''}`}
+      className={[
+        'conversation-layout-pane',
+        focused ? 'is-focused' : '',
+        isDragging ? 'is-drag-passive' : '',
+        isDropTarget ? 'is-drop-target' : ''
+      ].filter(Boolean).join(' ')}
       data-leaf-id={leafId}
       onMouseDown={onFocus}
     >
       {renderPane(target, leafId, focused)}
-      {tabDragTarget ? (
-        <ConversationDropOverlay
-          onAssign={(edge) => onAssign(tabDragTarget, edge)}
-        />
-      ) : null}
     </div>
   )
 }
 
 function ConversationDropOverlay({
-  onAssign
+  profile,
+  activeEdge,
+  compact,
+  style
 }: {
-  onAssign: (edge: DropEdge) => void
+  profile: DropProfile
+  activeEdge: DropEdge
+  compact: boolean
+  style: { top: number; left: number; width: number; height: number }
 }): React.JSX.Element {
-  const overlayRef = useRef<HTMLDivElement | null>(null)
-  const [activeEdge, setActiveEdge] = useState<DropEdge>('center')
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
-    if (!event.dataTransfer.types.includes(conversationDragMime)) return
-    event.preventDefault()
-    event.stopPropagation()
-    event.dataTransfer.dropEffect = 'move'
-    const rect = overlayRef.current?.getBoundingClientRect()
-    if (!rect) return
-    setActiveEdge(dropEdgeFromGrid(rect, event.clientX, event.clientY))
-  }
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
-    if (!event.dataTransfer.types.includes(conversationDragMime)) return
-    event.preventDefault()
-    event.stopPropagation()
-    const rect = overlayRef.current?.getBoundingClientRect()
-    const edge = rect ? dropEdgeFromGrid(rect, event.clientX, event.clientY) : activeEdge
-    onAssign(edge)
-  }
-
   return (
     <div
-      ref={overlayRef}
-      className="conversation-drop-overlay"
+      className={`conversation-drop-overlay is-${profile} ${compact ? 'is-compact' : ''}`}
       data-active-edge={activeEdge}
-      onDragEnter={handleDragOver}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
+      style={style}
+      aria-hidden="true"
     >
       <div className="conversation-drop-zone is-left">
-        <span>Side by side</span>
+        {!compact ? <span>Side by side</span> : null}
       </div>
       <div className="conversation-drop-zone is-right">
-        <span>Side by side</span>
+        {!compact ? <span>Side by side</span> : null}
       </div>
       <div className="conversation-drop-zone is-top">
-        <span>Add above</span>
+        {!compact ? <span>Stack above</span> : null}
       </div>
       <div className="conversation-drop-zone is-bottom">
-        <span>Add below</span>
+        {!compact ? <span>Stack below</span> : null}
       </div>
       <div className="conversation-drop-zone is-center">
-        <span>Open here</span>
+        {!compact ? <span>Open here</span> : null}
       </div>
     </div>
   )

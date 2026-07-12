@@ -195,6 +195,18 @@ button {
   height: 100%;
 }
 
+.conversation-layout-root {
+  position: relative;
+}
+
+.conversation-layout-root.is-tab-dragging .conversation-layout-pane.is-drag-passive:not(.is-drop-target) {
+  opacity: 0.55;
+}
+
+.conversation-layout-pane.is-drop-target {
+  box-shadow: inset 0 0 0 1px rgb(242 138 49 / 28%);
+}
+
 .conversation-layout-split.is-row {
   grid-template-rows: minmax(0, 1fr);
 }
@@ -244,56 +256,121 @@ button {
 
 .conversation-drop-overlay {
   position: absolute;
-  inset: 0;
   z-index: 30;
   display: grid;
+  pointer-events: none;
+  background: rgb(8 8 8 / 78%);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgb(242 138 49 / 22%);
+}
+
+/* Wide panes: full-width stack bands, large side-by-side columns */
+.conversation-drop-overlay.is-wide {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(44px, 0.16fr) minmax(0, 1fr) minmax(44px, 0.16fr);
+}
+
+.conversation-drop-overlay.is-wide .conversation-drop-zone.is-top {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.conversation-drop-overlay.is-wide .conversation-drop-zone.is-bottom {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+.conversation-drop-overlay.is-wide .conversation-drop-zone.is-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.conversation-drop-overlay.is-wide .conversation-drop-zone.is-center {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.conversation-drop-overlay.is-wide .conversation-drop-zone.is-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+/* Tall panes: full-height side bands, large stack rows */
+.conversation-drop-overlay.is-tall {
+  grid-template-columns: minmax(44px, 0.16fr) minmax(0, 1fr) minmax(44px, 0.16fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+.conversation-drop-overlay.is-tall .conversation-drop-zone.is-left {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-overlay.is-tall .conversation-drop-zone.is-right {
+  grid-column: 3;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-overlay.is-tall .conversation-drop-zone.is-top {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.conversation-drop-overlay.is-tall .conversation-drop-zone.is-center {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.conversation-drop-overlay.is-tall .conversation-drop-zone.is-bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+/* Balanced panes: classic five-zone cross */
+.conversation-drop-overlay.is-balanced {
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  background: rgb(8 8 8 / 72%);
-  pointer-events: auto;
+}
+
+.conversation-drop-overlay.is-balanced .conversation-drop-zone.is-left {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-overlay.is-balanced .conversation-drop-zone.is-right {
+  grid-column: 3;
+  grid-row: 1 / -1;
+}
+
+.conversation-drop-overlay.is-balanced .conversation-drop-zone.is-top {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.conversation-drop-overlay.is-balanced .conversation-drop-zone.is-bottom {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.conversation-drop-overlay.is-balanced .conversation-drop-zone.is-center {
+  grid-column: 2;
+  grid-row: 2;
 }
 
 .conversation-drop-zone {
   display: grid;
   place-items: center;
-  padding: 10px;
-  border: 1px dashed rgb(255 255 255 / 10%);
+  padding: 8px;
+  border: 1px dashed rgb(255 255 255 / 8%);
   color: rgb(255 255 255 / 0%);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 560;
   letter-spacing: 0.01em;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 }
 
-.conversation-drop-zone span {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgb(0 0 0 / 0%);
-}
-
-.conversation-drop-zone.is-left {
-  grid-column: 1;
-  grid-row: 1 / -1;
-}
-
-.conversation-drop-zone.is-right {
-  grid-column: 3;
-  grid-row: 1 / -1;
-}
-
-.conversation-drop-zone.is-top {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.conversation-drop-zone.is-bottom {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.conversation-drop-zone.is-center {
-  grid-column: 2;
-  grid-row: 2;
+.conversation-drop-overlay.is-compact .conversation-drop-zone {
+  padding: 4px;
 }
 
 .conversation-drop-overlay[data-active-edge='left'] .conversation-drop-zone.is-left,

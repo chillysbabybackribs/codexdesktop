@@ -253,6 +253,16 @@ export function normalizeLayout(layout: LayoutNode, validTargets: Set<Conversati
   })
 }
 
+export type DropProfile = 'wide' | 'tall' | 'balanced'
+
+export function dropProfileForRect(rect: DOMRect): DropProfile {
+  const width = Math.max(rect.width, 1)
+  const height = Math.max(rect.height, 1)
+  if (width / height > 1.15) return 'wide'
+  if (height / width > 1.15) return 'tall'
+  return 'balanced'
+}
+
 export function dropEdgeFromGrid(
   rect: DOMRect,
   clientX: number,
@@ -271,12 +281,42 @@ export function dropEdgeFromGrid(
   return 'center'
 }
 
+export function dropEdgeFromProfile(
+  rect: DOMRect,
+  clientX: number,
+  clientY: number,
+  profile: DropProfile = dropProfileForRect(rect)
+): DropEdge {
+  const x = (clientX - rect.left) / Math.max(rect.width, 1)
+  const y = (clientY - rect.top) / Math.max(rect.height, 1)
+
+  if (profile === 'wide') {
+    const band = Math.min(0.14, 48 / Math.max(rect.height, 1))
+    if (y < band) return 'top'
+    if (y > 1 - band) return 'bottom'
+    if (x < 1 / 3) return 'left'
+    if (x > 2 / 3) return 'right'
+    return 'center'
+  }
+
+  if (profile === 'tall') {
+    const band = Math.min(0.14, 48 / Math.max(rect.width, 1))
+    if (x < band) return 'left'
+    if (x > 1 - band) return 'right'
+    if (y < 1 / 3) return 'top'
+    if (y > 2 / 3) return 'bottom'
+    return 'center'
+  }
+
+  return dropEdgeFromGrid(rect, clientX, clientY)
+}
+
 export function dropEdgeFromPoint(
   rect: DOMRect,
   clientX: number,
   clientY: number
 ): DropEdge {
-  return dropEdgeFromGrid(rect, clientX, clientY)
+  return dropEdgeFromProfile(rect, clientX, clientY)
 }
 
 export const conversationDragMime = 'application/x-codex-conversation-target'

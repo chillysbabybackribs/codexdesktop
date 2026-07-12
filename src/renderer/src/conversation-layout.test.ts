@@ -5,6 +5,8 @@ import {
   collectTargets,
   createDefaultLayout,
   createLayoutLeaf,
+  dropEdgeFromProfile,
+  dropProfileForRect,
   findLeaf,
   isTiledLayout,
   normalizeLayout,
@@ -12,7 +14,6 @@ import {
   removeTarget,
   serializeLayoutNode,
   splitLeafAtEdge,
-  dropEdgeFromGrid,
   type LayoutNode
 } from './conversation-layout.ts'
 
@@ -67,24 +68,42 @@ test('assignTarget keeps a single main pane when swapping onto main', () => {
   assert.deepEqual(collectTargets(next), ['main'])
 })
 
-test('dropEdgeFromGrid maps left/right to side-by-side and top/bottom to stacked splits', () => {
-  const pane = {
+test('dropEdgeFromProfile uses wide and tall layouts that match the overlay zones', () => {
+  const wide = {
     left: 0,
     top: 0,
     width: 900,
-    height: 600,
+    height: 500,
     right: 900,
-    bottom: 600,
+    bottom: 500,
     x: 0,
     y: 0,
     toJSON: () => ({})
   } as DOMRect
 
-  assert.equal(dropEdgeFromGrid(pane, 120, 300), 'left')
-  assert.equal(dropEdgeFromGrid(pane, 780, 300), 'right')
-  assert.equal(dropEdgeFromGrid(pane, 450, 80), 'top')
-  assert.equal(dropEdgeFromGrid(pane, 450, 520), 'bottom')
-  assert.equal(dropEdgeFromGrid(pane, 450, 300), 'center')
+  assert.equal(dropProfileForRect(wide), 'wide')
+  assert.equal(dropEdgeFromProfile(wide, 120, 250), 'left')
+  assert.equal(dropEdgeFromProfile(wide, 780, 250), 'right')
+  assert.equal(dropEdgeFromProfile(wide, 450, 24), 'top')
+  assert.equal(dropEdgeFromProfile(wide, 450, 470), 'bottom')
+
+  const tall = {
+    left: 0,
+    top: 0,
+    width: 420,
+    height: 900,
+    right: 420,
+    bottom: 900,
+    x: 0,
+    y: 0,
+    toJSON: () => ({})
+  } as DOMRect
+
+  assert.equal(dropProfileForRect(tall), 'tall')
+  assert.equal(dropEdgeFromProfile(tall, 24, 450), 'left')
+  assert.equal(dropEdgeFromProfile(tall, 396, 450), 'right')
+  assert.equal(dropEdgeFromProfile(tall, 210, 120), 'top')
+  assert.equal(dropEdgeFromProfile(tall, 210, 780), 'bottom')
 })
 
 test('right split creates a side-by-side row layout', () => {
