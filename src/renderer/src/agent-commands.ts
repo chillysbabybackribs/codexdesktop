@@ -1,5 +1,7 @@
 import type { ChatAttachment } from '../../shared/ipc'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { AgentProvider } from '../../shared/agent'
+import { asClaudeEffort } from './claude-items.js'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }
@@ -14,7 +16,9 @@ type AgentCommandStore = {
 export function createAgentCommands(options: {
   store: AgentCommandStore
   getWorkspace: () => string | null
-  getSelectedModel: () => string | null
+  // Fallback model when the session has no explicit pick — the main selection
+  // for the main provider, that provider's catalog default otherwise.
+  getDefaultModel: (provider: AgentProvider) => string | null
   getSelectedEffort: () => ReasoningEffort | null
   acceptsImages: (model: string | null) => boolean
   buildMainChatContext: () => string
