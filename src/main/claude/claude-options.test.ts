@@ -19,7 +19,11 @@ test('Claude sessions disable implicit skills and expose only the explicit built
   assert.ok(!claudeBuiltInTools.includes('Skill'))
   assert.ok(!claudeBuiltInTools.includes('Agent'))
   assert.ok(options.disallowedTools?.includes('Skill'))
-  assert.deepEqual(options.settings, { autoMemoryEnabled: false })
+  assert.deepEqual(options.settings, {
+    autoMemoryEnabled: false,
+    autoDreamEnabled: false,
+    autoCompactEnabled: true
+  })
 })
 
 test('Claude browser MCP tools remain first-class with the bounded built-in surface', () => {

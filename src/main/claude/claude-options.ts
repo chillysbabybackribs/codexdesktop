@@ -51,6 +51,14 @@ export function buildClaudeOptions(
     // SDK-discovered skills are enabled when this is omitted. Keep them out of
     // app sessions until Codex Desktop owns selection and context budgeting.
     skills: [],
+    // Codex Desktop owns durable memory across providers. Keep Claude's
+    // provider-local memory writers off, while retaining its safety valve for
+    // long active conversations.
+    settings: {
+      autoMemoryEnabled: false,
+      autoDreamEnabled: false,
+      autoCompactEnabled: true
+    },
     settingSources: ['project'],
     strictMcpConfig: true,
     ...(mcpServer ? {
