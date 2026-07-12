@@ -1969,11 +1969,8 @@ export default function App(): React.JSX.Element {
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
           provider={provider}
-          onSetProvider={(nextProvider) => {
-            if (nextProvider === provider) return
-            window.localStorage.setItem(providerStorageKey, nextProvider)
-            window.location.reload()
-          }}
+          crossModels={crossModels}
+          onSelectCrossModel={handleSelectCrossModel}
           items={items}
           itemMeta={itemMeta}
           turnMeta={turnMeta}
@@ -2077,7 +2074,8 @@ function TitleBar(): React.JSX.Element {
 
 function ChatPane({
   provider,
-  onSetProvider,
+  crossModels,
+  onSelectCrossModel,
   items,
   itemMeta,
   turnMeta,
@@ -2142,7 +2140,8 @@ function ChatPane({
   onAgentCompact
 }: {
   provider: AgentProvider
-  onSetProvider: (provider: AgentProvider) => void
+  crossModels: Model[]
+  onSelectCrossModel: (model: string) => void
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
   turnMeta: Record<string, TurnMeta>
@@ -2424,13 +2423,17 @@ function ChatPane({
                     ) : null}
                     <div className="composer-context">
                       <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
-                      {models.length ? (
+                      {models.length || crossModels.length ? (
                         <ModelPill
                           models={models}
                           selectedModel={selectedModel}
                           selectedEffort={selectedReasoningEffort}
                           onSelectModel={onSelectModel}
                           onSelectModelEffort={onSelectModelEffort}
+                          primaryLabel={provider === 'codex' ? 'OpenAI Codex' : 'Anthropic Claude'}
+                          secondaryLabel={provider === 'codex' ? 'Anthropic Claude' : 'OpenAI Codex'}
+                          secondaryModels={crossModels}
+                          onSelectSecondaryModel={onSelectCrossModel}
                         />
                       ) : null}
                       <PlanModePill
@@ -2519,7 +2522,6 @@ function ChatPane({
       {isSettingsOpen ? (
         <SettingsModal
           provider={provider}
-          onSetProvider={onSetProvider}
           goal={activeGoal}
           isGoalUpdating={Boolean(activeTurnId) || isGoalUpdating}
           onSaveGoal={onSaveGoal}
@@ -2955,7 +2957,6 @@ function NewChatIcon(): React.JSX.Element {
 
 function SettingsModal({
   provider,
-  onSetProvider,
   goal,
   isGoalUpdating,
   onSaveGoal,
@@ -2965,7 +2966,6 @@ function SettingsModal({
   onClose
 }: {
   provider: AgentProvider
-  onSetProvider: (provider: AgentProvider) => void
   goal: ThreadGoal | null
   isGoalUpdating: boolean
   onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>
