@@ -19,12 +19,11 @@ pulse/log.md                  dated portfolio sweeps
 
 Idea status lifecycle: `seed → validating → validated → building → shipped` (or `killed` / `parked`).
 
-**Five skills** (in `skills/`, invoked by typing the marker in chat):
+**Four skills** (in `skills/`, invoked by typing the marker in chat):
 
 | Marker | Stage | What it does |
 |---|---|---|
-| `$studio-scout` | find | cheap bounded pass: mines logged-in communities/reviews/job-posts for recurring paid pain; writes seed files |
-| `$studio-hunt` | find/ideate | heavyweight multi-phase opportunity hunt; generates and reality-checks many wedges, promotes the strongest to seeds |
+| `$studio-scout` | find | mines logged-in communities/reviews/job-posts for recurring paid pain; writes seed files |
 | `$studio-validate <slug>` | decide | kill-biased 4-check protocol; writes verdict memo, flips status |
 | `$studio-launch <slug>` | distribute | works the submission checklist in the logged-in browser; drafts posts (publishing gated on you) |
 | `$studio-pulse` | operate | weekly sweep of dashboards/reviews/uptime; anomalies first, charts, durable log |

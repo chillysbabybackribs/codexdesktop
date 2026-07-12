@@ -37,13 +37,7 @@ import type { PluginAuthPolicy } from '../../shared/codex-protocol/v2/PluginAuth
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
-import {
-  buildTurnTrace,
-  isTurnTrace,
-  stripAutomaticSkillMarker,
-  stripSkillMarkerFromTitle,
-  type TurnTrace
-} from './trace'
+import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
 import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
@@ -62,12 +56,6 @@ import {
   type WorkItem
 } from './TaskActivity'
 import { selectCompletedWork } from './memory-work'
-import {
-  buildOptimisticUserMessage,
-  hasAuthoritativeUserMessage,
-  stripOptimisticUserMessage
-} from './optimistic-user-message'
-import { decideTurnAnchor } from './thread-scroll-state'
 import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
 import type { ChatAttachment } from '../../shared/ipc'
 import {
@@ -222,7 +210,6 @@ export default function App(): React.JSX.Element {
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
-  const optimisticUserItemIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
@@ -429,20 +416,23 @@ export default function App(): React.JSX.Element {
     })
 
     if (!initializationPromiseRef.current) {
+      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
       initializationPromiseRef.current = (async () => {
         const authPromise = window.api.codex.getAuthStatus().catch((error) => {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
-        // Do not eagerly resume the last model thread. Loading a long rollout
-        // at launch makes startup and the first response inherit its complete
-        // context. A fresh send starts a bounded thread and the attached
-        // prior-chat-memory skill reads app memory only when the request needs
-        // it. Users can still explicitly resume a thread from history.
-        await Promise.all([authPromise, threadsPromise])
+        // Main thread first — it warms up the codex child, so the dock's
+        // resume calls don't race a cold start. The dock restore then skips
+        // any thread the main view already owns.
+        const restorePromise = (async () => {
+          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+          await restoreAgentDock()
+        })()
+
+        await Promise.all([authPromise, threadsPromise, restorePromise])
         hasAutoRestoredRef.current = true
         setIsRestoring(false)
-        void restoreAgentDock()
       })()
     }
 
@@ -584,19 +574,6 @@ export default function App(): React.JSX.Element {
     userTurnRequestPendingRef.current = true
     watchThreadIdRef.current = activeThreadId
 
-    // The first app-server thread/start can take a moment. Move the composer
-    // and show the submitted row in the same local render instead of leaving
-    // the cleared composer stranded in the empty-state center until the server
-    // returns its authoritative userMessage item.
-    if (!items.length) {
-      const optimisticId = `optimistic-user-${crypto.randomUUID()}`
-      optimisticUserItemIdRef.current = optimisticId
-      setItems((current) => [
-        ...current,
-        buildOptimisticUserMessage(optimisticId, trimmed, attachments)
-      ])
-    }
-
     try {
       const response = await window.api.codex.sendMessage({
         threadId: activeThreadId,
@@ -633,11 +610,6 @@ export default function App(): React.JSX.Element {
       mergeItems(response.turn.items)
       return true
     } catch (error) {
-      const optimisticId = optimisticUserItemIdRef.current
-      optimisticUserItemIdRef.current = null
-      if (optimisticId) {
-        setItems((current) => current.filter((item) => item.id !== optimisticId))
-      }
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
@@ -727,7 +699,6 @@ export default function App(): React.JSX.Element {
     setActiveTurnId(null)
     activeTurnIdRef.current = null
     userRequestedTurnIdRef.current = null
-    optimisticUserItemIdRef.current = null
     setActiveGoal(null)
     activeGoalRef.current = null
     setActiveReasoningEffort(null)
@@ -796,6 +767,16 @@ export default function App(): React.JSX.Element {
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
+
+      if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
+        const read = await window.api.codex.readThread(threadId)
+
+        if (generation !== resumeGenerationRef.current) {
+          return
+        }
+
+        hydrateThread(read.thread, undefined, environment)
+      }
 
       try {
         const goal = await window.api.codex.getGoal(threadId)
@@ -1133,29 +1114,15 @@ export default function App(): React.JSX.Element {
 
     setItemMeta((current) => reduceItemNotificationMeta(current, notification, { compactionBeforeTokens }))
 
-    const notificationItem = notification.method === 'item/started' || notification.method === 'item/completed'
-      ? notification.params.item
-      : null
-    const authoritativeUserMessage = notificationItem?.type === 'userMessage'
-    const optimisticId = optimisticUserItemIdRef.current
-    if (authoritativeUserMessage) optimisticUserItemIdRef.current = null
-    const authoritativeItems = notificationItem ? [notificationItem] : []
-
     if (isImmediateItemNotification(notification)) {
       // File-change notifications are full, growing snapshots rather than
       // tiny append-only token deltas. Applying each snapshot immediately
       // lets the live diff card visibly grow during long writes instead of
       // collapsing a burst of patches into one update on the next frame.
       flushPendingItemMutations()
-      setItems((current) => reduceItemNotificationItems(
-        stripOptimisticUserMessage(current, optimisticId, authoritativeItems),
-        notification
-      ))
+      setItems((current) => reduceItemNotificationItems(current, notification))
     } else if (notification.method !== 'item/mcpToolCall/progress') {
-      enqueueItemMutation((current) => reduceItemNotificationItems(
-        stripOptimisticUserMessage(current, optimisticId, authoritativeItems),
-        notification
-      ))
+      enqueueItemMutation((current) => reduceItemNotificationItems(current, notification))
     }
 
     if (notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction') {
@@ -1393,12 +1360,7 @@ export default function App(): React.JSX.Element {
 
   function mergeItems(nextItems: ThreadItem[]): void {
     flushPendingItemMutations()
-    const optimisticId = optimisticUserItemIdRef.current
-    if (hasAuthoritativeUserMessage(nextItems)) optimisticUserItemIdRef.current = null
-    setItems((current) => upsertMany(
-      stripOptimisticUserMessage(current, optimisticId, nextItems),
-      nextItems
-    ))
+    setItems((current) => upsertMany(current, nextItems))
   }
 
   // Record lifecycle metadata for an item. The incoming turnId wins when
@@ -1508,11 +1470,7 @@ export default function App(): React.JSX.Element {
       reasoningEffort: ReasoningEffort | null
     }
   ): void {
-    const turns = thread.turns.length > 0
-      ? thread.turns
-      // Codex returns the bounded bootstrap page newest-first so it can show
-      // recent work immediately. Transcript rendering remains chronological.
-      : [...(fallbackTurns ?? [])].reverse()
+    const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
@@ -2675,11 +2633,9 @@ function ThreadScroll({
   // bottom-follow and releases the moment the reader scrolls.
   const anchorTurnRef = useRef<string | null>(null)
   const prevTurnRef = useRef<string | null>(null)
-  // A fresh thread usually arrives in two notifications: thread/started first,
-  // then turn/started. Keep this armed across the temporary null turn so the
-  // first message does not trigger the mid-thread top-anchor/spacer machinery
-  // while the composer is docking from the empty state.
-  const skipNextTurnAnchorRef = useRef(false)
+  // A fresh/restored thread may arrive with activeTurnId already set for an
+  // in-progress turn; that must NOT yank it to the top — only a live send does.
+  const justResetRef = useRef(false)
   // Programmatic scrollTop writes fire onScroll; without this guard the first
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
@@ -2819,7 +2775,7 @@ function ThreadScroll({
     cancelScheduledFollow()
     anchorTurnRef.current = null
     prevTurnRef.current = null
-    skipNextTurnAnchorRef.current = true
+    justResetRef.current = true
     setSpacerOn(false)
     pinnedRef.current = true
     followTail()
@@ -2832,18 +2788,14 @@ function ThreadScroll({
   }, dependencies)
 
   // A live send (activeTurnId transitions to a new non-null value) anchors that
-  // turn's user message to the top. Skip the first turn after a thread reset:
-  // thread/started and turn/started are separate notifications, so the skip
-  // must survive the intermediate render where activeTurnId is still null.
+  // turn's user message to the top. Skip the transition that coincides with a
+  // thread switch/restore — that turn is being read, not just asked.
   useLayoutEffect(() => {
-    const decision = decideTurnAnchor(
-      activeTurnId,
-      prevTurnRef.current,
-      skipNextTurnAnchorRef.current
-    )
-    skipNextTurnAnchorRef.current = decision.skipNext
-
-    if (decision.anchor && activeTurnId !== null) {
+    if (
+      activeTurnId !== null &&
+      activeTurnId !== prevTurnRef.current &&
+      !justResetRef.current
+    ) {
       anchorTurnRef.current = activeTurnId
       pinnedRef.current = false
       cancelScheduledFollow()
@@ -2881,6 +2833,7 @@ function ThreadScroll({
       pinnedRef.current = false
     }
     prevTurnRef.current = activeTurnId
+    justResetRef.current = false
   }, [activeTurnId, anchorTop, cancelScheduledFollow])
 
   useEffect(() => {
@@ -2929,6 +2882,17 @@ function ThreadScroll({
   )
 }
 
+function stripAutomaticSkillMarker(text: string): string {
+  return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
+}
+
+function stripInjectedMemory(text: string): string {
+  return text.replace(
+    /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
+    ''
+  )
+}
+
 function completedMemoryTurns(
   items: ChatItem[],
   itemMeta: Record<string, ItemMeta>,
@@ -2946,7 +2910,7 @@ function completedMemoryTurns(
     if (item.type === 'userMessage') {
       turn.user = item.content
         .filter((content) => content.type === 'text')
-        .map((content) => stripAutomaticSkillMarker(content.text))
+        .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
         .join('\n')
         .trim()
     } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
@@ -3023,7 +2987,7 @@ const ChatItemView = memo(function ChatItemView({
   if (item.type === 'userMessage') {
     const text = item.content
       .filter((content) => content.type === 'text')
-      .map((content) => stripAutomaticSkillMarker(content.text))
+      .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
       .join('\n')
     const attachments = attachmentsFromUserInput(item.content)
 
@@ -3932,6 +3896,10 @@ function persistLastThreadId(threadId: string | null): void {
 
 function threadTitle(thread: Thread): string {
   return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat')
+}
+
+function stripSkillMarkerFromTitle(title: string): string {
+  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat'
 }
 
 function workspaceName(path: string): string {

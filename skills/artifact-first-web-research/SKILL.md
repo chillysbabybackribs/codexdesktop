@@ -53,11 +53,9 @@ Write JSONL with Node serialization; do not construct JSON artifacts through she
 
 Use `browser_run` for bounded interactive or authenticated page work. Batch waiting, inspection, extraction, and verification into one program.
 
-Use `browser_extract_page` when the useful content is already visible in one tab. Its result carries `verified: false` with a reason when the page looks like an empty shell, login wall, or challenge page — treat unverified content as suspect rather than citing it.
+Use `browser_extract_page` when the useful content is already visible in one tab. It rejects empty shells, login walls, and challenge pages.
 
-Use `browser_screenshot` when you need to visually inspect the page; it returns the image directly to you.
-
-Use `browser_cdp` only for lower-level Chromium work such as lifecycle, DOM snapshots, input dispatch, storage, runtime control, or targeted network operations.
+Use `browser_cdp` only for lower-level Chromium work such as lifecycle, DOM snapshots, screenshots, input dispatch, storage, runtime control, or targeted network operations.
 
 For an optional multi-step task script, call the browser socket inherited in `CODEX_BROWSER_SOCK`. A generated Node helper can use `node:http`:
 
