@@ -2706,31 +2706,6 @@ button {
   transform: translate(-50%, -50%);
 }
 
-/* Keep the agent column on the same full-pane anchor when New Chat moves the
-   empty composer to center stage. Only the main-chat controls are centered in
-   the remaining chat space; agent windows retain their docked x/y placement. */
-.composer-dock.is-centered.has-agents {
-  inset: 0 22px 14px;
-  width: auto;
-  padding-right: 390px;
-  box-sizing: border-box;
-  justify-content: center;
-  transform: none;
-  /* The dock now spans the whole pane; stay click-through outside the actual
-     controls so the toolbar (settings gear) behind it keeps working. */
-  pointer-events: none;
-}
-
-.composer-dock.is-centered.has-agents > * {
-  pointer-events: auto;
-}
-
-.composer-dock.is-centered.has-agents .composer,
-.composer-dock.is-centered.has-agents .composer-context {
-  align-self: center;
-  width: min(100%, 608px);
-}
-
 .composer-dock.is-docked {
   position: sticky;
   bottom: 14px;
