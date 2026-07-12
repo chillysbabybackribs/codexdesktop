@@ -9,6 +9,7 @@ export type PageNavigationOptions = {
   signal?: AbortSignal
   quietMs?: number
   maxSettleMs?: number
+  readySelector?: string
 }
 
 export type PageNavigationResult = {
@@ -52,7 +53,8 @@ export async function loadPageAndSettle(
       waitForDocumentSettle(
         webContents,
         options.quietMs ?? DEFAULT_QUIET_MS,
-        Math.min(options.maxSettleMs ?? DEFAULT_MAX_SETTLE_MS, Math.max(250, deadline - domReadyAt))
+        Math.min(options.maxSettleMs ?? DEFAULT_MAX_SETTLE_MS, Math.max(250, deadline - domReadyAt)),
+        options.readySelector
       ),
       deadline,
       options.signal,
@@ -115,12 +117,14 @@ function waitForMainDocument(webContents: WebContents, signal?: AbortSignal): Pr
 async function waitForDocumentSettle(
   webContents: WebContents,
   quietMs: number,
-  maxSettleMs: number
+  maxSettleMs: number,
+  readySelector?: string
 ): Promise<{ reason: string }> {
   const safeQuietMs = Math.max(100, Math.min(1_500, Math.round(quietMs)))
   const safeMaxSettleMs = Math.max(safeQuietMs, Math.min(10_000, Math.round(maxSettleMs)))
   const program = `
     return await new Promise((resolve) => {
+      const readySelector = ${JSON.stringify(readySelector?.trim() ?? '')};
       const startedAt = performance.now();
       let lastMutationAt = startedAt;
       let observer;
@@ -131,6 +135,10 @@ async function waitForDocumentSettle(
       };
       const isUseful = () => {
         if (!document.body) return false;
+        if (readySelector) {
+          try { return Boolean(document.querySelector(readySelector)); }
+          catch { return false; }
+        }
         const textLength = (document.body.innerText || '').trim().length;
         return textLength >= 120 || Boolean(document.querySelector('main, article, form, input, [role="main"]'));
       };

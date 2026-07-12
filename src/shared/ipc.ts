@@ -76,7 +76,27 @@ export type CodexNotificationEvent = {
   notification: unknown
 }
 
-export type CodexEvent = CodexStatusEvent | CodexNotificationEvent
+export type ResearchProgressStage = 'queued' | 'preparing' | 'discovering' | 'verifying' | 'finalizing' | 'complete'
+
+export type ResearchProgress = {
+  stage: ResearchProgressStage
+  message: string
+  queryIndex?: number
+  queryCount?: number
+  pagesAttempted?: number
+  pagesVerified?: number
+  targetPages?: number
+}
+
+export type CodexResearchProgressEvent = {
+  type: 'researchProgress'
+  threadId: string
+  turnId: string
+  itemId: string
+  progress: ResearchProgress
+}
+
+export type CodexEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
 
 export type ChatAttachment = {
   id: string
