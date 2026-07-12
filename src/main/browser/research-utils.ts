@@ -34,7 +34,7 @@ export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] 
     const normalized = canonicalizeUrl(value.trim())
     if (!normalized || seen.has(normalized)) continue
     const parsed = new URL(normalized)
-    if (parsed.username || parsed.password) continue
+    if (parsed.username || parsed.password || isObviousPrivateHost(parsed.hostname)) continue
     seen.add(normalized)
     urls.push(normalized)
     if (urls.length >= Math.max(1, Math.min(8, Math.round(maxUrls)))) break
@@ -260,4 +260,17 @@ function canonicalizeUrl(value: string): string {
   } catch {
     return ''
   }
+}
+
+function isObviousPrivateHost(value: string): boolean {
+  const host = value.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.$/, '')
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local')) return true
+  if (host.includes(':') && (host === '::1' || host.startsWith('fc') || host.startsWith('fd') || host.startsWith('fe80:'))) return true
+  const octets = host.split('.').map(Number)
+  if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) return false
+  const [first, second] = octets
+  return first === 0 || first === 10 || first === 127 ||
+    (first === 169 && second === 254) ||
+    (first === 172 && second !== undefined && second >= 16 && second <= 31) ||
+    (first === 192 && second === 168)
 }

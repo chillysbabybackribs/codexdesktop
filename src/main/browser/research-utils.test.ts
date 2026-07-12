@@ -16,6 +16,8 @@ test('direct research URLs are canonicalized, bounded, and restricted to public 
     'https://example.com/docs?version=2',
     'file:///tmp/private.txt',
     'javascript:alert(1)',
+    'http://127.0.0.1/private',
+    'http://localhost/private',
     'https://user:secret@example.com/private',
     42
   ]), ['https://example.com/docs?version=2'])
