@@ -2973,12 +2973,31 @@ button {
   margin: 0 22px 14px;
 }
 
+/* Top toolbar of the input surface: which workspace, which model, what mode —
+   bound to the message being composed, divided from the text by a hairline. */
 .composer-context {
   display: flex;
   align-items: center;
   gap: 2px;
-  min-height: 28px;
-  padding: 0 2px;
+  min-height: 42px;
+  padding: 5px 8px;
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
+}
+
+.composer-context .workspace-pill,
+.composer-context .plan-mode-pill {
+  height: 30px;
+  font-size: 13.5px;
+}
+
+.composer-context .workspace-pill-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.composer-context .plan-mode-pill svg {
+  width: 15px;
+  height: 15px;
 }
 
 .composer-thread-controls {
@@ -3535,20 +3554,33 @@ button {
   }
 }
 
-.composer {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 10px;
-  min-height: 104px;
+/* The whole input object — context toolbar + form — reads as one raised card.
+   Border, background, and lift live here so the pieces inside stay chrome-free
+   and the composer presents as a single surface, not three stacked widgets. */
+.composer-surface {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #2b2b2c;
-  border-radius: 10px;
+  border-radius: 12px;
   /* Flat raised card — the inset top light does the lifting, no gradient. */
   background: #1f1f20;
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 4.5%),
     0 1px 3px rgb(0 0 0 / 28%),
     0 18px 42px rgb(0 0 0 / 24%);
+  transition: border-color 120ms ease;
+}
+
+.composer-surface:focus-within {
+  border-color: #3a3f52;
+}
+
+.composer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 84px;
+  background: transparent;
 }
 
 .plugin-mention-menu {
