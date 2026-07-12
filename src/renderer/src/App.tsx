@@ -848,13 +848,13 @@ export default function App(): React.JSX.Element {
     window.localStorage.setItem(reasoningEffortStorageKey, effort)
   }
 
-  // Picking a model from the other provider's section. Everything in the app
-  // is keyed on the boot-time provider, so persist the pick and reload — the
-  // same mechanism the old settings toggle used.
+  // A provider thread cannot move between runtimes. Start a new conversation
+  // tab on the chosen provider and keep the current conversation intact.
   const handleSelectCrossModel = (model: string): void => {
-    window.localStorage.setItem(modelStorageKey, model)
-    window.localStorage.setItem(providerStorageKey, provider === 'codex' ? 'claude' : 'codex')
-    window.location.reload()
+    const nextProvider: AgentProvider = provider === 'codex' ? 'claude' : 'codex'
+    const selected = crossModelsRef.current.find((candidate) => candidate.model === model)
+    const key = handleNewAgent(nextProvider, model)
+    handleSetAgentModel(key, model, selected?.defaultReasoningEffort, nextProvider)
   }
 
   function catalogForProvider(sessionProvider: AgentProvider): Model[] {
@@ -1258,15 +1258,7 @@ export default function App(): React.JSX.Element {
     },
     createMainThread: handleNewThread,
     resumeMainThread: resumeThreadById,
-    // The whole app is keyed on its boot-time provider, so promoting a tab
-    // from the other provider persists the pick and reloads into it — the
-    // same handoff the cross-provider model picker uses.
-    promoteCrossProvider: (session) => {
-      if (session.model) window.localStorage.setItem(modelStorageKey, session.model)
-      window.localStorage.setItem(providerStorageKey, session.provider)
-      persistLastThreadId(session.threadId, session.provider)
-      window.location.reload()
-    }
+    focusCrossProvider: (session) => handleSelectConversation(session.key)
   })
 
   function cancelAgentRecovery(key: string): void {
@@ -2463,20 +2455,18 @@ function ChatPane({
         >
           <SettingsIcon />
         </button>
-        {provider === 'codex' ? (
-          <ConversationTabStrip
-            sessions={agentSessions}
-            focusedTarget={focusedTarget}
-            visibleTargets={visibleTargets}
-            mainWorking={Boolean(activeTurnId)}
-            onSelectMain={() => onSelectConversation('main')}
-            onSelectAgent={onSelectConversation}
-            onNewAgent={onNewAgent}
-            onCloseAgent={closeAgent}
-            onTabDragStart={setTabDragTarget}
-            onTabDragEnd={() => setTabDragTarget(null)}
-          />
-        ) : <span className="workspace-pill">Claude Agent SDK</span>}
+        <ConversationTabStrip
+          sessions={agentSessions}
+          focusedTarget={focusedTarget}
+          visibleTargets={visibleTargets}
+          mainWorking={Boolean(activeTurnId)}
+          onSelectMain={() => onSelectConversation('main')}
+          onSelectAgent={onSelectConversation}
+          onNewAgent={onNewAgent}
+          onCloseAgent={closeAgent}
+          onTabDragStart={setTabDragTarget}
+          onTabDragEnd={() => setTabDragTarget(null)}
+        />
       </div>
 
       <div className="conversation-panels">
