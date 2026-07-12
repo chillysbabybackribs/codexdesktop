@@ -66,7 +66,7 @@ export function normalizeResearchFocus(
   if (!Array.isArray(values)) return []
 
   const normalized: ResearchFocus[] = []
-  const ids = new Map<string, number>()
+  const ids = new Set<string>()
   for (const [index, value] of values.entries()) {
     if (!value || typeof value !== 'object') continue
     const need = typeof value.need === 'string' ? value.need.trim().slice(0, 500) : ''
@@ -74,10 +74,15 @@ export function normalizeResearchFocus(
 
     const requestedId = typeof value.id === 'string' ? value.id.trim().slice(0, 80) : ''
     const baseId = requestedId || `focus-${index + 1}`
-    const duplicate = ids.get(baseId) ?? 0
-    ids.set(baseId, duplicate + 1)
+    let id = baseId
+    let suffix = 2
+    while (ids.has(id)) {
+      id = `${baseId}-${suffix}`
+      suffix += 1
+    }
+    ids.add(id)
     normalized.push({
-      id: duplicate === 0 ? baseId : `${baseId}-${duplicate + 1}`,
+      id,
       need,
       minSources: clampInteger(value.minSources, 1, 1, 3)
     })
@@ -164,6 +169,9 @@ function bestDocumentPassage(
 
   if (!best) return null
   const window = buildPassageWindow(lines, best.lineIndex, focusTokens, maxChars)
+  const visibleTokens = new Set(tokenize(window.text))
+  const visibleMatchedTerms = focusTokens.filter((token) => visibleTokens.has(token))
+  if (visibleMatchedTerms.length < requiredMatches) return null
   return {
     sourceId: document.sourceId,
     title: document.title,
@@ -174,7 +182,7 @@ function bestDocumentPassage(
     lineStart: window.lineStart,
     lineEnd: window.lineEnd,
     text: window.text,
-    matchedTerms: best.matchedTerms,
+    matchedTerms: visibleMatchedTerms,
     truncated: window.truncated,
     score: best.score,
     documentFingerprint: fingerprint(document.content)
@@ -190,11 +198,17 @@ function buildPassageWindow(
   const matchedLine = lines[matchIndex] ?? ''
   if (matchedLine.length > maxChars) {
     const normalized = matchedLine.toLowerCase()
-    const firstMatch = focusTokens
+    const matchIndexes = focusTokens
       .map((token) => normalized.search(new RegExp(`\\b${escapeRegExp(token)}\\b`, 'i')))
       .filter((index) => index >= 0)
-      .sort((left, right) => left - right)[0] ?? 0
-    const start = Math.max(0, Math.min(matchedLine.length - maxChars, firstMatch - Math.floor(maxChars / 3)))
+    const starts = unique(matchIndexes.map((index) => String(
+      Math.max(0, Math.min(matchedLine.length - maxChars, index - Math.floor(maxChars / 3)))
+    ))).map(Number)
+    const start = starts.sort((left, right) => {
+      const leftMatches = countTokenMatches(matchedLine.slice(left, left + maxChars), focusTokens)
+      const rightMatches = countTokenMatches(matchedLine.slice(right, right + maxChars), focusTokens)
+      return rightMatches - leftMatches || left - right
+    })[0] ?? 0
     return {
       lineStart: matchIndex + 1,
       lineEnd: matchIndex + 1,
@@ -206,22 +220,24 @@ function buildPassageWindow(
   let start = matchIndex
   let end = matchIndex
   let text = matchedLine
+  let canExpandLeft = true
+  let canExpandRight = true
   for (let distance = 1; distance <= 2; distance += 1) {
     const nextLeft = matchIndex - distance
     const nextRight = matchIndex + distance
-    if (nextLeft >= 0) {
+    if (canExpandLeft && nextLeft >= 0) {
       const candidate = `${lines[nextLeft]}\n${text}`
       if (candidate.length <= maxChars) {
         start = nextLeft
         text = candidate
-      }
+      } else canExpandLeft = false
     }
-    if (nextRight < lines.length) {
+    if (canExpandRight && nextRight < lines.length) {
       const candidate = `${text}\n${lines[nextRight]}`
       if (candidate.length <= maxChars) {
         end = nextRight
         text = candidate
-      }
+      } else canExpandRight = false
     }
   }
 
@@ -259,6 +275,11 @@ function fingerprint(value: string): string {
 
 function unique(values: string[]): string[] {
   return [...new Set(values)]
+}
+
+function countTokenMatches(value: string, tokens: string[]): number {
+  const values = new Set(tokenize(value))
+  return tokens.reduce((count, token) => count + (values.has(token) ? 1 : 0), 0)
 }
 
 function clampInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
