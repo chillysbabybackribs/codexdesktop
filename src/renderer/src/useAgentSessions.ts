@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { AgentEvent, AgentProvider } from '../../shared/agent'
 import {
   appendAgentSessionMessage,
   applyAgentDeltas,
@@ -58,9 +59,10 @@ export function useAgentSessions(
   patchAgentSession: (key: string, update: (session: AgentSession) => AgentSession) => void
   appendAgentMessage: (key: string, message: AgentLiteMessage) => void
   appendAgentMessageOnce: (key: string, message: AgentLiteMessage) => void
-  backgroundSessionForThread: (threadId: string) => AgentSession | null
+  backgroundSessionForThread: (threadId: string, provider?: AgentProvider) => AgentSession | null
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
-  handleNewAgent: () => void
+  handleClaudeAgentEvent: (session: AgentSession, event: AgentEvent) => void
+  handleNewAgent: (provider?: AgentProvider) => void
   handleToggleWatchAgent: (key: string) => void
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
 } {
@@ -100,8 +102,8 @@ export function useAgentSessions(
     updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message, true))
   }
 
-  function backgroundSessionForThread(threadId: string): AgentSession | null {
-    return findAgentSessionByThread(agentSessionsRef.current, threadId)
+  function backgroundSessionForThread(threadId: string, provider?: AgentProvider): AgentSession | null {
+    return findAgentSessionByThread(agentSessionsRef.current, threadId, provider)
   }
 
   useEffect(() => {
