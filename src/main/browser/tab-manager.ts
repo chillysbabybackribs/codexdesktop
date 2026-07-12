@@ -158,30 +158,7 @@ export class TabManager {
 
   cleanupTabs(url = defaultTabUrl): string {
     const homeUrl = normalizeNavigationInput(url) || defaultTabUrl
-
-    let keepTabId: string | null = this.getActiveTabId()
-    if (keepTabId) {
-      const active = this.tabs.get(keepTabId)
-      if (!active || active.view.webContents.isDestroyed()) {
-        keepTabId = null
-      }
-    }
-
-    if (!keepTabId) {
-      for (const [id, tab] of this.tabs) {
-        if (!tab.view.webContents.isDestroyed()) {
-          keepTabId = id
-          break
-        }
-      }
-    }
-
-    if (!keepTabId) {
-      keepTabId = this.createTab(homeUrl)
-    }
-
-    this.activateTab(keepTabId)
-    this.navigate(keepTabId, homeUrl)
+    const keepTabId = this.createTab(homeUrl)
 
     for (const tabId of Array.from(this.tabs.keys())) {
       if (tabId !== keepTabId) {
