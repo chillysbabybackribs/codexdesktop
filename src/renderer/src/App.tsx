@@ -249,6 +249,9 @@ export default function App(): React.JSX.Element {
   // notification handler only reacts to one relevant thread at a time.
   const autoRecoveryRef = useRef<AutoRecoveryState | null>(null)
   const watchThreadIdRef = useRef<string | null>(null)
+  // Claude tool.completed events carry no input; stash each call's args at
+  // tool.started so the completion patch can synthesize its diff/command item.
+  const claudeToolInputRef = useRef<Map<string, { tool: string; input: unknown }>>(new Map())
   const resumeGenerationRef = useRef(0)
   const hasAutoRestoredRef = useRef(false)
   const initializationPromiseRef = useRef<Promise<void> | null>(null)
