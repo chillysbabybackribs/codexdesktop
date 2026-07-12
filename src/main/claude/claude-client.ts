@@ -299,6 +299,35 @@ export class ClaudeClient extends EventEmitter {
         blocks: message.message.content,
         parentToolUseId: message.parent_tool_use_id
       })
+      for (const block of message.message.content) {
+        if (block.type !== 'tool_use') continue
+        this.emitEvent({
+          type: 'tool.started',
+          provider: 'claude',
+          sessionId: runtime.sessionId,
+          turnId: turn.id,
+          callId: block.id,
+          name: block.name,
+          input: block.input
+        })
+      }
+      return
+    }
+
+    if (message.type === 'user') {
+      const content = typeof message.message.content === 'string' ? [] : message.message.content
+      for (const block of content) {
+        if (block.type !== 'tool_result') continue
+        this.emitEvent({
+          type: 'tool.completed',
+          provider: 'claude',
+          sessionId: runtime.sessionId,
+          turnId: turn.id,
+          callId: block.tool_use_id,
+          failed: block.is_error ?? false,
+          content: block.content
+        })
+      }
       return
     }
 
