@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
@@ -24,6 +24,7 @@ import {
   normalizeLayout,
   parseLayoutNode,
   removeTarget,
+  sanitizeLayout,
   serializeLayoutNode,
   targetFromLegacySelection,
   type ConversationTarget,
@@ -118,11 +119,11 @@ export function useAgentSessions(
 
   function handleRemoveConversationTarget(target: ConversationTarget): void {
     setConversationLayout((current) => {
-      const next = removeTarget(current, target)
-      setFocusedLeafId((currentFocused) => {
-        const nextFocused = findLeaf(next, currentFocused) ?? findFirstLeaf(next)
-        return nextFocused.id
-      })
+      const valid = validTargets(agentSessionsRef.current)
+      valid.delete(target)
+      const next = sanitizeLayout(removeTarget(current, target), valid)
+      const focused = findLeaf(next, focusedLeafIdRef.current) ?? findFirstLeaf(next)
+      setFocusedLeafId(focused.id)
       return next
     })
   }
@@ -271,6 +272,22 @@ export function useAgentSessions(
       ...(effort ? { reasoningEffort: effort } : {})
     }))
   }
+
+  const agentSessionKeys = useMemo(
+    () => agentSessions.map((session) => session.key).sort().join('\n'),
+    [agentSessions]
+  )
+
+  useEffect(() => {
+    if (!agentDockRestoredRef.current) return
+    const valid = validTargets(agentSessionsRef.current)
+    setConversationLayout((current) => {
+      const next = sanitizeLayout(current, valid)
+      const focused = findLeaf(next, focusedLeafIdRef.current) ?? findFirstLeaf(next)
+      if (focused.id !== focusedLeafIdRef.current) setFocusedLeafId(focused.id)
+      return next
+    })
+  }, [agentSessionKeys])
 
   useEffect(() => () => {
     if (agentDeltaTimerRef.current !== null) window.clearTimeout(agentDeltaTimerRef.current)

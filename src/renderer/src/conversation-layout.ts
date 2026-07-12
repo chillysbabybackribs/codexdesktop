@@ -183,6 +183,22 @@ function pruneInvalidTargets(layout: LayoutNode, validTargets: Set<ConversationT
   return { ...layout, first, second }
 }
 
+function mapLayoutOrPrune(
+  layout: LayoutNode,
+  update: (leaf: LayoutLeaf) => LayoutLeaf | null
+): LayoutNode | null {
+  if (layout.type === 'leaf') {
+    return update(layout)
+  }
+
+  const first = mapLayoutOrPrune(layout.first, update)
+  const second = mapLayoutOrPrune(layout.second, update)
+  if (!first && !second) return null
+  if (!first) return second
+  if (!second) return first
+  return { ...layout, first, second }
+}
+
 function dedupeTargets(layout: LayoutNode): LayoutNode {
   const seen = new Set<ConversationTarget>()
   return mapLayoutOrPrune(layout, (leaf) => {
@@ -214,11 +230,15 @@ function removeTargetFromNode(node: LayoutNode, target: ConversationTarget): Lay
   return { ...node, first, second }
 }
 
-export function removeTarget(layout: LayoutNode, target: ConversationTarget): LayoutNode {
+export function removeTarget(
+  layout: LayoutNode,
+  target: ConversationTarget,
+  validTargets?: Set<ConversationTarget>
+): LayoutNode {
   if (target === 'main') return layout
   const next = removeTargetFromNode(layout, target)
   if (!next) return createDefaultLayout('main')
-  return next
+  return validTargets ? sanitizeLayout(next, validTargets) : next
 }
 
 export function collapseToTarget(layout: LayoutNode, target: ConversationTarget): LayoutNode {
@@ -270,14 +290,7 @@ export function parseLayoutNode(value: unknown): LayoutNode | null {
 }
 
 export function normalizeLayout(layout: LayoutNode, validTargets: Set<ConversationTarget>): LayoutNode {
-  const seen = new Set<ConversationTarget>()
-  return mapLayout(layout, (leaf) => {
-    let target = leaf.target
-    if (target !== 'main' && !validTargets.has(target)) target = 'main'
-    if (seen.has(target)) target = 'main'
-    seen.add(target)
-    return { ...leaf, target }
-  })
+  return sanitizeLayout(layout, validTargets)
 }
 
 export type DropProfile = 'wide' | 'tall' | 'balanced'

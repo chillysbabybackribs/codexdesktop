@@ -14,6 +14,7 @@ import {
   normalizeLayout,
   parseLayoutNode,
   removeTarget,
+  sanitizeLayout,
   serializeLayoutNode,
   splitLeafAtEdge,
   type LayoutNode
@@ -70,6 +71,46 @@ test('removeTarget preserves a main column beside a stacked agent column', () =>
   if (stack.type !== 'split') return
   assert.equal(stack.direction, 'column')
   assert.deepEqual(collectTargets(stack).sort(), ['agent-1', 'agent-3', 'agent-4'])
+})
+
+test('normalizeLayout removes stale agent panes instead of turning them into main', () => {
+  let layout: LayoutNode = createDefaultLayout('main')
+  const mainLeaf = findFirstLeaf(layout)
+  layout = splitLeafAtEdge(layout, mainLeaf.id, 'right', 'agent-1')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-1')!.id, 'bottom', 'agent-2')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-2')!.id, 'bottom', 'agent-3')
+
+  const normalized = normalizeLayout(layout, new Set(['agent-1', 'agent-2']))
+  assert.deepEqual(collectTargets(normalized).sort(), ['agent-1', 'agent-2', 'main'])
+
+  const root = normalized.type === 'split' ? normalized : null
+  assert.ok(root && root.direction === 'row')
+  assert.equal(root.second.type, 'split')
+  if (root.second.type === 'split') assert.equal(root.second.direction, 'column')
+})
+
+test('sequential closes preserve main beside a stacked agent column', () => {
+  let layout: LayoutNode = createDefaultLayout('main')
+  const mainLeaf = findFirstLeaf(layout)
+  layout = splitLeafAtEdge(layout, mainLeaf.id, 'right', 'agent-1')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-1')!.id, 'bottom', 'agent-2')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-2')!.id, 'bottom', 'agent-3')
+  layout = splitLeafAtEdge(layout, findLeafForTarget(layout, 'agent-3')!.id, 'bottom', 'agent-4')
+
+  const validAfterEachClose = [
+    new Set(['agent-1', 'agent-2', 'agent-3']),
+    new Set(['agent-1', 'agent-2']),
+    new Set(['agent-1'])
+  ]
+
+  layout = sanitizeLayout(removeTarget(layout, 'agent-4'), validAfterEachClose[0]!)
+  layout = sanitizeLayout(removeTarget(layout, 'agent-3'), validAfterEachClose[1]!)
+  layout = sanitizeLayout(removeTarget(layout, 'agent-2'), validAfterEachClose[2]!)
+
+  assert.deepEqual(collectTargets(layout).sort(), ['agent-1', 'main'])
+  const root = layout.type === 'split' ? layout : null
+  assert.ok(root && root.direction === 'row')
+  assert.equal(root.second.type === 'leaf' ? root.second.target : null, 'agent-1')
 })
 
 test('layout persistence round-trips and drops unknown agent targets', () => {
