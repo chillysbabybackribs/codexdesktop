@@ -287,6 +287,7 @@ export class ClaudeClient extends EventEmitter {
     } catch (error) {
       if (runtime.closing) return
       const normalized = normalizeError(error)
+      runtime.initializedSettled = true
       runtime.rejectInitialized(normalized)
       this.emitStatus('error', normalized.message)
       const turn = runtime.activeTurn ?? runtime.pendingTurns.shift() ?? null
