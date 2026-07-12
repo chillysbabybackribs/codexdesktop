@@ -402,7 +402,7 @@ export class ClaudeClient extends EventEmitter {
       }
       // Context usage is supplemental telemetry. Do not stop consuming SDK
       // messages while waiting for its control-channel round trip.
-      void this.emitTokenUsage(runtime, turn, message.message.id, message.message.usage)
+      void this.emitTokenUsage(runtime, turn, message.message.id, message.message.usage).catch(() => {})
       return
     }
 
