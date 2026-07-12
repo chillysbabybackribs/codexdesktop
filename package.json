@@ -25,6 +25,7 @@
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
   "dependencies": {
+    "linkedom": "^0.18.13",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
