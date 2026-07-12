@@ -187,22 +187,32 @@ export class ResearchRunner {
     queueMs: number,
     onProgress?: (progress: ResearchProgress) => void
   ): Promise<ResearchResult> {
-    const queries = request.queries
+    const queries = (request.queries ?? [])
       .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
       .map((query) => query.trim())
       .slice(0, 3)
+    const urls = normalizeResearchUrls(request.urls ?? [])
+    const focus = normalizeResearchFocus(request.focus)
 
-    if (queries.length === 0) {
-      return { ok: false, error: 'research_web requires at least one non-empty query' }
+    if (queries.length === 0 && urls.length === 0) {
+      return { ok: false, error: 'research_web requires at least one non-empty query or public HTTP(S) URL' }
     }
 
     const executionStartedAt = Date.now()
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
-    const targetPages = clamp(request.maxPages, DEFAULT_TARGET_PAGES, 1, MAX_TARGET_PAGES)
+    const focusTarget = focus.length > 0 ? Math.max(...focus.map(({ minSources }) => minSources)) : null
+    const directTarget = queries.length === 0 && urls.length > 0 ? Math.min(urls.length, MAX_TARGET_PAGES) : null
+    const targetPages = clamp(
+      request.maxPages,
+      focusTarget ?? directTarget ?? DEFAULT_TARGET_PAGES,
+      1,
+      MAX_TARGET_PAGES
+    )
     const maxAttempts = clamp(request.maxAttempts, DEFAULT_MAX_ATTEMPTS, targetPages, MAX_MAX_ATTEMPTS)
     const snippetChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
     const researchId = crypto.randomUUID()
-    const artifactDir = join(app.getPath('userData'), 'research', researchId)
+    const artifactRoot = join(app.getPath('userData'), 'research')
+    const artifactDir = join(artifactRoot, researchId)
     const navigation = createNavigationMetrics()
     let setupMs = 0
     let discoveryMs = 0
@@ -214,167 +224,228 @@ export class ResearchRunner {
       targetPages
     })
     const setupStartedAt = Date.now()
-    await pruneResearchArtifacts(join(app.getPath('userData'), 'research'))
     await mkdir(artifactDir, { recursive: true })
+    void this.pruneGate.schedule(artifactRoot)?.catch((error) => {
+      console.warn('Failed to prune research artifacts', error)
+    })
     setupMs = Date.now() - setupStartedAt
 
     const plannedQueries = buildResearchQueryVariants(queries)
     const searchQueries: string[] = []
     const discovered: SerpCandidate[] = []
+    const discoveredUrls = new Set(urls)
     const attemptedUrls = new Set<string>()
     const errors: Array<{ url?: string; error: string }> = []
     const pages: ResearchPage[] = []
+    const evidenceDocuments: ResearchEvidenceDocument[] = []
     let pageAttempts = 0
 
-    const searchView = this.createHiddenView()
-    try {
-      for (const [queryIndex, query] of plannedQueries.entries()) {
-        if (pages.length >= targetPages || pageAttempts >= maxAttempts) break
-        throwIfAborted(signal)
-        searchQueries.push(query)
-        notifyProgress(onProgress, {
-          stage: 'discovering',
-          message: `Searching source lane ${queryIndex + 1}/${plannedQueries.length}…`,
-          queryIndex: queryIndex + 1,
-          queryCount: plannedQueries.length,
-          pagesAttempted: pageAttempts,
-          pagesVerified: pages.length,
-          targetPages
-        })
+    const evidence = (): ReturnType<typeof selectResearchEvidence> =>
+      selectResearchEvidence(focus, evidenceDocuments, snippetChars)
+    const goalMet = (): boolean => focus.length > 0
+      ? evidence().gaps.length === 0
+      : pages.length >= targetPages
+    const remainingSuccessTarget = (): number => {
+      if (focus.length === 0) return Math.max(0, targetPages - pages.length)
+      const gaps = evidence().gaps
+      if (gaps.length === 0) return 0
+      const shortfall = Math.max(...gaps.map((gap) => gap.requiredSources - gap.matchedSources), 1)
+      return Math.min(Math.max(0, MAX_TARGET_PAGES - pages.length), shortfall)
+    }
 
-        const discoveryStartedAt = Date.now()
-        try {
-          const cacheKey = `${maxResults}:${query.toLowerCase()}`
-          const cached = this.searchCache.get(cacheKey)
-          let serp: Array<Omit<SerpCandidate, 'query'>>
+    const verifyCandidateBatch = async (candidates: ResearchCandidate[]): Promise<void> => {
+      const available = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
+      const attemptsRemaining = maxAttempts - pageAttempts
+      const successTarget = remainingSuccessTarget()
+      if (available.length === 0 || attemptsRemaining <= 0 || successTarget <= 0) return
 
-          if (cached && cached.expiresAt > Date.now()) {
-            serp = cached.candidates
-          } else {
-            const result = await loadSearchPage(searchView.webContents, googleSearchUrl(query, maxResults), signal)
-            recordNavigation(navigation, result)
-            serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
-              searchView.webContents,
-              buildSerpExtractionProgram(maxResults)
+      const pageBatchStartedAt = Date.now()
+      const attemptsBeforeBatch = pageAttempts
+      const batch = await collectWithConcurrencyUntil(
+        available,
+        {
+          concurrency: PAGE_WORKER_CONCURRENCY,
+          target: successTarget,
+          maxAttempts: attemptsRemaining,
+          onStarted: ({ attempted, succeeded }) => {
+            notifyVerificationProgress(
+              onProgress,
+              attemptsBeforeBatch + attempted,
+              pages.length + succeeded,
+              maxAttempts,
+              targetPages
             )
-            this.searchCache.set(cacheKey, {
-              expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
-              candidates: serp
-            })
-          }
-          discovered.push(...serp.map((result) => ({ ...result, query })))
-        } catch (error) {
-          if (signal.aborted) throw error
-          errors.push({ error: `SERP query failed for "${query}": ${formatError(error)}` })
-        } finally {
-          discoveryMs += Date.now() - discoveryStartedAt
-        }
-
-        const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
-          .filter((candidate) => !attemptedUrls.has(candidate.url))
-        const attemptsRemaining = maxAttempts - pageAttempts
-        const targetRemaining = targetPages - pages.length
-        if (candidates.length === 0 || attemptsRemaining <= 0 || targetRemaining <= 0) continue
-
-        const pageBatchStartedAt = Date.now()
-        const attemptsBeforeBatch = pageAttempts
-        const batch = await collectWithConcurrencyUntil(
-          candidates,
-          {
-            concurrency: PAGE_WORKER_CONCURRENCY,
-            target: targetRemaining,
-            maxAttempts: attemptsRemaining,
-            onStarted: ({ attempted, succeeded }) => {
-              notifyVerificationProgress(
-                onProgress,
-                attemptsBeforeBatch + attempted,
-                pages.length + succeeded,
-                maxAttempts,
-                targetPages
-              )
-            },
-            onSettled: ({ attempted, succeeded }) => {
-              notifyVerificationProgress(
-                onProgress,
-                attemptsBeforeBatch + attempted,
-                pages.length + succeeded,
-                maxAttempts,
-                targetPages
-              )
-            }
           },
-          async (candidate, index, stopSignal): Promise<ResearchPageDraft | null> => {
-            const rank = attemptsBeforeBatch + index + 1
-            attemptedUrls.add(candidate.url)
-            const view = this.createHiddenView()
-            const linked = linkAbortSignals(signal, stopSignal)
-            try {
-              const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
-              recordNavigation(navigation, navigationResult)
-              const extracted = await evaluate<{
-                title: string
-                url: string
-                content: string
-                wordCount: number
-                truncated: boolean
-              }>(view.webContents, buildPageExtractionProgram(snippetChars))
-              const assessment = assessExtractedPage(extracted)
-              if (!assessment.verified) {
-                throw new Error(`page verification failed: ${assessment.reason}`)
-              }
-              const html = await evaluate<string>(
-                view.webContents,
-                `return (document.documentElement?.outerHTML || '').slice(0, ${MAX_HTML_CHARS})`
-              )
-              return {
-                rank,
-                candidate,
-                title: extracted.title || candidate.title,
-                url: extracted.url || candidate.url,
-                content: extracted.content,
-                wordCount: extracted.wordCount,
-                html
-              }
-            } catch (error) {
-              if (signal.aborted) throw error
-              if (stopSignal.aborted) return null
-              errors.push({ url: candidate.url, error: formatError(error) })
-              return null
-            } finally {
-              linked.dispose()
-              this.closeHiddenView(view)
-            }
+          onSettled: ({ attempted, succeeded }) => {
+            notifyVerificationProgress(
+              onProgress,
+              attemptsBeforeBatch + attempted,
+              pages.length + succeeded,
+              maxAttempts,
+              targetPages
+            )
           }
-        )
-        pageAttempts += batch.attempted
-
-        for (const { value: draft } of batch.values) {
-          const baseName = `page-${String(draft.rank).padStart(2, '0')}`
-          const artifactPath = join(artifactDir, `${baseName}.txt`)
-          const htmlPath = join(artifactDir, `${baseName}.html`)
+        },
+        async (candidate, index, stopSignal): Promise<ResearchPageDraft | null> => {
+          const rank = attemptsBeforeBatch + index + 1
+          const sourceId = `page-${String(rank).padStart(2, '0')}`
+          attemptedUrls.add(candidate.url)
+          const view = this.createHiddenView()
+          const linked = linkAbortSignals(signal, stopSignal)
           try {
-            await writeFile(artifactPath, `${draft.content}\n`, 'utf8')
-            await writeFile(htmlPath, draft.html, 'utf8')
-            pages.push({
-              rank: draft.rank,
-              url: draft.url,
-              title: draft.title,
-              wordCount: draft.wordCount,
-              artifactPath,
-              htmlPath,
-              sourceQuery: draft.candidate.query,
-              sourceTier: draft.candidate.sourceTier,
-              score: draft.candidate.score,
-              verified: true
-            })
+            const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
+            recordNavigation(navigation, navigationResult)
+            const extracted = await evaluate<{
+              title: string
+              url: string
+              content: string
+              wordCount: number
+              truncated: boolean
+              html: string
+            }>(view.webContents, buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS))
+            const assessment = assessExtractedPage(extracted)
+            if (!assessment.verified) {
+              throw new Error(`page verification failed: ${assessment.reason}`)
+            }
+
+            const observedAt = new Date().toISOString()
+            const title = extracted.title || candidate.title
+            const url = extracted.url || candidate.url
+            const paths = await writeResearchPageArtifacts(artifactDir, sourceId, extracted.content, extracted.html)
+            return {
+              page: {
+                sourceId,
+                rank,
+                url,
+                title,
+                observedAt,
+                charCount: extracted.content.length,
+                wordCount: extracted.wordCount,
+                ...paths,
+                ...(candidate.sourceKind === 'search' ? { sourceQuery: candidate.query } : {}),
+                sourceKind: candidate.sourceKind,
+                sourceTier: candidate.sourceTier,
+                score: candidate.score,
+                artifactTruncated: extracted.truncated,
+                verified: true
+              },
+              content: extracted.content
+            }
           } catch (error) {
-            errors.push({ url: draft.url, error: `artifact write failed: ${formatError(error)}` })
+            if (signal.aborted) throw error
+            if (stopSignal.aborted) return null
+            errors.push({ url: candidate.url, error: formatError(error) })
+            return null
+          } finally {
+            linked.dispose()
+            this.closeHiddenView(view)
           }
         }
-        pageMs += Date.now() - pageBatchStartedAt
+      )
+      pageAttempts += batch.attempted
+      for (const { value: draft } of batch.values) {
+        pages.push(draft.page)
+        evidenceDocuments.push({
+          sourceId: draft.page.sourceId,
+          title: draft.page.title,
+          url: draft.page.url,
+          artifactPath: draft.page.artifactPath,
+          content: draft.content,
+          observedAt: draft.page.observedAt,
+          ...(draft.page.sourceTier ? { sourceTier: draft.page.sourceTier } : {})
+        })
       }
-    } finally {
-      this.closeHiddenView(searchView)
+      pageMs += Date.now() - pageBatchStartedAt
+    }
+
+    const drainCandidates = async (candidates: ResearchCandidate[]): Promise<void> => {
+      while (!goalMet() && pageAttempts < maxAttempts && pages.length < MAX_TARGET_PAGES) {
+        const remaining = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
+        if (remaining.length === 0) return
+        const attemptsBefore = pageAttempts
+        await verifyCandidateBatch(remaining)
+        if (pageAttempts === attemptsBefore) return
+      }
+    }
+
+    if (urls.length > 0) {
+      notifyProgress(onProgress, {
+        stage: 'verifying',
+        message: `Checking ${urls.length} direct ${urls.length === 1 ? 'source' : 'sources'}…`,
+        pagesAttempted: pageAttempts,
+        pagesVerified: pages.length,
+        targetPages
+      })
+      const rankingQueries = [...queries, ...focus.map(({ need }) => need)]
+      const directQuery = focus[0]?.need ?? queries[0] ?? 'direct source'
+      const directCandidates = rankSerpCandidates(
+        urls.map((url, index) => ({
+          url,
+          title: url,
+          snippet: '',
+          rank: index + 1,
+          query: directQuery
+        })),
+        rankingQueries.length > 0 ? rankingQueries : [directQuery],
+        urls.length
+      ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
+      await drainCandidates(directCandidates)
+    }
+
+    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < MAX_TARGET_PAGES) {
+      const searchView = this.createHiddenView()
+      try {
+        for (const [queryIndex, query] of plannedQueries.entries()) {
+          if (goalMet() || pageAttempts >= maxAttempts || pages.length >= MAX_TARGET_PAGES) break
+          throwIfAborted(signal)
+          searchQueries.push(query)
+          notifyProgress(onProgress, {
+            stage: 'discovering',
+            message: `Searching source lane ${queryIndex + 1}/${plannedQueries.length}…`,
+            queryIndex: queryIndex + 1,
+            queryCount: plannedQueries.length,
+            pagesAttempted: pageAttempts,
+            pagesVerified: pages.length,
+            targetPages
+          })
+
+          const discoveryStartedAt = Date.now()
+          try {
+            const cacheKey = `${maxResults}:${query.toLowerCase()}`
+            const cached = this.searchCache.get(cacheKey)
+            let serp: Array<Omit<SerpCandidate, 'query'>>
+
+            if (cached && cached.expiresAt > Date.now()) {
+              serp = cached.candidates
+            } else {
+              const result = await loadSearchPage(searchView.webContents, googleSearchUrl(query, maxResults), signal)
+              recordNavigation(navigation, result)
+              serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
+                searchView.webContents,
+                buildSerpExtractionProgram(maxResults)
+              )
+              this.searchCache.set(cacheKey, {
+                expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+                candidates: serp
+              })
+            }
+            const queryResults = serp.map((result) => ({ ...result, query }))
+            discovered.push(...queryResults)
+            for (const result of queryResults) discoveredUrls.add(result.url)
+          } catch (error) {
+            if (signal.aborted) throw error
+            errors.push({ error: `SERP query failed for "${query}": ${formatError(error)}` })
+          } finally {
+            discoveryMs += Date.now() - discoveryStartedAt
+          }
+
+          const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
+            .map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'search' }))
+          await drainCandidates(candidates)
+        }
+      } finally {
+        this.closeHiddenView(searchView)
+      }
     }
 
     notifyProgress(onProgress, {
@@ -385,15 +456,7 @@ export class ResearchRunner {
       targetPages
     })
     const finalizationStartedAt = Date.now()
-    const tabs = this.getTabs()
-    const visibleTabId = pages.length > 0 && tabs
-      ? this.stageBestPage(tabs, pages[0].url)
-      : undefined
-
-    if (visibleTabId) {
-      for (const page of pages) page.visibleTabId = visibleTabId
-    }
-
+    const evidencePacket = evidence()
     const finalizationMs = Date.now() - finalizationStartedAt
     const executionMs = Date.now() - executionStartedAt
     const metrics: ResearchMetrics = {
@@ -409,7 +472,7 @@ export class ResearchRunner {
       queriesAttempted: searchQueries.length,
       pagesAttempted: pageAttempts,
       pagesVerified: pages.length,
-      targetMet: pages.length >= targetPages,
+      targetMet: goalMet(),
       navigation
     }
 
@@ -425,12 +488,14 @@ export class ResearchRunner {
       ok: pages.length > 0,
       researchId,
       queries,
+      urls,
+      ...(focus.length > 0 ? { focus } : {}),
       searchQueries,
       artifactDir,
-      discoveredUrls: [...new Set(discovered.map((candidate) => candidate.url))],
-      discoveredCount: new Set(discovered.map((candidate) => candidate.url)).size,
+      discoveredUrls: [...discoveredUrls],
+      discoveredCount: discoveredUrls.size,
       pages,
-      ...(visibleTabId ? { visibleTabId } : {}),
+      ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),
       metrics,
       ...(errors.length > 0 ? { errors } : {}),
       ...(pages.length === 0 && errors.length === 0 ? { error: 'No qualifying pages found' } : {})
@@ -456,16 +521,6 @@ export class ResearchRunner {
     if (!view.webContents.isDestroyed()) view.webContents.close()
   }
 
-  private stageBestPage(tabs: TabManager, url: string): string {
-    if (this.stagingTabId && tabs.resolveWebContents(this.stagingTabId)) {
-      tabs.navigate(this.stagingTabId, url)
-      tabs.activateTab(this.stagingTabId)
-      return this.stagingTabId
-    }
-
-    this.stagingTabId = tabs.createTab(url)
-    return this.stagingTabId
-  }
 }
 
 async function loadSearchPage(
