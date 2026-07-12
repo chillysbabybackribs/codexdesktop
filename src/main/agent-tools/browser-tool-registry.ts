@@ -128,7 +128,18 @@ export async function executeBrowserTool(
     return { result: { ok: false, error: `unsupported browser tool: ${name}` }, imageUrls: [] }
   }
 
-  const parsed = browserToolInputSchema(definition).safeParse(rawArguments)
+  const rawRecord = asRecord(rawArguments)
+  if (name === 'browser_run' && !readString(rawRecord.code)) {
+    return {
+      result: { ok: false, error: 'browser_run requires a string "code" argument' },
+      imageUrls: []
+    }
+  }
+
+  const normalizedArguments = name === 'research_web'
+    ? { ...rawRecord, queries: readStringArray(rawRecord.queries) }
+    : rawArguments
+  const parsed = browserToolInputSchema(definition).safeParse(normalizedArguments)
   if (!parsed.success) {
     return {
       result: { ok: false, error: `invalid ${name} arguments: ${z.prettifyError(parsed.error)}` },
