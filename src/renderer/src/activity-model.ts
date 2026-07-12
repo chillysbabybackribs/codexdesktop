@@ -50,3 +50,7 @@ export function reduceResearchProgressMeta(
     }
   }
 }
+
+export function latestItemProgress(meta: ItemMeta | undefined): string | null {
+  return meta?.progress?.length ? meta.progress[meta.progress.length - 1] : null
+}

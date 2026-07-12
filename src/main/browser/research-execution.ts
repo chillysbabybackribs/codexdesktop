@@ -79,12 +79,14 @@ export async function collectWithConcurrencyUntil<T, R>(
 export class KeyedTaskScheduler {
   private readonly queues = new Map<string, Promise<void>>()
   private readonly waiters: Array<() => void> = []
+  private readonly maxConcurrent: number
   private active = 0
 
-  constructor(private readonly maxConcurrent: number) {
+  constructor(maxConcurrent: number) {
     if (!Number.isInteger(maxConcurrent) || maxConcurrent < 1) {
       throw new Error('maxConcurrent must be a positive integer')
     }
+    this.maxConcurrent = maxConcurrent
   }
 
   run<T>(key: string, task: (queueMs: number) => Promise<T>): Promise<T> {

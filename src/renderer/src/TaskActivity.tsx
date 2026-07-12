@@ -5,7 +5,7 @@ import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
 import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAction'
 import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
 import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
-import { workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
+import { latestItemProgress, workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
 import { browserLinkComponents } from './MarkdownContent'
 
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
@@ -807,9 +807,7 @@ function DynamicToolBlock({
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool
   const screenshot = cdpScreenshotArtifact(item)
   const fileArtifact = cdpFileArtifact(item)
-  const progress = status === 'running' && item.tool === 'research_web' && meta?.progress?.length
-    ? meta.progress[meta.progress.length - 1]
-    : null
+  const progress = status === 'running' && item.tool === 'research_web' ? latestItemProgress(meta) : null
 
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
@@ -1182,10 +1180,8 @@ export function currentActionLabel(
       case 'mcpToolCall':
         return `Calling ${item.server}.${item.tool}`
       case 'dynamicToolCall': {
-        const progress = itemMeta[item.id]?.progress
-        if (item.tool === 'research_web' && progress?.length) {
-          return progress[progress.length - 1]
-        }
+        const progress = item.tool === 'research_web' ? latestItemProgress(itemMeta[item.id]) : null
+        if (progress) return progress
         return `Calling ${item.tool}`
       }
       case 'webSearch':

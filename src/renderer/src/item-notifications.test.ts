@@ -4,7 +4,7 @@ import {
   isImmediateItemNotification,
   type ItemNotification
 } from './item-notifications.js'
-import { reduceResearchProgressMeta } from './activity-model.js'
+import { latestItemProgress, reduceResearchProgressMeta } from './activity-model.js'
 import type { CodexResearchProgressEvent } from '../../shared/ipc.js'
 
 function notification(method: ItemNotification['method']): ItemNotification {
@@ -34,10 +34,12 @@ test('research progress is attached to the matching dynamic tool item', () => {
     }
   }
 
-  assert.deepEqual(reduceResearchProgressMeta({}, event), {
+  const meta = reduceResearchProgressMeta({}, event)
+  assert.deepEqual(meta, {
     'call-1': {
       turnId: 'turn-1',
       progress: ['Verifying pages — 1/3 verified, 2/6 attempted…']
     }
   })
+  assert.equal(latestItemProgress(meta['call-1']), 'Verifying pages — 1/3 verified, 2/6 attempted…')
 })
