@@ -32,7 +32,7 @@ import { startBrowserControlServer, type BrowserControlServer } from './browser/
 import { registerCodexIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 import { registerClaudeIpc } from './claude/claude-ipc.js'
-import type { ClaudeClient } from './claude/claude-client.js'
+import type { ClaudeIpcHandle } from './claude/claude-ipc.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { ConversationMemoryService } from './conversation-memory-service.js'
@@ -80,7 +80,7 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
 let codexClient: CodexClient | null = null
-let claudeClient: ClaudeClient | null = null
+let claudeClient: ClaudeIpcHandle | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
 let quitReady = false

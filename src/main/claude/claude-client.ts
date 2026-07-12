@@ -49,7 +49,10 @@ type ClaudeRuntime = {
   closing: boolean
   seenModelMessageIds: Set<string>
   totalUsage: AgentUsage
+  idleTimer: NodeJS.Timeout | null
 }
+
+const claudeRuntimeIdleMs = 120_000
 
 export class ClaudeClient extends EventEmitter {
   private readonly runtimes = new Map<string, ClaudeRuntime>()
@@ -108,23 +111,18 @@ export class ClaudeClient extends EventEmitter {
     effort?: ClaudeEffort | null,
     collaborationMode: 'default' | 'plan' = 'default'
   ): Promise<{ threadId: string | null; model: string | null; effort: ClaudeEffort | null }> {
-    // A brand-new session gets no real id until the first message is sent (that
-    // is what makes the CLI emit `system/init`). Spin the runtime up now so it is
-    // warm, but return a null id — the first sendMessage() reports the real one.
-    const runtime = this.getRuntime(null, cwd, model, effort, collaborationMode)
-    return { threadId: runtime.sessionId, model: runtime.model, effort: runtime.effort }
+    // Claude assigns the real session id on the first message. Keep this call
+    // metadata-only so opening a new conversation does not spawn a CLI process.
+    return { threadId: null, model: model ?? null, effort: effort ?? null }
   }
 
   async resumeThread(
     threadId: string,
     cwd?: string | null
   ): Promise<{ threadId: string; model: string | null; effort: ClaudeEffort | null }> {
-    // Register the runtime so a later sendMessage(threadId) resumes this session,
-    // but do NOT await init: the CLI won't emit `system/init` on resume until it
-    // receives a message, so blocking here would hang boot. The thread id is
-    // already known (it is the resume id).
-    const runtime = this.getRuntime(threadId, cwd)
-    return { threadId, model: runtime.model, effort: runtime.effort }
+    // Session files are sufficient for restore. Defer the CLI process until a
+    // new turn is actually sent to this thread.
+    return { threadId, model: null, effort: null }
   }
 
   async sendMessage(
@@ -142,6 +140,7 @@ export class ClaudeClient extends EventEmitter {
     // for a message, the message waits for init). We push the turn first, then
     // await init to learn the real session id.
     const runtime = this.getRuntime(threadId, cwd, model, effort, collaborationMode)
+    this.clearIdleTimer(runtime)
     const alreadyInitialized = runtime.sessionId !== null && runtime.initializedSettled
 
     if (alreadyInitialized) {
@@ -206,6 +205,7 @@ export class ClaudeClient extends EventEmitter {
   unsubscribeThread(threadId: string): void {
     const runtime = this.runtimes.get(threadId)
     if (!runtime) return
+    this.clearIdleTimer(runtime)
     runtime.closing = true
     runtime.input.close()
     runtime.query.close()
@@ -215,6 +215,7 @@ export class ClaudeClient extends EventEmitter {
 
   dispose(): void {
     for (const runtime of this.runtimes.values()) {
+      this.clearIdleTimer(runtime)
       runtime.closing = true
       runtime.input.close()
       runtime.query.close()
@@ -283,6 +284,7 @@ export class ClaudeClient extends EventEmitter {
       closing: false,
       seenModelMessageIds: new Set(),
       totalUsage: emptyUsage()
+      ,idleTimer: null
     }
 
     const mcpServer = createClaudeBrowserMcpServer(
@@ -314,6 +316,7 @@ export class ClaudeClient extends EventEmitter {
       const turn = runtime.activeTurn ?? runtime.pendingTurns.shift() ?? null
       if (turn && runtime.sessionId) this.emitTurnCompleted(runtime, turn, null, normalized.message, emptyUsage())
     } finally {
+      this.clearIdleTimer(runtime)
       if (runtime.sessionId) this.runtimes.delete(runtime.sessionId)
       this.runtimes.delete(runtime.key)
     }
@@ -391,7 +394,9 @@ export class ClaudeClient extends EventEmitter {
           input: block.input
         })
       }
-      await this.emitTokenUsage(runtime, turn, message.message.id, message.message.usage)
+      // Context usage is supplemental telemetry. Do not stop consuming SDK
+      // messages while waiting for its control-channel round trip.
+      void this.emitTokenUsage(runtime, turn, message.message.id, message.message.usage)
       return
     }
 
@@ -446,7 +451,25 @@ export class ClaudeClient extends EventEmitter {
         toAgentUsage(message.usage, message.total_cost_usd)
       )
       runtime.activeTurn = null
+      this.scheduleIdleClose(runtime)
     }
+  }
+
+  private scheduleIdleClose(runtime: ClaudeRuntime): void {
+    this.clearIdleTimer(runtime)
+    runtime.idleTimer = setTimeout(() => {
+      runtime.idleTimer = null
+      if (!runtime.activeTurn && runtime.pendingTurns.length === 0 && runtime.sessionId) {
+        this.unsubscribeThread(runtime.sessionId)
+      }
+    }, claudeRuntimeIdleMs)
+    runtime.idleTimer.unref()
+  }
+
+  private clearIdleTimer(runtime: ClaudeRuntime): void {
+    if (!runtime.idleTimer) return
+    clearTimeout(runtime.idleTimer)
+    runtime.idleTimer = null
   }
 
   private async emitTokenUsage(
