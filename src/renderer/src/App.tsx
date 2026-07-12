@@ -1693,6 +1693,7 @@ export default function App(): React.JSX.Element {
           agentSessions={agentSessions}
           selectedAgentKey={selectedAgentKey}
           onSelectAgent={setSelectedAgentKey}
+          onSelectMain={() => setSelectedAgentKey(null)}
           onToggleWatchAgent={handleToggleWatchAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
@@ -1783,6 +1784,7 @@ function ChatPane({
   agentSessions,
   selectedAgentKey,
   onSelectAgent,
+  onSelectMain,
   onToggleWatchAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
@@ -1837,6 +1839,7 @@ function ChatPane({
   agentSessions: AgentSession[]
   selectedAgentKey: string | null
   onSelectAgent: (key: string) => void
+  onSelectMain: () => void
   onToggleWatchAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
