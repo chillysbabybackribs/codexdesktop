@@ -136,8 +136,9 @@ export function resolveViewports(requested: unknown): UiReviewViewport[] {
   const names = Array.isArray(requested)
     ? requested.filter((value): value is UiReviewViewportName => typeof value === 'string' && value in viewports)
     : []
-  const unique = [...new Set(names)]
-  return (unique.length ? unique : ['desktop', 'tablet', 'mobile']).map((name) => viewports[name])
+  const unique = [...new Set<UiReviewViewportName>(names)]
+  const defaults: UiReviewViewportName[] = ['desktop', 'tablet', 'mobile']
+  return (unique.length ? unique : defaults).map((name) => viewports[name])
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
