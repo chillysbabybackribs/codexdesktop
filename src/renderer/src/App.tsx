@@ -3144,6 +3144,33 @@ function WorkspacePill({
   )
 }
 
+function PlanModePill({
+  active,
+  disabled,
+  onToggle
+}: {
+  active: boolean
+  disabled: boolean
+  onToggle: () => void
+}): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      className={`plan-mode-pill ${active ? 'is-active' : ''}`}
+      aria-pressed={active}
+      disabled={disabled}
+      title={active ? 'Plan mode is on. Click to return to implementation mode.' : 'Investigate and propose a plan before editing.'}
+      onClick={onToggle}
+    >
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5.5 5.25h9M5.5 10h9M5.5 14.75h5.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="m2.75 5.25.85.85 1.45-1.7M2.75 10l.85.85 1.45-1.7M2.75 14.75l.85.85 1.45-1.7" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <span>Plan</span>
+    </button>
+  )
+}
+
 // Composer pill showing how full the thread's model context is (the last
 // model call's tokens against the model window). Clicking it asks the
 // app-server to compact the thread; auto-compaction also runs at 80% from the
