@@ -132,9 +132,10 @@ test('the combined evidence text stays inside the requested result budget', () =
     need: `claim${index} evidence`,
     minSources: 3
   }))
+  const sourceLabels = ['alpha', 'bravo', 'charlie']
   const sources = Array.from({ length: 3 }, (_, sourceIndex) => document(
     `page-0${sourceIndex + 1}`,
-    `${focus.map((item) => `${item.need} from independent source ${sourceIndex}.`).join('\n')}\nUnique ${sourceIndex}.`
+    `${focus.map((item) => `${item.need} from independent source ${sourceLabels[sourceIndex]}.`).join('\n')}\nUnique ${sourceLabels[sourceIndex]}.`
   ))
 
   const packet = selectResearchEvidence(focus, sources, 1_000)

@@ -660,11 +660,11 @@ export class ResearchRunner {
   }
 }
 
-async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promise<void> {
+async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promise<string> {
   const normalized = normalizeResearchUrls([url], 1)[0]
   if (!normalized) throw new Error('page verification failed: invalid or non-public URL')
   const host = new URL(normalized).hostname.replace(/^\[|\]$/g, '')
-  if (isPublicResearchAddress(host)) return
+  if (isPublicResearchAddress(host)) return normalized
 
   const browserSession = session.fromPartition(browserPartition)
   const resolutions = await Promise.allSettled([
@@ -678,6 +678,7 @@ async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promis
   if (addresses.length === 0) throw new Error(`page verification failed: could not resolve ${host}`)
   const blocked = addresses.find((address) => !isPublicResearchAddress(address))
   if (blocked) throw new Error(`page verification failed: ${host} resolved to a non-public address`)
+  return normalized
 }
 
 async function loadSearchPage(
