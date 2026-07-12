@@ -15,6 +15,7 @@ Produce intentional product design, not decorated boilerplate. Establish what â€
 - Treat references as evidence, not inspiration to approximate loosely.
 - Prefer a few strong decisions over many decorative effects.
 - Build the complete interaction, including empty, hover, focus, active, loading, error, reduced-motion, and responsive states when applicable.
+- Treat generated concepts, running previews, and deployments as different artifacts. Never present a concept image as implemented UI or a local preview as shipped work.
 - Never claim visual parity without inspecting rendered output.
 
 ## Choose the workflow
@@ -24,6 +25,8 @@ Use the **direct path** when the user supplies a complete visual direction, sele
 Use the **direction path** when the desired feeling or visual language is materially unresolved. Create three first-viewport design directions, let the user select one unless they asked Codex to decide, then implement.
 
 Use the **reference-matching path** when an image, existing page, or design is supplied. Inspect it at high detail, record observable properties, and implement against a comparison checklist. Do not invent details that contradict the reference.
+
+For any path, distinguish the requested product depth before implementation. A visual prototype may simulate data and integrations when clearly labeled. A functional site must implement and verify requested routes, forms, persistence, authentication, uploads, external services, and data behavior rather than merely drawing their interfaces.
 
 Ask at most three concise questions only when missing audience, product purpose, required content, or technical constraints would materially alter the result. Otherwise make reasonable assumptions and state them briefly.
 
@@ -65,6 +68,8 @@ Each direction must show only what belongs in the first viewport:
 
 Use image generation for expressive mockups when available. Generate clean page concepts without browser chrome, device montages, unrelated logos, or watermarks. If image generation is unavailable, provide implementation-ready written directions and ask the user to choose; do not pretend they are visual previews.
 
+Inspect every generated concept before presenting it. Reject or regenerate concepts with malformed text, inconsistent shared content, impossible interface geometry, missing primary actions, or obvious divergence from the product brief. A compelling image that cannot reasonably guide implementation is not a valid direction.
+
 For each option, record:
 
 - short title and design thesis;
@@ -96,6 +101,10 @@ Read [visual-contract.md](references/visual-contract.md) for the full schema and
 ## Phase 3: Implement the system
 
 Implement the selected direction as a coherent system rather than a screenshot trace.
+
+Build the complete requested experience, not only the hero or selected first viewport. Implement every requested route, section, form, interaction, and applicable loading, empty, success, confirmation, disabled, and error state. Keep simulated behavior explicit; never imply that a backend, payment flow, authentication system, upload pipeline, or external integration works unless it is implemented and verified.
+
+Write realistic, product-specific copy. Do not leave placeholder prose, unexplained sample data, or vague claims. Do not fabricate customers, testimonials, usage statistics, performance results, certifications, or endorsements.
 
 ### Foundation
 
@@ -146,6 +155,8 @@ See [interaction-patterns.md](references/interaction-patterns.md) for a detailed
 
 Design at desktop, tablet, and mobile widths. Do not merely scale desktop down.
 
+Define a collapse strategy for every complex component: preserve, reflow, reorder, scroll, simplify, replace, or hide it. Choose deliberately for navigation, tables, sidebars, action groups, media compositions, dashboards, and dense controls rather than applying one global breakpoint rule.
+
 - Recompose multi-column heroes below approximately 900px.
 - Preserve the product visualâ€™s legibility; collapse secondary rails before shrinking essential content.
 - Maintain 44px minimum touch targets.
@@ -167,6 +178,14 @@ Design at desktop, tablet, and mobile widths. Do not merely scale desktop down.
 ## Phase 4: Render and inspect
 
 Run the application and inspect the real page. A successful build is not visual verification.
+
+Keep the validation surfaces explicit:
+
+- **design concept:** a static proposal used to select observable visual direction;
+- **running preview:** the real implementation used to inspect rendering and behavior;
+- **deployment or checkpoint:** a stable shareable build, created only when supported and requested.
+
+Do not substitute one surface for another when reporting completion.
 
 Validate at representative widths:
 
@@ -193,7 +212,7 @@ Compare the render with the visual contract in descending impact order:
 4. colors and surface treatment;
 5. borders, shadows, and small details.
 
-Fix the largest visible mismatch first, render again, and repeat. Do not spend time tuning tiny shadows while the hero proportions are wrong.
+Record the largest visible mismatches, fix them in impact order, render again at the same viewport, and compare again. Complete at least one correction pass whenever a material mismatch is present. Continue until no high-impact mismatch remains; do not spend time tuning tiny shadows while the hero proportions are wrong.
 
 Use [quality-gates.md](references/quality-gates.md) as the final acceptance checklist.
 
@@ -216,6 +235,7 @@ Do not expose internal process noise. Do not claim pixel-perfect or identical ou
 
 - If image generation fails, continue with detailed written directions or implement a user-supplied direction.
 - If browser preview is unavailable, run production validation and clearly state that visual inspection remains outstanding.
+- If deployment is unavailable or outside scope, provide the verified local result and say that no stable deployment was created.
 - If the reference omits a required state, infer the smallest consistent behavior and label it as an inference.
 - If real media is unavailable, create an attractive, functional placeholder without fabricating a recording.
 - If an existing design system conflicts with a reference, preserve product consistency unless the user explicitly prioritizes the reference.

@@ -1,8 +1,8 @@
 interface:
   display_name: Build Polished UI
   short_description: Design and build production-quality UI examples
-  default_prompt: Use $build-polished-ui to design and implement a polished, responsive
-    UI with visual directions and rigorous QA.
+  default_prompt: Use $build-polished-ui to design and implement a complete, polished,
+    responsive UI through inspected visual directions, rendered comparison, and iterative QA.
 policy:
   products:
   - chatgpt

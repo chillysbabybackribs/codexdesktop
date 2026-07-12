@@ -11,6 +11,8 @@ Use this document after a direction is selected or a visual reference is supplie
 - Primary action:
 - Supporting proof:
 - Required first-viewport content:
+- Required routes, sections, forms, and states beyond the first viewport:
+- Functional integrations versus explicitly simulated behavior:
 
 ### Composition
 
@@ -67,6 +69,8 @@ Record semantic roles rather than a palette alone:
 
 Record changes at desktop, tablet, and mobile. Describe reflow, hidden secondary content, navigation behavior, media aspect ratio, and type scaling.
 
+For each complex component, record one primary strategy: preserve, reflow, reorder, scroll, simplify, replace, or hide. Include the breakpoint or condition that triggers the change and identify which content must remain visually dominant.
+
 ## Comparison method
 
 Compare at the same viewport whenever possible. Use this order:
@@ -79,6 +83,8 @@ Compare at the same viewport whenever possible. Use this order:
 6. Detail: do controls, icons, and micro-spacing feel consistent?
 
 Classify mismatches as high, medium, or low impact. Fix all high-impact mismatches before fine detail. The visual image governs observable appearance; the written brief governs hidden behavior and tokens. User requirements override both.
+
+After the first rendered comparison, record the largest mismatches and perform a correction pass whenever any material mismatch exists. Compare again at the same viewport so improvement is observable rather than assumed.
 
 ## Anti-drift rules
 
