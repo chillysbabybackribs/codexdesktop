@@ -165,6 +165,10 @@ export function AgentConversationPanel({
   session,
   active,
   models,
+  secondaryModels,
+  primaryLabel,
+  secondaryLabel,
+  onSelectSecondaryModel,
   mainModel,
   mainReasoningEffort,
   onSetModel,
@@ -181,6 +185,11 @@ export function AgentConversationPanel({
   session: AgentSession
   active: boolean
   models: Model[]
+  // The other provider's catalog; picking from it re-homes this agent tab.
+  secondaryModels?: Model[]
+  primaryLabel?: string
+  secondaryLabel?: string
+  onSelectSecondaryModel?: (key: string, model: string) => void
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
   onSetModel: (key: string, model: string) => void
@@ -336,6 +345,14 @@ export function AgentConversationPanel({
               onSelectModel={(model) => onSetModel(session.key, model)}
               onSelectModelEffort={(model, effort) => onSetModelEffort(session.key, model, effort)}
               reasoningMenuSide="left"
+              primaryLabel={primaryLabel}
+              secondaryLabel={secondaryLabel}
+              secondaryModels={secondaryModels}
+              onSelectSecondaryModel={
+                onSelectSecondaryModel
+                  ? (model) => onSelectSecondaryModel(session.key, model)
+                  : undefined
+              }
             />
           ) : null}
           <AgentContextPill
