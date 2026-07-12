@@ -139,7 +139,7 @@ export function ConversationTabStrip({
                 type="button"
                 className="conversation-tab-close"
                 aria-label={`Close ${session.title}`}
-                title="Close agent"
+                title="Close chat"
                 onClick={() => onCloseAgent(session.key)}
               >
                 ×
@@ -151,8 +151,8 @@ export function ConversationTabStrip({
       <button
         type="button"
         className="conversation-new-agent"
-        aria-label="New agent"
-        title="New agent"
+        aria-label="New chat"
+        title="New chat"
         onClick={onNewAgent}
       >
         <AgentPlusIcon />
@@ -176,6 +176,7 @@ export function AgentConversationPanel({
   onSetModelEffort,
   onCloseSession,
   onResetSession,
+  canPromote,
   onPromote,
   onToggleWatch,
   onSend,
@@ -198,6 +199,7 @@ export function AgentConversationPanel({
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onCloseSession: (key: string) => void
   onResetSession: (key: string) => void
+  canPromote: boolean
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -296,20 +298,22 @@ export function AgentConversationPanel({
           >
             <EyeIcon />
           </button>
+          {canPromote ? (
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Open in main chat"
+              title="Open in main chat (current chat is saved to history)"
+              onClick={() => onPromote(session.key)}
+            >
+              <ExpandIcon />
+            </button>
+          ) : null}
           <button
             type="button"
             className="icon-button"
-            aria-label="Open in main chat"
-            title="Open in main chat (current chat is saved to history)"
-            onClick={() => onPromote(session.key)}
-          >
-            <ExpandIcon />
-          </button>
-          <button
-            type="button"
-            className="icon-button"
-            aria-label="Close agent"
-            title="Close agent (stops the turn and unsubscribes the thread)"
+            aria-label="Close chat"
+            title="Close chat (stops the turn and unsubscribes the thread)"
             onClick={() => onCloseSession(session.key)}
           >
             ×
@@ -320,8 +324,8 @@ export function AgentConversationPanel({
       <div ref={scrollRef} className="agent-overlay-scroll">
         {session.messages.length === 0 ? (
           <div className="agent-overlay-empty">
-            An independent agent with its own conversation, running in parallel and sharing the
-            workspace. Toggle the eye to let it see recent main-chat context.
+            An independent chat running in parallel and sharing the workspace. Toggle the eye to
+            include recent main-chat context.
           </div>
         ) : (
           session.messages.map((message) => (

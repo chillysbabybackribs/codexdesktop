@@ -2426,7 +2426,6 @@ function ChatPane({
   }
 
   const promoteAgent = (key: string): void => {
-    onSelectConversation('main')
     onPromoteAgent(key)
   }
 
@@ -2614,7 +2613,7 @@ function ChatPane({
             if (!session) {
               return (
                 <div className="conversation-panel conversation-panel-empty">
-                  <div className="agent-overlay-empty">This agent tab was closed.</div>
+                  <div className="agent-overlay-empty">This chat tab was closed.</div>
                 </div>
               )
             }
@@ -2643,6 +2642,7 @@ function ChatPane({
                 onSetModelEffort={onSetAgentModelEffort}
                 onCloseSession={closeAgent}
                 onResetSession={onResetAgentSession}
+                canPromote={sameProvider}
                 onPromote={promoteAgent}
                 onToggleWatch={onToggleWatchAgent}
                 onSend={onAgentSend}
