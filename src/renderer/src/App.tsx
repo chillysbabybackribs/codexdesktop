@@ -13,6 +13,7 @@ import {
 import { AgentConversationPanel, ConversationTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
 import type { AgentLiteMessage, AgentSession } from './AgentDock'
+import { nextAgentSelectionAfterClose } from './agent-session-model'
 import type {
   BrowserBounds,
   BrowserState,
@@ -1939,13 +1940,9 @@ function ChatPane({
   }
 
   const closeAgent = (key: string): void => {
-    if (selectedAgentKey === key) {
-      const index = agentSessions.findIndex((session) => session.key === key)
-      const remaining = agentSessions.filter((session) => session.key !== key)
-      const fallback = remaining[index] ?? remaining[index - 1] ?? null
-      if (fallback) onSelectAgent(fallback.key)
-      else onSelectMain()
-    }
+    const next = nextAgentSelectionAfterClose(agentSessions, selectedAgentKey, key)
+    if (next) onSelectAgent(next)
+    else if (selectedAgentKey === key) onSelectMain()
     onCloseAgentSession(key)
   }
 

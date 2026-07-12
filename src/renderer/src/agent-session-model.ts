@@ -72,6 +72,18 @@ export function findAgentSessionByThread(sessions: AgentSession[], threadId: str
   return sessions.find((session) => session.threadId === threadId) ?? null
 }
 
+export function nextAgentSelectionAfterClose(
+  sessions: AgentSession[],
+  selectedKey: string | null,
+  closingKey: string
+): string | null {
+  if (selectedKey !== closingKey) return selectedKey
+  const index = sessions.findIndex((session) => session.key === closingKey)
+  if (index < 0) return selectedKey
+  const remaining = sessions.filter((session) => session.key !== closingKey)
+  return remaining[index]?.key ?? remaining[index - 1]?.key ?? null
+}
+
 export function updateAgentSession(
   sessions: AgentSession[],
   key: string,

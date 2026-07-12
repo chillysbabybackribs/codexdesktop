@@ -6,11 +6,26 @@ import {
   completeAgentMessage,
   createAgentSession,
   parseAgentDock,
+  nextAgentSelectionAfterClose,
   resetAgentSession,
   serializeAgentDock,
   stripMainChatContext,
   updateAgentSession
 } from './agent-session-model.ts'
+
+test('closing the selected agent prefers the next tab, then the previous tab, then main', () => {
+  const sessions = [
+    createAgentSession('one', 'Agent 1'),
+    createAgentSession('two', 'Agent 2'),
+    createAgentSession('three', 'Agent 3')
+  ]
+
+  assert.equal(nextAgentSelectionAfterClose(sessions, 'two', 'two'), 'three')
+  assert.equal(nextAgentSelectionAfterClose(sessions, 'three', 'three'), 'two')
+  assert.equal(nextAgentSelectionAfterClose([sessions[0]], 'one', 'one'), null)
+  assert.equal(nextAgentSelectionAfterClose(sessions, 'one', 'three'), 'one')
+  assert.equal(nextAgentSelectionAfterClose(sessions, null, 'two'), null)
+})
 
 test('agent session updates preserve unrelated sessions', () => {
   const first = createAgentSession('one', 'Agent 2')
