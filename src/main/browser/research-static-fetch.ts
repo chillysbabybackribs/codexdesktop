@@ -108,7 +108,13 @@ export async function fetchStaticResearchPage(
       return result('fallback', startedAt, bytes, redirects, `unsupported static charset: ${charset}`, currentUrl)
     }
 
-    const body = await readBoundedBody(response, maxBytes, options.signal)
+    let body: Awaited<ReturnType<typeof readBoundedBody>>
+    try {
+      body = await readBoundedBody(response, maxBytes, options.signal)
+    } catch (error) {
+      if (options.signal.aborted) throw error
+      return result('fallback', startedAt, bytes, redirects, `static body read failed: ${formatError(error)}`, currentUrl)
+    }
     bytes = body.bytes
     if (body.tooLarge) return result('fallback', startedAt, bytes, redirects, 'static response exceeded byte limit', currentUrl)
     if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body', currentUrl)

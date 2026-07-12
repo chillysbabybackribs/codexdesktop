@@ -25,7 +25,7 @@ export type RankedSerpCandidate = SerpCandidate & {
 
 export type ExtractedPageAssessment = {
   verified: boolean
-  reason?: 'invalid-url' | 'http-error' | 'challenge-page' | 'error-page' | 'insufficient-content'
+  reason?: 'invalid-url' | 'http-error' | 'challenge-page' | 'login-page' | 'error-page' | 'insufficient-content'
 }
 
 export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] {
@@ -214,6 +214,9 @@ export function assessExtractedPage(page: {
     return { verified: false, reason: 'challenge-page' }
   }
   const normalizedTitle = page.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+  if (page.wordCount < 200 && /^(sign in|log in|login|authentication required)\b/.test(normalizedTitle)) {
+    return { verified: false, reason: 'login-page' }
+  }
   if (
     page.wordCount < 200 &&
     /^(404|403|500|502|503|page not found|not found|internal server error|bad gateway|service unavailable|deployment not found)\b/.test(normalizedTitle)
