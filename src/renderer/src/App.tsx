@@ -47,7 +47,8 @@ import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
-  type ModelCallAttribution
+  type ModelCallAttribution,
+  type TurnTokenTelemetry
 } from './turn-telemetry'
 import {
   AutoFollow,
@@ -3425,6 +3426,31 @@ function asClaudeEffort(value: ReasoningEffort | null): ClaudeEffort | null {
   return value === 'low' || value === 'medium' || value === 'high' || value === 'xhigh' || value === 'max'
     ? value
     : null
+}
+
+// Map Claude's per-turn usage into the telemetry shape the TurnTail reads.
+// Claude reports a single cumulative usage per turn (not per model call), so we
+// record it as one call: turn == latestCall, and cache-creation + cache-read
+// both count as cached input.
+function claudeTurnTokens(usage: AgentUsage): TurnTokenTelemetry {
+  const cachedInputTokens = usage.cacheReadInputTokens + usage.cacheCreationInputTokens
+  const inputTokens = usage.inputTokens + cachedInputTokens
+  const breakdown = {
+    totalTokens: inputTokens + usage.outputTokens,
+    inputTokens,
+    cachedInputTokens,
+    outputTokens: usage.outputTokens,
+    reasoningOutputTokens: 0
+  }
+  return {
+    turn: breakdown,
+    latestCall: breakdown,
+    threadTotalAtEnd: breakdown,
+    modelContextWindow: null,
+    modelCallCount: breakdown.totalTokens > 0 ? 1 : 0,
+    modelCalls: [],
+    droppedModelCallSamples: 0
+  }
 }
 
 function claudeModelToUiModel(model: AgentModel, index: number): Model {
