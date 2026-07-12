@@ -1,3 +1,5 @@
+import { isIP } from 'node:net'
+
 const QUERY_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'about', 'be', 'by', 'for', 'from', 'how', 'in', 'is',
   'it', 'of', 'on', 'or', 'the', 'to', 'what', 'when', 'where', 'which', 'who',
@@ -40,6 +42,23 @@ export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] 
     if (urls.length >= Math.max(1, Math.min(8, Math.round(maxUrls)))) break
   }
   return urls
+}
+
+export function isPublicResearchAddress(value: string): boolean {
+  const address = value.toLowerCase().replace(/^\[|\]$/g, '').split('%')[0] ?? ''
+  const version = isIP(address)
+  if (version === 4) return isPublicIpv4(address)
+  if (version !== 6) return false
+
+  const parts = parseIpv6(address)
+  if (!parts) return false
+  if (parts.slice(0, 5).every((part) => part === 0) && parts[5] === 0xffff) {
+    return isPublicIpv4(`${parts[6] >> 8}.${parts[6] & 255}.${parts[7] >> 8}.${parts[7] & 255}`)
+  }
+  const first = parts[0]
+  if (first < 0x2000 || first > 0x3fff) return false
+  if (first === 0x2001 && parts[1] === 0x0db8) return false
+  return true
 }
 
 export function googleSearchUrl(query: string, maxResults: number): string {
@@ -265,12 +284,49 @@ function canonicalizeUrl(value: string): string {
 function isObviousPrivateHost(value: string): boolean {
   const host = value.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.$/, '')
   if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local')) return true
-  if (host.includes(':') && (host === '::1' || host.startsWith('fc') || host.startsWith('fd') || host.startsWith('fe80:'))) return true
-  const octets = host.split('.').map(Number)
+  return isIP(host) !== 0 && !isPublicResearchAddress(host)
+}
+
+function isPublicIpv4(value: string): boolean {
+  const octets = value.split('.').map(Number)
   if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) return false
-  const [first, second] = octets
-  return first === 0 || first === 10 || first === 127 ||
+  const [first, second, third] = octets
+  if (first === undefined || second === undefined || third === undefined) return false
+  return !(first === 0 || first === 10 || first === 127 || first >= 224 ||
+    (first === 100 && second >= 64 && second <= 127) ||
     (first === 169 && second === 254) ||
-    (first === 172 && second !== undefined && second >= 16 && second <= 31) ||
-    (first === 192 && second === 168)
+    (first === 172 && second >= 16 && second <= 31) ||
+    (first === 192 && second === 0 && third <= 2) ||
+    (first === 192 && second === 168) ||
+    (first === 198 && (second === 18 || second === 19)) ||
+    (first === 198 && second === 51 && third === 100) ||
+    (first === 203 && second === 0 && third === 113))
+}
+
+function parseIpv6(value: string): number[] | null {
+  if (value.split('::').length > 2) return null
+  const [leftRaw = '', rightRaw = ''] = value.split('::')
+  const left = parseIpv6Parts(leftRaw)
+  const right = parseIpv6Parts(rightRaw)
+  if (!left || !right) return null
+  if (!value.includes('::')) return left.length === 8 ? left : null
+  const missing = 8 - left.length - right.length
+  if (missing < 1) return null
+  return [...left, ...Array<number>(missing).fill(0), ...right]
+}
+
+function parseIpv6Parts(value: string): number[] | null {
+  if (!value) return []
+  const parts: number[] = []
+  for (const part of value.split(':')) {
+    if (part.includes('.')) {
+      const octets = part.split('.').map(Number)
+      if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) return null
+      parts.push((octets[0] << 8) | octets[1], (octets[2] << 8) | octets[3])
+      continue
+    }
+    if (!/^[0-9a-f]{1,4}$/i.test(part)) return null
+    parts.push(Number.parseInt(part, 16))
+  }
+  return parts
 }

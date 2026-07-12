@@ -164,7 +164,7 @@ test('passage windows remain contiguous and bounded when adjacent lines are over
 })
 
 test('matched terms always occur in a truncated long-line passage', () => {
-  const content = `alpha beta ${'filler '.repeat(400)} gamma discount`
+  const content = `alpha beta gamma ${'filler '.repeat(400)} discount`
   const passage = selectResearchEvidence(
     [{ id: 'spread', need: 'alpha beta gamma discount', minSources: 1 }],
     [document('page-01', content)],

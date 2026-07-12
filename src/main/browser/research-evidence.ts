@@ -282,7 +282,7 @@ function normalizeToken(value: string): string {
 }
 
 function normalizeText(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+  return tokenize(value).join(' ')
 }
 
 function fingerprint(value: string): string {

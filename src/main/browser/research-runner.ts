@@ -1,4 +1,4 @@
-import { app, WebContentsView } from 'electron'
+import { app, session, WebContentsView } from 'electron'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
@@ -20,6 +20,7 @@ import {
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
   googleSearchUrl,
+  isPublicResearchAddress,
   normalizeResearchUrls,
   rankSerpCandidates,
   type RankedSerpCandidate,
@@ -362,6 +363,13 @@ export class ResearchRunner {
             }
           }
 
+          try {
+            await assertPublicResearchUrl(candidate.url, signal)
+          } catch (error) {
+            if (signal.aborted) throw error
+            errors.push({ url: candidate.url, error: formatError(error) })
+            return null
+          }
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           try {
