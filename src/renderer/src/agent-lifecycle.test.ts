@@ -8,12 +8,14 @@ function lifecycleHarness(session: AgentSession): {
   messages: AgentLiteMessage[]
   selectedModels: string[]
   createdMainThreads: string[]
+  crossPromotions: AgentSession[]
   lifecycle: ReturnType<typeof createAgentLifecycle>
 } {
   const sessions = [session]
   const messages: AgentLiteMessage[] = []
   const selectedModels: string[] = []
   const createdMainThreads: string[] = []
+  const crossPromotions: AgentSession[] = []
   let selectedKey: string | null = session.key
   const recoveryRef = { current: new Map<string, AgentRecoveryState>() }
 
@@ -39,15 +41,17 @@ function lifecycleHarness(session: AgentSession): {
     isRecoverable: () => false,
     getWorkspace: () => '/workspace',
     getSelectedModel: () => 'main-model',
+    getMainProvider: () => 'codex',
     getActiveThreadId: () => null,
     pickFallbackModel: (model) => model,
     selectMainModel: (model) => selectedModels.push(model),
     clearActiveTurn: () => {},
     createMainThread: () => createdMainThreads.push('created'),
-    resumeMainThread: async () => {}
+    resumeMainThread: async () => {},
+    promoteCrossProvider: (promoted) => crossPromotions.push(promoted)
   })
 
-  return { sessions, messages, selectedModels, createdMainThreads, lifecycle }
+  return { sessions, messages, selectedModels, createdMainThreads, crossPromotions, lifecycle }
 }
 
 test('reset agent session clears conversation state but keeps its window', () => {
@@ -72,5 +76,20 @@ test('promoting a blank agent selects its model and creates a main thread', asyn
 
   assert.deepEqual(selectedModels, ['agent-model'])
   assert.deepEqual(createdMainThreads, ['created'])
+  assert.deepEqual(sessions, [])
+})
+
+test('promoting a claude agent while codex owns the main view hands off cross-provider', async () => {
+  const session = {
+    ...createAgentSession('agent-1', 'Agent 2', 'claude'),
+    threadId: 'claude-session-1',
+    model: 'claude-model'
+  }
+  const { sessions, selectedModels, createdMainThreads, crossPromotions, lifecycle } = lifecycleHarness(session)
+  await lifecycle.handlePromoteAgent('agent-1')
+
+  assert.deepEqual(selectedModels, [])
+  assert.deepEqual(createdMainThreads, [])
+  assert.equal(crossPromotions[0]?.threadId, 'claude-session-1')
   assert.deepEqual(sessions, [])
 })
