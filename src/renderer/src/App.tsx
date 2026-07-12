@@ -459,12 +459,19 @@ export default function App(): React.JSX.Element {
     }
 
     const rect = host.getBoundingClientRect()
+    const style = window.getComputedStyle(host)
+    const borderLeft = Number.parseFloat(style.borderLeftWidth) || 0
+    const borderRight = Number.parseFloat(style.borderRightWidth) || 0
+    const borderTop = Number.parseFloat(style.borderTopWidth) || 0
+    const borderBottom = Number.parseFloat(style.borderBottomWidth) || 0
 
     return {
-      x: rect.left,
-      y: rect.top,
-      width: rect.width,
-      height: rect.height
+      // WebContentsView is composited above the renderer. Target the host's
+      // inner edge so the native page cannot paint over the visible frame.
+      x: rect.left + borderLeft,
+      y: rect.top + borderTop,
+      width: Math.max(1, rect.width - borderLeft - borderRight),
+      height: Math.max(1, rect.height - borderTop - borderBottom)
     }
   }, [])
 

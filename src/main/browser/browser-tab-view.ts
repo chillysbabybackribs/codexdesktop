@@ -31,7 +31,9 @@ export function createBrowserTabView(window: BrowserWindow, bounds: BrowserBound
     }
   })
 
-  view.setBorderRadius?.(12)
+  // The renderer host has a 10px outer radius and a 1px frame. Match its
+  // 9px inner curve so the native surface sits inside instead of over it.
+  view.setBorderRadius(9)
   view.setBackgroundColor(browserBackgroundColor)
   view.setVisible(false)
   view.setBounds(bounds)
