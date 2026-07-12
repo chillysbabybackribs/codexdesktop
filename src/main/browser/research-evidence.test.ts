@@ -29,6 +29,14 @@ test('focus normalization bounds values and makes duplicate ids deterministic', 
     { id: 'price-2', need: 'Independent price confirmation', minSources: 3 },
     { id: 'focus-3', need: 'Fallback identifier', minSources: 1 }
   ])
+  assert.deepEqual(
+    normalizeResearchFocus([
+      { id: 'x', need: 'first' },
+      { id: 'x-2', need: 'second' },
+      { id: 'x', need: 'third' }
+    ]).map(({ id }) => id),
+    ['x', 'x-2', 'x-3']
+  )
 })
 
 test('evidence selection returns an exact bounded passage with artifact line locators', () => {
@@ -127,4 +135,36 @@ test('the combined evidence text stays inside the requested result budget', () =
   assert.deepEqual(packet.gaps, [])
   assert.equal(packet.passages.length, 18)
   assert.ok(packet.passages.reduce((total, passage) => total + passage.text.length, 0) <= 1_000)
+})
+
+test('passage windows remain contiguous and bounded when adjacent lines are oversized', () => {
+  const lines = [
+    'Small context two lines before.',
+    'Oversized left context '.repeat(100),
+    'Target migration evidence is here.',
+    'Oversized right context '.repeat(100),
+    'Small context two lines after.'
+  ]
+  const passage = selectResearchEvidence(
+    [{ id: 'target', need: 'migration evidence', minSources: 1 }],
+    [document('page-01', lines.join('\n'))],
+    1_000
+  ).passages[0]
+
+  assert.ok(passage)
+  assert.ok(passage.text.length <= 1_000)
+  assert.equal(passage.text, lines.slice(passage.lineStart - 1, passage.lineEnd).join('\n'))
+})
+
+test('matched terms always occur in a truncated long-line passage', () => {
+  const content = `alpha beta ${'filler '.repeat(400)} gamma discount`
+  const passage = selectResearchEvidence(
+    [{ id: 'spread', need: 'alpha beta gamma discount', minSources: 1 }],
+    [document('page-01', content)],
+    1_000
+  ).passages[0]
+
+  assert.ok(passage)
+  assert.ok(passage.text.length <= 1_000)
+  for (const term of passage.matchedTerms) assert.match(passage.text.toLowerCase(), new RegExp(`\\b${term}\\b`))
 })
