@@ -278,7 +278,7 @@ export class ResearchRunner {
       const gaps = evidence().gaps
       if (gaps.length === 0) return 0
       const shortfall = Math.max(...gaps.map((gap) => gap.requiredSources - gap.matchedSources), 1)
-      return Math.min(Math.max(0, MAX_TARGET_PAGES - pages.length), shortfall)
+      return Math.min(Math.max(0, targetPages - pages.length), shortfall)
     }
 
     const materializePage = async (
@@ -411,7 +411,7 @@ export class ResearchRunner {
     }
 
     const drainCandidates = async (candidates: ResearchCandidate[]): Promise<void> => {
-      while (!goalMet() && pageAttempts < maxAttempts && pages.length < MAX_TARGET_PAGES) {
+      while (!goalMet() && pageAttempts < maxAttempts && pages.length < targetPages) {
         const remaining = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
         if (remaining.length === 0) return
         const attemptsBefore = pageAttempts
@@ -444,11 +444,11 @@ export class ResearchRunner {
       await drainCandidates(directCandidates)
     }
 
-    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < MAX_TARGET_PAGES) {
+    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
       const searchView = this.createHiddenView()
       try {
         for (const [queryIndex, query] of plannedQueries.entries()) {
-          if (goalMet() || pageAttempts >= maxAttempts || pages.length >= MAX_TARGET_PAGES) break
+          if (goalMet() || pageAttempts >= maxAttempts || pages.length >= targetPages) break
           throwIfAborted(signal)
           searchQueries.push(query)
           notifyProgress(onProgress, {
