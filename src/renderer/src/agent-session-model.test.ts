@@ -94,6 +94,7 @@ test('agent dock persistence keeps only durable metadata', () => {
   assert.deepEqual(parseAgentDock(raw), {
     counter: 4,
     sessions: [{
+      provider: 'codex',
       threadId: 'thread-1',
       title: 'Research',
       watchesMain: true,
@@ -103,6 +104,15 @@ test('agent dock persistence keeps only durable metadata', () => {
     }]
   })
   assert.equal(parseAgentDock('{broken'), null)
+})
+
+test('agent sessions persist and default their provider', () => {
+  const claude = { ...createAgentSession('one', 'Helper', 'claude'), threadId: 'session-1' }
+  const parsed = parseAgentDock(serializeAgentDock(2, [claude], null))
+  assert.equal(parsed?.sessions[0]?.provider, 'claude')
+
+  // Docks persisted before provider existed restore as codex sessions.
+  assert.equal(createAgentSession('two', 'Legacy').provider, 'codex')
 })
 
 test('main chat context is removed from restored helper messages', () => {
