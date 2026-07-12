@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "selectionPolicy": {
+    "maxGood": 2,
+    "maxCounterexamples": 1,
+    "rule": "Select by product, aesthetic, composition, and media strategy. Never retrieve by color alone."
+  },
+  "examples": [
+    {
+      "id": "coffee-editorial-light",
+      "quality": "good",
+      "productTypes": ["hospitality", "local-service", "restaurant", "coffee-shop"],
+      "aestheticTags": ["editorial", "warm", "organic", "restrained", "premium"],
+      "compositionTags": ["split-hero", "oversized-serif", "stepped-mask", "product-rail"],
+      "mediaTags": ["photography-first", "environmental-photo", "product-photography"],
+      "reference": "coffee-editorial-light/reference.png",
+      "brief": "coffee-editorial-light/brief.json",
+      "critique": "coffee-editorial-light/critique.md",
+      "provenance": "User-supplied reference generated in ChatGPT; retained for internal calibration with user authorization in this workspace."
+    },
+    {
+      "id": "coffee-editorial-dark",
+      "quality": "good",
+      "productTypes": ["hospitality", "local-service", "restaurant", "coffee-shop", "craft-brand"],
+      "aestheticTags": ["cinematic", "dark", "editorial", "tactile", "premium"],
+      "compositionTags": ["split-hero", "oversized-serif", "full-bleed-photo", "utility-rail"],
+      "mediaTags": ["photography-first", "macro-product-photo", "atmospheric-photo"],
+      "reference": "coffee-editorial-dark/reference.png",
+      "brief": "coffee-editorial-dark/brief.json",
+      "critique": "coffee-editorial-dark/critique.md",
+      "provenance": "User-supplied reference generated in ChatGPT; retained for internal calibration with user authorization in this workspace."
+    },
+    {
+      "id": "coffee-css-illustration-baseline",
+      "quality": "needs-improvement",
+      "pairedWith": ["coffee-editorial-light", "coffee-editorial-dark"],
+      "productTypes": ["hospitality", "local-service", "restaurant", "coffee-shop"],
+      "aestheticTags": ["warm", "editorial", "illustrated"],
+      "compositionTags": ["split-hero", "oversized-serif", "arched-panel"],
+      "mediaTags": ["css-illustration", "no-photography"],
+      "reference": "coffee-css-illustration-baseline/reference.png",
+      "brief": "coffee-css-illustration-baseline/brief.json",
+      "critique": "coffee-css-illustration-baseline/critique.md",
+      "provenance": "Rendered from the first Codex implementation in this workspace and included as a contrastive baseline."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Warm illustrated cafe baseline",
+  "thesis": "A competent deployable cafe page using editorial type and code-native illustration, but with less sensory specificity than the photographic references.",
+  "visualContract": {
+    "hierarchy": ["headline", "illustrated cup", "menu action"],
+    "palette": ["parchment", "evergreen", "terracotta", "warm yellow"],
+    "typography": "Large serif display with sans-serif navigation and controls.",
+    "composition": "Balanced split hero with a contained arched illustration panel.",
+    "media": "CSS and inline SVG only.",
+    "texture": "Light grain, botanical line art, soft shadow."
+  },
+  "responsiveIntent": "Implemented and verified at desktop, tablet, and mobile.",
+  "doNotCopy": []
+}

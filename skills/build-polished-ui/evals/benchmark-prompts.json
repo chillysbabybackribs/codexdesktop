@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "prompts": [
+    {"id":"local-coffee","category":"local-service","prompt":"Create a one-page neighborhood coffee shop site with a hero, drinks, hours, testimonials, and visit CTA."},
+    {"id":"enterprise-risk","category":"b2b-enterprise","prompt":"Design a responsive operational-risk dashboard for bank compliance teams with alerts, cases, ownership, evidence, and audit history."},
+    {"id":"luxury-skincare","category":"luxury-consumer","prompt":"Build a premium product page for a botanical night serum with ingredients, clinical proof, ritual, reviews, and purchase CTA."},
+    {"id":"developer-observability","category":"developer-tool","prompt":"Create a landing page and product surface for a developer observability tool that explains traces, costs, alerts, and setup."},
+    {"id":"healthcare-portal","category":"healthcare","prompt":"Design a trustworthy patient portal for appointments, results, medication, secure messages, and urgent guidance."},
+    {"id":"culture-magazine","category":"editorial","prompt":"Create a responsive culture magazine homepage with one lead story, current issue, essays, photography, and subscription CTA."},
+    {"id":"furniture-commerce","category":"ecommerce","prompt":"Build a product page for a handcrafted lounge chair with gallery, materials, dimensions, delivery, configurator, and add-to-cart."},
+    {"id":"music-festival","category":"event","prompt":"Create a mobile-first site for an independent music festival with lineup, stages, schedule, tickets, travel, and accessibility."},
+    {"id":"warehouse-ops","category":"operations","prompt":"Design a dense warehouse operations interface for inbound loads, exceptions, dock assignments, labor, and throughput."},
+    {"id":"reference-match","category":"reference","prompt":"Recreate the supplied desktop reference as a responsive, accessible implementation while preserving its composition and visual language."}
+  ]
+}
