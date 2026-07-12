@@ -1388,9 +1388,14 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  function handleClaudeEvent(event: AgentEvent): void {
+  // Decides whether a Claude event belongs to the main view or a dock tab.
+  // Runs in both boot modes: with Codex as the main provider, every Claude
+  // event belongs to some dock session or is dropped.
+  function routeClaudeEvent(event: AgentEvent): void {
     if (event.provider !== 'claude') return
+
     if (event.type === 'status') {
+      if (provider !== 'claude') return
       setCodexStatus(event.status)
       if (event.status === 'error' || event.status === 'exited') {
         addSystemItem(event.message ?? 'Claude Agent SDK is not available.', event.status === 'error' ? 'error' : 'warning')
@@ -1399,6 +1404,16 @@ export default function App(): React.JSX.Element {
     }
 
     if (event.type === 'session.started') {
+      // Resume path: the session already belongs to a dock tab.
+      if (backgroundSessionForThread(event.sessionId, 'claude')) return
+      // A dock tab's first send is in flight; the event can beat the IPC
+      // response that would otherwise bind the id.
+      const pendingAgentKey = takeQueuedStart('claude')
+      if (pendingAgentKey) {
+        bindAgentThread(pendingAgentKey, event.sessionId)
+        return
+      }
+      if (provider !== 'claude') return
       watchThreadIdRef.current = event.sessionId
       setActiveThreadId(event.sessionId)
       setActiveThreadTitle('Claude session')
@@ -1406,6 +1421,19 @@ export default function App(): React.JSX.Element {
       return
     }
 
+    const dockSession = backgroundSessionForThread(event.sessionId, 'claude')
+    if (dockSession && !(provider === 'claude' && isRelevantThread(event.sessionId))) {
+      handleClaudeAgentEvent(dockSession, event)
+      return
+    }
+
+    if (provider === 'claude') handleClaudeEvent(event)
+  }
+
+  // Main-view reducer for Claude events; only called for the watched thread
+  // when Claude owns the main chat.
+  function handleClaudeEvent(event: AgentEvent): void {
+    if (event.type === 'status' || event.type === 'session.started') return
     if (!isRelevantThread(event.sessionId)) return
 
     if (event.type === 'turn.started') {
