@@ -259,6 +259,7 @@ export class ResearchRunner {
     const pages: ResearchPage[] = []
     const evidenceDocuments: ResearchEvidenceDocument[] = []
     let pageAttempts = 0
+    let pageCacheHits = 0
     let evidenceRevision = -1
     let cachedEvidence: ReturnType<typeof selectResearchEvidence> = { passages: [], gaps: [] }
 
@@ -278,6 +279,39 @@ export class ResearchRunner {
       if (gaps.length === 0) return 0
       const shortfall = Math.max(...gaps.map((gap) => gap.requiredSources - gap.matchedSources), 1)
       return Math.min(Math.max(0, MAX_TARGET_PAGES - pages.length), shortfall)
+    }
+
+    const materializePage = async (
+      candidate: ResearchCandidate,
+      rank: number,
+      sourceId: string,
+      extracted: ExtractedResearchPage,
+      cacheHit: boolean
+    ): Promise<ResearchPageDraft> => {
+      const title = extracted.title || candidate.title
+      const url = extracted.url || candidate.url
+      const paths = await writeResearchPageArtifacts(artifactDir, sourceId, extracted.content, extracted.html)
+      return {
+        page: {
+          sourceId,
+          rank,
+          url,
+          title,
+          observedAt: extracted.observedAt,
+          ...(extracted.status > 0 ? { status: extracted.status } : {}),
+          cacheHit,
+          charCount: extracted.content.length,
+          wordCount: extracted.wordCount,
+          ...paths,
+          ...(candidate.sourceKind === 'search' ? { sourceQuery: candidate.query } : {}),
+          sourceKind: candidate.sourceKind,
+          sourceTier: candidate.sourceTier,
+          score: candidate.score,
+          artifactTruncated: extracted.truncated,
+          verified: true
+        },
+        content: extracted.content
+      }
     }
 
     const verifyCandidateBatch = async (candidates: ResearchCandidate[]): Promise<void> => {
@@ -317,49 +351,35 @@ export class ResearchRunner {
           const rank = attemptsBeforeBatch + index + 1
           const sourceId = `page-${String(rank).padStart(2, '0')}`
           attemptedUrls.add(candidate.url)
+          const cached = this.readPageCache(candidate.url)
+          if (cached) {
+            try {
+              pageCacheHits += 1
+              return await materializePage(candidate, rank, sourceId, cached, true)
+            } catch (error) {
+              errors.push({ url: candidate.url, error: `cached artifact write failed: ${formatError(error)}` })
+              return null
+            }
+          }
+
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           try {
             const navigationResult = await loadPage(view.webContents, candidate.url, linked.signal)
             recordNavigation(navigation, navigationResult)
-            const extracted = await evaluate<{
-              title: string
-              url: string
-              content: string
-              wordCount: number
-              status: number
-              truncated: boolean
-              html: string
-            }>(view.webContents, buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS))
-            const assessment = assessExtractedPage(extracted)
+            const result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
+              view.webContents,
+              buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
+            )
+            const assessment = assessExtractedPage(result)
             if (!assessment.verified) {
               throw new Error(`page verification failed: ${assessment.reason}`)
             }
 
-            const observedAt = new Date().toISOString()
-            const title = extracted.title || candidate.title
-            const url = extracted.url || candidate.url
-            const paths = await writeResearchPageArtifacts(artifactDir, sourceId, extracted.content, extracted.html)
-            return {
-              page: {
-                sourceId,
-                rank,
-                url,
-                title,
-                observedAt,
-                ...(extracted.status > 0 ? { status: extracted.status } : {}),
-                charCount: extracted.content.length,
-                wordCount: extracted.wordCount,
-                ...paths,
-                ...(candidate.sourceKind === 'search' ? { sourceQuery: candidate.query } : {}),
-                sourceKind: candidate.sourceKind,
-                sourceTier: candidate.sourceTier,
-                score: candidate.score,
-                artifactTruncated: extracted.truncated,
-                verified: true
-              },
-              content: extracted.content
-            }
+            const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
+            this.cachePage(candidate.url, extracted)
+            if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
+            return materializePage(candidate, rank, sourceId, extracted, false)
           } catch (error) {
             if (signal.aborted) throw error
             if (stopSignal.aborted) return null
@@ -482,6 +502,7 @@ export class ResearchRunner {
       message: `Finalizing ${pages.length} verified ${pages.length === 1 ? 'page' : 'pages'}…`,
       pagesAttempted: pageAttempts,
       pagesVerified: pages.length,
+      pageCacheHits,
       targetPages
     })
     const finalizationStartedAt = Date.now()
