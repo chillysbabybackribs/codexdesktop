@@ -12,6 +12,7 @@ class FakeWebContents extends EventEmitter {
   entries: NavigationEntry[] = []
   activeIndex = 0
   restored: { entries: NavigationEntry[]; index: number } | null = null
+  stopCount = 0
 
   navigationHistory = {
     canGoBack: () => this.activeIndex > 0,
@@ -36,6 +37,10 @@ class FakeWebContents extends EventEmitter {
 
   getTitle(): string {
     return this.title
+  }
+
+  stop(): void {
+    this.stopCount += 1
   }
 }
 
@@ -145,4 +150,34 @@ test('falls back to the default page when saved navigation is unsafe', async () 
   assert.deepEqual(navigations, ['https://www.google.com'])
   assert.equal(tab.url, 'https://www.google.com')
   assert.equal(tab.title, 'New Tab')
+})
+
+test('stops a hung history restore and falls back to direct navigation', async () => {
+  const contents = new FakeWebContents()
+  const tab = fakeTab('hung-history', contents)
+  const navigations: string[] = []
+  contents.navigationHistory.restore = async () => await new Promise<void>(() => {})
+
+  await hydrateSavedBrowserTab(
+    tab,
+    {
+      title: 'Saved',
+      url: 'https://example.com/current',
+      favicon: null,
+      entries: [{ url: 'https://example.com/current', title: 'Current' }],
+      activeIndex: 0
+    },
+    'https://www.google.com',
+    async (url) => {
+      navigations.push(url)
+      contents.url = url
+    },
+    { historyRestoreTimeoutMs: 5 }
+  )
+
+  assert.equal(contents.stopCount, 1)
+  assert.deepEqual(navigations, ['https://example.com/current'])
+  assert.equal(tab.url, 'https://example.com/current')
+  assert.equal(tab.isLoading, false)
+  assert.equal(tab.suppressVisits, false)
 })

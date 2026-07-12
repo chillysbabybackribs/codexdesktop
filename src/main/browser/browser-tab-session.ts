@@ -3,6 +3,12 @@ import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.j
 import type { ManagedBrowserTab } from './browser-tab-model.js'
 import { clampTabIndex, safeWebContentsTitle, safeWebContentsUrl } from './browser-tab-model.js'
 
+const DEFAULT_HISTORY_RESTORE_TIMEOUT_MS = 10_000
+
+type HydrateSavedBrowserTabOptions = {
+  historyRestoreTimeoutMs?: number
+}
+
 export function captureBrowserSnapshot(
   tabs: Iterable<ManagedBrowserTab>,
   activeTabId: string | null
@@ -43,7 +49,8 @@ export async function hydrateSavedBrowserTab(
   tab: ManagedBrowserTab,
   saved: SavedBrowserTab,
   defaultUrl: string,
-  navigate: (url: string) => Promise<void>
+  navigate: (url: string) => Promise<void>,
+  options: HydrateSavedBrowserTabOptions = {}
 ): Promise<void> {
   const webContents = tab.view.webContents
 
@@ -52,10 +59,14 @@ export async function hydrateSavedBrowserTab(
 
     if (safeEntries.length > 0) {
       const activeIndex = clampTabIndex(saved.activeIndex, safeEntries.length)
-      await webContents.navigationHistory.restore({
-        entries: safeEntries,
-        index: activeIndex
-      })
+      await withTimeout(
+        webContents.navigationHistory.restore({
+          entries: safeEntries,
+          index: activeIndex
+        }),
+        options.historyRestoreTimeoutMs ?? DEFAULT_HISTORY_RESTORE_TIMEOUT_MS,
+        () => webContents.stop()
+      )
       tab.url = safeWebContentsUrl(webContents) || safeEntries[activeIndex]?.url || saved.url
       tab.title = safeWebContentsTitle(webContents) || tab.url || 'New Tab'
     } else if (isSafeNavigationUrl(saved.url)) {
@@ -134,4 +145,18 @@ function isSafeNavigationUrl(url: string): boolean {
   const lower = url.trim().toLowerCase()
 
   return Boolean(url.trim()) && !lower.startsWith('javascript:') && !lower.startsWith('file:')
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () => void): Promise<T> {
+  const safeTimeoutMs = Math.max(1, Math.round(timeoutMs))
+  let timer: ReturnType<typeof setTimeout> | undefined
+
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => {
+      onTimeout()
+      reject(new Error(`history restore timed out after ${safeTimeoutMs}ms`))
+    }, safeTimeoutMs)
+  })
+
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer))
 }
