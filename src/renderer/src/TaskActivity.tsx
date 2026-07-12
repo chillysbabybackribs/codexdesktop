@@ -807,6 +807,9 @@ function DynamicToolBlock({
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool
   const screenshot = cdpScreenshotArtifact(item)
   const fileArtifact = cdpFileArtifact(item)
+  const progress = status === 'running' && item.tool === 'research_web' && meta?.progress?.length
+    ? meta.progress[meta.progress.length - 1]
+    : null
 
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
@@ -842,6 +845,7 @@ function DynamicToolBlock({
       verb="Tool"
       detail={args ? `${name} ${args}` : name}
       meta={duration && duration >= 100 ? fmtDuration(duration) : null}
+      sub={progress ? <div className="tool-row-sub shimmer-text">{truncate(progress, 120)}</div> : null}
     />
   )
 }
@@ -1177,8 +1181,13 @@ export function currentActionLabel(
       }
       case 'mcpToolCall':
         return `Calling ${item.server}.${item.tool}`
-      case 'dynamicToolCall':
+      case 'dynamicToolCall': {
+        const progress = itemMeta[item.id]?.progress
+        if (item.tool === 'research_web' && progress?.length) {
+          return progress[progress.length - 1]
+        }
         return `Calling ${item.tool}`
+      }
       case 'webSearch':
         return 'Searching the web'
       case 'imageGeneration':

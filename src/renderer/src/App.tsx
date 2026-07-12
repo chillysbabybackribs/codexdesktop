@@ -73,6 +73,7 @@ import {
   reduceItemNotificationMeta,
   type ItemNotification
 } from './item-notifications'
+import { reduceResearchProgressMeta } from './activity-model'
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent } from './MarkdownContent'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
@@ -415,6 +416,13 @@ export default function App(): React.JSX.Element {
           addSystemItem(event.message ?? 'Codex app-server is not available.', event.status === 'error' ? 'error' : 'warning')
         }
 
+        return
+      }
+
+      if (event.type === 'researchProgress') {
+        if (isRelevantThread(event.threadId)) {
+          setItemMeta((current) => reduceResearchProgressMeta(current, event))
+        }
         return
       }
 
