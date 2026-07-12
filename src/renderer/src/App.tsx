@@ -37,7 +37,13 @@ import type { PluginAuthPolicy } from '../../shared/codex-protocol/v2/PluginAuth
 import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
-import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
+import {
+  buildTurnTrace,
+  isTurnTrace,
+  stripAutomaticSkillMarker,
+  stripSkillMarkerFromTitle,
+  type TurnTrace
+} from './trace'
 import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
@@ -2882,17 +2888,6 @@ function ThreadScroll({
   )
 }
 
-function stripAutomaticSkillMarker(text: string): string {
-  return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/, '')
-}
-
-function stripInjectedMemory(text: string): string {
-  return text.replace(
-    /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
-    ''
-  )
-}
-
 function completedMemoryTurns(
   items: ChatItem[],
   itemMeta: Record<string, ItemMeta>,
@@ -2910,7 +2905,7 @@ function completedMemoryTurns(
     if (item.type === 'userMessage') {
       turn.user = item.content
         .filter((content) => content.type === 'text')
-        .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
+        .map((content) => stripAutomaticSkillMarker(content.text))
         .join('\n')
         .trim()
     } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
@@ -2987,7 +2982,7 @@ const ChatItemView = memo(function ChatItemView({
   if (item.type === 'userMessage') {
     const text = item.content
       .filter((content) => content.type === 'text')
-      .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
+      .map((content) => stripAutomaticSkillMarker(content.text))
       .join('\n')
     const attachments = attachmentsFromUserInput(item.content)
 
@@ -3896,10 +3891,6 @@ function persistLastThreadId(threadId: string | null): void {
 
 function threadTitle(thread: Thread): string {
   return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat')
-}
-
-function stripSkillMarkerFromTitle(title: string): string {
-  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat'
 }
 
 function workspaceName(path: string): string {

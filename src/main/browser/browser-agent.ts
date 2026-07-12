@@ -3,6 +3,7 @@ import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-sessio
 import type { CdpArtifactStore } from './cdp-artifact-store.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
+import { assessExtractedPage } from './research-utils.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -571,11 +572,33 @@ export class BrowserAgentController {
     // serialization of the whole envelope.
     const contentMaxChars = Math.max(1_000, maxResultChars - 1_000)
 
-    return this.run(buildPageExtractionProgram(contentMaxChars), {
+    const outcome = await this.run(buildPageExtractionProgram(contentMaxChars), {
       ...options,
       maxResultChars
     })
+    return attachExtractionAssessment(outcome)
   }
+}
+
+// Score the extraction envelope the same way research_web scores saved pages,
+// so login walls and challenge pages come back verified:false with a reason
+// instead of silently passing boilerplate off as page content. Fan-out
+// (frame:'all') results are arrays of per-frame envelopes and pass through.
+function attachExtractionAssessment(outcome: BrowserAgentResult): BrowserAgentResult {
+  if (!outcome.ok || !outcome.result || typeof outcome.result !== 'object' || Array.isArray(outcome.result)) {
+    return outcome
+  }
+  const page = outcome.result as Record<string, unknown>
+  const { title, url, content, wordCount } = page
+  if (
+    typeof title !== 'string' ||
+    typeof url !== 'string' ||
+    typeof content !== 'string' ||
+    typeof wordCount !== 'number'
+  ) {
+    return outcome
+  }
+  return { ...outcome, result: { ...page, ...assessExtractedPage({ title, url, content, wordCount }) } }
 }
 
 export function buildPageExtractionProgram(maxChars: number): string {

@@ -5,11 +5,7 @@ import type { SkillsListResponse } from '../../shared/codex-protocol/v2/SkillsLi
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js'
 import type { ChatAttachment } from '../../shared/ipc.js'
 import { attachmentTurnInputs } from './attachment-input.js'
-import {
-  formatSkillInvocationText,
-  selectNewThreadSkills,
-  selectTurnSkills
-} from './codex-config.js'
+import { selectNewThreadSkills, selectTurnSkills } from './codex-config.js'
 
 type AppServerRequest = <T = unknown>(method: string, params?: unknown) => Promise<T>
 
@@ -59,14 +55,24 @@ export class LocalSkillRegistry {
     }
   }
 
-  buildTurnInput(text: string, isNewThread: boolean, attachments: ChatAttachment[] = []): UserInput[] {
+  // The user's text is sent untouched: codex expands each {type:'skill'} item
+  // into the full SKILL.md as a persistent user message, so prepending "$name"
+  // markers would only fabricate an explicit user invocation and pollute
+  // history. excludeSkills carries the names this thread already received —
+  // re-sending a skill appends another full copy of its body to history.
+  buildTurnInput(
+    text: string,
+    isNewThread: boolean,
+    attachments: ChatAttachment[] = [],
+    excludeSkills: ReadonlySet<string> = new Set()
+  ): UserInput[] {
     const turnSkills = selectTurnSkills(text, this.skills)
     const newThreadSkills = isNewThread ? selectNewThreadSkills(this.skills) : []
     const skills = [...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values()]
-    const visibleText = formatSkillInvocationText(text, turnSkills)
+      .filter((skill) => !excludeSkills.has(skill.name))
 
     return [
-      ...(visibleText.trim() ? [{ type: 'text', text: visibleText, text_elements: [] } satisfies UserInput] : []),
+      ...(text.trim() ? [{ type: 'text', text, text_elements: [] } satisfies UserInput] : []),
       ...attachmentTurnInputs(attachments),
       ...skills.map((skill): UserInput => ({ type: 'skill', name: skill.name, path: skill.path }))
     ]

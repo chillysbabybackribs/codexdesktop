@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events'
+import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
@@ -41,19 +42,22 @@ import {
 } from './app-server-rpc.js'
 import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
-import {
-  browserDynamicTools,
-  buildGuidance,
-  legacyResumeConfig,
-  newThreadConfig,
-  resolveTurnPolicy
-} from './codex-config.js'
+import { browserDynamicTools, buildGuidance, threadConfig } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
 // long threads stay responsive instead of riding the limit.
 const autoCompactContextRatio = 0.8
+
+// Threads without a chosen workspace must never run against $HOME: codex
+// permanently records the cwd as a trusted project in the user's
+// ~/.codex/config.toml and loads any ~/AGENTS.md written for other tools.
+function defaultWorkspaceDir(): string {
+  const dir = join(app.getPath('userData'), 'scratch-workspace')
+  mkdirSync(dir, { recursive: true })
+  return dir
+}
 
 export class CodexClient extends EventEmitter {
   private readonly appServer: AppServerProcess
@@ -63,6 +67,11 @@ export class CodexClient extends EventEmitter {
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
+  // Skill names whose SKILL.md body this thread has already received, so a
+  // skill is injected at most once per thread instead of on every matching
+  // turn. Cleared on compaction (history may have dropped the body) and left
+  // empty after resume (worst case: one duplicate injection per skill).
+  private readonly threadInjectedSkills = new Map<string, Set<string>>()
   constructor(
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner
@@ -187,14 +196,17 @@ export class CodexClient extends EventEmitter {
   async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
     await this.ensureStarted()
     const response = await this.request<ThreadStartResponse>('thread/start', {
-      cwd: cwd ?? process.env.HOME ?? process.cwd(),
+      cwd: cwd ?? defaultWorkspaceDir(),
       ...(model ? { model } : {}),
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
-      config: newThreadConfig,
+      config: threadConfig,
       dynamicTools: browserDynamicTools,
-      developerInstructions: buildGuidance()
+      developerInstructions: buildGuidance(),
+      // Inert on current gpt-5.6 templates, but pins future personality-enabled
+      // models so a user's ~/.codex personality never re-flavors app threads.
+      personality: 'none'
     })
     this.threadModels.set(response.thread.id, response.model)
     this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
@@ -207,8 +219,11 @@ export class CodexClient extends EventEmitter {
       threadId,
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
-      config: legacyResumeConfig,
-      developerInstructions: buildGuidance(),
+      config: threadConfig,
+      personality: 'none',
+      // No developerInstructions here: the start-time copy persists in thread
+      // history, and re-sending appends a second full copy of the guidance
+      // (with the stale original still live) on every resume.
       // Keep resume metadata small. The initial page is the renderer's
       // bounded bootstrap payload; requesting populated thread.turns as well
       // duplicates that history and makes large persisted chats feel frozen.
@@ -264,7 +279,8 @@ export class CodexClient extends EventEmitter {
     await this.ensureStarted()
     const startedThread = threadId ? null : await this.startThread(cwd, model)
     const activeThreadId = threadId ?? startedThread!.thread.id
-    const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
+    const injectedSkills = this.threadInjectedSkills.get(activeThreadId) ?? new Set<string>()
+    const input = this.localSkills.buildTurnInput(text, !threadId, attachments, injectedSkills)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -273,9 +289,12 @@ export class CodexClient extends EventEmitter {
       input,
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
-      ...resolveTurnPolicy(text),
       approvalPolicy: 'never'
     })
+    for (const item of input) {
+      if (item.type === 'skill') injectedSkills.add(item.name)
+    }
+    this.threadInjectedSkills.set(activeThreadId, injectedSkills)
     if (model) this.threadModels.set(activeThreadId, model)
     if (effort) this.threadReasoningEfforts.set(activeThreadId, effort)
 
@@ -293,12 +312,15 @@ export class CodexClient extends EventEmitter {
     return this.request('turn/interrupt', { threadId, turnId })
   }
 
+  // Steering is lightweight course-correction of an in-flight turn: plain
+  // text only, no skill machinery — a keyword match here used to dump a full
+  // SKILL.md body into the middle of a running turn.
   async steerTurn(threadId: string, turnId: string, text: string): Promise<unknown> {
     await this.ensureStarted()
     return this.request('turn/steer', {
       threadId,
       expectedTurnId: turnId,
-      input: this.localSkills.buildTurnInput(text, false)
+      input: [{ type: 'text', text, text_elements: [] }]
     })
   }
 
@@ -381,6 +403,9 @@ export class CodexClient extends EventEmitter {
       this.maybeAutoCompact(notification.params.threadId)
     } else if (notification.method === 'thread/compacted') {
       this.compactionsInFlight.delete(notification.params.threadId)
+      // Compaction may have dropped injected skill bodies from history, so
+      // allow the next matching turn to re-inject them.
+      this.threadInjectedSkills.delete(notification.params.threadId)
     } else if (
       notification.method === 'thread/deleted' ||
       notification.method === 'thread/closed'
@@ -389,6 +414,7 @@ export class CodexClient extends EventEmitter {
       this.threadReasoningEfforts.delete(notification.params.threadId)
       this.threadTokenUsage.delete(notification.params.threadId)
       this.compactionsInFlight.delete(notification.params.threadId)
+      this.threadInjectedSkills.delete(notification.params.threadId)
     }
 
     this.emit('event', {

@@ -780,10 +780,13 @@ function singleLine(text: string): string {
   return text.replace(/\s+/g, ' ').trim()
 }
 
-function stripAutomaticSkillMarker(text: string): string {
-  return text.replace(/^\$artifact-first-web-research[ \t]*\r?\n/i, '')
+// Older app versions prepended "$skill-name" marker lines to the user's text
+// for every auto-selected skill; persisted threads still carry them. Strip any
+// leading run of markers, not just the one skill name that existed back then.
+export function stripAutomaticSkillMarker(text: string): string {
+  return text.replace(/^(?:\$[a-z][a-z0-9-]*[ \t]*)+\r?\n/i, '')
 }
 
-function stripSkillMarkerFromTitle(title: string): string {
-  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat'
+export function stripSkillMarkerFromTitle(title: string): string {
+  return title.replace(/^(?:\$[a-z][a-z0-9-]*\s*)+/i, '') || 'New Chat'
 }

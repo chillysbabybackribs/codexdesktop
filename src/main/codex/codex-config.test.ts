@@ -4,10 +4,9 @@ import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata
 import {
   browserDynamicTools,
   buildGuidance,
-  formatSkillInvocationText,
-  resolveTurnPolicy,
   selectNewThreadSkills,
-  selectTurnSkills
+  selectTurnSkills,
+  threadConfig
 } from './codex-config.js'
 
 const webResearchSkill: SkillMetadata = {
@@ -91,16 +90,20 @@ test('an explicit skill mention always attaches it', () => {
   )
 })
 
-test('automatic skill invocation adds the app-server text marker', () => {
-  assert.equal(
-    formatSkillInvocationText('Research Electron navigation', [webResearchSkill]),
-    '$artifact-first-web-research\nResearch Electron navigation'
+test('common local-coding words do not attach the web research skill', () => {
+  assert.deepEqual(
+    selectTurnSkills('review the memory file and compare the current implementation', [webResearchSkill]),
+    []
+  )
+  assert.deepEqual(
+    selectTurnSkills('search the codebase for the latest tab manager changes', [webResearchSkill]),
+    []
   )
 })
 
-test('explicit skill invocation does not duplicate its marker', () => {
-  const text = '$artifact-first-web-research Research Electron navigation'
-  assert.equal(formatSkillInvocationText(text, [webResearchSkill]), text)
+test('clear web intent attaches the research skill', () => {
+  assert.deepEqual(selectTurnSkills('look up pricing threads on reddit', [webResearchSkill]), [webResearchSkill])
+  assert.deepEqual(selectTurnSkills('see https://example.com/changelog', [webResearchSkill]), [webResearchSkill])
 })
 
 test('new threads attach memory reasoning without classifying the prompt text', () => {
@@ -108,15 +111,26 @@ test('new threads attach memory reasoning without classifying the prompt text', 
   assert.deepEqual(selectNewThreadSkills([priorChatMemorySkill]), [priorChatMemorySkill])
 })
 
-test('memory skill does not require a synthetic invocation marker', () => {
-  assert.equal(formatSkillInvocationText('lets continue', []), 'lets continue')
-})
-
-test('guidance nudges ambiguous continuation without requesting improvement cards', () => {
+test('guidance defers to the memory skill without requesting improvement cards', () => {
   const guidance = buildGuidance({})
-  assert.match(guidance, /opening request is ambiguous.*use that skill/i)
+  assert.match(guidance, /prior-chat-memory skill attached.*follow its own gating rules/i)
+  assert.match(guidance, /injected <skill> blocks contain the complete SKILL\.md/i)
   assert.doesNotMatch(guidance, /app-improvement|self-improvement reporting/i)
   assert.doesNotMatch(guidance, /protected codex desktop host session/i)
+})
+
+test('guidance scopes its shaping note to task process, not final-answer style', () => {
+  const guidance = buildGuidance({})
+  assert.match(guidance, /task-process shaping only; it does not change personality or tone/)
+  assert.doesNotMatch(guidance, /final-answer style/)
+})
+
+test('thread config pins host-varying state off for start and resume', () => {
+  assert.equal(threadConfig.web_search, 'disabled')
+  assert.equal(threadConfig['features.memories'], false)
+  assert.equal(threadConfig['memories.use_memories'], false)
+  assert.equal(threadConfig['memories.generate_memories'], false)
+  assert.equal(threadConfig['features.tool_suggest'], false)
 })
 
 test('self-hosted guidance protects the exact host session and routes live checks to an isolated instance', () => {
@@ -133,17 +147,6 @@ test('self-hosted guidance protects the exact host session and routes live check
   assert.match(guidance, /never signal, terminate, restart, replace/i)
   assert.match(guidance, /npm run verify:app/)
   assert.match(guidance, /do not run `npm run dev` or `npm run dev:app`/i)
-})
-
-test('research turns keep the configured reasoning effort', () => {
-  const policy = resolveTurnPolicy('Find recent firsthand Linux migration reports with sources')
-
-  assert.deepEqual(policy, { summary: 'concise' })
-  assert.equal('effort' in policy, false)
-})
-
-test('implementation turns use automatic reasoning summaries', () => {
-  assert.deepEqual(resolveTurnPolicy('Refactor the tab manager and run its tests'), { summary: 'auto' })
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {

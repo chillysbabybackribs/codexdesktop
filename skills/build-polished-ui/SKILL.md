@@ -1,6 +1,6 @@
 ---
 name: build-polished-ui
-description: Design and implement high-quality web UI examples, landing pages, dashboards, product surfaces, and component showcases through a visual-contract-first workflow. Use when Codex is asked to build, redesign, prototype, or demonstrate a polished frontend; provide multiple visual directions; match the quality of a supplied reference; turn an image or brief into working UI; create an interactive application mockup; or improve a page that feels generic, unfinished, or visually weak. Covers design exploration, generated visual previews, implementation briefs, responsive frontend implementation, interaction design, accessibility, visual QA, and production validation.
+description: Design and implement high-quality web UI through a visual-contract-first workflow. Use when asked to build, redesign, prototype, or polish a frontend, match a supplied reference, or turn an image or brief into working UI.
 ---
 
 # Build Polished UI

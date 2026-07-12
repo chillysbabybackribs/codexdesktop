@@ -1,6 +1,6 @@
 ---
 name: studio-scout
-description: Mine logged-in communities, marketplaces, and review sites for recurring pain points worth building an app around. Produces deduplicated idea seed files with verbatim evidence in the workspace ideas/ pipeline. Invoke with $studio-scout, optionally followed by a niche or source to focus on.
+description: Cheap, bounded pain-point pass — the lightweight counterpart to $studio-hunt. Mines logged-in communities, marketplaces, and review sites for recurring paid pain and writes up to five deduplicated idea seeds with verbatim evidence into the workspace ideas/ pipeline. Invoke with $studio-scout, optionally followed by a niche or source to focus on.
 ---
 
 # Studio Scout

@@ -37,3 +37,23 @@ test('local skill registry composes visible text, attachments, and one skill inp
   assert.equal(input[1]?.type === 'localImage' && input[1].detail, 'high')
   assert.equal(input[2]?.type === 'skill' && input[2].name, researchSkill.name)
 })
+
+test('auto-selected skills do not rewrite the user text with markers', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [researchSkill])
+  const input = registry.buildTurnInput('research current Electron versions online', false)
+
+  assert.deepEqual(input.map((item) => item.type), ['text', 'skill'])
+  assert.equal(input[0]?.type === 'text' && input[0].text, 'research current Electron versions online')
+})
+
+test('skills the thread already received are not injected again', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [researchSkill])
+  const input = registry.buildTurnInput(
+    'research current Electron versions online',
+    false,
+    [],
+    new Set([researchSkill.name])
+  )
+
+  assert.deepEqual(input.map((item) => item.type), ['text'])
+})

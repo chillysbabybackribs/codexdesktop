@@ -1,6 +1,6 @@
 ---
 name: studio-hunt
-description: Creative, evidence-informed opportunity hunt for solo-buildable web apps. Uses current market motion, buyer behavior, and operational friction as creative material; generates many wedges early, reality-checks them quickly, and ranks the strongest for later validation. Invoke with $studio-hunt, optionally followed by a bias hint.
+description: Heavyweight multi-phase opportunity hunt for solo-buildable web apps — the deep counterpart to $studio-scout. Uses market motion, buyer behavior, and operational friction as creative material; generates many wedges, reality-checks them, and promotes the strongest into the ideas/ pipeline. Invoke with $studio-hunt, optionally followed by a bias hint.
 ---
 
 # Studio Hunt

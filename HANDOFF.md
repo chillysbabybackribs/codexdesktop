@@ -79,6 +79,8 @@ These are directional estimates, not guaranteed savings. Real compaction itself 
 
 ### P0: Reasoning policy inherits and sticks to the wrong effort
 
+> **Superseded (2026-07-11).** `resolveTurnPolicy()` has been removed entirely: its `summary` override never showed an observable effect in rollouts, and per-turn effort is deliberately not set by the app (effort follows the picker; tests guard against sticky effort). The diagnostic observations below were accurate at audit time but the recommended change should not be re-implemented.
+
 Relevant code: `src/main/codex/codex-config.ts`, `resolveTurnPolicy()`.
 
 The global Codex config currently defaults to `model_reasoning_effort = "xhigh"`. `resolveTurnPolicy()` only returns `effort: "low"` for a narrow research regex; otherwise it omits effort and inherits the global value.
@@ -155,7 +157,9 @@ Recommended changes:
 - Crop or downscale images before model use when full resolution is unnecessary.
 - Track argument and output sizes per tool call.
 
-### P0/P1: A compact research implementation exists but is not declared
+### RESOLVED (2026-07-10) — P0/P1: A compact research implementation exists but is not declared
+
+> `browserDynamicTools` now declares all research tools (`research_web`, `browser_extract_page`, `browser_screenshot`, `ui_review`, `browser_run`, `browser_cdp`); the claims below describe the pre-fix state.
 
 Relevant code:
 
