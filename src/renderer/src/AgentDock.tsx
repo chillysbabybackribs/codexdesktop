@@ -1,7 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
@@ -9,7 +7,7 @@ import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadToke
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
-import { browserLinkComponents } from './MarkdownContent'
+import { MarkdownContent } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
@@ -187,7 +185,7 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
   )
 }
 
-function AgentWindow({
+const AgentWindow = memo(function AgentWindow({
   session,
   isSelected,
   models,
@@ -355,7 +353,7 @@ function AgentWindow({
           session.messages.map((message) => (
             <div key={message.id} className={`agent-mini-message is-${message.role}`}>
               {message.role === 'assistant' ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={browserLinkComponents}>{message.text}</ReactMarkdown>
+                <MarkdownContent text={message.text} />
               ) : (
                 <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
               )}
@@ -464,6 +462,17 @@ function AgentWindow({
       </form>
     </div>
   )
+}, areAgentWindowPropsEqual)
+
+function areAgentWindowPropsEqual(
+  previous: React.ComponentProps<typeof AgentWindow>,
+  next: React.ComponentProps<typeof AgentWindow>
+): boolean {
+  return previous.session === next.session &&
+    previous.isSelected === next.isSelected &&
+    previous.models === next.models &&
+    previous.mainModel === next.mainModel &&
+    previous.mainReasoningEffort === next.mainReasoningEffort
 }
 
 function AgentContextPill({
