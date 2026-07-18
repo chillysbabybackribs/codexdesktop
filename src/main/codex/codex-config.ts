@@ -97,15 +97,17 @@ export function isFastPathTask(text: string): boolean {
   if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security)\b/.test(normalized)) {
     return false
   }
-  return /^(?:(?:can|could|would) you |please |ok )?(?:check|go to|list|navigate(?: to)?|open|read|show|visit)\b/.test(normalized) ||
-    (isInteractiveBrowserTask(text) && /\b(?:check|tell me|show|list|read)\b/.test(normalized))
+  return /^(?:(?:can|could|would) you |please |ok )?(?:check|go to|list|navigate(?: to)?|open|read|show|tell me|visit)\b/.test(normalized) ||
+    isInteractiveBrowserTask(text)
 }
 
 export function isInteractiveBrowserTask(text: string): boolean {
   const normalized = text.trim().toLowerCase()
   const browserAction = /\b(check|go to|navigate|open|read|show|visit|click|fill|select|submit)\b/.test(normalized)
   const accountState = /\b(my|account|dashboard|inbox|notifications?|messages?|unread|logged[ -]in|current tab|this (?:page|tab))\b/.test(normalized)
-  return browserAction && accountState
+  const firstPersonAccountObject = /\b(?:my|mine)\b/.test(normalized) &&
+    /\b(?:account|dashboard|inbox|notifications?|messages?|profile|settings?)\b/.test(normalized)
+  return (browserAction && accountState) || firstPersonAccountObject
 }
 
 export function isReadOnlyBrowserMicrotask(text: string): boolean {
@@ -121,9 +123,9 @@ export function isReadOnlyBrowserMicrotask(text: string): boolean {
 
 export function isWebResearchTask(text: string): boolean {
   const normalized = text.trim().toLowerCase()
-  const publicEvidenceRequest =
-    /\b(research|search online|find online|public sources?|citations?|news|pricing|customer reviews?|user reviews?|forums?|release notes?|compare|comparison)\b/.test(normalized)
-  if (isInteractiveBrowserTask(text) && !publicEvidenceRequest) return false
+  const explicitPublicLane =
+    /\b(research(?: online| the web)?|search online|find online|public sources?|online sources?|citations?|on the web|from the web|browse the web|web search)\b/.test(normalized)
+  if (isInteractiveBrowserTask(text) && !explicitPublicLane) return false
   if (/https?:\/\//.test(normalized)) return true
 
   const explicitWebAction =
