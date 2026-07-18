@@ -256,9 +256,15 @@ async function runModelArm(context, oracle, options) {
     const completedToolItems = streamedItems.filter((item) =>
       ['dynamicToolCall', 'mcpToolCall', 'commandExecution', 'webSearch'].includes(item.type)
     )
+    const snapshotCalls = toolCalls.filter(({ tool }) => tool === 'browser_snapshot')
+    const fastPathContract = toolCalls.length === 1 && snapshotCalls.length === 1 && snapshotCalls[0].ok === true &&
+      completedToolItems.length === 1 && completedToolItems[0].type === 'dynamicToolCall'
+    const productionControllerExercised = snapshotCalls.length === 1 &&
+      snapshotCalls[0].transport === 'browser-control:/snapshot'
 
     return {
-      ok: completed.status === 'completed' && accuracy.exactThreeAndState,
+      ok: completed.status === 'completed' && accuracy.exactThreeAndState && fastPathContract &&
+        (context.allowEvalFallback || productionControllerExercised),
       skipped: false,
       threadId: thread.thread.id,
       turnId: completed.id,
@@ -273,6 +279,7 @@ async function runModelArm(context, oracle, options) {
       modelCallCount: tokenEvents.length,
       toolCallCount: Math.max(toolCalls.length, completedToolItems.length),
       failedToolCallCount: toolCalls.filter(({ ok }) => !ok).length,
+      fastPathContract,
       toolDurationSumMs: round(sum(toolCalls.map(({ durationMs }) => durationMs)), 3),
       tokens: lastUsage ? {
         accumulated: lastUsage.total,
@@ -281,9 +288,7 @@ async function runModelArm(context, oracle, options) {
         calls: tokenEvents.map(({ last, modelContextWindow }) => ({ ...last, modelContextWindow }))
       } : null,
       toolCalls,
-      productionControllerExercised: toolCalls.some(({ tool }) => tool === 'browser_snapshot') &&
-        toolCalls.filter(({ tool }) => tool === 'browser_snapshot')
-          .every(({ transport }) => transport === 'browser-control:/snapshot'),
+      productionControllerExercised,
       finalResponse,
       accuracy
     }
@@ -525,8 +530,10 @@ async function routeModelBrowserTool(params, context) {
   if (params.tool === 'browser_snapshot') {
     const urlError = validateSamePage(args.url, context.expectedUrl)
     if (urlError) return failureToolResponse(urlError)
+    const objective = readString(args.objective)
+    if (!objective) return failureToolResponse('browser_snapshot requires objective.')
     const outcome = await postSnapshot(context, {
-      objective: readString(args.objective) ?? SNAPSHOT_OBJECTIVE,
+      objective,
       mode: readSnapshotMode(args.mode),
       order: readSnapshotOrder(args.order),
       selector: readString(args.selector),
