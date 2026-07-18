@@ -2547,7 +2547,7 @@ function MainChatTabStrip({
   tabs: MainChatTab[]
   activeKey: string
   disabled: boolean
-  onSelect: (key: string) => Promise<void>
+  onSelect: (key: string) => Promise<boolean>
   onClose: (key: string) => Promise<void>
   onNew: () => void
   onOpenSettings: () => void
@@ -2728,7 +2728,7 @@ function ChatPane({
   mainChatTabs: MainChatTab[]
   activeMainChatTabKey: string
   mainChatTabsDisabled: boolean
-  onSelectMainChatTab: (key: string) => Promise<void>
+  onSelectMainChatTab: (key: string) => Promise<boolean>
   onCloseMainChatTab: (key: string) => Promise<void>
   onNewMainChatTab: () => void
   items: ChatItem[]

@@ -91,10 +91,11 @@ export function resolveTurnPolicy(
 export function isFastPathTask(text: string): boolean {
   const normalized = text.trim().toLowerCase()
   if (!normalized || normalized.length > 360) return false
-  if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security|test)\b/.test(normalized)) {
+  if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security)\b/.test(normalized)) {
     return false
   }
-  return /^(?:can you |please )?(?:check|go to|list|navigate(?: to)?|open|read|show|visit)\b/.test(normalized)
+  return /^(?:(?:can|could|would) you |please |ok )?(?:check|go to|list|navigate(?: to)?|open|read|show|visit)\b/.test(normalized) ||
+    (isInteractiveBrowserTask(text) && /\b(?:check|tell me|show|list|read)\b/.test(normalized))
 }
 
 export function isInteractiveBrowserTask(text: string): boolean {
@@ -117,11 +118,10 @@ export function isReadOnlyBrowserMicrotask(text: string): boolean {
 
 export function isWebResearchTask(text: string): boolean {
   const normalized = text.trim().toLowerCase()
-  if (/https?:\/\//.test(normalized)) return true
-
   const publicEvidenceRequest =
     /\b(research|search online|find online|public sources?|citations?|news|pricing|customer reviews?|user reviews?|forums?|release notes?|compare|comparison)\b/.test(normalized)
   if (isInteractiveBrowserTask(text) && !publicEvidenceRequest) return false
+  if (/https?:\/\//.test(normalized)) return true
 
   const explicitWebAction =
     /\b(search|research|browse|look up|find online|search online|on the web|from the web|web search)\b/.test(normalized)
