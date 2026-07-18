@@ -599,6 +599,13 @@ function areAgentWindowPropsEqual(
     previous.mainReasoningEffort === next.mainReasoningEffort
 }
 
+const agentZoomStorageKey = (key: string): string => `codexdesktop.agent-zoom.${key}`
+
+function readAgentZoom(key: string): number {
+  const stored = Number(window.localStorage.getItem(agentZoomStorageKey(key)))
+  return Number.isFinite(stored) ? Math.max(80, Math.min(140, stored)) : 100
+}
+
 function AgentContextPill({
   usage,
   disabled,
@@ -695,6 +702,39 @@ function EyeIcon(): React.JSX.Element {
         strokeLinejoin="round"
       />
       <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  )
+}
+
+function ZoomIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" strokeWidth="1.7" />
+      <path d="m15 15 5 5M8 10.5h5M10.5 8v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ChevronDownIcon(): React.JSX.Element {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function MinusIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function PlusIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
