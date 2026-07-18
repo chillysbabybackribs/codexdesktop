@@ -766,15 +766,18 @@ export default function App(): React.JSX.Element {
         const started = await window.api.codex.startThread({ cwd: workspace, model: selectedModel })
         mainThreadStartsInFlightRef.current.delete(targetTabKey)
         threadId = started.thread.id
+        const startedTitle = threadTitle(started.thread)
         watchThreadIdRef.current = threadId
         activeThreadIdRef.current = threadId
         setActiveThreadId(threadId)
+        activeThreadTitleRef.current = startedTitle
+        setActiveThreadTitle(startedTitle)
         setActiveReasoningEffort(started.reasoningEffort)
         activeReasoningEffortRef.current = started.reasoningEffort
         patchMainChatTab(targetTabKey, (tab) => ({
           ...tab,
           threadId,
-          title: threadTitle(started.thread)
+          title: startedTitle
         }))
         persistLastThreadId(threadId)
       }
@@ -1168,10 +1171,18 @@ export default function App(): React.JSX.Element {
     })
     const threadId = started.thread.id
     watchThreadIdRef.current = threadId
+    activeThreadIdRef.current = threadId
     setActiveThreadId(threadId)
-    setActiveThreadTitle(threadTitle(started.thread))
+    const title = threadTitle(started.thread)
+    activeThreadTitleRef.current = title
+    setActiveThreadTitle(title)
     setActiveReasoningEffort(started.reasoningEffort)
     activeReasoningEffortRef.current = started.reasoningEffort
+    patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+      ...tab,
+      threadId,
+      title
+    }))
     persistLastThreadId(threadId)
     return threadId
   }
@@ -1311,7 +1322,6 @@ export default function App(): React.JSX.Element {
   }
 
   const {
-    bindAgentThread,
     handleAgentSend,
     handleAgentStop,
     handleAgentCompact,
