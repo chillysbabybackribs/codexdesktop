@@ -133,16 +133,29 @@ test('task snapshot infers a requested count, stays compact, and preserves sourc
 })
 
 test('reverse-document ordering selects records from the end when the planner requests it', () => {
-  const result = executeSnapshot(`<!doctype html><html><head><title>Results</title></head><body><main>
-    <div class="result-row">Result one</div><div class="result-row">Result two</div><div class="result-row">Result three</div>
-  </main></body></html>`, {
+  const rows = Array.from({ length: 100 }, (_, index) => `<div class="result-row">Result ${index + 1}</div>`).join('')
+  const result = executeSnapshot(`<!doctype html><html><head><title>Results</title></head><body><main>${rows}</main></body></html>`, {
     mode: 'task',
     objective: '2 results',
     order: 'reverse-document',
     maxChars: 3_000
   })
 
-  assert.deepEqual(result.items.map(({ text }) => text), ['Result three', 'Result two'])
+  assert.deepEqual(result.items.map(({ text }) => text), ['Result 100', 'Result 99'])
+})
+
+test('task mode preserves explicitly scoped navigation and menu controls', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Account</title></head><body>
+    <nav id="account-menu"><a href="/profile">Profile</a><a href="/settings">Settings</a><a href="/billing">Billing</a></nav>
+  </body></html>`, {
+    mode: 'task',
+    objective: 'show the 3 account menu links',
+    selector: '#account-menu',
+    maxChars: 3_000
+  })
+
+  assert.equal(result.scope.matched, true)
+  assert.deepEqual(result.items.map(({ text }) => text), ['Profile', 'Settings', 'Billing'])
 })
 
 test('custom list containers do not collapse their repeated child rows', () => {

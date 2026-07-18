@@ -513,6 +513,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }
 
   function isLowValueElement(element: Element, tag: string): boolean {
+    if (config.mode !== 'content') return false
     if (tag === 'nav' || tag === 'footer' || tag === 'aside') return true
     const role = (element.getAttribute('role') || '').toLowerCase()
     if (['banner', 'complementary', 'contentinfo', 'navigation', 'toolbar'].includes(role)) return true
@@ -869,11 +870,15 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }
 
   function compareCandidateQuality(left: RuntimeCandidate, right: RuntimeCandidate): number {
-    return left.score - right.score || right.order - left.order
+    return left.score - right.score || (
+      config.order === 'reverse-document' ? left.order - right.order : right.order - left.order
+    )
   }
 
   function compareBlockQuality(left: RuntimeBlock, right: RuntimeBlock): number {
-    return left.score - right.score || right.order - left.order
+    return left.score - right.score || (
+      config.order === 'reverse-document' ? left.order - right.order : right.order - left.order
+    )
   }
 
   function keepBest<T>(values: T[], value: T, limit: number, compare: (left: T, right: T) => number): void {
