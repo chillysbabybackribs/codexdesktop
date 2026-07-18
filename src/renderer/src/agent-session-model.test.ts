@@ -66,6 +66,28 @@ test('buffered deltas append in order and create missing assistant messages', ()
   ])
 })
 
+test('buffered deltas preserve unaffected session and message identity', () => {
+  const untouchedMessage = { id: 'untouched-message', role: 'assistant' as const, text: 'Settled' }
+  const updatedMessage = { id: 'answer', role: 'assistant' as const, text: 'Hello' }
+  const first = {
+    ...createAgentSession('one', 'Agent 2'),
+    messages: [untouchedMessage, updatedMessage]
+  }
+  const second = {
+    ...createAgentSession('two', 'Agent 3'),
+    messages: [{ id: 'other', role: 'assistant' as const, text: 'Other' }]
+  }
+
+  const result = applyAgentDeltas([first, second], new Map([
+    ['one', new Map([['answer', ' world']])]
+  ]))
+
+  assert.equal(result[1], second)
+  assert.equal(result[0]?.messages[0], untouchedMessage)
+  assert.notEqual(result[0]?.messages[1], updatedMessage)
+  assert.equal(result[0]?.messages[1]?.text, 'Hello world')
+})
+
 test('agent dock persistence keeps only durable metadata', () => {
   const session = {
     ...createAgentSession('one', 'Research'),
