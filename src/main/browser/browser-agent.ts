@@ -283,6 +283,9 @@ export class BrowserAgentController {
           ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
           ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
         })
+        if (options.readySelector?.trim() && result.settleReason !== 'selector-ready') {
+          throw new Error(`navigation readiness failed: ${result.settleReason}`)
+        }
         return {
           ok: true,
           result,

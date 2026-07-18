@@ -138,7 +138,7 @@ test('browser agent navigates with selector readiness through the tab manager', 
         durationMs: 120,
         domReadyMs: 70,
         settleMs: 50,
-        settleReason: 'dom-quiet'
+        settleReason: 'selector-ready'
       }
     }
   } as unknown as TabManager
@@ -153,7 +153,27 @@ test('browser agent navigates with selector readiness through the tab manager', 
     input: 'https://example.com/inbox',
     options: { timeoutMs: 4_000, readySelector: '[data-testid="inbox-row"]' }
   })
-  assert.equal((result.result as { settleReason: string }).settleReason, 'dom-quiet')
+  assert.equal((result.result as { settleReason: string }).settleReason, 'selector-ready')
+})
+
+test('browser agent reports missing requested navigation readiness as a failure', async () => {
+  const tabs = {
+    ...fakeTabs(async () => null),
+    navigateAndWait: async () => ({
+      url: 'https://example.com/inbox',
+      durationMs: 200,
+      domReadyMs: 50,
+      settleMs: 150,
+      settleReason: 'selector-deadline'
+    })
+  } as unknown as TabManager
+
+  const result = await new BrowserAgentController(() => tabs).navigate('https://example.com/inbox', {
+    readySelector: '[data-testid="missing"]'
+  })
+
+  assert.equal(result.ok, false)
+  assert.match(result.error ?? '', /navigation readiness failed: selector-deadline/)
 })
 
 test('browser agent persists oversized program results as artifacts', async (context) => {
