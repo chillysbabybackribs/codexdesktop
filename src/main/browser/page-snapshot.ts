@@ -131,10 +131,12 @@ const MAX_MAX_CHARS = 100_000
 const MAX_MAX_ITEMS = 200
 
 const OBJECTIVE_STOP_WORDS = new Set([
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'each', 'find', 'for', 'from', 'go', 'how',
-  'get', 'give', 'grab', 'i', 'identify', 'in', 'is', 'it', 'list', 'me', 'navigate', 'of',
-  'on', 'or', 'page', 'please', 'return', 'extract', 'show', 'tell', 'that', 'the', 'this',
-  'to', 'what', 'when', 'where', 'which', 'who', 'whether', 'with', 'first', 'last',
+  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'can', 'click', 'control', 'controls',
+  'could', 'each', 'find', 'for', 'from', 'go', 'how', 'get', 'give', 'grab', 'i',
+  'identify', 'in', 'is', 'it', 'like', 'list', 'me', 'my', 'navigate', 'need', 'of',
+  'on', 'or', 'our', 'page', 'please', 'press', 'return', 'extract', 'show', 'tap',
+  'tell', 'that', 'the', 'this', 'to', 'us', 'want', 'what', 'when', 'where', 'which',
+  'who', 'whether', 'with', 'would', 'you', 'your', 'first', 'last',
   'latest', 'recent', 'top', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
   'eight', 'nine', 'ten'
 ])
@@ -161,8 +163,9 @@ const OBJECTIVE_CANONICAL = new Map(
 export function expandPageSnapshotObjectiveTerms(objective: string): ObjectiveTermGroup[] {
   const groups: ObjectiveTermGroup[] = []
   const seen = new Set<string>()
+  const imperativeRead = /^(?:(?:can|could|would) you\s+|please\s+)?read\b/i.test(objective.trim())
   for (const raw of tokenizeObjective(objective)) {
-    if (OBJECTIVE_STOP_WORDS.has(raw) || /^\d+$/.test(raw)) continue
+    if (raw.length <= 1 || OBJECTIVE_STOP_WORDS.has(raw) || /^\d+$/.test(raw) || (raw === 'read' && imperativeRead)) continue
     const singular = raw.length > 3 && raw.endsWith('s') && !/(ss|us|is)$/.test(raw)
       ? raw.slice(0, -1)
       : raw

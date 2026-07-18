@@ -897,18 +897,10 @@ function assessBrowserExtractionValue(value: unknown, depth: number): { verified
       const record = asRecord(item)
       return `${String(record.text ?? '')} ${String(record.name ?? '')}`
     }).join(' ')
-    const wallText = `${title} ${content} ${itemEvidence}`
-    if (/\b(?:just a moment|checking your browser|verify you are human|access denied|captcha)\b/i.test(wallText)) {
-      return { verified: false, reason: 'challenge-page' }
-    }
     const coverage = asRecord(page.coverage)
     const objectiveTerms = Array.isArray(coverage.objectiveTerms)
       ? coverage.objectiveTerms.filter((term): term is string => typeof term === 'string')
       : []
-    const explicitlyRequestsAuth = objectiveTerms.some((term) => /^(?:auth|authenticate|authentication|login|signin)$/.test(term))
-    if (!explicitlyRequestsAuth && /\b(?:log[ -]?in|sign[ -]?in|authentication required|session expired)\b/i.test(wallText)) {
-      return { verified: false, reason: 'login-wall' }
-    }
     const contentAssessment = assessExtractedPage({
       title,
       url,
@@ -916,12 +908,22 @@ function assessBrowserExtractionValue(value: unknown, depth: number): { verified
       wordCount: content.trim() ? content.trim().split(/\s+/).length : 0
     })
     if (page.mode === 'content') return contentAssessment
+    const taskWallText = `${title} ${itemEvidence} ${meaningfulItems.length === 0 ? content : ''}`
+    if (/\b(?:just a moment|checking your browser|verify you are human|access denied|captcha)\b/i.test(taskWallText)) {
+      return { verified: false, reason: 'challenge-page' }
+    }
+    const explicitlyRequestsAuth = objectiveTerms.some((term) => /^(?:auth|authenticate|authentication|login|signin|sign)$/.test(term))
+    const normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+    const loginShell = /^(?:log[ -]?in|sign[ -]?in|login|authentication required|session expired)\b/.test(normalizedTitle) ||
+      /\/(?:login|log-in|signin|sign-in|auth)(?:[/?#]|$)/i.test(url)
+    if (!explicitlyRequestsAuth && loginShell) return { verified: false, reason: 'login-wall' }
     if (meaningfulItems.length > 0) {
       if (objectiveTerms.length > 0 && coverage.complete !== true) {
         const gaps = Array.isArray(coverage.gaps)
           ? coverage.gaps.filter((gap): gap is string => typeof gap === 'string').slice(0, 4)
           : []
-        return { verified: false, reason: `coverage-incomplete${gaps.length > 0 ? `:${gaps.join(',')}` : ''}` }
+        const structuralGap = gaps.find((gap) => /^(?:item-count-missing:|read-state-mismatch:|traversal-truncated$|result-budget$)/.test(gap))
+        if (structuralGap) return { verified: false, reason: `coverage-incomplete:${structuralGap}` }
       }
       return { verified: true }
     }
