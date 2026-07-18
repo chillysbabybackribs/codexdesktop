@@ -1232,6 +1232,38 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      const commandKey = event.metaKey || event.ctrlKey
+      if (!commandKey || event.altKey) return
+
+      if (event.key.toLowerCase() === 't' && !event.shiftKey) {
+        event.preventDefault()
+        handleNewMainChatTab()
+        return
+      }
+
+      if (event.key.toLowerCase() === 'w' && !event.shiftKey) {
+        event.preventDefault()
+        void handleCloseMainChatTab(activeMainChatTabKeyRef.current)
+        return
+      }
+
+      if (event.key === 'Tab') {
+        event.preventDefault()
+        const state = mainChatTabStateRef.current
+        if (state.tabs.length < 2) return
+        const index = state.tabs.findIndex((tab) => tab.key === state.activeKey)
+        const direction = event.shiftKey ? -1 : 1
+        const next = state.tabs[(index + direction + state.tabs.length) % state.tabs.length]
+        void handleSelectMainChatTab(next.key)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isSending, isGoalUpdating, isRestoring])
+
   const hasThreadContent = items.length > 0
 
   function isRelevantThread(incomingThreadId: string): boolean {
@@ -1823,6 +1855,29 @@ export default function App(): React.JSX.Element {
     await refreshThreads({ append: true })
   }
 
+  async function restoreBackgroundMainChatTabs(activeThreadId: string | null): Promise<void> {
+    const backgroundTabs = mainChatTabStateRef.current.tabs.filter(
+      (tab) => tab.threadId && tab.threadId !== activeThreadId
+    )
+    await Promise.all(backgroundTabs.map(async (tab) => {
+      try {
+        const resumed = await window.api.codex.resumeThread(tab.threadId!)
+        const turns = resumed.thread.turns.length
+          ? resumed.thread.turns
+          : (resumed.initialTurnsPage?.data ?? [])
+        const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null
+        patchMainChatTab(tab.key, (current) => ({
+          ...current,
+          title: threadTitle(resumed.thread),
+          status: inProgress ? 'working' : 'idle',
+          turnId: inProgress?.id ?? null
+        }))
+      } catch (error) {
+        console.warn(`Failed to restore background chat tab ${tab.threadId}`, error)
+      }
+    }))
+  }
+
   function hydrateThread(
     thread: Thread,
     fallbackTurns?: Turn[],
@@ -1842,9 +1897,12 @@ export default function App(): React.JSX.Element {
     setIsCompacting(false)
     activeCompactionRef.current = null
 
+    const nextTitle = threadTitle(thread)
     watchThreadIdRef.current = thread.id
+    activeThreadIdRef.current = thread.id
     setActiveThreadId(thread.id)
-    setActiveThreadTitle(threadTitle(thread))
+    activeThreadTitleRef.current = nextTitle
+    setActiveThreadTitle(nextTitle)
     const inProgressTurnId = turns.find((turn) => turn.status === 'inProgress')?.id ?? null
     setActiveTurnId(inProgressTurnId)
     activeTurnIdRef.current = inProgressTurnId
@@ -1872,9 +1930,19 @@ export default function App(): React.JSX.Element {
       }
     }
 
+    itemsRef.current = nextItems
+    itemMetaRef.current = nextItemMeta
+    turnMetaRef.current = nextTurnMeta
     setItems(nextItems)
     setItemMeta(nextItemMeta)
     setTurnMeta(nextTurnMeta)
+    patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+      ...tab,
+      threadId: thread.id,
+      title: nextTitle,
+      status: inProgressTurnId ? 'working' : 'idle',
+      turnId: inProgressTurnId
+    }))
   }
 
   // Queue a streaming mutation and schedule a single batched apply. Every delta
