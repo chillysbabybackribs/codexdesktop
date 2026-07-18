@@ -1,4 +1,5 @@
 export type PageSnapshotMode = 'task' | 'content' | 'interactive'
+export type PageSnapshotOrder = 'document' | 'reverse-document'
 
 export type PageSnapshotOptions = {
   objective?: string | null
@@ -6,6 +7,7 @@ export type PageSnapshotOptions = {
   selector?: string | null
   maxItems?: number | null
   maxChars?: number | null
+  order?: PageSnapshotOrder | null
 }
 
 export type PageSnapshotItemState = {
@@ -89,6 +91,7 @@ type RuntimePageSnapshotConfig = {
   maxItems: number
   maxChars: number
   maxVisitedNodes: number
+  order: PageSnapshotOrder
 }
 
 type RuntimeCandidate = {
@@ -174,7 +177,8 @@ export function buildPageSnapshotProgram(options: PageSnapshotOptions = {}): str
     : objective
       ? 'task'
       : 'content'
-  const maxItems = clampInteger(options.maxItems, DEFAULT_MAX_ITEMS, 1, MAX_MAX_ITEMS)
+  const inferredItemCount = inferRequestedItemCount(objective)
+  const maxItems = clampInteger(options.maxItems, inferredItemCount ?? DEFAULT_MAX_ITEMS, 1, MAX_MAX_ITEMS)
   const maxChars = clampInteger(options.maxChars, DEFAULT_MAX_CHARS, MIN_MAX_CHARS, MAX_MAX_CHARS)
   const config: RuntimePageSnapshotConfig = {
     objective,
@@ -183,7 +187,8 @@ export function buildPageSnapshotProgram(options: PageSnapshotOptions = {}): str
     selector: typeof options.selector === 'string' ? options.selector.trim().slice(0, 1_000) : '',
     maxItems,
     maxChars,
-    maxVisitedNodes: Math.min(100_000, Math.max(50_000, maxItems * 1_000))
+    maxVisitedNodes: Math.min(100_000, Math.max(50_000, maxItems * 1_000)),
+    order: options.order === 'reverse-document' ? 'reverse-document' : 'document'
   }
   return `return (${pageSnapshotRuntime.toString()})(${JSON.stringify(config)});`
 }
@@ -233,7 +238,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   let root: Node | null = document.body ?? document.documentElement
   if (config.selector) {
     try {
-      root = document.querySelector(config.selector)
+      root = deepQuerySelector(config.selector)
       scope.matched = Boolean(root)
     } catch (error) {
       root = null
@@ -322,11 +327,11 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     if (['script', 'style', 'noscript', 'template', 'svg', 'canvas'].includes(tag)) continue
 
     elementOrder += 1
-    const primary = entry.context.primary || isPrimaryElement(element, tag)
+    const startsPrimary = isPrimaryElement(element, tag)
+    const primary = entry.context.primary || startsPrimary
     const explicitlyHidden = entry.context.hidden || isExplicitlyHidden(element)
-    const lowValue = primary
-      ? false
-      : entry.context.lowValue || isLowValueElement(element, tag)
+    const inheritedLowValue = startsPrimary ? false : entry.context.lowValue
+    const lowValue = inheritedLowValue || isLowValueElement(element, tag)
     const role = inferRole(element, tag)
     const state = readState(element)
     const repeated = isRepeatedElement(element, tag, role, state)
@@ -380,9 +385,13 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     ? candidates.filter((candidate) => candidate.matchedTerms.length > 0)
     : candidates
   const rankedCandidates = (matchingCandidates.length > 0 ? matchingCandidates : candidates)
-    .sort((left, right) => right.score - left.score || left.order - right.order)
+    .sort((left, right) => right.score - left.score || (
+      config.order === 'reverse-document' ? right.order - left.order : left.order - right.order
+    ))
     .slice(0, config.maxItems)
-  const selectedCandidates = rankedCandidates.sort((left, right) => left.order - right.order)
+  const selectedCandidates = rankedCandidates.sort((left, right) =>
+    config.order === 'reverse-document' ? right.order - left.order : left.order - right.order
+  )
   let itemEntries = selectedCandidates.map((candidate) => ({
     candidate,
     item: materializeCandidate(candidate)
@@ -400,30 +409,25 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }))
 
   const contentBlocks = primaryContentBlocks.length > 0 ? primaryContentBlocks : fallbackContentBlocks
-  const itemContent = selectedCandidates.map((candidate) => candidate.text || candidate.nameHint).filter(Boolean)
+  const itemTerms = new Set(selectedCandidates.flatMap(({ matchedTerms }) => matchedTerms))
+  const itemsCoverObjective = objectiveGroups.every(({ term }) => itemTerms.has(term)) &&
+    (requestedStateTerms.size === 0 || selectedCandidates.every(({ state }) => state.read !== undefined))
+  if (config.mode === 'task' && itemsCoverObjective) outputPassages = []
   const contentSource = config.mode === 'content'
     ? contentBlocks.map(formatBlock)
-    : itemContent.length > 0
-      ? itemContent
-      : rankedPassages.map((passage) => passage.text)
+    : selectedCandidates.length > 0
+      ? []
+      : outputPassages.map((passage) => passage.text)
   const contentBudget = Math.max(200, Math.floor(config.maxChars * (config.mode === 'content' ? 0.5 : 0.28)))
   const joinedContent = contentSource.join('\n\n')
   let content = clipAtWord(joinedContent, contentBudget)
   let contentTruncated = content.length < joinedContent.length
 
-  const matched = new Set<string>()
-  for (const candidate of selectedCandidates) {
-    for (const term of candidate.matchedTerms) matched.add(term)
-  }
-  for (const passage of rankedPassages) {
-    for (const term of passage.matchedTerms) matched.add(term)
-  }
   const objectiveTerms = objectiveGroups.map(({ term }) => term)
-  const matchedTerms = objectiveTerms.filter((term) => matched.has(term))
-  const gaps = objectiveTerms.filter((term) => !matched.has(term))
   const rankingMs = roundMs(now() - rankingStartedAt)
 
-  let omittedItems = Math.max(0, candidateCount - itemEntries.length)
+  let omittedItems = 0
+  const initialCoverage = currentCoverage()
   let result: PageSnapshotResult = {
     page,
     mode: config.mode,
@@ -433,9 +437,9 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     passages: outputPassages,
     coverage: {
       objectiveTerms,
-      matchedTerms,
-      gaps,
-      complete: gaps.length === 0,
+      matchedTerms: initialCoverage.matchedTerms,
+      gaps: initialCoverage.gaps,
+      complete: initialCoverage.complete,
       visitedNodes,
       candidateCount,
       omittedItems
@@ -445,7 +449,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       rankingMs,
       totalMs: roundMs(now() - startedAt)
     },
-    truncated: traversalTruncated || contentTruncated || candidateCount > itemEntries.length
+    truncated: traversalTruncated || contentTruncated
   }
 
   fitResult()
@@ -477,6 +481,23 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       if (element.shadowRoot) return Array.from(element.shadowRoot.childNodes)
     }
     return Array.from(node.childNodes ?? [])
+  }
+
+  function deepQuerySelector(selector: string): Element | null {
+    const roots: Array<Document | ShadowRoot> = [document]
+    const seenRoots = new WeakSet<object>()
+    while (roots.length > 0) {
+      const candidateRoot = roots.shift()!
+      if (seenRoots.has(candidateRoot)) continue
+      seenRoots.add(candidateRoot)
+      const match = candidateRoot.querySelector(selector)
+      if (match) return match
+      for (const element of candidateRoot.querySelectorAll('*')) {
+        const shadowRoot = (element as Element & { shadowRoot?: ShadowRoot | null }).shadowRoot
+        if (shadowRoot) roots.push(shadowRoot)
+      }
+    }
+    return null
   }
 
   function isPrimaryElement(element: Element, tag: string): boolean {
@@ -627,7 +648,9 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const tokens = normalizedTokens(
       `${tag} ${element.id || ''} ${element.getAttribute('class') || ''} ${element.getAttribute('data-testid') || ''}`
     )
-    if (tokens.some((token) => ['card', 'item', 'message', 'notification', 'result', 'row'].includes(token))) return true
+    const containerLike = tokens.some((token) => ['container', 'feed', 'grid', 'group', 'list', 'table', 'wrapper'].includes(token))
+    const itemLike = tokens.some((token) => ['card', 'item', 'result', 'row'].includes(token))
+    if (itemLike || (!containerLike && tokens.some((token) => ['message', 'notification'].includes(token)))) return true
     return state.read !== undefined || Boolean(state.dataTokens?.length)
   }
 
@@ -765,24 +788,16 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
 
   function inferStructuredReadState(candidate: RuntimeCandidate): void {
     if (candidate.state.read !== undefined || candidate.state.selected === undefined || requestedStateTerms.size === 0) return
-    const identityTokens = new Set(normalizedTokens([
-      candidate.tag,
-      candidate.role || '',
-      candidate.element.id || '',
-      candidate.element.getAttribute('class') || '',
-      candidate.element.getAttribute('data-testid') || ''
-    ].join(' ')))
-    const notificationLike = ['activity', 'inbox', 'message', 'notification'].some((token) => identityTokens.has(token))
-    const rowLike = ['card', 'item', 'row'].some((token) => identityTokens.has(token))
-    if (!notificationLike || !rowLike) return
+    const redditInboxRow = candidate.tag === 'rpl-inbox-row' || Boolean(candidate.element.querySelector('rpl-inbox-row'))
+    if (!redditInboxRow) return
 
-    // Inbox components commonly render unread rows using their selected
-    // visual state. Keep the inference narrowly scoped to notification-like
-    // repeated rows and include the source evidence so callers can audit it.
+    // Reddit's inbox component renders unread rows using its selected visual
+    // state. Keep this inference on the identifiable component contract;
+    // generic aria-selected/list selection is not a read-state signal.
     candidate.state.read = !candidate.state.selected
     candidate.state.evidence = unique([
       ...(candidate.state.evidence ?? []),
-      candidate.state.selected ? 'inferred:selected-unread' : 'inferred:unselected-read'
+      candidate.state.selected ? 'inferred:rpl-selected-unread' : 'inferred:rpl-unselected-read'
     ]).slice(0, 12)
   }
 
@@ -815,7 +830,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       order: candidate.order,
       tag: candidate.tag,
       role: candidate.role,
-      name: candidate.nameHint || text?.slice(0, 240) || null,
+      name: candidate.nameHint || (config.mode === 'interactive' ? text?.slice(0, 240) : null) || null,
       text,
       href: candidate.href || null,
       datetime: candidate.datetime || null,
@@ -898,8 +913,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       itemEntries.splice(worstIndex, 1)
       itemEntries.sort((left, right) => left.candidate.order - right.candidate.order)
       result.items = itemEntries.map(({ item }) => item)
-      omittedItems += 1
-      result.coverage.omittedItems = Math.max(result.coverage.omittedItems, omittedItems)
+      omittedItems = selectedCandidates.length - itemEntries.length
+      result.coverage.omittedItems = omittedItems
       serializedChars = JSON.stringify(result).length
     }
     if (serializedChars > config.maxChars) {
@@ -911,7 +926,10 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       }
       serializedChars = JSON.stringify(result).length
     }
+    refreshCoverage()
+    serializedChars = JSON.stringify(result).length
     if (serializedChars > config.maxChars) {
+      omittedItems = selectedCandidates.length
       result = {
         page: result.page,
         mode: result.mode,
@@ -919,11 +937,42 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
         items: [],
         content: '',
         passages: [],
-        coverage: result.coverage,
+        coverage: {
+          ...result.coverage,
+          matchedTerms: [],
+          gaps: unique([...objectiveTerms, 'result-budget']),
+          complete: false,
+          omittedItems
+        },
         timings: result.timings,
         truncated: true
       }
     }
+  }
+
+  function currentCoverage(): { matchedTerms: string[]; gaps: string[]; complete: boolean } {
+    const matched = new Set<string>()
+    for (const { candidate } of itemEntries) {
+      for (const term of candidate.matchedTerms) matched.add(term)
+    }
+    for (const passage of outputPassages) {
+      for (const term of passage.matchedTerms) matched.add(term)
+    }
+    const matchedTerms = objectiveTerms.filter((term) => matched.has(term))
+    const gaps = objectiveTerms.filter((term) => !matched.has(term))
+    if (requestedStateTerms.size > 0) {
+      const missingStateItems = itemEntries.filter(({ candidate }) => candidate.state.read === undefined).length
+      if (missingStateItems > 0) gaps.push(`read-state-missing:${missingStateItems}`)
+    }
+    return { matchedTerms, gaps, complete: gaps.length === 0 }
+  }
+
+  function refreshCoverage(): void {
+    const coverage = currentCoverage()
+    result.coverage.matchedTerms = coverage.matchedTerms
+    result.coverage.gaps = coverage.gaps
+    result.coverage.complete = coverage.complete
+    result.coverage.omittedItems = omittedItems
   }
 
   function appendBounded(current: string, value: string, limit: number): string {
@@ -966,6 +1015,22 @@ function tokenizeObjective(value: string): string[] {
 
 function uniqueStrings(values: string[]): string[] {
   return [...new Set(values.filter(Boolean))]
+}
+
+function inferRequestedItemCount(objective: string): number | null {
+  const tokens = tokenizeObjective(objective)
+  const countable = new Set([
+    'alert', 'alerts', 'entry', 'entries', 'item', 'items', 'link', 'links',
+    'message', 'messages', 'notification', 'notifications', 'post', 'posts',
+    'record', 'records', 'result', 'results', 'row', 'rows'
+  ])
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (!/^\d{1,3}$/.test(tokens[index] ?? '')) continue
+    const count = Number(tokens[index])
+    if (count < 1 || count > MAX_MAX_ITEMS) continue
+    if (tokens.slice(index + 1, index + 4).some((token) => countable.has(token))) return count
+  }
+  return null
 }
 
 function isPageSnapshotMode(value: unknown): value is PageSnapshotMode {

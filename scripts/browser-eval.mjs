@@ -138,7 +138,7 @@ async function runDirectArm(context, oracle, sampleCount) {
   const program = buildPageSnapshotProgram({
     objective: SNAPSHOT_OBJECTIVE,
     mode: 'task',
-    maxItems: 16,
+    maxItems: 3,
     maxChars: 8_000
   })
   const samples = []
