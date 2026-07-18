@@ -5,26 +5,28 @@ export type CollectionProgress = {
   success?: boolean
 }
 
-export type CollectUntilOptions = {
-  concurrency: number
-  target: number
-  maxAttempts: number
-  onStarted?: (progress: CollectionProgress) => void
-  onSettled?: (progress: CollectionProgress) => void
-}
-
 export type CollectedValue<T> = {
   index: number
   value: T
 }
 
+export type CollectUntilOptions<T> = {
+  concurrency: number
+  target: number
+  maxAttempts: number
+  shouldStop?: (values: readonly CollectedValue<T>[]) => boolean
+  onStarted?: (progress: CollectionProgress) => void
+  onSettled?: (progress: CollectionProgress) => void
+}
+
 /**
  * Process a ranked list with bounded concurrency, stopping new and in-flight
- * work as soon as enough successful values have been collected.
+ * work as soon as enough successful values have been collected or an optional
+ * result-aware stop predicate says the collection goal is satisfied.
  */
 export async function collectWithConcurrencyUntil<T, R>(
   items: T[],
-  options: CollectUntilOptions,
+  options: CollectUntilOptions<R>,
   mapper: (item: T, index: number, stopSignal: AbortSignal) => Promise<R | null>
 ): Promise<{ values: CollectedValue<R>[]; attempted: number }> {
   const target = Math.max(0, Math.round(options.target))
@@ -38,9 +40,12 @@ export async function collectWithConcurrencyUntil<T, R>(
   const values: CollectedValue<R>[] = []
   let nextIndex = 0
   let attempted = 0
+  const goalReached = (): boolean => values.length >= target || options.shouldStop?.(values) === true
+
+  if (goalReached()) return { values: [], attempted: 0 }
 
   const workers = Array.from({ length: concurrency }, async () => {
-    while (!stopController.signal.aborted && values.length < target && attempted < maxAttempts) {
+    while (!stopController.signal.aborted && !goalReached() && attempted < maxAttempts) {
       const index = nextIndex
       nextIndex += 1
       if (index >= items.length) return
@@ -56,12 +61,12 @@ export async function collectWithConcurrencyUntil<T, R>(
         throw error
       }
 
-      if (value !== null && values.length < target) {
+      if (value !== null && !stopController.signal.aborted && !goalReached()) {
         values.push({ index, value })
       }
       options.onSettled?.({ attempted, succeeded: values.length, index, success: value !== null })
 
-      if (values.length >= target) {
+      if (goalReached()) {
         stopController.abort()
         return
       }
@@ -73,6 +78,28 @@ export async function collectWithConcurrencyUntil<T, R>(
     values: values.sort((left, right) => left.index - right.index),
     attempted
   }
+}
+
+/** Keep ranked values only when each one strictly improves the supplied deficit. */
+export function retainValuesReducingDeficit<T>(
+  values: readonly T[],
+  maxValues: number,
+  measureDeficit: (retained: readonly T[]) => number
+): T[] {
+  const limit = Math.max(0, Math.round(maxValues))
+  if (limit === 0 || values.length === 0) return []
+
+  const retained: T[] = []
+  let deficit = measureDeficit(retained)
+  for (const value of values) {
+    if (retained.length >= limit || deficit <= 0) break
+    const candidate = [...retained, value]
+    const candidateDeficit = measureDeficit(candidate)
+    if (candidateDeficit >= deficit) continue
+    retained.push(value)
+    deficit = candidateDeficit
+  }
+  return retained
 }
 
 /** Serializes work per key while allowing a bounded number of keys to run. */
