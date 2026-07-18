@@ -92,6 +92,7 @@ type RuntimePageSnapshotConfig = {
   maxChars: number
   maxVisitedNodes: number
   order: PageSnapshotOrder
+  requestedItemCount: number
 }
 
 type RuntimeCandidate = {
@@ -109,6 +110,7 @@ type RuntimeCandidate = {
   repeated: boolean
   score: number
   matchedTerms: string[]
+  styleVisible: boolean | null
 }
 
 type RuntimeBlock = {
@@ -188,7 +190,8 @@ export function buildPageSnapshotProgram(options: PageSnapshotOptions = {}): str
     maxItems,
     maxChars,
     maxVisitedNodes: Math.min(100_000, Math.max(50_000, maxItems * 1_000)),
-    order: options.order === 'reverse-document' ? 'reverse-document' : 'document'
+    order: options.order === 'reverse-document' ? 'reverse-document' : 'document',
+    requestedItemCount: inferredItemCount ?? 0
   }
   return `return (${pageSnapshotRuntime.toString()})(${JSON.stringify(config)});`
 }
@@ -225,7 +228,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   const stateTokenPattern = /^(?:active|checked|closed|disabled|enabled|inactive|new|open|opened|read|selected|seen|unread|unseen|unviewed|viewed)$/i
   const pageUrl = typeof location?.href === 'string' ? location.href : ''
   const page = {
-    url: pageUrl,
+    url: pageUrl.slice(0, 8_000),
     title: cleanText(document.title || '').slice(0, 300),
     lang: cleanText(document.documentElement?.getAttribute?.('lang') || '').slice(0, 40) || null,
     readyState: typeof document.readyState === 'string' ? document.readyState : null
@@ -484,17 +487,18 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }
 
   function deepQuerySelector(selector: string): Element | null {
-    const roots: Array<Document | ShadowRoot> = [document]
-    const seenRoots = new WeakSet<object>()
-    while (roots.length > 0) {
-      const candidateRoot = roots.shift()!
-      if (seenRoots.has(candidateRoot)) continue
-      seenRoots.add(candidateRoot)
-      const match = candidateRoot.querySelector(selector)
-      if (match) return match
-      for (const element of candidateRoot.querySelectorAll('*')) {
-        const shadowRoot = (element as Element & { shadowRoot?: ShadowRoot | null }).shadowRoot
-        if (shadowRoot) roots.push(shadowRoot)
+    const start = document.documentElement
+    const nodes: Node[] = start ? [start] : []
+    const seen = new WeakSet<object>()
+    while (nodes.length > 0) {
+      const node = nodes.pop()!
+      if (typeof node === 'object' && seen.has(node as object)) continue
+      if (typeof node === 'object') seen.add(node as object)
+      if (node.nodeType === Node.ELEMENT_NODE && (node as Element).matches(selector)) return node as Element
+      const children = composedChildren(node)
+      for (let index = children.length - 1; index >= 0; index -= 1) {
+        const child = children[index]
+        if (child) nodes.push(child)
       }
     }
     return null
@@ -651,7 +655,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     )
     const containerLike = tokens.some((token) => ['container', 'feed', 'grid', 'group', 'list', 'table', 'wrapper'].includes(token))
     const itemLike = tokens.some((token) => ['card', 'item', 'result', 'row'].includes(token))
-    if (itemLike || (!containerLike && tokens.some((token) => ['message', 'notification'].includes(token)))) return true
+    if (containerLike) return false
+    if (itemLike || tokens.some((token) => ['message', 'notification'].includes(token))) return true
     return state.read !== undefined || Boolean(state.dataTokens?.length)
   }
 
@@ -670,7 +675,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     interactive: boolean,
     parentCandidate: RuntimeCandidate | null
   ): boolean {
-    if (parentCandidate?.repeated) return false
+    if (parentCandidate?.repeated && !(config.mode === 'interactive' && interactive)) return false
     if (repeated || interactive) return true
     if (state.read !== undefined || state.checked !== undefined || state.selected !== undefined) return true
     const label = `${element.id || ''} ${element.getAttribute('class') || ''} ${element.getAttribute('data-testid') || ''}`
@@ -708,7 +713,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       nearbyHeading: lastHeading,
       repeated,
       score: 0,
-      matchedTerms: []
+      matchedTerms: [],
+      styleVisible: null
     }
   }
 
@@ -743,6 +749,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   function finalizeCandidate(candidate: RuntimeCandidate): void {
     candidate.text = cleanText(candidate.text).slice(0, textLimit)
     if (!candidate.text && !candidate.nameHint && !candidate.href && Object.keys(candidate.state).length === 0) return
+    candidate.styleVisible = detectComputedStyleVisibility(candidate.element)
+    if (candidate.styleVisible === false) return
     candidateCount += 1
     inferStructuredReadState(candidate)
     const stateText = [
@@ -755,8 +763,14 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${objectiveHref(candidate.href)} ${stateText}`
     candidate.matchedTerms = matchGroups(haystack).filter((term) => !requestedStateTerms.has(term))
     if (candidate.state.read !== undefined) {
-      for (const term of requestedStateTerms) {
-        if (!candidate.matchedTerms.includes(term)) candidate.matchedTerms.push(term)
+      const asksRead = requestedStateTerms.has('read')
+      const asksUnread = requestedStateTerms.has('unread')
+      const fieldDiscovery = asksRead && asksUnread
+      if ((fieldDiscovery || candidate.state.read) && asksRead && !candidate.matchedTerms.includes('read')) {
+        candidate.matchedTerms.push('read')
+      }
+      if ((fieldDiscovery || !candidate.state.read) && asksUnread && !candidate.matchedTerms.includes('unread')) {
+        candidate.matchedTerms.push('unread')
       }
     }
     const stateQueryMatches = candidate.state.read !== undefined &&
@@ -836,7 +850,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       href: candidate.href || null,
       datetime: candidate.datetime || null,
       state: candidate.state,
-      visible: detectVisibility(candidate.element),
+      visible: candidate.styleVisible === false ? false : detectVisibility(candidate.element),
       nearbyHeading: candidate.nearbyHeading || null
     }
   }
@@ -852,6 +866,20 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
         return rects.length > 0
       }
       return style ? true : null
+    } catch {
+      return null
+    }
+  }
+
+  function detectComputedStyleVisibility(element: Element): boolean | null {
+    if (isExplicitlyHidden(element)) return false
+    try {
+      const view = document.defaultView as (Window & typeof globalThis) | null
+      const style = typeof view?.getComputedStyle === 'function' ? view.getComputedStyle(element) : null
+      if (!style) return null
+      return style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse'
+        ? false
+        : true
     } catch {
       return null
     }
@@ -916,7 +944,9 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
         if (compareCandidateQuality(itemEntries[index].candidate, itemEntries[worstIndex].candidate) < 0) worstIndex = index
       }
       itemEntries.splice(worstIndex, 1)
-      itemEntries.sort((left, right) => left.candidate.order - right.candidate.order)
+      itemEntries.sort((left, right) => config.order === 'reverse-document'
+        ? right.candidate.order - left.candidate.order
+        : left.candidate.order - right.candidate.order)
       result.items = itemEntries.map(({ item }) => item)
       omittedItems = selectedCandidates.length - itemEntries.length
       result.coverage.omittedItems = omittedItems
@@ -936,9 +966,14 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     if (serializedChars > config.maxChars) {
       omittedItems = selectedCandidates.length
       result = {
-        page: result.page,
+        page: {
+          url: '',
+          title: result.page.title.slice(0, 80),
+          lang: result.page.lang?.slice(0, 20) ?? null,
+          readyState: result.page.readyState?.slice(0, 20) ?? null
+        },
         mode: result.mode,
-        scope: result.scope,
+        scope: { selector: result.scope.selector ? '[scoped]' : null, matched: result.scope.matched },
         items: [],
         content: '',
         passages: [],
@@ -951,6 +986,12 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
         },
         timings: result.timings,
         truncated: true
+      }
+      const baseChars = JSON.stringify(result).length
+      const urlBudget = Math.max(0, config.maxChars - baseChars - 2)
+      result.page.url = page.url.slice(0, urlBudget)
+      while (result.page.url && JSON.stringify(result).length > config.maxChars) {
+        result.page.url = result.page.url.slice(0, -1)
       }
     }
   }
@@ -966,8 +1007,18 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const matchedTerms = objectiveTerms.filter((term) => matched.has(term))
     const gaps = objectiveTerms.filter((term) => !matched.has(term))
     if (requestedStateTerms.size > 0) {
-      const missingStateItems = itemEntries.filter(({ candidate }) => candidate.state.read === undefined).length
-      if (missingStateItems > 0) gaps.push(`read-state-missing:${missingStateItems}`)
+      const asksRead = requestedStateTerms.has('read')
+      const asksUnread = requestedStateTerms.has('unread')
+      const fieldDiscovery = asksRead && asksUnread
+      const stateMismatchItems = itemEntries.filter(({ candidate }) => {
+        if (candidate.state.read === undefined) return true
+        if (fieldDiscovery) return false
+        return (asksRead && candidate.state.read !== true) || (asksUnread && candidate.state.read !== false)
+      }).length
+      if (stateMismatchItems > 0) gaps.push(`read-state-mismatch:${stateMismatchItems}`)
+    }
+    if (config.requestedItemCount > itemEntries.length) {
+      gaps.push(`item-count-missing:${config.requestedItemCount - itemEntries.length}`)
     }
     return { matchedTerms, gaps, complete: gaps.length === 0 }
   }
