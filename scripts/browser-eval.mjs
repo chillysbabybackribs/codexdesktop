@@ -20,7 +20,7 @@ const LEGACY_REFERENCE = {
   modelCallCount: 4,
   browserToolDurationSumMs: 402,
   exactThreeAndState: true,
-  note: 'Previously captured production trace; metadata is a fixed comparison point and is not rerun by this harness.'
+  note: 'Previously captured production trace; metadata is a fixed comparison point and is not rerun by this harness. It included requested navigation and a large persisted thread, while this harness uses a fresh ephemeral thread on an already-open page.'
 }
 
 const ORACLE_PROGRAM = `return (() => {
@@ -51,7 +51,7 @@ const ORACLE_PROGRAM = `return (() => {
 async function main() {
   const options = parseArgs(process.argv.slice(2))
   const startedAt = new Date()
-  const socketPath = requireSocketPath()
+  const socketPath = options.socket ?? requireSocketPath()
   const initialTabsResponse = await socketJson(socketPath, 'GET', '/tabs')
   const initialTabs = requireTabs(initialTabsResponse)
   const tab = requireActiveRedditNotificationsTab(initialTabs)
@@ -83,13 +83,15 @@ async function main() {
   }
 
   const report = {
-    schemaVersion: 1,
-    ok: direct.successCount === options.samples && hostUnchanged && (options.skipModel || model.ok === true),
+    schemaVersion: 2,
+    ok: direct.successCount === options.samples && direct.exactSnapshotCount === options.samples &&
+      hostUnchanged && (options.skipModel || model.ok === true),
     observedAt: startedAt.toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
     codexCli: codexVersion(),
     config: {
       samples: options.samples,
+      socketSource: options.socket ? '--socket' : 'CODEX_BROWSER_SOCK',
       model: options.model,
       effort: options.effort,
       skipModel: options.skipModel,
@@ -118,8 +120,10 @@ async function main() {
     legacyReference: LEGACY_REFERENCE,
     comparison: {
       ...(model.ok && typeof model.wallMs === 'number'
-        ? { endToEndWallSpeedupVsLegacy: round(LEGACY_REFERENCE.wallMs / model.wallMs, 2) }
+        ? { observedEndToEndRatioVsLegacyReference: round(LEGACY_REFERENCE.wallMs / model.wallMs, 2) }
         : {}),
+      strictApplesToApples: false,
+      caveat: 'The legacy trace requested navigation and carried a much larger persisted context; the current model arm starts fresh on the already-open page. The ratio is observational, not an isolated causal speedup.',
       qualityPreserved: direct.exactSnapshotCount === options.samples &&
         (options.skipModel || model.accuracy?.exactThreeAndState === true) && hostUnchanged
     }
@@ -135,20 +139,25 @@ async function main() {
 }
 
 async function runDirectArm(context, oracle, sampleCount) {
-  const program = buildPageSnapshotProgram({
-    objective: SNAPSHOT_OBJECTIVE,
-    mode: 'task',
-    maxItems: 3,
-    maxChars: 8_000
-  })
   const samples = []
   let preview = null
 
   for (let index = 1; index <= sampleCount; index += 1) {
     const startedAt = performance.now()
     let response
+    let transport
+    let fallbackReason
     try {
-      response = await postEval(context, program, { timeoutMs: 15_000, maxResultChars: 20_000 })
+      const outcome = await postSnapshot(context, {
+        objective: SNAPSHOT_OBJECTIVE,
+        mode: 'task',
+        maxItems: 3,
+        timeoutMs: 15_000,
+        maxResultChars: 8_000
+      })
+      response = outcome.response
+      transport = outcome.transport
+      fallbackReason = outcome.fallbackReason
     } catch (error) {
       samples.push({ index, ok: false, wallMs: round(performance.now() - startedAt, 3), error: errorMessage(error) })
       continue
@@ -166,6 +175,8 @@ async function runDirectArm(context, oracle, sampleCount) {
       snapshotDurationMs: finiteNumber(asRecord(snapshot.timings).totalMs),
       itemCount: Array.isArray(snapshot.items) ? snapshot.items.length : 0,
       exactThreeAndState: quality.exactThreeAndState,
+      transport,
+      ...(fallbackReason ? { fallbackReason } : {}),
       ...(ok ? {} : { error: response.error || 'snapshot response did not match the explicit Reddit tab' })
     })
     if (!preview && ok) preview = compactSnapshotPreview(snapshot, quality)
@@ -178,6 +189,10 @@ async function runDirectArm(context, oracle, sampleCount) {
     successCount: successful.length,
     successRate: round(successful.length / sampleCount, 4),
     exactSnapshotCount: samples.filter(({ exactThreeAndState }) => exactThreeAndState).length,
+    transports: Object.fromEntries([...new Set(samples.map(({ transport }) => transport).filter(Boolean))].map((transport) => [
+      transport,
+      samples.filter((sample) => sample.transport === transport).length
+    ])),
     metrics: {
       wallMs: summarizeNumbers(samples.map(({ wallMs }) => wallMs)),
       returnedDurationMs: summarizeNumbers(successful.map(({ returnedDurationMs }) => returnedDurationMs)),
@@ -458,6 +473,7 @@ class AppServerHarness {
         durationMs,
         hostDurationMs: finiteNumber(routed.hostResult?.durationMs),
         resultChars: JSON.stringify(routed.hostResult ?? null).length,
+        ...(routed.transport ? { transport: routed.transport } : {}),
         ...(routed.success ? {} : { error: routed.error })
       })
       this.toolCallsByTurn.set(params.turnId, calls)
@@ -495,18 +511,20 @@ async function routeModelBrowserTool(params, context) {
   if (params.tool === 'browser_snapshot') {
     const urlError = validateSamePage(args.url, context.expectedUrl)
     if (urlError) return failureToolResponse(urlError)
-    const program = buildPageSnapshotProgram({
+    const outcome = await postSnapshot(context, {
       objective: readString(args.objective) ?? SNAPSHOT_OBJECTIVE,
       mode: readSnapshotMode(args.mode),
       order: readSnapshotOrder(args.order),
       selector: readString(args.selector),
       maxItems: finiteNumber(args.maxItems),
-      maxChars: finiteNumber(args.maxResultChars) ?? 8_000
-    })
-    return hostToolResponse(await postEval(context, program, {
+      url: readString(args.url),
+      readySelector: readString(args.readySelector),
+      quietMs: finiteNumber(args.quietMs),
+      maxSettleMs: finiteNumber(args.maxSettleMs),
       timeoutMs: clampNumber(args.timeoutMs, 15_000, 250, 60_000),
-      maxResultChars: clampNumber(args.maxResultChars ?? args.maxChars, 20_000, 1_000, 100_000)
-    }))
+      maxResultChars: clampNumber(args.maxResultChars ?? args.maxChars, 8_000, 1_000, 100_000)
+    })
+    return { ...hostToolResponse(outcome.response), transport: outcome.transport }
   }
 
   if (params.tool === 'browser_extract_page') {
@@ -711,6 +729,38 @@ async function postEval(context, code, options) {
   return response
 }
 
+async function postSnapshot(context, args) {
+  const request = {
+    ...args,
+    tab: context.tabId
+  }
+  try {
+    const response = await socketJson(context.socketPath, 'POST', '/snapshot', request)
+    if (response.url && !isRedditNotificationsUrl(response.url)) {
+      throw new Error(`Browser target left Reddit notifications: ${response.url}`)
+    }
+    return { response, transport: 'browser-control:/snapshot' }
+  } catch (error) {
+    if (!/\b(?:no route|404|not found)\b/i.test(errorMessage(error))) throw error
+    const program = buildPageSnapshotProgram({
+      objective: args.objective,
+      mode: args.mode,
+      order: args.order,
+      selector: args.selector,
+      maxItems: args.maxItems,
+      maxChars: args.maxResultChars
+    })
+    return {
+      response: await postEval(context, program, {
+        timeoutMs: args.timeoutMs,
+        maxResultChars: Math.min(100_000, Math.max(1_000, args.maxResultChars + 12_000))
+      }),
+      transport: 'legacy-eval-fallback',
+      fallbackReason: errorMessage(error)
+    }
+  }
+}
+
 function socketJson(socketPath, method, path, body, contentType = 'application/json') {
   const payload = body === undefined ? null : typeof body === 'string' ? body : JSON.stringify(body)
   return new Promise((resolveRequest, reject) => {
@@ -746,7 +796,7 @@ function socketJson(socketPath, method, path, body, contentType = 'application/j
 }
 
 function parseArgs(args) {
-  const values = { samples: 25, model: 'gpt-5.6-terra', effort: 'low', output: null, skipModel: false }
+  const values = { samples: 25, model: 'gpt-5.6-terra', effort: 'low', output: null, socket: null, skipModel: false }
   for (let index = 0; index < args.length; index += 1) {
     const key = args[index]
     if (key === '--skip-model') {
@@ -758,6 +808,7 @@ function parseArgs(args) {
     else if (key === '--model') values.model = requiredValue(key, value)
     else if (key === '--effort') values.effort = requiredValue(key, value)
     else if (key === '--out') values.output = requiredValue(key, value)
+    else if (key === '--socket') values.socket = requiredValue(key, value)
     else throw new Error(`Unknown argument: ${key}`)
     index += 1
   }
