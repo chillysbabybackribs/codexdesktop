@@ -209,7 +209,7 @@ test('all turns request concise reasoning summaries without changing their effor
   assert.equal('effort' in policy, false)
 })
 
-test('simple read-only browser tasks use low effort while complex tasks still honor the selected effort', () => {
+test('simple read-only browser tasks use the fastest supported effort while complex tasks honor the selection', () => {
   assert.equal(isFastPathTask('Check my last two Reddit notifications'), true)
   assert.equal(isFastPathTask('ok navigate to reddit and check the last 3 notifications for a speed test'), true)
   assert.equal(isFastPathTask('Refactor the tab manager and run its tests'), false)
