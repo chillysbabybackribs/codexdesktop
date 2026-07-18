@@ -1,4 +1,4 @@
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/codex-protocol/v2/Model'
@@ -229,12 +229,35 @@ const AgentWindow = memo(function AgentWindow({
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const pinnedRef = useRef(true)
+  const suppressScrollRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
-  useEffect(() => {
+  const followTail = useCallback(() => {
     const node = scrollRef.current
-    if (node) node.scrollTop = node.scrollHeight
-  }, [session.messages, session.status])
+    if (!node || !pinnedRef.current) return
+    const target = Math.max(0, node.scrollHeight - node.clientHeight)
+    if (Math.abs(node.scrollTop - target) <= 1) return
+    suppressScrollRef.current = true
+    node.scrollTop = target
+  }, [])
+
+  useEffect(() => {
+    followTail()
+  }, [followTail, session.messages, session.status])
+
+  const handleScroll = useCallback(() => {
+    // Ignore the scroll event caused by our own bottom-follow write.
+    if (suppressScrollRef.current) {
+      suppressScrollRef.current = false
+      return
+    }
+
+    const node = scrollRef.current
+    if (!node) return
+    const distanceFromBottom = node.scrollHeight - node.scrollTop - node.clientHeight
+    pinnedRef.current = distanceFromBottom <= 48
+  }, [])
 
   // Selected windows come up text-ready.
   useEffect(() => {
@@ -345,7 +368,7 @@ const AgentWindow = memo(function AgentWindow({
         </div>
       </div>
 
-      <div ref={scrollRef} className="agent-overlay-scroll">
+      <div ref={scrollRef} className="agent-overlay-scroll" onScroll={handleScroll}>
         {session.messages.length === 0 ? (
           <div className="agent-overlay-empty">
             An independent agent with its own conversation, running in parallel and sharing the
