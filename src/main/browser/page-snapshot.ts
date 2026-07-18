@@ -240,7 +240,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     lang: cleanText(document.documentElement?.getAttribute?.('lang') || '').slice(0, 40) || null,
     readyState: typeof document.readyState === 'string' ? document.readyState : null
   }
-  const pageMatchedTerms = matchGroups(`${page.url} ${page.title}`)
+  const pageMatchedTerms = matchGroups(pageHostname(page.url))
+    .filter((term) => !requestedStateTerms.has(term))
   const scope = {
     selector: config.selector || null,
     matched: false
@@ -776,7 +777,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       ...(candidate.state.evidence ?? [])
     ].join(' ')
     const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${objectiveHref(candidate.href)} ${stateText}`
-    candidate.matchedTerms = matchGroups(haystack).filter((term) => !requestedStateTerms.has(term))
+    candidate.matchedTerms = matchGroups(haystack)
+      .filter((term) => !requestedStateTerms.has(term) && !pageMatchedTerms.includes(term))
     if (candidate.state.read !== undefined) {
       const asksRead = requestedStateTerms.has('read')
       const asksUnread = requestedStateTerms.has('unread')
@@ -851,7 +853,8 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     if (block.text.length < 3) return
     if (headingTags.has(block.tag)) block.text = `${'#'.repeat(Number(block.tag.slice(1)) || 1)} ${block.text}`
     block.text = block.text.slice(0, 1_500)
-    block.matchedTerms = matchGroups(block.text).filter((term) => !requestedStateTerms.has(term))
+    block.matchedTerms = matchGroups(block.text)
+      .filter((term) => !requestedStateTerms.has(term) && !pageMatchedTerms.includes(term))
     block.score = block.matchedTerms.length * 100 + (block.primary ? 20 : 0) + Math.min(30, Math.floor(block.text.length / 40))
     if (block.matchedTerms.length > 0 || objectiveGroups.length === 0) {
       keepBest(passages, { ...block }, passagePoolLimit, compareBlockQuality)
@@ -1103,6 +1106,14 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
 
   function cleanText(value: string): string {
     return value.replace(/\s+/g, ' ').trim()
+  }
+
+  function pageHostname(value: string): string {
+    try {
+      return new URL(value).hostname.replace(/^www\./i, '')
+    } catch {
+      return value
+    }
   }
 
   function normalizedTokens(value: string): string[] {
