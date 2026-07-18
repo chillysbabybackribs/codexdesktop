@@ -2131,13 +2131,12 @@ export default function App(): React.JSX.Element {
     }
 
     pendingItemMutationsRef.current = []
-    setItems((current) => {
-      let next = current
-      for (const mutate of pending) {
-        next = mutate(next)
-      }
-      return next
-    })
+    let next = itemsRef.current
+    for (const mutate of pending) {
+      next = mutate(next)
+    }
+    itemsRef.current = next
+    setItems(next)
   }
 
   // The structured turn plan renders as a live checklist card that updates in
