@@ -32,7 +32,6 @@ export function createAgentLifecycle(options: {
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
   selectMainModel: (model: string) => void
-  clearActiveTurn: () => void
   createMainThread: () => void
   resumeMainThread: (threadId: string) => Promise<void>
 }): {
@@ -166,7 +165,6 @@ export function createAgentLifecycle(options: {
       options.createMainThread()
       return
     }
-    options.clearActiveTurn()
     await options.resumeMainThread(session.threadId)
   }
 

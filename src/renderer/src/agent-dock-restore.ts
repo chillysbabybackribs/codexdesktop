@@ -34,10 +34,10 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
 
 export async function restoreAgentDock(options: {
   storageKey: string
-  activeThreadId: string | null
+  mainThreadIds: ReadonlySet<string>
   store: AgentDockStore
 }): Promise<void> {
-  const { storageKey, activeThreadId, store } = options
+  const { storageKey, mainThreadIds, store } = options
   try {
     const raw = window.localStorage.getItem(storageKey)
     if (!raw) return
@@ -46,7 +46,9 @@ export async function restoreAgentDock(options: {
     if (typeof parsed.counter === 'number' && parsed.counter > store.counterRef.current) {
       store.counterRef.current = parsed.counter
     }
-    const entries = parsed.sessions.filter((entry) => !entry.threadId || entry.threadId !== activeThreadId)
+    const entries = parsed.sessions.filter(
+      (entry) => !entry.threadId || !mainThreadIds.has(entry.threadId)
+    )
     if (!entries.length) return
 
     const restored: AgentSession[] = entries.map((entry) => ({

@@ -44,7 +44,6 @@ function lifecycleHarness(session: AgentSession): {
     getActiveThreadId: () => null,
     pickFallbackModel: (model) => model,
     selectMainModel: (model) => selectedModels.push(model),
-    clearActiveTurn: () => {},
     createMainThread: () => createdMainThreads.push('created'),
     resumeMainThread: async () => {}
   })

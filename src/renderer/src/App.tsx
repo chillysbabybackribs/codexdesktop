@@ -1354,7 +1354,9 @@ export default function App(): React.JSX.Element {
   function restoreAgentDock(): Promise<void> {
     return restorePersistedAgentDock({
       storageKey: agentDockStorageKey,
-      activeThreadId: activeThreadIdRef.current,
+      mainThreadIds: new Set(
+        mainChatTabStateRef.current.tabs.flatMap((tab) => tab.threadId ? [tab.threadId] : [])
+      ),
       store: {
         counterRef: agentCounterRef,
         restoredRef: agentDockRestoredRef,
@@ -1430,12 +1432,8 @@ export default function App(): React.JSX.Element {
     getActiveThreadId: () => activeThreadIdRef.current,
     pickFallbackModel,
     selectMainModel: handleSelectModel,
-    clearActiveTurn: () => {
-      setActiveTurnId(null)
-      activeTurnIdRef.current = null
-    },
-    createMainThread: handleNewThread,
-    resumeMainThread: resumeThreadById
+    createMainThread: handleNewMainChatTab,
+    resumeMainThread: handleResumeThread
   })
 
   function cancelAgentRecovery(key: string): void {
@@ -2378,9 +2376,9 @@ function MainChatTabStrip({
               <button
                 type="button"
                 className="main-chat-tab-close"
-                aria-label={`Close ${tab.title}`}
-                title="Close chat (Ctrl+W)"
-                disabled={disabled}
+                aria-label={tab.status === 'working' ? `${tab.title} is running` : `Close ${tab.title}`}
+                title={tab.status === 'working' ? 'Stop this chat before closing it' : 'Close chat (Ctrl+W)'}
+                disabled={disabled || tab.status === 'working'}
                 onClick={() => void onClose(tab.key)}
               >
                 <span aria-hidden="true">×</span>
