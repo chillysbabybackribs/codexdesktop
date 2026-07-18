@@ -75,9 +75,12 @@ export function resolveTurnPolicy(
   } = {}
 ): { summary: 'concise'; effort?: ReasoningEffort } {
   const supported = new Set(options.supportedEfforts ?? [])
-  const fastEffort = (options.fastMode || isReadOnlyBrowserMicrotask(text)) && isFastPathTask(text)
-    ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
-    : undefined
+  const browserMicrotask = isReadOnlyBrowserMicrotask(text) && isFastPathTask(text)
+  const fastEffort = browserMicrotask
+    ? (supported.has('none') ? 'none' : supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
+    : options.fastMode && isFastPathTask(text)
+      ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
+      : undefined
 
   return {
     // Concise summaries cut visible dialogue and summary tokens without

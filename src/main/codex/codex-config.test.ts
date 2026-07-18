@@ -222,6 +222,10 @@ test('simple read-only browser tasks use low effort while complex tasks still ho
     requestedEffort: 'high',
     supportedEfforts: ['minimal', 'low', 'medium', 'high']
   }), { summary: 'concise', effort: 'low' })
+  assert.deepEqual(resolveTurnPolicy('Check my last two Reddit notifications', {
+    requestedEffort: 'high',
+    supportedEfforts: ['none', 'low', 'medium', 'high']
+  }), { summary: 'concise', effort: 'none' })
   assert.deepEqual(resolveTurnPolicy('Review this local patch', {
     fastMode: true,
     requestedEffort: 'high',
