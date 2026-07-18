@@ -1008,8 +1008,8 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  const handleNewMainChatTab = (): void => {
-    if (isMainChatTransitionLocked()) return
+  const handleNewMainChatTab = (): boolean => {
+    if (isMainChatTransitionLocked()) return false
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
@@ -1018,6 +1018,7 @@ export default function App(): React.JSX.Element {
     applyMainChatSnapshot(tab)
     persistLastThreadId(null)
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+    return true
   }
 
   const handleSelectMainChatTab = async (key: string): Promise<void> => {
@@ -1090,13 +1091,13 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  const handleResumeThread = async (threadId: string): Promise<void> => {
-    if (isMainChatTransitionLocked()) return
+  const handleResumeThread = async (threadId: string): Promise<boolean> => {
+    if (isMainChatTransitionLocked()) return false
     setIsThreadMenuOpen(false)
     const existing = mainChatTabForThread(threadId)
     if (existing) {
       await handleSelectMainChatTab(existing.key)
-      return
+      return true
     }
 
     const current = mainChatTabStateRef.current.tabs.find(
@@ -1129,6 +1130,9 @@ export default function App(): React.JSX.Element {
       setReconcilingMainChatTabKey(null)
       reconcilingMainChatTabKeyRef.current = null
     }
+    const dockOwner = backgroundSessionForThread(threadId)
+    if (dockOwner) handleCloseAgentSession(dockOwner.key)
+    return true
   }
 
   async function resumeThreadById(
@@ -1138,10 +1142,6 @@ export default function App(): React.JSX.Element {
     const generation = ++resumeGenerationRef.current
     const tabKey = options.tabKey ?? activeMainChatTabKeyRef.current
     optimisticUserMessageIdRef.current = null
-
-    // If the target thread lives in the agent dock, the focused view absorbs
-    // it — one owner per thread.
-    updateAgentSessions((sessions) => sessions.filter((session) => session.threadId !== threadId))
 
     if (activeThreadIdRef.current !== threadId) {
       cancelAutoRecovery()
@@ -2423,7 +2423,7 @@ export default function App(): React.JSX.Element {
           onStop={handleStop}
           onNewThread={handleNewThread}
           onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
-          onResumeThread={handleResumeThread}
+          onResumeThread={async (threadId) => { await handleResumeThread(threadId) }}
           onLoadMoreThreads={loadMoreThreads}
           onPickWorkspace={handlePickWorkspace}
           onSaveGoal={handleSaveGoal}

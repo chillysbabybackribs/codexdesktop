@@ -32,8 +32,8 @@ export function createAgentLifecycle(options: {
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
   selectMainModel: (model: string) => void
-  createMainThread: () => void
-  resumeMainThread: (threadId: string) => Promise<void>
+  createMainThread: () => boolean
+  resumeMainThread: (threadId: string) => Promise<boolean>
 }): {
   cancelRecovery: (key: string) => void
   scheduleRecovery: (key: string, turnId: string, error: TurnError | null) => void
@@ -157,15 +157,15 @@ export function createAgentLifecycle(options: {
   async function handlePromoteAgent(key: string): Promise<void> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return
-    cancelRecovery(key)
     if (session.model && session.model !== options.getSelectedModel()) options.selectMainModel(session.model)
-    removeSession(key)
 
     if (!session.threadId) {
-      options.createMainThread()
+      if (!options.createMainThread()) return
+      removeSession(key)
       return
     }
-    await options.resumeMainThread(session.threadId)
+    if (!await options.resumeMainThread(session.threadId)) return
+    removeSession(key)
   }
 
   return {
