@@ -275,6 +275,16 @@ test('interactive mode drops repeated shells and understands natural control int
   assert.equal(result.coverage.complete, true)
 })
 
+test('interactive mode prioritizes form controls over generic links under a tight item limit', () => {
+  const result = executeSnapshot(`<!doctype html><html><body><main>
+    <a href="/help">Help</a><a href="/about">About</a>
+    <input aria-label="Search" type="search"><button>Submit</button>
+  </main></body></html>`, { mode: 'interactive', objective: 'what controls are available', maxItems: 2, maxChars: 3_000 })
+
+  assert.deepEqual(result.items.map(({ tag }) => tag), ['input', 'button'])
+  assert.equal(result.coverage.complete, true)
+})
+
 test('computed-hidden candidates cannot displace visible task results', () => {
   const hidden = Array.from({ length: 3 }, (_, index) => `<div class="result-row hidden">Hidden ${index + 1}</div>`).join('')
   const visible = Array.from({ length: 3 }, (_, index) => `<div class="result-row">Visible ${index + 1}</div>`).join('')

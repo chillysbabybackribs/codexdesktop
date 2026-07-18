@@ -131,7 +131,7 @@ const MAX_MAX_CHARS = 100_000
 const MAX_MAX_ITEMS = 200
 
 const OBJECTIVE_STOP_WORDS = new Set([
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'can', 'click', 'control', 'controls',
+  'a', 'an', 'and', 'are', 'as', 'at', 'available', 'be', 'by', 'can', 'click', 'control', 'controls',
   'could', 'each', 'find', 'for', 'from', 'go', 'how', 'get', 'give', 'grab', 'i',
   'identify', 'in', 'is', 'it', 'like', 'list', 'me', 'my', 'navigate', 'need', 'of',
   'on', 'or', 'our', 'page', 'please', 'press', 'return', 'extract', 'show', 'tap',
@@ -794,9 +794,10 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const nonStateMatches = candidate.matchedTerms.filter((term) => term !== 'read' && term !== 'unread').length
     candidate.score = (nonStateMatches + stateQueryMatches) * 100 +
       (candidate.repeated ? 24 : 0) +
-      (candidate.role && interactiveRoles.has(candidate.role) ? 10 : 0) +
+      interactiveCandidateBonus(candidate) +
       (candidate.state.read !== undefined ? 30 : 0) +
       (candidate.state.selected !== undefined ? 10 : 0) +
+      (candidate.nameHint ? 5 : 0) +
       (candidate.text ? 5 : 0)
     keepBest(candidates, candidate, candidatePoolLimit, compareCandidateQuality)
   }
@@ -813,6 +814,17 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     } catch {
       return href
     }
+  }
+
+  function interactiveCandidateBonus(candidate: RuntimeCandidate): number {
+    if (!candidate.role || !interactiveRoles.has(candidate.role)) return 0
+    if (config.mode !== 'interactive') return 10
+    if (candidate.role === 'link') return 6
+    if (['button', 'input', 'select', 'summary', 'textarea'].includes(candidate.tag) ||
+      ['button', 'checkbox', 'combobox', 'radio', 'searchbox', 'slider', 'switch', 'textbox'].includes(candidate.role)) {
+      return 24
+    }
+    return 12
   }
 
   function inferStructuredReadState(candidate: RuntimeCandidate): void {
