@@ -392,6 +392,39 @@ test('nested CDP response-body artifacts are indexed from browser agent envelope
   ])
 })
 
+test('oversized browser-run result artifacts are indexed from the tool envelope', () => {
+  const artifactPath = '/home/dp/.config/codexdesktop/cdp-artifacts/browser-result-test.json'
+  const items: ThreadItem[] = [{
+    type: 'dynamicToolCall',
+    id: 'browser-run-1',
+    namespace: null,
+    tool: 'browser_run',
+    arguments: { code: 'return window.largePayload' },
+    status: 'completed',
+    contentItems: [{
+      type: 'inputText',
+      text: JSON.stringify({ ok: true, result: 'compact preview', artifact: { artifactPath, kind: 'browser-result', bytes: 12 } })
+    }],
+    success: true,
+    durationMs: 8
+  }]
+
+  const trace = buildTurnTrace({
+    threadId: 'thread-1',
+    threadTitle: 'Capture browser result',
+    turnId: 'turn-1',
+    model: 'gpt-5.5',
+    workspace: '/workspace',
+    items,
+    itemMeta: { 'browser-run-1': { turnId: 'turn-1' } },
+    meta: { status: 'completed', origin: 'live', model: 'gpt-5.5' }
+  })
+
+  assert.deepEqual(trace.artifactIndex?.items.map(({ path, kind }) => ({ path, kind })), [
+    { path: artifactPath, kind: 'generatedFile' }
+  ])
+})
+
 test('isTurnTrace accepts durable schema 2-4 snapshots and current schema 5 traces', () => {
   assert.equal(isTurnTrace({ schemaVersion: 2, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)
   assert.equal(isTurnTrace({ schemaVersion: 3, exportedAt: 'now', turn: { id: 'turn' }, thread: {}, timeline: [] }), true)

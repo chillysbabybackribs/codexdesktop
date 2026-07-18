@@ -636,7 +636,7 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot')) {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'browser_run')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
@@ -647,11 +647,12 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
             trace?: { artifactPath?: unknown }
             snapshot?: { artifactPath?: unknown }
             responseBody?: { artifactPath?: unknown }
+            artifact?: { artifactPath?: unknown }
           }
           const result = parsed.result && typeof parsed.result === 'object'
             ? parsed.result as typeof parsed
             : parsed
-          for (const artifact of [result.screenshot, result.pdf, result.trace, result.snapshot, result.responseBody]) {
+          for (const artifact of [result.screenshot, result.pdf, result.trace, result.snapshot, result.responseBody, parsed.artifact]) {
             if (typeof artifact?.artifactPath !== 'string') continue
             addTraceArtifact(artifacts, {
               path: artifact.artifactPath,
