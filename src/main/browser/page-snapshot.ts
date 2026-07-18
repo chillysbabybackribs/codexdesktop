@@ -200,7 +200,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   const passagePoolLimit = Math.min(48, Math.max(12, config.maxItems * 2))
   const contentStorageChars = Math.min(240_000, Math.max(50_000, config.maxChars * 6))
   const objectiveGroups = config.objectiveGroups
-  const requestedStateTerms = new Set(
+  const requestedStateTerms: Set<string> = new Set(
     objectiveGroups
       .map(({ term }) => term)
       .filter((term) => term === 'read' || term === 'unread')

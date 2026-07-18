@@ -400,11 +400,12 @@ export class BrowserAgentController {
           if (!webContents) throw new Error(`browser target ${tabId} closed during navigation`)
         }
 
+        const targetContents = webContents
         const remainingMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
         const rawResult = await withTimeout(
-          executePageProgram(webContents, program, options.frame, maxResultChars),
+          executePageProgram(targetContents, program, options.frame, maxResultChars),
           remainingMs,
-          () => cdpSessionFor(webContents).terminateExecution()
+          () => cdpSessionFor(targetContents).terminateExecution()
         )
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
@@ -417,8 +418,8 @@ export class BrowserAgentController {
             error: `page snapshot verification failed: ${assessment.reason ?? 'unknown'}`,
             errorCode: 'executionError',
             tabId,
-            url: safeUrl(webContents),
-            title: safeTitle(webContents),
+            url: safeUrl(targetContents),
+            title: safeTitle(targetContents),
             durationMs: Date.now() - startedAt,
             resultChars: bounded.chars,
             truncated: bounded.truncated || nestedTruncated
@@ -437,8 +438,8 @@ export class BrowserAgentController {
           ok: true,
           result: bounded.value,
           tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
+          url: safeUrl(targetContents),
+          title: safeTitle(targetContents),
           durationMs: Date.now() - startedAt,
           resultChars: bounded.chars,
           truncated: bounded.truncated || nestedTruncated,
@@ -446,15 +447,18 @@ export class BrowserAgentController {
         } satisfies BrowserAgentSuccess
       } catch (error) {
         const errorCode = classifyBrowserFailure(error)
+        const failureContents = webContents ?? tabs.resolveWebContents(tabId)
         return {
           ok: false,
           error: errorMessage(error),
           errorCode,
           tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
+          url: failureContents ? safeUrl(failureContents) : '',
+          title: failureContents ? safeTitle(failureContents) : '',
           durationMs: Date.now() - startedAt,
-          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
+          ...(isLifecycleFailure(errorCode) && failureContents
+            ? { targetState: { frames: frameInventory(failureContents) } }
+            : {})
         } satisfies BrowserAgentFailure
       }
     })

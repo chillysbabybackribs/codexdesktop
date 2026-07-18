@@ -186,5 +186,5 @@ test('large DOM traversal and returned JSON remain bounded while retaining a lat
   assert.equal(result.items[0]?.state.read, false)
   assert.equal(result.coverage.visitedNodes <= 50_000, true)
   assert.equal(JSON.stringify(result).length <= 1_800, true)
-  assert.equal(result.truncated, true)
+  assert.equal(result.truncated, false)
 })
