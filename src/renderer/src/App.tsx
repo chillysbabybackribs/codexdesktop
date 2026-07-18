@@ -1101,11 +1101,12 @@ export default function App(): React.JSX.Element {
       return true
     }
 
-    const current = mainChatTabStateRef.current.tabs.find(
+    const previousState = mainChatTabStateRef.current
+    const current = previousState.tabs.find(
       (tab) => tab.key === activeMainChatTabKeyRef.current
     )
     const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0)
-    if (!reuseCurrent && mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false
+    if (!reuseCurrent && previousState.tabs.length >= maxMainChatTabs) return false
     const target = reuseCurrent
       ? { ...current!, threadId, title: threads.find((thread) => thread.id === threadId)?.name ?? 'Chat' }
       : createMainChatTab(
@@ -1115,6 +1116,7 @@ export default function App(): React.JSX.Element {
         )
 
     captureActiveMainChatSnapshot()
+    const previousSnapshot = mainChatSnapshotsRef.current.get(previousState.activeKey)
     if (reuseCurrent) mainChatSnapshotsRef.current.delete(target.key)
     updateMainChatTabs((state) => ({
       tabs: reuseCurrent
@@ -1132,11 +1134,28 @@ export default function App(): React.JSX.Element {
       setReconcilingMainChatTabKey(null)
       reconcilingMainChatTabKeyRef.current = null
     }
-    if (resumed) {
-      const dockOwner = backgroundSessionForThread(threadId)
-      if (dockOwner) handleCloseAgentSession(dockOwner.key)
+    if (!resumed) {
+      mainChatSnapshotsRef.current.delete(target.key)
+      if (previousSnapshot) {
+        mainChatSnapshotsRef.current.set(previousState.activeKey, previousSnapshot)
+      }
+      updateMainChatTabs((state) => ({
+        tabs: reuseCurrent
+          ? state.tabs.map((tab) => tab.key === target.key ? current! : tab)
+          : state.tabs.filter((tab) => tab.key !== target.key),
+        activeKey: previousState.activeKey
+      }))
+      const previousTab = previousState.tabs.find((tab) => tab.key === previousState.activeKey)
+      if (previousTab) {
+        applyMainChatSnapshot(previousTab, previousSnapshot)
+        persistLastThreadId(previousTab.threadId)
+      }
+      return false
     }
-    return resumed
+
+    const dockOwner = backgroundSessionForThread(threadId)
+    if (dockOwner) handleCloseAgentSession(dockOwner.key)
+    return true
   }
 
   async function resumeThreadById(

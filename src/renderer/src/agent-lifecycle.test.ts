@@ -3,7 +3,13 @@ import test from 'node:test'
 import { createAgentLifecycle, type AgentRecoveryState } from './agent-lifecycle.ts'
 import { createAgentSession, type AgentLiteMessage, type AgentSession } from './agent-session-model.ts'
 
-function lifecycleHarness(session: AgentSession): {
+function lifecycleHarness(
+  session: AgentSession,
+  options: {
+    createMainThread?: () => boolean
+    resumeMainThread?: (threadId: string) => Promise<boolean>
+  } = {}
+): {
   sessions: AgentSession[]
   messages: AgentLiteMessage[]
   selectedModels: string[]
@@ -44,8 +50,11 @@ function lifecycleHarness(session: AgentSession): {
     getActiveThreadId: () => null,
     pickFallbackModel: (model) => model,
     selectMainModel: (model) => selectedModels.push(model),
-    createMainThread: () => { createdMainThreads.push('created'); return true },
-    resumeMainThread: async () => true
+    createMainThread: options.createMainThread ?? (() => {
+      createdMainThreads.push('created')
+      return true
+    }),
+    resumeMainThread: options.resumeMainThread ?? (async () => true)
   })
 
   return { sessions, messages, selectedModels, createdMainThreads, lifecycle }
@@ -74,4 +83,20 @@ test('promoting a blank agent selects its model and creates a main thread', asyn
   assert.deepEqual(selectedModels, ['agent-model'])
   assert.deepEqual(createdMainThreads, ['created'])
   assert.deepEqual(sessions, [])
+})
+
+test('failed agent promotion keeps the agent session as the thread owner', async () => {
+  const session = {
+    ...createAgentSession('agent-1', 'Agent 2'),
+    threadId: 'thread-agent',
+    model: 'agent-model'
+  }
+  const { sessions, selectedModels, lifecycle } = lifecycleHarness(session, {
+    resumeMainThread: async () => false
+  })
+
+  await lifecycle.handlePromoteAgent('agent-1')
+
+  assert.equal(sessions[0]?.threadId, 'thread-agent')
+  assert.deepEqual(selectedModels, [])
 })

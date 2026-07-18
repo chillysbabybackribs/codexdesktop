@@ -227,7 +227,7 @@ export class ResearchRunner {
     const executionStartedAt = Date.now()
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
     const focusTarget = focus.length > 0
-      ? Math.min(MAX_TARGET_PAGES, Math.max(focus.length, ...focus.map(({ minSources }) => minSources))
+      ? Math.min(MAX_TARGET_PAGES, Math.max(focus.length, ...focus.map(({ minSources }) => minSources)))
       : null
     const directTarget = queries.length === 0 && urls.length > 0 ? Math.min(urls.length, MAX_TARGET_PAGES) : null
     const targetPages = clamp(
