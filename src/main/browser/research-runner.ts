@@ -37,8 +37,9 @@ const MAX_MAX_ATTEMPTS = 8
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
-const PAGE_WORKER_CONCURRENCY = 2
+const PAGE_WORKER_CONCURRENCY = 3
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
+const STATIC_PREFLIGHT_TIMEOUT_MS = 4_000
 const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
@@ -225,7 +226,9 @@ export class ResearchRunner {
 
     const executionStartedAt = Date.now()
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
-    const focusTarget = focus.length > 0 ? Math.max(...focus.map(({ minSources }) => minSources)) : null
+    const focusTarget = focus.length > 0
+      ? Math.min(MAX_TARGET_PAGES, Math.max(focus.length, ...focus.map(({ minSources }) => minSources))
+      : null
     const directTarget = queries.length === 0 && urls.length > 0 ? Math.min(urls.length, MAX_TARGET_PAGES) : null
     const targetPages = clamp(
       request.maxPages,
@@ -288,6 +291,28 @@ export class ResearchRunner {
       if (gaps.length === 0) return 0
       const shortfall = Math.max(...gaps.map((gap) => gap.requiredSources - gap.matchedSources), 1)
       return Math.min(Math.max(0, targetPages - pages.length), shortfall)
+    }
+    const coversUnresolvedFocus = (
+      candidate: ResearchCandidate,
+      sourceId: string,
+      extracted: ExtractedResearchPage
+    ): boolean => {
+      if (focus.length === 0) return true
+      const unresolved = new Set(evidence().gaps.map(({ focusId }) => focusId))
+      if (unresolved.size === 0) return true
+      const packet = selectResearchEvidence(
+        focus.filter(({ id }) => unresolved.has(id)),
+        [{
+          sourceId,
+          title: extracted.title || candidate.title,
+          url: extracted.url || candidate.url,
+          content: extracted.content,
+          observedAt: extracted.observedAt,
+          ...(candidate.sourceTier ? { sourceTier: candidate.sourceTier } : {})
+        }],
+        passageChars
+      )
+      return packet.passages.length > 0
     }
 
     const materializePage = async (
@@ -373,6 +398,7 @@ export class ResearchRunner {
           if (cached) {
             try {
               if (stopSignal.aborted) return null
+              if (!coversUnresolvedFocus(candidate, sourceId, cached)) return null
               const draft = await materializePage(candidate, rank, sourceId, cached, true, stopSignal)
               pageCacheHits += 1
               return draft
@@ -383,7 +409,10 @@ export class ResearchRunner {
             }
           }
 
-          const preflight = linkAbortSignals(signal, stopSignal)
+          const staticTimeout = new AbortController()
+          const staticStartedAt = Date.now()
+          const staticTimer = setTimeout(() => staticTimeout.abort(), STATIC_PREFLIGHT_TIMEOUT_MS)
+          const preflight = linkAbortSignals(signal, stopSignal, staticTimeout.signal)
           let staticResult: Awaited<ReturnType<typeof fetchStaticResearchPage>>
           try {
             staticFetchAttempts += 1
@@ -392,14 +421,33 @@ export class ResearchRunner {
               validateUrl: assertPublicResearchUrl,
               signal: preflight.signal
             })
-            staticFetchMs += staticResult.durationMs
           } catch (error) {
-            preflight.dispose()
-            if (signal.aborted) throw error
-            if (stopSignal.aborted) return null
-            recordResearchError(errors, { url: candidate.url, error: formatError(error) })
-            return null
+            if (signal.aborted) {
+              preflight.dispose()
+              throw error
+            }
+            if (stopSignal.aborted) {
+              preflight.dispose()
+              return null
+            }
+            if (staticTimeout.signal.aborted) {
+              staticResult = {
+                kind: 'fallback',
+                reason: `static preflight timed out after ${STATIC_PREFLIGHT_TIMEOUT_MS}ms`,
+                durationMs: Date.now() - staticStartedAt,
+                bytes: 0,
+                redirects: 0,
+                finalUrl: candidate.url
+              }
+            } else {
+              preflight.dispose()
+              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
+              return null
+            }
+          } finally {
+            clearTimeout(staticTimer)
           }
+          staticFetchMs += staticResult.durationMs
           if (staticResult.kind === 'blocked') {
             preflight.dispose()
             recordResearchError(errors, { url: candidate.url, error: staticResult.reason ?? 'static source blocked' })
@@ -411,6 +459,7 @@ export class ResearchRunner {
                 ...staticResult.page,
                 observedAt: new Date().toISOString()
               }
+              if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
               const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
               this.cachePage(candidate.url, extracted)
               if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
@@ -452,6 +501,7 @@ export class ResearchRunner {
             throwIfAborted(linked.signal)
 
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
+            if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
