@@ -6,6 +6,8 @@ import {
   buildGuidance,
   formatSkillInvocationText,
   isFastPathTask,
+  isInteractiveBrowserTask,
+  isReadOnlyBrowserMicrotask,
   isWebResearchTask,
   resolveTurnPolicy,
   selectNewThreadSkills,
@@ -69,6 +71,16 @@ test('fresh public-source requests load web research', () => {
   assert.equal(isWebResearchTask('Check the latest official Electron documentation'), true)
   assert.equal(isWebResearchTask('Find current pricing from public sources'), true)
   assert.equal(isWebResearchTask('Review this local patch'), false)
+})
+
+test('authenticated browser state stays on the compact interactive path', () => {
+  const prompt = 'Navigate to Reddit and tell me my last 3 notifications read or unread'
+  assert.equal(isInteractiveBrowserTask(prompt), true)
+  assert.equal(isReadOnlyBrowserMicrotask(prompt), true)
+  assert.equal(isWebResearchTask(prompt), false)
+  assert.deepEqual(selectTurnSkills(prompt, [webResearchSkill]), [])
+  assert.equal(isWebResearchTask('Find recent Reddit discussions about Electron performance'), true)
+  assert.equal(isWebResearchTask('Compare Reddit user reviews with public sources'), true)
 })
 
 test('frontend design turns automatically attach the polished UI skill', () => {
@@ -144,9 +156,10 @@ test('global guidance stays limited to product-wide behavior', () => {
   const guidance = buildGuidance({})
 
   assert.match(guidance, /reuse the active visible browser tab/i)
+  assert.match(guidance, /prefer one `browser_snapshot` call/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
-  assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|browser_run|multi-part answers/i)
+  assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|multi-part answers/i)
 })
 
 test('active autosnapshot guidance describes concurrent commit and push behavior', () => {
@@ -196,9 +209,14 @@ test('all turns request concise reasoning summaries without changing their effor
   assert.equal('effort' in policy, false)
 })
 
-test('Fast mode only downshifts simple tasks when the selected model supports it', () => {
+test('simple read-only browser tasks use low effort while complex tasks still honor the selected effort', () => {
   assert.equal(isFastPathTask('Check my last two Reddit notifications'), true)
+  assert.equal(isFastPathTask('ok navigate to reddit and check the last 3 notifications for a speed test'), true)
   assert.equal(isFastPathTask('Refactor the tab manager and run its tests'), false)
+  assert.deepEqual(resolveTurnPolicy('Check my last two Reddit notifications', {
+    requestedEffort: 'high',
+    supportedEfforts: ['minimal', 'low', 'medium', 'high']
+  }), { summary: 'concise', effort: 'low' })
   assert.deepEqual(resolveTurnPolicy('Check my last two Reddit notifications', {
     fastMode: true,
     requestedEffort: 'high',
@@ -206,6 +224,10 @@ test('Fast mode only downshifts simple tasks when the selected model supports it
   }), { summary: 'concise', effort: 'low' })
   assert.deepEqual(resolveTurnPolicy('Review this local patch', {
     fastMode: true,
+    requestedEffort: 'high',
+    supportedEfforts: ['minimal', 'low', 'medium', 'high']
+  }), { summary: 'concise' })
+  assert.deepEqual(resolveTurnPolicy('Click the mark-all-read button in my notifications', {
     requestedEffort: 'high',
     supportedEfforts: ['minimal', 'low', 'medium', 'high']
   }), { summary: 'concise' })
