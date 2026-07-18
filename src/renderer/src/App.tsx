@@ -744,7 +744,7 @@ export default function App(): React.JSX.Element {
     const trimmed = text.trim()
     const targetTabKey = activeMainChatTabKeyRef.current
 
-    if ((!trimmed && !attachments.length) || isSending || activeTurnId) {
+    if ((!trimmed && !attachments.length) || isSending || activeTurnId || isMainChatTransitionLocked()) {
       return false
     }
     if (attachments.some((attachment) => attachment.kind === 'image') && !modelAcceptsImages(models, selectedModel)) {
@@ -936,7 +936,7 @@ export default function App(): React.JSX.Element {
 
   const handleCompactThread = async (): Promise<void> => {
     const threadId = activeThreadIdRef.current
-    if (!threadId || activeTurnIdRef.current) {
+    if (!threadId || activeTurnIdRef.current || isMainChatTransitionLocked()) {
       return
     }
 
@@ -1244,7 +1244,7 @@ export default function App(): React.JSX.Element {
 
   async function handleSaveGoal(objective: string, tokenBudget: number | null): Promise<boolean> {
     const trimmed = objective.trim()
-    if (!trimmed || activeTurnIdRef.current || isGoalUpdating) return false
+    if (!trimmed || activeTurnIdRef.current || isGoalUpdating || isMainChatTransitionLocked()) return false
 
     setIsGoalUpdating(true)
     try {
@@ -1268,7 +1268,7 @@ export default function App(): React.JSX.Element {
 
   async function handleSetGoalStatus(status: Extract<ThreadGoalStatus, 'active' | 'paused'>): Promise<void> {
     const threadId = activeThreadIdRef.current
-    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating) return
+    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating || isMainChatTransitionLocked()) return
 
     setIsGoalUpdating(true)
     try {
@@ -1284,7 +1284,7 @@ export default function App(): React.JSX.Element {
 
   async function handleClearGoal(): Promise<void> {
     const threadId = activeThreadIdRef.current
-    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating) return
+    if (!threadId || !activeGoalRef.current || activeTurnIdRef.current || isGoalUpdating || isMainChatTransitionLocked()) return
 
     setIsGoalUpdating(true)
     try {
@@ -2864,7 +2864,7 @@ function ChatPane({
           footerTrailing={
             <ContextPill
               usage={contextUsage}
-              disabled={Boolean(activeTurnId)}
+              disabled={Boolean(activeTurnId) || mainChatTabsDisabled}
               compacting={isCompacting}
               onCompact={onCompactThread}
             />
@@ -2875,7 +2875,7 @@ function ChatPane({
       {isSettingsOpen ? (
         <SettingsModal
           goal={activeGoal}
-          isGoalUpdating={Boolean(activeTurnId) || isGoalUpdating}
+          isGoalUpdating={Boolean(activeTurnId) || isGoalUpdating || mainChatTabsDisabled}
           onSaveGoal={onSaveGoal}
           onSetGoalStatus={onSetGoalStatus}
           onClearGoal={onClearGoal}
