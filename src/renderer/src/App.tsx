@@ -2559,7 +2559,7 @@ function MainChatTabStrip({
     active?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   }, [activeKey, tabs.length])
 
-  const moveFocus = (fromKey: string, direction: -1 | 1 | 'first' | 'last'): void => {
+  const moveFocus = async (fromKey: string, direction: -1 | 1 | 'first' | 'last'): Promise<void> => {
     const index = tabs.findIndex((tab) => tab.key === fromKey)
     const nextIndex = direction === 'first'
       ? 0
@@ -2568,7 +2568,7 @@ function MainChatTabStrip({
         : (index + direction + tabs.length) % tabs.length
     const next = tabs[nextIndex]
     if (!next) return
-    void onSelect(next.key)
+    if (!await onSelect(next.key)) return
     requestAnimationFrame(() => {
       stripRef.current
         ?.querySelector<HTMLButtonElement>(`[data-main-chat-tab="${next.key}"]`)
@@ -2591,6 +2591,7 @@ function MainChatTabStrip({
                 role="tab"
                 className="main-chat-tab-target"
                 data-main-chat-tab={tab.key}
+                id={`main-chat-tab-${tab.key}`}
                 aria-selected={active}
                 aria-controls="main-chat-panel"
                 tabIndex={active ? 0 : -1}
@@ -2600,10 +2601,10 @@ function MainChatTabStrip({
                 onKeyDown={(event) => {
                   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
                     event.preventDefault()
-                    moveFocus(tab.key, event.key === 'ArrowLeft' ? -1 : 1)
+                    void moveFocus(tab.key, event.key === 'ArrowLeft' ? -1 : 1)
                   } else if (event.key === 'Home' || event.key === 'End') {
                     event.preventDefault()
-                    moveFocus(tab.key, event.key === 'Home' ? 'first' : 'last')
+                    void moveFocus(tab.key, event.key === 'Home' ? 'first' : 'last')
                   }
                 }}
               >
@@ -2943,7 +2944,7 @@ function ChatPane({
 
   return (
     <section
-      id="main-chat-panel"
+      id="main-chat-pane"
       className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
         !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
       } ${isMainFocused ? 'is-main-focused' : ''}`}
@@ -2970,6 +2971,8 @@ function ChatPane({
       />
 
       <ThreadScroll
+        id="main-chat-panel"
+        labelledBy={`main-chat-tab-${activeMainChatTabKey}`}
         resetKey={activeThreadId}
         activeTurnId={activeTurnId}
         dependencies={[items, itemMeta, activeTurnId]}
@@ -3642,12 +3645,16 @@ function ThreadScroll({
   children,
   dependencies,
   resetKey,
-  activeTurnId
+  activeTurnId,
+  id,
+  labelledBy
 }: {
   children: React.ReactNode
   dependencies: unknown[]
   resetKey: string | null
   activeTurnId: string | null
+  id: string
+  labelledBy: string
 }): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
@@ -3903,7 +3910,14 @@ function ThreadScroll({
   }, [cancelScheduledFollow, followTail])
 
   return (
-    <div ref={ref} className="thread-scroll" onScroll={handleScroll}>
+    <div
+      ref={ref}
+      id={id}
+      role="tabpanel"
+      aria-labelledby={labelledBy}
+      className="thread-scroll"
+      onScroll={handleScroll}
+    >
       <div ref={contentRef} className="thread-scroll-content">
         {children}
         {spacerOn ? (
