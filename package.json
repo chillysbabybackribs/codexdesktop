@@ -20,6 +20,7 @@
     "pretest": "npm run check:source-shadows",
     "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/renderer/src/*.test.ts",
     "benchmark:tokens": "node scripts/token-baseline.mjs",
+    "benchmark:browser": "node --no-warnings --experimental-strip-types --loader ./scripts/test-loader.mjs scripts/browser-eval.mjs",
     "clean:source-shadows": "node scripts/source-shadow-guard.mjs --fix",
     "check:source-shadows": "node scripts/source-shadow-guard.mjs --check",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
