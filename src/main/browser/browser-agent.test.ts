@@ -205,6 +205,54 @@ test('browser agent serializes programs targeting the same tab', async () => {
   assert.equal(maximumActive, 1)
 })
 
+test('passive CDP waits do not block the same-tab navigation that satisfies them', async () => {
+  class DebuggerFixture extends EventEmitter {
+    attached = false
+    isAttached = (): boolean => this.attached
+    attach = (): void => { this.attached = true }
+    sendCommand = async (): Promise<object> => ({})
+  }
+  const browserDebugger = new DebuggerFixture()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: browserDebugger,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/inbox',
+    getTitle: () => 'Inbox',
+    executeJavaScript: async () => null
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      browserDebugger.emit('message', {}, 'Page.lifecycleEvent', { name: 'load', frameId: 'main' })
+      return {
+        url: 'https://example.com/inbox',
+        durationMs: 5,
+        domReadyMs: 3,
+        settleMs: 2,
+        settleReason: 'selector-ready'
+      }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs)
+
+  const waiting = controller.waitForCdpEvent('Page.lifecycleEvent', {
+    filter: { name: 'load' },
+    timeoutMs: 500
+  })
+  const navigation = controller.navigate('https://example.com/inbox', {
+    readySelector: '[data-testid="row"]'
+  })
+  const [event, navigated] = await Promise.all([waiting, navigation])
+
+  assert.equal(event.ok, true)
+  assert.equal((event.result as { params: { name: string } }).params.name, 'load')
+  assert.equal(navigated.ok, true)
+})
+
 test('browser agent runs one program across all live frames in parallel', async () => {
   let active = 0
   let maximumActive = 0
