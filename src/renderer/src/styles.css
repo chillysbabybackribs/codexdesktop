@@ -4209,7 +4209,7 @@ button {
 }
 
 .split-divider:active::after {
-  background: #f28a31;
+  background: var(--live-signal);
 }
 
 /* Browser section: the darkest of the three — machined chassis with a faint
