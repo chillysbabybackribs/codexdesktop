@@ -195,6 +195,11 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   const passagePoolLimit = Math.min(48, Math.max(12, config.maxItems * 2))
   const contentStorageChars = Math.min(240_000, Math.max(50_000, config.maxChars * 6))
   const objectiveGroups = config.objectiveGroups
+  const requestedStateTerms = new Set(
+    objectiveGroups
+      .map(({ term }) => term)
+      .filter((term) => term === 'read' || term === 'unread')
+  )
   const blockTags = new Set([
     'address', 'article', 'blockquote', 'dd', 'details', 'div', 'dl', 'dt',
     'figcaption', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'main', 'p',
@@ -521,7 +526,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   function readState(element: Element): PageSnapshotItemState {
     const state: PageSnapshotItemState = {}
     const evidence: string[] = []
-    const classTokens = normalizedTokens(element.getAttribute('class') || '').slice(0, 10)
+    const classTokens = unique(normalizedTokens(element.getAttribute('class') || '')).slice(0, 10)
     if (classTokens.length > 0) {
       state.classTokens = classTokens
       evidence.push(...classTokens.slice(0, 6).map((token) => `class:${token}`))
@@ -619,7 +624,9 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     state: PageSnapshotItemState
   ): boolean {
     if (['article', 'li', 'tr'].includes(tag) || (role && repeatedRoles.has(role))) return true
-    const tokens = normalizedTokens(`${element.id || ''} ${element.getAttribute('class') || ''}`)
+    const tokens = normalizedTokens(
+      `${tag} ${element.id || ''} ${element.getAttribute('class') || ''} ${element.getAttribute('data-testid') || ''}`
+    )
     if (tokens.some((token) => ['card', 'item', 'message', 'notification', 'result', 'row'].includes(token))) return true
     return state.read !== undefined || Boolean(state.dataTokens?.length)
   }
@@ -639,7 +646,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     interactive: boolean,
     parentCandidate: RuntimeCandidate | null
   ): boolean {
-    if (parentCandidate?.repeated && !repeated) return false
+    if (parentCandidate?.repeated) return false
     if (repeated || interactive) return true
     if (state.read !== undefined || state.checked !== undefined || state.selected !== undefined) return true
     const label = `${element.id || ''} ${element.getAttribute('class') || ''} ${element.getAttribute('data-testid') || ''}`
@@ -713,6 +720,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     candidate.text = cleanText(candidate.text).slice(0, textLimit)
     if (!candidate.text && !candidate.nameHint && !candidate.href && Object.keys(candidate.state).length === 0) return
     candidateCount += 1
+    inferStructuredReadState(candidate)
     const stateText = [
       candidate.state.read === false ? 'unread unseen unviewed new' : '',
       candidate.state.read === true ? 'read seen viewed opened' : '',
@@ -721,7 +729,12 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       ...(candidate.state.evidence ?? [])
     ].join(' ')
     const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${candidate.href} ${stateText}`
-    candidate.matchedTerms = matchGroups(haystack)
+    candidate.matchedTerms = matchGroups(haystack).filter((term) => !requestedStateTerms.has(term))
+    if (candidate.state.read !== undefined) {
+      for (const term of requestedStateTerms) {
+        if (!candidate.matchedTerms.includes(term)) candidate.matchedTerms.push(term)
+      }
+    }
     const stateQueryMatches = candidate.state.read !== undefined &&
       candidate.matchedTerms.some((term) => term === 'read' || term === 'unread')
       ? 1
@@ -736,12 +749,35 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     keepBest(candidates, candidate, candidatePoolLimit, compareCandidateQuality)
   }
 
+  function inferStructuredReadState(candidate: RuntimeCandidate): void {
+    if (candidate.state.read !== undefined || candidate.state.selected === undefined || requestedStateTerms.size === 0) return
+    const identityTokens = new Set(normalizedTokens([
+      candidate.tag,
+      candidate.role || '',
+      candidate.element.id || '',
+      candidate.element.getAttribute('class') || '',
+      candidate.element.getAttribute('data-testid') || ''
+    ].join(' ')))
+    const notificationLike = ['activity', 'inbox', 'message', 'notification'].some((token) => identityTokens.has(token))
+    const rowLike = ['card', 'item', 'row'].some((token) => identityTokens.has(token))
+    if (!notificationLike || !rowLike) return
+
+    // Inbox components commonly render unread rows using their selected
+    // visual state. Keep the inference narrowly scoped to notification-like
+    // repeated rows and include the source evidence so callers can audit it.
+    candidate.state.read = !candidate.state.selected
+    candidate.state.evidence = unique([
+      ...(candidate.state.evidence ?? []),
+      candidate.state.selected ? 'inferred:selected-unread' : 'inferred:unselected-read'
+    ]).slice(0, 12)
+  }
+
   function finalizeBlock(block: RuntimeBlock): void {
     block.text = cleanText(block.text)
     if (block.text.length < 3) return
     if (headingTags.has(block.tag)) block.text = `${'#'.repeat(Number(block.tag.slice(1)) || 1)} ${block.text}`
     block.text = block.text.slice(0, 1_500)
-    block.matchedTerms = matchGroups(block.text)
+    block.matchedTerms = matchGroups(block.text).filter((term) => !requestedStateTerms.has(term))
     block.score = block.matchedTerms.length * 100 + (block.primary ? 20 : 0) + Math.min(30, Math.floor(block.text.length / 40))
     if (block.matchedTerms.length > 0 || objectiveGroups.length === 0) {
       keepBest(passages, { ...block }, passagePoolLimit, compareBlockQuality)

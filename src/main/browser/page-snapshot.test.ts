@@ -78,6 +78,37 @@ test('task snapshot ranks Reddit-like notification rows but returns them in docu
   assert.equal(JSON.stringify(result).length <= 4_000, true)
 })
 
+test('task snapshot treats selected custom inbox rows as auditable unread state', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Inbox</title></head><body>
+    <main><h1>Notifications</h1>
+      <notification-item><rpl-inbox-row selected role="none"><a href="/new"><span>Newest reply</span><time datetime="2026-07-18T10:00:00Z">now</time></a></rpl-inbox-row></notification-item>
+      <notification-item><rpl-inbox-row role="none"><a href="/old"><span>Earlier reply</span><time datetime="2026-07-17T10:00:00Z">yesterday</time></a></rpl-inbox-row></notification-item>
+    </main>
+  </body></html>`, {
+    mode: 'task',
+    objective: 'tell me the notifications and whether each is read or unread',
+    maxItems: 2,
+    maxChars: 4_000
+  }, (document) => {
+    for (const row of document.querySelectorAll('rpl-inbox-row')) {
+      Object.defineProperty(row, 'selected', {
+        configurable: true,
+        value: row.hasAttribute('selected')
+      })
+    }
+  })
+
+  assert.equal(result.items.length, 2)
+  assert.deepEqual(result.items.map(({ state }) => state.read), [false, true])
+  assert.match(result.items[0]?.state.evidence?.join(' ') ?? '', /selected-unread/)
+  assert.match(result.items[1]?.state.evidence?.join(' ') ?? '', /unselected-read/)
+  assert.deepEqual(result.items.map(({ datetime }) => datetime), [
+    '2026-07-18T10:00:00Z',
+    '2026-07-17T10:00:00Z'
+  ])
+  assert.equal(result.coverage.complete, true)
+})
+
 test('content mode preserves primary article text nested inside a fixed-sidebar wrapper', () => {
   const result = executeSnapshot(`<!doctype html><html><head><title>Report</title></head><body>
     <div class="fixed-sidebar">
