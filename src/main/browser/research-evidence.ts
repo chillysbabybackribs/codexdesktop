@@ -1,7 +1,7 @@
 const FOCUS_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'how', 'in',
   'is', 'it', 'of', 'on', 'or', 'the', 'to', 'what', 'when', 'where', 'which',
-  'who', 'why', 'with', 'do', 'does', 'did', 'tell', 'result', 'results', 'exact'
+  'who', 'why', 'with', 'do', 'does', 'doe', 'did', 'tell', 'result', 'results', 'exact'
 ])
 
 const DEFAULT_EVIDENCE_CHARS = 3_500
