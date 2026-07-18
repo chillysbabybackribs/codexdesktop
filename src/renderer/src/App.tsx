@@ -1520,6 +1520,51 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function handleBackgroundMainChatNotification(
+    tab: MainChatTab,
+    notification: ServerNotification
+  ): void {
+    switch (notification.method) {
+      case 'thread/name/updated':
+        patchMainChatTab(tab.key, (current) => ({
+          ...current,
+          title: notification.params.threadName || 'New Chat'
+        }))
+        void refreshThreads()
+        return
+      case 'turn/started':
+        patchMainChatTab(tab.key, (current) => ({
+          ...current,
+          status: 'working',
+          turnId: notification.params.turn.id
+        }))
+        return
+      case 'turn/completed': {
+        const turn = notification.params.turn
+        patchMainChatTab(tab.key, (current) => ({
+          ...current,
+          status: 'attention',
+          turnId: null
+        }))
+        void window.api.notifications.backgroundTurn({
+          threadId: notification.params.threadId,
+          title: tab.title || 'Chat',
+          status: turn.status === 'failed' ? 'failed' : 'completed',
+          message: turn.error?.message ?? null
+        })
+        void refreshThreads()
+        return
+      }
+      case 'error':
+        if (!notification.params.willRetry) {
+          patchMainChatTab(tab.key, (current) => ({ ...current, status: 'attention', turnId: null }))
+        }
+        return
+      default:
+        return
+    }
+  }
+
   function handleCodexNotification(notification: ServerNotification): void {
     const currentThreadId = activeThreadIdRef.current
 
@@ -1527,6 +1572,11 @@ export default function App(): React.JSX.Element {
     // never touch the focused view's state.
     const incomingThreadId = (notification.params as { threadId?: string } | undefined)?.threadId
     if (incomingThreadId && !isRelevantThread(incomingThreadId)) {
+      const backgroundMainTab = mainChatTabForThread(incomingThreadId)
+      if (backgroundMainTab) {
+        handleBackgroundMainChatNotification(backgroundMainTab, notification)
+        return
+      }
       const backgroundSession = backgroundSessionForThread(incomingThreadId)
       if (backgroundSession) {
         if (notification.method === 'thread/name/updated') {
@@ -1552,18 +1602,29 @@ export default function App(): React.JSX.Element {
         // (check by id); if this notification arrived first, the pending queue
         // holds the session key.
         const startedThreadId = notification.params.thread.id
+        if (mainChatTabForThread(startedThreadId)) {
+          return
+        }
         if (startedThreadId && backgroundSessionForThread(startedThreadId)) {
           return
         }
-        const pendingAgentKey = agentStartQueueRef.current.shift()
-        if (pendingAgentKey) {
-          bindAgentThread(pendingAgentKey, startedThreadId)
+        // Both main tabs and dock agents bind the start response themselves.
+        // While either start request is in flight, the unowned notification
+        // must not guess which surface initiated it.
+        if (mainThreadStartsInFlightRef.current.size || agentStartQueueRef.current.length) {
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
         persistLastThreadId(notification.params.thread.id)
+        activeThreadIdRef.current = notification.params.thread.id
         setActiveThreadId(notification.params.thread.id)
-        setActiveThreadTitle(threadTitle(notification.params.thread))
+        activeThreadTitleRef.current = threadTitle(notification.params.thread)
+        setActiveThreadTitle(activeThreadTitleRef.current)
+        patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+          ...tab,
+          threadId: notification.params.thread.id,
+          title: threadTitle(notification.params.thread)
+        }))
         return
       }
       case 'thread/goal/updated':
@@ -1586,7 +1647,10 @@ export default function App(): React.JSX.Element {
         return
       case 'thread/name/updated':
         if (notification.params.threadId === currentThreadId) {
-          setActiveThreadTitle(notification.params.threadName || 'New Chat')
+          const title = notification.params.threadName || 'New Chat'
+          activeThreadTitleRef.current = title
+          setActiveThreadTitle(title)
+          patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({ ...tab, title }))
         }
         void refreshThreads()
         return
@@ -1610,6 +1674,12 @@ export default function App(): React.JSX.Element {
           setActiveThreadId(notification.params.threadId)
           setActiveTurnId(turn.id)
           activeTurnIdRef.current = turn.id
+          patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+            ...tab,
+            threadId: notification.params.threadId,
+            status: 'working',
+            turnId: turn.id
+          }))
           noteTurn(turn.id, {
             status: 'inProgress',
             origin: 'live',
@@ -1642,6 +1712,11 @@ export default function App(): React.JSX.Element {
           })
           if (activeTurnIdRef.current === turn.id) activeTurnIdRef.current = null
           setActiveTurnId((current) => (current === turn.id ? null : current))
+          patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+            ...tab,
+            status: 'idle',
+            turnId: null
+          }))
           if (turn.status === 'failed') {
             maybeScheduleAutoRecovery(notification.params.threadId, turn.id, turn.error)
           } else {
@@ -1727,6 +1802,11 @@ export default function App(): React.JSX.Element {
             setActiveTurnId((current) =>
               current === notification.params.turnId ? null : current
             )
+            patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+              ...tab,
+              status: 'idle',
+              turnId: null
+            }))
             maybeScheduleAutoRecovery(
               notification.params.threadId,
               notification.params.turnId,
