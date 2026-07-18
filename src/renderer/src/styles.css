@@ -4708,9 +4708,9 @@ button {
   --agent-border-selected-flash: #66737a;
   --agent-window-shadow:
     inset 0 1px 0 rgb(255 255 255 / 7%),
-    inset 0 0 16px rgb(0 0 0 / 38%),
-    -8px 4px 18px rgb(0 0 0 / 32%),
-    0 14px 30px rgb(0 0 0 / 40%);
+    inset 0 0 12px rgb(0 0 0 / 30%),
+    -6px 3px 14px rgb(0 0 0 / 24%),
+    0 9px 22px rgb(0 0 0 / 32%);
   display: flex;
   flex-direction: column;
   flex: 0 0 var(--agent-window-height);
@@ -4745,13 +4745,18 @@ button {
 /* While the user works in the main chat, agent windows recede: dimmer, less
    saturated, clearly out of focus. Hover lifts one back to readable. */
 .chat-pane.is-main-focused .agent-overlay {
-  opacity: 0.55;
-  filter: saturate(0.75);
+  opacity: 0.72;
+  filter: saturate(0.9);
 }
 
 .chat-pane.is-main-focused .agent-overlay:hover {
-  opacity: 0.9;
+  opacity: 0.95;
   filter: none;
+}
+
+.chat-pane.is-main-focused .agent-overlay.is-selected {
+  opacity: 0.78;
+  filter: saturate(0.95);
 }
 
 .agent-overlay.is-flash {
@@ -4789,8 +4794,13 @@ button {
 }
 
 .agent-watch-toggle.is-active {
-  color: #f28a31;
-  background: transparent;
+  color: var(--live-signal);
+  background: rgb(242 138 49 / 10%);
+}
+
+.agent-close-button:hover {
+  background: #302224;
+  color: #f1b1b5;
 }
 
 .agent-overlay-header {
@@ -4799,6 +4809,7 @@ button {
   gap: 8px;
   flex: 0 0 auto;
   padding: 8px 10px;
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
 }
 
 .agent-overlay-title {
@@ -4807,7 +4818,8 @@ button {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13px;
-  color: #c9cdd2;
+  color: #d7dbe0;
+  font-weight: 600;
 }
 
 .agent-overlay-actions {
@@ -4829,7 +4841,7 @@ button {
 
 .agent-overlay-empty {
   margin: auto 8px;
-  color: #7b8087;
+  color: #969ca3;
   font-size: 12.5px;
   line-height: 1.5;
   text-align: center;
@@ -4837,8 +4849,8 @@ button {
 
 .agent-mini-message {
   max-width: 100%;
-  font-size: 13.5px;
-  line-height: 1.62;
+  font-size: 14px;
+  line-height: 1.58;
   overflow-wrap: anywhere;
 }
 
@@ -4935,13 +4947,13 @@ button {
 }
 
 .agent-mini-message.is-assistant a {
-  color: #5865f2;
+  color: #8ab9f0;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .agent-mini-message.is-assistant a:hover {
-  color: #8b95ff;
+  color: #b5d5fa;
 }
 
 .agent-mini-message.is-assistant table {
@@ -4967,7 +4979,7 @@ button {
 .agent-overlay-working {
   flex: 0 0 auto;
   font-size: 12px;
-  color: #8a8f96;
+  color: #969ca3;
 }
 
 .agent-overlay-composer {
@@ -4975,7 +4987,9 @@ button {
   align-items: flex-end;
   gap: 6px;
   flex: 0 0 auto;
-  padding: 8px;
+  padding: 8px 8px 9px;
+  border-top: 1px solid rgb(255 255 255 / 6%);
+  background: rgb(0 0 0 / 10%);
 }
 
 .agent-composer-body {
@@ -5032,10 +5046,16 @@ button {
   font-size: 13px;
   line-height: 1.4;
   outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.agent-overlay-composer textarea::placeholder {
+  color: #818890;
 }
 
 .agent-overlay-composer textarea:focus {
-  border-color: rgba(255, 255, 255, 0.28);
+  border-color: var(--focus-ink);
+  box-shadow: 0 0 0 2px var(--focus-halo);
 }
 
 .agent-overlay-composer textarea {
@@ -5106,7 +5126,13 @@ button {
   align-items: center;
   flex: 0 0 auto;
   min-height: 26px;
-  padding: 2px 6px 0;
+  padding: 4px 8px 2px;
+  border-top: 1px solid rgb(255 255 255 / 6%);
+  background: rgb(0 0 0 / 10%);
+}
+
+.agent-overlay-context + .agent-overlay-composer {
+  border-top: 0;
 }
 
 .agent-overlay-context .workspace-pill {
