@@ -108,12 +108,14 @@ type RuntimeCandidate = {
   state: PageSnapshotItemState
   nearbyHeading: string
   repeated: boolean
+  hasInteractiveDescendant: boolean
   score: number
   matchedTerms: string[]
   styleVisible: boolean | null
 }
 
 type RuntimeBlock = {
+  element: Element
   order: number
   tag: string
   text: string
@@ -130,9 +132,11 @@ const MAX_MAX_ITEMS = 200
 
 const OBJECTIVE_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'each', 'find', 'for', 'from', 'go', 'how',
-  'i', 'in', 'is', 'it', 'me', 'navigate', 'of', 'on', 'or', 'page', 'please',
-  'show', 'tell', 'that', 'the', 'this', 'to', 'what', 'when', 'where', 'which',
-  'who', 'whether', 'with', 'first', 'last', 'latest', 'recent', 'top'
+  'get', 'give', 'grab', 'i', 'identify', 'in', 'is', 'it', 'list', 'me', 'navigate', 'of',
+  'on', 'or', 'page', 'please', 'return', 'extract', 'show', 'tell', 'that', 'the', 'this',
+  'to', 'what', 'when', 'where', 'which', 'who', 'whether', 'with', 'first', 'last',
+  'latest', 'recent', 'top', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
+  'eight', 'nine', 'ten'
 ])
 
 const OBJECTIVE_SYNONYMS: Record<string, string[]> = {
@@ -339,6 +343,9 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const state = readState(element)
     const repeated = isRepeatedElement(element, tag, role, state)
     const interactive = isInteractiveElement(element, tag, role)
+    if (interactive && entry.context.candidate?.repeated) {
+      entry.context.candidate.hasInteractiveDescendant = true
+    }
     const shouldCreateCandidate = !explicitlyHidden && !lowValue && isCandidateElement(
       element,
       tag,
@@ -360,7 +367,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     const createdHeading = headingTags.has(tag) ? { text: '' } : null
     const activeHeading = createdHeading ?? entry.context.heading
     const createdBlock = !explicitlyHidden && !lowValue && blockTags.has(tag)
-      ? ({ order: elementOrder, tag, text: '', primary, score: 0, matchedTerms: [] } satisfies RuntimeBlock)
+      ? ({ element, order: elementOrder, tag, text: '', primary, score: 0, matchedTerms: [] } satisfies RuntimeBlock)
       : null
     const activeBlock = createdBlock ?? entry.context.block
 
@@ -712,6 +719,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       state,
       nearbyHeading: lastHeading,
       repeated,
+      hasInteractiveDescendant: false,
       score: 0,
       matchedTerms: [],
       styleVisible: null
@@ -748,8 +756,10 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
 
   function finalizeCandidate(candidate: RuntimeCandidate): void {
     candidate.text = cleanText(candidate.text).slice(0, textLimit)
+    if (config.mode === 'interactive' && candidate.repeated && candidate.hasInteractiveDescendant &&
+      !isInteractiveElement(candidate.element, candidate.tag, candidate.role)) return
     if (!candidate.text && !candidate.nameHint && !candidate.href && Object.keys(candidate.state).length === 0) return
-    candidate.styleVisible = detectComputedStyleVisibility(candidate.element)
+    candidate.styleVisible = detectTreeComputedVisibility(candidate.element)
     if (candidate.styleVisible === false) return
     candidateCount += 1
     inferStructuredReadState(candidate)
@@ -817,6 +827,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }
 
   function finalizeBlock(block: RuntimeBlock): void {
+    if (detectTreeComputedVisibility(block.element) === false) return
     block.text = cleanText(block.text)
     if (block.text.length < 3) return
     if (headingTags.has(block.tag)) block.text = `${'#'.repeat(Number(block.tag.slice(1)) || 1)} ${block.text}`
@@ -883,6 +894,25 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     } catch {
       return null
     }
+  }
+
+  const computedTreeVisibility = new WeakMap<Element, boolean | null>()
+
+  function detectTreeComputedVisibility(element: Element): boolean | null {
+    const cached = computedTreeVisibility.get(element)
+    if (cached !== undefined) return cached
+    const ownVisibility = detectComputedStyleVisibility(element)
+    if (ownVisibility === false) {
+      computedTreeVisibility.set(element, false)
+      return false
+    }
+    const rootNode = typeof element.getRootNode === 'function' ? element.getRootNode() : null
+    const shadowHost = rootNode && 'host' in rootNode ? (rootNode as ShadowRoot).host : null
+    const parent = element.parentElement ?? shadowHost
+    const parentVisibility = parent ? detectTreeComputedVisibility(parent) : null
+    const visible = parentVisibility === false ? false : ownVisibility
+    computedTreeVisibility.set(element, visible)
+    return visible
   }
 
   function matchGroups(value: string): string[] {
@@ -987,6 +1017,22 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
         timings: result.timings,
         truncated: true
       }
+      const boundedObjectiveTerms = objectiveTerms.slice(0, 4).map((term) => term.slice(0, 32))
+      result.coverage.objectiveTerms = boundedObjectiveTerms
+      result.coverage.gaps = unique([...boundedObjectiveTerms, 'result-budget'])
+      while (JSON.stringify(result).length > config.maxChars && result.coverage.objectiveTerms.length > 0) {
+        result.coverage.objectiveTerms.pop()
+        result.coverage.gaps = unique([...result.coverage.objectiveTerms, 'result-budget'])
+      }
+      if (JSON.stringify(result).length > config.maxChars) result.page.title = ''
+      if (JSON.stringify(result).length > config.maxChars) {
+        result.scope = { selector: null, matched: result.scope.matched }
+      }
+      if (JSON.stringify(result).length > config.maxChars) {
+        result.page.lang = null
+        result.page.readyState = null
+        result.coverage.gaps = ['result-budget']
+      }
       const baseChars = JSON.stringify(result).length
       const urlBudget = Math.max(0, config.maxChars - baseChars - 2)
       result.page.url = page.url.slice(0, urlBudget)
@@ -1020,6 +1066,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     if (config.requestedItemCount > itemEntries.length) {
       gaps.push(`item-count-missing:${config.requestedItemCount - itemEntries.length}`)
     }
+    if (traversalTruncated) gaps.push('traversal-truncated')
     return { matchedTerms, gaps, complete: gaps.length === 0 }
   }
 
@@ -1075,14 +1122,29 @@ function uniqueStrings(values: string[]): string[] {
 
 function inferRequestedItemCount(objective: string): number | null {
   const tokens = tokenizeObjective(objective)
+  const numberWords: Record<string, number> = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10
+  }
   const countable = new Set([
-    'alert', 'alerts', 'entry', 'entries', 'item', 'items', 'link', 'links',
+    'alert', 'alerts', 'button', 'buttons', 'card', 'cards', 'control', 'controls',
+    'entry', 'entries', 'item', 'items', 'link', 'links',
     'message', 'messages', 'notification', 'notifications', 'post', 'posts',
-    'record', 'records', 'result', 'results', 'row', 'rows'
+    'product', 'products', 'record', 'records', 'result', 'results', 'review', 'reviews',
+    'row', 'rows'
   ])
   for (let index = 0; index < tokens.length; index += 1) {
-    if (!/^\d{1,3}$/.test(tokens[index] ?? '')) continue
-    const count = Number(tokens[index])
+    const token = tokens[index] ?? ''
+    if (!/^\d{1,3}$/.test(token) && numberWords[token] === undefined) continue
+    const count = numberWords[token] ?? Number(token)
     if (count < 1 || count > MAX_MAX_ITEMS) continue
     if (tokens.slice(index + 1, index + 4).some((token) => countable.has(token))) return count
   }
