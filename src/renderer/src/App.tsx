@@ -370,6 +370,84 @@ export default function App(): React.JSX.Element {
     threadsNextCursorRef.current = threadsNextCursor
   }, [threadsNextCursor])
 
+  function updateMainChatTabs(update: (state: MainChatTabState) => MainChatTabState): void {
+    setMainChatTabState((current) => {
+      const next = update(current)
+      mainChatTabStateRef.current = next
+      activeMainChatTabKeyRef.current = next.activeKey
+      return next
+    })
+  }
+
+  function patchMainChatTab(key: string, update: (tab: MainChatTab) => MainChatTab): void {
+    updateMainChatTabs((state) => ({
+      ...state,
+      tabs: state.tabs.map((tab) => tab.key === key ? update(tab) : tab)
+    }))
+  }
+
+  function mainChatTabForThread(threadId: string): MainChatTab | null {
+    return tabForThread(mainChatTabStateRef.current.tabs, threadId)
+  }
+
+  function captureActiveMainChatSnapshot(): void {
+    flushPendingItemMutations()
+    const key = activeMainChatTabKeyRef.current
+    mainChatSnapshotsRef.current.set(key, {
+      threadId: activeThreadIdRef.current,
+      title: activeThreadTitleRef.current,
+      turnId: activeTurnIdRef.current,
+      goal: cloneGoal(activeGoalRef.current),
+      reasoningEffort: activeReasoningEffortRef.current,
+      items: itemsRef.current,
+      itemMeta: itemMetaRef.current,
+      turnMeta: turnMetaRef.current,
+      contextUsage: contextUsageRef.current,
+      isCompacting,
+      activeCompaction: activeCompactionRef.current ? { ...activeCompactionRef.current } : null,
+      precedingModelInputByTurn: new Map(precedingModelInputByTurnRef.current),
+      pendingCompactionByTurn: new Set(pendingCompactionByTurnRef.current)
+    })
+  }
+
+  function applyMainChatSnapshot(tab: MainChatTab, snapshot?: MainChatSnapshot): void {
+    const threadId = snapshot?.threadId ?? tab.threadId
+    const title = snapshot?.title ?? tab.title
+    const turnId = snapshot?.turnId ?? tab.turnId
+    const nextItems = snapshot?.items ?? []
+    const nextItemMeta = snapshot?.itemMeta ?? {}
+    const nextTurnMeta = snapshot?.turnMeta ?? {}
+    const nextGoal = cloneGoal(snapshot?.goal ?? null)
+    const nextEffort = snapshot?.reasoningEffort ?? null
+    const nextUsage = snapshot?.contextUsage ?? null
+
+    watchThreadIdRef.current = threadId
+    activeThreadIdRef.current = threadId
+    activeThreadTitleRef.current = title
+    activeTurnIdRef.current = turnId
+    activeGoalRef.current = nextGoal
+    activeReasoningEffortRef.current = nextEffort
+    itemsRef.current = nextItems
+    itemMetaRef.current = nextItemMeta
+    turnMetaRef.current = nextTurnMeta
+    contextUsageRef.current = nextUsage
+    activeCompactionRef.current = snapshot?.activeCompaction ? { ...snapshot.activeCompaction } : null
+    precedingModelInputByTurnRef.current = new Map(snapshot?.precedingModelInputByTurn ?? [])
+    pendingCompactionByTurnRef.current = new Set(snapshot?.pendingCompactionByTurn ?? [])
+
+    setActiveThreadId(threadId)
+    setActiveThreadTitle(title)
+    setActiveTurnId(turnId)
+    setActiveGoal(nextGoal)
+    setActiveReasoningEffort(nextEffort)
+    setItems(nextItems)
+    setItemMeta(nextItemMeta)
+    setTurnMeta(nextTurnMeta)
+    setContextUsage(nextUsage)
+    setIsCompacting(snapshot?.isCompacting ?? false)
+    setIsGoalUpdating(false)
+  }
+
   useEffect(() => {
     if (workspace) {
       window.localStorage.setItem('codexdesktop.workspace', workspace)
@@ -508,7 +586,10 @@ export default function App(): React.JSX.Element {
     })
 
     if (!initializationPromiseRef.current) {
-      const lastThreadId = window.localStorage.getItem(lastThreadStorageKey)
+      const activeTab = mainChatTabStateRef.current.tabs.find(
+        (tab) => tab.key === mainChatTabStateRef.current.activeKey
+      )
+      const lastThreadId = activeTab?.threadId ?? null
       initializationPromiseRef.current = (async () => {
         const authPromise = window.api.codex.getAuthStatus().catch((error) => {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
@@ -519,6 +600,7 @@ export default function App(): React.JSX.Element {
         // any thread the main view already owns.
         const restorePromise = (async () => {
           if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+          await restoreBackgroundMainChatTabs(lastThreadId)
           await restoreAgentDock()
         })()
 
