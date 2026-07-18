@@ -769,19 +769,21 @@ export default function App(): React.JSX.Element {
         mainThreadStartsInFlightRef.current.delete(targetTabKey)
         threadId = started.thread.id
         const startedTitle = threadTitle(started.thread)
-        watchThreadIdRef.current = threadId
-        activeThreadIdRef.current = threadId
-        setActiveThreadId(threadId)
-        activeThreadTitleRef.current = startedTitle
-        setActiveThreadTitle(startedTitle)
-        setActiveReasoningEffort(started.reasoningEffort)
-        activeReasoningEffortRef.current = started.reasoningEffort
         patchMainChatTab(targetTabKey, (tab) => ({
           ...tab,
           threadId,
           title: startedTitle
         }))
-        persistLastThreadId(threadId)
+        if (activeMainChatTabKeyRef.current === targetTabKey) {
+          watchThreadIdRef.current = threadId
+          activeThreadIdRef.current = threadId
+          setActiveThreadId(threadId)
+          activeThreadTitleRef.current = startedTitle
+          setActiveThreadTitle(startedTitle)
+          setActiveReasoningEffort(started.reasoningEffort)
+          activeReasoningEffortRef.current = started.reasoningEffort
+          persistLastThreadId(threadId)
+        }
       }
 
       const response = await window.api.codex.sendMessage({
@@ -793,6 +795,24 @@ export default function App(): React.JSX.Element {
         effort: selectedReasoningEffort,
         fastMode
       })
+      patchMainChatTab(targetTabKey, (tab) => ({
+        ...tab,
+        threadId: response.threadId,
+        status: 'working',
+        turnId: response.turn.id
+      }))
+      if (activeMainChatTabKeyRef.current !== targetTabKey) {
+        const snapshot = mainChatSnapshotsRef.current.get(targetTabKey)
+        if (snapshot) {
+          mainChatSnapshotsRef.current.set(targetTabKey, {
+            ...snapshot,
+            threadId: response.threadId,
+            turnId: response.turn.id,
+            reasoningEffort: response.reasoningEffort
+          })
+        }
+        return true
+      }
       watchThreadIdRef.current = response.threadId
       activeThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -801,12 +821,6 @@ export default function App(): React.JSX.Element {
       if (!turnAlreadyObserved) userRequestedTurnIdRef.current = response.turn.id
       setActiveTurnId(response.turn.id)
       activeTurnIdRef.current = response.turn.id
-      patchMainChatTab(targetTabKey, (tab) => ({
-        ...tab,
-        threadId: response.threadId,
-        status: 'working',
-        turnId: response.turn.id
-      }))
       setActiveReasoningEffort(response.reasoningEffort)
       activeReasoningEffortRef.current = response.reasoningEffort
       const goalSnapshot = cloneGoal(activeGoalRef.current)
@@ -935,7 +949,17 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function isMainChatTransitionLocked(): boolean {
+    return Boolean(
+      userTurnRequestPendingRef.current ||
+      isGoalUpdating ||
+      isRestoring ||
+      reconcilingMainChatTabKeyRef.current
+    )
+  }
+
   const handleNewThread = (): void => {
+    if (isMainChatTransitionLocked() || activeTurnIdRef.current) return
     const previousThreadId = activeThreadIdRef.current
     const tabKey = activeMainChatTabKeyRef.current
 
@@ -944,7 +968,9 @@ export default function App(): React.JSX.Element {
     resumeGenerationRef.current += 1
     watchThreadIdRef.current = null
     persistLastThreadId(null)
+    activeThreadIdRef.current = null
     setActiveThreadId(null)
+    activeThreadTitleRef.current = 'New Chat'
     setActiveThreadTitle('New Chat')
     setActiveTurnId(null)
     activeTurnIdRef.current = null
@@ -954,6 +980,9 @@ export default function App(): React.JSX.Element {
     activeGoalRef.current = null
     setActiveReasoningEffort(null)
     activeReasoningEffortRef.current = null
+    itemsRef.current = []
+    itemMetaRef.current = {}
+    turnMetaRef.current = {}
     setItems([])
     setItemMeta({})
     setTurnMeta({})
@@ -980,7 +1009,7 @@ export default function App(): React.JSX.Element {
   }
 
   const handleNewMainChatTab = (): void => {
-    if (isSending || isGoalUpdating || isRestoring || reconcilingMainChatTabKeyRef.current) return
+    if (isMainChatTransitionLocked()) return
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
@@ -994,10 +1023,7 @@ export default function App(): React.JSX.Element {
   const handleSelectMainChatTab = async (key: string): Promise<void> => {
     if (
       key === activeMainChatTabKeyRef.current ||
-      isSending ||
-      isGoalUpdating ||
-      isRestoring ||
-      reconcilingMainChatTabKeyRef.current
+      isMainChatTransitionLocked()
     ) return
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
     if (!target) return
@@ -1030,10 +1056,10 @@ export default function App(): React.JSX.Element {
   }
 
   const handleCloseMainChatTab = async (key: string): Promise<void> => {
-    if (isSending || isGoalUpdating || isRestoring || reconcilingMainChatTabKeyRef.current) return
+    if (isMainChatTransitionLocked()) return
     const current = mainChatTabStateRef.current
     const closing = current.tabs.find((tab) => tab.key === key)
-    if (!closing) return
+    if (!closing || closing.status === 'working') return
     const wasActive = current.activeKey === key
     if (wasActive) captureActiveMainChatSnapshot()
     const next = closeMainChatTab(current, key, () => crypto.randomUUID())
@@ -1065,6 +1091,7 @@ export default function App(): React.JSX.Element {
   }
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
+    if (isMainChatTransitionLocked()) return
     setIsThreadMenuOpen(false)
     const existing = mainChatTabForThread(threadId)
     if (existing) {
@@ -1288,7 +1315,12 @@ export default function App(): React.JSX.Element {
         return
       }
 
-      if (event.key.toLowerCase() === 'n' && !event.shiftKey && !activeTurnIdRef.current) {
+      if (
+        event.key.toLowerCase() === 'n' &&
+        !event.shiftKey &&
+        !activeTurnIdRef.current &&
+        !isMainChatTransitionLocked()
+      ) {
         event.preventDefault()
         handleNewThread()
         requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
