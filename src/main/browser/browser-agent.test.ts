@@ -114,7 +114,7 @@ test('browser extraction verification accepts verified frame and target envelope
   assert.equal(assessBrowserExtractionResult({ frames: [{ ok: true, result: { content: 'Loading...' } }] }).verified, false)
 })
 
-test('snapshot verification rejects content shells, login walls, challenges, and incomplete task coverage', () => {
+test('snapshot verification rejects shells and structural gaps without rejecting legitimate auth content', () => {
   const snapshot = (overrides: Record<string, unknown>): Record<string, unknown> => ({
     page: { title: 'Inbox', url: 'https://example.com/inbox' },
     mode: 'task',
@@ -135,11 +135,33 @@ test('snapshot verification rejects content shells, login walls, challenges, and
     items: [{ text: 'Sign in', href: '/login' }]
   })), { verified: false, reason: 'login-wall' })
   assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    mode: 'content',
+    page: { title: 'Authentication guide', url: 'https://example.com/docs/authentication' },
+    content: 'This guide explains how to sign in to the application, establish a session, and troubleshoot account access. '.repeat(35)
+  })), { verified: true })
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    mode: 'interactive',
+    page: { title: 'Login', url: 'https://example.com/login' },
+    items: [{ text: 'Sign in', name: 'Sign in', href: '/login' }],
+    coverage: { objectiveTerms: ['sign', 'button'], matchedTerms: ['sign', 'button'], gaps: [], complete: true }
+  })), { verified: true })
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
     items: [{ text: 'Verify you are human', href: null }]
   })), { verified: false, reason: 'challenge-page' })
-  const incomplete = assessBrowserExtractionResult(snapshot({ items: [{ text: 'One notification' }] }))
-  assert.equal(incomplete.verified, false)
-  assert.match(incomplete.reason ?? '', /coverage-incomplete:notification/)
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    items: [{ text: 'One notification' }]
+  })), { verified: true })
+  const structurallyIncomplete = assessBrowserExtractionResult(snapshot({
+    items: [{ text: 'One notification' }],
+    coverage: {
+      objectiveTerms: ['notification'],
+      matchedTerms: ['notification'],
+      gaps: ['item-count-missing:2'],
+      complete: false
+    }
+  }))
+  assert.equal(structurallyIncomplete.verified, false)
+  assert.match(structurallyIncomplete.reason ?? '', /coverage-incomplete:item-count-missing:2/)
 })
 
 test('browser agent runs a program against the active tab', async () => {
