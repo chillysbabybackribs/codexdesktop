@@ -124,10 +124,10 @@ const MAX_MAX_CHARS = 100_000
 const MAX_MAX_ITEMS = 200
 
 const OBJECTIVE_STOP_WORDS = new Set([
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'find', 'for', 'from', 'go', 'how',
+  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'each', 'find', 'for', 'from', 'go', 'how',
   'i', 'in', 'is', 'it', 'me', 'navigate', 'of', 'on', 'or', 'page', 'please',
   'show', 'tell', 'that', 'the', 'this', 'to', 'what', 'when', 'where', 'which',
-  'who', 'with', 'first', 'last', 'latest', 'recent', 'top'
+  'who', 'whether', 'with', 'first', 'last', 'latest', 'recent', 'top'
 ])
 
 const OBJECTIVE_SYNONYMS: Record<string, string[]> = {
