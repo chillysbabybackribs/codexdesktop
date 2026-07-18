@@ -2104,6 +2104,12 @@ export default function App(): React.JSX.Element {
       <TitleBar />
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
+          mainChatTabs={mainChatTabs}
+          activeMainChatTabKey={activeMainChatTabKey}
+          mainChatTabsDisabled={isSending || isGoalUpdating || isRestoring}
+          onSelectMainChatTab={handleSelectMainChatTab}
+          onCloseMainChatTab={handleCloseMainChatTab}
+          onNewMainChatTab={handleNewMainChatTab}
           items={items}
           itemMeta={itemMeta}
           turnMeta={turnMeta}
@@ -2197,6 +2203,12 @@ function TitleBar(): React.JSX.Element {
 }
 
 function ChatPane({
+  mainChatTabs,
+  activeMainChatTabKey,
+  mainChatTabsDisabled,
+  onSelectMainChatTab,
+  onCloseMainChatTab,
+  onNewMainChatTab,
   items,
   itemMeta,
   turnMeta,
@@ -2254,6 +2266,12 @@ function ChatPane({
   onAgentStop,
   onAgentCompact
 }: {
+  mainChatTabs: MainChatTab[]
+  activeMainChatTabKey: string
+  mainChatTabsDisabled: boolean
+  onSelectMainChatTab: (key: string) => Promise<void>
+  onCloseMainChatTab: (key: string) => Promise<void>
+  onNewMainChatTab: () => void
   items: ChatItem[]
   itemMeta: Record<string, ItemMeta>
   turnMeta: Record<string, TurnMeta>
@@ -2481,17 +2499,15 @@ function ChatPane({
         />
       ) : null}
       <div className={`chat-pane-content ${isPluginBrowserOpen ? 'is-hidden' : ''}`}>
-      <div className="chat-toolbar">
-        <button
-          type="button"
-          className="icon-button"
-          aria-label="Open settings"
-          title="Settings"
-          onClick={() => setIsSettingsOpen(true)}
-        >
-          <SettingsIcon />
-        </button>
-      </div>
+      <MainChatTabStrip
+        tabs={mainChatTabs}
+        activeKey={activeMainChatTabKey}
+        disabled={mainChatTabsDisabled}
+        onSelect={onSelectMainChatTab}
+        onClose={onCloseMainChatTab}
+        onNew={onNewMainChatTab}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+      />
 
       <ThreadScroll
         resetKey={activeThreadId}
@@ -2597,6 +2613,8 @@ function ChatPane({
           ) : null}
         </div>
         <Composer
+          key={activeMainChatTabKey}
+          draftKey={activeMainChatTabKey}
           docked={hasThreadContent}
           workspace={workspace}
           installedPlugins={installedPlugins}
