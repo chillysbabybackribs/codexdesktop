@@ -2202,6 +2202,132 @@ function TitleBar(): React.JSX.Element {
   )
 }
 
+function MainChatTabStrip({
+  tabs,
+  activeKey,
+  disabled,
+  onSelect,
+  onClose,
+  onNew,
+  onOpenSettings
+}: {
+  tabs: MainChatTab[]
+  activeKey: string
+  disabled: boolean
+  onSelect: (key: string) => Promise<void>
+  onClose: (key: string) => Promise<void>
+  onNew: () => void
+  onOpenSettings: () => void
+}): React.JSX.Element {
+  const stripRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const active = stripRef.current?.querySelector<HTMLElement>(`[data-main-chat-tab="${activeKey}"]`)
+    active?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [activeKey, tabs.length])
+
+  const moveFocus = (fromKey: string, direction: -1 | 1 | 'first' | 'last'): void => {
+    const index = tabs.findIndex((tab) => tab.key === fromKey)
+    const nextIndex = direction === 'first'
+      ? 0
+      : direction === 'last'
+        ? tabs.length - 1
+        : (index + direction + tabs.length) % tabs.length
+    const next = tabs[nextIndex]
+    if (!next) return
+    void onSelect(next.key)
+    requestAnimationFrame(() => {
+      stripRef.current
+        ?.querySelector<HTMLButtonElement>(`[data-main-chat-tab="${next.key}"]`)
+        ?.focus()
+    })
+  }
+
+  return (
+    <header className="main-chat-tabbar">
+      <div ref={stripRef} className="main-chat-tabs-scroll" role="tablist" aria-label="Open chats">
+        {tabs.map((tab) => {
+          const active = tab.key === activeKey
+          return (
+            <div
+              key={tab.key}
+              className={`main-chat-tab ${active ? 'is-active' : ''} is-${tab.status}`}
+            >
+              <button
+                type="button"
+                role="tab"
+                className="main-chat-tab-target"
+                data-main-chat-tab={tab.key}
+                aria-selected={active}
+                aria-controls="main-chat-panel"
+                tabIndex={active ? 0 : -1}
+                disabled={disabled}
+                title={tab.title}
+                onClick={() => void onSelect(tab.key)}
+                onKeyDown={(event) => {
+                  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                    event.preventDefault()
+                    moveFocus(tab.key, event.key === 'ArrowLeft' ? -1 : 1)
+                  } else if (event.key === 'Home' || event.key === 'End') {
+                    event.preventDefault()
+                    moveFocus(tab.key, event.key === 'Home' ? 'first' : 'last')
+                  }
+                }}
+              >
+                <MainChatGlyph />
+                <span className="main-chat-tab-title">{tab.title}</span>
+                {tab.status === 'working' ? (
+                  <span className="main-chat-tab-spinner" aria-label="Running" />
+                ) : tab.status === 'attention' ? (
+                  <span className="main-chat-tab-attention" aria-label="Awaiting your attention" />
+                ) : null}
+              </button>
+              <button
+                type="button"
+                className="main-chat-tab-close"
+                aria-label={`Close ${tab.title}`}
+                title="Close chat (Ctrl+W)"
+                disabled={disabled}
+                onClick={() => void onClose(tab.key)}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          )
+        })}
+      </div>
+      <button
+        type="button"
+        className="main-chat-tab-action main-chat-tab-new"
+        aria-label="New chat tab"
+        title="New chat tab (Ctrl+T)"
+        disabled={disabled}
+        onClick={onNew}
+      >
+        <span aria-hidden="true">+</span>
+      </button>
+      <div className="main-chat-tabbar-spacer" />
+      <button
+        type="button"
+        className="main-chat-tab-action"
+        aria-label="Open settings"
+        title="Settings"
+        onClick={onOpenSettings}
+      >
+        <SettingsIcon />
+      </button>
+    </header>
+  )
+}
+
+function MainChatGlyph(): React.JSX.Element {
+  return (
+    <svg className="main-chat-tab-glyph" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4 4.75A1.75 1.75 0 0 1 5.75 3h4.5A1.75 1.75 0 0 1 12 4.75v3.5A1.75 1.75 0 0 1 10.25 10H7l-2.4 2v-2.15A1.75 1.75 0 0 1 4 8.5V4.75Z" />
+    </svg>
+  )
+}
+
 function ChatPane({
   mainChatTabs,
   activeMainChatTabKey,
@@ -2484,6 +2610,7 @@ function ChatPane({
 
   return (
     <section
+      id="main-chat-panel"
       className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
         !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
       } ${isMainFocused ? 'is-main-focused' : ''}`}
