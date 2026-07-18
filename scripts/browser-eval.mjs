@@ -223,10 +223,11 @@ async function runModelArm(context, oracle, options) {
     const wallMs = round(performance.now() - turnStartedAt, 3)
     const toolCalls = harness.toolCallsForTurn(turnResponse.turn.id)
     const tokenEvents = dedupeTokenCalls(harness.tokenEventsForTurn(turnResponse.turn.id))
-    const finalResponse = finalAgentResponse(completed)
+    const streamedItems = harness.itemsForTurn(turnResponse.turn.id)
+    const finalResponse = finalAgentResponse({ items: streamedItems })
     const accuracy = evaluateModelResponse(finalResponse, oracle)
     const lastUsage = tokenEvents.at(-1) ?? null
-    const completedToolItems = (completed.items ?? []).filter((item) =>
+    const completedToolItems = streamedItems.filter((item) =>
       ['dynamicToolCall', 'mcpToolCall', 'commandExecution', 'webSearch'].includes(item.type)
     )
 
@@ -271,6 +272,7 @@ class AppServerHarness {
     this.turnWaiters = new Map()
     this.tokensByTurn = new Map()
     this.toolCallsByTurn = new Map()
+    this.itemsByTurn = new Map()
     this.turnStartedAt = new Map()
     this.firstToolAt = new Map()
     this.stderr = []
@@ -382,6 +384,10 @@ class AppServerHarness {
     return this.toolCallsByTurn.get(turnId) ?? []
   }
 
+  itemsForTurn(turnId) {
+    return this.itemsByTurn.get(turnId) ?? []
+  }
+
   firstToolLatencyForTurn(turnId) {
     const first = this.firstToolAt.get(turnId)
     const started = this.turnStartedAt.get(turnId)
@@ -418,6 +424,10 @@ class AppServerHarness {
       if (['dynamicToolCall', 'mcpToolCall', 'commandExecution', 'webSearch'].includes(type)) {
         this.noteFirstTool(message.params.turnId)
       }
+    } else if (message.method === 'item/completed') {
+      const items = this.itemsByTurn.get(message.params.turnId) ?? []
+      items.push(message.params.item)
+      this.itemsByTurn.set(message.params.turnId, items)
     } else if (message.method === 'turn/completed') {
       this.completedTurns.set(message.params.turn.id, message.params.turn)
       const waiter = this.turnWaiters.get(message.params.turn.id)
