@@ -157,14 +157,15 @@ export function createAgentLifecycle(options: {
   async function handlePromoteAgent(key: string): Promise<void> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return
-    if (session.model && session.model !== options.getSelectedModel()) options.selectMainModel(session.model)
 
     if (!session.threadId) {
       if (!options.createMainThread()) return
+      if (session.model && session.model !== options.getSelectedModel()) options.selectMainModel(session.model)
       removeSession(key)
       return
     }
     if (!await options.resumeMainThread(session.threadId)) return
+    if (session.model && session.model !== options.getSelectedModel()) options.selectMainModel(session.model)
     removeSession(key)
   }
 

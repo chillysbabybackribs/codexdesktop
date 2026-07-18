@@ -1124,21 +1124,23 @@ export default function App(): React.JSX.Element {
     reconcilingMainChatTabKeyRef.current = target.key
     setReconcilingMainChatTabKey(target.key)
     setIsRestoring(true)
-    await resumeThreadById(threadId, { tabKey: target.key })
+    const resumed = await resumeThreadById(threadId, { tabKey: target.key })
     if (activeMainChatTabKeyRef.current === target.key) {
       setIsRestoring(false)
       setReconcilingMainChatTabKey(null)
       reconcilingMainChatTabKeyRef.current = null
     }
-    const dockOwner = backgroundSessionForThread(threadId)
-    if (dockOwner) handleCloseAgentSession(dockOwner.key)
-    return true
+    if (resumed) {
+      const dockOwner = backgroundSessionForThread(threadId)
+      if (dockOwner) handleCloseAgentSession(dockOwner.key)
+    }
+    return resumed
   }
 
   async function resumeThreadById(
     threadId: string,
     options: { silent?: boolean; tabKey?: string } = {}
-  ): Promise<void> {
+  ): Promise<boolean> {
     const generation = ++resumeGenerationRef.current
     const tabKey = options.tabKey ?? activeMainChatTabKeyRef.current
     optimisticUserMessageIdRef.current = null
@@ -1157,7 +1159,7 @@ export default function App(): React.JSX.Element {
       const resumed = await window.api.codex.resumeThread(threadId)
 
       if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
-        return
+        return false
       }
 
       const environment = {
@@ -1173,7 +1175,7 @@ export default function App(): React.JSX.Element {
         const read = await window.api.codex.readThread(threadId)
 
         if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
-          return
+          return false
         }
 
         hydrateThread(read.thread, undefined, environment)
@@ -1181,7 +1183,7 @@ export default function App(): React.JSX.Element {
 
       try {
         const goal = await window.api.codex.getGoal(threadId)
-        if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) return
+        if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) return false
         setActiveGoal(goal)
         activeGoalRef.current = goal
       } catch (error) {
@@ -1189,9 +1191,10 @@ export default function App(): React.JSX.Element {
       }
 
       persistLastThreadId(threadId)
+      return true
     } catch (error) {
       if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
-        return
+        return false
       }
 
       watchThreadIdRef.current = activeThreadIdRef.current
@@ -1201,6 +1204,7 @@ export default function App(): React.JSX.Element {
       } else {
         persistLastThreadId(null)
       }
+      return false
     }
   }
 
