@@ -2136,6 +2136,17 @@ function ChatPane({
             openKeys={openAgentKeys}
             onFocus={focusAgent}
           />
+          {activeTurnId ? (
+            <button
+              type="button"
+              className="composer-new-agent-button"
+              aria-label="Open a new agent"
+              title="New agent"
+              onClick={onNewAgent}
+            >
+              <NewAgentIcon />
+            </button>
+          ) : null}
         </div>
         <Composer
           docked={hasThreadContent}
