@@ -1538,6 +1538,13 @@ export default function App(): React.JSX.Element {
   ): void {
     switch (notification.method) {
       case 'thread/name/updated':
+        if (mainChatSnapshotsRef.current.has(tab.key)) {
+          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
+          mainChatSnapshotsRef.current.set(tab.key, {
+            ...snapshot,
+            title: notification.params.threadName || 'New Chat'
+          })
+        }
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           title: notification.params.threadName || 'New Chat'
@@ -1545,6 +1552,13 @@ export default function App(): React.JSX.Element {
         void refreshThreads()
         return
       case 'turn/started':
+        if (mainChatSnapshotsRef.current.has(tab.key)) {
+          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
+          mainChatSnapshotsRef.current.set(tab.key, {
+            ...snapshot,
+            turnId: notification.params.turn.id
+          })
+        }
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'working',
@@ -1553,6 +1567,15 @@ export default function App(): React.JSX.Element {
         return
       case 'turn/completed': {
         const turn = notification.params.turn
+        if (mainChatSnapshotsRef.current.has(tab.key)) {
+          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
+          mainChatSnapshotsRef.current.set(tab.key, {
+            ...snapshot,
+            turnId: null,
+            isCompacting: false,
+            activeCompaction: null
+          })
+        }
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'attention',
@@ -1569,6 +1592,10 @@ export default function App(): React.JSX.Element {
       }
       case 'error':
         if (!notification.params.willRetry) {
+          if (mainChatSnapshotsRef.current.has(tab.key)) {
+            const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
+            mainChatSnapshotsRef.current.set(tab.key, { ...snapshot, turnId: null })
+          }
           patchMainChatTab(tab.key, (current) => ({ ...current, status: 'attention', turnId: null }))
         }
         return
