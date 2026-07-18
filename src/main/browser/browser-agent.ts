@@ -429,10 +429,51 @@ export class BrowserAgentController {
       return { ok: false, error: 'browser.cdp wait requires an event method' } satisfies BrowserAgentFailure
     }
 
-    return this.runCdpOperation(options, async (session, timeoutMs) => {
+    // Passive waits deliberately do not occupy the per-tab mutation queue.
+    // This lets a wait and the navigation/action that will satisfy it be issued
+    // together without the action sitting behind its own waiter until timeout.
+    const tabs = this.getTabs()
+    const tabId = options.tabId ?? tabs?.getActiveTabId()
+    if (!tabs || !tabId) {
+      return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+    const webContents = tabs.resolveWebContents(tabId)
+    if (!webContents) {
+      return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
+    }
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+    const startedAt = Date.now()
+    try {
+      const session = cdpSessionFor(webContents)
       await session.prepareForEvent(method)
-      return session.waitForEvent(toEventQuery(options, method), timeoutMs)
-    })
+      const rawResult = await session.waitForEvent(toEventQuery(options, method), timeoutMs)
+      const bounded = boundResult(rawResult, maxResultChars)
+      return {
+        ok: true,
+        result: bounded.value,
+        tabId,
+        url: safeUrl(webContents),
+        title: safeTitle(webContents),
+        durationMs: Date.now() - startedAt,
+        resultChars: bounded.chars,
+        truncated: bounded.truncated
+      } satisfies BrowserAgentSuccess
+    } catch (error) {
+      return {
+        ok: false,
+        error: errorMessage(error),
+        tabId,
+        url: safeUrl(webContents),
+        title: safeTitle(webContents),
+        durationMs: Date.now() - startedAt
+      } satisfies BrowserAgentFailure
+    }
   }
 
   async startCdpTrace(params: object = {}, options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
