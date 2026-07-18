@@ -241,8 +241,21 @@ test('simple read-only browser tasks use low effort while complex tasks still ho
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_navigate', 'browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
+  const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
+  assert.equal(browserSnapshot?.type, 'function')
+  if (!browserSnapshot || browserSnapshot.type !== 'function') assert.fail('browser_snapshot function tool is missing')
+  const snapshotSchema = browserSnapshot.inputSchema as {
+    required?: string[]
+    properties: Record<string, { enum?: string[]; minimum?: number; maximum?: number; description?: string }>
+  }
+  assert.deepEqual(snapshotSchema.required, ['objective'])
+  assert.deepEqual(snapshotSchema.properties.mode?.enum, ['task', 'content', 'interactive'])
+  assert.deepEqual(snapshotSchema.properties.order?.enum, ['document', 'reverse-document'])
+  assert.equal(snapshotSchema.properties.maxItems?.minimum, 1)
+  assert.equal(snapshotSchema.properties.maxItems?.maximum, 200)
+  assert.match(browserSnapshot.description, /one call/i)
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')

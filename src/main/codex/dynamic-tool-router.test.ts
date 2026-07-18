@@ -39,6 +39,55 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
+test('dynamic tool router validates and forwards the one-call browser snapshot', async () => {
+  const rejected = await routeDynamicToolCall(params('browser_snapshot', { objective: '   ' }), {
+    browserAgent: unusedBrowser,
+    researchRunner: unusedResearch
+  })
+  assert.equal(rejected.success, false)
+  assert.match(textResult(rejected).error ?? '', /requires a string "objective" argument/)
+
+  let received: unknown = null
+  const browserAgent = {
+    snapshot: async (options: unknown) => {
+      received = options
+      return { ok: true }
+    }
+  } as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_snapshot', {
+    objective: 'latest 3 notifications and whether each is read or unread',
+    url: 'https://example.com/inbox',
+    tab: 'tab-1',
+    frame: 'main',
+    mode: 'task',
+    order: 'reverse-document',
+    selector: 'notification-list',
+    maxItems: 3,
+    readySelector: 'notification-item',
+    timeoutMs: 4_000,
+    quietMs: 80,
+    maxSettleMs: 500,
+    maxResultChars: 6_000
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(received, {
+    objective: 'latest 3 notifications and whether each is read or unread',
+    url: 'https://example.com/inbox',
+    tabId: 'tab-1',
+    frame: 'main',
+    mode: 'task',
+    order: 'reverse-document',
+    selector: 'notification-list',
+    maxItems: 3,
+    readySelector: 'notification-item',
+    timeoutMs: 4_000,
+    quietMs: 80,
+    maxSettleMs: 500,
+    maxResultChars: 6_000
+  })
+})
+
 test('dynamic tool router forwards selector-ready navigation', async () => {
   let received: unknown = null
   const browserAgent = {

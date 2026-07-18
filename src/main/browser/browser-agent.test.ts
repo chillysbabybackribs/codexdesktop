@@ -176,6 +176,95 @@ test('browser agent reports missing requested navigation readiness as a failure'
   assert.match(result.error ?? '', /navigation readiness failed: selector-deadline/)
 })
 
+test('browser snapshot batches navigation, readiness, and objective extraction in one queued call', async () => {
+  const calls: string[] = []
+  let executedProgram = ''
+  const tabs = {
+    ...fakeTabs(async (program: string) => {
+      calls.push('extract')
+      executedProgram = program
+      return {
+        page: { url: 'https://example.com/inbox', title: 'Inbox', lang: 'en', readyState: 'complete' },
+        mode: 'task',
+        scope: { selector: null, matched: true },
+        items: [{ ref: 'e1', text: 'Newest notification', name: null, href: null, state: { read: false } }],
+        content: '',
+        passages: [],
+        coverage: { objectiveTerms: ['notification'], matchedTerms: ['notification'], gaps: [], complete: true },
+        timings: { traversalMs: 2, rankingMs: 1, totalMs: 3 },
+        truncated: false
+      }
+    }),
+    navigateAndWait: async (_id: string, _input: string, options: unknown) => {
+      calls.push('navigate')
+      assert.deepEqual(options, { timeoutMs: 4_000, readySelector: 'notification-item', quietMs: 50, maxSettleMs: 500 })
+      return { settleReason: 'selector-ready', durationMs: 100, domReadyMs: 50, settleMs: 50 }
+    }
+  } as unknown as TabManager
+
+  const result = await new BrowserAgentController(() => tabs).snapshot({
+    url: 'https://example.com/inbox',
+    objective: 'latest notification and whether it is read or unread',
+    mode: 'task',
+    order: 'document',
+    maxItems: 1,
+    readySelector: 'notification-item',
+    quietMs: 50,
+    maxSettleMs: 500,
+    timeoutMs: 4_000
+  })
+
+  assert.equal(result.ok, true)
+  assert.deepEqual(calls, ['navigate', 'extract'])
+  assert.match(executedProgram, /pageSnapshotRuntime/)
+  assert.match(executedProgram, /latest notification/)
+  assert.equal((result.result as { items: unknown[] }).items.length, 1)
+})
+
+test('browser snapshot returns structured scope failures without claiming success', async () => {
+  const controller = new BrowserAgentController(() => fakeTabs(async () => ({
+    page: { url: 'https://example.com', title: 'Example' },
+    mode: 'task',
+    scope: { selector: '.missing', matched: false },
+    items: [],
+    content: '',
+    passages: [],
+    coverage: { objectiveTerms: ['result'], matchedTerms: [], gaps: ['result'], complete: false },
+    timings: { traversalMs: 1, rankingMs: 0, totalMs: 1 },
+    truncated: false
+  })))
+
+  const result = await controller.snapshot({ objective: 'find the result', selector: '.missing' })
+
+  assert.equal(result.ok, false)
+  assert.match(result.error ?? '', /selector-not-found/)
+  assert.equal((result.result as { scope: { matched: boolean } }).scope.matched, false)
+})
+
+test('browser extract page uses the composed-tree snapshot pipeline', async () => {
+  let executedProgram = ''
+  const controller = new BrowserAgentController(() => fakeTabs(async (program: string) => {
+    executedProgram = program
+    return {
+      page: { url: 'https://example.com/report', title: 'Report' },
+      mode: 'content',
+      scope: { selector: null, matched: true },
+      items: [],
+      content: 'Concrete browser extraction evidence and measured results. '.repeat(20),
+      passages: [],
+      coverage: { objectiveTerms: [], matchedTerms: [], gaps: [], complete: true },
+      timings: { traversalMs: 2, rankingMs: 1, totalMs: 3 },
+      truncated: false
+    }
+  }))
+
+  const result = await controller.extractPage()
+
+  assert.equal(result.ok, true)
+  assert.match(executedProgram, /pageSnapshotRuntime/)
+  assert.match(executedProgram, /"mode":"content"/)
+})
+
 test('browser agent persists oversized program results as artifacts', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-agent-'))
   context.after(() => rm(root, { recursive: true, force: true }))
