@@ -43,7 +43,8 @@ const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
 const PAGE_WORKER_CONCURRENCY = 3
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
-const STATIC_PREFLIGHT_TIMEOUT_MS = 4_000
+const STATIC_PREFLIGHT_TIMEOUT_MS = 2_000
+const STATIC_PREFLIGHT_MAX_BYTES = 750_000
 const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
@@ -446,7 +447,8 @@ export class ResearchRunner {
             staticResult = await fetchStaticResearchPage(candidate.url, {
               fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
               validateUrl: assertPublicResearchUrl,
-              signal: preflight.signal
+              signal: preflight.signal,
+              maxBytes: STATIC_PREFLIGHT_MAX_BYTES
             })
           } catch (error) {
             if (signal.aborted) {

@@ -2,7 +2,9 @@ import { parseHTML } from 'linkedom'
 import { buildPageExtractionProgram } from './browser-agent.js'
 import { assessExtractedPage } from './research-utils.js'
 
-const DEFAULT_MAX_BYTES = 2_000_000
+// Keep inert parsing bounded on Electron's main thread. Larger documents move
+// directly to Chromium, where parsing cannot stall the application event loop.
+const DEFAULT_MAX_BYTES = 750_000
 const DEFAULT_MAX_REDIRECTS = 5
 const STATIC_ARTIFACT_CHARS = 100_000
 const MIN_STATIC_WORDS = 80
