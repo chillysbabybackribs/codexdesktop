@@ -240,6 +240,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     lang: cleanText(document.documentElement?.getAttribute?.('lang') || '').slice(0, 40) || null,
     readyState: typeof document.readyState === 'string' ? document.readyState : null
   }
+  const pageMatchedTerms = matchGroups(`${page.url} ${page.title}`)
   const scope = {
     selector: config.selector || null,
     matched: false
@@ -423,7 +424,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }))
 
   const contentBlocks = primaryContentBlocks.length > 0 ? primaryContentBlocks : fallbackContentBlocks
-  const itemTerms = new Set(selectedCandidates.flatMap(({ matchedTerms }) => matchedTerms))
+  const itemTerms = new Set([...pageMatchedTerms, ...selectedCandidates.flatMap(({ matchedTerms }) => matchedTerms)])
   const itemsCoverObjective = objectiveGroups.every(({ term }) => itemTerms.has(term)) &&
     (requestedStateTerms.size === 0 || selectedCandidates.every(({ state }) => state.read !== undefined))
   if (config.mode === 'task' && itemsCoverObjective) outputPassages = []
@@ -807,8 +808,10 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     try {
       const target = new URL(href, pageUrl || 'https://snapshot.invalid/')
       const current = new URL(pageUrl || 'https://snapshot.invalid/')
-      if (target.origin === current.origin && target.pathname === current.pathname && target.search === current.search) {
-        return target.hash
+      const targetHost = target.hostname.replace(/^www\./i, '')
+      const currentHost = current.hostname.replace(/^www\./i, '')
+      if (targetHost === currentHost) {
+        return `${target.pathname} ${target.search} ${target.hash}`
       }
       return `${target.hostname} ${target.pathname} ${target.search}`
     } catch {
@@ -1057,7 +1060,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   }
 
   function currentCoverage(): { matchedTerms: string[]; gaps: string[]; complete: boolean } {
-    const matched = new Set<string>()
+    const matched = new Set<string>(pageMatchedTerms)
     for (const { candidate } of itemEntries) {
       for (const term of candidate.matchedTerms) matched.add(term)
     }

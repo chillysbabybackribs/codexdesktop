@@ -285,6 +285,17 @@ test('interactive mode prioritizes form controls over generic links under a tigh
   assert.equal(result.coverage.complete, true)
 })
 
+test('page identity satisfies brand context without making every same-site link relevant', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Example</title></head><body><main>
+    <a href="/search/help">Search help</a><a href="/search/about">How search works</a>
+    <input aria-label="Search" type="search"><button aria-label="Example Search">Go</button>
+  </main></body></html>`, { mode: 'interactive', objective: 'Example search controls', maxItems: 2, maxChars: 3_000 }, undefined, 'https://example.com/')
+
+  assert.deepEqual(result.items.map(({ tag }) => tag), ['input', 'button'])
+  assert.deepEqual(result.coverage.matchedTerms, ['example', 'search'])
+  assert.equal(result.coverage.complete, true)
+})
+
 test('computed-hidden candidates cannot displace visible task results', () => {
   const hidden = Array.from({ length: 3 }, (_, index) => `<div class="result-row hidden">Hidden ${index + 1}</div>`).join('')
   const visible = Array.from({ length: 3 }, (_, index) => `<div class="result-row">Visible ${index + 1}</div>`).join('')
