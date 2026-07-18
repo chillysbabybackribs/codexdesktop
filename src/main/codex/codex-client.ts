@@ -267,6 +267,8 @@ export class CodexClient extends EventEmitter {
     const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
     const effectiveEffort = requestedEffort
+    const activeModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
+    const summaryPolicy = resolveTurnPolicy(text)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -275,7 +277,7 @@ export class CodexClient extends EventEmitter {
       input,
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
-      ...resolveTurnPolicy(text),
+      ...(!this.isReasoningSummarySupportedForModel(activeModel) ? {} : summaryPolicy),
       approvalPolicy: 'never'
     })
     if (model) this.threadModels.set(activeThreadId, model)
@@ -287,6 +289,11 @@ export class CodexClient extends EventEmitter {
       model: model ?? this.threadModels.get(activeThreadId) ?? null,
       reasoningEffort: effectiveEffort
     }
+  }
+
+  private isReasoningSummarySupportedForModel(model: string | null): boolean {
+    if (!model) return true
+    return !/gpt-5\.3-codex-spark/i.test(model)
   }
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
