@@ -5,6 +5,7 @@ import {
   browserDynamicTools,
   buildGuidance,
   formatSkillInvocationText,
+  isFastPathTask,
   isWebResearchTask,
   resolveTurnPolicy,
   selectNewThreadSkills,
@@ -188,22 +189,37 @@ test('self-hosted guidance protects the exact host session and routes live check
   assert.match(guidance, /do not run `npm run dev` or `npm run dev:app`/i)
 })
 
-test('research turns keep the configured reasoning effort', () => {
+test('all turns request concise reasoning summaries without changing their effort', () => {
   const policy = resolveTurnPolicy('Find recent firsthand Linux migration reports with sources')
 
   assert.deepEqual(policy, { summary: 'concise' })
   assert.equal('effort' in policy, false)
 })
 
-test('implementation turns use automatic reasoning summaries', () => {
-  assert.deepEqual(resolveTurnPolicy('Refactor the tab manager and run its tests'), { summary: 'auto' })
-  assert.deepEqual(resolveTurnPolicy('Review this local patch'), { summary: 'auto' })
+test('Fast mode only downshifts simple tasks when the selected model supports it', () => {
+  assert.equal(isFastPathTask('Check my last two Reddit notifications'), true)
+  assert.equal(isFastPathTask('Refactor the tab manager and run its tests'), false)
+  assert.deepEqual(resolveTurnPolicy('Check my last two Reddit notifications', {
+    fastMode: true,
+    requestedEffort: 'high',
+    supportedEfforts: ['minimal', 'low', 'medium', 'high']
+  }), { summary: 'concise', effort: 'low' })
+  assert.deepEqual(resolveTurnPolicy('Review this local patch', {
+    fastMode: true,
+    requestedEffort: 'high',
+    supportedEfforts: ['minimal', 'low', 'medium', 'high']
+  }), { summary: 'concise' })
+  assert.deepEqual(resolveTurnPolicy('Check the inbox', {
+    fastMode: true,
+    requestedEffort: 'high',
+    supportedEfforts: ['high']
+  }), { summary: 'concise' })
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_screenshot', 'ui_review', 'browser_navigate', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')

@@ -127,6 +127,51 @@ test('browser agent runs a program against the active tab', async () => {
   assert.equal(result.url, 'https://example.com/article')
 })
 
+test('browser agent navigates with selector readiness through the tab manager', async () => {
+  let received: unknown = null
+  const tabs = {
+    ...fakeTabs(async () => null),
+    navigateAndWait: async (id: string, input: string, options: unknown) => {
+      received = { id, input, options }
+      return {
+        url: 'https://example.com/inbox',
+        durationMs: 120,
+        domReadyMs: 70,
+        settleMs: 50,
+        settleReason: 'dom-quiet'
+      }
+    }
+  } as unknown as TabManager
+  const result = await new BrowserAgentController(() => tabs).navigate('https://example.com/inbox', {
+    readySelector: '[data-testid="inbox-row"]',
+    timeoutMs: 4_000
+  })
+
+  assert.equal(result.ok, true)
+  assert.deepEqual(received, {
+    id: 'tab-1',
+    input: 'https://example.com/inbox',
+    options: { timeoutMs: 4_000, readySelector: '[data-testid="inbox-row"]' }
+  })
+  assert.equal((result.result as { settleReason: string }).settleReason, 'dom-quiet')
+})
+
+test('browser agent persists oversized program results as artifacts', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-agent-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async () => ({ payload: 'x'.repeat(2_000) })),
+    new CdpArtifactStore(root)
+  )
+
+  const result = await controller.run('return window.largePayload', { maxResultChars: 1_000 })
+
+  assert.equal(result.ok, true)
+  assert.equal(result.truncated, true)
+  assert.match(result.artifact?.artifactPath ?? '', /browser-result-.*\.json$/)
+  assert.equal(result.artifact?.kind, 'browser-result')
+})
+
 test('browser agent serializes programs targeting the same tab', async () => {
   let releaseFirst: () => void = () => assert.fail('first browser operation was not queued')
   let active = 0

@@ -39,6 +39,36 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
+test('dynamic tool router forwards selector-ready navigation', async () => {
+  let received: unknown = null
+  const browserAgent = {
+    navigate: async (url: string, options: unknown) => {
+      received = { url, options }
+      return { ok: true }
+    }
+  } as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_navigate', {
+    url: 'https://example.com/inbox',
+    tab: 'tab-1',
+    readySelector: '[data-testid="inbox-row"]',
+    timeoutMs: 4_000,
+    quietMs: 200,
+    maxSettleMs: 1_000
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(received, {
+    url: 'https://example.com/inbox',
+    options: {
+      tabId: 'tab-1',
+      readySelector: '[data-testid="inbox-row"]',
+      timeoutMs: 4_000,
+      quietMs: 200,
+      maxSettleMs: 1_000
+    }
+  })
+})
+
 test('dynamic tool router normalizes research arguments and forwards run context and progress', async () => {
   let request: ResearchRequest | null = null
   const contexts: ResearchRunContext[] = []
