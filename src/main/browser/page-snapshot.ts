@@ -728,7 +728,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       ...(candidate.state.dataTokens ?? []),
       ...(candidate.state.evidence ?? [])
     ].join(' ')
-    const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${candidate.href} ${stateText}`
+    const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${objectiveHref(candidate.href)} ${stateText}`
     candidate.matchedTerms = matchGroups(haystack).filter((term) => !requestedStateTerms.has(term))
     if (candidate.state.read !== undefined) {
       for (const term of requestedStateTerms) {
@@ -745,8 +745,22 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       (candidate.role && interactiveRoles.has(candidate.role) ? 10 : 0) +
       (candidate.state.read !== undefined ? 30 : 0) +
       (candidate.state.selected !== undefined ? 10 : 0) +
-      Math.min(20, Math.floor(candidate.text.length / 24))
+      (candidate.text ? 5 : 0)
     keepBest(candidates, candidate, candidatePoolLimit, compareCandidateQuality)
+  }
+
+  function objectiveHref(href: string): string {
+    if (!href) return ''
+    try {
+      const target = new URL(href, pageUrl || 'https://snapshot.invalid/')
+      const current = new URL(pageUrl || 'https://snapshot.invalid/')
+      if (target.origin === current.origin && target.pathname === current.pathname && target.search === current.search) {
+        return target.hash
+      }
+      return `${target.hostname} ${target.pathname} ${target.search}`
+    } catch {
+      return href
+    }
   }
 
   function inferStructuredReadState(candidate: RuntimeCandidate): void {
