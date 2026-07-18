@@ -6,7 +6,7 @@ const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
-  '- For simple browser reads, prefer one `browser_snapshot` call that can navigate, wait, and return task-focused items. Batch ordered actions, inspection, and verification into one `browser_run` program only when interaction is required.',
+  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; it can navigate, wait, and return task-focused items. On an older resumed thread where that tool is absent, use one `browser_run` call for the visible page, or `browser_navigate` followed by one `browser_run` call when the page must change. Batch ordered actions, inspection, and verification into one `browser_run` program when interaction is required.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]

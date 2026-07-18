@@ -173,6 +173,13 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|multi-part answers/i)
 })
 
+test('browser guidance preserves a one-call fallback for older resumed threads', () => {
+  const guidance = buildGuidance({})
+  assert.match(guidance, /browser_snapshot` call when it is available/)
+  assert.match(guidance, /older resumed thread where that tool is absent/)
+  assert.match(guidance, /one `browser_run` call/)
+})
+
 test('active autosnapshot guidance describes concurrent commit and push behavior', () => {
   const guidance = buildGuidance({
     CODEX_DESKTOP_AUTOGIT_ACTIVE: '1',

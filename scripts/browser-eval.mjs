@@ -55,7 +55,12 @@ async function main() {
   const initialTabsResponse = await socketJson(socketPath, 'GET', '/tabs')
   const initialTabs = requireTabs(initialTabsResponse)
   const tab = requireActiveRedditNotificationsTab(initialTabs)
-  const context = { socketPath, tabId: tab.id, expectedUrl: tab.url }
+  const context = {
+    socketPath,
+    tabId: tab.id,
+    expectedUrl: tab.url,
+    allowEvalFallback: options.allowEvalFallback
+  }
   const oracleBefore = await captureOracle(context)
   const direct = await runDirectArm(context, oracleBefore, options.samples)
   const tabsAfterDirect = requireTabs(await socketJson(socketPath, 'GET', '/tabs'))
@@ -95,6 +100,7 @@ async function main() {
       model: options.model,
       effort: options.effort,
       skipModel: options.skipModel,
+      allowEvalFallback: options.allowEvalFallback,
       canonicalPrompt: CANONICAL_PROMPT,
       snapshotObjective: SNAPSHOT_OBJECTIVE,
       productionDynamicTools: browserDynamicTools.map(({ name }) => name),
@@ -115,6 +121,8 @@ async function main() {
       after: oracleProjection(oracleAfter),
       unchanged: sameOracle(oracleBefore, oracleAfter)
     },
+    productionControllerExercised: direct.productionControllerExercised &&
+      (options.skipModel || model.productionControllerExercised === true),
     direct,
     model,
     legacyReference: LEGACY_REFERENCE,
@@ -136,6 +144,7 @@ async function main() {
     await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
   }
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`)
+  if (!report.ok) process.exitCode = 1
 }
 
 async function runDirectArm(context, oracle, sampleCount) {
@@ -165,7 +174,7 @@ async function runDirectArm(context, oracle, sampleCount) {
     const wallMs = round(performance.now() - startedAt, 3)
     const snapshot = asRecord(response.result)
     const quality = evaluateSnapshot(snapshot, oracle)
-    const ok = response.ok === true && asRecord(snapshot.page).url === context.expectedUrl
+    const ok = response.ok === true && asRecord(snapshot.page).url === context.expectedUrl && quality.exactThreeAndState
     samples.push({
       index,
       ok,
@@ -193,6 +202,8 @@ async function runDirectArm(context, oracle, sampleCount) {
       transport,
       samples.filter((sample) => sample.transport === transport).length
     ])),
+    productionControllerExercised: samples.length === sampleCount &&
+      samples.every(({ transport }) => transport === 'browser-control:/snapshot'),
     metrics: {
       wallMs: summarizeNumbers(samples.map(({ wallMs }) => wallMs)),
       returnedDurationMs: summarizeNumbers(successful.map(({ returnedDurationMs }) => returnedDurationMs)),
@@ -270,6 +281,9 @@ async function runModelArm(context, oracle, options) {
         calls: tokenEvents.map(({ last, modelContextWindow }) => ({ ...last, modelContextWindow }))
       } : null,
       toolCalls,
+      productionControllerExercised: toolCalls.some(({ tool }) => tool === 'browser_snapshot') &&
+        toolCalls.filter(({ tool }) => tool === 'browser_snapshot')
+          .every(({ transport }) => transport === 'browser-control:/snapshot'),
       finalResponse,
       accuracy
     }
@@ -742,6 +756,9 @@ async function postSnapshot(context, args) {
     return { response, transport: 'browser-control:/snapshot' }
   } catch (error) {
     if (!/\b(?:no route|404|not found)\b/i.test(errorMessage(error))) throw error
+    if (!context.allowEvalFallback) {
+      throw new Error(`Production browser-control /snapshot is unavailable (${errorMessage(error)}). Use --allow-eval-fallback only for an explicitly labelled compatibility run.`)
+    }
     const program = buildPageSnapshotProgram({
       objective: args.objective,
       mode: args.mode,
@@ -796,11 +813,23 @@ function socketJson(socketPath, method, path, body, contentType = 'application/j
 }
 
 function parseArgs(args) {
-  const values = { samples: 25, model: 'gpt-5.6-terra', effort: 'low', output: null, socket: null, skipModel: false }
+  const values = {
+    samples: 25,
+    model: 'gpt-5.6-terra',
+    effort: 'low',
+    output: null,
+    socket: null,
+    skipModel: false,
+    allowEvalFallback: false
+  }
   for (let index = 0; index < args.length; index += 1) {
     const key = args[index]
     if (key === '--skip-model') {
       values.skipModel = true
+      continue
+    }
+    if (key === '--allow-eval-fallback') {
+      values.allowEvalFallback = true
       continue
     }
     const value = args[index + 1]
