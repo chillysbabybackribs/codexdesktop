@@ -91,6 +91,15 @@ import {
   hasAuthoritativeUserMessage,
   stripOptimisticUserMessage
 } from './optimistic-user-message'
+import {
+  closeMainChatTab,
+  createMainChatTab,
+  parseMainChatTabState,
+  serializeMainChatTabState,
+  tabForThread,
+  type MainChatTab,
+  type MainChatTabState
+} from './main-chat-tabs'
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model)
@@ -102,6 +111,7 @@ const minChatWidth = 280
 const minBrowserWidth = 420
 const dividerWidth = 8
 const lastThreadStorageKey = 'codexdesktop.lastThreadId'
+const mainChatTabsStorageKey = 'codexdesktop.mainChatTabs.v1'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
@@ -138,14 +148,40 @@ function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
   return goal ? { ...goal } : null
 }
 
+type MainChatSnapshot = {
+  threadId: string | null
+  title: string
+  turnId: string | null
+  goal: ThreadGoal | null
+  reasoningEffort: ReasoningEffort | null
+  items: ChatItem[]
+  itemMeta: Record<string, ItemMeta>
+  turnMeta: Record<string, TurnMeta>
+  contextUsage: ThreadTokenUsage | null
+  isCompacting: boolean
+  activeCompaction: { itemId: string; turnId: string; beforeTokens: number | null } | null
+  precedingModelInputByTurn: Map<string, ModelCallAttribution>
+  pendingCompactionByTurn: Set<string>
+}
+
 export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'))
     return Number.isFinite(stored) && stored > 20 && stored < 70 ? stored : 37
   })
+  const [mainChatTabState, setMainChatTabState] = useState<MainChatTabState>(() =>
+    parseMainChatTabState(
+      window.localStorage.getItem(mainChatTabsStorageKey),
+      window.localStorage.getItem(lastThreadStorageKey),
+      () => crypto.randomUUID()
+    )
+  )
+  const mainChatTabs = mainChatTabState.tabs
+  const activeMainChatTabKey = mainChatTabState.activeKey
+  const initialMainChatTab = mainChatTabs.find((tab) => tab.key === activeMainChatTabKey) ?? mainChatTabs[0]
   const [items, setItems] = useState<ChatItem[]>([])
-  const [activeThreadId, setActiveThreadId] = useState<string | null>(null)
-  const [activeThreadTitle, setActiveThreadTitle] = useState('New Chat')
+  const [activeThreadId, setActiveThreadId] = useState<string | null>(initialMainChatTab.threadId)
+  const [activeThreadTitle, setActiveThreadTitle] = useState(initialMainChatTab.title)
   const [activeTurnId, setActiveTurnId] = useState<string | null>(null)
   const [activeGoal, setActiveGoal] = useState<ThreadGoal | null>(null)
   const [isGoalUpdating, setIsGoalUpdating] = useState(false)
@@ -213,8 +249,11 @@ export default function App(): React.JSX.Element {
   const isDraggingDividerRef = useRef(false)
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
+  const activeThreadTitleRef = useRef(activeThreadTitle)
   const activeTurnIdRef = useRef<string | null>(activeTurnId)
   const itemsRef = useRef<ChatItem[]>(items)
+  const itemMetaRef = useRef<Record<string, ItemMeta>>(itemMeta)
+  const turnMetaRef = useRef<Record<string, TurnMeta>>(turnMeta)
   const activeGoalRef = useRef<ThreadGoal | null>(activeGoal)
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
@@ -247,6 +286,10 @@ export default function App(): React.JSX.Element {
   // started from, so the compaction turn's token update can record the shrink.
   const activeCompactionRef = useRef<{ itemId: string; turnId: string; beforeTokens: number | null } | null>(null)
   const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
+  const mainChatTabStateRef = useRef(mainChatTabState)
+  const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
+  const mainChatSnapshotsRef = useRef<Map<string, MainChatSnapshot>>(new Map())
+  const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
   // Per-session overload recovery, keyed by session key — the dock equivalent
   // of autoRecoveryRef (which only ever tracks the focused thread).
   const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
@@ -266,12 +309,30 @@ export default function App(): React.JSX.Element {
   }, [activeThreadId])
 
   useEffect(() => {
+    activeThreadTitleRef.current = activeThreadTitle
+  }, [activeThreadTitle])
+
+  useEffect(() => {
     activeTurnIdRef.current = activeTurnId
   }, [activeTurnId])
 
   useEffect(() => {
     itemsRef.current = items
   }, [items])
+
+  useEffect(() => {
+    itemMetaRef.current = itemMeta
+  }, [itemMeta])
+
+  useEffect(() => {
+    turnMetaRef.current = turnMeta
+  }, [turnMeta])
+
+  useEffect(() => {
+    mainChatTabStateRef.current = mainChatTabState
+    activeMainChatTabKeyRef.current = mainChatTabState.activeKey
+    window.localStorage.setItem(mainChatTabsStorageKey, serializeMainChatTabState(mainChatTabState))
+  }, [mainChatTabState])
 
   useEffect(() => {
     activeGoalRef.current = activeGoal
