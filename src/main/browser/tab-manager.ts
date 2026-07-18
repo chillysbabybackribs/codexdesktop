@@ -356,7 +356,7 @@ export class TabManager {
   private async hydrateSavedTab(tab: ManagedBrowserTab, saved: SavedBrowserTab): Promise<void> {
     try {
       await hydrateSavedBrowserTab(tab, saved, defaultTabUrl, (url) =>
-        this.startNavigation(tab, url)
+        this.startNavigation(tab, url).then(() => {})
       )
     } finally {
       this.pushState()

@@ -271,7 +271,7 @@ export class BrowserAgentController {
           timeoutMs,
           ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
           ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
-          ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? { } : { maxSettleMs: options.maxSettleMs })
+          ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
         })
         return {
           ok: true,

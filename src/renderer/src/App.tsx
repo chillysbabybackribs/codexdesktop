@@ -105,6 +105,7 @@ const lastThreadStorageKey = 'codexdesktop.lastThreadId'
 const agentDockStorageKey = 'codexdesktop.agentDock.v1'
 const modelStorageKey = 'codexdesktop.model'
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort'
+const fastModeStorageKey = 'codexdesktop.fastMode'
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted'
@@ -169,6 +170,7 @@ export default function App(): React.JSX.Element {
   const [selectedReasoningEffort, setSelectedReasoningEffort] = useState<ReasoningEffort | null>(
     () => window.localStorage.getItem(reasoningEffortStorageKey)
   )
+  const [fastMode, setFastMode] = useState(() => window.localStorage.getItem(fastModeStorageKey) === '1')
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
   // Lifecycle data the item payloads don't carry: which turn an item belongs
@@ -220,6 +222,7 @@ export default function App(): React.JSX.Element {
   const optimisticUserMessageIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
   const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort)
+  const fastModeRef = useRef(fastMode)
   const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
   // Pending overload recovery for the watched thread; single slot because the
@@ -285,6 +288,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     selectedReasoningEffortRef.current = selectedReasoningEffort
   }, [selectedReasoningEffort])
+
+  useEffect(() => {
+    fastModeRef.current = fastMode
+  }, [fastMode])
 
   useEffect(() => {
     modelsRef.current = models
@@ -615,7 +622,8 @@ export default function App(): React.JSX.Element {
         attachments,
         cwd: workspace,
         model: selectedModel,
-        effort: selectedReasoningEffort
+        effort: selectedReasoningEffort,
+        fastMode
       })
       watchThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
@@ -695,6 +703,11 @@ export default function App(): React.JSX.Element {
     setSelectedReasoningEffort(effort)
     window.localStorage.setItem(modelStorageKey, model)
     window.localStorage.setItem(reasoningEffortStorageKey, effort)
+  }
+
+  const handleSetFastMode = (enabled: boolean): void => {
+    setFastMode(enabled)
+    window.localStorage.setItem(fastModeStorageKey, enabled ? '1' : '0')
   }
 
   const handleSelectAgentModel = (key: string, model: string): void => {
@@ -1013,6 +1026,7 @@ export default function App(): React.JSX.Element {
     getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
     getSelectedEffort: () => selectedReasoningEffortRef.current,
+    getFastMode: () => fastModeRef.current,
     acceptsImages: (model) => modelAcceptsImages(modelsRef.current, model),
     buildMainChatContext,
     cancelRecovery: cancelAgentRecovery
@@ -1685,8 +1699,10 @@ export default function App(): React.JSX.Element {
           models={models}
           selectedModel={selectedModel}
           selectedReasoningEffort={selectedReasoningEffort}
+          fastMode={fastMode}
           onSelectModel={handleSelectModel}
           onSelectModelEffort={handleSelectModelEffort}
+          onSetFastMode={handleSetFastMode}
           onSend={handleSend}
           onSteer={handleSteer}
           onStop={handleStop}
@@ -1776,8 +1792,10 @@ function ChatPane({
   models,
   selectedModel,
   selectedReasoningEffort,
+  fastMode,
   onSelectModel,
   onSelectModelEffort,
+  onSetFastMode,
   onSend,
   onSteer,
   onStop,
@@ -1831,8 +1849,10 @@ function ChatPane({
   models: Model[]
   selectedModel: string | null
   selectedReasoningEffort: ReasoningEffort | null
+  fastMode: boolean
   onSelectModel: (model: string) => void
   onSelectModelEffort: (model: string, effort: ReasoningEffort) => void
+  onSetFastMode: (enabled: boolean) => void
   onSend: (text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (text: string) => Promise<boolean>
   onStop: () => Promise<void>
@@ -2129,6 +2149,8 @@ function ChatPane({
               selectedEffort={selectedReasoningEffort}
               onSelectModel={onSelectModel}
               onSelectModelEffort={onSelectModelEffort}
+              fastMode={fastMode}
+              onToggleFastMode={onSetFastMode}
             />
           ) : null}
           <AgentTabStrip

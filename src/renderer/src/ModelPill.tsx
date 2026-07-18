@@ -12,6 +12,8 @@ export function ModelPill({
   onSelectModel,
   selectedEffort,
   onSelectModelEffort,
+  fastMode = false,
+  onToggleFastMode,
   reasoningMenuSide = 'auto'
 }: {
   models: Model[]
@@ -19,6 +21,8 @@ export function ModelPill({
   onSelectModel: (model: string) => void
   selectedEffort?: ReasoningEffort | null
   onSelectModelEffort?: (model: string, effort: ReasoningEffort) => void
+  fastMode?: boolean
+  onToggleFastMode?: (enabled: boolean) => void
   reasoningMenuSide?: 'auto' | 'left' | 'right'
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
@@ -202,6 +206,24 @@ export function ModelPill({
                 </div>
               )
             })}
+            {onToggleFastMode ? (
+              <div className="fast-mode-setting">
+                <span className="fast-mode-copy">
+                  <span className="fast-mode-label">Fast mode</span>
+                  <span className="fast-mode-description">Uses lower effort only for simple requests</span>
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={fastMode}
+                  className={`fast-mode-switch ${fastMode ? 'is-active' : ''}`}
+                  onClick={() => onToggleFastMode(!fastMode)}
+                >
+                  <span className="fast-mode-switch-knob" />
+                  <span className="sr-only">{fastMode ? 'Disable' : 'Enable'} Fast mode</span>
+                </button>
+              </div>
+            ) : null}
           </div>
           {expanded && onSelectModelEffort && expandedEfforts.length ? createPortal(
             <div
