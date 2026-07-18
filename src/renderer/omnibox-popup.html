@@ -20,17 +20,17 @@
       body {
         background: transparent;
         overflow: hidden;
-        font-family: system-ui, sans-serif;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         user-select: none;
       }
 
       #card {
         margin: 0 2px 14px;
         padding: 6px 0;
-        border: 1px solid #34383d;
+        border: 1px solid rgb(255 255 255 / 11%);
         border-radius: 10px;
-        background: #181a1d;
-        box-shadow: 0 6px 14px rgb(0 0 0 / 35%);
+        background: #1b1b1c;
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%), 0 8px 18px rgb(0 0 0 / 38%);
       }
 
       .row {
@@ -46,27 +46,27 @@
 
       .row.is-selected,
       .row:hover {
-        background: #24282e;
+        background: #242527;
       }
 
       .row-icon {
         justify-self: center;
         width: 14px;
         height: 14px;
-        color: #7d848b;
+        color: #90979e;
       }
 
       .row-text {
         overflow: hidden;
         text-overflow: ellipsis;
-        color: #e4e6e8;
+        color: #e9ebed;
       }
 
       .row-detail {
         overflow: hidden;
         text-overflow: ellipsis;
         margin-left: 10px;
-        color: #7d848b;
+        color: #899199;
       }
 
       .row-detail:not(:empty)::before {

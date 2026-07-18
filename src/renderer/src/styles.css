@@ -2831,7 +2831,7 @@ button {
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: #9aa0a6;
+  color: var(--chrome-fg);
   font-size: 13.5px;
   cursor: pointer;
   transition:
@@ -5101,8 +5101,7 @@ button {
 }
 
 .composer .stop-square-button:focus-visible {
-  outline: 2px solid #8da9ef;
-  outline-offset: 2px;
+  outline-color: var(--focus-ink);
 }
 
 .composer .stop-square-button .stop-square {
@@ -5205,5 +5204,15 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .auto-copy-toast { animation: none; }
+  .auto-copy-toast,
+  .composer-create-menu,
+  .message-assistant.is-streaming > *:last-child::after,
+  .task-activity-message.is-streaming .markdown-body > *:last-child::after,
+  .context-pill.is-compacting .context-pill-fill,
+  .work-spinner,
+  .tab-favicon-spinner,
+  .agent-status-spinner,
+  .agent-overlay.is-flash {
+    animation: none;
+  }
 }
