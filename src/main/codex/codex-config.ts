@@ -6,6 +6,7 @@ const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
+  '- For simple browser reads, prefer one `browser_snapshot` call that can navigate, wait, and return task-focused items. Batch ordered actions, inspection, and verification into one `browser_run` program only when interaction is required.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -74,7 +75,7 @@ export function resolveTurnPolicy(
   } = {}
 ): { summary: 'concise'; effort?: ReasoningEffort } {
   const supported = new Set(options.supportedEfforts ?? [])
-  const fastEffort = options.fastMode && isFastPathTask(text)
+  const fastEffort = (options.fastMode || isReadOnlyBrowserMicrotask(text)) && isFastPathTask(text)
     ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
     : undefined
 
@@ -96,17 +97,40 @@ export function isFastPathTask(text: string): boolean {
   return /^(?:can you |please )?(?:check|go to|list|navigate(?: to)?|open|read|show|visit)\b/.test(normalized)
 }
 
+export function isInteractiveBrowserTask(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  const browserAction = /\b(check|go to|navigate|open|read|show|visit|click|fill|select|submit)\b/.test(normalized)
+  const accountState = /\b(my|account|dashboard|inbox|notifications?|messages?|unread|logged[ -]in|current tab|this (?:page|tab))\b/.test(normalized)
+  return browserAction && accountState
+}
+
+export function isReadOnlyBrowserMicrotask(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (!isFastPathTask(text)) return false
+  if (/\b(click|fill|type|select|submit|send|post|comment|upload|download|buy|purchase|delete|remove|mark|archive|log[ -]?in|sign[ -]?in)\b/.test(normalized)) {
+    return false
+  }
+  const directNavigation = /^(?:can you |please |ok )?(?:go to|navigate(?: to)?|visit)\b/.test(normalized)
+  const browserObject = /https?:\/\/|\b(?:browser|tab|website|webpage|web page|notifications?|inbox|dashboard|reddit|github|gmail|youtube)\b|\b[a-z0-9-]+\.(?:com|org|net|io|dev)\b/.test(normalized)
+  return directNavigation || browserObject
+}
+
 export function isWebResearchTask(text: string): boolean {
   const normalized = text.trim().toLowerCase()
   if (/https?:\/\//.test(normalized)) return true
 
+  const publicEvidenceRequest =
+    /\b(research|search online|find online|public sources?|citations?|news|pricing|customer reviews?|user reviews?|forums?|release notes?|compare|comparison)\b/.test(normalized)
+  if (isInteractiveBrowserTask(text) && !publicEvidenceRequest) return false
+
   const explicitWebAction =
     /\b(search|research|browse|look up|find online|search online|on the web|from the web|web search)\b/.test(normalized)
   const publicSource =
-    /\b(official (docs?|documentation)|public sources?|online sources?|citations?|news|pricing|reddit|forums?|customer reviews?|user reviews?|app store reviews?|release notes?|website|webpage|web page)\b/.test(normalized)
+    /\b(official (docs?|documentation)|public sources?|online sources?|citations?|news|pricing|forums?|customer reviews?|user reviews?|app store reviews?|release notes?|website|webpage|web page)\b/.test(normalized)
   const freshnessRequirement = /\b(current|currently|latest|recent|today|this week|this month|this year|up[- ]to[- ]date)\b/.test(normalized)
 
-  return explicitWebAction || publicSource || (freshnessRequirement && /\b(find|check|verify|compare|price|version|release)\b/.test(normalized))
+  return explicitWebAction || publicSource || /\breddit\b/.test(normalized) ||
+    (freshnessRequirement && /\b(find|check|verify|compare|price|version|release)\b/.test(normalized))
 }
 
 export function shouldAttachPriorChatMemory(text: string): boolean {
