@@ -211,6 +211,46 @@ const browserNavigateSchema = {
   additionalProperties: false
 }
 
+const browserSnapshotSchema = {
+  type: 'object',
+  properties: {
+    objective: {
+      type: 'string',
+      description: 'Concrete fields, list, or page facts to return. Include requested count and state, such as "latest 3 notifications and whether each is read or unread".'
+    },
+    url: {
+      type: 'string',
+      description: 'Optional URL or navigation input. When provided, navigation, readiness, and extraction happen in this one call on the existing tab.'
+    },
+    tab: { type: 'string', description: 'Optional existing tab id. Defaults to the active visible tab; `all` is not supported.' },
+    frame: { type: 'string', description: 'Optional frame target: main, all, or a frameId returned by browser_run.' },
+    mode: {
+      type: 'string',
+      enum: ['task', 'content', 'interactive'],
+      description: 'Task returns objective-ranked rows and state (default); content favors article text; interactive favors controls.'
+    },
+    order: {
+      type: 'string',
+      enum: ['document', 'reverse-document'],
+      description: 'Returned list order. Defaults to document order; use reverse-document only when the page is known to render the desired records last.'
+    },
+    selector: { type: 'string', description: 'Optional extraction scope selector. Searches the document and open shadow roots.' },
+    maxItems: {
+      type: 'number',
+      minimum: 1,
+      maximum: 200,
+      description: 'Maximum task items. Set this to the requested list count; otherwise a nearby numeric count in the objective is inferred.'
+    },
+    readySelector: { type: 'string', description: 'Optional deep selector that must become ready after navigation.' },
+    timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' },
+    quietMs: { type: 'number', description: 'Optional DOM-quiet window after navigation readiness.' },
+    maxSettleMs: { type: 'number', description: 'Optional maximum DOM-settle time after document readiness.' },
+    maxResultChars: { type: 'number', description: 'Optional structured result limit from 1000 to 100000 characters.' }
+  },
+  required: ['objective'],
+  additionalProperties: false
+}
+
 const browserCdpSchema = {
   type: 'object',
   properties: {
@@ -238,6 +278,11 @@ const browserExtractPageSchema = {
   properties: {
     tab: { type: 'string', description: 'Optional tab id. Defaults to the active visible tab.' },
     frame: { type: 'string', description: 'Optional frame target: main, all, or a frameId returned by browser_run.' },
+    objective: { type: 'string', description: 'Optional extraction objective. When supplied, returns ranked structured task items as well as bounded content.' },
+    mode: { type: 'string', enum: ['task', 'content', 'interactive'], description: 'Optional snapshot mode. Defaults to content for compatibility.' },
+    order: { type: 'string', enum: ['document', 'reverse-document'], description: 'Optional structured-item order.' },
+    selector: { type: 'string', description: 'Optional extraction scope selector, including open-shadow-root descendants.' },
+    maxItems: { type: 'number', minimum: 1, maximum: 200, description: 'Optional maximum structured items.' },
     timeoutMs: { type: 'number', description: 'Optional extraction timeout from 250 to 60000 milliseconds.' },
     maxResultChars: { type: 'number', description: 'Optional extracted content limit from 1000 to 100000 characters.' }
   },
@@ -312,6 +357,12 @@ const researchWebSchema = {
 }
 
 export const browserDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'function',
+    name: 'browser_snapshot',
+    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, and timings in one call. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
+    inputSchema: browserSnapshotSchema
+  },
   {
     type: 'function',
     name: 'browser_navigate',

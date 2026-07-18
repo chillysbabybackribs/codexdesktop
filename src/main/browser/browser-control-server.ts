@@ -142,6 +142,38 @@ async function route(
       return
     }
 
+    if (req.method === 'POST' && path === '/snapshot') {
+      const body = await readBody(req)
+      let parsed: Record<string, unknown>
+      try {
+        parsed = asRecord(body ? JSON.parse(body) : {})
+      } catch {
+        sendJson(res, 400, { ok: false, error: 'body must be a JSON snapshot request' })
+        return
+      }
+      const objective = typeof parsed.objective === 'string' ? parsed.objective : null
+      if (!objective?.trim()) {
+        sendJson(res, 400, { ok: false, error: 'snapshot requires "objective"' })
+        return
+      }
+      sendJson(res, 200, await browserAgent.snapshot({
+        objective,
+        url: typeof parsed.url === 'string' ? parsed.url : null,
+        tabId: typeof parsed.tab === 'string' ? parsed.tab : tabParam(req),
+        frame: typeof parsed.frame === 'string' ? parsed.frame : frameParam(req),
+        mode: parsed.mode === 'task' || parsed.mode === 'content' || parsed.mode === 'interactive' ? parsed.mode : null,
+        order: parsed.order === 'reverse-document' ? 'reverse-document' : parsed.order === 'document' ? 'document' : null,
+        selector: typeof parsed.selector === 'string' ? parsed.selector : null,
+        maxItems: typeof parsed.maxItems === 'number' ? parsed.maxItems : null,
+        readySelector: typeof parsed.readySelector === 'string' ? parsed.readySelector : null,
+        timeoutMs: typeof parsed.timeoutMs === 'number' ? parsed.timeoutMs : numberParam(req, 'timeoutMs'),
+        quietMs: typeof parsed.quietMs === 'number' ? parsed.quietMs : null,
+        maxSettleMs: typeof parsed.maxSettleMs === 'number' ? parsed.maxSettleMs : null,
+        maxResultChars: typeof parsed.maxResultChars === 'number' ? parsed.maxResultChars : numberParam(req, 'maxResultChars')
+      }))
+      return
+    }
+
     if (req.method === 'POST' && path === '/cdp') {
       const body = await readBody(req)
       let parsed: {

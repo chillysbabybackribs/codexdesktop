@@ -3,7 +3,7 @@ import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-sessio
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
-import { buildPageSnapshotProgram, type PageSnapshotMode } from './page-snapshot.js'
+import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import type { TabManager } from './tab-manager.js'
 
@@ -57,6 +57,7 @@ export type BrowserSnapshotOptions = BrowserRunOptions & {
   mode?: PageSnapshotMode | null
   selector?: string | null
   maxItems?: number | null
+  order?: PageSnapshotOrder | null
   readySelector?: string | null
   quietMs?: number | null
   maxSettleMs?: number | null
@@ -369,6 +370,7 @@ export class BrowserAgentController {
       mode: options.mode,
       selector: options.selector,
       maxItems: options.maxItems,
+      order: options.order,
       maxChars: maxResultChars
     })
 

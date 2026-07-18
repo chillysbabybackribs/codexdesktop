@@ -40,6 +40,25 @@ export async function routeDynamicToolCall(
       )
       result = review.result
       imageUrls = review.imageUrls
+    } else if (params.tool === 'browser_snapshot') {
+      const objective = readString(args.objective)
+      result = objective
+        ? await dependencies.browserAgent.snapshot({
+            objective,
+            url: readString(args.url),
+            tabId: resolveAgentTab(readString(args.tab)),
+            frame: readString(args.frame),
+            mode: readSnapshotMode(args.mode),
+            order: readSnapshotOrder(args.order),
+            selector: readString(args.selector),
+            maxItems: readNumber(args.maxItems),
+            readySelector: readString(args.readySelector),
+            timeoutMs: readNumber(args.timeoutMs),
+            quietMs: readNumber(args.quietMs),
+            maxSettleMs: readNumber(args.maxSettleMs),
+            maxResultChars: readNumber(args.maxResultChars)
+          })
+        : { ok: false, error: 'browser_snapshot requires a string "objective" argument' }
     } else if (params.tool === 'browser_run') {
       const code = readString(args.code)
       result = code
@@ -65,6 +84,11 @@ export async function routeDynamicToolCall(
       result = await dependencies.browserAgent.extractPage({
         tabId: resolveAgentTab(readString(args.tab)),
         frame: readString(args.frame),
+        objective: readString(args.objective),
+        mode: readSnapshotMode(args.mode),
+        order: readSnapshotOrder(args.order),
+        selector: readString(args.selector),
+        maxItems: readNumber(args.maxItems),
         timeoutMs: readNumber(args.timeoutMs),
         maxResultChars: readNumber(args.maxResultChars)
       })
@@ -167,6 +191,14 @@ function readString(value: unknown): string | undefined {
 
 function readNumber(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+function readSnapshotMode(value: unknown): 'task' | 'content' | 'interactive' | undefined {
+  return value === 'task' || value === 'content' || value === 'interactive' ? value : undefined
+}
+
+function readSnapshotOrder(value: unknown): 'document' | 'reverse-document' | undefined {
+  return value === 'document' || value === 'reverse-document' ? value : undefined
 }
 
 function readStringArray(value: unknown): string[] {
