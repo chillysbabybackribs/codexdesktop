@@ -212,12 +212,14 @@ export default function App(): React.JSX.Element {
   const splitRef = useRef(split)
   const activeThreadIdRef = useRef<string | null>(activeThreadId)
   const activeTurnIdRef = useRef<string | null>(activeTurnId)
+  const itemsRef = useRef<ChatItem[]>(items)
   const activeGoalRef = useRef<ThreadGoal | null>(activeGoal)
   const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
   const optimisticUserMessageIdRef = useRef<string | null>(null)
   const selectedModelRef = useRef<string | null>(selectedModel)
+  const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort)
   const modelsRef = useRef<Model[]>(models)
   const workspaceRef = useRef<string | null>(workspace)
   // Pending overload recovery for the watched thread; single slot because the
@@ -265,6 +267,10 @@ export default function App(): React.JSX.Element {
   }, [activeTurnId])
 
   useEffect(() => {
+    itemsRef.current = items
+  }, [items])
+
+  useEffect(() => {
     activeGoalRef.current = activeGoal
   }, [activeGoal])
 
@@ -275,6 +281,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     selectedModelRef.current = selectedModel
   }, [selectedModel])
+
+  useEffect(() => {
+    selectedReasoningEffortRef.current = selectedReasoningEffort
+  }, [selectedReasoningEffort])
 
   useEffect(() => {
     modelsRef.current = models
@@ -969,7 +979,7 @@ export default function App(): React.JSX.Element {
   // Compact digest of the focused conversation, prepended to helper-agent
   // sends. Built from renderer state — no extra IPC or token-heavy replay.
   function buildMainChatContext(): string {
-    const recent = liteMessagesFromItems(items).slice(-8)
+    const recent = liteMessagesFromItems(itemsRef.current).slice(-8)
     const lines = recent.map((message) => {
       const text = message.text.length > 600 ? `${message.text.slice(0, 600)}…` : message.text
       return `${message.role === 'user' ? 'User' : 'Assistant'}: ${text}`
@@ -1002,8 +1012,8 @@ export default function App(): React.JSX.Element {
     },
     getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
-    getSelectedEffort: () => selectedReasoningEffort,
-    acceptsImages: (model) => modelAcceptsImages(models, model),
+    getSelectedEffort: () => selectedReasoningEffortRef.current,
+    acceptsImages: (model) => modelAcceptsImages(modelsRef.current, model),
     buildMainChatContext,
     cancelRecovery: cancelAgentRecovery
   })
