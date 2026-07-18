@@ -59,11 +59,11 @@ function TabStrip({ state }: { state: BrowserState }): React.JSX.Element {
               }
             }}
           >
-            ×
+            <CloseIcon />
           </span>
         </button>
       ))}
-      <button type="button" className="new-tab-button" aria-label="New tab" onClick={() => void window.api.browser.newTab()}>+</button>
+      <button type="button" className="new-tab-button" aria-label="New tab" onClick={() => void window.api.browser.newTab()}><PlusIcon /></button>
     </div>
   )
 }
@@ -197,9 +197,9 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
 
   return (
     <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
-      <button type="button" className="browser-nav-button" aria-label="Back" disabled={!activeTab?.canGoBack} onClick={() => activeTab && void window.api.browser.back(activeTab.id)}>‹</button>
-      <button type="button" className="browser-nav-button" aria-label="Forward" disabled={!activeTab?.canGoForward} onClick={() => activeTab && void window.api.browser.forward(activeTab.id)}>›</button>
-      <button type="button" className="browser-nav-button" aria-label="Reload" disabled={!activeTab} onClick={() => activeTab && void window.api.browser.reload(activeTab.id)}>↻</button>
+      <button type="button" className="browser-nav-button" aria-label="Back" disabled={!activeTab?.canGoBack} onClick={() => activeTab && void window.api.browser.back(activeTab.id)}><ChevronIcon direction="left" /></button>
+      <button type="button" className="browser-nav-button" aria-label="Forward" disabled={!activeTab?.canGoForward} onClick={() => activeTab && void window.api.browser.forward(activeTab.id)}><ChevronIcon direction="right" /></button>
+      <button type="button" className="browser-nav-button" aria-label="Reload" disabled={!activeTab} onClick={() => activeTab && void window.api.browser.reload(activeTab.id)}><ReloadIcon /></button>
       <input
         ref={omniboxRef}
         className="omnibox"
@@ -218,22 +218,91 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         }}
         onKeyDown={handleOmniboxKeyDown}
       />
-      <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}>⌕</button>
-      <button type="button" className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`} aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)} onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}>{activeTab?.isMuted ? '⊘' : '♪'}</button>
+      <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}><SearchIcon /></button>
+      <button type="button" className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`} aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)} onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}><VolumeIcon muted={Boolean(activeTab?.isMuted)} /></button>
       <div className="browser-zoom" aria-label="Page zoom">
-        <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}>−</button>
+        <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}><MinusIcon /></button>
         <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
-        <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}>+</button>
+        <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}><PlusIcon /></button>
       </div>
       {findOpen ? (
         <div className="browser-find" role="search">
           <input ref={findInputRef} value={findText} placeholder="Find in page" aria-label="Find in page" onChange={(event) => { setFindText(event.target.value); if (event.target.value && activeTab) void window.api.browser.find(activeTab.id, event.target.value, true).then(setFindResult) }} onKeyDown={(event) => { if (event.key === 'Escape') closeFind(); if (event.key === 'Enter') { event.preventDefault(); void runFind(!event.shiftKey) } }} />
           <span aria-live="polite">{findText ? `${findResult.activeMatchOrdinal}/${findResult.matches}` : '0/0'}</span>
-          <button type="button" aria-label="Previous match" onClick={() => void runFind(false)}>↑</button>
-          <button type="button" aria-label="Next match" onClick={() => void runFind(true)}>↓</button>
-          <button type="button" aria-label="Close find" onClick={closeFind}>×</button>
+          <button type="button" aria-label="Previous match" onClick={() => void runFind(false)}><ChevronIcon direction="up" /></button>
+          <button type="button" aria-label="Next match" onClick={() => void runFind(true)}><ChevronIcon direction="down" /></button>
+          <button type="button" aria-label="Close find" onClick={closeFind}><CloseIcon /></button>
         </div>
       ) : null}
     </form>
+  )
+}
+
+function ChevronIcon({ direction }: { direction: 'up' | 'down' | 'left' | 'right' }): React.JSX.Element {
+  const paths = {
+    up: 'm6 14 6-6 6 6',
+    down: 'm6 10 6 6 6-6',
+    left: 'm14 6-6 6 6 6',
+    right: 'm10 6 6 6-6 6'
+  }
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d={paths[direction]} stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function ReloadIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M19.2 8.8A7.7 7.7 0 1 0 20 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M19.2 4.8v4h-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function SearchIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="10.8" cy="10.8" r="5.8" stroke="currentColor" strokeWidth="1.8" />
+      <path d="m15.2 15.2 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function VolumeIcon({ muted }: { muted: boolean }): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4.5 10h3.2L12 6.5v11l-4.3-3.5H4.5z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      {muted ? (
+        <path d="m15.5 10.2 4 4m0-4-4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      ) : (
+        <path d="M15.5 9.2a4 4 0 0 1 0 5.6M18 6.7a7.4 7.4 0 0 1 0 10.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      )}
+    </svg>
+  )
+}
+
+function PlusIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function MinusIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function CloseIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
   )
 }

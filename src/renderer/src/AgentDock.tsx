@@ -317,7 +317,7 @@ function AgentWindow({
           </button>
           <button
             type="button"
-            className="icon-button"
+            className="icon-button agent-close-button"
             aria-label="Open in main chat"
             title="Open in main chat (current chat is saved to history)"
             onClick={() => onPromote(session.key)}
@@ -340,7 +340,7 @@ function AgentWindow({
             title="Close agent (stops the turn and unsubscribes the thread)"
             onClick={() => onCloseSession(session.key)}
           >
-            ×
+            <CloseIcon />
           </button>
         </div>
       </div>
@@ -584,6 +584,14 @@ function MinimizeIcon(): React.JSX.Element {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M5 19h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function CloseIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   )
 }

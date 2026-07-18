@@ -32,6 +32,17 @@ type AppServerRpcOptions = {
 const defaultRequestTimeoutMs = 30_000
 const maxBufferedMessageChars = 16_000_000
 
+export class AppServerRpcError extends Error {
+  constructor(
+    message: string,
+    readonly code: number,
+    readonly data?: unknown
+  ) {
+    super(message)
+    this.name = 'AppServerRpcError'
+  }
+}
+
 export class AppServerRpc {
   private readonly writeMessage: AppServerRpcOptions['write']
   private readonly onNotification: AppServerRpcOptions['onNotification']
@@ -155,7 +166,7 @@ export class AppServerRpc {
     clearTimeout(pending.timer)
 
     if (message.error) {
-      pending.reject(new Error(message.error.message))
+      pending.reject(new AppServerRpcError(message.error.message, message.error.code, message.error.data))
     } else {
       pending.resolve(message.result)
     }

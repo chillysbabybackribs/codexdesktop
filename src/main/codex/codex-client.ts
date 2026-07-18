@@ -35,6 +35,7 @@ import type { AppsListResponse } from '../../shared/codex-protocol/v2/AppsListRe
 import type { ChatAttachment } from '../../shared/ipc.js'
 import {
   AppServerRpc,
+  AppServerRpcError,
   type JsonRpcId,
   type JsonRpcMessage,
   type JsonRpcRequestMessage
@@ -269,15 +270,16 @@ export class CodexClient extends EventEmitter {
     const effectiveEffort = requestedEffort
     const activeModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const summaryPolicy = resolveTurnPolicy(text)
+    const includeSummaryPolicy = this.isReasoningSummarySupportedForModel(activeModel)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
-    const response = await this.request<TurnStartResponse>('turn/start', {
+    const response = await this.startTurnWithSummaryFallback({
       threadId: activeThreadId,
       input,
       ...(model ? { model } : {}),
       ...(effort ? { effort } : {}),
-      ...(!this.isReasoningSummarySupportedForModel(activeModel) ? {} : summaryPolicy),
+      ...(includeSummaryPolicy ? summaryPolicy : {}),
       approvalPolicy: 'never'
     })
     if (model) this.threadModels.set(activeThreadId, model)
@@ -294,6 +296,34 @@ export class CodexClient extends EventEmitter {
   private isReasoningSummarySupportedForModel(model: string | null): boolean {
     if (!model) return true
     return !/gpt-5\.3-codex-spark/i.test(model)
+  }
+
+  private async startTurnWithSummaryFallback(
+    params: Record<string, unknown> & { summary?: 'auto' | 'concise' }
+  ): Promise<TurnStartResponse> {
+    try {
+      return await this.request<TurnStartResponse>('turn/start', params)
+    } catch (error) {
+      if (params.summary === undefined || !this.isUnsupportedReasoningSummaryError(error)) {
+        throw error
+      }
+
+      const { summary: _summary, ...fallbackParams } = params
+      console.warn('Retrying Codex turn without reasoning summary after provider rejected reasoning.summary')
+      return this.request<TurnStartResponse>('turn/start', fallbackParams)
+    }
+  }
+
+  private isUnsupportedReasoningSummaryError(error: unknown): boolean {
+    const haystack = [
+      error instanceof Error ? error.message : String(error),
+      error instanceof AppServerRpcError ? JSON.stringify(error.data) : ''
+    ].join('\n')
+
+    return (
+      /unsupported_parameter/i.test(haystack) &&
+      /reasoning\.summary|model_reasoning_summary|\bsummary\b/i.test(haystack)
+    )
   }
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {

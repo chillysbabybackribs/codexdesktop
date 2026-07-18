@@ -15,6 +15,11 @@
   --surface-raised: #212122;
   --hairline: rgb(255 255 255 / 7%);
   --hairline-strong: rgb(255 255 255 / 12%);
+  --chrome-fg: #969da4;
+  --chrome-fg-strong: #dfe3e7;
+  --focus-ink: #8ca9d4;
+  --focus-halo: rgb(140 169 212 / 24%);
+  --live-signal: #f28a31;
 
   /* Film-grain tile at ~4% alpha; reads as material, not pattern. Applied to
      chassis surfaces and agent glass only — never the chat reading surface. */
@@ -196,7 +201,7 @@ button {
   height: 28px;
   place-items: center;
   border-radius: 7px;
-  color: #8b9095;
+  color: var(--chrome-fg);
   cursor: pointer;
   transition:
     background 120ms ease,
@@ -206,7 +211,7 @@ button {
 
 .icon-button:hover {
   background: #202020;
-  color: #d4d4d4;
+  color: var(--chrome-fg-strong);
 }
 
 .icon-button:active {
@@ -216,21 +221,21 @@ button {
 }
 
 .icon-button:focus-visible {
-  outline: 2px solid #4a90d9;
+  outline: 2px solid var(--focus-ink);
   outline-offset: 1px;
 }
 
 .icon-settings {
   display: block;
-  transition: transform 220ms ease;
+  transition: transform 160ms ease;
 }
 
 .icon-button:hover .icon-settings {
-  transform: rotate(35deg);
+  transform: rotate(12deg);
 }
 
 .icon-button:active .icon-settings {
-  transform: rotate(60deg);
+  transform: rotate(16deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -271,7 +276,7 @@ button {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #9aa0a6;
+  color: var(--chrome-fg);
 }
 
 .thread-select-wrap.is-composer .chevron {
@@ -2844,7 +2849,7 @@ button {
 }
 
 .workspace-pill:focus-visible {
-  outline: 2px solid #4a90d9;
+  outline: 2px solid var(--focus-ink);
   outline-offset: 1px;
 }
 
@@ -2880,7 +2885,7 @@ button {
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: #9aa0a6;
+  color: var(--chrome-fg);
   font-size: 12.5px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
@@ -2899,7 +2904,7 @@ button {
 }
 
 .context-pill:focus-visible {
-  outline: 2px solid #4a90d9;
+  outline: 2px solid var(--focus-ink);
   outline-offset: 1px;
 }
 
@@ -3318,7 +3323,7 @@ button {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 4%),
     0 1px 2px rgb(0 0 0 / 26%),
-    0 16px 40px rgb(0 0 0 / 22%);
+    0 10px 26px rgb(0 0 0 / 18%);
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
@@ -3327,7 +3332,7 @@ button {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 5%),
     0 1px 2px rgb(0 0 0 / 28%),
-    0 16px 44px rgb(0 0 0 / 26%);
+    0 10px 28px rgb(0 0 0 / 21%);
 }
 
 .plugin-mention-menu {
@@ -4084,6 +4089,12 @@ button {
   cursor: default;
 }
 
+.send-button:focus-visible,
+.stop-square-button:focus-visible {
+  outline: 2px solid var(--focus-ink);
+  outline-offset: 2px;
+}
+
 .agent-new-chat-button {
   color: #ffffff;
 }
@@ -4095,7 +4106,7 @@ button {
 }
 
 .agent-new-chat-button:focus-visible {
-  outline: 2px solid #667fa8;
+  outline: 2px solid var(--focus-ink);
   outline-offset: 2px;
 }
 
