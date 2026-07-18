@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { collectWithConcurrencyUntil, KeyedTaskScheduler } from './research-execution.ts'
+import {
+  collectWithConcurrencyUntil,
+  KeyedTaskScheduler,
+  retainValuesReducingDeficit
+} from './research-execution.ts'
 
 test('candidate collection stops queued and in-flight work at the success target', async () => {
   const started: number[] = []
@@ -49,6 +53,48 @@ test('irrelevant pages do not consume the success target or abort a later releva
   assert.ok(result.attempted >= 2 && result.attempted <= 3)
   assert.ok(completed.includes(0))
   assert.ok(completed.includes(1))
+})
+
+test('result-aware collection waits for distinct focus coverage instead of the first success', async () => {
+  const result = await collectWithConcurrencyUntil(
+    ['focus-a', 'duplicate-a', 'focus-b'],
+    {
+      concurrency: 2,
+      target: 3,
+      maxAttempts: 3,
+      shouldStop: (values) => new Set(values.map(({ value }) => value)).size === 2
+    },
+    async (item, index, stopSignal) => {
+      if (index !== 1) return item
+      return new Promise<null>((resolve) => {
+        if (stopSignal.aborted) resolve(null)
+        else stopSignal.addEventListener('abort', () => resolve(null), { once: true })
+      })
+    }
+  )
+
+  assert.deepEqual(result.values, [
+    { index: 0, value: 'focus-a' },
+    { index: 2, value: 'focus-b' }
+  ])
+  assert.equal(result.attempted, 3)
+})
+
+test('ranked retention drops duplicate drafts that do not reduce focus deficit', () => {
+  const retained = retainValuesReducingDeficit(
+    [
+      { id: 'a-primary', coverage: ['a'] },
+      { id: 'a-duplicate', coverage: ['a'] },
+      { id: 'b-primary', coverage: ['b'] }
+    ],
+    3,
+    (values) => {
+      const covered = new Set(values.flatMap(({ coverage }) => coverage))
+      return ['a', 'b'].filter((focusId) => !covered.has(focusId)).length
+    }
+  )
+
+  assert.deepEqual(retained.map(({ id }) => id), ['a-primary', 'b-primary'])
 })
 
 test('keyed scheduling serializes one thread while allowing another thread to run', async () => {
