@@ -3,6 +3,7 @@ import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-sessio
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
+import { buildPageSnapshotProgram, type PageSnapshotMode } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import type { TabManager } from './tab-manager.js'
 
@@ -45,6 +46,17 @@ export type BrowserRunOptions = BrowserAgentOptions & {
 }
 
 export type BrowserNavigateOptions = BrowserAgentOptions & {
+  readySelector?: string | null
+  quietMs?: number | null
+  maxSettleMs?: number | null
+}
+
+export type BrowserSnapshotOptions = BrowserRunOptions & {
+  url?: string | null
+  objective?: string | null
+  mode?: PageSnapshotMode | null
+  selector?: string | null
+  maxItems?: number | null
   readySelector?: string | null
   quietMs?: number | null
   maxSettleMs?: number | null
@@ -322,6 +334,139 @@ export class BrowserAgentController {
       }
     })
 
+    return operation
+  }
+
+  /**
+   * Optionally navigate one existing tab and produce a compact, objective-aware
+   * page snapshot in a single queued operation. This is the ordinary fast path
+   * for read-only browser tasks: one model round, one composed-tree traversal,
+   * and structured state evidence instead of a full DOM serialization.
+   */
+  async snapshot(options: BrowserSnapshotOptions = {}): Promise<BrowserAgentResult> {
+    const tabs = this.getTabs()
+    if (!tabs) {
+      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+    if (options.tabId === 'all') {
+      return { ok: false, error: 'browser.snapshot requires one existing tab, not "all"' } satisfies BrowserAgentFailure
+    }
+
+    const tabId = options.tabId ?? tabs.getActiveTabId()
+    if (!tabId) {
+      return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
+    }
+    const requestedUrl = options.url?.trim() ?? ''
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+    const program = buildPageSnapshotProgram({
+      objective: options.objective,
+      mode: options.mode,
+      selector: options.selector,
+      maxItems: options.maxItems,
+      maxChars: maxResultChars
+    })
+
+    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
+    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      let webContents = tabs.resolveWebContents(tabId)
+      if (!webContents) {
+        return {
+          ok: false,
+          error: `no browser target with id ${tabId}`,
+          errorCode: 'targetClosed',
+          targetState: { targets: tabs.listTargets() }
+        } satisfies BrowserAgentFailure
+      }
+
+      const startedAt = Date.now()
+      try {
+        if (requestedUrl) {
+          const navigation = await tabs.navigateAndWait(tabId, requestedUrl, {
+            timeoutMs,
+            ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
+            ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
+            ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
+          })
+          if (options.readySelector?.trim() && navigation.settleReason !== 'selector-ready') {
+            throw new Error(`navigation readiness failed: ${navigation.settleReason}`)
+          }
+          webContents = tabs.resolveWebContents(tabId)
+          if (!webContents) throw new Error(`browser target ${tabId} closed during navigation`)
+        }
+
+        const remainingMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
+        const rawResult = await withTimeout(
+          executePageProgram(webContents, program, options.frame, maxResultChars),
+          remainingMs,
+          () => cdpSessionFor(webContents).terminateExecution()
+        )
+        const bounded = boundResult(rawResult, maxResultChars)
+        const rawMetadata = asRecord(rawResult)
+        const nestedTruncated = rawMetadata.truncated === true
+        const assessment = assessBrowserExtractionResult(rawResult)
+        if (!assessment.verified) {
+          return {
+            ok: false,
+            result: bounded.value,
+            error: `page snapshot verification failed: ${assessment.reason ?? 'unknown'}`,
+            errorCode: 'executionError',
+            tabId,
+            url: safeUrl(webContents),
+            title: safeTitle(webContents),
+            durationMs: Date.now() - startedAt,
+            resultChars: bounded.chars,
+            truncated: bounded.truncated || nestedTruncated
+          } satisfies BrowserAgentFailure
+        }
+
+        let artifact: CdpFileArtifact | undefined
+        if (bounded.truncated && this.artifactStore) {
+          try {
+            artifact = await this.artifactStore.persistBrowserResult(JSON.stringify(rawResult))
+          } catch (error) {
+            console.warn('Could not persist oversized browser snapshot artifact', error)
+          }
+        }
+        return {
+          ok: true,
+          result: bounded.value,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          resultChars: bounded.chars,
+          truncated: bounded.truncated || nestedTruncated,
+          ...(artifact ? { artifact } : {})
+        } satisfies BrowserAgentSuccess
+      } catch (error) {
+        const errorCode = classifyBrowserFailure(error)
+        return {
+          ok: false,
+          error: errorMessage(error),
+          errorCode,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
+        } satisfies BrowserAgentFailure
+      }
+    })
+
+    const queueTail = operation.then(
+      () => undefined,
+      () => undefined
+    )
+    this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
+    })
     return operation
   }
 
@@ -717,33 +862,8 @@ export class BrowserAgentController {
     }
   }
 
-  async extractPage(options: BrowserRunOptions = {}): Promise<BrowserAgentResult> {
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
-
-    // Leave room for the structured extraction envelope when bounding the
-    // page body, so the result remains JSON rather than becoming a partial
-    // serialization of the whole envelope.
-    const contentMaxChars = Math.max(1_000, maxResultChars - 1_000)
-
-    const result = await this.run(buildPageExtractionProgram(contentMaxChars), {
-      ...options,
-      maxResultChars
-    })
-    if (!result.ok) return result
-
-    const assessment = assessBrowserExtractionResult(result.result)
-    if (assessment.verified) return result
-    return {
-      ...result,
-      ok: false,
-      error: `page verification failed: ${assessment.reason ?? 'unknown'}`,
-      errorCode: 'executionError'
-    }
+  async extractPage(options: BrowserSnapshotOptions = {}): Promise<BrowserAgentResult> {
+    return this.snapshot({ ...options, mode: options.mode ?? 'content' })
   }
 }
 
@@ -754,6 +874,30 @@ export function assessBrowserExtractionResult(value: unknown): { verified: boole
 function assessBrowserExtractionValue(value: unknown, depth: number): { verified: boolean; reason?: string } {
   if (depth > 3) return { verified: false, reason: 'invalid extraction envelope' }
   const page = asRecord(value)
+  if (Array.isArray(page.items) && typeof page.content === 'string') {
+    const metadata = asRecord(page.page)
+    const scope = asRecord(page.scope)
+    if (typeof scope.selector === 'string' && scope.selector && scope.matched !== true) {
+      return { verified: false, reason: typeof scope.error === 'string' ? scope.error : 'selector-not-found' }
+    }
+    const title = typeof metadata.title === 'string' ? metadata.title : ''
+    const url = typeof metadata.url === 'string' ? metadata.url : ''
+    const content = page.content
+    if (/\b(?:just a moment|checking your browser|verify you are human|access denied|captcha)\b/i.test(`${title} ${content}`)) {
+      return { verified: false, reason: 'challenge-page' }
+    }
+    const meaningfulItems = page.items.filter((item) => {
+      const record = asRecord(item)
+      return [record.text, record.name, record.href].some((field) => typeof field === 'string' && field.trim().length > 0)
+    })
+    if (meaningfulItems.length > 0) return { verified: true }
+    return assessExtractedPage({
+      title,
+      url,
+      content,
+      wordCount: content.trim() ? content.trim().split(/\s+/).length : 0
+    })
+  }
   if (typeof page.content === 'string' || typeof page.url === 'string') {
     return assessExtractedPage({
       title: typeof page.title === 'string' ? page.title : '',
