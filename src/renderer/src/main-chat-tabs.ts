@@ -1,5 +1,7 @@
 export type MainChatTabStatus = 'idle' | 'working' | 'attention'
 
+export const maxMainChatTabs = 12
+
 export type MainChatTab = {
   key: string
   threadId: string | null
@@ -60,7 +62,7 @@ export function parseMainChatTabState(
           ? candidate.title.trim()
           : 'New Chat'
         return [createMainChatTab(key, threadId, title)]
-      })
+      }).slice(0, maxMainChatTabs)
     : []
 
   if (!tabs.length) {

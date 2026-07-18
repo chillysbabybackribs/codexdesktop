@@ -94,6 +94,7 @@ import {
 import {
   closeMainChatTab,
   createMainChatTab,
+  maxMainChatTabs,
   parseMainChatTabState,
   serializeMainChatTabState,
   tabForThread,
@@ -1009,7 +1010,7 @@ export default function App(): React.JSX.Element {
   }
 
   const handleNewMainChatTab = (): boolean => {
-    if (isMainChatTransitionLocked()) return false
+    if (isMainChatTransitionLocked() || mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
@@ -1104,6 +1105,7 @@ export default function App(): React.JSX.Element {
       (tab) => tab.key === activeMainChatTabKeyRef.current
     )
     const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0)
+    if (!reuseCurrent && mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false
     const target = reuseCurrent
       ? { ...current!, threadId, title: threads.find((thread) => thread.id === threadId)?.name ?? 'Chat' }
       : createMainChatTab(
@@ -2607,9 +2609,9 @@ function MainChatTabStrip({
       <button
         type="button"
         className="main-chat-tab-action main-chat-tab-new"
-        aria-label="New chat tab"
-        title="New chat tab (Ctrl+T)"
-        disabled={disabled}
+        aria-label={tabs.length >= maxMainChatTabs ? 'Chat tab limit reached' : 'New chat tab'}
+        title={tabs.length >= maxMainChatTabs ? `Up to ${maxMainChatTabs} chats can stay open` : 'New chat tab (Ctrl+T)'}
+        disabled={disabled || tabs.length >= maxMainChatTabs}
         onClick={onNew}
       >
         <span aria-hidden="true">+</span>
