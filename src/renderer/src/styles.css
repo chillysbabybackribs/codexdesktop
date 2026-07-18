@@ -4256,7 +4256,9 @@ button {
   height: 30px;
   border: 0;
   background: transparent;
-  color: #8e9499;
+  color: var(--chrome-fg);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
 }
 
 .tab {
@@ -4277,11 +4279,9 @@ button {
 }
 
 .tab.is-active {
-  background: var(--surface-raised);
-  color: #dbdbdb;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 5%),
-    0 1px 2px rgb(0 0 0 / 25%);
+  background: #1a1a1b;
+  color: var(--chrome-fg-strong);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
 }
 
 .tab-title {
@@ -4311,7 +4311,7 @@ button {
 .tab-favicon-spinner {
   box-sizing: border-box;
   border: 1.5px solid #43484e;
-  border-top-color: #f28a31;
+  border-top-color: var(--live-signal);
   border-radius: 50%;
   animation: work-spin 720ms linear infinite;
 }
@@ -4322,15 +4322,27 @@ button {
   height: 18px;
   place-items: center;
   border-radius: 50%;
+  color: inherit;
 }
 
 .tab-close:hover {
   background: #303030;
 }
 
+.tab-close svg {
+  width: 13px;
+  height: 13px;
+}
+
 .new-tab-button {
+  display: grid;
   width: 34px;
-  font-size: 22px;
+  place-items: center;
+}
+
+.new-tab-button svg {
+  width: 16px;
+  height: 16px;
 }
 
 .browser-toolbar {
@@ -4343,7 +4355,7 @@ button {
   padding: 4px 12px 6px;
   border-right: 0;
   border-left: 0;
-  background: #121213;
+  background: #151516;
 }
 
 .browser-nav-button.is-active {
@@ -4363,10 +4375,14 @@ button {
 
 .browser-zoom button,
 .browser-find button {
+  display: grid;
   height: 100%;
+  place-items: center;
   border: 0;
   background: transparent;
-  color: #92989e;
+  color: var(--chrome-fg);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
 }
 
 .browser-zoom button:hover,
@@ -4376,8 +4392,14 @@ button {
 }
 
 .browser-zoom .zoom-value {
-  font-size: 10px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
+}
+
+.browser-zoom svg,
+.browser-find svg {
+  width: 13px;
+  height: 13px;
 }
 
 .browser-find {
@@ -4423,8 +4445,14 @@ button {
   border: 0;
   border-radius: 6px;
   background: transparent;
-  color: #737a80;
-  font-size: 18px;
+  color: var(--chrome-fg);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.browser-nav-button svg {
+  width: 15px;
+  height: 15px;
 }
 
 .browser-nav-button:not(:disabled):hover {
@@ -4447,7 +4475,7 @@ button {
   background: #0e0e0f;
   color: #e5e5e5;
   padding: 0 12px;
-  font-size: 12px;
+  font-size: 12.5px;
   box-shadow:
     inset 0 1px 2px rgb(0 0 0 / 40%),
     0 1px 0 rgb(255 255 255 / 3%);
@@ -4456,6 +4484,9 @@ button {
 .omnibox:focus {
   border-color: rgb(255 255 255 / 20%);
   background: #101011;
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 40%),
+    0 0 0 2px var(--focus-halo);
 }
 
 .browser-frame {
@@ -4477,9 +4508,19 @@ button {
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 10px;
   background: #1c1c1d;
-  box-shadow:
-    0 2px 6px rgb(0 0 0 / 30%),
-    0 10px 28px rgb(0 0 0 / 34%);
+  box-shadow: 0 5px 18px rgb(0 0 0 / 27%);
+}
+
+.tab:focus-visible,
+.tab-close:focus-visible,
+.new-tab-button:focus-visible,
+.browser-nav-button:focus-visible,
+.browser-zoom button:focus-visible,
+.browser-find button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--focus-ink);
+  outline-offset: -2px;
 }
 
 /* ---- Agent dock: tab strip + overlay window ---- */
