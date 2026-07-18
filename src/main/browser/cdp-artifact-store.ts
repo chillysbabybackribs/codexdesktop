@@ -6,6 +6,7 @@ const maxPdfBytes = 25 * 1024 * 1024
 const maxTraceBytes = 100 * 1024 * 1024
 const maxSnapshotBytes = 100 * 1024 * 1024
 const maxResponseBodyBytes = 25 * 1024 * 1024
+const maxBrowserResultBytes = 25 * 1024 * 1024
 const maxReadableImageBytes = 20 * 1024 * 1024
 const maxArtifactAgeMs = 7 * 24 * 60 * 60 * 1000
 const maxArtifactBytes = 250 * 1024 * 1024
@@ -25,7 +26,7 @@ export type CdpFileArtifact = {
   artifactPath: string
   fileName: string
   mediaType: string
-  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
+  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body' | 'browser-result'
   bytes: number
   createdAt: string
 }
@@ -120,6 +121,15 @@ export class CdpArtifactStore {
     const normalizedMimeType = normalizeMimeType(mimeType)
     const extension = responseBodyExtension(normalizedMimeType, url)
     return this.persistBufferArtifact(buffer, 'response-body', extension, normalizedMimeType, 'response-body')
+  }
+
+  async persistBrowserResult(serialized: string): Promise<CdpFileArtifact> {
+    const buffer = Buffer.from(serialized, 'utf8')
+    if (buffer.length === 0) throw new Error('Browser program returned an empty serialized result')
+    if (buffer.length > maxBrowserResultBytes) {
+      throw new Error('Browser program result exceeds the 25 MB artifact limit')
+    }
+    return this.persistBufferArtifact(buffer, 'browser-result', 'json', 'application/json', 'browser-result')
   }
 
   async readImageDataUrl(artifactPath: string): Promise<string | null> {

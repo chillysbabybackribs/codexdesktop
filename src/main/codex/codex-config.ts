@@ -167,7 +167,7 @@ const browserRunSchema = {
     tab: { type: 'string', description: 'Optional tab or popup target id. Defaults to the active visible tab; use all to run the program across every live target in parallel.' },
     frame: { type: 'string', description: 'Optional frame target. Defaults to main; use all to run the same program across every live frame in parallel, or pass a frameId returned by an all-frame run.' },
     timeoutMs: { type: 'number', description: 'Optional timeout from 250 to 60000 milliseconds.' },
-    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
+    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters. Oversized default results are kept as JSON artifacts with a compact preview returned to the model.' }
   },
   required: ['code'],
   additionalProperties: false

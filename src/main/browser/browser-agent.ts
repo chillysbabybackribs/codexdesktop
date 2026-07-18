@@ -1,6 +1,6 @@
 import type { WebContents, WebFrameMain } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
-import type { CdpArtifactStore } from './cdp-artifact-store.js'
+import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { assessExtractedPage } from './research-utils.js'
@@ -84,6 +84,7 @@ export type BrowserAgentResult = {
   resultChars?: number
   truncated?: boolean
   errorCode?: BrowserFailureCode
+  artifact?: CdpFileArtifact
   targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
 }
 
@@ -188,6 +189,14 @@ export class BrowserAgentController {
         const rawMetadata = asRecord(rawResult)
         const nestedTruncated = rawMetadata.truncated === true
         const originalChars = typeof rawMetadata.originalChars === 'number' ? rawMetadata.originalChars : bounded.chars
+        let artifact: CdpFileArtifact | undefined
+        if (bounded.truncated && this.artifactStore) {
+          try {
+            artifact = await this.artifactStore.persistBrowserResult(JSON.stringify(rawResult))
+          } catch (error) {
+            console.warn('Could not persist oversized browser result artifact', error)
+          }
+        }
         return {
           ok: true,
           result: bounded.value,
@@ -196,7 +205,8 @@ export class BrowserAgentController {
           title: safeTitle(webContents),
           durationMs: Date.now() - startedAt,
           resultChars: originalChars,
-          truncated: bounded.truncated || nestedTruncated
+          truncated: bounded.truncated || nestedTruncated,
+          ...(artifact ? { artifact } : {})
         } satisfies BrowserAgentSuccess
       } catch (error) {
         const errorCode = classifyBrowserFailure(error)
