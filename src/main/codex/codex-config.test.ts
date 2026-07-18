@@ -219,7 +219,7 @@ test('Fast mode only downshifts simple tasks when the selected model supports it
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_screenshot', 'ui_review', 'browser_navigate', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_navigate', 'browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
