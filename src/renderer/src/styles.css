@@ -4871,6 +4871,12 @@ button {
   color: #d6d8db;
 }
 
+.agent-mini-message.is-assistant .markdown-body {
+  color: inherit;
+  font-size: 12.5px;
+  line-height: 1.52;
+}
+
 .agent-mini-message.is-assistant > :first-child {
   margin-top: 0;
 }
@@ -4898,8 +4904,9 @@ button {
 .agent-mini-message.is-assistant h4 {
   margin: 0.9em 0 0.35em;
   color: #f0f0f0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 640;
+  letter-spacing: 0;
   line-height: 1.35;
 }
 
