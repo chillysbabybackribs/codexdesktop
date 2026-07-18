@@ -1595,12 +1595,8 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  function reduceBackgroundTurnSnapshot(
-    tab: MainChatTab,
-    turn: Turn,
-    completed: boolean
-  ): MainChatSnapshot {
-    const current = mainChatSnapshotsRef.current.get(tab.key) ?? {
+  function backgroundMainChatSnapshot(tab: MainChatTab): MainChatSnapshot {
+    return mainChatSnapshotsRef.current.get(tab.key) ?? {
       threadId: tab.threadId,
       title: tab.title,
       turnId: null,
@@ -1615,6 +1611,14 @@ export default function App(): React.JSX.Element {
       precedingModelInputByTurn: new Map<string, ModelCallAttribution>(),
       pendingCompactionByTurn: new Set<string>()
     }
+  }
+
+  function reduceBackgroundTurnSnapshot(
+    tab: MainChatTab,
+    turn: Turn,
+    completed: boolean
+  ): MainChatSnapshot {
+    const current = backgroundMainChatSnapshot(tab)
     const nextItemMeta = { ...current.itemMeta }
     for (const item of turn.items) {
       nextItemMeta[item.id] = { ...nextItemMeta[item.id], turnId: turn.id }
@@ -1714,6 +1718,29 @@ export default function App(): React.JSX.Element {
     tab: MainChatTab,
     notification: ServerNotification
   ): void {
+    if (isItemNotification(notification)) {
+      const current = backgroundMainChatSnapshot(tab)
+      const optimisticId = current.items.find((item) => item.id.startsWith('optimistic-user-'))?.id ?? null
+      const incomingItems = notification.method === 'item/started' || notification.method === 'item/completed'
+        ? [notification.params.item]
+        : []
+      const nextItems = reduceItemNotificationItems(
+        stripOptimisticUserMessage(current.items, optimisticId, incomingItems),
+        notification
+      )
+      const nextItemMeta = reduceItemNotificationMeta(current.itemMeta, notification)
+      const compactionStarted = notification.method === 'item/started' && notification.params.item.type === 'contextCompaction'
+      const compactionCompleted = notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction'
+      mainChatSnapshotsRef.current.set(tab.key, {
+        ...current,
+        items: nextItems,
+        itemMeta: nextItemMeta,
+        isCompacting: compactionStarted ? true : compactionCompleted ? false : current.isCompacting,
+        activeCompaction: compactionCompleted ? null : current.activeCompaction
+      })
+      return
+    }
+
     switch (notification.method) {
       case 'thread/name/updated':
         if (mainChatSnapshotsRef.current.has(tab.key)) {
@@ -1753,6 +1780,69 @@ export default function App(): React.JSX.Element {
         })
         persistBackgroundMainChatCompletion(tab, notification.params.threadId, turn.id, snapshot)
         void refreshThreads()
+        return
+      }
+      case 'thread/goal/updated': {
+        const current = backgroundMainChatSnapshot(tab)
+        mainChatSnapshotsRef.current.set(tab.key, {
+          ...current,
+          goal: cloneGoal(notification.params.goal)
+        })
+        return
+      }
+      case 'thread/goal/cleared': {
+        const current = backgroundMainChatSnapshot(tab)
+        mainChatSnapshotsRef.current.set(tab.key, { ...current, goal: null })
+        return
+      }
+      case 'thread/tokenUsage/updated': {
+        const current = backgroundMainChatSnapshot(tab)
+        const existing = current.turnMeta[notification.params.turnId]?.tokens
+        const isNewCall = existing
+          ? notification.params.tokenUsage.total.totalTokens > existing.threadTotalAtEnd.totalTokens
+          : notification.params.tokenUsage.last.totalTokens > 0
+        const compactedBeforeCall = isNewCall
+          ? current.pendingCompactionByTurn.delete(notification.params.turnId)
+          : false
+        mainChatSnapshotsRef.current.set(tab.key, {
+          ...current,
+          contextUsage: notification.params.tokenUsage,
+          turnMeta: reduceTurnTelemetry(current.turnMeta, {
+            type: 'tokenUsage',
+            turnId: notification.params.turnId,
+            tokenUsage: notification.params.tokenUsage,
+            atMs: Date.now(),
+            precedingItem: current.precedingModelInputByTurn.get(notification.params.turnId) ?? null,
+            compactedBeforeCall
+          })
+        })
+        return
+      }
+      case 'model/rerouted': {
+        const current = backgroundMainChatSnapshot(tab)
+        mainChatSnapshotsRef.current.set(tab.key, {
+          ...current,
+          turnMeta: reduceTurnTelemetry(current.turnMeta, {
+            type: 'modelRerouted',
+            turnId: notification.params.turnId,
+            atMs: Date.now(),
+            fromModel: notification.params.fromModel,
+            toModel: notification.params.toModel,
+            reason: notification.params.reason
+          })
+        })
+        return
+      }
+      case 'turn/diff/updated': {
+        const current = backgroundMainChatSnapshot(tab)
+        mainChatSnapshotsRef.current.set(tab.key, {
+          ...current,
+          turnMeta: reduceTurnTelemetry(current.turnMeta, {
+            type: 'patch',
+            turnId: notification.params.turnId,
+            patch: { diffSummary: summarizeTurnDiff(notification.params.diff) }
+          })
+        })
         return
       }
       case 'error':
