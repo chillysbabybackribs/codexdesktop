@@ -889,20 +889,43 @@ function assessBrowserExtractionValue(value: unknown, depth: number): { verified
     const title = typeof metadata.title === 'string' ? metadata.title : ''
     const url = typeof metadata.url === 'string' ? metadata.url : ''
     const content = page.content
-    if (/\b(?:just a moment|checking your browser|verify you are human|access denied|captcha)\b/i.test(`${title} ${content}`)) {
-      return { verified: false, reason: 'challenge-page' }
-    }
     const meaningfulItems = page.items.filter((item) => {
       const record = asRecord(item)
       return [record.text, record.name, record.href].some((field) => typeof field === 'string' && field.trim().length > 0)
     })
-    if (meaningfulItems.length > 0) return { verified: true }
-    return assessExtractedPage({
+    const itemEvidence = meaningfulItems.map((item) => {
+      const record = asRecord(item)
+      return `${String(record.text ?? '')} ${String(record.name ?? '')}`
+    }).join(' ')
+    const wallText = `${title} ${content} ${itemEvidence}`
+    if (/\b(?:just a moment|checking your browser|verify you are human|access denied|captcha)\b/i.test(wallText)) {
+      return { verified: false, reason: 'challenge-page' }
+    }
+    const coverage = asRecord(page.coverage)
+    const objectiveTerms = Array.isArray(coverage.objectiveTerms)
+      ? coverage.objectiveTerms.filter((term): term is string => typeof term === 'string')
+      : []
+    const explicitlyRequestsAuth = objectiveTerms.some((term) => /^(?:auth|authenticate|authentication|login|signin)$/.test(term))
+    if (!explicitlyRequestsAuth && /\b(?:log[ -]?in|sign[ -]?in|authentication required|session expired)\b/i.test(wallText)) {
+      return { verified: false, reason: 'login-wall' }
+    }
+    const contentAssessment = assessExtractedPage({
       title,
       url,
       content,
       wordCount: content.trim() ? content.trim().split(/\s+/).length : 0
     })
+    if (page.mode === 'content') return contentAssessment
+    if (meaningfulItems.length > 0) {
+      if (objectiveTerms.length > 0 && coverage.complete !== true) {
+        const gaps = Array.isArray(coverage.gaps)
+          ? coverage.gaps.filter((gap): gap is string => typeof gap === 'string').slice(0, 4)
+          : []
+        return { verified: false, reason: `coverage-incomplete${gaps.length > 0 ? `:${gaps.join(',')}` : ''}` }
+      }
+      return { verified: true }
+    }
+    return contentAssessment
   }
   if (typeof page.content === 'string' || typeof page.url === 'string') {
     return assessExtractedPage({

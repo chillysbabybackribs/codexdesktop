@@ -114,6 +114,34 @@ test('browser extraction verification accepts verified frame and target envelope
   assert.equal(assessBrowserExtractionResult({ frames: [{ ok: true, result: { content: 'Loading...' } }] }).verified, false)
 })
 
+test('snapshot verification rejects content shells, login walls, challenges, and incomplete task coverage', () => {
+  const snapshot = (overrides: Record<string, unknown>): Record<string, unknown> => ({
+    page: { title: 'Inbox', url: 'https://example.com/inbox' },
+    mode: 'task',
+    scope: { selector: null, matched: true },
+    items: [],
+    content: '',
+    coverage: { objectiveTerms: ['notification'], matchedTerms: [], gaps: ['notification'], complete: false },
+    ...overrides
+  })
+
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    mode: 'content',
+    items: [{ text: 'Help', href: '/help' }],
+    content: 'Loading...'
+  })), { verified: false, reason: 'insufficient-content' })
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    page: { title: 'Login', url: 'https://example.com/login' },
+    items: [{ text: 'Sign in', href: '/login' }]
+  })), { verified: false, reason: 'login-wall' })
+  assert.deepEqual(assessBrowserExtractionResult(snapshot({
+    items: [{ text: 'Verify you are human', href: null }]
+  })), { verified: false, reason: 'challenge-page' })
+  const incomplete = assessBrowserExtractionResult(snapshot({ items: [{ text: 'One notification' }] }))
+  assert.equal(incomplete.verified, false)
+  assert.match(incomplete.reason ?? '', /coverage-incomplete:notification/)
+})
+
 test('browser agent runs a program against the active tab', async () => {
   const controller = new BrowserAgentController(
     () => fakeTabs(async () => ({ answer: 42 }))
