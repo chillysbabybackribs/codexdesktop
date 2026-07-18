@@ -1595,6 +1595,121 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function reduceBackgroundTurnSnapshot(
+    tab: MainChatTab,
+    turn: Turn,
+    completed: boolean
+  ): MainChatSnapshot {
+    const current = mainChatSnapshotsRef.current.get(tab.key) ?? {
+      threadId: tab.threadId,
+      title: tab.title,
+      turnId: null,
+      goal: null,
+      reasoningEffort: null,
+      items: [],
+      itemMeta: {},
+      turnMeta: {},
+      contextUsage: null,
+      isCompacting: false,
+      activeCompaction: null,
+      precedingModelInputByTurn: new Map<string, ModelCallAttribution>(),
+      pendingCompactionByTurn: new Set<string>()
+    }
+    const nextItemMeta = { ...current.itemMeta }
+    for (const item of turn.items) {
+      nextItemMeta[item.id] = { ...nextItemMeta[item.id], turnId: turn.id }
+    }
+    const status = completed
+      ? (turn.status === 'inProgress' ? 'completed' : turn.status)
+      : 'inProgress'
+    const nextTurnMeta = reduceTurnTelemetry(current.turnMeta, {
+      type: 'patch',
+      turnId: turn.id,
+      patch: {
+        status,
+        origin: 'live',
+        model: current.turnMeta[turn.id]?.model ?? selectedModelRef.current,
+        reasoningEffort: current.turnMeta[turn.id]?.reasoningEffort ?? current.reasoningEffort,
+        workspace: current.turnMeta[turn.id]?.workspace ?? workspaceRef.current,
+        startedAtMs: turn.startedAt ? turn.startedAt * 1000 : current.turnMeta[turn.id]?.startedAtMs,
+        ...(completed ? {
+          completedAtMs: turn.completedAt ? turn.completedAt * 1000 : Date.now(),
+          durationMs: turn.durationMs ?? undefined,
+          errorMessage: turn.error?.message,
+          goalAtEnd: cloneGoal(current.goal)
+        } : {
+          goalAtStart: cloneGoal(current.goal),
+          goalAtEnd: cloneGoal(current.goal)
+        })
+      }
+    })
+    const next: MainChatSnapshot = {
+      ...current,
+      turnId: completed ? null : turn.id,
+      items: upsertMany(current.items, turn.items),
+      itemMeta: nextItemMeta,
+      turnMeta: nextTurnMeta,
+      isCompacting: completed ? false : current.isCompacting,
+      activeCompaction: completed ? null : current.activeCompaction
+    }
+    mainChatSnapshotsRef.current.set(tab.key, next)
+    return next
+  }
+
+  function persistBackgroundMainChatCompletion(
+    tab: MainChatTab,
+    threadId: string,
+    turnId: string,
+    snapshot: MainChatSnapshot
+  ): void {
+    const meta = snapshot.turnMeta[turnId]
+    if (!meta) return
+    const model = meta.model ?? selectedModelRef.current
+    const workspace = meta.workspace ?? workspaceRef.current
+    const trace = buildTurnTrace({
+      threadId,
+      threadTitle: snapshot.title || tab.title,
+      turnId,
+      model,
+      workspace,
+      items: snapshot.items,
+      itemMeta: snapshot.itemMeta,
+      meta
+    })
+    const traceContent = `${JSON.stringify(trace, null, 2)}\n`
+    const traceFingerprint = JSON.stringify({ ...trace, exportedAt: '' })
+    const traceKey = `${threadId}/${turnId}`
+    if (persistedTraceFingerprintsRef.current.get(traceKey) !== traceFingerprint) {
+      persistedTraceFingerprintsRef.current.set(traceKey, traceFingerprint)
+      void window.api.trace.persist({ threadId, turnId, content: traceContent }).catch((error) => {
+        if (persistedTraceFingerprintsRef.current.get(traceKey) === traceFingerprint) {
+          persistedTraceFingerprintsRef.current.delete(traceKey)
+        }
+        console.warn('Failed to persist background turn trace', error)
+      })
+    }
+
+    const turns = completedMemoryTurns(snapshot.items, snapshot.itemMeta, snapshot.turnMeta)
+    if (!turns.length) return
+    const completedAtMs = meta.completedAtMs ?? Date.now()
+    const params: MemoryPersistParams = {
+      threadId,
+      title: snapshot.title || tab.title,
+      workspace,
+      updatedAt: new Date(completedAtMs).toISOString(),
+      turns
+    }
+    const memoryFingerprint = JSON.stringify(params)
+    if (persistedMemoryFingerprintsRef.current.get(threadId) === memoryFingerprint) return
+    persistedMemoryFingerprintsRef.current.set(threadId, memoryFingerprint)
+    void window.api.memory.persist(params).catch((error) => {
+      if (persistedMemoryFingerprintsRef.current.get(threadId) === memoryFingerprint) {
+        persistedMemoryFingerprintsRef.current.delete(threadId)
+      }
+      console.warn('Failed to persist background chat memory', error)
+    })
+  }
+
   function handleBackgroundMainChatNotification(
     tab: MainChatTab,
     notification: ServerNotification
@@ -1615,13 +1730,7 @@ export default function App(): React.JSX.Element {
         void refreshThreads()
         return
       case 'turn/started':
-        if (mainChatSnapshotsRef.current.has(tab.key)) {
-          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
-          mainChatSnapshotsRef.current.set(tab.key, {
-            ...snapshot,
-            turnId: notification.params.turn.id
-          })
-        }
+        reduceBackgroundTurnSnapshot(tab, notification.params.turn, false)
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'working',
@@ -1630,15 +1739,7 @@ export default function App(): React.JSX.Element {
         return
       case 'turn/completed': {
         const turn = notification.params.turn
-        if (mainChatSnapshotsRef.current.has(tab.key)) {
-          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
-          mainChatSnapshotsRef.current.set(tab.key, {
-            ...snapshot,
-            turnId: null,
-            isCompacting: false,
-            activeCompaction: null
-          })
-        }
+        const snapshot = reduceBackgroundTurnSnapshot(tab, turn, true)
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'attention',
@@ -1650,6 +1751,7 @@ export default function App(): React.JSX.Element {
           status: turn.status === 'failed' ? 'failed' : 'completed',
           message: turn.error?.message ?? null
         })
+        persistBackgroundMainChatCompletion(tab, notification.params.threadId, turn.id, snapshot)
         void refreshThreads()
         return
       }
