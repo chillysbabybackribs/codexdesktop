@@ -488,9 +488,10 @@ async function routeModelBrowserTool(params, context) {
     const program = buildPageSnapshotProgram({
       objective: readString(args.objective) ?? SNAPSHOT_OBJECTIVE,
       mode: readSnapshotMode(args.mode),
+      order: readSnapshotOrder(args.order),
       selector: readString(args.selector),
       maxItems: finiteNumber(args.maxItems),
-      maxChars: finiteNumber(args.maxChars)
+      maxChars: finiteNumber(args.maxResultChars) ?? 8_000
     })
     return hostToolResponse(await postEval(context, program, {
       timeoutMs: clampNumber(args.timeoutMs, 15_000, 250, 60_000),
@@ -853,6 +854,10 @@ function failureToolResponse(error) {
 
 function readSnapshotMode(value) {
   return ['task', 'content', 'interactive'].includes(value) ? value : 'task'
+}
+
+function readSnapshotOrder(value) {
+  return value === 'reverse-document' ? value : 'document'
 }
 
 function readString(value) {
