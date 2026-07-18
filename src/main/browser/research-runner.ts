@@ -13,7 +13,11 @@ import {
   type ResearchGap,
   type ResearchPassage
 } from './research-evidence.js'
-import { collectWithConcurrencyUntil, KeyedTaskScheduler } from './research-execution.js'
+import {
+  collectWithConcurrencyUntil,
+  KeyedTaskScheduler,
+  retainValuesReducingDeficit
+} from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { fetchStaticResearchPage } from './research-static-fetch.js'
 import {
@@ -285,12 +289,26 @@ export class ResearchRunner {
     const goalMet = (): boolean => focus.length > 0
       ? evidence().gaps.length === 0
       : pages.length >= targetPages
-    const remainingSuccessTarget = (): number => {
-      if (focus.length === 0) return Math.max(0, targetPages - pages.length)
-      const gaps = evidence().gaps
-      if (gaps.length === 0) return 0
-      const shortfall = Math.max(...gaps.map((gap) => gap.requiredSources - gap.matchedSources), 1)
-      return Math.min(Math.max(0, targetPages - pages.length), shortfall)
+    const remainingSuccessTarget = (): number => Math.max(0, targetPages - pages.length)
+    const draftEvidenceDocument = (draft: ResearchPageDraft): ResearchEvidenceDocument => ({
+      sourceId: draft.page.sourceId,
+      title: draft.page.title,
+      url: draft.page.url,
+      content: draft.content,
+      observedAt: draft.page.observedAt,
+      ...(draft.page.sourceTier ? { sourceTier: draft.page.sourceTier } : {})
+    })
+    const focusCoverageDeficit = (drafts: readonly ResearchPageDraft[] = []): number => {
+      if (focus.length === 0) return 0
+      const packet = selectResearchEvidence(
+        focus,
+        [...evidenceDocuments, ...drafts.map(draftEvidenceDocument)],
+        passageChars
+      )
+      return packet.gaps.reduce(
+        (total, gap) => total + Math.max(0, gap.requiredSources - gap.matchedSources),
+        0
+      )
     }
     const coversUnresolvedFocus = (
       candidate: ResearchCandidate,
@@ -360,17 +378,26 @@ export class ResearchRunner {
     const verifyCandidateBatch = async (candidates: ResearchCandidate[]): Promise<void> => {
       const available = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
       const attemptsRemaining = maxAttempts - pageAttempts
-      const successTarget = remainingSuccessTarget()
+      // Focused runs cannot stop on a raw page count: the first successful
+      // page may cover only one of several distinct evidence needs. Let the
+      // coverage predicate stop the batch once all focus deficits are filled.
+      const successTarget = focus.length > 0 ? attemptsRemaining : remainingSuccessTarget()
       if (available.length === 0 || attemptsRemaining <= 0 || successTarget <= 0) return
 
       const pageBatchStartedAt = Date.now()
       const attemptsBeforeBatch = pageAttempts
-      const batch = await collectWithConcurrencyUntil(
+      const batch = await collectWithConcurrencyUntil<ResearchCandidate, ResearchPageDraft>(
         available,
         {
           concurrency: PAGE_WORKER_CONCURRENCY,
           target: successTarget,
           maxAttempts: attemptsRemaining,
+          ...(focus.length > 0
+            ? {
+                shouldStop: (values: readonly { value: ResearchPageDraft }[]) =>
+                  focusCoverageDeficit(values.map(({ value }) => value)) === 0
+              }
+            : {}),
           onStarted: ({ attempted, succeeded }) => {
             notifyVerificationProgress(
               onProgress,
@@ -519,16 +546,17 @@ export class ResearchRunner {
         }
       )
       pageAttempts += batch.attempted
-      for (const { value: draft } of batch.values) {
+      const rankedDrafts = batch.values.map(({ value }) => value)
+      const acceptedDrafts = focus.length > 0
+        ? retainValuesReducingDeficit(
+            rankedDrafts,
+            targetPages - pages.length,
+            (retained) => focusCoverageDeficit(retained)
+          )
+        : rankedDrafts.slice(0, targetPages - pages.length)
+      for (const draft of acceptedDrafts) {
         pages.push(draft.page)
-        evidenceDocuments.push({
-          sourceId: draft.page.sourceId,
-          title: draft.page.title,
-          url: draft.page.url,
-          content: draft.content,
-          observedAt: draft.page.observedAt,
-          ...(draft.page.sourceTier ? { sourceTier: draft.page.sourceTier } : {})
-        })
+        evidenceDocuments.push(draftEvidenceDocument(draft))
       }
       pageMs += Date.now() - pageBatchStartedAt
     }
