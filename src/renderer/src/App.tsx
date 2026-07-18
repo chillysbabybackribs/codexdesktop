@@ -1724,6 +1724,25 @@ export default function App(): React.JSX.Element {
   ): void {
     if (isItemNotification(notification)) {
       const current = backgroundMainChatSnapshot(tab)
+      const nextPrecedingModelInput = new Map(current.precedingModelInputByTurn)
+      const nextPendingCompaction = new Set(current.pendingCompactionByTurn)
+      let nextActiveCompaction = current.activeCompaction
+      if (notification.method === 'item/started' || notification.method === 'item/completed') {
+        const item = notification.params.item
+        if (item.type === 'contextCompaction') {
+          nextPendingCompaction.add(notification.params.turnId)
+        } else {
+          const attribution = modelCallAttributionForItem(item)
+          if (attribution) nextPrecedingModelInput.set(notification.params.turnId, attribution)
+        }
+        if (notification.method === 'item/started' && item.type === 'contextCompaction') {
+          nextActiveCompaction = {
+            itemId: item.id,
+            turnId: notification.params.turnId,
+            beforeTokens: current.contextUsage?.last.totalTokens ?? null
+          }
+        }
+      }
       const optimisticId = current.items.find((item) => item.id.startsWith('optimistic-user-'))?.id ?? null
       const incomingItems = notification.method === 'item/started' || notification.method === 'item/completed'
         ? [notification.params.item]
@@ -1740,7 +1759,9 @@ export default function App(): React.JSX.Element {
         items: nextItems,
         itemMeta: nextItemMeta,
         isCompacting: compactionStarted ? true : compactionCompleted ? false : current.isCompacting,
-        activeCompaction: compactionCompleted ? null : current.activeCompaction
+        activeCompaction: compactionCompleted ? null : nextActiveCompaction,
+        precedingModelInputByTurn: nextPrecedingModelInput,
+        pendingCompactionByTurn: nextPendingCompaction
       })
       return
     }
