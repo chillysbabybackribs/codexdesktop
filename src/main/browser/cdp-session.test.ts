@@ -62,18 +62,19 @@ function fixture(): { session: CdpSession; contents: FakeWebContents } {
   }
 }
 
-test('CDP session performs one capability handshake before commands', async () => {
+test('ordinary CDP commands bypass the lazy capability handshake', async () => {
   const { session, contents } = fixture()
 
   const first = await session.send('Page.getLayoutMetrics')
   await session.send('Runtime.evaluate', { expression: 'document.title' })
   const capabilities = await session.capabilities()
+  await session.capabilities()
 
   assert.deepEqual(contents.debugger.commands.map(({ method }) => method), [
-    'Browser.getVersion',
-    'Schema.getDomains',
     'Page.getLayoutMetrics',
-    'Runtime.evaluate'
+    'Runtime.evaluate',
+    'Browser.getVersion',
+    'Schema.getDomains'
   ])
   assert.deepEqual(first, { method: 'Page.getLayoutMetrics', params: {} })
   assert.equal(capabilities.product, 'Chrome/150.0.0.0')
@@ -83,7 +84,6 @@ test('CDP session performs one capability handshake before commands', async () =
 
 test('CDP event journal filters buffered events and resolves waits', async () => {
   const { session, contents } = fixture()
-  await session.capabilities()
   const waiting = session.waitForEvent({
     method: 'Page.lifecycleEvent',
     afterSequence: 0,
@@ -97,6 +97,7 @@ test('CDP event journal filters buffered events and resolves waits', async () =>
   assert.equal(event.sequence, 2)
   assert.equal((event.params as { name: string }).name, 'networkIdle')
   assert.deepEqual(session.eventPage({ contains: { frameId: 'tw' } }).events.map(({ sequence }) => sequence), [2])
+  assert.deepEqual(contents.debugger.commands, [])
 })
 
 test('CDP event journal remains bounded and reports dropped events', () => {
@@ -133,8 +134,6 @@ test('preparing lifecycle and network events enables their domains', async () =>
   await session.prepareForEvent('Network.responseReceived')
 
   assert.deepEqual(contents.debugger.commands.map(({ method }) => method), [
-    'Browser.getVersion',
-    'Schema.getDomains',
     'Page.enable',
     'Page.setLifecycleEventsEnabled',
     'Network.enable'
@@ -162,7 +161,7 @@ test('performance diagnostics collect compact metrics, lifecycle, and timeline e
   assert.equal(page.webVitals.longTaskCount, 1)
   assert.deepEqual(page.support.eventTypes, ['largest-contentful-paint', 'layout-shift', 'longtask'])
   assert.equal(stopped.active, false)
-  assert.deepEqual(contents.debugger.commands.slice(2, 5).map(({ method }) => method), [
+  assert.deepEqual(contents.debugger.commands.slice(0, 3).map(({ method }) => method), [
     'Performance.enable',
     'Page.enable',
     'Page.setLifecycleEventsEnabled'

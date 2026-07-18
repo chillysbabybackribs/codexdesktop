@@ -182,7 +182,6 @@ export class CdpSession {
 
   async send(method: string, params: object = {}): Promise<unknown> {
     this.ensureAttached()
-    await this.ensureCapabilities()
     return this.webContents.debugger.sendCommand(method, params)
   }
 
@@ -208,7 +207,6 @@ export class CdpSession {
 
   async waitForEvent(query: CdpEventQuery, timeoutMs: number): Promise<CdpEventRecord> {
     this.ensureAttached()
-    await this.ensureCapabilities()
     const existing = this.events.find((event) => matchesEvent(event, query))
     if (existing) return existing
 

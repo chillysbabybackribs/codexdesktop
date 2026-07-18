@@ -65,6 +65,42 @@ test('evidence selection returns an exact bounded passage with artifact line loc
   assert.deepEqual(passage.matchedTerms, ['enterprise', 'annual', 'discount'])
 })
 
+test('multi-clause evidence requires the answer-bearing clause instead of lexical overlap alone', () => {
+  const source: ResearchEvidenceDocument = {
+    ...document('page-01', [
+      '# Document: querySelectorAll() method',
+      '',
+      'The method returns a static (not live) NodeList representing matching elements.',
+      '',
+      '## Return value',
+      '',
+      'A non-live NodeList containing one Element object for each match.',
+      '',
+      'The elements are in document order — parents before children, earlier siblings before later siblings.',
+      '',
+      'const matches = document.querySelectorAll("p");',
+      '',
+      'This example returns a list of all div elements.'
+    ].join('\n')),
+    title: 'Document: querySelectorAll() method'
+  }
+
+  const packet = selectResearchEvidence(
+    [{
+      id: 'ordering',
+      need: 'What does Document.querySelectorAll return, and how is the result ordered?',
+      minSources: 1
+    }],
+    [source],
+    1_000
+  )
+
+  assert.deepEqual(packet.gaps, [])
+  assert.match(packet.passages[0]?.text ?? '', /static \(not live\) NodeList/i)
+  assert.match(packet.passages[0]?.text ?? '', /document order/i)
+  assert.doesNotMatch(packet.passages[0]?.text ?? '', /^const matches[\s\S]*This example returns/i)
+})
+
 test('evidence selection finds claims beyond the former artifact prefix', () => {
   const filler = Array.from({ length: 600 }, (_, index) => `Background paragraph ${index} with ordinary context.`)
   const content = [...filler, 'The migration requires kernel version 6.8 on Linux.'].join('\n')

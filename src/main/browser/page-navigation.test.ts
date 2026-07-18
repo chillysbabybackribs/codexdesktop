@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { EventEmitter } from 'node:events'
 import test from 'node:test'
 import type { WebContents } from 'electron'
-import { loadPageAndSettle } from './page-navigation.ts'
+import { parseHTML } from 'linkedom'
+import { buildDocumentSettleProgram, loadPageAndSettle } from './page-navigation.ts'
 
 class FakeWebContents extends EventEmitter {
   stopCalls = 0
@@ -76,7 +77,46 @@ test('navigation can settle against a targeted readiness selector', async () => 
   )
 
   assert.match(contents.executedPrograms[0], /const readySelector = "a\[href\] h3"/)
-  assert.match(contents.executedPrograms[0], /document\.querySelector\(readySelector\)/)
+  assert.match(contents.executedPrograms[0], /querySelectorDeep\(readySelector\)/)
+  assert.match(contents.executedPrograms[0], /finish\('selector-ready'\)/)
+})
+
+test('selector readiness uses open shadow roots and ignores unrelated document mutations', async () => {
+  const { document, window } = parseHTML('<html><body><main>Loading</main><div id="host"></div></body></html>')
+  const host = document.querySelector('#host')
+  assert.ok(host)
+  const shadow = host.attachShadow({ mode: 'open' })
+  shadow.innerHTML = '<section><div class="notification-ready">Ready</div></section>'
+
+  const mutationTimer = setInterval(() => {
+    document.querySelector('main')?.append(document.createTextNode('.'))
+  }, 10)
+  const startedAt = performance.now()
+  try {
+    const result = await executeSettleProgram(
+      buildDocumentSettleProgram(350, 500, '.notification-ready'),
+      document,
+      window.MutationObserver
+    )
+    const durationMs = performance.now() - startedAt
+
+    assert.equal(result.reason, 'selector-ready')
+    assert.ok(durationMs >= 75, `selector stability resolved too early (${durationMs}ms)`)
+    assert.ok(durationMs < 300, `unrelated mutations delayed selector readiness (${durationMs}ms)`)
+  } finally {
+    clearInterval(mutationTimer)
+  }
+})
+
+test('missing readiness selector reports a selector deadline', async () => {
+  const { document, window } = parseHTML('<html><body><main>Loaded content</main></body></html>')
+  const result = await executeSettleProgram(
+    buildDocumentSettleProgram(100, 125, '.never-present'),
+    document,
+    window.MutationObserver
+  )
+
+  assert.equal(result.reason, 'selector-deadline')
 })
 
 test('navigation can block an unsafe main-frame redirect before following it', async () => {
@@ -102,3 +142,26 @@ test('navigation can block an unsafe main-frame redirect before following it', a
   ), /page redirect blocked/)
   assert.equal(prevented, true)
 })
+
+function executeSettleProgram(
+  program: string,
+  document: unknown,
+  MutationObserver: unknown
+): Promise<{ reason: string }> {
+  const execute = new Function(
+    'document',
+    'MutationObserver',
+    'performance',
+    'setInterval',
+    'clearInterval',
+    `return ${program}`
+  ) as (
+    document: unknown,
+    MutationObserver: unknown,
+    performance: Performance,
+    setInterval: typeof globalThis.setInterval,
+    clearInterval: typeof globalThis.clearInterval
+  ) => Promise<{ reason: string }>
+
+  return execute(document, MutationObserver, performance, setInterval, clearInterval)
+}

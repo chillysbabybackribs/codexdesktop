@@ -2,6 +2,7 @@ import type { WebContents } from 'electron'
 
 const DEFAULT_QUIET_MS = 350
 const DEFAULT_MAX_SETTLE_MS = 3_000
+const READY_SELECTOR_STABLE_MS = 90
 
 export type PageNavigationOptions = {
   timeoutMs: number
@@ -140,41 +141,91 @@ async function waitForDocumentSettle(
   maxSettleMs: number,
   readySelector?: string
 ): Promise<{ reason: string }> {
+  return webContents.executeJavaScript(
+    buildDocumentSettleProgram(quietMs, maxSettleMs, readySelector),
+    true
+  ) as Promise<{ reason: string }>
+}
+
+export function buildDocumentSettleProgram(
+  quietMs: number,
+  maxSettleMs: number,
+  readySelector?: string
+): string {
   const safeQuietMs = Math.max(100, Math.min(1_500, Math.round(quietMs)))
   const safeMaxSettleMs = Math.max(safeQuietMs, Math.min(10_000, Math.round(maxSettleMs)))
-  const program = `
+  return `(async () => {
     return await new Promise((resolve) => {
       const readySelector = ${JSON.stringify(readySelector?.trim() ?? '')};
       const startedAt = performance.now();
       let lastMutationAt = startedAt;
+      let selectorMatch = null;
+      let selectorSeenAt = null;
       let observer;
+      let timer;
+      let finished = false;
       const finish = (reason) => {
+        if (finished) return;
+        finished = true;
         observer?.disconnect();
         clearInterval(timer);
         resolve({ reason });
       };
+      const querySelectorDeep = (selector) => {
+        const roots = [document];
+        for (let index = 0; index < roots.length; index += 1) {
+          const root = roots[index];
+          let match;
+          try { match = root.querySelector(selector); }
+          catch { return { match: null, invalid: true }; }
+          if (match) return { match, invalid: false };
+          for (const element of root.querySelectorAll('*')) {
+            if (element.shadowRoot) roots.push(element.shadowRoot);
+          }
+        }
+        return { match: null, invalid: false };
+      };
       const isUseful = () => {
         if (!document.body) return false;
-        if (readySelector) {
-          try { return Boolean(document.querySelector(readySelector)); }
-          catch { return false; }
-        }
         const textLength = (document.body.innerText || '').trim().length;
         return textLength >= 120 || Boolean(document.querySelector('main, article, form, input, [role="main"]'));
       };
-      observer = new MutationObserver(() => { lastMutationAt = performance.now(); });
-      if (document.documentElement) {
-        observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+      if (!readySelector) {
+        observer = new MutationObserver(() => { lastMutationAt = performance.now(); });
+        if (document.documentElement) {
+          observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+        }
       }
-      const timer = setInterval(() => {
+      const tick = () => {
         const now = performance.now();
+        if (readySelector) {
+          const selected = querySelectorDeep(readySelector);
+          if (selected.invalid) {
+            finish('selector-invalid');
+            return;
+          }
+          if (selected.match) {
+            if (selected.match !== selectorMatch) {
+              selectorMatch = selected.match;
+              selectorSeenAt = now;
+            } else if (selectorSeenAt !== null && now - selectorSeenAt >= ${READY_SELECTOR_STABLE_MS}) {
+              finish('selector-ready');
+              return;
+            }
+          } else {
+            selectorMatch = null;
+            selectorSeenAt = null;
+          }
+          if (now - startedAt >= ${safeMaxSettleMs}) finish('selector-deadline');
+          return;
+        }
         if (isUseful() && now - lastMutationAt >= ${safeQuietMs}) finish('dom-quiet');
         else if (now - startedAt >= ${safeMaxSettleMs}) finish(isUseful() ? 'settle-deadline' : 'content-deadline');
-      }, 50);
+      };
+      timer = setInterval(tick, readySelector ? 25 : 50);
+      tick();
     });
-  `
-
-  return webContents.executeJavaScript(`(async () => { ${program}\n})()`, true) as Promise<{ reason: string }>
+  })()`
 }
 
 function withDeadline<T>(
