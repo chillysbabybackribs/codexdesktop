@@ -62,6 +62,7 @@ export class CodexClient extends EventEmitter {
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
   private readonly threadModels = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
+  private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
   constructor(
@@ -102,7 +103,14 @@ export class CodexClient extends EventEmitter {
       cursor = page.nextCursor
     } while (cursor)
 
-    return models.filter((model) => !model.hidden)
+    const visible = models.filter((model) => !model.hidden)
+    for (const model of visible) {
+      this.modelReasoningEfforts.set(
+        model.model,
+        model.supportedReasoningEfforts.map((option) => option.reasoningEffort)
+      )
+    }
+    return visible
   }
 
   async listThreads(options?: { cursor?: string | null; cwd?: string | null }): Promise<ThreadListResponse> {
@@ -256,7 +264,8 @@ export class CodexClient extends EventEmitter {
     cwd?: string | null,
     model?: string | null,
     attachments: ChatAttachment[] = [],
-    effort?: ReasoningEffort | null
+    effort?: ReasoningEffort | null,
+    fastMode = false
   ): Promise<TurnStartResponse & {
     threadId: string
     model: string | null
@@ -267,9 +276,14 @@ export class CodexClient extends EventEmitter {
     const activeThreadId = threadId ?? startedThread!.thread.id
     const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
     const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
-    const effectiveEffort = requestedEffort
     const activeModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
-    const summaryPolicy = resolveTurnPolicy(text)
+    const summaryPolicy = resolveTurnPolicy(text, {
+      fastMode,
+      requestedEffort,
+      supportedEfforts: activeModel ? this.modelReasoningEfforts.get(activeModel) : undefined
+    })
+    const turnEffort = summaryPolicy.effort ?? effort
+    const effectiveEffort = turnEffort ?? requestedEffort
     const includeSummaryPolicy = this.isReasoningSummarySupportedForModel(activeModel)
 
     // `model` overrides this turn and all subsequent turns on the thread, so
@@ -278,7 +292,7 @@ export class CodexClient extends EventEmitter {
       threadId: activeThreadId,
       input,
       ...(model ? { model } : {}),
-      ...(effort ? { effort } : {}),
+      ...(turnEffort ? { effort: turnEffort } : {}),
       ...(includeSummaryPolicy ? summaryPolicy : {}),
       approvalPolicy: 'never'
     })

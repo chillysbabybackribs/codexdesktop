@@ -23,6 +23,7 @@ function commandHarness(acceptsImages = true): {
     getWorkspace: () => '/workspace',
     getSelectedModel: () => 'test-model',
     getSelectedEffort: () => 'high',
+    getFastMode: () => true,
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
     cancelRecovery: () => {}
@@ -78,6 +79,7 @@ test('agent send forwards the agent reasoning effort', async () => {
 
     assert.equal(sent, true)
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
+    assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })

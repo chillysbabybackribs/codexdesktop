@@ -16,6 +16,7 @@ export function createAgentCommands(options: {
   getWorkspace: () => string | null
   getSelectedModel: () => string | null
   getSelectedEffort: () => ReasoningEffort | null
+  getFastMode: () => boolean
   acceptsImages: (model: string | null) => boolean
   buildMainChatContext: () => string
   cancelRecovery: (key: string) => void
@@ -76,7 +77,8 @@ export function createAgentCommands(options: {
         attachments,
         cwd: options.getWorkspace(),
         model: agentModel,
-        effort: session.reasoningEffort ?? options.getSelectedEffort()
+        effort: session.reasoningEffort ?? options.getSelectedEffort(),
+        fastMode: options.getFastMode()
       })
       store.patchSession(key, (current) => ({
         ...current,

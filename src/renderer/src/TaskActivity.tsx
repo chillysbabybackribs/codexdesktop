@@ -426,8 +426,11 @@ function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: numb
 // ---------------------------------------------------------------------------
 
 function reasoningText(item: ReasoningItem): string {
-  const parts = [...item.summary, ...item.content].map((part) => part.trim()).filter(Boolean)
-  return parts.join('\n\n')
+  const summary = item.summary.map((part) => part.trim()).filter(Boolean)
+  if (summary.length) return summary.join('\n\n')
+  // Older threads and providers without a reasoning summary remain readable;
+  // the full reasoning content is otherwise intentionally kept in Trace.
+  return item.content.map((part) => part.trim()).filter(Boolean).join('\n\n')
 }
 
 // The streamed model narration renders as bare muted text — no per-block

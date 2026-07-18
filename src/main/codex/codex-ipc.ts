@@ -54,7 +54,8 @@ export function registerCodexIpc(
       params.cwd,
       params.model,
       attachments,
-      params.effort
+      params.effort,
+      params.fastMode === true
     )
   })
   ipcMain.handle(ipcChannels.codexSteerTurn, (_event, params: CodexSteerTurnParams) =>

@@ -1,5 +1,6 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
@@ -64,8 +65,35 @@ export const legacyResumeConfig = {
   }
 }
 
-export function resolveTurnPolicy(text: string): { summary: 'auto' | 'concise' } {
-  return { summary: isWebResearchTask(text) ? 'concise' : 'auto' }
+export function resolveTurnPolicy(
+  text: string,
+  options: {
+    fastMode?: boolean
+    requestedEffort?: ReasoningEffort | null
+    supportedEfforts?: ReasoningEffort[]
+  } = {}
+): { summary: 'concise'; effort?: ReasoningEffort } {
+  const supported = new Set(options.supportedEfforts ?? [])
+  const fastEffort = options.fastMode && isFastPathTask(text)
+    ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
+    : undefined
+
+  return {
+    // Concise summaries cut visible dialogue and summary tokens without
+    // lowering the model's actual reasoning effort. Full reasoning remains in
+    // the trace payload for people who need to inspect it.
+    summary: 'concise',
+    ...(fastEffort && fastEffort !== options.requestedEffort ? { effort: fastEffort } : {})
+  }
+}
+
+export function isFastPathTask(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (!normalized || normalized.length > 360) return false
+  if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security|test)\b/.test(normalized)) {
+    return false
+  }
+  return /^(?:can you |please )?(?:check|go to|list|navigate(?: to)?|open|read|show|visit)\b/.test(normalized)
 }
 
 export function isWebResearchTask(text: string): boolean {

@@ -8,7 +8,10 @@ import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
 export const MAX_BROWSER_TIMEOUT_MS = 60_000
-export const DEFAULT_BROWSER_RESULT_CHARS = 24_000
+// Tool transcripts are model context. Keep the ordinary path compact; callers
+// can request a larger explicit budget and oversized raw results are saved as
+// artifacts when storage is available.
+export const DEFAULT_BROWSER_RESULT_CHARS = 8_000
 export const MAX_BROWSER_RESULT_CHARS = 100_000
 export const MAX_PARALLEL_BROWSER_TARGETS = 8
 export const MAX_PARALLEL_BROWSER_FRAMES = 12

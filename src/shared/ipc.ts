@@ -133,6 +133,8 @@ export type CodexSendMessageParams = {
   model?: string | null
   /** Reasoning effort override for this turn and subsequent turns. */
   effort?: ReasoningEffort | null
+  /** Opt-in: downshift supported simple requests while retaining the selected effort for substantive work. */
+  fastMode?: boolean
 }
 
 export type CodexStartThreadParams = {
