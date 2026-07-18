@@ -19,7 +19,7 @@ import {
 import { createBrowserTabView, attachBrowserTabViewEvents } from './browser-tab-view.js'
 import { BrowserTargetRegistry, type BrowserTarget } from './browser-target-registry.js'
 import { chromeLikeUserAgent } from './browser-session.js'
-import { loadPageAndSettle } from './page-navigation.js'
+import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 
 const defaultTabUrl = 'https://www.google.com'
@@ -29,6 +29,13 @@ type BrowserStateListener = (state: BrowserState) => void
 export type BrowserVisitListener = {
   recordVisit(url: string, title: string): void
   updateTitle(url: string, title: string): void
+}
+
+export type NavigateAndWaitOptions = {
+  timeoutMs?: number
+  quietMs?: number
+  maxSettleMs?: number
+  readySelector?: string
 }
 
 export type { BrowserTarget } from './browser-target-registry.js'
@@ -181,14 +188,18 @@ export class TabManager {
     void this.startNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
   }
 
-  async navigateAndWait(id: string, input: string, timeoutMs = 15_000): Promise<void> {
+  async navigateAndWait(
+    id: string,
+    input: string,
+    options: NavigateAndWaitOptions = {}
+  ): Promise<PageNavigationResult> {
     const tab = this.tabs.get(id)
 
     if (!tab) {
       throw new Error(`no tab with id ${id}`)
     }
 
-    await this.startNavigation(tab, normalizeNavigationInput(input), timeoutMs)
+    return this.startNavigation(tab, normalizeNavigationInput(input), options)
   }
 
   goBack(id: string): void {
@@ -367,17 +378,20 @@ export class TabManager {
   private async startNavigation(
     tab: ManagedBrowserTab,
     url: string,
-    timeoutMs = 15_000
-  ): Promise<void> {
+    options: NavigateAndWaitOptions = {}
+  ): Promise<PageNavigationResult> {
     this.cancelNavigation(tab.id)
     const controller = new AbortController()
     this.navigationControllers.set(tab.id, controller)
 
     try {
-      await loadPageAndSettle(tab.view.webContents, url, {
-        timeoutMs,
+      return await loadPageAndSettle(tab.view.webContents, url, {
+        timeoutMs: options.timeoutMs ?? 15_000,
         userAgent: chromeLikeUserAgent(),
-        signal: controller.signal
+        signal: controller.signal,
+        ...(options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
+        ...(options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs }),
+        ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {})
       })
     } finally {
       if (this.navigationControllers.get(tab.id) === controller) {

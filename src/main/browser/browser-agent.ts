@@ -41,6 +41,12 @@ export type BrowserRunOptions = BrowserAgentOptions & {
   frame?: string | null
 }
 
+export type BrowserNavigateOptions = BrowserAgentOptions & {
+  readySelector?: string | null
+  quietMs?: number | null
+  maxSettleMs?: number | null
+}
+
 export type BrowserFrameDescriptor = {
   frameId: string
   parentFrameId: string | null
@@ -188,6 +194,91 @@ export class BrowserAgentController {
           durationMs: Date.now() - startedAt,
           resultChars: originalChars,
           truncated: bounded.truncated || nestedTruncated
+        } satisfies BrowserAgentSuccess
+      } catch (error) {
+        const errorCode = classifyBrowserFailure(error)
+        return {
+          ok: false,
+          error: errorMessage(error),
+          errorCode,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
+        } satisfies BrowserAgentFailure
+      }
+    })
+
+    const queueTail = operation.then(
+      () => undefined,
+      () => undefined
+    )
+    this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) {
+        this.tabQueues.delete(tabId)
+      }
+    })
+
+    return operation
+  }
+
+  /**
+   * Navigate the visible tab until the requested DOM state is usable. This
+   * deliberately uses DOM readiness and a short settle window, never network
+   * idleness: modern applications commonly retain background connections long
+   * after the requested content is ready.
+   */
+  async navigate(url: string, options: BrowserNavigateOptions = {}): Promise<BrowserAgentResult> {
+    if (!url.trim()) {
+      return { ok: false, error: 'browser.navigate requires a non-empty URL or input' } satisfies BrowserAgentFailure
+    }
+
+    const tabs = this.getTabs()
+    if (!tabs) {
+      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    if (options.tabId === 'all') {
+      return { ok: false, error: 'browser.navigate requires one existing tab, not "all"' } satisfies BrowserAgentFailure
+    }
+
+    const tabId = options.tabId ?? tabs.getActiveTabId()
+    if (!tabId) {
+      return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
+    }
+
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
+    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      const webContents = tabs.resolveWebContents(tabId)
+      if (!webContents) {
+        return {
+          ok: false,
+          error: `no browser target with id ${tabId}`,
+          errorCode: 'targetClosed',
+          targetState: { targets: tabs.listTargets() }
+        } satisfies BrowserAgentFailure
+      }
+
+      const startedAt = Date.now()
+      try {
+        const result = await tabs.navigateAndWait(tabId, url, {
+          timeoutMs,
+          ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
+          ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
+          ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? { } : { maxSettleMs: options.maxSettleMs })
+        })
+        return {
+          ok: true,
+          result,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          resultChars: JSON.stringify(result).length,
+          truncated: false
         } satisfies BrowserAgentSuccess
       } catch (error) {
         const errorCode = classifyBrowserFailure(error)

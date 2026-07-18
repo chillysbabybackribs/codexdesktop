@@ -50,6 +50,17 @@ export async function routeDynamicToolCall(
             maxResultChars: readNumber(args.maxResultChars)
           })
         : { ok: false, error: 'browser_run requires a string "code" argument' }
+    } else if (params.tool === 'browser_navigate') {
+      const url = readString(args.url)
+      result = url
+        ? await dependencies.browserAgent.navigate(url, {
+            tabId: resolveAgentTab(readString(args.tab)),
+            readySelector: readString(args.readySelector),
+            timeoutMs: readNumber(args.timeoutMs),
+            quietMs: readNumber(args.quietMs),
+            maxSettleMs: readNumber(args.maxSettleMs)
+          })
+        : { ok: false, error: 'browser_navigate requires a string "url" argument' }
     } else if (params.tool === 'browser_extract_page') {
       result = await dependencies.browserAgent.extractPage({
         tabId: resolveAgentTab(readString(args.tab)),

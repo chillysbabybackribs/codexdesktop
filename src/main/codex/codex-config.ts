@@ -4,6 +4,7 @@ import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
+  '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -144,6 +145,20 @@ const browserRunSchema = {
   additionalProperties: false
 }
 
+const browserNavigateSchema = {
+  type: 'object',
+  properties: {
+    url: { type: 'string', description: 'URL or normal browser navigation input for the existing visible tab.' },
+    tab: { type: 'string', description: 'Optional existing tab id. Defaults to the active visible tab; `all` is not supported for navigation.' },
+    readySelector: { type: 'string', description: 'Optional CSS selector that marks the requested page state as ready. Prefer this to waiting for network idleness on interactive sites.' },
+    timeoutMs: { type: 'number', description: 'Optional navigation timeout from 250 to 60000 milliseconds.' },
+    quietMs: { type: 'number', description: 'Optional DOM-quiet window after readiness. Defaults to 350 milliseconds.' },
+    maxSettleMs: { type: 'number', description: 'Optional maximum DOM-settle time after document readiness. Defaults to 3000 milliseconds.' }
+  },
+  required: ['url'],
+  additionalProperties: false
+}
+
 const browserCdpSchema = {
   type: 'object',
   properties: {
@@ -245,6 +260,12 @@ const researchWebSchema = {
 }
 
 export const browserDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'function',
+    name: 'browser_navigate',
+    description: 'Navigate one existing visible browser tab and return as soon as the requested DOM state is usable. Use before browser_run when changing pages; provide readySelector for interactive or authenticated pages instead of waiting for network idle.',
+    inputSchema: browserNavigateSchema
+  },
   {
     type: 'function',
     name: 'browser_screenshot',
