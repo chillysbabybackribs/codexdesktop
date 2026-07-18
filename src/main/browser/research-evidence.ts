@@ -200,7 +200,13 @@ function bestDocumentPassage(
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
     const preliminaryScore = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
-    const window = buildPassageWindow(lines, lineIndex, passageFocusTokens, maxChars)
+    const window = buildPassageWindow(
+      lines,
+      lineIndex,
+      passageFocusTokens,
+      maxChars,
+      passageClauses.length > 1
+    )
     const visibleTokens = new Set(tokenize(window.text))
     const visibleMatchedTerms = passageFocusTokens.filter((token) => visibleTokens.has(token))
     if (visibleMatchedTerms.length < requiredMatches) continue
@@ -250,7 +256,8 @@ function buildPassageWindow(
   lines: string[],
   matchIndex: number,
   focusTokens: string[],
-  maxChars: number
+  maxChars: number,
+  semanticContext = false
 ): {
   lineStart: number
   lineEnd: number
@@ -286,16 +293,39 @@ function buildPassageWindow(
   let start = matchIndex
   let end = matchIndex
   let text = matchedLine
-  const indexes = semanticWindowIndexes(lines, matchIndex)
-  for (const index of indexes.sort((left, right) => Math.abs(left - matchIndex) - Math.abs(right - matchIndex))) {
-    if (index === matchIndex) continue
-    const nextStart = Math.min(start, index)
-    const nextEnd = Math.max(end, index)
-    const candidate = lines.slice(nextStart, nextEnd + 1).join('\n')
-    if (candidate.length <= maxChars) {
-      start = nextStart
-      end = nextEnd
-      text = candidate
+  if (semanticContext) {
+    const indexes = semanticWindowIndexes(lines, matchIndex)
+    for (const index of indexes.sort((left, right) => Math.abs(left - matchIndex) - Math.abs(right - matchIndex))) {
+      if (index === matchIndex) continue
+      const nextStart = Math.min(start, index)
+      const nextEnd = Math.max(end, index)
+      const candidate = lines.slice(nextStart, nextEnd + 1).join('\n')
+      if (candidate.length <= maxChars) {
+        start = nextStart
+        end = nextEnd
+        text = candidate
+      }
+    }
+  } else {
+    let canExpandLeft = true
+    let canExpandRight = true
+    for (let distance = 1; distance <= 2; distance += 1) {
+      const nextLeft = matchIndex - distance
+      const nextRight = matchIndex + distance
+      if (canExpandLeft && nextLeft >= 0) {
+        const candidate = `${lines[nextLeft]}\n${text}`
+        if (candidate.length <= maxChars) {
+          start = nextLeft
+          text = candidate
+        } else canExpandLeft = false
+      }
+      if (canExpandRight && nextRight < lines.length) {
+        const candidate = `${text}\n${lines[nextRight]}`
+        if (candidate.length <= maxChars) {
+          end = nextRight
+          text = candidate
+        } else canExpandRight = false
+      }
     }
   }
 
