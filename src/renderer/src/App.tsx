@@ -740,6 +740,7 @@ export default function App(): React.JSX.Element {
 
   const handleSend = async (text: string, attachments: ChatAttachment[] = []): Promise<boolean> => {
     const trimmed = text.trim()
+    const targetTabKey = activeMainChatTabKeyRef.current
 
     if ((!trimmed && !attachments.length) || isSending || activeTurnId) {
       return false
@@ -759,8 +760,27 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, buildOptimisticUserMessage(optimisticId, trimmed, attachments)])
 
     try {
+      let threadId = activeThreadIdRef.current
+      if (!threadId) {
+        mainThreadStartsInFlightRef.current.add(targetTabKey)
+        const started = await window.api.codex.startThread({ cwd: workspace, model: selectedModel })
+        mainThreadStartsInFlightRef.current.delete(targetTabKey)
+        threadId = started.thread.id
+        watchThreadIdRef.current = threadId
+        activeThreadIdRef.current = threadId
+        setActiveThreadId(threadId)
+        setActiveReasoningEffort(started.reasoningEffort)
+        activeReasoningEffortRef.current = started.reasoningEffort
+        patchMainChatTab(targetTabKey, (tab) => ({
+          ...tab,
+          threadId,
+          title: threadTitle(started.thread)
+        }))
+        persistLastThreadId(threadId)
+      }
+
       const response = await window.api.codex.sendMessage({
-        threadId: activeThreadId,
+        threadId,
         text: trimmed,
         attachments,
         cwd: workspace,
@@ -769,12 +789,19 @@ export default function App(): React.JSX.Element {
         fastMode
       })
       watchThreadIdRef.current = response.threadId
+      activeThreadIdRef.current = response.threadId
       setActiveThreadId(response.threadId)
       persistLastThreadId(response.threadId)
       const turnAlreadyObserved = activeTurnIdRef.current === response.turn.id
       if (!turnAlreadyObserved) userRequestedTurnIdRef.current = response.turn.id
       setActiveTurnId(response.turn.id)
       activeTurnIdRef.current = response.turn.id
+      patchMainChatTab(targetTabKey, (tab) => ({
+        ...tab,
+        threadId: response.threadId,
+        status: 'working',
+        turnId: response.turn.id
+      }))
       setActiveReasoningEffort(response.reasoningEffort)
       activeReasoningEffortRef.current = response.reasoningEffort
       const goalSnapshot = cloneGoal(activeGoalRef.current)
@@ -795,6 +822,7 @@ export default function App(): React.JSX.Element {
       mergeItems(response.turn.items)
       return true
     } catch (error) {
+      mainThreadStartsInFlightRef.current.delete(targetTabKey)
       if (optimisticUserMessageIdRef.current === optimisticId) {
         optimisticUserMessageIdRef.current = null
         setItems((current) => current.filter((item) => item.id !== optimisticId))
