@@ -4186,7 +4186,7 @@ button {
 .split-divider::before {
   inset-block: 0;
   width: 1px;
-  background: rgb(255 255 255 / 8%);
+  background: rgb(255 255 255 / 6%);
 }
 
 .split-divider::after {
