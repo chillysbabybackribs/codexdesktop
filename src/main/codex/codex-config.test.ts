@@ -81,6 +81,17 @@ test('authenticated browser state stays on the compact interactive path', () => 
   assert.deepEqual(selectTurnSkills(prompt, [webResearchSkill]), [])
   assert.equal(isWebResearchTask('Find recent Reddit discussions about Electron performance'), true)
   assert.equal(isWebResearchTask('Compare Reddit user reviews with public sources'), true)
+  for (const authenticatedPrompt of [
+    'Tell me my last 3 Reddit notifications',
+    'What are my latest Reddit notifications?',
+    'Check my Reddit notifications and compare the last 3',
+    'Check my dashboard pricing',
+    'Check the inbox customer reviews'
+  ]) {
+    assert.equal(isInteractiveBrowserTask(authenticatedPrompt), true, authenticatedPrompt)
+    assert.equal(isWebResearchTask(authenticatedPrompt), false, authenticatedPrompt)
+  }
+  assert.equal(isWebResearchTask('Search online for public Reddit user reviews'), true)
 })
 
 test('frontend design turns automatically attach the polished UI skill', () => {

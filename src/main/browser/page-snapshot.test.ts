@@ -39,6 +39,21 @@ test('objective expansion groups notification and state synonyms', () => {
   )
 })
 
+test('objective expansion removes request language and distinguishes imperative read from read state', () => {
+  assert.deepEqual(expandPageSnapshotObjectiveTerms("I'd like you to list my latest three notifications"), [
+    {
+      term: 'notification',
+      alternatives: ['notification', 'notifications', 'alert', 'alerts', 'activity', 'activities', 'inbox', 'update', 'updates']
+    }
+  ])
+  assert.deepEqual(expandPageSnapshotObjectiveTerms('read my last message'), [
+    { term: 'message', alternatives: ['message', 'messages', 'reply', 'replies', 'replied', 'mention', 'mentions', 'mentioned'] }
+  ])
+  assert.deepEqual(expandPageSnapshotObjectiveTerms('show whether each message is read or unread').map(({ term }) => term), [
+    'message', 'read', 'unread'
+  ])
+})
+
 test('task snapshot ranks Reddit-like notification rows but returns them in document order', () => {
   const result = executeSnapshot(`<!doctype html><html lang="en"><head><title>Notifications</title></head><body>
     <main>
@@ -218,6 +233,20 @@ test('requested list count remains a coverage requirement during partial renderi
   assert.equal(result.coverage.gaps.includes('item-count-missing:1'), true)
 })
 
+test('natural-language item counts drive selection and missing-count coverage', () => {
+  const exact = executeSnapshot(`<!doctype html><html><body><main>
+    <div class="notification-row">One</div><div class="notification-row">Two</div><div class="notification-row">Three</div><div class="notification-row">Four</div>
+  </main></body></html>`, { mode: 'task', objective: 'tell me my latest three notifications', maxChars: 3_000 })
+  assert.deepEqual(exact.items.map(({ text }) => text), ['One', 'Two', 'Three'])
+  assert.equal(exact.coverage.complete, true)
+
+  const partial = executeSnapshot(`<!doctype html><html><body><main>
+    <div class="notification-row">One</div><div class="notification-row">Two</div>
+  </main></body></html>`, { mode: 'task', objective: 'return the latest three notifications', maxChars: 3_000 })
+  assert.equal(partial.coverage.complete, false)
+  assert.equal(partial.coverage.gaps.includes('item-count-missing:1'), true)
+})
+
 test('container-like result grids preserve their child result cards', () => {
   const result = executeSnapshot(`<!doctype html><html><head><title>Results</title></head><body><main>
     <div class="result-grid"><div class="result-card">One</div><div class="result-card">Two</div><div class="result-card">Three</div></div>
@@ -235,12 +264,37 @@ test('interactive mode returns controls nested inside repeated list items', () =
   assert.deepEqual(result.items.map(({ text }) => text), ['Add', 'Remove', 'Details'])
 })
 
+test('interactive mode drops repeated shells and understands natural control intent', () => {
+  const result = executeSnapshot(`<!doctype html><html><body><main><ul>
+    <li class="product-item"><button>Add</button><button>Remove</button></li>
+    <li class="product-item"><a href="/details">Details</a></li>
+  </ul></main></body></html>`, { mode: 'interactive', objective: 'what can I click', maxItems: 3, maxChars: 3_000 })
+
+  assert.deepEqual(result.items.map(({ tag }) => tag), ['button', 'button', 'a'])
+  assert.deepEqual(result.items.map(({ text }) => text), ['Add', 'Remove', 'Details'])
+  assert.equal(result.coverage.complete, true)
+})
+
 test('computed-hidden candidates cannot displace visible task results', () => {
   const hidden = Array.from({ length: 3 }, (_, index) => `<div class="result-row hidden">Hidden ${index + 1}</div>`).join('')
   const visible = Array.from({ length: 3 }, (_, index) => `<div class="result-row">Visible ${index + 1}</div>`).join('')
   const result = executeSnapshot(`<!doctype html><html><head><title>Results</title></head><body><main>${hidden}${visible}</main></body></html>`, {
     mode: 'task', objective: '3 results', maxChars: 3_000
   }, (document) => {
+    Object.defineProperty(document.defaultView, 'getComputedStyle', {
+      configurable: true,
+      value: (element: Element) => ({ display: element.classList.contains('hidden') ? 'none' : 'block', visibility: 'visible' })
+    })
+  })
+
+  assert.deepEqual(result.items.map(({ text }) => text), ['Visible 1', 'Visible 2', 'Visible 3'])
+})
+
+test('computed-hidden ancestor sections exclude their descendant results', () => {
+  const result = executeSnapshot(`<!doctype html><html><body><main>
+    <section class="hidden"><div class="result-row">Hidden 1</div><div class="result-row">Hidden 2</div><div class="result-row">Hidden 3</div></section>
+    <section><div class="result-row">Visible 1</div><div class="result-row">Visible 2</div><div class="result-row">Visible 3</div></section>
+  </main></body></html>`, { mode: 'task', objective: '3 results', maxChars: 3_000 }, (document) => {
     Object.defineProperty(document.defaultView, 'getComputedStyle', {
       configurable: true,
       value: (element: Element) => ({ display: element.classList.contains('hidden') ? 'none' : 'block', visibility: 'visible' })
@@ -365,6 +419,28 @@ test('result-budget fallback keeps even an oversized page URL inside the hard bo
   }, undefined, longUrl)
 
   assert.equal(JSON.stringify(result).length <= 1_000, true)
+})
+
+test('result-budget fallback bounds high-entropy objective metadata', () => {
+  const objective = Array.from({ length: 16 }, (_, index) => `uniqueterm${index}${'x'.repeat(24)}`).join(' ')
+  const result = executeSnapshot(`<!doctype html><html><head><title>${'T'.repeat(300)}</title></head><body></body></html>`, {
+    mode: 'task', objective, maxChars: 1_000
+  }, undefined, `https://example.com/${'u'.repeat(4_000)}`)
+
+  assert.equal(JSON.stringify(result).length <= 1_000, true)
+  assert.equal(result.coverage.complete, false)
+  assert.equal(result.coverage.gaps.includes('result-budget'), true)
+})
+
+test('traversal truncation prevents a partial reverse tail from claiming complete coverage', () => {
+  const rows = Array.from({ length: 25_100 }, (_, index) => `<div class="result-row">Result ${index + 1}</div>`).join('')
+  const result = executeSnapshot(`<!doctype html><html><body><main>${rows}</main></body></html>`, {
+    mode: 'task', objective: 'last 3 results', order: 'reverse-document', maxChars: 3_000
+  })
+
+  assert.equal(result.truncated, true)
+  assert.equal(result.coverage.complete, false)
+  assert.equal(result.coverage.gaps.includes('traversal-truncated'), true)
 })
 
 test('tight-budget reverse results retain reverse order after item trimming', () => {
