@@ -185,6 +185,26 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
   )
 }
 
+type AgentWindowProps = {
+  session: AgentSession
+  isSelected: boolean
+  models: Model[]
+  mainModel: string | null
+  mainReasoningEffort: ReasoningEffort | null
+  onSetModel: (key: string, model: string) => void
+  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
+  onSelect: (key: string) => void
+  onMinimize: (key: string) => void
+  onCloseSession: (key: string) => void
+  onResetSession: (key: string) => void
+  onPromote: (key: string) => void
+  onToggleWatch: (key: string) => void
+  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
+  onSteer: (key: string, text: string) => Promise<boolean>
+  onStop: (key: string) => Promise<void>
+  onCompact: (key: string) => Promise<void>
+}
+
 const AgentWindow = memo(function AgentWindow({
   session,
   isSelected,
@@ -203,25 +223,7 @@ const AgentWindow = memo(function AgentWindow({
   onSteer,
   onStop,
   onCompact
-}: {
-  session: AgentSession
-  isSelected: boolean
-  models: Model[]
-  mainModel: string | null
-  mainReasoningEffort: ReasoningEffort | null
-  onSetModel: (key: string, model: string) => void
-  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
-  onSelect: (key: string) => void
-  onMinimize: (key: string) => void
-  onCloseSession: (key: string) => void
-  onResetSession: (key: string) => void
-  onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
-  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
-  onSteer: (key: string, text: string) => Promise<boolean>
-  onStop: (key: string) => Promise<void>
-  onCompact: (key: string) => Promise<void>
-}): React.JSX.Element {
+}: AgentWindowProps): React.JSX.Element {
   const [value, setValue] = useState('')
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
@@ -465,8 +467,8 @@ const AgentWindow = memo(function AgentWindow({
 }, areAgentWindowPropsEqual)
 
 function areAgentWindowPropsEqual(
-  previous: React.ComponentProps<typeof AgentWindow>,
-  next: React.ComponentProps<typeof AgentWindow>
+  previous: AgentWindowProps,
+  next: AgentWindowProps
 ): boolean {
   return previous.session === next.session &&
     previous.isSelected === next.isSelected &&
