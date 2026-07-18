@@ -1022,13 +1022,11 @@ export default function App(): React.JSX.Element {
     return true
   }
 
-  const handleSelectMainChatTab = async (key: string): Promise<void> => {
-    if (
-      key === activeMainChatTabKeyRef.current ||
-      isMainChatTransitionLocked()
-    ) return
+  const handleSelectMainChatTab = async (key: string): Promise<boolean> => {
+    if (key === activeMainChatTabKeyRef.current) return true
+    if (isMainChatTransitionLocked()) return false
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
-    if (!target) return
+    if (!target) return false
 
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
@@ -1047,14 +1045,16 @@ export default function App(): React.JSX.Element {
       reconcilingMainChatTabKeyRef.current = key
       setReconcilingMainChatTabKey(key)
       if (!snapshot) setIsRestoring(true)
-      await resumeThreadById(target.threadId, { silent: true, tabKey: key })
+      const resumed = await resumeThreadById(target.threadId, { silent: true, tabKey: key })
       if (activeMainChatTabKeyRef.current === key) {
         setIsRestoring(false)
         setReconcilingMainChatTabKey(null)
         reconcilingMainChatTabKeyRef.current = null
       }
+      if (!resumed) return false
     }
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+    return true
   }
 
   const handleCloseMainChatTab = async (key: string): Promise<void> => {
@@ -1097,8 +1097,7 @@ export default function App(): React.JSX.Element {
     setIsThreadMenuOpen(false)
     const existing = mainChatTabForThread(threadId)
     if (existing) {
-      await handleSelectMainChatTab(existing.key)
-      return true
+      return handleSelectMainChatTab(existing.key)
     }
 
     const previousState = mainChatTabStateRef.current
