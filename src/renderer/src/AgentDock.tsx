@@ -228,10 +228,35 @@ const AgentWindow = memo(function AgentWindow({
   const [attachments, setAttachments] = useState<ChatAttachment[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [zoomPercent, setZoomPercent] = useState(() => readAgentZoom(session.key))
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const menuRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
   const suppressScrollRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  useEffect(() => {
+    window.localStorage.setItem(agentZoomStorageKey(session.key), String(zoomPercent))
+  }, [session.key, zoomPercent])
+
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const closeOnOutsidePointer = (event: PointerEvent): void => {
+      if (menuRef.current && event.target instanceof Node && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false)
+      }
+    }
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setIsMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', closeOnOutsidePointer)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [isMenuOpen])
 
   const followTail = useCallback(() => {
     const node = scrollRef.current
@@ -274,6 +299,12 @@ const AgentWindow = memo(function AgentWindow({
 
   const working = session.status === 'working'
   const hasDraft = Boolean(value.trim() || attachments.length)
+
+  const adjustZoom = (direction: 'in' | 'out' | 'reset'): void => {
+    setZoomPercent((current) => direction === 'reset'
+      ? 100
+      : Math.max(80, Math.min(140, current + (direction === 'in' ? 10 : -10))))
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -322,31 +353,94 @@ const AgentWindow = memo(function AgentWindow({
     >
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
-        <span className="agent-overlay-title">{session.title}</span>
+        <div className="agent-overlay-menu-wrap" ref={menuRef}>
+          <button
+            type="button"
+            className={`agent-overlay-title-button ${isMenuOpen ? 'is-open' : ''}`}
+            aria-expanded={isMenuOpen}
+            aria-haspopup="menu"
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            <span className="agent-overlay-title">{session.title}</span>
+            <ChevronDownIcon />
+          </button>
+          {isMenuOpen ? (
+            <div className="agent-overlay-menu" role="menu" aria-label={`${session.title} controls`}>
+              <div className="agent-menu-label">Agent controls</div>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.watchesMain}
+                onClick={() => {
+                  onToggleWatch(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.watchesMain ? 'Sharing main-chat context' : 'Share main-chat context'}</strong>
+                  <small>{session.watchesMain ? 'Helper mode is on' : 'Keep this agent independent'}</small>
+                </span>
+                <span className={`agent-menu-status ${session.watchesMain ? 'is-active' : ''}`}>
+                  {session.watchesMain ? 'On' : 'Off'}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitem"
+                onClick={() => {
+                  onPromote(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <ExpandIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>Switch to main chat</strong>
+                  <small>Save this conversation to chat history</small>
+                </span>
+              </button>
+              <div className="agent-menu-divider" />
+              <div className="agent-menu-zoom" role="group" aria-label="Chat zoom">
+                <span className="agent-menu-zoom-label">
+                  <ZoomIcon />
+                  <span>Chat zoom</span>
+                </span>
+                <div className="agent-zoom-controls">
+                  <button
+                    type="button"
+                    aria-label="Zoom chat out"
+                    title="Zoom out"
+                    disabled={zoomPercent <= 80}
+                    onClick={() => adjustZoom('out')}
+                  >
+                    <MinusIcon />
+                  </button>
+                  <button
+                    type="button"
+                    className="agent-zoom-value"
+                    aria-label="Reset chat zoom"
+                    title="Reset chat zoom"
+                    onClick={() => adjustZoom('reset')}
+                  >
+                    {zoomPercent}%
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Zoom chat in"
+                    title="Zoom in"
+                    disabled={zoomPercent >= 140}
+                    onClick={() => adjustZoom('in')}
+                  >
+                    <PlusIcon />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
         <div className="agent-overlay-actions">
-          <button
-            type="button"
-            className={`icon-button agent-watch-toggle ${session.watchesMain ? 'is-active' : ''}`}
-            aria-label={session.watchesMain ? 'Stop sharing main-chat context' : 'Share main-chat context'}
-            aria-pressed={session.watchesMain}
-            title={
-              session.watchesMain
-                ? 'Helper mode on: sends recent main-chat context with each message'
-                : 'Helper mode off: independent agent'
-            }
-            onClick={() => onToggleWatch(session.key)}
-          >
-            <EyeIcon />
-          </button>
-          <button
-            type="button"
-            className="icon-button agent-close-button"
-            aria-label="Open in main chat"
-            title="Open in main chat (current chat is saved to history)"
-            onClick={() => onPromote(session.key)}
-          >
-            <ExpandIcon />
-          </button>
           <button
             type="button"
             className="icon-button"
@@ -369,23 +463,28 @@ const AgentWindow = memo(function AgentWindow({
       </div>
 
       <div ref={scrollRef} className="agent-overlay-scroll" onScroll={handleScroll}>
-        {session.messages.length === 0 ? (
-          <div className="agent-overlay-empty">
-            An independent agent with its own conversation, running in parallel and sharing the
-            workspace. Toggle the eye to let it see recent main-chat context.
-          </div>
-        ) : (
-          session.messages.map((message) => (
-            <div key={message.id} className={`agent-mini-message is-${message.role}`}>
-              {message.role === 'assistant' ? (
-                <MarkdownContent text={message.text} />
-              ) : (
-                <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
-              )}
+        <div
+          className="agent-overlay-content"
+          style={{ '--agent-chat-zoom': `${zoomPercent / 100}` } as React.CSSProperties}
+        >
+          {session.messages.length === 0 ? (
+            <div className="agent-overlay-empty">
+              An independent agent with its own conversation, running in parallel and sharing the
+              workspace. Use the menu above to share main-chat context or switch back to the main chat.
             </div>
-          ))
-        )}
-        {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
+          ) : (
+            session.messages.map((message) => (
+              <div key={message.id} className={`agent-mini-message is-${message.role}`}>
+                {message.role === 'assistant' ? (
+                  <MarkdownContent text={message.text} />
+                ) : (
+                  <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
+                )}
+              </div>
+            ))
+          )}
+          {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
+        </div>
       </div>
 
       {models.length || session.contextUsage ? (
