@@ -91,7 +91,7 @@ test('browser page extraction verifies substantial content before reporting succ
   assert.equal((await valid.extractPage()).ok, true)
   const rejected = await invalid.extractPage()
   assert.equal(rejected.ok, false)
-  assert.match(rejected.error ?? '', /page verification failed: insufficient-content/)
+  assert.match(rejected.error ?? '', /page snapshot verification failed: insufficient-content/)
 })
 
 test('browser extraction verification accepts verified frame and target envelopes', () => {
