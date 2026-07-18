@@ -33,6 +33,23 @@ test('candidate collection respects the attempt ceiling when pages fail verifica
   assert.equal(result.attempted, 3)
 })
 
+test('irrelevant pages do not consume the success target or abort a later relevant candidate', async () => {
+  const completed: number[] = []
+  const result = await collectWithConcurrencyUntil(
+    ['generic', 'relevant', 'extra'],
+    { concurrency: 2, target: 1, maxAttempts: 3 },
+    async (item, index) => {
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      completed.push(index)
+      return item === 'relevant' ? item : null
+    }
+  )
+
+  assert.deepEqual(result.values, [{ index: 1, value: 'relevant' }])
+  assert.equal(result.attempted, 2)
+  assert.deepEqual(completed.sort(), [0, 1])
+})
+
 test('keyed scheduling serializes one thread while allowing another thread to run', async () => {
   const scheduler = new KeyedTaskScheduler(2)
   const firstGate = deferred<void>()
