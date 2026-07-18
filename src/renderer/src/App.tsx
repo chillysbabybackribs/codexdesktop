@@ -932,6 +932,7 @@ export default function App(): React.JSX.Element {
 
   const handleNewThread = (): void => {
     const previousThreadId = activeThreadIdRef.current
+    const tabKey = activeMainChatTabKeyRef.current
 
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
@@ -957,30 +958,134 @@ export default function App(): React.JSX.Element {
     activeCompactionRef.current = null
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
+    mainChatSnapshotsRef.current.delete(tabKey)
+    patchMainChatTab(tabKey, (tab) => ({
+      ...createMainChatTab(tab.key),
+      key: tab.key
+    }))
 
-    if (previousThreadId && !backgroundSessionForThread(previousThreadId)) {
+    if (
+      previousThreadId &&
+      !backgroundSessionForThread(previousThreadId) &&
+      !mainChatTabStateRef.current.tabs.some((tab) => tab.key !== tabKey && tab.threadId === previousThreadId)
+    ) {
       void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+    }
+  }
+
+  const handleNewMainChatTab = (): void => {
+    if (isSending || isGoalUpdating || isRestoring) return
+    captureActiveMainChatSnapshot()
+    cancelAutoRecovery()
+    setIsThreadMenuOpen(false)
+    const tab = createMainChatTab(crypto.randomUUID())
+    updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }))
+    applyMainChatSnapshot(tab)
+    persistLastThreadId(null)
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+  }
+
+  const handleSelectMainChatTab = async (key: string): Promise<void> => {
+    if (key === activeMainChatTabKeyRef.current || isSending || isGoalUpdating || isRestoring) return
+    const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
+    if (!target) return
+
+    captureActiveMainChatSnapshot()
+    cancelAutoRecovery()
+    setIsThreadMenuOpen(false)
+    updateMainChatTabs((state) => ({
+      tabs: state.tabs.map((tab) => tab.key === key && tab.status === 'attention'
+        ? { ...tab, status: tab.turnId ? 'working' : 'idle' }
+        : tab),
+      activeKey: key
+    }))
+    const snapshot = mainChatSnapshotsRef.current.get(key)
+    applyMainChatSnapshot(target, snapshot)
+    persistLastThreadId(target.threadId)
+
+    if (target.threadId) {
+      if (!snapshot) setIsRestoring(true)
+      await resumeThreadById(target.threadId, { silent: true, tabKey: key })
+      if (activeMainChatTabKeyRef.current === key) setIsRestoring(false)
+    }
+    requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+  }
+
+  const handleCloseMainChatTab = async (key: string): Promise<void> => {
+    if (isSending || isGoalUpdating || isRestoring) return
+    const current = mainChatTabStateRef.current
+    const closing = current.tabs.find((tab) => tab.key === key)
+    if (!closing) return
+    const wasActive = current.activeKey === key
+    if (wasActive) captureActiveMainChatSnapshot()
+    const next = closeMainChatTab(current, key, () => crypto.randomUUID())
+    mainChatSnapshotsRef.current.delete(key)
+    updateMainChatTabs(() => next)
+
+    if (closing.threadId) {
+      void window.api.codex.unsubscribeThread(closing.threadId).catch(() => {})
+    }
+    if (!wasActive) return
+
+    cancelAutoRecovery()
+    const target = next.tabs.find((tab) => tab.key === next.activeKey) ?? next.tabs[0]
+    const snapshot = mainChatSnapshotsRef.current.get(target.key)
+    applyMainChatSnapshot(target, snapshot)
+    persistLastThreadId(target.threadId)
+    if (target.threadId) {
+      if (!snapshot) setIsRestoring(true)
+      await resumeThreadById(target.threadId, { silent: true, tabKey: target.key })
+      if (activeMainChatTabKeyRef.current === target.key) setIsRestoring(false)
     }
   }
 
   const handleResumeThread = async (threadId: string): Promise<void> => {
     setIsThreadMenuOpen(false)
-    await resumeThreadById(threadId)
+    const existing = mainChatTabForThread(threadId)
+    if (existing) {
+      await handleSelectMainChatTab(existing.key)
+      return
+    }
+
+    const current = mainChatTabStateRef.current.tabs.find(
+      (tab) => tab.key === activeMainChatTabKeyRef.current
+    )
+    const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0)
+    const target = reuseCurrent
+      ? { ...current!, threadId, title: threads.find((thread) => thread.id === threadId)?.name ?? 'Chat' }
+      : createMainChatTab(
+          crypto.randomUUID(),
+          threadId,
+          threads.find((thread) => thread.id === threadId)?.name ?? 'Chat'
+        )
+
+    captureActiveMainChatSnapshot()
+    if (reuseCurrent) mainChatSnapshotsRef.current.delete(target.key)
+    updateMainChatTabs((state) => ({
+      tabs: reuseCurrent
+        ? state.tabs.map((tab) => tab.key === target.key ? target : tab)
+        : [...state.tabs, target],
+      activeKey: target.key
+    }))
+    applyMainChatSnapshot(target)
+    setIsRestoring(true)
+    await resumeThreadById(threadId, { tabKey: target.key })
+    if (activeMainChatTabKeyRef.current === target.key) setIsRestoring(false)
   }
 
   async function resumeThreadById(
     threadId: string,
-    options: { silent?: boolean } = {}
+    options: { silent?: boolean; tabKey?: string } = {}
   ): Promise<void> {
     const generation = ++resumeGenerationRef.current
-    const previousThreadId = activeThreadIdRef.current
+    const tabKey = options.tabKey ?? activeMainChatTabKeyRef.current
     optimisticUserMessageIdRef.current = null
 
     // If the target thread lives in the agent dock, the focused view absorbs
     // it — one owner per thread.
     updateAgentSessions((sessions) => sessions.filter((session) => session.threadId !== threadId))
 
-    if (previousThreadId !== threadId) {
+    if (activeThreadIdRef.current !== threadId) {
       cancelAutoRecovery()
     }
     setActiveGoal(null)
@@ -988,20 +1093,12 @@ export default function App(): React.JSX.Element {
     setActiveReasoningEffort(null)
     activeReasoningEffortRef.current = null
 
-    if (
-      previousThreadId &&
-      previousThreadId !== threadId &&
-      !backgroundSessionForThread(previousThreadId)
-    ) {
-      void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
-    }
-
     watchThreadIdRef.current = threadId
 
     try {
       const resumed = await window.api.codex.resumeThread(threadId)
 
-      if (generation !== resumeGenerationRef.current) {
+      if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
         return
       }
 
@@ -1017,7 +1114,7 @@ export default function App(): React.JSX.Element {
       if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
         const read = await window.api.codex.readThread(threadId)
 
-        if (generation !== resumeGenerationRef.current) {
+        if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
           return
         }
 
@@ -1026,7 +1123,7 @@ export default function App(): React.JSX.Element {
 
       try {
         const goal = await window.api.codex.getGoal(threadId)
-        if (generation !== resumeGenerationRef.current) return
+        if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) return
         setActiveGoal(goal)
         activeGoalRef.current = goal
       } catch (error) {
@@ -1035,7 +1132,7 @@ export default function App(): React.JSX.Element {
 
       persistLastThreadId(threadId)
     } catch (error) {
-      if (generation !== resumeGenerationRef.current) {
+      if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
         return
       }
 
