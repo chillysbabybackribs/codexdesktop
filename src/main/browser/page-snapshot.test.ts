@@ -109,6 +109,76 @@ test('task snapshot treats selected custom inbox rows as auditable unread state'
   assert.equal(result.coverage.complete, true)
 })
 
+test('task snapshot infers a requested count, stays compact, and preserves source order', () => {
+  const rows = Array.from({ length: 5 }, (_, index) =>
+    `<notification-item><rpl-inbox-row ${index === 0 ? 'selected' : ''} role="none"><a href="/${index}">Notification ${index + 1}</a></rpl-inbox-row></notification-item>`
+  ).join('')
+  const result = executeSnapshot(`<!doctype html><html><head><title>Inbox</title></head><body><main>${rows}</main></body></html>`, {
+    mode: 'task',
+    objective: 'latest 3 Reddit notifications and whether each is read or unread',
+    maxChars: 4_000
+  }, (document) => {
+    for (const row of document.querySelectorAll('rpl-inbox-row')) {
+      Object.defineProperty(row, 'selected', { value: row.hasAttribute('selected') })
+    }
+  })
+
+  assert.deepEqual(result.items.map(({ text }) => text), ['Notification 1', 'Notification 2', 'Notification 3'])
+  assert.deepEqual(result.items.map(({ state }) => state.read), [false, true, true])
+  assert.equal(result.content, '')
+  assert.deepEqual(result.passages, [])
+  assert.equal(result.items.every(({ name }) => name === null), true)
+  assert.equal(result.truncated, false)
+  assert.equal(result.coverage.omittedItems, 0)
+})
+
+test('reverse-document ordering selects records from the end when the planner requests it', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Results</title></head><body><main>
+    <div class="result-row">Result one</div><div class="result-row">Result two</div><div class="result-row">Result three</div>
+  </main></body></html>`, {
+    mode: 'task',
+    objective: '2 results',
+    order: 'reverse-document',
+    maxChars: 3_000
+  })
+
+  assert.deepEqual(result.items.map(({ text }) => text), ['Result three', 'Result two'])
+})
+
+test('custom list containers do not collapse their repeated child rows', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Inbox</title></head><body><main>
+    <notification-list>
+      <notification-row data-read="false">One</notification-row>
+      <notification-row data-read="true">Two</notification-row>
+      <notification-row data-read="true">Three</notification-row>
+    </notification-list>
+  </main></body></html>`, {
+    mode: 'task',
+    objective: '3 notifications and whether each is read or unread',
+    maxChars: 3_000
+  })
+
+  assert.deepEqual(result.items.map(({ text }) => text), ['One', 'Two', 'Three'])
+  assert.deepEqual(result.items.map(({ state }) => state.read), [false, true, true])
+  assert.equal(result.coverage.complete, true)
+})
+
+test('coverage reports per-item state gaps and does not infer read state from generic selection', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Inbox</title></head><body><main>
+    <div class="notification-item" data-read="true">Known</div>
+    <div class="notification-item" aria-selected="false">Unknown two</div>
+    <div class="notification-item">Unknown three</div>
+  </main></body></html>`, {
+    mode: 'task',
+    objective: '3 notifications and whether each is read or unread',
+    maxChars: 3_000
+  })
+
+  assert.deepEqual(result.items.map(({ state }) => state.read), [true, undefined, undefined])
+  assert.equal(result.coverage.complete, false)
+  assert.equal(result.coverage.gaps.includes('read-state-missing:2'), true)
+})
+
 test('content mode preserves primary article text nested inside a fixed-sidebar wrapper', () => {
   const result = executeSnapshot(`<!doctype html><html><head><title>Report</title></head><body>
     <div class="fixed-sidebar">
@@ -134,6 +204,17 @@ test('content mode preserves primary article text nested inside a fixed-sidebar 
   assert.equal(result.passages.some(({ text }) => /primary article/.test(text)), true)
 })
 
+test('content mode removes low-value descendants nested inside main', () => {
+  const result = executeSnapshot(`<!doctype html><html><head><title>Report</title></head><body><main>
+    <article><h1>Measured browser result</h1><p>The verified article evidence remains intact for extraction.</p></article>
+    <aside>Sponsored related recommendations should be excluded.</aside>
+    <nav>Pagination and newsletter controls should be excluded.</nav>
+  </main></body></html>`, { mode: 'content', maxChars: 3_000 })
+
+  assert.match(result.content, /verified article evidence remains intact/)
+  assert.doesNotMatch(result.content, /Sponsored related|Pagination and newsletter/)
+})
+
 test('composed traversal reaches task content in an open shadow root', () => {
   const result = executeSnapshot(
     '<!doctype html><html><head><title>Shadow inbox</title></head><body><main><h1>Activity</h1><notification-list></notification-list></main></body></html>',
@@ -156,6 +237,40 @@ test('composed traversal reaches task content in an open shadow root', () => {
   assert.equal(result.items[0]?.state.read, false)
   assert.equal(result.items[0]?.href, 'https://www.reddit.com/shadow/1')
   assert.equal(result.coverage.complete, true)
+})
+
+test('scoped snapshot selectors resolve inside open shadow roots', () => {
+  const result = executeSnapshot(
+    '<!doctype html><html><head><title>Shadow inbox</title></head><body><notification-list></notification-list></body></html>',
+    { mode: 'task', objective: 'unread notification', selector: '.notification-row', maxItems: 1, maxChars: 2_000 },
+    (document) => {
+      const host = document.querySelector('notification-list')
+      assert.ok(host)
+      host.attachShadow({ mode: 'open' }).innerHTML = '<div class="notification-row" data-read="false">Scoped unread item</div>'
+    }
+  )
+
+  assert.equal(result.scope.matched, true)
+  assert.equal(result.items.length, 1)
+  assert.match(result.items[0]?.text ?? '', /Scoped unread item/)
+})
+
+test('result-budget fallback invalidates coverage when all evidence must be removed', () => {
+  const longPath = `/${'x'.repeat(2_000)}`
+  const result = executeSnapshot(`<!doctype html><html><head><title>Inbox</title></head><body><main>
+    <div class="notification-row unread" data-read="false"><a href="${longPath}">${'Long notification evidence '.repeat(40)}</a></div>
+  </main></body></html>`, {
+    mode: 'task',
+    objective: 'notification read or unread',
+    maxItems: 1,
+    maxChars: 1_000
+  })
+
+  assert.deepEqual(result.items, [])
+  assert.equal(result.coverage.complete, false)
+  assert.equal(result.coverage.gaps.includes('result-budget'), true)
+  assert.equal(result.coverage.omittedItems, 1)
+  assert.equal(JSON.stringify(result).length <= 1_000, true)
 })
 
 test('large DOM traversal and returned JSON remain bounded while retaining a late relevant item', () => {
