@@ -22,11 +22,12 @@ Leave `maxPages`, `maxAttempts`, and `snippetChars` omitted unless the task genu
 
 - Known official documentation, release notes, or public records: direct `urls` with focused evidence needs.
 - Broad public discovery: `research_web` with one primary query and adaptive fallback lanes.
-- One already-visible page: `browser_extract_page`.
-- Authenticated, interactive, or client-rendered state: use `browser_navigate` against the existing visible tab, with a page-specific `readySelector`, then use `browser_run` to inspect or act.
+- One already-visible public content page: `browser_extract_page`.
+- Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.
+- Interaction or mutation: use one batched `browser_run` program for the ordered actions, inspection, and verification. If navigation is required first, use `browser_navigate` with a page-specific `readySelector`, then the single batched program.
 - Low-level lifecycle, network, storage, screenshot, or trace work: `browser_cdp`.
 
-Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
+If `browser_snapshot` is not present on an older resumed thread, use one `browser_run` call for an already-visible read or `browser_navigate` followed by one `browser_run` call when the page must change. Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
 
 ## Evidence Contract
 
