@@ -33,13 +33,18 @@ const defaultRequestTimeoutMs = 30_000
 const maxBufferedMessageChars = 16_000_000
 
 export class AppServerRpcError extends Error {
+  readonly code: number
+  readonly data?: unknown
+
   constructor(
     message: string,
-    readonly code: number,
-    readonly data?: unknown
+    code: number,
+    data?: unknown
   ) {
     super(message)
     this.name = 'AppServerRpcError'
+    this.code = code
+    this.data = data
   }
 }
 
