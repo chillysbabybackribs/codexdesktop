@@ -962,6 +962,7 @@ export default function App(): React.JSX.Element {
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
     mainChatSnapshotsRef.current.delete(tabKey)
+    discardComposerDraft(tabKey)
     patchMainChatTab(tabKey, (tab) => ({
       ...createMainChatTab(tab.key),
       key: tab.key
@@ -1023,6 +1024,7 @@ export default function App(): React.JSX.Element {
     if (wasActive) captureActiveMainChatSnapshot()
     const next = closeMainChatTab(current, key, () => crypto.randomUUID())
     mainChatSnapshotsRef.current.delete(key)
+    discardComposerDraft(key)
     updateMainChatTabs(() => next)
 
     if (closing.threadId) {
@@ -3956,7 +3958,19 @@ function GoalIcon(): React.JSX.Element {
 }
 
 
+type ComposerDraft = {
+  value: string
+  attachments: ChatAttachment[]
+}
+
+const composerDrafts = new Map<string, ComposerDraft>()
+
+function discardComposerDraft(key: string): void {
+  composerDrafts.delete(key)
+}
+
 function Composer({
+  draftKey,
   docked,
   workspace,
   installedPlugins,
@@ -3973,6 +3987,7 @@ function Composer({
   footerLeading,
   footerTrailing
 }: {
+  draftKey: string
   docked: boolean
   workspace: string | null
   installedPlugins: PluginSummary[]
@@ -3989,8 +4004,10 @@ function Composer({
   footerLeading?: React.ReactNode
   footerTrailing?: React.ReactNode
 }): React.JSX.Element {
-  const [value, setValue] = useState('')
-  const [attachments, setAttachments] = useState<ChatAttachment[]>([])
+  const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '')
+  const [attachments, setAttachments] = useState<ChatAttachment[]>(
+    () => composerDrafts.get(draftKey)?.attachments ?? []
+  )
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const createMenuRef = useRef<HTMLDivElement | null>(null)
@@ -4002,6 +4019,10 @@ function Composer({
   const hasDraft = Boolean(value.trim() || attachments.length)
   const isQuietStatus = status === 'idle' || status === 'ready'
   const visibleStatus = attachmentError ?? (isTurnActive || isQuietStatus ? null : status)
+
+  useEffect(() => {
+    composerDrafts.set(draftKey, { value, attachments })
+  }, [draftKey, value, attachments])
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current
@@ -4088,6 +4109,8 @@ function Composer({
     if (!accepted) {
       setValue((current) => current ? `${text}\n${current}` : text)
       if (!isTurnActive) setAttachments(submittedAttachments)
+    } else {
+      composerDrafts.delete(draftKey)
     }
   }
 
