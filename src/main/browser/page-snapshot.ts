@@ -124,7 +124,7 @@ const MAX_MAX_CHARS = 100_000
 const MAX_MAX_ITEMS = 200
 
 const OBJECTIVE_STOP_WORDS = new Set([
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'go', 'how',
+  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'find', 'for', 'from', 'go', 'how',
   'i', 'in', 'is', 'it', 'me', 'navigate', 'of', 'on', 'or', 'page', 'please',
   'show', 'tell', 'that', 'the', 'this', 'to', 'what', 'when', 'where', 'which',
   'who', 'with', 'first', 'last', 'latest', 'recent', 'top'
@@ -722,7 +722,12 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
     ].join(' ')
     const haystack = `${candidate.tag} ${candidate.role || ''} ${candidate.nameHint} ${candidate.text} ${candidate.href} ${stateText}`
     candidate.matchedTerms = matchGroups(haystack)
-    candidate.score = candidate.matchedTerms.length * 100 +
+    const stateQueryMatches = candidate.state.read !== undefined &&
+      candidate.matchedTerms.some((term) => term === 'read' || term === 'unread')
+      ? 1
+      : 0
+    const nonStateMatches = candidate.matchedTerms.filter((term) => term !== 'read' && term !== 'unread').length
+    candidate.score = (nonStateMatches + stateQueryMatches) * 100 +
       (candidate.repeated ? 24 : 0) +
       (candidate.role && interactiveRoles.has(candidate.role) ? 10 : 0) +
       (candidate.state.read !== undefined ? 30 : 0) +
