@@ -188,6 +188,7 @@ export default function App(): React.JSX.Element {
   const [activeReasoningEffort, setActiveReasoningEffort] = useState<ReasoningEffort | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [isRestoring, setIsRestoring] = useState(true)
+  const [reconcilingMainChatTabKey, setReconcilingMainChatTabKey] = useState<string | null>(null)
   const [codexStatus, setCodexStatus] = useState('idle')
   const [threads, setThreads] = useState<Thread[]>([])
   const [threadsNextCursor, setThreadsNextCursor] = useState<string | null>(null)
@@ -290,6 +291,7 @@ export default function App(): React.JSX.Element {
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
   const mainChatSnapshotsRef = useRef<Map<string, MainChatSnapshot>>(new Map())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
+  const reconcilingMainChatTabKeyRef = useRef<string | null>(null)
   // Per-session overload recovery, keyed by session key — the dock equivalent
   // of autoRecoveryRef (which only ever tracks the focused thread).
   const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
@@ -978,7 +980,7 @@ export default function App(): React.JSX.Element {
   }
 
   const handleNewMainChatTab = (): void => {
-    if (isSending || isGoalUpdating || isRestoring) return
+    if (isSending || isGoalUpdating || isRestoring || reconcilingMainChatTabKeyRef.current) return
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
@@ -990,7 +992,13 @@ export default function App(): React.JSX.Element {
   }
 
   const handleSelectMainChatTab = async (key: string): Promise<void> => {
-    if (key === activeMainChatTabKeyRef.current || isSending || isGoalUpdating || isRestoring) return
+    if (
+      key === activeMainChatTabKeyRef.current ||
+      isSending ||
+      isGoalUpdating ||
+      isRestoring ||
+      reconcilingMainChatTabKeyRef.current
+    ) return
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
     if (!target) return
 
@@ -1008,15 +1016,21 @@ export default function App(): React.JSX.Element {
     persistLastThreadId(target.threadId)
 
     if (target.threadId) {
+      reconcilingMainChatTabKeyRef.current = key
+      setReconcilingMainChatTabKey(key)
       if (!snapshot) setIsRestoring(true)
       await resumeThreadById(target.threadId, { silent: true, tabKey: key })
-      if (activeMainChatTabKeyRef.current === key) setIsRestoring(false)
+      if (activeMainChatTabKeyRef.current === key) {
+        setIsRestoring(false)
+        setReconcilingMainChatTabKey(null)
+        reconcilingMainChatTabKeyRef.current = null
+      }
     }
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
   }
 
   const handleCloseMainChatTab = async (key: string): Promise<void> => {
-    if (isSending || isGoalUpdating || isRestoring) return
+    if (isSending || isGoalUpdating || isRestoring || reconcilingMainChatTabKeyRef.current) return
     const current = mainChatTabStateRef.current
     const closing = current.tabs.find((tab) => tab.key === key)
     if (!closing) return
@@ -1038,9 +1052,15 @@ export default function App(): React.JSX.Element {
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
     if (target.threadId) {
+      reconcilingMainChatTabKeyRef.current = target.key
+      setReconcilingMainChatTabKey(target.key)
       if (!snapshot) setIsRestoring(true)
       await resumeThreadById(target.threadId, { silent: true, tabKey: target.key })
-      if (activeMainChatTabKeyRef.current === target.key) setIsRestoring(false)
+      if (activeMainChatTabKeyRef.current === target.key) {
+        setIsRestoring(false)
+        setReconcilingMainChatTabKey(null)
+        reconcilingMainChatTabKeyRef.current = null
+      }
     }
   }
 
@@ -1073,9 +1093,15 @@ export default function App(): React.JSX.Element {
       activeKey: target.key
     }))
     applyMainChatSnapshot(target)
+    reconcilingMainChatTabKeyRef.current = target.key
+    setReconcilingMainChatTabKey(target.key)
     setIsRestoring(true)
     await resumeThreadById(threadId, { tabKey: target.key })
-    if (activeMainChatTabKeyRef.current === target.key) setIsRestoring(false)
+    if (activeMainChatTabKeyRef.current === target.key) {
+      setIsRestoring(false)
+      setReconcilingMainChatTabKey(null)
+      reconcilingMainChatTabKeyRef.current = null
+    }
   }
 
   async function resumeThreadById(
@@ -1262,6 +1288,13 @@ export default function App(): React.JSX.Element {
         return
       }
 
+      if (event.key.toLowerCase() === 'n' && !event.shiftKey && !activeTurnIdRef.current) {
+        event.preventDefault()
+        handleNewThread()
+        requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
+        return
+      }
+
       if (event.key === 'Tab') {
         event.preventDefault()
         const state = mainChatTabStateRef.current
@@ -1275,7 +1308,7 @@ export default function App(): React.JSX.Element {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isSending, isGoalUpdating, isRestoring])
+  }, [isSending, isGoalUpdating, isRestoring, reconcilingMainChatTabKey])
 
   const hasThreadContent = items.length > 0
 
@@ -2135,7 +2168,7 @@ export default function App(): React.JSX.Element {
         <ChatPane
           mainChatTabs={mainChatTabs}
           activeMainChatTabKey={activeMainChatTabKey}
-          mainChatTabsDisabled={isSending || isGoalUpdating || isRestoring}
+          mainChatTabsDisabled={isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)}
           onSelectMainChatTab={handleSelectMainChatTab}
           onCloseMainChatTab={handleCloseMainChatTab}
           onNewMainChatTab={handleNewMainChatTab}
@@ -2155,7 +2188,7 @@ export default function App(): React.JSX.Element {
           threadsLoading={threadsLoading}
           threadsError={threadsError}
           hasThreadContent={hasThreadContent}
-          isBusy={isRestoring || isSending || Boolean(activeTurnId)}
+          isBusy={isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)}
           workspace={workspace}
           models={models}
           selectedModel={selectedModel}
