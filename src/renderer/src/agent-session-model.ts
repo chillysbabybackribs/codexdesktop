@@ -97,14 +97,24 @@ export function applyAgentDeltas(sessions: AgentSession[], buffer: AgentDeltaBuf
     const perItem = buffer.get(session.key)
     if (!perItem?.size) return session
 
-    let messages = session.messages
-    for (const [itemId, delta] of perItem) {
-      const existing = messages.find((message) => message.id === itemId)
-      messages = existing
-        ? messages.map((message) => message.id === itemId ? { ...message, text: `${message.text}${delta}` } : message)
-        : [...messages, { id: itemId, role: 'assistant', text: delta }]
+    const pending = new Map(perItem)
+    let changed = false
+    let messages = session.messages.map((message) => {
+      const delta = pending.get(message.id)
+      if (delta === undefined) return message
+      pending.delete(message.id)
+      changed = true
+      return { ...message, text: `${message.text}${delta}` }
+    })
+
+    if (pending.size) {
+      changed = true
+      messages = [
+        ...messages,
+        ...Array.from(pending, ([id, text]) => ({ id, role: 'assistant' as const, text }))
+      ]
     }
-    return { ...session, messages }
+    return changed ? { ...session, messages } : session
   })
 }
 

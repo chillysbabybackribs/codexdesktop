@@ -48,6 +48,8 @@ export function useAgentSessions(
   const agentSessionsRef = useRef<AgentSession[]>([])
   const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
   const agentDeltaTimerRef = useRef<number | null>(null)
+  const agentDockPersistTimerRef = useRef<number | null>(null)
+  const lastAgentDockSnapshotRef = useRef<string | null>(null)
   const agentStartQueueRef = useRef<string[]>([])
   const agentCounterRef = useRef(2)
   const agentDockRestoredRef = useRef(false)
@@ -75,7 +77,7 @@ export function useAgentSessions(
 
   function flushAgentDeltas(): void {
     if (agentDeltaTimerRef.current !== null) {
-      window.clearTimeout(agentDeltaTimerRef.current)
+      window.cancelAnimationFrame(agentDeltaTimerRef.current)
       agentDeltaTimerRef.current = null
     }
     const buffer = agentDeltaBufferRef.current
@@ -92,7 +94,7 @@ export function useAgentSessions(
     }
     perItem.set(itemId, `${perItem.get(itemId) ?? ''}${delta}`)
     if (agentDeltaTimerRef.current === null) {
-      agentDeltaTimerRef.current = window.setTimeout(flushAgentDeltas, 32)
+      agentDeltaTimerRef.current = window.requestAnimationFrame(flushAgentDeltas)
     }
   }
 
@@ -207,17 +209,28 @@ export function useAgentSessions(
   }
 
   useEffect(() => () => {
-    if (agentDeltaTimerRef.current !== null) window.clearTimeout(agentDeltaTimerRef.current)
+    if (agentDeltaTimerRef.current !== null) window.cancelAnimationFrame(agentDeltaTimerRef.current)
+    if (agentDockPersistTimerRef.current !== null) window.clearTimeout(agentDockPersistTimerRef.current)
   }, [])
 
   useEffect(() => {
     if (!agentDockRestoredRef.current) return
-    window.localStorage.setItem(storageKey, serializeAgentDock(
+    const snapshot = serializeAgentDock(
       agentCounterRef.current,
       agentSessions,
       openAgentKeys,
       selectedAgentKey
-    ))
+    )
+    if (snapshot === lastAgentDockSnapshotRef.current) return
+    lastAgentDockSnapshotRef.current = snapshot
+
+    if (agentDockPersistTimerRef.current !== null) {
+      window.clearTimeout(agentDockPersistTimerRef.current)
+    }
+    agentDockPersistTimerRef.current = window.setTimeout(() => {
+      agentDockPersistTimerRef.current = null
+      window.localStorage.setItem(storageKey, snapshot)
+    }, 250)
   }, [agentSessions, openAgentKeys, selectedAgentKey, storageKey])
 
   return {
