@@ -260,6 +260,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   const primaryContentBlocks: RuntimeBlock[] = []
   const fallbackContentBlocks: RuntimeBlock[] = []
   const seenNodes = new WeakSet<object>()
+  const computedTreeVisibility = new WeakMap<Element, boolean | null>()
   let primaryContentChars = 0
   let fallbackContentChars = 0
   let visitedNodes = 0
@@ -895,8 +896,6 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
       return null
     }
   }
-
-  const computedTreeVisibility = new WeakMap<Element, boolean | null>()
 
   function detectTreeComputedVisibility(element: Element): boolean | null {
     const cached = computedTreeVisibility.get(element)
