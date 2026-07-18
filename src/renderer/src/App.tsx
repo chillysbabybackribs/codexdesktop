@@ -1954,7 +1954,7 @@ export default function App(): React.JSX.Element {
     await Promise.all(backgroundTabs.map(async (tab) => {
       try {
         const resumed = await window.api.codex.resumeThread(tab.threadId!)
-        const turns = resumed.thread.turns.length
+        const turns: Turn[] = resumed.thread.turns.length
           ? resumed.thread.turns
           : (resumed.initialTurnsPage?.data ?? [])
         const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null
