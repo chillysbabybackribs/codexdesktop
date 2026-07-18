@@ -1,7 +1,7 @@
 const FOCUS_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'how', 'in',
   'is', 'it', 'of', 'on', 'or', 'the', 'to', 'what', 'when', 'where', 'which',
-  'who', 'why', 'with'
+  'who', 'why', 'with', 'do', 'does', 'did', 'tell', 'result', 'results', 'exact'
 ])
 
 const DEFAULT_EVIDENCE_CHARS = 3_500
@@ -10,6 +10,7 @@ const MAX_EVIDENCE_CHARS = 8_000
 const MIN_PASSAGE_CHARS = 50
 const MAX_PASSAGE_CHARS = 1_500
 const MAX_FOCUS_ITEMS = 6
+const MAX_CONTEXT_NONEMPTY_LINES = 4
 const WORD_SEGMENTER = new Intl.Segmenter('und', { granularity: 'word' })
 
 export type ResearchFocus = {
@@ -64,6 +65,8 @@ type IndexedEvidenceDocument = {
   lineTokens: Array<Set<string>>
   windowTokens: Array<Set<string>>
   windowText: string[]
+  tokenFrequency: Map<string, number>
+  titleTokens: Set<string>
   fingerprint: string
 }
 
@@ -112,13 +115,14 @@ export function selectResearchEvidence(
 
   for (const item of focus) {
     const tokens = tokenizeFocus(item.need)
+    const clauses = tokenizeFocusClauses(item.need)
     const perPassageChars = Math.max(
       MIN_PASSAGE_CHARS,
       Math.min(MAX_PASSAGE_CHARS, Math.floor(passageBudget / focus.length / item.minSources))
     )
     const candidates = tokens.length > 0
       ? indexedDocuments
-          .map((document) => bestDocumentPassage(document, tokens, perPassageChars))
+          .map((document) => bestDocumentPassage(document, tokens, clauses, perPassageChars))
           .filter((candidate): candidate is PassageCandidate => candidate !== null)
           .sort(compareCandidates)
       : []
@@ -161,10 +165,15 @@ export function selectResearchEvidence(
 function bestDocumentPassage(
   indexed: IndexedEvidenceDocument,
   focusTokens: string[],
+  focusClauses: string[][],
   maxChars: number
 ): PassageCandidate | null {
   const { document, lines } = indexed
-  const requiredMatches = Math.min(3, Math.max(1, Math.ceil(focusTokens.length * 0.6)))
+  const passageFocusTokens = focusTokens.filter((token) => !indexed.titleTokens.has(token))
+  const requiredMatches = Math.min(3, Math.max(1, Math.ceil(passageFocusTokens.length * 0.6)))
+  const passageClauses = focusClauses
+    .map((clause) => clause.filter((token) => !indexed.titleTokens.has(token)))
+    .filter((clause) => clause.length > 0)
   let best: {
     lineStart: number
     lineEnd: number
@@ -181,21 +190,23 @@ function bestDocumentPassage(
     const localMatches = focusTokens.filter((token) => lineTokens.has(token))
     if (localMatches.length === 0) continue
     const windowTokens = indexed.windowTokens[lineIndex] ?? new Set<string>()
-    const matchedTerms = focusTokens.filter((token) => windowTokens.has(token))
+    const matchedTerms = passageFocusTokens.filter((token) => windowTokens.has(token))
     if (matchedTerms.length < requiredMatches) continue
-    const requiredExactTerms = focusTokens.filter((token) => /\d/.test(token))
+    if (!clausesCovered(windowTokens, passageClauses)) continue
+    const requiredExactTerms = passageFocusTokens.filter((token) => /\d/.test(token))
     if (requiredExactTerms.some((token) => !windowTokens.has(token))) continue
 
     const normalizedLine = indexed.windowText[lineIndex] ?? ''
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
     const preliminaryScore = matchedTerms.length * 30 + localMatches.length * 8 + (exactPhrase ? 100 : 0)
-    const window = buildPassageWindow(lines, lineIndex, focusTokens, maxChars)
+    const window = buildPassageWindow(lines, lineIndex, passageFocusTokens, maxChars)
     const visibleTokens = new Set(tokenize(window.text))
-    const visibleMatchedTerms = focusTokens.filter((token) => visibleTokens.has(token))
+    const visibleMatchedTerms = passageFocusTokens.filter((token) => visibleTokens.has(token))
     if (visibleMatchedTerms.length < requiredMatches) continue
-    if (focusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) continue
-    const score = scorePassageText(window.text, focusTokens) + preliminaryScore / 100
+    if (!clausesCovered(visibleTokens, passageClauses)) continue
+    if (passageFocusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) continue
+    const score = scorePassageText(window.text, passageFocusTokens, indexed.tokenFrequency) + preliminaryScore / 100
     if (!best || score > best.score) best = { ...window, score, matchedTerms: visibleMatchedTerms }
   }
 
@@ -218,15 +229,19 @@ function bestDocumentPassage(
 function indexEvidenceDocument(document: ResearchEvidenceDocument): IndexedEvidenceDocument {
   const lines = document.content.split('\n')
   const lineTokens = lines.map((line) => new Set(tokenize(line)))
-  const windows = lines.map((_line, lineIndex) =>
-    lines.slice(Math.max(0, lineIndex - 2), lineIndex + 3).join(' ')
-  )
+  const windows = lines.map((_line, lineIndex) => semanticWindow(lines, lineIndex).join(' '))
+  const tokenFrequency = new Map<string, number>()
+  for (const tokens of lineTokens) {
+    for (const token of tokens) tokenFrequency.set(token, (tokenFrequency.get(token) ?? 0) + 1)
+  }
   return {
     document,
     lines,
     lineTokens,
     windowTokens: windows.map((value) => new Set(tokenize(value))),
     windowText: windows.map(normalizeText),
+    tokenFrequency,
+    titleTokens: new Set(tokenize(document.title)),
     fingerprint: fingerprint(document.content)
   }
 }
@@ -271,24 +286,16 @@ function buildPassageWindow(
   let start = matchIndex
   let end = matchIndex
   let text = matchedLine
-  let canExpandLeft = true
-  let canExpandRight = true
-  for (let distance = 1; distance <= 2; distance += 1) {
-    const nextLeft = matchIndex - distance
-    const nextRight = matchIndex + distance
-    if (canExpandLeft && nextLeft >= 0) {
-      const candidate = `${lines[nextLeft]}\n${text}`
-      if (candidate.length <= maxChars) {
-        start = nextLeft
-        text = candidate
-      } else canExpandLeft = false
-    }
-    if (canExpandRight && nextRight < lines.length) {
-      const candidate = `${text}\n${lines[nextRight]}`
-      if (candidate.length <= maxChars) {
-        end = nextRight
-        text = candidate
-      } else canExpandRight = false
+  const indexes = semanticWindowIndexes(lines, matchIndex)
+  for (const index of indexes.sort((left, right) => Math.abs(left - matchIndex) - Math.abs(right - matchIndex))) {
+    if (index === matchIndex) continue
+    const nextStart = Math.min(start, index)
+    const nextEnd = Math.max(end, index)
+    const candidate = lines.slice(nextStart, nextEnd + 1).join('\n')
+    if (candidate.length <= maxChars) {
+      start = nextStart
+      end = nextEnd
+      text = candidate
     }
   }
 
@@ -314,6 +321,13 @@ function tokenizeFocus(value: string): string[] {
   return unique(tokenize(value).filter((token) => !FOCUS_STOP_WORDS.has(token))).slice(0, 16)
 }
 
+function tokenizeFocusClauses(value: string): string[][] {
+  return value
+    .split(/(?:[;?]|,\s*(?:and|or)\s+|\b(?:and|or)\s+(?=(?:how|what|which|where|when|whether|why)\b))/i)
+    .map(tokenizeFocus)
+    .filter((tokens) => tokens.length > 0)
+}
+
 function tokenize(value: string): string[] {
   return [...WORD_SEGMENTER.segment(value.normalize('NFKC').toLowerCase())]
     .filter((segment) => segment.isWordLike)
@@ -323,6 +337,8 @@ function tokenize(value: string): string[] {
 
 function normalizeToken(value: string): string {
   if (value.length > 3 && value.endsWith('s') && !/(ss|us|is)$/.test(value)) return value.slice(0, -1)
+  if (value.length > 5 && value.endsWith('ed')) return value.slice(0, -2)
+  if (value.length > 6 && value.endsWith('ing')) return value.slice(0, -3)
   return value
 }
 
@@ -343,10 +359,42 @@ function countTokenMatches(value: string, tokens: string[]): number {
   return tokens.reduce((count, token) => count + (values.has(token) ? 1 : 0), 0)
 }
 
-function scorePassageText(value: string, focusTokens: string[]): number {
+function scorePassageText(value: string, focusTokens: string[], tokenFrequency: Map<string, number>): number {
   const matched = countTokenMatches(value, focusTokens)
   const exactPhrase = normalizeText(value).includes(normalizeText(focusTokens.join(' ')))
-  return matched * 30 + (exactPhrase ? 100 : 0)
+  const visible = new Set(tokenize(value))
+  const rarity = focusTokens.reduce(
+    (score, token) => score + (visible.has(token) ? 40 / Math.max(1, tokenFrequency.get(token) ?? 1) : 0),
+    0
+  )
+  return matched * 30 + rarity + (exactPhrase ? 100 : 0)
+}
+
+function clausesCovered(tokens: Set<string>, clauses: string[][]): boolean {
+  return clauses.every((clause) => {
+    const required = Math.min(2, Math.max(1, Math.ceil(clause.length * 0.5)))
+    return clause.filter((token) => tokens.has(token)).length >= required
+  })
+}
+
+function semanticWindow(lines: string[], lineIndex: number): string[] {
+  return semanticWindowIndexes(lines, lineIndex).map((index) => lines[index] ?? '')
+}
+
+function semanticWindowIndexes(lines: string[], lineIndex: number): number[] {
+  const indexes = [lineIndex]
+  for (const direction of [-1, 1]) {
+    let nonempty = 0
+    for (
+      let index = lineIndex + direction;
+      index >= 0 && index < lines.length && nonempty < MAX_CONTEXT_NONEMPTY_LINES;
+      index += direction
+    ) {
+      indexes.push(index)
+      if (lines[index]?.trim()) nonempty += 1
+    }
+  }
+  return unique(indexes.map(String)).map(Number).sort((left, right) => left - right)
 }
 
 function clampInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {

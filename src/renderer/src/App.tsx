@@ -2260,23 +2260,28 @@ export default function App(): React.JSX.Element {
     const backgroundTabs = mainChatTabStateRef.current.tabs.filter(
       (tab) => tab.threadId && tab.threadId !== activeThreadId
     )
-    await Promise.all(backgroundTabs.map(async (tab) => {
-      try {
-        const resumed = await window.api.codex.resumeThread(tab.threadId!)
-        const turns: Turn[] = resumed.thread.turns.length
-          ? resumed.thread.turns
-          : (resumed.initialTurnsPage?.data ?? [])
-        const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null
-        patchMainChatTab(tab.key, (current) => ({
-          ...current,
-          title: threadTitle(resumed.thread),
-          status: inProgress ? 'working' : 'idle',
-          turnId: inProgress?.id ?? null
-        }))
-      } catch (error) {
-        console.warn(`Failed to restore background chat tab ${tab.threadId}`, error)
-      }
-    }))
+    // Resume in small waves: each call can return a substantial initial turn
+    // page, and restoring a full working set should not stampede app-server.
+    for (let index = 0; index < backgroundTabs.length; index += 3) {
+      const wave = backgroundTabs.slice(index, index + 3)
+      await Promise.all(wave.map(async (tab) => {
+        try {
+          const resumed = await window.api.codex.resumeThread(tab.threadId!)
+          const turns: Turn[] = resumed.thread.turns.length
+            ? resumed.thread.turns
+            : (resumed.initialTurnsPage?.data ?? [])
+          const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null
+          patchMainChatTab(tab.key, (current) => ({
+            ...current,
+            title: threadTitle(resumed.thread),
+            status: inProgress ? 'working' : 'idle',
+            turnId: inProgress?.id ?? null
+          }))
+        } catch (error) {
+          console.warn(`Failed to restore background chat tab ${tab.threadId}`, error)
+        }
+      }))
+    }
   }
 
   function hydrateThread(
