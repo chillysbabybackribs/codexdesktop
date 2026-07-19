@@ -373,36 +373,57 @@ function BrowserToolbar({
     omniboxRef.current?.blur()
   }
 
+  // Only read as identity when the field is idle; while editing, show raw text.
+  const identity = isEditing ? null : omniboxIdentity(activeTab?.url ?? '')
+
   return (
     <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
       <button type="button" className="browser-nav-button" aria-label="Back" disabled={!activeTab?.canGoBack} onClick={() => activeTab && void window.api.browser.back(activeTab.id)}><ChevronIcon direction="left" /></button>
       <button type="button" className="browser-nav-button" aria-label="Forward" disabled={!activeTab?.canGoForward} onClick={() => activeTab && void window.api.browser.forward(activeTab.id)}><ChevronIcon direction="right" /></button>
       <button type="button" className="browser-nav-button" aria-label="Reload" disabled={!activeTab} onClick={() => activeTab && void window.api.browser.reload(activeTab.id)}><ReloadIcon /></button>
-      <input
-        ref={omniboxRef}
-        className="omnibox"
-        value={input}
-        spellCheck={false}
-        autoComplete="off"
-        aria-label="Address"
-        onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; if (!focusFromMouseRef.current) event.target.select(); runQuery('') }}
-        onMouseDown={(event) => { justFocusedRef.current = document.activeElement !== event.currentTarget; focusFromMouseRef.current = true }}
-        onMouseUp={(event) => {
-          focusFromMouseRef.current = false
-          // First click focuses the field: select the whole URL so a keystroke
-          // replaces it. Any later click (already focused) leaves the caret the
-          // browser just placed, so you can edit character-by-character.
-          if (justFocusedRef.current) { justFocusedRef.current = false; event.currentTarget.select() }
-        }}
-        onBlur={() => { setIsEditing(false); closePopup() }}
-        onChange={(event) => {
-          const text = event.target.value
-          setInput(text)
-          typedTextRef.current = text
-          runQuery(text, ((event.nativeEvent as InputEvent).inputType ?? '').startsWith('insert'))
-        }}
-        onKeyDown={handleOmniboxKeyDown}
-      />
+      <div className="omnibox-field">
+        <input
+          ref={omniboxRef}
+          className="omnibox"
+          value={input}
+          spellCheck={false}
+          autoComplete="off"
+          aria-label="Address"
+          onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; if (!focusFromMouseRef.current) event.target.select(); runQuery('') }}
+          onMouseDown={(event) => { justFocusedRef.current = document.activeElement !== event.currentTarget; focusFromMouseRef.current = true }}
+          onMouseUp={(event) => {
+            focusFromMouseRef.current = false
+            // First click focuses the field: select the whole URL so a keystroke
+            // replaces it. Any later click (already focused) leaves the caret the
+            // browser just placed, so you can edit character-by-character.
+            if (justFocusedRef.current) { justFocusedRef.current = false; event.currentTarget.select() }
+          }}
+          onBlur={() => { setIsEditing(false); closePopup() }}
+          onChange={(event) => {
+            const text = event.target.value
+            setInput(text)
+            typedTextRef.current = text
+            runQuery(text, ((event.nativeEvent as InputEvent).inputType ?? '').startsWith('insert'))
+          }}
+          onKeyDown={handleOmniboxKeyDown}
+        />
+        {/* Opaque, click-through overlay: hides the raw URL while unfocused and
+            shows a legible identity. pointer-events:none → a click still lands
+            on the input beneath, focuses it, and this unmounts. */}
+        {identity ? (
+          <div className="omnibox-identity" aria-hidden="true">
+            {identity.kind === 'web' ? (
+              identity.secure ? (
+                <LockIcon />
+              ) : (
+                <span className="oi-insecure">Not secure</span>
+              )
+            ) : null}
+            <span className="oi-host">{identity.host}</span>
+            {identity.rest ? <span className="oi-rest">{identity.rest}</span> : null}
+          </div>
+        ) : null}
+      </div>
       <button
         ref={menuButtonRef}
         type="button"
@@ -473,6 +494,15 @@ function PlusIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function LockIcon(): React.JSX.Element {
+  return (
+    <svg className="oi-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="5" y="10.5" width="14" height="9.5" rx="2.2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M8 10.5V7.9a4 4 0 0 1 8 0v2.6" stroke="currentColor" strokeWidth="1.7" />
     </svg>
   )
 }
