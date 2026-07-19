@@ -106,6 +106,7 @@ export function buildPlanBriefing(input: {
     '- key files or areas to touch, when identifiable',
     '- explicit done-criteria',
     '- the main risk or trap, in one line',
+    'The plan must keep every new file and project inside the current workspace directory — never a sibling or home-directory location — unless the user explicitly asked for somewhere else.',
     'The doer executes this plan and you will audit its work against it afterwards — write the plan you are prepared to hold it to.',
   ].join('\n')
 }
@@ -116,7 +117,7 @@ export function buildExecutionInjection(plan: string | null, reviewerLabel: stri
       '',
       '',
       PLAN_OPEN,
-      `Your reviewer — ${reviewerLabel} — prepared this plan for the confirmed task. Execute it where it serves the user's goal; deviate when reality contradicts it, and say so when you do. Verify any line marked ASSUMPTION before relying on it. Begin now.`,
+      `Your reviewer — ${reviewerLabel} — prepared this plan for the confirmed task. Execute it where it serves the user's goal; deviate when reality contradicts it, and say so when you do. Verify any line marked ASSUMPTION before relying on it. Keep all new files and projects inside the current workspace directory unless the user explicitly asked for another location. Begin now.`,
       '',
       plan,
       PLAN_CLOSE,
@@ -127,6 +128,7 @@ export function buildExecutionInjection(plan: string | null, reviewerLabel: stri
     '',
     INSTRUCTION_OPEN,
     'Your paired reviewer could not produce a plan in time. The user has confirmed the task — begin now on your own judgment.',
+    'Keep all new files and projects inside the current workspace directory unless the user explicitly asked for another location.',
     INSTRUCTION_CLOSE,
   ].join('\n')
 }

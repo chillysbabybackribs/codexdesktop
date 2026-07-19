@@ -117,6 +117,7 @@ import {
   type LoopDecision,
   type LoopState,
 } from './audit-loop-controller';
+import { outOfWorkspacePaths } from './workspace-containment';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
@@ -3011,6 +3012,30 @@ export default function App(): React.JSX.Element {
             status: 'idle',
             turnId: null,
           }));
+          {
+            // Containment backstop: work that landed outside the workspace
+            // escaped checkpoints, Keep/Undo, and audit diff grounding — say
+            // so in the transcript (a warning, never a gate).
+            const commands: string[] = [];
+            const editedPaths: string[] = [];
+            for (const item of itemsRef.current) {
+              if (itemMetaRef.current[item.id]?.turnId !== turn.id) continue;
+              if (item.type === 'commandExecution') commands.push(item.command);
+              else if (item.type === 'fileChange')
+                editedPaths.push(...item.changes.map((change) => change.path));
+            }
+            const outside = outOfWorkspacePaths({
+              commands,
+              filePaths: editedPaths,
+              workspace: workspaceRef.current,
+            });
+            if (outside.length) {
+              addSystemItem(
+                `This turn touched paths outside the workspace (${outside.join(', ')}) — anything created there is not covered by checkpoints or Keep/Undo.`,
+                'warning',
+              );
+            }
+          }
           void maybeTriggerAuditors(turn.id);
           if (turn.status === 'failed') {
             maybeScheduleAutoRecovery(notification.params.threadId, turn.id, turn.error);

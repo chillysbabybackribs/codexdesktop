@@ -79,13 +79,18 @@ test('plan briefing carries all three texts and the NO-PLAN escape', () => {
   assert.match(briefing, /verifying the load-bearing premises/)
   assert.match(briefing, /ASSUMPTION:/)
   assert.match(briefing, /do not begin executing the task/)
+  // Containment: plans must keep new work inside the declared workspace.
+  assert.match(briefing, /inside the current workspace directory/)
 })
 
-test('execution injection carries the plan and the assumption check', () => {
+test('execution injection carries the plan, assumption check, and containment', () => {
   const injection = buildExecutionInjection('1. do the step', 'Reviewer (X)')
   assert.match(injection, /1\. do the step/)
   assert.match(injection, /ASSUMPTION/)
   assert.match(injection, /Begin now/)
+  assert.match(injection, /inside the current workspace directory/)
+  // The no-plan fallback carries containment too.
+  assert.match(buildExecutionInjection(null, 'Reviewer (X)'), /inside the current workspace directory/)
 })
 
 test('NO-PLAN detection and reason extraction', () => {
