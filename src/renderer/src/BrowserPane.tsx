@@ -20,18 +20,27 @@ export function BrowserPane({
   state,
   activeTab,
   viewHostRef,
-  viewBounds
+  viewBounds,
+  isFullscreen,
+  onToggleFullscreen
 }: {
   state: BrowserState
   activeTab: BrowserTabState | null
   viewHostRef: RefObject<HTMLDivElement | null>
   viewBounds: BrowserBounds | null
+  isFullscreen: boolean
+  onToggleFullscreen: () => void
 }): React.JSX.Element {
   return (
     <section className="browser-pane">
       <div className="browser-shell">
         <TabStrip state={state} />
-        <BrowserToolbar activeTab={activeTab} vpn={state.vpn} />
+        <BrowserToolbar
+          activeTab={activeTab}
+          vpn={state.vpn}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={onToggleFullscreen}
+        />
         <div className="browser-frame">
           <div ref={viewHostRef} className="browser-view-host" data-ready={viewBounds ? 'true' : 'false'} />
         </div>
@@ -102,10 +111,14 @@ function vpnLabel(vpn: BrowserVpnStatus): string {
 
 function BrowserToolbar({
   activeTab,
-  vpn
+  vpn,
+  isFullscreen,
+  onToggleFullscreen
 }: {
   activeTab: BrowserTabState | null
   vpn: BrowserVpnStatus
+  isFullscreen: boolean
+  onToggleFullscreen: () => void
 }): React.JSX.Element {
   const [input, setInput] = useState('')
   const [isEditing, setIsEditing] = useState(false)
@@ -139,14 +152,21 @@ function BrowserToolbar({
   }, [activeTab?.id])
   useEffect(() => window.api.browser.onFindRequested(() => setFindOpen(true)), [])
   useEffect(() => window.api.browser.onFocusOmnibox(() => omniboxRef.current?.focus()), [])
+  // Guest pages forward F11 through the main process (focus lives in the
+  // native view); this subscription handles it alongside chrome-focused F11.
+  useEffect(
+    () => window.api.browser.onFullscreenToggleRequested(onToggleFullscreen),
+    [onToggleFullscreen]
+  )
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') { event.preventDefault(); setFindOpen(true) }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') { event.preventDefault(); omniboxRef.current?.focus() }
+      if (event.key === 'F11') { event.preventDefault(); onToggleFullscreen() }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [onToggleFullscreen])
   useEffect(() => {
     const onResize = (): void => {
       if (document.activeElement === omniboxRef.current) omniboxRef.current?.blur()
