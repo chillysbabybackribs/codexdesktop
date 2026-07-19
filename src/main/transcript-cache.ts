@@ -46,7 +46,17 @@ export class TranscriptCache {
     await this.enqueue(threadId, async () => {
       const path = this.pathFor(threadId)
       await mkdir(this.root, { recursive: true })
-      await appendFile(path, `${lines.join('\n')}\n`, 'utf8')
+      // Leading-newline guard: if a prior append was interrupted mid-line, the
+      // file has no trailing newline and a bare append would concatenate onto
+      // the torn line and corrupt this batch too. The occasional resulting
+      // blank line is filtered on read and dropped by compaction.
+      let needsGuard = false
+      try {
+        needsGuard = (await stat(path)).size > 0
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+      }
+      await appendFile(path, `${needsGuard ? '\n' : ''}${lines.join('\n')}\n`, 'utf8')
       await this.compactIfOversized(threadId)
     })
   }
