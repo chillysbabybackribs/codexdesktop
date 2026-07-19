@@ -199,28 +199,46 @@ export class ClaudeTurnTranslator {
     return { notifications: [] }
   }
 
-  // The full assistant message re-states every block; emitting completions is
-  // idempotent through the store's upsert/longest-text-wins merge.
+  // The SDK restates assistant content as full messages — often SPLIT into one
+  // record per content block, all sharing the provider message id — after the
+  // same text already streamed. Completions must land on the SAME item id as
+  // the streamed block, or split records and replays turn into duplicate
+  // messages (live-caught: the audit report rendered twice). Match restated
+  // text to a streamed block by content; otherwise key off the provider
+  // message id, memoized so exact replays stay idempotent even after the
+  // streaming block map resets.
   private handleAssistant(message: Record<string, unknown>): ClaudeTranslation {
+    const providerId = typeof message.id === 'string' ? safeId(message.id) : 'anon'
     const notifications: ServerNotification[] = []
-    if (!this.partialMessageOpen) {
-      this.messageSequence += 1
-      const providerId = typeof message.id === 'string' ? `-${safeId(message.id)}` : ''
-      this.messageKey = `m${this.messageSequence}${providerId}`
-      this.blocks.clear()
-    }
     const content = Array.isArray(message.content) ? message.content : []
-    content.forEach((rawBlock, index) => {
+    for (const rawBlock of content) {
       const block = asRecord(rawBlock)
-      const tracked = this.blocks.get(index)
-      if (block.type === 'text' && typeof block.text === 'string') {
-        const id = tracked?.id ?? `${this.context.turnId}:${this.messageKey}:b${index}`
-        this.blocks.set(index, { id, kind: 'text', text: block.text })
-        notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }))
+      if (block.type !== 'text' || typeof block.text !== 'string') continue
+      const memoKey = `${providerId} ${block.text}`
+      let id = this.emittedTextIds.get(memoKey)
+      if (!id) {
+        const streamed = this.matchStreamedTextBlock(block.text)
+        id = streamed?.id ?? `${this.context.turnId}:${providerId}:t${this.textIdCounter++}`
+        this.emittedTextIds.set(memoKey, id)
       }
-    })
-    this.partialMessageOpen = false
+      notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }))
+    }
     return { notifications }
+  }
+
+  // The streamed block this restated text corresponds to: exact match first,
+  // then prefix in either direction (an interrupted stream holds a prefix of
+  // the final text; the store's longest-text-wins merge reconciles).
+  private matchStreamedTextBlock(text: string): { id: string } | null {
+    let prefix: { id: string } | null = null
+    for (const block of this.blocks.values()) {
+      if (block.kind !== 'text') continue
+      if (block.text === text) return block
+      if (!prefix && block.text.length > 0 && (text.startsWith(block.text) || block.text.startsWith(text))) {
+        prefix = block
+      }
+    }
+    return prefix
   }
 
   private handleToolResults(message: Record<string, unknown>): ClaudeTranslation {
