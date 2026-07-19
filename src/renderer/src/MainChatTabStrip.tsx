@@ -21,6 +21,8 @@ export function MainChatTabStrip({
   canSplitActivePane,
   onClose,
   onNew,
+  isBrowserMiddle,
+  onToggleBrowserMiddle,
   onOpenSettings,
   title,
   threads,
@@ -45,6 +47,8 @@ export function MainChatTabStrip({
   canSplitActivePane: boolean;
   onClose: (key: string) => Promise<void>;
   onNew: () => void;
+  isBrowserMiddle: boolean;
+  onToggleBrowserMiddle: () => void;
   onOpenSettings: () => void;
   title: string;
   threads: Thread[];
@@ -355,6 +359,27 @@ export function MainChatTabStrip({
       <div className="main-chat-tabbar-spacer" />
       <button
         type="button"
+        className={`main-chat-tab-action main-chat-workspace-layout ${
+          isBrowserMiddle ? 'is-active' : ''
+        }`}
+        aria-label={
+          isBrowserMiddle
+            ? 'Return browser to the right of the chats'
+            : 'Place browser between chat columns'
+        }
+        aria-pressed={isBrowserMiddle}
+        title={
+          isBrowserMiddle
+            ? 'Return browser to the right'
+            : 'Center browser between chat columns'
+        }
+        disabled={disabled}
+        onClick={onToggleBrowserMiddle}
+      >
+        <BrowserMiddleIcon />
+      </button>
+      <button
+        type="button"
         className="main-chat-tab-action"
         aria-label="Split right — open a new chat beside this one"
         title="Split right — new chat beside this one (Ctrl+\)"
@@ -413,6 +438,17 @@ function SplitRightIcon(): React.JSX.Element {
       <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
       <path d="M9.5 3.5v9" stroke="currentColor" />
       <path d="M11.5 8h-2M11 6.9 12.1 8 11 9.1" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" opacity="0.75" />
+    </svg>
+  );
+}
+
+function BrowserMiddleIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <rect x="6.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <rect x="11.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <path d="M7.5 4.5h1M7.5 6.5h1" stroke="currentColor" strokeLinecap="round" />
     </svg>
   );
 }

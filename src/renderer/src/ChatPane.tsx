@@ -45,6 +45,11 @@ export function ChatPane({
   onReorderMainChatTabs,
   onCloseMainChatTab,
   onNewMainChatTab,
+  paneId = 'main-chat-pane',
+  showTabBar = true,
+  browserMiddleSide = null,
+  isBrowserMiddle,
+  onToggleBrowserMiddle,
   splitLayout,
   onDropTabOnPane,
   onCloseSplitPane,
@@ -132,6 +137,11 @@ export function ChatPane({
   ) => void;
   onCloseMainChatTab: (key: string) => Promise<void>;
   onNewMainChatTab: () => void;
+  paneId?: string;
+  showTabBar?: boolean;
+  browserMiddleSide?: 'left' | 'right' | null;
+  isBrowserMiddle: boolean;
+  onToggleBrowserMiddle: () => void;
   splitLayout: SplitNode;
   onDropTabOnPane: (sourceKey: string, targetKey: string, zone: SplitDropZone) => void;
   onCloseSplitPane: (tabKey: string) => void;
@@ -512,8 +522,10 @@ export function ChatPane({
 
   return (
     <section
-      id="main-chat-pane"
-      className={`chat-pane ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
+      id={paneId}
+      className={`chat-pane ${showTabBar ? 'has-tabbar' : 'has-no-tabbar'} ${
+        browserMiddleSide ? `is-browser-middle-${browserMiddleSide}` : ''
+      } ${isPluginBrowserOpen ? 'is-plugin-browser' : hasThreadContent ? 'is-thread' : 'is-empty'} ${isRestoring ? 'is-hydrating' : ''} ${
         !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
       } ${isMainFocused ? 'is-main-focused' : ''}`}
       aria-busy={isRestoring}
@@ -534,31 +546,35 @@ export function ChatPane({
         />
       ) : null}
       <div className={`chat-pane-content ${isPluginBrowserOpen ? 'is-hidden' : ''}`}>
-        <MainChatTabStrip
-          tabs={mainChatTabs}
-          activeKey={activeMainChatTabKey}
-          disabled={mainChatTabsDisabled}
-          onSelect={onSelectMainChatTab}
-          onReorder={onReorderMainChatTabs}
-          onPaneDragUpdate={setPaneDropTarget}
-          onDropOnPane={onDropTabOnPane}
-          canSplitForDrop={canSplitForDrop}
-          onSplitActivePane={onSplitActivePane}
-          canSplitActivePane={canSplitActivePane}
-          onClose={onCloseMainChatTab}
-          onNew={onNewMainChatTab}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          title={title}
-          threads={threads}
-          activeThreadId={activeThreadId}
-          isThreadMenuOpen={isThreadMenuOpen}
-          threadsNextCursor={threadsNextCursor}
-          threadsLoading={threadsLoading}
-          threadsError={threadsError}
-          onToggleThreadMenu={onToggleThreadMenu}
-          onResumeThread={onResumeThread}
-          onLoadMoreThreads={onLoadMoreThreads}
-        />
+        {showTabBar ? (
+          <MainChatTabStrip
+            tabs={mainChatTabs}
+            activeKey={activeMainChatTabKey}
+            disabled={mainChatTabsDisabled}
+            onSelect={onSelectMainChatTab}
+            onReorder={onReorderMainChatTabs}
+            onPaneDragUpdate={setPaneDropTarget}
+            onDropOnPane={onDropTabOnPane}
+            canSplitForDrop={canSplitForDrop}
+            onSplitActivePane={onSplitActivePane}
+            canSplitActivePane={canSplitActivePane}
+            onClose={onCloseMainChatTab}
+            onNew={onNewMainChatTab}
+            isBrowserMiddle={isBrowserMiddle}
+            onToggleBrowserMiddle={onToggleBrowserMiddle}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+            title={title}
+            threads={threads}
+            activeThreadId={activeThreadId}
+            isThreadMenuOpen={isThreadMenuOpen}
+            threadsNextCursor={threadsNextCursor}
+            threadsLoading={threadsLoading}
+            threadsError={threadsError}
+            onToggleThreadMenu={onToggleThreadMenu}
+            onResumeThread={onResumeThread}
+            onLoadMoreThreads={onLoadMoreThreads}
+          />
+        ) : null}
 
         <div className="chat-split-root">{renderSplitNode(splitLayout, '')}</div>
 
