@@ -1102,6 +1102,8 @@ button {
 
 .thread-menu-search-icon {
   flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
   color: #878787;
   transition: color 130ms ease;
 }
