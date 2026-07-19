@@ -83,6 +83,20 @@ import {
   threadTitle,
 } from './app-helpers';
 import { useAgentSessions } from './useAgentSessions';
+import {
+  buildDeclinedInjection,
+  buildExecutionInjection,
+  buildPlanBriefing,
+  buildRestateInjection,
+  isNoPlan,
+  lastAgentMessageText,
+  latestAssistantText,
+  noPlanReason,
+  pickIntakeReviewer,
+  reviewerDisplayLabel,
+  stripIntakeInjections,
+  type IntakeState,
+} from './main-chat-intake';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
@@ -3394,6 +3408,48 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, { type: 'system', id: crypto.randomUUID(), level, text }]);
   }
 
+  // Conversational intake state per main-chat tab (protocol in
+  // main-chat-intake.ts). Transient by design: a reload mid-protocol simply
+  // sends the next message normally.
+  const mainChatIntakeRef = useRef(new Map<string, IntakeState>());
+
+  // A thread switch or reset invalidates a pending intake for the active tab —
+  // the confirmation would target a conversation no longer on screen.
+  useEffect(() => {
+    const state = mainChatIntakeRef.current.get(activeMainChatTabKey);
+    if (state && state.threadId !== null && state.threadId !== activeThreadId) {
+      mainChatIntakeRef.current.delete(activeMainChatTabKey);
+    }
+  }, [activeThreadId, activeMainChatTabKey]);
+
+  // Wait for the paired reviewer to finish its planning turn. Polls the
+  // sessions ref (bounded, 500ms) instead of adding subscription plumbing for
+  // one call site; resolves null on timeout or reset so the main chat can
+  // never be bricked by its reviewer.
+  async function awaitReviewerPlan(
+    reviewerKey: string,
+    timeoutMs = 120_000,
+  ): Promise<string | null> {
+    const deadline = Date.now() + timeoutMs;
+    let sawWorking = false;
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => window.setTimeout(resolve, 500));
+      const reviewer = agentSessionsRef.current.find((session) => session.key === reviewerKey);
+      if (!reviewer) return null;
+      if (reviewer.status === 'working') {
+        sawWorking = true;
+        continue;
+      }
+      if (reviewer.status === 'done') {
+        const text = latestAssistantText(reviewer.messages);
+        if (text !== null) return text;
+        continue; // completion raced ahead of the message reduce — keep polling
+      }
+      if (sawWorking) return null; // reset out from under us
+    }
+    return null;
+  }
+
   // Codex-doer / Claude-auditor pairing: when the focused main chat completes
   // a turn, idle dock agents in audit mode receive a compact briefing. Turns
   // that changed files get the workspace-grounded diff audit (the auditor
@@ -3407,6 +3463,9 @@ export default function App(): React.JSX.Element {
       (session) => session.mainChatTabKey === activeTabKey && session.auditsMain,
     );
     if (!auditors.length) return;
+    // Intake protocol turns (restatement / declined-start replies) are not
+    // work — the reviewer plans instead of auditing until the task starts.
+    if (mainChatIntakeRef.current.has(activeTabKey)) return;
     const threadId = activeThreadIdRef.current;
     // fileChange items only cover editor-tool edits; the checkpoint diff is
     // ground truth and also catches shell-command writes (the doer's most
