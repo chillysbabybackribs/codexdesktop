@@ -18,6 +18,7 @@ function useDismissibleMenu(
   isOpen: boolean,
   setIsOpen: (open: boolean) => void,
   wrapRef: React.RefObject<HTMLDivElement | null>,
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
 ): void {
   useEffect(() => {
     if (!isOpen) return;
@@ -26,7 +27,10 @@ function useDismissibleMenu(
       if (!wrapRef.current?.contains(event.target as Node)) setIsOpen(false);
     };
     const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        window.requestAnimationFrame(() => triggerRef.current?.focus());
+      }
     };
 
     window.addEventListener('mousedown', handlePointerDown);
@@ -35,7 +39,7 @@ function useDismissibleMenu(
       window.removeEventListener('mousedown', handlePointerDown);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, setIsOpen, wrapRef]);
+  }, [isOpen, setIsOpen, triggerRef, wrapRef]);
 }
 
 export function ModelSelector({
@@ -51,7 +55,8 @@ export function ModelSelector({
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  useDismissibleMenu(isOpen, setIsOpen, wrapRef);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  useDismissibleMenu(isOpen, setIsOpen, wrapRef, triggerRef);
 
   const active = activeModelFor({ models, selectedModel });
   const canToggleFastMode = Boolean(
@@ -61,6 +66,7 @@ export function ModelSelector({
   return (
     <div ref={wrapRef} className="model-selector-wrap">
       <button
+        ref={triggerRef}
         type="button"
         className="selector-trigger model-selector-trigger"
         title={active ? `${active.displayName} — ${active.description}` : 'Choose model'}
@@ -89,6 +95,7 @@ export function ModelSelector({
                   onClick={() => {
                     onSelectModel(model.model);
                     setIsOpen(false);
+                    window.requestAnimationFrame(() => triggerRef.current?.focus());
                   }}
                 >
                   <span className="model-option-name">{model.displayName}</span>
@@ -139,7 +146,8 @@ export function EffortSelector({
 }): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  useDismissibleMenu(isOpen, setIsOpen, wrapRef);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  useDismissibleMenu(isOpen, setIsOpen, wrapRef, triggerRef);
 
   const active = activeModelFor({ models, selectedModel });
   const efforts = active?.supportedReasoningEfforts ?? [];
@@ -149,15 +157,19 @@ export function EffortSelector({
   const label = effectiveEffort ? reasoningEffortLabel(effectiveEffort) : 'Default';
   const unavailable = !active || !efforts.length;
 
-  const selectEffort = (effort: ReasoningEffort): void => {
+  const selectEffort = (effort: ReasoningEffort, closeMenu = true): void => {
     if (!active) return;
     onSelectEffort(active.model, effort);
-    setIsOpen(false);
+    if (closeMenu) {
+      setIsOpen(false);
+      window.requestAnimationFrame(() => triggerRef.current?.focus());
+    }
   };
 
   return (
     <div ref={wrapRef} className="effort-selector-wrap">
       <button
+        ref={triggerRef}
         type="button"
         className="selector-trigger effort-selector-trigger"
         title={unavailable ? 'This model has no effort options' : `Reasoning effort: ${label}`}
@@ -215,7 +227,7 @@ export function EffortSelector({
                         Math.max(0, index + direction),
                       );
                       const next = efforts[nextIndex];
-                      if (next) selectEffort(next.reasoningEffort);
+                      if (next) selectEffort(next.reasoningEffort, false);
                     }}
                   >
                     <span className="effort-step-dot" />
