@@ -8,6 +8,7 @@ import {
   liveTurnGlance,
   parseAuditPrompt,
   shouldTriggerAudit,
+  turnAnswerText,
   turnChangedFiles,
   turnStepLines
 } from './audit-trigger.ts'
@@ -166,12 +167,49 @@ test('auditBriefMarkdown renders the briefing as sectioned markdown', () => {
   const md = auditBriefMarkdown({
     userText: 'fix the tests',
     files: ['a.ts', 'b.ts'],
-    steps: ['$ npm test (exit 1)', 'edited: a.ts']
+    steps: ['$ npm test (exit 1)', 'edited: a.ts'],
+    answerText: 'All green now.'
   })
   assert.match(md, /## Request\n\nfix the tests/)
   assert.match(md, /## Changed files\n\n- `a\.ts`\n- `b\.ts`/)
   assert.match(md, /## Steps\n\n1\. `\$ npm test \(exit 1\)`\n2\. `edited: a\.ts`/)
-  assert.equal(auditBriefMarkdown({ userText: '', files: [], steps: [] }), '_No details captured._')
+  assert.match(md, /## Answer\n\nAll green now\./)
+  assert.equal(auditBriefMarkdown({ userText: '', files: [], steps: [], answerText: '' }), '_No details captured._')
+})
+
+test('turnAnswerText picks the last non-empty agent message of the turn, clipped', () => {
+  const items = [
+    { type: 'agentMessage', id: 'm1', text: 'thinking out loud', phase: null, memoryCitation: null },
+    { type: 'agentMessage', id: 'm2', text: 'Final answer.', phase: null, memoryCitation: null },
+    { type: 'agentMessage', id: 'other', text: 'different turn', phase: null, memoryCitation: null }
+  ] as unknown as ChatItem[]
+  const meta = { m1: { turnId: 't1' }, m2: { turnId: 't1' }, other: { turnId: 't2' } }
+  assert.equal(turnAnswerText(items, meta, 't1'), 'Final answer.')
+  assert.equal(turnAnswerText(items, meta, 't3'), '')
+  const long = [{ type: 'agentMessage', id: 'l1', text: 'y'.repeat(3000), phase: null, memoryCitation: null }] as unknown as ChatItem[]
+  assert.equal(turnAnswerText(long, { l1: { turnId: 't1' } }, 't1').length, 1501, 'clipped with ellipsis')
+})
+
+test('parseAuditPrompt recovers the answer for the restore path', () => {
+  const prompt = buildAuditPrompt({
+    userText: 'brainstorm',
+    files: [],
+    answerText: 'Idea one.\nIdea two.'
+  })
+  const parsed = parseAuditPrompt(prompt)
+  assert.equal(parsed.answerText, 'Idea one.\nIdea two.')
+  assert.deepEqual(parsed.files, [])
+  // Steps + answer + files together still parse cleanly.
+  const full = buildAuditPrompt({
+    userText: 'do it',
+    files: ['a.ts'],
+    steps: ['$ ls (exit 0)'],
+    answerText: 'Done.'
+  })
+  const parsedFull = parseAuditPrompt(full)
+  assert.deepEqual(parsedFull.steps, ['$ ls (exit 0)'])
+  assert.deepEqual(parsedFull.files, ['a.ts'])
+  assert.equal(parsedFull.answerText, 'Done.')
 })
 
 test('liveTurnGlance reports true counts and the genuinely-latest step, uncapped', () => {
