@@ -412,47 +412,12 @@ function ReloadIcon(): React.JSX.Element {
   )
 }
 
-function SearchIcon(): React.JSX.Element {
+function KebabIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="10.8" cy="10.8" r="5.8" stroke="currentColor" strokeWidth="1.8" />
-      <path d="m15.2 15.2 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function VolumeIcon({ muted }: { muted: boolean }): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4.5 10h3.2L12 6.5v11l-4.3-3.5H4.5z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
-      {muted ? (
-        <path d="m15.5 10.2 4 4m0-4-4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      ) : (
-        <path d="M15.5 9.2a4 4 0 0 1 0 5.6M18 6.7a7.4 7.4 0 0 1 0 10.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      )}
-    </svg>
-  )
-}
-
-function FullscreenIcon({ active }: { active: boolean }): React.JSX.Element {
-  return active ? (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M9.5 5v4.5H5M14.5 5v4.5H19M9.5 19v-4.5H5M14.5 19v-4.5H19" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 9.5V5h4.5M19 9.5V5h-4.5M5 14.5V19h4.5M19 14.5V19h-4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function ShieldIcon({ active }: { active: boolean }): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 3.4 5.6 5.9v5.4c0 4 2.6 6.9 6.4 8.7 3.8-1.8 6.4-4.7 6.4-8.7V5.9L12 3.4Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
-      {active ? (
-        <path d="m9.2 11.9 2 2 3.7-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-      ) : null}
+      <circle cx="12" cy="5.6" r="1.55" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.55" fill="currentColor" />
+      <circle cx="12" cy="18.4" r="1.55" fill="currentColor" />
     </svg>
   )
 }
@@ -461,14 +426,6 @@ function PlusIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function MinusIcon(): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
     </svg>
   )
 }
