@@ -148,6 +148,7 @@ const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
 const fastModeStorageKey = 'codexdesktop.fastMode';
+const alwaysKeepAllStorageKey = 'codexdesktop.alwaysKeepAll';
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted';
@@ -230,6 +231,9 @@ export default function App(): React.JSX.Element {
   );
   const [fastMode, setFastMode] = useState(
     () => window.localStorage.getItem(fastModeStorageKey) === '1',
+  );
+  const [alwaysKeepAll, setAlwaysKeepAll] = useState(
+    () => window.localStorage.getItem(alwaysKeepAllStorageKey) === '1',
   );
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
@@ -3027,6 +3031,11 @@ export default function App(): React.JSX.Element {
     setTurnReviews((current) => ({ ...current, [turnId]: 'kept' }));
   }, []);
 
+  const handleSetAlwaysKeepAll = useCallback((enabled: boolean): void => {
+    setAlwaysKeepAll(enabled);
+    window.localStorage.setItem(alwaysKeepAllStorageKey, enabled ? '1' : '0');
+  }, []);
+
   const handleUndoTurnAll = useCallback(
     async (turnId: string): Promise<void> => {
       if (await handleRevertTurn(turnId)) {
@@ -3067,7 +3076,9 @@ export default function App(): React.JSX.Element {
           onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
           turnReviews={turnReviews}
           undoneFiles={undoneFiles}
+          alwaysKeepAll={alwaysKeepAll}
           onKeepTurn={handleKeepTurn}
+          onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
           onUndoTurnAll={handleUndoTurnAll}
           onUndoFile={handleUndoFile}
           mainChatTabs={mainChatTabs}
@@ -3531,7 +3542,9 @@ function ChatPane({
   onRevertTurn,
   turnReviews,
   undoneFiles,
+  alwaysKeepAll,
   onKeepTurn,
+  onSetAlwaysKeepAll,
   onUndoTurnAll,
   onUndoFile,
   mainChatTabs,
@@ -3606,7 +3619,9 @@ function ChatPane({
   onRevertTurn: (turnId: string) => void;
   turnReviews: Record<string, 'kept' | 'undone'>;
   undoneFiles: Record<string, string[]>;
+  alwaysKeepAll: boolean;
   onKeepTurn: (turnId: string) => void;
+  onSetAlwaysKeepAll: (enabled: boolean) => void;
   onUndoTurnAll: (turnId: string) => Promise<void>;
   onUndoFile: (turnId: string, path: string) => Promise<void>;
   mainChatTabs: MainChatTab[];
@@ -3997,7 +4012,9 @@ function ChatPane({
               changes={reviewTarget.changes}
               workspace={workspace}
               undonePaths={new Set(undoneFiles[reviewTarget.turnId] ?? [])}
+              alwaysKeepAll={alwaysKeepAll}
               onKeepAll={() => onKeepTurn(reviewTarget.turnId)}
+              onSetAlwaysKeepAll={onSetAlwaysKeepAll}
               onUndoAll={() => void onUndoTurnAll(reviewTarget.turnId)}
               onUndoFile={(path) => void onUndoFile(reviewTarget.turnId, path)}
             />

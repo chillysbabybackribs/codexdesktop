@@ -14,14 +14,18 @@ export function ReviewBar({
   changes,
   workspace,
   undonePaths,
+  alwaysKeepAll,
   onKeepAll,
+  onSetAlwaysKeepAll,
   onUndoAll,
   onUndoFile
 }: {
   changes: ReviewChange[]
   workspace: string | null
   undonePaths: ReadonlySet<string>
+  alwaysKeepAll: boolean
   onKeepAll: () => void
+  onSetAlwaysKeepAll: (enabled: boolean) => void
   onUndoAll: () => void
   onUndoFile: (path: string) => void
 }): React.JSX.Element {
@@ -76,6 +80,18 @@ export function ReviewBar({
             onBlur={() => setConfirmingUndoAll(false)}
           >
             {confirmingUndoAll ? 'Undo all changes?' : 'Undo all'}
+          </button>
+          <button
+            type="button"
+            className={`review-always-keep ${alwaysKeepAll ? 'is-active' : ''}`}
+            aria-pressed={alwaysKeepAll}
+            title="Automatically keep future edits while continuing to show each turn's change summary and Undo controls."
+            onClick={() => onSetAlwaysKeepAll(!alwaysKeepAll)}
+          >
+            <span className="review-always-keep-mark" aria-hidden="true">
+              ✓
+            </span>
+            Always keep all
           </button>
           <button type="button" className="review-keep-all" onClick={onKeepAll}>
             Keep all

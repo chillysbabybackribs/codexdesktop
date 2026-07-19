@@ -2048,7 +2048,78 @@ button {
   display: flex;
   align-items: flex-start;
   gap: 9px;
+  width: 100%;
+  margin: 0;
   padding: 8px 12px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.term-head:disabled {
+  cursor: default;
+}
+
+.term-card.is-collapsed .term-head:hover {
+  background: rgb(255 255 255 / 3%);
+}
+
+.term-line-count {
+  color: #6f757c;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.term-chevron {
+  flex: none;
+  align-self: center;
+  color: #6f757c;
+  opacity: 0;
+  transition: opacity 120ms ease, transform 140ms ease;
+}
+
+.term-card:hover .term-chevron,
+.term-chevron.is-open {
+  opacity: 1;
+}
+
+.term-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Settled-turn step collapse: the "N steps" toggle above the activity */
+
+.activity-steps-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin: 2px 0 4px;
+  padding: 2px 6px 2px 2px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: #82888f;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.activity-steps-toggle:hover {
+  color: #b3bac1;
+  background: rgb(255 255 255 / 4%);
+}
+
+.activity-steps-chevron {
+  transition: transform 140ms ease;
+}
+
+.activity-steps-chevron.is-open {
+  transform: rotate(90deg);
 }
 
 .term-icon {
@@ -6564,6 +6635,49 @@ button {
   background: rgb(229 83 75 / 7%);
 }
 
+.review-always-keep {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 6px;
+  padding: 3px 9px;
+  background: rgb(255 255 255 / 2%);
+  color: var(--chrome-fg);
+  font-size: 11.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.review-always-keep:hover {
+  border-color: rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 5%);
+  color: var(--chrome-fg-strong);
+}
+
+.review-always-keep.is-active {
+  border-color: rgb(255 255 255 / 22%);
+  background: var(--surface-raised);
+  color: #eeeeef;
+}
+
+.review-always-keep-mark {
+  width: 9px;
+  color: currentColor;
+  opacity: 0;
+  font-size: 10px;
+  line-height: 1;
+  transition: opacity 140ms ease;
+}
+
+.review-always-keep.is-active .review-always-keep-mark {
+  opacity: 1;
+}
+
 .review-keep-all {
   border: 1px solid #e2e2e3;
   background: #e2e2e3;
@@ -6676,6 +6790,7 @@ button {
 
 .review-bar-summary:focus-visible,
 .review-undo-all:focus-visible,
+.review-always-keep:focus-visible,
 .review-keep-all:focus-visible,
 .review-file-name:focus-visible,
 .review-file-undo:focus-visible {
