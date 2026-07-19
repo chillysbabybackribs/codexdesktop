@@ -699,6 +699,13 @@ export default function App(): React.JSX.Element {
     );
   }, [mainChatTabState]);
 
+  // Tab state now owns the workspace. The old window-global key is read once
+  // during initial migration above, then discarded so it cannot become a
+  // competing source of truth on a later launch.
+  useEffect(() => {
+    window.localStorage.removeItem('codexdesktop.workspace');
+  }, []);
+
   useEffect(() => {
     chatSplitLayoutRef.current = chatSplitLayout;
     // Debounced: ratio drags update the layout once per pointer move.
