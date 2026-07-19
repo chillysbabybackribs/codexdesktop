@@ -4,19 +4,23 @@ import {
   appendAgentSessionMessage,
   agentSessionsForMainChatTab,
   applyAgentDeltas,
+  buildAgentRoster,
   collapseAdjacentAssistantDuplicates,
   completeAgentMessage,
   createAgentSession,
   createReviewerSession,
+  createWorkerSession,
   defaultReviewerModel,
   latestAuditReport,
   parseAgentDock,
   resetAgentSession,
   reviewerTitle,
+  rollupStatus,
   serializeAgentDock,
   stripMainChatContext,
   updateAgentSession
 } from './agent-session-model.ts'
+import type { AgentSession } from './agent-session-model.ts'
 import type { Model } from '../../shared/session-protocol'
 
 test('agent session updates preserve unrelated sessions', () => {

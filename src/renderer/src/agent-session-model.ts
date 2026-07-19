@@ -230,6 +230,75 @@ export function agentSessionsForMainChatTab(
   return sessions.filter((session) => session.mainChatTabKey === mainChatTabKey)
 }
 
+// The roster is the master-detail "map": a shallow tree of agents grouped by
+// their spawning session. A node's `rollup` folds the whole subtree's status
+// into one glyph so a collapsed lead still signals "a child is working" or
+// "a child errored".
+export type AgentRosterNode = {
+  session: AgentSession
+  children: AgentRosterNode[]
+  rollup: RosterRollupStatus
+}
+
+export type RosterRollupStatus = 'idle' | 'working' | 'done' | 'attention'
+
+// Fold a subtree's statuses into one. 'attention' (a descendant that ended in
+// an error state we surface as a stuck/idle child after failure) wins over
+// everything so problems never hide under a collapsed parent; then 'working'
+// (self or any descendant still running); then 'done' if anything completed;
+// else 'idle'. `attentionKeys` marks sessions currently flagged for attention
+// (e.g. a failed turn awaiting recovery) — the caller owns that signal, so the
+// fold takes it as input rather than inventing a new session field.
+export function rollupStatus(
+  node: AgentRosterNode,
+  attentionKeys?: ReadonlySet<string>,
+): RosterRollupStatus {
+  let working = false
+  let done = false
+  let attention = false
+  const visit = (current: AgentRosterNode): void => {
+    if (attentionKeys?.has(current.session.key)) attention = true
+    if (current.session.status === 'working') working = true
+    else if (current.session.status === 'done') done = true
+    for (const child of current.children) visit(child)
+  }
+  visit(node)
+  if (attention) return 'attention'
+  if (working) return 'working'
+  if (done) return 'done'
+  return 'idle'
+}
+
+// Build the shallow spawn tree for one owning tab. Children link to parents by
+// `parentAgentKey`; a child whose parent is absent (parent closed, or the link
+// points outside this tab) is promoted to top-level so it never vanishes from
+// the roster. Order is preserved from the input session order at each level.
+export function buildAgentRoster(
+  sessions: AgentSession[],
+  attentionKeys?: ReadonlySet<string>,
+): AgentRosterNode[] {
+  const byKey = new Map(sessions.map((session) => [session.key, session]))
+  const childrenOf = new Map<string, AgentSession[]>()
+  const roots: AgentSession[] = []
+  for (const session of sessions) {
+    const parentKey = session.parentAgentKey
+    if (parentKey && byKey.has(parentKey)) {
+      const bucket = childrenOf.get(parentKey)
+      if (bucket) bucket.push(session)
+      else childrenOf.set(parentKey, [session])
+    } else {
+      roots.push(session)
+    }
+  }
+  const build = (session: AgentSession): AgentRosterNode => {
+    const children = (childrenOf.get(session.key) ?? []).map(build)
+    const node: AgentRosterNode = { session, children, rollup: 'idle' }
+    node.rollup = rollupStatus(node, attentionKeys)
+    return node
+  }
+  return roots.map(build)
+}
+
 export function updateAgentSession(
   sessions: AgentSession[],
   key: string,
