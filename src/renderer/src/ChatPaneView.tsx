@@ -49,6 +49,7 @@ function MainChatGlyph(): React.JSX.Element {
 export function ChatPaneView({
   tabKey,
   tab,
+  ariaIdPrefix,
   isActive,
   showHeader,
   dropZone,
@@ -83,6 +84,7 @@ export function ChatPaneView({
 }: {
   tabKey: string;
   tab: MainChatTab | null;
+  ariaIdPrefix: string;
   isActive: boolean;
   showHeader: boolean;
   dropZone: SplitDropZone | null;
@@ -316,8 +318,8 @@ export function ChatPaneView({
       ) : null}
       <FileReviewContext.Provider value={fileReview}>
         <ThreadScroll
-          id={`main-chat-panel-${tabKey}`}
-          labelledBy={`main-chat-tab-${tabKey}`}
+          id={`${ariaIdPrefix}-panel-${tabKey}`}
+          labelledBy={`${ariaIdPrefix}-tab-${tabKey}`}
           scrollKey={tabKey}
           resetKey={paneThreadId}
           activeTurnId={paneTurnId}

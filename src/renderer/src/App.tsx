@@ -3589,7 +3589,7 @@ export default function App(): React.JSX.Element {
             {renderChatPane(browserMiddleColumns.second, {
               id: 'main-chat-pane-right',
               pathPrefix: 's',
-              showTabBar: false,
+              showTabBar: true,
               side: 'right',
             })}
           </>

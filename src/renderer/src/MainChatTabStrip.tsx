@@ -9,6 +9,8 @@ import { splitDropZoneAt, type SplitDropZone } from './chat-split';
 import { ThreadMenu } from './ThreadMenu';
 
 export function MainChatTabStrip({
+  idPrefix,
+  showGlobalActions,
   tabs,
   activeKey,
   disabled,
@@ -35,6 +37,8 @@ export function MainChatTabStrip({
   onResumeThread,
   onLoadMoreThreads,
 }: {
+  idPrefix: string;
+  showGlobalActions: boolean;
   tabs: MainChatTab[];
   activeKey: string;
   disabled: boolean;
@@ -252,7 +256,12 @@ export function MainChatTabStrip({
 
   return (
     <header className="main-chat-tabbar">
-      <div ref={stripRef} className="main-chat-tabs-scroll" role="tablist" aria-label="Open chats">
+      <div
+        ref={stripRef}
+        className="main-chat-tabs-scroll"
+        role="tablist"
+        aria-label={showGlobalActions ? 'Open chats' : 'Open chats in right workspace'}
+      >
         {tabs.map((tab) => {
           const active = tab.key === activeKey;
           const isDragging = dragging?.sourceKey === tab.key;
@@ -270,9 +279,9 @@ export function MainChatTabStrip({
                 role="tab"
                 className="main-chat-tab-target"
                 data-main-chat-tab={tab.key}
-                id={`main-chat-tab-${tab.key}`}
+                id={`${idPrefix}-tab-${tab.key}`}
                 aria-selected={active}
-                aria-controls={`main-chat-panel-${tab.key}`}
+                aria-controls={`${idPrefix}-panel-${tab.key}`}
                 tabIndex={active ? 0 : -1}
                 disabled={disabled}
                 title={tab.title}
@@ -398,28 +407,32 @@ export function MainChatTabStrip({
       >
         <SplitDownIcon />
       </button>
-      <ThreadMenu
-        placement="tabbar"
-        title={title}
-        threads={threads}
-        activeThreadId={activeThreadId}
-        isOpen={isThreadMenuOpen}
-        threadsNextCursor={threadsNextCursor}
-        threadsLoading={threadsLoading}
-        threadsError={threadsError}
-        onToggle={onToggleThreadMenu}
-        onResumeThread={onResumeThread}
-        onLoadMoreThreads={onLoadMoreThreads}
-      />
-      <button
-        type="button"
-        className="main-chat-tab-action"
-        aria-label="Open settings"
-        title="Settings"
-        onClick={onOpenSettings}
-      >
-        <SettingsIcon />
-      </button>
+      {showGlobalActions ? (
+        <>
+          <ThreadMenu
+            placement="tabbar"
+            title={title}
+            threads={threads}
+            activeThreadId={activeThreadId}
+            isOpen={isThreadMenuOpen}
+            threadsNextCursor={threadsNextCursor}
+            threadsLoading={threadsLoading}
+            threadsError={threadsError}
+            onToggle={onToggleThreadMenu}
+            onResumeThread={onResumeThread}
+            onLoadMoreThreads={onLoadMoreThreads}
+          />
+          <button
+            type="button"
+            className="main-chat-tab-action"
+            aria-label="Open settings"
+            title="Settings"
+            onClick={onOpenSettings}
+          >
+            <SettingsIcon />
+          </button>
+        </>
+      ) : null}
     </header>
   );
 }

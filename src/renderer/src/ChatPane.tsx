@@ -219,6 +219,11 @@ export function ChatPane({
     tabKey: string;
     zone: SplitDropZone;
   } | null>(null);
+  const headerIdPrefix = browserMiddleSide === 'right' ? 'right-chat' : 'main-chat';
+  // History and settings are app-wide surfaces. The right header keeps the
+  // workspace controls that matter in place (tabs, new, splits, layout) while
+  // avoiding a second copy of those global menus.
+  const showGlobalHeaderActions = browserMiddleSide !== 'right';
 
   // Live glance at the in-flight turn for auditor dock cards ("watching" POV).
   // Cheap passes over state this pane already re-renders on.
@@ -454,6 +459,7 @@ export function ChatPane({
         <ChatPaneView
           key={node.tabKey}
           tabKey={node.tabKey}
+          ariaIdPrefix={headerIdPrefix}
           tab={tab}
           isActive={isActivePane}
           showHeader={multiPane}
@@ -548,6 +554,8 @@ export function ChatPane({
       <div className={`chat-pane-content ${isPluginBrowserOpen ? 'is-hidden' : ''}`}>
         {showTabBar ? (
           <MainChatTabStrip
+            idPrefix={headerIdPrefix}
+            showGlobalActions={showGlobalHeaderActions}
             tabs={mainChatTabs}
             activeKey={activeMainChatTabKey}
             disabled={mainChatTabsDisabled}
