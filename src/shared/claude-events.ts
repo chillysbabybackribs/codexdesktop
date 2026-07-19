@@ -36,21 +36,44 @@ export type ClaudeTranslation = {
   turnEnded?: boolean;
 };
 
-export function userMessageItem(turnId: string, text: string): ThreadItem {
+// Mirrors the codex UserInput content shape (and buildOptimisticUserMessage in
+// the renderer) so attachmentsFromUserInput/AttachmentStrip render Claude user
+// messages — including images — identically to codex ones.
+export type ClaudeUserAttachment = {
+  kind: 'image' | 'file';
+  name: string;
+  path: string;
+};
+
+export function userMessageItem(
+  turnId: string,
+  text: string,
+  attachments: ClaudeUserAttachment[] = [],
+): ThreadItem {
+  const content: unknown[] = [];
+  if (text) content.push({ type: 'text', text });
+  for (const attachment of attachments) {
+    content.push(
+      attachment.kind === 'image'
+        ? { type: 'localImage', path: attachment.path, detail: 'high' }
+        : { type: 'mention', name: attachment.name, path: attachment.path },
+    );
+  }
   return {
     type: 'userMessage',
     id: `${turnId}:user`,
-    content: [{ type: 'text', text }],
+    content,
   } as unknown as ThreadItem;
 }
 
 export function turnStartedNotification(
   context: ClaudeTurnContext,
   userText: string,
+  attachments: ClaudeUserAttachment[] = [],
 ): ServerNotification {
   const turn = {
     id: context.turnId,
-    items: [userMessageItem(context.turnId, userText)],
+    items: [userMessageItem(context.turnId, userText, attachments)],
     itemsView: 'full',
     status: 'inProgress',
     error: null,

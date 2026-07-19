@@ -400,7 +400,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     session.lastActivityMs = Date.now();
     this.clearIdleTimer(session);
 
-    this.emitNotification(turnStartedNotification(context, text));
+    this.emitNotification(turnStartedNotification(context, text, attachments));
     const response = {
       turn: {
         id: turnId,

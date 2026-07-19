@@ -6988,110 +6988,124 @@ button {
   color: var(--chrome-fg-strong);
 }
 
-/* Grows upward out of the top of the "files changed" bar as one cohesive
-   shape: rounded only on top, bottom edge open and borderless so it fuses
-   seamlessly into the bar's head below it — no line divides the two. */
+/* Anchored dropdown above the trigger: a quiet, standard popover panel —
+   hairline border, raised surface, soft layered shadow. Items stack
+   vertically with leading icons; the toggle shows its state on the right. */
 .review-action-menu {
   position: absolute;
   top: auto;
-  right: -1px;
-  bottom: calc(100% - 4px);
+  right: 0;
+  bottom: calc(100% + 8px);
   z-index: 30;
   display: flex;
-  justify-content: flex-end;
-  align-items: stretch;
-  /* Fixed width so the SVG tab maps 1:1 (no stretch distortion of the curve).
-     Labels are stable, so this stays correct. */
-  width: 340px;
-  max-width: 100cqw;
-  /* Left padding is the curve's horizontal run: buttons sit right of the
-     sweep. Bottom padding keeps them clear of the fused baseline. */
-  padding: 0 0 4px 78px;
-  border: 0;
-  filter: drop-shadow(0 -10px 24px rgb(0 0 0 / 32%));
+  flex-direction: column;
+  min-width: 216px;
+  max-width: calc(100cqw - 12px);
+  padding: 5px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 10px;
+  background-color: var(--surface-raised);
+  background-image: var(--grain);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 4%),
+    0 2px 6px rgb(0 0 0 / 28%),
+    0 14px 36px rgb(0 0 0 / 42%);
   transform-origin: bottom right;
-  animation: review-action-menu-in 170ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* The tab silhouette: a flat top over the buttons that tapers on the left
-   via a smooth cubic sweep down into the rail. One SVG gives both the grey
-   fill (matched to the rail) and the hairline outline, so it reads as a
-   single flowing shape rather than a right-angled box. */
-.review-action-menu::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 340 44'%3E%3Cpath d='M0 44 C 40 44 44 2 84 2 L 330 2 A 10 10 0 0 1 340 12 L 340 44 Z' fill='%231c1c1d' stroke='rgba(255,255,255,0.13)' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
-  background-size: 100% 100%;
+  animation: review-action-menu-in 140ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes review-action-menu-in {
   from {
     opacity: 0;
-    transform: translateY(8px) scaleY(0.9);
+    transform: translateY(5px) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Flat segmented control: options sit flush inside one surface, divided by
-   hairlines. No chrome per item until hover — quiet, dense, enterprise. */
 .review-action-menu-item {
-  position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 34px;
-  padding: 0 16px;
+  gap: 9px;
+  width: 100%;
+  margin: 0;
+  min-height: 30px;
+  padding: 5px 9px;
   border: 0;
-  border-radius: 0;
+  border-radius: 7px;
   background: transparent;
-  color: var(--chrome-fg);
+  color: var(--chrome-fg-strong);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 450;
+  letter-spacing: 0.005em;
+  text-align: left;
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 110ms ease, color 110ms ease;
 }
 
-.review-action-menu-item:not(:first-child) {
-  box-shadow: inset 1px 0 0 var(--hairline);
-}
-
-.review-action-menu-item > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.005em;
-}
-
 .review-action-menu-item:hover,
 .review-action-menu-item:focus-visible {
-  background: rgb(255 255 255 / 5%);
-  color: var(--chrome-fg-strong);
+  background: rgb(255 255 255 / 6%);
 }
 
 .review-action-menu-item:active {
-  background: rgb(255 255 255 / 3%);
+  background: rgb(255 255 255 / 4%);
+}
+
+.review-action-menu-icon {
+  flex: none;
+  color: var(--chrome-fg);
+  transition: color 110ms ease;
+}
+
+.review-action-menu-item:hover .review-action-menu-icon,
+.review-action-menu-item:focus-visible .review-action-menu-icon {
+  color: var(--chrome-fg-strong);
+}
+
+.review-action-menu-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right-aligned checked state on the "Always keep all" toggle row. */
+.review-action-menu-state {
+  flex: none;
+  color: var(--chrome-fg-strong);
+}
+
+.review-action-menu-divider {
+  flex: none;
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--hairline);
+}
+
+/* Undo is neutral at rest; the confirm step is where the red lives. */
+.review-action-menu-item.is-danger:hover,
+.review-action-menu-item.is-danger:focus-visible {
+  background: rgb(229 83 75 / 10%);
+  color: #f1a09a;
+}
+
+.review-action-menu-item.is-danger:hover .review-action-menu-icon,
+.review-action-menu-item.is-danger:focus-visible .review-action-menu-icon {
+  color: #f1a09a;
 }
 
 .review-action-menu-item.is-confirming {
-  background: rgb(255 255 255 / 7%);
-  color: var(--chrome-fg-strong);
+  background: rgb(229 83 75 / 12%);
+  color: #f1a09a;
 }
 
-.review-action-menu-check {
-  color: var(--chrome-fg);
-  font-size: 10px;
-}
-
-.review-action-menu-item:hover .review-action-menu-check,
-.review-action-menu-item:focus-visible .review-action-menu-check {
-  color: var(--chrome-fg-strong);
+.review-action-menu-item.is-confirming .review-action-menu-icon {
+  color: #f1a09a;
 }
 
 .review-undo-all {
@@ -7336,15 +7350,16 @@ button {
   }
 
   .review-actions-trigger {
-    width: 44px;
-    height: 44px;
+    width: 28px;
+    height: 28px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .review-chevron,
   .review-actions-trigger,
-  .review-actions-trigger svg,
+  .review-action-menu-item,
+  .review-action-menu-icon,
   .review-undo-all,
   .review-always-keep,
   .review-always-keep-mark,
