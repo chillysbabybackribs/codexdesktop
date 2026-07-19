@@ -2779,7 +2779,7 @@ export default function App(): React.JSX.Element {
           mainThreadStartsInFlightRef.current.delete(pendingOwner.key);
           const existingTitle = mainChatTabStateRef.current.tabs.find(
             (tab) => tab.key === pendingOwner.key,
-          )?.title ?? 'New Chat';
+          )?.title ?? defaultThreadTitle;
           const startedTitle = resolveThreadTitle(
             threadTitle(notification.params.thread),
             existingTitle,
@@ -2809,7 +2809,7 @@ export default function App(): React.JSX.Element {
         setActiveThreadId(notification.params.thread.id);
         const existingTitle = mainChatTabStateRef.current.tabs.find(
           (tab) => tab.key === activeMainChatTabKeyRef.current,
-        )?.title ?? 'New Chat';
+        )?.title ?? defaultThreadTitle;
         const startedTitle = resolveThreadTitle(threadTitle(notification.params.thread), existingTitle);
         activeThreadTitleRef.current = startedTitle;
         setActiveThreadTitle(activeThreadTitleRef.current);
@@ -3219,7 +3219,7 @@ export default function App(): React.JSX.Element {
 
     const currentTitle = mainChatTabStateRef.current.tabs.find(
       (tab) => tab.key === activeMainChatTabKeyRef.current,
-    )?.title ?? 'New Chat';
+    )?.title ?? defaultThreadTitle;
     const nextTitle = resolveThreadTitle(threadTitle(thread), currentTitle);
     watchThreadIdRef.current = thread.id;
     activeThreadIdRef.current = thread.id;
