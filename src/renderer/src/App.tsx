@@ -1510,8 +1510,9 @@ export default function App(): React.JSX.Element {
             'the main-chat model',
         });
         try {
+          const baselineMessageCount = intakeReviewer.messages.length;
           if (await handleAgentSend(intakeReviewer.key, briefing, [])) {
-            plan = await awaitReviewerPlan(intakeReviewer.key);
+            plan = await awaitReviewerPlan(intakeReviewer.key, baselineMessageCount);
           }
         } catch {
           plan = null;
@@ -3508,12 +3509,16 @@ export default function App(): React.JSX.Element {
     }
   }, [activeThreadId, activeMainChatTabKey]);
 
-  // Wait for the paired reviewer to finish its planning turn. Polls the
-  // sessions ref (bounded, 500ms) instead of adding subscription plumbing for
-  // one call site; resolves null on timeout or reset so the main chat can
-  // never be bricked by its reviewer.
+  // Wait for the paired reviewer to answer the briefing just sent. Polls the
+  // sessions ref (bounded, 500ms) instead of adding subscription plumbing;
+  // resolves null on timeout or reset so the main chat can never be bricked
+  // by its reviewer. `afterMessageCount` is the reviewer's message count from
+  // BEFORE the briefing was sent — acceptance requires growth past it, so a
+  // previously completed exchange (status still 'done', old reply on top) can
+  // never be mistaken for the new answer.
   async function awaitReviewerPlan(
     reviewerKey: string,
+    afterMessageCount: number,
     timeoutMs = 120_000,
   ): Promise<string | null> {
     const deadline = Date.now() + timeoutMs;
@@ -3526,12 +3531,12 @@ export default function App(): React.JSX.Element {
         sawWorking = true;
         continue;
       }
-      if (reviewer.status === 'done') {
+      if (reviewer.messages.length > afterMessageCount && reviewer.status === 'done') {
         const text = latestAssistantText(reviewer.messages);
         if (text !== null) return text;
         continue; // completion raced ahead of the message reduce — keep polling
       }
-      if (sawWorking) return null; // reset out from under us
+      if (sawWorking && reviewer.status === 'idle') return null; // reset out from under us
     }
     return null;
   }
@@ -3601,8 +3606,9 @@ export default function App(): React.JSX.Element {
           selectedModel ??
           'the main-chat model',
       });
+      const baselineMessageCount = reviewer.messages.length;
       if (!(await handleAgentSend(reviewer.key, briefing, []))) return;
-      const reply = await awaitReviewerPlan(reviewer.key, 90_000);
+      const reply = await awaitReviewerPlan(reviewer.key, baselineMessageCount, 90_000);
       // The turn may have finished while the check ran — never steer a dead
       // turn (the completion audit is about to cover it anyway).
       if (!reply || activeTurnIdRef.current !== turnId) return;
