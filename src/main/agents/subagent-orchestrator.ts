@@ -111,17 +111,7 @@ export class SubagentOrchestrator {
     const threadId = notificationThreadId(notification)
     if (!threadId) return event
     const child = this.byThreadId.get(threadId)
-    if (!child) {
-      if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1' && this.pendingByAgentKey.size > 0) {
-        console.error(
-          `[subagent] UNTAGGED ${(notification as { method?: string })?.method} thread=${threadId} (pending=${this.pendingByAgentKey.size}, tracked=${this.byThreadId.size})`,
-        )
-      }
-      return event
-    }
-    if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1') {
-      console.error(`[subagent] tag ${(notification as { method?: string })?.method} thread=${threadId} key=${child.agentKey}`)
-    }
+    if (!child) return event
 
     // Capture the child's answer as it streams: the terminal turn/completed
     // arrives with itemsView:'notLoaded', so the final text lives in the
@@ -251,11 +241,6 @@ export class SubagentOrchestrator {
       const finalText = child.lastAgentText.trim()
         ? clip(child.lastAgentText)
         : finalAnswerFromItems(turn.items ?? [])
-      if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1') {
-        console.error(
-          `[subagent] settle key=${child.agentKey} itemsView=${turn.itemsView} streamLen=${child.lastAgentText.length} finalLen=${finalText.length} final="${finalText.slice(0, 80)}"`,
-        )
-      }
       const failed = turn.status === 'failed'
       this.settle(child, {
         ok: !failed,
