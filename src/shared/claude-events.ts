@@ -63,7 +63,10 @@ export class ClaudeTurnTranslator {
   private readonly context: ClaudeTurnContext
   private messageSequence = 0
   private messageKey = 'm0'
-  private partialMessageOpen = false
+  // (provider message id, text) → emitted item id: keeps restated/replayed
+  // assistant text idempotent even after the streaming block map resets.
+  private readonly emittedTextIds = new Map<string, string>()
+  private textIdCounter = 0
   private pendingError: { message: string; codexErrorInfo: 'usageLimitExceeded' | 'serverOverloaded' | 'internalServerError' | 'unauthorized' | 'badRequest' | 'other' } | null = null
 
   constructor(context: ClaudeTurnContext) {
@@ -110,13 +113,11 @@ export class ClaudeTurnTranslator {
       this.messageSequence += 1
       const providerId = typeof message.id === 'string' ? `-${safeId(message.id)}` : ''
       this.messageKey = `m${this.messageSequence}${providerId}`
-      this.partialMessageOpen = true
       this.blocks.clear()
       return { notifications: [] }
     }
 
     if (event.type === 'content_block_start') {
-      this.partialMessageOpen = true
       const index = Number(event.index ?? 0)
       const block = asRecord(event.content_block)
       if (block.type === 'text') {
