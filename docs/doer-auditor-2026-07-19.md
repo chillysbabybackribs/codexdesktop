@@ -60,3 +60,36 @@ workspace. No transcript piping.
 - The audit send goes through the normal dock send path, so its user message
   is visible in the card (transparent; also steerable/interruptable like any
   agent turn).
+
+## Simplification pass (2026-07-19, later the same day)
+
+The dock's front-loaded configuration collapsed into defaults + one
+contextual decision:
+
+- **Born a reviewer.** A new dock agent is created with `auditsMain` armed
+  and opens straight into the audit standby — the three-toggle
+  `AgentModeSelector` empty-state panel is deleted (flags still live in the
+  header menu). Titles are identity-first: "Reviewer", "Reviewer 2"… per tab.
+- **Cross-family model default, both directions.** The `claude-default`
+  hardcode became `defaultReviewerModel(mainModel, models)`: pick a visible
+  model from a different provider than the main tab's CURRENT model (Claude
+  doer → codex reviewer too). Null when only one provider is configured — a
+  null agent model follows the main chat. Explicit choices are never
+  overridden; any model may review any model.
+- **First-flag send prompt.** `reportsToMain` is no longer pre-asked. New
+  field `sendPolicyDecided` (persisted; legacy records with auto-send on
+  restore as decided). The first `VERDICT: flag` renders Send / Always send /
+  Keep here on the report itself — the standing auto-send decision is made
+  with a real finding on screen. The menu toggle also counts as deciding.
+- **Recency-weighted density.** `dock-exchanges.ts` groups transcript rows
+  into exchanges; the newest (and any still-streaming) renders full-fidelity,
+  older ones collapse to one-line capsules (verdict glyph + headline) that
+  expand in place. Verdict badges moved above report bodies (verdict-first).
+- **Extend.** A header button grows one card to `min(800px, pane − 120px)` ×
+  full column height over a scrim. Collapse is implicit: focusing the main
+  chat (the existing `is-main-focused` signal), Escape, extending another
+  card, or clicking the scrim. Density follows real width via CSS container
+  queries (`container-type: inline-size` on the card), so zoom/extend/future
+  resizing share one mechanism.
+- The composer's "New agent" button shows while idle too (was mid-turn only)
+  — an idle-armed reviewer audits the very next turn.
