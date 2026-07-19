@@ -193,12 +193,13 @@ test('active autosnapshot guidance describes concurrent commit and push behavior
   const guidance = buildGuidance({
     CODEX_DESKTOP_AUTOGIT_ACTIVE: '1',
     CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED: '1',
+    CODEX_DESKTOP_AUTOGIT_TARGET_BRANCH: 'master',
     CODEX_DESKTOP_AUTOGIT_ROOT: '/workspace/codexdesktop'
   })
 
   assert.match(guidance, /automatic git snapshotting is active/i)
   assert.match(guidance, /monitors `\/workspace\/codexdesktop`/)
-  assert.match(guidance, /commits settled safe changes.*pushes each autosnapshot.*`origin`/i)
+  assert.match(guidance, /commits settled safe changes.*pushes each autosnapshot.*`origin\/master`/i)
   assert.match(guidance, /re-read `git status`, `HEAD`, and the current branch/i)
   assert.match(guidance, /let the watcher own routine staging, commits, and pushes/i)
 })

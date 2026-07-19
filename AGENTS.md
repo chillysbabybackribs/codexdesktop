@@ -43,7 +43,7 @@ npm run clean:source-shadows
 
 ## Automatic Git snapshots
 
-- `npm run dev` starts both Electron/Vite and `scripts/git-autosnapshot.mjs --watch`. After the tree settles, the watcher commits safe changes and pushes the autosnapshot to the current branch on `origin` by default.
+- `npm run dev` starts both Electron/Vite and `scripts/git-autosnapshot.mjs --watch`. After the tree settles, the watcher commits safe changes and pushes every autosnapshot to `origin/master` by default, even if a feature branch is checked out. Override the target only with `CODEXDESKTOP_AUTOGIT_TARGET_BRANCH` when branch isolation is explicitly intended.
 - In an auto-Git dev session, let the watcher own routine staging, commits, and pushes. Do not manually commit, push, rewrite history, or disable the watcher unless the user explicitly asks for that Git operation.
 - Git state can change while work is in progress. Re-read `git status`, `HEAD`, and the current branch before Git-sensitive actions or handoff; a clean tree or autosnapshot commit does not prove the task is complete.
 - Set `CODEXDESKTOP_AUTOGIT_PUSH=0` to keep snapshots local, or `CODEXDESKTOP_AUTOGIT=0` to disable the watcher. `npm run dev:app` and `npm run verify:app` do not start a watcher themselves.

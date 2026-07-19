@@ -98,9 +98,10 @@ published for your platform, install `tor` on `PATH` instead.
 | `npm run lint` | Run Biome lint checks. |
 
 Automatic snapshots are enabled by default under `npm run dev`: after the tree settles,
-the watcher commits safe changes and pushes the current branch to `origin`. Set
-`CODEXDESKTOP_AUTOGIT_PUSH=0` for local-only snapshots or `CODEXDESKTOP_AUTOGIT=0` to
-disable the watcher.
+the watcher commits safe changes and pushes them to `origin/master`, even if another
+branch is checked out. Set `CODEXDESKTOP_AUTOGIT_TARGET_BRANCH` only when an isolated
+remote branch is intentional, `CODEXDESKTOP_AUTOGIT_PUSH=0` for local-only snapshots,
+or `CODEXDESKTOP_AUTOGIT=0` to disable the watcher.
 
 Generated protocol types under `src/shared/codex-protocol/` should not be edited by hand.
 Regenerate them from the installed Codex app-server with `npm run gen:codex-protocol`.

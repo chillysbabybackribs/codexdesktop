@@ -19,8 +19,9 @@ export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
 
   if (env.CODEX_DESKTOP_AUTOGIT_ACTIVE === '1') {
     const repoRoot = env.CODEX_DESKTOP_AUTOGIT_ROOT || 'the Codex Desktop source checkout'
+    const targetBranch = env.CODEX_DESKTOP_AUTOGIT_TARGET_BRANCH || 'master'
     const pushBehavior = env.CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED === '1'
-      ? ' and then pushes each autosnapshot to the current branch on `origin`'
+      ? ` and then pushes each autosnapshot to \`origin/${targetBranch}\``
       : '; automatic pushing is disabled'
 
     guidance.push(

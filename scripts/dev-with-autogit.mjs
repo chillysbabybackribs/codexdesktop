@@ -10,11 +10,17 @@ const electronViteBin = join(repoRoot, 'node_modules', '.bin', `electron-vite${b
 const autogitDisabled = ['0', 'false', 'off'].includes(
   String(process.env.CODEXDESKTOP_AUTOGIT ?? '').toLowerCase(),
 );
-const appEnv = {
+const autogitTargetBranch = process.env.CODEXDESKTOP_AUTOGIT_TARGET_BRANCH?.trim() || 'master';
+const autogitEnv = {
   ...process.env,
+  CODEXDESKTOP_AUTOGIT_TARGET_BRANCH: autogitTargetBranch,
+};
+const appEnv = {
+  ...autogitEnv,
   CODEX_DESKTOP_AUTOGIT_ACTIVE: autogitDisabled ? '0' : '1',
   CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED:
     !autogitDisabled && process.env.CODEXDESKTOP_AUTOGIT_PUSH !== '0' ? '1' : '0',
+  CODEX_DESKTOP_AUTOGIT_TARGET_BRANCH: autogitTargetBranch,
   CODEX_DESKTOP_AUTOGIT_ROOT: repoRoot,
 };
 
@@ -30,7 +36,7 @@ let shuttingDown = false;
 
 const autogit = spawn(process.execPath, [join(scriptDir, 'git-autosnapshot.mjs'), '--watch'], {
   cwd: repoRoot,
-  env: process.env,
+  env: autogitEnv,
   stdio: 'inherit',
 });
 
