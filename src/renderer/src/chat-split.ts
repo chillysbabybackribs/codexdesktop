@@ -12,6 +12,10 @@ export type SplitPaneLeaf = { kind: 'pane'; tabKey: string }
 export type SplitBranch = {
   kind: 'split'
   direction: SplitDirection
+  // Only explicit split gestures set this. Older browser-middle layouts
+  // auto-stacked tabs without recording intent, so the optional marker also
+  // provides a migration boundary for those legacy branches.
+  explicit?: true
   // Fraction of the container given to `first`, clamped so no pane collapses.
   ratio: number
   first: SplitNode
@@ -134,6 +138,7 @@ export function insertSplitPane(
       return {
         kind: 'split',
         direction,
+        explicit: true,
         ratio: 0.5,
         first: before ? added : candidate,
         second: before ? candidate : added,
@@ -290,6 +295,7 @@ function sanitizeSplitNode(value: unknown): SplitNode | null {
     kind?: unknown
     tabKey?: unknown
     direction?: unknown
+    explicit?: unknown
     ratio?: unknown
     first?: unknown
     second?: unknown
@@ -306,6 +312,7 @@ function sanitizeSplitNode(value: unknown): SplitNode | null {
     return {
       kind: 'split',
       direction: candidate.direction === 'column' ? 'column' : 'row',
+      ...(candidate.explicit === true ? { explicit: true as const } : {}),
       ratio:
         typeof candidate.ratio === 'number' && Number.isFinite(candidate.ratio)
           ? clampSplitRatio(candidate.ratio)
