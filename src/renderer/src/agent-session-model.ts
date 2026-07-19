@@ -17,6 +17,7 @@ export type AgentSession = {
   turnId: string | null
   messages: AgentLiteMessage[]
   watchesMain: boolean
+  auditsMain: boolean
   model: string | null
   reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
@@ -27,6 +28,7 @@ export type PersistedAgentSession = {
   threadId?: string | null
   title?: string
   watchesMain?: boolean
+  auditsMain?: boolean
   model?: string | null
   reasoningEffort?: ReasoningEffort | null
   open?: boolean
@@ -49,6 +51,7 @@ export function createAgentSession(key: string, title: string): AgentSession {
     turnId: null,
     messages: [],
     watchesMain: false,
+    auditsMain: false,
     model: null,
     reasoningEffort: null,
     contextUsage: null,
@@ -145,6 +148,7 @@ export function serializeAgentDock(
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,
+      auditsMain: session.auditsMain,
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
