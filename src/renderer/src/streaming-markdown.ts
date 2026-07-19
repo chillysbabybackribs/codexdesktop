@@ -18,6 +18,9 @@ export function splitMarkdownSegments(text: string): string[] {
   let current: string[] = []
   let fence: { char: string; length: number } | null = null
   let pendingBoundary = false
+  // Whether the segment's trailing block is list-flavored — a later sibling
+  // list item must merge into it so loose ordered-list numbering survives.
+  let inListContext = false
 
   for (const line of lines) {
     const bare = line.endsWith('\n') ? line.slice(0, -1) : line
@@ -39,13 +42,21 @@ export function splitMarkdownSegments(text: string): string[] {
 
     if (pendingBoundary) {
       pendingBoundary = false
-      // List items and indented continuations stay with their segment so
-      // ordered-list numbering and loose-list structure are preserved.
-      if (current.length && !listStartRe.test(bare) && !indentedRe.test(bare)) {
+      // Sibling list items and indented continuations stay with their segment
+      // so numbering and loose-list/indented-code structure are preserved; a
+      // list that follows a non-list block starts a fresh segment.
+      const continuesList = listStartRe.test(bare) && inListContext
+      if (current.length && !continuesList && !indentedRe.test(bare)) {
         segments.push(current.join(''))
         current = []
       }
     }
+
+    inListContext = listStartRe.test(bare)
+      ? true
+      : indentedRe.test(bare) || /^ {1,3}\S/.test(bare)
+        ? inListContext
+        : false
 
     const open = bare.match(fenceOpenRe)
     if (open) fence = { char: open[1][0], length: open[1].length }
