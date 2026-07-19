@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path'
 import { app } from 'electron'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
-import type { Model } from '../../shared/codex-protocol/v2/Model.js'
+import type { Model } from '../../shared/session-protocol/index.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
@@ -35,7 +35,15 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { runBrowserTool } from '../tools/browser-tool-registry.js'
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js'
-import { buildClaudeQueryOptions, claudeDefaultModelId } from './claude-options.js'
+import { buildClaudeQueryOptions } from './claude-options.js'
+import {
+  buildClaudeModelCatalog,
+  claudeDefaultModel,
+  claudeRuntimeModel,
+  normalizeClaudeEffort,
+  type ClaudeEffort,
+  type ClaudeSdkModelInfo
+} from './claude-models.js'
 import type { SessionProvider } from './session-provider.js'
 import {
   ClaudeTurnTranslator,
@@ -53,7 +61,7 @@ import {
 
 export const claudeCapabilities: ProviderCapabilities = {
   steering: false,
-  reasoningEfforts: false,
+  reasoningEfforts: true,
   compaction: 'none',
   toolTransport: 'mcp',
   resume: true,
@@ -75,6 +83,11 @@ type InputStream = {
 type LiveRuntime = {
   input: InputStream
   interrupt: () => Promise<void>
+  setModel: (model: string | null) => Promise<void>
+  applySettings: (settings: { effort: ClaudeEffort | null; fastMode: boolean }) => Promise<void>
+  model: string | null
+  effort: ClaudeEffort | null
+  fastMode: boolean
 }
 
 type SlotWaiter = {
@@ -88,6 +101,9 @@ type ClaudeSession = {
   claudeSessionId: string | null
   cwd: string
   model: string | null
+  effort: ClaudeEffort | null
+  fastMode: boolean
+  resolvedModel: string | null
   runtime: LiveRuntime | null
   startPromise: Promise<void> | null
   slotReserved: boolean
@@ -100,7 +116,13 @@ type ClaudeSession = {
   total: TokenUsageBreakdown
 }
 
-type PersistedSessions = Record<string, { claudeSessionId: string | null; cwd: string; model: string | null }>
+type PersistedSessions = Record<string, {
+  claudeSessionId: string | null
+  cwd: string
+  model: string | null
+  effort?: ClaudeEffort | null
+  fastMode?: boolean
+}>
 
 function createInputStream(): InputStream {
   const queue: unknown[] = []
@@ -132,6 +154,20 @@ function emptyBreakdown(): TokenUsageBreakdown {
   return { totalTokens: 0, inputTokens: 0, cachedInputTokens: 0, outputTokens: 0, reasoningOutputTokens: 0 }
 }
 
+async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  let timer: NodeJS.Timeout | null = null
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), timeoutMs)
+      })
+    ])
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
+
 export class ClaudeProvider extends EventEmitter implements SessionProvider {
   readonly id = 'claude' as const
   readonly capabilities = claudeCapabilities
@@ -144,6 +180,8 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private readonly browserAgent: BrowserAgentController | null
   private readonly researchRunner: ResearchRunner | null
   private mcpServerConfig: unknown | null = null
+  private modelCatalogPromise: Promise<Model[]> | null = null
+  private readonly modelsById = new Map<string, Model>()
   private disposed = false
 
   constructor(
@@ -167,27 +205,17 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   }
 
   async listModels(): Promise<Model[]> {
-    // The SDK exposes no model-list API; a single spike-proven default entry
-    // keeps the pill honest. Empty efforts hide the effort submenu; text-only
-    // modality makes the composer reject image attachments (unsupported v1).
-    return [{
-      id: claudeDefaultModelId,
-      model: claudeDefaultModelId,
-      upgrade: null,
-      upgradeInfo: null,
-      availabilityNux: null,
-      displayName: 'Claude (Agent SDK)',
-      description: 'Claude Code runtime via the vendored Agent SDK',
-      hidden: false,
-      supportedReasoningEfforts: [],
-      defaultReasoningEffort: 'medium',
-      inputModalities: ['text'],
-      supportsPersonality: false,
-      additionalSpeedTiers: [],
-      serviceTiers: [],
-      defaultServiceTier: null,
-      isDefault: false
-    } as unknown as Model]
+    if (!this.modelCatalogPromise) {
+      this.modelCatalogPromise = this.discoverModels().catch((error) => {
+        console.warn('failed to discover Claude models; using the account default only:', (error as Error).message)
+        return [claudeDefaultModel()]
+      }).then((models) => {
+        this.modelsById.clear()
+        for (const model of models) this.modelsById.set(model.model, model)
+        return models
+      })
+    }
+    return this.modelCatalogPromise
   }
 
   async listThreads(): Promise<ThreadListResponse> {
@@ -201,7 +229,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     return {
       thread: { id: session.threadId, turns: [], cwd: session.cwd } as unknown as ThreadStartResponse['thread'],
       model: session.model,
-      reasoningEffort: null
+      reasoningEffort: session.effort
     } as unknown as ThreadStartResponse
   }
 
@@ -213,7 +241,9 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     const session = this.ensureSessionRecord(
       threadId,
       persisted?.cwd ?? this.sessions.get(threadId)?.cwd ?? process.env.HOME ?? process.cwd(),
-      persisted?.model ?? this.sessions.get(threadId)?.model ?? null
+      persisted?.model ?? this.sessions.get(threadId)?.model ?? null,
+      persisted?.effort ?? this.sessions.get(threadId)?.effort ?? null,
+      persisted?.fastMode ?? this.sessions.get(threadId)?.fastMode ?? false
     )
     if (persisted?.claudeSessionId) session.claudeSessionId = persisted.claudeSessionId
     // History pages stay empty: the renderer paints from the transcript cache
@@ -221,7 +251,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     return {
       thread: { id: threadId, turns: [], cwd: session.cwd } as unknown as ThreadResumeResponse['thread'],
       model: session.model,
-      reasoningEffort: null,
+      reasoningEffort: session.effort,
       cwd: session.cwd,
       initialTurnsPage: { data: [], nextCursor: null }
     } as unknown as ThreadResumeResponse
@@ -237,14 +267,16 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     cwd?: string | null,
     model?: string | null,
     _attachments: ChatAttachment[] = [],
-    _effort?: ReasoningEffort | null,
-    _fastMode = false
+    effort?: ReasoningEffort | null,
+    fastMode = false
   ): Promise<TurnStartResponse & { threadId: string; model: string | null; reasoningEffort: ReasoningEffort | null }> {
     const activeThreadId = threadId ?? (await this.startThread(cwd, model)).thread.id
     const session = this.ensureSessionRecord(
       activeThreadId,
       cwd ?? this.sessions.get(activeThreadId)?.cwd ?? process.env.HOME ?? process.cwd(),
-      model ?? this.sessions.get(activeThreadId)?.model ?? null
+      model ?? this.sessions.get(activeThreadId)?.model ?? null,
+      normalizeClaudeEffort(effort),
+      fastMode
     )
     if (session.working) throw new Error('a turn is already running on this claude session')
 
@@ -263,7 +295,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       turnId,
       nowMs: () => Date.now(),
       tokens: {
-        contextWindow: claudeContextWindowFor(session.model),
+        contextWindow: claudeContextWindowFor(claudeRuntimeModel(session.model) ?? session.model),
         addLast: (last) => {
           session.total = {
             totalTokens: session.total.totalTokens + last.totalTokens,
@@ -296,11 +328,13 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       } as unknown as Turn,
       threadId: activeThreadId,
       model: session.model,
-      reasoningEffort: null
+      reasoningEffort: session.effort
     } as unknown as TurnStartResponse & { threadId: string; model: string | null; reasoningEffort: ReasoningEffort | null }
 
     try {
       await this.ensureLive(session)
+      await this.synchronizeRuntimeSettings(session)
+      void this.persistSessions()
       session.runtime!.input.push({
         type: 'user',
         message: { role: 'user', content: text },
@@ -405,7 +439,13 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
 
   // ---- lifecycle internals -------------------------------------------------
 
-  private ensureSessionRecord(threadId: string, cwd: string, model: string | null): ClaudeSession {
+  private ensureSessionRecord(
+    threadId: string,
+    cwd: string,
+    model: string | null,
+    effort?: ClaudeEffort | null,
+    fastMode?: boolean
+  ): ClaudeSession {
     let session = this.sessions.get(threadId)
     if (!session) {
       session = {
@@ -413,6 +453,9 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         claudeSessionId: null,
         cwd,
         model,
+        effort: effort ?? null,
+        fastMode: this.supportsFastMode(model, fastMode === true),
+        resolvedModel: null,
         runtime: null,
         startPromise: null,
         slotReserved: false,
@@ -427,6 +470,8 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       this.sessions.set(threadId, session)
     }
     if (model) session.model = model
+    if (effort !== undefined) session.effort = effort
+    if (fastMode !== undefined) session.fastMode = this.supportsFastMode(session.model, fastMode)
     return session
   }
 
