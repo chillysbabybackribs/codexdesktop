@@ -7,6 +7,7 @@ const taskShapingGuidance = [
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
   '- For simple browser reads, prefer one `browser_snapshot` call when it is available; state every requested field and list count in its objective. It can navigate, wait, and return task-focused items. If a snapshot reports `completion.nextAction: "answer"`, use that evidence directly and do not repeat a page read. If it reports `targeted-gap-fill`, resolve only its named coverage gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
+  '- When reviewing or editing Codex Desktop\'s own UI in a live dev session, use `app_screenshot` for the full Electron window (chat plus embedded browser). Use `browser_screenshot` for page content inside the browser tab only.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -335,6 +336,12 @@ const browserScreenshotSchema = {
   additionalProperties: false
 }
 
+const appScreenshotSchema = {
+  type: 'object',
+  properties: {},
+  additionalProperties: false
+}
+
 const uiReviewSchema = {
   type: 'object',
   properties: {
@@ -411,6 +418,12 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_screenshot',
     description: 'Capture the visible viewport of this thread\'s browser tab and view it directly. Returns the screenshot to the model as an image plus compact artifact metadata.',
     inputSchema: browserScreenshotSchema
+  },
+  {
+    type: 'function',
+    name: 'app_screenshot',
+    description: 'Capture the full Codex Desktop window, including the chat pane and embedded browser, for model vision. Use when reviewing or iterating on the app UI itself. Returns the screenshot as an image plus compact artifact metadata. Use browser_screenshot for page content inside the browser tab only.',
+    inputSchema: appScreenshotSchema
   },
   {
     type: 'function',

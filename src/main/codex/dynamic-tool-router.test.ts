@@ -168,6 +168,36 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   })
 })
 
+test('dynamic tool router returns app screenshot image content', async () => {
+  const browserAgent = withTurnRunner({
+    captureAppScreenshot: async () => ({
+      ok: true,
+      result: {
+        screenshot: {
+          artifactPath: '/tmp/app-window.png',
+          fileName: 'app-window.png',
+          mediaType: 'image/png',
+          bytes: 42,
+          width: 800,
+          height: 600
+        }
+      }
+    }),
+    readScreenshotDataUrl: async () => 'data:image/png;base64,abc'
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, true)
+  assert.equal(response.contentItems.length, 2)
+  assert.equal(response.contentItems[1]?.type, 'inputImage')
+  if (response.contentItems[1]?.type === 'inputImage') {
+    assert.equal(response.contentItems[1].imageUrl, 'data:image/png;base64,abc')
+  }
+})
+
 test('dynamic browser calls carry their exact owning turn', async () => {
   let owner: unknown = null
   const browserAgent = {

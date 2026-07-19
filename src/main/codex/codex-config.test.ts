@@ -168,6 +168,8 @@ test('global guidance stays limited to product-wide behavior', () => {
 
   assert.match(guidance, /reuse the active visible browser tab/i)
   assert.match(guidance, /prefer one `browser_snapshot` call/i)
+  assert.match(guidance, /app_screenshot.*full Electron window/i)
+  assert.match(guidance, /browser_screenshot.*browser tab only/i)
   assert.match(guidance, /completion\.nextAction: "answer"/i)
   assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
@@ -265,7 +267,7 @@ test('simple read-only browser tasks use the fastest supported effort while comp
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')
@@ -289,6 +291,12 @@ test('the dynamic tool surface includes verified research primitives', () => {
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
   assert.deepEqual(Object.keys((browserScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), ['tab'])
   assert.deepEqual((browserScreenshot.inputSchema as { required?: string[] }).required, undefined)
+  const appScreenshot = browserDynamicTools.find(({ name }) => name === 'app_screenshot')
+  assert.equal(appScreenshot?.type, 'function')
+  if (!appScreenshot || appScreenshot.type !== 'function') assert.fail('app_screenshot function tool is missing')
+  assert.deepEqual(Object.keys((appScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), [])
+  assert.match(appScreenshot.description, /full Codex Desktop window/i)
+  assert.match(appScreenshot.description, /browser_screenshot/i)
   const uiReview = browserDynamicTools.find(({ name }) => name === 'ui_review')
   assert.equal(uiReview?.type, 'function')
   if (!uiReview || uiReview.type !== 'function') assert.fail('ui_review function tool is missing')

@@ -888,7 +888,7 @@ export function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArti
 }
 
 function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact | null {
-  if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot') return null
+  if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot' && item.tool !== 'app_screenshot') return null
 
   for (const content of item.contentItems ?? []) {
     if (content.type !== 'inputText') continue

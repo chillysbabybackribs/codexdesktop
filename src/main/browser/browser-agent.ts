@@ -6,6 +6,7 @@ import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
+import { captureAppWindowImage } from './app-window-screenshot.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -853,6 +854,48 @@ export class BrowserAgentController {
         }
       }
     })
+  }
+
+  async captureAppScreenshot(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'screenshot artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+
+    const tabs = this.getTabs()
+    if (!tabs) {
+      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    if (options.signal?.aborted) return cancelledResult()
+
+    try {
+      const window = tabs.getWindow()
+      const browser = tabs.getVisibleBrowserCaptureTarget()
+      const image = await captureAppWindowImage({ window, browser }, timeoutMs)
+      const buffer = image.toPNG()
+      const screenshot = await artifactStore.persistScreenshot(buffer.toString('base64'), 'png')
+      const [contentWidth, contentHeight] = window.getContentSize()
+      return {
+        ok: true,
+        result: {
+          screenshot: {
+            ...screenshot,
+            scope: 'appWindow',
+            contentWidth,
+            contentHeight,
+            browserVisible: Boolean(browser),
+            ...(browser ? { tabId: tabs.getActiveTabId(), bounds: browser.bounds } : {})
+          }
+        }
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      } satisfies BrowserAgentFailure
+    }
   }
 
   async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {

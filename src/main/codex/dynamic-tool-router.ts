@@ -42,6 +42,17 @@ export async function routeDynamicToolCall(
           result = { ...result, ok: false, error: 'captured screenshot could not be loaded for model vision' }
         }
       }
+    } else if (params.tool === 'app_screenshot') {
+      result = await runBrowserOperation((signal) => dependencies.browserAgent.captureAppScreenshot({ signal }))
+      const screenshot = asRecord(asRecord(result.result).screenshot)
+      const artifactPath = readString(screenshot.artifactPath)
+      if (result.ok && artifactPath) {
+        const imageUrl = await dependencies.browserAgent.readScreenshotDataUrl(artifactPath)
+        if (imageUrl) imageUrls = [imageUrl]
+        else {
+          result = { ...result, ok: false, error: 'captured app screenshot could not be loaded for model vision' }
+        }
+      }
     } else if (params.tool === 'ui_review') {
       const review = await runBrowserOperation((signal) => runUiReview(
         dependencies.browserAgent,

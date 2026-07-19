@@ -945,6 +945,63 @@ test('browser agent captures a model screenshot through Electron without CDP', a
   assert.match(await controller.readScreenshotDataUrl(screenshot.artifactPath) ?? '', /^data:image\/png;base64,/)
 })
 
+test('browser agent captures the full app window for model vision', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-app-screenshot-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const shellImage = {
+    getScaleFactors: () => [1],
+    getSize: () => ({ width: 4, height: 4 }),
+    toBitmap: () => rgbaBuffer(4, 4, 10, 20, 30)
+  }
+  const browserImage = {
+    getScaleFactors: () => [1],
+    getSize: () => ({ width: 2, height: 2 }),
+    toBitmap: () => rgbaBuffer(2, 2, 200, 210, 220),
+    resize: () => browserImage
+  }
+  const window = {
+    isDestroyed: () => false,
+    getContentSize: () => [4, 4] as [number, number],
+    webContents: {
+      isDestroyed: () => false,
+      capturePage: async () => shellImage
+    }
+  }
+  const browserWebContents = {
+    isDestroyed: () => false,
+    capturePage: async () => browserImage
+  }
+  const tabs = {
+    getWindow: () => window,
+    getVisibleBrowserCaptureTarget: () => ({
+      webContents: browserWebContents,
+      bounds: { x: 1, y: 1, width: 2, height: 2 }
+    }),
+    getActiveTabId: () => 'tab-app'
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureAppScreenshot()
+  const screenshot = (result.result as { screenshot: { artifactPath: string; scope: string; browserVisible: boolean } }).screenshot
+
+  assert.equal(result.ok, true)
+  assert.equal(screenshot.scope, 'appWindow')
+  assert.equal(screenshot.browserVisible, true)
+  assert.match(screenshot.artifactPath, /\.png$/)
+  assert.match(await controller.readScreenshotDataUrl(screenshot.artifactPath) ?? '', /^data:image\/png;base64,/)
+})
+
+function rgbaBuffer(width: number, height: number, r: number, g: number, b: number, a = 255): Buffer {
+  const buffer = Buffer.alloc(width * height * 4)
+  for (let offset = 0; offset < buffer.length; offset += 4) {
+    buffer[offset] = b
+    buffer[offset + 1] = g
+    buffer[offset + 2] = r
+    buffer[offset + 3] = a
+  }
+  return buffer
+}
+
 test('browser agent returns PDF artifact metadata instead of base64 document data', async (context) => {
   const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-agent-'))
   context.after(() => rm(root, { recursive: true, force: true }))

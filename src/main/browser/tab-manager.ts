@@ -353,6 +353,18 @@ export class TabManager {
     return this.activeTabId
   }
 
+  getWindow(): BrowserWindow {
+    return this.window
+  }
+
+  getVisibleBrowserCaptureTarget(): { webContents: WebContents; bounds: BrowserBounds } | null {
+    if (this.isDraggingDivider || this.isOverlayOpen) return null
+    const tab = this.getActiveTab()
+    if (!tab || this.bounds.x < 0 || this.bounds.y < 0) return null
+    if (tab.view.webContents.isDestroyed()) return null
+    return { webContents: tab.view.webContents, bounds: { ...this.bounds } }
+  }
+
   resolveWebContents(tabId?: string | null): WebContents | null {
     const tab = tabId ? this.tabs.get(tabId) : this.getActiveTab()
     const webContents = tab?.view.webContents ?? (tabId ? this.targets.resolvePopup(tabId) : null)
