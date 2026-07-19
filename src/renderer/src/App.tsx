@@ -90,6 +90,7 @@ import {
   buildAuditPrompt,
   liveTurnGlance,
   shouldTriggerAudit,
+  turnAnswerText,
   turnChangedFiles,
   turnStepLines,
 } from './audit-trigger';
