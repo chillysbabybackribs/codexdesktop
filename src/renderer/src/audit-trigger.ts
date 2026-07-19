@@ -159,6 +159,7 @@ export function auditBriefMarkdown(audit: AuditRequestSummary): string {
   if (audit.steps.length) {
     sections.push(`## Steps\n\n${audit.steps.map((step, index) => `${index + 1}. \`${step}\``).join('\n')}`)
   }
+  if (audit.answerText) sections.push(`## Answer\n\n${audit.answerText}`)
   return sections.join('\n\n') || '_No details captured._'
 }
 
@@ -214,7 +215,9 @@ export function parseAuditPrompt(text: string): AuditRequestSummary {
   }
 
   const steps: string[] = []
-  const stepBlock = text.match(/Steps the main chat took, in order:\n([\s\S]*?)\nThe turn changed/)
+  const stepBlock = text.match(
+    /Steps the main chat took, in order:\n([\s\S]*?)\n(?:The turn changed|The main chat answered:|Note: file-change|Your job:)/
+  )
   if (stepBlock) {
     for (const line of stepBlock[1].split('\n')) {
       const step = line.trim()
@@ -222,15 +225,29 @@ export function parseAuditPrompt(text: string): AuditRequestSummary {
     }
   }
 
-  return { userText, files, steps }
+  const answerBlock = text.match(/The main chat answered:\n([\s\S]*?)\n(?:Note: file-change|Your job:)/)
+  const answerText = answerBlock
+    ? answerBlock[1].split('\n').map((line) => line.trim()).filter(Boolean).join('\n')
+    : ''
+
+  return { userText, files, steps, answerText }
 }
 
+// Every completed turn with anything to look at fires (files, an answer, or
+// steps); only truly-empty turns and busy auditors skip. Chat-only turns are
+// deliberate audit material — second viewpoints during brainstorming/research.
 export function shouldTriggerAudit(input: {
   auditorStatus: 'idle' | 'working' | 'done'
   auditorTurnId: string | null
   changedFiles: string[]
+  answerText?: string
+  stepCount?: number
 }): boolean {
-  if (input.changedFiles.length === 0) return false
+  const hasSubstance =
+    input.changedFiles.length > 0 ||
+    Boolean(input.answerText?.trim()) ||
+    (input.stepCount ?? 0) > 0
+  if (!hasSubstance) return false
   if (input.auditorTurnId || input.auditorStatus === 'working') return false
   return true
 }
