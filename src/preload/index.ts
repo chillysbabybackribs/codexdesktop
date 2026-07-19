@@ -29,6 +29,7 @@ import type {
   OmniboxQueryResult,
   TraceLoadParams,
   TracePersistParams,
+  TranscriptCachePersistParams,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -141,6 +142,11 @@ export const api = {
     persist: (params: TracePersistParams): Promise<void> => ipcRenderer.invoke(ipcChannels.tracePersist, params),
     load: (params: TraceLoadParams): Promise<string | null> => ipcRenderer.invoke(ipcChannels.traceLoad, params),
     save: (params: TraceSaveParams): Promise<TraceSaveResult> => ipcRenderer.invoke(ipcChannels.traceSave, params)
+  },
+  transcriptCache: {
+    load: (threadId: string): Promise<unknown | null> => ipcRenderer.invoke(ipcChannels.transcriptCacheLoad, threadId),
+    persist: (params: TranscriptCachePersistParams): Promise<void> =>
+      ipcRenderer.invoke(ipcChannels.transcriptCachePersist, params)
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>

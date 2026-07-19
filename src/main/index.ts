@@ -14,6 +14,7 @@ import type {
   OmniboxQueryResult,
   TraceLoadParams,
   TracePersistParams,
+  TranscriptCachePersistParams,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -34,6 +35,7 @@ import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
+import { TranscriptCache } from './transcript-cache.js'
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -311,6 +313,7 @@ function registerIpc(): void {
   const memoryStore = new MemoryStore(memoryDirectory)
   codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
+  const transcriptCache = new TranscriptCache(join(app.getPath('userData'), 'transcript-cache'))
 
   ipcMain.handle(ipcChannels.windowMinimize, () => mainWindow?.minimize())
   ipcMain.handle(ipcChannels.windowToggleMaximize, () => {
@@ -454,6 +457,13 @@ function registerIpc(): void {
   )
   ipcMain.handle(ipcChannels.traceLoad, (_event, params: TraceLoadParams) =>
     turnTraceStore.load(params.threadId, params.turnId)
+  )
+  ipcMain.handle(ipcChannels.transcriptCacheLoad, async (_event, threadId: string): Promise<unknown | null> => {
+    const snapshots = await transcriptCache.read(threadId)
+    return snapshots.at(-1) ?? null
+  })
+  ipcMain.handle(ipcChannels.transcriptCachePersist, (_event, params: TranscriptCachePersistParams) =>
+    transcriptCache.replace(params.threadId, [params.snapshot])
   )
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {

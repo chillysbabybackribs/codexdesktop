@@ -248,6 +248,11 @@ export type TraceLoadParams = {
   turnId: string
 }
 
+export type TranscriptCachePersistParams = {
+  threadId: string
+  snapshot: unknown
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -302,6 +307,8 @@ export const ipcChannels = {
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',
   traceSave: 'trace:save',
+  transcriptCacheLoad: 'transcript-cache:load',
+  transcriptCachePersist: 'transcript-cache:persist',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
   attachmentPick: 'attachment:pick',
