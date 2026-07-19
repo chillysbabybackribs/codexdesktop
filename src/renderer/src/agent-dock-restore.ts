@@ -69,6 +69,7 @@ export async function restoreAgentDock(options: {
       mainChatTabKey: typeof entry.mainChatTabKey === 'string' && entry.mainChatTabKey
         ? entry.mainChatTabKey
         : activeMainChatTabKey,
+      workspace: typeof entry.workspace === 'string' && entry.workspace ? entry.workspace : null,
       // Phase 1 does not persist the spawn tree, so a restored session is
       // always a top-level agent (reviewer or a promoted lead), never a
       // spawned worker — the parent link and spawning turn are intentionally

@@ -35,6 +35,7 @@ export function useAgentSessions(
   // explicit user choice). Returns null when only one provider is configured
   // — a null agent model follows the main chat's model.
   deriveReviewerModel: () => string | null,
+  workspaceForMainChatTab: (key: string | null) => string | null,
 ): {
   agentSessions: AgentSession[];
   openAgentKeys: string[];
@@ -290,7 +291,13 @@ export function useAgentSessions(
     agentCounterRef.current++;
     updateAgentSessions((sessions) => [
       ...sessions,
-      createReviewerSession(key, title, mainChatTabKey, deriveReviewerModel()),
+      createReviewerSession(
+        key,
+        title,
+        mainChatTabKey,
+        deriveReviewerModel(),
+        workspaceForMainChatTab(mainChatTabKey),
+      ),
     ]);
     sessionStore.set(key, emptySessionState({ title }));
     setOpenAgentKeys((current) => [...current, key]);
@@ -320,6 +327,8 @@ export function useAgentSessions(
         spawn.parentAgentKey ?? spawn.agentKey,
         null,
         spawn.model,
+        agentSessionsRef.current.find((session) => session.key === spawn.parentAgentKey)?.workspace ??
+          workspaceForMainChatTab(spawn.mainChatTabKey),
       ),
     ]);
     sessionStore.set(spawn.agentKey, emptySessionState({ title: spawn.title }));

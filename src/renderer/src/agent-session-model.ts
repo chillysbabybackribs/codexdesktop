@@ -26,6 +26,9 @@ export type AgentSession = {
   // Main-chat tab that created and owns this agent window. Agent sessions are
   // long-lived, but their mini-window is intentionally scoped to this tab.
   mainChatTabKey: string | null
+  // Snapshot of the owning main chat's working directory. Agents keep this
+  // even when the user focuses another tab while they are running.
+  workspace: string | null
   // Spawn-tree linkage. `parentAgentKey` keys on the app `key` (not threadId)
   // because a child's threadId is null until its first turn starts, so the
   // parent link must survive the pre-thread window. null = top-level (a lead
@@ -61,6 +64,7 @@ export type AgentSession = {
 
 export type PersistedAgentSession = {
   mainChatTabKey?: string | null
+  workspace?: string | null
   threadId?: string | null
   title?: string
   watchesMain?: boolean
@@ -80,10 +84,16 @@ export type PersistedAgentDock = {
 
 export type AgentDeltaBuffer = ReadonlyMap<string, ReadonlyMap<string, string>>
 
-export function createAgentSession(key: string, title: string, mainChatTabKey: string | null = null): AgentSession {
+export function createAgentSession(
+  key: string,
+  title: string,
+  mainChatTabKey: string | null = null,
+  workspace: string | null = null,
+): AgentSession {
   return {
     key,
     mainChatTabKey,
+    workspace,
     role: 'reviewer',
     parentAgentKey: null,
     spawnedByTurnId: null,
@@ -112,9 +122,10 @@ export function createReviewerSession(
   key: string,
   title: string,
   mainChatTabKey: string | null,
-  model: string | null
+  model: string | null,
+  workspace: string | null,
 ): AgentSession {
-  return { ...createAgentSession(key, title, mainChatTabKey), auditsMain: true, model }
+  return { ...createAgentSession(key, title, mainChatTabKey, workspace), auditsMain: true, model }
 }
 
 // A worker spawned by a lead's spawn_subagent tool call. It inherits the
@@ -128,10 +139,11 @@ export function createWorkerSession(
   mainChatTabKey: string | null,
   parentAgentKey: string,
   spawnedByTurnId: string | null,
-  model: string | null
+  model: string | null,
+  workspace: string | null,
 ): AgentSession {
   return {
-    ...createAgentSession(key, title, mainChatTabKey),
+    ...createAgentSession(key, title, mainChatTabKey, workspace),
     role: 'worker',
     parentAgentKey,
     spawnedByTurnId,
@@ -396,6 +408,7 @@ export function serializeAgentDock(
     counter,
     sessions: sessions.map((session) => ({
       mainChatTabKey: session.mainChatTabKey,
+      workspace: session.workspace,
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,

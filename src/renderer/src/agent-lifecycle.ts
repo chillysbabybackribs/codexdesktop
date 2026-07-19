@@ -30,7 +30,7 @@ export function createAgentLifecycle(options: {
   recoveryPrompt: string
   isRecoverable: (error: TurnError | null) => boolean
   isTurnTerminal: (key: string, turnId: string) => boolean
-  getWorkspace: () => string | null
+  getWorkspace: (session: AgentSession) => string | null
   getSelectedModel: () => string | null
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
@@ -100,7 +100,7 @@ export function createAgentLifecycle(options: {
       const response = await window.api.session.sendMessage({
         threadId: session.threadId,
         text: options.recoveryPrompt,
-        cwd: options.getWorkspace(),
+        cwd: options.getWorkspace(session),
         model: model ?? session.model ?? options.getSelectedModel(),
         effort: session.reasoningEffort
       })

@@ -453,6 +453,10 @@ export default function App(): React.JSX.Element {
     // at the moment an agent is born or armed. Null (single provider) makes
     // the agent follow the main chat's model — the correct fallback.
     () => defaultReviewerModel(selectedModelRef.current, modelsRef.current),
+    (tabKey) =>
+      tabKey
+        ? mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null
+        : null,
   );
   const appRef = useRef<HTMLDivElement | null>(null);
   const viewHostRef = useRef<HTMLDivElement | null>(null);
@@ -2484,7 +2488,7 @@ export default function App(): React.JSX.Element {
       patchSession: patchAgentSession,
       appendMessage: appendAgentMessage,
     },
-    getWorkspace: () => workspaceRef.current,
+    getWorkspace: (session) => session.workspace,
     getSelectedModel: () => selectedModelRef.current,
     getSelectedEffort: () => selectedReasoningEffortRef.current,
     getFastMode: () => fastModeRef.current,
@@ -2521,7 +2525,7 @@ export default function App(): React.JSX.Element {
     isRecoverable: (error) => Boolean(error && isRecoverableTurnError(error.codexErrorInfo)),
     isTurnTerminal: (key, turnId) =>
       hasObservedTerminalTurn(sessionStoreRef.current.peek(key)?.turnMeta ?? {}, turnId),
-    getWorkspace: () => workspaceRef.current,
+    getWorkspace: (session) => session.workspace,
     getSelectedModel: () => selectedModelRef.current,
     getActiveThreadId: () => activeThreadIdRef.current,
     pickFallbackModel,

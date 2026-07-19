@@ -18,7 +18,7 @@ type AgentCommandStore = {
 
 export function createAgentCommands(options: {
   store: AgentCommandStore
-  getWorkspace: () => string | null
+  getWorkspace: (session: AgentSession) => string | null
   getSelectedModel: () => string | null
   getSelectedEffort: () => ReasoningEffort | null
   getFastMode: () => boolean
@@ -83,7 +83,7 @@ export function createAgentCommands(options: {
         threadId,
         text: outgoingText,
         attachments,
-        cwd: options.getWorkspace(),
+        cwd: options.getWorkspace(session),
         model: agentModel,
         effort: session.reasoningEffort ?? options.getSelectedEffort(),
         fastMode: options.getFastMode()
