@@ -7016,47 +7016,60 @@ button {
 
 .review-action-menu-item {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 44px;
-  padding: 8px 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 14px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 8px;
   background: transparent;
-  color: #d8dce0;
-  text-align: left;
+  color: var(--chrome-fg-strong);
+  white-space: nowrap;
   cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }
 
-.review-action-menu-item:hover,
-.review-action-menu-item:focus-visible {
-  background: rgb(255 255 255 / 6%);
-  color: #fff;
-}
-
-.review-action-menu-item.is-confirming {
-  background: rgb(229 83 75 / 10%);
-  color: #f1a09a;
+/* Hairline separators between options — drawn as a right border on all but
+   the last, inset vertically so they read as dividers, not full-height rules. */
+.review-action-menu-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  background: var(--hairline);
 }
 
 .review-action-menu-item > span:first-child {
-  font-size: 11.75px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 550;
 }
 
-.review-action-menu-item small {
-  color: #8c8c8c;
-  font-size: 10.5px;
-  line-height: 1.25;
+.review-action-menu-item:hover,
+.review-action-menu-item:focus-visible {
+  background: rgb(255 255 255 / 7%);
+  color: #fff;
+}
+
+/* Undo is destructive — warm it on hover and in the confirm state. */
+.review-action-menu-item[role="menuitem"]:first-child:hover,
+.review-action-menu-item[role="menuitem"]:first-child:focus-visible {
+  background: rgb(229 83 75 / 14%);
+  color: #f4b3ad;
+}
+
+.review-action-menu-item.is-confirming {
+  background: rgb(229 83 75 / 16%);
+  color: #f4b3ad;
 }
 
 .review-action-menu-check {
-  margin-left: 5px;
   color: var(--live-signal);
   font-size: 10px;
 }
