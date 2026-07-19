@@ -1,5 +1,4 @@
 import {
-  type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent,
   useCallback,
@@ -29,7 +28,6 @@ import type { Thread } from '../../shared/session-protocol';
 import type { ThreadGoal } from '../../shared/session-protocol';
 import type { ThreadGoalStatus } from '../../shared/session-protocol';
 import type { ThreadItem } from '../../shared/session-protocol';
-import type { ThreadTokenUsage } from '../../shared/session-protocol';
 import type { PluginSummary } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
@@ -58,6 +56,7 @@ import {
   stripAutomaticSkillMarker,
   stripInjectedMemory,
 } from './ChatTranscript';
+import { ContextPill, SettingsModal, UnsplitIcon, WorkspacePill } from './ChatControls';
 import type { ChatAttachment } from '../../shared/ipc';
 import {
   buildRows,
