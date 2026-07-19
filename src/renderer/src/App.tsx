@@ -56,6 +56,13 @@ import {
   type WorkItem,
 } from './TaskActivity';
 import { ReviewBar, type ReviewChange } from './ReviewBar';
+import {
+  buildMentionContext,
+  rankMentionCandidates,
+  stripMentionContext,
+  type FileMention,
+  type MentionCandidate,
+} from './mention-model';
 import { selectCompletedWork } from './memory-work';
 import {
   AttachmentButton,
@@ -5499,6 +5506,7 @@ function GoalIcon(): React.JSX.Element {
 type ComposerDraft = {
   value: string;
   attachments: ChatAttachment[];
+  mentions?: FileMention[];
 };
 
 const composerDrafts = new Map<string, ComposerDraft>();
@@ -5545,6 +5553,12 @@ function Composer({
   const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '');
   const [attachments, setAttachments] = useState<ChatAttachment[]>(
     () => composerDrafts.get(draftKey)?.attachments ?? [],
+  );
+  const [mentions, setMentions] = useState<FileMention[]>(
+    () => composerDrafts.get(draftKey)?.mentions ?? [],
+  );
+  const [mentionIndex, setMentionIndex] = useState<{ files: string[]; dirs: string[] } | null>(
+    null,
   );
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
