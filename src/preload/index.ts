@@ -156,6 +156,8 @@ export const api = {
   checkpoints: {
     list: (threadId: string): Promise<CheckpointSummary[]> => ipcRenderer.invoke(ipcChannels.checkpointList, threadId),
     revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params),
+    revertFiles: (params: CheckpointRevertFilesParams): Promise<void> =>
+      ipcRenderer.invoke(ipcChannels.checkpointRevertFiles, params),
     changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
   },
   artifact: {

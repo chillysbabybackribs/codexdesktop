@@ -97,6 +97,39 @@ test('revert restores modified files, deletes files created after the checkpoint
   })
 })
 
+test('revertFiles restores only the named files, deletes named files created after, leaves the rest', async () => {
+  await withRepo(async (repo, store) => {
+    await mkdir(join(repo, 'src'))
+    await writeFile(join(repo, 'src/app.ts'), 'original a\n')
+    await writeFile(join(repo, 'src/lib.ts'), 'original b\n')
+    await git(repo, 'add', '-A')
+    await git(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'code')
+
+    const record = await store.createCheckpoint(repo, 'thread-1', 'before turn')
+
+    // The "turn" edits both files and creates a third.
+    await writeFile(join(repo, 'src/app.ts'), 'edited a\n')
+    await writeFile(join(repo, 'src/lib.ts'), 'edited b\n')
+    await writeFile(join(repo, 'src/new.ts'), 'created\n')
+
+    // Undo app.ts (absolute path) and new.ts (relative path); keep lib.ts.
+    await store.revertFiles(record!.id, [join(repo, 'src/app.ts'), 'src/new.ts'])
+
+    assert.equal(await readFile(join(repo, 'src/app.ts'), 'utf8'), 'original a\n')
+    assert.equal(await readFile(join(repo, 'src/lib.ts'), 'utf8'), 'edited b\n', 'unnamed files keep their edits')
+    assert.ok(!existsSync(join(repo, 'src/new.ts')), 'named file created after checkpoint is deleted')
+
+    // A safety checkpoint of the pre-undo state was recorded.
+    const all = await store.list('thread-1')
+    assert.ok(all.some((candidate) => candidate.label.startsWith('pre-undo of files')))
+
+    // Paths escaping the repo are ignored, not deleted.
+    await writeFile(join(repo, '..', 'outside.txt'), 'outside\n')
+    await store.revertFiles(record!.id, ['../outside.txt'])
+    assert.ok(existsSync(join(repo, '..', 'outside.txt')), 'paths outside the repo are never touched')
+  })
+})
+
 test('revert takes a safety checkpoint first, so a revert is revertible', async () => {
   await withRepo(async (repo, store) => {
     await writeFile(join(repo, 'file.txt'), 'before\n')
