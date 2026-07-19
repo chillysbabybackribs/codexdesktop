@@ -3475,10 +3475,46 @@ function MainChatTabStrip({
     drag.hasMoved = true;
 
     const tabStripBounds = stripRef.current?.getBoundingClientRect();
-    const minPreviewLeft = tabStripBounds?.left ?? 0;
+    const tabbarBounds = stripRef.current
+      ?.closest('.main-chat-tabbar')
+      ?.getBoundingClientRect();
+    // Below the tab bar the drag stops being a reorder and becomes a pane
+    // drop: the pane under the pointer plus the zone within it — edges tear
+    // the chat out into a new split, the center shows it in that pane.
+    const inStrip = tabbarBounds ? event.clientY <= tabbarBounds.bottom : true;
+    let paneTarget: { tabKey: string; zone: SplitDropZone } | null = null;
+    if (!inStrip) {
+      for (const pane of Array.from(
+        document.querySelectorAll<HTMLElement>('[data-split-pane-key]'),
+      )) {
+        const paneKey = pane.dataset.splitPaneKey;
+        if (!paneKey) continue;
+        const zone = splitDropZoneAt(
+          event.clientX,
+          event.clientY,
+          pane.getBoundingClientRect(),
+          canSplitForDrop(paneKey, drag.sourceKey),
+        );
+        if (!zone) continue;
+        // Dropping a chat onto the pane already showing it is a no-op.
+        if (!(zone === 'center' && paneKey === drag.sourceKey)) {
+          paneTarget = { tabKey: paneKey, zone };
+        }
+        break;
+      }
+    }
+    if (
+      (drag.paneTarget?.tabKey ?? null) !== (paneTarget?.tabKey ?? null) ||
+      (drag.paneTarget?.zone ?? null) !== (paneTarget?.zone ?? null)
+    ) {
+      drag.paneTarget = paneTarget;
+      onPaneDragUpdate(paneTarget);
+    }
+
+    const minPreviewLeft = inStrip ? (tabStripBounds?.left ?? 0) : 0;
     const maxPreviewLeft = Math.max(
       minPreviewLeft,
-      (tabStripBounds?.right ?? window.innerWidth) - drag.width,
+      (inStrip ? (tabStripBounds?.right ?? window.innerWidth) : window.innerWidth) - drag.width,
     );
     const previewLeft = Math.min(
       Math.max(event.clientX - drag.pointerOffsetX, minPreviewLeft),
@@ -3488,20 +3524,22 @@ function MainChatTabStrip({
       Math.max(event.clientY - drag.pointerOffsetY, 0),
       window.innerHeight - 40,
     );
-    const dropTarget = findMainChatTabDropTarget(
-      drag.sourceKey,
-      drag.sourceLeft,
-      previewLeft,
-      drag.width,
-      Array.from(
-        stripRef.current?.querySelectorAll<HTMLElement>('[data-main-chat-tab-key]') ?? [],
-      ).flatMap((tab) => {
-        const key = tab.dataset.mainChatTabKey;
-        if (!key) return [];
-        const rect = tab.getBoundingClientRect();
-        return [{ key, left: rect.left, right: rect.right }];
-      }),
-    );
+    const dropTarget = inStrip
+      ? findMainChatTabDropTarget(
+          drag.sourceKey,
+          drag.sourceLeft,
+          previewLeft,
+          drag.width,
+          Array.from(
+            stripRef.current?.querySelectorAll<HTMLElement>('[data-main-chat-tab-key]') ?? [],
+          ).flatMap((tab) => {
+            const key = tab.dataset.mainChatTabKey;
+            if (!key) return [];
+            const rect = tab.getBoundingClientRect();
+            return [{ key, left: rect.left, right: rect.right }];
+          }),
+        )
+      : null;
 
     drag.targetKey = dropTarget?.key ?? null;
     drag.placement = dropTarget?.placement ?? 'before';
@@ -3527,11 +3565,14 @@ function MainChatTabStrip({
       window.setTimeout(() => {
         suppressClickRef.current = false;
       }, 0);
-      if (shouldReorder && drag.targetKey) {
+      if (shouldReorder && drag.paneTarget) {
+        onDropOnPane(drag.sourceKey, drag.paneTarget.tabKey, drag.paneTarget.zone);
+      } else if (shouldReorder && drag.targetKey) {
         onReorder(drag.sourceKey, drag.targetKey, drag.placement);
       }
     }
 
+    onPaneDragUpdate(null);
     dragStateRef.current = null;
     setDragging(null);
   };
