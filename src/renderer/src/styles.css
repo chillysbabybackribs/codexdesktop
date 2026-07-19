@@ -6942,7 +6942,6 @@ button {
 }
 
 .review-compact-actions {
-  position: relative;
   display: inline-flex;
   flex: none;
 }
@@ -6983,10 +6982,10 @@ button {
 .review-action-menu {
   position: absolute;
   top: auto;
-  right: -10px;
+  right: 0;
   bottom: calc(100% - 1px);
   z-index: 30;
-  width: min(248px, calc(100cqw - 4px));
+  width: min(248px, 100cqw);
   padding: 5px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
