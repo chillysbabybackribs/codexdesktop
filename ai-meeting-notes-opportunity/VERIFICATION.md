@@ -8,9 +8,10 @@ Completed 2026-07-19.
 | --- | --- |
 | `node --check prototype/app.js` | Passed: static interaction script parsed successfully. |
 | `python3 -m http.server 4173 --directory prototype` | Used for local static preview. |
-| Browser desktop review at 1440 × 900 | Completed after implementation; review queue, transcript, health rail, filters, import modal, and export control were visible with no horizontal overflow. |
-| Browser mobile review at 390 × 844 | Completed after implementation; primary review queue moved ahead of transcript, filters remained scrollable, controls fit the viewport, and no horizontal overflow was observed. |
-| UI interaction check | Search/filter, review-next jump, task toggle, owner assignment, import dialog close, and local Markdown export were exercised. |
+| Browser UI audit at 1440 × 900, 820 × 1180, and 390 × 844 | Completed. No horizontal overflow, clipping, broken assets, runtime exceptions, or failed requests were found. |
+| Visual inspection of desktop and mobile screenshots | Completed. The desktop preserves the three-column review workspace; mobile moves the review queue ahead of the transcript and keeps filters on one scrollable row. |
+| Correction pass | Fixed a CSS specificity bug that kept the import dialog visible on load. Added 44px touch targets at tablet/mobile widths and keyboard access for the local-file chooser. A second audit reported no undersized touch targets. |
+| Browser interaction check | Confirmed that the dialog is hidden initially, opens with focus on its close button, closes correctly, and search for `Eli` reduces the outcome list to one matching item. |
 
 ## Files created
 
