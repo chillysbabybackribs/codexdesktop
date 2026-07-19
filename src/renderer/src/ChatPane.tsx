@@ -9,7 +9,6 @@ import type {
   ThreadGoalStatus,
 } from '../../shared/session-protocol';
 import { AgentColumn, AgentTabStrip, type AgentSession } from './AgentDock';
-import { NewAgentIcon } from './Composer';
 import { ChatPaneView } from './ChatPaneView';
 import { SettingsModal, WorkspacePill } from './ChatControls';
 import { MainChatTabStrip } from './MainChatTabStrip';
@@ -432,15 +431,6 @@ export function ChatPane({
             });
           }}
         />
-        <button
-          type="button"
-          className="composer-new-agent-button"
-          aria-label="New agent"
-          title="New agent"
-          onClick={() => onNewAgent(tabKey)}
-        >
-          <NewAgentIcon />
-        </button>
       </div>
     );
   };
@@ -493,6 +483,7 @@ export function ChatPane({
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
             composerHeaderContext: paneComposerModelContext(node.tabKey, tab),
             composerFooterContext: paneComposerFooterContext(node.tabKey),
+            onNewAgent: () => onNewAgent(node.tabKey),
           }}
         />
       );

@@ -42,6 +42,7 @@ export function Composer({
   onSteer,
   onStop,
   onNewThread,
+  onNewAgent,
   providerId = 'codex',
   footerLeading,
   footerContext,
@@ -59,6 +60,7 @@ export function Composer({
   onSteer: (text: string) => Promise<boolean>;
   onStop: () => Promise<void>;
   onNewThread: () => void;
+  onNewAgent?: () => void;
   providerId?: ProviderId;
   footerLeading?: React.ReactNode;
   footerContext?: React.ReactNode;
@@ -75,6 +77,9 @@ export function Composer({
   );
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const createMenuRef = useRef<HTMLDivElement | null>(null);
+  const createMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>(
     'closed',
   );
@@ -88,6 +93,36 @@ export function Composer({
   useEffect(() => {
     composerDrafts.set(draftKey, { value, attachments, mentions });
   }, [draftKey, value, attachments, mentions]);
+
+  useEffect(() => {
+    if (!isCreateMenuOpen) return;
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      createMenuRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus();
+    });
+    const closeOnOutsidePointer = (event: PointerEvent): void => {
+      if (
+        createMenuRef.current &&
+        event.target instanceof Node &&
+        !createMenuRef.current.contains(event.target)
+      ) {
+        setIsCreateMenuOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      setIsCreateMenuOpen(false);
+      createMenuTriggerRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isCreateMenuOpen]);
 
   // Workspace file index for @-mentions: fetched when a mention token opens,
   // cached for the life of that menu (the main process caches the git listing
@@ -418,16 +453,51 @@ export function Composer({
           >
             Auto
           </button>
-          <button
-            type="button"
-            className="composer-new-thread-button"
-            aria-label="New chat"
-            title="New chat"
-            disabled={isLoading || isTurnActive || hasDraft}
-            onClick={onNewThread}
-          >
-            <NewChatIcon />
-          </button>
+          <div className="composer-create-menu-wrap" ref={createMenuRef}>
+            <button
+              ref={createMenuTriggerRef}
+              type="button"
+              className="composer-new-thread-button"
+              aria-label="Create"
+              title="Create new chat or agent"
+              aria-haspopup="menu"
+              aria-expanded={isCreateMenuOpen}
+              onClick={() => setIsCreateMenuOpen((open) => !open)}
+            >
+              <NewChatIcon />
+            </button>
+            {isCreateMenuOpen ? (
+              <div className="composer-create-menu" role="menu" aria-label="Create">
+                <button
+                  type="button"
+                  className="composer-create-menu-item"
+                  role="menuitem"
+                  disabled={isLoading || isTurnActive || hasDraft}
+                  onClick={() => {
+                    setIsCreateMenuOpen(false);
+                    onNewThread();
+                  }}
+                >
+                  <NewChatIcon />
+                  <span>New chat</span>
+                </button>
+                {onNewAgent ? (
+                  <button
+                    type="button"
+                    className="composer-create-menu-item"
+                    role="menuitem"
+                    onClick={() => {
+                      setIsCreateMenuOpen(false);
+                      onNewAgent();
+                    }}
+                  >
+                    <NewAgentIcon />
+                    <span>New agent</span>
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
           <AttachmentButton
             disabled={isLoading || isTurnActive}
             onAdd={(items) => {

@@ -117,6 +117,7 @@ export function ChatPaneView({
     agentColumn: React.ReactNode;
     composerHeaderContext: React.ReactNode;
     composerFooterContext: React.ReactNode;
+    onNewAgent: () => void;
   } | null;
 }): React.JSX.Element {
   const subscribeToPane = useCallback(
@@ -441,6 +442,11 @@ export function ChatPaneView({
             await runFocused(onStop);
           }}
           onNewThread={() => void runFocused(onNewThread)}
+          onNewAgent={
+            dockExtras?.onNewAgent
+              ? () => void runFocused(dockExtras.onNewAgent)
+              : undefined
+          }
           providerId={providerId}
           footerContext={dockExtras?.composerFooterContext}
         />
