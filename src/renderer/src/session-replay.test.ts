@@ -81,8 +81,9 @@ test('replay: full turn lifecycle produces the expected render rows and telemetr
   assert.equal(meta?.tokens?.modelCallCount, 1)
   assert.equal(state.contextUsage?.last.totalTokens, 900)
 
+  // No work items in this turn, so no tail row — just the two chat rows.
   const { rows } = buildRows(state.items, state.itemMeta, null)
-  assert.deepEqual(rows.map((row) => row.kind), ['chat', 'chat', 'tail'])
+  assert.deepEqual(rows.map((row) => row.kind), ['chat', 'chat'])
 })
 
 test('replay: work items group into an activity row with a live tail', () => {
