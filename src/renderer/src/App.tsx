@@ -3315,6 +3315,127 @@ export default function App(): React.JSX.Element {
     [turnCheckpoints],
   );
 
+  const browserMiddleChats =
+    workspaceLayoutMode === 'browser-middle'
+      ? browserMiddleChatLayout(
+          chatSplitLayout,
+          mainChatTabs.map((tab) => tab.key),
+          activeMainChatTabKey,
+        )
+      : null;
+  const browserMiddleColumns =
+    browserMiddleChats?.kind === 'split' && browserMiddleChats.direction === 'row'
+      ? browserMiddleChats
+      : null;
+
+  const renderChatPane = (
+    layout: SplitNode,
+    options: { id: string; pathPrefix: string; showTabBar: boolean; side: 'left' | 'right' | null },
+  ): React.JSX.Element => (
+    <ChatPane
+      turnCheckpoints={turnCheckpoints}
+      onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+      turnReviews={turnReviews}
+      undoneFiles={undoneFiles}
+      alwaysKeepAll={alwaysKeepAll}
+      onKeepTurn={handleKeepTurn}
+      onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
+      onUndoTurnAll={handleUndoTurnAll}
+      onUndoFile={handleUndoFile}
+      agentSessionStore={sessionStoreRef.current}
+      mainChatTabs={mainChatTabs}
+      activeMainChatTabKey={activeMainChatTabKey}
+      mainChatTabsDisabled={
+        isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
+      }
+      onSelectMainChatTab={handleSelectMainChatTab}
+      onReorderMainChatTabs={handleReorderMainChatTabs}
+      onCloseMainChatTab={handleCloseMainChatTab}
+      onNewMainChatTab={handleNewMainChatTab}
+      paneId={options.id}
+      showTabBar={options.showTabBar}
+      browserMiddleSide={options.side}
+      isBrowserMiddle={workspaceLayoutMode === 'browser-middle'}
+      onToggleBrowserMiddle={toggleBrowserMiddleLayout}
+      splitLayout={layout}
+      onDropTabOnPane={handleDropTabOnSplitPane}
+      onCloseSplitPane={handleCloseSplitPane}
+      onSetSplitRatio={(path, ratio) => handleSetSplitRatio(`${options.pathPrefix}${path}`, ratio)}
+      canSplitForDrop={(targetKey, sourceKey) =>
+        canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+      }
+      onSplitActivePane={handleSplitActivePane}
+      canSplitActivePane={
+        canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
+        mainChatTabs.length < maxMainChatTabs
+      }
+      items={items}
+      itemMeta={itemMeta}
+      title={activeThreadTitle}
+      status={codexStatus}
+      isRestoring={isRestoring}
+      threads={threads}
+      activeThreadId={activeThreadId}
+      activeTurnId={activeTurnId}
+      activeGoal={activeGoal}
+      isGoalUpdating={isGoalUpdating}
+      isThreadMenuOpen={isThreadMenuOpen}
+      threadsNextCursor={threadsNextCursor}
+      threadsLoading={threadsLoading}
+      threadsError={threadsError}
+      hasThreadContent={hasThreadContent}
+      isBusy={
+        isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
+      }
+      workspace={workspace}
+      models={models}
+      selectedModel={selectedModel}
+      selectedReasoningEffort={selectedReasoningEffort}
+      fastMode={fastMode}
+      onSelectModel={handleSelectModel}
+      onSelectModelEffort={handleSelectModelEffort}
+      onSetFastMode={handleSetFastMode}
+      onSend={handleSend}
+      onSteer={handleSteer}
+      onStop={handleStop}
+      onNewThread={handleNewThread}
+      onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
+      onResumeThread={async (threadId) => {
+        await handleResumeThread(threadId);
+      }}
+      onLoadMoreThreads={loadMoreThreads}
+      onPickWorkspace={handlePickWorkspace}
+      onSaveGoal={handleSaveGoal}
+      onSetGoalStatus={handleSetGoalStatus}
+      onClearGoal={handleClearGoal}
+      onCompactThread={handleCompactThread}
+      agentSessions={agentSessions}
+      openAgentKeys={openAgentKeys}
+      selectedAgentKey={selectedAgentKey}
+      onSelectAgent={setSelectedAgentKey}
+      onOpenAgent={handleOpenAgent}
+      onMinimizeAgent={handleMinimizeAgent}
+      onToggleWatchAgent={handleToggleWatchAgent}
+      onToggleAuditAgent={handleToggleAuditAgent}
+      onToggleReportAgent={handleToggleReportAgent}
+      onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+      onDecideAgentSendPolicy={handleDecideSendPolicy}
+      onSetAgentModel={handleSelectAgentModel}
+      onSetAgentModelEffort={handleSelectAgentModelEffort}
+      onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
+      onPromoteAgent={(key) => void handlePromoteAgent(key)}
+      onCloseAgentSession={handleCloseAgentSession}
+      onResetAgentSession={handleResetAgentSession}
+      onAgentSend={handleAgentSend}
+      onAgentSteer={handleAgentSteer}
+      onAgentStop={handleAgentStop}
+      onAgentCompact={handleAgentCompact}
+      onLoadOlderHistory={(tabKey, threadId) => {
+        void loadOlderThreadHistory(threadId, tabKey);
+      }}
+    />
+  );
+
   return (
     <div ref={appRef} className="app-shell">
       <TitleBar />
