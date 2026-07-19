@@ -7,6 +7,9 @@ import type {
 } from '../../shared/session-protocol';
 import type { TurnMeta } from './TaskActivity';
 
+export const defaultThreadTitle = 'New Chat';
+const maxProvisionalThreadTitleLength = 72;
+
 export function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model);
   return !selected || selected.inputModalities.includes('image');
@@ -54,11 +57,37 @@ export function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
 }
 
 export function threadTitle(thread: Thread): string {
-  return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat');
+  return stripSkillMarkerFromTitle(thread.name || thread.preview || defaultThreadTitle);
+}
+
+// A new thread has no server-generated name yet, but its first prompt is
+// already useful navigation context. Keep it short enough for a compact tab;
+// the eventual thread/name/updated notification remains authoritative.
+export function provisionalThreadTitle(prompt: string): string {
+  const normalized = prompt.replace(/\s+/g, ' ').trim();
+  const title = stripSkillMarkerFromTitle(normalized);
+  if (title.length <= maxProvisionalThreadTitleLength) return title;
+
+  const clipped = title.slice(0, maxProvisionalThreadTitleLength - 1).trimEnd();
+  const boundary = clipped.lastIndexOf(' ');
+  const readable = boundary >= Math.floor(maxProvisionalThreadTitleLength / 2)
+    ? clipped.slice(0, boundary)
+    : clipped;
+  return `${readable.trimEnd()}…`;
+}
+
+// A thread/start response may still contain only the placeholder name. Do not
+// let that transient metadata overwrite the prompt-derived title the user just
+// saw; a real name notification replaces it normally.
+export function resolveThreadTitle(remoteTitle: string, currentTitle: string): string {
+  const current = currentTitle.trim();
+  return remoteTitle === defaultThreadTitle && current && current !== defaultThreadTitle
+    ? current
+    : remoteTitle;
 }
 
 function stripSkillMarkerFromTitle(title: string): string {
-  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat';
+  return title.replace(/^\$artifact-first-web-research\s*/i, '') || defaultThreadTitle;
 }
 
 // Compact recency label for a thread row: "now", "5m", "3h" within a day, then

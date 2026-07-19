@@ -76,7 +76,9 @@ import {
   isRecoverableTurnError,
   isTerminalTurnStatus,
   modelAcceptsImages,
+  provisionalThreadTitle,
   relativeThreadTime,
+  resolveThreadTitle,
   threadTitle,
 } from './app-helpers';
 import { useAgentSessions } from './useAgentSessions';
@@ -1388,6 +1390,19 @@ export default function App(): React.JSX.Element {
     setIsSending(true);
     userTurnRequestPendingRef.current = true;
     watchThreadIdRef.current = activeThreadId;
+    const threadId = activeThreadIdRef.current;
+    const existingTab = mainChatTabStateRef.current.tabs.find((tab) => tab.key === targetTabKey);
+    const priorTitle = existingTab?.title ?? 'New Chat';
+    const provisionalTitle = threadId
+      ? null
+      : provisionalThreadTitle(trimmed || attachments[0]?.name || '');
+    const appliedProvisionalTitle =
+      Boolean(provisionalTitle && provisionalTitle !== 'New Chat' && priorTitle === 'New Chat');
+    if (appliedProvisionalTitle && provisionalTitle) {
+      patchMainChatTab(targetTabKey, (tab) => ({ ...tab, title: provisionalTitle }));
+      activeThreadTitleRef.current = provisionalTitle;
+      setActiveThreadTitle(provisionalTitle);
+    }
     const optimisticId = `optimistic-user-${crypto.randomUUID()}`;
     optimisticUserMessageIdRef.current = optimisticId;
     setItems((current) => [
@@ -1396,7 +1411,6 @@ export default function App(): React.JSX.Element {
     ]);
 
     try {
-      const threadId = activeThreadIdRef.current;
       if (!threadId) {
         mainThreadStartsInFlightRef.current.add(targetTabKey);
         pendingThreadStartOwnersRef.current.push({ kind: 'main', key: targetTabKey });
@@ -1482,6 +1496,16 @@ export default function App(): React.JSX.Element {
       if (optimisticUserMessageIdRef.current === optimisticId) {
         optimisticUserMessageIdRef.current = null;
         setItems((current) => current.filter((item) => item.id !== optimisticId));
+      }
+      if (appliedProvisionalTitle && provisionalTitle) {
+        const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === targetTabKey);
+        if (tab?.threadId === null && tab.title === provisionalTitle) {
+          patchMainChatTab(targetTabKey, (current) => ({ ...current, title: priorTitle }));
+          if (activeMainChatTabKeyRef.current === targetTabKey) {
+            activeThreadTitleRef.current = priorTitle;
+            setActiveThreadTitle(priorTitle);
+          }
+        }
       }
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error');
       return false;
@@ -2724,7 +2748,13 @@ export default function App(): React.JSX.Element {
         const pendingOwner = pendingThreadStartOwnersRef.current.shift();
         if (pendingOwner?.kind === 'main') {
           mainThreadStartsInFlightRef.current.delete(pendingOwner.key);
-          const startedTitle = threadTitle(notification.params.thread);
+          const existingTitle = mainChatTabStateRef.current.tabs.find(
+            (tab) => tab.key === pendingOwner.key,
+          )?.title ?? 'New Chat';
+          const startedTitle = resolveThreadTitle(
+            threadTitle(notification.params.thread),
+            existingTitle,
+          );
           patchMainChatTab(pendingOwner.key, (tab) => ({
             ...tab,
             threadId: startedThreadId,
@@ -2748,12 +2778,16 @@ export default function App(): React.JSX.Element {
         persistLastThreadId(notification.params.thread.id);
         activeThreadIdRef.current = notification.params.thread.id;
         setActiveThreadId(notification.params.thread.id);
-        activeThreadTitleRef.current = threadTitle(notification.params.thread);
+        const existingTitle = mainChatTabStateRef.current.tabs.find(
+          (tab) => tab.key === activeMainChatTabKeyRef.current,
+        )?.title ?? 'New Chat';
+        const startedTitle = resolveThreadTitle(threadTitle(notification.params.thread), existingTitle);
+        activeThreadTitleRef.current = startedTitle;
         setActiveThreadTitle(activeThreadTitleRef.current);
         patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
           ...tab,
           threadId: notification.params.thread.id,
-          title: threadTitle(notification.params.thread),
+          title: startedTitle,
         }));
         return;
       }
@@ -3117,7 +3151,7 @@ export default function App(): React.JSX.Element {
             const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null;
             patchMainChatTab(tab.key, (current) => ({
               ...current,
-              title: threadTitle(resumed.thread),
+              title: resolveThreadTitle(threadTitle(resumed.thread), current.title),
               model: resumed.model ?? current.model,
               reasoningEffort: resumed.reasoningEffort ?? current.reasoningEffort,
               status: inProgress ? 'working' : 'idle',
@@ -3154,7 +3188,10 @@ export default function App(): React.JSX.Element {
     setIsCompacting(false);
     activeCompactionRef.current = null;
 
-    const nextTitle = threadTitle(thread);
+    const currentTitle = mainChatTabStateRef.current.tabs.find(
+      (tab) => tab.key === activeMainChatTabKeyRef.current,
+    )?.title ?? 'New Chat';
+    const nextTitle = resolveThreadTitle(threadTitle(thread), currentTitle);
     watchThreadIdRef.current = thread.id;
     activeThreadIdRef.current = thread.id;
     setActiveThreadId(thread.id);
