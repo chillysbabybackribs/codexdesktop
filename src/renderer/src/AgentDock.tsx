@@ -7,6 +7,8 @@ import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
+import type { AuditRequestSummary } from './audit-trigger'
+import { auditSummaryLabel } from './audit-trigger'
 import { MarkdownContent } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
@@ -503,7 +505,9 @@ const AgentWindow = memo(function AgentWindow({
           ) : (
             session.messages.map((message) => (
               <div key={message.id} className={`agent-mini-message is-${message.role}`}>
-                {message.role === 'assistant' ? (
+                {message.audit ? (
+                  <AuditRequestCard audit={message.audit} />
+                ) : message.role === 'assistant' ? (
                   <MarkdownContent text={message.text} />
                 ) : (
                   <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
