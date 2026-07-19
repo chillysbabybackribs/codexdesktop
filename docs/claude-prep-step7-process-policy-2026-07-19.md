@@ -59,16 +59,18 @@ hold 2.5–4 GB hostage. Crash isolation (one process = one session) is kept.
 - On adapter startup, assert the running binary's version equals the tested
   pin; mismatch warns loudly (surfaced, not silent — Phase 5 rules apply).
 
-### D5 — SDK-vs-raw-CLI: resolved by spike before the adapter build
+### D5 — RESOLVED: Agent SDK (spike run 2026-07-19)
 
-A short (~1 day) spike decides whether the adapter drives the CLI's
-stream-JSON directly or through the Agent SDK. The SDK is the stronger
-stability posture (protocol mapping pinned inside a lockfile-controlled
-library; in-process MCP servers would let the browser tools skip even the
-stdio shim) — verify at spike time: how the SDK sources its runtime binary
-(must compose with D4's pinning), per-session process behavior (must compose
-with D1–D3), and streaming-event completeness against what the session store
-reducer needs.
+See `claude-d5-spike-2026-07-19.md`. All three criteria verified live: the
+SDK vendors an exactly version-paired runtime binary (D4 satisfied natively —
+no self-updater in play), streaming-input sessions run one persistent
+resumable process (D1–D3 map 1:1), and the event stream with
+`includePartialMessages` covers every reducer input plus a first-class
+`rate_limit_event` for the backoff requirement. Adapter contract discovered:
+`system/init` repeats per message/resume and must not be treated as a
+once-per-process gate. In-process MCP (`createSdkMcpServer`) becomes the
+primary tool transport; the stdio shim is the fallback. `settingSources: []`
+isolates app sessions from the user's `~/.claude`.
 
 ## Interactions with existing machinery
 
