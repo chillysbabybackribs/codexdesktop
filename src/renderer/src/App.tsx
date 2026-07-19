@@ -10,7 +10,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { AgentColumn, AgentTabStrip } from './AgentDock';
-import { Composer, NewAgentIcon, discardComposerDraft } from './Composer';
+import { NewAgentIcon, discardComposerDraft } from './Composer';
 import { MainChatTabStrip } from './MainChatTabStrip';
 import { ModelPill } from './ModelPill';
 import type { AgentSession } from './AgentDock';
@@ -31,40 +31,22 @@ import type { ThreadItem } from '../../shared/session-protocol';
 import type { PluginSummary } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
-import { TraceModal } from './TraceModal';
-import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
+import { buildTurnTrace } from './trace';
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
 } from './turn-telemetry';
-import {
-  FileReviewContext,
-  TurnTail,
-  type FileReviewActions,
-  type ItemMeta,
-  type TurnMeta,
-  type TurnPlanItem,
-  type WorkItem,
-} from './TaskActivity';
-import { ReviewBar, type ReviewChange } from './ReviewBar';
+import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
 import { stripMentionContext } from './mention-model';
 import { selectCompletedWork } from './memory-work';
-import { ThreadScroll } from './ThreadScroll';
 import {
-  ChatItemView,
-  TaskActivityCard,
   stripAutomaticSkillMarker,
   stripInjectedMemory,
 } from './ChatTranscript';
-import { ContextPill, SettingsModal, UnsplitIcon, WorkspacePill } from './ChatControls';
+import { ChatPaneView } from './ChatPaneView';
+import { SettingsModal, WorkspacePill } from './ChatControls';
 import type { ChatAttachment } from '../../shared/ipc';
-import {
-  buildRows,
-  isWorkItem,
-  upsertMany,
-  type ChatItem,
-  type SystemItem,
-} from './transcript-model';
+import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transcript-model';
 import {
   isImmediateItemNotification,
   isItemNotification,
@@ -194,10 +176,6 @@ function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
 // The per-session render model now lives in session-store.ts (Phase 2); a
 // main-chat "snapshot" is simply a session state held under the tab's key.
 type MainChatSnapshot = SessionRenderState;
-
-// Stable fallback snapshot for panes whose tab has no session yet —
-// useSyncExternalStore needs referential stability across reads.
-const emptyPaneSessionState = emptySessionState();
 
 export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
@@ -3378,16 +3356,6 @@ function TitleBar(): React.JSX.Element {
     </header>
   );
 }
-
-
-function MainChatGlyph(): React.JSX.Element {
-  return (
-    <svg className="main-chat-tab-glyph" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4 4.75A1.75 1.75 0 0 1 5.75 3h4.5A1.75 1.75 0 0 1 12 4.75v3.5A1.75 1.75 0 0 1 10.25 10H7l-2.4 2v-2.15A1.75 1.75 0 0 1 4 8.5V4.75Z" />
-    </svg>
-  );
-}
-
 
 
 function ChatPane({
