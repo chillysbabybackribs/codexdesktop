@@ -30,6 +30,7 @@ export function PluginGlyph({ plugin }: { plugin: PluginSummary }): React.JSX.El
   return <span aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span>;
 }
 
+
 type PluginConnectionInfo = {
   apps: AppSummary[];
   needsAuth: AppSummary[];
@@ -525,6 +526,7 @@ export function PluginBrowserView({
     </section>
   );
 }
+
 
 function PluginSetupPanel({
   setup,

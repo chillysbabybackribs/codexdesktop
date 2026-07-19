@@ -14,7 +14,11 @@ import {
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock';
 import { ModelPill } from './ModelPill';
 import type { AgentSession } from './AgentDock';
-import type { BrowserBounds, BrowserState, MemoryPersistParams } from '../../shared/ipc';
+import type {
+  BrowserBounds,
+  BrowserState,
+  MemoryPersistParams,
+} from '../../shared/ipc';
 import type { ServerNotification } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import type { CodexErrorInfo } from '../../shared/session-protocol';
@@ -30,7 +34,10 @@ import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
 import { TraceModal, formatTokens } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
-import { modelCallAttributionForItem, reduceTurnTelemetry } from './turn-telemetry';
+import {
+  modelCallAttributionForItem,
+  reduceTurnTelemetry,
+} from './turn-telemetry';
 import {
   AutoFollow,
   FileReviewContext,
@@ -102,11 +109,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
-import {
-  agentSessionsForMainChatTab,
-  defaultReviewerModel,
-  latestAuditReport,
-} from './agent-session-model';
+import { agentSessionsForMainChatTab, defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import { pluginUninstallId } from './plugin-lifecycle';
 import { flattenPlugins, PluginBrowserView, PluginGlyph } from './PluginBrowser';
 import {
@@ -230,8 +233,8 @@ export default function App(): React.JSX.Element {
   const [fastMode, setFastMode] = useState(
     () => window.localStorage.getItem(fastModeStorageKey) === '1',
   );
-  const [alwaysKeepAll, setAlwaysKeepAll] = useState(() =>
-    isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
+  const [alwaysKeepAll, setAlwaysKeepAll] = useState(
+    () => isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
   );
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
@@ -292,9 +295,7 @@ export default function App(): React.JSX.Element {
   // (same-thread + bounce gates), and the in-flight marker consumed by
   // handleSend to tag the feedback turn it starts.
   const auditFeedbackTurnIdsRef = useRef<Set<string>>(new Set());
-  const auditContextByAuditorRef = useRef<
-    Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean }>
-  >(new Map());
+  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean }>>(new Map());
   const pendingAuditFeedbackRef = useRef(false);
   const userRequestedTurnIdRef = useRef<string | null>(null);
   const optimisticUserMessageIdRef = useRef<string | null>(null);
@@ -2870,9 +2871,7 @@ export default function App(): React.JSX.Element {
       userItem && userItem.type === 'userMessage'
         ? userItem.content
             .filter((content) => content.type === 'text')
-            .map((content) =>
-              stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-            )
+            .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
             .join('\n')
             .trim() || '(request text unavailable)'
         : '(request text unavailable)';
@@ -2889,13 +2888,7 @@ export default function App(): React.JSX.Element {
       }
       return;
     }
-    const prompt = buildAuditPrompt({
-      userText,
-      files: changed,
-      steps,
-      answerText,
-      detectionUnavailable,
-    });
+    const prompt = buildAuditPrompt({ userText, files: changed, steps, answerText, detectionUnavailable });
     // Structured summary rides along on the displayed message so the card can
     // render a compact collapsible card; the model still receives `prompt`.
     const auditSummary = { userText, files: changed, steps, answerText };
@@ -3853,14 +3846,10 @@ function ChatPane({
   }, [items, itemMeta, activeTurnId]);
 
   const activeAgentSessions = agentSessionsForMainChatTab(agentSessions, activeMainChatTabKey);
-  const openAgentSessions = activeAgentSessions.filter((session) =>
-    openAgentKeys.includes(session.key),
-  );
-  const selectedActiveAgentKey = openAgentSessions.some(
-    (session) => session.key === selectedAgentKey,
-  )
+  const openAgentSessions = activeAgentSessions.filter((session) => openAgentKeys.includes(session.key));
+  const selectedActiveAgentKey = openAgentSessions.some((session) => session.key === selectedAgentKey)
     ? selectedAgentKey
-    : (openAgentSessions[0]?.key ?? null);
+    : openAgentSessions[0]?.key ?? null;
 
   const openPluginBrowser = (): void => {
     setIsSettingsOpen(false);
@@ -3976,59 +3965,59 @@ function ChatPane({
         />
 
         <FileReviewContext.Provider value={fileReview}>
-          <ThreadScroll
-            id="main-chat-panel"
-            labelledBy={`main-chat-tab-${activeMainChatTabKey}`}
-            scrollKey={activeMainChatTabKey}
-            resetKey={activeThreadId}
-            activeTurnId={activeTurnId}
-            dependencies={[items, itemMeta, activeTurnId]}
-            onReachStart={onLoadOlderHistory}
-          >
-            {isRestoring ? (
-              <div className="chat-restore-status" role="status" aria-live="polite">
-                <span className="shimmer-text">Restoring conversation…</span>
-              </div>
-            ) : null}
-            {rows.map((row) => {
-              if (row.kind === 'activity') {
-                return (
-                  <TaskActivityCard
-                    key={row.id}
-                    items={row.items}
-                    itemMeta={itemMeta}
-                    live={Boolean(activeTurnId) && row.turnId === activeTurnId}
-                    workspace={workspace}
-                  />
-                );
-              }
-              if (row.kind === 'tail') {
-                return (
-                  <TurnTail
-                    key={row.id}
-                    live={row.turnId === activeTurnId}
-                    items={turnWork.get(row.turnId) ?? []}
-                    itemMeta={itemMeta}
-                    meta={turnMeta[row.turnId]}
-                    streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
-                    onOpenTrace={() => openTrace(row.turnId)}
-                    onRevert={
-                      turnCheckpoints[row.turnId] ? () => onRevertTurn(row.turnId) : undefined
-                    }
-                  />
-                );
-              }
+        <ThreadScroll
+          id="main-chat-panel"
+          labelledBy={`main-chat-tab-${activeMainChatTabKey}`}
+          scrollKey={activeMainChatTabKey}
+          resetKey={activeThreadId}
+          activeTurnId={activeTurnId}
+          dependencies={[items, itemMeta, activeTurnId]}
+          onReachStart={onLoadOlderHistory}
+        >
+          {isRestoring ? (
+            <div className="chat-restore-status" role="status" aria-live="polite">
+              <span className="shimmer-text">Restoring conversation…</span>
+            </div>
+          ) : null}
+          {rows.map((row) => {
+            if (row.kind === 'activity') {
               return (
-                <ChatItemView
-                  key={row.item.id}
-                  item={row.item}
-                  meta={itemMeta[row.item.id]}
-                  turnId={row.turnId}
-                  streaming={row.item.id === streamingMessageId}
+                <TaskActivityCard
+                  key={row.id}
+                  items={row.items}
+                  itemMeta={itemMeta}
+                  live={Boolean(activeTurnId) && row.turnId === activeTurnId}
+                  workspace={workspace}
                 />
               );
-            })}
-          </ThreadScroll>
+            }
+            if (row.kind === 'tail') {
+              return (
+                <TurnTail
+                  key={row.id}
+                  live={row.turnId === activeTurnId}
+                  items={turnWork.get(row.turnId) ?? []}
+                  itemMeta={itemMeta}
+                  meta={turnMeta[row.turnId]}
+                  streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
+                  onOpenTrace={() => openTrace(row.turnId)}
+                  onRevert={
+                    turnCheckpoints[row.turnId] ? () => onRevertTurn(row.turnId) : undefined
+                  }
+                />
+              );
+            }
+            return (
+              <ChatItemView
+                key={row.item.id}
+                item={row.item}
+                meta={itemMeta[row.item.id]}
+                turnId={row.turnId}
+                streaming={row.item.id === streamingMessageId}
+              />
+            );
+          })}
+        </ThreadScroll>
         </FileReviewContext.Provider>
 
         <div
@@ -4090,11 +4079,7 @@ function ChatPane({
                 onToggleFastMode={onSetFastMode}
               />
             ) : null}
-            <AgentTabStrip
-              sessions={activeAgentSessions}
-              openKeys={openAgentKeys}
-              onFocus={focusAgent}
-            />
+            <AgentTabStrip sessions={activeAgentSessions} openKeys={openAgentKeys} onFocus={focusAgent} />
             {/* Always available: a reviewer armed while idle audits the very
                 next turn — the born-a-reviewer default is most useful BEFORE
                 the work starts, not only mid-turn. */}
@@ -5094,9 +5079,7 @@ function completedMemoryTurns(
     if (item.type === 'userMessage') {
       turn.user = item.content
         .filter((content) => content.type === 'text')
-        .map((content) =>
-          stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-        )
+        .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
         .join('\n')
         .trim();
     } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
@@ -5177,20 +5160,12 @@ function AuditFeedbackCard({
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        <span className="audit-feedback-flag" aria-hidden="true">
-          ⚑
-        </span>
+        <span className="audit-feedback-flag" aria-hidden="true">⚑</span>
         <span className="audit-feedback-title">Audit feedback · {agentTitle}</span>
         {!open && preview ? <span className="audit-feedback-preview">{preview}</span> : null}
         <span className="audit-feedback-chevron" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path
-              d="m6 9 6 6 6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
       </button>
@@ -5225,9 +5200,7 @@ const ChatItemView = memo(function ChatItemView({
   if (item.type === 'userMessage') {
     const text = item.content
       .filter((content) => content.type === 'text')
-      .map((content) =>
-        stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-      )
+      .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
       .join('\n');
     const attachments = attachmentsFromUserInput(item.content);
     // Auditor feedback renders as a compact retractable card, not the raw
@@ -5727,9 +5700,7 @@ function Composer({
     if (index < fileCandidates.length) {
       chooseMention(fileCandidates[index]);
     } else if (mentionPlugins.length) {
-      choosePlugin(
-        mentionPlugins[Math.min(index - fileCandidates.length, mentionPlugins.length - 1)],
-      );
+      choosePlugin(mentionPlugins[Math.min(index - fileCandidates.length, mentionPlugins.length - 1)]);
     }
   };
 

@@ -1,60 +1,60 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { randomUUID } from 'node:crypto';
-import { dirname } from 'node:path';
-import { parseSavedBrowserState, sanitizeBrowserState } from './browser-state-sanitize.js';
-import type { SavedBrowserState } from './browser-state-types.js';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { randomUUID } from 'node:crypto'
+import { dirname } from 'node:path'
+import { parseSavedBrowserState, sanitizeBrowserState } from './browser-state-sanitize.js'
+import type { SavedBrowserState } from './browser-state-types.js'
 
-export type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js';
-export { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js';
+export type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
+export { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 
 export class BrowserStateStore {
-  private readonly filePath: string | (() => string);
-  private saveQueue: Promise<void> = Promise.resolve();
+  private readonly filePath: string | (() => string)
+  private saveQueue: Promise<void> = Promise.resolve()
 
   constructor(filePath: string | (() => string)) {
-    this.filePath = filePath;
+    this.filePath = filePath
   }
 
   async load(): Promise<SavedBrowserState | null> {
     try {
-      const raw = await readFile(this.path(), 'utf8');
-      const saved = parseSavedBrowserState(raw);
+      const raw = await readFile(this.path(), 'utf8')
+      const saved = parseSavedBrowserState(raw)
       if (!saved) {
-        console.warn('Ignoring invalid saved browser state; starting a new browser session');
+        console.warn('Ignoring invalid saved browser state; starting a new browser session')
       }
-      return saved;
+      return saved
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-        console.warn('Failed to load saved browser state; starting a new browser session', error);
+        console.warn('Failed to load saved browser state; starting a new browser session', error)
       }
-      return null;
+      return null
     }
   }
 
   async save(state: SavedBrowserState): Promise<void> {
-    const payload = sanitizeBrowserState(state);
+    const payload = sanitizeBrowserState(state)
 
     if (!payload) {
-      return;
+      return
     }
 
-    const filePath = this.path();
-    const serialized = `${JSON.stringify(payload)}\n`;
+    const filePath = this.path()
+    const serialized = `${JSON.stringify(payload)}\n`
     const operation = this.saveQueue.then(async () => {
-      const temporaryPath = `${filePath}.${process.pid}.${randomUUID()}.tmp`;
-      await mkdir(dirname(filePath), { recursive: true });
-      await writeFile(temporaryPath, serialized, 'utf8');
-      await rename(temporaryPath, filePath);
-    });
-    this.saveQueue = operation.catch(() => {});
-    await operation;
+      const temporaryPath = `${filePath}.${process.pid}.${randomUUID()}.tmp`
+      await mkdir(dirname(filePath), { recursive: true })
+      await writeFile(temporaryPath, serialized, 'utf8')
+      await rename(temporaryPath, filePath)
+    })
+    this.saveQueue = operation.catch(() => {})
+    await operation
   }
 
   async flush(): Promise<void> {
-    await this.saveQueue;
+    await this.saveQueue
   }
 
   private path(): string {
-    return typeof this.filePath === 'function' ? this.filePath() : this.filePath;
+    return typeof this.filePath === 'function' ? this.filePath() : this.filePath
   }
 }
