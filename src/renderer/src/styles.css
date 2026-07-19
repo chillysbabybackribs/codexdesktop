@@ -6976,24 +6976,27 @@ button {
   transform: rotate(180deg);
 }
 
+/* Grows upward out of the top of the "files changed" bar as one cohesive
+   shape: rounded only on top, bottom edge open and borderless so it fuses
+   seamlessly into the bar's head below it — no line divides the two. */
 .review-action-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: auto;
   right: 0;
-  bottom: auto;
+  bottom: calc(100% - 1px);
   z-index: 30;
-  width: min(248px, calc(100cqw - 16px));
+  width: min(248px, 100cqw);
   padding: 5px;
   border: 1px solid var(--hairline-strong);
-  border-radius: 13px;
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
   background-color: var(--surface-card);
   background-image: var(--grain);
   box-shadow:
-    0 14px 34px rgb(0 0 0 / 42%),
-    0 2px 8px rgb(0 0 0 / 30%),
+    0 -12px 28px rgb(0 0 0 / 34%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
   overflow: hidden;
-  transform-origin: top right;
+  transform-origin: bottom right;
   animation: review-action-menu-in 170ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
