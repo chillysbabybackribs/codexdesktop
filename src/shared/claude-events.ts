@@ -257,12 +257,20 @@ export class ClaudeTurnTranslator {
           ],
         };
       }
+      if (block.kind === 'tool' && typeof delta.partial_json === 'string') {
+        // Tool input streams as JSON fragments; parseable only at block stop.
+        block.text += delta.partial_json;
+        return { notifications: [] };
+      }
       return { notifications: [] };
     }
 
     if (event.type === 'content_block_stop') {
       const block = this.blocks.get(Number(event.index ?? 0));
-      if (!block || block.kind === 'tool') return { notifications: [] };
+      if (!block) return { notifications: [] };
+      if (block.kind === 'tool') {
+        return { notifications: this.enrichToolCall(block.id, parseJsonRecord(block.text)) };
+      }
       return {
         notifications: [
           this.completedBlockNotification({
@@ -291,6 +299,17 @@ export class ClaudeTurnTranslator {
     const content = Array.isArray(message.content) ? message.content : [];
     for (const rawBlock of content) {
       const block = asRecord(rawBlock);
+      if (block.type === 'tool_use' && typeof block.id === 'string') {
+        // Restated tool_use carries the complete input — the enrichment path
+        // for runs without stream events, and an idempotent re-emit otherwise.
+        if (!this.tools.has(block.id)) {
+          notifications.push(
+            ...this.startToolCall(block.id, typeof block.name === 'string' ? block.name : 'tool'),
+          );
+        }
+        notifications.push(...this.enrichToolCall(block.id, asRecord(block.input)));
+        continue;
+      }
       if (block.type !== 'text' || typeof block.text !== 'string') continue;
       const memoKey = `${providerId} ${block.text}`;
       let id = this.emittedTextIds.get(memoKey);
