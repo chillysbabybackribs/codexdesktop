@@ -635,7 +635,7 @@ export default function App(): React.JSX.Element {
     );
     const prompt = firstUserMessage?.content
       .filter((content) => content.type === 'text')
-      .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+      .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
       .join('\n')
       .trim() ?? '';
     const title = provisionalThreadTitle(prompt);
@@ -1452,6 +1452,60 @@ export default function App(): React.JSX.Element {
       buildOptimisticUserMessage(optimisticId, trimmed, attachments),
     ]);
 
+    // Conversational intake (docs/prompt-intake-2026-07-19.md): with a
+    // Reviewer docked, a fresh thread's first send becomes a restatement turn;
+    // the user's natural-language confirmation then fetches the reviewer's
+    // plan before the doer starts. The transcript shows only the user's words.
+    let outgoingText = trimmed;
+    let startedIntakeRestatement = false;
+    const intakeState = mainChatIntakeRef.current.get(targetTabKey);
+    const intakeReviewer = pickIntakeReviewer(agentSessionsRef.current, targetTabKey);
+    if (intakeState && intakeState.threadId !== threadId) {
+      // The pending protocol belongs to a different conversation (thread
+      // switched around the bind) — drop it and send normally.
+      mainChatIntakeRef.current.delete(targetTabKey);
+    } else if (!intakeState && !threadId && intakeReviewer) {
+      outgoingText = `${trimmed}${buildRestateInjection(reviewerDisplayLabel(intakeReviewer, models))}`;
+      mainChatIntakeRef.current.set(targetTabKey, {
+        phase: 'awaitingConfirmation',
+        threadId: null,
+        original: trimmed,
+      });
+      startedIntakeRestatement = true;
+    } else if (intakeState?.phase === 'awaitingConfirmation') {
+      intakeState.phase = 'planning';
+      let plan: string | null = null;
+      if (intakeReviewer) {
+        const briefing = buildPlanBriefing({
+          original: intakeState.original,
+          restatement: lastAgentMessageText(itemsRef.current) ?? '(restatement unavailable)',
+          reply: trimmed,
+          doerLabel:
+            models.find((model) => model.id === selectedModel)?.displayName ??
+            selectedModel ??
+            'the main-chat model',
+        });
+        try {
+          if (await handleAgentSend(intakeReviewer.key, briefing, [])) {
+            plan = await awaitReviewerPlan(intakeReviewer.key);
+          }
+        } catch {
+          plan = null;
+        }
+      }
+      if (plan && isNoPlan(plan)) {
+        // Not a go: stay in the protocol and let the doer answer normally.
+        intakeState.phase = 'awaitingConfirmation';
+        outgoingText = `${trimmed}${buildDeclinedInjection(noPlanReason(plan))}`;
+      } else {
+        mainChatIntakeRef.current.delete(targetTabKey);
+        if (!plan) {
+          addSystemItem('Reviewer plan unavailable — starting without it.', 'warning');
+        }
+        outgoingText = `${trimmed}${buildExecutionInjection(plan, reviewerDisplayLabel(intakeReviewer, models))}`;
+      }
+    }
+
     try {
       if (!threadId) {
         mainThreadStartsInFlightRef.current.add(targetTabKey);
@@ -1460,7 +1514,7 @@ export default function App(): React.JSX.Element {
 
       const response = await window.api.session.sendMessage({
         threadId,
-        text: trimmed,
+        text: outgoingText,
         attachments,
         cwd: workspace,
         model: selectedModel,
@@ -1492,6 +1546,12 @@ export default function App(): React.JSX.Element {
         status: terminalAlreadyObserved ? tab.status : 'working',
         turnId: terminalAlreadyObserved ? null : response.turn.id,
       }));
+      if (startedIntakeRestatement) {
+        // Bind the protocol to the thread the restatement turn created so a
+        // later thread switch invalidates it cleanly.
+        const intake = mainChatIntakeRef.current.get(targetTabKey);
+        if (intake) intake.threadId = response.threadId;
+      }
       if (!targetIsActive) {
         const snapshot = responseSnapshot;
         if (snapshot) {
@@ -1549,6 +1609,7 @@ export default function App(): React.JSX.Element {
           }
         }
       }
+      if (startedIntakeRestatement) mainChatIntakeRef.current.delete(targetTabKey);
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error');
       return false;
     } finally {
@@ -3496,7 +3557,7 @@ export default function App(): React.JSX.Element {
       userItem && userItem.type === 'userMessage'
         ? userItem.content
             .filter((content) => content.type === 'text')
-            .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+            .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
             .join('\n')
             .trim() || '(request text unavailable)'
         : '(request text unavailable)';

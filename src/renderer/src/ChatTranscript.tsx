@@ -4,6 +4,7 @@ import { AutoFollow, isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from 
 import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
+import { stripIntakeInjections } from './main-chat-intake';
 import { parseAuditFeedback } from './audit-trigger';
 import { formatTokens } from './TraceModal';
 import { isWorkItem, type ActivityItem, type ChatItem } from './transcript-model';
@@ -224,7 +225,7 @@ export const ChatItemView = memo(function ChatItemView({
   if (item.type === 'userMessage') {
     const text = item.content
       .filter((content) => content.type === 'text')
-      .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+      .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
       .join('\n');
     const attachments = attachmentsFromUserInput(item.content);
     // Auditor feedback renders as a compact retractable card, not the raw
