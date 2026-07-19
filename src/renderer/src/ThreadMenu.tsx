@@ -54,7 +54,6 @@ export function ThreadMenu({
 }): React.JSX.Element {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const firstCommandRef = useRef<HTMLButtonElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<MenuView>(placement === 'tabbar' ? 'options' : 'history');
@@ -72,6 +71,7 @@ export function ThreadMenu({
       }),
     [isBrowserMiddle, canSplitActivePane, disabled, showGlobalActions],
   );
+  const allCommandsDisabled = commands.every((command) => command.disabled);
 
   const close = (restoreFocus = false): void => {
     setIsOpen(false);
@@ -91,7 +91,11 @@ export function ThreadMenu({
     if (!isOpen) return;
     const id = window.requestAnimationFrame(() => {
       if (view === 'history') searchRef.current?.focus();
-      else firstCommandRef.current?.focus();
+      else {
+        wrapRef.current
+          ?.querySelector<HTMLButtonElement>('.header-options-item:not(:disabled)')
+          ?.focus();
+      }
     });
     return () => window.cancelAnimationFrame(id);
   }, [isOpen, view]);
@@ -177,6 +181,7 @@ export function ThreadMenu({
         title={placement === 'tabbar' ? 'Chat and layout options' : 'Chat history'}
         aria-haspopup="menu"
         aria-expanded={isOpen}
+        disabled={allCommandsDisabled}
         onClick={() => (isOpen ? close() : open())}
       >
         {placement === 'tabbar' ? (
@@ -195,16 +200,12 @@ export function ThreadMenu({
         <div className="thread-menu header-options-menu" role="menu" onKeyDown={handleOptionsKeyDown}>
           <div className="header-options-heading">Chat workspace</div>
           <div className="header-options-list">
-            {commands.map((command, index) => (
+            {commands.map((command) => (
               <button
-                ref={index === 0 ? firstCommandRef : undefined}
                 type="button"
-                role={command.id === 'browser-layout' ? 'menuitemcheckbox' : 'menuitem'}
-                aria-checked={command.id === 'browser-layout' ? command.active : undefined}
+                role="menuitem"
                 key={command.id}
-                className={`header-options-item ${command.active ? 'is-active' : ''} ${
-                  command.id === 'history' ? 'starts-global-section' : ''
-                }`}
+                className={`header-options-item ${command.id === 'history' ? 'starts-global-section' : ''}`}
                 disabled={command.disabled}
                 onClick={() => runCommand(command.id)}
               >
@@ -219,8 +220,6 @@ export function ThreadMenu({
                   <span className="header-options-disclosure" aria-hidden="true">
                     <ChevronRightIcon />
                   </span>
-                ) : command.active ? (
-                  <span className="header-options-check" aria-hidden="true">✓</span>
                 ) : null}
               </button>
             ))}

@@ -928,8 +928,7 @@ button {
   font-size: 9.5px;
 }
 
-.header-options-disclosure,
-.header-options-check {
+.header-options-disclosure {
   display: grid;
   min-width: 16px;
   place-items: center;
