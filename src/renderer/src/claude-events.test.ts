@@ -141,6 +141,49 @@ test('content-block indexes are scoped to each assistant message', () => {
   assert.equal(new Set(messages.map(({ id }) => id)).size, 2)
 })
 
+test('split assistant records (one per block, same provider id) do not duplicate the answer', () => {
+  // Live-caught shape: the SDK emits one `assistant` record per content block
+  // — thinking first, then text — both with the same provider message id,
+  // after the text already streamed. The report used to render twice.
+  const { state } = replayTurn([
+    init,
+    messageStart('msg-final'),
+    blockStart(0, { type: 'thinking' }),
+    { type: 'stream_event', event: { type: 'content_block_delta', index: 0, delta: { type: 'thinking_delta', thinking: 'checking…' } } },
+    blockStop(0),
+    blockStart(1, { type: 'text' }),
+    textDelta(1, 'Looks solid.'),
+    blockStop(1),
+    { type: 'assistant', message: { id: 'msg-final', content: [{ type: 'thinking', thinking: 'checking…' }] } },
+    { type: 'assistant', message: { id: 'msg-final', content: [{ type: 'text', text: 'Looks solid.' }] } },
+    result({ input_tokens: 5, output_tokens: 5 })
+  ], 'audit the turn')
+
+  const messages = state.items.filter((item) => item.type === 'agentMessage') as Array<{ text: string }>
+  assert.equal(messages.length, 1, 'split records must not duplicate the message')
+  assert.equal(messages[0].text, 'Looks solid.')
+})
+
+test('replayed assistant records stay idempotent even after the block map resets', () => {
+  const restate = { type: 'assistant', message: { id: 'msg-a', content: [{ type: 'text', text: 'answer' }] } }
+  const { state } = replayTurn([
+    init,
+    messageStart('msg-a'),
+    blockStart(0, { type: 'text' }),
+    textDelta(0, 'answer'),
+    blockStop(0),
+    restate,
+    // A later message resets the streaming block map…
+    messageStart('msg-b'),
+    // …then the SDK replays the earlier assistant record verbatim.
+    restate,
+    result({ input_tokens: 2, output_tokens: 2 })
+  ], 'q')
+
+  const messages = state.items.filter((item) => item.type === 'agentMessage') as Array<{ text: string }>
+  assert.deepEqual(messages.map(({ text }) => text), ['answer'])
+})
+
 test('rate-limit and SDK error details survive into the failed turn', () => {
   const { context } = makeContext()
   const translator = new ClaudeTurnTranslator(context)
