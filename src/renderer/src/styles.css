@@ -7010,11 +7010,11 @@ button {
   align-items: stretch;
   /* Fixed width so the SVG tab maps 1:1 (no stretch distortion of the curve).
      Labels are stable, so this stays correct. */
-  width: 340px;
+  width: 384px;
   max-width: 100cqw;
   /* Left padding is the curve's horizontal run: buttons sit right of the
      sweep. Bottom padding keeps them clear of the fused baseline. */
-  padding: 0 0 4px 78px;
+  padding: 0 0 4px 148px;
   border: 0;
   filter: drop-shadow(0 -10px 24px rgb(0 0 0 / 32%));
   transform-origin: bottom right;
