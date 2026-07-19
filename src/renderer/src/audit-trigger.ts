@@ -84,6 +84,7 @@ export type AuditRequestSummary = {
   userText: string
   files: string[]
   steps: string[]
+  answerText: string
 }
 
 // One-liner headline for the collapsed card: file count + names, e.g.
@@ -101,7 +102,17 @@ function basename(path: string): string {
   return parts[parts.length - 1] || path
 }
 
-export function buildAuditPrompt(input: { userText: string; files: string[]; steps?: string[] }): string {
+// Every completed turn is audit material. File-changing turns get the
+// workspace-grounded diff audit; chat-only turns (brainstorming, research,
+// Q&A) get a second-opinion review of the answer itself — with an explicit
+// escape hatch for trivial turns so a "hello" earns a few words, not a report.
+export function buildAuditPrompt(input: {
+  userText: string
+  files: string[]
+  steps?: string[]
+  answerText?: string
+  detectionUnavailable?: boolean
+}): string {
   const request = input.userText.replace(/\s+/g, ' ').trim()
   const clipped = request.length > 300 ? `${request.slice(0, 300).trimEnd()}…` : request
   const shown = input.files.slice(0, 6)
@@ -111,15 +122,29 @@ export function buildAuditPrompt(input: { userText: string; files: string[]; ste
   const steps = input.steps?.length
     ? `Steps the main chat took, in order:\n${input.steps.map((step) => `  ${step}`).join('\n')}`
     : null
+  // Blank lines squashed: the prompt stays one compact block, and the parse
+  // path recovers the answer without ambiguity.
+  const answerLines = (input.answerText ?? '').split('\n').map((line) => line.trim()).filter(Boolean)
+  const answer = answerLines.length
+    ? `The main chat answered:\n${answerLines.map((line) => `  ${line}`).join('\n')}`
+    : null
+
+  const job = input.files.length
+    ? 'Your job: audit the changes. Use the step log to decide depth: `git diff HEAD` or read only what looks consequential; skim the rest. Reply with concise findings: real bugs, risky changes, or a short "looks solid" with one reason.'
+    : 'Your job: give a brief second opinion on the answer — a gap, a risk, a sharper angle, or agreement with one concrete reason.'
 
   return [
     '[auto-audit] The main chat just completed a turn in this shared workspace.',
     `The user's request was: "${clipped}"`,
     ...(steps ? [steps] : []),
-    `The turn changed ${input.files.length} file(s): ${fileList}.`,
-    'Use the step log to decide depth: `git diff HEAD` or read only the changes that look consequential; skim the rest.',
-    'Reply with concise findings: real bugs, risky changes, or a short "looks solid" with one reason. Under 120 words.',
-    'If you find an issue worth keeping, also append a dated bullet to AUDIT.md in the workspace root (create it if missing).'
+    ...(input.files.length ? [`The turn changed ${input.files.length} file(s): ${fileList}.`] : []),
+    ...(answer ? [answer] : []),
+    ...(input.detectionUnavailable
+      ? ['Note: file-change detection is unavailable here (workspace is not a git repo); check for edits yourself if relevant.']
+      : []),
+    job,
+    'If the turn was trivial (a greeting or small acknowledgment), reply in a few words.',
+    'Under 120 words. If you find a durable issue, append a dated bullet to AUDIT.md in the workspace root (create it if missing).'
   ].join('\n')
 }
 
