@@ -57,15 +57,19 @@ test('agent send rejects unsupported images before starting a thread', async () 
 test('agent send forwards the agent reasoning effort', async () => {
   const previousWindow = globalThis.window
   const sentParams: unknown[] = []
+  let startThreadCalls = 0
   Object.defineProperty(globalThis, 'window', {
     configurable: true,
     value: {
       api: {
         codex: {
-          startThread: async () => ({ thread: { id: 'thread-1' } }),
+          startThread: async () => {
+            startThreadCalls += 1
+            return { thread: { id: 'thread-1' } }
+          },
           sendMessage: async (params: unknown) => {
             sentParams.push(params)
-            return { turn: { id: 'turn-1' } }
+            return { threadId: 'thread-1', turn: { id: 'turn-1' } }
           }
         }
       }
@@ -78,8 +82,11 @@ test('agent send forwards the agent reasoning effort', async () => {
     const sent = await commands.handleAgentSend('agent-1', 'Solve this')
 
     assert.equal(sent, true)
+    assert.equal(startThreadCalls, 0)
+    assert.equal((sentParams[0] as { threadId?: string | null }).threadId, null)
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
     assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
+    assert.equal(sessions[0]?.threadId, 'thread-1')
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
