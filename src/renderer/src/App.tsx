@@ -70,6 +70,14 @@ import {
 } from './agent-dock-restore';
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
+import {
+  cloneGoal,
+  isRecoverableTurnError,
+  isTerminalTurnStatus,
+  modelAcceptsImages,
+  relativeThreadTime,
+  threadTitle,
+} from './app-helpers';
 import { useAgentSessions } from './useAgentSessions';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
@@ -112,11 +120,6 @@ import {
   type SplitNode,
 } from './chat-split';
 
-function modelAcceptsImages(models: Model[], model: string | null): boolean {
-  const selected = models.find((candidate) => candidate.model === model || candidate.id === model);
-  return !selected || selected.inputModalities.includes('image');
-}
-
 const minChatWidth = 280;
 const minBrowserWidth = 420;
 const dividerWidth = 8;
@@ -128,10 +131,6 @@ const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
 const fastModeStorageKey = 'codexdesktop.fastMode';
 
-function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
-  return status === 'completed' || status === 'failed' || status === 'interrupted';
-}
-
 // Turn failures the app can recover from by retrying/continuing on the same
 // thread: capacity problems on the provider side, not problems with the
 // request itself (auth, context window, budget, policy).
@@ -139,12 +138,6 @@ const maxAutoRecoveryAttempts = 3;
 const autoRecoveryDelayMs = 10_000;
 const autoRecoveryPrompt =
   'The previous turn was cut short by a model availability error. Continue the task from where you left off.';
-
-function isRecoverableTurnError(info: CodexErrorInfo | null): boolean {
-  if (!info) return false;
-  if (info === 'serverOverloaded' || info === 'internalServerError') return true;
-  return typeof info === 'object' && 'responseTooManyFailedAttempts' in info;
-}
 
 type AutoRecoveryState = {
   threadId: string;
@@ -156,10 +149,6 @@ type AutoRecoveryState = {
 };
 
 type PendingThreadStartOwner = { kind: 'main'; key: string } | { kind: 'agent'; key: string };
-
-function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
-  return goal ? { ...goal } : null;
-}
 
 // The per-session render model now lives in session-store.ts (Phase 2); a
 // main-chat "snapshot" is simply a session state held under the tab's key.
@@ -3352,42 +3341,4 @@ function persistLastThreadId(threadId: string | null): void {
   } else {
     window.localStorage.removeItem(lastThreadStorageKey);
   }
-}
-
-function threadTitle(thread: Thread): string {
-  return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat');
-}
-
-function stripSkillMarkerFromTitle(title: string): string {
-  return title.replace(/^\$artifact-first-web-research\s*/i, '') || 'New Chat';
-}
-
-// Compact recency label for a thread row: "now", "5m", "3h" within a day, then
-// "Yesterday", a weekday within the week, and a short date beyond that. Keeps
-// rows scannable instead of repeating a full "Jul 9, 3:14 PM" on every line.
-function relativeThreadTime(seconds: number): string {
-  const then = seconds * 1000;
-  const diff = Date.now() - then;
-  if (diff < 45_000) {
-    return 'now';
-  }
-  const minutes = Math.round(diff / 60_000);
-  if (minutes < 60) {
-    return `${minutes}m`;
-  }
-  const hours = Math.round(diff / 3_600_000);
-  if (hours < 24) {
-    return `${hours}h`;
-  }
-
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-  const dayMs = 86_400_000;
-  if (then >= startOfToday.getTime() - dayMs) {
-    return 'Yesterday';
-  }
-  if (then >= startOfToday.getTime() - 6 * dayMs) {
-    return new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(then);
-  }
-  return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(then);
 }
