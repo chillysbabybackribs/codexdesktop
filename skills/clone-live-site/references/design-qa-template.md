@@ -40,6 +40,19 @@ Save this as `design-qa.md` in the cloned project's root. Add one comparison ent
 - Interaction and responsive behavior:
 - Accessibility and reduced motion:
 
+## Motion evidence
+
+- Motion manifest, or why no in-scope motion exists:
+- Dominant motion regions and criticality:
+- Source transport, selected source/codec, duration, dimensions, and playback attributes:
+- Source timeline frames or state captures:
+- Implementation timeline frames or state captures:
+- Matched-timestamp comparison artifacts:
+- First-load, autoplay, playback progression, loop seam, and poster result:
+- Desktop, tablet, mobile, and reduced-motion result:
+- Media/network failures, decode errors, dropped frames, or stalls:
+- Remaining motion deviations and severity:
+
 ## Findings
 
 - [P0/P1/P2/P3] <short title>
@@ -70,4 +83,3 @@ final result: passed
 ```
 
 Use `final result: blocked` instead when evidence is missing or any actionable P0/P1/P2 issue remains. The final result line must be the last nonblank line in the file.
-

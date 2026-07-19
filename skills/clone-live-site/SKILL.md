@@ -32,6 +32,7 @@ Write a compact internal contract containing:
 - in-scope routes, viewports, theme, locale, and auth state;
 - destination project and whether it is an existing app or a new prototype;
 - visible sections, interactions, and responsive states that must be reproduced;
+- dominant motion regions, their fidelity tier (`exact asset`, `behaviorally equivalent`, or `static by source design`), and whether the source changes strategy by breakpoint or reduced-motion preference;
 - behavior that must remain simulated because it requires a backend;
 - source-evidence directory and local asset directory.
 
@@ -52,7 +53,7 @@ Confirm the page is the requested source before capture. Stop if the visible res
 
 ## Phase 2: Capture source evidence
 
-Create a persistent evidence area inside the destination project, normally `.codex/clone-evidence/<source-slug>/`, with `source/`, `states/`, and `manifests/` subdirectories. Keep consumed assets in the app's normal local asset directory, not in the evidence directory.
+Create a persistent evidence area inside the destination project, normally `.codex/clone-evidence/<source-slug>/`, with `source/`, `states/`, `motion/`, and `manifests/` subdirectories. Keep consumed assets in the app's normal local asset directory, not in the evidence directory.
 
 Capture before writing app code or starting a local server.
 
@@ -80,6 +81,23 @@ Record:
 
 Use screenshots as visual truth and DOM/style data as implementation evidence. Do not implement a state from a screenshot alone when browser evidence for that state is available.
 
+### Motion and temporal-media pass
+
+Treat visible motion as a first-class fidelity surface. A screenshot records composition, not animation transport, timing, frame content, crop behavior, or responsive fallbacks. If any in-scope region contains video, animated raster media, SVG animation, CSS/WAAPI animation, canvas, WebGL, Lottie, Rive, Spline, a marquee, parallax, or state-driven transition, read and follow `references/motion-capture.md` before implementation.
+
+Create `manifests/motion.md` and one evidence folder per motion region under `motion/`. For each region:
+
+- classify it as transferable media, code-native animation, runtime-rendered animation, or interaction/scroll-driven motion;
+- assign criticality. Motion is **dominant** when it sits behind or beside the primary message, occupies roughly 20% or more of the first viewport, or materially carries the source's brand character. Missing or generically substituting dominant motion is a blocking P1;
+- capture the actual transport and all fallbacks: `currentSrc`, nested `<source>` entries, MIME types/codecs, posters, intrinsic dimensions, duration, frame rate when available, autoplay/muted/loop/plays-inline/preload/controls state, canvas resolution, loaded animation libraries, and CSS/WAAPI keyframes and timing;
+- start network capture before navigation or state activation and record media, range responses, animation JSON, sprites, shaders, workers, and responsive variants. DOM URLs alone are insufficient because the browser may select only one codec or lazy-load a source;
+- record container bounds, overflow crop, object fit/position, transforms, masks, filters, blend modes, opacity, stacking, overlays, and the text or controls layered above the motion;
+- capture time-aligned source frames or states using media timeline control or animation timeline control, not arbitrary screenshots taken at unknown phases;
+- test desktop, tablet, mobile, reduced-motion, first load, loop seam, offscreen/on-screen behavior, hover/focus/tap activation, and any visibility-triggered play/pause behavior that exists in scope;
+- restore the source's playback, scroll, and interaction state after inspection.
+
+Do not write app code until every dominant motion region has a resolved implementation route and evidence set. If the original permitted asset cannot be acquired and a behaviorally equivalent recreation cannot be validated at matched timestamps, mark QA blocked instead of replacing it with a gradient, generic CSS bars, or a static poster.
+
 ### Interaction pass
 
 Build an interaction matrix in `manifests/interactions.md`. For every in-scope control, record the start state, action, resulting state or navigation, keyboard behavior, and evidence path.
@@ -96,12 +114,13 @@ Create `manifests/assets.md` with one entry per visible required asset: source U
 
 - Save authorized source assets locally. Never hotlink them in the final app.
 - Preserve original SVG, raster, video, and font files when they can be fetched and their use is permitted.
-- Do not replace visible source imagery with CSS art, gradients, emoji, text glyphs, placeholder blocks, handmade SVGs, or generic stock assets.
+- Preserve codec fallbacks, posters, animation data, sprites, shaders, and worker files that are required for the observed motion path. Inspect downloaded media metadata and verify it decodes locally before implementation.
+- Do not replace visible source imagery or motion with CSS art, gradients, emoji, text glyphs, placeholder blocks, handmade SVGs, generic stock assets, or a static frame. In a faithful clone, a source video is a video unless the source itself uses a static fallback at that viewport or preference.
 - If an inaccessible raster photo or illustration is necessary, load `$imagegen`, use the source screenshot as a reference, generate only the missing underlying visual, inspect it, and copy the selected output into the destination project before use.
 - Do not use image generation for logos, wordmarks, UI text, icons, fonts, or code-native vector marks. Obtain the authorized original. For a non-brand icon only, use the closest matching open-source icon family and record the substitution. Do not default to Lucide unless it is genuinely the closest match.
 - If a fidelity-critical logo, font, icon, video, or other asset cannot be copied or acceptably substituted, stop and mark QA blocked instead of hiding the gap.
 
-Do not begin implementation until desktop and mobile capture, key states, the interaction matrix, and every required visible asset have a resolved manifest status.
+Do not begin implementation until desktop and mobile capture, key states, the interaction matrix, the motion manifest, and every required visible asset have a resolved manifest status.
 
 ## Phase 4: Build the local frontend
 
@@ -110,6 +129,7 @@ Build only from captured source evidence and the asset manifest.
 - In an existing app, reuse its components, routing, tokens, and conventions.
 - For a new prototype, create the smallest self-contained project that fits the workspace's existing package manager and standard frontend tooling. Do not introduce an unrelated framework or global dependency.
 - Keep exact source copy, information architecture, visual hierarchy, and responsive behavior unless technical or legal constraints require a documented deviation.
+- Reproduce the observed motion system, not merely its first frame. Preserve source ordering, codecs, poster behavior, autoplay policy, loop behavior, playback rate, timeline duration, crop, overlays, activation rules, breakpoint replacements, and reduced-motion treatment. Use the smallest implementation that matches the evidence; do not rebuild an ordinary transferable video as canvas or CSS.
 - Implement source UI text and controls in accessible HTML/CSS, never as rasterized text.
 - Implement every in-scope interaction in the matrix. Use realistic local mock data for frontend states, and label simulated backend outcomes honestly in code and handoff notes.
 - Do not add visual ideas, extra sections, decorative effects, invented claims, or routes unsupported by the source.
@@ -127,6 +147,7 @@ At minimum compare:
 - tablet around `820 x 1180`;
 - mobile `390 x 844`;
 - every captured interaction state that changes appearance or layout.
+- every dominant motion region at matched timeline positions and activation states, including its mobile and reduced-motion variants.
 
 Compare in descending impact order:
 
@@ -137,13 +158,14 @@ Compare in descending impact order:
 5. colors, surfaces, borders, radii, shadows, and motion;
 6. hover, focus, keyboard, responsive, and reduced-motion behavior.
 
-Use `ui_review` for the implementation's desktop, tablet, and mobile audit. Inspect every screenshot, test primary interactions in the browser, and check console exceptions, failed requests, broken assets, overflow, clipping, headings, landmarks, and touch targets. Fix the largest visible mismatch first, capture again at the same state, and repeat until no P0/P1/P2 issue remains.
+Use `ui_review` for the implementation's desktop, tablet, and mobile audit. Inspect every screenshot, test primary interactions in the browser, and check console exceptions, failed requests, broken assets, overflow, clipping, headings, landmarks, and touch targets. For motion, also verify that playback advances, the intended codec/source loads, the poster does not flash incorrectly, the loop seam is acceptable, crop and overlays remain aligned throughout the timeline, offscreen media obeys the source policy, and reduced motion matches the source. Fix the largest visible mismatch first, capture again at the same viewport and timeline position, and repeat until no P0/P1/P2 issue remains.
 
 ## Phase 6: Blocking design QA
 
 Create project-root `design-qa.md` using `references/design-qa-template.md`.
 
 - The report must name the source visual truth, implementation capture, viewport, state, full-view comparison artifact, any focused-region evidence, interaction checks, console/network checks, findings, and correction history.
+- When motion exists, the report must also name the motion manifest, source and implementation timeline frames or recordings, tested timestamps/states, selected media source and codec, playback/loop result, responsive and reduced-motion result, and any dropped-frame or load failure evidence.
 - Classify findings as P0, P1, P2, or P3. P0/P1/P2 are blocking; P3 may remain as follow-up polish.
 - Set `final result: passed` only when source and implementation evidence were both inspected and no actionable P0/P1/P2 finding remains.
 - If source capture, implementation capture, responsive inspection, state comparison, required asset acquisition, or browser verification is unavailable, set `final result: blocked` and stop.
@@ -171,7 +193,12 @@ Do not claim pixel-perfect, identical, deployed, or production-ready unless the 
 
 - Invalid or blocked source: stop before scaffolding and describe the visible blocker.
 - Missing evidence or unresolved required asset: record it and set QA blocked.
+- Missing dominant-motion evidence, an unauthorized/unavailable required animation asset, a static or generic substitute for source motion, or an implementation whose timeline cannot be compared deterministically: record it and set QA blocked.
 - Preview unavailable: production checks may continue, but visual QA remains blocked.
 - Reference omits a necessary minor state: infer the smallest behavior consistent with captured states and label it as an inference.
 - Source requires private server behavior: reproduce only the permitted frontend state with explicit simulation, or narrow scope with the user.
 
+## References
+
+- `references/motion-capture.md`: blocking workflow for discovering, acquiring, reproducing, and validating video, canvas, WebGL, CSS/WAAPI, and interaction-driven motion.
+- `references/design-qa-template.md`: required final clone QA structure.
