@@ -176,7 +176,7 @@ test('global guidance stays limited to product-wide behavior', () => {
 test('browser guidance preserves a one-call fallback for older resumed threads', () => {
   const guidance = buildGuidance({})
   assert.match(guidance, /browser_snapshot` call when it is available/)
-  assert.match(guidance, /older resumed thread where that tool is absent/)
+  assert.match(guidance, /older resumed thread where newer tools are absent/)
   assert.match(guidance, /one `browser_run` call/)
 })
 
