@@ -20,13 +20,43 @@ test('round trips open tabs without persisting transient status', () => {
   const state = {
     activeKey: 'tab-b',
     tabs: [
-      { ...createMainChatTab('tab-a', 'thread-a', 'First'), status: 'working' as const },
-      { ...createMainChatTab('tab-b', null, 'New Chat'), status: 'attention' as const }
+      {
+        ...createMainChatTab('tab-a', 'thread-a', 'First', 'gpt-5.4', 'high'),
+        status: 'working' as const
+      },
+      {
+        ...createMainChatTab('tab-b', null, 'New Chat', 'gpt-5.3', 'medium'),
+        status: 'attention' as const
+      }
     ]
   }
   const restored = parseMainChatTabState(serializeMainChatTabState(state), null, () => 'unused')
   assert.equal(restored.activeKey, 'tab-b')
   assert.deepEqual(restored.tabs.map((tab) => tab.status), ['idle', 'idle'])
+  assert.deepEqual(restored.tabs.map((tab) => [tab.model, tab.reasoningEffort]), [
+    ['gpt-5.4', 'high'],
+    ['gpt-5.3', 'medium']
+  ])
+})
+
+test('migrates the legacy model choice into every pre-model tab', () => {
+  const state = parseMainChatTabState(
+    JSON.stringify({
+      activeKey: 'tab-a',
+      tabs: [
+        { key: 'tab-a', threadId: 'thread-a', title: 'First' },
+        { key: 'tab-b', threadId: 'thread-b', title: 'Second' }
+      ]
+    }),
+    null,
+    () => 'unused',
+    { model: 'gpt-5.4', reasoningEffort: 'high' }
+  )
+
+  assert.deepEqual(state.tabs.map((tab) => [tab.model, tab.reasoningEffort]), [
+    ['gpt-5.4', 'high'],
+    ['gpt-5.4', 'high']
+  ])
 })
 
 test('closing the active tab selects its nearest neighbor', () => {

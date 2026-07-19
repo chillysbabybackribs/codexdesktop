@@ -6,6 +6,10 @@ export type MainChatTab = {
   key: string
   threadId: string | null
   title: string
+  // Composer choices belong to the conversation, not the window. Keeping
+  // these on the tab lets several main chats run with different models.
+  model: string | null
+  reasoningEffort: string | null
   status: MainChatTabStatus
   turnId: string | null
 }
@@ -19,6 +23,8 @@ type PersistedMainChatTab = {
   key?: unknown
   threadId?: unknown
   title?: unknown
+  model?: unknown
+  reasoningEffort?: unknown
 }
 
 type PersistedMainChatTabState = {
@@ -29,15 +35,21 @@ type PersistedMainChatTabState = {
 export function createMainChatTab(
   key: string,
   threadId: string | null = null,
-  title = 'New Chat'
+  title = 'New Chat',
+  model: string | null = null,
+  reasoningEffort: string | null = null
 ): MainChatTab {
-  return { key, threadId, title, status: 'idle', turnId: null }
+  return { key, threadId, title, model, reasoningEffort, status: 'idle', turnId: null }
 }
 
 export function parseMainChatTabState(
   raw: string | null,
   legacyThreadId: string | null,
-  createKey: () => string
+  createKey: () => string,
+  legacySelection: { model: string | null; reasoningEffort: string | null } = {
+    model: null,
+    reasoningEffort: null
+  }
 ): MainChatTabState {
   let parsed: PersistedMainChatTabState | null = null
   try {
@@ -61,15 +73,33 @@ export function parseMainChatTabState(
         const title = typeof candidate.title === 'string' && candidate.title.trim()
           ? candidate.title.trim()
           : 'New Chat'
-        return [createMainChatTab(key, threadId, title)]
+        const model = typeof candidate.model === 'string' && candidate.model
+          ? candidate.model
+          : legacySelection.model
+        const reasoningEffort = typeof candidate.reasoningEffort === 'string' && candidate.reasoningEffort
+          ? candidate.reasoningEffort
+          : legacySelection.reasoningEffort
+        return [createMainChatTab(key, threadId, title, model, reasoningEffort)]
       }).slice(0, maxMainChatTabs)
     : []
 
   if (!tabs.length) {
-    tabs.push(createMainChatTab(createKey(), legacyThreadId))
+    tabs.push(createMainChatTab(
+      createKey(),
+      legacyThreadId,
+      'New Chat',
+      legacySelection.model,
+      legacySelection.reasoningEffort
+    ))
   } else if (legacyThreadId && !seenThreads.has(legacyThreadId)) {
     // Preserve the pre-tabs last-thread preference during the migration.
-    tabs[0] = createMainChatTab(tabs[0].key, legacyThreadId, tabs[0].title)
+    tabs[0] = createMainChatTab(
+      tabs[0].key,
+      legacyThreadId,
+      tabs[0].title,
+      tabs[0].model,
+      tabs[0].reasoningEffort
+    )
   }
 
   const requestedActiveKey = typeof parsed?.activeKey === 'string' ? parsed.activeKey : null
@@ -83,7 +113,13 @@ export function parseMainChatTabState(
 export function serializeMainChatTabState(state: MainChatTabState): string {
   return JSON.stringify({
     activeKey: state.activeKey,
-    tabs: state.tabs.map(({ key, threadId, title }) => ({ key, threadId, title }))
+    tabs: state.tabs.map(({ key, threadId, title, model, reasoningEffort }) => ({
+      key,
+      threadId,
+      title,
+      model,
+      reasoningEffort
+    }))
   })
 }
 
@@ -96,7 +132,14 @@ export function closeMainChatTab(
   if (index === -1) return state
 
   if (state.tabs.length === 1) {
-    const replacement = createMainChatTab(createKey())
+    const previous = state.tabs[0]
+    const replacement = createMainChatTab(
+      createKey(),
+      null,
+      'New Chat',
+      previous.model,
+      previous.reasoningEffort
+    )
     return { tabs: [replacement], activeKey: replacement.key }
   }
 
