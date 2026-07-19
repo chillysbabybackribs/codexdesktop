@@ -61,6 +61,9 @@ export class ClaudeTurnTranslator {
   private readonly blocks = new Map<number, { id: string; kind: 'text' | 'thinking' | 'tool'; text: string }>()
   private readonly toolNames = new Map<string, string>()
   private readonly context: ClaudeTurnContext
+  private messageSequence = 0
+  private messageKey = 'm0'
+  private pendingError: { message: string; codexErrorInfo: 'usageLimitExceeded' | 'serverOverloaded' | 'internalServerError' | 'unauthorized' | 'badRequest' | 'other' } | null = null
 
   constructor(context: ClaudeTurnContext) {
     this.context = context
@@ -78,8 +81,24 @@ export class ClaudeTurnTranslator {
     }
 
     if (type === 'stream_event') return this.handleStreamEvent(asRecord(message.event))
-    if (type === 'assistant') return this.handleAssistant(asRecord(message.message))
+    if (type === 'assistant') {
+      this.rememberAssistantError(message)
+      return this.handleAssistant(asRecord(message.message))
+    }
     if (type === 'user') return this.handleToolResults(asRecord(message.message))
+    if (type === 'rate_limit_event') {
+      const info = asRecord(message.rate_limit_info)
+      if (info.status === 'rejected') {
+        const reset = typeof info.resetsAt === 'number'
+          ? ` Resets at ${new Date(info.resetsAt).toISOString()}.`
+          : ''
+        this.pendingError = {
+          message: `Claude usage limit reached.${reset}`,
+          codexErrorInfo: 'usageLimitExceeded'
+        }
+      }
+      return { notifications: [] }
+    }
     if (type === 'result') return this.handleResult(message)
     return { notifications: [] }
   }
@@ -87,11 +106,19 @@ export class ClaudeTurnTranslator {
   private handleStreamEvent(event: Record<string, unknown>): ClaudeTranslation {
     const { threadId, turnId } = this.context
 
+    if (event.type === 'message_start') {
+      const message = asRecord(event.message)
+      this.messageSequence += 1
+      this.messageKey = safeId(typeof message.id === 'string' ? message.id : `m${this.messageSequence}`)
+      this.blocks.clear()
+      return { notifications: [] }
+    }
+
     if (event.type === 'content_block_start') {
       const index = Number(event.index ?? 0)
       const block = asRecord(event.content_block)
       if (block.type === 'text') {
-        const id = `${turnId}:b${index}`
+        const id = `${turnId}:${this.messageKey}:b${index}`
         this.blocks.set(index, { id, kind: 'text', text: '' })
         return {
           notifications: [asNotification('item/started', {
@@ -103,7 +130,7 @@ export class ClaudeTurnTranslator {
         }
       }
       if (block.type === 'thinking') {
-        const id = `${turnId}:b${index}`
+        const id = `${turnId}:${this.messageKey}:b${index}`
         this.blocks.set(index, { id, kind: 'thinking', text: '' })
         return {
           notifications: [asNotification('item/started', {
@@ -116,7 +143,7 @@ export class ClaudeTurnTranslator {
       }
       if (block.type === 'tool_use') {
         // Use the SDK's tool_use id so tool_result messages match directly.
-        const id = typeof block.id === 'string' ? block.id : `${turnId}:b${index}`
+        const id = typeof block.id === 'string' ? block.id : `${turnId}:${this.messageKey}:b${index}`
         this.blocks.set(index, { id, kind: 'tool', text: '' })
         this.toolNames.set(id, typeof block.name === 'string' ? block.name : 'tool')
         return {
@@ -173,12 +200,17 @@ export class ClaudeTurnTranslator {
   // idempotent through the store's upsert/longest-text-wins merge.
   private handleAssistant(message: Record<string, unknown>): ClaudeTranslation {
     const notifications: ServerNotification[] = []
+    const messageId = typeof message.id === 'string' ? safeId(message.id) : null
+    if (messageId && messageId !== this.messageKey) {
+      this.messageKey = messageId
+      this.blocks.clear()
+    }
     const content = Array.isArray(message.content) ? message.content : []
     content.forEach((rawBlock, index) => {
       const block = asRecord(rawBlock)
       const tracked = this.blocks.get(index)
       if (block.type === 'text' && typeof block.text === 'string') {
-        const id = tracked?.id ?? `${this.context.turnId}:b${index}`
+        const id = tracked?.id ?? `${this.context.turnId}:${this.messageKey}:b${index}`
         this.blocks.set(index, { id, kind: 'text', text: block.text })
         notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }))
       }
@@ -225,6 +257,13 @@ export class ClaudeTurnTranslator {
     const { total } = this.context.tokens.addLast(last)
 
     const failed = message.subtype !== 'success'
+    const sdkErrors = Array.isArray(message.errors)
+      ? message.errors.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      : []
+    const errorMessage = this.pendingError?.message
+      ?? sdkErrors.join('\n')
+      ?? (typeof message.result === 'string' && message.result.trim() ? message.result : null)
+      ?? `claude turn ended: ${String(message.subtype)}`
     const completedAtMs = this.context.nowMs()
     const turn = {
       id: turnId,
@@ -232,7 +271,11 @@ export class ClaudeTurnTranslator {
       itemsView: 'full',
       status: failed ? 'failed' : 'completed',
       error: failed
-        ? { message: typeof message.result === 'string' ? message.result : `claude turn ended: ${String(message.subtype)}` }
+        ? {
+            message: errorMessage,
+            codexErrorInfo: this.pendingError?.codexErrorInfo ?? classifyClaudeError(errorMessage),
+            additionalDetails: sdkErrors.length > 1 ? sdkErrors.slice(1).join('\n') : null
+          }
         : null,
       startedAt: null,
       completedAt: Math.floor(completedAtMs / 1000),
@@ -263,6 +306,24 @@ export class ClaudeTurnTranslator {
       item
     })
   }
+
+  private rememberAssistantError(message: Record<string, unknown>): void {
+    if (typeof message.error !== 'string') return
+    const mapping = {
+      authentication_failed: 'unauthorized',
+      oauth_org_not_allowed: 'unauthorized',
+      billing_error: 'usageLimitExceeded',
+      rate_limit: 'usageLimitExceeded',
+      overloaded: 'serverOverloaded',
+      server_error: 'internalServerError',
+      invalid_request: 'badRequest',
+      model_not_found: 'badRequest'
+    } as const
+    this.pendingError = {
+      message: `Claude request failed: ${message.error.replaceAll('_', ' ')}`,
+      codexErrorInfo: mapping[message.error as keyof typeof mapping] ?? 'other'
+    }
+  }
 }
 
 export function claudeContextWindowFor(model: string | null): number {
@@ -279,4 +340,18 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function readCount(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function safeId(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 120) || 'message'
+}
+
+function classifyClaudeError(message: string): 'usageLimitExceeded' | 'serverOverloaded' | 'internalServerError' | 'unauthorized' | 'badRequest' | 'other' {
+  const normalized = message.toLowerCase()
+  if (normalized.includes('rate limit') || normalized.includes('usage limit') || normalized.includes('billing')) return 'usageLimitExceeded'
+  if (normalized.includes('overload')) return 'serverOverloaded'
+  if (normalized.includes('auth') || normalized.includes('oauth')) return 'unauthorized'
+  if (normalized.includes('invalid request') || normalized.includes('model not found')) return 'badRequest'
+  if (normalized.includes('server error') || normalized.includes('internal')) return 'internalServerError'
+  return 'other'
 }
