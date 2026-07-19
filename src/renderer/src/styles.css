@@ -6216,19 +6216,21 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin: auto 0;
+  gap: 7px;
+  max-width: 320px;
+  margin: auto auto;
+  padding: 0 20px;
   text-align: center;
 }
 
 .agent-standby-spinner {
-  width: 16px;
-  height: 16px;
-  margin-bottom: 4px;
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  border-top-color: rgba(255, 255, 255, 0.55);
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  border: 2.5px solid rgba(255, 255, 255, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  animation: agent-standby-spin 0.9s linear infinite;
+  animation: agent-standby-spin 1.05s linear infinite;
 }
 
 @keyframes agent-standby-spin {
@@ -6236,9 +6238,9 @@ button {
 }
 
 .agent-standby-title {
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: #cccccc;
+  color: #d6d6d6;
 }
 
 .agent-standby-meta {
@@ -6246,11 +6248,23 @@ button {
   color: #878787;
 }
 
-.agent-standby-step {
+/* The narrated current action — the headline of what the doer is doing. */
+span.agent-standby-action {
   max-width: 100%;
-  font-size: 11px;
-  color: #878787;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  color: #b4b4b4;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+code.agent-standby-action {
+  max-width: 100%;
+  overflow: hidden;
+  color: #969696;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -6298,7 +6312,15 @@ button {
   color: #929292;
 }
 
-.agent-audit-live-step {
+span.agent-audit-live-step {
+  overflow: hidden;
+  color: #b0b0b0;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+code.agent-audit-live-step {
   font-size: 11px;
   color: #878787;
   overflow: hidden;
