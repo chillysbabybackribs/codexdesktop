@@ -74,6 +74,18 @@ test('plan briefing carries all three texts and the NO-PLAN escape', () => {
   assert.match(briefing, /GPT-5\.6-Sol/)
   assert.match(briefing, /NO-PLAN/)
   assert.match(briefing, /done-criteria/)
+  // Repo-grounded planning: premises come from the live workspace, not docs;
+  // anything unverified is labeled for the doer to check.
+  assert.match(briefing, /verifying the load-bearing premises/)
+  assert.match(briefing, /ASSUMPTION:/)
+  assert.match(briefing, /do not begin executing the task/)
+})
+
+test('execution injection carries the plan and the assumption check', () => {
+  const injection = buildExecutionInjection('1. do the step', 'Reviewer (X)')
+  assert.match(injection, /1\. do the step/)
+  assert.match(injection, /ASSUMPTION/)
+  assert.match(injection, /Begin now/)
 })
 
 test('NO-PLAN detection and reason extraction', () => {
