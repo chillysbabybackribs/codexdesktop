@@ -11,8 +11,8 @@
 >
 > Purpose: an accurate, current map of what this app can do, plus a working hypothesis
 > about where it's headed. Verified against the working tree — typecheck clean,
-> **590/590 tests pass**, 0 TODO/FIXME markers, every non-trivial source file has a
-> sibling test. Supersedes `docs/codebase-audit-2026-07-19.md`, which predates the
+> **590/590 tests pass**, no TODO/FIXME markers in app source (two live in vendored
+> `codex-protocol` wire types), every non-trivial source file has a sibling test. Supersedes `docs/codebase-audit-2026-07-19.md`, which predates the
 > Claude runtime, the 1–4 pane split, turn checkpoints, and the doer/auditor loop and
 > is therefore materially stale on capabilities (it remains useful as a dated
 > file-by-file reference).
