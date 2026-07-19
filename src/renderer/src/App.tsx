@@ -3995,6 +3995,183 @@ function ChatPane({
     requestAnimationFrame(run);
   };
 
+  // Any interaction inside a background pane focuses it — the split-surface
+  // equivalent of clicking that chat's tab. updateMainChatTabs applies
+  // eagerly, so by the time the actual click handler runs, "active" already
+  // means this pane.
+  const focusPaneFromEvent = (target: EventTarget | null): void => {
+    if (!(target instanceof HTMLElement)) return;
+    const key = target.closest<HTMLElement>('[data-split-pane-key]')?.dataset.splitPaneKey;
+    if (key && key !== activeMainChatTabKey) void onSelectMainChatTab(key);
+  };
+
+  const beginSplitRatioDrag = (
+    event: PointerEvent<HTMLDivElement>,
+    path: string,
+    direction: SplitDirection,
+  ): void => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    const container = event.currentTarget.parentElement;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const handleMove = (moveEvent: globalThis.PointerEvent): void => {
+      const ratio =
+        direction === 'row'
+          ? (moveEvent.clientX - rect.left) / Math.max(1, rect.width)
+          : (moveEvent.clientY - rect.top) / Math.max(1, rect.height);
+      onSetSplitRatio(path, ratio);
+    };
+    const finish = (): void => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', finish);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', finish, { once: true });
+    window.addEventListener('pointercancel', finish, { once: true });
+  };
+
+  const multiPane = countSplitPanes(splitLayout) > 1;
+
+  // The dock extras belong to the workspace, not to a pane: the agent column
+  // and the composer context row (workspace, model, agent capsules) render
+  // once, inside whichever pane is focused — exactly where they lived when
+  // there was only one pane.
+  const activeDockExtras = {
+    agentColumn: openAgentSessions.length ? (
+      <AgentColumn
+        sessions={openAgentSessions}
+        sessionStore={agentSessionStore}
+        workspace={workspace}
+        selectedKey={selectedActiveAgentKey}
+        models={models}
+        mainModel={selectedModel}
+        mainReasoningEffort={selectedReasoningEffort}
+        liveMainTurn={liveMainTurn}
+        isMainFocused={isMainFocused}
+        onSetModel={onSetAgentModel}
+        onSetModelEffort={onSetAgentModelEffort}
+        onSelect={onSelectAgent}
+        onMinimize={onMinimizeAgent}
+        onCloseSession={onCloseAgentSession}
+        onResetSession={onResetAgentSession}
+        onPromote={onPromoteAgent}
+        onToggleWatch={onToggleWatchAgent}
+        onToggleAudit={onToggleAuditAgent}
+        onToggleReport={onToggleReportAgent}
+        onSendFeedback={onSendAuditFeedback}
+        onDecideSendPolicy={onDecideAgentSendPolicy}
+        onSend={onAgentSend}
+        onSteer={onAgentSteer}
+        onStop={onAgentStop}
+        onCompact={onAgentCompact}
+      />
+    ) : null,
+    composerContext: (
+      <div className="composer-context">
+        <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
+        {models.length ? (
+          <ModelPill
+            models={models}
+            selectedModel={selectedModel}
+            selectedEffort={selectedReasoningEffort}
+            onSelectModel={onSelectModel}
+            onSelectModelEffort={onSelectModelEffort}
+            fastMode={fastMode}
+            onToggleFastMode={onSetFastMode}
+          />
+        ) : null}
+        <AgentTabStrip
+          sessions={activeAgentSessions}
+          openKeys={openAgentKeys}
+          onFocus={focusAgent}
+        />
+        {/* Always available: a reviewer armed while idle audits the very
+            next turn — the born-a-reviewer default is most useful BEFORE
+            the work starts, not only mid-turn. */}
+        <button
+          type="button"
+          className="composer-new-agent-button"
+          aria-label="Open a new reviewer agent"
+          title="New agent — born a reviewer"
+          onClick={() => onNewAgent(activeMainChatTabKey)}
+        >
+          <NewAgentIcon />
+        </button>
+      </div>
+    ),
+  };
+
+  const renderSplitNode = (node: SplitNode, path: string): React.JSX.Element => {
+    if (node.kind === 'pane') {
+      const tab = mainChatTabs.find((candidate) => candidate.key === node.tabKey) ?? null;
+      const isActivePane = node.tabKey === activeMainChatTabKey;
+      return (
+        <ChatPaneView
+          key={node.tabKey}
+          tabKey={node.tabKey}
+          tab={tab}
+          isActive={isActivePane}
+          showHeader={multiPane}
+          dropZone={paneDropTarget?.tabKey === node.tabKey ? paneDropTarget.zone : null}
+          sessionStore={agentSessionStore}
+          workspace={workspace}
+          codexStatus={status}
+          isRestoring={isRestoring}
+          isBusy={isBusy}
+          mainChatTabsDisabled={mainChatTabsDisabled}
+          turnCheckpoints={turnCheckpoints}
+          turnReviews={turnReviews}
+          undoneFiles={undoneFiles}
+          alwaysKeepAll={alwaysKeepAll}
+          onKeepTurn={onKeepTurn}
+          onSetAlwaysKeepAll={onSetAlwaysKeepAll}
+          onUndoTurnAll={onUndoTurnAll}
+          onUndoFile={onUndoFile}
+          onRevertTurn={onRevertTurn}
+          installedPlugins={installedPlugins}
+          onInstalledPluginsChange={setInstalledPlugins}
+          onBrowsePlugins={openPluginBrowser}
+          onSend={onSend}
+          onSteer={onSteer}
+          onStop={onStop}
+          onNewThread={onNewThread}
+          onCompactThread={onCompactThread}
+          onNewAgent={() => onNewAgent(node.tabKey)}
+          onSelectPane={onSelectMainChatTab}
+          onCloseSplitPane={onCloseSplitPane}
+          onLoadOlderHistory={onLoadOlderHistory}
+          dockExtras={isActivePane ? activeDockExtras : null}
+        />
+      );
+    }
+    const style =
+      node.direction === 'row'
+        ? {
+            gridTemplateColumns: `minmax(160px, ${node.ratio}fr) 5px minmax(160px, ${
+              1 - node.ratio
+            }fr)`,
+          }
+        : {
+            gridTemplateRows: `minmax(120px, ${node.ratio}fr) 5px minmax(120px, ${
+              1 - node.ratio
+            }fr)`,
+          };
+    return (
+      <div key={path || 'root'} className={`chat-split is-${node.direction}`} style={style}>
+        {renderSplitNode(node.first, `${path}f`)}
+        <div
+          className="chat-split-divider"
+          role="separator"
+          aria-orientation={node.direction === 'row' ? 'vertical' : 'horizontal'}
+          onPointerDown={(event) => beginSplitRatioDrag(event, path, node.direction)}
+        />
+        {renderSplitNode(node.second, `${path}s`)}
+      </div>
+    );
+  };
+
   return (
     <section
       id="main-chat-pane"
@@ -4002,8 +4179,14 @@ function ChatPane({
         !isPluginBrowserOpen && openAgentSessions.length ? 'has-agents' : ''
       } ${isMainFocused ? 'is-main-focused' : ''}`}
       aria-busy={isRestoring}
-      onPointerDownCapture={(event) => updateFocusRegion(event.target)}
-      onFocusCapture={(event) => updateFocusRegion(event.target)}
+      onPointerDownCapture={(event) => {
+        updateFocusRegion(event.target);
+        focusPaneFromEvent(event.target);
+      }}
+      onFocusCapture={(event) => {
+        updateFocusRegion(event.target);
+        focusPaneFromEvent(event.target);
+      }}
     >
       {isPluginBrowserOpen ? (
         <PluginBrowserView
@@ -4019,6 +4202,9 @@ function ChatPane({
           disabled={mainChatTabsDisabled}
           onSelect={onSelectMainChatTab}
           onReorder={onReorderMainChatTabs}
+          onPaneDragUpdate={setPaneDropTarget}
+          onDropOnPane={onDropTabOnPane}
+          canSplitForDrop={canSplitForDrop}
           onClose={onCloseMainChatTab}
           onNew={onNewMainChatTab}
           onOpenSettings={() => setIsSettingsOpen(true)}
