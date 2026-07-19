@@ -179,9 +179,68 @@ function BrowserToolbar({
   useEffect(() => {
     setIsEditing(false)
     closePopup()
+    void window.api.browser.menuClose()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab?.id])
   useEffect(() => window.api.browser.onFindRequested(() => setFindOpen(true)), [])
+  // The menu is a native overlay view; main owns its visibility (it also hides
+  // it on window blur and after non-sticky commands). Mirror that state here.
+  useEffect(() => window.api.browser.onMenuClosed(() => setMenuOpen(false)), [])
+  // Live-refresh the open menu when the state it reflects changes (zoom
+  // percent after a zoom command, mute/vpn/fullscreen toggles).
+  useEffect(() => {
+    if (menuOpen) void window.api.browser.menuUpdate(buildMenuItems(activeTab, vpn, isFullscreen))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    menuOpen,
+    activeTab?.id,
+    activeTab?.isMuted,
+    activeTab?.isAudible,
+    activeTab?.zoomPercent,
+    vpn.state,
+    vpn.bootstrapProgress,
+    isFullscreen
+  ])
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        void window.api.browser.menuClose()
+      }
+    }
+    // Dismiss when clicking anywhere else in the chrome. Clicks on the page or
+    // on the popup itself never reach this document — those are covered by the
+    // window-blur fallback below and by main hiding after commands.
+    const onPointerDown = (event: PointerEvent): void => {
+      if (menuButtonRef.current?.contains(event.target as Node)) return
+      void window.api.browser.menuClose()
+    }
+    // Clicking the page (a native view) moves focus out of this document
+    // without any pointer event here. Close after a grace period — sticky menu
+    // commands (zoom) refocus the chrome immediately, cancelling the timer.
+    let blurTimer: number | null = null
+    const onWindowBlur = (): void => {
+      blurTimer = window.setTimeout(() => void window.api.browser.menuClose(), 160)
+    }
+    const onWindowFocus = (): void => {
+      if (blurTimer !== null) {
+        window.clearTimeout(blurTimer)
+        blurTimer = null
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('pointerdown', onPointerDown, true)
+    window.addEventListener('blur', onWindowBlur)
+    window.addEventListener('focus', onWindowFocus)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('pointerdown', onPointerDown, true)
+      window.removeEventListener('blur', onWindowBlur)
+      window.removeEventListener('focus', onWindowFocus)
+      if (blurTimer !== null) window.clearTimeout(blurTimer)
+    }
+  }, [menuOpen])
   useEffect(() => window.api.browser.onFocusOmnibox(() => omniboxRef.current?.focus()), [])
   // Guest pages forward F11 through the main process (focus lives in the
   // native view); this subscription handles it alongside chrome-focused F11.
@@ -297,29 +356,25 @@ function BrowserToolbar({
         }}
         onKeyDown={handleOmniboxKeyDown}
       />
-      <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}><SearchIcon /></button>
-      <button type="button" className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`} aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)} onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}><VolumeIcon muted={Boolean(activeTab?.isMuted)} /></button>
       <button
+        ref={menuButtonRef}
         type="button"
-        className={`browser-nav-button vpn-toggle ${vpn.state === 'on' ? 'is-active' : ''} ${vpn.state === 'starting' ? 'is-connecting' : ''} ${vpn.state === 'error' ? 'is-error' : ''}`}
-        aria-label={vpn.state === 'on' || vpn.state === 'starting' ? 'Disable VPN' : 'Enable VPN'}
-        aria-pressed={vpn.state === 'on'}
-        title={vpnLabel(vpn)}
-        onClick={() => void window.api.browser.toggleVpn()}
-      ><ShieldIcon active={vpn.state === 'on'} /></button>
-      <div className="browser-zoom" aria-label="Page zoom">
-        <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}><MinusIcon /></button>
-        <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
-        <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}><PlusIcon /></button>
-      </div>
-      <button
-        type="button"
-        className={`browser-nav-button ${isFullscreen ? 'is-active' : ''}`}
-        aria-label={isFullscreen ? 'Exit full screen browser' : 'Full screen browser'}
-        aria-pressed={isFullscreen}
-        title={isFullscreen ? 'Exit full screen browser (F11)' : 'Full screen browser (F11)'}
-        onClick={onToggleFullscreen}
-      ><FullscreenIcon active={isFullscreen} /></button>
+        className={`browser-nav-button vpn-toggle ${menuOpen ? 'is-active' : ''} ${vpn.state === 'starting' ? 'is-connecting' : ''} ${vpn.state === 'error' ? 'is-error' : ''}`}
+        aria-label="Browser menu"
+        aria-haspopup="menu"
+        aria-expanded={menuOpen}
+        title="Browser menu"
+        onClick={() => {
+          if (menuOpen) {
+            void window.api.browser.menuClose()
+            return
+          }
+          const rect = menuButtonRef.current?.getBoundingClientRect()
+          if (!rect) return
+          setMenuOpen(true)
+          void window.api.browser.menuOpen({ x: rect.right + 2, y: rect.bottom + 4 }, buildMenuItems(activeTab, vpn, isFullscreen))
+        }}
+      ><KebabIcon /></button>
       {findOpen ? (
         <div className="browser-find" role="search">
           <input ref={findInputRef} value={findText} placeholder="Find in page" aria-label="Find in page" onChange={(event) => { setFindText(event.target.value); if (event.target.value && activeTab) void window.api.browser.find(activeTab.id, event.target.value, true).then(setFindResult) }} onKeyDown={(event) => { if (event.key === 'Escape') closeFind(); if (event.key === 'Enter') { event.preventDefault(); void runFind(!event.shiftKey) } }} />

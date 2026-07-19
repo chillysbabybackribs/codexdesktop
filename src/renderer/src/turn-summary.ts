@@ -92,12 +92,17 @@ export function currentActionLabel(
   return streamingMessage ? 'Writing' : 'Working'
 }
 
-function countBrowseActions(items: WorkItem[], phase: 'completed' | 'running'): BrowseCounts {
+function countBrowseActions(
+  items: WorkItem[],
+  itemMeta: Record<string, ItemMeta>,
+  phase: 'completed' | 'running'
+): BrowseCounts {
   const counts: BrowseCounts = { files: 0, searches: 0 }
 
   for (const item of items) {
     if (item.type === 'webSearch') {
-      const running = item.status === 'inProgress'
+      const running =
+        !itemMeta[item.id]?.completedAtMs && items.length > 0 && items[items.length - 1]?.id === item.id
       if (phase === 'running' && running) {
         counts.searches += 1
       } else if (phase === 'completed' && !running) {
@@ -172,8 +177,8 @@ export function activityFeedLines(
 ): ActivityFeedLine[] {
   const lines: ActivityFeedLine[] = []
 
-  const explored = countBrowseActions(items, 'completed')
-  const exploring = countBrowseActions(items, 'running')
+  const explored = countBrowseActions(items, itemMeta, 'completed')
+  const exploring = countBrowseActions(items, itemMeta, 'running')
 
   const exploredLabel = browseSummaryLabel(explored, 'past')
   if (exploredLabel) {

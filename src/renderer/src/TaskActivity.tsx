@@ -800,7 +800,7 @@ function FileChangeBlock({
         />
       ))}
       {item.changes.length === 0 && status === 'running' && !live ? (
-        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="…" />
+        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="" />
       ) : null}
     </>
   )
@@ -1092,6 +1092,7 @@ export function isHiddenDuringLiveStep(item: WorkItem, live: boolean): boolean {
       }
       return true
     case 'subAgentActivity':
+      return true
     case 'collabAgentToolCall':
       return item.status !== 'inProgress'
     default:
