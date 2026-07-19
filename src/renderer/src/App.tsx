@@ -95,6 +95,7 @@ import {
   reorderMainChatTabs,
   serializeMainChatTabState,
   tabForThread,
+  type BrowserMiddleSide,
   type MainChatTab,
   type MainChatTabState,
 } from './main-chat-tabs';
@@ -125,6 +126,8 @@ import {
   parseBrowserMiddleColumnWidths,
   parseWorkspaceLayoutMode,
   serializeBrowserMiddleColumnWidths,
+  type BrowserMiddleActiveTabKeys,
+  type BrowserMiddleTabKeys,
   type BrowserMiddleColumnWidths,
   type WorkspaceLayoutMode,
 } from './workspace-layout';
@@ -138,6 +141,7 @@ const mainChatTabsStorageKey = 'codexdesktop.mainChatTabs.v1';
 const chatSplitStorageKey = 'codexdesktop.chatSplit.v1';
 const workspaceLayoutStorageKey = 'codexdesktop.workspaceLayout.v1';
 const browserMiddleColumnWidthsStorageKey = 'codexdesktop.browserMiddleColumnWidths.v1';
+const browserMiddleActiveTabsStorageKey = 'codexdesktop.browserMiddleActiveTabs.v1';
 const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
@@ -161,6 +165,98 @@ type AutoRecoveryState = {
 };
 
 type PendingThreadStartOwner = { kind: 'main'; key: string } | { kind: 'agent'; key: string };
+
+function browserMiddleTabKeys(tabs: readonly MainChatTab[]): BrowserMiddleTabKeys {
+  return {
+    left: tabs
+      .filter((tab) => tab.browserMiddleSide === 'left')
+      .map((tab) => tab.key),
+    right: tabs
+      .filter((tab) => tab.browserMiddleSide === 'right')
+      .map((tab) => tab.key),
+  };
+}
+
+function parseBrowserMiddleActiveTabKeys(raw: string | null): BrowserMiddleActiveTabKeys {
+  try {
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed || typeof parsed !== 'object') return { left: null, right: null };
+    const candidate = parsed as { left?: unknown; right?: unknown };
+    return {
+      left: typeof candidate.left === 'string' && candidate.left ? candidate.left : null,
+      right: typeof candidate.right === 'string' && candidate.right ? candidate.right : null,
+    };
+  } catch {
+    return { left: null, right: null };
+  }
+}
+
+function reconcileBrowserMiddleActiveTabKeys(
+  current: BrowserMiddleActiveTabKeys,
+  tabs: readonly MainChatTab[],
+  activeKey: string,
+): BrowserMiddleActiveTabKeys {
+  const bySide = browserMiddleTabKeys(tabs);
+  const next: BrowserMiddleActiveTabKeys = {
+    left: bySide.left.includes(current.left ?? '') ? current.left : bySide.left[0] ?? null,
+    right: bySide.right.includes(current.right ?? '') ? current.right : bySide.right[0] ?? null,
+  };
+  const active = tabs.find((tab) => tab.key === activeKey);
+  if (active?.browserMiddleSide) next[active.browserMiddleSide] = active.key;
+  return next;
+}
+
+function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTabState {
+  let tabs = state.tabs;
+  const createCompanion = (side: BrowserMiddleSide): void => {
+    const template = tabs.find((tab) => tab.key === state.activeKey) ?? tabs[0];
+    tabs = [
+      ...tabs,
+      createMainChatTab(
+        crypto.randomUUID(),
+        null,
+        'New Chat',
+        template?.model ?? null,
+        template?.reasoningEffort ?? null,
+        side,
+      ),
+    ];
+  };
+  const assign = (key: string, side: BrowserMiddleSide): void => {
+    const index = tabs.findIndex((tab) => tab.key === key);
+    if (index < 0 || tabs[index].browserMiddleSide === side) return;
+    if (tabs === state.tabs) tabs = [...tabs];
+    tabs[index] = { ...tabs[index], browserMiddleSide: side };
+  };
+
+  const pickUnassigned = (preferActive: boolean): MainChatTab | null =>
+    (preferActive
+      ? tabs.find((tab) => tab.key === state.activeKey && tab.browserMiddleSide === null)
+      : null) ?? tabs.find((tab) => tab.browserMiddleSide === null) ?? null;
+
+  if (!tabs.some((tab) => tab.browserMiddleSide === 'left')) {
+    const target = pickUnassigned(true);
+    if (target) assign(target.key, 'left');
+    else createCompanion('left');
+  }
+  if (!tabs.some((tab) => tab.browserMiddleSide === 'right')) {
+    const target = pickUnassigned(false);
+    if (target) {
+      assign(target.key, 'right');
+    } else {
+      createCompanion('right');
+    }
+  }
+
+  let bySide = browserMiddleTabKeys(tabs);
+  for (const tab of tabs.filter((candidate) => candidate.browserMiddleSide === null)) {
+    const side: BrowserMiddleSide = bySide.left.length <= bySide.right.length ? 'left' : 'right';
+    assign(tab.key, side);
+    bySide = browserMiddleTabKeys(tabs);
+  }
+
+  return tabs === state.tabs ? state : { ...state, tabs };
+}
 
 // The per-session render model now lives in session-store.ts (Phase 2); a
 // main-chat "snapshot" is simply a session state held under the tab's key.
@@ -1238,7 +1334,10 @@ export default function App(): React.JSX.Element {
       patchMainChatTab(targetTabKey, (tab) => ({
         ...tab,
         threadId: response.threadId,
-        status: terminalAlreadyObserved ? (targetIsActive ? 'idle' : 'attention') : 'working',
+        // The completion handler already chose idle vs attention based on
+        // whether this tab was focused when it finished. Preserve that exact
+        // settled presentation if the invoke response arrives afterward.
+        status: terminalAlreadyObserved ? tab.status : 'working',
         turnId: terminalAlreadyObserved ? null : response.turn.id,
       }));
       if (!targetIsActive) {
