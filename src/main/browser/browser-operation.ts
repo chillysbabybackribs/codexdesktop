@@ -280,6 +280,7 @@ export function withTimeout<T>(
   signal?: AbortSignal
 ): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | null = null
+  let abortHandler: (() => void) | null = null
   let settled = false
   const cancel = (reject: (reason?: unknown) => void, error: Error): void => {
     if (settled) return
@@ -293,35 +294,22 @@ export function withTimeout<T>(
         operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`)
       )
     }, timeoutMs)
-    signal?.addEventListener(
-      'abort',
-      () => {
+    if (signal) {
+      abortHandler = () => {
         cancel(
           reject,
-          operationError(
-            'cancelled',
-            'controller',
-            'browser operation cancelled with its owning turn'
-          )
+          operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
         )
-      },
-      { once: true }
-    )
-    if (signal?.aborted) {
-      cancel(
-        reject,
-        operationError(
-          'cancelled',
-          'controller',
-          'browser operation cancelled with its owning turn'
-        )
-      )
+      }
+      signal.addEventListener('abort', abortHandler, { once: true })
+      if (signal.aborted) abortHandler()
     }
   })
 
   return Promise.race([promise, timeout]).finally(() => {
     settled = true
     if (timer) clearTimeout(timer)
+    if (signal && abortHandler) signal.removeEventListener('abort', abortHandler)
   })
 }
 
