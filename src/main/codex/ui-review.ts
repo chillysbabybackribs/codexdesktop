@@ -72,8 +72,9 @@ return {
 export async function runUiReview(
   browserAgent: BrowserAgentController,
   requestedViewports: unknown,
-  tabId?: string
+  options: { tabId?: string; signal?: AbortSignal } = {}
 ): Promise<{ result: BrowserAgentResult; imageUrls: string[] }> {
+  const { tabId, signal } = options
   const selected = resolveViewports(requestedViewports)
   const reviews: Array<Record<string, unknown>> = []
   const imageUrls: string[] = []
@@ -85,16 +86,16 @@ export async function runUiReview(
         height: viewport.height,
         deviceScaleFactor: 1,
         mobile: viewport.mobile
-      }, { tabId })
+      }, { tabId, signal })
       if (!emulation.ok) return { result: emulation, imageUrls }
 
-      const audit = await browserAgent.run(auditProgram, { tabId, timeoutMs: 10_000, maxResultChars: 40_000 })
+      const audit = await browserAgent.run(auditProgram, { tabId, timeoutMs: 10_000, maxResultChars: 40_000, signal })
       if (!audit.ok) return { result: audit, imageUrls }
 
       const capture = await browserAgent.cdp('Page.captureScreenshot', {
         format: 'png',
         captureBeyondViewport: false
-      }, { tabId, timeoutMs: 15_000 })
+      }, { tabId, timeoutMs: 15_000, signal })
       if (!capture.ok) return { result: capture, imageUrls }
 
       const screenshot = asRecord(asRecord(capture.result).screenshot)
@@ -115,8 +116,8 @@ export async function runUiReview(
       })
     }
 
-    const exceptions = await browserAgent.cdpEvents({ tabId, limit: 20 }, 'Runtime.exceptionThrown')
-    const failedRequests = await browserAgent.cdpEvents({ tabId, limit: 20 }, 'Network.loadingFailed')
+    const exceptions = await browserAgent.cdpEvents({ tabId, limit: 20, signal }, 'Runtime.exceptionThrown')
+    const failedRequests = await browserAgent.cdpEvents({ tabId, limit: 20, signal }, 'Network.loadingFailed')
     return {
       result: {
         ok: true,

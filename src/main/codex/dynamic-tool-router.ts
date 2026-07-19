@@ -15,6 +15,12 @@ export async function routeDynamicToolCall(
 ): Promise<DynamicToolCallResponse> {
   try {
     const args = asRecord(params.arguments)
+    const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
+      dependencies.browserAgent.runForTurn({
+        threadId: params.threadId,
+        turnId: params.turnId,
+        callId: params.callId
+      }, execute)
     let result
     let imageUrls: string[] = []
 
@@ -22,7 +28,7 @@ export async function routeDynamicToolCall(
       result = { ok: false, error: `unsupported dynamic tool namespace: ${params.namespace}` }
     } else if (params.tool === 'browser_screenshot') {
       const tabId = resolveAgentTab(readString(args.tab))
-      result = await dependencies.browserAgent.captureScreenshot({ tabId })
+      result = await runBrowserOperation((signal) => dependencies.browserAgent.captureScreenshot({ tabId, signal }))
       const screenshot = asRecord(asRecord(result.result).screenshot)
       const artifactPath = readString(screenshot.artifactPath)
       if (result.ok && artifactPath) {
@@ -33,17 +39,17 @@ export async function routeDynamicToolCall(
         }
       }
     } else if (params.tool === 'ui_review') {
-      const review = await runUiReview(
+      const review = await runBrowserOperation((signal) => runUiReview(
         dependencies.browserAgent,
         args.viewports,
-        resolveAgentTab(readString(args.tab)) ?? undefined
-      )
+        { tabId: resolveAgentTab(readString(args.tab)) ?? undefined, signal }
+      ))
       result = review.result
       imageUrls = review.imageUrls
     } else if (params.tool === 'browser_snapshot') {
       const objective = readString(args.objective)
       result = objective
-        ? await dependencies.browserAgent.snapshot({
+        ? await runBrowserOperation((signal) => dependencies.browserAgent.snapshot({
             objective,
             url: readString(args.url),
             tabId: resolveAgentTab(readString(args.tab)),
@@ -56,40 +62,44 @@ export async function routeDynamicToolCall(
             timeoutMs: readNumber(args.timeoutMs),
             quietMs: readNumber(args.quietMs),
             maxSettleMs: readNumber(args.maxSettleMs),
-            maxResultChars: readNumber(args.maxResultChars)
-          })
+            maxResultChars: readNumber(args.maxResultChars),
+            signal
+          }))
         : { ok: false, error: 'browser_snapshot requires a string "objective" argument' }
     } else if (params.tool === 'browser_flow') {
       result = Array.isArray(args.steps)
-        ? await dependencies.browserAgent.flow(args.steps, {
+        ? await runBrowserOperation((signal) => dependencies.browserAgent.flow(args.steps, {
             tabId: resolveAgentTab(readString(args.tab)),
             timeoutMs: readNumber(args.timeoutMs),
-            maxResultChars: readNumber(args.maxResultChars)
-          })
+            maxResultChars: readNumber(args.maxResultChars),
+            signal
+          }))
         : { ok: false, error: 'browser_flow requires a non-empty "steps" array' }
     } else if (params.tool === 'browser_run') {
       const code = readString(args.code)
       result = code
-        ? await dependencies.browserAgent.run(code, {
+        ? await runBrowserOperation((signal) => dependencies.browserAgent.run(code, {
             tabId: resolveAgentTab(readString(args.tab)),
             frame: readString(args.frame),
             timeoutMs: readNumber(args.timeoutMs),
-            maxResultChars: readNumber(args.maxResultChars)
-          })
+            maxResultChars: readNumber(args.maxResultChars),
+            signal
+          }))
         : { ok: false, error: 'browser_run requires a string "code" argument' }
     } else if (params.tool === 'browser_navigate') {
       const url = readString(args.url)
       result = url
-        ? await dependencies.browserAgent.navigate(url, {
+        ? await runBrowserOperation((signal) => dependencies.browserAgent.navigate(url, {
             tabId: resolveAgentTab(readString(args.tab)),
             readySelector: readString(args.readySelector),
             timeoutMs: readNumber(args.timeoutMs),
             quietMs: readNumber(args.quietMs),
-            maxSettleMs: readNumber(args.maxSettleMs)
-          })
+            maxSettleMs: readNumber(args.maxSettleMs),
+            signal
+          }))
         : { ok: false, error: 'browser_navigate requires a string "url" argument' }
     } else if (params.tool === 'browser_extract_page') {
-      result = await dependencies.browserAgent.extractPage({
+      result = await runBrowserOperation((signal) => dependencies.browserAgent.extractPage({
         tabId: resolveAgentTab(readString(args.tab)),
         frame: readString(args.frame),
         objective: readString(args.objective),
@@ -98,10 +108,11 @@ export async function routeDynamicToolCall(
         selector: readString(args.selector),
         maxItems: readNumber(args.maxItems),
         timeoutMs: readNumber(args.timeoutMs),
-        maxResultChars: readNumber(args.maxResultChars)
-      })
+        maxResultChars: readNumber(args.maxResultChars),
+        signal
+      }))
     } else if (params.tool === 'browser_cdp') {
-      result = await routeCdpOperation(args, dependencies.browserAgent)
+      result = await runBrowserOperation((signal) => routeCdpOperation(args, dependencies.browserAgent, signal))
     } else if (params.tool === 'research_web') {
       result = await dependencies.researchRunner.run({
         queries: readStringArray(args.queries),
@@ -141,7 +152,8 @@ export async function routeDynamicToolCall(
 
 async function routeCdpOperation(
   args: Record<string, unknown>,
-  browserAgent: BrowserAgentController
+  browserAgent: BrowserAgentController,
+  signal: AbortSignal
 ): Promise<Awaited<ReturnType<BrowserAgentController['cdp']>>> {
   const operation = readString(args.operation) ?? 'command'
   const method = readString(args.method)
@@ -152,7 +164,8 @@ async function routeCdpOperation(
     afterSequence: readNumber(args.afterSequence),
     filter: asRecord(args.filter),
     contains: readStringRecord(args.contains),
-    limit: readNumber(args.limit)
+    limit: readNumber(args.limit),
+    signal
   }
 
   if (operation === 'capabilities') return browserAgent.cdpCapabilities(options)
