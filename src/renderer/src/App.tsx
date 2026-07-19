@@ -3037,6 +3037,7 @@ function ChatPane({
       <ThreadScroll
         id="main-chat-panel"
         labelledBy={`main-chat-tab-${activeMainChatTabKey}`}
+        scrollKey={activeMainChatTabKey}
         resetKey={activeThreadId}
         activeTurnId={activeTurnId}
         dependencies={[items, itemMeta, activeTurnId]}
@@ -3714,6 +3715,7 @@ function SettingsModal({
 function ThreadScroll({
   children,
   dependencies,
+  scrollKey,
   resetKey,
   activeTurnId,
   id,
@@ -3722,6 +3724,7 @@ function ThreadScroll({
 }: {
   children: React.ReactNode
   dependencies: unknown[]
+  scrollKey: string
   resetKey: string | null
   activeTurnId: string | null
   id: string
@@ -3751,7 +3754,18 @@ function ThreadScroll({
   // anchor write would immediately release the anchor (bottom-pin doesn't need
   // it because it re-pins to the same value).
   const suppressScrollRef = useRef(false)
+  const scrollKeyRef = useRef(scrollKey)
+  const scrollPositionsRef = useRef(new Map<string, { top: number; pinned: boolean }>())
   const [spacerOn, setSpacerOn] = useState(false)
+
+  const rememberScrollPosition = useCallback(() => {
+    const el = ref.current
+    if (!el) return
+    scrollPositionsRef.current.set(scrollKeyRef.current, {
+      top: el.scrollTop,
+      pinned: pinnedRef.current
+    })
+  }, [])
 
   const cancelScheduledFollow = useCallback(() => {
     if (frameRef.current !== null) {
@@ -3806,8 +3820,9 @@ function ThreadScroll({
     if (Math.abs(delta) > 1) {
       suppressScrollRef.current = true
       el.scrollTop += delta
+      rememberScrollPosition()
     }
-  }, [])
+  }, [rememberScrollPosition])
 
   const followTail = useCallback(() => {
     // Top-anchor mode owns the scroll position while active.
@@ -3832,6 +3847,7 @@ function ThreadScroll({
         suppressScrollRef.current = true
         el.scrollTop = target
       }
+      rememberScrollPosition()
 
       // Markdown code blocks, font metrics, and live diff rows can settle one
       // layout pass after React commits. A second frame catches that growth
@@ -3846,11 +3862,12 @@ function ThreadScroll({
               suppressScrollRef.current = true
               settled.scrollTop = settledTarget
             }
+            rememberScrollPosition()
           }
         })
       }
     })
-  }, [anchorTop])
+  }, [anchorTop, rememberScrollPosition])
 
   const handleScroll = useCallback(() => {
     // Ignore the scroll events our own programmatic writes produce.
@@ -3865,6 +3882,7 @@ function ThreadScroll({
     }
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
     pinnedRef.current = distanceFromBottom <= 48
+    rememberScrollPosition()
 
     // A deliberate scroll releases the top-anchor, exactly like it releases
     // bottom-follow — the reader is now driving.
@@ -3879,19 +3897,34 @@ function ThreadScroll({
       cancelScheduledFollow()
     }
     if (el.scrollTop <= 96) onReachStart?.()
-  }, [cancelScheduledFollow, onReachStart])
+  }, [cancelScheduledFollow, onReachStart, rememberScrollPosition])
 
   useLayoutEffect(() => {
-    // A new thread is a new reading context. Start it at the latest content,
-    // even if the previous thread had deliberately released auto-follow.
+    // A tab has its own reading context. Restore its last known position when
+    // returning to it; a never-seen tab still begins at its latest content.
     cancelScheduledFollow()
     anchorTurnRef.current = null
     prevTurnRef.current = null
     justResetRef.current = true
     setSpacerOn(false)
-    pinnedRef.current = true
-    followTail()
-  }, [cancelScheduledFollow, followTail, resetKey])
+    scrollKeyRef.current = scrollKey
+    const saved = scrollPositionsRef.current.get(scrollKey)
+    pinnedRef.current = saved?.pinned ?? true
+    if (!saved) {
+      followTail()
+      return
+    }
+    const restore = (): void => {
+      const el = ref.current
+      if (!el || scrollKeyRef.current !== scrollKey) return
+      const maximum = Math.max(0, el.scrollHeight - el.clientHeight)
+      suppressScrollRef.current = true
+      el.scrollTop = Math.min(saved.top, maximum)
+      rememberScrollPosition()
+    }
+    const frame = window.requestAnimationFrame(restore)
+    return () => window.cancelAnimationFrame(frame)
+  }, [cancelScheduledFollow, followTail, rememberScrollPosition, resetKey, scrollKey])
 
   useLayoutEffect(() => {
     followTail()
