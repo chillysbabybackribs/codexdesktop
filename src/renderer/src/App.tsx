@@ -571,17 +571,33 @@ export default function App(): React.JSX.Element {
           return
         }
         setModels(list)
-        // Drop a persisted pick the CLI no longer offers.
-        setSelectedModel((current) =>
-          current && list.some((model) => model.model === current) ? current : null
-        )
-        const active = list.find((model) => model.model === selectedModel) ?? list.find((model) => model.isDefault) ?? list[0]
-        setSelectedReasoningEffort((current) => {
+        const normalizeTab = (tab: MainChatTab): MainChatTab => {
+          // A saved explicit pick may disappear after a CLI/config update.
+          // In that case fall back to the server default for this tab only.
+          const model = tab.model && list.some((candidate) => candidate.model === tab.model)
+            ? tab.model
+            : null
+          const active = list.find((candidate) => candidate.model === model) ??
+            list.find((candidate) => candidate.isDefault) ??
+            list[0]
           const supported = active.supportedReasoningEfforts.map((option) => option.reasoningEffort)
-          const next = current && supported.includes(current) ? current : active.defaultReasoningEffort
-          window.localStorage.setItem(reasoningEffortStorageKey, next)
-          return next
-        })
+          const reasoningEffort = tab.reasoningEffort && supported.includes(tab.reasoningEffort)
+            ? tab.reasoningEffort
+            : active.defaultReasoningEffort
+          return { ...tab, model, reasoningEffort }
+        }
+        const activeTab = normalizeTab(
+          mainChatTabStateRef.current.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current) ??
+          mainChatTabStateRef.current.tabs[0]
+        )
+        updateMainChatTabs((state) => ({
+          ...state,
+          tabs: state.tabs.map(normalizeTab)
+        }))
+        selectedModelRef.current = activeTab.model
+        selectedReasoningEffortRef.current = activeTab.reasoningEffort
+        setSelectedModel(activeTab.model)
+        setSelectedReasoningEffort(activeTab.reasoningEffort)
       },
       (error: Error) => console.warn('Failed to load Codex model list', error)
     )
@@ -900,25 +916,22 @@ export default function App(): React.JSX.Element {
 
   const handleSelectModel = (model: string): void => {
     cancelAutoRecovery()
-    setSelectedModel(model)
-    window.localStorage.setItem(modelStorageKey, model)
 
     const selected = models.find((candidate) => candidate.model === model)
-    if (!selected) return
+    if (!selected) {
+      setActiveMainChatModelSelection(model, selectedReasoningEffortRef.current)
+      return
+    }
     const supported = selected.supportedReasoningEfforts.map((option) => option.reasoningEffort)
-    const nextEffort = selectedReasoningEffort && supported.includes(selectedReasoningEffort)
-      ? selectedReasoningEffort
+    const nextEffort = selectedReasoningEffortRef.current && supported.includes(selectedReasoningEffortRef.current)
+      ? selectedReasoningEffortRef.current
       : selected.defaultReasoningEffort
-    setSelectedReasoningEffort(nextEffort)
-    window.localStorage.setItem(reasoningEffortStorageKey, nextEffort)
+    setActiveMainChatModelSelection(model, nextEffort)
   }
 
   const handleSelectModelEffort = (model: string, effort: ReasoningEffort): void => {
     cancelAutoRecovery()
-    setSelectedModel(model)
-    setSelectedReasoningEffort(effort)
-    window.localStorage.setItem(modelStorageKey, model)
-    window.localStorage.setItem(reasoningEffortStorageKey, effort)
+    setActiveMainChatModelSelection(model, effort)
   }
 
   const handleSetFastMode = (enabled: boolean): void => {
@@ -1021,7 +1034,7 @@ export default function App(): React.JSX.Element {
     mainChatSnapshotsRef.current.delete(tabKey)
     discardComposerDraft(tabKey)
     patchMainChatTab(tabKey, (tab) => ({
-      ...createMainChatTab(tab.key),
+      ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort),
       key: tab.key
     }))
 
@@ -1039,7 +1052,13 @@ export default function App(): React.JSX.Element {
     captureActiveMainChatSnapshot()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
-    const tab = createMainChatTab(crypto.randomUUID())
+    const tab = createMainChatTab(
+      crypto.randomUUID(),
+      null,
+      'New Chat',
+      selectedModelRef.current,
+      selectedReasoningEffortRef.current
+    )
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }))
     applyMainChatSnapshot(tab)
     persistLastThreadId(null)
@@ -1136,7 +1155,9 @@ export default function App(): React.JSX.Element {
       : createMainChatTab(
           crypto.randomUUID(),
           threadId,
-          threads.find((thread) => thread.id === threadId)?.name ?? 'Chat'
+          threads.find((thread) => thread.id === threadId)?.name ?? 'Chat',
+          selectedModelRef.current,
+          selectedReasoningEffortRef.current
         )
 
     captureActiveMainChatSnapshot()

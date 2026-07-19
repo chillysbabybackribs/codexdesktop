@@ -245,16 +245,15 @@ export class BrowserAgentController {
           ...(artifact ? { artifact } : {})
         } satisfies BrowserAgentSuccess
       } catch (error) {
-        const errorCode = classifyBrowserFailure(error)
+        const failureFields = browserFailureFields(error, 'pageScriptError', 'pageScript')
         return {
           ok: false,
-          error: errorMessage(error),
-          errorCode,
+          ...failureFields,
           tabId,
           url: safeUrl(webContents),
           title: safeTitle(webContents),
           durationMs: Date.now() - startedAt,
-          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
+          ...(isLifecycleFailure(failureFields.errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
         } satisfies BrowserAgentFailure
       }
     })
