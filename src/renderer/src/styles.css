@@ -5763,6 +5763,57 @@ button {
   overflow-wrap: anywhere;
 }
 
+/* Phase 5: full-fidelity activity in the dock — the main chat's work
+   components (tool rows, terminal cards, thought blocks, diff cards) at mini
+   scale. Same classes, tighter rhythm. */
+
+.agent-mini-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.agent-mini-activity .work-group {
+  gap: 3px;
+}
+
+.agent-mini-activity .tool-row,
+.agent-mini-activity .thought-toggle {
+  font-size: 11.5px;
+}
+
+.agent-mini-activity .thought-text {
+  font-size: 12.5px;
+}
+
+.agent-mini-activity .term-command,
+.agent-mini-activity .term-output pre,
+.agent-mini-activity .diff-text,
+.agent-mini-activity .diff-gutter {
+  font-size: 10.5px;
+}
+
+.agent-mini-activity .diff-file-name {
+  font-size: 11.5px;
+}
+
+.agent-mini-activity .term-output pre,
+.agent-mini-activity .diff-text {
+  overflow-wrap: anywhere;
+}
+
+.agent-mini-commentary {
+  color: #939393;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.agent-mini-commentary .markdown-body {
+  font-size: 12.5px;
+}
+
 .agent-mini-message.is-user {
   align-self: flex-end;
   max-width: 85%;
