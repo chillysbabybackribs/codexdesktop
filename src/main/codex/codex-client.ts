@@ -45,6 +45,8 @@ import {
 } from './app-server-rpc.js'
 import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
+import { isAgentTool, routeAgentToolCall } from '../agents/agent-tool-router.js'
+import type { SubagentSpawner } from '../agents/subagent-orchestrator.js'
 import {
   allDynamicTools,
   buildGuidance,
@@ -72,6 +74,10 @@ export class CodexClient extends EventEmitter implements SessionProvider {
   private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
+  // Injected after construction (the orchestrator needs the providers first).
+  // When set, spawn_subagent tool calls route here; when unset, they return a
+  // clean unavailable result so the runtime never hangs.
+  private subagentSpawner: SubagentSpawner | null = null
   constructor(
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner,

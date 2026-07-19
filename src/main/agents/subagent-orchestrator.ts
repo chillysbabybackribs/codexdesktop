@@ -52,6 +52,14 @@ type PendingChild = {
 
 type ProviderSelector = (model: string | null | undefined) => SessionProvider
 
+// The narrow view providers depend on for the spawn_subagent tool — kept small
+// so a provider only sees "spawn a child and give me its result", not the full
+// orchestrator. Breaks the construction cycle (orchestrator needs providers;
+// providers need this) via a setter on each provider.
+export interface SubagentSpawner {
+  spawnAndAwait(request: SpawnRequest): Promise<SpawnResult>
+}
+
 // Extract the child's final answer from a completed turn's items — the last
 // non-empty agent message, clipped so a runaway child can't flood the parent's
 // context. Mirrors the renderer's turnAnswerText, but reads the wire Turn.
