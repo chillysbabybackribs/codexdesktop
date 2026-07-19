@@ -14,6 +14,7 @@ import {
   AttachmentStrip,
   saveBrowserFiles,
 } from './Attachments';
+import { composerDrafts } from './composer-draft';
 import {
   buildMentionContext,
   rankMentionCandidates,
@@ -23,17 +24,7 @@ import {
 import { flattenPlugins, pluginUninstallId } from './plugin-lifecycle';
 import { PluginGlyph } from './PluginBrowser';
 
-type ComposerDraft = {
-  value: string;
-  attachments: ChatAttachment[];
-  mentions?: FileMention[];
-};
-
-const composerDrafts = new Map<string, ComposerDraft>();
-
-export function discardComposerDraft(key: string): void {
-  composerDrafts.delete(key);
-}
+export { discardComposerDraft } from './composer-draft';
 
 export function Composer({
   draftKey,
