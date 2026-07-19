@@ -1,6 +1,6 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
-  "//": "QUIET MODE. Linter is installed and wired but intentionally reports NOTHING during the capability build-out phase. Security/a11y/correctness hardening is the FINAL phase: run `npm run lint:strict` (uses biome.strict.json) to see the full ruleset when you're ready. Do not turn the strict rules on in this file until then.",
+  "//": "a11y is OFF by design: accessibility hardening is deferred to the final phase (see biome.strict.json / `npm run lint:strict`). Every other group stays on to catch real bugs during the build-out. Nothing here gates build/commit.",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -39,11 +39,33 @@
   },
   "linter": {
     "enabled": true,
+    "domains": {
+      "react": "recommended"
+    },
     "rules": {
-      "recommended": false
+      "recommended": true,
+      "a11y": "off",
+      "suspicious": {
+        "noExplicitAny": "error"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useImportType": "warn",
+        "useNodejsImportProtocol": "warn"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn"
+      }
     }
   },
   "assist": {
-    "enabled": false
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
   }
 }

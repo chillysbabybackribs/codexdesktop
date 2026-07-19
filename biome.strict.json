@@ -1,27 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
-  "//": "FINAL-PHASE ruleset. NOT active in normal `npm run lint` (that uses the quiet biome.json). Run `npm run lint:strict` during security/a11y/correctness hardening to surface the full ruleset. Extends the quiet config for files/formatter, then turns the real rules back on.",
+  "//": "FINAL-PHASE ruleset. Same as biome.json but with a11y turned back ON. NOT used by `npm run lint`; run `npm run lint:strict` during accessibility/security hardening to surface the deferred a11y findings.",
   "extends": ["./biome.json"],
   "linter": {
     "enabled": true,
-    "domains": {
-      "react": "recommended"
-    },
     "rules": {
       "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "error"
-      },
-      "style": {
-        "noNonNullAssertion": "off",
-        "useImportType": "warn",
-        "useNodejsImportProtocol": "warn"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "warn",
-        "noUnusedImports": "warn",
-        "noUnusedVariables": "warn"
-      }
+      "a11y": "on"
     }
   }
 }
