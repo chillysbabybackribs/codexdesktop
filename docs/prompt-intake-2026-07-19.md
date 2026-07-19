@@ -1,5 +1,37 @@
 # Prompt Intake — beginning-phase supervision (design, 2026-07-19)
 
+## SHIPPED v1 (same day): the conversational protocol
+
+The user chose a different v1 shape than the Auto/parallel design below: a
+**buttonless conversational intake** for paired chats, built in
+`src/renderer/src/main-chat-intake.ts` + `App.tsx` wiring. Live-verified
+end-to-end (isolated instance): restatement → "yes start" → reviewer plans in
+its own thread → doer executes → **reviewer audits against its own plan's
+done-criteria** ("✓ pass … matches the plan's done-criteria").
+
+- **Trigger**: first send of a fresh thread when a Reviewer-role dock card is
+  paired to the tab (`pickIntakeReviewer`). Follow-ups/unpaired chats unaffected.
+- **Turn A**: the doer gets the verbatim prompt + a stripped instruction block —
+  acknowledge, name the reviewer (card title + model displayName), restate the
+  ask, surface assumptions, invite "yes, start". No tools, no work.
+- **Turn B**: ANY reply while awaiting confirmation first sends a plan briefing
+  into the standing Reviewer's own thread (`handleAgentSend`), awaits it
+  (bounded 500ms poll, 120s timeout → degrade to "plan unavailable", never
+  brick the chat), then starts the doer on reply + `<codexdesktop-reviewer-plan>`
+  block. NO-PLAN sentinel = reviewer judged the reply a non-authorization →
+  doer answers conversationally, protocol stays armed.
+- Transcript shows only the user's words (`stripIntakeInjections` joined the
+  memory/mention strip chains in ChatTranscript, memory-turns, and both App
+  chains — including provisional titles).
+- Audits are suppressed while the protocol is pending (restatement/declined
+  turns are not work); the execution turn is audited normally — and the plan
+  lives in the reviewer's context, so the audit holds the doer to it.
+- Staleness: state binds to the thread Turn A created; thread switch/reset
+  clears it. Transient by design (reload → next send is just normal).
+
+The Auto/parallel design below remains the follow-up direction for unpaired or
+low-ceremony use; the mid-turn watchdog is the next increment after that.
+
 ## The finding this design answers
 
 Live test (long research turn, weak doer): a broad/poorly-scoped prompt is **not a
