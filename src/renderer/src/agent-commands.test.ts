@@ -9,7 +9,7 @@ function commandHarness(acceptsImages = true, isTurnTerminal = false): {
   threadStartEvents: string[]
   commands: ReturnType<typeof createAgentCommands>
 } {
-  const sessions = [createAgentSession('agent-1', 'Agent 2')]
+  const sessions = [createAgentSession('agent-1', 'Agent 2', 'tab-1', '/workspace/agent-1')]
   const messages: AgentLiteMessage[] = []
   const threadStartEvents: string[] = []
   const commands = createAgentCommands({
@@ -22,7 +22,7 @@ function commandHarness(acceptsImages = true, isTurnTerminal = false): {
       },
       appendMessage: (_key, message) => messages.push(message)
     },
-    getWorkspace: () => '/workspace',
+    getWorkspace: (session) => session.workspace,
     getSelectedModel: () => 'test-model',
     getSelectedEffort: () => 'high',
     getFastMode: () => true,
@@ -91,6 +91,7 @@ test('agent send forwards the agent reasoning effort', async () => {
     assert.equal((sentParams[0] as { threadId?: string | null }).threadId, null)
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
     assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
+    assert.equal((sentParams[0] as { cwd?: string }).cwd, '/workspace/agent-1')
     assert.equal(sessions[0]?.threadId, 'thread-1')
     assert.deepEqual(threadStartEvents, ['queued:agent-1', 'settled:agent-1'])
   } finally {
