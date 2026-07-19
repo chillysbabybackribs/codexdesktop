@@ -2501,11 +2501,52 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, { type: 'system', id: crypto.randomUUID(), level, text }])
   }
 
+  // Phase 4 ledger: turnId -> checkpointId for the focused thread, refreshed on
+  // thread switches and turn completion (checkpoints bind their turn id
+  // shortly after the turn starts). Reversibility only — never a gate.
+  const [turnCheckpoints, setTurnCheckpoints] = useState<Record<string, string>>({})
+  useEffect(() => {
+    if (!activeThreadId) {
+      setTurnCheckpoints({})
+      return
+    }
+    let stale = false
+    void window.api.checkpoints.list(activeThreadId).then((records) => {
+      if (stale) return
+      const byTurn: Record<string, string> = {}
+      for (const record of records) {
+        if (record.turnId) byTurn[record.turnId] = record.id
+      }
+      setTurnCheckpoints(byTurn)
+    }).catch(() => {
+      // No checkpoints (non-git workspace or store failure): the ledger simply
+      // offers no revert.
+    })
+    return () => {
+      stale = true
+    }
+  }, [activeThreadId, activeTurnId])
+
+  async function handleRevertTurn(turnId: string): Promise<void> {
+    const checkpointId = turnCheckpoints[turnId]
+    if (!checkpointId) return
+    try {
+      await window.api.checkpoints.revert({ checkpointId })
+      addSystemItem(
+        'Workspace files restored to before this turn. The pre-revert state was checkpointed too, so this revert can itself be reverted.'
+      )
+    } catch (error) {
+      addSystemItem(`Revert failed: ${(error as Error).message}`, 'error')
+    }
+  }
+
   return (
     <div ref={appRef} className="app-shell">
       <TitleBar />
       <main className="workspace" style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}>
         <ChatPane
+          turnCheckpoints={turnCheckpoints}
+          onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
           mainChatTabs={mainChatTabs}
           activeMainChatTabKey={activeMainChatTabKey}
           mainChatTabsDisabled={isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)}
@@ -2736,6 +2777,8 @@ function MainChatGlyph(): React.JSX.Element {
 }
 
 function ChatPane({
+  turnCheckpoints,
+  onRevertTurn,
   mainChatTabs,
   activeMainChatTabKey,
   mainChatTabsDisabled,
@@ -2800,6 +2843,8 @@ function ChatPane({
   onAgentCompact,
   onLoadOlderHistory
 }: {
+  turnCheckpoints: Record<string, string>
+  onRevertTurn: (turnId: string) => void
   mainChatTabs: MainChatTab[]
   activeMainChatTabKey: string
   mainChatTabsDisabled: boolean
@@ -3081,6 +3126,7 @@ function ChatPane({
                 meta={turnMeta[row.turnId]}
                 streamingMessage={Boolean(streamingMessageId) && row.turnId === activeTurnId}
                 onOpenTrace={() => openTrace(row.turnId)}
+                onRevert={turnCheckpoints[row.turnId] ? () => onRevertTurn(row.turnId) : undefined}
               />
             )
           }

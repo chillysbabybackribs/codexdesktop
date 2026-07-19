@@ -50,6 +50,13 @@ $$('.filter').forEach((filter) => filter.addEventListener('click', () => {
 document.addEventListener('keydown', (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.focus(); }
   if (event.key === 'Escape' && !$('#importModal').hidden) closeImport();
+  if (event.key === 'Tab' && !$('#importModal').hidden) {
+    const focusable = $$('button, [tabindex="0"], input:not([hidden])', $('#importModal'));
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
 });
 
 $$('.task-check').forEach((check) => check.addEventListener('click', () => {
@@ -85,6 +92,9 @@ function closeImport() { modal.hidden = true; $('#importStatus').textContent = '
 $('#importButton').addEventListener('click', openImport);
 $('#closeImport').addEventListener('click', closeImport);
 modal.addEventListener('click', (event) => { if (event.target === modal) closeImport(); });
+$('.dropzone').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); $('#fileInput').click(); }
+});
 $('#fileInput').addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (!file) return;

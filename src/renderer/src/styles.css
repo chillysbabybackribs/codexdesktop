@@ -5820,3 +5820,25 @@ button {
   content-visibility: auto;
   contain-intrinsic-size: auto 120px;
 }
+
+/* Phase 4: per-turn workspace revert on the completed-turn tail. */
+.turn-revert-button {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: #9aa3ab;
+  border-radius: 6px;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.turn-revert-button:hover {
+  color: #d9dde1;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.turn-revert-button.is-confirming {
+  color: #ffb38a;
+  border-color: rgba(255, 179, 138, 0.55);
+}

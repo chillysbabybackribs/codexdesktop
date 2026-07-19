@@ -108,7 +108,7 @@
       <section class="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
         <button class="modal-close" id="closeImport" type="button" aria-label="Close import dialog">×</button>
         <p class="eyebrow">LOCAL IMPORT</p><h2 id="import-title">Bring in a meeting transcript</h2><p>Choose a text, VTT, or SRT file. This static prototype keeps it in your browser only.</p>
-        <label class="dropzone" for="fileInput"><span aria-hidden="true">↑</span><strong>Choose a local file</strong><small>TXT, VTT, or SRT · mock import</small></label>
+        <label class="dropzone" for="fileInput" role="button" tabindex="0"><span aria-hidden="true">↑</span><strong>Choose a local file</strong><small>TXT, VTT, or SRT · mock import</small></label>
         <input id="fileInput" type="file" accept=".txt,.vtt,.srt" hidden />
         <div id="importStatus" class="import-status" aria-live="polite"></div>
       </section>
