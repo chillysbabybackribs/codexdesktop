@@ -26,7 +26,9 @@ function commandHarness(acceptsImages = true): {
     getFastMode: () => true,
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
-    cancelRecovery: () => {}
+    cancelRecovery: () => {},
+    queueThreadStart: () => {},
+    settleThreadStart: () => {}
   })
   return { sessions, messages, commands }
 }

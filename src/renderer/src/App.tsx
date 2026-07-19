@@ -146,6 +146,10 @@ type AutoRecoveryState = {
   timer: number | null
 }
 
+type PendingThreadStartOwner =
+  | { kind: 'main'; key: string }
+  | { kind: 'agent'; key: string }
+
 function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
   return goal ? { ...goal } : null
 }
@@ -297,6 +301,7 @@ export default function App(): React.JSX.Element {
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
   const mainChatSnapshotsRef = useRef<Map<string, MainChatSnapshot>>(new Map())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
+  const pendingThreadStartOwnersRef = useRef<PendingThreadStartOwner[]>([])
   const reconcilingMainChatTabKeyRef = useRef<string | null>(null)
   // Per-session overload recovery, keyed by session key — the dock equivalent
   // of autoRecoveryRef (which only ever tracks the focused thread).
@@ -807,6 +812,7 @@ export default function App(): React.JSX.Element {
       const threadId = activeThreadIdRef.current
       if (!threadId) {
         mainThreadStartsInFlightRef.current.add(targetTabKey)
+        pendingThreadStartOwnersRef.current.push({ kind: 'main', key: targetTabKey })
       }
 
       const response = await window.api.codex.sendMessage({
@@ -872,6 +878,9 @@ export default function App(): React.JSX.Element {
       return false
     } finally {
       mainThreadStartsInFlightRef.current.delete(targetTabKey)
+      pendingThreadStartOwnersRef.current = pendingThreadStartOwnersRef.current.filter(
+        (owner) => owner.kind !== 'main' || owner.key !== targetTabKey
+      )
       userTurnRequestPendingRef.current = false
       setIsSending(false)
     }
@@ -1450,6 +1459,7 @@ export default function App(): React.JSX.Element {
   }
 
   const {
+    bindAgentThread,
     handleAgentSend,
     handleAgentStop,
     handleAgentCompact,
@@ -1467,7 +1477,13 @@ export default function App(): React.JSX.Element {
     getFastMode: () => fastModeRef.current,
     acceptsImages: (model) => modelAcceptsImages(modelsRef.current, model),
     buildMainChatContext,
-    cancelRecovery: cancelAgentRecovery
+    cancelRecovery: cancelAgentRecovery,
+    queueThreadStart: (key) => pendingThreadStartOwnersRef.current.push({ kind: 'agent', key }),
+    settleThreadStart: (key) => {
+      pendingThreadStartOwnersRef.current = pendingThreadStartOwnersRef.current.filter(
+        (owner) => owner.kind !== 'agent' || owner.key !== key
+      )
+    }
   })
 
   const agentLifecycle = createAgentLifecycle({
@@ -1989,21 +2005,17 @@ export default function App(): React.JSX.Element {
         }
         // A first send creates its thread inside `sendMessage`. Its
         // notifications can arrive before that IPC call returns, so claim the
-        // pending owner here before `turn/started` needs to route its items.
-        // Main sends are serialized by the composer; concurrent dock starts
-        // are requested through the app-server in queue order.
-        const pendingMainTabKey = mainThreadStartsInFlightRef.current.size === 1
-          ? [...mainThreadStartsInFlightRef.current][0]
-          : null
-        if (pendingMainTabKey) {
-          mainThreadStartsInFlightRef.current.delete(pendingMainTabKey)
+        // next IPC owner before `turn/started` needs to route its items.
+        const pendingOwner = pendingThreadStartOwnersRef.current.shift()
+        if (pendingOwner?.kind === 'main') {
+          mainThreadStartsInFlightRef.current.delete(pendingOwner.key)
           const startedTitle = threadTitle(notification.params.thread)
-          patchMainChatTab(pendingMainTabKey, (tab) => ({
+          patchMainChatTab(pendingOwner.key, (tab) => ({
             ...tab,
             threadId: startedThreadId,
             title: startedTitle
           }))
-          if (activeMainChatTabKeyRef.current === pendingMainTabKey) {
+          if (activeMainChatTabKeyRef.current === pendingOwner.key) {
             watchThreadIdRef.current = startedThreadId
             activeThreadIdRef.current = startedThreadId
             setActiveThreadId(startedThreadId)
@@ -2013,9 +2025,8 @@ export default function App(): React.JSX.Element {
           }
           return
         }
-        const pendingAgentKey = agentStartQueueRef.current.shift()
-        if (pendingAgentKey) {
-          bindAgentThread(pendingAgentKey, startedThreadId)
+        if (pendingOwner?.kind === 'agent') {
+          bindAgentThread(pendingOwner.key, startedThreadId)
           return
         }
         watchThreadIdRef.current = notification.params.thread.id

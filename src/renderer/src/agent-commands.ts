@@ -20,6 +20,8 @@ export function createAgentCommands(options: {
   acceptsImages: (model: string | null) => boolean
   buildMainChatContext: () => string
   cancelRecovery: (key: string) => void
+  queueThreadStart: (key: string) => void
+  settleThreadStart: (key: string) => void
 }): {
   bindAgentThread: (key: string, threadId: string) => void
   handleAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
@@ -60,6 +62,7 @@ export function createAgentCommands(options: {
       const startsNewThread = !threadId
       if (startsNewThread) {
         store.startQueueRef.current.push(key)
+        options.queueThreadStart(key)
       }
 
       store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
@@ -89,6 +92,7 @@ export function createAgentCommands(options: {
       return false
     } finally {
       store.startQueueRef.current = store.startQueueRef.current.filter((queued) => queued !== key)
+      options.settleThreadStart(key)
     }
   }
 
