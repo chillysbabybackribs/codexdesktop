@@ -480,9 +480,6 @@ export default function App(): React.JSX.Element {
   const optimisticUserMessageIdRef = useRef<string | null>(null);
   const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort);
   const fastModeRef = useRef(fastMode);
-  // This ref is only the focused tab's display value. All asynchronous work
-  // must resolve its owning tab or thread explicitly (see helpers below).
-  const workspaceRef = useRef<string | null>(workspace);
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
   const autoRecoveryRef = useRef<AutoRecoveryState | null>(null);
@@ -755,10 +752,6 @@ export default function App(): React.JSX.Element {
   }, [models]);
 
   useEffect(() => {
-    workspaceRef.current = workspace;
-  }, [workspace]);
-
-  useEffect(() => {
     splitRef.current = split;
   }, [split]);
 
@@ -990,7 +983,6 @@ export default function App(): React.JSX.Element {
     selectedReasoningEffortRef.current = tab.reasoningEffort;
     setSelectedModel(tab.model);
     setSelectedReasoningEffort(tab.reasoningEffort);
-    workspaceRef.current = tab.workspace;
     // Route notifications for this tab's thread to the focused view even
     // before the session learns its threadId from hydration.
     watchThreadIdRef.current = session?.threadId ?? tab.threadId;
@@ -2261,7 +2253,6 @@ export default function App(): React.JSX.Element {
 
       if (picked) {
         patchMainChatTab(tabKey, (current) => ({ ...current, workspace: picked }));
-        workspaceRef.current = picked;
       }
     } catch (error) {
       addSystemItem(`Workspace selection failed: ${(error as Error).message}`, 'error');
