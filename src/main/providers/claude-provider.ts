@@ -35,6 +35,8 @@ import type { BrowserAgentController } from '../browser/browser-agent.js';
 import type { ResearchRunner } from '../browser/research-runner.js';
 import { runBrowserTool } from '../tools/browser-tool-registry.js';
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js';
+import { isAgentTool, runAgentTool } from '../agents/agent-tool-router.js';
+import type { SubagentSpawner } from '../agents/subagent-orchestrator.js';
 import {
   buildClaudeQueryOptions,
   synchronizeClaudeRuntimeSettings,
@@ -243,6 +245,10 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private modelCatalogPromise: Promise<Model[]> | null = null;
   private readonly modelsById = new Map<string, Model>();
   private disposed = false;
+  // Injected after construction (the orchestrator needs the providers first).
+  // When set, spawn_subagent MCP tool calls route here; when unset, they return
+  // a clean unavailable result.
+  private subagentSpawner: SubagentSpawner | null = null;
 
   constructor(
     checkpoints: TurnCheckpointStore | null = null,
