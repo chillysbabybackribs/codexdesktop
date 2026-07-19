@@ -175,7 +175,13 @@ export default function App(): React.JSX.Element {
     parseMainChatTabState(
       window.localStorage.getItem(mainChatTabsStorageKey),
       window.localStorage.getItem(lastThreadStorageKey),
-      () => crypto.randomUUID()
+      () => crypto.randomUUID(),
+      {
+        // One-time migration source for tab state saved before model choices
+        // were isolated per chat.
+        model: window.localStorage.getItem(modelStorageKey),
+        reasoningEffort: window.localStorage.getItem(reasoningEffortStorageKey)
+      }
     )
   )
   const mainChatTabs = mainChatTabState.tabs
@@ -201,13 +207,11 @@ export default function App(): React.JSX.Element {
   )
   const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false)
   const [models, setModels] = useState<Model[]>([])
-  // Model slug sent with every turn. `null` = no explicit pick yet, so turns
-  // omit the override and run on the CLI-configured default.
-  const [selectedModel, setSelectedModel] = useState<string | null>(
-    () => window.localStorage.getItem(modelStorageKey)
-  )
+  // The active tab projects its saved model choice into the composer. `null`
+  // means no explicit override, so turns use the CLI-configured default.
+  const [selectedModel, setSelectedModel] = useState<string | null>(initialMainChatTab.model)
   const [selectedReasoningEffort, setSelectedReasoningEffort] = useState<ReasoningEffort | null>(
-    () => window.localStorage.getItem(reasoningEffortStorageKey)
+    initialMainChatTab.reasoningEffort
   )
   const [fastMode, setFastMode] = useState(() => window.localStorage.getItem(fastModeStorageKey) === '1')
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
@@ -394,6 +398,21 @@ export default function App(): React.JSX.Element {
     return tabForThread(mainChatTabStateRef.current.tabs, threadId)
   }
 
+  function setActiveMainChatModelSelection(
+    model: string | null,
+    reasoningEffort: ReasoningEffort | null
+  ): void {
+    selectedModelRef.current = model
+    selectedReasoningEffortRef.current = reasoningEffort
+    setSelectedModel(model)
+    setSelectedReasoningEffort(reasoningEffort)
+    patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
+      ...tab,
+      model,
+      reasoningEffort
+    }))
+  }
+
   function captureActiveMainChatSnapshot(): void {
     flushPendingItemMutations()
     const key = activeMainChatTabKeyRef.current
@@ -425,6 +444,9 @@ export default function App(): React.JSX.Element {
     const nextEffort = snapshot?.reasoningEffort ?? null
     const nextUsage = snapshot?.contextUsage ?? null
 
+    selectedModelRef.current = tab.model
+    selectedReasoningEffortRef.current = tab.reasoningEffort
+
     watchThreadIdRef.current = threadId
     activeThreadIdRef.current = threadId
     activeThreadTitleRef.current = title
@@ -444,6 +466,8 @@ export default function App(): React.JSX.Element {
     setActiveTurnId(turnId)
     setActiveGoal(nextGoal)
     setActiveReasoningEffort(nextEffort)
+    setSelectedModel(tab.model)
+    setSelectedReasoningEffort(tab.reasoningEffort)
     setItems(nextItems)
     setItemMeta(nextItemMeta)
     setTurnMeta(nextTurnMeta)
