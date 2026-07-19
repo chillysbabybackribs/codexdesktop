@@ -2785,10 +2785,12 @@ export default function App(): React.JSX.Element {
   }
 
   // Codex-doer / Claude-auditor pairing: when the focused main chat completes
-  // a turn that changed files, idle dock agents in audit mode receive a
-  // compact workspace-reading prompt (the auditor runs `git diff` itself —
-  // no transcript piping). Failed/interrupted turns trigger too: partial
-  // changes are prime audit material. Busy auditors are skipped, not queued.
+  // a turn, idle dock agents in audit mode receive a compact briefing. Turns
+  // that changed files get the workspace-grounded diff audit (the auditor
+  // runs `git diff` itself); chat-only turns get a second-opinion review of
+  // the answer — trivial turns earn a few words by prompt design, not a skip.
+  // Failed/interrupted turns trigger too: partial work is prime material.
+  // Busy auditors are skipped, not queued.
   async function maybeTriggerAuditors(turnId: string): Promise<void> {
     const auditors = agentSessionsRef.current.filter((session) => session.auditsMain);
     if (!auditors.length) return;
@@ -2806,17 +2808,6 @@ export default function App(): React.JSX.Element {
       if (diffed === null) detectionUnavailable = true;
       else changed = diffed;
     }
-    if (!changed.length) {
-      // Tell armed auditors why nothing fired — an armed auditor that stays
-      // silent with no explanation reads as hung.
-      const note = detectionUnavailable
-        ? 'Last turn finished, but change detection needs a git workspace'
-        : 'Last turn finished with no file changes';
-      for (const auditor of auditors) {
-        patchAgentSession(auditor.key, (session) => ({ ...session, lastAuditNote: note }));
-      }
-      return;
-    }
     const userItem = itemsRef.current.find(
       (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
     );
@@ -2829,16 +2820,30 @@ export default function App(): React.JSX.Element {
             .trim() || '(request text unavailable)'
         : '(request text unavailable)';
     const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId);
-    const prompt = buildAuditPrompt({ userText, files: changed, steps });
+    const answerText = turnAnswerText(itemsRef.current, itemMetaRef.current, turnId);
+    if (!changed.length && !answerText && !steps.length) {
+      // Nothing to review at all (interrupted before any output). Tell armed
+      // auditors why nothing fired — silence reads as hung.
+      for (const auditor of auditors) {
+        patchAgentSession(auditor.key, (session) => ({
+          ...session,
+          lastAuditNote: 'Last turn finished with nothing to review',
+        }));
+      }
+      return;
+    }
+    const prompt = buildAuditPrompt({ userText, files: changed, steps, answerText, detectionUnavailable });
     // Structured summary rides along on the displayed message so the card can
     // render a compact collapsible card; the model still receives `prompt`.
-    const auditSummary = { userText, files: changed, steps };
+    const auditSummary = { userText, files: changed, steps, answerText };
     for (const auditor of auditors) {
       if (
         !shouldTriggerAudit({
           auditorStatus: auditor.status,
           auditorTurnId: auditor.turnId,
           changedFiles: changed,
+          answerText,
+          stepCount: steps.length,
         })
       )
         continue;
