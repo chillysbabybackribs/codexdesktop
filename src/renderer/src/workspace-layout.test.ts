@@ -76,6 +76,37 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
   });
 });
 
+test('browser-middle keeps a newly selected tab in its own column', () => {
+  const result = browserMiddleChatLayout(
+    {
+      kind: 'split',
+      direction: 'row',
+      ratio: 0.5,
+      first: splitLeaf('left-one'),
+      second: splitLeaf('right-one'),
+    },
+    {
+      left: ['left-one', 'left-two'],
+      right: ['right-one'],
+    },
+    { left: 'left-two', right: 'right-one' },
+  );
+
+  assert.deepEqual(result, {
+    kind: 'split',
+    direction: 'row',
+    ratio: 0.5,
+    first: {
+      kind: 'split',
+      direction: 'column',
+      ratio: 0.5,
+      first: splitLeaf('left-one'),
+      second: splitLeaf('left-two'),
+    },
+    second: splitLeaf('right-one'),
+  });
+});
+
 test('workspace-layout persistence rejects malformed values', () => {
   assert.equal(parseWorkspaceLayoutMode('browser-middle'), 'browser-middle');
   assert.equal(parseWorkspaceLayoutMode('anything-else'), 'chat-browser');
