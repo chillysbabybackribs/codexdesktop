@@ -174,7 +174,15 @@ export function AgentColumn({
   }
 
   return (
-    <div className="agent-column-shell">
+    <>
+      {extendedKey ? (
+        <div
+          className="agent-extend-scrim"
+          aria-hidden="true"
+          onClick={() => setExtendedKey(null)}
+        />
+      ) : null}
+      <div className={`agent-column-shell ${extendedKey ? 'has-extended' : ''}`}>
       {hiddenAbove > 0 ? (
         <button
           type="button"
@@ -188,12 +196,13 @@ export function AgentColumn({
           </span>
         </button>
       ) : null}
-      <div ref={scrollRef} className="agent-column" onScroll={updateChevrons}>
+      <div ref={scrollRef} className={`agent-column ${extendedKey ? 'has-extended' : ''}`} onScroll={updateChevrons}>
         {sessions.map((session) => (
           <AgentWindow
             key={session.key}
             session={session}
             isSelected={session.key === selectedKey}
+            isExtended={session.key === extendedKey}
             sessionStore={sessionStore}
             workspace={workspace}
             models={models}
@@ -211,6 +220,8 @@ export function AgentColumn({
             onToggleAudit={onToggleAudit}
             onToggleReport={onToggleReport}
             onSendFeedback={onSendFeedback}
+            onDecideSendPolicy={onDecideSendPolicy}
+            onToggleExtend={toggleExtend}
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
@@ -231,7 +242,8 @@ export function AgentColumn({
           </span>
         </button>
       ) : null}
-    </div>
+      </div>
+    </>
   )
 }
 
