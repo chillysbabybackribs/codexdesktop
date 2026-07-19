@@ -960,6 +960,7 @@ function parseArgs(args) {
     effort: 'low',
     output: null,
     socket: null,
+    scenario: 'reddit-notifications',
     skipModel: false,
     allowEvalFallback: false
   }
@@ -977,6 +978,7 @@ function parseArgs(args) {
     if (key === '--samples') values.samples = positiveInteger(key, value)
     else if (key === '--model') values.model = requiredValue(key, value)
     else if (key === '--effort') values.effort = requiredValue(key, value)
+    else if (key === '--scenario') values.scenario = requiredValue(key, value)
     else if (key === '--out') values.output = requiredValue(key, value)
     else if (key === '--socket') values.socket = requiredValue(key, value)
     else throw new Error(`Unknown argument: ${key}`)
@@ -996,10 +998,16 @@ function requireTabs(response) {
   return response.tabs
 }
 
-function requireActiveRedditNotificationsTab(tabs) {
+function requireScenario(name) {
+  const scenario = SCENARIOS[name]
+  if (!scenario) throw new Error(`Unknown scenario ${name}. Expected one of: ${Object.keys(SCENARIOS).join(', ')}`)
+  return scenario
+}
+
+function requireActiveScenarioTab(tabs, scenario) {
   const active = tabs.filter(({ active }) => active)
-  if (active.length !== 1 || !isRedditNotificationsUrl(active[0].url)) {
-    throw new Error('The single active visible tab must already be https://www.reddit.com/notifications; the harness will not navigate or activate tabs.')
+  if (active.length !== 1 || !scenario.matchesUrl(active[0].url)) {
+    throw new Error(`The single active visible tab must already be the ${scenario.pageLabel}; the harness will not navigate or activate tabs.`)
   }
   return active[0]
 }
@@ -1008,6 +1016,15 @@ function isRedditNotificationsUrl(value) {
   try {
     const url = new URL(String(value))
     return /(^|\.)reddit\.com$/i.test(url.hostname) && /^\/notifications\/?$/i.test(url.pathname)
+  } catch {
+    return false
+  }
+}
+
+function isHackerNewsUrl(value) {
+  try {
+    const url = new URL(String(value))
+    return url.hostname === 'news.ycombinator.com' && /^\/$/.test(url.pathname)
   } catch {
     return false
   }
@@ -1023,21 +1040,14 @@ function validateSamePage(value, expected) {
   try {
     const requested = new URL(String(value), expected)
     const current = new URL(expected)
-    return requested.href === current.href ? null : `Rejected navigation to ${requested.href}; benchmark is pinned to the already-open Reddit notifications page.`
+    return requested.href === current.href ? null : `Rejected navigation to ${requested.href}; benchmark is pinned to the already-open scenario page.`
   } catch {
     return `Rejected invalid URL ${String(value)}.`
   }
 }
 
-function sameOracle(left, right) {
-  return JSON.stringify(oracleProjection(left)) === JSON.stringify(oracleProjection(right))
-}
-
-function oracleProjection(oracle) {
-  return {
-    url: oracle.url,
-    rows: oracle.rows.map(({ id, unread, read, text, href, datetime }) => ({ id, unread, read, text, href, datetime }))
-  }
+function sameOracle(left, right, scenario) {
+  return JSON.stringify(scenario.projectOracle(left)) === JSON.stringify(scenario.projectOracle(right))
 }
 
 function sameTabs(left, right) {
