@@ -430,8 +430,8 @@ const AgentWindow = memo(function AgentWindow({
                   <strong>{session.auditsMain ? 'Auditing main-chat turns' : 'Audit main-chat turns'}</strong>
                   <small>
                     {session.auditsMain
-                      ? 'Reviews the diff after each file-changing turn'
-                      : 'Auto-review file changes (defaults to Claude)'}
+                      ? 'Reviews every completed main-chat turn'
+                      : 'Second viewpoint on every turn (defaults to Claude)'}
                   </small>
                 </span>
                 <span className={`agent-menu-status ${session.auditsMain ? 'is-active' : ''}`}>
@@ -755,7 +755,7 @@ function AgentModeSelector({
       >
         <span className="agent-mode-copy">
           <strong>Audit main-chat turns</strong>
-          <small>Auto-reviews the diff after each file-changing turn · defaults to Claude</small>
+          <small>Second viewpoint on every turn — diffs, answers, ideas · defaults to Claude</small>
         </span>
         <span className={`agent-mode-switch ${session.auditsMain ? 'is-on' : ''}`} aria-hidden="true">
           <span className="agent-mode-knob" />
@@ -791,7 +791,7 @@ function AuditStandby({
       ) : (
         <>
           <span className="agent-standby-title">Waiting for the main chat</span>
-          <span className="agent-standby-meta">{note ?? 'Audits run when a turn changes files'}</span>
+          <span className="agent-standby-meta">{note ?? 'Reviews every completed turn — brief when trivial'}</span>
         </>
       )}
     </div>
