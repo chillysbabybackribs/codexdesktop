@@ -1591,21 +1591,9 @@ export default function App(): React.JSX.Element {
     agentLifecycle.scheduleRecovery(key, turnId, error)
   }
 
-  // Store cleanup rides along with the lifecycle verbs: close/reset retire the
-  // agent key's session record; promote hands the thread to a main tab, which
-  // owns its own key, so the agent-key record is stale either way.
-  const handleCloseAgentSession = (key: string): void => {
-    sessionStoreRef.current.remove(key)
-    agentLifecycle.handleCloseAgentSession(key)
-  }
-  const handleResetAgentSession = (key: string): void => {
-    sessionStoreRef.current.remove(key)
-    agentLifecycle.handleResetAgentSession(key)
-  }
-  const handlePromoteAgent = async (key: string): Promise<void> => {
-    sessionStoreRef.current.remove(key)
-    await agentLifecycle.handlePromoteAgent(key)
-  }
+  // Store cleanup for close/reset/promote lives inside agent-lifecycle via
+  // resetRenderState/removeRenderState — no App-side wrapping needed.
+  const { handleCloseAgentSession, handleResetAgentSession, handlePromoteAgent } = agentLifecycle
 
   // ---- End background agent sessions ---------------------------------------
 
@@ -1903,21 +1891,10 @@ export default function App(): React.JSX.Element {
           void refreshThreads()
           return
         }
-        // Dock threads also reduce into the session store under the agent key,
-        // so the store is the complete record of every surface. The lite dock
-        // view still renders from AgentSession; dock cards that want rich data
-        // (work items, turn telemetry) read the store. The full view-model
-        // swap is deferred to the dock UI upgrade (see phase2 doc).
-        sessionStoreRef.current.update(backgroundSession.key, (current) => {
-          const seeded = current.threadId === null && backgroundSession.threadId
-            ? { ...current, threadId: backgroundSession.threadId, title: backgroundSession.title }
-            : current
-          return reduceSessionNotification(seeded, notification, {
-            atMs: Date.now(),
-            fallbackModel: backgroundSession.model ?? selectedModelRef.current,
-            workspace: workspaceRef.current
-          })
-        })
+        // useAgentSessions owns the store reduction for dock threads (it
+        // reduces via reduceSessionNotification under the agent key and
+        // projects the lite view from the result) — reducing here as well
+        // would apply every delta twice.
         handleAgentNotification(backgroundSession, notification)
         return
       }
