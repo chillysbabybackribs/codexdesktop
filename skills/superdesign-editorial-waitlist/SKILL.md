@@ -1,6 +1,6 @@
 ---
 name: superdesign-editorial-waitlist
-description: Build a cinematic editorial waitlist landing page using the verified Superdesign Editorial Waitlist reference: matte charcoal, warm earth tones, oversized typography, a brutalist grid, subtle noise, layered text depth, and restrained motion. Use when the user explicitly requests this reference or an editorial waitlist style; do not use for ordinary waitlist pages.
+description: "Build a cinematic editorial waitlist landing page using the verified Superdesign Editorial Waitlist reference: matte charcoal, warm earth tones, oversized typography, a brutalist grid, subtle noise, layered text depth, and restrained motion. Use when the user explicitly requests this reference or an editorial waitlist style; do not use for ordinary waitlist pages."
 ---
 
 # Superdesign Editorial Waitlist
