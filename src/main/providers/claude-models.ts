@@ -77,7 +77,7 @@ export function mapClaudeModel(info: ClaudeSdkModelInfo): Model {
   const effortLevels =
     info.supportsEffort === false ? [] : [...new Set(info.supportedEffortLevels ?? [])];
   const defaultEffort = effortLevels.includes('high') ? 'high' : (effortLevels[0] ?? 'high');
-  const model = claudeModelId(info.value);
+  const model = info.value === 'default' ? claudeDefaultModelId : claudeModelId(info.value);
   return {
     id: model,
     model,

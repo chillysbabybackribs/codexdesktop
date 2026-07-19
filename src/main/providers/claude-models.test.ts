@@ -51,6 +51,25 @@ test('SDK model metadata maps into shared picker rows', () => {
   assert.match(catalog[1].description, /claude-sonnet-5/);
 });
 
+test('the SDK default row enriches the persisted compatibility id instead of duplicating it', () => {
+  const catalog = buildClaudeModelCatalog([
+    {
+      value: 'default',
+      resolvedModel: 'claude-opus-4-8[1m]',
+      displayName: 'Default (recommended)',
+      description: 'Account default.',
+      supportedEffortLevels: ['low', 'high'],
+      supportsFastMode: true,
+    },
+  ]);
+
+  assert.equal(catalog.length, 1);
+  assert.equal(catalog[0].model, claudeDefaultModelId);
+  assert.equal(catalog[0].runtimeModel, 'default');
+  assert.equal(catalog[0].resolvedModel, 'claude-opus-4-8[1m]');
+  assert.equal(catalog[0].supportsFastMode, true);
+});
+
 test('invalid effort values are not forwarded to Claude', () => {
   assert.equal(normalizeClaudeEffort('xhigh'), 'xhigh');
   assert.equal(normalizeClaudeEffort('minimal'), null);
