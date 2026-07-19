@@ -274,6 +274,7 @@ function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTab
         template?.model ?? null,
         template?.reasoningEffort ?? null,
         side,
+        template?.workspace ?? null,
       ),
     ];
   };
@@ -823,6 +824,14 @@ export default function App(): React.JSX.Element {
     }));
   }
 
+  function workspaceForMainChatTab(tabKey: string): string | null {
+    return mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null;
+  }
+
+  function workspaceForThread(threadId: string): string | null {
+    return mainChatTabForThread(threadId)?.workspace ?? null;
+  }
+
   function handleReorderMainChatTabs(
     sourceKey: string,
     targetKey: string,
@@ -930,6 +939,7 @@ export default function App(): React.JSX.Element {
       selectedReasoningEffortRef.current,
       mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === focusedKey)
         ?.browserMiddleSide ?? null,
+      workspaceForMainChatTab(focusedKey),
     );
     // The pane is placed before its tab exists (raw layout op, no validation);
     // the tab update right after adds the tab and focuses it, so its
@@ -1832,6 +1842,7 @@ export default function App(): React.JSX.Element {
       selectedModelRef.current,
       selectedReasoningEffortRef.current,
       browserMiddleSide,
+      active?.workspace ?? null,
     );
     // New-tab creation is intentionally not a split command. The fresh chat
     // owns the full chat height; users can drag tabs onto pane edges when they
@@ -1931,6 +1942,7 @@ export default function App(): React.JSX.Element {
         closing.model,
         closing.reasoningEffort,
         closing.browserMiddleSide,
+        closing.workspace,
       );
       sessionStoreRef.current.remove(key);
       resumeFailuresByTabRef.current.delete(key);
@@ -2022,6 +2034,7 @@ export default function App(): React.JSX.Element {
           selectedModelRef.current,
           selectedReasoningEffortRef.current,
           browserMiddleSide,
+          current?.workspace ?? null,
         );
 
     flushActiveMainChatSession();
