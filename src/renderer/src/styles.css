@@ -5966,79 +5966,141 @@ button {
   white-space: pre-wrap;
 }
 
-/* ── Agent empty-state mode selector (monochrome, borderless) ────────── */
+/* ── Assistant-mode empty hint (reviewer standby is the default state) ── */
 
-.agent-mode-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: auto 0;
+.agent-empty-hint {
+  margin: auto 10px;
+  color: #9b9b9b;
+  font-size: 12px;
+  line-height: 1.55;
+  text-align: center;
 }
 
-.agent-mode-option {
+/* ── Exchange capsules: recency-weighted history in the small window ──── */
+
+.agent-exchange {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agent-exchange-capsule {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 9px 10px;
-  border: none;
+  gap: 7px;
+  width: 100%;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
-  background: none;
-  color: inherit;
+  background: rgba(255, 255, 255, 0.03);
+  color: #a9a9a9;
+  font-size: 11px;
+  line-height: 1.4;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
-.agent-mode-option:hover {
-  background: rgba(255, 255, 255, 0.04);
+.agent-exchange-capsule:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #d8d8d8;
 }
 
-.agent-mode-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1;
+.agent-exchange-capsule.is-open .agent-capsule-chevron svg {
+  transform: rotate(180deg);
 }
 
-.agent-mode-copy strong {
-  font-size: 12.5px;
+.agent-capsule-verdict {
+  flex: 0 0 auto;
+  font-size: 10.5px;
   font-weight: 600;
+}
+
+.agent-capsule-verdict.is-pass {
+  color: var(--live-signal);
+}
+
+.agent-capsule-verdict.is-flag {
   color: #dfe2e6;
 }
 
-.agent-mode-copy small {
-  font-size: 11px;
-  line-height: 1.45;
-  color: #878787;
+.agent-capsule-verdict.is-none {
+  color: #7c7c7c;
 }
 
-.agent-mode-switch {
-  flex: none;
-  width: 30px;
-  height: 17px;
-  padding: 2px;
+.agent-capsule-headline {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-capsule-chevron {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: #8a8a8a;
+}
+
+.agent-capsule-chevron svg {
+  transition: transform 0.14s ease;
+}
+
+/* ── First-flag send prompt: decided with a real finding on screen ────── */
+
+.agent-send-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.agent-send-prompt-copy {
+  color: #cfd2d6;
+  font-size: 11.5px;
+  font-weight: 550;
+}
+
+.agent-send-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.agent-send-prompt-button {
+  padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  transition: background 0.15s ease;
+  background: none;
+  color: #c9c9c9;
+  font-size: 11px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
-.agent-mode-switch.is-on {
-  background: rgba(255, 255, 255, 0.45);
+.agent-send-prompt-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
 }
 
-.agent-mode-knob {
-  display: block;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #14161c;
-  transition: transform 0.15s ease;
+.agent-send-prompt-button.is-primary {
+  border-color: rgba(255, 255, 255, 0.38);
+  color: #f0f2f4;
 }
 
-.agent-mode-switch.is-on .agent-mode-knob {
-  transform: translateX(13px);
-  background: #0c0e13;
+.agent-send-prompt-button.is-quiet {
+  border-color: transparent;
+  color: #9a9a9a;
+}
+
+.agent-send-prompt-button.is-quiet:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #d0d0d0;
 }
 
 /* ── Armed-auditor standby (centered) ────────────────────────────────── */
@@ -6253,6 +6315,13 @@ button {
 .agent-audit-verdict.is-actionable:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Verdict-first: the badge leads the report instead of trailing it. */
+.agent-audit-verdict.is-lead {
+  margin-top: 0;
+  margin-bottom: 2px;
+  align-self: flex-start;
 }
 
 .agent-audit-note {
