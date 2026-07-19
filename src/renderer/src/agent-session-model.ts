@@ -173,6 +173,32 @@ export function defaultReviewerModel(mainModel: string | null, models: Model[]):
   ).id
 }
 
+// The card's user-facing role. `role` stays the spawn-tree truth and the
+// behavior flags stay the mechanism; this is the one derived value the menu
+// radio shows and the one intent a role choice expresses. 'worker' is
+// read-only — spawned children keep their role; the radio offers the other
+// two.
+export type DockRole = 'worker' | 'reviewer' | 'helper'
+
+// Derive the radio's selected value from session state. A top-level agent
+// with neither flag (legacy restore) reads as 'reviewer' — the born-a-reviewer
+// default; re-picking Reviewer arms the flags via dockRoleFlags, so stale
+// snapshots heal on first touch.
+export function dockRoleOf(session: AgentSession): DockRole {
+  if (session.role === 'worker') return 'worker'
+  if (session.watchesMain && !session.auditsMain) return 'helper'
+  return 'reviewer'
+}
+
+// The flag patch a role choice implies. Reviewer and Helper are mutually
+// exclusive behaviors (audit briefings vs context-prepended manual sends), so
+// each arms its flag and clears the other.
+export function dockRoleFlags(role: 'reviewer' | 'helper'): Pick<AgentSession, 'auditsMain' | 'watchesMain'> {
+  return role === 'reviewer'
+    ? { auditsMain: true, watchesMain: false }
+    : { auditsMain: false, watchesMain: true }
+}
+
 // Adjacent identical assistant messages are stream-restate artifacts (the
 // Claude translator dedupes new turns at the source; this also cleans threads
 // persisted before that fix). A model genuinely repeating itself verbatim

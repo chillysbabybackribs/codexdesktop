@@ -81,7 +81,9 @@ export async function restoreAgentDock(options: {
       status: 'idle',
       turnId: null,
       messages: [],
-      watchesMain: Boolean(entry.watchesMain),
+      // Radio model: Reviewer and Helper are exclusive — audit wins when a
+      // legacy snapshot carried both flags.
+      watchesMain: Boolean(entry.watchesMain) && !entry.auditsMain,
       auditsMain: Boolean(entry.auditsMain),
       reportsToMain: Boolean(entry.reportsToMain),
       // Legacy records predate the first-flag prompt: auto-send on was an

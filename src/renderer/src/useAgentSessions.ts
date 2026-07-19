@@ -5,6 +5,7 @@ import type { ReasoningEffort } from '../../shared/session-protocol';
 import {
   createReviewerSession,
   createWorkerSession,
+  dockRoleFlags,
   findAgentSessionByThread,
   reviewerTitle,
   serializeAgentDock,
@@ -63,8 +64,7 @@ export function useAgentSessions(
   }) => void;
   handleOpenAgent: (key: string) => void;
   handleMinimizeAgent: (key: string) => void;
-  handleToggleWatchAgent: (key: string) => void;
-  handleToggleAuditAgent: (key: string) => void;
+  handleSetAgentRole: (key: string, role: 'reviewer' | 'helper') => void;
   handleToggleReportAgent: (key: string) => void;
   handleDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void;
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort | null) => void;
@@ -335,23 +335,23 @@ export function useAgentSessions(
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key));
   }
 
-  function handleToggleWatchAgent(key: string): void {
-    patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }));
-  }
-
-  function handleToggleAuditAgent(key: string): void {
+  // The card's Role radio: role is the intent, the flags are the mechanism,
+  // and one atomic patch keeps them agreeing. Dispatched even when the shown
+  // role is re-picked — re-arming the flags heals legacy snapshots that
+  // restored with neither (or both) flags set.
+  function handleSetAgentRole(key: string, role: 'reviewer' | 'helper'): void {
     patchAgentSession(key, (session) => ({
       ...session,
-      auditsMain: !session.auditsMain,
-      // Feedback requires an audit to exist: disabling audit disables it.
-      reportsToMain: session.auditsMain ? false : session.reportsToMain,
+      ...dockRoleFlags(role),
+      // Feedback requires an audit to exist: leaving Reviewer drops auto-send.
+      reportsToMain: role === 'reviewer' ? session.reportsToMain : false,
       lastAuditNote: null,
-      // The headline pairing: arming audit on a session that has not chosen a
-      // runtime yet derives a model from a different family than the main
-      // chat's current model — cross-provider review whichever direction the
-      // pairing runs. Explicit choices are never overridden.
+      // The headline pairing: becoming a reviewer on a session that has not
+      // chosen a runtime yet derives a model from a different family than the
+      // main chat's current model — cross-provider review whichever direction
+      // the pairing runs. Explicit choices are never overridden.
       model:
-        !session.auditsMain && !session.threadId && !session.model
+        role === 'reviewer' && !session.threadId && !session.model
           ? deriveReviewerModel()
           : session.model,
     }));
@@ -448,8 +448,7 @@ export function useAgentSessions(
     handleSpawnedAgent,
     handleOpenAgent,
     handleMinimizeAgent,
-    handleToggleWatchAgent,
-    handleToggleAuditAgent,
+    handleSetAgentRole,
     handleToggleReportAgent,
     handleDecideSendPolicy,
     handleSetAgentModel,

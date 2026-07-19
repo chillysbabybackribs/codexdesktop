@@ -6532,6 +6532,16 @@ button {
   outline-offset: -2px;
 }
 
+.agent-menu-item.is-static {
+  cursor: default;
+}
+
+.agent-menu-item.is-static:hover,
+.agent-menu-item.is-static:focus-visible {
+  background: transparent;
+  color: #d8dce0;
+}
+
 .agent-menu-item > svg {
   flex: 0 0 auto;
   color: #aeaeae;
