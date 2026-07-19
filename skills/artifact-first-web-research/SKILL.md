@@ -24,10 +24,12 @@ Leave `maxPages`, `maxAttempts`, and `snippetChars` omitted unless the task genu
 - Broad public discovery: `research_web` with one primary query and adaptive fallback lanes.
 - One already-visible public content page: `browser_extract_page`.
 - Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.
-- Interaction or mutation: use one batched `browser_run` program for the ordered actions, inspection, and verification. If navigation is required first, use `browser_navigate` with a page-specific `readySelector`, then the single batched program.
+- Interaction or mutation: batch actions that remain in the current page. Treat any action that may trigger full-document or SPA-route navigation as a phase boundary: perform the action, then inspect the destination in a fresh browser operation after its containing page or list state is ready. If navigation is required first, use `browser_navigate` with a page-specific `readySelector` before the batched program.
 - Low-level lifecycle, network, storage, screenshot, or trace work: `browser_cdp`.
 
 If `browser_snapshot` is not present on an older resumed thread, use one `browser_run` call for an already-visible read or `browser_navigate` followed by one `browser_run` call when the page must change. Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
+
+Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception; then use the best direct-source fallback or the single permitted gap-fill when justified.
 
 ## Evidence Contract
 
