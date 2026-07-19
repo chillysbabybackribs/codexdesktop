@@ -1,4 +1,4 @@
-# Phase 4 — Persistence and browser/CDP lifecycle (2026-07-19, in progress)
+# Phase 4 — Persistence and browser/CDP lifecycle (2026-07-19, complete)
 
 Goal: make browser and chat restoration durable across close/reopen cycles while
 ensuring native Chromium and CDP resources do not survive their owning tab.
@@ -34,9 +34,14 @@ No model, tool, or user-flow restrictions are part of this phase.
 - `npm run typecheck`, `npm run build`, and `npm run verify:app`: clean.
 - The isolated verification instance was closed after launch; its user-data
   directory and browser-control socket were removed.
+- A focused two-launch smoke reused one disposable profile: the first instance
+  restored an existing tab, navigated it to `https://example.com/`, and started
+  active CDP performance diagnostics. After a controlled close, the second
+  instance restored the same page in a new native tab. Its first CDP read
+  reported `active: false`, proving that transient diagnostics did not cross
+  the WebContents boundary; a new `performanceStart` immediately succeeded.
+- `scripts/verify-instance.mjs` now supports an explicitly retained,
+  caller-supplied disposable profile only for this kind of relaunch smoke.
+  Its ordinary unique-profile and cleanup behavior is unchanged.
 
-## Remaining
-
-- Add a focused close/reopen smoke that exercises persisted browser tabs while
-  a CDP operation is active, then confirm the restored target owns a fresh CDP
-  session.
+Phase 4 is complete.
