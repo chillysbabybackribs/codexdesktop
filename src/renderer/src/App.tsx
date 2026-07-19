@@ -2619,13 +2619,16 @@ export default function App(): React.JSX.Element {
       : '(request text unavailable)'
     const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId)
     const prompt = buildAuditPrompt({ userText, files: changed, steps })
+    // Structured summary rides along on the displayed message so the card can
+    // render a compact collapsible card; the model still receives `prompt`.
+    const auditSummary = { userText, files: changed, steps }
     for (const auditor of auditors) {
       if (!shouldTriggerAudit({
         auditorStatus: auditor.status,
         auditorTurnId: auditor.turnId,
         changedFiles: changed
       })) continue
-      void handleAgentSend(auditor.key, prompt)
+      void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary })
     }
   }
 

@@ -76,7 +76,7 @@ export function createAgentCommands(options: {
         options.queueThreadStart(key)
       }
 
-      store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
+      store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments, audit: opts.audit })
       const outgoingText = session.watchesMain ? `${options.buildMainChatContext()}\n\n${text}` : text
       const response = await window.api.session.sendMessage({
         threadId,
