@@ -48,6 +48,11 @@ type PendingChild = {
   provider: SessionProvider
   resolve: (result: SpawnResult) => void
   settled: boolean
+  // The child's latest completed agent message, accumulated from streamed
+  // item/completed events. The turn/completed payload arrives with
+  // itemsView:'notLoaded' (items:[]), so the final answer must be captured from
+  // the stream, not the terminal turn.
+  lastAgentText: string
 }
 
 type ProviderSelector = (model: string | null | undefined) => SessionProvider
