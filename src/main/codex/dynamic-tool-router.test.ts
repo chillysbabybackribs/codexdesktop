@@ -197,6 +197,35 @@ test('dynamic tool router returns a standalone data URI for app screenshots', as
   }])
 })
 
+test('dynamic tool router returns a standalone data URI for browser screenshots', async () => {
+  const browserAgent = withTurnRunner({
+    captureScreenshot: async () => ({
+      ok: true,
+      result: {
+        screenshot: {
+          artifactPath: '/tmp/browser-tab.png',
+          fileName: 'browser-tab.png',
+          mediaType: 'image/png',
+          bytes: 42,
+          width: 800,
+          height: 600
+        }
+      }
+    }),
+    readScreenshotDataUrl: async () => 'data:image/png;base64,def'
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,def'
+  }])
+})
+
 test('dynamic tool router preserves screenshot errors as text', async () => {
   const browserAgent = withTurnRunner({
     captureAppScreenshot: async () => ({ ok: false, error: 'capture unavailable' })
@@ -211,8 +240,6 @@ test('dynamic tool router preserves screenshot errors as text', async () => {
     type: 'inputText',
     text: JSON.stringify({ ok: false, error: 'capture unavailable' })
   }])
-})
-  }
 })
 
 test('dynamic browser calls carry their exact owning turn', async () => {
