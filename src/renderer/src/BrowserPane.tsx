@@ -52,31 +52,78 @@ export function BrowserPane({
 
 function TabStrip({ state }: { state: BrowserState }): React.JSX.Element {
   return (
-    <div className="tab-strip">
-      {state.tabs.map((tab) => (
-        <button type="button" key={tab.id} className={`tab ${tab.id === state.activeTabId ? 'is-active' : ''}`} onClick={() => void window.api.browser.activateTab(tab.id)}>
-          <TabFavicon favicon={tab.favicon} isLoading={tab.isLoading} />
-          <span className="tab-title">{tab.title || 'New Tab'}</span>
-          <span
-            role="button"
-            tabIndex={0}
-            className="tab-close"
-            aria-label={`Close ${tab.title || 'tab'}`}
-            onClick={(event) => { event.stopPropagation(); void window.api.browser.closeTab(tab.id) }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.stopPropagation()
-                void window.api.browser.closeTab(tab.id)
-              }
-            }}
-          >
-            <CloseIcon />
-          </span>
-        </button>
-      ))}
+    <div className="tab-strip" role="tablist" aria-label="Open tabs">
+      {/* Own flex track so tabs compress/clip here and the + button (a sibling
+          with flex:0 0) can never be pushed off the strip. */}
+      <div className="tab-list">
+        {state.tabs.map((tab) => {
+          const active = tab.id === state.activeTabId
+          const label = tab.title || 'New Tab'
+          return (
+            <div
+              key={tab.id}
+              role="tab"
+              aria-selected={active}
+              tabIndex={0}
+              title={label}
+              className={`tab ${active ? 'is-active' : ''}`}
+              onClick={() => void window.api.browser.activateTab(tab.id)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  void window.api.browser.activateTab(tab.id)
+                }
+              }}
+              onAuxClick={(event) => {
+                // Middle-click closes, as in every mainstream browser.
+                if (event.button === 1) {
+                  event.preventDefault()
+                  void window.api.browser.closeTab(tab.id)
+                }
+              }}
+            >
+              <TabFavicon favicon={tab.favicon} isLoading={tab.isLoading} />
+              <span className="tab-title">{label}</span>
+              {/* A real <button>, not a role-span inside a button — valid
+                  interactive nesting and native keyboard/AT behavior. */}
+              <button
+                type="button"
+                className="tab-close"
+                aria-label={`Close ${label}`}
+                onClick={(event) => { event.stopPropagation(); void window.api.browser.closeTab(tab.id) }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+          )
+        })}
+      </div>
       <button type="button" className="new-tab-button" aria-label="New tab" onClick={() => void window.api.browser.newTab()}><PlusIcon /></button>
     </div>
   )
+}
+
+// Unfocused address readout: lead with the security posture and the site
+// identity (hostname), demote the path. Raw URLs are for editing, not reading.
+function omniboxIdentity(
+  rawUrl: string
+): { kind: 'web' | 'file' | 'other'; secure: boolean; host: string; rest: string } | null {
+  if (!rawUrl) return null
+  let url: URL
+  try {
+    url = new URL(rawUrl)
+  } catch {
+    return null
+  }
+  if (url.protocol === 'http:' || url.protocol === 'https:') {
+    const host = url.hostname.replace(/^www\./, '')
+    const rest = (url.pathname === '/' ? '' : url.pathname) + url.search + url.hash
+    return { kind: 'web', secure: url.protocol === 'https:', host, rest }
+  }
+  if (url.protocol === 'file:') {
+    return { kind: 'file', secure: false, host: 'Local file', rest: url.pathname }
+  }
+  return { kind: 'other', secure: false, host: rawUrl, rest: '' }
 }
 
 function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading: boolean }): React.JSX.Element {
