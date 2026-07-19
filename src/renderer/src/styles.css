@@ -658,14 +658,13 @@ button {
   padding: 0;
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 12px;
-  /* A deeper graphite surface keeps the history palette distinct from the
-     chat canvas without making the blue active-thread signal feel louder. */
-  background: rgb(20 21 24 / 98.5%);
+  /* A near-black neutral canvas keeps blue reserved for active/focused state. */
+  background: rgb(14 14 15 / 99.25%);
   box-shadow:
     0 0 0 1px rgb(0 0 0 / 52%),
     0 14px 32px -14px rgb(0 0 0 / 68%),
     0 28px 64px -24px rgb(0 0 0 / 72%);
-  backdrop-filter: blur(20px) saturate(125%);
+  backdrop-filter: blur(18px) saturate(100%);
   transform: translateX(-50%);
   transform-origin: top center;
   overflow: hidden;
