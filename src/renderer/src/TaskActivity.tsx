@@ -3,7 +3,8 @@ import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/session-protocol'
 import type { ThreadItem } from '../../shared/session-protocol'
 import type { WebSearchAction } from '../../shared/session-protocol'
-import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
+import { parseUnifiedDiff, type DiffLine, type DiffSegment, type TurnDiffSummary } from './diff'
+import { langForPath, useLineTokens, type ThemedToken } from './highlight'
 import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
 import { latestItemProgress, workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
 import { browserLinkComponents } from './MarkdownContent'
@@ -358,6 +359,12 @@ const ClockIcon = (): React.JSX.Element => (
   <Icon>
     <circle cx="12" cy="12" r="8.2" />
     <path d="M12 7.5V12l3 2" />
+  </Icon>
+)
+
+const ChevronDownIcon = ({ className }: { className?: string }): React.JSX.Element => (
+  <Icon className={className}>
+    <path d="m6.5 9.5 5.5 5.5 5.5-5.5" />
   </Icon>
 )
 

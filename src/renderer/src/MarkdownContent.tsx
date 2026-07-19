@@ -94,7 +94,26 @@ const markdownComponents: Components = {
   pre: ({ children, ...props }) => {
     const child = Children.toArray(children)[0]
     if (isValidElement(child) && child.type === ChartBlock) return child
-    return <pre {...props}>{children}</pre>
+
+    const codeProps = isValidElement<{ className?: string; children?: React.ReactNode }>(child) ? child.props : null
+    const language = codeProps?.className?.match(/language-([\w-]+)/)?.[1]
+    const value = String(codeProps?.children ?? '').replace(/\n$/, '')
+
+    // Chart fences render as ChartBlock from the code component — skip the
+    // pre wrapper entirely so the figure isn't nested in a code frame.
+    if ((language === 'chart' || language === 'graph') && parseChartConfig(value)) return <>{children}</>
+
+    if (!language) return <pre {...props}>{children}</pre>
+
+    return (
+      <div className="code-block">
+        <div className="code-block-head">
+          <span className="code-block-lang">{language}</span>
+          <CopyCodeButton text={value} />
+        </div>
+        <pre {...props}>{children}</pre>
+      </div>
+    )
   },
   code: ({ children, className, ...props }) => {
     const language = className?.match(/language-([\w-]+)/)?.[1]
@@ -103,12 +122,65 @@ const markdownComponents: Components = {
 
     if (config) return <ChartBlock config={config} />
 
+    if (language) return <HighlightedCode value={value} language={language} className={className} />
+
     return (
       <code className={className} {...props}>
         {children}
       </code>
     )
   }
+}
+
+// Fenced code with Shiki tokens; falls back to plain text until the
+// highlighter (or the fence's grammar) finishes loading.
+function HighlightedCode({
+  value,
+  language,
+  className
+}: {
+  value: string
+  language: string
+  className?: string
+}): React.JSX.Element {
+  const tokens = useHighlightTokens(value, resolveLang(language))
+
+  if (!tokens) {
+    return <code className={className}>{value}</code>
+  }
+
+  return (
+    <code className={className}>
+      {tokens.map((line, lineIndex) => (
+        <Fragment key={lineIndex}>
+          {line.map((token, tokenIndex) => (
+            <span key={tokenIndex} style={token.color ? { color: token.color } : undefined}>
+              {token.content}
+            </span>
+          ))}
+          {lineIndex < tokens.length - 1 ? '\n' : null}
+        </Fragment>
+      ))}
+    </code>
+  )
+}
+
+function CopyCodeButton({ text }: { text: string }): React.JSX.Element {
+  const [copied, setCopied] = useState(false)
+
+  return (
+    <button
+      type="button"
+      className="code-copy"
+      onClick={() => {
+        void navigator.clipboard.writeText(text)
+        setCopied(true)
+        window.setTimeout(() => setCopied(false), 1600)
+      }}
+    >
+      {copied ? 'Copied' : 'Copy'}
+    </button>
+  )
 }
 
 function parseChartConfig(value: string): ChartConfig | null {
