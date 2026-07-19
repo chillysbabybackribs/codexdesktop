@@ -5434,8 +5434,8 @@ button {
 
 .browser-toolbar {
   display: grid;
-  /* back, forward, reload, omnibox, find, mute, vpn, zoom, fullscreen */
-  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px 32px auto 32px;
+  /* back, forward, reload, omnibox, overflow menu */
+  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px;
   position: relative;
   align-items: center;
   gap: 4px;
@@ -5451,12 +5451,32 @@ button {
   color: #dcdcdc;
 }
 
-.browser-nav-button.vpn-toggle.is-connecting svg {
+/* VPN state indicator on the overflow menu button: the toggle itself lives in
+   the dropdown, but on/connecting/error stay visible at a glance. */
+.browser-menu-button {
+  position: relative;
+}
+
+.browser-menu-button[data-vpn='on']::after,
+.browser-menu-button[data-vpn='starting']::after,
+.browser-menu-button[data-vpn='error']::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #63b57f;
+}
+
+.browser-menu-button[data-vpn='starting']::after {
+  background: #cfa055;
   animation: vpn-connecting-pulse 1.2s ease-in-out infinite;
 }
 
-.browser-nav-button.vpn-toggle.is-error {
-  color: #c96a6a;
+.browser-menu-button[data-vpn='error']::after {
+  background: #c96a6a;
 }
 
 @keyframes vpn-connecting-pulse {

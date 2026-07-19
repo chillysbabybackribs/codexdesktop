@@ -359,7 +359,8 @@ function BrowserToolbar({
       <button
         ref={menuButtonRef}
         type="button"
-        className={`browser-nav-button vpn-toggle ${menuOpen ? 'is-active' : ''} ${vpn.state === 'starting' ? 'is-connecting' : ''} ${vpn.state === 'error' ? 'is-error' : ''}`}
+        className={`browser-nav-button browser-menu-button ${menuOpen ? 'is-active' : ''}`}
+        data-vpn={vpn.state}
         aria-label="Browser menu"
         aria-haspopup="menu"
         aria-expanded={menuOpen}
