@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  auditBriefMarkdown,
   auditSummaryLabel,
   buildAuditPrompt,
   isAuditPrompt,
@@ -124,6 +125,18 @@ test('parseAuditPrompt drops the "and N more" placeholder from the clipped file 
   // Only the 6 shown paths are recoverable from prose; "and 2 more" is not a path.
   assert.deepEqual(parsed.files, ['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts', 'f.ts'])
   assert.equal(auditSummaryLabel(parsed.files), 'a.ts +5 more')
+})
+
+test('auditBriefMarkdown renders the briefing as sectioned markdown', () => {
+  const md = auditBriefMarkdown({
+    userText: 'fix the tests',
+    files: ['a.ts', 'b.ts'],
+    steps: ['$ npm test (exit 1)', 'edited: a.ts']
+  })
+  assert.match(md, /## Request\n\nfix the tests/)
+  assert.match(md, /## Changed files\n\n- `a\.ts`\n- `b\.ts`/)
+  assert.match(md, /## Steps\n\n1\. `\$ npm test \(exit 1\)`\n2\. `edited: a\.ts`/)
+  assert.equal(auditBriefMarkdown({ userText: '', files: [], steps: [] }), '_No details captured._')
 })
 
 test('liveTurnGlance reports true counts and the genuinely-latest step, uncapped', () => {
