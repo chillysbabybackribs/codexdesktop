@@ -630,7 +630,7 @@ async function routeModelBrowserTool(params, context) {
       maxResultChars: clampNumber(args.maxResultChars, 20_000, 1_000, 100_000)
     })
     if (response.url && !context.scenario.matchesUrl(response.url)) {
-      throw new Error(`Browser target left Reddit notifications: ${response.url}`)
+      throw new Error(`Browser target left ${context.scenario.pageLabel}: ${response.url}`)
     }
     return hostToolResponse(response)
   }

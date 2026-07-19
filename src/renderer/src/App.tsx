@@ -486,66 +486,29 @@ export default function App(): React.JSX.Element {
     }))
   }
 
-  function captureActiveMainChatSnapshot(): void {
+  function flushActiveMainChatSession(): void {
+    // Every active-path write already lands in the session store live; only
+    // rAF-batched item mutations can still be pending when the active key is
+    // about to change, and they must land under the OLD key.
     flushPendingItemMutations()
-    const key = activeMainChatTabKeyRef.current
-    sessionStoreRef.current.set(key, {
-      threadId: activeThreadIdRef.current,
-      title: activeThreadTitleRef.current,
-      turnId: activeTurnIdRef.current,
-      goal: cloneGoal(activeGoalRef.current),
-      reasoningEffort: activeReasoningEffortRef.current,
-      items: itemsRef.current,
-      itemMeta: itemMetaRef.current,
-      turnMeta: turnMetaRef.current,
-      contextUsage: contextUsageRef.current,
-      isCompacting,
-      activeCompaction: activeCompactionRef.current ? { ...activeCompactionRef.current } : null,
-      precedingModelInputByTurn: new Map(precedingModelInputByTurnRef.current),
-      pendingCompactionByTurn: new Set(pendingCompactionByTurnRef.current)
-    })
   }
 
-  function applyMainChatSnapshot(tab: MainChatTab, snapshot?: MainChatSnapshot): void {
-    const threadId = snapshot?.threadId ?? tab.threadId
-    const title = snapshot?.title ?? tab.title
-    const turnId = snapshot?.turnId ?? tab.turnId
-    const nextItems = snapshot?.items ?? []
-    const nextItemMeta = snapshot?.itemMeta ?? {}
-    const nextTurnMeta = snapshot?.turnMeta ?? {}
-    const nextGoal = cloneGoal(snapshot?.goal ?? null)
-    const nextEffort = snapshot?.reasoningEffort ?? null
-    const nextUsage = snapshot?.contextUsage ?? null
-
+  function focusMainChatTab(tab: MainChatTab, session?: SessionRenderState): void {
+    // Tab-scoped composer selections project into the composer.
     selectedModelRef.current = tab.model
     selectedReasoningEffortRef.current = tab.reasoningEffort
-
-    watchThreadIdRef.current = threadId
-    activeThreadIdRef.current = threadId
-    activeThreadTitleRef.current = title
-    activeTurnIdRef.current = turnId
-    activeGoalRef.current = nextGoal
-    activeReasoningEffortRef.current = nextEffort
-    itemsRef.current = nextItems
-    itemMetaRef.current = nextItemMeta
-    turnMetaRef.current = nextTurnMeta
-    contextUsageRef.current = nextUsage
-    activeCompactionRef.current = snapshot?.activeCompaction ? { ...snapshot.activeCompaction } : null
-    precedingModelInputByTurnRef.current = new Map(snapshot?.precedingModelInputByTurn ?? [])
-    pendingCompactionByTurnRef.current = new Set(snapshot?.pendingCompactionByTurn ?? [])
-
-    setActiveThreadId(threadId)
-    setActiveThreadTitle(title)
-    setActiveTurnId(turnId)
-    setActiveGoal(nextGoal)
-    setActiveReasoningEffort(nextEffort)
     setSelectedModel(tab.model)
     setSelectedReasoningEffort(tab.reasoningEffort)
-    setItems(nextItems)
-    setItemMeta(nextItemMeta)
-    setTurnMeta(nextTurnMeta)
-    setContextUsage(nextUsage)
-    setIsCompacting(snapshot?.isCompacting ?? false)
+    // Route notifications for this tab's thread to the focused view even
+    // before the session learns its threadId from hydration.
+    watchThreadIdRef.current = session?.threadId ?? tab.threadId
+    // Header continuity for uncached tabs. A title-only session never reads
+    // as cached, because hydration keys off the session's threadId.
+    if (!session && tab.title) {
+      sessionStoreRef.current.update(tab.key, (current) =>
+        current.title === tab.title ? current : { ...current, title: tab.title }
+      )
+    }
     setIsGoalUpdating(false)
   }
 
@@ -1107,7 +1070,7 @@ export default function App(): React.JSX.Element {
 
   const handleNewMainChatTab = (): boolean => {
     if (isMainChatTransitionLocked() || mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false
-    captureActiveMainChatSnapshot()
+    flushActiveMainChatSession()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
     const tab = createMainChatTab(
@@ -1118,7 +1081,7 @@ export default function App(): React.JSX.Element {
       selectedReasoningEffortRef.current
     )
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }))
-    applyMainChatSnapshot(tab)
+    focusMainChatTab(tab)
     persistLastThreadId(null)
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus())
     return true
@@ -1130,7 +1093,7 @@ export default function App(): React.JSX.Element {
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
     if (!target) return false
 
-    captureActiveMainChatSnapshot()
+    flushActiveMainChatSession()
     cancelAutoRecovery()
     setIsThreadMenuOpen(false)
     updateMainChatTabs((state) => ({
@@ -1140,7 +1103,7 @@ export default function App(): React.JSX.Element {
       activeKey: key
     }))
     const snapshot = sessionStoreRef.current.peek(key)
-    applyMainChatSnapshot(target, snapshot)
+    focusMainChatTab(target, snapshot)
     persistLastThreadId(target.threadId)
 
     if (needsMainChatTabHydration(target, snapshot?.threadId)) {
@@ -1165,7 +1128,7 @@ export default function App(): React.JSX.Element {
     const closing = current.tabs.find((tab) => tab.key === key)
     if (!closing || closing.status === 'working') return
     const wasActive = current.activeKey === key
-    if (wasActive) captureActiveMainChatSnapshot()
+    if (wasActive) flushActiveMainChatSession()
     const next = closeMainChatTab(current, key, () => crypto.randomUUID())
     sessionStoreRef.current.remove(key)
     discardComposerDraft(key)
@@ -1179,7 +1142,7 @@ export default function App(): React.JSX.Element {
     cancelAutoRecovery()
     const target = next.tabs.find((tab) => tab.key === next.activeKey) ?? next.tabs[0]
     const snapshot = sessionStoreRef.current.peek(target.key)
-    applyMainChatSnapshot(target, snapshot)
+    focusMainChatTab(target, snapshot)
     persistLastThreadId(target.threadId)
     if (needsMainChatTabHydration(target, snapshot?.threadId)) {
       reconcilingMainChatTabKeyRef.current = target.key
@@ -1218,7 +1181,7 @@ export default function App(): React.JSX.Element {
           selectedReasoningEffortRef.current
         )
 
-    captureActiveMainChatSnapshot()
+    flushActiveMainChatSession()
     const previousSnapshot = sessionStoreRef.current.peek(previousState.activeKey)
     if (reuseCurrent) sessionStoreRef.current.remove(target.key)
     updateMainChatTabs((state) => ({
@@ -1227,7 +1190,7 @@ export default function App(): React.JSX.Element {
         : [...state.tabs, target],
       activeKey: target.key
     }))
-    applyMainChatSnapshot(target)
+    focusMainChatTab(target)
     reconcilingMainChatTabKeyRef.current = target.key
     setReconcilingMainChatTabKey(target.key)
     setIsRestoring(true)
@@ -1250,7 +1213,7 @@ export default function App(): React.JSX.Element {
       }))
       const previousTab = previousState.tabs.find((tab) => tab.key === previousState.activeKey)
       if (previousTab) {
-        applyMainChatSnapshot(previousTab, previousSnapshot)
+        focusMainChatTab(previousTab, previousSnapshot)
         persistLastThreadId(previousTab.threadId)
       }
       return false
