@@ -5,6 +5,7 @@ import {
   createMainChatTab,
   needsMainChatTabHydration,
   parseMainChatTabState,
+  reorderMainChatTabs,
   serializeMainChatTabState
 } from './main-chat-tabs.ts'
 
@@ -76,6 +77,31 @@ test('closing the only tab leaves a fresh usable tab', () => {
     activeKey: 'tab-new',
     tabs: [createMainChatTab('tab-new')]
   })
+})
+
+test('reorders open tabs while keeping the active tab stable', () => {
+  const state = {
+    activeKey: 'tab-b',
+    tabs: [createMainChatTab('tab-a'), createMainChatTab('tab-b'), createMainChatTab('tab-c')]
+  }
+
+  const movedAfter = reorderMainChatTabs(state, 'tab-a', 'tab-c', 'after')
+  assert.deepEqual(movedAfter.tabs.map((tab) => tab.key), ['tab-b', 'tab-c', 'tab-a'])
+  assert.equal(movedAfter.activeKey, 'tab-b')
+
+  const movedBefore = reorderMainChatTabs(movedAfter, 'tab-a', 'tab-b', 'before')
+  assert.deepEqual(movedBefore.tabs.map((tab) => tab.key), ['tab-a', 'tab-b', 'tab-c'])
+})
+
+test('leaves tab state unchanged when a reorder target is invalid', () => {
+  const state = {
+    activeKey: 'tab-a',
+    tabs: [createMainChatTab('tab-a'), createMainChatTab('tab-b')]
+  }
+
+  assert.equal(reorderMainChatTabs(state, 'missing', 'tab-b', 'before'), state)
+  assert.equal(reorderMainChatTabs(state, 'tab-a', 'missing', 'after'), state)
+  assert.equal(reorderMainChatTabs(state, 'tab-a', 'tab-a', 'before'), state)
 })
 
 test('cached running tabs keep their live transcript instead of rehydrating', () => {

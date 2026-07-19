@@ -149,6 +149,29 @@ export function closeMainChatTab(
   return { tabs, activeKey: next.key }
 }
 
+export function reorderMainChatTabs(
+  state: MainChatTabState,
+  sourceKey: string,
+  targetKey: string,
+  placement: 'before' | 'after'
+): MainChatTabState {
+  if (sourceKey === targetKey) return state
+
+  const source = state.tabs.find((tab) => tab.key === sourceKey)
+  if (!source || !state.tabs.some((tab) => tab.key === targetKey)) return state
+
+  const withoutSource = state.tabs.filter((tab) => tab.key !== sourceKey)
+  const targetIndex = withoutSource.findIndex((tab) => tab.key === targetKey)
+  const insertAt = placement === 'before' ? targetIndex : targetIndex + 1
+  const tabs = [
+    ...withoutSource.slice(0, insertAt),
+    source,
+    ...withoutSource.slice(insertAt)
+  ]
+
+  return { ...state, tabs }
+}
+
 export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab | null {
   return tabs.find((tab) => tab.threadId === threadId) ?? null
 }

@@ -102,6 +102,7 @@ import {
   maxMainChatTabs,
   needsMainChatTabHydration,
   parseMainChatTabState,
+  reorderMainChatTabs,
   serializeMainChatTabState,
   tabForThread,
   type MainChatTab,
@@ -484,6 +485,14 @@ export default function App(): React.JSX.Element {
       ...state,
       tabs: state.tabs.map((tab) => tab.key === key ? update(tab) : tab)
     }))
+  }
+
+  function handleReorderMainChatTabs(
+    sourceKey: string,
+    targetKey: string,
+    placement: 'before' | 'after'
+  ): void {
+    updateMainChatTabs((state) => reorderMainChatTabs(state, sourceKey, targetKey, placement))
   }
 
   function mainChatTabForThread(threadId: string): MainChatTab | null {
@@ -2627,6 +2636,7 @@ export default function App(): React.JSX.Element {
           activeMainChatTabKey={activeMainChatTabKey}
           mainChatTabsDisabled={isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)}
           onSelectMainChatTab={handleSelectMainChatTab}
+          onReorderMainChatTabs={handleReorderMainChatTabs}
           onCloseMainChatTab={handleCloseMainChatTab}
           onNewMainChatTab={handleNewMainChatTab}
           items={items}
@@ -2902,6 +2912,7 @@ function ChatPane({
   activeMainChatTabKey,
   mainChatTabsDisabled,
   onSelectMainChatTab,
+  onReorderMainChatTabs,
   onCloseMainChatTab,
   onNewMainChatTab,
   items,
@@ -2968,6 +2979,7 @@ function ChatPane({
   activeMainChatTabKey: string
   mainChatTabsDisabled: boolean
   onSelectMainChatTab: (key: string) => Promise<boolean>
+  onReorderMainChatTabs: (sourceKey: string, targetKey: string, placement: 'before' | 'after') => void
   onCloseMainChatTab: (key: string) => Promise<void>
   onNewMainChatTab: () => void
   items: ChatItem[]
@@ -3204,6 +3216,7 @@ function ChatPane({
         activeKey={activeMainChatTabKey}
         disabled={mainChatTabsDisabled}
         onSelect={onSelectMainChatTab}
+        onReorder={onReorderMainChatTabs}
         onClose={onCloseMainChatTab}
         onNew={onNewMainChatTab}
         onOpenSettings={() => setIsSettingsOpen(true)}

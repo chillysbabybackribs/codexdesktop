@@ -23,6 +23,7 @@ import type { MemoryStore } from '../memory-store.js'
 import type { AttachmentStore } from '../attachment-store.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
 import type { SessionProvider } from '../providers/session-provider.js'
+import { ClaudeProvider } from '../providers/claude-provider.js'
 import type { ProviderId } from '../../shared/session-protocol/provider.js'
 
 export function registerSessionIpc(
@@ -34,38 +35,52 @@ export function registerSessionIpc(
   checkpointStore: TurnCheckpointStore | null = null
 ): CodexClient {
   const client = new CodexClient(browserAgent, researchRunner, checkpointStore)
-  // Provider registry (Claude-prep step 4): every session:* handler below
-  // resolves its provider through this map. Single-entry today; a Claude
-  // adapter registers here and inherits the entire IPC surface. Multi-provider
-  // payload routing (provider field on requests) lands with adapter #2.
-  const providers = new Map<ProviderId, SessionProvider>([[client.id, client]])
-  const resolveProvider = (id?: ProviderId): SessionProvider => providers.get(id ?? 'codex') ?? client
-  void resolveProvider
+  const claude = new ClaudeProvider(checkpointStore)
+  // Provider registry (Claude-prep step 4, populated by the adapter build):
+  // routing is by thread-id prefix for existing threads (`claude-…`) and by
+  // model-id prefix for new ones, so the ModelPill selection alone decides the
+  // runtime and every downstream surface (store, cache, checkpoints, dock)
+  // works unchanged.
+  const providers = new Map<ProviderId, SessionProvider>([
+    [client.id, client],
+    [claude.id, claude]
+  ])
+  const byThread = (threadId?: string | null): SessionProvider =>
+    threadId?.startsWith('claude-') ? claude : client
+  const forNewThread = (model?: string | null): SessionProvider =>
+    model?.startsWith('claude') ? claude : client
+  void providers
 
-  client.on('event', (event: SessionEvent) => {
-    getWindow()?.webContents.send(ipcChannels.sessionEvent, event)
-  })
+  for (const provider of [client, claude]) {
+    provider.on('event', (event: SessionEvent) => {
+      getWindow()?.webContents.send(ipcChannels.sessionEvent, event)
+    })
+  }
 
   ipcMain.handle(ipcChannels.sessionGetAuthStatus, () => client.getAuthStatus())
-  ipcMain.handle(ipcChannels.sessionListModels, () => client.listModels())
+  ipcMain.handle(ipcChannels.sessionListModels, async () => {
+    const [codexModels, claudeModels] = await Promise.all([client.listModels(), claude.listModels()])
+    return [...codexModels, ...claudeModels]
+  })
   ipcMain.handle(ipcChannels.sessionListThreads, (_event, params?: CodexListThreadsParams) =>
     client.listThreads(params)
   )
   ipcMain.handle(ipcChannels.sessionStartThread, (_event, params?: CodexStartThreadParams) =>
-    client.startThread(params?.cwd, params?.model)
+    forNewThread(params?.model).startThread(params?.cwd, params?.model)
   )
   ipcMain.handle(ipcChannels.sessionResumeThread, (_event, params: CodexResumeThreadParams) =>
-    client.resumeThread(params.threadId, params.history)
+    byThread(params.threadId).resumeThread(params.threadId, params.history)
   )
   ipcMain.handle(ipcChannels.sessionListThreadTurns, (_event, params: CodexListThreadTurnsParams) =>
-    client.listThreadTurns(params)
+    byThread(params.threadId).listThreadTurns(params)
   )
-  ipcMain.handle(ipcChannels.sessionGetGoal, (_event, threadId: string) => client.getGoal(threadId))
-  ipcMain.handle(ipcChannels.sessionSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
-  ipcMain.handle(ipcChannels.sessionClearGoal, (_event, threadId: string) => client.clearGoal(threadId))
+  ipcMain.handle(ipcChannels.sessionGetGoal, (_event, threadId: string) => byThread(threadId).getGoal(threadId))
+  ipcMain.handle(ipcChannels.sessionSetGoal, (_event, params: CodexSetGoalParams) => byThread(params.threadId).setGoal(params))
+  ipcMain.handle(ipcChannels.sessionClearGoal, (_event, threadId: string) => byThread(threadId).clearGoal(threadId))
   ipcMain.handle(ipcChannels.sessionSendMessage, async (_event, params: CodexSendMessageParams) => {
     const attachments = await attachmentStore.verify(params.attachments ?? [])
-    return client.sendMessage(
+    const provider = params.threadId ? byThread(params.threadId) : forNewThread(params.model)
+    return provider.sendMessage(
       params.threadId,
       params.text,
       params.cwd,
@@ -76,16 +91,16 @@ export function registerSessionIpc(
     )
   })
   ipcMain.handle(ipcChannels.sessionSteerTurn, (_event, params: CodexSteerTurnParams) =>
-    client.steerTurn(params.threadId, params.turnId, params.text)
+    byThread(params.threadId).steerTurn(params.threadId, params.turnId, params.text)
   )
   ipcMain.handle(ipcChannels.sessionInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
-    client.interruptTurn(params.threadId, params.turnId)
+    byThread(params.threadId).interruptTurn(params.threadId, params.turnId)
   )
   ipcMain.handle(ipcChannels.sessionCompactThread, (_event, threadId: string) =>
-    client.compactThread(threadId)
+    byThread(threadId).compactThread(threadId)
   )
   ipcMain.handle(ipcChannels.sessionUnsubscribeThread, (_event, threadId: string) =>
-    client.unsubscribeThread(threadId)
+    byThread(threadId).unsubscribeThread(threadId)
   )
   ipcMain.handle(ipcChannels.sessionListInstalledPlugins, (_event, params?: CodexPluginQueryParams) =>
     client.listInstalledPlugins(params?.cwd)
