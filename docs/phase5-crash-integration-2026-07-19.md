@@ -23,10 +23,26 @@ Verified: focused RPC coverage (10 tests), full suite (344 tests), production
 build, and a disposable Electron launch/shutdown smoke all passed. The
 verification profile and browser-control socket were removed after shutdown.
 
+## Increment 2 — lifecycle golden coverage (landed)
+
+`src/main/lifecycle-golden.test.ts` composes the production boundaries that
+previously had only component-level coverage:
+
+- app-server process + RPC restart: an incomplete response from a crashed
+  process rejects stale work, then the replacement process resumes cleanly;
+- dynamic tool router + turn-owned browser queue: cancelling a turn while its
+  browser call is queued prevents any execution against the shared tab;
+- keyed session store replay: a background completion remains available under
+  its own session without mutating the focused transcript; and
+- popup target registry + CDP session: close-time cleanup detaches once,
+  releases CDP listeners, and removes the registered target.
+
+The suite is deterministic and uses fakes only at Electron/process edges; the
+ownership, routing, queueing, persistence-model, and cleanup implementations
+under test are the real production code.
+
 ## Remaining
 
 1. Continue the silent-failure sweep across the remaining lifecycle seams.
-2. Add golden/integration coverage for restart, cancellation, background work,
-   and browser ownership.
-3. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
+2. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
    duplicate paths.
