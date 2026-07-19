@@ -50,6 +50,19 @@ test('navigation resolves from useful document readiness before full load', asyn
   assert.equal(contents.stopCalls, 1)
 })
 
+test('manual navigation reaches DOM readiness without evaluating page code', async () => {
+  const contents = new FakeWebContents()
+  const result = await loadPageAndSettle(
+    contents as unknown as WebContents,
+    'https://example.com/manual',
+    { timeoutMs: 1_000, settleDocument: false }
+  )
+
+  assert.equal(result.settleReason, 'dom-ready')
+  assert.equal(result.settleMs, 0)
+  assert.deepEqual(contents.executedPrograms, [])
+})
+
 test('aborting navigation stops the underlying page load', async () => {
   const contents = new FakeWebContents()
   contents.loadURL = (url: string) => {

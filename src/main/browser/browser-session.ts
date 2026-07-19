@@ -9,6 +9,7 @@ export const browserPartition = 'persist:codex-browser'
 
 let cachedBrowserIdentity: BrowserIdentity | null = null
 const browserIdentityPromises = new WeakMap<WebContents, Promise<void>>()
+const watchedBrowserIdentities = new WeakSet<WebContents>()
 
 function browserIdentity(): BrowserIdentity {
   cachedBrowserIdentity ??= buildBrowserIdentity({
@@ -34,21 +35,36 @@ export function ensureBrowserIdentity(webContents: WebContents): Promise<void> {
   if (webContents.isDestroyed()) return Promise.resolve()
   webContents.setUserAgent(chromeLikeUserAgent())
 
+  if (!watchedBrowserIdentities.has(webContents)) {
+    watchedBrowserIdentities.add(webContents)
+    const onDebuggerDetach = (): void => {
+      // DevTools can temporarily replace our debugger client. Retry the native
+      // UA-CH override before the next app-driven navigation.
+      browserIdentityPromises.delete(webContents)
+    }
+    webContents.debugger.on('detach', onDebuggerDetach)
+    webContents.once('destroyed', () => webContents.debugger.off('detach', onDebuggerDetach))
+  }
+
   const existing = browserIdentityPromises.get(webContents)
   if (existing) return existing
 
   const identity = browserIdentity()
-  const ready = withTimeout(
+  let ready: Promise<void>
+  ready = withTimeout(
     cdpSessionFor(webContents).send('Network.setUserAgentOverride', {
       userAgent: identity.userAgent,
       acceptLanguage: identity.acceptLanguage,
       userAgentMetadata: identity.userAgentMetadata
     }),
     2_000
-  ).catch((error) => {
+  ).then(() => undefined).catch((error) => {
     // A closing target or open DevTools client can temporarily own the CDP
     // channel. The clean session/WebContents UA remains the compatibility floor.
     console.warn('Could not apply browser UA Client Hints override', error)
+    if (browserIdentityPromises.get(webContents) === ready) {
+      browserIdentityPromises.delete(webContents)
+    }
   })
   browserIdentityPromises.set(webContents, ready)
   return ready

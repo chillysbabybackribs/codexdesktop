@@ -460,7 +460,7 @@ export class TabManager {
 
     try {
       await ensureBrowserIdentity(tab.view.webContents)
-      if (controller.signal.aborted) throw new DOMException('navigation aborted', 'AbortError')
+      if (controller.signal.aborted) throw new Error('navigation aborted')
       return await loadPageAndSettle(tab.view.webContents, url, {
         timeoutMs: options.timeoutMs ?? 15_000,
         signal: controller.signal,
