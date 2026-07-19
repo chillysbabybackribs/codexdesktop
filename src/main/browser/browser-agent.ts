@@ -1329,7 +1329,7 @@ async function executePageProgram(
   const wrapped = buildWrappedPageProgram(code)
   const selector = frameSelector?.trim()
   if (!selector || selector === 'main') {
-    return unwrapPageProgramResult(await webContents.executeJavaScript(wrapped, true))
+    return requirePageProgramResult(unwrapPageProgramResult(await webContents.executeJavaScript(wrapped, true)))
   }
 
   const mainFrame = webContents.mainFrame
@@ -1339,7 +1339,7 @@ async function executePageProgram(
     const results = await mapWithConcurrency(frames, MAX_PARALLEL_BROWSER_FRAMES, async (frame) => {
       const descriptor = describeFrame(frame, mainFrame)
       try {
-        const result = unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true))
+        const result = requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
         const bounded = boundResult(result, perFrameBudget)
         return {
           frame: descriptor,
@@ -1374,7 +1374,7 @@ async function executePageProgram(
   if (!frame) throw new Error(`no live frame with id ${selector}`)
   return {
     frame: describeFrame(frame, mainFrame),
-    result: unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true))
+    result: requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
   }
 }
 
@@ -1426,6 +1426,15 @@ function unwrapPageProgramResult(value: unknown): unknown {
     ...(typeof pageError.name === 'string' && pageError.name ? { name: pageError.name } : {}),
     ...(typeof pageError.stack === 'string' && pageError.stack ? { stack: pageError.stack } : {})
   })
+}
+
+function requirePageProgramResult(value: unknown): unknown {
+  if (value !== undefined) return value
+  throw operationError(
+    'noResult',
+    'pageScript',
+    'browser_run completed without a result; return the value explicitly from the top-level program'
+  )
 }
 
 function liveFrames(mainFrame: WebFrameMain): WebFrameMain[] {

@@ -138,7 +138,9 @@ const OBJECTIVE_STOP_WORDS = new Set([
   'tell', 'that', 'the', 'this', 'to', 'us', 'want', 'what', 'when', 'where', 'which',
   'who', 'whether', 'with', 'would', 'you', 'your', 'first', 'last',
   'latest', 'recent', 'top', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
-  'eight', 'nine', 'ten'
+  'eight', 'nine', 'ten', 'displayed', 'direct', 'front', 'listed', 'listing',
+  'order', 'ordered', 'preserve', 'preserving', 'rank', 'ranked', 'row', 'rows',
+  'story', 'stories'
 ])
 
 const OBJECTIVE_SYNONYMS: Record<string, string[]> = {
@@ -166,9 +168,13 @@ export function expandPageSnapshotObjectiveTerms(objective: string): ObjectiveTe
   const imperativeRead = /^(?:(?:can|could|would) you\s+|please\s+)?read\b/i.test(objective.trim())
   for (const raw of tokenizeObjective(objective)) {
     if (raw.length <= 1 || OBJECTIVE_STOP_WORDS.has(raw) || /^\d+$/.test(raw) || (raw === 'read' && imperativeRead)) continue
-    const singular = raw.length > 3 && raw.endsWith('s') && !/(ss|us|is)$/.test(raw)
-      ? raw.slice(0, -1)
-      : raw
+    const singular = raw === 'news'
+      ? raw
+      : raw.length > 4 && raw.endsWith('ies')
+        ? `${raw.slice(0, -3)}y`
+        : raw.length > 3 && raw.endsWith('s') && !/(ss|us|is)$/.test(raw)
+          ? raw.slice(0, -1)
+          : raw
     const canonical = OBJECTIVE_CANONICAL.get(raw) ?? OBJECTIVE_CANONICAL.get(singular) ?? singular
     if (seen.has(canonical)) continue
     seen.add(canonical)
