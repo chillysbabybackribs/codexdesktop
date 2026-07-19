@@ -603,7 +603,7 @@ const AgentWindow = memo(function AgentWindow({
                   <small>
                     {session.auditsMain
                       ? 'Reviews every completed main-chat turn'
-                      : 'Second viewpoint on every turn (defaults to Claude)'}
+                      : 'Second viewpoint on every turn · picks a second provider'}
                   </small>
                 </span>
                 <span className={`agent-menu-status ${session.auditsMain ? 'is-active' : ''}`}>
@@ -727,12 +727,10 @@ const AgentWindow = memo(function AgentWindow({
             session.auditsMain ? (
               <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
             ) : (
-              <AgentModeSelector
-                session={session}
-                onToggleWatch={onToggleWatch}
-                onToggleAudit={onToggleAudit}
-                onToggleReport={onToggleReport}
-              />
+              <div className="agent-empty-hint" role="note">
+                Message this agent below — or turn on “Audit main-chat turns” from the
+                title menu to make it a reviewer again.
+              </div>
             )
           ) : (
             messageNodes
