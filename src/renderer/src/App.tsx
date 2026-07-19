@@ -309,10 +309,8 @@ export default function App(): React.JSX.Element {
   const pendingAuditFeedbackRef = useRef(false);
   const userRequestedTurnIdRef = useRef<string | null>(null);
   const optimisticUserMessageIdRef = useRef<string | null>(null);
-  const selectedModelRef = useRef<string | null>(selectedModel);
   const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort);
   const fastModeRef = useRef(fastMode);
-  const modelsRef = useRef<Model[]>(models);
   const workspaceRef = useRef<string | null>(workspace);
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
@@ -3168,6 +3166,7 @@ export default function App(): React.JSX.Element {
           onToggleAuditAgent={handleToggleAuditAgent}
           onToggleReportAgent={handleToggleReportAgent}
           onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+          onDecideAgentSendPolicy={handleDecideSendPolicy}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
           onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
@@ -3629,6 +3628,7 @@ function ChatPane({
   onToggleAuditAgent,
   onToggleReportAgent,
   onSendAuditFeedback,
+  onDecideAgentSendPolicy,
   onSetAgentModel,
   onSetAgentModelEffort,
   onNewAgent,
@@ -3711,6 +3711,7 @@ function ChatPane({
   onToggleAuditAgent: (key: string) => void;
   onToggleReportAgent: (key: string) => void;
   onSendAuditFeedback: (key: string) => void;
+  onDecideAgentSendPolicy: (key: string, policy: 'always' | 'keep') => void;
   onSetAgentModel: (key: string, model: string) => void;
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void;
   onNewAgent: (mainChatTabKey: string) => void;
@@ -4056,6 +4057,7 @@ function ChatPane({
               mainModel={selectedModel}
               mainReasoningEffort={selectedReasoningEffort}
               liveMainTurn={liveMainTurn}
+              isMainFocused={isMainFocused}
               onSetModel={onSetAgentModel}
               onSetModelEffort={onSetAgentModelEffort}
               onSelect={onSelectAgent}
@@ -4067,6 +4069,7 @@ function ChatPane({
               onToggleAudit={onToggleAuditAgent}
               onToggleReport={onToggleReportAgent}
               onSendFeedback={onSendAuditFeedback}
+              onDecideSendPolicy={onDecideAgentSendPolicy}
               onSend={onAgentSend}
               onSteer={onAgentSteer}
               onStop={onAgentStop}
