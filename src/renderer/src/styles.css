@@ -6640,10 +6640,9 @@ button {
 .review-always-keep {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
   border: 1px solid var(--hairline-strong);
   border-radius: 6px;
-  padding: 3px 9px;
+  padding: 3px 8px;
   background: rgb(255 255 255 / 2%);
   color: var(--chrome-fg);
   font-size: 11.5px;
@@ -6668,15 +6667,22 @@ button {
 }
 
 .review-always-keep-mark {
-  width: 9px;
+  width: 0;
+  margin-right: 0;
+  overflow: hidden;
   color: currentColor;
   opacity: 0;
   font-size: 10px;
   line-height: 1;
-  transition: opacity 140ms ease;
+  transition:
+    width 140ms ease,
+    margin-right 140ms ease,
+    opacity 140ms ease;
 }
 
 .review-always-keep.is-active .review-always-keep-mark {
+  width: 9px;
+  margin-right: 4px;
   opacity: 1;
 }
 
