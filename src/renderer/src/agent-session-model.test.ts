@@ -7,13 +7,17 @@ import {
   collapseAdjacentAssistantDuplicates,
   completeAgentMessage,
   createAgentSession,
+  createReviewerSession,
+  defaultReviewerModel,
   latestAuditReport,
   parseAgentDock,
   resetAgentSession,
+  reviewerTitle,
   serializeAgentDock,
   stripMainChatContext,
   updateAgentSession
 } from './agent-session-model.ts'
+import type { Model } from '../../shared/session-protocol'
 
 test('agent session updates preserve unrelated sessions', () => {
   const first = createAgentSession('one', 'Agent 2')
@@ -127,6 +131,7 @@ test('agent dock persistence keeps only durable metadata', () => {
       watchesMain: true,
       auditsMain: false,
       reportsToMain: false,
+      sendPolicyDecided: false,
       model: 'gpt-5',
       reasoningEffort: 'high',
       open: true,
@@ -134,6 +139,61 @@ test('agent dock persistence keeps only durable metadata', () => {
     }]
   })
   assert.equal(parseAgentDock('{broken'), null)
+})
+
+test('new agents are born reviewers: audit armed, send policy undecided', () => {
+  const session = createReviewerSession('one', 'Reviewer', 'tab-a', 'claude-default')
+  assert.equal(session.auditsMain, true)
+  assert.equal(session.reportsToMain, false)
+  assert.equal(session.sendPolicyDecided, false)
+  assert.equal(session.model, 'claude-default')
+  assert.equal(session.mainChatTabKey, 'tab-a')
+})
+
+test('reviewer titles count per owning tab', () => {
+  const sessions = [
+    createReviewerSession('a', 'Reviewer', 'tab-a', null),
+    createReviewerSession('b', 'Reviewer 2', 'tab-a', null),
+    { ...createAgentSession('c', 'Research', 'tab-a'), title: 'Research' },
+    createReviewerSession('d', 'Reviewer', 'tab-b', null)
+  ]
+  assert.equal(reviewerTitle(sessions, 'tab-a'), 'Reviewer 3')
+  assert.equal(reviewerTitle(sessions, 'tab-b'), 'Reviewer 2')
+  assert.equal(reviewerTitle(sessions, 'tab-c'), 'Reviewer')
+})
+
+const model = (id: string, providerId: string | undefined, extra: Record<string, unknown> = {}): Model =>
+  ({ id, model: id, providerId, hidden: false, isDefault: false, ...extra }) as unknown as Model
+
+test('reviewer model defaults cross-family in both pairing directions', () => {
+  const models = [
+    model('gpt-5', 'codex', { isDefault: true }),
+    model('gpt-5-mini', 'codex'),
+    model('claude-default', 'claude'),
+    model('claude:opus', 'claude')
+  ]
+  // Codex doer → claude reviewer (account default preferred).
+  assert.equal(defaultReviewerModel('gpt-5', models), 'claude-default')
+  // Null main model means the CLI default (codex) → still cross-family.
+  assert.equal(defaultReviewerModel(null, models), 'claude-default')
+  // Claude doer → codex reviewer (catalog default preferred).
+  assert.equal(defaultReviewerModel('claude:opus', models), 'gpt-5')
+})
+
+test('reviewer model derivation respects hidden models and single-provider setups', () => {
+  const single = [model('gpt-5', 'codex', { isDefault: true }), model('gpt-5-mini', 'codex')]
+  // One family only: null — the agent follows the main chat's model.
+  assert.equal(defaultReviewerModel('gpt-5', single), null)
+
+  const hiddenOther = [
+    model('gpt-5', 'codex'),
+    model('claude:opus', 'claude', { hidden: true })
+  ]
+  assert.equal(defaultReviewerModel('gpt-5', hiddenOther), null)
+
+  // Models without providerId count as codex (the host runtime).
+  const legacy = [model('gpt-5', undefined), model('claude-default', 'claude')]
+  assert.equal(defaultReviewerModel('gpt-5', legacy), 'claude-default')
 })
 
 test('main chat context is removed from restored helper messages', () => {
