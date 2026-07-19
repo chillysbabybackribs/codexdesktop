@@ -3606,6 +3606,10 @@ button {
   padding: 0 2px;
 }
 
+.composer-model-context {
+  justify-content: flex-start;
+}
+
 .composer-new-agent-button {
   display: inline-grid;
   flex: 0 0 auto;

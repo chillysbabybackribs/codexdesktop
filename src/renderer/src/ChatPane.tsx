@@ -389,10 +389,9 @@ export function ChatPane({
     onSelectModelEffort(model, effort);
   };
 
-  const paneComposerContext = (tabKey: string, tab: MainChatTab | null, isActivePane: boolean) => (
-    <div className="composer-context">
-      {isActivePane ? <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} /> : null}
-      {models.length ? (
+  const paneComposerModelContext = (tabKey: string, tab: MainChatTab | null) =>
+    models.length ? (
+      <div className="composer-context composer-model-context">
         <ModelPill
           models={models}
           selectedModel={tab?.model ?? null}
@@ -404,27 +403,29 @@ export function ChatPane({
           fastMode={fastMode}
           onToggleFastMode={onSetFastMode}
         />
-      ) : null}
-      {isActivePane ? (
-        <>
-          <AgentTabStrip
-            sessions={activeAgentSessions}
-            openKeys={openAgentKeys}
-            onFocus={focusAgent}
-          />
-          <button
-            type="button"
-            className="composer-new-agent-button"
-            aria-label="New agent"
-            title="New agent"
-            onClick={() => onNewAgent(activeMainChatTabKey)}
-          >
-            <NewAgentIcon />
-          </button>
-        </>
-      ) : null}
-    </div>
-  );
+      </div>
+    ) : null;
+
+  const paneComposerFooterContext = (isActivePane: boolean) =>
+    isActivePane ? (
+      <div className="composer-context">
+        <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
+        <AgentTabStrip
+          sessions={activeAgentSessions}
+          openKeys={openAgentKeys}
+          onFocus={focusAgent}
+        />
+        <button
+          type="button"
+          className="composer-new-agent-button"
+          aria-label="New agent"
+          title="New agent"
+          onClick={() => onNewAgent(activeMainChatTabKey)}
+        >
+          <NewAgentIcon />
+        </button>
+      </div>
+    ) : null;
 
   /* The focused pane also carries the workspace-level reviewer column. */
   const activeDockExtras = {
@@ -472,7 +473,8 @@ export function ChatPane({
           onLoadOlderHistory={onLoadOlderHistory}
           dockExtras={{
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
-            composerFooterContext: paneComposerContext(node.tabKey, tab, isActivePane),
+            composerHeaderContext: paneComposerModelContext(node.tabKey, tab),
+            composerFooterContext: paneComposerFooterContext(isActivePane),
           }}
         />
       );

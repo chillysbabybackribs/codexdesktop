@@ -113,7 +113,11 @@ export function ChatPaneView({
   onSelectPane: (key: string) => Promise<boolean>;
   onCloseSplitPane: (tabKey: string) => void;
   onLoadOlderHistory: (tabKey: string, threadId: string) => void;
-  dockExtras: { agentColumn: React.ReactNode; composerFooterContext: React.ReactNode } | null;
+  dockExtras: {
+    agentColumn: React.ReactNode;
+    composerHeaderContext: React.ReactNode;
+    composerFooterContext: React.ReactNode;
+  } | null;
 }): React.JSX.Element {
   const subscribeToPane = useCallback(
     (onStoreChange: () => void) => sessionStore.subscribe(tabKey, onStoreChange),
@@ -390,6 +394,7 @@ export function ChatPaneView({
           />
         ) : null}
         {dockExtras?.agentColumn}
+        {dockExtras?.composerHeaderContext}
         <Composer
           draftKey={tabKey}
           docked={hasContent}
