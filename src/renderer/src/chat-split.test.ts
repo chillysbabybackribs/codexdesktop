@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   adjacentSplitPaneKey,
+  canSplitPaneAt,
   canSplitPaneForDrop,
   countSplitPanes,
   insertSplitPane,
@@ -43,6 +44,18 @@ test('builds a four-pane quadrant grid and rejects a fifth', () => {
   const rejected = insertSplitPane(layout, 'a', 'e', 'right')
   assert.equal(rejected, layout)
   assert.equal(canSplitPaneForDrop(layout, 'a', 'e'), false)
+})
+
+test('canSplitPaneAt reflects depth and pane caps for button splits', () => {
+  let layout = splitLeaf('a')
+  assert.equal(canSplitPaneAt(layout, 'a'), true)
+  assert.equal(canSplitPaneAt(layout, 'missing'), false)
+  layout = insertSplitPane(layout, 'a', 'b', 'right')
+  layout = insertSplitPane(layout, 'b', 'c', 'bottom')
+  assert.equal(canSplitPaneAt(layout, 'a'), true) // depth 1
+  assert.equal(canSplitPaneAt(layout, 'c'), false) // depth 2
+  layout = insertSplitPane(layout, 'a', 'd', 'bottom')
+  assert.equal(canSplitPaneAt(layout, 'b'), false) // pane cap reached
 })
 
 test('depth cap blocks a third level even under the pane cap', () => {

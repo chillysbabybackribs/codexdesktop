@@ -90,6 +90,12 @@ export function replaceSplitPane(node: SplitNode, targetKey: string, nextKey: st
   return mapNode(node)
 }
 
+/** Whether `targetKey`'s pane has room to split at all (depth and pane caps). */
+export function canSplitPaneAt(node: SplitNode, targetKey: string): boolean {
+  const depth = splitPaneDepth(node, targetKey)
+  return depth !== null && depth < maxSplitDepth && countSplitPanes(node) < maxSplitPanes
+}
+
 /**
  * Whether dropping `sourceKey` on one of `targetKey`'s edges may split that
  * pane. Judged on the tree as it would look after the drop plucks the source
@@ -103,9 +109,7 @@ export function canSplitPaneForDrop(
 ): boolean {
   if (targetKey === sourceKey) return false
   const base = splitHasPane(node, sourceKey) ? removeSplitPane(node, sourceKey) : node
-  const depth = splitPaneDepth(base, targetKey)
-  if (depth === null) return false
-  return countSplitPanes(base) < maxSplitPanes && depth < maxSplitDepth
+  return canSplitPaneAt(base, targetKey)
 }
 
 /**
