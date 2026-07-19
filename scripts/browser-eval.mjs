@@ -557,6 +557,24 @@ async function routeModelBrowserTool(params, context) {
     }))
   }
 
+  if (params.tool === 'browser_flow') {
+    const steps = Array.isArray(args.steps) ? args.steps : []
+    if (steps.length === 0) return failureToolResponse('browser_flow requires steps.')
+    if (steps.some((step) => !['wait', 'find'].includes(readString(asRecord(step).type)))) {
+      return failureToolResponse('The read-only eval allows only browser_flow wait and find steps.')
+    }
+    const response = await socketJson(context.socketPath, 'POST', '/flow', {
+      steps,
+      tab: context.tabId,
+      timeoutMs: clampNumber(args.timeoutMs, 15_000, 250, 60_000),
+      maxResultChars: clampNumber(args.maxResultChars, 20_000, 1_000, 100_000)
+    })
+    if (response.url && !isRedditNotificationsUrl(response.url)) {
+      throw new Error(`Browser target left Reddit notifications: ${response.url}`)
+    }
+    return hostToolResponse(response)
+  }
+
   if (params.tool === 'browser_run') {
     if (args.frame && args.frame !== 'main') return failureToolResponse('The read-only eval supports only the main frame.')
     const code = readString(args.code)
