@@ -9,7 +9,12 @@ import { fileURLToPath } from 'node:url'
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(scriptDir, '..')
 const sessionId = randomUUID()
-const userData = join(tmpdir(), `codexdesktop-verify-${sessionId}`)
+// Lifecycle smoke tests can deliberately retain one isolated profile across a
+// controlled relaunch. Normal verification remains self-cleaning and creates
+// a unique temporary profile exactly as before.
+const requestedUserData = process.env.CODEX_DESKTOP_VERIFY_USER_DATA?.trim()
+const userData = requestedUserData || join(tmpdir(), `codexdesktop-verify-${sessionId}`)
+const retainUserData = process.env.CODEX_DESKTOP_VERIFY_KEEP_USER_DATA === '1'
 const electronBin = join(repoRoot, 'node_modules', 'electron', 'dist', process.platform === 'win32' ? 'electron.exe' : 'electron')
 const env = {
   ...process.env,
@@ -43,7 +48,11 @@ child.on('error', (error) => {
 })
 
 child.on('exit', async (code, signal) => {
-  await rm(userData, { recursive: true, force: true })
-  process.stdout.write(`[verify-instance] closed (${code ?? signal ?? 'unknown'}); removed ${userData}\n`)
+  if (retainUserData) {
+    process.stdout.write(`[verify-instance] closed (${code ?? signal ?? 'unknown'}); retained ${userData}\n`)
+  } else {
+    await rm(userData, { recursive: true, force: true })
+    process.stdout.write(`[verify-instance] closed (${code ?? signal ?? 'unknown'}); removed ${userData}\n`)
+  }
   process.exitCode = stopping ? 0 : (code ?? 1)
 })

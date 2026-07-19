@@ -269,16 +269,30 @@ export class TabManager {
     }
     return new Promise((resolve) => {
       const requestId = webContents.findInPage(text, { forward, findNext: true })
+      // A superseded find or a navigation mid-search never delivers this
+      // requestId's finalUpdate; without the timeout the listener leaks and
+      // the caller hangs forever.
+      let settled = false
+      const settle = (result: { activeMatchOrdinal: number; matches: number; finalUpdate: boolean }): void => {
+        if (settled) return
+        settled = true
+        clearTimeout(timer)
+        webContents.off('found-in-page', onResult)
+        webContents.off('destroyed', onGone)
+        resolve(result)
+      }
       const onResult = (_event: Electron.Event, result: Electron.FoundInPageResult): void => {
         if (result.requestId !== requestId || !result.finalUpdate) return
-        webContents.off('found-in-page', onResult)
-        resolve({
+        settle({
           activeMatchOrdinal: result.activeMatchOrdinal,
           matches: result.matches,
           finalUpdate: result.finalUpdate
         })
       }
+      const onGone = (): void => settle({ activeMatchOrdinal: 0, matches: 0, finalUpdate: true })
+      const timer = setTimeout(onGone, 2000)
       webContents.on('found-in-page', onResult)
+      webContents.once('destroyed', onGone)
     })
   }
 

@@ -4965,7 +4965,9 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
       setMarketplaces(result.marketplaces)
       onChanged(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
       setState('ready')
-      void refreshConnections(result.marketplaces).catch(() => {})
+      void refreshConnections(result.marketplaces).catch((error) => {
+        console.warn('Plugin connection refresh failed; statuses may be stale', error)
+      })
     } catch {
       setState('error')
     }
