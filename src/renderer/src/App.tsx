@@ -81,7 +81,7 @@ import {
   type SessionRenderState
 } from './session-store'
 import { parseTranscriptSession, serializeTranscriptSession } from './transcript-cache-model'
-import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles } from './audit-trigger'
+import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles, turnStepLines } from './audit-trigger'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -2617,7 +2617,8 @@ export default function App(): React.JSX.Element {
           .join('\n')
           .trim() || '(request text unavailable)'
       : '(request text unavailable)'
-    const prompt = buildAuditPrompt({ userText, files: changed })
+    const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId)
+    const prompt = buildAuditPrompt({ userText, files: changed, steps })
     for (const auditor of auditors) {
       if (!shouldTriggerAudit({
         auditorStatus: auditor.status,

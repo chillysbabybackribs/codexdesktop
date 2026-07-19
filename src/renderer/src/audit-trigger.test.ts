@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles } from './audit-trigger.ts'
+import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles, turnStepLines } from './audit-trigger.ts'
 import type { ChatItem } from './transcript-model.ts'
 
 const fileChange = (id: string, paths: string[]): ChatItem =>
@@ -43,4 +43,40 @@ test('the audit prompt is compact, lists files, and directs the auditor at the w
   assert.ok(!prompt.includes('\n\n'), 'stays compact')
   const longPrompt = buildAuditPrompt({ userText: 'x'.repeat(500), files: ['a.ts'] })
   assert.match(longPrompt, /…/)
+})
+
+test('turnStepLines builds an ordered, clipped step log from work items', () => {
+  const items = [
+    { type: 'commandExecution', id: 'c1', command: 'npm test', exitCode: 0, status: 'completed', aggregatedOutput: '' },
+    fileChange('f1', ['src/app.ts']),
+    { type: 'commandExecution', id: 'c2', command: 'x'.repeat(200), exitCode: 1, status: 'failed', aggregatedOutput: '' },
+    { type: 'agentMessage', id: 'm1', text: 'done', phase: null, memoryCitation: null }
+  ] as unknown as ChatItem[]
+  const meta = { c1: { turnId: 't1' }, f1: { turnId: 't1' }, c2: { turnId: 't1' }, m1: { turnId: 't1' } }
+  const lines = turnStepLines(items, meta, 't1')
+  assert.equal(lines[0], '$ npm test (exit 0)')
+  assert.equal(lines[1], 'edited: src/app.ts')
+  assert.match(lines[2], /^\$ x+…/)
+  assert.equal(lines.length, 3, 'agent messages are not steps')
+})
+
+test('turnStepLines caps the log and summarizes the overflow', () => {
+  const items = Array.from({ length: 30 }, (_, index) =>
+    ({ type: 'commandExecution', id: `c${index}`, command: `step ${index}`, exitCode: 0, status: 'completed', aggregatedOutput: '' })) as unknown as ChatItem[]
+  const meta = Object.fromEntries(items.map((item) => [item.id, { turnId: 't1' }]))
+  const lines = turnStepLines(items, meta, 't1')
+  assert.equal(lines.length, 20)
+  assert.match(lines.at(-1) ?? '', /and 11 more steps/)
+})
+
+test('the audit prompt embeds the step log between request and file list', () => {
+  const prompt = buildAuditPrompt({
+    userText: 'fix the tests',
+    files: ['a.ts'],
+    steps: ['$ npm test (exit 1)', 'edited: a.ts', '$ npm test (exit 0)']
+  })
+  assert.match(prompt, /Steps the main chat took, in order:\n {2}\$ npm test \(exit 1\)\n {2}edited: a\.ts/)
+  assert.match(prompt, /decide depth/)
+  const without = buildAuditPrompt({ userText: 'x', files: ['a.ts'] })
+  assert.ok(!without.includes('Steps the main chat took'))
 })
