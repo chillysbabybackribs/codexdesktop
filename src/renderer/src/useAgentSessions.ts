@@ -3,7 +3,6 @@ import type { ServerNotification } from '../../shared/session-protocol';
 import type { TurnError } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import {
-  createAgentSession,
   createReviewerSession,
   findAgentSessionByThread,
   reviewerTitle,
@@ -59,6 +58,7 @@ export function useAgentSessions(
   handleToggleWatchAgent: (key: string) => void;
   handleToggleAuditAgent: (key: string) => void;
   handleToggleReportAgent: (key: string) => void;
+  handleDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void;
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort | null) => void;
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([]);
@@ -273,10 +273,17 @@ export function useAgentSessions(
     }
   }
 
+  // Born a reviewer: a fresh dock agent opens straight into audit standby
+  // with a cross-family model pre-derived — zero configuration. The counter
+  // survives for restore compatibility but no longer names new agents.
   function handleNewAgent(mainChatTabKey: string): void {
     const key = crypto.randomUUID();
-    const title = `Agent ${agentCounterRef.current++}`;
-    updateAgentSessions((sessions) => [...sessions, createAgentSession(key, title, mainChatTabKey)]);
+    const title = reviewerTitle(agentSessionsRef.current, mainChatTabKey);
+    agentCounterRef.current++;
+    updateAgentSessions((sessions) => [
+      ...sessions,
+      createReviewerSession(key, title, mainChatTabKey, deriveReviewerModel()),
+    ]);
     sessionStore.set(key, emptySessionState({ title }));
     setOpenAgentKeys((current) => [...current, key]);
     setSelectedAgentKey(key);
