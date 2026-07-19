@@ -14,11 +14,26 @@ export type AgentLiteMessage = {
   audit?: AuditRequestSummary
 }
 
+// The spawn tree role. 'reviewer' is the born-a-reviewer dock agent (audit
+// pairing); 'lead' and 'worker' form the subagent spawn tree — a lead's
+// spawn_subagent tool call creates a 'worker'. Kept to three values on
+// purpose: the tree stays shallow (a worker is never itself shown as
+// spawnable in the roster).
+export type AgentRole = 'lead' | 'worker' | 'reviewer'
+
 export type AgentSession = {
   key: string
   // Main-chat tab that created and owns this agent window. Agent sessions are
   // long-lived, but their mini-window is intentionally scoped to this tab.
   mainChatTabKey: string | null
+  // Spawn-tree linkage. `parentAgentKey` keys on the app `key` (not threadId)
+  // because a child's threadId is null until its first turn starts, so the
+  // parent link must survive the pre-thread window. null = top-level (a lead
+  // or a standalone reviewer). `spawnedByTurnId` is the parent turnId whose
+  // tool call created this worker — it groups workers under the spawning turn.
+  role: AgentRole
+  parentAgentKey: string | null
+  spawnedByTurnId: string | null
   threadId: string | null
   title: string
   status: 'idle' | 'working' | 'done'
@@ -69,6 +84,9 @@ export function createAgentSession(key: string, title: string, mainChatTabKey: s
   return {
     key,
     mainChatTabKey,
+    role: 'reviewer',
+    parentAgentKey: null,
+    spawnedByTurnId: null,
     threadId: null,
     title,
     status: 'idle',
