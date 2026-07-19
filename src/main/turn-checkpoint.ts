@@ -163,6 +163,30 @@ export class TurnCheckpointStore {
   }
 
   /**
+   * Ground-truth change detection: which non-ignored files differ between a
+   * checkpoint (the pre-turn workspace snapshot) and the worktree NOW. Unlike
+   * protocol fileChange items, this catches shell-command writes — the same
+   * completeness argument as the checkpoints themselves.
+   */
+  async changedFiles(checkpointId: string, limit = 50): Promise<string[]> {
+    const index = await this.readIndex()
+    const record = index.checkpoints.find((candidate) => candidate.id === checkpointId)
+    if (!record) return []
+    const root = record.repoRoot
+
+    const currentRaw = await git(root, ['ls-files', '-z', '-co', '--exclude-standard'])
+    const current = new Set(currentRaw.split('\0').filter(Boolean))
+    const checkpointRaw = await git(root, ['ls-tree', '-r', '-z', '--name-only', record.commit])
+    const checkpointFiles = new Set(checkpointRaw.split('\0').filter(Boolean))
+    const modifiedRaw = await git(root, ['diff', '--name-only', '-z', record.commit, '--', '.'])
+
+    const changed = new Set<string>(modifiedRaw.split('\0').filter(Boolean))
+    for (const file of current) if (!checkpointFiles.has(file)) changed.add(file)
+    for (const file of checkpointFiles) if (!current.has(file)) changed.add(file)
+    return [...changed].slice(0, limit)
+  }
+
+  /**
    * Make the worktree match the checkpoint exactly for non-ignored files:
    * restore every file the checkpoint holds and delete files created since.
    * The current state is checkpointed first ("pre-revert"), so this operation

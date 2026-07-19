@@ -158,3 +158,24 @@ test('pruning caps checkpoints per thread and deletes their refs', async () => {
     )
   })
 })
+
+test('changedFiles ground-truths shell-made modifications, additions, and deletions', async () => {
+  await withRepo(async (repo, store) => {
+    await writeFile(join(repo, 'kept.txt'), 'same\n')
+    await writeFile(join(repo, 'edited.txt'), 'v1\n')
+    await writeFile(join(repo, 'doomed.txt'), 'bye\n')
+    await git(repo, 'add', '-A')
+    await git(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'base')
+
+    const record = await store.createCheckpoint(repo, 'thread-1', 'pre-turn')
+    assert.deepEqual(await store.changedFiles(record!.id), [], 'untouched workspace reports no changes')
+
+    // Simulate a turn made ONLY of shell writes (no fileChange items exist).
+    await writeFile(join(repo, 'edited.txt'), 'v2\n')
+    await writeFile(join(repo, 'brand-new.txt'), 'hi\n')
+    await rm(join(repo, 'doomed.txt'))
+
+    const changed = (await store.changedFiles(record!.id)).sort()
+    assert.deepEqual(changed, ['brand-new.txt', 'doomed.txt', 'edited.txt'])
+  })
+})
