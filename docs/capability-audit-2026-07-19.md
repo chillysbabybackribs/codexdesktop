@@ -152,9 +152,10 @@ high-leverage review — and is a direct generalization of the existing doer/aud
 (`audit-trigger.ts`), which today fires once per turn with a one-bounce cap. The
 **beginning phase shipped** in the post-merge refresh: conversational intake gives the
 loop its alignment gate (doer restates, user confirms, reviewer authors the plan it
-will later audit against — see `docs/prompt-intake-2026-07-19.md`). The missing pieces
-are the **mid-turn watchdog** (sparse, silence-by-default trajectory checks steered
-into the running turn) and the **loop-to-done controller**: a bounded, converging cycle
+will later audit against — see `docs/prompt-intake-2026-07-19.md`), and the **middle
+phase shipped the same day**: a mid-turn watchdog (sparse, silence-by-default
+trajectory checks; `STEER:` corrections delivered into the running turn through the
+steer channel). The missing piece is the **loop-to-done controller**: a bounded, converging cycle
 (doer produces → reviewer flags → doer fixes → reviewer re-checks → …) with a clear
 termination condition (reviewer passes, or a max-iteration / budget ceiling), built on
 the existing checkpoint machinery so every iteration is reversible.
@@ -186,8 +187,9 @@ studio back-half run itself.
    in §3, with cheap-doer/strong-reviewer economics, checkpoint-reversible iterations,
    and explicit termination (reviewer pass or budget/iteration ceiling). Start from
    `audit-trigger.ts`; the hard part is convergence and stop conditions, not the plumbing.
-   The beginning phase (intake) is shipped; next increment is the mid-turn watchdog
-   (`docs/prompt-intake-2026-07-19.md` §build increments).
+   The beginning phase (intake) and middle phase (mid-turn watchdog) are both shipped
+   (`docs/prompt-intake-2026-07-19.md`); what remains is the loop itself — bounded
+   doer↔reviewer convergence with explicit termination.
 3. **Plan mode.** *Conversational form shipped 2026-07-19 (post-audit):* paired-thread
    intake — doer restates, user confirms buttonlessly, reviewer authors the plan and
    audits against it. Remaining scope, if real use demands it: a file-by-file
@@ -242,7 +244,7 @@ substrate and unblocking the studio are the same work.
 ## 6. One-line summary
 
 The substrate — logged-in agent browser + reversible cross-provider review, now with a
-shipped subagent primitive and a reviewer-authored plan loop — is ahead of the
-incumbents on the things that matter most for solo autonomous work; the gap between it
-and "unstoppable" is the mid-turn watchdog, the RSI loop-to-done controller, and
-scheduling, which are also exactly what would let the studio pipeline run itself.
+shipped subagent primitive and full beginning/middle/end reviewer supervision — is
+ahead of the incumbents on the things that matter most for solo autonomous work; the
+gap between it and "unstoppable" is the RSI loop-to-done controller and scheduling,
+which are also exactly what would let the studio pipeline run itself.

@@ -36,6 +36,19 @@ done-criteria** ("✓ pass … matches the plan's done-criteria").
 - Staleness: state binds to the thread Turn A created; thread switch/reset
   clears it. Transient by design (reload → next send is just normal).
 
+**Mid-turn watchdog SHIPPED (same day):** `src/renderer/src/main-chat-watchdog.ts`
++ a 15s tick in App. Sparse, decaying trajectory checks on the standing
+reviewer while a long main-chat turn runs: first check only once the turn is
+both ≥60s old and ≥5 steps deep (short turns pay nothing), then 2/4/8-minute
+gaps, max 5 per turn. The briefing demands `ON-TRACK` (dropped silently) or
+`STEER:` + course correction, no tools, "when in doubt: ON-TRACK"; a steer is
+delivered into the running turn via the steer channel, attributed
+`[Course check from <reviewer>]`. Unparseable replies never steer. The
+completion audit is collision-hardened: if a check is in flight when the turn
+ends, `maybeTriggerAuditors` waits it out (bounded) instead of busy-skipping
+the end verdict. Live-verified end-to-end: check fired at +72s mid-turn,
+ON-TRACK, zero steers on a sane run, task completed, end audit intact.
+
 The Auto/parallel design below remains the follow-up direction for unpaired or
 low-ceremony use; the mid-turn watchdog is the next increment after that.
 
