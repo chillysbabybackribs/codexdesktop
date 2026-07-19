@@ -35,7 +35,10 @@ import type { BrowserAgentController } from '../browser/browser-agent.js';
 import type { ResearchRunner } from '../browser/research-runner.js';
 import { runBrowserTool } from '../tools/browser-tool-registry.js';
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js';
-import { buildClaudeQueryOptions } from './claude-options.js';
+import {
+  buildClaudeQueryOptions,
+  synchronizeClaudeRuntimeSettings,
+} from './claude-options.js';
 import {
   buildClaudeModelCatalog,
   claudeDefaultModel,
@@ -372,7 +375,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
 
     try {
       await this.ensureLive(session);
-      await this.synchronizeRuntimeSettings(session);
+      await synchronizeClaudeRuntimeSettings(session.runtime!, session);
       void this.persistSessions();
       session.runtime!.input.push({
         type: 'user',
@@ -626,21 +629,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     } catch (error) {
       this.releaseSlot(session);
       throw error;
-    }
-  }
-
-  private async synchronizeRuntimeSettings(session: ClaudeSession): Promise<void> {
-    const runtime = session.runtime;
-    if (!runtime) throw new Error('claude runtime is unavailable');
-    const model = claudeRuntimeModel(session.model);
-    if (runtime.model !== model) {
-      await runtime.setModel(model);
-      runtime.model = model;
-    }
-    if (runtime.effort !== session.effort || runtime.fastMode !== session.fastMode) {
-      await runtime.applySettings({ effort: session.effort, fastMode: session.fastMode });
-      runtime.effort = session.effort;
-      runtime.fastMode = session.fastMode;
     }
   }
 

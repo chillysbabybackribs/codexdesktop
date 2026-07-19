@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildClaudeQueryOptions, claudeDefaultModelId } from './claude-options.ts';
+import {
+  buildClaudeQueryOptions,
+  claudeDefaultModelId,
+  synchronizeClaudeRuntimeSettings,
+} from './claude-options.ts';
 
 test('bypass permission mode includes the SDK safety acknowledgement', () => {
   const options = buildClaudeQueryOptions(
@@ -39,4 +43,36 @@ test('resume, explicit model, and browser MCP configuration are forwarded', () =
   assert.equal(options.settings?.fastModePerSessionOptIn, true);
   assert.equal(options.resume, 'session-123');
   assert.equal(options.mcpServers?.browser, browser);
+});
+
+test('a live runtime applies model and flag changes before the next turn', async () => {
+  const calls: string[] = [];
+  const runtime = {
+    model: 'opus',
+    effort: 'high' as const,
+    fastMode: false,
+    async setModel(model: string | null) {
+      calls.push(`model:${model}`);
+    },
+    async applySettings(settings: { effort: 'low' | 'medium' | 'high' | 'xhigh' | 'max' | null; fastMode: boolean }) {
+      calls.push(`settings:${settings.effort}:${settings.fastMode}`);
+    },
+  };
+
+  await synchronizeClaudeRuntimeSettings(runtime, {
+    model: 'claude:sonnet',
+    effort: 'low',
+    fastMode: true,
+  });
+  assert.deepEqual(calls, ['model:sonnet', 'settings:low:true']);
+  assert.equal(runtime.model, 'sonnet');
+  assert.equal(runtime.effort, 'low');
+  assert.equal(runtime.fastMode, true);
+
+  await synchronizeClaudeRuntimeSettings(runtime, {
+    model: 'claude:sonnet',
+    effort: 'low',
+    fastMode: true,
+  });
+  assert.equal(calls.length, 2, 'already-applied settings are not resent');
 });

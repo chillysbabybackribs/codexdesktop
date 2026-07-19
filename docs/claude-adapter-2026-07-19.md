@@ -46,8 +46,19 @@ unchanged because the adapter speaks the shared notification vocabulary.
 
 ## v1 limits (facts)
 
-- Single "Claude (Agent SDK)" model entry (SDK default model; no model-list
-  API). Text-only modality — image attachments are blocked by the composer.
+- **Model catalog follow-up complete:** the provider now discovers the
+  account/policy-specific catalog through the SDK's `supportedModels()` control
+  API. SDK values are exposed as provider-qualified picker ids (`claude:…`) so
+  aliases such as `sonnet` cannot route to Codex; the SDK `default` row retains
+  the persisted `claude-default` compatibility id. Display names, descriptions,
+  resolved ids, effort levels, adaptive-thinking support, and fast-mode support
+  come from the runtime rather than a hand-maintained list. Discovery failure
+  falls back to the Claude Code account default without hiding Codex models.
+- Model and effort changes on a live thread are applied through `setModel()`
+  and `applyFlagSettings()` before the next input. Model, effort, and fast-mode
+  state persist with the Claude session mapping. Result `modelUsage` supplies
+  the actual context window instead of relying only on the model-name fallback.
+- Text-only modality — image attachments are still blocked by the composer.
 - No mid-turn steering (capability-declared; composer steer attempts surface
   a clear error). No goals/plugins/compaction. Skills auto-attach is
   codex-only.

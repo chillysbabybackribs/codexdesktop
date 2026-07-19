@@ -10,6 +10,14 @@ export type ClaudeQuerySession = {
   claudeSessionId: string | null;
 };
 
+export type ClaudeMutableRuntimeSettings = {
+  model: string | null;
+  effort: ClaudeEffort | null;
+  fastMode: boolean;
+  setModel: (model: string | null) => Promise<void>;
+  applySettings: (settings: { effort: ClaudeEffort | null; fastMode: boolean }) => Promise<void>;
+};
+
 export function buildClaudeQueryOptions(
   session: ClaudeQuerySession,
   mcpServerConfig: unknown | null,
@@ -32,4 +40,20 @@ export function buildClaudeQueryOptions(
     settingSources: [],
     ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {}),
   };
+}
+
+export async function synchronizeClaudeRuntimeSettings(
+  runtime: ClaudeMutableRuntimeSettings,
+  desired: Pick<ClaudeQuerySession, 'model' | 'effort' | 'fastMode'>,
+): Promise<void> {
+  const model = claudeRuntimeModel(desired.model);
+  if (runtime.model !== model) {
+    await runtime.setModel(model);
+    runtime.model = model;
+  }
+  if (runtime.effort !== desired.effort || runtime.fastMode !== desired.fastMode) {
+    await runtime.applySettings({ effort: desired.effort, fastMode: desired.fastMode });
+    runtime.effort = desired.effort;
+    runtime.fastMode = desired.fastMode;
+  }
 }
