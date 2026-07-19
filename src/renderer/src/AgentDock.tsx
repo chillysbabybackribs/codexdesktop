@@ -311,36 +311,19 @@ const AgentWindow = memo(function AgentWindow({
 
   const working = session.status === 'working'
 
-  // Each auto-audit request is grouped with the assistant reply that answers
-  // it, so the exchange renders as one card: compact briefing header + the
-  // report as the body (streaming in live while the auditor works).
-  const messageNodes: React.JSX.Element[] = []
-  let auditShowsWorking = false
-  for (let index = 0; index < session.messages.length; index += 1) {
-    const message = session.messages[index]
-    if (message.audit) {
-      const next = session.messages[index + 1]
-      const report = next && next.role === 'assistant' ? next : null
-      const isLive = working && !report && index === session.messages.length - 1
-      if (isLive) auditShowsWorking = true
-      if (report) index += 1
-      messageNodes.push(
-        <div key={message.id} className="agent-mini-message is-audit">
-          <AuditExchangeCard audit={message.audit} report={report?.text ?? null} working={isLive} />
-        </div>
-      )
-      continue
-    }
-    messageNodes.push(
-      <div key={message.id} className={`agent-mini-message is-${message.role}`}>
-        {message.role === 'assistant' ? (
-          <MarkdownContent text={message.text} />
-        ) : (
-          <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
-        )}
-      </div>
-    )
-  }
+  // The audit briefing renders as a retractable markdown doc (the artifact the
+  // auditor reads); the report that follows is a plain assistant message.
+  const messageNodes = session.messages.map((message) => (
+    <div key={message.id} className={`agent-mini-message is-${message.audit ? 'audit' : message.role}`}>
+      {message.audit ? (
+        <AuditBriefDoc audit={message.audit} />
+      ) : message.role === 'assistant' ? (
+        <MarkdownContent text={message.text} />
+      ) : (
+        <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
+      )}
+    </div>
+  ))
   // The audit watch strip: while the main chat's turn is in flight and this
   // agent is armed to audit, show the doer's progress from the auditor's POV.
   const watchingMain = session.auditsMain && liveMainTurn !== null && !working
@@ -537,15 +520,19 @@ const AgentWindow = memo(function AgentWindow({
           style={{ '--agent-chat-zoom': `${zoomPercent / 100}` } as React.CSSProperties}
         >
           {session.messages.length === 0 ? (
-            <AgentModeSelector
-              session={session}
-              onToggleWatch={onToggleWatch}
-              onToggleAudit={onToggleAudit}
-            />
+            session.auditsMain ? (
+              <AuditStandby live={liveMainTurn} />
+            ) : (
+              <AgentModeSelector
+                session={session}
+                onToggleWatch={onToggleWatch}
+                onToggleAudit={onToggleAudit}
+              />
+            )
           ) : (
             messageNodes
           )}
-          {watchingMain && liveMainTurn ? (
+          {session.messages.length > 0 && watchingMain && liveMainTurn ? (
             <div className="agent-audit-live" role="status">
               <span className="agent-audit-live-pulse" aria-hidden="true" />
               <div className="agent-audit-live-copy">
@@ -561,7 +548,7 @@ const AgentWindow = memo(function AgentWindow({
               </div>
             </div>
           ) : null}
-          {working && !auditShowsWorking ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
+          {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
         </div>
       </div>
 

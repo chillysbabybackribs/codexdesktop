@@ -456,6 +456,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
 
     try {
       const sdk = await import('@anthropic-ai/claude-agent-sdk')
+      if (this.disposed) throw new Error('claude provider disposed')
       const { query } = sdk
       // In-process MCP browser tools (built once): Claude sessions drive the
       // SAME embedded browser through the SAME neutral dispatch the codex
@@ -493,6 +494,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private async consume(session: ClaudeSession, runtime: LiveRuntime, stream: AsyncIterable<unknown>): Promise<void> {
     try {
       for await (const message of stream) {
+        if (session.runtime !== runtime) break
         session.lastActivityMs = Date.now()
         const translation = session.translator?.handle(message)
         if (!translation) continue
@@ -509,12 +511,12 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       }
     } catch (error) {
       console.warn(`claude session ${session.threadId} stream failed:`, (error as Error).message)
-      if (!this.disposed && session.working && session.activeTurnId) {
+      if (!this.disposed && session.runtime === runtime && session.working && session.activeTurnId) {
         // Surface the failure as a failed turn so the UI never hangs on a
         // silent stream death (Phase 5 rules).
         this.emitNotification(this.failedTurnNotification(session, session.activeTurnId, `claude stream failed: ${(error as Error).message}`))
+        this.finishTurn(session)
       }
-      this.finishTurn(session)
     } finally {
       // Stream closed (idle-kill, interrupt-exit, or crash): free the slot.
       if (session.runtime === runtime) {
