@@ -347,24 +347,215 @@ export class ClaudeTurnTranslator {
     const content = Array.isArray(message.content) ? message.content : [];
     for (const rawBlock of content) {
       const block = asRecord(rawBlock);
-      if (block.type === 'tool_result' && typeof block.tool_use_id === 'string') {
-        notifications.push(
-          asNotification('item/completed', {
-            threadId: this.context.threadId,
-            turnId: this.context.turnId,
-            completedAtMs: this.context.nowMs(),
-            item: {
-              type: 'mcpToolCall',
-              id: block.tool_use_id,
-              server: 'claude',
-              tool: this.toolNames.get(block.tool_use_id) ?? 'tool',
-              status: block.is_error === true ? 'failed' : 'completed',
-            } as unknown as ThreadItem,
-          }),
-        );
-      }
+      if (block.type !== 'tool_result' || typeof block.tool_use_id !== 'string') continue;
+      const id = block.tool_use_id;
+      const state = this.tools.get(id) ?? this.rememberFallbackTool(id);
+      // The todo board is turn-level state, not a transcript item — its
+      // tool_result carries nothing the plan notification didn't.
+      if (state.kind === 'plan') continue;
+      notifications.push(
+        this.toolItemNotification(
+          'item/completed',
+          id,
+          state,
+          block.is_error === true ? 'failed' : 'completed',
+          extractToolResultText(block.content),
+        ),
+      );
     }
     return { notifications };
+  }
+
+  // -- Tool call translation ------------------------------------------------
+
+  private startToolCall(id: string, name: string): ServerNotification[] {
+    const state: ClaudeToolState = {
+      name,
+      kind: classifyClaudeTool(name),
+      startedAtMs: this.context.nowMs(),
+      command: '',
+      commandActions: [],
+      changes: [],
+      query: '',
+      action: null,
+      arguments: null,
+    };
+    this.tools.set(id, state);
+    if (state.kind === 'plan') return [];
+    return [this.toolItemNotification('item/started', id, state, 'inProgress')];
+  }
+
+  private rememberFallbackTool(id: string): ClaudeToolState {
+    const state: ClaudeToolState = {
+      name: 'tool',
+      kind: 'mcp',
+      startedAtMs: this.context.nowMs(),
+      command: '',
+      commandActions: [],
+      changes: [],
+      query: '',
+      action: null,
+      arguments: null,
+    };
+    this.tools.set(id, state);
+    return state;
+  }
+
+  // Fill the typed item in once the tool input is known — at
+  // content_block_stop from accumulated input deltas, and again (idempotently,
+  // via the item upsert) from the restated assistant message.
+  private enrichToolCall(id: string, input: Record<string, unknown>): ServerNotification[] {
+    const state = this.tools.get(id);
+    if (!state || Object.keys(input).length === 0) return [];
+    const path = str(input.file_path);
+
+    switch (state.name) {
+      case 'Bash':
+        state.command = str(input.command) ?? '';
+        break;
+      case 'Read':
+        if (!path) return [];
+        state.command = `Read ${path}`;
+        state.commandActions = [
+          { type: 'read', command: state.command, name: basename(path), path },
+        ];
+        break;
+      case 'Glob':
+        state.command = `Glob ${str(input.pattern) ?? ''}`.trim();
+        state.commandActions = [
+          { type: 'listFiles', command: state.command, path: str(input.path) },
+        ];
+        break;
+      case 'Grep': {
+        const pattern = str(input.pattern);
+        state.command = `Grep ${pattern ?? ''}`.trim();
+        state.commandActions = [
+          { type: 'search', command: state.command, query: pattern, path: str(input.path) },
+        ];
+        break;
+      }
+      case 'Edit':
+        if (!path) return [];
+        state.changes = [
+          {
+            path,
+            kind: { type: 'update', move_path: null },
+            diff: synthesizeReplaceDiff(str(input.old_string) ?? '', str(input.new_string) ?? ''),
+          },
+        ];
+        break;
+      case 'Write':
+        if (!path) return [];
+        state.changes = [
+          { path, kind: { type: 'add' }, diff: prefixLines(str(input.content) ?? '', '+') },
+        ];
+        break;
+      case 'MultiEdit': {
+        if (!path) return [];
+        const edits = Array.isArray(input.edits) ? input.edits : [];
+        const hunks = edits
+          .map((edit) => {
+            const record = asRecord(edit);
+            return synthesizeReplaceDiff(
+              str(record.old_string) ?? '',
+              str(record.new_string) ?? '',
+            );
+          })
+          .filter(Boolean);
+        state.changes = [
+          { path, kind: { type: 'update', move_path: null }, diff: hunks.join('\n@@\n') },
+        ];
+        break;
+      }
+      case 'WebSearch':
+        state.query = str(input.query) ?? '';
+        state.action = { type: 'search', query: state.query || null, queries: null };
+        break;
+      case 'WebFetch':
+        state.query = str(input.url) ?? '';
+        state.action = { type: 'openPage', url: str(input.url) };
+        break;
+      case 'TodoWrite': {
+        const plan = planStepsFrom(input.todos);
+        if (plan.length === 0) return [];
+        return [
+          asNotification('turn/plan/updated', {
+            threadId: this.context.threadId,
+            turnId: this.context.turnId,
+            explanation: null,
+            plan,
+          }),
+        ];
+      }
+      default:
+        state.arguments = input;
+        break;
+    }
+
+    if (state.kind === 'plan') return [];
+    return [this.toolItemNotification('item/started', id, state, 'inProgress')];
+  }
+
+  private toolItemNotification(
+    method: 'item/started' | 'item/completed',
+    id: string,
+    state: ClaudeToolState,
+    status: 'inProgress' | 'completed' | 'failed',
+    output?: string,
+  ): ServerNotification {
+    const nowMs = this.context.nowMs();
+    const completed = method === 'item/completed';
+    const durationMs = completed ? Math.max(0, nowMs - state.startedAtMs) : null;
+
+    let item: ThreadItem;
+    if (state.kind === 'command') {
+      item = {
+        type: 'commandExecution',
+        id,
+        command: state.command,
+        cwd: '',
+        processId: null,
+        source: 'agent',
+        status,
+        commandActions: state.commandActions,
+        aggregatedOutput: output ?? '',
+        exitCode: completed && status === 'completed' ? 0 : null,
+        durationMs,
+      } as unknown as ThreadItem;
+    } else if (state.kind === 'fileChange') {
+      item = { type: 'fileChange', id, changes: state.changes, status } as unknown as ThreadItem;
+    } else if (state.kind === 'webSearch') {
+      item = {
+        type: 'webSearch',
+        id,
+        query: state.query,
+        action: state.action,
+      } as unknown as ThreadItem;
+    } else {
+      item = {
+        type: 'mcpToolCall',
+        id,
+        server: 'claude',
+        tool: state.name,
+        status,
+        ...(state.arguments === null ? {} : { arguments: state.arguments }),
+        ...(durationMs === null ? {} : { durationMs }),
+      } as unknown as ThreadItem;
+    }
+
+    return completed
+      ? asNotification('item/completed', {
+          threadId: this.context.threadId,
+          turnId: this.context.turnId,
+          completedAtMs: nowMs,
+          item,
+        })
+      : asNotification('item/started', {
+          threadId: this.context.threadId,
+          turnId: this.context.turnId,
+          startedAtMs: state.startedAtMs,
+          item,
+        });
   }
 
   private handleResult(message: Record<string, unknown>): ClaudeTranslation {
