@@ -3401,6 +3401,8 @@ function MainChatTabStrip({
   onPaneDragUpdate,
   onDropOnPane,
   canSplitForDrop,
+  onSplitActivePane,
+  canSplitActivePane,
   onClose,
   onNew,
   onOpenSettings,
@@ -3800,6 +3802,8 @@ function ChatPane({
   onCloseSplitPane,
   onSetSplitRatio,
   canSplitForDrop,
+  onSplitActivePane,
+  canSplitActivePane,
   items,
   itemMeta,
   title,
@@ -3885,6 +3889,8 @@ function ChatPane({
   onCloseSplitPane: (tabKey: string) => void;
   onSetSplitRatio: (path: string, ratio: number) => void;
   canSplitForDrop: (targetKey: string, sourceKey: string) => boolean;
+  onSplitActivePane: (direction: 'right' | 'down') => boolean;
+  canSplitActivePane: boolean;
   items: ChatItem[];
   itemMeta: Record<string, ItemMeta>;
   title: string;
@@ -4256,6 +4262,8 @@ function ChatPane({
           onPaneDragUpdate={setPaneDropTarget}
           onDropOnPane={onDropTabOnPane}
           canSplitForDrop={canSplitForDrop}
+          onSplitActivePane={onSplitActivePane}
+          canSplitActivePane={canSplitActivePane}
           onClose={onCloseMainChatTab}
           onNew={onNewMainChatTab}
           onOpenSettings={() => setIsSettingsOpen(true)}
