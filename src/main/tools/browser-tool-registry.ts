@@ -47,6 +47,7 @@ export async function runBrowserTool(
     const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
       owner ? deps.browserAgent.runForTurn(owner, execute) : execute(new AbortController().signal)
 
+    // biome-ignore lint/suspicious/noImplicitAnyLet: heterogeneous per-tool accumulator, cast to BrowserToolOutcome['result'] at the return boundary
     let result
     let imageUrls: string[] = []
 

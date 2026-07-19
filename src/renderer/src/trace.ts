@@ -752,7 +752,9 @@ function collectTruncations(value: unknown, path: string, truncations: TraceTrun
     return
   }
   if (Array.isArray(value)) {
-    value.forEach((part, index) => collectTruncations(part, `${path}[${index}]`, truncations))
+    value.forEach((part, index) => {
+      collectTruncations(part, `${path}[${index}]`, truncations)
+    })
     return
   }
   if (!value || typeof value !== 'object') return
