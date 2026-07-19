@@ -804,28 +804,9 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, buildOptimisticUserMessage(optimisticId, trimmed, attachments)])
 
     try {
-      let threadId = activeThreadIdRef.current
+      const threadId = activeThreadIdRef.current
       if (!threadId) {
         mainThreadStartsInFlightRef.current.add(targetTabKey)
-        const started = await window.api.codex.startThread({ cwd: workspace, model: selectedModel })
-        mainThreadStartsInFlightRef.current.delete(targetTabKey)
-        threadId = started.thread.id
-        const startedTitle = threadTitle(started.thread)
-        patchMainChatTab(targetTabKey, (tab) => ({
-          ...tab,
-          threadId,
-          title: startedTitle
-        }))
-        if (activeMainChatTabKeyRef.current === targetTabKey) {
-          watchThreadIdRef.current = threadId
-          activeThreadIdRef.current = threadId
-          setActiveThreadId(threadId)
-          activeThreadTitleRef.current = startedTitle
-          setActiveThreadTitle(startedTitle)
-          setActiveReasoningEffort(started.reasoningEffort)
-          activeReasoningEffortRef.current = started.reasoningEffort
-          persistLastThreadId(threadId)
-        }
       }
 
       const response = await window.api.codex.sendMessage({
@@ -883,7 +864,6 @@ export default function App(): React.JSX.Element {
       mergeItems(response.turn.items)
       return true
     } catch (error) {
-      mainThreadStartsInFlightRef.current.delete(targetTabKey)
       if (optimisticUserMessageIdRef.current === optimisticId) {
         optimisticUserMessageIdRef.current = null
         setItems((current) => current.filter((item) => item.id !== optimisticId))
@@ -891,6 +871,7 @@ export default function App(): React.JSX.Element {
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error')
       return false
     } finally {
+      mainThreadStartsInFlightRef.current.delete(targetTabKey)
       userTurnRequestPendingRef.current = false
       setIsSending(false)
     }
@@ -2006,10 +1987,35 @@ export default function App(): React.JSX.Element {
         if (startedThreadId && backgroundSessionForThread(startedThreadId)) {
           return
         }
-        // Both main tabs and dock agents bind the start response themselves.
-        // While either start request is in flight, the unowned notification
-        // must not guess which surface initiated it.
-        if (mainThreadStartsInFlightRef.current.size || agentStartQueueRef.current.length) {
+        // A first send creates its thread inside `sendMessage`. Its
+        // notifications can arrive before that IPC call returns, so claim the
+        // pending owner here before `turn/started` needs to route its items.
+        // Main sends are serialized by the composer; concurrent dock starts
+        // are requested through the app-server in queue order.
+        const pendingMainTabKey = mainThreadStartsInFlightRef.current.size === 1
+          ? [...mainThreadStartsInFlightRef.current][0]
+          : null
+        if (pendingMainTabKey) {
+          mainThreadStartsInFlightRef.current.delete(pendingMainTabKey)
+          const startedTitle = threadTitle(notification.params.thread)
+          patchMainChatTab(pendingMainTabKey, (tab) => ({
+            ...tab,
+            threadId: startedThreadId,
+            title: startedTitle
+          }))
+          if (activeMainChatTabKeyRef.current === pendingMainTabKey) {
+            watchThreadIdRef.current = startedThreadId
+            activeThreadIdRef.current = startedThreadId
+            setActiveThreadId(startedThreadId)
+            activeThreadTitleRef.current = startedTitle
+            setActiveThreadTitle(startedTitle)
+            persistLastThreadId(startedThreadId)
+          }
+          return
+        }
+        const pendingAgentKey = agentStartQueueRef.current.shift()
+        if (pendingAgentKey) {
+          bindAgentThread(pendingAgentKey, startedThreadId)
           return
         }
         watchThreadIdRef.current = notification.params.thread.id
