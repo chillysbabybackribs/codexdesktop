@@ -620,6 +620,14 @@ function TerminalCard({
   const elapsedMs = running && meta?.startedAtMs ? Math.max(0, liveNow - meta.startedAtMs) : null
   const elapsed = elapsedMs !== null && elapsedMs >= 2500 ? fmtDuration(elapsedMs) : null
 
+  // Prose headline when the command classifies; the raw command stays one
+  // hover (title) or one click (expanded echo line) away.
+  const narration = useMemo(
+    () => narrateCommand(item.command, item.commandActions, commandDescriptionOf(item)),
+    [item]
+  )
+  const cleaned = useMemo(() => cleanCommand(item.command), [item.command])
+
   return (
     <div className={`term-card status-${status} ${expanded ? 'is-open' : 'is-collapsed'}`}>
       <button
@@ -632,9 +640,15 @@ function TerminalCard({
         }}
       >
         <span className="term-icon">{running ? <Spinner /> : <TerminalIcon />}</span>
-        <code className="term-command" title={item.command}>
-          {item.command}
-        </code>
+        {narration.natural ? (
+          <span className={`term-summary${running ? ' shimmer-text' : ''}`} title={cleaned}>
+            {running ? narration.running : narration.done}
+          </span>
+        ) : (
+          <code className="term-command" title={cleaned}>
+            {narration.done}
+          </code>
+        )}
         <span className="term-meta">
           {!expanded && lines.length > 0 ? (
             <span className="term-line-count">{lines.length === 1 ? '1 line' : `${lines.length} lines`}</span>
@@ -645,6 +659,11 @@ function TerminalCard({
           {!running ? <ChevronDownIcon className={`term-chevron ${expanded ? 'is-open' : ''}`} /> : null}
         </span>
       </button>
+      {expanded && !running && narration.natural ? (
+        <div className="term-cmdline">
+          <code>$ {cleaned}</code>
+        </div>
+      ) : null}
       {expanded && lines.length > 0 ? (
         running ? (
           <AutoFollow className="term-output is-live">

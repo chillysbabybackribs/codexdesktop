@@ -1,13 +1,48 @@
 import type { WebContents, WebFrameMain } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
-import { BrowserFlowError, runBrowserFlow } from './browser-flow.js'
+import { runBrowserFlow } from './browser-flow.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import { captureAppWindowImage } from './app-window-screenshot.js'
 import type { TabManager } from './tab-manager.js'
+import {
+  KeyedOperationQueue,
+  assertTargetLeaseCurrent,
+  boundResult,
+  browserFailureFields,
+  browserFailureFor,
+  cancelledResult,
+  captureTargetLease,
+  describeFrame,
+  frameInventory,
+  isLifecycleFailure,
+  liveFrames,
+  operationError,
+  safeTitle,
+  safeUrl,
+  withTimeout,
+  type BrowserAgentFailure,
+  type BrowserAgentResult,
+  type BrowserAgentSuccess,
+  type BrowserFailure,
+  type BrowserFailureCode,
+  type BrowserFailurePhase,
+  type BrowserFrameDescriptor,
+  type BrowserSnapshotCompletion,
+  type BrowserTargetLease
+} from './browser-operation.js'
+
+export type {
+  BrowserAgentResult,
+  BrowserFailure,
+  BrowserFailureCode,
+  BrowserFailurePhase,
+  BrowserFrameDescriptor,
+  BrowserSnapshotCompletion
+} from './browser-operation.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
 export const MAX_BROWSER_TIMEOUT_MS = 60_000
@@ -28,39 +63,6 @@ export const PAGE_EXTRACTION_REMOVE_SELECTORS = [
 ] as const
 export const PAGE_EXTRACTION_LOW_VALUE_PATTERN =
   '(^|[-_\\s])(advert|ad|banner|cookie|consent|modal|dialog|popup|newsletter|subscribe|social|share|related|recommend|breadcrumb|pagination|sidebar|toolbar|menu|promo|sponsor)([-_\\s]|$)'
-
-export type BrowserFailureCode =
-  | 'cancelled'
-  | 'noResult'
-  | 'timeout'
-  | 'targetClosed'
-  | 'targetChanged'
-  | 'frameDetached'
-  | 'frameNotFound'
-  | 'executionError'
-  | 'pageScriptError'
-  | 'conditionNotMet'
-  | 'conditionTimeout'
-  | 'selectorNotFound'
-  | 'invalidSelector'
-  | 'resultSerializationError'
-
-export type BrowserFailurePhase =
-  | 'pageScript'
-  | 'targetLifecycle'
-  | 'navigationReadiness'
-  | 'snapshotVerification'
-  | 'resultSerialization'
-  | 'browserFlow'
-  | 'controller'
-
-export type BrowserFailure = {
-  code: BrowserFailureCode
-  phase: BrowserFailurePhase
-  message: string
-  name?: string
-  stack?: string
-}
 
 export type BrowserOperationOwner = {
   threadId: string
@@ -102,15 +104,6 @@ export type BrowserSnapshotOptions = BrowserRunOptions & {
   maxSettleMs?: number | null
 }
 
-export type BrowserFrameDescriptor = {
-  frameId: string
-  parentFrameId: string | null
-  name: string
-  url: string
-  origin: string
-  isMainFrame: boolean
-}
-
 export type BrowserCdpEventOptions = BrowserAgentOptions & {
   afterSequence?: number | null
   filter?: Record<string, unknown> | null
@@ -125,63 +118,6 @@ type CdpOperationContext = {
   webContents: WebContents
 }
 
-type BrowserTargetLease = {
-  tabId: string
-  webContents: WebContents
-  epoch: number
-}
-
-export type BrowserAgentResult = {
-  ok: boolean
-  result?: unknown
-  error?: string
-  tabId?: string
-  url?: string
-  title?: string
-  durationMs?: number
-  resultChars?: number
-  truncated?: boolean
-  errorCode?: BrowserFailureCode
-  failure?: BrowserFailure
-  artifact?: CdpFileArtifact
-  targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
-  /** Snapshot-specific execution hint derived from structured coverage, not model reasoning. */
-  completion?: BrowserSnapshotCompletion
-  /** Navigation selector state retained when a snapshot can still verify the requested evidence. */
-  readiness?: {
-    selector: string
-    settleReason: string
-    matched: boolean
-  }
-}
-
-export type BrowserSnapshotCompletion = {
-  /** `complete` means the returned snapshot is sufficient to answer from directly. */
-  status: 'complete' | 'incomplete'
-  /** The next evidence operation, if any; this never removes browser capabilities. */
-  nextAction: 'answer' | 'targeted-gap-fill'
-  reason: string
-  gaps: string[]
-}
-
-type BrowserAgentSuccess = BrowserAgentResult & {
-  ok: true
-  result: unknown
-  tabId: string
-  url: string
-  title: string
-  durationMs: number
-  resultChars: number
-  truncated: boolean
-}
-
-type BrowserAgentFailure = BrowserAgentResult & {
-  ok: false
-  error: string
-}
-
-type QueuedOperation<T> = Promise<T>
-
 /**
  * Shared browser execution surface for Codex and the legacy Unix-socket API.
  * Operations on one tab are serialized; different tabs can still run in
@@ -189,7 +125,7 @@ type QueuedOperation<T> = Promise<T>
  * it, preventing the next program from racing a still-running page script.
  */
 export class BrowserAgentController {
-  private readonly tabQueues = new Map<string, Promise<void>>()
+  private readonly tabOperations = new KeyedOperationQueue()
   private readonly turnOperations = new Map<string, Set<AbortController>>()
   private readonly blockedTurnBrowserWork = new Map<string, BrowserFailure>()
   private readonly getTabs: () => TabManager | null

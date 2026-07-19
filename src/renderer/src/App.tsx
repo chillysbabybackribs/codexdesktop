@@ -3902,54 +3902,11 @@ function ChatPane({
   // Which region the user is working in: the main chat (default) or the agent
   // column. Drives the dim/unfocus treatment on agent windows via CSS.
   const [isMainFocused, setIsMainFocused] = useState(true);
-  const [traceTurnId, setTraceTurnId] = useState<string | null>(null);
-  const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null);
-  const traceLoadGenerationRef = useRef(0);
-  const { rows, turnWork } = useMemo(
-    () => buildRows(items, itemMeta, activeTurnId),
-    [items, itemMeta, activeTurnId],
-  );
-
-  // Review target: the newest settled turn that edited files, still
-  // unreviewed and revertible. Scanning stops at the newest edit-turn — once
-  // it is kept/undone the bar goes away instead of resurfacing older turns.
-  const reviewTarget = useMemo((): { turnId: string; changes: ReviewChange[] } | null => {
-    if (activeTurnId) return null;
-    for (let i = rows.length - 1; i >= 0; i -= 1) {
-      const row = rows[i];
-      if (row.kind !== 'tail') continue;
-      const changes = (turnWork.get(row.turnId) ?? [])
-        .filter(
-          (item): item is Extract<WorkItem, { type: 'fileChange' }> => item.type === 'fileChange',
-        )
-        .flatMap((item) => item.changes);
-      if (!changes.length) continue;
-      if (turnReviews[row.turnId] || !turnCheckpoints[row.turnId]) return null;
-      return { turnId: row.turnId, changes };
-    }
-    return null;
-  }, [rows, turnWork, activeTurnId, turnReviews, turnCheckpoints]);
-
-  // Context for per-file Undo on diff cards. Identity is stable across
-  // streaming renders (deps change on turn boundaries and review actions
-  // only), so memoized cards are not re-rendered per delta.
-  const fileReview = useMemo(
-    (): FileReviewActions => ({
-      canUndo: (turnId) =>
-        Boolean(
-          turnId &&
-            turnId !== activeTurnId &&
-            turnCheckpoints[turnId] &&
-            turnReviews[turnId] !== 'undone',
-        ),
-      isUndone: (turnId, path) =>
-        Boolean(
-          turnId && (turnReviews[turnId] === 'undone' || undoneFiles[turnId]?.includes(path)),
-        ),
-      undoFile: (turnId, path) => void onUndoFile(turnId, path),
-    }),
-    [activeTurnId, turnCheckpoints, turnReviews, undoneFiles, onUndoFile],
-  );
+  // Live pane drop target while a chat tab is dragged over the split surface.
+  const [paneDropTarget, setPaneDropTarget] = useState<{
+    tabKey: string;
+    zone: SplitDropZone;
+  } | null>(null);
 
   // Live glance at the in-flight turn for auditor dock cards ("watching" POV).
   // Cheap passes over state this pane already re-renders on.
@@ -3957,75 +3914,6 @@ function ChatPane({
     () => (activeTurnId ? liveTurnGlance(items, itemMeta, activeTurnId) : null),
     [items, itemMeta, activeTurnId],
   );
-  const currentTrace = useMemo(
-    () =>
-      traceTurnId
-        ? buildTurnTrace({
-            threadId: activeThreadId,
-            threadTitle: title,
-            turnId: traceTurnId,
-            model: selectedModel,
-            workspace,
-            items,
-            itemMeta,
-            meta: turnMeta[traceTurnId],
-          })
-        : null,
-    [traceTurnId, activeThreadId, title, selectedModel, workspace, items, itemMeta, turnMeta],
-  );
-  const trace = storedTrace?.turn.id === traceTurnId ? storedTrace : currentTrace;
-
-  function openTrace(turnId: string): void {
-    const generation = ++traceLoadGenerationRef.current;
-    setTraceTurnId(turnId);
-    setStoredTrace(null);
-
-    if (!activeThreadId || turnMeta[turnId]?.origin !== 'restored') return;
-
-    void window.api.trace.load({ threadId: activeThreadId, turnId }).then(
-      (content) => {
-        if (generation !== traceLoadGenerationRef.current || !content) return;
-
-        try {
-          const parsed: unknown = JSON.parse(content);
-          if (isTurnTrace(parsed) && parsed.turn.id === turnId) setStoredTrace(parsed);
-        } catch (error) {
-          console.warn('Failed to load persisted turn trace', error);
-        }
-      },
-      (error) => {
-        console.warn('Failed to load persisted turn trace', error);
-      },
-    );
-  }
-
-  useEffect(() => {
-    traceLoadGenerationRef.current += 1;
-    setTraceTurnId(null);
-    setStoredTrace(null);
-  }, [activeThreadId]);
-
-  // True while the live turn's newest item is an assistant message still
-  // receiving deltas — drives the "Writing" tail label and message caret.
-  const streamingMessageId = useMemo(() => {
-    if (!activeTurnId) {
-      return null;
-    }
-    for (let i = items.length - 1; i >= 0; i -= 1) {
-      const item = items[i];
-      if (item.type === 'system' || itemMeta[item.id]?.turnId !== activeTurnId) {
-        continue;
-      }
-      if (
-        item.type === 'agentMessage' &&
-        item.phase !== 'commentary' &&
-        !itemMeta[item.id]?.completedAtMs
-      ) {
-        return item.id;
-      }
-    }
-    return null;
-  }, [items, itemMeta, activeTurnId]);
 
   const activeAgentSessions = agentSessionsForMainChatTab(agentSessions, activeMainChatTabKey);
   const openAgentSessions = activeAgentSessions.filter((session) => openAgentKeys.includes(session.key));
