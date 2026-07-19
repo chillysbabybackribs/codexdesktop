@@ -4106,6 +4106,13 @@ function ChatPane({
   );
 }
 
+// Work items that stay visible when a settled turn's steps are collapsed:
+// edits are the product, the plan is the status board — everything else is
+// process and folds away Cursor-style.
+function isEssentialWorkItem(item: WorkItem): boolean {
+  return item.type === 'fileChange' || item.type === 'turnPlan';
+}
+
 function TaskActivityCard({
   items,
   itemMeta,
@@ -4117,6 +4124,14 @@ function TaskActivityCard({
   live: boolean;
   workspace: string | null;
 }): React.JSX.Element {
+  // null = default by liveness: live turns show everything, settled turns
+  // collapse their step rows to a "N steps" toggle.
+  const [stepsOpen, setStepsOpen] = useState<boolean | null>(null);
+  const showSteps = live || (stepsOpen ?? false);
+  const hiddenStepCount = live
+    ? 0
+    : items.filter((item) => isWorkItem(item) && !isEssentialWorkItem(item)).length;
+
   let newestWorkItemId: string | undefined;
   for (let i = items.length - 1; i >= 0; i -= 1) {
     if (isWorkItem(items[i])) {
@@ -4129,21 +4144,22 @@ function TaskActivityCard({
   let workRun: WorkItem[] = [];
 
   const flushWork = (): void => {
-    if (!workRun.length) {
+    const visible = showSteps ? workRun : workRun.filter(isEssentialWorkItem);
+    workRun = [];
+    if (!visible.length) {
       return;
     }
-    const first = workRun[0];
+    const first = visible[0];
     content.push(
       <WorkGroup
         key={`work-${first.id}`}
-        items={workRun}
+        items={visible}
         itemMeta={itemMeta}
         live={live}
         workspace={workspace}
         newestItemId={newestWorkItemId}
       />,
     );
-    workRun = [];
   };
 
   for (const item of items) {
@@ -4176,10 +4192,40 @@ function TaskActivityCard({
       aria-label="In-task activity"
       aria-live={live ? 'polite' : 'off'}
     >
+      {hiddenStepCount > 0 ? (
+        <button
+          type="button"
+          className="activity-steps-toggle"
+          aria-expanded={showSteps}
+          onClick={() => setStepsOpen(!showSteps)}
+        >
+          <StepsChevronIcon className={`activity-steps-chevron ${showSteps ? 'is-open' : ''}`} />
+          {hiddenStepCount} {hiddenStepCount === 1 ? 'step' : 'steps'}
+        </button>
+      ) : null}
       <AutoFollow className="task-activity-card-scroll">
         <div className="task-activity-card-content">{content}</div>
       </AutoFollow>
     </section>
+  );
+}
+
+function StepsChevronIcon({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <svg
+      className={className}
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m8.5 6 6 6-6 6" />
+    </svg>
   );
 }
 
