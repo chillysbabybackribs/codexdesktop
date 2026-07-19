@@ -5671,6 +5671,31 @@ function Composer({
     );
   });
 
+  // File/folder candidates share the mention menu with plugins: files first,
+  // one selection index spanning both sections.
+  const fileCandidates = useMemo(
+    () =>
+      pluginQuery !== null && mentionIndex
+        ? rankMentionCandidates(pluginQuery, mentionIndex.files, mentionIndex.dirs, 8)
+        : [],
+    [pluginQuery, mentionIndex],
+  );
+  const mentionOptionCount = fileCandidates.length + mentionPlugins.length;
+
+  const chooseMention = (candidate: MentionCandidate): void => {
+    const match = value.match(/(?:^|\s)@([^\s@]*)$/);
+    if (!match || match.index === undefined) return;
+    const leadingSpace = match[0].startsWith(' ') ? ' ' : '';
+    setMentions((current) =>
+      current.some((mention) => mention.path === candidate.path && mention.kind === candidate.kind)
+        ? current
+        : [...current, { path: candidate.path, kind: candidate.kind }],
+    );
+    setValue(`${value.slice(0, match.index)}${leadingSpace}`);
+    setPluginMenuState('closed');
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
   const choosePlugin = (plugin: PluginSummary): void => {
     const match = value.match(/(?:^|\s)@([^\s@]*)$/);
     if (!match || match.index === undefined) return;
@@ -5679,6 +5704,14 @@ function Composer({
     setValue(`${value.slice(0, match.index)}${leadingSpace}@${name} `);
     setPluginMenuState('closed');
     requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
+  const chooseMentionOption = (index: number): void => {
+    if (index < fileCandidates.length) {
+      chooseMention(fileCandidates[index]);
+    } else if (mentionPlugins.length) {
+      choosePlugin(mentionPlugins[Math.min(index - fileCandidates.length, mentionPlugins.length - 1)]);
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -5784,26 +5817,26 @@ function Composer({
             setPluginMenuState('closed');
             return;
           }
-          if (pluginMenuState === 'ready' && mentionPlugins.length && event.key === 'ArrowDown') {
+          if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowDown') {
             event.preventDefault();
-            setPluginSelectionIndex((current) => (current + 1) % mentionPlugins.length);
+            setPluginSelectionIndex((current) => (current + 1) % mentionOptionCount);
             return;
           }
-          if (pluginMenuState === 'ready' && mentionPlugins.length && event.key === 'ArrowUp') {
+          if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowUp') {
             event.preventDefault();
             setPluginSelectionIndex(
-              (current) => (current - 1 + mentionPlugins.length) % mentionPlugins.length,
+              (current) => (current - 1 + mentionOptionCount) % mentionOptionCount,
             );
             return;
           }
           if (
             pluginMenuState === 'ready' &&
-            mentionPlugins.length &&
+            mentionOptionCount &&
             event.key === 'Enter' &&
             !event.shiftKey
           ) {
             event.preventDefault();
-            choosePlugin(mentionPlugins[Math.min(pluginSelectionIndex, mentionPlugins.length - 1)]);
+            chooseMentionOption(Math.min(pluginSelectionIndex, mentionOptionCount - 1));
             return;
           }
           if (event.key === 'Enter' && !event.shiftKey) {
