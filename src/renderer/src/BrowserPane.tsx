@@ -208,7 +208,7 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         autoComplete="off"
         aria-label="Address"
         onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; justFocusedRef.current = true; event.target.select(); runQuery('') }}
-        onMouseUp={(event) => { if (justFocusedRef.current) { event.preventDefault(); justFocusedRef.current = false } }}
+        onMouseUp={(event) => { if (justFocusedRef.current) { justFocusedRef.current = false; if (event.currentTarget.selectionStart === event.currentTarget.selectionEnd) event.currentTarget.select() } }}
         onBlur={() => { setIsEditing(false); closePopup() }}
         onChange={(event) => {
           const text = event.target.value

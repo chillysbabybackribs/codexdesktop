@@ -3984,12 +3984,23 @@ function ChatPane({
             );
           })}
         </ThreadScroll>
+        </FileReviewContext.Provider>
 
         <div
           className={`composer-dock ${hasThreadContent ? 'is-docked' : 'is-centered'} ${
             openAgentSessions.length ? 'has-agents' : ''
           }`}
         >
+          {reviewTarget ? (
+            <ReviewBar
+              changes={reviewTarget.changes}
+              workspace={workspace}
+              undonePaths={new Set(undoneFiles[reviewTarget.turnId] ?? [])}
+              onKeepAll={() => onKeepTurn(reviewTarget.turnId)}
+              onUndoAll={() => void onUndoTurnAll(reviewTarget.turnId)}
+              onUndoFile={(path) => void onUndoFile(reviewTarget.turnId, path)}
+            />
+          ) : null}
           {openAgentSessions.length ? (
             <AgentColumn
               sessions={openAgentSessions}
