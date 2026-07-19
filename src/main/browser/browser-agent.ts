@@ -1137,18 +1137,81 @@ function describeFrame(frame: WebFrameMain, mainFrame: WebFrameMain): BrowserFra
   }
 }
 
+class BrowserOperationError extends Error {
+  readonly failure: BrowserFailure
+
+  constructor(failure: BrowserFailure) {
+    super(failure.message)
+    this.name = failure.name ?? 'BrowserOperationError'
+    this.failure = failure
+    if (failure.stack) this.stack = failure.stack
+  }
+}
+
+function operationError(
+  code: BrowserFailureCode,
+  phase: BrowserFailurePhase,
+  message: string,
+  details: Pick<BrowserFailure, 'name' | 'stack'> = {}
+): BrowserOperationError {
+  return new BrowserOperationError({ code, phase, message, ...details })
+}
+
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
+  try {
+    return error instanceof Error ? error.message : String(error)
+  } catch {
+    return 'unknown browser error'
+  }
+}
+
+function browserFailureFor(
+  error: unknown,
+  fallbackCode: BrowserFailureCode = 'executionError',
+  fallbackPhase: BrowserFailurePhase = 'controller'
+): BrowserFailure {
+  if (error instanceof BrowserOperationError) return error.failure
+  const message = errorMessage(error)
+  const name = error instanceof Error && error.name ? error.name.slice(0, 120) : undefined
+  const stack = error instanceof Error && error.stack ? error.stack.slice(0, 4_000) : undefined
+  if (/browser operation timed out|navigation timed out|CDP event wait timed out/i.test(message)) {
+    return { code: 'timeout', phase: 'controller', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  if (/no live frame with id/i.test(message)) {
+    return { code: 'frameNotFound', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  if (/frame.*(?:disposed|detached|destroyed)|render frame was disposed/i.test(message)) {
+    return { code: 'frameDetached', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  if (/execution context was destroyed|cannot find context|cannot execute JavaScript in this frame|target changed/i.test(message)) {
+    return { code: 'targetChanged', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  if (/target.*(?:closed|destroyed)|webcontents.*destroyed|page was closed/i.test(message)) {
+    return { code: 'targetClosed', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  if (/not JSON serializable|could not be cloned|object could not be cloned|serialize/i.test(message)) {
+    return { code: 'resultSerializationError', phase: 'resultSerialization', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
+  }
+  return {
+    code: fallbackCode,
+    phase: fallbackPhase,
+    message,
+    ...(name ? { name } : {}),
+    ...(stack ? { stack } : {})
+  }
 }
 
 function classifyBrowserFailure(error: unknown): BrowserFailureCode {
-  const message = errorMessage(error)
-  if (/timed out/i.test(message)) return 'timeout'
-  if (/no live frame with id/i.test(message)) return 'frameNotFound'
-  if (/frame.*(?:disposed|detached|destroyed)|render frame was disposed/i.test(message)) return 'frameDetached'
-  if (/execution context was destroyed|cannot find context|navigat(?:e|ed|ion)|target changed/i.test(message)) return 'targetChanged'
-  if (/target.*(?:closed|destroyed)|webcontents.*destroyed/i.test(message)) return 'targetClosed'
-  return 'executionError'
+  return browserFailureFor(error).code
+}
+
+function browserFailureFields(
+  error: unknown,
+  fallbackCode: BrowserFailureCode = 'executionError',
+  fallbackPhase: BrowserFailurePhase = 'controller'
+): Pick<BrowserAgentFailure, 'error' | 'errorCode' | 'failure'> {
+  const failure = browserFailureFor(error, fallbackCode, fallbackPhase)
+  return { error: failure.message, errorCode: failure.code, failure }
 }
 
 function isLifecycleFailure(code: BrowserFailureCode | undefined): boolean {
@@ -1189,7 +1252,11 @@ function boundResult(value: unknown, maxChars: number): { value: unknown; chars:
   try {
     serialized = JSON.stringify(value) ?? 'null'
   } catch (error) {
-    throw new Error(`browser result is not JSON serializable: ${error instanceof Error ? error.message : String(error)}`)
+    throw operationError(
+      'resultSerializationError',
+      'resultSerialization',
+      `browser result is not JSON serializable: ${error instanceof Error ? error.message : String(error)}`
+    )
   }
 
   if (serialized.length <= maxChars) {
