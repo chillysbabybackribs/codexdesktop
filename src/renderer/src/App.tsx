@@ -1433,9 +1433,7 @@ export default function App(): React.JSX.Element {
       }
       if (!resumed) return false;
     }
-    requestAnimationFrame(() =>
-      document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus(),
-    );
+    focusActiveComposer();
     return true;
   };
 
@@ -1446,7 +1444,20 @@ export default function App(): React.JSX.Element {
     if (!closing || closing.status === 'working') return;
     const wasActive = current.activeKey === key;
     if (wasActive) flushActiveMainChatSession();
-    const next = closeMainChatTab(current, key, () => crypto.randomUUID());
+    let next = closeMainChatTab(current, key, () => crypto.randomUUID());
+    // Closing a chat that is on screen in a split: focus stays in the split
+    // (its spatial sibling) instead of jumping to a hidden neighbor tab. The
+    // pane itself collapses via the reconcile inside updateMainChatTabs.
+    const layout = chatSplitLayoutRef.current;
+    if (wasActive && countSplitPanes(layout) > 1 && splitHasPane(layout, key)) {
+      const sibling = adjacentSplitPaneKey(layout, key);
+      const fallback = splitPaneKeys(removeSplitPane(layout, key))[0];
+      const preferred = [sibling, fallback].find(
+        (candidate): candidate is string =>
+          Boolean(candidate) && next.tabs.some((tab) => tab.key === candidate),
+      );
+      if (preferred) next = { ...next, activeKey: preferred };
+    }
     sessionStoreRef.current.remove(key);
     resumeFailuresByTabRef.current.delete(key);
     discardComposerDraft(key);
@@ -1837,9 +1848,7 @@ export default function App(): React.JSX.Element {
       ) {
         event.preventDefault();
         handleNewThread();
-        requestAnimationFrame(() =>
-          document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus(),
-        );
+        focusActiveComposer();
         return;
       }
 
