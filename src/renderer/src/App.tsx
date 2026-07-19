@@ -8,7 +8,8 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState
+  useState,
+  useSyncExternalStore
 } from 'react'
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock'
 import { ModelPill } from './ModelPill'
@@ -185,13 +186,7 @@ export default function App(): React.JSX.Element {
   const mainChatTabs = mainChatTabState.tabs
   const activeMainChatTabKey = mainChatTabState.activeKey
   const initialMainChatTab = mainChatTabs.find((tab) => tab.key === activeMainChatTabKey) ?? mainChatTabs[0]
-  const [items, setItems] = useState<ChatItem[]>([])
-  const [activeThreadId, setActiveThreadId] = useState<string | null>(initialMainChatTab.threadId)
-  const [activeThreadTitle, setActiveThreadTitle] = useState(initialMainChatTab.title)
-  const [activeTurnId, setActiveTurnId] = useState<string | null>(null)
-  const [activeGoal, setActiveGoal] = useState<ThreadGoal | null>(null)
   const [isGoalUpdating, setIsGoalUpdating] = useState(false)
-  const [activeReasoningEffort, setActiveReasoningEffort] = useState<ReasoningEffort | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [isRestoring, setIsRestoring] = useState(true)
   const [reconcilingMainChatTabKey, setReconcilingMainChatTabKey] = useState<string | null>(null)
@@ -214,13 +209,6 @@ export default function App(): React.JSX.Element {
   const [fastMode, setFastMode] = useState(() => window.localStorage.getItem(fastModeStorageKey) === '1')
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
-  // Lifecycle data the item payloads don't carry: which turn an item belongs
-  // to, start/completion timestamps, MCP progress. Keyed by item id.
-  const [itemMeta, setItemMeta] = useState<Record<string, ItemMeta>>({})
-  // Per-turn status, timing, token usage, and diff stats for the tail rows.
-  const [turnMeta, setTurnMeta] = useState<Record<string, TurnMeta>>({})
-  // Latest thread-level usage snapshot; `last` sizes the current context.
-  const [contextUsage, setContextUsage] = useState<ThreadTokenUsage | null>(null)
   const {
     agentSessions,
     openAgentKeys,
@@ -246,21 +234,12 @@ export default function App(): React.JSX.Element {
     schedule: maybeScheduleAgentRecovery,
     cancel: cancelAgentRecovery
   })
-  const [isCompacting, setIsCompacting] = useState(false)
   const appRef = useRef<HTMLDivElement | null>(null)
   const viewHostRef = useRef<HTMLDivElement | null>(null)
   const pendingBoundsRef = useRef<BrowserBounds | null>(null)
   const rafRef = useRef<number | null>(null)
   const isDraggingDividerRef = useRef(false)
   const splitRef = useRef(split)
-  const activeThreadIdRef = useRef<string | null>(activeThreadId)
-  const activeThreadTitleRef = useRef(activeThreadTitle)
-  const activeTurnIdRef = useRef<string | null>(activeTurnId)
-  const itemsRef = useRef<ChatItem[]>(items)
-  const itemMetaRef = useRef<Record<string, ItemMeta>>(itemMeta)
-  const turnMetaRef = useRef<Record<string, TurnMeta>>(turnMeta)
-  const activeGoalRef = useRef<ThreadGoal | null>(activeGoal)
-  const activeReasoningEffortRef = useRef<ReasoningEffort | null>(activeReasoningEffort)
   const userTurnRequestPendingRef = useRef(false)
   const userRequestedTurnIdRef = useRef<string | null>(null)
   const optimisticUserMessageIdRef = useRef<string | null>(null)
@@ -285,12 +264,6 @@ export default function App(): React.JSX.Element {
   const threadsNextCursorRef = useRef<string | null>(null)
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map())
   const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map())
-  const precedingModelInputByTurnRef = useRef<Map<string, ModelCallAttribution>>(new Map())
-  const pendingCompactionByTurnRef = useRef<Set<string>>(new Set())
-  // The contextCompaction item currently running, with the context size it
-  // started from, so the compaction turn's token update can record the shrink.
-  const activeCompactionRef = useRef<{ itemId: string; turnId: string; beforeTokens: number | null } | null>(null)
-  const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
   const mainChatTabStateRef = useRef(mainChatTabState)
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
   const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore)
@@ -303,6 +276,102 @@ export default function App(): React.JSX.Element {
   // Per-session overload recovery, keyed by session key — the dock equivalent
   // of autoRecoveryRef (which only ever tracks the focused thread).
   const agentRecoveryRef = useRef<Map<string, Omit<AutoRecoveryState, 'threadId'>>>(new Map())
+
+  // ── Phase 2: the active tab's render model lives in the SessionStore under
+  // the active tab key. React subscribes via useSyncExternalStore; the legacy
+  // setter/ref names below are store-backed shims so call sites are unchanged.
+  const subscribeToSessions = useCallback(
+    (onStoreChange: () => void) => sessionStoreRef.current.subscribeAll(onStoreChange),
+    []
+  )
+  const readActiveSession = useCallback(
+    () => sessionStoreRef.current.get(activeMainChatTabKeyRef.current),
+    []
+  )
+  const activeSession = useSyncExternalStore(subscribeToSessions, readActiveSession)
+  const items = activeSession.items
+  const itemMeta = activeSession.itemMeta
+  const turnMeta = activeSession.turnMeta
+  const contextUsage = activeSession.contextUsage
+  const activeGoal = activeSession.goal
+  const isCompacting = activeSession.isCompacting
+  const activeThreadId = activeSession.threadId
+  const activeThreadTitle = activeSession.title
+  const activeTurnId = activeSession.turnId
+  const activeReasoningEffort = activeSession.reasoningEffort
+
+  const activeSessionShims = useMemo(() => {
+    const updateField = <K extends keyof SessionRenderState>(
+      field: K,
+      value: SessionRenderState[K] | ((current: SessionRenderState[K]) => SessionRenderState[K])
+    ): void => {
+      sessionStoreRef.current.update(activeMainChatTabKeyRef.current, (session) => {
+        const next = typeof value === 'function'
+          ? (value as (current: SessionRenderState[K]) => SessionRenderState[K])(session[field])
+          : value
+        return Object.is(next, session[field]) ? session : { ...session, [field]: next }
+      })
+    }
+    const makeSetter = <K extends keyof SessionRenderState>(field: K) =>
+      (value: SessionRenderState[K] | ((current: SessionRenderState[K]) => SessionRenderState[K])): void =>
+        updateField(field, value)
+    const makeRef = <K extends keyof SessionRenderState>(field: K): { current: SessionRenderState[K] } => ({
+      get current(): SessionRenderState[K] {
+        return sessionStoreRef.current.get(activeMainChatTabKeyRef.current)[field]
+      },
+      set current(value: SessionRenderState[K]) {
+        updateField(field, value)
+      }
+    })
+    return {
+      setItems: makeSetter('items'),
+      setItemMeta: makeSetter('itemMeta'),
+      setTurnMeta: makeSetter('turnMeta'),
+      setContextUsage: makeSetter('contextUsage'),
+      setActiveGoal: makeSetter('goal'),
+      setIsCompacting: makeSetter('isCompacting'),
+      setActiveThreadId: makeSetter('threadId'),
+      setActiveThreadTitle: makeSetter('title'),
+      setActiveTurnId: makeSetter('turnId'),
+      setActiveReasoningEffort: makeSetter('reasoningEffort'),
+      itemsRef: makeRef('items'),
+      itemMetaRef: makeRef('itemMeta'),
+      turnMetaRef: makeRef('turnMeta'),
+      contextUsageRef: makeRef('contextUsage'),
+      activeGoalRef: makeRef('goal'),
+      activeReasoningEffortRef: makeRef('reasoningEffort'),
+      activeThreadIdRef: makeRef('threadId'),
+      activeThreadTitleRef: makeRef('title'),
+      activeTurnIdRef: makeRef('turnId'),
+      activeCompactionRef: makeRef('activeCompaction'),
+      precedingModelInputByTurnRef: makeRef('precedingModelInputByTurn'),
+      pendingCompactionByTurnRef: makeRef('pendingCompactionByTurn')
+    }
+  }, [])
+  const {
+    setItems,
+    setItemMeta,
+    setTurnMeta,
+    setContextUsage,
+    setActiveGoal,
+    setIsCompacting,
+    setActiveThreadId,
+    setActiveThreadTitle,
+    setActiveTurnId,
+    setActiveReasoningEffort,
+    itemsRef,
+    itemMetaRef,
+    turnMetaRef,
+    contextUsageRef,
+    activeGoalRef,
+    activeReasoningEffortRef,
+    activeThreadIdRef,
+    activeThreadTitleRef,
+    activeTurnIdRef,
+    activeCompactionRef,
+    precedingModelInputByTurnRef,
+    pendingCompactionByTurnRef
+  } = activeSessionShims
 
   useEffect(() => {
     return window.api.browser.onState(setBrowserState)
