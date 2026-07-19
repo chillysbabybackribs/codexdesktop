@@ -142,24 +142,26 @@ test('content-block indexes are scoped to each assistant message', () => {
 })
 
 test('rate-limit and SDK error details survive into the failed turn', () => {
-  const { state } = replayTurn([
-    {
-      type: 'rate_limit_event',
-      rate_limit_info: { status: 'rejected', resetsAt: 2_000_000_000 }
-    },
-    {
-      type: 'result',
-      subtype: 'error_during_execution',
-      usage: { input_tokens: 1, output_tokens: 0 },
-      errors: ['provider detail'],
-      duration_ms: 20
-    }
-  ], 'continue')
+  const { context } = makeContext()
+  const translator = new ClaudeTurnTranslator(context)
+  translator.handle({
+    type: 'rate_limit_event',
+    rate_limit_info: { status: 'rejected', resetsAt: 2_000_000_000 }
+  })
+  const translation = translator.handle({
+    type: 'result',
+    subtype: 'error_during_execution',
+    usage: { input_tokens: 1, output_tokens: 0 },
+    errors: ['provider detail'],
+    duration_ms: 20
+  })
+  const completed = translation.notifications.at(-1) as unknown as {
+    params: { turn: { status: string; error: { message: string; codexErrorInfo: string } } }
+  }
 
-  const meta = state.turnMeta['claude-t1-turn1']
-  assert.equal(meta?.status, 'failed')
-  assert.match(meta?.errorMessage ?? '', /usage limit reached/i)
-  assert.equal(meta?.error?.codexErrorInfo, 'usageLimitExceeded')
+  assert.equal(completed.params.turn.status, 'failed')
+  assert.match(completed.params.turn.error.message, /usage limit reached/i)
+  assert.equal(completed.params.turn.error.codexErrorInfo, 'usageLimitExceeded')
 })
 
 test('a failed result marks the turn failed with the error message', () => {

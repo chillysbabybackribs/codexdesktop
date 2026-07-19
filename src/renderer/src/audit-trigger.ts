@@ -105,6 +105,20 @@ export function buildAuditPrompt(input: { userText: string; files: string[]; ste
   ].join('\n')
 }
 
+// The briefing as a markdown document — rendered in the agent card as a
+// retractable "audit-brief.md" the auditor's work is grounded in.
+export function auditBriefMarkdown(audit: AuditRequestSummary): string {
+  const sections: string[] = []
+  if (audit.userText) sections.push(`## Request\n\n${audit.userText}`)
+  if (audit.files.length) {
+    sections.push(`## Changed files\n\n${audit.files.map((file) => `- \`${file}\``).join('\n')}`)
+  }
+  if (audit.steps.length) {
+    sections.push(`## Steps\n\n${audit.steps.map((step, index) => `${index + 1}. \`${step}\``).join('\n')}`)
+  }
+  return sections.join('\n\n') || '_No details captured._'
+}
+
 // Live glance at the in-flight main-chat turn, shown in auditor cards while
 // the doer works ("watching" POV). Pure and cheap — recomputed per items
 // change from state the renderer already holds; no model cost.
