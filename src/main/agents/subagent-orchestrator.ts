@@ -162,6 +162,7 @@ export class SubagentOrchestrator {
       provider,
       resolve: () => {},
       settled: false,
+      lastAgentText: '',
     }
     this.pendingByAgentKey.set(agentKey, pending)
 

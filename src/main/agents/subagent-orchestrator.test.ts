@@ -34,12 +34,28 @@ function agentMessage(text: string): ThreadItem {
   return { type: 'agentMessage', id: 'm1', text, phase: null, memoryCitation: null } as ThreadItem
 }
 
-function turnCompleted(threadId: string, items: ThreadItem[], status: 'completed' | 'failed' = 'completed'): SessionEvent {
+// The child's answer arrives via a streamed item/completed; the terminal
+// turn/completed carries itemsView:'notLoaded' with empty items (the real
+// app-server behavior), so the orchestrator must accumulate from the stream.
+function itemCompleted(threadId: string, item: ThreadItem): SessionEvent {
+  const notification = {
+    method: 'item/completed',
+    params: { item, threadId, turnId: 't1', completedAtMs: 1 },
+  } as unknown as ServerNotification
+  return { type: 'notification', notification }
+}
+
+function turnCompleted(
+  threadId: string,
+  status: 'completed' | 'failed' = 'completed',
+  itemsView: 'full' | 'notLoaded' = 'notLoaded',
+  items: ThreadItem[] = [],
+): SessionEvent {
   const notification = {
     method: 'turn/completed',
     params: {
       threadId,
-      turn: { id: 't1', items, itemsView: 'full', status, error: null, startedAt: 0, completedAt: 1, durationMs: 1 },
+      turn: { id: 't1', items, itemsView, status, error: null, startedAt: 0, completedAt: 1, durationMs: 1 },
     },
   } as unknown as ServerNotification
   return { type: 'notification', notification }
@@ -60,14 +76,38 @@ test('spawnAndAwait returns the child final answer as an ok result', async () =>
   await Promise.resolve()
   await Promise.resolve()
 
-  // The child's turn completes; the orchestrator resolves the pending promise.
-  orchestrator.tagEvent(turnCompleted('child-1', [agentMessage('the summary')]))
+  // The answer streams in via item/completed; the terminal turn/completed has
+  // no items (itemsView:'notLoaded') — the orchestrator must have captured it.
+  orchestrator.tagEvent(itemCompleted('child-1', agentMessage('the summary')))
+  orchestrator.tagEvent(turnCompleted('child-1'))
   const result = await pending
 
   assert.equal(result.ok, true)
   assert.equal(result.status, 'completed')
   assert.equal(result.threadId, 'child-1')
   assert.equal(result.finalText, 'the summary')
+})
+
+test('final answer comes from the stream even when turn/completed carries no items', async () => {
+  const { provider } = fakeProvider()
+  const orchestrator = new SubagentOrchestrator(() => provider, () => {})
+  const pending = orchestrator.spawnAndAwait({
+    parentThreadId: 'lead-thread',
+    parentTurnId: 'lead-turn',
+    parentAgentKey: 'lead-key',
+    task: 'do work',
+  })
+  await Promise.resolve()
+  await Promise.resolve()
+
+  // Two streamed messages; the last non-empty one wins.
+  orchestrator.tagEvent(itemCompleted('child-1', agentMessage('working…')))
+  orchestrator.tagEvent(itemCompleted('child-1', agentMessage('SUBAGENT REPORTING IN')))
+  // Real app-server shape: notLoaded + empty items.
+  orchestrator.tagEvent(turnCompleted('child-1', 'completed', 'notLoaded', []))
+  const result = await pending
+  assert.equal(result.ok, true)
+  assert.equal(result.finalText, 'SUBAGENT REPORTING IN')
 })
 
 test('spawnAndAwait announces agentSpawned before any turn events', async () => {
