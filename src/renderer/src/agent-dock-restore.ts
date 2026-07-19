@@ -68,6 +68,13 @@ export async function restoreAgentDock(options: {
 
     // Register before resuming so incoming events route to the dock.
     store.updateSessions((current) => [...current, ...restored])
+    for (const session of restored) {
+      store.setRenderState(session.key, emptySessionState({
+        threadId: session.threadId,
+        title: session.title,
+        reasoningEffort: session.reasoningEffort
+      }))
+    }
     const anyOpenFlag = entries.some((entry) => entry.open)
     const openKeys = anyOpenFlag
       ? restored.filter((_, index) => entries[index].open).map((session) => session.key)

@@ -152,7 +152,9 @@ export function useAgentSessions(
     const terminal = notifications.at(-1)
     syncAgentSession(key, terminal?.method === 'turn/started'
       ? 'working'
-      : terminal?.method === 'turn/completed' ? 'done' : undefined)
+      : terminal?.method === 'turn/completed' || (terminal?.method === 'error' && !terminal.params.willRetry)
+        ? 'done'
+        : undefined)
   }
 
   function applyAgentNotification(key: string, notification: ServerNotification): void {
