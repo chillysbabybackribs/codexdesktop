@@ -1188,7 +1188,8 @@ test('browser agent captures a bounded WebSocket stream and persists NDJSON in o
   assert.equal(stream.messages[1].data, '{"delta":"two"}')
   const artifact = await (await import('node:fs/promises')).readFile(stream.artifact.artifactPath, 'utf8')
   assert.match(artifact, /"type":"network-stream"/)
-  assert.match(artifact, /"delta":"two"/)
+  const lines = artifact.trim().split('\n').map((line) => JSON.parse(line) as { data?: string })
+  assert.equal(lines[2].data, '{"delta":"two"}')
 })
 
 test('browser network capture requires one trigger and a targeted URL matcher', async () => {
