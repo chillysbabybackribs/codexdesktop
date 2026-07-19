@@ -105,6 +105,33 @@ export function buildAuditPrompt(input: { userText: string; files: string[]; ste
   ].join('\n')
 }
 
+// Live glance at the in-flight main-chat turn, shown in auditor cards while
+// the doer works ("watching" POV). Pure and cheap — recomputed per items
+// change from state the renderer already holds; no model cost.
+export type LiveTurnGlance = {
+  turnId: string
+  stepCount: number
+  fileCount: number
+  lastStep: string | null
+}
+
+export function liveTurnGlance(
+  items: ChatItem[],
+  itemMeta: Record<string, ItemMeta>,
+  turnId: string
+): LiveTurnGlance {
+  // No cap: the glance wants the true count and the genuinely-latest step,
+  // not the overflow summary line the audit briefing uses.
+  const steps = turnStepLines(items, itemMeta, turnId, Number.MAX_SAFE_INTEGER)
+  const files = turnChangedFiles(items, itemMeta, turnId)
+  return {
+    turnId,
+    stepCount: steps.length,
+    fileCount: files.length,
+    lastStep: steps.at(-1) ?? null
+  }
+}
+
 // True when a stored user message is an auto-audit request. Cheap marker check
 // so the restore path can rebuild the collapsed card instead of showing the
 // full prompt verbatim after an app restart.
