@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import type { WebContents } from 'electron'
 import {
   BrowserOperationError,
   KeyedOperationQueue,
   boundResult,
   browserFailureFor,
+  createBoundedSuccessResult,
+  createFailureResult,
+  operationError,
   withTimeout
 } from './browser-operation.ts'
 
@@ -108,4 +112,29 @@ test('boundResult returns a bounded preview and classifies serialization failure
       return true
     }
   )
+})
+
+test('operation result factories preserve a consistent target envelope', () => {
+  const webContents = {
+    getURL: () => 'https://example.com/report',
+    getTitle: () => 'Example report'
+  } as WebContents
+  const context = { tabId: 'tab-1', webContents, startedAt: Date.now() }
+
+  const success = createBoundedSuccessResult({ answer: 42 }, 1_000, context)
+  assert.equal(success.ok, true)
+  assert.deepEqual(success.result, { answer: 42 })
+  assert.equal(success.tabId, 'tab-1')
+  assert.equal(success.url, 'https://example.com/report')
+  assert.equal(success.title, 'Example report')
+  assert.equal(success.truncated, false)
+
+  const failure = createFailureResult(
+    operationError('targetChanged', 'targetLifecycle', 'target changed'),
+    context
+  )
+  assert.equal(failure.ok, false)
+  assert.equal(failure.errorCode, 'targetChanged')
+  assert.equal(failure.failure?.phase, 'targetLifecycle')
+  assert.equal(failure.tabId, 'tab-1')
 })
