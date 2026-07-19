@@ -7012,10 +7012,9 @@ button {
   display: flex;
   align-items: center;
   gap: 7px;
-  min-height: 29px;
-  padding: 0 12px;
-  border-bottom: 1px solid var(--hairline);
-  background: rgb(255 255 255 / 1.5%);
+  min-height: 26px;
+  padding: 0 9px;
+  margin-bottom: 3px;
   color: #9b9b9b;
   font-size: 10px;
   font-weight: 650;
@@ -7037,11 +7036,10 @@ button {
   flex-direction: column;
   gap: 2px;
   width: 100%;
-  min-height: 45px;
-  padding: 8px 34px 8px 12px;
+  min-height: 44px;
+  padding: 8px 34px 8px 9px;
   border: 0;
-  border-bottom: 1px solid rgb(255 255 255 / 5%);
-  border-radius: 0;
+  border-radius: 9px;
   background: transparent;
   color: #d8dce0;
   text-align: left;
@@ -7051,16 +7049,12 @@ button {
 
 .review-action-menu-item:hover,
 .review-action-menu-item:focus-visible {
-  background: rgb(255 255 255 / 5.5%);
+  background: rgb(255 255 255 / 6%);
   color: #fff;
 }
 
-.review-action-menu-item:last-child {
-  border-bottom: 0;
-}
-
 .review-action-menu-item.is-confirming {
-  background: rgb(229 83 75 / 8%);
+  background: rgb(229 83 75 / 10%);
   color: #f1a09a;
 }
 
