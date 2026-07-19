@@ -530,6 +530,15 @@ export default function App(): React.JSX.Element {
   }, [mainChatTabState]);
 
   useEffect(() => {
+    chatSplitLayoutRef.current = chatSplitLayout;
+    // Debounced: ratio drags update the layout once per pointer move.
+    const timer = window.setTimeout(() => {
+      window.localStorage.setItem(chatSplitStorageKey, serializeChatSplitLayout(chatSplitLayout));
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [chatSplitLayout]);
+
+  useEffect(() => {
     activeGoalRef.current = activeGoal;
   }, [activeGoal]);
 
@@ -565,6 +574,15 @@ export default function App(): React.JSX.Element {
     threadsNextCursorRef.current = threadsNextCursor;
   }, [threadsNextCursor]);
 
+  function updateChatSplitLayout(update: (layout: SplitNode) => SplitNode): void {
+    // Eager against the ref, like updateMainChatTabs: drop handlers read the
+    // layout back synchronously right after writing it.
+    const next = update(chatSplitLayoutRef.current);
+    if (next === chatSplitLayoutRef.current) return;
+    chatSplitLayoutRef.current = next;
+    setChatSplitLayoutState(next);
+  }
+
   function updateMainChatTabs(update: (state: MainChatTabState) => MainChatTabState): void {
     // Applied eagerly against the ref (the always-current source) so
     // activeMainChatTabKeyRef is correct the moment this returns — active-
@@ -574,6 +592,21 @@ export default function App(): React.JSX.Element {
     mainChatTabStateRef.current = next;
     activeMainChatTabKeyRef.current = next.activeKey;
     setMainChatTabState(next);
+    // Every tab mutation flows through here, so this is the single place the
+    // split layout is forced back to its invariants: panes only show open
+    // tabs, and the active tab is always visible — appearing where the
+    // previously focused pane was, exactly like the one-pane content swap.
+    const reconciled = reconcileChatSplitLayout(
+      chatSplitLayoutRef.current,
+      next.tabs.map((tab) => tab.key),
+      next.activeKey,
+      focusedPaneTabKeyRef.current,
+    );
+    if (reconciled !== chatSplitLayoutRef.current) {
+      chatSplitLayoutRef.current = reconciled;
+      setChatSplitLayoutState(reconciled);
+    }
+    focusedPaneTabKeyRef.current = next.activeKey;
   }
 
   function patchMainChatTab(key: string, update: (tab: MainChatTab) => MainChatTab): void {
