@@ -1261,7 +1261,8 @@ export function TurnTail({
   itemMeta,
   meta,
   streamingMessage,
-  onOpenTrace
+  onOpenTrace,
+  onRevert
 }: {
   live: boolean
   items: WorkItem[]
@@ -1269,8 +1270,13 @@ export function TurnTail({
   meta: TurnMeta | undefined
   streamingMessage: boolean
   onOpenTrace?: () => void
+  onRevert?: () => void
 }): React.JSX.Element | null {
   const now = useNow(live)
+  // Two-click inline confirm: reverting rewrites workspace files, so a lone
+  // misclick shouldn't fire it — but no dialogs; the revert itself is also
+  // checkpointed, so even a confirmed mistake is undoable.
+  const [confirmingRevert, setConfirmingRevert] = useState(false)
 
   if (live) {
     const label = currentActionLabel(items, itemMeta, streamingMessage)
@@ -1335,6 +1341,24 @@ export function TurnTail({
         {[lead, ...parts].join(' · ')}
         {meta?.status === 'failed' && meta.errorMessage ? ` — ${truncate(meta.errorMessage, 160)}` : ''}
       </span>
+      {onRevert ? (
+        <button
+          type="button"
+          className={`turn-revert-button ${confirmingRevert ? 'is-confirming' : ''}`}
+          title="Restore the workspace files to how they were before this turn. The current state is checkpointed first, so a revert can itself be reverted."
+          onClick={() => {
+            if (confirmingRevert) {
+              setConfirmingRevert(false)
+              onRevert()
+            } else {
+              setConfirmingRevert(true)
+            }
+          }}
+          onBlur={() => setConfirmingRevert(false)}
+        >
+          {confirmingRevert ? 'Revert workspace?' : 'Revert'}
+        </button>
+      ) : null}
       {onOpenTrace ? <button type="button" className="turn-trace-button" onClick={onOpenTrace}>Trace</button> : null}
       <span className="tail-rule" aria-hidden="true" />
     </div>
