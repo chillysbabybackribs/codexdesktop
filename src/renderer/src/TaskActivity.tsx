@@ -597,10 +597,15 @@ function TerminalCard({
   liveNow: number
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
+  // Cursor-style step row: settled commands collapse to their header line
+  // (failures stay open — the error is the payload). Live commands always
+  // stream their output.
+  const [open, setOpen] = useState<boolean | null>(null)
   const running = status === 'running'
   const output = useMemo(() => stripAnsi(item.aggregatedOutput ?? '').replace(/\n+$/, ''), [item.aggregatedOutput])
   const lines = useMemo(() => (output ? output.split('\n') : []), [output])
 
+  const expanded = running || (open ?? status === 'failed')
   const hiddenCount = !running && !showAll ? Math.max(0, lines.length - collapsedOutputLines) : 0
   const shownLines = hiddenCount > 0 ? lines.slice(hiddenCount) : lines
 
@@ -608,19 +613,31 @@ function TerminalCard({
   const elapsed = elapsedMs !== null && elapsedMs >= 2500 ? fmtDuration(elapsedMs) : null
 
   return (
-    <div className={`term-card status-${status}`}>
-      <div className="term-head">
+    <div className={`term-card status-${status} ${expanded ? 'is-open' : 'is-collapsed'}`}>
+      <button
+        type="button"
+        className="term-head"
+        aria-expanded={expanded}
+        disabled={running}
+        onClick={() => {
+          if (!running) setOpen(!expanded)
+        }}
+      >
         <span className="term-icon">{running ? <Spinner /> : <TerminalIcon />}</span>
         <code className="term-command" title={item.command}>
           {item.command}
         </code>
         <span className="term-meta">
+          {!expanded && lines.length > 0 ? (
+            <span className="term-line-count">{lines.length === 1 ? '1 line' : `${lines.length} lines`}</span>
+          ) : null}
           {running && elapsed ? <span className="term-elapsed">{elapsed}</span> : null}
           {!running && duration ? <span className="term-elapsed">{fmtDuration(duration)}</span> : null}
           <StatusChip status={status} exitCode={item.exitCode} />
+          {!running ? <ChevronDownIcon className={`term-chevron ${expanded ? 'is-open' : ''}`} /> : null}
         </span>
-      </div>
-      {lines.length > 0 ? (
+      </button>
+      {expanded && lines.length > 0 ? (
         running ? (
           <AutoFollow className="term-output is-live">
             <pre>{output}</pre>
