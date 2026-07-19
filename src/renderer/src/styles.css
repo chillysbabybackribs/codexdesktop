@@ -6888,6 +6888,7 @@ button {
 .review-bar.is-action-menu-open {
   position: relative;
   z-index: 8;
+  border-top-right-radius: 0;
   overflow: visible;
 }
 
@@ -6982,10 +6983,10 @@ button {
 .review-action-menu {
   position: absolute;
   top: auto;
-  right: 0;
+  right: -10px;
   bottom: calc(100% - 1px);
   z-index: 30;
-  width: min(248px, 100cqw);
+  width: min(248px, calc(100cqw - 4px));
   padding: 5px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
@@ -7003,11 +7004,11 @@ button {
 @keyframes review-action-menu-in {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.97);
+    transform: translateY(8px) scaleY(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scaleY(1);
   }
 }
 
