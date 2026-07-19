@@ -66,7 +66,7 @@ test('agent send forwards the agent reasoning effort', async () => {
     configurable: true,
     value: {
       api: {
-        codex: {
+        session: {
           startThread: async () => {
             startThreadCalls += 1
             return { thread: { id: 'thread-1' } }
@@ -107,7 +107,7 @@ test('agent stop surfaces an interrupt failure instead of leaving a working agen
     configurable: true,
     value: {
       api: {
-        codex: {
+        session: {
           interruptTurn: async () => { throw new Error('app-server unavailable') }
         }
       }

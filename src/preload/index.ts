@@ -130,7 +130,7 @@ export const api = {
     uninstallPlugin: (pluginId: string): Promise<void> =>
       ipcRenderer.invoke(ipcChannels.sessionUninstallPlugin, pluginId),
     onEvent: (listener: (event: SessionEvent) => void) => {
-      const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
+      const wrapped = (_event: Electron.IpcRendererEvent, event: SessionEvent): void => listener(event)
       ipcRenderer.on(ipcChannels.sessionEvent, wrapped)
       return () => {
         ipcRenderer.off(ipcChannels.sessionEvent, wrapped)

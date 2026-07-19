@@ -112,7 +112,7 @@ test('closing a background agent logs interrupt and unsubscribe cleanup failures
     configurable: true,
     value: {
       api: {
-        codex: {
+        session: {
           interruptTurn: async () => { throw new Error('interrupt transport failed') },
           unsubscribeThread: async () => { throw new Error('unsubscribe transport failed') }
         }
