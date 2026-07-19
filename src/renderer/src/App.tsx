@@ -3425,6 +3425,8 @@ function MainChatTabStrip({
   onPaneDragUpdate: (target: { tabKey: string; zone: SplitDropZone } | null) => void;
   onDropOnPane: (sourceKey: string, targetKey: string, zone: SplitDropZone) => void;
   canSplitForDrop: (targetKey: string, sourceKey: string) => boolean;
+  onSplitActivePane: (direction: 'right' | 'down') => boolean;
+  canSplitActivePane: boolean;
   onClose: (key: string) => Promise<void>;
   onNew: () => void;
   onOpenSettings: () => void;
@@ -3735,6 +3737,26 @@ function MainChatTabStrip({
         <span aria-hidden="true">+</span>
       </button>
       <div className="main-chat-tabbar-spacer" />
+      <button
+        type="button"
+        className="main-chat-tab-action"
+        aria-label="Split right — open a new chat beside this one"
+        title="Split right — new chat beside this one (Ctrl+\)"
+        disabled={disabled || !canSplitActivePane}
+        onClick={() => onSplitActivePane('right')}
+      >
+        <SplitRightIcon />
+      </button>
+      <button
+        type="button"
+        className="main-chat-tab-action"
+        aria-label="Split down — open a new chat below this one"
+        title="Split down — new chat below this one (Ctrl+Shift+\)"
+        disabled={disabled || !canSplitActivePane}
+        onClick={() => onSplitActivePane('down')}
+      >
+        <SplitDownIcon />
+      </button>
       <ThreadMenu
         placement="tabbar"
         title={title}
@@ -4702,6 +4724,26 @@ function UnsplitIcon(): React.JSX.Element {
     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
       <path d="M6.2 6.2l3.6 3.6M9.8 6.2l-3.6 3.6" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SplitRightIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
+      <path d="M9.5 3.5v9" stroke="currentColor" />
+      <path d="M11.5 8h-2M11 6.9 12.1 8 11 9.1" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" opacity="0.75" />
+    </svg>
+  );
+}
+
+function SplitDownIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
+      <path d="M2.5 9h11" stroke="currentColor" />
+      <path d="M8 11.5v-2M6.9 11 8 12.1 9.1 11" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" opacity="0.75" />
     </svg>
   );
 }
