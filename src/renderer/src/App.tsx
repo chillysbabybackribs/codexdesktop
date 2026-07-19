@@ -3693,6 +3693,48 @@ function ChatPane({
     () => buildRows(items, itemMeta, activeTurnId),
     [items, itemMeta, activeTurnId],
   );
+
+  // Review target: the newest settled turn that edited files, still
+  // unreviewed and revertible. Scanning stops at the newest edit-turn — once
+  // it is kept/undone the bar goes away instead of resurfacing older turns.
+  const reviewTarget = useMemo((): { turnId: string; changes: ReviewChange[] } | null => {
+    if (activeTurnId) return null;
+    for (let i = rows.length - 1; i >= 0; i -= 1) {
+      const row = rows[i];
+      if (row.kind !== 'tail') continue;
+      const changes = (turnWork.get(row.turnId) ?? [])
+        .filter(
+          (item): item is Extract<WorkItem, { type: 'fileChange' }> => item.type === 'fileChange',
+        )
+        .flatMap((item) => item.changes);
+      if (!changes.length) continue;
+      if (turnReviews[row.turnId] || !turnCheckpoints[row.turnId]) return null;
+      return { turnId: row.turnId, changes };
+    }
+    return null;
+  }, [rows, turnWork, activeTurnId, turnReviews, turnCheckpoints]);
+
+  // Context for per-file Undo on diff cards. Identity is stable across
+  // streaming renders (deps change on turn boundaries and review actions
+  // only), so memoized cards are not re-rendered per delta.
+  const fileReview = useMemo(
+    (): FileReviewActions => ({
+      canUndo: (turnId) =>
+        Boolean(
+          turnId &&
+            turnId !== activeTurnId &&
+            turnCheckpoints[turnId] &&
+            turnReviews[turnId] !== 'undone',
+        ),
+      isUndone: (turnId, path) =>
+        Boolean(
+          turnId && (turnReviews[turnId] === 'undone' || undoneFiles[turnId]?.includes(path)),
+        ),
+      undoFile: (turnId, path) => void onUndoFile(turnId, path),
+    }),
+    [activeTurnId, turnCheckpoints, turnReviews, undoneFiles, onUndoFile],
+  );
+
   // Live glance at the in-flight turn for auditor dock cards ("watching" POV).
   // Cheap passes over state this pane already re-renders on.
   const liveMainTurn = useMemo(
@@ -3888,6 +3930,7 @@ function ChatPane({
           onLoadMoreThreads={onLoadMoreThreads}
         />
 
+        <FileReviewContext.Provider value={fileReview}>
         <ThreadScroll
           id="main-chat-panel"
           labelledBy={`main-chat-tab-${activeMainChatTabKey}`}
