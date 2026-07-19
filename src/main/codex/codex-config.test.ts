@@ -365,7 +365,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.match(browserFlow.description, /missing find is successful/i)
   const browserNetwork = browserDynamicTools.find(({ name }) => name === 'browser_network')
   assert.equal(browserNetwork?.type, 'function')
-  if (!browserNetwork || browserNetwork.type !== 'function') assert.fail('browser_network function tool is missing')
+  if (browserNetwork?.type !== 'function') assert.fail('browser_network function tool is missing')
   const networkSchema = browserNetwork.inputSchema as {
     required?: string[]
     properties: {

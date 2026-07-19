@@ -1070,6 +1070,71 @@ test('browser agent returns a bounded network journal and materializes a respons
   assert.equal(await (await import('node:fs/promises')).readFile(body.artifactPath, 'utf8'), '{"ok":true}')
 })
 
+test('browser agent captures a matched completed response and body in one navigation call', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-network-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/results',
+    getTitle: () => 'Results'
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-1', url: 'https://example.com/results', title: 'Results', active: true }],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      debuggerApi.emit('message', {}, 'Network.requestWillBeSent', {
+        requestId: 'graphql-1', type: 'Fetch', timestamp: 2,
+        request: { url: 'https://example.com/graphql?operation=Results', method: 'POST' }
+      })
+      debuggerApi.emit('message', {}, 'Network.responseReceived', {
+        requestId: 'graphql-1', type: 'Fetch',
+        response: { status: 200, mimeType: 'application/graphql-response+json', protocol: 'h2' }
+      })
+      debuggerApi.emit('message', {}, 'Network.loadingFinished', {
+        requestId: 'graphql-1', timestamp: 2.04, encodedDataLength: 11
+      })
+      return { url: 'https://example.com/results', durationMs: 5, domReadyMs: 3, settleMs: 2, settleReason: 'dom-ready' }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureNetwork({
+    url: 'https://example.com/results',
+    match: {
+      urlContains: '/graphql',
+      method: 'POST',
+      resourceType: 'Fetch',
+      mimeType: 'json',
+      statusMin: 200,
+      statusMax: 299
+    }
+  })
+
+  assert.equal(result.ok, true)
+  const network = (result.result as {
+    network: {
+      trigger: string
+      request: { requestId: string; completedAt: string | null }
+      responseBody: { artifactPath: string; kind: string }
+    }
+  }).network
+  assert.equal(network.trigger, 'navigate')
+  assert.equal(network.request.requestId, 'graphql-1')
+  assert.equal(typeof network.request.completedAt, 'string')
+  assert.equal(network.responseBody.kind, 'response-body')
+  assert.equal(await (await import('node:fs/promises')).readFile(network.responseBody.artifactPath, 'utf8'), '{"ok":true}')
+})
+
+test('browser network capture requires one trigger and a targeted URL matcher', async () => {
+  const controller = new BrowserAgentController(() => null)
+  assert.match((await controller.captureNetwork({ match: { urlContains: '/api' } })).error ?? '', /exactly one trigger/)
+  assert.match((await controller.captureNetwork({ url: 'https://example.com', match: {} })).error ?? '', /match\.urlContains/)
+})
+
 class FakeDebugger extends EventEmitter {
   private attached = false
   unsupportedPdf = false

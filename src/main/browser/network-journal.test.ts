@@ -88,3 +88,48 @@ test('network journal remains bounded', () => {
   assert.equal(page.hasMoreMatching, true)
   assert.equal(journal.request('0'), null)
 })
+
+test('network journal waits for a fully completed response using exact transport filters', async () => {
+  const journal = new NetworkJournal()
+  journal.start()
+  const waiting = journal.waitForRequest({
+    urlContains: '/graphql',
+    method: 'POST',
+    resourceType: 'Fetch',
+    mimeType: 'json',
+    statusMin: 200,
+    statusMax: 299,
+    completedOnly: true
+  }, 500)
+
+  journal.record('Network.requestWillBeSent', {
+    requestId: 'graphql', timestamp: 20, type: 'Fetch',
+    request: { url: 'https://example.com/graphql?operation=List', method: 'POST' }
+  })
+  journal.record('Network.responseReceived', {
+    requestId: 'graphql', type: 'Fetch',
+    response: { status: 200, mimeType: 'application/graphql-response+json', protocol: 'h2' }
+  })
+
+  let settled = false
+  void waiting.then(() => { settled = true })
+  await new Promise<void>((resolve) => setImmediate(resolve))
+  assert.equal(settled, false)
+
+  journal.record('Network.loadingFinished', {
+    requestId: 'graphql', timestamp: 20.08, encodedDataLength: 1_024
+  })
+  const request = await waiting
+  assert.equal(request.requestId, 'graphql')
+  assert.equal(request.durationMs, 80)
+  assert.equal(request.encodedDataLength, 1_024)
+})
+
+test('network journal request waits are cancellable', async () => {
+  const journal = new NetworkJournal()
+  const controller = new AbortController()
+  journal.start()
+  const waiting = journal.waitForRequest({ urlContains: '/never' }, 5_000, controller.signal)
+  controller.abort()
+  await assert.rejects(waiting, /cancelled/)
+})
