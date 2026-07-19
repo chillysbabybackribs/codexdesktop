@@ -281,6 +281,14 @@ function BrowserToolbar({
         <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
         <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}><PlusIcon /></button>
       </div>
+      <button
+        type="button"
+        className={`browser-nav-button ${isFullscreen ? 'is-active' : ''}`}
+        aria-label={isFullscreen ? 'Exit full screen browser' : 'Full screen browser'}
+        aria-pressed={isFullscreen}
+        title={isFullscreen ? 'Exit full screen browser (F11)' : 'Full screen browser (F11)'}
+        onClick={onToggleFullscreen}
+      ><FullscreenIcon active={isFullscreen} /></button>
       {findOpen ? (
         <div className="browser-find" role="search">
           <input ref={findInputRef} value={findText} placeholder="Find in page" aria-label="Find in page" onChange={(event) => { setFindText(event.target.value); if (event.target.value && activeTab) void window.api.browser.find(activeTab.id, event.target.value, true).then(setFindResult) }} onKeyDown={(event) => { if (event.key === 'Escape') closeFind(); if (event.key === 'Enter') { event.preventDefault(); void runFind(!event.shiftKey) } }} />
@@ -335,6 +343,18 @@ function VolumeIcon({ muted }: { muted: boolean }): React.JSX.Element {
       ) : (
         <path d="M15.5 9.2a4 4 0 0 1 0 5.6M18 6.7a7.4 7.4 0 0 1 0 10.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
       )}
+    </svg>
+  )
+}
+
+function FullscreenIcon({ active }: { active: boolean }): React.JSX.Element {
+  return active ? (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9.5 5v4.5H5M14.5 5v4.5H19M9.5 19v-4.5H5M14.5 19v-4.5H19" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 9.5V5h4.5M19 9.5V5h-4.5M5 14.5V19h4.5M19 14.5V19h-4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }

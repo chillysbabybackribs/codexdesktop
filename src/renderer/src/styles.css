@@ -135,6 +135,13 @@ button {
   min-height: 0;
 }
 
+/* Browser-fullscreen: the browser pane is the only visible workspace child;
+   the grid collapses to a single column (inline style) and the chat pane and
+   divider stay mounted but hidden, preserving chat state. */
+.workspace.is-browser-fullscreen > :not(.browser-pane) {
+  display: none;
+}
+
 .chat-pane {
   position: relative;
   display: grid;
