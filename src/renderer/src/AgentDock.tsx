@@ -468,139 +468,15 @@ const AgentWindow = memo(function AgentWindow({
     >
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
-        <div className="agent-overlay-menu-wrap" ref={menuRef}>
-          <button
-            type="button"
-            className={`agent-overlay-title-button ${isMenuOpen ? 'is-open' : ''}`}
-            aria-expanded={isMenuOpen}
-            aria-haspopup="menu"
-            onClick={() => setIsMenuOpen((open) => !open)}
-          >
-            <span className="agent-overlay-title">{session.title}</span>
-            <ChevronDownIcon />
-          </button>
-          {isMenuOpen ? (
-            <div className="agent-overlay-menu" role="menu" aria-label={`${session.title} controls`}>
-              <div className="agent-menu-label">Agent controls</div>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitemcheckbox"
-                aria-checked={session.watchesMain}
-                onClick={() => {
-                  onToggleWatch(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <EyeIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>{session.watchesMain ? 'Sharing main-chat context' : 'Share main-chat context'}</strong>
-                  <small>{session.watchesMain ? 'Helper mode is on' : 'Keep this agent independent'}</small>
-                </span>
-                <span className={`agent-menu-status ${session.watchesMain ? 'is-active' : ''}`}>
-                  {session.watchesMain ? 'On' : 'Off'}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitemcheckbox"
-                aria-checked={session.auditsMain}
-                onClick={() => {
-                  onToggleAudit(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <EyeIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>{session.auditsMain ? 'Auditing main-chat turns' : 'Audit main-chat turns'}</strong>
-                  <small>
-                    {session.auditsMain
-                      ? 'Reviews every completed main-chat turn'
-                      : 'Second viewpoint on every turn · picks a second provider'}
-                  </small>
-                </span>
-                <span className={`agent-menu-status ${session.auditsMain ? 'is-active' : ''}`}>
-                  {session.auditsMain ? 'On' : 'Off'}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitemcheckbox"
-                aria-checked={session.reportsToMain}
-                onClick={() => {
-                  onToggleReport(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <EyeIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>{session.reportsToMain ? 'Sending findings to main chat' : 'Send findings to main chat'}</strong>
-                  <small>
-                    {session.reportsToMain
-                      ? 'Flagged audits go to the doer automatically'
-                      : 'Flagged audits auto-send · one round per turn'}
-                  </small>
-                </span>
-                <span className={`agent-menu-status ${session.reportsToMain ? 'is-active' : ''}`}>
-                  {session.reportsToMain ? 'On' : 'Off'}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitem"
-                onClick={() => {
-                  onPromote(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <ExpandIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>Switch to main chat</strong>
-                  <small>Save this conversation to chat history</small>
-                </span>
-              </button>
-              <div className="agent-menu-divider" />
-              <div className="agent-menu-zoom" role="group" aria-label="Chat zoom">
-                <span className="agent-menu-zoom-label">
-                  <ZoomIcon />
-                  <span>Chat zoom</span>
-                </span>
-                <div className="agent-zoom-controls">
-                  <button
-                    type="button"
-                    aria-label="Zoom chat out"
-                    title="Zoom out"
-                    disabled={zoomPercent <= 80}
-                    onClick={() => adjustZoom('out')}
-                  >
-                    <MinusIcon />
-                  </button>
-                  <button
-                    type="button"
-                    className="agent-zoom-value"
-                    aria-label="Reset chat zoom"
-                    title="Reset chat zoom"
-                    onClick={() => adjustZoom('reset')}
-                  >
-                    {zoomPercent}%
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Zoom chat in"
-                    title="Zoom in"
-                    disabled={zoomPercent >= 140}
-                    onClick={() => adjustZoom('in')}
-                  >
-                    <PlusIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
+        <AgentWindowMenu
+          session={session}
+          zoomPercent={zoomPercent}
+          adjustZoom={adjustZoom}
+          onToggleWatch={onToggleWatch}
+          onToggleAudit={onToggleAudit}
+          onToggleReport={onToggleReport}
+          onPromote={onPromote}
+        />
         <div className="agent-overlay-actions">
           <button
             type="button"
@@ -693,82 +569,15 @@ const AgentWindow = memo(function AgentWindow({
         </div>
       ) : null}
 
-      <form
-        className="agent-overlay-composer"
-        onSubmit={handleSubmit}
-        onDragOver={(event) => { if (!working && event.dataTransfer.types.includes('Files')) event.preventDefault() }}
-        onDrop={(event) => {
-          if (working) return
-          const files = Array.from(event.dataTransfer.files)
-          if (!files.length) return
-          event.preventDefault()
-          setAttachmentError(null)
-          void saveBrowserFiles(files).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
-        }}
-      >
-        <div className="agent-composer-body">
-          <AttachmentStrip attachments={attachments} removable compact onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
-        <textarea
-          ref={textareaRef}
-          value={value}
-          rows={1}
-          placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
-          disabled={isSending}
-          onChange={(event) => setValue(event.target.value)}
-          onPaste={(event) => {
-            if (working) return
-            const images = Array.from(event.clipboardData.files).filter((file) => file.type.startsWith('image/'))
-            if (!images.length) return
-            const pastedText = event.clipboardData.getData('text/plain')
-            const start = event.currentTarget.selectionStart
-            const end = event.currentTarget.selectionEnd
-            event.preventDefault()
-            if (pastedText) setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`)
-            setAttachmentError(null)
-            void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault()
-              event.currentTarget.form?.requestSubmit()
-            }
-          }}
-        />
-          {attachmentError ? <span className="agent-attachment-error" role="status">{attachmentError}</span> : null}
-        </div>
-        <AttachmentButton disabled={working || isSending} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
-        {working ? (
-          <button
-            type="button"
-            className="stop-square-button"
-            aria-label="Stop agent turn"
-            title="Stop"
-            onClick={() => void onStop(session.key)}
-          >
-            <span className="stop-square" aria-hidden="true" />
-          </button>
-        ) : hasDraft ? (
-          <button
-            type="submit"
-            className="send-button"
-            aria-label="Send to agent"
-            disabled={isSending}
-          >
-            <SendArrowIcon />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="send-button agent-new-chat-button"
-            aria-label="Start a new agent chat"
-            title="New chat"
-            disabled={isSending}
-            onClick={() => onResetSession(session.key)}
-          >
-            <NewChatPlusIcon />
-          </button>
-        )}
-      </form>
+      <AgentComposer
+        session={session}
+        working={working}
+        textareaRef={textareaRef}
+        onSend={onSend}
+        onSteer={onSteer}
+        onStop={onStop}
+        onResetSession={onResetSession}
+      />
     </div>
   )
 }, areAgentWindowPropsEqual)
