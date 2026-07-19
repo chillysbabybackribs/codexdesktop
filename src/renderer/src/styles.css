@@ -6387,3 +6387,219 @@ button {
   color: #ffb38a;
   border-color: rgba(255, 179, 138, 0.55);
 }
+
+/* --- Review bar: Cursor-style Keep/Undo after a turn that edited files --- */
+
+.review-bar {
+  margin: 0 0 8px;
+  border: 1px solid #33383e;
+  border-radius: 10px;
+  background: #191d21;
+  box-shadow: 0 6px 22px rgb(0 0 0 / 28%);
+  overflow: hidden;
+}
+
+.review-bar-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px 7px 8px;
+}
+
+.review-bar-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: #b3bac1;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  cursor: pointer;
+  text-align: left;
+}
+
+.review-chevron {
+  flex: none;
+  color: #767d85;
+  transition: transform 140ms ease;
+}
+
+.review-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.review-bar-totals {
+  display: inline-flex;
+  gap: 7px;
+  font-size: 11.5px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.review-bar-actions {
+  display: inline-flex;
+  gap: 7px;
+  flex: none;
+}
+
+.review-undo-all {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: #9aa3ab;
+  border-radius: 6px;
+  font-size: 11.5px;
+  padding: 3px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.review-undo-all:hover {
+  color: #d9dde1;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.review-undo-all.is-confirming {
+  color: #ffb38a;
+  border-color: rgba(255, 179, 138, 0.55);
+}
+
+.review-keep-all {
+  border: 1px solid transparent;
+  background: #2f6feb;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.review-keep-all:hover {
+  background: #3b7bf5;
+}
+
+.review-files {
+  max-height: 180px;
+  overflow-y: auto;
+  border-top: 1px solid #262b30;
+  padding: 4px 0;
+  scrollbar-width: thin;
+}
+
+.review-file {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 3px 12px;
+  font-size: 12px;
+}
+
+.review-file.is-undone {
+  opacity: 0.55;
+}
+
+.review-file-name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #cbd4de;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+}
+
+.review-file-name:hover .review-file-base {
+  text-decoration: underline;
+}
+
+.review-file-base {
+  flex: none;
+  font-weight: 550;
+}
+
+.review-file-dir {
+  color: #6d7580;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-file-counts {
+  display: inline-flex;
+  gap: 6px;
+  flex: none;
+  font-size: 11px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.review-file-undo {
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: #9aa3ab;
+  border-radius: 5px;
+  font-size: 10.5px;
+  padding: 1px 8px;
+  cursor: pointer;
+}
+
+.review-file-undo:hover {
+  color: #ffb38a;
+  border-color: rgba(255, 179, 138, 0.55);
+}
+
+/* Per-file Undo on diff cards + undone/flash treatments */
+
+.diff-undo-button {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: #9aa3ab;
+  border-radius: 5px;
+  font-size: 10.5px;
+  padding: 1px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.diff-card:hover .diff-undo-button,
+.diff-undo-button.is-confirming,
+.diff-undo-button:focus-visible {
+  opacity: 1;
+}
+
+.diff-undo-button:hover {
+  color: #d9dde1;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.diff-undo-button.is-confirming {
+  color: #ffb38a;
+  border-color: rgba(255, 179, 138, 0.55);
+}
+
+.diff-card.is-undone {
+  opacity: 0.6;
+}
+
+.diff-card.is-flash {
+  outline: 2px solid rgba(116, 141, 168, 0.85);
+  outline-offset: 2px;
+  transition: outline-color 600ms ease;
+}
