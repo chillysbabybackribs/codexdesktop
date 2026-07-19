@@ -471,6 +471,7 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
     tabManager?.zoom(tabId, direction))
   ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
+  ipcMain.handle(ipcChannels.browserToggleVpn, () => vpnManager.toggle())
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))

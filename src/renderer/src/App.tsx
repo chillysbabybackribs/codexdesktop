@@ -216,7 +216,7 @@ export default function App(): React.JSX.Element {
   const [alwaysKeepAll, setAlwaysKeepAll] = useState(
     () => isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
   );
-  const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null });
+  const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null, vpn: { state: 'off', bootstrapProgress: 0, detail: null } });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
   const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore);
   if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore();

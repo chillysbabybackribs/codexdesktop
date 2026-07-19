@@ -12,6 +12,7 @@ import type {
   BrowserBounds,
   BrowserFindResult,
   BrowserState,
+  BrowserVpnStatus,
   SessionEvent,
   CodexInterruptTurnParams,
   CodexListThreadTurnsParams,
@@ -77,6 +78,7 @@ export const api = {
     zoom: (tabId: string, direction: 'in' | 'out' | 'reset') =>
       ipcRenderer.invoke(ipcChannels.browserZoom, tabId, direction),
     toggleMute: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserToggleMute, tabId),
+    toggleVpn: (): Promise<BrowserVpnStatus> => ipcRenderer.invoke(ipcChannels.browserToggleVpn),
     onFindRequested: (listener: () => void) => {
       const wrapped = (): void => listener()
       ipcRenderer.on(ipcChannels.browserFindRequested, wrapped)

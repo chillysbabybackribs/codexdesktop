@@ -11,6 +11,7 @@ import type {
   BrowserBounds,
   BrowserState,
   BrowserTabState,
+  BrowserVpnStatus,
   OmniboxAnchor,
   OmniboxSuggestion
 } from '../../shared/ipc'
@@ -30,7 +31,7 @@ export function BrowserPane({
     <section className="browser-pane">
       <div className="browser-shell">
         <TabStrip state={state} />
-        <BrowserToolbar activeTab={activeTab} />
+        <BrowserToolbar activeTab={activeTab} vpn={state.vpn} />
         <div className="browser-frame">
           <div ref={viewHostRef} className="browser-view-host" data-ready={viewBounds ? 'true' : 'false'} />
         </div>
@@ -86,7 +87,26 @@ function GlobeIcon(): React.JSX.Element {
   )
 }
 
-function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): React.JSX.Element {
+function vpnLabel(vpn: BrowserVpnStatus): string {
+  switch (vpn.state) {
+    case 'on':
+      return 'VPN on — tabs are routed through Tor. Click to disable.'
+    case 'starting':
+      return `Connecting VPN… ${vpn.bootstrapProgress}%${vpn.detail ? ` — ${vpn.detail}` : ''}. Click to cancel.`
+    case 'error':
+      return `VPN error: ${vpn.detail ?? 'unknown'}. Click to retry.`
+    default:
+      return 'Enable VPN — route tabs through the built-in Tor tunnel'
+  }
+}
+
+function BrowserToolbar({
+  activeTab,
+  vpn
+}: {
+  activeTab: BrowserTabState | null
+  vpn: BrowserVpnStatus
+}): React.JSX.Element {
   const [input, setInput] = useState('')
   const [isEditing, setIsEditing] = useState(false)
   const [suggestions, setSuggestions] = useState<OmniboxSuggestion[]>([])
@@ -228,6 +248,14 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
       />
       <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}><SearchIcon /></button>
       <button type="button" className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`} aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)} onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}><VolumeIcon muted={Boolean(activeTab?.isMuted)} /></button>
+      <button
+        type="button"
+        className={`browser-nav-button vpn-toggle ${vpn.state === 'on' ? 'is-active' : ''} ${vpn.state === 'starting' ? 'is-connecting' : ''} ${vpn.state === 'error' ? 'is-error' : ''}`}
+        aria-label={vpn.state === 'on' || vpn.state === 'starting' ? 'Disable VPN' : 'Enable VPN'}
+        aria-pressed={vpn.state === 'on'}
+        title={vpnLabel(vpn)}
+        onClick={() => void window.api.browser.toggleVpn()}
+      ><ShieldIcon active={vpn.state === 'on'} /></button>
       <div className="browser-zoom" aria-label="Page zoom">
         <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}><MinusIcon /></button>
         <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
