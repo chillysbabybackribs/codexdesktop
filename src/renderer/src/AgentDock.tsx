@@ -15,6 +15,8 @@ import { buildRows, isWorkItem, type ActivityItem, type RenderRow } from './tran
 import { WorkGroup, type ItemMeta, type WorkItem } from './TaskActivity'
 import { emptySessionState, type SessionStore } from './session-store'
 import { agentZoomStorageKey, storedAgentZoom } from './agent-zoom'
+import { areAgentWindowPropsEqual, type AgentWindowProps } from './agent-window-props'
+import { hiddenAgentCounts, windowScrollTarget, type AgentColumnMetrics } from './agent-column-scroll'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
@@ -138,16 +140,20 @@ export function AgentColumn({
     })
   }
 
+  const readColumnMetrics = (node: HTMLDivElement): AgentColumnMetrics => {
+    const first = node.firstElementChild
+    return {
+      scrollTop: node.scrollTop,
+      scrollHeight: node.scrollHeight,
+      clientHeight: node.clientHeight,
+      firstItemHeight: first instanceof HTMLElement ? first.offsetHeight : null
+    }
+  }
+
   const updateChevrons = (): void => {
     const node = scrollRef.current
     if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    const above = Math.max(0, Math.round(node.scrollTop / slot))
-    const below = Math.max(
-      0,
-      Math.round((node.scrollHeight - node.scrollTop - node.clientHeight) / slot)
-    )
+    const { above, below } = hiddenAgentCounts(readColumnMetrics(node))
     setHiddenAbove(above)
     setHiddenBelow(below)
   }
@@ -165,12 +171,7 @@ export function AgentColumn({
   const scrollByWindow = (direction: 1 | -1): void => {
     const node = scrollRef.current
     if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    // Absolute target from the CURRENT slot index — repeated clicks land on
-    // exact snap points instead of compounding relative deltas mid-animation.
-    const index = Math.round(node.scrollTop / slot) + direction
-    const target = Math.max(0, Math.min(index * slot, node.scrollHeight - node.clientHeight))
+    const target = windowScrollTarget(readColumnMetrics(node), direction)
     node.scrollTo({ top: target, behavior: 'smooth' })
   }
 
@@ -260,35 +261,6 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
       />
     </svg>
   )
-}
-
-type AgentWindowProps = {
-  session: AgentSession
-  isSelected: boolean
-  isExtended: boolean
-  sessionStore: SessionStore
-  workspace: string | null
-  models: Model[]
-  mainModel: string | null
-  mainReasoningEffort: ReasoningEffort | null
-  liveMainTurn: LiveTurnGlance | null
-  onSetModel: (key: string, model: string) => void
-  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
-  onSelect: (key: string) => void
-  onMinimize: (key: string) => void
-  onCloseSession: (key: string) => void
-  onResetSession: (key: string) => void
-  onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
-  onToggleAudit: (key: string) => void
-  onToggleReport: (key: string) => void
-  onSendFeedback: (key: string) => void
-  onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
-  onToggleExtend: (key: string) => void
-  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
-  onSteer: (key: string, text: string) => Promise<boolean>
-  onStop: (key: string) => Promise<void>
-  onCompact: (key: string) => Promise<void>
 }
 
 // Stable empty fallback for sessions the store has not seen yet —
@@ -858,29 +830,6 @@ const AgentWindow = memo(function AgentWindow({
     </div>
   )
 }, areAgentWindowPropsEqual)
-
-function areAgentWindowPropsEqual(
-  previous: AgentWindowProps,
-  next: AgentWindowProps
-): boolean {
-  return previous.session === next.session &&
-    previous.isSelected === next.isSelected &&
-    previous.isExtended === next.isExtended &&
-    previous.models === next.models &&
-    previous.mainModel === next.mainModel &&
-    previous.mainReasoningEffort === next.mainReasoningEffort &&
-    // Only auditors render the live glance; everyone else skips those updates.
-    (!next.session.auditsMain || isSameLiveGlance(previous.liveMainTurn, next.liveMainTurn))
-}
-
-function isSameLiveGlance(a: LiveTurnGlance | null, b: LiveTurnGlance | null): boolean {
-  if (a === b) return true
-  if (!a || !b) return false
-  return a.turnId === b.turnId &&
-    a.stepCount === b.stepCount &&
-    a.fileCount === b.fileCount &&
-    a.lastStep === b.lastStep
-}
 
 function readAgentZoom(key: string): number {
   return storedAgentZoom(window.localStorage.getItem(agentZoomStorageKey(key)))
