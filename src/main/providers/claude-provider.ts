@@ -648,12 +648,21 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       if (!this.mcpServerConfig && this.browserAgent) {
         const browserAgent = this.browserAgent;
         const researchRunner = this.researchRunner ?? undefined;
-        this.mcpServerConfig = buildClaudeBrowserMcpServer(sdk as never, (tool, args) =>
-          runBrowserTool(
+        this.mcpServerConfig = buildClaudeBrowserMcpServer(sdk as never, async (tool, args) => {
+          // Subagent tools route to the orchestrator, not the browser. Parent
+          // context comes from the session whose turn is currently running —
+          // Phase 1 is blocking-single, so the active working session IS the
+          // spawning lead.
+          if (isAgentTool(tool)) {
+            const origin = this.activeSpawnOrigin();
+            const result = await runAgentTool(tool, args, origin, this.subagentSpawner);
+            return { result, imageUrls: [] };
+          }
+          return runBrowserTool(
             { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
             { browserAgent, researchRunner },
-          ),
-        );
+          );
+        });
       }
       const input = createInputStream();
       const handle = query({
