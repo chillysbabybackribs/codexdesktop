@@ -107,6 +107,16 @@ import {
   watchdogCheckDue,
   type WatchdogTurnState,
 } from './main-chat-watchdog';
+import {
+  continueLoop,
+  decideLoopContinuation,
+  loopConvergedMessage,
+  loopRoundMessage,
+  loopStopMessage,
+  startLoop,
+  type LoopDecision,
+  type LoopState,
+} from './audit-loop-controller';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
@@ -455,7 +465,11 @@ export default function App(): React.JSX.Element {
   // (same-thread + bounce gates), and the in-flight marker consumed by
   // handleSend to tag the feedback turn it starts.
   const auditFeedbackTurnIdsRef = useRef<Set<string>>(new Set());
-  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean }>>(new Map());
+  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean; changedFileCount: number | null }>>(new Map());
+  // Loop-to-done ledger per auditor: rounds dispatched + the last flag's
+  // signature (audit-loop-controller.ts). Transient by design — a reload
+  // mid-loop stops the loop rather than resuming blind.
+  const auditLoopRef = useRef<Map<string, LoopState>>(new Map());
   const pendingAuditFeedbackRef = useRef(false);
   const userRequestedTurnIdRef = useRef<string | null>(null);
   const optimisticUserMessageIdRef = useRef<string | null>(null);
@@ -3695,6 +3709,9 @@ export default function App(): React.JSX.Element {
       auditContextByAuditorRef.current.set(auditor.key, {
         threadId,
         auditedTurnWasFeedback: auditFeedbackTurnIdsRef.current.has(turnId),
+        // Ground truth for the controller's progress check; null = detection
+        // unavailable (non-git workspace), which is skipped, not zero.
+        changedFileCount: detectionUnavailable ? null : changed.length,
       });
       void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary });
     }

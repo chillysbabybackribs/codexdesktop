@@ -203,6 +203,10 @@ export function shouldSendAuditFeedback(input: {
   mainIdle: boolean
   sameThread: boolean
   auditedTurnWasFeedback: boolean
+  // Loop-to-done controller approval (audit-loop-controller.ts): a fix turn's
+  // flagged audit may bounce again only when the controller says the loop has
+  // headroom and is making progress.
+  loopMayContinue: boolean
 }): boolean {
   if (!input.reportsToMain) return false
   // Missing verdicts fail quiet: the report stays visible in the agent
@@ -210,9 +214,10 @@ export function shouldSendAuditFeedback(input: {
   if (input.verdict !== 'flag') return false
   if (!input.mainIdle) return false
   if (!input.sameThread) return false
-  // One bounce per user-initiated turn: feedback-started turns get audited
-  // and display their verdict, but do not auto-send again.
-  if (input.auditedTurnWasFeedback) return false
+  // Feedback-started turns bounce again only under controller policy — the
+  // old flat one-bounce cap is the controller's fallback (loopMayContinue
+  // false).
+  if (input.auditedTurnWasFeedback && !input.loopMayContinue) return false
   return true
 }
 
