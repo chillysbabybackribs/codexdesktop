@@ -470,7 +470,6 @@ export function ChatPane({
           onStop={onStop}
           onNewThread={onNewThread}
           onCompactThread={onCompactThread}
-          onNewAgent={() => onNewAgent(node.tabKey)}
           onSelectPane={onSelectMainChatTab}
           onCloseSplitPane={onCloseSplitPane}
           onLoadOlderHistory={onLoadOlderHistory}
