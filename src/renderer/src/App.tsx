@@ -98,6 +98,15 @@ import {
   stripIntakeInjections,
   type IntakeState,
 } from './main-chat-intake';
+import {
+  buildSteerMessage,
+  buildWatchdogBriefing,
+  newWatchdogTurnState,
+  nextWatchdogDelayMs,
+  parseWatchdogVerdict,
+  watchdogCheckDue,
+  type WatchdogTurnState,
+} from './main-chat-watchdog';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
