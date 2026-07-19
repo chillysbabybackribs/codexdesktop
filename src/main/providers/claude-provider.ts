@@ -31,6 +31,10 @@ import type {
 import type { ProviderCapabilities } from '../../shared/session-protocol/provider.js'
 import type { ResumeHistoryConsumer } from '../codex/resume-history.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
+import type { BrowserAgentController } from '../browser/browser-agent.js'
+import type { ResearchRunner } from '../browser/research-runner.js'
+import { runBrowserTool } from '../tools/browser-tool-registry.js'
+import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js'
 import type { SessionProvider } from './session-provider.js'
 import {
   ClaudeTurnTranslator,
@@ -127,10 +131,19 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private readonly statePath: string
   private persisted: PersistedSessions | null = null
   private readonly checkpoints: TurnCheckpointStore | null
+  private readonly browserAgent: BrowserAgentController | null
+  private readonly researchRunner: ResearchRunner | null
+  private mcpServerConfig: unknown | null = null
 
-  constructor(checkpoints: TurnCheckpointStore | null = null) {
+  constructor(
+    checkpoints: TurnCheckpointStore | null = null,
+    browserAgent: BrowserAgentController | null = null,
+    researchRunner: ResearchRunner | null = null
+  ) {
     super()
     this.checkpoints = checkpoints
+    this.browserAgent = browserAgent
+    this.researchRunner = researchRunner
     this.statePath = join(app.getPath('userData'), 'claude-sessions.json')
   }
 
@@ -382,7 +395,22 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       await new Promise<void>((resolve) => this.slotWaiters.push(resolve))
     }
 
-    const { query } = await import('@anthropic-ai/claude-agent-sdk')
+    const sdk = await import('@anthropic-ai/claude-agent-sdk')
+    const { query } = sdk
+    // In-process MCP browser tools (built once): Claude sessions drive the
+    // SAME embedded browser through the SAME neutral dispatch the codex
+    // dynamic tools use — ownerless, like the socket transport.
+    if (!this.mcpServerConfig && this.browserAgent) {
+      const browserAgent = this.browserAgent
+      const researchRunner = this.researchRunner ?? undefined
+      this.mcpServerConfig = buildClaudeBrowserMcpServer(
+        sdk as never,
+        (tool, args) => runBrowserTool(
+          { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
+          { browserAgent, researchRunner }
+        )
+      )
+    }
     const input = createInputStream()
     const handle = query({
       prompt: input.stream() as AsyncIterable<never>,
@@ -396,7 +424,8 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         permissionMode: 'bypassPermissions',
         // Spike-verified isolation: the user's ~/.claude settings never bleed
         // into app sessions.
-        settingSources: []
+        settingSources: [],
+        ...(this.mcpServerConfig ? { mcpServers: { browser: this.mcpServerConfig as never } } : {})
       }
     })
     session.runtime = {

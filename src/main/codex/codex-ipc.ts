@@ -35,7 +35,7 @@ export function registerSessionIpc(
   checkpointStore: TurnCheckpointStore | null = null
 ): CodexClient {
   const client = new CodexClient(browserAgent, researchRunner, checkpointStore)
-  const claude = new ClaudeProvider(checkpointStore)
+  const claude = new ClaudeProvider(checkpointStore, browserAgent, researchRunner)
   // Provider registry (Claude-prep step 4, populated by the adapter build):
   // routing is by thread-id prefix for existing threads (`claude-…`) and by
   // model-id prefix for new ones, so the ModelPill selection alone decides the
