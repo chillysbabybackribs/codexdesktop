@@ -3,6 +3,7 @@ import test from 'node:test'
 import {
   appendAgentSessionMessage,
   applyAgentDeltas,
+  collapseAdjacentAssistantDuplicates,
   completeAgentMessage,
   createAgentSession,
   parseAgentDock,
@@ -119,4 +120,23 @@ test('agent dock persistence keeps only durable metadata', () => {
 test('main chat context is removed from restored helper messages', () => {
   assert.equal(stripMainChatContext('<main-chat-context>summary</main-chat-context>\n\nQuestion'), 'Question')
   assert.equal(stripMainChatContext('Question'), 'Question')
+})
+
+test('adjacent identical assistant messages collapse; non-adjacent repeats stay', () => {
+  // Stream-restate artifact shape: the same reply persisted under two item
+  // ids (threads recorded before the translator dedupe fix keep this forever).
+  const collapsed = collapseAdjacentAssistantDuplicates([
+    { id: 'u1', role: 'user', text: 'audit this' },
+    { id: 'a1', role: 'assistant', text: 'Looks solid.' },
+    { id: 'a2', role: 'assistant', text: 'Looks solid.' },
+    { id: 'a3', role: 'assistant', text: 'A different follow-up.' }
+  ])
+  assert.deepEqual(collapsed.map(({ id }) => id), ['u1', 'a1', 'a3'])
+
+  const separated = collapseAdjacentAssistantDuplicates([
+    { id: 'a1', role: 'assistant', text: 'ok' },
+    { id: 'u1', role: 'user', text: 'again?' },
+    { id: 'a2', role: 'assistant', text: 'ok' }
+  ])
+  assert.deepEqual(separated.map(({ id }) => id), ['a1', 'u1', 'a2'])
 })
