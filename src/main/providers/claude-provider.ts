@@ -35,6 +35,7 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import { runBrowserTool } from '../tools/browser-tool-registry.js'
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js'
+import { buildClaudeQueryOptions, claudeDefaultModelId } from './claude-options.js'
 import type { SessionProvider } from './session-provider.js'
 import {
   ClaudeTurnTranslator,
@@ -64,7 +65,6 @@ export const claudeCapabilities: ProviderCapabilities = {
 
 const maxLiveSessions = 3
 const idleKillMs = 15 * 60 * 1000
-export const claudeDefaultModelId = 'claude-default'
 
 type InputStream = {
   push: (message: unknown) => void
@@ -130,26 +130,6 @@ function createInputStream(): InputStream {
 
 function emptyBreakdown(): TokenUsageBreakdown {
   return { totalTokens: 0, inputTokens: 0, cachedInputTokens: 0, outputTokens: 0, reasoningOutputTokens: 0 }
-}
-
-export function buildClaudeQueryOptions(
-  session: Pick<ClaudeSession, 'cwd' | 'model' | 'claudeSessionId'>,
-  mcpServerConfig: unknown | null
-) {
-  return {
-    cwd: session.cwd,
-    ...(session.model && session.model !== claudeDefaultModelId ? { model: session.model } : {}),
-    ...(session.claudeSessionId ? { resume: session.claudeSessionId } : {}),
-    includePartialMessages: true,
-    // The pinned SDK requires this explicit acknowledgement whenever bypass
-    // mode is selected; permissionMode alone is not a valid pairing.
-    permissionMode: 'bypassPermissions' as const,
-    allowDangerouslySkipPermissions: true,
-    // Spike-verified isolation: the user's ~/.claude settings never bleed
-    // into app sessions.
-    settingSources: [] as const,
-    ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {})
-  }
 }
 
 export class ClaudeProvider extends EventEmitter implements SessionProvider {
