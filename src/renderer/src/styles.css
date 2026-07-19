@@ -6888,6 +6888,7 @@ button {
 .review-bar.is-action-menu-open {
   position: relative;
   z-index: 8;
+  border-top-left-radius: 0;
   border-top-right-radius: 0;
   overflow: visible;
 }
@@ -7002,16 +7003,16 @@ button {
 .review-action-menu {
   position: absolute;
   top: auto;
-  right: 0;
-  bottom: calc(100% - 4px);
+  left: -1px;
+  right: -1px;
+  bottom: calc(100% - 3px);
   z-index: 30;
   display: flex;
-  width: max-content;
-  max-width: 100cqw;
+  justify-content: flex-end;
   padding: 0;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
-  border-radius: 11px 11px 0 0;
+  border-radius: 10px 10px 0 0;
   /* Same white overlay the bar head uses (1.5%) stacked on --surface-card,
      so the menu grey is identical to the bar it grows out of. */
   background-color: var(--surface-card);
