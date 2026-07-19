@@ -372,6 +372,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
       match?: { required?: string[] }
       steps?: { minItems?: number; maxItems?: number }
       captureBody?: { type?: string }
+      download?: { type?: string }
       stream?: {
         required?: string[]
         properties?: {
@@ -387,12 +388,14 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.equal(networkSchema.properties.steps?.minItems, 1)
   assert.equal(networkSchema.properties.steps?.maxItems, 24)
   assert.equal(networkSchema.properties.captureBody?.type, 'boolean')
+  assert.equal(networkSchema.properties.download?.type, 'boolean')
   assert.deepEqual(networkSchema.properties.stream?.required, ['transport'])
   assert.deepEqual(networkSchema.properties.stream?.properties?.transport?.enum, ['sse', 'websocket'])
   assert.equal(networkSchema.properties.stream?.properties?.maxMessages?.maximum, 1000)
   assert.equal(networkSchema.properties.stream?.properties?.idleMs?.minimum, 50)
   assert.match(browserNetwork.description, /one model call/i)
   assert.match(browserNetwork.description, /SSE\/WebSocket stream as an artifact/i)
+  assert.match(browserNetwork.description, /Chromium download handoff as an artifact/i)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')

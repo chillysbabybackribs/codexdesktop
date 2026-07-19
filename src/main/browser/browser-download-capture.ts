@@ -107,7 +107,11 @@ export class BrowserDownloadCaptureBroker {
 
   private async rejectWaiter(waiter: DownloadWaiter, error: Error): Promise<void> {
     if (!this.settleWaiter(waiter)) return
-    if (waiter.item && !waiter.item.isDestroyed()) waiter.item.cancel()
+    try {
+      waiter.item?.cancel()
+    } catch {
+      // A terminal DownloadItem may already have released its native handle.
+    }
     await waiter.reservation.cancel()
     waiter.reject(error)
   }
