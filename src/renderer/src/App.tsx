@@ -147,6 +147,22 @@ const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
 const fastModeStorageKey = 'codexdesktop.fastMode';
 
+const titlebarTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+});
+
+const titlebarDateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+});
+
+const titlebarAccessibleFormatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'full',
+  timeStyle: 'short',
+});
+
 // Turn failures the app can recover from by retrying/continuing on the same
 // thread: capacity problems on the provider side, not problems with the
 // request itself (auth, context window, budget, policy).
@@ -3847,12 +3863,39 @@ export default function App(): React.JSX.Element {
 
 function TitleBar(): React.JSX.Element {
   const isVerificationInstance = window.api.runtime.instanceRole === 'verification';
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    const refreshClock = () => {
+      const next = new Date();
+      setNow(next);
+      timeoutId = window.setTimeout(
+        refreshClock,
+        60_000 - (next.getSeconds() * 1_000 + next.getMilliseconds()) + 20,
+      );
+    };
+
+    const current = new Date();
+    timeoutId = window.setTimeout(
+      refreshClock,
+      60_000 - (current.getSeconds() * 1_000 + current.getMilliseconds()) + 20,
+    );
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   return (
     <header className={`titlebar ${isVerificationInstance ? 'is-verification' : ''}`}>
-      <div className="titlebar-title">
-        {isVerificationInstance ? 'Chat — Verification Instance' : 'Chat'}
-      </div>
+      <time
+        className="titlebar-clock"
+        dateTime={now.toISOString()}
+        aria-label={titlebarAccessibleFormatter.format(now)}
+      >
+        <span className="titlebar-clock-time">{titlebarTimeFormatter.format(now)}</span>
+        <span className="titlebar-clock-date">{titlebarDateFormatter.format(now)}</span>
+      </time>
       <div className="window-controls">
         <button
           type="button"

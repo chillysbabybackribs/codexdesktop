@@ -76,10 +76,27 @@ button {
   -webkit-app-region: drag;
 }
 
-.titlebar-title {
+.titlebar-clock {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.titlebar-clock-time {
   font-size: 12px;
   font-weight: 680;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.02em;
+  color: #d0d0d0;
+}
+
+.titlebar-clock-date {
+  font-size: 10px;
+  font-weight: 620;
+  letter-spacing: 0.075em;
+  color: #858585;
+  text-transform: uppercase;
 }
 
 .titlebar.is-verification {
@@ -87,7 +104,7 @@ button {
   color: #e2d3a3;
 }
 
-.titlebar.is-verification .titlebar-title::before {
+.titlebar.is-verification .titlebar-clock::before {
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -97,6 +114,14 @@ button {
   box-shadow: 0 0 0 2px rgb(185 154 77 / 14%);
   content: '';
   vertical-align: 1px;
+}
+
+.titlebar.is-verification .titlebar-clock-time {
+  color: #e2d3a3;
+}
+
+.titlebar.is-verification .titlebar-clock-date {
+  color: #b9a978;
 }
 
 .window-controls {
