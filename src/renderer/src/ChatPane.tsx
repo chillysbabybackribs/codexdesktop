@@ -228,7 +228,6 @@ export function ChatPane({
     [items, itemMeta, activeTurnId],
   );
 
-  const activeAgentSessions = agentSessionsForMainChatTab(agentSessions, activeMainChatTabKey);
   const visibleAgentSession = visibleAgentForMainChatTab(
     agentSessions,
     activeMainChatTabKey,
