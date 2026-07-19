@@ -532,6 +532,7 @@ export class ResearchRunner {
                 this.cachePage(candidate.url, extracted)
                 if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
                 staticFetchHits += 1
+                harvestRedirectHubLinks(candidate, extracted)
                 return draft
               } catch (error) {
                 if (signal.aborted) throw error
@@ -606,6 +607,7 @@ export class ResearchRunner {
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
+            harvestRedirectHubLinks(candidate, extracted)
             return draft
           } catch (error) {
             if (signal.aborted) throw error
@@ -667,6 +669,22 @@ export class ResearchRunner {
         urls.length
       ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
       await drainCandidates(directCandidates)
+
+      if (!goalMet() && redirectFollowUps.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
+        notifyProgress(onProgress, {
+          stage: 'verifying',
+          message: `Following ${redirectFollowUps.length} same-site ${redirectFollowUps.length === 1 ? 'link' : 'links'} found behind cross-host redirects…`,
+          pagesAttempted: pageAttempts,
+          pagesVerified: pages.length,
+          targetPages
+        })
+        const followUpCandidates = rankSerpCandidates(
+          redirectFollowUps,
+          rankingQueries.length > 0 ? rankingQueries : [directQuery],
+          redirectFollowUps.length
+        ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
+        await drainCandidates(followUpCandidates)
+      }
     }
 
     if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
