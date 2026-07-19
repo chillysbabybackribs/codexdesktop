@@ -1,12 +1,16 @@
 import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
+import type { AuditRequestSummary } from './audit-trigger'
 
 export type AgentLiteMessage = {
   id: string
   role: 'user' | 'assistant'
   text: string
   attachments?: ChatAttachment[]
+  // Present only on the auto-audit request message. When set, the card renders
+  // a compact collapsible "Auditing turn" card instead of the raw prompt text.
+  audit?: AuditRequestSummary
 }
 
 export type AgentSession = {

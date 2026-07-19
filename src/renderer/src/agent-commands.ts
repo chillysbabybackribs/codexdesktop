@@ -1,6 +1,11 @@
 import type { ChatAttachment } from '../../shared/ipc'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
+import type { AuditRequestSummary } from './audit-trigger.js'
+
+// Extra send options. `audit` is set only by the auto-audit trigger so the
+// card can show a compact card while the model still gets the full prompt.
+export type AgentSendOptions = { audit?: AuditRequestSummary }
 
 type MutableRef<T> = { current: T }
 
@@ -24,7 +29,12 @@ export function createAgentCommands(options: {
   settleThreadStart: (key: string) => void
 }): {
   bindAgentThread: (key: string, threadId: string) => void
-  handleAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
+  handleAgentSend: (
+    key: string,
+    text: string,
+    attachments?: ChatAttachment[],
+    opts?: AgentSendOptions
+  ) => Promise<boolean>
   handleAgentStop: (key: string) => Promise<void>
   handleAgentCompact: (key: string) => Promise<void>
   handleAgentSteer: (key: string, text: string) => Promise<boolean>
@@ -41,7 +51,8 @@ export function createAgentCommands(options: {
   async function handleAgentSend(
     key: string,
     text: string,
-    attachments: ChatAttachment[] = []
+    attachments: ChatAttachment[] = [],
+    opts: AgentSendOptions = {}
   ): Promise<boolean> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return false

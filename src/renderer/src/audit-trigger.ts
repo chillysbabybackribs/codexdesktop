@@ -58,6 +58,31 @@ function clip(line: string, maxChars = 90): string {
   return flat.length > maxChars ? `${flat.slice(0, maxChars).trimEnd()}…` : flat
 }
 
+// Structured summary of an auto-audit request, carried on the auditor's user
+// message so the agent card can render a compact, collapsible card instead of
+// the full prompt verbatim. The model still receives buildAuditPrompt()'s
+// string; this is presentation-only.
+export type AuditRequestSummary = {
+  userText: string
+  files: string[]
+  steps: string[]
+}
+
+// One-liner headline for the collapsed card: file count + names, e.g.
+// "codex-config.ts +2 more" or "codex-config.ts, foo.ts".
+export function auditSummaryLabel(files: string[]): string {
+  const count = files.length
+  if (count === 0) return 'no files changed'
+  const names = files.map(basename)
+  if (count <= 2) return names.join(', ')
+  return `${names[0]} +${count - 1} more`
+}
+
+function basename(path: string): string {
+  const parts = path.split(/[\\/]/)
+  return parts[parts.length - 1] || path
+}
+
 export function buildAuditPrompt(input: { userText: string; files: string[]; steps?: string[] }): string {
   const request = input.userText.replace(/\s+/g, ' ').trim()
   const clipped = request.length > 300 ? `${request.slice(0, 300).trimEnd()}…` : request
