@@ -134,9 +134,12 @@ export function registerSessionIpc(
   ipcMain.handle(ipcChannels.sessionSteerTurn, (_event, params: CodexSteerTurnParams) =>
     byThread(params.threadId).steerTurn(params.threadId, params.turnId, params.text),
   );
-  ipcMain.handle(ipcChannels.sessionInterruptTurn, (_event, params: CodexInterruptTurnParams) =>
-    byThread(params.threadId).interruptTurn(params.threadId, params.turnId),
-  );
+  ipcMain.handle(ipcChannels.sessionInterruptTurn, (_event, params: CodexInterruptTurnParams) => {
+    // Cascade first: stop any subagents this turn spawned so a stopped lead
+    // never leaves orphan children running.
+    orchestrator.interruptChildrenOf(params.threadId, params.turnId);
+    return byThread(params.threadId).interruptTurn(params.threadId, params.turnId);
+  });
   ipcMain.handle(ipcChannels.sessionCompactThread, (_event, threadId: string) =>
     byThread(threadId).compactThread(threadId),
   );

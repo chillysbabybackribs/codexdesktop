@@ -157,7 +157,8 @@ export function closeMainChatTab(
       null,
       'New Chat',
       previous.model,
-      previous.reasoningEffort
+      previous.reasoningEffort,
+      previous.browserMiddleSide,
     )
     return { tabs: [replacement], activeKey: replacement.key }
   }

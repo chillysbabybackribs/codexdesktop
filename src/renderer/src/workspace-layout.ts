@@ -1,4 +1,5 @@
 import { splitLeaf, splitPaneKeys, type SplitNode } from './chat-split.ts';
+import type { BrowserMiddleSide } from './main-chat-tabs.ts';
 
 export type WorkspaceLayoutMode = 'chat-browser' | 'browser-middle';
 
@@ -6,6 +7,9 @@ export type BrowserMiddleColumnWidths = {
   left: number;
   right: number;
 };
+
+export type BrowserMiddleTabKeys = Record<BrowserMiddleSide, readonly string[]>;
+export type BrowserMiddleActiveTabKeys = Record<BrowserMiddleSide, string | null>;
 
 export const defaultBrowserMiddleColumnWidths: BrowserMiddleColumnWidths = {
   left: 26,
@@ -36,54 +40,49 @@ export function serializeBrowserMiddleColumnWidths(widths: BrowserMiddleColumnWi
 
 /**
  * Reuses the chat split tree for the centered-browser workspace: its root is
- * the left/right divide and each branch is a vertical stack. A single visible
- * chat is paired with the next open tab, so entering the mode always exposes
- * a chat on each side of the browser.
+ * the left/right divide and each branch is a vertical stack. Each branch is
+ * supplied from its own tab collection, so the headers never mirror each
+ * other and a selected tab stays on the side where it was created.
  */
 export function browserMiddleChatLayout(
   layout: SplitNode,
-  tabKeys: readonly string[],
-  activeKey: string,
+  tabKeys: BrowserMiddleTabKeys,
+  activeKeys: BrowserMiddleActiveTabKeys,
 ): SplitNode {
-  const valid = new Set(tabKeys);
-  const visible = unique(splitPaneKeys(layout).filter((key) => valid.has(key)));
-  const ordered = unique([
-    ...visible,
-    ...tabKeys.filter((key) => !visible.includes(key)),
-  ]).slice(0, 4);
-
-  if (valid.has(activeKey) && !ordered.includes(activeKey)) {
-    ordered.unshift(activeKey);
-  }
-
-  const keys = ordered.slice(0, 4);
-  if (keys.length < 2) return splitLeaf(keys[0] ?? activeKey);
-
-  if (layout.kind === 'split' && layout.direction === 'row') {
-    const left = keysIn(layout.first, valid);
-    const right = keysIn(layout.second, valid);
-    if (left.length && right.length) {
-      return {
-        kind: 'split',
-        direction: 'row',
-        ratio: 0.5,
-        first: stackColumn(left),
-        second: stackColumn(right),
-      };
-    }
-  }
+  const leftKeys = visibleKeysForSide(layout, 'left', tabKeys.left, activeKeys.left);
+  const rightKeys = visibleKeysForSide(layout, 'right', tabKeys.right, activeKeys.right);
 
   return {
     kind: 'split',
     direction: 'row',
     ratio: 0.5,
-    first: stackColumn(keys.filter((_, index) => index % 2 === 0)),
-    second: stackColumn(keys.filter((_, index) => index % 2 === 1)),
+    first: stackColumn(leftKeys),
+    second: stackColumn(rightKeys),
   };
 }
 
-function keysIn(node: SplitNode, valid: ReadonlySet<string>): string[] {
-  return unique(splitPaneKeys(node).filter((key) => valid.has(key))).slice(0, 2);
+function visibleKeysForSide(
+  layout: SplitNode,
+  side: BrowserMiddleSide,
+  tabKeys: readonly string[],
+  activeKey: string | null,
+): string[] {
+  const valid = new Set(tabKeys);
+  const branch =
+    layout.kind === 'split' && layout.direction === 'row'
+      ? side === 'left'
+        ? layout.first
+        : layout.second
+      : layout;
+  const visible = unique(splitPaneKeys(branch).filter((key) => valid.has(key))).slice(0, 2);
+
+  if (activeKey && valid.has(activeKey) && !visible.includes(activeKey)) {
+    // A selected hidden tab replaces the lower pane, preserving the primary
+    // pane while ensuring every header selection has a visible conversation.
+    return unique([...visible.slice(0, 1), activeKey, ...tabKeys]).slice(0, 2);
+  }
+
+  return unique([...visible, ...tabKeys]).slice(0, 2);
 }
 
 function stackColumn(keys: readonly string[]): SplitNode {
