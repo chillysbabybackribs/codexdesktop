@@ -1808,7 +1808,7 @@ export default function App(): React.JSX.Element {
     resumeFailuresByTabRef.current.delete(tabKey);
     discardComposerDraft(tabKey);
     patchMainChatTab(tabKey, (tab) => ({
-      ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort),
+      ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort, null, tab.workspace),
       key: tab.key,
     }));
 
@@ -2233,11 +2233,21 @@ export default function App(): React.JSX.Element {
   }
 
   const handlePickWorkspace = async (): Promise<void> => {
+    const tabKey = activeMainChatTabKeyRef.current;
+    const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
+    if (tab?.threadId) {
+      addSystemItem(
+        'This chat is already bound to its working directory. Start a new chat to work in a different folder.',
+        'warning',
+      );
+      return;
+    }
     try {
       const picked = await window.api.workspace.pick();
 
       if (picked) {
-        setWorkspace(picked);
+        patchMainChatTab(tabKey, (current) => ({ ...current, workspace: picked }));
+        workspaceRef.current = picked;
       }
     } catch (error) {
       addSystemItem(`Workspace selection failed: ${(error as Error).message}`, 'error');
@@ -2249,7 +2259,7 @@ export default function App(): React.JSX.Element {
     if (existingThreadId) return existingThreadId;
 
     const started = await window.api.session.startThread({
-      cwd: workspaceRef.current,
+      cwd: workspaceForMainChatTab(activeMainChatTabKeyRef.current),
       model: selectedModelRef.current,
     });
     const threadId = started.thread.id;
@@ -2265,6 +2275,7 @@ export default function App(): React.JSX.Element {
       ...tab,
       threadId,
       title,
+      workspace: started.thread.cwd ?? tab.workspace,
     }));
     persistLastThreadId(threadId);
     return threadId;
