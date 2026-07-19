@@ -237,8 +237,7 @@ export class BrowserAgentController {
       MAX_BROWSER_RESULT_CHARS
     )
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const lease = captureTargetLease(tabs, tabId)
       if (!lease) {
@@ -300,18 +299,6 @@ export class BrowserAgentController {
       }
     })
 
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) {
-        this.tabQueues.delete(tabId)
-      }
-    })
-
-    return operation
   }
 
   /**
@@ -341,8 +328,7 @@ export class BrowserAgentController {
       MAX_BROWSER_RESULT_CHARS
     )
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
@@ -402,15 +388,6 @@ export class BrowserAgentController {
       }
     })
 
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-    return operation
   }
 
   /**
@@ -439,8 +416,7 @@ export class BrowserAgentController {
     }
 
     const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
@@ -492,18 +468,6 @@ export class BrowserAgentController {
       }
     })
 
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) {
-        this.tabQueues.delete(tabId)
-      }
-    })
-
-    return operation
   }
 
   /**
@@ -542,8 +506,7 @@ export class BrowserAgentController {
       maxChars: maxResultChars
     })
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       let lease = captureTargetLease(tabs, tabId)
       if (!lease) {
@@ -687,15 +650,6 @@ export class BrowserAgentController {
       }
     })
 
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-    return operation
   }
 
   private async runAcrossTargets(code: string, options: BrowserRunOptions): Promise<BrowserAgentResult> {
@@ -1071,8 +1025,7 @@ export class BrowserAgentController {
       1_000,
       MAX_BROWSER_RESULT_CHARS
     )
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation = previous.then(async (): Promise<BrowserAgentResult> => {
+    return this.tabOperations.run(tabId, async (): Promise<BrowserAgentResult> => {
       if (options.signal?.aborted) return cancelledResult()
       const lease = options.requireStableTarget ? captureTargetLease(tabs, tabId) : null
       const webContents = lease?.webContents ?? tabs.resolveWebContents(tabId)
@@ -1117,16 +1070,6 @@ export class BrowserAgentController {
       }
     })
 
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-
-    return operation
   }
 
   private async materializeCdpResult(

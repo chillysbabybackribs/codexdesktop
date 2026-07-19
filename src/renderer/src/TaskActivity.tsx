@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/session-protocol'
 import type { ThreadItem } from '../../shared/session-protocol'
 import type { WebSearchAction } from '../../shared/session-protocol'
-import { cleanCommand, narrateCommand } from './command-narrate'
+import { cleanCommand, commandDescriptionOf, narrateCommand } from './command-narrate'
 import { parseUnifiedDiff, type DiffLine, type DiffSegment } from './diff'
 import { langForPath, useLineTokens, type ThemedToken } from './highlight'
 import type { TurnMeta, TurnTokenTelemetry } from './turn-telemetry'
@@ -522,13 +522,6 @@ function ThoughtBlock({
 
 function isBrowseAction(action: CommandAction): boolean {
   return action.type === 'read' || action.type === 'listFiles' || action.type === 'search'
-}
-
-// The Claude adapter rides the model-written Bash `description` along on the
-// item outside the generated protocol shape; absent on Codex items.
-function commandDescriptionOf(item: CommandExecutionItem): string | null {
-  const value = (item as { commandDescription?: unknown }).commandDescription
-  return typeof value === 'string' && value.trim() ? value : null
 }
 
 function CompactActionRows({

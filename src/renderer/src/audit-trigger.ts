@@ -1,4 +1,5 @@
 import type { ItemMeta } from './activity-model.js'
+import { cleanCommand, commandDescriptionOf, narrateCommand } from './command-narrate.js'
 import type { ChatItem } from './transcript-model.js'
 
 // The Codex-doer / Claude-auditor pairing: pure decision + prompt building
@@ -253,8 +254,55 @@ export function liveTurnGlance(
     turnId,
     stepCount: steps.length,
     fileCount: files.length,
-    lastStep: steps.at(-1) ?? null
+    lastStep: currentActionLine(items, itemMeta, turnId)
   }
+}
+
+// Natural-language caption for what the doer is doing right now — newest
+// in-turn item worth narrating, progressive tense while it is still running.
+// The audit briefing keeps the raw `$ command` lines; this is display only.
+export function currentActionLine(
+  items: ChatItem[],
+  itemMeta: Record<string, ItemMeta>,
+  turnId: string
+): string | null {
+  for (let i = items.length - 1; i >= 0; i -= 1) {
+    const item = items[i]
+    if (itemMeta[item.id]?.turnId !== turnId) continue
+    const status = 'status' in item && typeof item.status === 'string' ? item.status : null
+    const running = status ? status === 'inProgress' : !itemMeta[item.id]?.completedAtMs
+
+    switch (item.type) {
+      case 'reasoning':
+        if (running) return 'Thinking'
+        continue
+      case 'agentMessage':
+        if (running) return 'Writing a reply'
+        continue
+      case 'commandExecution': {
+        const narration = narrateCommand(item.command, item.commandActions, commandDescriptionOf(item))
+        if (narration.natural) return clip(running ? narration.running : narration.done)
+        return clip(`$ ${cleanCommand(item.command)}`)
+      }
+      case 'fileChange': {
+        const names = item.changes.map((change) => basename(change.path))
+        const label = names.length <= 2 ? names.join(', ') : `${names[0]} +${names.length - 1} more`
+        return clip(`${running ? 'Editing' : 'Edited'} ${label || 'files'}`)
+      }
+      case 'webSearch': {
+        const query = (item as { query?: string }).query
+        return query ? clip(`Searching the web for “${query}”`) : 'Searching the web'
+      }
+      case 'mcpToolCall':
+      case 'dynamicToolCall': {
+        const tool = (item as { tool?: string }).tool ?? 'a tool'
+        return clip(`${running ? 'Using' : 'Used'} ${tool}`)
+      }
+      default:
+        continue
+    }
+  }
+  return null
 }
 
 // True when a stored user message is an auto-audit request. Cheap marker check

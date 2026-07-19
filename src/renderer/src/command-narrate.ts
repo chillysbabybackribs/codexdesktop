@@ -168,6 +168,13 @@ export function cleanCommand(command: string): string {
   return stripShellWrapper(command).replace(/\s+/g, ' ').trim()
 }
 
+// The Claude adapter rides Bash's model-written `description` along on the
+// command item outside the generated protocol shape; absent on Codex items.
+export function commandDescriptionOf(item: unknown): string | null {
+  const value = (item as { commandDescription?: unknown } | null)?.commandDescription
+  return typeof value === 'string' && value.trim() ? value : null
+}
+
 // ---------------------------------------------------------------------------
 // Description conjugation (Claude runtime)
 // ---------------------------------------------------------------------------
