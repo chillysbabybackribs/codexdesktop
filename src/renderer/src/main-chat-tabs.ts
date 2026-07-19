@@ -19,6 +19,12 @@ export type MainChatTabState = {
   activeKey: string
 }
 
+export type MainChatTabDropCandidate = {
+  key: string
+  left: number
+  right: number
+}
+
 type PersistedMainChatTab = {
   key?: unknown
   threadId?: unknown
@@ -170,6 +176,38 @@ export function reorderMainChatTabs(
   ]
 
   return { ...state, tabs }
+}
+
+export function findMainChatTabDropTarget(
+  sourceKey: string,
+  sourceLeft: number,
+  previewLeft: number,
+  previewWidth: number,
+  candidates: MainChatTabDropCandidate[],
+  overlapRatio = 0.1
+): { key: string; placement: 'before' | 'after' } | null {
+  const previewRight = previewLeft + previewWidth
+  const minimumOverlap = previewWidth * overlapRatio
+  const previewCenter = previewLeft + previewWidth / 2
+
+  const target = candidates
+    .filter((candidate) => candidate.key !== sourceKey)
+    .map((candidate) => ({
+      candidate,
+      overlap: Math.max(0, Math.min(previewRight, candidate.right) - Math.max(previewLeft, candidate.left))
+    }))
+    .filter(({ overlap }) => overlap >= minimumOverlap)
+    .sort((first, second) => (
+      second.overlap - first.overlap ||
+      Math.abs((first.candidate.left + first.candidate.right) / 2 - previewCenter) -
+        Math.abs((second.candidate.left + second.candidate.right) / 2 - previewCenter)
+    ))[0]?.candidate
+
+  if (!target) return null
+  return {
+    key: target.key,
+    placement: previewLeft > sourceLeft ? 'after' : 'before'
+  }
 }
 
 export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab | null {

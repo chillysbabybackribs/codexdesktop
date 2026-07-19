@@ -99,6 +99,7 @@ import {
 import {
   closeMainChatTab,
   createMainChatTab,
+  findMainChatTabDropTarget,
   maxMainChatTabs,
   needsMainChatTabHydration,
   parseMainChatTabState,
@@ -2782,6 +2783,7 @@ function MainChatTabStrip({
     startY: number
     pointerOffsetX: number
     pointerOffsetY: number
+    sourceLeft: number
     width: number
     hasMoved: boolean
     targetKey: string | null
@@ -2831,6 +2833,7 @@ function MainChatTabStrip({
       startY: event.clientY,
       pointerOffsetX: event.clientX - rect.left,
       pointerOffsetY: event.clientY - rect.top,
+      sourceLeft: rect.left,
       width: rect.width,
       hasMoved: false,
       targetKey: null,
@@ -2845,17 +2848,6 @@ function MainChatTabStrip({
     if (!drag.hasMoved && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 6) return
     drag.hasMoved = true
 
-    const target = document.elementFromPoint(event.clientX, event.clientY)
-      ?.closest<HTMLElement>('[data-main-chat-tab-key]')
-    const targetKey = target?.dataset.mainChatTabKey ?? null
-    const targetRect = target?.getBoundingClientRect()
-    const canTarget = Boolean(targetKey && targetKey !== drag.sourceKey && targetRect)
-    const placement = canTarget && event.clientX >= targetRect!.left + targetRect!.width / 2
-      ? 'after'
-      : 'before'
-
-    drag.targetKey = canTarget ? targetKey : null
-    drag.placement = placement
     const tabStripBounds = stripRef.current?.getBoundingClientRect()
     const minPreviewLeft = tabStripBounds?.left ?? 0
     const maxPreviewLeft = Math.max(
@@ -2870,6 +2862,21 @@ function MainChatTabStrip({
       Math.max(event.clientY - drag.pointerOffsetY, 0),
       window.innerHeight - 40
     )
+    const dropTarget = findMainChatTabDropTarget(
+      drag.sourceKey,
+      drag.sourceLeft,
+      previewLeft,
+      drag.width,
+      Array.from(stripRef.current?.querySelectorAll<HTMLElement>('[data-main-chat-tab-key]') ?? []).flatMap((tab) => {
+        const key = tab.dataset.mainChatTabKey
+        if (!key) return []
+        const rect = tab.getBoundingClientRect()
+        return [{ key, left: rect.left, right: rect.right }]
+      })
+    )
+
+    drag.targetKey = dropTarget?.key ?? null
+    drag.placement = dropTarget?.placement ?? 'before'
     setDragging({
       sourceKey: drag.sourceKey,
       targetKey: drag.targetKey,
