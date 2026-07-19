@@ -674,7 +674,18 @@ function areAgentWindowPropsEqual(
     previous.isSelected === next.isSelected &&
     previous.models === next.models &&
     previous.mainModel === next.mainModel &&
-    previous.mainReasoningEffort === next.mainReasoningEffort
+    previous.mainReasoningEffort === next.mainReasoningEffort &&
+    // Only auditors render the live glance; everyone else skips those updates.
+    (!next.session.auditsMain || isSameLiveGlance(previous.liveMainTurn, next.liveMainTurn))
+}
+
+function isSameLiveGlance(a: LiveTurnGlance | null, b: LiveTurnGlance | null): boolean {
+  if (a === b) return true
+  if (!a || !b) return false
+  return a.turnId === b.turnId &&
+    a.stepCount === b.stepCount &&
+    a.fileCount === b.fileCount &&
+    a.lastStep === b.lastStep
 }
 
 const agentZoomStorageKey = (key: string): string => `codexdesktop.agent-zoom.${key}`
@@ -720,11 +731,74 @@ function AgentContextPill({
   )
 }
 
-// The auto-audit request, rendered as a compact collapsible card instead of
-// the full prompt verbatim. Collapsed by default: a one-line "Auditing turn"
-// headline with the changed-file summary. Expanding reveals the user's
-// request and the ordered step log the auditor was briefed with.
-function AuditRequestCard({ audit }: { audit: AuditRequestSummary }): React.JSX.Element {
+// The empty-state setup panel: instead of prose, the agent's pairing modes as
+// clean toggleable options. The same flags live in the header menu afterwards.
+function AgentModeSelector({
+  session,
+  onToggleWatch,
+  onToggleAudit
+}: {
+  session: AgentSession
+  onToggleWatch: (key: string) => void
+  onToggleAudit: (key: string) => void
+}): React.JSX.Element {
+  return (
+    <div className="agent-mode-selector">
+      <div className="agent-mode-heading">
+        <strong>Independent agent</strong>
+        <span>
+          Runs in parallel and shares your workspace. Pick how it pairs with the main
+          chat — or just send it a message.
+        </span>
+      </div>
+      <button
+        type="button"
+        className={`agent-mode-option ${session.watchesMain ? 'is-on' : ''}`}
+        role="switch"
+        aria-checked={session.watchesMain}
+        onClick={() => onToggleWatch(session.key)}
+      >
+        <span className="agent-mode-icon" aria-hidden="true"><EyeIcon /></span>
+        <span className="agent-mode-copy">
+          <strong>Share main-chat context</strong>
+          <small>Each message carries a snapshot of the main conversation</small>
+        </span>
+        <span className={`agent-mode-switch ${session.watchesMain ? 'is-on' : ''}`} aria-hidden="true">
+          <span className="agent-mode-knob" />
+        </span>
+      </button>
+      <button
+        type="button"
+        className={`agent-mode-option ${session.auditsMain ? 'is-on' : ''}`}
+        role="switch"
+        aria-checked={session.auditsMain}
+        onClick={() => onToggleAudit(session.key)}
+      >
+        <span className="agent-mode-icon" aria-hidden="true"><ShieldCheckIcon /></span>
+        <span className="agent-mode-copy">
+          <strong>Audit main-chat turns</strong>
+          <small>Auto-reviews the diff after each file-changing turn · defaults to Claude</small>
+        </span>
+        <span className={`agent-mode-switch ${session.auditsMain ? 'is-on' : ''}`} aria-hidden="true">
+          <span className="agent-mode-knob" />
+        </span>
+      </button>
+    </div>
+  )
+}
+
+// One audit exchange as a single card: compact briefing header (expandable to
+// the request, changed files, and step log) with the auditor's report as the
+// body — streaming in while the audit runs.
+function AuditExchangeCard({
+  audit,
+  report,
+  working
+}: {
+  audit: AuditRequestSummary
+  report: string | null
+  working: boolean
+}): React.JSX.Element {
   const [expanded, setExpanded] = useState(false)
   const fileLabel = auditSummaryLabel(audit.files)
   return (
@@ -735,9 +809,9 @@ function AuditRequestCard({ audit }: { audit: AuditRequestSummary }): React.JSX.
         aria-expanded={expanded}
         onClick={() => setExpanded((current) => !current)}
       >
-        <EyeIcon />
+        <span className="agent-audit-badge" aria-hidden="true"><ShieldCheckIcon /></span>
         <span className="agent-audit-headline">
-          <strong>Auditing turn</strong>
+          <strong>Audit</strong>
           <span className="agent-audit-files">{fileLabel}</span>
         </span>
         <span className="agent-audit-chevron" aria-hidden="true">
@@ -774,7 +848,28 @@ function AuditRequestCard({ audit }: { audit: AuditRequestSummary }): React.JSX.
           ) : null}
         </div>
       ) : null}
+      {report ? (
+        <div className="agent-audit-report">
+          <MarkdownContent text={report} />
+        </div>
+      ) : working ? (
+        <div className="agent-audit-report is-pending shimmer-text">Reviewing changes…</div>
+      ) : null}
     </div>
+  )
+}
+
+function ShieldCheckIcon(): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 3 5 6v5c0 4.4 3 8.4 7 9.6 4-1.2 7-5.2 7-9.6V6l-7-3Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 
