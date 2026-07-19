@@ -1,4 +1,4 @@
-# Phase 2 — External session store (2026-07-19, in progress)
+# Phase 2 — External session store (2026-07-19, complete)
 
 Goal: one render model for every conversation surface, held outside React in
 `src/renderer/src/session-store.ts`; surfaces subscribe by key. No behavior or
@@ -73,28 +73,24 @@ goal + terminal error) through `reduceSessionNotification`, asserting the
 render-model shape the UI draws. This is the regression net for the dock
 migration and future provider adapters.
 
-## Slice 5 — dock dual-write (landed); view-model swap deferred by design
+## Slice 5 — dock agents onto the shared store (landed)
 
-Dock threads now ALSO reduce into the SessionStore under the agent's session
-key (routing site in App.tsx `handleCodexNotification`, seeded with the
-session's threadId/title), and close/reset/promote retire the store record
-(wrappers above the lifecycle verbs in App.tsx). The store is therefore the
-complete record of every surface — active tab, background tabs, dock agents —
-through one reducer.
+- Dock threads now use `reduceSessionNotification` under their dock-session
+  key. The former lightweight notification reducer no longer owns a separate
+  transcript.
+- `AgentSession[]` is synchronized from shared render state; dock-only metadata
+  (helper mode, model override, open/selected state, and recovery) remains
+  outside the transcript model.
+- Live assistant deltas buffer until the next animation frame, then reduce as
+  one store update and one dock projection update. This preserves streaming
+  coalescing without duplicate transcript state.
+- Dock restoration seeds a shared session before resuming, then hydrates it
+  with full turn items. Closing or resetting an agent removes or resets that
+  same store entry.
 
-The dock's *view* still renders from the lite `AgentSession` model
-(`useAgentSessions.ts` / `agent-session-model.ts`, ~880 lines across five
-files). Swapping it to store-derived selectors was deliberately deferred: the
-migration's payoff (work items, turn telemetry, live action labels in dock
-cards) arrives exactly when the dock UI is upgraded to mission-control cards,
-and doing the state surgery without the rendering upgrade pays the full cost
-for no visible benefit. When that product work starts, the store already holds
-everything the new cards need — synthesize `AgentSession[]` from
-store + dock metadata (watchesMain, model override, open/selected) and delete
-the lite reducer then.
+## Final verification
 
-Cost of the interim dual-write: dock notifications reduce twice (lite + full).
-Dock traffic is low-volume next to the main transcript; measured impact nil.
-
-Verified: 333/333 tests, build clean, live dock smoke (spawn agent → send →
-reply renders in card, main transcript isolated, lifecycle cleanup wired).
+- `npm test`: 333 passing tests.
+- `npm run typecheck` and `npm run build`: clean.
+- `npm run verify:app`: isolated Electron instance launched successfully and
+  its user-data directory and browser-control socket were removed after close.
