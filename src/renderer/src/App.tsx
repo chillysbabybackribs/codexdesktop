@@ -335,7 +335,6 @@ export default function App(): React.JSX.Element {
   const [workspace, setWorkspace] = useState<string | null>(() =>
     window.localStorage.getItem('codexdesktop.workspace'),
   );
-  const [isThreadMenuOpen, setIsThreadMenuOpen] = useState(false);
   const [models, setModels] = useState<Model[]>([]);
   // The active tab projects its saved model choice into the composer. `null`
   // means no explicit override, so turns use the CLI-configured default.
@@ -840,7 +839,6 @@ export default function App(): React.JSX.Element {
     if (!canSplitPaneAt(chatSplitLayoutRef.current, focusedKey)) return false;
     flushActiveMainChatSession();
     cancelAutoRecovery();
-    setIsThreadMenuOpen(false);
     const tab = createMainChatTab(
       crypto.randomUUID(),
       null,
@@ -1605,7 +1603,6 @@ export default function App(): React.JSX.Element {
     const tabKey = activeMainChatTabKeyRef.current;
 
     cancelAutoRecovery();
-    setIsThreadMenuOpen(false);
     resumeGenerationRef.current += 1;
     watchThreadIdRef.current = null;
     persistLastThreadId(null);
@@ -1657,7 +1654,6 @@ export default function App(): React.JSX.Element {
       return false;
     flushActiveMainChatSession();
     cancelAutoRecovery();
-    setIsThreadMenuOpen(false);
     const active = mainChatTabStateRef.current.tabs.find(
       (tab) => tab.key === activeMainChatTabKeyRef.current,
     );
@@ -1706,7 +1702,6 @@ export default function App(): React.JSX.Element {
 
     flushActiveMainChatSession();
     cancelAutoRecovery();
-    setIsThreadMenuOpen(false);
     updateMainChatTabs((state) => ({
       tabs: state.tabs.map((tab) =>
         tab.key === key && tab.status === 'attention'
@@ -1835,7 +1830,6 @@ export default function App(): React.JSX.Element {
 
   const handleResumeThread = async (threadId: string): Promise<boolean> => {
     if (isMainChatTransitionLocked()) return false;
-    setIsThreadMenuOpen(false);
     const existing = mainChatTabForThread(threadId);
     if (existing) {
       return handleSelectMainChatTab(existing.key);
@@ -3634,7 +3628,6 @@ export default function App(): React.JSX.Element {
       activeTurnId={activeTurnId}
       activeGoal={activeGoal}
       isGoalUpdating={isGoalUpdating}
-      isThreadMenuOpen={isThreadMenuOpen}
       threadsNextCursor={threadsNextCursor}
       threadsLoading={threadsLoading}
       threadsError={threadsError}
@@ -3654,7 +3647,6 @@ export default function App(): React.JSX.Element {
       onSteer={handleSteer}
       onStop={handleStop}
       onNewThread={handleNewThread}
-      onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
       onResumeThread={async (threadId) => {
         await handleResumeThread(threadId);
       }}
@@ -3753,7 +3745,6 @@ export default function App(): React.JSX.Element {
           activeTurnId={activeTurnId}
           activeGoal={activeGoal}
           isGoalUpdating={isGoalUpdating}
-          isThreadMenuOpen={isThreadMenuOpen}
           threadsNextCursor={threadsNextCursor}
           threadsLoading={threadsLoading}
           threadsError={threadsError}
@@ -3773,7 +3764,6 @@ export default function App(): React.JSX.Element {
           onSteer={handleSteer}
           onStop={handleStop}
           onNewThread={handleNewThread}
-          onToggleThreadMenu={() => setIsThreadMenuOpen((open) => !open)}
           onResumeThread={async (threadId) => {
             await handleResumeThread(threadId);
           }}

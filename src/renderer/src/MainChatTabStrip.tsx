@@ -29,11 +29,9 @@ export function MainChatTabStrip({
   title,
   threads,
   activeThreadId,
-  isThreadMenuOpen,
   threadsNextCursor,
   threadsLoading,
   threadsError,
-  onToggleThreadMenu,
   onResumeThread,
   onLoadMoreThreads,
 }: {
@@ -57,11 +55,9 @@ export function MainChatTabStrip({
   title: string;
   threads: Thread[];
   activeThreadId: string | null;
-  isThreadMenuOpen: boolean;
   threadsNextCursor: string | null;
   threadsLoading: boolean;
   threadsError: string | null;
-  onToggleThreadMenu: () => void;
   onResumeThread: (threadId: string) => Promise<void>;
   onLoadMoreThreads: () => Promise<void>;
 }): React.JSX.Element {
@@ -366,73 +362,24 @@ export function MainChatTabStrip({
         <span aria-hidden="true">+</span>
       </button>
       <div className="main-chat-tabbar-spacer" />
-      <button
-        type="button"
-        className={`main-chat-tab-action main-chat-workspace-layout ${
-          isBrowserMiddle ? 'is-active' : ''
-        }`}
-        aria-label={
-          isBrowserMiddle
-            ? 'Return browser to the right of the chats'
-            : 'Place browser between chat columns'
-        }
-        aria-pressed={isBrowserMiddle}
-        title={
-          isBrowserMiddle
-            ? 'Return browser to the right'
-            : 'Center browser between chat columns'
-        }
+      <ThreadMenu
+        placement="tabbar"
+        title={title}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        threadsNextCursor={threadsNextCursor}
+        threadsLoading={threadsLoading}
+        threadsError={threadsError}
         disabled={disabled}
-        onClick={onToggleBrowserMiddle}
-      >
-        <BrowserMiddleIcon />
-      </button>
-      <button
-        type="button"
-        className="main-chat-tab-action"
-        aria-label="Split right — open a new chat beside this one"
-        title="Split right — new chat beside this one (Ctrl+\)"
-        disabled={disabled || !canSplitActivePane}
-        onClick={() => onSplitActivePane('right')}
-      >
-        <SplitRightIcon />
-      </button>
-      <button
-        type="button"
-        className="main-chat-tab-action"
-        aria-label="Split down — open a new chat below this one"
-        title="Split down — new chat below this one (Ctrl+Shift+\)"
-        disabled={disabled || !canSplitActivePane}
-        onClick={() => onSplitActivePane('down')}
-      >
-        <SplitDownIcon />
-      </button>
-      {showGlobalActions ? (
-        <>
-          <ThreadMenu
-            placement="tabbar"
-            title={title}
-            threads={threads}
-            activeThreadId={activeThreadId}
-            isOpen={isThreadMenuOpen}
-            threadsNextCursor={threadsNextCursor}
-            threadsLoading={threadsLoading}
-            threadsError={threadsError}
-            onToggle={onToggleThreadMenu}
-            onResumeThread={onResumeThread}
-            onLoadMoreThreads={onLoadMoreThreads}
-          />
-          <button
-            type="button"
-            className="main-chat-tab-action"
-            aria-label="Open settings"
-            title="Settings"
-            onClick={onOpenSettings}
-          >
-            <SettingsIcon />
-          </button>
-        </>
-      ) : null}
+        isBrowserMiddle={isBrowserMiddle}
+        canSplitActivePane={canSplitActivePane}
+        showGlobalActions={showGlobalActions}
+        onToggleBrowserMiddle={onToggleBrowserMiddle}
+        onSplitActivePane={onSplitActivePane}
+        onOpenSettings={onOpenSettings}
+        onResumeThread={onResumeThread}
+        onLoadMoreThreads={onLoadMoreThreads}
+      />
     </header>
   );
 }
@@ -441,58 +388,6 @@ function MainChatGlyph(): React.JSX.Element {
   return (
     <svg className="main-chat-tab-glyph" viewBox="0 0 16 16" aria-hidden="true">
       <path d="M4 4.75A1.75 1.75 0 0 1 5.75 3h4.5A1.75 1.75 0 0 1 12 4.75v3.5A1.75 1.75 0 0 1 10.25 10H7l-2.4 2v-2.15A1.75 1.75 0 0 1 4 8.5V4.75Z" />
-    </svg>
-  );
-}
-
-function SplitRightIcon(): React.JSX.Element {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
-      <path d="M9.5 3.5v9" stroke="currentColor" />
-      <path d="M11.5 8h-2M11 6.9 12.1 8 11 9.1" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" opacity="0.75" />
-    </svg>
-  );
-}
-
-function BrowserMiddleIcon(): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="1.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
-      <rect x="6.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
-      <rect x="11.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
-      <path d="M7.5 4.5h1M7.5 6.5h1" stroke="currentColor" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function SplitDownIcon(): React.JSX.Element {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
-      <path d="M2.5 9h11" stroke="currentColor" />
-      <path d="M8 11.5v-2M6.9 11 8 12.1 9.1 11" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" opacity="0.75" />
-    </svg>
-  );
-}
-
-function SettingsIcon(): React.JSX.Element {
-  return (
-    <svg
-      className="icon-settings"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
     </svg>
   );
 }

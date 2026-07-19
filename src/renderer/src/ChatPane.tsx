@@ -68,7 +68,6 @@ export function ChatPane({
   activeTurnId,
   activeGoal,
   isGoalUpdating,
-  isThreadMenuOpen,
   threadsNextCursor,
   threadsLoading,
   threadsError,
@@ -86,7 +85,6 @@ export function ChatPane({
   onSteer,
   onStop,
   onNewThread,
-  onToggleThreadMenu,
   onResumeThread,
   onLoadMoreThreads,
   onPickWorkspace,
@@ -161,7 +159,6 @@ export function ChatPane({
   activeTurnId: string | null;
   activeGoal: ThreadGoal | null;
   isGoalUpdating: boolean;
-  isThreadMenuOpen: boolean;
   threadsNextCursor: string | null;
   threadsLoading: boolean;
   threadsError: string | null;
@@ -179,7 +176,6 @@ export function ChatPane({
   onSteer: (text: string) => Promise<boolean>;
   onStop: () => Promise<void>;
   onNewThread: () => void;
-  onToggleThreadMenu: () => void;
   onResumeThread: (threadId: string) => Promise<void>;
   onLoadMoreThreads: () => Promise<void>;
   onPickWorkspace: () => Promise<void>;
@@ -576,11 +572,9 @@ export function ChatPane({
             title={title}
             threads={threads}
             activeThreadId={activeThreadId}
-            isThreadMenuOpen={isThreadMenuOpen}
             threadsNextCursor={threadsNextCursor}
             threadsLoading={threadsLoading}
             threadsError={threadsError}
-            onToggleThreadMenu={onToggleThreadMenu}
             onResumeThread={onResumeThread}
             onLoadMoreThreads={onLoadMoreThreads}
           />
