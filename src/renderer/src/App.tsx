@@ -656,9 +656,9 @@ export default function App(): React.JSX.Element {
     });
   }, [activeThreadId, activeThreadTitle, activeTurnId, workspace, items, itemMeta, turnMeta]);
 
-  // The model catalog comes from `model/list` on the app-server, so it is the
-  // same list (and default) the CLI's own /model picker shows. Loaded once the
-  // server is ready; if it fails, sends simply omit the override.
+  // The merged catalog comes from each registered runtime: Codex app-server's
+  // `model/list` plus Claude Agent SDK `supportedModels()`. Loaded once the
+  // shared session surface is ready; if it fails, sends omit the override.
   useEffect(() => {
     if (codexStatus !== 'ready' || models.length) {
       return;
@@ -714,7 +714,7 @@ export default function App(): React.JSX.Element {
         setSelectedModel(activeTab.model);
         setSelectedReasoningEffort(activeTab.reasoningEffort);
       },
-      (error: Error) => console.warn('Failed to load Codex model list', error),
+      (error: Error) => console.warn('Failed to load model catalog', error),
     );
 
     return () => {
