@@ -3522,6 +3522,94 @@ export default function App(): React.JSX.Element {
     return null;
   }
 
+  // The user's request for a turn, display-stripped — shared by the completion
+  // audit briefing and the mid-turn watchdog briefing.
+  function turnUserRequestText(turnId: string): string {
+    const userItem = itemsRef.current.find(
+      (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
+    );
+    if (!userItem || userItem.type !== 'userMessage') return '(request text unavailable)';
+    return (
+      userItem.content
+        .filter((content) => content.type === 'text')
+        .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
+        .join('\n')
+        .trim() || '(request text unavailable)'
+    );
+  }
+
+  // Mid-turn watchdog (main-chat-watchdog.ts): sparse trajectory checks on the
+  // paired reviewer while a long main-chat turn runs. Silence-by-default — an
+  // ON-TRACK reply is dropped; a STEER reply lands in the running turn through
+  // the steer channel. Short turns never qualify, so quick tasks pay nothing.
+  const watchdogRef = useRef(new Map<string, WatchdogTurnState>());
+  const watchdogTickRef = useRef<() => void>(() => {});
+  watchdogTickRef.current = () => void maybeRunWatchdogCheck();
+  useEffect(() => {
+    const timer = window.setInterval(() => watchdogTickRef.current(), 15_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  async function maybeRunWatchdogCheck(): Promise<void> {
+    const tabKey = activeMainChatTabKeyRef.current;
+    const turnId = activeTurnIdRef.current;
+    const states = watchdogRef.current;
+    if (!turnId) {
+      states.delete(tabKey);
+      return;
+    }
+    // Intake protocol turns are conversation, not work.
+    if (mainChatIntakeRef.current.has(tabKey)) return;
+    let state = states.get(tabKey);
+    if (!state || state.turnId !== turnId) {
+      const startedAtMs = turnMetaRef.current[turnId]?.startedAtMs ?? Date.now();
+      state = newWatchdogTurnState(turnId, startedAtMs);
+      states.set(tabKey, state);
+    }
+    const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId);
+    if (!watchdogCheckDue(state, Date.now(), steps.length)) return;
+    const reviewer = pickIntakeReviewer(agentSessionsRef.current, tabKey);
+    // No paired reviewer, or busy on something else → try again next tick.
+    if (!reviewer || reviewer.status === 'working') return;
+
+    state.inFlight = true;
+    state.checksSent += 1;
+    state.nextCheckAtMs = Date.now() + nextWatchdogDelayMs(state.checksSent);
+    try {
+      const startedAtMs = turnMetaRef.current[turnId]?.startedAtMs ?? Date.now();
+      const briefing = buildWatchdogBriefing({
+        userText: turnUserRequestText(turnId),
+        steps,
+        elapsedMinutes: Math.max(1, Math.round((Date.now() - startedAtMs) / 60_000)),
+        checkNumber: state.checksSent,
+        doerLabel:
+          models.find((model) => model.id === selectedModel)?.displayName ??
+          selectedModel ??
+          'the main-chat model',
+      });
+      if (!(await handleAgentSend(reviewer.key, briefing, []))) return;
+      const reply = await awaitReviewerPlan(reviewer.key, 90_000);
+      // The turn may have finished while the check ran — never steer a dead
+      // turn (the completion audit is about to cover it anyway).
+      if (!reply || activeTurnIdRef.current !== turnId) return;
+      const verdict = parseWatchdogVerdict(reply);
+      if (verdict.verdict === 'steer') {
+        const threadId = activeThreadIdRef.current;
+        if (threadId) {
+          await window.api.session
+            .steerTurn({
+              threadId,
+              turnId,
+              text: buildSteerMessage(reviewer.title, verdict.guidance),
+            })
+            .catch(() => {});
+        }
+      }
+    } finally {
+      state.inFlight = false;
+    }
+  }
+
   // Codex-doer / Claude-auditor pairing: when the focused main chat completes
   // a turn, idle dock agents in audit mode receive a compact briefing. Turns
   // that changed files get the workspace-grounded diff audit (the auditor
@@ -3538,6 +3626,19 @@ export default function App(): React.JSX.Element {
     // Intake protocol turns (restatement / declined-start replies) are not
     // work — the reviewer plans instead of auditing until the task starts.
     if (mainChatIntakeRef.current.has(activeTabKey)) return;
+    // A watchdog check may be mid-flight on the reviewer as the turn ends;
+    // busy auditors are normally skipped, but skipping HERE would trade the
+    // end audit (the loop's verdict) for a trajectory check. Wait it out,
+    // bounded.
+    {
+      const watchdog = watchdogRef.current.get(activeTabKey);
+      if (watchdog?.inFlight) {
+        const deadline = Date.now() + 90_000;
+        while (watchdog.inFlight && Date.now() < deadline) {
+          await new Promise((resolve) => window.setTimeout(resolve, 500));
+        }
+      }
+    }
     const threadId = activeThreadIdRef.current;
     // fileChange items only cover editor-tool edits; the checkpoint diff is
     // ground truth and also catches shell-command writes (the doer's most
@@ -3561,17 +3662,7 @@ export default function App(): React.JSX.Element {
     ) {
       return;
     }
-    const userItem = itemsRef.current.find(
-      (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
-    );
-    const userText =
-      userItem && userItem.type === 'userMessage'
-        ? userItem.content
-            .filter((content) => content.type === 'text')
-            .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
-            .join('\n')
-            .trim() || '(request text unavailable)'
-        : '(request text unavailable)';
+    const userText = turnUserRequestText(turnId);
     const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId);
     const answerText = turnAnswerText(itemsRef.current, itemMetaRef.current, turnId);
     if (!changed.length && !answerText && !steps.length) {
