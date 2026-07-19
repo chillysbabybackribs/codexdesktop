@@ -514,25 +514,47 @@ export class ResearchRunner {
             return null
           }
           if (staticResult.kind === 'accepted' && staticResult.page) {
-            try {
-              const extracted: ExtractedResearchPage = {
-                ...staticResult.page,
-                observedAt: new Date().toISOString()
-              }
-              if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
-              const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
-              this.cachePage(candidate.url, extracted)
-              if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
-              staticFetchHits += 1
-              return draft
-            } catch (error) {
-              if (signal.aborted) throw error
-              if (stopSignal.aborted) return null
-              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
-              return null
-            } finally {
-              preflight.dispose()
+            const extracted: ExtractedResearchPage = {
+              ...staticResult.page,
+              observedAt: new Date().toISOString()
             }
+            // The static lane must pass the same page assessment as the
+            // Chromium lane: without it a 404/challenge/login body with enough
+            // text is silently accepted as a verified source.
+            const staticAssessment = assessExtractedPage(extracted)
+            if (staticAssessment.verified) {
+              try {
+                if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
+                  harvestRedirectHubLinks(candidate, extracted)
+                  return null
+                }
+                const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
+                this.cachePage(candidate.url, extracted)
+                if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
+                staticFetchHits += 1
+                return draft
+              } catch (error) {
+                if (signal.aborted) throw error
+                if (stopSignal.aborted) return null
+                recordResearchError(errors, { url: candidate.url, error: formatError(error) })
+                return null
+              } finally {
+                preflight.dispose()
+              }
+            }
+            harvestRedirectHubLinks(candidate, extracted)
+            if (staticAssessment.reason === 'http-error') {
+              // An HTTP error status is authoritative — do not spend a browser
+              // load rendering an error page into "no usable passages".
+              preflight.dispose()
+              recordResearchError(errors, {
+                url: candidate.url,
+                error: `page verification failed: http-error (status ${extracted.status}${extracted.url !== candidate.url ? ` at ${extracted.url}` : ''})`
+              })
+              return null
+            }
+            // Static body reads as a shell/thin/challenge page — fall through
+            // and let the Chromium lane render it before giving up.
           }
           preflight.dispose()
           if (stopSignal.aborted) return null
@@ -570,12 +592,17 @@ export class ResearchRunner {
               }
             }
             if (!assessment.verified) {
-              throw new Error(`page verification failed: ${assessment.reason}`)
+              harvestRedirectHubLinks(candidate, result)
+              const statusSuffix = result.status >= 400 ? ` (status ${result.status})` : ''
+              throw new Error(`page verification failed: ${assessment.reason}${statusSuffix}`)
             }
             throwIfAborted(linked.signal)
 
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
-            if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
+            if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
+              harvestRedirectHubLinks(candidate, extracted)
+              return null
+            }
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)

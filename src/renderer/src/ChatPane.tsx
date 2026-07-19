@@ -16,7 +16,7 @@ import { EffortSelector, ModelSelector } from './ModelPill';
 import { PluginBrowserView } from './PluginBrowser';
 import { type ItemMeta } from './TaskActivity';
 import { liveTurnGlance } from './audit-trigger';
-import { agentSessionsForMainChatTab, visibleAgentForMainChatTab } from './agent-session-model';
+import { agentSessionsForMainChatTab } from './agent-session-model';
 import type { MainChatTab } from './main-chat-tabs';
 import { SessionStore } from './session-store';
 import type { ChatItem } from './transcript-model';
@@ -228,16 +228,13 @@ export function ChatPane({
     [items, itemMeta, activeTurnId],
   );
 
-  const visibleAgentSession = visibleAgentForMainChatTab(
-    agentSessions,
-    activeMainChatTabKey,
-    openAgentKeys,
-    selectedAgentKey,
+  const activeAgentSessions = agentSessionsForMainChatTab(agentSessions, activeMainChatTabKey);
+  const openAgentSessions = activeAgentSessions.filter((session) =>
+    openAgentKeys.includes(session.key),
   );
-  // Defensive normalization for older persisted docks that may contain
-  // several open keys for one chat: only the selected detail is ever mounted.
-  const openAgentSessions = visibleAgentSession ? [visibleAgentSession] : [];
-  const selectedActiveAgentKey = visibleAgentSession?.key ?? null;
+  const selectedActiveAgentKey = openAgentSessions.some((session) => session.key === selectedAgentKey)
+    ? selectedAgentKey
+    : openAgentSessions[0]?.key ?? null;
 
   const openPluginBrowser = (): void => {
     setIsSettingsOpen(false);

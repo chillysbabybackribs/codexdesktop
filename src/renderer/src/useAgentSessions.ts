@@ -7,7 +7,6 @@ import {
   createWorkerSession,
   dockRoleFlags,
   findAgentSessionByThread,
-  openAgentForMainChatTab,
   reviewerTitle,
   serializeAgentDock,
   updateAgentSession,
@@ -294,7 +293,7 @@ export function useAgentSessions(
       createReviewerSession(key, title, mainChatTabKey, deriveReviewerModel()),
     ]);
     sessionStore.set(key, emptySessionState({ title }));
-    setOpenAgentKeys((current) => openAgentForMainChatTab(agentSessionsRef.current, current, key));
+    setOpenAgentKeys((current) => [...current, key]);
     setSelectedAgentKey(key);
   }
 
@@ -324,13 +323,12 @@ export function useAgentSessions(
       ),
     ]);
     sessionStore.set(spawn.agentKey, emptySessionState({ title: spawn.title }));
-    // Background activity must not mutate the visible dock layout. The worker
-    // appears in the roster (with live status rolled up to its lead), and the
-    // user can explicitly select it when they want its transcript.
+    // Open it so the worker's stream is visible in the dock as it runs.
+    setOpenAgentKeys((current) => (current.includes(spawn.agentKey) ? current : [...current, spawn.agentKey]));
   }
 
   function handleOpenAgent(key: string): void {
-    setOpenAgentKeys((current) => openAgentForMainChatTab(agentSessionsRef.current, current, key));
+    setOpenAgentKeys((current) => (current.includes(key) ? current : [...current, key]));
   }
 
   function handleMinimizeAgent(key: string): void {
