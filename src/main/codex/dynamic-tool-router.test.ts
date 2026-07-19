@@ -9,12 +9,17 @@ function params(tool: string, args: DynamicToolCallParams['arguments'], namespac
   return { threadId: 'thread-1', turnId: 'turn-1', callId: 'call-1', namespace, tool, arguments: args }
 }
 
-const unusedBrowser = {} as BrowserAgentController
+const unusedBrowser = {
+  blockedTurnBrowserResult: () => null,
+  blockTurnBrowserWork: () => {}
+} as unknown as BrowserAgentController
 const unusedResearch = {} as ResearchRunner
 
 function withTurnRunner<T extends object>(browserAgent: T): T & Pick<BrowserAgentController, 'runForTurn'> {
   return {
     ...browserAgent,
+    blockedTurnBrowserResult: () => null,
+    blockTurnBrowserWork: () => {},
     runForTurn: async (_owner, execute) => execute(new AbortController().signal)
   } as T & Pick<BrowserAgentController, 'runForTurn'>
 }
@@ -166,6 +171,8 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
 test('dynamic browser calls carry their exact owning turn', async () => {
   let owner: unknown = null
   const browserAgent = {
+    blockedTurnBrowserResult: () => null,
+    blockTurnBrowserWork: () => {},
     runForTurn: async (nextOwner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) => {
       owner = nextOwner
       return execute(new AbortController().signal)

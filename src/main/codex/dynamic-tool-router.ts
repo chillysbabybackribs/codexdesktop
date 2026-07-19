@@ -21,7 +21,7 @@ export async function routeDynamicToolCall(
       callId: params.callId
     }
     const isBrowserTool = params.namespace === null && params.tool !== 'research_web'
-    const blockedResult = isBrowserTool ? dependencies.browserAgent.blockedTurnBrowserResult?.(owner) ?? null : null
+    const blockedResult = isBrowserTool ? dependencies.browserAgent.blockedTurnBrowserResult(owner) : null
     if (blockedResult) return dynamicToolResponse(blockedResult)
     const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
       dependencies.browserAgent.runForTurn(owner, execute)
@@ -135,7 +135,7 @@ export async function routeDynamicToolCall(
       result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
     }
 
-    if (isBrowserTool) dependencies.browserAgent.blockTurnBrowserWork?.(owner, result)
+    if (isBrowserTool) dependencies.browserAgent.blockTurnBrowserWork(owner, result)
     return dynamicToolResponse(result, imageUrls)
   } catch (error) {
     return {

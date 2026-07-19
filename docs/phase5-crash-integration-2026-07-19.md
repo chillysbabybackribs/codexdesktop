@@ -92,6 +92,19 @@ The final sweep passed:
 Together with the deterministic golden flows for cancellation, background
 work, and browser ownership, this completes the Phase 5 lifecycle/crash sweep.
 
+## Increment 5 — terminal browser target ownership (landed)
+
+When a browser operation returns `targetClosed` or `targetChanged`, the dynamic
+tool router now records that target loss against the owning thread and turn.
+Every later browser tool call in that same turn is rejected with the original
+structured lifecycle failure and an instruction to start a new user request;
+it cannot default to a different tab that has become active in the meantime.
+
+The guard is released on turn completion (and interruption). The regression
+test reproduces a no-tab `browser_flow` after the original active target is
+closed, asserts that the next active tab receives no execution, and verifies
+that turn cleanup releases the guard.
+
 ## Remaining
 
 None. Phase 5's silent-failure, integration, lifecycle/crash, and fragile-path
