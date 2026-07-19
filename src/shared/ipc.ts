@@ -253,6 +253,18 @@ export type TranscriptCachePersistParams = {
   snapshot: unknown
 }
 
+export type CheckpointSummary = {
+  id: string
+  threadId: string
+  turnId: string | null
+  label: string
+  createdAt: number
+}
+
+export type CheckpointRevertParams = {
+  checkpointId: string
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -309,6 +321,8 @@ export const ipcChannels = {
   traceSave: 'trace:save',
   transcriptCacheLoad: 'transcript-cache:load',
   transcriptCachePersist: 'transcript-cache:persist',
+  checkpointList: 'checkpoint:list',
+  checkpointRevert: 'checkpoint:revert',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
   attachmentPick: 'attachment:pick',

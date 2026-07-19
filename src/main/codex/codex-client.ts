@@ -2,6 +2,7 @@ import { EventEmitter } from 'node:events'
 import { join } from 'node:path'
 import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
+import type { TurnCheckpointStore } from '../turn-checkpoint.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
@@ -63,13 +64,15 @@ export class CodexClient extends EventEmitter {
   private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
   private readonly threadModels = new Map<string, string>()
+  private readonly threadCwds = new Map<string, string>()
   private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
   private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
   constructor(
     private readonly browserAgent: BrowserAgentController,
-    private readonly researchRunner: ResearchRunner
+    private readonly researchRunner: ResearchRunner,
+    private readonly checkpoints: TurnCheckpointStore | null = null
   ) {
     super()
     this.appServer = new AppServerProcess({
@@ -197,8 +200,9 @@ export class CodexClient extends EventEmitter {
 
   async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
     await this.ensureStarted()
+    const resolvedCwd = cwd ?? process.env.HOME ?? process.cwd()
     const response = await this.request<ThreadStartResponse>('thread/start', {
-      cwd: cwd ?? process.env.HOME ?? process.cwd(),
+      cwd: resolvedCwd,
       ...(model ? { model } : {}),
       approvalPolicy: 'never',
       sandbox: 'danger-full-access',
@@ -209,6 +213,7 @@ export class CodexClient extends EventEmitter {
     })
     this.threadModels.set(response.thread.id, response.model)
     this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
+    this.threadCwds.set(response.thread.id, resolvedCwd)
     return response
   }
 
@@ -228,6 +233,7 @@ export class CodexClient extends EventEmitter {
     })
     this.threadModels.set(threadId, response.model)
     this.threadReasoningEfforts.set(threadId, response.reasoningEffort)
+    if (response.cwd) this.threadCwds.set(threadId, response.cwd)
     return response
   }
 
@@ -286,6 +292,19 @@ export class CodexClient extends EventEmitter {
     const effectiveEffort = turnEffort ?? requestedEffort
     const includeSummaryPolicy = this.isReasoningSummarySupportedForModel(activeModel)
 
+    // Reversibility (Phase 4): snapshot the workspace before the turn can
+    // touch it. Fire-and-forget — a checkpoint failure or a slow `git add`
+    // must never gate or delay a send; that turn simply offers no revert.
+    const checkpointCwd = this.threadCwds.get(activeThreadId)
+    const checkpointPromise = this.checkpoints && checkpointCwd
+      ? this.checkpoints
+          .createCheckpoint(checkpointCwd, activeThreadId, `before turn (${new Date().toISOString()})`)
+          .catch((error) => {
+            console.warn('turn checkpoint failed:', (error as Error).message)
+            return null
+          })
+      : null
+
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
     const response = await this.startTurnWithSummaryFallback({
@@ -298,6 +317,13 @@ export class CodexClient extends EventEmitter {
     })
     if (model) this.threadModels.set(activeThreadId, model)
     if (effectiveEffort) this.threadReasoningEfforts.set(activeThreadId, effectiveEffort)
+    if (checkpointPromise) {
+      const boundTurnId = response.turn.id
+      void checkpointPromise.then((record) => {
+        if (record) return this.checkpoints!.assignTurn(record.id, boundTurnId)
+        return undefined
+      })
+    }
 
     return {
       ...response,

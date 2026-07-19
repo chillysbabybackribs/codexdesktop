@@ -15,6 +15,8 @@ import type {
   TraceLoadParams,
   TracePersistParams,
   TranscriptCachePersistParams,
+  CheckpointRevertParams,
+  CheckpointSummary,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -36,6 +38,7 @@ import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
 import { TranscriptCache } from './transcript-cache.js'
+import { TurnCheckpointStore } from './turn-checkpoint.js'
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -313,7 +316,8 @@ function registerIpc(): void {
   const memoryDirectory = join(app.getPath('userData'), 'memory')
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
+  const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
   void codexClient.warmUp()
@@ -470,6 +474,19 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.transcriptCachePersist, (_event, params: TranscriptCachePersistParams) =>
     transcriptCache.replace(params.threadId, [params.snapshot])
   )
+  ipcMain.handle(ipcChannels.checkpointList, async (_event, threadId: string): Promise<CheckpointSummary[]> => {
+    const records = await checkpointStore.list(threadId)
+    return records.map(({ id, threadId: recordThreadId, turnId, label, createdAt }) => ({
+      id,
+      threadId: recordThreadId,
+      turnId,
+      label,
+      createdAt
+    }))
+  })
+  ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
+    await checkpointStore.revert(params.checkpointId)
+  })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {
     if (!mainWindow) {

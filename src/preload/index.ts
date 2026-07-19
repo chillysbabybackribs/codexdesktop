@@ -30,6 +30,8 @@ import type {
   TraceLoadParams,
   TracePersistParams,
   TranscriptCachePersistParams,
+  CheckpointRevertParams,
+  CheckpointSummary,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -147,6 +149,10 @@ export const api = {
     load: (threadId: string): Promise<unknown | null> => ipcRenderer.invoke(ipcChannels.transcriptCacheLoad, threadId),
     persist: (params: TranscriptCachePersistParams): Promise<void> =>
       ipcRenderer.invoke(ipcChannels.transcriptCachePersist, params)
+  },
+  checkpoints: {
+    list: (threadId: string): Promise<CheckpointSummary[]> => ipcRenderer.invoke(ipcChannels.checkpointList, threadId),
+    revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params)
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>
