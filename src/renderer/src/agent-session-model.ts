@@ -107,6 +107,13 @@ export function findAgentSessionByThread(sessions: AgentSession[], threadId: str
   return sessions.find((session) => session.threadId === threadId) ?? null
 }
 
+export function agentSessionsForMainChatTab(
+  sessions: AgentSession[],
+  mainChatTabKey: string,
+): AgentSession[] {
+  return sessions.filter((session) => session.mainChatTabKey === mainChatTabKey)
+}
+
 export function updateAgentSession(
   sessions: AgentSession[],
   key: string,

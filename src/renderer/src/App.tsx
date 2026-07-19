@@ -104,6 +104,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
+import { agentSessionsForMainChatTab } from './agent-session-model';
 import {
   pluginInstallParams,
   pluginUninstallId,
@@ -2834,6 +2835,15 @@ export default function App(): React.JSX.Element {
       if (diffed === null) detectionUnavailable = true;
       else changed = diffed;
     }
+    // Check again after the async checkpoint lookup. The user may have
+    // switched chats while the diff was loading; never send an audit prompt
+    // built from the wrong main-chat tab.
+    if (
+      activeMainChatTabKeyRef.current !== activeTabKey ||
+      activeThreadIdRef.current !== threadId
+    ) {
+      return;
+    }
     const userItem = itemsRef.current.find(
       (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
     );
@@ -3671,10 +3681,11 @@ function ChatPane({
     return null;
   }, [items, itemMeta, activeTurnId]);
 
-  const activeAgentSessions = agentSessions.filter(
-    (session) => session.mainChatTabKey === activeMainChatTabKey,
-  );
+  const activeAgentSessions = agentSessionsForMainChatTab(agentSessions, activeMainChatTabKey);
   const openAgentSessions = activeAgentSessions.filter((session) => openAgentKeys.includes(session.key));
+  const selectedActiveAgentKey = openAgentSessions.some((session) => session.key === selectedAgentKey)
+    ? selectedAgentKey
+    : openAgentSessions[0]?.key ?? null;
 
   const openPluginBrowser = (): void => {
     setIsSettingsOpen(false);
@@ -3851,7 +3862,7 @@ function ChatPane({
           {openAgentSessions.length ? (
             <AgentColumn
               sessions={openAgentSessions}
-              selectedKey={selectedAgentKey}
+              selectedKey={selectedActiveAgentKey}
               models={models}
               mainModel={selectedModel}
               mainReasoningEffort={selectedReasoningEffort}
