@@ -128,8 +128,7 @@ export function AgentColumn({
   onCloseSession,
   onResetSession,
   onPromote,
-  onToggleWatch,
-  onToggleAudit,
+  onSetRole,
   onToggleReport,
   onSendFeedback,
   onDecideSendPolicy,
@@ -154,8 +153,7 @@ export function AgentColumn({
   onCloseSession: (key: string) => void
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
-  onToggleAudit: (key: string) => void
+  onSetRole: (key: string, role: 'reviewer' | 'helper') => void
   onToggleReport: (key: string) => void
   onSendFeedback: (key: string) => void
   onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
@@ -282,8 +280,7 @@ export function AgentColumn({
             onCloseSession={onCloseSession}
             onResetSession={onResetSession}
             onPromote={onPromote}
-            onToggleWatch={onToggleWatch}
-            onToggleAudit={onToggleAudit}
+            onSetRole={onSetRole}
             onToggleReport={onToggleReport}
             onSendFeedback={onSendFeedback}
             onDecideSendPolicy={onDecideSendPolicy}
@@ -348,8 +345,7 @@ const AgentWindow = memo(function AgentWindow({
   onCloseSession,
   onResetSession,
   onPromote,
-  onToggleWatch,
-  onToggleAudit,
+  onSetRole,
   onToggleReport,
   onSendFeedback,
   onDecideSendPolicy,
@@ -537,8 +533,7 @@ const AgentWindow = memo(function AgentWindow({
           session={session}
           zoomPercent={zoomPercent}
           adjustZoom={adjustZoom}
-          onToggleWatch={onToggleWatch}
-          onToggleAudit={onToggleAudit}
+          onSetRole={onSetRole}
           onToggleReport={onToggleReport}
           onPromote={onPromote}
         />
@@ -587,8 +582,8 @@ const AgentWindow = memo(function AgentWindow({
               </div>
             ) : (
               <div className="agent-empty-hint" role="note">
-                Message this agent below — or turn on “Audit main-chat turns” from the
-                title menu to make it a reviewer again.
+                Message this agent below — or set its role to “Reviewer” from the
+                title menu to make it an auditor again.
               </div>
             )
           ) : (

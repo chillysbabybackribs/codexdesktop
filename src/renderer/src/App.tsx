@@ -403,8 +403,7 @@ export default function App(): React.JSX.Element {
     handleSpawnedAgent,
     handleOpenAgent,
     handleMinimizeAgent,
-    handleToggleWatchAgent,
-    handleToggleAuditAgent,
+    handleSetAgentRole,
     handleToggleReportAgent,
     handleDecideSendPolicy,
     handleSetAgentModel,
@@ -3749,8 +3748,7 @@ export default function App(): React.JSX.Element {
       onSelectAgent={setSelectedAgentKey}
       onOpenAgent={handleOpenAgent}
       onMinimizeAgent={handleMinimizeAgent}
-      onToggleWatchAgent={handleToggleWatchAgent}
-      onToggleAuditAgent={handleToggleAuditAgent}
+      onSetAgentRole={handleSetAgentRole}
       onToggleReportAgent={handleToggleReportAgent}
       onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
       onDecideAgentSendPolicy={handleDecideSendPolicy}
@@ -3866,8 +3864,7 @@ export default function App(): React.JSX.Element {
           onSelectAgent={setSelectedAgentKey}
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
-          onToggleWatchAgent={handleToggleWatchAgent}
-          onToggleAuditAgent={handleToggleAuditAgent}
+          onSetAgentRole={handleSetAgentRole}
           onToggleReportAgent={handleToggleReportAgent}
           onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
           onDecideAgentSendPolicy={handleDecideSendPolicy}

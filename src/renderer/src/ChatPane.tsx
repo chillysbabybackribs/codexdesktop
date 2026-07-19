@@ -98,8 +98,7 @@ export function ChatPane({
   onSelectAgent,
   onOpenAgent,
   onMinimizeAgent,
-  onToggleWatchAgent,
-  onToggleAuditAgent,
+  onSetAgentRole,
   onToggleReportAgent,
   onSendAuditFeedback,
   onDecideAgentSendPolicy,
@@ -189,8 +188,7 @@ export function ChatPane({
   onSelectAgent: (key: string) => void;
   onOpenAgent: (key: string) => void;
   onMinimizeAgent: (key: string) => void;
-  onToggleWatchAgent: (key: string) => void;
-  onToggleAuditAgent: (key: string) => void;
+  onSetAgentRole: (key: string, role: 'reviewer' | 'helper') => void;
   onToggleReportAgent: (key: string) => void;
   onSendAuditFeedback: (key: string) => void;
   onDecideAgentSendPolicy: (key: string, policy: 'always' | 'keep') => void;
@@ -378,8 +376,7 @@ export function ChatPane({
       onCloseSession={onCloseAgentSession}
       onResetSession={onResetAgentSession}
       onPromote={onPromoteAgent}
-      onToggleWatch={onToggleWatchAgent}
-      onToggleAudit={onToggleAuditAgent}
+      onSetRole={onSetAgentRole}
       onToggleReport={onToggleReportAgent}
       onSendFeedback={onSendAuditFeedback}
       onDecideSendPolicy={onDecideAgentSendPolicy}
