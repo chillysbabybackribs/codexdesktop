@@ -1,6 +1,7 @@
 import { ipcMain, type BrowserWindow } from 'electron'
 import type {
   CodexEvent,
+  CodexListThreadTurnsParams,
   CodexInterruptTurnParams,
   CodexListThreadsParams,
   CodexPluginAppStatusParams,
@@ -44,6 +45,9 @@ export function registerCodexIpc(
   )
   ipcMain.handle(ipcChannels.codexResumeThread, (_event, params: CodexResumeThreadParams) =>
     client.resumeThread(params.threadId, params.history)
+  )
+  ipcMain.handle(ipcChannels.codexListThreadTurns, (_event, params: CodexListThreadTurnsParams) =>
+    client.listThreadTurns(params)
   )
   ipcMain.handle(ipcChannels.codexGetGoal, (_event, threadId: string) => client.getGoal(threadId))
   ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))

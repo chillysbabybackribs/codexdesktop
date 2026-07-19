@@ -4,7 +4,7 @@ import { resumeHistoryPageFor } from './resume-history.ts'
 
 test('resume history is bounded and tailored to each renderer consumer', () => {
   assert.deepEqual(resumeHistoryPageFor('main'), {
-    limit: 48,
+    limit: 2,
     sortDirection: 'desc',
     itemsView: 'full'
   })
@@ -23,5 +23,5 @@ test('resume history is bounded and tailored to each renderer consumer', () => {
 test('resume history settings are returned as fresh values', () => {
   const page = resumeHistoryPageFor('main')
   page.limit = 1
-  assert.equal(resumeHistoryPageFor('main').limit, 48)
+  assert.equal(resumeHistoryPageFor('main').limit, 2)
 })

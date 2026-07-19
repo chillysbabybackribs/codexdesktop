@@ -300,6 +300,8 @@ export default function App(): React.JSX.Element {
   const mainChatTabStateRef = useRef(mainChatTabState)
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
   const mainChatSnapshotsRef = useRef<Map<string, MainChatSnapshot>>(new Map())
+  const olderHistoryCursorByThreadRef = useRef<Map<string, string | null>>(new Map())
+  const olderHistoryLoadsRef = useRef<Set<string>>(new Set())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
   const pendingThreadStartOwnersRef = useRef<PendingThreadStartOwner[]>([])
   const reconcilingMainChatTabKeyRef = useRef<string | null>(null)
@@ -1234,8 +1236,14 @@ export default function App(): React.JSX.Element {
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       // Resume pages are newest-first for fast retrieval. The transcript is
-      // rendered in reading order, so reverse its bounded page exactly once.
+      // rendered in reading order, so reverse its tiny first page exactly once.
       hydrateThread(resumed.thread, [...(resumed.initialTurnsPage?.data ?? [])].reverse(), environment)
+      olderHistoryCursorByThreadRef.current.set(threadId, resumed.initialTurnsPage?.nextCursor ?? null)
+      // Let the recent tail commit before warming a single 10-turn page. More
+      // history stays demand-driven as the reader reaches the top.
+      window.setTimeout(() => {
+        void loadOlderThreadHistory(threadId, tabKey)
+      }, 0)
 
       try {
         const goal = await window.api.codex.getGoal(threadId)
@@ -2439,6 +2447,59 @@ export default function App(): React.JSX.Element {
     }))
   }
 
+  async function loadOlderThreadHistory(threadId: string, tabKey: string): Promise<void> {
+    const cursor = olderHistoryCursorByThreadRef.current.get(threadId)
+    if (!cursor || olderHistoryLoadsRef.current.has(threadId)) return
+
+    olderHistoryLoadsRef.current.add(threadId)
+    try {
+      const page = await window.api.codex.listThreadTurns({ threadId, cursor, limit: 10 })
+      olderHistoryCursorByThreadRef.current.set(threadId, page.nextCursor)
+      if (activeThreadIdRef.current !== threadId || activeMainChatTabKeyRef.current !== tabKey) return
+
+      const currentItemIds = new Set(itemsRef.current.map((item) => item.id))
+      const currentTurnIds = new Set(Object.keys(turnMetaRef.current))
+      const olderItems: ChatItem[] = []
+      const nextItemMeta = { ...itemMetaRef.current }
+      const nextTurnMeta = { ...turnMetaRef.current }
+      const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey)
+
+      for (const turn of [...page.data].reverse()) {
+        if (currentTurnIds.has(turn.id)) continue
+        nextTurnMeta[turn.id] = {
+          status: turn.status,
+          origin: 'restored',
+          model: tab?.model ?? selectedModelRef.current,
+          reasoningEffort: tab?.reasoningEffort ?? selectedReasoningEffortRef.current,
+          workspace: workspaceRef.current,
+          startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
+          completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
+          durationMs: turn.durationMs ?? undefined,
+          errorMessage: turn.error?.message
+        }
+        for (const item of turn.items) {
+          if (currentItemIds.has(item.id)) continue
+          currentItemIds.add(item.id)
+          olderItems.push(item)
+          nextItemMeta[item.id] = { turnId: turn.id }
+        }
+      }
+
+      if (!olderItems.length) return
+      const nextItems = [...olderItems, ...itemsRef.current]
+      itemsRef.current = nextItems
+      itemMetaRef.current = nextItemMeta
+      turnMetaRef.current = nextTurnMeta
+      setItems(nextItems)
+      setItemMeta(nextItemMeta)
+      setTurnMeta(nextTurnMeta)
+    } catch (error) {
+      console.warn(`Failed to load older history for ${threadId}`, error)
+    } finally {
+      olderHistoryLoadsRef.current.delete(threadId)
+    }
+  }
+
   // Queue a streaming mutation and schedule a single batched apply. Every delta
   // kind funnels through here so a burst of reasoning/command/text tokens
   // collapses into one setItems (one buildRows + one render) per display frame
@@ -3046,6 +3107,10 @@ function ChatPane({
         resetKey={activeThreadId}
         activeTurnId={activeTurnId}
         dependencies={[items, itemMeta, activeTurnId]}
+        onReachStart={() => {
+          const threadId = activeThreadIdRef.current
+          if (threadId) void loadOlderThreadHistory(threadId, activeMainChatTabKeyRef.current)
+        }}
       >
         {isRestoring ? (
           <div className="chat-restore-status" role="status" aria-live="polite">
@@ -3717,7 +3782,8 @@ function ThreadScroll({
   resetKey,
   activeTurnId,
   id,
-  labelledBy
+  labelledBy,
+  onReachStart
 }: {
   children: React.ReactNode
   dependencies: unknown[]
@@ -3725,6 +3791,7 @@ function ThreadScroll({
   activeTurnId: string | null
   id: string
   labelledBy: string
+  onReachStart?: () => void
 }): React.JSX.Element {
   const ref = useRef<HTMLDivElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
@@ -3876,7 +3943,8 @@ function ThreadScroll({
     if (!pinnedRef.current) {
       cancelScheduledFollow()
     }
-  }, [cancelScheduledFollow])
+    if (el.scrollTop <= 96) onReachStart?.()
+  }, [cancelScheduledFollow, onReachStart])
 
   useLayoutEffect(() => {
     // A new thread is a new reading context. Start it at the latest content,

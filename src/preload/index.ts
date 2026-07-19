@@ -12,6 +12,7 @@ import type {
   BrowserState,
   CodexEvent,
   CodexInterruptTurnParams,
+  CodexListThreadTurnsParams,
   CodexListThreadsParams,
   CodexPluginAppStatusParams,
   CodexPluginAppStatusResponse,
@@ -102,6 +103,8 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.codexListThreads, params),
     startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.codexStartThread, params),
     resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.codexResumeThread, params),
+    listThreadTurns: (params: CodexListThreadTurnsParams) =>
+      ipcRenderer.invoke(ipcChannels.codexListThreadTurns, params),
     getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexGetGoal, threadId),
     setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.codexSetGoal, params),
     clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexClearGoal, threadId),

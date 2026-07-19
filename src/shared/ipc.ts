@@ -147,6 +147,12 @@ export type CodexResumeThreadParams = {
   history: 'main' | 'background' | 'agent'
 }
 
+export type CodexListThreadTurnsParams = {
+  threadId: string
+  cursor: string
+  limit?: number
+}
+
 export type CodexSetGoalParams = ThreadGoalSetParams
 
 export type CodexInterruptTurnParams = {
@@ -276,6 +282,7 @@ export const ipcChannels = {
   codexListThreads: 'codex:listThreads',
   codexStartThread: 'codex:startThread',
   codexResumeThread: 'codex:resumeThread',
+  codexListThreadTurns: 'codex:listThreadTurns',
   codexGetGoal: 'codex:getGoal',
   codexSetGoal: 'codex:setGoal',
   codexClearGoal: 'codex:clearGoal',

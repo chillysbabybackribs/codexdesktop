@@ -6,6 +6,7 @@ import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
   CodexEvent,
+  CodexListThreadTurnsParams,
   CodexPluginAppStatusResponse
 } from '../../shared/ipc.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
@@ -15,6 +16,7 @@ import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/Dynam
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
+import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
 import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js'
 import type { ThreadGoalGetResponse } from '../../shared/codex-protocol/v2/ThreadGoalGetResponse.js'
@@ -227,6 +229,16 @@ export class CodexClient extends EventEmitter {
     this.threadModels.set(threadId, response.model)
     this.threadReasoningEfforts.set(threadId, response.reasoningEffort)
     return response
+  }
+
+  async listThreadTurns(params: CodexListThreadTurnsParams): Promise<ThreadTurnsListResponse> {
+    await this.ensureStarted()
+    return this.request<ThreadTurnsListResponse>('thread/turns/list', {
+      ...params,
+      limit: params.limit ?? 10,
+      sortDirection: 'desc',
+      itemsView: 'full'
+    })
   }
 
   async getGoal(threadId: string): Promise<ThreadGoal | null> {
