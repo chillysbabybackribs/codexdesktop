@@ -33,7 +33,7 @@ import type { ThreadTokenUsage } from '../../shared/session-protocol';
 import type { PluginSummary } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
-import { TraceModal, formatTokens } from './TraceModal';
+import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
 import {
   modelCallAttributionForItem,
@@ -86,7 +86,6 @@ import {
   buildAuditFeedbackMessage,
   buildAuditPrompt,
   liveTurnGlance,
-  parseAuditFeedback,
   parseAuditVerdict,
   shouldSendAuditFeedback,
   shouldTriggerAudit,
