@@ -1022,13 +1022,15 @@ function renderAgentRow(row: RenderRow, context: AgentRowContext): React.JSX.Ele
 
   if (item.type === 'agentMessage') {
     if (!item.text || context.duplicateAssistantIds.has(item.id)) return null
+    const isLatestReport = item.id === context.lastAssistantTextId
     return (
       <div key={item.id} className="agent-mini-message is-assistant">
         <AssistantMessage
           text={item.text}
           // Manual escalation targets the latest audit exchange; only its
-          // report gets an actionable flag badge.
-          onSendFlagged={item.id === context.lastAssistantTextId ? context.onSendFlagged : undefined}
+          // report gets an actionable flag badge or the first-flag prompt.
+          onSendFlagged={isLatestReport ? context.onSendFlagged : undefined}
+          sendPrompt={isLatestReport ? context.sendPolicyPrompt : null}
         />
       </div>
     )
