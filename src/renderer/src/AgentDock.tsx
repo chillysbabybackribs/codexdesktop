@@ -555,6 +555,7 @@ const AgentWindow = memo(function AgentWindow({
                 session={session}
                 onToggleWatch={onToggleWatch}
                 onToggleAudit={onToggleAudit}
+                onToggleReport={onToggleReport}
               />
             )
           ) : (
@@ -751,11 +752,13 @@ function AgentContextPill({
 function AgentModeSelector({
   session,
   onToggleWatch,
-  onToggleAudit
+  onToggleAudit,
+  onToggleReport
 }: {
   session: AgentSession
   onToggleWatch: (key: string) => void
   onToggleAudit: (key: string) => void
+  onToggleReport: (key: string) => void
 }): React.JSX.Element {
   return (
     <div className="agent-mode-selector">
