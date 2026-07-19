@@ -339,6 +339,17 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
 
   async interruptTurn(threadId: string, _turnId: string): Promise<unknown> {
     const session = this.sessions.get(threadId)
+    if (session?.waitingForSlot && session.working && session.activeTurnId) {
+      const waiterIndex = this.slotWaiters.findIndex((waiter) => waiter.session === session)
+      if (waiterIndex >= 0) {
+        const [waiter] = this.slotWaiters.splice(waiterIndex, 1)
+        session.waitingForSlot = false
+        this.emitNotification(this.interruptedTurnNotification(session, session.activeTurnId))
+        this.finishTurn(session)
+        waiter.reject(new Error('claude turn interrupted while queued'))
+      }
+      return {}
+    }
     if (session?.runtime && session.working) await session.runtime.interrupt()
     return {}
   }
@@ -622,6 +633,25 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
           itemsView: 'full',
           status: 'failed',
           error: { message, codexErrorInfo: 'other', additionalDetails: null },
+          startedAt: null,
+          completedAt: Math.floor(Date.now() / 1000),
+          durationMs: null
+        }
+      }
+    }
+  }
+
+  private interruptedTurnNotification(session: ClaudeSession, turnId: string): unknown {
+    return {
+      method: 'turn/completed',
+      params: {
+        threadId: session.threadId,
+        turn: {
+          id: turnId,
+          items: [],
+          itemsView: 'full',
+          status: 'interrupted',
+          error: null,
           startedAt: null,
           completedAt: Math.floor(Date.now() / 1000),
           durationMs: null

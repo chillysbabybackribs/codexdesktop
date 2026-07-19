@@ -35,8 +35,7 @@ import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
-import { registerSessionIpc } from './codex/codex-ipc.js'
-import type { CodexClient } from './codex/codex-client.js'
+import { registerSessionIpc, type RegisteredSessionProviders } from './codex/codex-ipc.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
@@ -84,7 +83,7 @@ if (!hasSingleInstanceLock) {
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
-let codexClient: CodexClient | null = null
+let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
 let quitReady = false
@@ -282,8 +281,8 @@ function bootstrap(): void {
     quitPreparationStarted = true
 
     researchRunner.dispose()
-    codexClient?.dispose()
-    codexClient = null
+    sessionProviders?.dispose()
+    sessionProviders = null
     const closingBrowserControl = browserControl?.close()
     browserControl = null
 
@@ -350,10 +349,10 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
-  codexClient = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
+  sessionProviders = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
-  void codexClient.warmUp()
+  void sessionProviders.codexClient.warmUp()
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
   const transcriptCache = new TranscriptCache(join(app.getPath('userData'), 'transcript-cache'))
 

@@ -89,9 +89,7 @@ export class ClaudeTurnTranslator {
     if (type === 'rate_limit_event') {
       const info = asRecord(message.rate_limit_info)
       if (info.status === 'rejected') {
-        const reset = typeof info.resetsAt === 'number'
-          ? ` Resets at ${new Date(info.resetsAt).toISOString()}.`
-          : ''
+        const reset = formatResetTime(info.resetsAt)
         this.pendingError = {
           message: `Claude usage limit reached.${reset}`,
           codexErrorInfo: 'usageLimitExceeded'
@@ -261,7 +259,7 @@ export class ClaudeTurnTranslator {
       ? message.errors.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
       : []
     const errorMessage = this.pendingError?.message
-      ?? sdkErrors.join('\n')
+      ?? (sdkErrors.length > 0 ? sdkErrors.join('\n') : null)
       ?? (typeof message.result === 'string' && message.result.trim() ? message.result : null)
       ?? `claude turn ended: ${String(message.subtype)}`
     const completedAtMs = this.context.nowMs()
@@ -354,4 +352,11 @@ function classifyClaudeError(message: string): 'usageLimitExceeded' | 'serverOve
   if (normalized.includes('invalid request') || normalized.includes('model not found')) return 'badRequest'
   if (normalized.includes('server error') || normalized.includes('internal')) return 'internalServerError'
   return 'other'
+}
+
+function formatResetTime(value: unknown): string {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return ''
+  const milliseconds = value < 10_000_000_000 ? value * 1000 : value
+  const date = new Date(milliseconds)
+  return Number.isNaN(date.getTime()) ? '' : ` Resets at ${date.toISOString()}.`
 }

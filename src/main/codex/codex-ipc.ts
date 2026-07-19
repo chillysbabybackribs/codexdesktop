@@ -26,6 +26,11 @@ import type { SessionProvider } from '../providers/session-provider.js'
 import { ClaudeProvider } from '../providers/claude-provider.js'
 import type { ProviderId } from '../../shared/session-protocol/provider.js'
 
+export type RegisteredSessionProviders = {
+  codexClient: CodexClient
+  dispose: () => void
+}
+
 export function registerSessionIpc(
   getWindow: () => BrowserWindow | null,
   browserAgent: BrowserAgentController,
@@ -33,7 +38,7 @@ export function registerSessionIpc(
   memoryStore: MemoryStore,
   attachmentStore: AttachmentStore,
   checkpointStore: TurnCheckpointStore | null = null
-): CodexClient {
+): RegisteredSessionProviders {
   const client = new CodexClient(browserAgent, researchRunner, checkpointStore)
   const claude = new ClaudeProvider(checkpointStore, browserAgent, researchRunner)
   // Provider registry (Claude-prep step 4, populated by the adapter build):
@@ -124,5 +129,11 @@ export function registerSessionIpc(
     memoryStore.persist(params)
   )
 
-  return client
+  return {
+    codexClient: client,
+    dispose: () => {
+      claude.dispose()
+      client.dispose()
+    }
+  }
 }
