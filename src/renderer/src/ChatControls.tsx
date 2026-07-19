@@ -5,15 +5,10 @@ import type {
   ThreadTokenUsage,
 } from '../../shared/session-protocol';
 
-export function UnsplitIcon(): React.JSX.Element {
+export function CloseIcon(): React.JSX.Element {
   return (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
-      <path
-        d="M6.2 6.2l3.6 3.6M9.8 6.2l-3.6 3.6"
-        stroke="currentColor"
-        strokeLinecap="round"
-      />
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="m4.25 4.25 7.5 7.5m0-7.5-7.5 7.5" stroke="currentColor" strokeLinecap="round" />
     </svg>
   );
 }

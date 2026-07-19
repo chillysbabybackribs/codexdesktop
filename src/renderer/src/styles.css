@@ -302,25 +302,37 @@ button {
   flex: 1 1 auto;
 }
 
-.chat-pane-view-unsplit {
+.chat-pane-view-close {
   display: grid;
   flex: 0 0 22px;
   width: 22px;
   height: 22px;
+  padding: 0;
   place-items: center;
   border: none;
   border-radius: 5px;
   background: transparent;
-  color: #8f8f8f;
+  color: #a8a8a8;
   cursor: pointer;
   transition:
     background 120ms ease,
     color 120ms ease;
 }
 
-.chat-pane-view-unsplit:hover {
+.chat-pane-view-close svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 1.65;
+}
+
+.chat-pane-view-close:hover {
   background: rgb(255 255 255 / 7%);
   color: #e1e3e5;
+}
+
+.chat-pane-view-close:focus-visible {
+  outline: 1px solid var(--focus-ink);
+  outline-offset: -2px;
 }
 
 /* Drop hints while a chat tab is dragged over the surface: edges preview the

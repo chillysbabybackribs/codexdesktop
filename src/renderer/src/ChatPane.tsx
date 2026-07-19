@@ -321,6 +321,9 @@ export function ChatPane({
   // means this pane.
   const focusPaneFromEvent = (target: EventTarget | null): void => {
     if (!(target instanceof HTMLElement)) return;
+    // Closing a background split pane should leave the active chat alone.
+    // Otherwise this capture handler makes the pane active before its X runs.
+    if (target.closest('[data-split-pane-close]')) return;
     const key = target.closest<HTMLElement>('[data-split-pane-key]')?.dataset.splitPaneKey;
     if (key && key !== activeMainChatTabKey) void onSelectMainChatTab(key);
   };

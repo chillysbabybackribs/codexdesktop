@@ -10,7 +10,7 @@ import type { ChatAttachment } from '../../shared/ipc';
 import type { Model, PluginSummary } from '../../shared/session-protocol';
 import { resolveModelProvider } from './app-helpers';
 import { Composer } from './Composer';
-import { ContextPill, UnsplitIcon } from './ChatControls';
+import { CloseIcon, ContextPill } from './ChatControls';
 import { ChatItemView, TaskActivityCard } from './ChatTranscript';
 import { ThreadScroll } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
@@ -307,12 +307,16 @@ export function ChatPaneView({
           <span className="chat-pane-view-header-spacer" />
           <button
             type="button"
-            className="chat-pane-view-unsplit"
-            aria-label={`Close split for ${paneTitle}`}
-            title="Close split — the chat stays open as a tab"
-            onClick={() => onCloseSplitPane(tabKey)}
+            className="chat-pane-view-close"
+            data-split-pane-close
+            aria-label={`Close ${paneTitle} split pane`}
+            title="Close this split pane"
+            onClick={(event) => {
+              event.stopPropagation();
+              onCloseSplitPane(tabKey);
+            }}
           >
-            <UnsplitIcon />
+            <CloseIcon />
           </button>
         </header>
       ) : null}
