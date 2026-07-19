@@ -3238,7 +3238,6 @@ export default function App(): React.JSX.Element {
           }
           items={items}
           itemMeta={itemMeta}
-          turnMeta={turnMeta}
           title={activeThreadTitle}
           status={codexStatus}
           isRestoring={isRestoring}
@@ -3276,8 +3275,6 @@ export default function App(): React.JSX.Element {
           onSaveGoal={handleSaveGoal}
           onSetGoalStatus={handleSetGoalStatus}
           onClearGoal={handleClearGoal}
-          contextUsage={contextUsage}
-          isCompacting={isCompacting}
           onCompactThread={handleCompactThread}
           agentSessions={agentSessions}
           openAgentKeys={openAgentKeys}
@@ -3875,8 +3872,6 @@ function ChatPane({
   onSaveGoal: (objective: string, tokenBudget: number | null) => Promise<boolean>;
   onSetGoalStatus: (status: Extract<ThreadGoalStatus, 'active' | 'paused'>) => Promise<void>;
   onClearGoal: () => Promise<void>;
-  contextUsage: ThreadTokenUsage | null;
-  isCompacting: boolean;
   onCompactThread: () => Promise<void>;
   agentSessions: AgentSession[];
   openAgentKeys: string[];
@@ -3899,7 +3894,7 @@ function ChatPane({
   onAgentSteer: (key: string, text: string) => Promise<boolean>;
   onAgentStop: (key: string) => Promise<void>;
   onAgentCompact: (key: string) => Promise<void>;
-  onLoadOlderHistory: () => void;
+  onLoadOlderHistory: (tabKey: string, threadId: string) => void;
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false);
