@@ -1,9 +1,9 @@
 import type { CommandAction } from '../../shared/session-protocol'
 import type { ThreadItem } from '../../shared/session-protocol'
-import { cleanCommand, commandDescriptionOf, narrateCommand } from './command-narrate'
-import { parseUnifiedDiff } from './diff'
-import { basename, fmtTokens, truncate } from './activity-format'
-import { latestItemProgress, type ItemMeta, type WorkItem } from './activity-model'
+import { cleanCommand, commandDescriptionOf, narrateCommand } from './command-narrate.js'
+import { parseUnifiedDiff } from './diff.js'
+import { basename, fmtTokens, truncate } from './activity-format.js'
+import { latestItemProgress, type ItemMeta, type WorkItem } from './activity-model.js'
 import type { TurnMeta, TurnTokenTelemetry } from './turn-telemetry'
 
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
