@@ -4006,6 +4006,146 @@ button {
     0 10px 28px rgb(0 0 0 / 21%);
 }
 
+/* Mention stack: file/folder section above the plugin section, one popover. */
+.composer-mention-stack {
+  position: absolute;
+  z-index: 35;
+  left: 10px;
+  bottom: calc(100% + 10px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(680px, calc(100% - 20px));
+}
+
+.composer-mention-stack .plugin-mention-menu {
+  position: static;
+  left: auto;
+  bottom: auto;
+  width: 100%;
+}
+
+.file-mention-menu {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 5px;
+  border: 1px solid #343538;
+  border-radius: 12px;
+  background: #1b1b1c;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 48%), inset 0 1px 0 rgb(255 255 255 / 4%);
+  animation: plugin-pop-in 150ms cubic-bezier(.2,.8,.2,1);
+}
+
+.file-mention-heading {
+  padding: 10px 14px 6px;
+  color: #8a8a8a;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.file-mention-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 5px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: #cfcfcf;
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.file-mention-row:hover,
+.file-mention-row.is-selected {
+  background: rgb(255 255 255 / 6%);
+}
+
+.file-mention-row .mention-glyph {
+  align-self: center;
+  flex: none;
+  color: #8a8a8a;
+}
+
+.file-mention-base {
+  flex: none;
+  font-weight: 550;
+}
+
+.file-mention-dir {
+  min-width: 0;
+  overflow: hidden;
+  color: #757575;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-mention-kind {
+  margin-left: auto;
+  color: #757575;
+  font-size: 10.5px;
+}
+
+/* Context pills for chosen mentions */
+.mention-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 2px 6px;
+}
+
+.mention-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 4px 2px 8px;
+  border: 1px solid #37383b;
+  border-radius: 7px;
+  background: #202021;
+  color: #c9c9c9;
+  font-size: 11.5px;
+}
+
+.mention-pill .mention-glyph {
+  color: #8a8a8a;
+}
+
+.mention-pill-name {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mention-pill-remove {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: #8a8a8a;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mention-pill-remove:hover {
+  background: rgb(255 255 255 / 8%);
+  color: #e6e6e6;
+}
+
 .plugin-mention-menu {
   position: absolute;
   z-index: 35;
