@@ -354,6 +354,12 @@ test('browser snapshot batches navigation, readiness, and objective extraction i
   assert.match(executedProgram, /pageSnapshotRuntime/)
   assert.match(executedProgram, /latest notification/)
   assert.equal((result.result as { items: unknown[] }).items.length, 1)
+  assert.deepEqual(result.completion, {
+    status: 'complete',
+    nextAction: 'answer',
+    reason: 'requested snapshot coverage is complete',
+    gaps: []
+  })
 })
 
 test('browser snapshot retries one loading shell when a mutation-ready document becomes useful', async () => {
@@ -387,6 +393,32 @@ test('browser snapshot retries one loading shell when a mutation-ready document 
   assert.equal(result.ok, true)
   assert.equal(mutationWaits, 1)
   assert.equal(snapshots, 2)
+})
+
+test('browser snapshot identifies only the unresolved coverage gaps for a targeted follow-up', async () => {
+  const controller = new BrowserAgentController(() => fakeTabs(async () => ({
+    page: { url: 'https://example.com/inbox', title: 'Inbox', readyState: 'complete' },
+    mode: 'task', scope: { selector: null, matched: true },
+    items: [{ ref: 'e1', text: 'Newest notification', name: null, href: null, state: {} }],
+    content: '', passages: [],
+    coverage: {
+      objectiveTerms: ['notification', 'unread'],
+      matchedTerms: ['notification'],
+      gaps: ['unread', 'read-state-mismatch:1'],
+      complete: false
+    },
+    timings: { traversalMs: 1, rankingMs: 1, totalMs: 2 }, truncated: false
+  })))
+
+  const result = await controller.snapshot({ objective: 'latest unread notification' })
+
+  assert.equal(result.ok, true)
+  assert.deepEqual(result.completion, {
+    status: 'incomplete',
+    nextAction: 'targeted-gap-fill',
+    reason: 'snapshot has named evidence gaps',
+    gaps: ['unread', 'read-state-mismatch:1']
+  })
 })
 
 test('browser snapshot returns structured scope failures without claiming success', async () => {

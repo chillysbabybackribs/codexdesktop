@@ -143,6 +143,17 @@ export type BrowserAgentResult = {
   failure?: BrowserFailure
   artifact?: CdpFileArtifact
   targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
+  /** Snapshot-specific execution hint derived from structured coverage, not model reasoning. */
+  completion?: BrowserSnapshotCompletion
+}
+
+export type BrowserSnapshotCompletion = {
+  /** `complete` means the returned snapshot is sufficient to answer from directly. */
+  status: 'complete' | 'incomplete'
+  /** The next evidence operation, if any; this never removes browser capabilities. */
+  nextAction: 'answer' | 'targeted-gap-fill'
+  reason: string
+  gaps: string[]
 }
 
 type BrowserAgentSuccess = BrowserAgentResult & {
@@ -675,6 +686,7 @@ export class BrowserAgentController {
           durationMs: Date.now() - startedAt,
           resultChars: bounded.chars,
           truncated: bounded.truncated || nestedTruncated,
+          completion: snapshotCompletion(rawResult, bounded.truncated || nestedTruncated),
           ...(artifact ? { artifact } : {})
         } satisfies BrowserAgentSuccess
       } catch (error) {
@@ -1564,6 +1576,35 @@ function cancelledResult(): BrowserAgentFailure {
     operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
   )
   return { ok: false, error: failure.message, errorCode: failure.code, failure }
+}
+
+function snapshotCompletion(value: unknown, truncated: boolean): BrowserSnapshotCompletion {
+  const snapshot = asRecord(value)
+  const coverage = asRecord(snapshot.coverage)
+  const gaps = Array.isArray(coverage.gaps)
+    ? coverage.gaps.filter((gap): gap is string => typeof gap === 'string' && gap.trim().length > 0).slice(0, 12)
+    : []
+
+  if (!truncated && coverage.complete === true) {
+    return {
+      status: 'complete',
+      nextAction: 'answer',
+      reason: 'requested snapshot coverage is complete',
+      gaps: []
+    }
+  }
+
+  const unresolved = truncated && !gaps.includes('result-truncated')
+    ? [...gaps, 'result-truncated']
+    : gaps
+  return {
+    status: 'incomplete',
+    nextAction: 'targeted-gap-fill',
+    reason: unresolved.length > 0
+      ? 'snapshot has named evidence gaps'
+      : 'snapshot coverage is not complete',
+    gaps: unresolved
+  }
 }
 
 function boundResult(value: unknown, maxChars: number): { value: unknown; chars: number; truncated: boolean } {

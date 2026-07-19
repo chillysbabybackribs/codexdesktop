@@ -6,7 +6,7 @@ const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
-  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; it can navigate, wait, and return task-focused items. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
+  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; state every requested field and list count in its objective. It can navigate, wait, and return task-focused items. If a snapshot reports `completion.nextAction: "answer"`, use that evidence directly and do not repeat a page read. If it reports `targeted-gap-fill`, resolve only its named coverage gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -398,7 +398,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_snapshot',
-    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, and timings in one call. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
+    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, and a completion directive in one call. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
     inputSchema: browserSnapshotSchema
   },
   {

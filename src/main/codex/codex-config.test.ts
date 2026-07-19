@@ -168,6 +168,8 @@ test('global guidance stays limited to product-wide behavior', () => {
 
   assert.match(guidance, /reuse the active visible browser tab/i)
   assert.match(guidance, /prefer one `browser_snapshot` call/i)
+  assert.match(guidance, /completion\.nextAction: "answer"/i)
+  assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
   assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|multi-part answers/i)
@@ -278,6 +280,8 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.equal(snapshotSchema.properties.maxItems?.minimum, 1)
   assert.equal(snapshotSchema.properties.maxItems?.maximum, 200)
   assert.match(browserSnapshot.description, /one call/i)
+  assert.match(browserSnapshot.description, /completion directive/i)
+  assert.match(browserSnapshot.description, /targeted-gap-fill/i)
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
