@@ -1,6 +1,5 @@
 import {
   type KeyboardEvent as ReactKeyboardEvent,
-  type PointerEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -9,11 +8,8 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { AgentColumn, AgentTabStrip } from './AgentDock';
-import { NewAgentIcon, discardComposerDraft } from './Composer';
-import { MainChatTabStrip } from './MainChatTabStrip';
-import { ModelPill } from './ModelPill';
-import type { AgentSession } from './AgentDock';
+import { discardComposerDraft } from './Composer';
+import { ChatPane } from './ChatPane';
 import type {
   BrowserBounds,
   BrowserState,
@@ -28,7 +24,6 @@ import type { Thread } from '../../shared/session-protocol';
 import type { ThreadGoal } from '../../shared/session-protocol';
 import type { ThreadGoalStatus } from '../../shared/session-protocol';
 import type { ThreadItem } from '../../shared/session-protocol';
-import type { PluginSummary } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
 import { buildTurnTrace } from './trace';
@@ -40,8 +35,6 @@ import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity'
 import { stripMentionContext } from './mention-model';
 import { selectCompletedWork } from './memory-work';
 import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
-import { ChatPaneView } from './ChatPaneView';
-import { SettingsModal, WorkspacePill } from './ChatControls';
 import type { ChatAttachment } from '../../shared/ipc';
 import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transcript-model';
 import {
@@ -63,7 +56,6 @@ import { parseTranscriptSession, serializeTranscriptSession } from './transcript
 import {
   buildAuditFeedbackMessage,
   buildAuditPrompt,
-  liveTurnGlance,
   parseAuditVerdict,
   shouldSendAuditFeedback,
   shouldTriggerAudit,
@@ -78,8 +70,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
-import { agentSessionsForMainChatTab, defaultReviewerModel, latestAuditReport } from './agent-session-model';
-import { PluginBrowserView } from './PluginBrowser';
+import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
   hasAuthoritativeUserMessage,
@@ -116,7 +107,6 @@ import {
   splitHasPane,
   splitPaneKeys,
   updateSplitRatio,
-  type SplitDirection,
   type SplitDropZone,
   type SplitNode,
 } from './chat-split';
