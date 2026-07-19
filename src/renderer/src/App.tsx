@@ -81,7 +81,7 @@ import {
   type SessionRenderState
 } from './session-store'
 import { parseTranscriptSession, serializeTranscriptSession } from './transcript-cache-model'
-import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles, turnStepLines } from './audit-trigger'
+import { buildAuditPrompt, liveTurnGlance, shouldTriggerAudit, turnChangedFiles, turnStepLines } from './audit-trigger'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -3247,6 +3247,12 @@ function ChatPane({
     () => buildRows(items, itemMeta, activeTurnId),
     [items, itemMeta, activeTurnId]
   )
+  // Live glance at the in-flight turn for auditor dock cards ("watching" POV).
+  // Cheap passes over state this pane already re-renders on.
+  const liveMainTurn = useMemo(
+    () => (activeTurnId ? liveTurnGlance(items, itemMeta, activeTurnId) : null),
+    [items, itemMeta, activeTurnId]
+  )
   const currentTrace = useMemo(
     () => traceTurnId
       ? buildTurnTrace({
@@ -3490,6 +3496,7 @@ function ChatPane({
             models={models}
             mainModel={selectedModel}
             mainReasoningEffort={selectedReasoningEffort}
+            liveMainTurn={liveMainTurn}
             onSetModel={onSetAgentModel}
             onSetModelEffort={onSetAgentModelEffort}
             onSelect={onSelectAgent}
