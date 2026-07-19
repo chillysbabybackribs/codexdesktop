@@ -30,6 +30,7 @@ export const PAGE_EXTRACTION_LOW_VALUE_PATTERN =
 
 export type BrowserFailureCode =
   | 'cancelled'
+  | 'noResult'
   | 'timeout'
   | 'targetClosed'
   | 'targetChanged'
@@ -145,6 +146,12 @@ export type BrowserAgentResult = {
   targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
   /** Snapshot-specific execution hint derived from structured coverage, not model reasoning. */
   completion?: BrowserSnapshotCompletion
+  /** Navigation selector state retained when a snapshot can still verify the requested evidence. */
+  readiness?: {
+    selector: string
+    settleReason: string
+    matched: boolean
+  }
 }
 
 export type BrowserSnapshotCompletion = {
@@ -580,6 +587,7 @@ export class BrowserAgentController {
       }
 
       let webContents = lease.webContents
+      let readiness: BrowserAgentResult['readiness']
 
       const startedAt = Date.now()
       try {
@@ -591,12 +599,13 @@ export class BrowserAgentController {
             ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
             ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
           })
-          if (options.readySelector?.trim() && navigation.settleReason !== 'selector-ready') {
-            throw operationError(
-              'conditionTimeout',
-              'navigationReadiness',
-              `navigation readiness failed: ${navigation.settleReason}`
-            )
+          const readySelector = options.readySelector?.trim()
+          if (readySelector) {
+            readiness = {
+              selector: readySelector,
+              settleReason: navigation.settleReason,
+              matched: navigation.settleReason === 'selector-ready'
+            }
           }
           lease = captureTargetLease(tabs, tabId)
           if (!lease) {
@@ -666,7 +675,8 @@ export class BrowserAgentController {
             durationMs: Date.now() - startedAt,
             resultChars: bounded.chars,
             truncated: bounded.truncated || nestedTruncated,
-            completion: snapshotCompletion(rawResult, bounded.truncated || nestedTruncated)
+            completion: snapshotCompletion(rawResult, bounded.truncated || nestedTruncated),
+            ...(readiness ? { readiness } : {})
           } satisfies BrowserAgentFailure
         }
 
@@ -688,6 +698,7 @@ export class BrowserAgentController {
           resultChars: bounded.chars,
           truncated: bounded.truncated || nestedTruncated,
           completion: snapshotCompletion(rawResult, bounded.truncated || nestedTruncated),
+          ...(readiness ? { readiness } : {}),
           ...(artifact ? { artifact } : {})
         } satisfies BrowserAgentSuccess
       } catch (error) {
