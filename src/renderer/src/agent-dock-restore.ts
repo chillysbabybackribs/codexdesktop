@@ -41,9 +41,11 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
 export async function restoreAgentDock(options: {
   storageKey: string
   mainThreadIds: ReadonlySet<string>
+  mainChatTabKeys: ReadonlySet<string>
+  activeMainChatTabKey: string
   store: AgentDockStore
 }): Promise<void> {
-  const { storageKey, mainThreadIds, store } = options
+  const { storageKey, mainThreadIds, mainChatTabKeys, activeMainChatTabKey, store } = options
   try {
     const raw = window.localStorage.getItem(storageKey)
     if (!raw) return
@@ -53,12 +55,20 @@ export async function restoreAgentDock(options: {
       store.counterRef.current = parsed.counter
     }
     const entries = parsed.sessions.filter(
-      (entry) => !entry.threadId || !mainThreadIds.has(entry.threadId)
+      (entry) =>
+        (!entry.threadId || !mainThreadIds.has(entry.threadId)) &&
+        (!entry.mainChatTabKey || mainChatTabKeys.has(entry.mainChatTabKey))
     )
     if (!entries.length) return
 
     const restored: AgentSession[] = entries.map((entry) => ({
       key: crypto.randomUUID(),
+      // Pre-ownership dock records are legacy global agents. Keep them
+      // reachable in the chat that was active during restore; newer records
+      // retain their exact owning tab.
+      mainChatTabKey: typeof entry.mainChatTabKey === 'string' && entry.mainChatTabKey
+        ? entry.mainChatTabKey
+        : activeMainChatTabKey,
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
       status: 'idle',

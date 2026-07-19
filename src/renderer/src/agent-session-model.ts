@@ -15,6 +15,9 @@ export type AgentLiteMessage = {
 
 export type AgentSession = {
   key: string
+  // Main-chat tab that created and owns this agent window. Agent sessions are
+  // long-lived, but their mini-window is intentionally scoped to this tab.
+  mainChatTabKey: string | null
   threadId: string | null
   title: string
   status: 'idle' | 'working' | 'done'
@@ -36,6 +39,7 @@ export type AgentSession = {
 }
 
 export type PersistedAgentSession = {
+  mainChatTabKey?: string | null
   threadId?: string | null
   title?: string
   watchesMain?: boolean
@@ -54,9 +58,10 @@ export type PersistedAgentDock = {
 
 export type AgentDeltaBuffer = ReadonlyMap<string, ReadonlyMap<string, string>>
 
-export function createAgentSession(key: string, title: string): AgentSession {
+export function createAgentSession(key: string, title: string, mainChatTabKey: string | null = null): AgentSession {
   return {
     key,
+    mainChatTabKey,
     threadId: null,
     title,
     status: 'idle',
@@ -172,6 +177,7 @@ export function serializeAgentDock(
   return JSON.stringify({
     counter,
     sessions: sessions.map((session) => ({
+      mainChatTabKey: session.mainChatTabKey,
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,

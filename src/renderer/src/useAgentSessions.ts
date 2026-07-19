@@ -46,7 +46,7 @@ export function useAgentSessions(
   removeAgentSessionRender: (key: string) => void;
   backgroundSessionForThread: (threadId: string) => AgentSession | null;
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void;
-  handleNewAgent: () => void;
+  handleNewAgent: (mainChatTabKey: string) => void;
   handleOpenAgent: (key: string) => void;
   handleMinimizeAgent: (key: string) => void;
   handleToggleWatchAgent: (key: string) => void;
@@ -266,10 +266,10 @@ export function useAgentSessions(
     }
   }
 
-  function handleNewAgent(): void {
+  function handleNewAgent(mainChatTabKey: string): void {
     const key = crypto.randomUUID();
     const title = `Agent ${agentCounterRef.current++}`;
-    updateAgentSessions((sessions) => [...sessions, createAgentSession(key, title)]);
+    updateAgentSessions((sessions) => [...sessions, createAgentSession(key, title, mainChatTabKey)]);
     sessionStore.set(key, emptySessionState({ title }));
     setOpenAgentKeys((current) => [...current, key]);
     setSelectedAgentKey(key);

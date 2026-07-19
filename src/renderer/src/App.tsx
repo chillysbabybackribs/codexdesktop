@@ -1735,6 +1735,8 @@ export default function App(): React.JSX.Element {
       mainThreadIds: new Set(
         mainChatTabStateRef.current.tabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])),
       ),
+      mainChatTabKeys: new Set(mainChatTabStateRef.current.tabs.map((tab) => tab.key)),
+      activeMainChatTabKey: activeMainChatTabKeyRef.current,
       store: {
         counterRef: agentCounterRef,
         restoredRef: agentDockRestoredRef,
@@ -2813,7 +2815,10 @@ export default function App(): React.JSX.Element {
   // Failed/interrupted turns trigger too: partial work is prime material.
   // Busy auditors are skipped, not queued.
   async function maybeTriggerAuditors(turnId: string): Promise<void> {
-    const auditors = agentSessionsRef.current.filter((session) => session.auditsMain);
+    const activeTabKey = activeMainChatTabKeyRef.current;
+    const auditors = agentSessionsRef.current.filter(
+      (session) => session.mainChatTabKey === activeTabKey && session.auditsMain,
+    );
     if (!auditors.length) return;
     const threadId = activeThreadIdRef.current;
     // fileChange items only cover editor-tool edits; the checkpoint diff is
@@ -3666,7 +3671,10 @@ function ChatPane({
     return null;
   }, [items, itemMeta, activeTurnId]);
 
-  const openAgentSessions = agentSessions.filter((session) => openAgentKeys.includes(session.key));
+  const activeAgentSessions = agentSessions.filter(
+    (session) => session.mainChatTabKey === activeMainChatTabKey,
+  );
+  const openAgentSessions = activeAgentSessions.filter((session) => openAgentKeys.includes(session.key));
 
   const openPluginBrowser = (): void => {
     setIsSettingsOpen(false);
@@ -3877,14 +3885,14 @@ function ChatPane({
                 onToggleFastMode={onSetFastMode}
               />
             ) : null}
-            <AgentTabStrip sessions={agentSessions} openKeys={openAgentKeys} onFocus={focusAgent} />
+            <AgentTabStrip sessions={activeAgentSessions} openKeys={openAgentKeys} onFocus={focusAgent} />
             {activeTurnId ? (
               <button
                 type="button"
                 className="composer-new-agent-button"
                 aria-label="Open a new agent"
                 title="New agent"
-                onClick={onNewAgent}
+                onClick={() => onNewAgent(activeMainChatTabKey)}
               >
                 <NewAgentIcon />
               </button>
