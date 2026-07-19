@@ -2734,7 +2734,17 @@ function MainChatTabStrip({
   onSelect,
   onClose,
   onNew,
-  onOpenSettings
+  onOpenSettings,
+  title,
+  threads,
+  activeThreadId,
+  isThreadMenuOpen,
+  threadsNextCursor,
+  threadsLoading,
+  threadsError,
+  onToggleThreadMenu,
+  onResumeThread,
+  onLoadMoreThreads
 }: {
   tabs: MainChatTab[]
   activeKey: string
@@ -2743,6 +2753,16 @@ function MainChatTabStrip({
   onClose: (key: string) => Promise<void>
   onNew: () => void
   onOpenSettings: () => void
+  title: string
+  threads: Thread[]
+  activeThreadId: string | null
+  isThreadMenuOpen: boolean
+  threadsNextCursor: string | null
+  threadsLoading: boolean
+  threadsError: string | null
+  onToggleThreadMenu: () => void
+  onResumeThread: (threadId: string) => Promise<void>
+  onLoadMoreThreads: () => Promise<void>
 }): React.JSX.Element {
   const stripRef = useRef<HTMLDivElement | null>(null)
 
@@ -2833,6 +2853,19 @@ function MainChatTabStrip({
         <span aria-hidden="true">+</span>
       </button>
       <div className="main-chat-tabbar-spacer" />
+      <ThreadMenu
+        placement="tabbar"
+        title={title}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        isOpen={isThreadMenuOpen}
+        threadsNextCursor={threadsNextCursor}
+        threadsLoading={threadsLoading}
+        threadsError={threadsError}
+        onToggle={onToggleThreadMenu}
+        onResumeThread={onResumeThread}
+        onLoadMoreThreads={onLoadMoreThreads}
+      />
       <button
         type="button"
         className="main-chat-tab-action"
@@ -3166,6 +3199,16 @@ function ChatPane({
         onClose={onCloseMainChatTab}
         onNew={onNewMainChatTab}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        title={title}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        isThreadMenuOpen={isThreadMenuOpen}
+        threadsNextCursor={threadsNextCursor}
+        threadsLoading={threadsLoading}
+        threadsError={threadsError}
+        onToggleThreadMenu={onToggleThreadMenu}
+        onResumeThread={onResumeThread}
+        onLoadMoreThreads={onLoadMoreThreads}
       />
 
       <ThreadScroll
@@ -3292,21 +3335,6 @@ function ChatPane({
           onStop={onStop}
           onNewThread={onNewThread}
           onNewAgent={onNewAgent}
-          footerLeading={
-            <ThreadMenu
-              placement="composer"
-              title={title}
-              threads={threads}
-              activeThreadId={activeThreadId}
-              isOpen={isThreadMenuOpen}
-              threadsNextCursor={threadsNextCursor}
-              threadsLoading={threadsLoading}
-              threadsError={threadsError}
-              onToggle={onToggleThreadMenu}
-              onResumeThread={onResumeThread}
-              onLoadMoreThreads={onLoadMoreThreads}
-            />
-          }
           footerTrailing={
             <ContextPill
               usage={contextUsage}
@@ -3421,8 +3449,9 @@ function TaskActivityCard({
   )
 }
 
-// The thread selector opens a searchable recent-thread popover. In the chat
-// composer it opens upward so history stays near the user's current workflow.
+// The thread selector opens a searchable recent-thread popover. The tab-bar
+// trigger opens below the header; the legacy toolbar/composer placements retain
+// their respective centered and upward menu geometry.
 function ThreadMenu({
   placement = 'toolbar',
   title,
@@ -3436,7 +3465,7 @@ function ThreadMenu({
   onResumeThread,
   onLoadMoreThreads
 }: {
-  placement?: 'toolbar' | 'composer'
+  placement?: 'toolbar' | 'composer' | 'tabbar'
   title: string
   threads: Thread[]
   activeThreadId: string | null
@@ -3535,13 +3564,15 @@ function ThreadMenu({
       <button
         type="button"
         className={`thread-select ${isOpen ? 'is-open' : ''}`}
-        aria-label={placement === 'composer' ? 'Chat history' : 'Open thread menu'}
-        title={placement === 'composer' ? 'Chat history' : undefined}
+        aria-label={placement === 'tabbar' ? 'Open conversation history' : placement === 'composer' ? 'Chat history' : 'Open thread menu'}
+        title={placement === 'tabbar' ? 'Conversation history' : placement === 'composer' ? 'Chat history' : undefined}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={onToggle}
       >
-        {placement === 'composer' ? (
+        {placement === 'tabbar' ? (
+          <VerticalDotsIcon />
+        ) : placement === 'composer' ? (
           <ChatBubbleIcon />
         ) : (
           <span className="thread-title">{stripSkillMarkerFromTitle(title)}</span>
