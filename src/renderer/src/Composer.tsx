@@ -42,9 +42,9 @@ export function Composer({
   onSteer,
   onStop,
   onNewThread,
-  onNewAgent,
   providerId = 'codex',
   footerLeading,
+  footerContext,
   footerTrailing,
 }: {
   draftKey: string;
@@ -60,9 +60,9 @@ export function Composer({
   onSteer: (text: string) => Promise<boolean>;
   onStop: () => Promise<void>;
   onNewThread: () => void;
-  onNewAgent: () => void;
   providerId?: ProviderId;
   footerLeading?: React.ReactNode;
+  footerContext?: React.ReactNode;
   footerTrailing?: React.ReactNode;
 }): React.JSX.Element {
   const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '');
@@ -77,11 +77,9 @@ export function Composer({
   );
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const createMenuRef = useRef<HTMLDivElement | null>(null);
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>(
     'closed',
   );
-  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0);
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/);
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null;
@@ -148,34 +146,6 @@ export function Composer({
   }, [pluginQuery !== null, workspace, isLoading, onInstalledPluginsChange]);
 
   useEffect(() => setPluginSelectionIndex(0), [pluginQuery]);
-
-  useEffect(() => {
-    if (hasDraft || isTurnActive || isLoading) {
-      setIsCreateMenuOpen(false);
-    }
-  }, [hasDraft, isTurnActive, isLoading]);
-
-  useEffect(() => {
-    if (!isCreateMenuOpen) return;
-
-    const handlePointerDown = (event: MouseEvent): void => {
-      if (createMenuRef.current && !createMenuRef.current.contains(event.target as Node)) {
-        setIsCreateMenuOpen(false);
-      }
-    };
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        setIsCreateMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('mousedown', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('mousedown', handlePointerDown);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isCreateMenuOpen]);
 
   const mentionPlugins = installedPlugins.filter((plugin) => {
     const name = plugin.interface?.displayName || plugin.name;
@@ -268,11 +238,6 @@ export function Composer({
     } else {
       composerDrafts.delete(draftKey);
     }
-  };
-
-  const runCreateCommand = (command: () => void): void => {
-    setIsCreateMenuOpen(false);
-    command();
   };
 
   return (
@@ -423,6 +388,24 @@ export function Composer({
       />
       <div className="composer-footer">
         <div className="composer-leading-actions">
+          <button
+            type="button"
+            className="composer-auto-mode"
+            disabled
+            title="Security restriction level — automatic (manual controls coming soon)"
+          >
+            Auto
+          </button>
+          <button
+            type="button"
+            className="composer-new-thread-button"
+            aria-label="New chat"
+            title="New chat"
+            disabled={isLoading || isTurnActive || hasDraft}
+            onClick={onNewThread}
+          >
+            <NewChatIcon />
+          </button>
           <AttachmentButton
             disabled={isLoading || isTurnActive}
             onAdd={(items) => {
@@ -436,8 +419,9 @@ export function Composer({
         {visibleStatus ? (
           <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
         ) : null}
+        {footerContext ? <div className="composer-control-context">{footerContext}</div> : null}
         {footerTrailing ? <div className="composer-trailing-actions">{footerTrailing}</div> : null}
-        <div className="composer-primary-action" ref={createMenuRef}>
+        <div className="composer-primary-action">
           {isTurnActive ? (
             <button
               type="button"
@@ -457,64 +441,10 @@ export function Composer({
             >
               <SendArrowIcon />
             </button>
-          ) : (
-            <>
-              {isCreateMenuOpen ? (
-                <div className="composer-create-menu" role="menu">
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="composer-create-item"
-                    onClick={() => runCreateCommand(onNewThread)}
-                  >
-                    <span className="composer-create-item-icon" aria-hidden="true">
-                      <ChatBubbleIcon />
-                    </span>
-                    <span>New chat</span>
-                  </button>
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="composer-create-item"
-                    onClick={() => runCreateCommand(onNewAgent)}
-                  >
-                    <span className="composer-create-item-icon" aria-hidden="true">
-                      <NewAgentIcon />
-                    </span>
-                    <span>New agent</span>
-                  </button>
-                </div>
-              ) : null}
-              <button
-                type="button"
-                className={`send-button composer-new-chat ${isCreateMenuOpen ? 'is-open' : ''}`}
-                aria-label="Create"
-                title="Create"
-                aria-haspopup="menu"
-                aria-expanded={isCreateMenuOpen}
-                disabled={isLoading}
-                onClick={() => setIsCreateMenuOpen((open) => !open)}
-              >
-                <NewChatIcon />
-              </button>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
     </form>
-  );
-}
-
-function ChatBubbleIcon(): React.JSX.Element {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8A1.5 1.5 0 0 1 18.5 15H9l-4 3.5V15H5.5A1.5 1.5 0 0 1 4 13.5v-8Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 

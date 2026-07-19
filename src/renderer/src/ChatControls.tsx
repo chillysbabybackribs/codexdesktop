@@ -183,10 +183,19 @@ export function ContextPill({
       }
       onClick={() => void onCompact()}
     >
-      <span className="context-pill-track" aria-hidden="true">
-        <span className="context-pill-fill" style={{ width: `${percent}%` }} />
+      <span className="context-pill-ring" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle className="context-pill-ring-track" cx="12" cy="12" r="8" />
+          <circle
+            className="context-pill-ring-fill"
+            cx="12"
+            cy="12"
+            r="8"
+            pathLength="100"
+            style={{ strokeDasharray: `${percent} 100` }}
+          />
+        </svg>
       </span>
-      <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
     </button>
   );
 }

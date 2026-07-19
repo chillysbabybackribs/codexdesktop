@@ -476,7 +476,7 @@ export function ChatPane({
           onLoadOlderHistory={onLoadOlderHistory}
           dockExtras={{
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
-            composerContext: paneComposerContext(node.tabKey, tab, isActivePane),
+            composerFooterContext: paneComposerContext(node.tabKey, tab, isActivePane),
           }}
         />
       );

@@ -45,7 +45,7 @@ function MainChatGlyph(): React.JSX.Element {
 // and rendered from that key's slot in the session store (the same slot the
 // background notification path already keeps live). The focused pane also
 // hosts the workspace-wide dock extras: the agent column and the composer
-// context row.
+// footer controls.
 export function ChatPaneView({
   tabKey,
   tab,
@@ -76,7 +76,6 @@ export function ChatPaneView({
   onStop,
   onNewThread,
   onCompactThread,
-  onNewAgent,
   onSelectPane,
   onCloseSplitPane,
   onLoadOlderHistory,
@@ -111,11 +110,10 @@ export function ChatPaneView({
   onStop: () => Promise<void>;
   onNewThread: () => void;
   onCompactThread: () => Promise<void>;
-  onNewAgent: () => void;
   onSelectPane: (key: string) => Promise<boolean>;
   onCloseSplitPane: (tabKey: string) => void;
   onLoadOlderHistory: (tabKey: string, threadId: string) => void;
-  dockExtras: { agentColumn: React.ReactNode; composerContext: React.ReactNode } | null;
+  dockExtras: { agentColumn: React.ReactNode; composerFooterContext: React.ReactNode } | null;
 }): React.JSX.Element {
   const subscribeToPane = useCallback(
     (onStoreChange: () => void) => sessionStore.subscribe(tabKey, onStoreChange),
@@ -392,7 +390,6 @@ export function ChatPaneView({
           />
         ) : null}
         {dockExtras?.agentColumn}
-        {dockExtras?.composerContext}
         <Composer
           draftKey={tabKey}
           docked={hasContent}
@@ -425,8 +422,8 @@ export function ChatPaneView({
             await runFocused(onStop);
           }}
           onNewThread={() => void runFocused(onNewThread)}
-          onNewAgent={() => void runFocused(onNewAgent)}
           providerId={providerId}
+          footerContext={dockExtras?.composerFooterContext}
           footerTrailing={
             <ContextPill
               usage={session.contextUsage}
