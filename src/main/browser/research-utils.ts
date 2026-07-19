@@ -210,12 +210,14 @@ export function assessExtractedPage(page: {
     return { verified: false, reason: 'http-error' }
   }
 
-  const sample = `${page.title}\n${page.content.slice(0, 1_500)}`.toLowerCase()
+  // A challenge banner is often injected after the site header. Inspect a
+  // bounded but meaningful sample rather than just the leading chrome.
+  const sample = `${page.title}\n${page.content.slice(0, 12_000)}`.toLowerCase()
   if (/captcha|verify you are human|access denied|sign in to continue|checking your browser|just a moment/.test(sample)) {
     return { verified: false, reason: 'challenge-page' }
   }
   const normalizedTitle = page.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
-  if (page.wordCount < 200 && /^(sign in|log in|login|authentication required)\b/.test(normalizedTitle)) {
+  if (/^(sign in|log in|login|authentication required)\b/.test(normalizedTitle)) {
     return { verified: false, reason: 'login-page' }
   }
   if (
@@ -227,7 +229,23 @@ export function assessExtractedPage(page: {
   if (page.wordCount < 40 || page.content.trim().length < 240) {
     return { verified: false, reason: 'insufficient-content' }
   }
+  if (isLoadingShell(page.content)) {
+    return { verified: false, reason: 'insufficient-content' }
+  }
   return { verified: true }
+}
+
+function isLoadingShell(content: string): boolean {
+  const lines = content
+    .split(/\n+/)
+    .map((line) => line.trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 120)
+  if (lines.length === 0) return false
+  const loadingLines = lines.filter((line) =>
+    /^(?:loading(?:\.{1,3})?|please wait(?:\.{1,3})?|fetching|initializing|preparing|content is loading|skeleton|shimmer)/.test(line)
+  ).length
+  return loadingLines >= 2 && loadingLines / lines.length >= 0.6
 }
 
 function classifySource(

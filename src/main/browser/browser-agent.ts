@@ -596,17 +596,39 @@ export class BrowserAgentController {
 
         const targetContents = webContents
         const remainingMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
-        const rawResult = await withTimeout(
+        let rawResult = await withTimeout(
           executePageProgram(targetContents, program, options.frame, maxResultChars),
           remainingMs,
           () => cdpSessionFor(targetContents).terminateExecution(),
           options.signal
         )
         assertTargetLeaseCurrent(tabs, lease)
+        let assessment = assessBrowserExtractionResult(rawResult)
+        // Hydrated applications can expose a small, plausible loading shell at
+        // DOM-ready. Retry once only for that recognizable state, waiting on
+        // mutations instead of adding delay to ordinary completed pages.
+        if (!assessment.verified && isLikelyLoadingSnapshot(rawResult)) {
+          const retryBudgetMs = Math.min(1_500, Math.max(250, timeoutMs - (Date.now() - startedAt)))
+          await withTimeout(
+            waitForSnapshotContent(targetContents, retryBudgetMs),
+            retryBudgetMs,
+            () => cdpSessionFor(targetContents).terminateExecution(),
+            options.signal
+          )
+          assertTargetLeaseCurrent(tabs, lease)
+          const remainingRetryMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
+          rawResult = await withTimeout(
+            executePageProgram(targetContents, program, options.frame, maxResultChars),
+            remainingRetryMs,
+            () => cdpSessionFor(targetContents).terminateExecution(),
+            options.signal
+          )
+          assertTargetLeaseCurrent(tabs, lease)
+          assessment = assessBrowserExtractionResult(rawResult)
+        }
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
         const nestedTruncated = rawMetadata.truncated === true
-        const assessment = assessBrowserExtractionResult(rawResult)
         if (!assessment.verified) {
           const reason = assessment.reason ?? 'unknown'
           const code: BrowserFailureCode = reason.startsWith('invalid selector:')
