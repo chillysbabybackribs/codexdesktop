@@ -13,11 +13,11 @@
       "electron.vite.config.ts",
       "!**/*.d.ts",
       "!**/*.tsbuildinfo",
-      "!src/shared/codex-protocol/**",
-      "!src/shared/session-protocol/**",
-      "!dist/**",
-      "!out/**",
-      "!.vite/**"
+      "!src/shared/codex-protocol",
+      "!src/shared/session-protocol",
+      "!dist",
+      "!out",
+      "!.vite"
     ]
   },
   "formatter": {
