@@ -20,6 +20,13 @@ done-criteria** ("✓ pass … matches the plan's done-criteria").
   brick the chat), then starts the doer on reply + `<codexdesktop-reviewer-plan>`
   block. NO-PLAN sentinel = reviewer judged the reply a non-authorization →
   doer answers conversationally, protocol stays armed.
+- **Repo-grounded planning** (added after the first live run): the plan briefing
+  requires the reviewer to verify load-bearing premises with live tool calls
+  before writing the plan — internal docs/memory are not trusted for repository
+  facts — and to prefix anything unverifiable with `ASSUMPTION:`; the doer's
+  execution block tells it to verify assumptions before relying on them. Driven
+  by a real incident: a reviewer planned from a stale capability doc and the
+  doer had to correct the premise mid-task.
 - Transcript shows only the user's words (`stripIntakeInjections` joined the
   memory/mention strip chains in ChatTranscript, memory-turns, and both App
   chains — including provisional titles).
