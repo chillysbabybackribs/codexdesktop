@@ -2165,6 +2165,9 @@ export default function App(): React.JSX.Element {
         // projects the lite view from the result) — reducing here as well
         // would apply every delta twice.
         handleAgentNotification(backgroundSession, notification);
+        if (notification.method === 'turn/completed') {
+          void maybeSendAuditFeedback(backgroundSession.key);
+        }
         return;
       }
     }
@@ -2863,7 +2866,61 @@ export default function App(): React.JSX.Element {
       )
         continue;
       patchAgentSession(auditor.key, (session) => ({ ...session, lastAuditNote: null }));
+      auditContextByAuditorRef.current.set(auditor.key, {
+        threadId,
+        auditedTurnWasFeedback: auditFeedbackTurnIdsRef.current.has(turnId),
+      });
       void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary });
+    }
+  }
+
+  // Audit feedback: when an auditor with "send findings to main chat" enabled
+  // finishes an audit with VERDICT: flag, the report flows into the main chat
+  // as a visible turn for the doer to act on. Gated (pure, tested): flag-only
+  // (pass verdicts converge the loop), main idle, same thread, and one bounce
+  // per user-initiated turn — feedback-started turns are re-audited and
+  // display their verdict, but never auto-send again.
+  async function maybeSendAuditFeedback(sessionKey: string): Promise<void> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === sessionKey);
+    if (!session?.reportsToMain) return;
+    const context = auditContextByAuditorRef.current.get(sessionKey);
+    if (!context) return;
+    // Only the audit exchange counts: the last user message must be the audit
+    // briefing (a user manually chatting with the agent never auto-sends).
+    const messages = session.messages;
+    let lastUserIndex = -1;
+    for (let index = messages.length - 1; index >= 0; index -= 1) {
+      if (messages[index].role === 'user') {
+        lastUserIndex = index;
+        break;
+      }
+    }
+    if (lastUserIndex === -1 || !messages[lastUserIndex].audit) return;
+    const report = messages
+      .slice(lastUserIndex + 1)
+      .filter((message) => message.role === 'assistant')
+      .map((message) => message.text)
+      .join('\n')
+      .trim();
+    if (!report) return;
+    // One send attempt per audit, whatever the outcome.
+    auditContextByAuditorRef.current.delete(sessionKey);
+    if (
+      !shouldSendAuditFeedback({
+        verdict: parseAuditVerdict(report),
+        reportsToMain: session.reportsToMain,
+        mainIdle: !activeTurnIdRef.current,
+        sameThread: context.threadId !== null && context.threadId === activeThreadIdRef.current,
+        auditedTurnWasFeedback: context.auditedTurnWasFeedback,
+      })
+    )
+      return;
+    pendingAuditFeedbackRef.current = true;
+    const sent = await handleSend(buildAuditFeedbackMessage({ agentTitle: session.title, report }));
+    pendingAuditFeedbackRef.current = false;
+    if (!sent) {
+      // The main chat got busy in the meantime; the report stays in the
+      // agent window for the user to escalate manually.
     }
   }
 
