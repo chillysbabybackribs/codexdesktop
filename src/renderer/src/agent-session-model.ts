@@ -1,5 +1,6 @@
 import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
+import type { Model } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
 import type { AuditRequestSummary } from './audit-trigger'
 
@@ -28,6 +29,11 @@ export type AgentSession = {
   // Flagged audit reports auto-send into the main chat for the doer to act
   // on (verdict-gated, one bounce per user turn). Implies auditsMain.
   reportsToMain: boolean
+  // Whether the user has settled the send-to-main policy. False until the
+  // first flagged report asks (Send / Always send / Keep here) or the user
+  // toggles auto-send explicitly — the decision happens at the moment of
+  // first value, with a real finding on screen, not as an abstract pre-toggle.
+  sendPolicyDecided: boolean
   // Transient: why the last completed main-chat turn did not trigger an audit
   // (no changes detected / detection unavailable). Shown in the standby view
   // so an armed auditor never silently looks hung. Not persisted.
@@ -45,6 +51,7 @@ export type PersistedAgentSession = {
   watchesMain?: boolean
   auditsMain?: boolean
   reportsToMain?: boolean
+  sendPolicyDecided?: boolean
   model?: string | null
   reasoningEffort?: ReasoningEffort | null
   open?: boolean
