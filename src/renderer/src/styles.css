@@ -4008,8 +4008,8 @@ button {
 }
 
 .effort-menu-shell {
-  right: 0;
-  left: auto;
+  right: auto;
+  left: 0;
 }
 
 .model-menu {
