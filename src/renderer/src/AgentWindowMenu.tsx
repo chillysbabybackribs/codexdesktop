@@ -1,29 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
-import type { AgentSession } from './agent-session-model'
+import { dockRoleOf, type AgentSession } from './agent-session-model'
 import { ChevronDownIcon } from './agent-row-render'
 
-// The window title button and its dropdown: watch/audit/report toggles,
-// promote to main chat, and the chat-zoom controls. Open state and the
-// outside-click/Escape closing live here; zoom state stays with AgentWindow
-// (the transcript content scales by it too) and arrives as props.
+// The window title button and its dropdown: the Role radio (Reviewer/Helper,
+// with a read-only Worker line for spawned children), the reviewer-only
+// auto-send toggle, promote to main chat, and the chat-zoom controls. Open
+// state and the outside-click/Escape closing live here; zoom state stays with
+// AgentWindow (the transcript content scales by it too) and arrives as props.
 export function AgentWindowMenu({
   session,
   zoomPercent,
   adjustZoom,
-  onToggleWatch,
-  onToggleAudit,
+  onSetRole,
   onToggleReport,
   onPromote
 }: {
   session: AgentSession
   zoomPercent: number
   adjustZoom: (direction: 'in' | 'out' | 'reset') => void
-  onToggleWatch: (key: string) => void
-  onToggleAudit: (key: string) => void
+  onSetRole: (key: string, role: 'reviewer' | 'helper') => void
   onToggleReport: (key: string) => void
   onPromote: (key: string) => void
 }): React.JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const dockRole = dockRoleOf(session)
   const menuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
