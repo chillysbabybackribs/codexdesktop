@@ -64,15 +64,20 @@ test('inserting an already-visible pane moves it instead of duplicating', () => 
   assert.equal(moved.kind === 'split' && moved.direction, 'column')
 })
 
-test('moving a pane within a full grid stays possible', () => {
+test('moving a pane within a full grid: shallow edges yes, deep edges no', () => {
   let layout = splitLeaf('a')
   layout = insertSplitPane(layout, 'a', 'b', 'right')
   layout = insertSplitPane(layout, 'a', 'c', 'bottom')
   layout = insertSplitPane(layout, 'b', 'd', 'bottom')
-  assert.equal(canSplitPaneForDrop(layout, 'a', 'd'), true)
-  const moved = insertSplitPane(layout, 'a', 'd', 'left')
+  // After plucking d out, b sits at depth 1 and can host it again.
+  assert.equal(canSplitPaneForDrop(layout, 'b', 'd'), true)
+  const moved = insertSplitPane(layout, 'b', 'd', 'top')
   assert.equal(countSplitPanes(moved), 4)
-  assert.deepEqual(keysOf(moved).slice(0, 2), ['d', 'a'])
+  // a stays at depth 2 after the pluck; splitting it would need depth 3.
+  assert.equal(canSplitPaneForDrop(layout, 'a', 'd'), false)
+  // Rearranging against a deep pane is a center swap instead.
+  const swapped = replaceSplitPane(layout, 'a', 'd')
+  assert.deepEqual(keysOf(swapped), ['d', 'c', 'b', 'a'])
 })
 
 test('replace swaps when the incoming chat is already visible', () => {

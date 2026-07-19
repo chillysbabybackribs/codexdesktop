@@ -135,6 +135,24 @@ import {
   isAlwaysKeepAllStored,
   storedAlwaysKeepAllValue,
 } from './review-preference';
+import {
+  adjacentSplitPaneKey,
+  canSplitPaneForDrop,
+  countSplitPanes,
+  insertSplitPane,
+  parseChatSplitLayout,
+  reconcileChatSplitLayout,
+  removeSplitPane,
+  replaceSplitPane,
+  serializeChatSplitLayout,
+  splitDropZoneAt,
+  splitHasPane,
+  splitPaneKeys,
+  updateSplitRatio,
+  type SplitDirection,
+  type SplitDropZone,
+  type SplitNode,
+} from './chat-split';
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model);
@@ -146,6 +164,7 @@ const minBrowserWidth = 420;
 const dividerWidth = 8;
 const lastThreadStorageKey = 'codexdesktop.lastThreadId';
 const mainChatTabsStorageKey = 'codexdesktop.mainChatTabs.v1';
+const chatSplitStorageKey = 'codexdesktop.chatSplit.v1';
 const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
@@ -210,6 +229,20 @@ export default function App(): React.JSX.Element {
   const activeMainChatTabKey = mainChatTabState.activeKey;
   const initialMainChatTab =
     mainChatTabs.find((tab) => tab.key === activeMainChatTabKey) ?? mainChatTabs[0];
+  // Which open chats are on screen and how they tile (single, side-by-side,
+  // stacked, quadrants). Every pane key is an open tab key; the active tab is
+  // always one of the visible panes.
+  const [chatSplitLayout, setChatSplitLayoutState] = useState<SplitNode>(() =>
+    parseChatSplitLayout(
+      window.localStorage.getItem(chatSplitStorageKey),
+      mainChatTabState.tabs.map((tab) => tab.key),
+      mainChatTabState.activeKey,
+    ),
+  );
+  const chatSplitLayoutRef = useRef(chatSplitLayout);
+  // The pane that most recently held the active tab — where a newly selected
+  // hidden tab should appear, mirroring how a single pane swaps content.
+  const focusedPaneTabKeyRef = useRef(mainChatTabState.activeKey);
   const [isGoalUpdating, setIsGoalUpdating] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isRestoring, setIsRestoring] = useState(true);
