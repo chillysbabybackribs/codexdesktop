@@ -222,6 +222,13 @@ function createWindow(): void {
   tabManager = new TabManager(mainWindow)
   tabManager.setVpnStatusSource(() => vpnManager.status())
   tabManager.onState((state) => {
+    // Restored/background tabs already carry Chromium's saved favicon. Seed
+    // history from every tab, not only whichever one is currently active.
+    for (const tab of state.tabs) {
+      if (tab.favicon) {
+        browserHistoryStore.updateFavicon(tab.url, tab.favicon)
+      }
+    }
     sendToMainRenderer(ipcChannels.browserState, state)
   })
   tabManager.onPersist(() => {

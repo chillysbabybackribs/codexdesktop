@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { HistoryEntry } from './browser-history-store.ts'
-import { buildSuggestions, inlineCompletion, MAX_OMNIBOX_ROWS } from './omnibox-suggestions.ts'
+import { buildSuggestions, conventionalFaviconUrl, inlineCompletion, MAX_OMNIBOX_ROWS } from './omnibox-suggestions.ts'
 
 const NOW = 1_000_000_000_000
 
@@ -43,6 +43,14 @@ test('history suggestions carry the favicon captured by browser tabs', () => {
 
   assert.equal(rows[0].kind, 'history')
   assert.equal(rows[0].favicon, favicon)
+})
+
+test('legacy history uses a direct same-origin favicon candidate', () => {
+  const rows = buildSuggestions('', [entry('https://www.reddit.com/notifications', 'Inbox', 10)], NOW)
+
+  assert.equal(rows[0].favicon, 'https://www.reddit.com/favicon.ico')
+  assert.equal(conventionalFaviconUrl('http://localhost:3000/'), null)
+  assert.equal(conventionalFaviconUrl('not a url'), null)
 })
 
 test('url-like input yields a navigate row and dedupes the identical history row', () => {

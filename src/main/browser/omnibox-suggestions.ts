@@ -48,7 +48,22 @@ function historyRow(entry: HistoryEntry): OmniboxSuggestion {
     url: entry.url,
     text: entry.title || displayUrl(entry.url),
     detail: displayUrl(entry.url),
-    favicon: entry.favicon
+    // Legacy history predates favicon persistence. Use the site's own
+    // conventional icon endpoint as a direct fallback; never disclose history
+    // to a third-party favicon proxy.
+    favicon: entry.favicon ?? conventionalFaviconUrl(entry.url)
+  }
+}
+
+export function conventionalFaviconUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:' || !parsed.hostname) {
+      return null
+    }
+    return `${parsed.origin}/favicon.ico`
+  } catch {
+    return null
   }
 }
 

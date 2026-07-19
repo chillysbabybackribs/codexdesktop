@@ -19,6 +19,7 @@ const MAX_FAVICON_LENGTH = 128 * 1024
 // recorded — internal, file, and data URLs never belong in suggestions.
 export class BrowserHistoryStore {
   private entriesByUrl = new Map<string, HistoryEntry>()
+  private faviconsBySite = new Map<string, string>()
   private saveTimer: ReturnType<typeof setTimeout> | null = null
   private saveQueue: Promise<void> = Promise.resolve()
   private loaded = false
@@ -32,7 +33,22 @@ export class BrowserHistoryStore {
     try {
       const raw = await readFile(this.getFilePath(), 'utf8')
       const parsed: unknown = JSON.parse(raw)
-      for (const entry of parseHistoryEntries(parsed)) {
+      const entries = parseHistoryEntries(parsed)
+
+      // Seed the site-level identity cache first, then hydrate legacy sibling
+      // URLs from any favicon already known for that company host.
+      for (const entry of entries) {
+        const site = faviconSiteKey(entry.url)
+        if (site && entry.favicon) {
+          this.faviconsBySite.set(site, entry.favicon)
+        }
+      }
+
+      for (const entry of entries) {
+        const cachedFavicon = this.faviconsBySite.get(faviconSiteKey(entry.url) ?? '')
+        if (cachedFavicon) {
+          entry.favicon = cachedFavicon
+        }
         this.entriesByUrl.set(entry.url, entry)
       }
     } catch {
@@ -48,6 +64,12 @@ export class BrowserHistoryStore {
     }
 
     const existing = this.entriesByUrl.get(url)
+    const site = faviconSiteKey(url)
+    const safeFavicon = sanitizeHistoryFavicon(favicon)
+    if (safeFavicon) {
+      this.updateFavicon(url, safeFavicon)
+    }
+    const resolvedFavicon = safeFavicon ?? (site ? this.faviconsBySite.get(site) ?? null : null)
 
     if (existing) {
       existing.visitCount += 1
@@ -55,9 +77,8 @@ export class BrowserHistoryStore {
       if (title.trim()) {
         existing.title = title.trim()
       }
-      const safeFavicon = sanitizeHistoryFavicon(favicon)
-      if (safeFavicon) {
-        existing.favicon = safeFavicon
+      if (resolvedFavicon) {
+        existing.favicon = resolvedFavicon
       }
       // Re-insert so map order approximates recency, which prune() relies on.
       this.entriesByUrl.delete(url)
@@ -66,7 +87,7 @@ export class BrowserHistoryStore {
       this.entriesByUrl.set(url, {
         url,
         title: title.trim(),
-        favicon: sanitizeHistoryFavicon(favicon),
+        favicon: resolvedFavicon,
         visitCount: 1,
         lastVisitAt: now
       })
@@ -87,14 +108,27 @@ export class BrowserHistoryStore {
     }
   }
 
-  // Favicons often arrive after navigation and title events. Preserve the
-  // latest trusted site identity without counting another visit.
+  // Favicons often arrive after navigation and title events. Treat them as a
+  // company-host identity so a restored Google tab, for example, refreshes
+  // every google.com history URL rather than only one exact address.
   updateFavicon(url: string, favicon: string | null): void {
-    const entry = this.entriesByUrl.get(url)
     const safeFavicon = sanitizeHistoryFavicon(favicon)
+    const site = faviconSiteKey(url)
 
-    if (entry && safeFavicon && entry.favicon !== safeFavicon) {
-      entry.favicon = safeFavicon
+    if (!site || !safeFavicon || this.faviconsBySite.get(site) === safeFavicon) {
+      return
+    }
+
+    this.faviconsBySite.set(site, safeFavicon)
+    let changed = false
+    for (const entry of this.entriesByUrl.values()) {
+      if (faviconSiteKey(entry.url) === site && entry.favicon !== safeFavicon) {
+        entry.favicon = safeFavicon
+        changed = true
+      }
+    }
+
+    if (changed) {
       this.scheduleSave()
     }
   }
@@ -207,4 +241,18 @@ export function sanitizeHistoryFavicon(favicon: unknown): string | null {
   }
 
   return null
+}
+
+function faviconSiteKey(url: string): string | null {
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+      return null
+    }
+
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, '')
+    return host ? `${host}${parsed.port ? `:${parsed.port}` : ''}` : null
+  } catch {
+    return null
+  }
 }

@@ -92,6 +92,29 @@ test('backfills only trusted, bounded favicons', async () => {
   }
 })
 
+test('shares a restored tab favicon across same-site history and future visits', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
+  try {
+    const store = new BrowserHistoryStore(() => join(directory, 'history.json'))
+    await store.load()
+    store.recordVisit('https://example.com/first', 'First', 1000)
+    store.recordVisit('https://www.example.com/second', 'Second', 2000)
+    store.recordVisit('https://docs.example.com/', 'Docs', 3000)
+
+    const favicon = 'https://example.com/assets/favicon.png'
+    store.updateFavicon('https://www.example.com/current', favicon)
+    store.recordVisit('https://example.com/future', 'Future', 4000)
+
+    const byUrl = new Map(store.entries().map((entry) => [entry.url, entry]))
+    assert.equal(byUrl.get('https://example.com/first')?.favicon, favicon)
+    assert.equal(byUrl.get('https://www.example.com/second')?.favicon, favicon)
+    assert.equal(byUrl.get('https://example.com/future')?.favicon, favicon)
+    assert.equal(byUrl.get('https://docs.example.com/')?.favicon, null)
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
 test('flush reports a failed write and leaves the save queue reusable', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
   try {
