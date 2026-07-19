@@ -72,6 +72,8 @@ export type BrowserAgentOptions = {
   maxResultChars?: number | null
   /** Internal turn-lifetime signal. Socket and UI callers intentionally omit it. */
   signal?: AbortSignal
+  /** Internal guard for observational operations that must not return stale page data. */
+  requireStableTarget?: boolean
 }
 
 export type BrowserRunOptions = BrowserAgentOptions & {
@@ -731,7 +733,10 @@ export class BrowserAgentController {
       return { ok: false, error: 'browser.cdp requires a method' } satisfies BrowserAgentFailure
     }
 
-    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+    return this.runCdpOperation({
+      ...options,
+      requireStableTarget: options.requireStableTarget ?? isObservationalCdpMethod(method)
+    }, async (session, timeoutMs, context) => {
       let result: unknown
       try {
         result = await withTimeout(session.send(method, params), timeoutMs)
@@ -753,7 +758,7 @@ export class BrowserAgentController {
       return { ok: false, error: 'screenshot artifact storage is not available' } satisfies BrowserAgentFailure
     }
 
-    return this.runCdpOperation(options, async (_session, timeoutMs, context) => {
+    return this.runCdpOperation({ ...options, requireStableTarget: true }, async (_session, timeoutMs, context) => {
       // This is intentionally Electron-native rather than Page.captureScreenshot:
       // the app owns the WebContents, so no debugger attachment is necessary.
       const image = await withTimeout(context.webContents.capturePage(), timeoutMs)
@@ -860,7 +865,7 @@ export class BrowserAgentController {
     if (!artifactStore) {
       return { ok: false, error: 'CDP artifact storage is not available' } satisfies BrowserAgentFailure
     }
-    return this.runCdpOperation(options, async (session, timeoutMs, context) => {
+    return this.runCdpOperation({ ...options, requireStableTarget: true }, async (session, timeoutMs, context) => {
       const afterSequence = session.eventPage({ limit: 1 }).latestSequence
       await withTimeout(session.send('Tracing.end'), timeoutMs)
       const completed = await session.waitForEvent({
@@ -1009,8 +1014,9 @@ export class BrowserAgentController {
     )
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation = previous.then(async (): Promise<BrowserAgentResult> => {
-      throwIfAborted(options.signal)
-      const webContents = tabs.resolveWebContents(tabId)
+      if (options.signal?.aborted) return cancelledResult()
+      const lease = options.requireStableTarget ? captureTargetLease(tabs, tabId) : null
+      const webContents = lease?.webContents ?? tabs.resolveWebContents(tabId)
       if (!webContents) {
         return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
       }
@@ -1025,6 +1031,7 @@ export class BrowserAgentController {
           () => session.terminateExecution(),
           options.signal
         )
+        if (lease) assertTargetLeaseCurrent(tabs, lease)
         const bounded = boundResult(rawResult, maxResultChars)
         return {
           ok: true,
@@ -1664,6 +1671,10 @@ function asRecord(value: unknown): Record<string, unknown> {
 function isUnsupportedCdpCommand(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error)
   return /wasn't found|method not found|not supported/i.test(message)
+}
+
+function isObservationalCdpMethod(method: string): boolean {
+  return /^(?:Page\.captureScreenshot|DOMSnapshot\.captureSnapshot|Accessibility\.get|(?:Browser|DOM|Network|Performance|Target)\.get)/.test(method)
 }
 
 function clampNumber(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {

@@ -468,6 +468,20 @@ test('cancelling a turn drops its queued browser operation before page execution
   assert.equal(executions, 0)
 })
 
+test('browser read results fail when the target page epoch changes during execution', async () => {
+  let epoch = 4
+  const tabs = fakeTabs(async () => {
+    epoch += 1
+    return { stale: true }
+  }) as unknown as TabManager & { getTargetEpoch: (tabId: string) => number }
+  tabs.getTargetEpoch = () => epoch
+  const result = await new BrowserAgentController(() => tabs).run('return { stale: true }')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'targetChanged')
+  assert.match(result.error ?? '', /changed during operation/)
+})
+
 test('browser agent surfaces browser flow not_found as a successful tool result', async () => {
   const webContents = Object.assign(new EventEmitter(), {
     executeJavaScript: async () => ({ url: 'https://example.com/search', count: 0, matches: [] }),
