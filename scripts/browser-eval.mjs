@@ -121,7 +121,7 @@ async function main() {
   const direct = await runDirectArm(context, oracleBefore, options.samples)
   const tabsAfterDirect = requireTabs(await socketJson(socketPath, 'GET', '/tabs'))
   const oracleAfterDirect = await captureOracle(context)
-  direct.oracleUnchanged = sameOracle(oracleBefore, oracleAfterDirect)
+  direct.oracleUnchanged = sameOracle(oracleBefore, oracleAfterDirect, scenario)
   direct.tabsUnchanged = sameTabs(initialTabs, tabsAfterDirect)
 
   let model
@@ -137,9 +137,9 @@ async function main() {
 
   const finalTabs = requireTabs(await socketJson(socketPath, 'GET', '/tabs'))
   const oracleAfter = await captureOracle(context)
-  const hostUnchanged = sameOracle(oracleBefore, oracleAfter) && sameTabs(initialTabs, finalTabs)
+  const hostUnchanged = sameOracle(oracleBefore, oracleAfter, scenario) && sameTabs(initialTabs, finalTabs)
   if (!options.skipModel) {
-    model.oracleUnchanged = sameOracle(oracleAfterDirect, oracleAfter)
+    model.oracleUnchanged = sameOracle(oracleAfterDirect, oracleAfter, scenario)
     model.tabsUnchanged = sameTabs(tabsAfterDirect, finalTabs)
   }
 
@@ -177,7 +177,7 @@ async function main() {
       before: scenario.projectOracle(oracleBefore),
       afterDirect: scenario.projectOracle(oracleAfterDirect),
       after: scenario.projectOracle(oracleAfter),
-      unchanged: sameOracle(oracleBefore, oracleAfter)
+      unchanged: sameOracle(oracleBefore, oracleAfter, scenario)
     },
     productionControllerExercised: direct.productionControllerExercised &&
       (options.skipModel || model.productionControllerExercised === true),
@@ -191,7 +191,7 @@ async function main() {
       strictApplesToApples: false,
       caveat: 'The legacy trace requested navigation and carried a much larger persisted context; the current model arm starts fresh on the already-open page. The ratio is observational, not an isolated causal speedup.',
       qualityPreserved: (!scenario.requiresConclusiveSnapshot || direct.exactSnapshotCount === options.samples) &&
-        (options.skipModel || model.accuracy?.exactThreeAndState === true) && hostUnchanged
+        (options.skipModel || model.accuracy?.exactResponse === true) && hostUnchanged
     }
   }
 
