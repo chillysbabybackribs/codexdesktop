@@ -1,6 +1,7 @@
 import type { WebContents, WebFrameMain } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
+import { BrowserFlowError, runBrowserFlow } from './browser-flow.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
@@ -67,6 +68,8 @@ export type BrowserAgentOptions = {
 export type BrowserRunOptions = BrowserAgentOptions & {
   frame?: string | null
 }
+
+export type BrowserFlowOptions = BrowserAgentOptions
 
 export type BrowserNavigateOptions = BrowserAgentOptions & {
   readySelector?: string | null
