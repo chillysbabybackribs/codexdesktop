@@ -85,7 +85,10 @@ test('cached running tabs keep their live transcript instead of rehydrating', ()
     turnId: 'turn-running'
   }
 
-  assert.equal(needsMainChatTabHydration(running, true), false)
-  assert.equal(needsMainChatTabHydration(running, false), true)
-  assert.equal(needsMainChatTabHydration(createMainChatTab('tab-new'), false), false)
+  assert.equal(needsMainChatTabHydration(running, 'thread-running'), false)
+  assert.equal(needsMainChatTabHydration(running, null), true)
+  assert.equal(needsMainChatTabHydration(running, undefined), true)
+  // A cached session for a DIFFERENT thread does not count as this tab's cache.
+  assert.equal(needsMainChatTabHydration(running, 'thread-other'), true)
+  assert.equal(needsMainChatTabHydration(createMainChatTab('tab-new'), null), false)
 })

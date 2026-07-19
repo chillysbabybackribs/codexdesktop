@@ -381,12 +381,14 @@ export default function App(): React.JSX.Element {
   }, [threadsNextCursor])
 
   function updateMainChatTabs(update: (state: MainChatTabState) => MainChatTabState): void {
-    setMainChatTabState((current) => {
-      const next = update(current)
-      mainChatTabStateRef.current = next
-      activeMainChatTabKeyRef.current = next.activeKey
-      return next
-    })
+    // Applied eagerly against the ref (the always-current source) so
+    // activeMainChatTabKeyRef is correct the moment this returns — active-
+    // session writes that follow in the same handler must target the new key,
+    // not wait for React to run a queued updater.
+    const next = update(mainChatTabStateRef.current)
+    mainChatTabStateRef.current = next
+    activeMainChatTabKeyRef.current = next.activeKey
+    setMainChatTabState(next)
   }
 
   function patchMainChatTab(key: string, update: (tab: MainChatTab) => MainChatTab): void {
@@ -1072,7 +1074,7 @@ export default function App(): React.JSX.Element {
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
 
-    if (needsMainChatTabHydration(target, Boolean(snapshot))) {
+    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
       reconcilingMainChatTabKeyRef.current = key
       setReconcilingMainChatTabKey(key)
       if (!snapshot) setIsRestoring(true)
@@ -1110,7 +1112,7 @@ export default function App(): React.JSX.Element {
     const snapshot = sessionStoreRef.current.peek(target.key)
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
-    if (needsMainChatTabHydration(target, Boolean(snapshot))) {
+    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
       reconcilingMainChatTabKeyRef.current = target.key
       setReconcilingMainChatTabKey(target.key)
       if (!snapshot) setIsRestoring(true)

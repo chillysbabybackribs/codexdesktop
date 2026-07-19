@@ -154,14 +154,16 @@ export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab
 }
 
 /**
- * Open tabs remain subscribed and their in-memory snapshots receive every live
+ * Open tabs remain subscribed and their in-memory sessions receive every live
  * notification. Rehydrating a cached tab from bounded thread history can erase
  * newer reasoning, commentary, and tool-call state, so only uncached
- * thread-backed tabs need a server resume.
+ * thread-backed tabs need a server resume. "Cached" means the stored session
+ * holds THIS tab's thread — an auto-created empty session (threadId null) or a
+ * session left over from a different thread does not count.
  */
 export function needsMainChatTabHydration(
   tab: MainChatTab,
-  snapshotAvailable: boolean
+  cachedThreadId: string | null | undefined
 ): tab is MainChatTab & { threadId: string } {
-  return Boolean(tab.threadId && !snapshotAvailable)
+  return Boolean(tab.threadId && cachedThreadId !== tab.threadId)
 }
