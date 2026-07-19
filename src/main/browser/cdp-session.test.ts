@@ -167,3 +167,17 @@ test('performance diagnostics collect compact metrics, lifecycle, and timeline e
     'Page.setLifecycleEventsEnabled'
   ])
 })
+
+test('disposing a CDP session detaches the debugger, rejects waiters, and releases listeners', async () => {
+  const { session, contents } = fixture()
+  const waiting = session.waitForEvent({ method: 'Page.loadEventFired' }, 1_000)
+
+  session.dispose()
+
+  await assert.rejects(waiting, /CDP debugger detached/)
+  assert.equal(contents.debugger.isAttached(), false)
+  assert.equal(contents.debugger.listenerCount('message'), 0)
+  assert.equal(contents.debugger.listenerCount('detach'), 0)
+  assert.equal(contents.listenerCount('destroyed'), 0)
+  await assert.rejects(session.send('Page.getLayoutMetrics'), /disposed/)
+})

@@ -21,6 +21,7 @@ import { BrowserTargetRegistry, type BrowserTarget } from './browser-target-regi
 import { chromeLikeUserAgent } from './browser-session.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
+import { disposeCdpSession } from './cdp-session.js'
 
 const defaultTabUrl = 'https://www.google.com'
 
@@ -56,6 +57,7 @@ export class TabManager {
   private stateListener: BrowserStateListener | null = null
   private persistListener: (() => void) | null = null
   private visitListener: BrowserVisitListener | null = null
+  private disposed = false
 
   constructor(private readonly window: BrowserWindow) {
     window.on('resize', () => {
@@ -152,6 +154,7 @@ export class TabManager {
     this.cancelNavigation(id)
     this.targetEpochs.delete(id)
     this.window.contentView.removeChildView(tab.view)
+    disposeCdpSession(tab.view.webContents)
 
     if (!tab.view.webContents.isDestroyed()) {
       tab.view.webContents.close()
@@ -165,6 +168,32 @@ export class TabManager {
     }
 
     this.pushState()
+  }
+
+  /** Release owned native tab views without creating fallback tabs on shutdown. */
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    const tabs = [...this.tabs.values()]
+    this.tabs.clear()
+    this.activeTabId = null
+    this.targetEpochs.clear()
+    for (const tab of tabs) {
+      this.cancelNavigation(tab.id)
+      try {
+        this.window.contentView.removeChildView(tab.view)
+      } catch {
+        // Native view may already be detached during window teardown.
+      }
+      disposeCdpSession(tab.view.webContents)
+      if (!tab.view.webContents.isDestroyed()) {
+        try {
+          tab.view.webContents.close()
+        } catch {
+          // Electron may already be finalizing this WebContentsView.
+        }
+      }
+    }
   }
 
   activateTab(id: string): void {
@@ -443,6 +472,7 @@ export class TabManager {
   private handleDestroyedTab(tab: ManagedBrowserTab): void {
     this.cancelNavigation(tab.id)
     this.targetEpochs.delete(tab.id)
+    disposeCdpSession(tab.view.webContents)
     if (!this.tabs.has(tab.id)) {
       return
     }
@@ -477,6 +507,7 @@ export class TabManager {
 
       this.tabs.delete(id)
       this.targetEpochs.delete(id)
+      disposeCdpSession(tab.view.webContents)
       if (this.activeTabId === id) {
         removedActiveTabId = id
         this.activeTabId = null

@@ -154,6 +154,7 @@ const sessions = new WeakMap<WebContents, CdpSession>()
 
 export class CdpSession {
   private attached = false
+  private disposed = false
   private readonly webContents: WebContents
   private capabilitiesPromise: Promise<CdpCapabilities> | null = null
   private readonly events: CdpEventRecord[] = []
@@ -162,22 +163,27 @@ export class CdpSession {
   private droppedEvents = 0
   private readonly networkJournal = new NetworkJournal()
   private readonly performanceDiagnostics = new PerformanceDiagnostics()
+  private readonly onMessage = (_event: Electron.Event, method: string, params: unknown, sessionId?: string): void => {
+    this.recordEvent(method, params, sessionId)
+  }
+  private readonly onDetach = (): void => {
+    this.attached = false
+    this.capabilitiesPromise = null
+    this.rejectWaiters(new Error('CDP debugger detached while waiting for an event'))
+  }
+  private readonly onDestroyed = (): void => {
+    this.attached = false
+    this.capabilitiesPromise = null
+    this.rejectWaiters(new Error('CDP target was destroyed while waiting for an event'))
+    this.releaseListeners()
+    sessions.delete(this.webContents)
+  }
 
   constructor(webContents: WebContents) {
     this.webContents = webContents
-    webContents.debugger.on('message', (_event, method, params, sessionId) => {
-      this.recordEvent(method, params, sessionId)
-    })
-    webContents.debugger.on('detach', () => {
-      this.attached = false
-      this.capabilitiesPromise = null
-      this.rejectWaiters(new Error('CDP debugger detached while waiting for an event'))
-    })
-    webContents.once('destroyed', () => {
-      this.attached = false
-      this.capabilitiesPromise = null
-      this.rejectWaiters(new Error('CDP target was destroyed while waiting for an event'))
-    })
+    webContents.debugger.on('message', this.onMessage)
+    webContents.debugger.on('detach', this.onDetach)
+    webContents.once('destroyed', this.onDestroyed)
   }
 
   async send(method: string, params: object = {}): Promise<unknown> {
@@ -393,7 +399,24 @@ export class CdpSession {
     this.rejectWaiters(new Error('CDP debugger detached'))
   }
 
+  /**
+   * Terminal cleanup for a tab closing or a window shutting down. Unlike
+   * detach(), this also releases listeners and transient diagnostics so the
+   * session cannot retain a closing native surface.
+   */
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.networkJournal.stop()
+    this.performanceDiagnostics.stop()
+    this.detach()
+    this.releaseListeners()
+  }
+
   private ensureAttached(): void {
+    if (this.disposed) {
+      throw new Error('CDP session has been disposed')
+    }
     if (this.webContents.isDestroyed()) {
       throw new Error('CDP target is no longer available')
     }
@@ -480,6 +503,12 @@ export class CdpSession {
     }
     this.waiters.clear()
   }
+
+  private releaseListeners(): void {
+    this.webContents.debugger.off('message', this.onMessage)
+    this.webContents.debugger.off('detach', this.onDetach)
+    this.webContents.off('destroyed', this.onDestroyed)
+  }
 }
 
 export function cdpSessionFor(webContents: WebContents): CdpSession {
@@ -489,6 +518,14 @@ export function cdpSessionFor(webContents: WebContents): CdpSession {
     sessions.set(webContents, session)
   }
   return session
+}
+
+/** Explicit terminal cleanup for a closed WebContentsView. */
+export function disposeCdpSession(webContents: WebContents): void {
+  const session = sessions.get(webContents)
+  if (!session) return
+  sessions.delete(webContents)
+  session.dispose()
 }
 
 function matchesEvent(event: CdpEventRecord, query: CdpEventQuery): boolean {

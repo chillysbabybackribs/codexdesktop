@@ -211,9 +211,11 @@ function createWindow(): void {
     void flushBrowserPersist().catch((error) => {
       console.warn('Failed to persist browser state while closing the window', error)
     })
+    tabManager?.dispose()
   })
 
   mainWindow.on('closed', () => {
+    tabManager?.dispose()
     omniboxPopup?.dispose()
     omniboxPopup = null
     mainWindow = null
