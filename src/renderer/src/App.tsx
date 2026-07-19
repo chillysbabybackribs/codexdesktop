@@ -2061,8 +2061,11 @@ export default function App(): React.JSX.Element {
               }
             })
           }
-          setTurnMeta((current) => {
-            const existing = current[notification.params.turnId]?.tokens
+          // Computed OUTSIDE the setter: store-backed setters apply
+          // synchronously, so a ref write nested inside the updater would be
+          // overwritten when the outer update commits its (stale-base) result.
+          {
+            const existing = turnMetaRef.current[notification.params.turnId]?.tokens
             const isNewCall = existing
               ? notification.params.tokenUsage.total.totalTokens > existing.threadTotalAtEnd.totalTokens
               : notification.params.tokenUsage.last.totalTokens > 0
@@ -2073,16 +2076,17 @@ export default function App(): React.JSX.Element {
                 [...pendingCompactionByTurnRef.current].filter((turnId) => turnId !== notification.params.turnId)
               )
             }
+            const precedingItem = precedingModelInputByTurnRef.current.get(notification.params.turnId) ?? null
 
-            return reduceTurnTelemetry(current, {
+            setTurnMeta((current) => reduceTurnTelemetry(current, {
               type: 'tokenUsage',
               turnId: notification.params.turnId,
               tokenUsage: notification.params.tokenUsage,
               atMs: Date.now(),
-              precedingItem: precedingModelInputByTurnRef.current.get(notification.params.turnId) ?? null,
+              precedingItem,
               compactedBeforeCall
-            })
-          })
+            }))
+          }
         }
         return
       case 'model/rerouted':
