@@ -1077,6 +1077,7 @@ export default function App(): React.JSX.Element {
     precedingModelInputByTurnRef.current = new Map()
     pendingCompactionByTurnRef.current = new Set()
     sessionStoreRef.current.remove(tabKey)
+    resumeFailuresByTabRef.current.delete(tabKey)
     discardComposerDraft(tabKey)
     patchMainChatTab(tabKey, (tab) => ({
       ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort),
@@ -1193,11 +1194,15 @@ export default function App(): React.JSX.Element {
     const snapshot = sessionStoreRef.current.peek(target.key)
     focusMainChatTab(target, snapshot)
     persistLastThreadId(target.threadId)
-    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
+    const targetThreadId = target.threadId
+    if (targetThreadId && (
+      needsMainChatTabHydration(target, snapshot?.threadId) ||
+      resumeFailuresByTabRef.current.get(target.key) === targetThreadId
+    )) {
       reconcilingMainChatTabKeyRef.current = target.key
       setReconcilingMainChatTabKey(target.key)
       if (!snapshot) setIsRestoring(true)
-      await resumeThreadById(target.threadId, { silent: true, tabKey: target.key })
+      await resumeThreadById(targetThreadId, { silent: true, tabKey: target.key })
       if (activeMainChatTabKeyRef.current === target.key) {
         setIsRestoring(false)
         setReconcilingMainChatTabKey(null)
@@ -1232,7 +1237,10 @@ export default function App(): React.JSX.Element {
 
     flushActiveMainChatSession()
     const previousSnapshot = sessionStoreRef.current.peek(previousState.activeKey)
-    if (reuseCurrent) sessionStoreRef.current.remove(target.key)
+    if (reuseCurrent) {
+      sessionStoreRef.current.remove(target.key)
+      resumeFailuresByTabRef.current.delete(target.key)
+    }
     updateMainChatTabs((state) => ({
       tabs: reuseCurrent
         ? state.tabs.map((tab) => tab.key === target.key ? target : tab)
@@ -1251,6 +1259,7 @@ export default function App(): React.JSX.Element {
     }
     if (!resumed) {
       sessionStoreRef.current.remove(target.key)
+      resumeFailuresByTabRef.current.delete(target.key)
       if (previousSnapshot) {
         sessionStoreRef.current.set(previousState.activeKey, previousSnapshot)
       }
