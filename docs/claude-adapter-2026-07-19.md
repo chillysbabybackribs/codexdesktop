@@ -1,7 +1,7 @@
 # Claude adapter — v1 landed (2026-07-19)
 
-Codex Desktop is now a two-runtime app. Selecting **"Claude (Agent SDK)"** in
-the ModelPill routes that conversation to the Claude Code runtime; everything
+Codex Desktop is now a two-runtime app. Selecting any Claude model in the
+ModelPill routes that conversation to the Claude Code runtime; everything
 downstream — session store, transcript cache, checkpoints, tabs, dock — works
 unchanged because the adapter speaks the shared notification vocabulary.
 

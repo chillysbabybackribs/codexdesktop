@@ -11,6 +11,24 @@ import type { ChatItem } from './transcript-model.js'
 // trigger, and busy auditors are skipped rather than queued (the next
 // file-changing turn re-covers the workspace state).
 
+// The doer's final answer for the turn — what a chat-only audit reasons
+// about. Last non-empty agent message, clipped to keep the briefing small.
+export function turnAnswerText(
+  items: ChatItem[],
+  itemMeta: Record<string, ItemMeta>,
+  turnId: string,
+  maxChars = 1500
+): string {
+  let answer = ''
+  for (const item of items) {
+    if (item.type !== 'agentMessage') continue
+    if (itemMeta[item.id]?.turnId !== turnId) continue
+    if (item.text.trim()) answer = item.text
+  }
+  const flat = answer.trim()
+  return flat.length > maxChars ? `${flat.slice(0, maxChars).trimEnd()}…` : flat
+}
+
 export function turnChangedFiles(
   items: ChatItem[],
   itemMeta: Record<string, ItemMeta>,
