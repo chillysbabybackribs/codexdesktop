@@ -25,8 +25,9 @@ verification profile and browser-control socket were removed after shutdown.
 
 ## Increment 2 — lifecycle golden coverage (landed)
 
-`src/main/lifecycle-golden.test.ts` composes the production boundaries that
-previously had only component-level coverage:
+`src/main/lifecycle-golden.test.ts` and
+`src/renderer/src/background-lifecycle-golden.test.ts` compose the production
+boundaries that previously had only component-level coverage:
 
 - app-server process + RPC restart: an incomplete response from a crashed
   process rejects stale work, then the replacement process resumes cleanly;

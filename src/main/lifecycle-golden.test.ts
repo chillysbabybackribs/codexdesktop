@@ -14,10 +14,6 @@ import { AppServerRpc } from './codex/app-server-rpc.ts'
 import { routeDynamicToolCall } from './codex/dynamic-tool-router.ts'
 import type { DynamicToolCallParams } from '../shared/codex-protocol/v2/DynamicToolCallParams.ts'
 import type { ResearchRunner } from './browser/research-runner.ts'
-import type { ServerNotification } from '../shared/codex-protocol/ServerNotification.ts'
-import type { ThreadItem } from '../shared/codex-protocol/v2/ThreadItem.ts'
-import type { Turn } from '../shared/codex-protocol/v2/Turn.ts'
-import { SessionStore, emptySessionState, reduceSessionNotification } from '../renderer/src/session-store.ts'
 
 type FakeChild = Omit<ChildProcessWithoutNullStreams, 'stdin' | 'stdout' | 'stderr'> & {
   stdin: PassThrough
@@ -133,45 +129,6 @@ test('golden cancellation: a turn-owned browser call is dropped while queued beh
   assert.equal(result.ok, false)
   assert.equal(result.errorCode, 'cancelled')
   assert.equal(executions, 1, 'the cancelled turn never reached the shared browser target')
-})
-
-test('golden background replay: an inactive session retains its completed work without touching the active session', () => {
-  const store = new SessionStore()
-  const activeKey = 'main-thread'
-  const backgroundKey = 'background-thread'
-  const item = {
-    type: 'agentMessage',
-    id: 'message-golden',
-    text: 'Background work finished.',
-    phase: null,
-    memoryCitation: null
-  } as unknown as ThreadItem
-  const running = {
-    id: 'turn-golden',
-    items: [item],
-    itemsView: 'full',
-    status: 'inProgress',
-    error: null,
-    startedAt: 100,
-    completedAt: null,
-    durationMs: null
-  } as unknown as Turn
-  const completed = { ...running, status: 'completed', completedAt: 120, durationMs: 20 } as Turn
-  const notify = (method: string, turn: Turn): ServerNotification =>
-    ({ method, params: { threadId: 'thread-golden', turn } } as unknown as ServerNotification)
-  const context = { atMs: 130_000, fallbackModel: 'gpt-test', workspace: '/tmp/golden' }
-
-  store.set(activeKey, emptySessionState({ threadId: 'main-thread', title: 'Active' }))
-  store.set(backgroundKey, emptySessionState({ threadId: 'thread-golden', title: 'Background' }))
-  const activeBefore = store.get(activeKey)
-  store.update(backgroundKey, (state) => reduceSessionNotification(state, notify('turn/started', running), context))
-  store.update(backgroundKey, (state) => reduceSessionNotification(state, notify('turn/completed', completed), context))
-
-  const background = store.get(backgroundKey)
-  assert.equal(store.get(activeKey), activeBefore, 'background events must not mutate the focused transcript')
-  assert.equal(background.turnId, null)
-  assert.equal(background.turnMeta['turn-golden']?.status, 'completed')
-  assert.equal(background.items[0]?.id, 'message-golden')
 })
 
 class FakeDebugger extends EventEmitter {
