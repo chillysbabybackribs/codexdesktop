@@ -33,6 +33,7 @@ import type {
   TracePersistParams,
   TranscriptCachePersistParams,
   CheckpointRevertParams,
+  CheckpointRevertFilesParams,
   CheckpointChangedFilesParams,
   CheckpointSummary,
   TraceSaveParams,

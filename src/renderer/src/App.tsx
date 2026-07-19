@@ -2902,44 +2902,66 @@ export default function App(): React.JSX.Element {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === sessionKey);
     if (!session?.reportsToMain) return;
     const context = auditContextByAuditorRef.current.get(sessionKey);
-    if (!context) return;
-    // Only the audit exchange counts: the last user message must be the audit
-    // briefing (a user manually chatting with the agent never auto-sends).
-    const messages = session.messages;
-    let lastUserIndex = -1;
-    for (let index = messages.length - 1; index >= 0; index -= 1) {
-      if (messages[index].role === 'user') {
-        lastUserIndex = index;
-        break;
-      }
-    }
-    if (lastUserIndex === -1 || !messages[lastUserIndex].audit) return;
-    const report = messages
-      .slice(lastUserIndex + 1)
-      .filter((message) => message.role === 'assistant')
-      .map((message) => message.text)
-      .join('\n')
-      .trim();
+    // Only the audit exchange counts: the latest user message must be the
+    // audit briefing (manual chats with the agent never auto-send).
+    const report = latestAuditReport(session.messages);
     if (!report) return;
-    // One send attempt per audit, whatever the outcome.
+    // One auto-send attempt per audit, whatever the outcome.
     auditContextByAuditorRef.current.delete(sessionKey);
+    if (parseAuditVerdict(report) !== 'flag') return;
+    // A flagged report that does NOT flow explains itself — a silently
+    // suppressed sendback reads as broken (and the flag badge stays clickable
+    // for manual escalation).
+    const explainSkip = (reason: string): void => {
+      patchAgentSession(sessionKey, (current) => ({ ...current, lastAuditNote: reason }));
+    };
+    if (!context) {
+      explainSkip('Flagged — not auto-sent (audit predates this session); click the flag to send');
+      return;
+    }
     if (
       !shouldSendAuditFeedback({
-        verdict: parseAuditVerdict(report),
+        verdict: 'flag',
         reportsToMain: session.reportsToMain,
         mainIdle: !activeTurnIdRef.current,
         sameThread: context.threadId !== null && context.threadId === activeThreadIdRef.current,
         auditedTurnWasFeedback: context.auditedTurnWasFeedback,
       })
-    )
+    ) {
+      explainSkip(
+        context.auditedTurnWasFeedback
+          ? 'Flagged — auto-send capped at one round per turn; click the flag to send'
+          : activeTurnIdRef.current
+            ? 'Flagged — main chat was busy; click the flag to send'
+            : 'Flagged — main chat moved on; click the flag to send',
+      );
       return;
+    }
     pendingAuditFeedbackRef.current = true;
     const sent = await handleSend(buildAuditFeedbackMessage({ agentTitle: session.title, report }));
     pendingAuditFeedbackRef.current = false;
-    if (!sent) {
-      // The main chat got busy in the meantime; the report stays in the
-      // agent window for the user to escalate manually.
+    if (sent) {
+      patchAgentSession(sessionKey, (current) => ({ ...current, lastAuditNote: null }));
+    } else {
+      explainSkip('Flagged — main chat became busy; click the flag to send');
     }
+  }
+
+  // Manual escalation: clicking a flagged verdict badge sends that audit's
+  // report into the main chat now — covering toggled-on-too-late, busy-at-
+  // completion, and post-restart audits that the auto path could not serve.
+  async function handleSendAuditFeedbackNow(sessionKey: string): Promise<void> {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === sessionKey);
+    if (!session) return;
+    const report = latestAuditReport(session.messages);
+    if (!report) return;
+    // User-initiated: no bounce mark — the resulting turn gets a fresh audit
+    // with full auto-send rights, exactly like any user message.
+    const sent = await handleSend(buildAuditFeedbackMessage({ agentTitle: session.title, report }));
+    patchAgentSession(sessionKey, (current) => ({
+      ...current,
+      lastAuditNote: sent ? null : 'Main chat is busy — try again when it finishes',
+    }));
   }
 
   // Phase 4 ledger: turnId -> checkpointId for the focused thread, refreshed on
