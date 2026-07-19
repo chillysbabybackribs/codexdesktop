@@ -7203,22 +7203,42 @@ button {
   max-height: 180px;
   overflow-y: auto;
   border-top: 1px solid var(--hairline);
-  background: rgb(0 0 0 / 14%);
-  padding: 4px 0;
+  background: rgb(0 0 0 / 16%);
+  padding: 5px;
   scrollbar-width: thin;
 }
 
 .review-file {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 3px 12px;
+  padding: 4px 8px;
+  border-radius: 7px;
   font-size: 12px;
   transition: background-color 120ms ease;
 }
 
 .review-file:hover {
-  background: rgb(255 255 255 / 2.5%);
+  background: rgb(255 255 255 / 4%);
+}
+
+/* Accent tick that slides in on hover — a quiet pointer to the active row. */
+.review-file::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 1px;
+  background: var(--chrome-fg);
+  transform: translateY(-50%);
+  transition: height 140ms ease;
+}
+
+.review-file:hover::before {
+  height: 15px;
 }
 
 .review-file.is-undone {
