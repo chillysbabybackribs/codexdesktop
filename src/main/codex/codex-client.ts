@@ -385,6 +385,17 @@ export class CodexClient extends EventEmitter {
     this.appServer.dispose()
   }
 
+  // Spawn and initialize the app-server at app launch so the first message or
+  // resume never pays the cold start. Failure is non-fatal: the next real
+  // request retries the spawn and status events surface the state.
+  async warmUp(): Promise<void> {
+    try {
+      await this.ensureStarted()
+    } catch (error) {
+      console.warn('codex app-server warm-up failed:', (error as Error).message)
+    }
+  }
+
   private async ensureStarted(): Promise<void> {
     return this.appServer.ensureStarted(() => this.initialize())
   }

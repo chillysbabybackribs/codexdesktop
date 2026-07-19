@@ -312,6 +312,9 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore)
+  // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
+  // paints immediately while the child warms in parallel.
+  void codexClient.warmUp()
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
   const transcriptCache = new TranscriptCache(join(app.getPath('userData'), 'transcript-cache'))
 
