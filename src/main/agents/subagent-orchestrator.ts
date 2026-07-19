@@ -226,6 +226,11 @@ export class SubagentOrchestrator {
     if (notification.method === 'turn/completed') {
       const turn = notification.params.turn
       const finalText = finalAnswerFromItems(turn.items ?? [])
+      if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1') {
+        console.error(
+          `[subagent] settle key=${child.agentKey} itemsView=${turn.itemsView} items=${(turn.items ?? []).length} types=${(turn.items ?? []).map((i) => i.type).join(',')} finalLen=${finalText.length} final="${finalText.slice(0, 80)}"`,
+        )
+      }
       const failed = turn.status === 'failed'
       this.settle(child, {
         ok: !failed,
