@@ -921,70 +921,6 @@ function AgentContextPill({
   )
 }
 
-// The empty-state setup panel: the agent's pairing modes as minimal
-// text-and-toggle rows. The same flags live in the header menu afterwards.
-function AgentModeSelector({
-  session,
-  onToggleWatch,
-  onToggleAudit,
-  onToggleReport
-}: {
-  session: AgentSession
-  onToggleWatch: (key: string) => void
-  onToggleAudit: (key: string) => void
-  onToggleReport: (key: string) => void
-}): React.JSX.Element {
-  return (
-    <div className="agent-mode-selector">
-      <button
-        type="button"
-        className="agent-mode-option"
-        role="switch"
-        aria-checked={session.watchesMain}
-        onClick={() => onToggleWatch(session.key)}
-      >
-        <span className="agent-mode-copy">
-          <strong>Share main-chat context</strong>
-          <small>Each message carries a snapshot of the main conversation</small>
-        </span>
-        <span className={`agent-mode-switch ${session.watchesMain ? 'is-on' : ''}`} aria-hidden="true">
-          <span className="agent-mode-knob" />
-        </span>
-      </button>
-      <button
-        type="button"
-        className="agent-mode-option"
-        role="switch"
-        aria-checked={session.auditsMain}
-        onClick={() => onToggleAudit(session.key)}
-      >
-        <span className="agent-mode-copy">
-          <strong>Audit main-chat turns</strong>
-          <small>Second viewpoint on every turn — diffs, answers, ideas · defaults to Claude</small>
-        </span>
-        <span className={`agent-mode-switch ${session.auditsMain ? 'is-on' : ''}`} aria-hidden="true">
-          <span className="agent-mode-knob" />
-        </span>
-      </button>
-      <button
-        type="button"
-        className="agent-mode-option"
-        role="switch"
-        aria-checked={session.reportsToMain}
-        onClick={() => onToggleReport(session.key)}
-      >
-        <span className="agent-mode-copy">
-          <strong>Send findings to main chat</strong>
-          <small>Flagged audits auto-send to the doer · one round per turn</small>
-        </span>
-        <span className={`agent-mode-switch ${session.reportsToMain ? 'is-on' : ''}`} aria-hidden="true">
-          <span className="agent-mode-knob" />
-        </span>
-      </button>
-    </div>
-  )
-}
-
 // Centered standby for an armed auditor with no conversation yet: waiting for
 // the main chat, then live progress from the auditor's POV once a turn runs.
 // `note` explains the last turn that completed without triggering an audit.
@@ -1018,26 +954,35 @@ function AuditStandby({
   )
 }
 
-// Assistant text with audit-verdict awareness: a trailing "VERDICT: …" line
-// (the auditor's machine-readable close) renders as a quiet badge instead of
-// prose. A flagged badge with a send action is a button — manual escalation
-// into the main chat for reports the auto path did not (or could not) send.
+// The first-flag decision handlers, attached to the latest flagged report of
+// an agent whose send-to-main policy is still undecided.
+type SendPolicyPrompt = {
+  onSendOnce: () => void
+  onAlways: () => void
+  onKeep: () => void
+}
+
+type AgentRowContext = {
+  itemMeta: Record<string, ItemMeta>
+  activeTurnId: string | null
+  workspace: string | null
+  duplicateAssistantIds: ReadonlySet<string>
+  lastAssistantTextId: string | null
+  onSendFlagged: () => void
+  sendPolicyPrompt: SendPolicyPrompt | null
+}
+
+// Assistant text with audit-verdict awareness: a "VERDICT: …" line (the
+// auditor's machine-readable close) renders as a badge pinned above the
+// report — verdict first, findings after. A flagged badge with a send action
+// is a button — manual escalation into the main chat for reports the auto
+// path did not (or could not) send.
 // One transcript row for the dock's full-fidelity view. Chat rows keep the
 // dock's compact message chrome (audit docs, verdict badges); activity rows
 // reuse the main chat's WorkGroup so tool rows, terminal cards, thought
 // blocks, and diff cards render identically at dock scale. Turn tails are
 // skipped — the window header and Working shimmer already carry status.
-function renderAgentRow(
-  row: RenderRow,
-  context: {
-    itemMeta: Record<string, ItemMeta>
-    activeTurnId: string | null
-    workspace: string | null
-    duplicateAssistantIds: ReadonlySet<string>
-    lastAssistantTextId: string | null
-    onSendFlagged: () => void
-  }
-): React.JSX.Element | null {
+function renderAgentRow(row: RenderRow, context: AgentRowContext): React.JSX.Element | null {
   if (row.kind === 'tail') return null
 
   if (row.kind === 'activity') {
