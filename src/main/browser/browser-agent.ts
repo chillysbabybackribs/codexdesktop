@@ -29,6 +29,7 @@ export const PAGE_EXTRACTION_LOW_VALUE_PATTERN =
   '(^|[-_\\s])(advert|ad|banner|cookie|consent|modal|dialog|popup|newsletter|subscribe|social|share|related|recommend|breadcrumb|pagination|sidebar|toolbar|menu|promo|sponsor)([-_\\s]|$)'
 
 export type BrowserFailureCode =
+  | 'cancelled'
   | 'timeout'
   | 'targetClosed'
   | 'targetChanged'
@@ -59,10 +60,18 @@ export type BrowserFailure = {
   stack?: string
 }
 
+export type BrowserOperationOwner = {
+  threadId: string
+  turnId: string
+  callId?: string
+}
+
 export type BrowserAgentOptions = {
   tabId?: string | null
   timeoutMs?: number | null
   maxResultChars?: number | null
+  /** Internal turn-lifetime signal. Socket and UI callers intentionally omit it. */
+  signal?: AbortSignal
 }
 
 export type BrowserRunOptions = BrowserAgentOptions & {
@@ -154,6 +163,7 @@ type QueuedOperation<T> = Promise<T>
  */
 export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
+  private readonly turnOperations = new Map<string, Set<AbortController>>()
   private readonly getTabs: () => TabManager | null
   private readonly artifactStore?: CdpArtifactStore
 
@@ -175,6 +185,34 @@ export class BrowserAgentController {
 
   async readScreenshotDataUrl(artifactPath: string): Promise<string | null> {
     return this.artifactStore?.readImageDataUrl(artifactPath) ?? null
+  }
+
+  /**
+   * Associates an operation with the app-server turn that requested it. The
+   * browser remains shared and fully capable; this only prevents stopped work
+   * from continuing to mutate or read a page after its owning turn is gone.
+   */
+  async runForTurn<T>(owner: BrowserOperationOwner, execute: (signal: AbortSignal) => Promise<T>): Promise<T> {
+    const key = turnOperationKey(owner.threadId, owner.turnId)
+    const controller = new AbortController()
+    const operations = this.turnOperations.get(key) ?? new Set<AbortController>()
+    operations.add(controller)
+    this.turnOperations.set(key, operations)
+    try {
+      return await execute(controller.signal)
+    } finally {
+      operations.delete(controller)
+      if (operations.size === 0 && this.turnOperations.get(key) === operations) {
+        this.turnOperations.delete(key)
+      }
+    }
+  }
+
+  cancelTurn(threadId: string, turnId: string): void {
+    const key = turnOperationKey(threadId, turnId)
+    const operations = this.turnOperations.get(key)
+    if (!operations) return
+    for (const controller of operations) controller.abort()
   }
 
   async run(code: string, options: BrowserRunOptions = {}): Promise<BrowserAgentResult> {
@@ -206,6 +244,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      throwIfAborted(options.signal)
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -223,7 +262,8 @@ export class BrowserAgentController {
         const rawResult = await withTimeout(
           execution,
           timeoutMs,
-          () => cdpSessionFor(webContents).terminateExecution()
+          () => cdpSessionFor(webContents).terminateExecution(),
+          options.signal
         )
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
@@ -305,6 +345,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      throwIfAborted(options.signal)
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         const failure = browserFailureFor(
@@ -324,7 +365,8 @@ export class BrowserAgentController {
         const rawResult = await withTimeout(
           runBrowserFlow(webContents, steps, { timeoutMs }),
           timeoutMs,
-          () => cdpSessionFor(webContents).terminateExecution()
+          () => cdpSessionFor(webContents).terminateExecution(),
+          options.signal
         )
         const bounded = boundResult(rawResult, maxResultChars)
         let artifact: CdpFileArtifact | undefined
@@ -401,6 +443,7 @@ export class BrowserAgentController {
     const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      throwIfAborted(options.signal)
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -415,6 +458,7 @@ export class BrowserAgentController {
       try {
         const result = await tabs.navigateAndWait(tabId, url, {
           timeoutMs,
+          signal: options.signal,
           ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
           ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
           ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
@@ -502,6 +546,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      throwIfAborted(options.signal)
       let webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -517,6 +562,7 @@ export class BrowserAgentController {
         if (requestedUrl) {
           const navigation = await tabs.navigateAndWait(tabId, requestedUrl, {
             timeoutMs,
+            signal: options.signal,
             ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
             ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
             ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
@@ -539,7 +585,8 @@ export class BrowserAgentController {
         const rawResult = await withTimeout(
           executePageProgram(targetContents, program, options.frame, maxResultChars),
           remainingMs,
-          () => cdpSessionFor(targetContents).terminateExecution()
+          () => cdpSessionFor(targetContents).terminateExecution(),
+          options.signal
         )
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)

@@ -36,6 +36,7 @@ export type NavigateAndWaitOptions = {
   quietMs?: number
   maxSettleMs?: number
   readySelector?: string
+  signal?: AbortSignal
 }
 
 export type { BrowserTarget } from './browser-target-registry.js'
@@ -383,6 +384,8 @@ export class TabManager {
     this.cancelNavigation(tab.id)
     const controller = new AbortController()
     this.navigationControllers.set(tab.id, controller)
+    const abortFromCaller = (): void => controller.abort()
+    options.signal?.addEventListener('abort', abortFromCaller, { once: true })
 
     try {
       return await loadPageAndSettle(tab.view.webContents, url, {
@@ -394,6 +397,7 @@ export class TabManager {
         ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {})
       })
     } finally {
+      options.signal?.removeEventListener('abort', abortFromCaller)
       if (this.navigationControllers.get(tab.id) === controller) {
         this.navigationControllers.delete(tab.id)
       }
