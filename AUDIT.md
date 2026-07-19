@@ -1,0 +1,2 @@
+
+- 2026-07-19: image_url 400 fix (codex-config.ts) is prompt-guidance-only — adds instruction to regex-extract `data:image/...` from screenshot tool result before calling `image()`. Mitigation, not deterministic: relies on model obeying guidance every time; root cause (tool result concatenates JSON metadata + data URI) is not fixed at code level. Consider sanitizing in the image() handler / tool result if reachable. Regex `data:image/[^\s]+` works only because the URI is last in the string.
