@@ -3033,7 +3033,6 @@ export default function App(): React.JSX.Element {
       }
     },
     // handleRevertTurn is a plain closure over turnCheckpoints.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [turnCheckpoints],
   );
 
@@ -3052,7 +3051,6 @@ export default function App(): React.JSX.Element {
       }
     },
     // addSystemItem is a stable plain closure; turnCheckpoints is the real dep.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [turnCheckpoints],
   );
 
@@ -3066,6 +3064,11 @@ export default function App(): React.JSX.Element {
         <ChatPane
           turnCheckpoints={turnCheckpoints}
           onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+          turnReviews={turnReviews}
+          undoneFiles={undoneFiles}
+          onKeepTurn={handleKeepTurn}
+          onUndoTurnAll={handleUndoTurnAll}
+          onUndoFile={handleUndoFile}
           mainChatTabs={mainChatTabs}
           activeMainChatTabKey={activeMainChatTabKey}
           mainChatTabsDisabled={
@@ -3525,6 +3528,11 @@ function VerticalDotsIcon(): React.JSX.Element {
 function ChatPane({
   turnCheckpoints,
   onRevertTurn,
+  turnReviews,
+  undoneFiles,
+  onKeepTurn,
+  onUndoTurnAll,
+  onUndoFile,
   mainChatTabs,
   activeMainChatTabKey,
   mainChatTabsDisabled,
@@ -3595,6 +3603,11 @@ function ChatPane({
 }: {
   turnCheckpoints: Record<string, string>;
   onRevertTurn: (turnId: string) => void;
+  turnReviews: Record<string, 'kept' | 'undone'>;
+  undoneFiles: Record<string, string[]>;
+  onKeepTurn: (turnId: string) => void;
+  onUndoTurnAll: (turnId: string) => Promise<void>;
+  onUndoFile: (turnId: string, path: string) => Promise<void>;
   mainChatTabs: MainChatTab[];
   activeMainChatTabKey: string;
   mainChatTabsDisabled: boolean;
