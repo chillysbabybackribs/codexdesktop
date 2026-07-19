@@ -94,11 +94,13 @@ async function handle(message: JsonRpcRequest): Promise<void> {
   }
   if (message.method === 'tools/list') {
     reply(id, {
-      tools: browserToolSpecs.map((spec) => ({
-        name: spec.name,
-        description: spec.description,
-        inputSchema: spec.inputSchema
-      }))
+      tools: browserToolSpecs
+        .filter((spec): spec is Extract<typeof spec, { type: 'function' }> => spec.type === 'function')
+        .map((spec) => ({
+          name: spec.name,
+          description: spec.description,
+          inputSchema: spec.inputSchema
+        }))
     })
     return
   }
