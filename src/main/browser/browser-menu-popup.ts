@@ -38,6 +38,7 @@ export class BrowserMenuPopup {
   private pageReady = false
   private visible = false
   private items: BrowserMenuItem[] = []
+  private anchor: BrowserMenuAnchor | null = null
   private readonly window: BrowserWindow
   private readonly onCommand: (command: BrowserMenuCommand) => void
   private readonly onClosed: () => void
@@ -47,6 +48,10 @@ export class BrowserMenuPopup {
     this.onCommand = onCommand
     this.onClosed = onClosed
     ipcMain.on(ipcChannels.browserMenuCommand, this.handleCommand)
+
+    // Preload this hidden native surface. Loading it from the first click can
+    // briefly take focus from the chrome and trigger its blur-to-close path.
+    this.ensureView()
   }
 
   show(anchor: BrowserMenuAnchor, items: BrowserMenuItem[]): void {
@@ -57,17 +62,15 @@ export class BrowserMenuPopup {
       return
     }
 
-    const view = this.ensureView()
-    // Re-adding an existing child moves it to the top of the stack, so the
-    // menu stays above whichever tab view is active.
-    this.window.contentView.addChildView(view)
-    view.setBounds(this.computeBounds(anchor, items))
-    view.setVisible(true)
-    // Raising a WebContentsView can transfer native keyboard focus to it.
-    // Give focus back so Escape and outside clicks keep working in the chrome.
-    this.window.webContents.focus()
+    this.anchor = anchor
     this.visible = true
-    this.sendRender()
+    const view = this.ensureView()
+
+    // Never reveal the view while its document is still loading. The pending
+    // first open is presented by did-finish-load instead of flashing closed.
+    if (this.pageReady) {
+      this.present(view)
+    }
   }
 
   update(items: BrowserMenuItem[]): void {
@@ -82,6 +85,7 @@ export class BrowserMenuPopup {
   hide(): void {
     const wasVisible = this.visible
     this.visible = false
+    this.anchor = null
 
     if (this.view) {
       this.view.setVisible(false)
@@ -160,7 +164,11 @@ export class BrowserMenuPopup {
 
     view.webContents.on('did-finish-load', () => {
       this.pageReady = true
-      this.sendRender()
+      if (this.visible) {
+        this.present(view)
+      } else {
+        this.sendRender()
+      }
     })
 
     if (process.env.ELECTRON_RENDERER_URL) {
@@ -171,6 +179,22 @@ export class BrowserMenuPopup {
 
     this.view = view
     return view
+  }
+
+  private present(view: WebContentsView): void {
+    if (!this.anchor || !this.visible) {
+      return
+    }
+
+    // Re-adding an existing child moves it to the top of the stack, so the
+    // menu stays above whichever tab view is active.
+    this.window.contentView.addChildView(view)
+    view.setBounds(this.computeBounds(this.anchor, this.items))
+    view.setVisible(true)
+    this.sendRender()
+    // Raising a WebContentsView can transfer native keyboard focus to it.
+    // Restore chrome focus so Escape and outside-click dismissal keep working.
+    this.window.webContents.focus()
   }
 
   private computeBounds(anchor: BrowserMenuAnchor, items: BrowserMenuItem[]): Electron.Rectangle {

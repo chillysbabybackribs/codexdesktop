@@ -208,8 +208,7 @@ function BrowserToolbar({
   const omniboxRef = useRef<HTMLInputElement>(null)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const typedTextRef = useRef('')
-  const justFocusedRef = useRef(false)
-  const focusFromMouseRef = useRef(false)
+  const focusingOmniboxFromPointerRef = useRef(false)
   const querySeqRef = useRef(0)
   const pendingInlineRef = useRef<{ start: number; end: number } | null>(null)
 
@@ -288,7 +287,11 @@ function BrowserToolbar({
       if (blurTimer !== null) window.clearTimeout(blurTimer)
     }
   }, [menuOpen])
-  useEffect(() => window.api.browser.onFocusOmnibox(() => omniboxRef.current?.focus()), [])
+  useEffect(() => window.api.browser.onFocusOmnibox(() => {
+    const input = omniboxRef.current
+    input?.focus()
+    input?.select()
+  }), [])
   // Guest pages forward F11 through the main process (focus lives in the
   // native view); this subscription handles it alongside chrome-focused F11.
   useEffect(
@@ -298,7 +301,11 @@ function BrowserToolbar({
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') { event.preventDefault(); setFindOpen(true) }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') { event.preventDefault(); omniboxRef.current?.focus() }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
+        event.preventDefault()
+        omniboxRef.current?.focus()
+        omniboxRef.current?.select()
+      }
       if (event.key === 'F11') { event.preventDefault(); onToggleFullscreen() }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -389,14 +396,29 @@ function BrowserToolbar({
           spellCheck={false}
           autoComplete="off"
           aria-label="Address"
-          onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; if (!focusFromMouseRef.current) event.target.select(); runQuery('') }}
-          onMouseDown={(event) => { justFocusedRef.current = document.activeElement !== event.currentTarget; focusFromMouseRef.current = true }}
-          onMouseUp={(event) => {
-            focusFromMouseRef.current = false
-            // First click focuses the field: select the whole URL so a keystroke
-            // replaces it. Any later click (already focused) leaves the caret the
-            // browser just placed, so you can edit character-by-character.
-            if (justFocusedRef.current) { justFocusedRef.current = false; event.currentTarget.select() }
+          onFocus={(event) => {
+            const input = event.currentTarget
+            setIsEditing(true)
+            typedTextRef.current = input.value
+            if (!focusingOmniboxFromPointerRef.current) input.select()
+            // Let the focus gesture finish before a native suggestion surface
+            // is raised above the page.
+            window.requestAnimationFrame(() => {
+              if (document.activeElement === input) runQuery('')
+            })
+          }}
+          onMouseDown={(event) => {
+            // Claim the first pointer focus synchronously. Waiting for mouseup
+            // is fragile because a native WebContentsView can consume it.
+            if (document.activeElement === event.currentTarget) return
+            event.preventDefault()
+            focusingOmniboxFromPointerRef.current = true
+            try {
+              event.currentTarget.focus()
+              event.currentTarget.select()
+            } finally {
+              focusingOmniboxFromPointerRef.current = false
+            }
           }}
           onBlur={() => { setIsEditing(false); closePopup() }}
           onChange={(event) => {
