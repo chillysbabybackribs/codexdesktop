@@ -3,6 +3,7 @@ import test from 'node:test'
 import type { Thread } from '../../shared/session-protocol/index.ts'
 import {
   groupThreadsForMenu,
+  headerMenuCommands,
   relativeThreadTime,
   stripSkillMarkerFromTitle,
   threadTitle
@@ -165,4 +166,38 @@ test('groupThreadsForMenu returns nothing when the query matches no thread', () 
   const { groups, flatIds } = groupThreadsForMenu([thread], 'zebra')
   assert.deepEqual(groups, [])
   assert.deepEqual(flatIds, [])
+})
+
+test('header menu consolidates layout, split, history, and settings commands', () => {
+  const commands = headerMenuCommands({
+    isBrowserMiddle: false,
+    canSplitActivePane: true,
+    disabled: false,
+    showGlobalActions: true
+  })
+
+  assert.deepEqual(
+    commands.map((command) => command.id),
+    ['browser-layout', 'split-right', 'split-down', 'history', 'settings']
+  )
+  assert.equal(commands[0]?.label, 'Browser in middle')
+  assert.equal(commands[1]?.hint, 'Ctrl+\\')
+})
+
+test('secondary browser-middle header keeps only pane layout commands', () => {
+  const commands = headerMenuCommands({
+    isBrowserMiddle: true,
+    canSplitActivePane: false,
+    disabled: false,
+    showGlobalActions: false
+  })
+
+  assert.deepEqual(commands.map((command) => command.id), [
+    'browser-layout',
+    'split-right',
+    'split-down'
+  ])
+  assert.equal(commands[0]?.label, 'Browser on right')
+  assert.equal(commands[0]?.active, true)
+  assert.equal(commands[1]?.disabled, true)
 })

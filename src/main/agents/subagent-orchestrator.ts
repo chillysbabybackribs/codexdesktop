@@ -101,7 +101,17 @@ export class SubagentOrchestrator {
     const threadId = notificationThreadId(notification)
     if (!threadId) return event
     const child = this.byThreadId.get(threadId)
-    if (!child) return event
+    if (!child) {
+      if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1' && this.pendingByAgentKey.size > 0) {
+        console.error(
+          `[subagent] UNTAGGED ${(notification as { method?: string })?.method} thread=${threadId} (pending=${this.pendingByAgentKey.size}, tracked=${this.byThreadId.size})`,
+        )
+      }
+      return event
+    }
+    if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1') {
+      console.error(`[subagent] tag ${(notification as { method?: string })?.method} thread=${threadId} key=${child.agentKey}`)
+    }
 
     this.maybeSettle(child, notification)
 

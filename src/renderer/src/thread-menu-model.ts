@@ -2,6 +2,73 @@ import type { Thread } from '../../shared/session-protocol';
 
 export type ThreadGroup = { label: string; threads: Thread[] };
 
+export type HeaderMenuCommandId =
+  | 'browser-layout'
+  | 'split-right'
+  | 'split-down'
+  | 'history'
+  | 'settings';
+
+export type HeaderMenuCommand = {
+  id: HeaderMenuCommandId;
+  label: string;
+  hint: string | null;
+  disabled: boolean;
+  active: boolean;
+};
+
+export function headerMenuCommands(options: {
+  isBrowserMiddle: boolean;
+  canSplitActivePane: boolean;
+  disabled: boolean;
+  showGlobalActions: boolean;
+}): HeaderMenuCommand[] {
+  const commands: HeaderMenuCommand[] = [
+    {
+      id: 'browser-layout',
+      label: options.isBrowserMiddle ? 'Browser on right' : 'Browser in middle',
+      hint: options.isBrowserMiddle ? 'Return to two columns' : 'Place browser between chats',
+      disabled: options.disabled,
+      active: options.isBrowserMiddle,
+    },
+    {
+      id: 'split-right',
+      label: 'Split chat right',
+      hint: 'Ctrl+\\',
+      disabled: options.disabled || !options.canSplitActivePane,
+      active: false,
+    },
+    {
+      id: 'split-down',
+      label: 'Split chat down',
+      hint: 'Ctrl+Shift+\\',
+      disabled: options.disabled || !options.canSplitActivePane,
+      active: false,
+    },
+  ];
+
+  if (options.showGlobalActions) {
+    commands.push(
+      {
+        id: 'history',
+        label: 'Chat history',
+        hint: null,
+        disabled: false,
+        active: false,
+      },
+      {
+        id: 'settings',
+        label: 'Settings',
+        hint: null,
+        disabled: false,
+        active: false,
+      },
+    );
+  }
+
+  return commands;
+}
+
 export function threadTitle(thread: Thread): string {
   return stripSkillMarkerFromTitle(thread.name || thread.preview || 'New Chat');
 }
