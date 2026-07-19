@@ -3,8 +3,6 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import {
-  appendAgentSessionMessage,
-  applyAgentDeltas,
   createAgentSession,
   completeAgentMessage,
   findAgentSessionByThread,
@@ -13,9 +11,14 @@ import {
   type AgentLiteMessage,
   type AgentSession
 } from './agent-session-model'
+import { buildOptimisticUserMessage } from './optimistic-user-message'
+import { upsertMany } from './transcript-model'
+import { emptySessionState, reduceSessionNotification, type SessionStore } from './session-store'
+import { liteMessagesFromItems } from './agent-dock-restore'
 
 export function useAgentSessions(
   storageKey: string,
+  sessionStore: SessionStore,
   recovery: {
     schedule: (key: string, turnId: string, error: TurnError | null) => void
     cancel: (key: string) => void
@@ -46,7 +49,7 @@ export function useAgentSessions(
   const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
   const [selectedAgentKey, setSelectedAgentKey] = useState<string | null>(null)
   const agentSessionsRef = useRef<AgentSession[]>([])
-  const agentDeltaBufferRef = useRef<Map<string, Map<string, string>>>(new Map())
+  const agentDeltaBufferRef = useRef<Map<string, ServerNotification[]>>(new Map())
   const agentDeltaTimerRef = useRef<number | null>(null)
   const agentDockPersistTimerRef = useRef<number | null>(null)
   const lastAgentDockSnapshotRef = useRef<string | null>(null)
@@ -60,19 +63,77 @@ export function useAgentSessions(
   }
 
   function patchAgentSession(key: string, update: (session: AgentSession) => AgentSession): void {
-    updateAgentSessions((sessions) => updateAgentSession(sessions, key, update))
+    let previous: AgentSession | null = null
+    let next: AgentSession | null = null
+    updateAgentSessions((sessions) => updateAgentSession(sessions, key, (session) => {
+      previous = session
+      next = update(session)
+      return next
+    }))
+    if (!previous || !next) return
+    sessionStore.update(key, (state) => {
+      const messagesChanged = previous!.messages !== next!.messages
+      return {
+        ...state,
+        threadId: next!.threadId,
+        title: next!.title,
+        turnId: next!.turnId,
+        reasoningEffort: next!.reasoningEffort,
+        contextUsage: next!.contextUsage,
+        isCompacting: next!.isCompacting,
+        ...(messagesChanged ? {
+          items: next!.messages.map((message) => message.role === 'user'
+            ? buildOptimisticUserMessage(message.id, message.text, message.attachments ?? [])
+            : { type: 'agentMessage' as const, id: message.id, text: message.text, phase: null, memoryCitation: null })
+        } : {})
+      }
+    })
   }
 
-  function appendAgentMessage(key: string, message: AgentLiteMessage): void {
-    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message))
+  function syncAgentSession(key: string, status?: AgentSession['status']): void {
+    const state = sessionStore.get(key)
+    updateAgentSessions((sessions) => updateAgentSession(sessions, key, (session) => ({
+      ...session,
+      threadId: state.threadId ?? session.threadId,
+      turnId: state.turnId,
+      status: status ?? (state.turnId ? 'working' : session.status),
+      messages: liteMessagesFromItems(state.items),
+      reasoningEffort: state.reasoningEffort ?? session.reasoningEffort,
+      contextUsage: state.contextUsage,
+      isCompacting: state.isCompacting
+    })))
+  }
+
+  function appendAgentMessage(key: string, message: AgentLiteMessage, dedupe = false): void {
+    sessionStore.update(key, (state) => {
+      if (dedupe && state.items.some((item) => item.id === message.id)) return state
+      const item = message.role === 'user'
+        ? buildOptimisticUserMessage(message.id, message.text, message.attachments ?? [])
+        : { type: 'agentMessage' as const, id: message.id, text: message.text, phase: null, memoryCitation: null }
+      return { ...state, items: upsertMany(state.items, [item]) }
+    })
+    syncAgentSession(key)
   }
 
   function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
-    updateAgentSessions((sessions) => appendAgentSessionMessage(sessions, key, message, true))
+    appendAgentMessage(key, message, true)
   }
 
   function backgroundSessionForThread(threadId: string): AgentSession | null {
     return findAgentSessionByThread(agentSessionsRef.current, threadId)
+  }
+
+  function applyAgentNotification(key: string, notification: ServerNotification): void {
+    const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
+    if (!session) return
+    sessionStore.update(key, (state) => reduceSessionNotification(state, notification, {
+      atMs: Date.now(),
+      fallbackModel: session.model,
+      workspace: null
+    }))
+    syncAgentSession(key, notification.method === 'turn/started'
+      ? 'working'
+      : notification.method === 'turn/completed' ? 'done' : undefined)
   }
 
   function flushAgentDeltas(): void {
@@ -83,16 +144,18 @@ export function useAgentSessions(
     const buffer = agentDeltaBufferRef.current
     if (!buffer.size) return
     agentDeltaBufferRef.current = new Map()
-    updateAgentSessions((sessions) => applyAgentDeltas(sessions, buffer))
+    for (const [key, notifications] of buffer) {
+      for (const notification of notifications) applyAgentNotification(key, notification)
+    }
   }
 
-  function enqueueAgentDelta(key: string, itemId: string, delta: string): void {
-    let perItem = agentDeltaBufferRef.current.get(key)
-    if (!perItem) {
-      perItem = new Map()
-      agentDeltaBufferRef.current.set(key, perItem)
+  function enqueueAgentDelta(key: string, notification: ServerNotification): void {
+    let pending = agentDeltaBufferRef.current.get(key)
+    if (!pending) {
+      pending = []
+      agentDeltaBufferRef.current.set(key, pending)
     }
-    perItem.set(itemId, `${perItem.get(itemId) ?? ''}${delta}`)
+    pending.push(notification)
     if (agentDeltaTimerRef.current === null) {
       agentDeltaTimerRef.current = window.requestAnimationFrame(flushAgentDeltas)
     }
@@ -103,22 +166,15 @@ export function useAgentSessions(
       flushAgentDeltas()
     }
 
+    if (notification.method === 'item/agentMessage/delta') {
+      enqueueAgentDelta(session.key, notification)
+      return
+    }
+
+    applyAgentNotification(session.key, notification)
     switch (notification.method) {
-      case 'turn/started':
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          status: 'working',
-          turnId: notification.params.turn.id
-        }))
-        return
       case 'turn/completed': {
         const turn = notification.params.turn
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          status: 'done',
-          turnId: null,
-          isCompacting: false
-        }))
         void window.api.notifications.backgroundTurn({
           threadId: notification.params.threadId,
           title: session.title || 'Background agent',
@@ -136,29 +192,6 @@ export function useAgentSessions(
         else recovery.cancel(session.key)
         return
       }
-      case 'item/agentMessage/delta':
-        enqueueAgentDelta(session.key, notification.params.itemId, notification.params.delta)
-        return
-      case 'item/completed': {
-        const item = notification.params.item
-        if (item.type === 'contextCompaction') {
-          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: false }))
-        } else if (item.type === 'agentMessage') {
-          updateAgentSessions((sessions) => completeAgentMessage(sessions, session.key, item.id, item.text))
-        }
-        return
-      }
-      case 'item/started':
-        if (notification.params.item.type === 'contextCompaction') {
-          patchAgentSession(session.key, (current) => ({ ...current, isCompacting: true }))
-        }
-        return
-      case 'thread/tokenUsage/updated':
-        patchAgentSession(session.key, (current) => ({
-          ...current,
-          contextUsage: notification.params.tokenUsage
-        }))
-        return
       case 'error': {
         const { turnId, error, willRetry } = notification.params
         if (willRetry) return
@@ -167,9 +200,6 @@ export function useAgentSessions(
           role: 'assistant',
           text: `⚠ ${error.message}`
         })
-        patchAgentSession(session.key, (current) =>
-          current.turnId === turnId ? { ...current, status: 'done', turnId: null } : current
-        )
         recovery.schedule(session.key, turnId, error)
         return
       }
@@ -180,10 +210,12 @@ export function useAgentSessions(
 
   function handleNewAgent(): void {
     const key = crypto.randomUUID()
+    const title = `Agent ${agentCounterRef.current++}`
     updateAgentSessions((sessions) => [
       ...sessions,
-      createAgentSession(key, `Agent ${agentCounterRef.current++}`)
+      createAgentSession(key, title)
     ])
+    sessionStore.set(key, emptySessionState({ title }))
     setOpenAgentKeys((current) => [...current, key])
     setSelectedAgentKey(key)
   }
