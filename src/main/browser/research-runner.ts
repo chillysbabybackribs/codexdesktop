@@ -2,7 +2,7 @@ import { app, session, WebContentsView } from 'electron'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
-import { browserPartition, ensureBrowserIdentity } from './browser-session.js'
+import { browserPartition } from './browser-session.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
 import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
@@ -740,7 +740,6 @@ export class ResearchRunner {
         partition: browserPartition
       }
     })
-    void ensureBrowserIdentity(view.webContents)
     this.searchViews.add(view)
     return view
   }
@@ -785,7 +784,6 @@ async function loadSearchPage(
   url: string,
   signal: AbortSignal
 ): Promise<PageNavigationResult> {
-  void ensureBrowserIdentity(webContents)
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
     signal,
@@ -800,7 +798,6 @@ async function loadPage(
   url: string,
   signal: AbortSignal
 ): Promise<PageNavigationResult> {
-  void ensureBrowserIdentity(webContents)
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
     signal,

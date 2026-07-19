@@ -1,6 +1,6 @@
 import type { BrowserWindow, WebContents } from 'electron'
 import { join } from 'node:path'
-import { browserPartition, ensureBrowserIdentity } from './browser-session.js'
+import { browserPartition } from './browser-session.js'
 import { resolveWindowOpenAction } from './window-open-policy.js'
 
 // Google Sign-In popups call window.opener.postMessage(). Converting popups
@@ -11,8 +11,6 @@ export function attachPopupWindowHandling(
   parent: BrowserWindow,
   onPopupCreated?: (webContents: WebContents) => void
 ): void {
-  void ensureBrowserIdentity(webContents)
-
   webContents.setWindowOpenHandler((details) => {
     const action = resolveWindowOpenAction(details)
 

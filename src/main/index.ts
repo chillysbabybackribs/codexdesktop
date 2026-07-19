@@ -40,7 +40,7 @@ import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
-import { configureBrowserSession } from './browser/browser-session.js'
+import { configureBrowserSession, configureBrowserUserAgentFallback } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { TorVpnManager } from './browser/vpn-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
@@ -52,6 +52,11 @@ import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
 import { MentionIndexService } from './mention-index.js'
+
+// Establish the guest browser identity before Chromium creates a session. A
+// later Session/WebContents override suppresses native UA Client Hints and the
+// CDP workaround for that would expose DevTools during manual browsing.
+configureBrowserUserAgentFallback()
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
