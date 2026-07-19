@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   appendAgentSessionMessage,
+  agentSessionsForMainChatTab,
   applyAgentDeltas,
   collapseAdjacentAssistantDuplicates,
   completeAgentMessage,
@@ -20,6 +21,21 @@ test('agent session updates preserve unrelated sessions', () => {
 
   assert.equal(updated[0]?.status, 'working')
   assert.equal(updated[1], second)
+})
+
+test('agent windows belong to one main chat tab', () => {
+  const first = createAgentSession('one', 'Agent 2', 'tab-a')
+  const second = createAgentSession('two', 'Agent 3', 'tab-b')
+  const legacy = createAgentSession('legacy', 'Agent 4')
+
+  assert.deepEqual(
+    agentSessionsForMainChatTab([first, second, legacy], 'tab-a').map((session) => session.key),
+    ['one'],
+  )
+  assert.deepEqual(
+    agentSessionsForMainChatTab([first, second, legacy], 'tab-b').map((session) => session.key),
+    ['two'],
+  )
 })
 
 test('resetting an agent starts a fresh chat in the same configured slot', () => {
