@@ -14,6 +14,8 @@ export type StaticResearchPage = {
   status: number
   truncated: boolean
   html: string
+  mediaType: string
+  extractionPath: 'static-html' | 'network-response'
 }
 
 export type StaticResearchResult = {
@@ -65,7 +67,9 @@ export async function fetchStaticResearchPage(
         credentials: 'include',
         signal: options.signal,
         bypassCustomProtocolHandlers: true,
-        headers: { accept: 'text/html,application/xhtml+xml;q=0.9' }
+        headers: {
+          accept: 'text/html,application/xhtml+xml;q=0.9,application/json;q=0.9,application/graphql-response+json;q=0.9,application/x-ndjson;q=0.8,application/ndjson;q=0.8'
+        }
       })
     } catch (error) {
       if (options.signal.aborted) throw error
@@ -89,7 +93,8 @@ export async function fetchStaticResearchPage(
     }
 
     const contentType = response.headers.get('content-type')?.toLowerCase() ?? ''
-    if (!/^text\/html\b|^application\/xhtml\+xml\b/.test(contentType)) {
+    const responseKind = classifyResponseKind(contentType)
+    if (responseKind === 'unsupported') {
       return result('fallback', startedAt, bytes, redirects, `unsupported static content type: ${contentType || 'unknown'}`, currentUrl)
     }
     const charset = /charset=([^;\s]+)/i.exec(contentType)?.[1]?.replace(/["']/g, '').toLowerCase()
@@ -109,14 +114,18 @@ export async function fetchStaticResearchPage(
     if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body', currentUrl)
 
     try {
-      const extraction = await extractStaticPage(body.text, currentUrl)
-      if (!extraction.ok) {
-        return result('fallback', startedAt, bytes, redirects, extraction.reason, currentUrl)
-      }
-      const page: StaticResearchPage = {
-        ...extraction.page,
-        status: response.status,
-        html: body.text
+      const page = responseKind === 'html'
+        ? await extractHtmlResearchPage(body.text, currentUrl, response.status, contentType)
+        : extractStructuredResearchPage(body.text, currentUrl, response.status, contentType, responseKind)
+      if (!page) {
+        return result(
+          'fallback',
+          startedAt,
+          bytes,
+          redirects,
+          responseKind === 'html' ? 'static extraction confidence is too low' : 'structured response confidence is too low',
+          currentUrl
+        )
       }
       return {
         kind: 'accepted',
@@ -131,6 +140,83 @@ export async function fetchStaticResearchPage(
       return result('fallback', startedAt, bytes, redirects, `static extraction failed: ${formatError(error)}`, currentUrl)
     }
   }
+}
+
+async function extractHtmlResearchPage(
+  html: string,
+  url: string,
+  status: number,
+  mediaType: string
+): Promise<StaticResearchPage | null> {
+  const extraction = await extractStaticPage(html, url)
+  if (!extraction.ok) return null
+  return {
+    ...extraction.page,
+    status,
+    html,
+    mediaType,
+    extractionPath: 'static-html'
+  }
+}
+
+function extractStructuredResearchPage(
+  body: string,
+  url: string,
+  status: number,
+  mediaType: string,
+  kind: 'json' | 'ndjson'
+): StaticResearchPage | null {
+  let content: string
+  try {
+    if (kind === 'json') {
+      content = JSON.stringify(JSON.parse(body), null, 2)
+    } else {
+      const records = body.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)
+      if (records.length === 0) return null
+      content = records.map((record) => JSON.stringify(JSON.parse(record), null, 2)).join('\n')
+    }
+  } catch {
+    return null
+  }
+  const normalized = content.trim()
+  const wordCount = normalized ? normalized.split(/\s+/).length : 0
+  if (normalized.length < 240 || wordCount < 40) return null
+  const title = structuredResponseTitle(url, kind)
+  return {
+    title,
+    url,
+    content: normalized,
+    wordCount,
+    status,
+    truncated: false,
+    html: `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title></head><body><pre>${escapeHtml(body)}</pre></body></html>`,
+    mediaType,
+    extractionPath: 'network-response'
+  }
+}
+
+function classifyResponseKind(contentType: string): 'html' | 'json' | 'ndjson' | 'unsupported' {
+  const mediaType = contentType.split(';', 1)[0]?.trim() ?? ''
+  if (mediaType === 'text/html' || mediaType === 'application/xhtml+xml') return 'html'
+  if (mediaType === 'application/x-ndjson' || mediaType === 'application/ndjson') return 'ndjson'
+  if (mediaType === 'application/json' || mediaType.endsWith('+json')) return 'json'
+  return 'unsupported'
+}
+
+function structuredResponseTitle(url: string, kind: 'json' | 'ndjson'): string {
+  const parsed = new URL(url)
+  const leaf = parsed.pathname.split('/').filter(Boolean).at(-1)
+  return `${leaf || parsed.hostname} ${kind === 'ndjson' ? 'NDJSON' : 'JSON'} response`
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character] ?? character)
 }
 
 async function readBoundedBody(

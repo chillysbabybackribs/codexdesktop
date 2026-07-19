@@ -83,6 +83,8 @@ export type ResearchPage = {
   sourceTier?: string
   score?: number
   artifactTruncated: boolean
+  mediaType?: string
+  extractionPath?: 'static-html' | 'network-response' | 'browser-dom'
   verified: true
 }
 
@@ -155,6 +157,8 @@ type ExtractedResearchPage = {
   truncated: boolean
   html: string
   observedAt: string
+  mediaType?: string
+  extractionPath?: 'static-html' | 'network-response' | 'browser-dom'
 }
 
 type ResearchCandidate = RankedSerpCandidate & { sourceKind: 'direct' | 'search' }
@@ -406,6 +410,8 @@ export class ResearchRunner {
           sourceTier: candidate.sourceTier,
           score: candidate.score,
           artifactTruncated: extracted.truncated,
+          ...(extracted.mediaType ? { mediaType: extracted.mediaType } : {}),
+          extractionPath: extracted.extractionPath ?? 'browser-dom',
           verified: true
         },
         content: extracted.content
