@@ -18,7 +18,7 @@
     "pretypecheck": "npm run check:source-shadows",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "pretest": "npm run check:source-shadows",
-    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/renderer/src/*.test.ts",
+    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/main/providers/*.test.ts src/renderer/src/*.test.ts",
     "benchmark:tokens": "node scripts/token-baseline.mjs",
     "benchmark:browser": "node --no-warnings --experimental-strip-types --loader ./scripts/test-loader.mjs scripts/browser-eval.mjs",
     "clean:source-shadows": "node scripts/source-shadow-guard.mjs --fix",
