@@ -52,10 +52,34 @@ restriction changes.
   localStorage and before-quit flushes are lost. Close via the app
   (`window.api.window.close()`) when testing persistence.
 
+## Slice 3 — swap machinery deleted (landed)
+
+- `captureActiveMainChatSnapshot` (13-field copy) → `flushActiveMainChatSession`
+  (just flushes pending rAF item mutations; every other write is already live
+  in the store). `applyMainChatSnapshot` (27 ref/state writes) →
+  `focusMainChatTab` (composer model/effort projection, `watchThreadIdRef`,
+  title continuity for uncached tabs). Tab switching is now a pure active-key
+  change; the store IS the state.
+- Uncached-tab title seeding writes title only — never threadId — so a
+  title-only session can never suppress hydration.
+- Verified: 331/331 tests, build clean, live two-tab ALPHA/BRAVO smoke on the
+  rewritten switch flow (isolation both directions, switch-back restore).
+
+## Slice 4 — replay contract tests (landed)
+
+`session-replay.test.ts`: full notification sequences (turn lifecycle with
+deltas, work-item grouping into activity/tail rows via `buildRows`, compaction +
+goal + terminal error) through `reduceSessionNotification`, asserting the
+render-model shape the UI draws. This is the regression net for the dock
+migration and future provider adapters.
+
 ## Remaining in Phase 2
 
 - Dock agent sessions onto the store (lite path in `useAgentSessions.ts` /
-  `agent-session-model.ts`).
-- Delete `captureActiveMainChatSnapshot` / `applyMainChatSnapshot` (now mostly
-  redundant writes) and collapse tab switching to a pure key change.
-- Golden-trace replay tests over the unified reducer path.
+  `agent-session-model.ts`): route dock threads through
+  `reduceSessionNotification` under the dock session key, keep dock-only
+  metadata (watchesMain, model override, open/selected) separate, synthesize
+  the `AgentSession[]` prop AgentDock already consumes. Side effects (OS
+  notification, auto-recovery) stay caller-side. Consider batching dock store
+  notifies per rAF (dock deltas currently coalesce per frame; keep that
+  property).
