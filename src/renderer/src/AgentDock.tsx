@@ -1,15 +1,18 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { FormEvent } from 'react'
 import { ModelPill } from './ModelPill'
 import type { Model } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
-import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
-import type { AgentSession } from './agent-session-model'
+import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowserFiles } from './Attachments'
+import { stripMainChatContext, type AgentSession } from './agent-session-model'
 import type { AuditRequestSummary, LiveTurnGlance } from './audit-trigger'
-import { auditBriefMarkdown, auditSummaryLabel, parseAuditVerdict, stripVerdictLine } from './audit-trigger'
+import { auditBriefMarkdown, auditSummaryLabel, isAuditPrompt, parseAuditPrompt, parseAuditVerdict, stripVerdictLine } from './audit-trigger'
 import { MarkdownContent } from './MarkdownContent'
+import { buildRows, isWorkItem, type ActivityItem, type RenderRow } from './transcript-model'
+import { WorkGroup, type ItemMeta, type WorkItem } from './TaskActivity'
+import { emptySessionState, type SessionStore } from './session-store'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
@@ -43,6 +46,8 @@ export function AgentTabStrip({
 export function AgentColumn({
   sessions,
   selectedKey,
+  sessionStore,
+  workspace,
   models,
   mainModel,
   mainReasoningEffort,
@@ -65,6 +70,8 @@ export function AgentColumn({
 }: {
   sessions: AgentSession[]
   selectedKey: string | null
+  sessionStore: SessionStore
+  workspace: string | null
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
@@ -146,6 +153,8 @@ export function AgentColumn({
             key={session.key}
             session={session}
             isSelected={session.key === selectedKey}
+            sessionStore={sessionStore}
+            workspace={workspace}
             models={models}
             mainModel={mainModel}
             mainReasoningEffort={mainReasoningEffort}
@@ -202,6 +211,8 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
 type AgentWindowProps = {
   session: AgentSession
   isSelected: boolean
+  sessionStore: SessionStore
+  workspace: string | null
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
