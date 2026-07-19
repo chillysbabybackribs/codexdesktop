@@ -2182,7 +2182,12 @@ export default function App(): React.JSX.Element {
       const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
       const model = resumed.model ?? tab?.model ?? null;
       const reasoningEffort = resumed.reasoningEffort ?? tab?.reasoningEffort ?? null;
-      patchMainChatTab(tabKey, (current) => ({ ...current, model, reasoningEffort }));
+      patchMainChatTab(tabKey, (current) => ({
+        ...current,
+        model,
+        reasoningEffort,
+        workspace: resumed.cwd ?? current.workspace,
+      }));
       selectedModelRef.current = model;
       selectedReasoningEffortRef.current = reasoningEffort;
       setSelectedModel(model);
@@ -2641,7 +2646,7 @@ export default function App(): React.JSX.Element {
       await window.api.session.sendMessage({
         threadId,
         text: autoRecoveryPrompt,
-        cwd: workspaceRef.current,
+        cwd: workspaceForThread(threadId),
         model,
       });
     } catch (error) {
@@ -2722,7 +2727,7 @@ export default function App(): React.JSX.Element {
     const meta = snapshot.turnMeta[turnId];
     if (!meta) return;
     const model = meta.model ?? tab.model;
-    const workspace = meta.workspace ?? workspaceRef.current;
+    const workspace = meta.workspace ?? tab.workspace;
     const trace = buildTurnTrace({
       threadId,
       threadTitle: snapshot.title || tab.title,
@@ -2782,7 +2787,7 @@ export default function App(): React.JSX.Element {
       const next = reduceSessionNotification(seeded, notification, {
         atMs: Date.now(),
         fallbackModel: tab.model,
-        workspace: workspaceRef.current,
+        workspace: tab.workspace,
       });
       // A freshly seeded session is stored only when the notification actually
       // touched it — untouched seeds would also read as "cached".
@@ -3004,7 +3009,7 @@ export default function App(): React.JSX.Element {
             requestedModel: selectedModelRef.current,
             model: selectedModelRef.current,
             reasoningEffort: activeReasoningEffortRef.current,
-            workspace: workspaceRef.current,
+            workspace: workspaceForThread(notification.params.threadId),
             goalAtStart: goalSnapshot,
             goalAtEnd: goalSnapshot,
             goalContinuation,
@@ -3050,7 +3055,7 @@ export default function App(): React.JSX.Element {
             const outside = outOfWorkspacePaths({
               commands,
               filePaths: editedPaths,
-              workspace: workspaceRef.current,
+              workspace: turnMetaRef.current[turn.id]?.workspace ?? workspaceForThread(notification.params.threadId),
             });
             if (outside.length) {
               addSystemItem(
@@ -3280,7 +3285,7 @@ export default function App(): React.JSX.Element {
         // Ref, not state: refreshThreads is invoked from the mount-only codex
         // event handler (e.g. agent turn/completed), whose closure captured the
         // launch-time `workspace`. Using the ref refetches the current workspace.
-        cwd: workspaceRef.current,
+        cwd: workspace,
         cursor,
       });
 
@@ -3421,6 +3426,7 @@ export default function App(): React.JSX.Element {
       ...tab,
       threadId: thread.id,
       title: nextTitle,
+      workspace: environment?.workspace ?? thread.cwd ?? tab.workspace,
       status: inProgressTurnId ? 'working' : 'idle',
       turnId: inProgressTurnId,
     }));
@@ -3451,7 +3457,7 @@ export default function App(): React.JSX.Element {
           origin: 'restored',
           model: tab?.model ?? selectedModelRef.current,
           reasoningEffort: tab?.reasoningEffort ?? selectedReasoningEffortRef.current,
-          workspace: workspaceRef.current,
+          workspace: tab?.workspace ?? null,
           startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
           completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
           durationMs: turn.durationMs ?? undefined,
