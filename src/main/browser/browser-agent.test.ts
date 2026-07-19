@@ -212,6 +212,29 @@ test('browser agent accepts only namespaced page condition codes', async () => {
   assert.equal(spoofed.errorCode, 'pageScriptError')
 })
 
+test('browser agent classifies syntax failures before the page envelope as page script errors', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const result = await controller.run('return {')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'pageScriptError')
+  assert.equal(result.failure?.phase, 'pageScript')
+})
+
+test('browser agent treats an explicit not_found return as successful data', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const result = await controller.run(`return { outcome: 'not_found', inspectedResults: 20 }`)
+
+  assert.equal(result.ok, true)
+  assert.deepEqual(result.result, { outcome: 'not_found', inspectedResults: 20 })
+})
+
 test('browser agent keeps Chromium context loss distinct from page errors', async () => {
   const controller = new BrowserAgentController(
     () => fakeTabs(async () => { throw new Error('Execution context was destroyed, most likely because of a navigation') })
