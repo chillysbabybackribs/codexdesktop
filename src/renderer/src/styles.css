@@ -6480,10 +6480,11 @@ button {
 
 .review-bar {
   margin: 0 0 8px;
-  border: 1px solid #33383e;
+  border: 1px solid var(--hairline-strong);
   border-radius: 10px;
-  background: #191d21;
-  box-shadow: 0 6px 22px rgb(0 0 0 / 28%);
+  background-color: var(--surface-card);
+  background-image: var(--grain);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
   overflow: hidden;
 }
 
@@ -6492,6 +6493,7 @@ button {
   align-items: center;
   gap: 10px;
   padding: 7px 10px 7px 8px;
+  background: rgb(255 255 255 / 1.5%);
 }
 
 .review-bar-summary {
@@ -6504,7 +6506,7 @@ button {
   padding: 2px 4px;
   border: 0;
   background: none;
-  color: #b3bac1;
+  color: var(--chrome-fg-strong);
   font: inherit;
   font-size: 12.5px;
   font-weight: 550;
@@ -6514,7 +6516,7 @@ button {
 
 .review-chevron {
   flex: none;
-  color: #767d85;
+  color: var(--chrome-fg);
   transition: transform 140ms ease;
 }
 
@@ -6536,46 +6538,57 @@ button {
 }
 
 .review-undo-all {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: transparent;
-  color: #9aa3ab;
+  border: 1px solid var(--hairline-strong);
+  background: rgb(255 255 255 / 2%);
+  color: var(--chrome-fg);
   border-radius: 6px;
   font-size: 11.5px;
   padding: 3px 10px;
   cursor: pointer;
   white-space: nowrap;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
 .review-undo-all:hover {
-  color: #d9dde1;
-  border-color: rgba(255, 255, 255, 0.28);
+  color: var(--chrome-fg-strong);
+  border-color: rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 5%);
 }
 
 .review-undo-all.is-confirming {
-  color: #ffb38a;
-  border-color: rgba(255, 179, 138, 0.55);
+  color: #f1a09a;
+  border-color: rgb(229 83 75 / 48%);
+  background: rgb(229 83 75 / 7%);
 }
 
 .review-keep-all {
-  border: 1px solid transparent;
-  background: #2f6feb;
-  color: #fff;
+  border: 1px solid #e2e2e3;
+  background: #e2e2e3;
+  color: #151516;
   border-radius: 6px;
   font-size: 11.5px;
   font-weight: 600;
   padding: 3px 12px;
   cursor: pointer;
   white-space: nowrap;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
 }
 
 .review-keep-all:hover {
-  background: #3b7bf5;
+  border-color: #f2f2f3;
+  background: #f2f2f3;
 }
 
 .review-files {
   max-height: 180px;
   overflow-y: auto;
-  border-top: 1px solid #262b30;
+  border-top: 1px solid var(--hairline);
+  background: rgb(0 0 0 / 14%);
   padding: 4px 0;
   scrollbar-width: thin;
 }
@@ -6586,6 +6599,11 @@ button {
   gap: 9px;
   padding: 3px 12px;
   font-size: 12px;
+  transition: background-color 120ms ease;
+}
+
+.review-file:hover {
+  background: rgb(255 255 255 / 2.5%);
 }
 
 .review-file.is-undone {
@@ -6602,7 +6620,7 @@ button {
   padding: 0;
   border: 0;
   background: none;
-  color: #cbd4de;
+  color: var(--chrome-fg-strong);
   font: inherit;
   font-size: 12px;
   cursor: pointer;
@@ -6620,7 +6638,7 @@ button {
 }
 
 .review-file-dir {
-  color: #6d7580;
+  color: #747a80;
   font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
@@ -6637,18 +6655,32 @@ button {
 
 .review-file-undo {
   flex: none;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: transparent;
-  color: #9aa3ab;
+  border: 1px solid var(--hairline-strong);
+  background: rgb(255 255 255 / 2%);
+  color: var(--chrome-fg);
   border-radius: 5px;
   font-size: 10.5px;
   padding: 1px 8px;
   cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
 .review-file-undo:hover {
-  color: #ffb38a;
-  border-color: rgba(255, 179, 138, 0.55);
+  color: var(--chrome-fg-strong);
+  border-color: rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 5%);
+}
+
+.review-bar-summary:focus-visible,
+.review-undo-all:focus-visible,
+.review-keep-all:focus-visible,
+.review-file-name:focus-visible,
+.review-file-undo:focus-visible {
+  outline: 2px solid var(--focus-ink);
+  outline-offset: 2px;
 }
 
 /* Per-file Undo on diff cards + undone/flash treatments */
