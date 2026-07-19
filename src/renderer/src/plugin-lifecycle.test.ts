@@ -66,7 +66,7 @@ test('marketplace-backed local plugin lifecycle keeps name and installed id', ()
   assert.equal(pluginUninstallId(local), 'lifecycle-smoke@personal')
 })
 
-test('plugin catalogs flatten by id and keep the latest marketplace metadata', () => {
+test('plugin catalogs flatten by stable name and keep the latest marketplace metadata', () => {
   const original = plugin({ installed: false })
   const updated = plugin({ installed: true })
   const local = plugin({
@@ -82,6 +82,26 @@ test('plugin catalogs flatten by id and keep the latest marketplace metadata', (
       marketplace({ name: 'secondary', plugins: [updated] })
     ]),
     [updated, local]
+  )
+})
+
+test('plugin catalogs prefer an installed local counterpart over its remote directory entry', () => {
+  const remote = plugin({ installed: false })
+  const local = plugin({
+    id: 'figma@openai-curated',
+    remotePluginId: null,
+    name: remote.name,
+    source: { type: 'local', path: '/tmp/figma' },
+    installed: true,
+    enabled: true
+  })
+
+  assert.deepEqual(
+    flattenPlugins([
+      marketplace({ plugins: [remote] }),
+      marketplace({ name: 'openai-curated', path: '/tmp/marketplace.json', plugins: [local] })
+    ]),
+    [local]
   )
 })
 

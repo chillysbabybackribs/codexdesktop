@@ -56,6 +56,7 @@ import {
 } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
 import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-history.js'
+import { localCuratedFallbackParams, mergeInstalledPlugins } from './plugin-install-fallback.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
@@ -148,9 +149,18 @@ export class CodexClient extends EventEmitter implements SessionProvider {
 
   async listPlugins(cwd?: string | null): Promise<PluginListResponse> {
     await this.ensureStarted()
-    return this.request<PluginListResponse>('plugin/list', {
+    const available = await this.request<PluginListResponse>('plugin/list', {
       ...(cwd ? { cwds: [cwd] } : {})
     })
+    try {
+      const installed = await this.request<PluginInstalledResponse>('plugin/installed', {
+        ...(cwd ? { cwds: [cwd] } : {})
+      })
+      return mergeInstalledPlugins(available, installed)
+    } catch (error) {
+      console.warn('Could not merge installed plugins into the directory response', error)
+      return available
+    }
   }
 
   async readPlugin(params: PluginInstallParams): Promise<PluginReadResponse> {
@@ -196,7 +206,17 @@ export class CodexClient extends EventEmitter implements SessionProvider {
 
   async installPlugin(params: PluginInstallParams): Promise<PluginInstallResponse> {
     await this.ensureStarted()
-    const result = await this.request<PluginInstallResponse>('plugin/install', params)
+    let result: PluginInstallResponse
+    try {
+      result = await this.request<PluginInstallResponse>('plugin/install', params)
+    } catch (error) {
+      const fallbackParams = await localCuratedFallbackParams(params, error)
+      if (!fallbackParams) throw error
+
+      const remote = await this.request<PluginReadResponse>('plugin/read', params)
+      if (remote.plugin.summary.name !== fallbackParams.pluginName) throw error
+      result = await this.request<PluginInstallResponse>('plugin/install', fallbackParams)
+    }
     await this.localSkills.refresh(<T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams), true)
     return result
   }
