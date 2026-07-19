@@ -5053,6 +5053,45 @@ function singleLineClip(value: string, maxChars: number): string {
   return line.length > maxChars ? `${line.slice(0, maxChars).trimEnd()}…` : line;
 }
 
+// Auditor feedback in the main transcript: a quiet retractable card — header
+// row with the flag + agent name, expandable to the full report. The doer
+// model still receives the raw [audit-feedback] block; this is display only.
+function AuditFeedbackCard({
+  agentTitle,
+  report,
+}: {
+  agentTitle: string;
+  report: string;
+}): React.JSX.Element {
+  const [open, setOpen] = useState(false);
+  const firstLine = report.split('\n')[0] ?? '';
+  const preview = firstLine.length > 90 ? `${firstLine.slice(0, 90).trimEnd()}…` : firstLine;
+  return (
+    <div className={`audit-feedback-card ${open ? 'is-open' : ''}`}>
+      <button
+        type="button"
+        className="audit-feedback-row"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="audit-feedback-flag" aria-hidden="true">⚑</span>
+        <span className="audit-feedback-title">Audit feedback · {agentTitle}</span>
+        {!open && preview ? <span className="audit-feedback-preview">{preview}</span> : null}
+        <span className="audit-feedback-chevron" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
+      {open ? (
+        <div className="audit-feedback-body">
+          <MarkdownContent text={report} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 const ChatItemView = memo(function ChatItemView({
   item,
   meta,
