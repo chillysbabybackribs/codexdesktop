@@ -60,7 +60,7 @@ export function rankMentionCandidates(
   const candidates: MentionCandidate[] = []
   for (const path of files) {
     const score = fuzzyScore(query, path)
-    if (score !== null) candidates.push({ path, kind: 'file', score: score + 1 })
+    if (score !== null) candidates.push({ path, kind: 'file', score: score + 2 })
   }
   for (const path of dirs) {
     const score = fuzzyScore(query, path)
