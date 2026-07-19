@@ -1236,7 +1236,7 @@ export default function App(): React.JSX.Element {
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       // Resume pages are newest-first for fast retrieval. The transcript is
-      // rendered in reading order, so reverse its tiny first page exactly once.
+      // rendered in reading order, so reverse its one-turn first page exactly once.
       hydrateThread(resumed.thread, [...(resumed.initialTurnsPage?.data ?? [])].reverse(), environment)
       olderHistoryCursorByThreadRef.current.set(threadId, resumed.initialTurnsPage?.nextCursor ?? null)
       // Let the recent tail commit before warming a single 10-turn page. More
