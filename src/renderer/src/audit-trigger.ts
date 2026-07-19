@@ -182,6 +182,20 @@ export function buildAuditFeedbackMessage(input: { agentTitle: string; report: s
   ].join('\n')
 }
 
+// Display-side parse of a feedback message: the main transcript renders it as
+// a compact retractable card instead of the raw block the model receives.
+export function parseAuditFeedback(text: string): { agentTitle: string; report: string } | null {
+  if (!isAuditFeedback(text)) return null
+  const lines = text.split('\n')
+  const header = lines[0].match(/^\[audit-feedback\] (.*?) reviewed the last turn and flagged issues:$/)
+  const agentTitle = header ? header[1] : 'Auditor'
+  const body = lines.slice(1)
+  if (body.at(-1) === 'Address what is valid; push back with a reason on anything that is not.') {
+    body.pop()
+  }
+  return { agentTitle, report: body.join('\n').trim() }
+}
+
 export function shouldSendAuditFeedback(input: {
   verdict: 'pass' | 'flag' | null
   reportsToMain: boolean

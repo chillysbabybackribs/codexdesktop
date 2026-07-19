@@ -90,9 +90,11 @@ export function collapseAdjacentAssistantDuplicates(messages: AgentLiteMessage[]
   })
 }
 
-// The most recent audit exchange's report: every assistant message after the
-// last audit briefing, joined. null when the latest exchange is not an audit
-// (a user manually chatting with the agent never counts as one).
+// The most recent audit exchange's report: the FINAL assistant message after
+// the last audit briefing. Interim narration ("let me diff the commits…")
+// stays out — the audit prompt demands a self-contained concise close, and
+// joining interims duplicated content in the forwarded feedback. null when
+// the latest exchange is not an audit (manual chats never count as one).
 export function latestAuditReport(messages: AgentLiteMessage[]): string | null {
   let lastUserIndex = -1
   for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -102,13 +104,11 @@ export function latestAuditReport(messages: AgentLiteMessage[]): string | null {
     }
   }
   if (lastUserIndex === -1 || !messages[lastUserIndex].audit) return null
-  const report = messages
-    .slice(lastUserIndex + 1)
-    .filter((message) => message.role === 'assistant')
-    .map((message) => message.text)
-    .join('\n')
-    .trim()
-  return report || null
+  for (let index = messages.length - 1; index > lastUserIndex; index -= 1) {
+    const message = messages[index]
+    if (message.role === 'assistant' && message.text.trim()) return message.text.trim()
+  }
+  return null
 }
 
 export function resetAgentSession(session: AgentSession): AgentSession {
