@@ -30,7 +30,9 @@ const IGNORED_PREFIXES = [
   '/nix',
 ]
 
-const PATH_TOKEN = /(?:~|\$HOME)?\/[\w.@+\-/]+/g
+// The lookbehind keeps relative segments like `./words` or `foo/bar` from
+// matching as absolute paths mid-token.
+const PATH_TOKEN = /(?:~|\$HOME)?(?<![\w.@+\-])\/[\w.@+\-/]+/g
 
 export function outOfWorkspacePaths(input: {
   commands: string[]
