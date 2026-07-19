@@ -12,6 +12,13 @@ function params(tool: string, args: DynamicToolCallParams['arguments'], namespac
 const unusedBrowser = {} as BrowserAgentController
 const unusedResearch = {} as ResearchRunner
 
+function withTurnRunner<T extends object>(browserAgent: T): T & Pick<BrowserAgentController, 'runForTurn'> {
+  return {
+    ...browserAgent,
+    runForTurn: async (_owner, execute) => execute(new AbortController().signal)
+  } as T & Pick<BrowserAgentController, 'runForTurn'>
+}
+
 function textResult(response: Awaited<ReturnType<typeof routeDynamicToolCall>>): { ok: boolean; error?: string } {
   const item = response.contentItems[0]
   assert.equal(item?.type, 'inputText')
@@ -48,12 +55,12 @@ test('dynamic tool router validates and forwards navigation-aware browser flows'
   assert.match(textResult(rejected).error ?? '', /requires a non-empty "steps" array/)
 
   let received: unknown = null
-  const browserAgent = {
+  const browserAgent = withTurnRunner({
     flow: async (steps: unknown, options: unknown) => {
       received = { steps, options }
       return { ok: true, result: { outcome: 'not_found', completedSteps: 2 } }
     }
-  } as unknown as BrowserAgentController
+  }) as unknown as BrowserAgentController
   const steps = [
     { type: 'wait', selector: '.results' },
     { type: 'find', selector: 'a.target' }
@@ -66,7 +73,9 @@ test('dynamic tool router validates and forwards navigation-aware browser flows'
   }), { browserAgent, researchRunner: unusedResearch })
 
   assert.equal(response.success, true)
-  assert.deepEqual(received, {
+  const receivedRecord = received as { steps: unknown; options: { signal?: AbortSignal } & Record<string, unknown> }
+  assert.equal(receivedRecord.options.signal instanceof AbortSignal, true)
+  assert.deepEqual({ steps: receivedRecord.steps, options: omitSignal(receivedRecord.options) }, {
     steps,
     options: { tabId: 'tab-1', timeoutMs: 4_000, maxResultChars: 6_000 }
   })
@@ -81,12 +90,12 @@ test('dynamic tool router validates and forwards the one-call browser snapshot',
   assert.match(textResult(rejected).error ?? '', /requires a string "objective" argument/)
 
   let received: unknown = null
-  const browserAgent = {
+  const browserAgent = withTurnRunner({
     snapshot: async (options: unknown) => {
       received = options
       return { ok: true }
     }
-  } as unknown as BrowserAgentController
+  }) as unknown as BrowserAgentController
   const response = await routeDynamicToolCall(params('browser_snapshot', {
     objective: 'latest 3 notifications and whether each is read or unread',
     url: 'https://example.com/inbox',
@@ -104,7 +113,8 @@ test('dynamic tool router validates and forwards the one-call browser snapshot',
   }), { browserAgent, researchRunner: unusedResearch })
 
   assert.equal(response.success, true)
-  assert.deepEqual(received, {
+  assert.equal((received as { signal?: AbortSignal }).signal instanceof AbortSignal, true)
+  assert.deepEqual(omitSignal(received as Record<string, unknown>), {
     objective: 'latest 3 notifications and whether each is read or unread',
     url: 'https://example.com/inbox',
     tabId: 'tab-1',
@@ -123,12 +133,12 @@ test('dynamic tool router validates and forwards the one-call browser snapshot',
 
 test('dynamic tool router forwards selector-ready navigation', async () => {
   let received: unknown = null
-  const browserAgent = {
+  const browserAgent = withTurnRunner({
     navigate: async (url: string, options: unknown) => {
       received = { url, options }
       return { ok: true }
     }
-  } as unknown as BrowserAgentController
+  }) as unknown as BrowserAgentController
   const response = await routeDynamicToolCall(params('browser_navigate', {
     url: 'https://example.com/inbox',
     tab: 'tab-1',
@@ -139,7 +149,9 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   }), { browserAgent, researchRunner: unusedResearch })
 
   assert.equal(response.success, true)
-  assert.deepEqual(received, {
+  const receivedRecord = received as { url: string; options: { signal?: AbortSignal } & Record<string, unknown> }
+  assert.equal(receivedRecord.options.signal instanceof AbortSignal, true)
+  assert.deepEqual({ url: receivedRecord.url, options: omitSignal(receivedRecord.options) }, {
     url: 'https://example.com/inbox',
     options: {
       tabId: 'tab-1',
@@ -150,6 +162,30 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
     }
   })
 })
+
+test('dynamic browser calls carry their exact owning turn', async () => {
+  let owner: unknown = null
+  const browserAgent = {
+    runForTurn: async (nextOwner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) => {
+      owner = nextOwner
+      return execute(new AbortController().signal)
+    },
+    run: async () => ({ ok: true })
+  } as unknown as BrowserAgentController
+
+  const response = await routeDynamicToolCall(params('browser_run', { code: 'return 1' }), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(owner, { threadId: 'thread-1', turnId: 'turn-1', callId: 'call-1' })
+})
+
+function omitSignal(value: Record<string, unknown>): Record<string, unknown> {
+  const { signal: _signal, ...rest } = value
+  return rest
+}
 
 test('dynamic tool router normalizes research arguments and forwards run context and progress', async () => {
   let request: ResearchRequest | null = null

@@ -342,6 +342,7 @@ export class CodexClient extends EventEmitter {
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
     await this.ensureStarted()
+    this.browserAgent.cancelTurn(threadId, turnId)
     this.researchRunner.cancel(turnId)
     return this.request('turn/interrupt', { threadId, turnId })
   }

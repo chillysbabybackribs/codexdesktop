@@ -449,6 +449,25 @@ test('browser agent serializes programs targeting the same tab', async () => {
   assert.equal(maximumActive, 1)
 })
 
+test('cancelling a turn drops its queued browser operation before page execution', async () => {
+  let executions = 0
+  const controller = new BrowserAgentController(() => fakeTabs(async () => {
+    executions += 1
+    return 'should not run'
+  }))
+
+  const pending = controller.runForTurn(
+    { threadId: 'thread-1', turnId: 'turn-1', callId: 'call-1' },
+    (signal) => controller.run('return 1', { signal })
+  )
+  controller.cancelTurn('thread-1', 'turn-1')
+  const result = await pending
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'cancelled')
+  assert.equal(executions, 0)
+})
+
 test('browser agent surfaces browser flow not_found as a successful tool result', async () => {
   const webContents = Object.assign(new EventEmitter(), {
     executeJavaScript: async () => ({ url: 'https://example.com/search', count: 0, matches: [] }),
