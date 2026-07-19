@@ -240,6 +240,32 @@ button {
   background: #1a1a1b;
 }
 
+.main-chat-tab.is-dragging {
+  opacity: 0.54;
+}
+
+.main-chat-tab.is-drop-before::before,
+.main-chat-tab.is-drop-after::before {
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  bottom: 5px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--focus-ink);
+  box-shadow: 0 0 0 1px var(--focus-halo);
+  content: '';
+  pointer-events: none;
+}
+
+.main-chat-tab.is-drop-before::before {
+  left: -1px;
+}
+
+.main-chat-tab.is-drop-after::before {
+  right: -1px;
+}
+
 .main-chat-tab-target {
   display: flex;
   flex: 1;
@@ -251,8 +277,12 @@ button {
   border: 0;
   background: transparent;
   color: inherit;
-  cursor: default;
+  cursor: grab;
   text-align: left;
+}
+
+.main-chat-tab.is-dragging .main-chat-tab-target {
+  cursor: grabbing;
 }
 
 .main-chat-tab-target:disabled,

@@ -2740,6 +2740,7 @@ function MainChatTabStrip({
   activeKey,
   disabled,
   onSelect,
+  onReorder,
   onClose,
   onNew,
   onOpenSettings,
@@ -2758,6 +2759,7 @@ function MainChatTabStrip({
   activeKey: string
   disabled: boolean
   onSelect: (key: string) => Promise<boolean>
+  onReorder: (sourceKey: string, targetKey: string, placement: 'before' | 'after') => void
   onClose: (key: string) => Promise<void>
   onNew: () => void
   onOpenSettings: () => void
@@ -2773,6 +2775,20 @@ function MainChatTabStrip({
   onLoadMoreThreads: () => Promise<void>
 }): React.JSX.Element {
   const stripRef = useRef<HTMLDivElement | null>(null)
+  const dragStateRef = useRef<{
+    pointerId: number
+    sourceKey: string
+    startX: number
+    hasMoved: boolean
+    targetKey: string | null
+    placement: 'before' | 'after'
+  } | null>(null)
+  const suppressClickRef = useRef(false)
+  const [dragging, setDragging] = useState<{
+    sourceKey: string
+    targetKey: string | null
+    placement: 'before' | 'after'
+  } | null>(null)
 
   useEffect(() => {
     const active = stripRef.current?.querySelector<HTMLElement>(`[data-main-chat-tab="${activeKey}"]`)
@@ -2796,15 +2812,77 @@ function MainChatTabStrip({
     })
   }
 
+  const beginTabDrag = (event: PointerEvent<HTMLButtonElement>, sourceKey: string): void => {
+    if (disabled || event.button !== 0) return
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      sourceKey,
+      startX: event.clientX,
+      hasMoved: false,
+      targetKey: null,
+      placement: 'before'
+    }
+  }
+
+  const updateTabDrag = (event: PointerEvent<HTMLButtonElement>): void => {
+    const drag = dragStateRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+
+    if (!drag.hasMoved && Math.abs(event.clientX - drag.startX) < 6) return
+    drag.hasMoved = true
+
+    const target = document.elementFromPoint(event.clientX, event.clientY)
+      ?.closest<HTMLElement>('[data-main-chat-tab-key]')
+    const targetKey = target?.dataset.mainChatTabKey ?? null
+    const targetRect = target?.getBoundingClientRect()
+    const canTarget = Boolean(targetKey && targetKey !== drag.sourceKey && targetRect)
+    const placement = canTarget && event.clientX >= targetRect!.left + targetRect!.width / 2
+      ? 'after'
+      : 'before'
+
+    drag.targetKey = canTarget ? targetKey : null
+    drag.placement = placement
+    setDragging({
+      sourceKey: drag.sourceKey,
+      targetKey: drag.targetKey,
+      placement: drag.placement
+    })
+  }
+
+  const finishTabDrag = (event: PointerEvent<HTMLButtonElement>, shouldReorder: boolean): void => {
+    const drag = dragStateRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+
+    if (drag.hasMoved) {
+      suppressClickRef.current = true
+      window.setTimeout(() => { suppressClickRef.current = false }, 0)
+      if (shouldReorder && drag.targetKey) {
+        onReorder(drag.sourceKey, drag.targetKey, drag.placement)
+      }
+    }
+
+    dragStateRef.current = null
+    setDragging(null)
+  }
+
   return (
     <header className="main-chat-tabbar">
       <div ref={stripRef} className="main-chat-tabs-scroll" role="tablist" aria-label="Open chats">
         {tabs.map((tab) => {
           const active = tab.key === activeKey
+          const isDragging = dragging?.sourceKey === tab.key
+          const isDropTarget = dragging?.targetKey === tab.key
           return (
             <div
               key={tab.key}
-              className={`main-chat-tab ${active ? 'is-active' : ''} is-${tab.status}`}
+              data-main-chat-tab-key={tab.key}
+              className={`main-chat-tab ${active ? 'is-active' : ''} is-${tab.status} ${
+                isDragging ? 'is-dragging' : ''
+              } ${isDropTarget ? `is-drop-${dragging?.placement}` : ''}`}
             >
               <button
                 type="button"
@@ -2817,7 +2895,18 @@ function MainChatTabStrip({
                 tabIndex={active ? 0 : -1}
                 disabled={disabled}
                 title={tab.title}
-                onClick={() => void onSelect(tab.key)}
+                onClick={(event) => {
+                  if (suppressClickRef.current) {
+                    event.preventDefault()
+                    suppressClickRef.current = false
+                    return
+                  }
+                  void onSelect(tab.key)
+                }}
+                onPointerDown={(event) => beginTabDrag(event, tab.key)}
+                onPointerMove={updateTabDrag}
+                onPointerUp={(event) => finishTabDrag(event, true)}
+                onPointerCancel={(event) => finishTabDrag(event, false)}
                 onKeyDown={(event) => {
                   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
                     event.preventDefault()
