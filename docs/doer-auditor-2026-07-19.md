@@ -13,10 +13,14 @@ workspace. No transcript piping.
   Enabling it on a session that has not chosen a runtime defaults the model to
   `claude-default` — the cross-provider pairing by default, overridable.
 - **Trigger** (`src/renderer/src/audit-trigger.ts`, pure + tested): fires when
-  the FOCUSED main chat completes a turn that changed files and the auditor is
-  idle. Busy auditors are skipped, not queued (the next file-changing turn
-  re-covers workspace state). Failed/interrupted turns trigger too — partial
-  changes are prime audit material.
+  the FOCUSED main chat completes ANY turn with substance (changed files, an
+  answer, or steps) and the auditor is idle. File-changing turns get the
+  workspace-grounded diff audit; chat-only turns (brainstorming, research,
+  Q&A) get a second-opinion review of the answer — the briefing embeds the
+  doer's reply (clipped), a deliberate v2 departure from "no transcript
+  piping". Trivial turns earn a few words by prompt design, not a skip. Busy
+  auditors are skipped, not queued. Failed/interrupted turns trigger too —
+  partial work is prime audit material.
 - **Change detection is checkpoint-ground-truthed.** Protocol `fileChange`
   items only cover editor-tool edits; shell writes (`printf > file`) emit
   none — the exact blind spot our competitive research flagged in Claude
