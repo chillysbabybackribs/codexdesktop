@@ -9,6 +9,7 @@ import { AttachmentButton, AttachmentStrip, attachmentsFromUserInput, saveBrowse
 import { stripMainChatContext, type AgentSession } from './agent-session-model'
 import type { AuditRequestSummary, LiveTurnGlance } from './audit-trigger'
 import { auditBriefMarkdown, auditSummaryLabel, isAuditPrompt, parseAuditPrompt, parseAuditVerdict, stripVerdictLine } from './audit-trigger'
+import { exchangeHasTurn, groupDockExchanges, type DockExchange } from './dock-exchanges'
 import { MarkdownContent } from './MarkdownContent'
 import { buildRows, isWorkItem, type ActivityItem, type RenderRow } from './transcript-model'
 import { WorkGroup, type ItemMeta, type WorkItem } from './TaskActivity'
@@ -328,6 +329,8 @@ const AgentWindow = memo(function AgentWindow({
   const [isSending, setIsSending] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [zoomPercent, setZoomPercent] = useState(() => readAgentZoom(session.key))
+  // Older exchanges the user re-opened from their capsules.
+  const [expandedExchanges, setExpandedExchanges] = useState<ReadonlySet<string>>(() => new Set())
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const menuRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
