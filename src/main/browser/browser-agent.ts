@@ -1384,10 +1384,6 @@ function browserFailureFor(
   }
 }
 
-function classifyBrowserFailure(error: unknown): BrowserFailureCode {
-  return browserFailureFor(error).code
-}
-
 function browserFailureFields(
   error: unknown,
   fallbackCode: BrowserFailureCode = 'executionError',
@@ -1419,7 +1415,7 @@ function withTimeout<T>(
   const timeout = new Promise<T>((_resolve, reject) => {
     timer = setTimeout(() => {
       void Promise.resolve(onTimeout?.()).finally(() => {
-        reject(new Error(`browser operation timed out after ${timeoutMs}ms`))
+        reject(operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`))
       })
     }, timeoutMs)
   })
