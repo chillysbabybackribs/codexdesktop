@@ -3877,6 +3877,7 @@ button {
 
 .fast-mode-switch.is-active .fast-mode-switch-knob {
   transform: translateX(15px);
+  background: #1a1a1a;
 }
 
 .reasoning-menu {
