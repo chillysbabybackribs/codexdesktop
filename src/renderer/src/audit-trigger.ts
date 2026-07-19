@@ -144,8 +144,61 @@ export function buildAuditPrompt(input: {
       : []),
     job,
     'If the turn was trivial (a greeting or small acknowledgment), reply in a few words.',
-    'Under 120 words. If you find a durable issue, append a dated bullet to AUDIT.md in the workspace root (create it if missing).'
+    'Under 120 words. If you find a durable issue, append a dated bullet to AUDIT.md in the workspace root (create it if missing).',
+    'End your reply with its verdict on one line: "VERDICT: pass" if nothing needs attention, or "VERDICT: flag" if something does.'
   ].join('\n')
+}
+
+// ── Audit feedback: the report flowing back to the doer ─────────────────
+//
+// The auditor ends every report with a VERDICT line. `pass` stays quiet in
+// the agent window; `flag` may auto-send the report into the main chat so the
+// doer can act on it. Loop control lives in shouldSendAuditFeedback: verdict
+// gate (natural convergence — fixes that pass stop the cycle), idle + same-
+// thread gates (never interrupt or cross threads), and a bounce cap (the hard
+// stop; today one bounce per user-initiated turn, the future per-agent trust
+// dial raises it).
+
+export function parseAuditVerdict(report: string): 'pass' | 'flag' | null {
+  const matches = [...report.matchAll(/^\s*VERDICT:\s*(pass|flag)\b/gim)]
+  const last = matches.at(-1)
+  return last ? (last[1].toLowerCase() as 'pass' | 'flag') : null
+}
+
+export function stripVerdictLine(report: string): string {
+  return report.replace(/\n?^\s*VERDICT:\s*(?:pass|flag)\b.*$/gim, '').trim()
+}
+
+export function isAuditFeedback(text: string): boolean {
+  return text.startsWith('[audit-feedback]')
+}
+
+export function buildAuditFeedbackMessage(input: { agentTitle: string; report: string }): string {
+  const body = stripVerdictLine(input.report)
+  return [
+    `[audit-feedback] ${input.agentTitle} reviewed the last turn and flagged issues:`,
+    body,
+    'Address what is valid; push back with a reason on anything that is not.'
+  ].join('\n')
+}
+
+export function shouldSendAuditFeedback(input: {
+  verdict: 'pass' | 'flag' | null
+  reportsToMain: boolean
+  mainIdle: boolean
+  sameThread: boolean
+  auditedTurnWasFeedback: boolean
+}): boolean {
+  if (!input.reportsToMain) return false
+  // Missing verdicts fail quiet: the report stays visible in the agent
+  // window, but an ambiguous audit never starts a doer turn on its own.
+  if (input.verdict !== 'flag') return false
+  if (!input.mainIdle) return false
+  if (!input.sameThread) return false
+  // One bounce per user-initiated turn: feedback-started turns get audited
+  // and display their verdict, but do not auto-send again.
+  if (input.auditedTurnWasFeedback) return false
+  return true
 }
 
 // The briefing as a markdown document — rendered in the agent card as a
