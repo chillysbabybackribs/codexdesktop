@@ -294,16 +294,10 @@ const AgentWindow = memo(function AgentWindow({
   onStop,
   onCompact
 }: AgentWindowProps): React.JSX.Element {
-  const [value, setValue] = useState('')
-  const [attachments, setAttachments] = useState<ChatAttachment[]>([])
-  const [attachmentError, setAttachmentError] = useState<string | null>(null)
-  const [isSending, setIsSending] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [zoomPercent, setZoomPercent] = useState(() => readAgentZoom(session.key))
   // Older exchanges the user re-opened from their capsules.
   const [expandedExchanges, setExpandedExchanges] = useState<ReadonlySet<string>>(() => new Set())
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const menuRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
   const suppressScrollRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -311,24 +305,6 @@ const AgentWindow = memo(function AgentWindow({
   useEffect(() => {
     window.localStorage.setItem(agentZoomStorageKey(session.key), String(zoomPercent))
   }, [session.key, zoomPercent])
-
-  useEffect(() => {
-    if (!isMenuOpen) return
-    const closeOnOutsidePointer = (event: PointerEvent): void => {
-      if (menuRef.current && event.target instanceof Node && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false)
-      }
-    }
-    const closeOnEscape = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setIsMenuOpen(false)
-    }
-    document.addEventListener('pointerdown', closeOnOutsidePointer)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeOnOutsidePointer)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [isMenuOpen])
 
   // Phase 5: the dock renders the FULL transcript from the shared session
   // store — the same ThreadItem → rows pipeline as the main chat, so agents
@@ -378,13 +354,6 @@ const AgentWindow = memo(function AgentWindow({
     if (isSelected) textareaRef.current?.focus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useLayoutEffect(() => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-    textarea.style.height = '0px'
-    textarea.style.height = `${Math.min(120, Math.max(34, textarea.scrollHeight))}px`
-  }, [value])
 
   const working = session.status === 'working'
 
@@ -470,37 +439,11 @@ const AgentWindow = memo(function AgentWindow({
   // The audit watch strip: while the main chat's turn is in flight and this
   // agent is armed to audit, show the doer's progress from the auditor's POV.
   const watchingMain = session.auditsMain && liveMainTurn !== null && !working
-  const hasDraft = Boolean(value.trim() || attachments.length)
 
   const adjustZoom = (direction: 'in' | 'out' | 'reset'): void => {
     setZoomPercent((current) => direction === 'reset'
       ? 100
       : Math.max(80, Math.min(140, current + (direction === 'in' ? 10 : -10))))
-  }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault()
-    const text = value.trim()
-    if ((!text && !attachments.length) || isSending) return
-    setValue('')
-    const submittedAttachments = attachments
-    if (!working) setAttachments([])
-    setIsSending(true)
-    try {
-      // While a turn runs, typed text steers it instead of starting a new turn
-      // — same routing as the main composer.
-      const accepted = working
-        ? await onSteer(session.key, text)
-        : await onSend(session.key, text, submittedAttachments)
-      if (!accepted) {
-        setValue((current) => (current ? `${text}\n${current}` : text))
-        if (!working) setAttachments(submittedAttachments)
-      }
-    } finally {
-      setIsSending(false)
-      // The composer stays text-ready: refocus once the textarea re-enables.
-      requestAnimationFrame(() => textareaRef.current?.focus())
-    }
   }
 
   // Click-anywhere-to-type: clicking empty window space focuses the composer,

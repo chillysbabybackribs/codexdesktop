@@ -24,9 +24,22 @@ export type BrowserFindResult = {
   finalUpdate: boolean
 }
 
+/**
+ * Built-in VPN (Tor) status. `starting` covers binary launch through circuit
+ * bootstrap; the proxy is applied to the browser session only once `on`.
+ */
+export type BrowserVpnStatus = {
+  state: 'off' | 'starting' | 'on' | 'error'
+  /** Tor bootstrap percentage, 0-100. Meaningful while `starting`. */
+  bootstrapProgress: number
+  /** Human-readable bootstrap phase or error message, if any. */
+  detail: string | null
+}
+
 export type BrowserState = {
   tabs: BrowserTabState[]
   activeTabId: string | null
+  vpn: BrowserVpnStatus
 }
 
 export type OmniboxSuggestion = {

@@ -14,6 +14,7 @@ export const ipcChannels = {
   browserFindRequested: 'browser:findRequested',
   browserZoom: 'browser:zoom',
   browserToggleMute: 'browser:toggleMute',
+  browserToggleVpn: 'browser:toggleVpn',
   browserSetBounds: 'browser:setBounds',
   browserBeginDividerDrag: 'browser:beginDividerDrag',
   browserEndDividerDrag: 'browser:endDividerDrag',
