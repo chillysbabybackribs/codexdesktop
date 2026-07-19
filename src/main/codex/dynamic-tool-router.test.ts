@@ -39,6 +39,39 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
+test('dynamic tool router validates and forwards navigation-aware browser flows', async () => {
+  const rejected = await routeDynamicToolCall(params('browser_flow', {}), {
+    browserAgent: unusedBrowser,
+    researchRunner: unusedResearch
+  })
+  assert.equal(rejected.success, false)
+  assert.match(textResult(rejected).error ?? '', /requires a non-empty "steps" array/)
+
+  let received: unknown = null
+  const browserAgent = {
+    flow: async (steps: unknown, options: unknown) => {
+      received = { steps, options }
+      return { ok: true, result: { outcome: 'not_found', completedSteps: 2 } }
+    }
+  } as unknown as BrowserAgentController
+  const steps = [
+    { type: 'wait', selector: '.results' },
+    { type: 'find', selector: 'a.target' }
+  ]
+  const response = await routeDynamicToolCall(params('browser_flow', {
+    steps,
+    tab: 'tab-1',
+    timeoutMs: 4_000,
+    maxResultChars: 6_000
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(received, {
+    steps,
+    options: { tabId: 'tab-1', timeoutMs: 4_000, maxResultChars: 6_000 }
+  })
+})
+
 test('dynamic tool router validates and forwards the one-call browser snapshot', async () => {
   const rejected = await routeDynamicToolCall(params('browser_snapshot', { objective: '   ' }), {
     browserAgent: unusedBrowser,

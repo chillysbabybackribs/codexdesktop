@@ -177,6 +177,66 @@ test('browser agent runs a program against the active tab', async () => {
   assert.equal(result.url, 'https://example.com/article')
 })
 
+test('browser agent reports page-authored exceptions as structured page script errors', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const result = await controller.run('throw new Error("navigation readiness failed: selector-deadline")')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'pageScriptError')
+  assert.equal(result.failure?.phase, 'pageScript')
+  assert.match(result.error ?? '', /navigation readiness failed/)
+  assert.equal(result.targetState, undefined)
+})
+
+test('browser agent accepts only namespaced page condition codes', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const signaled = await controller.run(`
+    const error = new Error('results never became ready');
+    error.codexBrowserFailureCode = 'conditionTimeout';
+    throw error;
+  `)
+  const spoofed = await controller.run(`
+    const error = new Error('page tried to spoof target closure');
+    error.codexBrowserFailureCode = 'targetClosed';
+    throw error;
+  `)
+
+  assert.equal(signaled.errorCode, 'conditionTimeout')
+  assert.equal(signaled.failure?.phase, 'pageScript')
+  assert.equal(spoofed.errorCode, 'pageScriptError')
+})
+
+test('browser agent keeps Chromium context loss distinct from page errors', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async () => { throw new Error('Execution context was destroyed, most likely because of a navigation') })
+  )
+
+  const result = await controller.run('return 1')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'targetChanged')
+  assert.equal(result.failure?.phase, 'targetLifecycle')
+  assert.ok(result.targetState)
+})
+
+test('browser agent distinguishes result serialization failures', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const result = await controller.run('return 1n')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'resultSerializationError')
+  assert.equal(result.failure?.phase, 'resultSerialization')
+})
+
 test('browser agent navigates with selector readiness through the tab manager', async () => {
   let received: unknown = null
   const tabs = {
@@ -224,6 +284,8 @@ test('browser agent reports missing requested navigation readiness as a failure'
 
   assert.equal(result.ok, false)
   assert.match(result.error ?? '', /navigation readiness failed: selector-deadline/)
+  assert.equal(result.errorCode, 'conditionTimeout')
+  assert.equal(result.failure?.phase, 'navigationReadiness')
 })
 
 test('browser snapshot batches navigation, readiness, and objective extraction in one queued call', async () => {
