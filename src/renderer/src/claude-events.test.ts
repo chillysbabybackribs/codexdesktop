@@ -11,7 +11,7 @@ import {
   reduceSessionNotification,
   type SessionRenderState
 } from './session-store.ts'
-import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown.ts'
+import type { TokenUsageBreakdown } from '../../shared/session-protocol/index.ts'
 
 // End-to-end contract: spike-shaped SDK messages → translator → the SAME
 // reducer the UI renders from. If this passes, a Claude turn renders.
