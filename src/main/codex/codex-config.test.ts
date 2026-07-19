@@ -315,6 +315,8 @@ test('the dynamic tool surface includes verified research primitives', () => {
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')
+  assert.match(browserRun.description, /explicitly `return`/i)
+  assert.match(browserRun.description, /noResult/)
   assert.deepEqual(Object.keys((browserRun.inputSchema as { properties: Record<string, unknown> }).properties), [
     'code', 'tab', 'frame', 'timeoutMs', 'maxResultChars'
   ])

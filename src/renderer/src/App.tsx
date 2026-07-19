@@ -1018,8 +1018,8 @@ export default function App(): React.JSX.Element {
     contextUsageRef.current = null
     setIsCompacting(false)
     activeCompactionRef.current = null
-    precedingModelInputByTurnRef.current.clear()
-    pendingCompactionByTurnRef.current.clear()
+    precedingModelInputByTurnRef.current = new Map()
+    pendingCompactionByTurnRef.current = new Set()
     sessionStoreRef.current.remove(tabKey)
     discardComposerDraft(tabKey)
     patchMainChatTab(tabKey, (tab) => ({
@@ -1997,9 +1997,13 @@ export default function App(): React.JSX.Element {
             const isNewCall = existing
               ? notification.params.tokenUsage.total.totalTokens > existing.threadTotalAtEnd.totalTokens
               : notification.params.tokenUsage.last.totalTokens > 0
-            const compactedBeforeCall = isNewCall
-              ? pendingCompactionByTurnRef.current.delete(notification.params.turnId)
-              : false
+            const compactedBeforeCall = isNewCall &&
+              pendingCompactionByTurnRef.current.has(notification.params.turnId)
+            if (compactedBeforeCall) {
+              pendingCompactionByTurnRef.current = new Set(
+                [...pendingCompactionByTurnRef.current].filter((turnId) => turnId !== notification.params.turnId)
+              )
+            }
 
             return reduceTurnTelemetry(current, {
               type: 'tokenUsage',
@@ -2120,12 +2124,14 @@ export default function App(): React.JSX.Element {
 
   function rememberModelCallInput(turnId: string, item: ThreadItem): void {
     if (item.type === 'contextCompaction') {
-      pendingCompactionByTurnRef.current.add(turnId)
+      pendingCompactionByTurnRef.current = new Set(pendingCompactionByTurnRef.current).add(turnId)
       return
     }
 
     const attribution = modelCallAttributionForItem(item)
-    if (attribution) precedingModelInputByTurnRef.current.set(turnId, attribution)
+    if (attribution) {
+      precedingModelInputByTurnRef.current = new Map(precedingModelInputByTurnRef.current).set(turnId, attribution)
+    }
   }
 
   // Tag a batch of items (from turn/started, turn/completed, or turn/start
@@ -2226,8 +2232,8 @@ export default function App(): React.JSX.Element {
   ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
 
-    precedingModelInputByTurnRef.current.clear()
-    pendingCompactionByTurnRef.current.clear()
+    precedingModelInputByTurnRef.current = new Map()
+    pendingCompactionByTurnRef.current = new Set()
     // No usage snapshot until the resumed thread's next model call reports in.
     setContextUsage(null)
     contextUsageRef.current = null

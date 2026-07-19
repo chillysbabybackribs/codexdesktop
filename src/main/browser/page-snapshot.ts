@@ -138,7 +138,7 @@ const OBJECTIVE_STOP_WORDS = new Set([
   'tell', 'that', 'the', 'this', 'to', 'us', 'want', 'what', 'when', 'where', 'which',
   'who', 'whether', 'with', 'would', 'you', 'your', 'first', 'last',
   'latest', 'recent', 'top', 'one', 'two', 'three', 'four', 'five', 'six', 'seven',
-  'eight', 'nine', 'ten', 'displayed', 'direct', 'front', 'listed', 'listing',
+  'eight', 'nine', 'ten', 'displayed', 'direct', 'exactly', 'front', 'including', 'item', 'items', 'listed', 'listing',
   'order', 'ordered', 'preserve', 'preserving', 'rank', 'ranked', 'row', 'rows',
   'story', 'stories'
 ])
@@ -151,6 +151,7 @@ const OBJECTIVE_SYNONYMS: Record<string, string[]> = {
   account: ['account', 'profile', 'user'],
   setting: ['setting', 'settings', 'preference', 'preferences', 'option', 'options'],
   error: ['error', 'errors', 'failure', 'failed', 'problem', 'problems'],
+  score: ['score', 'scores', 'point', 'points'],
   price: ['price', 'prices', 'pricing', 'cost', 'costs'],
   download: ['download', 'downloads', 'file', 'files'],
   date: ['date', 'dates', 'time', 'times', 'datetime']

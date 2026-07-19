@@ -428,7 +428,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_run',
-    description: 'Run bespoke JavaScript in a stable visible browser document. Top-level return and await are supported. Return expected missing states as data instead of throwing, and end the batch before an action that triggers full or SPA navigation. Use browser_flow for common navigation-aware interactions. Page-origin CORS rules apply within each frame.',
+    description: 'Run bespoke JavaScript in a stable visible browser document. Top-level return and await are supported. For read-only extraction, explicitly `return` the structured value from the top-level program; an omitted result returns structured `noResult` data. Return expected missing states as data instead of throwing, and end the batch before an action that triggers full or SPA navigation. Use browser_flow for common navigation-aware interactions. Page-origin CORS rules apply within each frame.',
     inputSchema: browserRunSchema
   },
   {
