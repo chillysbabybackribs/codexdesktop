@@ -180,6 +180,9 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
   const normalized = text.trim().toLowerCase()
   const webResearchTask = isWebResearchTask(text)
   const liveSiteCloneTask = isLiveSiteCloneTask(text)
+  const liveSiteRedesignTask =
+    /\b(like|better|redesign|improve|inspired by|in the style of)\b/.test(normalized) &&
+    (/https?:\/\//.test(normalized) || /\b(?:this|the|current|existing|live|target)\s+(?:site|website|webpage|web page|page)\b/.test(normalized))
   const polishedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
@@ -209,7 +212,7 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
       return liveSiteCloneTask
     }
 
-    return skill.name === 'build-polished-ui' && (polishedUiTask || liveSiteCloneTask)
+    return skill.name === 'build-polished-ui' && (polishedUiTask || liveSiteCloneTask || liveSiteRedesignTask)
   })
 }
 

@@ -170,6 +170,15 @@ test('site redesign and inspiration requests do not attach the clone workflow', 
     assert.equal(isLiveSiteCloneTask(prompt), false, prompt)
     assert.deepEqual(selectTurnSkills(prompt, [cloneLiveSiteSkill]), [], prompt)
   }
+
+  assert.deepEqual(
+    selectTurnSkills('Create a site inspired by https://example.com', [cloneLiveSiteSkill, polishedUiSkill]),
+    [polishedUiSkill]
+  )
+  assert.deepEqual(
+    selectTurnSkills('Make the current site better', [cloneLiveSiteSkill, polishedUiSkill]),
+    [polishedUiSkill]
+  )
 })
 
 test('unrelated coding turns do not load the polished UI skill', () => {
