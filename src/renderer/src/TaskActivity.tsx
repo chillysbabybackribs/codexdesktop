@@ -30,7 +30,7 @@ type PlanItem = Extract<ThreadItem, { type: 'plan' }>
 type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
 
 // ---------------------------------------------------------------------------
-// File review context ù the Keep/Undo flow (Cursor-style post-hoc review).
+// File review context ¬∑ the Keep/Undo flow (Cursor-style post-hoc review).
 // Provided by ChatPane; consumed by DiffCard so every settled diff card offers
 // a per-file Undo without threading callbacks through the memoized layers.
 // ---------------------------------------------------------------------------
@@ -127,7 +127,7 @@ export function AutoFollow({
       })
     }
 
-    // Observe the inner content box, which grows as streamed text is appended ù
+    // Observe the inner content box, which grows as streamed text is appended ¬∑
     // the scroll container's own border box does not. This catches growth with
     // a coalesced resize callback instead of a subtree characterData
     // MutationObserver firing once per streamed character.
@@ -151,7 +151,7 @@ export function AutoFollow({
 }
 
 // ---------------------------------------------------------------------------
-// Icons ù quiet 15px strokes matching the app's existing inline icon style
+// Icons ¬∑ quiet 15px strokes matching the app's existing inline icon style
 // ---------------------------------------------------------------------------
 
 function Icon({ children, className }: { children: React.ReactNode; className?: string }): React.JSX.Element {
@@ -319,7 +319,7 @@ function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: numb
 }
 
 // ---------------------------------------------------------------------------
-// Thought (reasoning) ù the streamed model narration
+// Thought (reasoning) ¬∑ the streamed model narration
 // ---------------------------------------------------------------------------
 
 function reasoningText(item: ReasoningItem): string {
@@ -355,7 +355,7 @@ function ThoughtBlock({
     !streaming && meta?.startedAtMs && meta?.completedAtMs ? Math.max(0, meta.completedAtMs - meta.startedAtMs) : null
   const label = streaming
     ? elapsedMs !== null && elapsedMs >= 3000
-      ? `Thinking ù ${fmtDuration(elapsedMs)}`
+      ? `Thinking ¬∑ ${fmtDuration(elapsedMs)}`
       : 'Thinking'
     : durationMs !== null
       ? `Thought for ${fmtDuration(durationMs)}`
@@ -387,7 +387,7 @@ function ThoughtBlock({
 }
 
 // ---------------------------------------------------------------------------
-// Command execution ù compact Cursor-style rows for read/list/search, a real
+// Command execution ¬∑ compact Cursor-style rows for read/list/search, a real
 // terminal card for everything else
 // ---------------------------------------------------------------------------
 
@@ -466,7 +466,7 @@ function TerminalCard({
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
   // Cursor-style step row: settled commands collapse to their header line
-  // (failures stay open ù the error is the payload). Live commands always
+  // (failures stay open ¬∑ the error is the payload). Live commands always
   // stream their output.
   const [open, setOpen] = useState<boolean | null>(null)
   const running = status === 'running'
@@ -576,7 +576,7 @@ function CommandBlock({
 }
 
 // ---------------------------------------------------------------------------
-// File changes ù live-streaming diff cards
+// File changes ¬∑ live-streaming diff cards
 // ---------------------------------------------------------------------------
 
 const collapsedDiffLines = 18
@@ -604,7 +604,7 @@ function DiffCard({
     [diff, kind.type]
   )
   const running = status === 'running'
-  // Syntax highlighting is deferred until the edit settles ù live patches
+  // Syntax highlighting is deferred until the edit settles ¬∑ live patches
   // re-render per delta and tokenizing every visible line each frame is waste.
   const lang = useMemo(() => (running ? null : langForPath(path)), [running, path])
 
@@ -667,7 +667,7 @@ function DiffCard({
             <DiffLines lines={shownLines} lang={lang} />
             {overflow > 0 ? (
               <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
-                ? show full diff ù {overflow} more {overflow === 1 ? 'line' : 'lines'}
+                ? show full diff ¬∑ {overflow} more {overflow === 1 ? 'line' : 'lines'}
               </button>
             ) : null}
             {showAll && parsed.lines.length > collapsedDiffLines ? (
@@ -800,7 +800,7 @@ function FileChangeBlock({
         />
       ))}
       {item.changes.length === 0 && status === 'running' && !live ? (
-        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="ù" />
+        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="¬∑" />
       ) : null}
     </>
   )
@@ -862,7 +862,7 @@ function DynamicToolBlock({
   const progress = status === 'running' && item.tool === 'research_web' ? latestItemProgress(meta) : null
 
   if (screenshot) {
-    const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}ù${screenshot.height}` : null
+    const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}¬∑${screenshot.height}` : null
     return (
       <div className="screenshot-tool-step">
         <ToolRow
@@ -871,7 +871,7 @@ function DynamicToolBlock({
           verb="Captured screenshot"
           detail={screenshot.fileName}
           detailTitle={screenshot.artifactPath}
-          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' ù ')}
+          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' ¬∑ ')}
         />
         <CdpScreenshotPreview artifact={screenshot} />
       </div>
@@ -1055,7 +1055,7 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
         />
       )
     case 'subAgentActivity':
-      return <ToolRow icon={<BotIcon />} status={status} verb="Sub-agent" detail={`${item.kind} ù ${basename(item.agentPath)}`} />
+      return <ToolRow icon={<BotIcon />} status={status} verb="Sub-agent" detail={`${item.kind} ¬∑ ${basename(item.agentPath)}`} />
     case 'collabAgentToolCall':
       return (
         <ToolRow
@@ -1237,7 +1237,7 @@ export function WorkGroup({
 }
 
 // ---------------------------------------------------------------------------
-// Turn tail ù live shimmer status while running, permanent receipt when done
+// Turn tail ¬∑ live shimmer status while running, permanent receipt when done
 // ---------------------------------------------------------------------------
 
 export function TurnTail({
@@ -1259,7 +1259,7 @@ export function TurnTail({
 }): React.JSX.Element | null {
   const now = useNow(live)
   // Two-click inline confirm: reverting rewrites workspace files, so a lone
-  // misclick shouldn't fire it ù but no dialogs; the revert itself is also
+  // misclick shouldn't fire it ¬∑ but no dialogs; the revert itself is also
   // checkpointed, so even a confirmed mistake is undoable.
   const [confirmingRevert, setConfirmingRevert] = useState(false)
 
@@ -1286,7 +1286,7 @@ export function TurnTail({
 
     return (
       <div className="turn-tail is-live">
-        <span className="shimmer-text tail-label">{label}ù</span>
+        <span className="shimmer-text tail-label">{label}¬∑</span>
         {elapsed !== null && elapsed >= 1000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
         {tokens ? (
           <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
@@ -1323,8 +1323,8 @@ export function TurnTail({
     <div className={`turn-tail is-done ${tone}`}>
       <span className="tail-rule" aria-hidden="true" />
       <span className="tail-summary">
-        {[lead, ...parts].join(' ù ')}
-        {meta?.status === 'failed' && meta.errorMessage ? ` ù ${truncate(meta.errorMessage, 160)}` : ''}
+        {[lead, ...parts].join(' ¬∑ ')}
+        {meta?.status === 'failed' && meta.errorMessage ? ` ¬∑ ${truncate(meta.errorMessage, 160)}` : ''}
       </span>
       {onRevert ? (
         <button
