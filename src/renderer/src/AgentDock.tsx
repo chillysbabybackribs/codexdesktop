@@ -234,9 +234,15 @@ type AgentWindowProps = {
   onCompact: (key: string) => Promise<void>
 }
 
+// Stable empty fallback for sessions the store has not seen yet —
+// useSyncExternalStore requires a referentially stable snapshot.
+const emptyAgentRenderState = emptySessionState()
+
 const AgentWindow = memo(function AgentWindow({
   session,
   isSelected,
+  sessionStore,
+  workspace,
   models,
   mainModel,
   mainReasoningEffort,
