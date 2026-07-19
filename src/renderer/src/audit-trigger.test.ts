@@ -4,6 +4,7 @@ import {
   auditSummaryLabel,
   buildAuditPrompt,
   isAuditPrompt,
+  liveTurnGlance,
   parseAuditPrompt,
   shouldTriggerAudit,
   turnChangedFiles,
@@ -123,6 +124,22 @@ test('parseAuditPrompt drops the "and N more" placeholder from the clipped file 
   // Only the 6 shown paths are recoverable from prose; "and 2 more" is not a path.
   assert.deepEqual(parsed.files, ['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts', 'f.ts'])
   assert.equal(auditSummaryLabel(parsed.files), 'a.ts +5 more')
+})
+
+test('liveTurnGlance reports true counts and the genuinely-latest step, uncapped', () => {
+  const items = [
+    ...Array.from({ length: 25 }, (_, index) =>
+      ({ type: 'commandExecution', id: `c${index}`, command: `step ${index}`, exitCode: 0, status: 'completed', aggregatedOutput: '' })),
+    fileChange('f1', ['src/a.ts', 'src/b.ts'])
+  ] as unknown as ChatItem[]
+  const meta = Object.fromEntries(items.map((item) => [item.id, { turnId: 't1' }]))
+  const glance = liveTurnGlance(items, meta, 't1')
+  assert.equal(glance.turnId, 't1')
+  assert.equal(glance.stepCount, 26, 'no 20-line cap, no overflow summary line')
+  assert.equal(glance.fileCount, 2)
+  assert.equal(glance.lastStep, 'edited: src/a.ts, src/b.ts')
+  const idle = liveTurnGlance(items, meta, 'other-turn')
+  assert.deepEqual(idle, { turnId: 'other-turn', stepCount: 0, fileCount: 0, lastStep: null })
 })
 
 test('parseAuditPrompt handles a prompt with no step log', () => {
