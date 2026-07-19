@@ -31,8 +31,9 @@ const IGNORED_PREFIXES = [
 ]
 
 // The lookbehind keeps relative segments like `./words` or `foo/bar` from
-// matching as absolute paths mid-token.
-const PATH_TOKEN = /(?:~|\$HOME)?(?<![\w.@+\-])\/[\w.@+\-/]+/g
+// matching as absolute paths mid-token; it sits before the prefix so `~/x`
+// and `$HOME/x` still match.
+const PATH_TOKEN = /(?<![\w.@+\-])(?:~|\$HOME)?\/[\w.@+\-/]+/g
 
 export function outOfWorkspacePaths(input: {
   commands: string[]

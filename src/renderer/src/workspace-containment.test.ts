@@ -30,13 +30,13 @@ test('reads and in-workspace or system paths never flag', () => {
   )
 })
 
-test('~ paths are outside by construction when the workspace is not under home', () => {
+test('~ and $HOME paths are outside by construction for a non-home workspace', () => {
   const flagged = outOfWorkspacePaths({
-    commands: ['mkdir -p ~/og-check'],
+    commands: ['mkdir -p ~/og-check', 'tee $HOME/notes.md'],
     filePaths: [],
     workspace: '/tmp/scratch/verify-ws8',
   })
-  assert.deepEqual(flagged, ['~/og-check'])
+  assert.deepEqual(flagged, ['~/og-check', '$HOME/notes.md'])
 })
 
 test('editor writes to absolute outside paths flag without a write verb', () => {
