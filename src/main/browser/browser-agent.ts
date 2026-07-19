@@ -4,7 +4,7 @@ import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { runBrowserFlow } from './browser-flow.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
-import type { NetworkJournalQuery } from './network-journal.js'
+import type { NetworkJournalQuery, NetworkStreamTransport } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import { captureAppWindowImage } from './app-window-screenshot.js'
@@ -97,6 +97,11 @@ export type BrowserNetworkCaptureParams = {
   steps?: unknown
   match?: NetworkJournalQuery | null
   captureBody?: boolean | null
+  stream?: {
+    transport?: NetworkStreamTransport | null
+    maxMessages?: number | null
+    idleMs?: number | null
+  } | null
   readySelector?: string | null
   quietMs?: number | null
   maxSettleMs?: number | null
@@ -982,10 +987,17 @@ export class BrowserAgentController {
     if (!match.urlContains?.trim()) {
       return { ok: false, error: 'browser_network requires match.urlContains' } satisfies BrowserAgentFailure
     }
-    const captureBody = params.captureBody !== false
+    const streamTransport = params.stream?.transport
+    if (params.stream && streamTransport !== 'sse' && streamTransport !== 'websocket') {
+      return { ok: false, error: 'browser_network stream.transport must be "sse" or "websocket"' } satisfies BrowserAgentFailure
+    }
+    if (params.stream && params.captureBody === true) {
+      return { ok: false, error: 'browser_network cannot combine stream capture with captureBody: true' } satisfies BrowserAgentFailure
+    }
+    const captureBody = !params.stream && params.captureBody !== false
     const artifactStore = this.artifactStore
-    if (captureBody && !artifactStore) {
-      return { ok: false, error: 'network response-body artifact storage is not available' } satisfies BrowserAgentFailure
+    if ((captureBody || params.stream) && !artifactStore) {
+      return { ok: false, error: 'network artifact storage is not available' } satisfies BrowserAgentFailure
     }
 
     const tabs = this.getTabs()
@@ -1012,12 +1024,23 @@ export class BrowserAgentController {
       const executeCapture = async (): Promise<unknown> => {
         await session.startNetworkJournal()
         try {
-          const waiting = session.waitForNetworkRequest(
-            { ...match, urlContains: match.urlContains?.trim(), completedOnly: true },
-            timeoutMs,
-            captureController.signal
-          ).then(
-            (request) => ({ ok: true as const, request }),
+          const normalizedMatch = { ...match, urlContains: match.urlContains?.trim() }
+          const waiting = (streamTransport
+            ? session.waitForNetworkStream(
+                streamTransport,
+                normalizedMatch,
+                clampNumber(params.stream?.maxMessages, 50, 1, 1_000),
+                clampNumber(params.stream?.idleMs, 500, 50, 10_000),
+                timeoutMs,
+                captureController.signal
+              ).then((stream) => ({ kind: 'stream' as const, stream }))
+            : session.waitForNetworkRequest(
+                { ...normalizedMatch, completedOnly: true },
+                timeoutMs,
+                captureController.signal
+              ).then((request) => ({ kind: 'request' as const, request })))
+          .then(
+            (capture) => ({ ok: true as const, capture }),
             (error) => ({ ok: false as const, error })
           )
 
@@ -1040,28 +1063,47 @@ export class BrowserAgentController {
 
           const matched = await waiting
           if (!matched.ok) throw matched.error
-          const request = matched.request
-          if (request.failed) {
-            throw new Error(`matched network request failed: ${request.errorText ?? request.blockedReason ?? request.url}`)
-          }
-
           let responseBody: Record<string, unknown> | undefined
-          if (captureBody && artifactStore) {
-            const response = asRecord(await session.send('Network.getResponseBody', { requestId: request.requestId }))
+          let streamCapture: Record<string, unknown> | undefined
+          let request: unknown
+          if (matched.capture.kind === 'request') {
+            request = matched.capture.request
+            if (matched.capture.request.failed) {
+              throw new Error(`matched network request failed: ${matched.capture.request.errorText ?? matched.capture.request.blockedReason ?? matched.capture.request.url}`)
+            }
+          }
+          if (captureBody && artifactStore && matched.capture.kind === 'request') {
+            const capturedRequest = matched.capture.request
+            const response = asRecord(await session.send('Network.getResponseBody', { requestId: capturedRequest.requestId }))
             if (typeof response.body !== 'string') throw new Error('Network.getResponseBody returned no body')
             responseBody = await artifactStore.persistResponseBody(
               response.body,
               response.base64Encoded === true,
-              request.mimeType,
-              request.url
+              capturedRequest.mimeType,
+              capturedRequest.url
             )
+          }
+          if (artifactStore && matched.capture.kind === 'stream') {
+            const { messages, ...summary } = matched.capture.stream
+            const serialized = [
+              JSON.stringify({ type: 'network-stream', ...summary }),
+              ...messages.map((message) => JSON.stringify({ type: 'message', ...message }))
+            ].join('\n')
+            const artifact = await artifactStore.persistNetworkStream(`${serialized}\n`)
+            streamCapture = {
+              ...summary,
+              artifact,
+              messages: messages.slice(0, 10),
+              omittedMessages: Math.max(0, messages.length - 10)
+            }
           }
 
           return {
             network: {
               trigger: requestedUrl ? 'navigate' : 'flow',
-              request,
+              ...(request ? { request } : {}),
               ...(responseBody ? { responseBody } : {}),
+              ...(streamCapture ? { stream: streamCapture } : {}),
               action: boundResult(actionResult, Math.min(3_000, Math.max(1_000, Math.floor(maxResultChars / 2)))).value
             }
           }
