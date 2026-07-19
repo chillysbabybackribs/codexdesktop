@@ -9,36 +9,25 @@ import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
 // A fake provider that records calls and lets the test control when a child's
 // turn "starts" (sendMessage resolves with a threadId) — only the two methods
 // the orchestrator touches are implemented.
-function fakeProvider(overrides: Partial<{
-  sendMessage: (threadId: string) => Promise<{ threadId: string }>
-  interruptTurn: (threadId: string, turnId: string) => Promise<unknown>
-}> = {}): {
+type FakeProvider = {
   provider: SessionProvider
   interrupts: Array<{ threadId: string; turnId: string }>
-  sends: number
-} {
+}
+
+function fakeProvider(): FakeProvider {
   const interrupts: Array<{ threadId: string; turnId: string }> = []
   let sends = 0
   const provider = {
     sendMessage: async () => {
       sends += 1
-      const threadId = overrides.sendMessage
-        ? (await overrides.sendMessage(`child-${sends}`)).threadId
-        : `child-${sends}`
-      return { threadId, model: null, reasoningEffort: null } as never
+      return { threadId: `child-${sends}`, model: null, reasoningEffort: null } as never
     },
     interruptTurn: async (threadId: string, turnId: string) => {
       interrupts.push({ threadId, turnId })
-      return overrides.interruptTurn ? overrides.interruptTurn(threadId, turnId) : undefined
+      return undefined
     },
   } as unknown as SessionProvider
-  return {
-    provider,
-    interrupts,
-    get sends() {
-      return sends
-    },
-  } as { provider: SessionProvider; interrupts: Array<{ threadId: string; turnId: string }>; sends: number }
+  return { provider, interrupts }
 }
 
 function agentMessage(text: string): ThreadItem {

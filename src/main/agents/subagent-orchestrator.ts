@@ -70,11 +70,16 @@ export class SubagentOrchestrator {
   // their threadId is bound.
   private readonly byThreadId = new Map<string, PendingChild>()
   private readonly pendingByAgentKey = new Map<string, PendingChild>()
+  private readonly selectProvider: ProviderSelector
+  private readonly emit: (event: SessionEvent | AgentSpawnedEvent) => void
 
   constructor(
-    private readonly selectProvider: ProviderSelector,
-    private readonly emit: (event: SessionEvent | AgentSpawnedEvent) => void,
-  ) {}
+    selectProvider: ProviderSelector,
+    emit: (event: SessionEvent | AgentSpawnedEvent) => void,
+  ) {
+    this.selectProvider = selectProvider
+    this.emit = emit
+  }
 
   // Called from the provider event bridge for EVERY event. Returns the event to
   // forward — for a child-thread notification it returns a tagged copy so the
