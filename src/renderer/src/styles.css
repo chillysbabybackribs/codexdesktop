@@ -5828,9 +5828,14 @@ button {
   display: grid;
   width: 18px;
   height: 18px;
+  padding: 0;
   place-items: center;
+  border: 0;
   border-radius: 50%;
+  appearance: none;
+  background: transparent;
   color: inherit;
+  cursor: pointer;
 }
 
 .tab-close:hover {
