@@ -97,7 +97,9 @@ function scheduleBrowserPersist(): void {
     const snapshot = tabManager?.captureSnapshot()
 
     if (snapshot) {
-      void browserStateStore.save(snapshot)
+      void browserStateStore.save(snapshot).catch((error) => {
+        console.warn('Failed to persist browser state', error)
+      })
     }
   }, 500)
 }
@@ -113,19 +115,8 @@ async function flushBrowserPersist(): Promise<void> {
   if (snapshot) {
     await browserStateStore.save(snapshot)
   }
-}
 
-function flushBrowserPersistSync(): void {
-  if (persistBrowserTimer) {
-    clearTimeout(persistBrowserTimer)
-    persistBrowserTimer = null
-  }
-
-  const snapshot = tabManager?.captureSnapshot()
-
-  if (snapshot) {
-    browserStateStore.saveSync(snapshot)
-  }
+  await browserStateStore.flush()
 }
 
 function sendToMainRenderer(channel: string, payload: unknown): void {
@@ -211,6 +202,15 @@ function createWindow(): void {
     omniboxPopup?.hide()
   })
 
+  // Capture while the native views still exist. On macOS a normal window
+  // close does not quit the process, and on other platforms before-quit can
+  // run only after this manager has been cleared.
+  mainWindow.on('close', () => {
+    void flushBrowserPersist().catch((error) => {
+      console.warn('Failed to persist browser state while closing the window', error)
+    })
+  })
+
   mainWindow.on('closed', () => {
     omniboxPopup?.dispose()
     omniboxPopup = null
@@ -243,7 +243,6 @@ function bootstrap(): void {
     }
     quitPreparationStarted = true
 
-    flushBrowserPersistSync()
     researchRunner.dispose()
     codexClient?.dispose()
     codexClient = null
@@ -252,7 +251,7 @@ function bootstrap(): void {
 
     // before-quit does not wait for promises. Hold the first quit request long
     // enough to durably flush history, then allow the second request through.
-    void Promise.all([browserHistoryStore.flush(), closingBrowserControl])
+    void Promise.all([flushBrowserPersist(), browserHistoryStore.flush(), closingBrowserControl])
       .catch((error) => console.warn('Failed to finish shutdown persistence', error))
       .finally(() => {
         quitReady = true
