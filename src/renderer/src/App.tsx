@@ -3047,7 +3047,7 @@ export default function App(): React.JSX.Element {
           onToggleReportAgent={handleToggleReportAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
-          onNewAgent={handleNewAgent}
+          onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
           onPromoteAgent={(key) => void handlePromoteAgent(key)}
           onCloseAgentSession={handleCloseAgentSession}
           onResetAgentSession={handleResetAgentSession}
@@ -3572,7 +3572,7 @@ function ChatPane({
   onToggleReportAgent: (key: string) => void;
   onSetAgentModel: (key: string, model: string) => void;
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void;
-  onNewAgent: () => void;
+  onNewAgent: (mainChatTabKey: string) => void;
   onPromoteAgent: (key: string) => void;
   onCloseAgentSession: (key: string) => void;
   onResetAgentSession: (key: string) => void;
@@ -3913,7 +3913,7 @@ function ChatPane({
             onSteer={onSteer}
             onStop={onStop}
             onNewThread={onNewThread}
-            onNewAgent={onNewAgent}
+            onNewAgent={() => onNewAgent(activeMainChatTabKey)}
             footerTrailing={
               <ContextPill
                 usage={contextUsage}

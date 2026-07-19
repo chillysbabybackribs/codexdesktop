@@ -104,6 +104,7 @@ test('agent dock persistence keeps only durable metadata', () => {
   assert.deepEqual(parseAgentDock(raw), {
     counter: 4,
     sessions: [{
+      mainChatTabKey: null,
       threadId: 'thread-1',
       title: 'Research',
       watchesMain: true,
