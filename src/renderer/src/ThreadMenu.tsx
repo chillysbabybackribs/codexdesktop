@@ -8,24 +8,30 @@ import {
 import type { Thread } from '../../shared/session-protocol';
 import {
   groupThreadsForMenu,
+  headerMenuCommands,
   relativeThreadTime,
   stripSkillMarkerFromTitle,
   threadTitle,
+  type HeaderMenuCommandId,
 } from './thread-menu-model';
 
-// The thread selector opens a searchable recent-thread popover. The tab-bar
-// trigger opens below the header; the legacy toolbar/composer placements retain
-// their respective centered and upward menu geometry.
+type MenuView = 'options' | 'history';
+
 export function ThreadMenu({
   placement = 'toolbar',
   title,
   threads,
   activeThreadId,
-  isOpen,
   threadsNextCursor,
   threadsLoading,
   threadsError,
-  onToggle,
+  disabled = false,
+  isBrowserMiddle = false,
+  canSplitActivePane = false,
+  showGlobalActions = true,
+  onToggleBrowserMiddle,
+  onSplitActivePane,
+  onOpenSettings,
   onResumeThread,
   onLoadMoreThreads,
 }: {
@@ -33,63 +39,110 @@ export function ThreadMenu({
   title: string;
   threads: Thread[];
   activeThreadId: string | null;
-  isOpen: boolean;
   threadsNextCursor: string | null;
   threadsLoading: boolean;
   threadsError: string | null;
-  onToggle: () => void;
+  disabled?: boolean;
+  isBrowserMiddle?: boolean;
+  canSplitActivePane?: boolean;
+  showGlobalActions?: boolean;
+  onToggleBrowserMiddle?: () => void;
+  onSplitActivePane?: (direction: 'right' | 'down') => boolean;
+  onOpenSettings?: () => void;
   onResumeThread: (threadId: string) => Promise<void>;
   onLoadMoreThreads: () => Promise<void>;
 }): React.JSX.Element {
   const wrapRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const firstCommandRef = useRef<HTMLButtonElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [view, setView] = useState<MenuView>(placement === 'tabbar' ? 'options' : 'history');
   const [query, setQuery] = useState('');
-  // Highlighted row for keyboard/hover navigation. `null` is the resting state;
-  // `0..n` indexes the flat, filtered thread list.
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  // Filter by title/preview, then bucket into recency groups. `nowSeconds` is
-  // sampled once per open so relative labels ("2h", "Yesterday") stay stable.
   const { groups, flatIds } = useMemo(() => groupThreadsForMenu(threads, query), [threads, query]);
+  const commands = useMemo(
+    () =>
+      headerMenuCommands({
+        isBrowserMiddle,
+        canSplitActivePane,
+        disabled,
+        showGlobalActions,
+      }),
+    [isBrowserMiddle, canSplitActivePane, disabled, showGlobalActions],
+  );
 
-  // Reset transient state whenever the menu opens; focus the search field so the
-  // user can immediately type to filter (Cursor-style).
-  useEffect(() => {
-    if (!isOpen) {
-      return;
+  const close = (restoreFocus = false): void => {
+    setIsOpen(false);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => triggerRef.current?.focus());
     }
+  };
+
+  const open = (): void => {
+    setView(placement === 'tabbar' ? 'options' : 'history');
     setQuery('');
     setActiveIndex(null);
-    const id = window.requestAnimationFrame(() => searchRef.current?.focus());
-    return () => window.cancelAnimationFrame(id);
-  }, [isOpen]);
+    setIsOpen(true);
+  };
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+    if (!isOpen) return;
+    const id = window.requestAnimationFrame(() => {
+      if (view === 'history') searchRef.current?.focus();
+      else firstCommandRef.current?.focus();
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [isOpen, view]);
 
+  useEffect(() => {
+    if (!isOpen) return;
     const handlePointerDown = (event: MouseEvent): void => {
-      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) {
-        onToggle();
-      }
+      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) close();
     };
-
     window.addEventListener('mousedown', handlePointerDown);
-    return () => {
-      window.removeEventListener('mousedown', handlePointerDown);
-    };
-  }, [isOpen, onToggle]);
+    return () => window.removeEventListener('mousedown', handlePointerDown);
+  }, [isOpen]);
 
   const resume = (threadId: string): void => {
-    onToggle();
+    close();
     void onResumeThread(threadId);
   };
 
-  const handleKeyDown = (event: ReactKeyboardEvent): void => {
+  const runCommand = (id: HeaderMenuCommandId): void => {
+    if (id === 'history') {
+      setView('history');
+      return;
+    }
+    close();
+    if (id === 'browser-layout') onToggleBrowserMiddle?.();
+    else if (id === 'split-right') onSplitActivePane?.('right');
+    else if (id === 'split-down') onSplitActivePane?.('down');
+    else if (id === 'settings') onOpenSettings?.();
+  };
+
+  const handleOptionsKeyDown = (event: ReactKeyboardEvent): void => {
     if (event.key === 'Escape') {
       event.preventDefault();
-      onToggle();
+      close(true);
+      return;
+    }
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+    event.preventDefault();
+    const items = Array.from(
+      wrapRef.current?.querySelectorAll<HTMLButtonElement>('.header-options-item:not(:disabled)') ?? [],
+    );
+    const current = items.indexOf(document.activeElement as HTMLButtonElement);
+    const direction = event.key === 'ArrowDown' ? 1 : -1;
+    items[(current + direction + items.length) % items.length]?.focus();
+  };
+
+  const handleHistoryKeyDown = (event: ReactKeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      if (placement === 'tabbar') setView('options');
+      else close(true);
       return;
     }
     if (event.key === 'ArrowDown') {
@@ -108,40 +161,23 @@ export function ThreadMenu({
       });
       return;
     }
-    if (event.key === 'Enter') {
-      // With nothing highlighted, let Enter fall through (no-op here).
-      if (activeIndex === null) {
-        return;
-      }
+    if (event.key === 'Enter' && activeIndex !== null) {
       event.preventDefault();
-      if (flatIds[activeIndex]) {
-        resume(flatIds[activeIndex]);
-      }
+      if (flatIds[activeIndex]) resume(flatIds[activeIndex]);
     }
   };
 
   return (
     <div ref={wrapRef} className={`thread-select-wrap is-${placement}`}>
       <button
+        ref={triggerRef}
         type="button"
         className={`thread-select ${isOpen ? 'is-open' : ''}`}
-        aria-label={
-          placement === 'tabbar'
-            ? 'Open conversation history'
-            : placement === 'composer'
-              ? 'Chat history'
-              : 'Open thread menu'
-        }
-        title={
-          placement === 'tabbar'
-            ? 'Conversation history'
-            : placement === 'composer'
-              ? 'Chat history'
-              : undefined
-        }
+        aria-label={placement === 'tabbar' ? 'Open chat and layout options' : 'Open chat history'}
+        title={placement === 'tabbar' ? 'Chat and layout options' : 'Chat history'}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        onClick={onToggle}
+        onClick={() => (isOpen ? close() : open())}
       >
         {placement === 'tabbar' ? (
           <VerticalDotsIcon />
@@ -151,19 +187,62 @@ export function ThreadMenu({
           <span className="thread-title">{stripSkillMarkerFromTitle(title)}</span>
         )}
         <span className="chevron" aria-hidden="true">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path
-              d="m6 9 6 6 6-6"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <ChevronIcon />
         </span>
       </button>
-      {isOpen ? (
-        <div className="thread-menu" role="menu" onKeyDown={handleKeyDown}>
+
+      {isOpen && view === 'options' ? (
+        <div className="thread-menu header-options-menu" role="menu" onKeyDown={handleOptionsKeyDown}>
+          <div className="header-options-heading">Chat workspace</div>
+          <div className="header-options-list">
+            {commands.map((command, index) => (
+              <button
+                ref={index === 0 ? firstCommandRef : undefined}
+                type="button"
+                role={command.id === 'browser-layout' ? 'menuitemcheckbox' : 'menuitem'}
+                aria-checked={command.id === 'browser-layout' ? command.active : undefined}
+                key={command.id}
+                className={`header-options-item ${command.active ? 'is-active' : ''} ${
+                  command.id === 'history' ? 'starts-global-section' : ''
+                }`}
+                disabled={command.disabled}
+                onClick={() => runCommand(command.id)}
+              >
+                <span className="header-options-icon" aria-hidden="true">
+                  <CommandIcon id={command.id} />
+                </span>
+                <span className="header-options-copy">
+                  <span className="header-options-label">{command.label}</span>
+                  {command.hint ? <span className="header-options-hint">{command.hint}</span> : null}
+                </span>
+                {command.id === 'history' ? (
+                  <span className="header-options-disclosure" aria-hidden="true">
+                    <ChevronRightIcon />
+                  </span>
+                ) : command.active ? (
+                  <span className="header-options-check" aria-hidden="true">✓</span>
+                ) : null}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {isOpen && view === 'history' ? (
+        <div className="thread-menu is-history-view" role="menu" onKeyDown={handleHistoryKeyDown}>
+          {placement === 'tabbar' ? (
+            <div className="thread-menu-view-header">
+              <button
+                type="button"
+                className="thread-menu-back"
+                aria-label="Back to chat and layout options"
+                onClick={() => setView('options')}
+              >
+                <ChevronLeftIcon />
+              </button>
+              <span>Chat history</span>
+            </div>
+          ) : null}
           <div className="thread-menu-search">
             <SearchIcon />
             <input
@@ -242,6 +321,14 @@ export function ThreadMenu({
   );
 }
 
+function CommandIcon({ id }: { id: HeaderMenuCommandId }): React.JSX.Element {
+  if (id === 'browser-layout') return <BrowserMiddleIcon />;
+  if (id === 'split-right') return <SplitRightIcon />;
+  if (id === 'split-down') return <SplitDownIcon />;
+  if (id === 'history') return <ChatBubbleIcon />;
+  return <SettingsIcon />;
+}
+
 function VerticalDotsIcon(): React.JSX.Element {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -252,16 +339,47 @@ function VerticalDotsIcon(): React.JSX.Element {
   );
 }
 
+function BrowserMiddleIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <rect x="6.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <rect x="11.5" y="2.5" width="3" height="11" rx="0.75" stroke="currentColor" />
+      <path d="M7.5 4.5h1M7.5 6.5h1" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SplitRightIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
+      <path d="M9.5 3.5v9" stroke="currentColor" />
+    </svg>
+  );
+}
+
+function SplitDownIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
+      <path d="M2.5 9h11" stroke="currentColor" />
+    </svg>
+  );
+}
+
+function SettingsIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="2.25" stroke="currentColor" />
+      <path d="M8 1.75v1.5M8 12.75v1.5M1.75 8h1.5M12.75 8h1.5M3.58 3.58l1.06 1.06M11.36 11.36l1.06 1.06M3.58 12.42l1.06-1.06M11.36 4.64l1.06-1.06" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function SearchIcon(): React.JSX.Element {
   return (
-    <svg
-      className="thread-menu-search-icon"
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg className="thread-menu-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
       <path d="m20 20-3.2-3.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
@@ -270,13 +388,32 @@ function SearchIcon(): React.JSX.Element {
 
 function ChatBubbleIcon(): React.JSX.Element {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8A1.5 1.5 0 0 1 18.5 15H9l-4 3.5V15H5.5A1.5 1.5 0 0 1 4 13.5v-8Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8A1.5 1.5 0 0 1 18.5 15H9l-4 3.5V15H5.5A1.5 1.5 0 0 1 4 13.5v-8Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ChevronIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="m6 3.5 4.5 4.5L6 12.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M10 3.5 5.5 8l4.5 4.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
