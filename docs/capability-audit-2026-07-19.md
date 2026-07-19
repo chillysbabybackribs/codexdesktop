@@ -101,10 +101,14 @@ Compared against Cursor 2.x/3.5, Claude Code (2026), and the OpenAI Codex app (2
   matches the plan's done-criteria"). Incumbents' plan modes produce inert documents.
 
 **Conspicuously missing (build map in §4)**
-- No true **subagent spawn primitive** — "stacked subagents" is UI pane layout plus
-  renderer glue; the doer/auditor loop is bespoke, not infrastructure.
-- No **plan mode** interaction (propose file-by-file plan → approve → execute), despite
-  having a `planning` skill and a plan-checklist renderer.
+- Subagent spawn is **Phase-1 blocking single only** — `spawn_subagent` (shipped
+  post-audit: `src/main/agents/subagent-orchestrator.ts` + `agent-tool-router.ts`,
+  both providers, interrupt cascade) runs one child to completion and returns its
+  answer; no parallel fan-out/gather yet, and spawned workers are turn-ephemeral.
+- Plan mode is **conversational only** — the paired-thread intake protocol (doer
+  restates → user confirms in chat → reviewer authors the plan the doer executes;
+  `main-chat-intake.ts`, shipped post-audit) covers the confirm-before-work moment,
+  but there is no file-by-file plan-edit/approve surface.
 - No **scheduling / background turns** (the studio doc's own first-pulled feature; Codex
   ships Automations).
 - Browser network layer is **read-only** (no request interception/routing/mocking).
@@ -145,11 +149,15 @@ correcting each other's work until a task is done.** The concrete base model:
 
 This inverts the usual economics — cheap model does volume, expensive model does
 high-leverage review — and is a direct generalization of the existing doer/auditor loop
-(`audit-trigger.ts`), which today fires once per turn with a one-bounce cap. The missing
-piece is the **loop-to-done controller**: a bounded, converging cycle (doer produces →
-reviewer flags → doer fixes → reviewer re-checks → …) with a clear termination
-condition (reviewer passes, or a max-iteration / budget ceiling), built on the existing
-checkpoint machinery so every iteration is reversible.
+(`audit-trigger.ts`), which today fires once per turn with a one-bounce cap. The
+**beginning phase shipped** in the post-merge refresh: conversational intake gives the
+loop its alignment gate (doer restates, user confirms, reviewer authors the plan it
+will later audit against — see `docs/prompt-intake-2026-07-19.md`). The missing pieces
+are the **mid-turn watchdog** (sparse, silence-by-default trajectory checks steered
+into the running turn) and the **loop-to-done controller**: a bounded, converging cycle
+(doer produces → reviewer flags → doer fixes → reviewer re-checks → …) with a clear
+termination condition (reviewer passes, or a max-iteration / budget ceiling), built on
+the existing checkpoint machinery so every iteration is reversible.
 
 **The optimistic-but-possible horizon** these two combine into: a **long-running,
 high-quality, start-to-finish pipeline** — a cheap doer + strong reviewer loop that can
