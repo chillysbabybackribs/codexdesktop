@@ -34,8 +34,8 @@ import {
 } from './turn-telemetry';
 import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
 import { stripMentionContext } from './mention-model';
-import { selectCompletedWork } from './memory-work';
 import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
+import { completedMemoryTurns } from './memory-turns';
 import type { ChatAttachment } from '../../shared/ipc';
 import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transcript-model';
 import {
