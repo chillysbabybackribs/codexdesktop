@@ -308,7 +308,7 @@ const AgentWindow = memo(function AgentWindow({
 
   useEffect(() => {
     followTail()
-  }, [followTail, session.messages, session.status, liveMainTurn])
+  }, [followTail, rows, session.status, liveMainTurn])
 
   const handleScroll = useCallback(() => {
     // Ignore the scroll event caused by our own bottom-follow write.
@@ -338,24 +338,59 @@ const AgentWindow = memo(function AgentWindow({
 
   const working = session.status === 'working'
 
-  // The audit briefing renders as a retractable markdown doc (the artifact the
-  // auditor reads); the report that follows is a plain assistant message.
-  const messageNodes = session.messages.map((message, index) => (
-    <div key={message.id} className={`agent-mini-message is-${message.audit ? 'audit' : message.role}`}>
-      {message.audit ? (
-        <AuditBriefDoc audit={message.audit} />
-      ) : message.role === 'assistant' ? (
-        <AssistantMessage
-          text={message.text}
-          // Manual escalation targets the latest audit exchange; only its
-          // report gets an actionable flag badge.
-          onSendFlagged={index === session.messages.length - 1 ? () => onSendFeedback(session.key) : undefined}
-        />
-      ) : (
-        <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
-      )}
-    </div>
-  ))
+  // Phase 5: the dock renders the FULL transcript from the shared session
+  // store — the same ThreadItem → rows pipeline as the main chat, so agents
+  // get thought blocks, tool rows, terminal cards, and diff cards instead of
+  // a prose-only projection.
+  const subscribeRenderState = useCallback(
+    (onChange: () => void) => sessionStore.subscribe(session.key, onChange),
+    [sessionStore, session.key]
+  )
+  const renderState = useSyncExternalStore(
+    subscribeRenderState,
+    () => sessionStore.peek(session.key) ?? emptyAgentRenderState
+  )
+  const { rows } = useMemo(
+    () => buildRows(renderState.items, renderState.itemMeta, renderState.turnId),
+    [renderState.items, renderState.itemMeta, renderState.turnId]
+  )
+
+  // Adjacent identical assistant restatements carry no information (same
+  // policy the lite projection applied).
+  const duplicateAssistantIds = useMemo(() => {
+    const skip = new Set<string>()
+    let previous: { text: string } | null = null
+    for (const item of renderState.items) {
+      if (item.type === 'agentMessage') {
+        if (previous && previous.text === item.text) skip.add(item.id)
+        previous = item
+      } else if (item.type === 'userMessage') {
+        previous = null
+      }
+    }
+    return skip
+  }, [renderState.items])
+
+  let lastAssistantTextId: string | null = null
+  for (let index = rows.length - 1; index >= 0; index -= 1) {
+    const row = rows[index]
+    if (row.kind === 'chat' && row.item.type === 'agentMessage' && row.item.text && !duplicateAssistantIds.has(row.item.id)) {
+      lastAssistantTextId = row.item.id
+      break
+    }
+  }
+
+  const messageNodes = rows.map((row) =>
+    renderAgentRow(row, {
+      itemMeta: renderState.itemMeta,
+      activeTurnId: renderState.turnId,
+      workspace,
+      duplicateAssistantIds,
+      lastAssistantTextId,
+      onSendFlagged: () => onSendFeedback(session.key)
+    })
+  )
+  const hasTranscript = rows.some((row) => row.kind !== 'tail')
   // The audit watch strip: while the main chat's turn is in flight and this
   // agent is armed to audit, show the doer's progress from the auditor's POV.
   const watchingMain = session.auditsMain && liveMainTurn !== null && !working
@@ -574,7 +609,7 @@ const AgentWindow = memo(function AgentWindow({
           className="agent-overlay-content"
           style={{ '--agent-chat-zoom': `${zoomPercent / 100}` } as React.CSSProperties}
         >
-          {session.messages.length === 0 ? (
+          {!hasTranscript ? (
             session.auditsMain ? (
               <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
             ) : (
@@ -588,7 +623,7 @@ const AgentWindow = memo(function AgentWindow({
           ) : (
             messageNodes
           )}
-          {session.messages.length > 0 && watchingMain && liveMainTurn ? (
+          {hasTranscript && watchingMain && liveMainTurn ? (
             <div className="agent-audit-live" role="status">
               <span className="agent-audit-live-pulse" aria-hidden="true" />
               <div className="agent-audit-live-copy">
@@ -604,7 +639,7 @@ const AgentWindow = memo(function AgentWindow({
               </div>
             </div>
           ) : null}
-          {session.messages.length > 0 && !working && session.lastAuditNote ? (
+          {hasTranscript && !working && session.lastAuditNote ? (
             <div className="agent-audit-note" role="status">{session.lastAuditNote}</div>
           ) : null}
           {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
