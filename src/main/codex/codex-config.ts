@@ -272,14 +272,14 @@ const browserSnapshotSchema = {
       enum: ['document', 'reverse-document'],
       description: 'Returned list order. Defaults to document order; use reverse-document only when the page is known to render the desired records last.'
     },
-    selector: { type: 'string', description: 'Optional extraction scope selector. Searches the document and open shadow roots.' },
+    selector: { type: 'string', description: 'Optional extraction scope container selector. The first matching container is traversed; do not pass a repeated row selector when you need multiple rows.' },
     maxItems: {
       type: 'number',
       minimum: 1,
       maximum: 200,
       description: 'Maximum task items. Set this to the requested list count; otherwise a nearby numeric count in the objective is inferred.'
     },
-    readySelector: { type: 'string', description: 'Optional deep selector that must become ready after navigation.' },
+    readySelector: { type: 'string', description: 'Optional deep selector used to accelerate navigation readiness. A selector miss is reported in `readiness`; a snapshot can still succeed when its requested evidence verifies.' },
     timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' },
     quietMs: { type: 'number', description: 'Optional DOM-quiet window after navigation readiness.' },
     maxSettleMs: { type: 'number', description: 'Optional maximum DOM-settle time after document readiness.' },
@@ -398,7 +398,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_snapshot',
-    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, and a completion directive in one call. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
+    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, readiness state, and a completion directive in one call. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use a container selector rather than a repeated row selector. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
     inputSchema: browserSnapshotSchema
   },
   {

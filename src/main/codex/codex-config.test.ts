@@ -282,6 +282,8 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.match(browserSnapshot.description, /one call/i)
   assert.match(browserSnapshot.description, /completion directive/i)
   assert.match(browserSnapshot.description, /targeted-gap-fill/i)
+  assert.match(snapshotSchema.properties.selector?.description ?? '', /container selector/i)
+  assert.match(snapshotSchema.properties.readySelector?.description ?? '', /snapshot can still succeed/i)
   const browserScreenshot = browserDynamicTools.find(({ name }) => name === 'browser_screenshot')
   assert.equal(browserScreenshot?.type, 'function')
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
