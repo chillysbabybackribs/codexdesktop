@@ -1671,6 +1671,27 @@ function clampNumber(value: number | null | undefined, fallback: number, minimum
   return Math.min(maximum, Math.max(minimum, Math.round(value)))
 }
 
+function captureTargetLease(tabs: TabManager, tabId: string): BrowserTargetLease | null {
+  const webContents = tabs.resolveWebContents(tabId)
+  if (!webContents) return null
+  // Test doubles and the legacy socket adapter may not expose epochs yet; the
+  // WebContents identity still protects target close/replacement in that path.
+  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
+  return { tabId, webContents, epoch: epochReader?.call(tabs, tabId) ?? 0 }
+}
+
+function assertTargetLeaseCurrent(tabs: TabManager, lease: BrowserTargetLease): void {
+  const current = tabs.resolveWebContents(lease.tabId)
+  if (!current) {
+    throw operationError('targetClosed', 'targetLifecycle', `browser target ${lease.tabId} closed during operation`)
+  }
+  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
+  const epoch = epochReader?.call(tabs, lease.tabId)
+  if (current !== lease.webContents || (epoch !== undefined && epoch !== null && epoch !== lease.epoch)) {
+    throw operationError('targetChanged', 'targetLifecycle', `browser target ${lease.tabId} changed during operation`)
+  }
+}
+
 function safeUrl(webContents: WebContents): string {
   try {
     return webContents.getURL()
