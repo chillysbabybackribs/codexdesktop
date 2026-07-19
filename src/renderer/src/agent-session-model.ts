@@ -117,6 +117,28 @@ export function createReviewerSession(
   return { ...createAgentSession(key, title, mainChatTabKey), auditsMain: true, model }
 }
 
+// A worker spawned by a lead's spawn_subagent tool call. It inherits the
+// spawning session's owning tab so the roster groups it under the right main
+// chat, links to its parent by key, and records the turn that created it. It
+// is never an auditor (workers do the work; the reviewer pairing is separate).
+// The threadId is bound once the orchestrator starts its turn.
+export function createWorkerSession(
+  key: string,
+  title: string,
+  mainChatTabKey: string | null,
+  parentAgentKey: string,
+  spawnedByTurnId: string | null,
+  model: string | null
+): AgentSession {
+  return {
+    ...createAgentSession(key, title, mainChatTabKey),
+    role: 'worker',
+    parentAgentKey,
+    spawnedByTurnId,
+    model
+  }
+}
+
 // "Reviewer", then "Reviewer 2"… per owning tab — identity over enumeration
 // (the old "Agent 79" told the user nothing about what the window does).
 export function reviewerTitle(sessions: AgentSession[], mainChatTabKey: string | null): string {
