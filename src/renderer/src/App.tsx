@@ -76,6 +76,12 @@ import {
 import { reduceResearchProgressMeta } from './activity-model'
 import { BrowserPane } from './BrowserPane'
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent'
+import {
+  SessionStore,
+  emptySessionState,
+  reduceSessionNotification,
+  type SessionRenderState
+} from './session-store'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -154,21 +160,9 @@ function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
   return goal ? { ...goal } : null
 }
 
-type MainChatSnapshot = {
-  threadId: string | null
-  title: string
-  turnId: string | null
-  goal: ThreadGoal | null
-  reasoningEffort: ReasoningEffort | null
-  items: ChatItem[]
-  itemMeta: Record<string, ItemMeta>
-  turnMeta: Record<string, TurnMeta>
-  contextUsage: ThreadTokenUsage | null
-  isCompacting: boolean
-  activeCompaction: { itemId: string; turnId: string; beforeTokens: number | null } | null
-  precedingModelInputByTurn: Map<string, ModelCallAttribution>
-  pendingCompactionByTurn: Set<string>
-}
+// The per-session render model now lives in session-store.ts (Phase 2); a
+// main-chat "snapshot" is simply a session state held under the tab's key.
+type MainChatSnapshot = SessionRenderState
 
 export default function App(): React.JSX.Element {
   const [split, setSplit] = useState(() => {
@@ -299,7 +293,8 @@ export default function App(): React.JSX.Element {
   const contextUsageRef = useRef<ThreadTokenUsage | null>(null)
   const mainChatTabStateRef = useRef(mainChatTabState)
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
-  const mainChatSnapshotsRef = useRef<Map<string, MainChatSnapshot>>(new Map())
+  const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore)
+  if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore()
   const olderHistoryCursorByThreadRef = useRef<Map<string, string | null>>(new Map())
   const olderHistoryLoadsRef = useRef<Set<string>>(new Set())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
@@ -423,7 +418,7 @@ export default function App(): React.JSX.Element {
   function captureActiveMainChatSnapshot(): void {
     flushPendingItemMutations()
     const key = activeMainChatTabKeyRef.current
-    mainChatSnapshotsRef.current.set(key, {
+    sessionStoreRef.current.set(key, {
       threadId: activeThreadIdRef.current,
       title: activeThreadTitleRef.current,
       turnId: activeTurnIdRef.current,
@@ -833,9 +828,9 @@ export default function App(): React.JSX.Element {
         turnId: response.turn.id
       }))
       if (activeMainChatTabKeyRef.current !== targetTabKey) {
-        const snapshot = mainChatSnapshotsRef.current.get(targetTabKey)
+        const snapshot = sessionStoreRef.current.peek(targetTabKey)
         if (snapshot) {
-          mainChatSnapshotsRef.current.set(targetTabKey, {
+          sessionStoreRef.current.set(targetTabKey, {
             ...snapshot,
             threadId: response.threadId,
             turnId: response.turn.id,
