@@ -147,12 +147,171 @@ button {
   background: #181818;
 }
 
-.chat-pane.is-empty {
-  grid-template-rows: 40px 1fr;
+/* The pane rows (transcript + composer, docked or centered) moved into
+   .chat-pane-view so several chats can tile the surface; the section itself
+   is just tabbar + split surface. */
+.chat-pane.is-empty,
+.chat-pane.is-thread {
+  grid-template-rows: 40px minmax(0, 1fr);
 }
 
-.chat-pane.is-thread {
-  grid-template-rows: 40px 1fr auto;
+/* ── Chat split surface ──────────────────────────────────────────────────
+   A binary tile tree: rows place children side by side, columns stack them.
+   Grid templates (ratio + 5px divider) come inline from the layout model. */
+.chat-split-root {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+.chat-split {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+.chat-split.is-row {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.chat-split.is-column {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.chat-split-divider {
+  position: relative;
+  z-index: 5;
+  background: var(--hairline-strong);
+  background-clip: content-box;
+  transition: background-color 120ms ease;
+}
+
+.chat-split.is-row > .chat-split-divider {
+  padding: 0 2px;
+  cursor: col-resize;
+}
+
+.chat-split.is-column > .chat-split-divider {
+  padding: 2px 0;
+  cursor: row-resize;
+}
+
+.chat-split-divider:hover,
+.chat-split-divider:active {
+  background-color: rgb(255 255 255 / 22%);
+}
+
+.chat-pane-view {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #181818;
+}
+
+.chat-pane-view.is-empty {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.chat-pane-view.has-header {
+  grid-template-rows: 30px minmax(0, 1fr) auto;
+}
+
+.chat-pane-view.has-header.is-empty {
+  grid-template-rows: 30px minmax(0, 1fr);
+}
+
+/* In a split, background panes recede a step; the focused pane reads as the
+   working surface — same grammar as active vs quiet tabs. */
+.chat-pane-view-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 0 4px 0 10px;
+  border-bottom: 1px solid var(--hairline-strong);
+  background: #121213;
+  color: #8a8a8a;
+  font-size: 12px;
+  user-select: none;
+}
+
+.chat-pane-view.is-focused .chat-pane-view-header {
+  background: #1a1a1b;
+  color: #d9dbdd;
+}
+
+.chat-pane-view-header .main-chat-tab-glyph {
+  flex: 0 0 auto;
+  opacity: 0.85;
+}
+
+.chat-pane-view-title {
+  overflow: hidden;
+  min-width: 0;
+  max-width: 60%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-pane-view-header-spacer {
+  flex: 1 1 auto;
+}
+
+.chat-pane-view-unsplit {
+  display: grid;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #8f8f8f;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
+}
+
+.chat-pane-view-unsplit:hover {
+  background: rgb(255 255 255 / 7%);
+  color: #e1e3e5;
+}
+
+/* Drop hints while a chat tab is dragged over the surface: edges preview the
+   half the chat would occupy, center previews a content swap. */
+.chat-split-drop-overlay {
+  position: absolute;
+  z-index: 7;
+  inset: 6px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 6%);
+  pointer-events: none;
+}
+
+.chat-pane-view.has-header .chat-split-drop-overlay {
+  top: 34px;
+}
+
+.chat-split-drop-overlay.is-left {
+  right: calc(50% + 2px);
+}
+
+.chat-split-drop-overlay.is-right {
+  left: calc(50% + 2px);
+}
+
+.chat-split-drop-overlay.is-top {
+  bottom: calc(50% + 2px);
+}
+
+.chat-split-drop-overlay.is-bottom {
+  top: calc(50% + 2px);
 }
 
 .chat-pane.is-plugin-browser {
@@ -6901,6 +7060,7 @@ code.agent-audit-live-step {
   .work-spinner,
   .tab-favicon-spinner,
   .agent-status-spinner,
+  .agent-standby-spinner,
   .agent-overlay.is-flash {
     animation: none;
   }

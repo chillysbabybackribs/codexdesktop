@@ -95,6 +95,9 @@ type ClaudeToolState = {
   kind: ClaudeToolKind;
   startedAtMs: number;
   command: string;
+  // Bash's model-written natural-language `description` — the renderer
+  // prefers it over heuristics when narrating the command.
+  description: string;
   commandActions: unknown[];
   changes: Array<{ path: string; kind: unknown; diff: string }>;
   query: string;
@@ -397,6 +400,7 @@ export class ClaudeTurnTranslator {
       kind: classifyClaudeTool(name),
       startedAtMs: this.context.nowMs(),
       command: '',
+      description: '',
       commandActions: [],
       changes: [],
       query: '',
@@ -414,6 +418,7 @@ export class ClaudeTurnTranslator {
       kind: 'mcp',
       startedAtMs: this.context.nowMs(),
       command: '',
+      description: '',
       commandActions: [],
       changes: [],
       query: '',
@@ -435,6 +440,7 @@ export class ClaudeTurnTranslator {
     switch (state.name) {
       case 'Bash':
         state.command = str(input.command) ?? '';
+        state.description = str(input.description) ?? '';
         break;
       case 'Read':
         if (!path) return [];
