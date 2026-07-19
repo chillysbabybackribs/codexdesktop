@@ -1070,9 +1070,11 @@ async function executePageProgram(
   frameSelector: string | null | undefined,
   maxResultChars: number
 ): Promise<unknown> {
-  const wrapped = `(async () => { ${code}\n})()`
+  const wrapped = buildWrappedPageProgram(code)
   const selector = frameSelector?.trim()
-  if (!selector || selector === 'main') return webContents.executeJavaScript(wrapped, true)
+  if (!selector || selector === 'main') {
+    return unwrapPageProgramResult(await webContents.executeJavaScript(wrapped, true))
+  }
 
   const mainFrame = webContents.mainFrame
   const frames = liveFrames(mainFrame)
@@ -1081,7 +1083,7 @@ async function executePageProgram(
     const results = await mapWithConcurrency(frames, MAX_PARALLEL_BROWSER_FRAMES, async (frame) => {
       const descriptor = describeFrame(frame, mainFrame)
       try {
-        const result = await frame.executeJavaScript(wrapped, true)
+        const result = unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true))
         const bounded = boundResult(result, perFrameBudget)
         return {
           frame: descriptor,
@@ -1091,11 +1093,13 @@ async function executePageProgram(
           truncated: bounded.truncated
         }
       } catch (error) {
+        const failure = browserFailureFor(error, 'pageScriptError', 'pageScript')
         return {
           frame: descriptor,
           ok: false,
-          error: errorMessage(error),
-          errorCode: classifyBrowserFailure(error),
+          error: failure.message,
+          errorCode: failure.code,
+          failure,
           truncated: false
         }
       }
@@ -1114,8 +1118,58 @@ async function executePageProgram(
   if (!frame) throw new Error(`no live frame with id ${selector}`)
   return {
     frame: describeFrame(frame, mainFrame),
-    result: await frame.executeJavaScript(wrapped, true)
+    result: unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true))
   }
+}
+
+const PAGE_PROGRAM_ENVELOPE_KEY = '__codexBrowserRunV1'
+const PAGE_SIGNAL_CODES = new Set<BrowserFailureCode>([
+  'conditionNotMet',
+  'conditionTimeout',
+  'selectorNotFound',
+  'invalidSelector'
+])
+
+function buildWrappedPageProgram(code: string): string {
+  return `(async () => {
+    const normalizeError = (error) => {
+      const safeRead = (read, fallback = '') => { try { return read(); } catch { return fallback; } };
+      const rawMessage = safeRead(() => error && typeof error.message === 'string' ? error.message : '');
+      const fallbackMessage = safeRead(() => typeof error === 'string' ? error : String(error), 'unknown page script error');
+      const name = safeRead(() => error && typeof error.name === 'string' ? error.name : typeof error, 'Error');
+      const stack = safeRead(() => error && typeof error.stack === 'string' ? error.stack : '', '');
+      const code = safeRead(() => error && typeof error.codexBrowserFailureCode === 'string' ? error.codexBrowserFailureCode : '', '');
+      return {
+        name: String(name || 'Error').slice(0, 120),
+        message: String(rawMessage || fallbackMessage || 'unknown page script error').slice(0, 2000),
+        ...(stack ? { stack: String(stack).slice(0, 4000) } : {}),
+        ...(code ? { code: String(code).slice(0, 80) } : {})
+      };
+    };
+    try {
+      const value = await (async () => { ${code}\n})();
+      return { ${PAGE_PROGRAM_ENVELOPE_KEY}: true, ok: true, value };
+    } catch (error) {
+      return { ${PAGE_PROGRAM_ENVELOPE_KEY}: true, ok: false, error: normalizeError(error) };
+    }
+  })()`
+}
+
+function unwrapPageProgramResult(value: unknown): unknown {
+  const envelope = asRecord(value)
+  if (envelope[PAGE_PROGRAM_ENVELOPE_KEY] !== true) return value
+  if (envelope.ok === true) return envelope.value
+
+  const pageError = asRecord(envelope.error)
+  const message = typeof pageError.message === 'string' && pageError.message
+    ? pageError.message
+    : 'page script failed'
+  const requestedCode = typeof pageError.code === 'string' ? pageError.code as BrowserFailureCode : undefined
+  const code = requestedCode && PAGE_SIGNAL_CODES.has(requestedCode) ? requestedCode : 'pageScriptError'
+  throw operationError(code, 'pageScript', message, {
+    ...(typeof pageError.name === 'string' && pageError.name ? { name: pageError.name } : {}),
+    ...(typeof pageError.stack === 'string' && pageError.stack ? { stack: pageError.stack } : {})
+  })
 }
 
 function liveFrames(mainFrame: WebFrameMain): WebFrameMain[] {
