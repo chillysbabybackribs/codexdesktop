@@ -6985,8 +6985,10 @@ button {
   right: 0;
   bottom: calc(100% - 2px);
   z-index: 30;
-  width: min(248px, 100cqw);
+  display: flex;
+  width: min(430px, 100cqw);
   padding: 5px;
+  gap: 4px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
   border-radius: 12px 12px 0 0;
@@ -7038,9 +7040,10 @@ button {
   align-items: flex-start;
   flex-direction: column;
   gap: 2px;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 44px;
-  padding: 8px 34px 8px 9px;
+  padding: 8px 9px;
   border: 0;
   border-radius: 9px;
   background: transparent;
