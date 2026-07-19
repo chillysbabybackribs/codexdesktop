@@ -33,10 +33,24 @@ test('turnChangedFiles collects unique paths for exactly the completed turn', ()
   assert.deepEqual(turnChangedFiles(items, meta, 'turn-3'), [])
 })
 
-test('audit fires only for file-changing turns and idle auditors', () => {
+test('audit fires for any turn with substance; only empty turns and busy auditors skip', () => {
   assert.equal(shouldTriggerAudit({ auditorStatus: 'idle', auditorTurnId: null, changedFiles: ['a.ts'] }), true)
   assert.equal(shouldTriggerAudit({ auditorStatus: 'done', auditorTurnId: null, changedFiles: ['a.ts'] }), true)
-  assert.equal(shouldTriggerAudit({ auditorStatus: 'idle', auditorTurnId: null, changedFiles: [] }), false, 'chat-only turns never audit')
+  assert.equal(
+    shouldTriggerAudit({ auditorStatus: 'idle', auditorTurnId: null, changedFiles: [], answerText: 'Here is an idea…' }),
+    true,
+    'chat-only turns audit too — second viewpoint during brainstorming'
+  )
+  assert.equal(
+    shouldTriggerAudit({ auditorStatus: 'idle', auditorTurnId: null, changedFiles: [], answerText: '', stepCount: 2 }),
+    true,
+    'tool-only turns still audit'
+  )
+  assert.equal(
+    shouldTriggerAudit({ auditorStatus: 'idle', auditorTurnId: null, changedFiles: [], answerText: '  ', stepCount: 0 }),
+    false,
+    'turns with nothing to review never audit'
+  )
   assert.equal(shouldTriggerAudit({ auditorStatus: 'working', auditorTurnId: 't', changedFiles: ['a.ts'] }), false, 'busy auditors are skipped, not queued')
 })
 
@@ -53,6 +67,27 @@ test('the audit prompt is compact, lists files, and directs the auditor at the w
   assert.ok(!prompt.includes('\n\n'), 'stays compact')
   const longPrompt = buildAuditPrompt({ userText: 'x'.repeat(500), files: ['a.ts'] })
   assert.match(longPrompt, /…/)
+})
+
+test('chat-only turns get the second-opinion flavor with the answer embedded', () => {
+  const prompt = buildAuditPrompt({
+    userText: 'brainstorm names for the feature',
+    files: [],
+    answerText: 'Here are three ideas:\n\n1. Pairwise\n2. Shadow\n3. Copilot'
+  })
+  assert.match(prompt, /The main chat answered:\n {2}Here are three ideas:/)
+  assert.match(prompt, /second opinion on the answer/)
+  assert.match(prompt, /trivial \(a greeting or small acknowledgment\), reply in a few words/)
+  assert.ok(!prompt.includes('The turn changed'), 'no file section on chat-only turns')
+  assert.ok(!prompt.includes('git diff HEAD'), 'no diff instructions on chat-only turns')
+  assert.ok(!prompt.includes('\n\n'), 'answer blank lines are squashed')
+})
+
+test('the detection-unavailable note rides into the prompt for non-git workspaces', () => {
+  const prompt = buildAuditPrompt({ userText: 'do it', files: [], answerText: 'done', detectionUnavailable: true })
+  assert.match(prompt, /file-change detection is unavailable here/)
+  const gitPrompt = buildAuditPrompt({ userText: 'do it', files: ['a.ts'], answerText: 'done' })
+  assert.ok(!gitPrompt.includes('detection is unavailable'))
 })
 
 test('turnStepLines builds an ordered, clipped step log from work items', () => {
