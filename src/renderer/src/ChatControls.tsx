@@ -160,27 +160,27 @@ export function ContextPill({
   disabled: boolean;
   compacting: boolean;
   onCompact: () => Promise<void>;
-}): React.JSX.Element | null {
+}): React.JSX.Element {
   const window = usage?.modelContextWindow;
   const contextTokens = usage?.last.totalTokens ?? 0;
-
-  if (!usage || !window || contextTokens <= 0) {
-    return null;
-  }
-
-  const percent = Math.min(100, Math.round((contextTokens / window) * 100));
+  const hasUsage = Boolean(usage && window && contextTokens > 0);
+  const percent = hasUsage && window
+    ? Math.min(100, Math.round((contextTokens / window) * 100))
+    : 0;
   const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : '';
+  const title = compacting
+    ? 'Compacting the conversation…'
+    : hasUsage && window
+      ? `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact the conversation.`
+      : 'Context usage will appear after the first model response.';
 
   return (
     <button
       type="button"
-      className={`context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
-      disabled={disabled}
-      title={
-        compacting
-          ? 'Compacting the conversation…'
-          : `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact the conversation.`
-      }
+      className={`context-pill ${level} ${hasUsage ? '' : 'is-empty'} ${compacting ? 'is-compacting' : ''}`}
+      disabled={disabled || !hasUsage}
+      aria-label={title}
+      title={title}
       onClick={() => void onCompact()}
     >
       <span className="context-pill-ring" aria-hidden="true">

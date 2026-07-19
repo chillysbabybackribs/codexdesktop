@@ -3795,6 +3795,10 @@ button {
   stroke: #b9b9b9;
 }
 
+.composer-control-bar .context-pill.is-empty .context-pill-ring-fill {
+  stroke: transparent;
+}
+
 .context-pill.is-compacting {
   opacity: 1;
 }

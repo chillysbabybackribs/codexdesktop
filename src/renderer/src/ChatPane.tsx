@@ -406,26 +406,36 @@ export function ChatPane({
       </div>
     ) : null;
 
-  const paneComposerFooterContext = (isActivePane: boolean) =>
-    isActivePane ? (
+  // Composer controls belong to the visible pane, not the focused pane. Keeping
+  // this tree stable prevents focus changes from changing the lower composer
+  // strip, while still routing agent actions to the correct chat.
+  const paneComposerFooterContext = (tabKey: string) => {
+    const paneAgentSessions = agentSessionsForMainChatTab(agentSessions, tabKey);
+
+    return (
       <div className="composer-context">
         <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
         <AgentTabStrip
-          sessions={activeAgentSessions}
+          sessions={paneAgentSessions}
           openKeys={openAgentKeys}
-          onFocus={focusAgent}
+          onFocus={(agentKey) => {
+            void onSelectMainChatTab(tabKey).then((selected) => {
+              if (selected) focusAgent(agentKey);
+            });
+          }}
         />
         <button
           type="button"
           className="composer-new-agent-button"
           aria-label="New agent"
           title="New agent"
-          onClick={() => onNewAgent(activeMainChatTabKey)}
+          onClick={() => onNewAgent(tabKey)}
         >
           <NewAgentIcon />
         </button>
       </div>
-    ) : null;
+    );
+  };
 
   /* The focused pane also carries the workspace-level reviewer column. */
   const activeDockExtras = {
@@ -474,7 +484,7 @@ export function ChatPane({
           dockExtras={{
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
             composerHeaderContext: paneComposerModelContext(node.tabKey, tab),
-            composerFooterContext: paneComposerFooterContext(isActivePane),
+            composerFooterContext: paneComposerFooterContext(node.tabKey),
           }}
         />
       );
