@@ -19,6 +19,14 @@ const planningSkill: SkillMetadata = {
   enabled: true
 }
 
+const editorialWaitlistSkill: SkillMetadata = {
+  name: 'superdesign-editorial-waitlist',
+  description: 'Build editorial waitlist landing pages from a visual contract',
+  path: '/app/skills/superdesign-editorial-waitlist/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('local skill path containment rejects siblings and traversal', () => {
   assert.equal(isPathWithin('/app/skills', '/app/skills/research/SKILL.md'), true)
   assert.equal(isPathWithin('/app/skills', '/app/skills-other/research/SKILL.md'), false)
@@ -52,4 +60,16 @@ test('ordinary turns do not force-attach the planning skill', () => {
 
   assert.deepEqual(input.map((item) => item.type), ['text'])
   assert.equal(input[0]?.type === 'text' && input[0].text, 'Help me decide how to approach this')
+})
+
+test('editorial waitlist turns send the reference skill to the model', () => {
+  const registry = new LocalSkillRegistry('/app', '/app/skills', [editorialWaitlistSkill])
+  const input = registry.buildTurnInput('Build an editorial waitlist landing page for a private design salon', false)
+
+  assert.deepEqual(input.map((item) => item.type), ['text', 'skill'])
+  assert.equal(
+    input[0]?.type === 'text' && input[0].text,
+    '$superdesign-editorial-waitlist\nBuild an editorial waitlist landing page for a private design salon'
+  )
+  assert.equal(input[1]?.type === 'skill' && input[1].name, editorialWaitlistSkill.name)
 })
