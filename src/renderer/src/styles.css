@@ -6983,18 +6983,18 @@ button {
   position: absolute;
   top: auto;
   right: 0;
-  bottom: calc(100% - 1px);
+  bottom: calc(100% - 2px);
   z-index: 30;
   width: min(248px, 100cqw);
   padding: 5px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
   border-radius: 12px 12px 0 0;
+  /* Same white overlay the bar head uses (1.5%) stacked on --surface-card,
+     so the menu grey is identical to the bar it grows out of. */
   background-color: var(--surface-card);
-  background-image: var(--grain);
-  box-shadow:
-    0 -12px 28px rgb(0 0 0 / 34%),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
+  background-image: linear-gradient(rgb(255 255 255 / 1.5%), rgb(255 255 255 / 1.5%)), var(--grain);
+  box-shadow: 0 -12px 28px rgb(0 0 0 / 34%);
   overflow: hidden;
   transform-origin: bottom right;
   animation: review-action-menu-in 170ms cubic-bezier(0.16, 1, 0.3, 1);
