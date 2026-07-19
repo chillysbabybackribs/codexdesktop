@@ -516,14 +516,28 @@ export class ResearchRunner {
             const navigationResult = await loadPage(view.webContents, browserUrl, linked.signal)
             recordNavigation(navigation, navigationResult)
             throwIfAborted(linked.signal)
-            const result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
+            let result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
               view.webContents,
               buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
             )
             const safeFinalUrl = normalizeResearchUrls([result.url], 1)[0]
             if (!safeFinalUrl) throw new Error('page verification failed: invalid or non-public final URL')
             result.url = safeFinalUrl
-            const assessment = assessExtractedPage(result)
+            let assessment = assessExtractedPage(result)
+            if (!assessment.verified && assessment.reason === 'insufficient-content' && isLikelyLoadingContent(result.content)) {
+              const ready = await waitForResearchContent(view.webContents)
+              throwIfAborted(linked.signal)
+              if (ready) {
+                result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
+                  view.webContents,
+                  buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
+                )
+                const retryUrl = normalizeResearchUrls([result.url], 1)[0]
+                if (!retryUrl) throw new Error('page verification failed: invalid or non-public final URL')
+                result.url = retryUrl
+                assessment = assessExtractedPage(result)
+              }
+            }
             if (!assessment.verified) {
               throw new Error(`page verification failed: ${assessment.reason}`)
             }
@@ -792,6 +806,40 @@ async function loadPage(
 
 async function evaluate<T>(webContents: Electron.WebContents, code: string): Promise<T> {
   return webContents.executeJavaScript(`(async () => { ${code}\n})()`, true) as Promise<T>
+}
+
+function isLikelyLoadingContent(content: string): boolean {
+  return /^(?:loading(?:\.{1,3})?|please wait(?:\.{1,3})?|fetching|initializing|preparing|content is loading|skeleton|shimmer)/i.test(content.trim())
+}
+
+async function waitForResearchContent(webContents: Electron.WebContents): Promise<boolean> {
+  return webContents.executeJavaScript(`new Promise((resolve) => {
+    const startedAt = performance.now();
+    let observer;
+    let timer;
+    let finished = false;
+    const finish = (ready) => {
+      if (finished) return;
+      finished = true;
+      observer?.disconnect();
+      clearInterval(timer);
+      resolve(ready);
+    };
+    const loadingShell = (value) => /^(?:loading(?:\\.{1,3})?|please wait(?:\\.{1,3})?|fetching|initializing|preparing|content is loading|skeleton|shimmer)/i.test(value.trim());
+    const useful = () => {
+      const text = (document.body?.innerText || '').replace(/\\s+/g, ' ').trim();
+      const busy = document.querySelector('[aria-busy="true"], [role="progressbar"], [data-loading="true"]');
+      return text.length >= 500 && !loadingShell(text) && !busy;
+    };
+    const tick = () => {
+      if (useful()) return finish(true);
+      if (performance.now() - startedAt >= 1500) finish(false);
+    };
+    observer = new MutationObserver(tick);
+    if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
+    timer = setInterval(tick, 50);
+    tick();
+  })`, true) as Promise<boolean>
 }
 
 function clamp(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {
