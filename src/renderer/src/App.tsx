@@ -3557,8 +3557,8 @@ export default function App(): React.JSX.Element {
     workspaceLayoutMode === 'browser-middle'
       ? browserMiddleChatLayout(
           chatSplitLayout,
-          mainChatTabs.map((tab) => tab.key),
-          activeMainChatTabKey,
+          browserMiddleTabKeys(mainChatTabs),
+          browserMiddleActiveTabKeys,
         )
       : null;
   const browserMiddleColumns =
@@ -3569,8 +3569,16 @@ export default function App(): React.JSX.Element {
   const renderChatPane = (
     layout: SplitNode,
     options: { id: string; pathPrefix: string; showTabBar: boolean; side: 'left' | 'right' | null },
-  ): React.JSX.Element => (
-    <ChatPane
+  ): React.JSX.Element => {
+    const paneTabs = options.side
+      ? mainChatTabs.filter((tab) => tab.browserMiddleSide === options.side)
+      : mainChatTabs;
+    const headerActiveMainChatTabKey = options.side
+      ? browserMiddleActiveTabKeys[options.side] ?? paneTabs[0]?.key ?? activeMainChatTabKey
+      : activeMainChatTabKey;
+
+    return (
+      <ChatPane
       turnCheckpoints={turnCheckpoints}
       onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
       turnReviews={turnReviews}
@@ -3581,8 +3589,9 @@ export default function App(): React.JSX.Element {
       onUndoTurnAll={handleUndoTurnAll}
       onUndoFile={handleUndoFile}
       agentSessionStore={sessionStoreRef.current}
-      mainChatTabs={mainChatTabs}
+      mainChatTabs={paneTabs}
       activeMainChatTabKey={activeMainChatTabKey}
+      headerActiveMainChatTabKey={headerActiveMainChatTabKey}
       mainChatTabsDisabled={
         isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
       }
@@ -3604,7 +3613,7 @@ export default function App(): React.JSX.Element {
       }
       onSplitActivePane={handleSplitActivePane}
       canSplitActivePane={
-        canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
+        canSplitPaneAt(chatSplitLayout, headerActiveMainChatTabKey) &&
         mainChatTabs.length < maxMainChatTabs
       }
       items={items}
@@ -3671,8 +3680,9 @@ export default function App(): React.JSX.Element {
       onLoadOlderHistory={(tabKey, threadId) => {
         void loadOlderThreadHistory(threadId, tabKey);
       }}
-    />
-  );
+      />
+    );
+  };
 
   return (
     <div ref={appRef} className="app-shell">

@@ -5897,6 +5897,48 @@ button {
   white-space: nowrap;
 }
 
+/* Roster nesting: a spawned worker chip sits one indent under its lead, with a
+   small branch tick so the parent→child relationship reads at a glance. */
+.agent-tab.is-child {
+  max-width: 138px;
+  padding-left: 6px;
+  opacity: 0.92;
+}
+
+.agent-tab-branch {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-right: 1px;
+  border-left: 1.5px solid #3a3a3d;
+  border-bottom: 1.5px solid #3a3a3d;
+  border-bottom-left-radius: 3px;
+}
+
+/* Rolled-up child count on a lead chip ("2/3" working, or the total). */
+.agent-tab-count {
+  flex: 0 0 auto;
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #2a2a2c;
+  color: var(--chrome-fg);
+  font-size: 10.5px;
+  font-weight: 640;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* A failed descendant surfaces as an amber dot on the collapsed lead so a
+   problem never hides under the rollup. */
+.agent-status-attention {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d9a441;
+  box-shadow: 0 0 0 2px rgba(217, 164, 65, 0.18);
+}
+
 .agent-status {
   flex: 0 0 auto;
   display: inline-flex;

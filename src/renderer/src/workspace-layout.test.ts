@@ -10,7 +10,11 @@ import {
 } from './workspace-layout.ts';
 
 test('browser-middle creates a chat on both sides from a one-pane layout', () => {
-  const result = browserMiddleChatLayout(splitLeaf('one'), ['one', 'two'], 'one');
+  const result = browserMiddleChatLayout(
+    splitLeaf('one'),
+    { left: ['one'], right: ['two'] },
+    { left: 'one', right: 'two' },
+  );
 
   assert.deepEqual(result, {
     kind: 'split',
@@ -44,8 +48,11 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
 
   const result = browserMiddleChatLayout(
     layout,
-    ['left-top', 'left-bottom', 'right-top', 'right-bottom'],
-    'left-top',
+    {
+      left: ['left-top', 'left-bottom'],
+      right: ['right-top', 'right-bottom'],
+    },
+    { left: 'left-top', right: 'right-top' },
   );
 
   assert.deepEqual(result, {

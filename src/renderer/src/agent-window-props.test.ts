@@ -13,6 +13,9 @@ function makeSession(overrides: Partial<AgentSession> = {}): AgentSession {
   return {
     key: 'agent-1',
     mainChatTabKey: null,
+    role: 'reviewer',
+    parentAgentKey: null,
+    spawnedByTurnId: null,
     threadId: 'thread-1',
     title: 'Reviewer',
     status: 'idle',
