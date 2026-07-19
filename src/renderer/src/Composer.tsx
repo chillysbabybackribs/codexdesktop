@@ -1,7 +1,6 @@
 import {
   type FormEvent,
   useEffect,
-  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -66,7 +65,6 @@ export function Composer({
   footerContext?: React.ReactNode;
   footerTrailing?: React.ReactNode;
 }): React.JSX.Element {
-  const formId = useId();
   const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '');
   const [attachments, setAttachments] = useState<ChatAttachment[]>(
     () => composerDrafts.get(draftKey)?.attachments ?? [],
@@ -245,7 +243,6 @@ export function Composer({
   return (
     <>
       <form
-        id={formId}
         className="composer"
         onSubmit={handleSubmit}
         onDragOver={(event) => {
@@ -390,6 +387,28 @@ export function Composer({
           }
         }}
       />
+      <div className="composer-primary-action">
+        {isTurnActive ? (
+          <button
+            type="button"
+            className="stop-square-button"
+            aria-label="Stop turn"
+            title="Stop"
+            onClick={() => void onStop()}
+          >
+            <span className="stop-square" aria-hidden="true" />
+          </button>
+        ) : hasDraft ? (
+          <button
+            type="submit"
+            className="send-button"
+            aria-label="Send message"
+            disabled={isLoading}
+          >
+            <SendArrowIcon />
+          </button>
+        ) : null}
+      </div>
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
@@ -426,29 +445,6 @@ export function Composer({
         ) : null}
         {footerContext ? <div className="composer-control-context">{footerContext}</div> : null}
         {footerTrailing ? <div className="composer-trailing-actions">{footerTrailing}</div> : null}
-        <div className="composer-primary-action">
-          {isTurnActive ? (
-            <button
-              type="button"
-              className="stop-square-button"
-              aria-label="Stop turn"
-              title="Stop"
-              onClick={() => void onStop()}
-            >
-              <span className="stop-square" aria-hidden="true" />
-            </button>
-          ) : hasDraft ? (
-            <button
-              type="submit"
-              form={formId}
-              className="send-button"
-              aria-label="Send message"
-              disabled={isLoading}
-            >
-              <SendArrowIcon />
-            </button>
-          ) : null}
-        </div>
       </div>
     </>
   );

@@ -4941,7 +4941,7 @@ button {
   min-width: 0;
   min-height: 54px;
   max-height: 190px;
-  padding: 18px 16px 0;
+  padding: 18px 64px 0 16px;
   resize: none;
   overflow-y: auto;
   border: 0;
@@ -5060,18 +5060,22 @@ button {
 }
 
 .composer-primary-action {
+  position: absolute;
+  top: 50%;
+  right: 14px;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   min-width: 0;
+  transform: translateY(-50%);
 }
 
 .composer-primary-action:empty {
   display: none;
 }
 
-.composer-control-bar .composer-primary-action .stop-square-button {
+.composer .composer-primary-action .stop-square-button {
   width: 34px;
   height: 34px;
   border-radius: 9px;
@@ -5295,7 +5299,7 @@ button {
 
 /* Claude Code composer: the active send button is a light, near-white
    rounded square with a dark arrow — the one bright accent in the bar. */
-.composer-control-bar .composer-primary-action .send-button {
+.composer .composer-primary-action .send-button {
   width: 34px;
   height: 34px;
   border-radius: 9px;
@@ -5305,20 +5309,20 @@ button {
   box-shadow: 0 1px 2px rgb(0 0 0 / 22%);
 }
 
-.composer-control-bar .composer-primary-action .send-button:not(:disabled):hover {
+.composer .composer-primary-action .send-button:not(:disabled):hover {
   border-color: #ffffff;
   background: #ffffff;
   color: #101010;
 }
 
-.composer-control-bar .composer-primary-action .send-button:disabled {
+.composer .composer-primary-action .send-button:disabled {
   border-color: #2c2c2c;
   background: #1c1c1c;
   color: #4a4d52;
   box-shadow: none;
 }
 
-.composer-control-bar .send-button:not(:disabled):hover {
+.composer .send-button:not(:disabled):hover {
   background: #202020;
   border-color: #404040;
 }
