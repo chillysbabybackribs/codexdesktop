@@ -197,6 +197,78 @@ test('dynamic tool router returns a standalone data URI for app screenshots', as
   }])
 })
 
+test('app screenshots remain available after a browser tab target is lost', async () => {
+  let captured = false
+  let recordedBrowserBlock = false
+  const browserAgent = {
+    blockedTurnBrowserResult: () => ({
+      ok: false,
+      error: 'the previous browser tab closed',
+      errorCode: 'targetClosed'
+    }),
+    blockTurnBrowserWork: () => { recordedBrowserBlock = true },
+    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
+      execute(new AbortController().signal),
+    captureAppScreenshot: async () => {
+      captured = true
+      return {
+        ok: true,
+        result: {
+          screenshot: {
+            artifactPath: '/tmp/app-window-after-tab-close.png',
+            fileName: 'app-window-after-tab-close.png',
+            mediaType: 'image/png',
+            bytes: 42,
+            width: 800,
+            height: 600
+          }
+        }
+      }
+    },
+    readScreenshotDataUrl: async () => 'data:image/png;base64,still-valid'
+  } as unknown as BrowserAgentController
+
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(captured, true)
+  assert.equal(recordedBrowserBlock, false)
+  assert.equal(response.success, true)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,still-valid'
+  }])
+})
+
+test('tab screenshots stay blocked after their browser target is lost', async () => {
+  let captured = false
+  const browserAgent = {
+    blockedTurnBrowserResult: () => ({
+      ok: false,
+      error: 'the previous browser tab closed',
+      errorCode: 'targetClosed'
+    }),
+    blockTurnBrowserWork: () => {},
+    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
+      execute(new AbortController().signal),
+    captureScreenshot: async () => {
+      captured = true
+      return { ok: true }
+    }
+  } as unknown as BrowserAgentController
+
+  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(captured, false)
+  assert.equal(response.success, false)
+  assert.match(textResult(response).error ?? '', /previous browser tab closed/)
+})
+
 test('dynamic tool router returns a standalone data URI for browser screenshots', async () => {
   const browserAgent = withTurnRunner({
     captureScreenshot: async () => ({

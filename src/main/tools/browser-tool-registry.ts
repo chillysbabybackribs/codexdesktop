@@ -40,8 +40,14 @@ export async function runBrowserTool(
 ): Promise<BrowserToolOutcome> {
   const { tool, args, owner, callId } = invocation
   try {
-    const isBrowserTool = tool !== 'research_web'
-    const blockedResult = isBrowserTool && owner ? deps.browserAgent.blockedTurnBrowserResult(owner) : null
+    // A lost Chromium tab blocks later tab-bound work in the same turn so it
+    // cannot silently jump to a different tab. app_screenshot is deliberately
+    // exempt: it captures the Electron window itself and remains valid even
+    // when the previously targeted browser tab was closed or replaced.
+    const isTargetBoundBrowserTool = tool !== 'research_web' && tool !== 'app_screenshot'
+    const blockedResult = isTargetBoundBrowserTool && owner
+      ? deps.browserAgent.blockedTurnBrowserResult(owner)
+      : null
     if (blockedResult) return { result: blockedResult as BrowserToolOutcome['result'], imageUrls: [] }
 
     const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
@@ -169,7 +175,7 @@ export async function runBrowserTool(
       result = { ok: false, error: `unsupported browser tool: ${tool}` }
     }
 
-    if (isBrowserTool && owner) deps.browserAgent.blockTurnBrowserWork(owner, result)
+    if (isTargetBoundBrowserTool && owner) deps.browserAgent.blockTurnBrowserWork(owner, result)
     return { result: result as BrowserToolOutcome['result'], imageUrls }
   } catch (error) {
     return {

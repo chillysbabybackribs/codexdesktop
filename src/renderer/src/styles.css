@@ -5428,8 +5428,11 @@ button {
   align-items: center;
   gap: 6px;
   width: min(400px, 75%);
-  height: calc(100vh - 64px);
-  transition: width 0.17s ease;
+  /* Clear the app chrome above: titlebar (32px) + tab bar (41px) + air — a
+     full-height extended card (and the overflow chevron) must start below
+     the tabs, never under them. */
+  height: calc(100vh - 86px);
+  transition: width 0.17s ease, right 0.17s ease;
 }
 
 /* ── Extend: one card grows into a reading surface. Entering is explicit
@@ -5439,6 +5442,9 @@ button {
 
 .agent-column-shell.has-extended {
   width: min(800px, calc(100% - 120px));
+  /* The resting column bleeds 22px past the pane edge (shadow gutter); a
+     reading surface should sit fully inside it. */
+  right: 8px;
 }
 
 .agent-extend-scrim {
@@ -6986,7 +6992,8 @@ button {
   width: min(244px, calc(100cqw - 16px));
   padding: 0;
   border: 1px solid var(--hairline-strong);
-  border-radius: 11px 11px 0 11px;
+  border-bottom: 0;
+  border-radius: 11px 11px 0 0;
   background-color: var(--surface-card);
   background-image: var(--grain);
   box-shadow:
