@@ -281,7 +281,7 @@ const AgentWindow = memo(function AgentWindow({
 
   useEffect(() => {
     followTail()
-  }, [followTail, session.messages, session.status])
+  }, [followTail, session.messages, session.status, liveMainTurn])
 
   const handleScroll = useCallback(() => {
     // Ignore the scroll event caused by our own bottom-follow write.
