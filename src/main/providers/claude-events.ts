@@ -59,6 +59,7 @@ export function turnStartedNotification(context: ClaudeTurnContext, userText: st
 
 export class ClaudeTurnTranslator {
   private readonly blocks = new Map<number, { id: string; kind: 'text' | 'thinking' | 'tool'; text: string }>()
+  private readonly toolNames = new Map<string, string>()
   private readonly context: ClaudeTurnContext
 
   constructor(context: ClaudeTurnContext) {
@@ -117,6 +118,7 @@ export class ClaudeTurnTranslator {
         // Use the SDK's tool_use id so tool_result messages match directly.
         const id = typeof block.id === 'string' ? block.id : `${turnId}:b${index}`
         this.blocks.set(index, { id, kind: 'tool', text: '' })
+        this.toolNames.set(id, typeof block.name === 'string' ? block.name : 'tool')
         return {
           notifications: [asNotification('item/started', {
             threadId,
@@ -198,7 +200,7 @@ export class ClaudeTurnTranslator {
             type: 'mcpToolCall',
             id: block.tool_use_id,
             server: 'claude',
-            tool: 'tool',
+            tool: this.toolNames.get(block.tool_use_id) ?? 'tool',
             status: block.is_error === true ? 'failed' : 'completed'
           } as unknown as ThreadItem
         }))
