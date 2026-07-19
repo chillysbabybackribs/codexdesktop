@@ -180,7 +180,7 @@ test('header menu consolidates layout, split, history, and settings commands', (
     commands.map((command) => command.id),
     ['browser-layout', 'split-right', 'split-down', 'history', 'settings']
   )
-  assert.equal(commands[0]?.label, 'Browser in middle')
+  assert.equal(commands[0]?.label, 'Center browser')
   assert.equal(commands[1]?.hint, 'Ctrl+\\')
 })
 
@@ -197,7 +197,7 @@ test('secondary browser-middle header keeps only pane layout commands', () => {
     'split-right',
     'split-down'
   ])
-  assert.equal(commands[0]?.label, 'Browser on right')
+  assert.equal(commands[0]?.label, 'Move browser right')
   assert.equal(commands[0]?.active, true)
   assert.equal(commands[1]?.disabled, true)
 })

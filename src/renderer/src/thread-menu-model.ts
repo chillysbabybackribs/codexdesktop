@@ -14,7 +14,6 @@ export type HeaderMenuCommand = {
   label: string;
   hint: string | null;
   disabled: boolean;
-  active: boolean;
 };
 
 export function headerMenuCommands(options: {
@@ -26,24 +25,21 @@ export function headerMenuCommands(options: {
   const commands: HeaderMenuCommand[] = [
     {
       id: 'browser-layout',
-      label: options.isBrowserMiddle ? 'Browser on right' : 'Browser in middle',
+      label: options.isBrowserMiddle ? 'Move browser right' : 'Center browser',
       hint: options.isBrowserMiddle ? 'Return to two columns' : 'Place browser between chats',
       disabled: options.disabled,
-      active: options.isBrowserMiddle,
     },
     {
       id: 'split-right',
       label: 'Split chat right',
       hint: 'Ctrl+\\',
       disabled: options.disabled || !options.canSplitActivePane,
-      active: false,
     },
     {
       id: 'split-down',
       label: 'Split chat down',
       hint: 'Ctrl+Shift+\\',
       disabled: options.disabled || !options.canSplitActivePane,
-      active: false,
     },
   ];
 
@@ -54,14 +50,12 @@ export function headerMenuCommands(options: {
         label: 'Chat history',
         hint: null,
         disabled: false,
-        active: false,
       },
       {
         id: 'settings',
         label: 'Settings',
         hint: null,
         disabled: false,
-        active: false,
       },
     );
   }
