@@ -13,6 +13,25 @@ export type CodexStatusEvent = {
 export type CodexNotificationEvent = {
   type: 'notification'
   notification: unknown
+  // Spawn-tree tagging (Phase 1 subagents). Set by the SubagentOrchestrator on
+  // events belonging to a spawned child thread so the renderer roster can nest
+  // them; absent for ordinary main/dock threads. The wire notification itself
+  // is never modified — parentage lives on the envelope only.
+  parentThreadId?: string | null
+  parentAgentKey?: string | null
+  agentKey?: string
+}
+
+// Announced the instant a subagent is spawned, before any of its turn events,
+// so the renderer can create the worker session and route its stream. Carried
+// on the same channel as notifications.
+export type AgentSpawnedEvent = {
+  type: 'agentSpawned'
+  agentKey: string
+  parentAgentKey: string | null
+  parentThreadId: string | null
+  title: string
+  model: string | null
 }
 
 export type ResearchProgressStage = 'queued' | 'preparing' | 'discovering' | 'verifying' | 'finalizing' | 'complete'
@@ -35,7 +54,11 @@ export type CodexResearchProgressEvent = {
   progress: ResearchProgress
 }
 
-export type SessionEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
+export type SessionEvent =
+  | CodexStatusEvent
+  | CodexNotificationEvent
+  | CodexResearchProgressEvent
+  | AgentSpawnedEvent
 /** @deprecated alias kept for migration; import SessionEvent. */
 export type CodexEvent = SessionEvent
 
