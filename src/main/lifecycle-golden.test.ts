@@ -131,6 +131,58 @@ test('golden cancellation: a turn-owned browser call is dropped while queued beh
   assert.equal(executions, 1, 'the cancelled turn never reached the shared browser target')
 })
 
+test('golden browser ownership: a closed target ends browser work for that turn instead of reusing another active tab', async () => {
+  let activeTabId = 'tab-closed'
+  let fallbackExecutions = 0
+  const fallbackContents = {
+    executeJavaScript: async () => {
+      fallbackExecutions += 1
+      return { outcome: 'not_found' }
+    },
+    getURL: () => 'https://example.test/fallback',
+    getTitle: () => 'Fallback tab',
+    isDestroyed: () => false
+  }
+  const tabs = {
+    getActiveTabId: () => activeTabId,
+    resolveWebContents: (tabId: string) => tabId === 'tab-fallback' ? fallbackContents : null,
+    listTabs: () => [],
+    listTargets: () => []
+  } as unknown as TabManager
+  const browserAgent = new BrowserAgent(() => tabs)
+  const first = await routeDynamicToolCall({
+    ...dynamicParams(),
+    tool: 'browser_flow',
+    arguments: { steps: [{ type: 'wait', selector: '#phase5-never-exists' }] }
+  }, { browserAgent, researchRunner: {} as ResearchRunner })
+  const firstResult = JSON.parse((first.contentItems[0] as { type: 'inputText'; text: string }).text) as { errorCode?: string }
+  assert.equal(firstResult.errorCode, 'targetClosed')
+
+  activeTabId = 'tab-fallback'
+  const second = await routeDynamicToolCall({
+    ...dynamicParams(),
+    callId: 'call-after-close',
+    tool: 'browser_flow',
+    arguments: { steps: [{ type: 'wait', selector: '#phase5-never-exists' }] }
+  }, { browserAgent, researchRunner: {} as ResearchRunner })
+  const secondResult = JSON.parse((second.contentItems[0] as { type: 'inputText'; text: string }).text) as { error?: string; errorCode?: string }
+  assert.equal(second.success, false)
+  assert.equal(secondResult.errorCode, 'targetClosed')
+  assert.match(secondResult.error ?? '', /start a new user request/i)
+  assert.equal(fallbackExecutions, 0, 'the newly active tab is never reused by the failed turn')
+
+  browserAgent.completeTurn('thread-golden', 'turn-golden')
+  const nextTurn = await routeDynamicToolCall({
+    ...dynamicParams(),
+    turnId: 'turn-next',
+    callId: 'call-next',
+    tool: 'browser_flow',
+    arguments: { steps: [{ type: 'wait', selector: '#phase5-never-exists' }] }
+  }, { browserAgent, researchRunner: {} as ResearchRunner })
+  assert.equal(nextTurn.success, true)
+  assert.equal(fallbackExecutions, 1, 'a new user turn may intentionally use the active tab')
+})
+
 class FakeDebugger extends EventEmitter {
   attached = false
   detachCalls = 0

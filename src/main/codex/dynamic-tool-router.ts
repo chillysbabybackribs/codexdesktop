@@ -15,12 +15,16 @@ export async function routeDynamicToolCall(
 ): Promise<DynamicToolCallResponse> {
   try {
     const args = asRecord(params.arguments)
+    const owner = {
+      threadId: params.threadId,
+      turnId: params.turnId,
+      callId: params.callId
+    }
+    const isBrowserTool = params.namespace === null && params.tool !== 'research_web'
+    const blockedResult = isBrowserTool ? dependencies.browserAgent.blockedTurnBrowserResult(owner) : null
+    if (blockedResult) return dynamicToolResponse(blockedResult)
     const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
-      dependencies.browserAgent.runForTurn({
-        threadId: params.threadId,
-        turnId: params.turnId,
-        callId: params.callId
-      }, execute)
+      dependencies.browserAgent.runForTurn(owner, execute)
     let result
     let imageUrls: string[] = []
 
@@ -131,13 +135,8 @@ export async function routeDynamicToolCall(
       result = { ok: false, error: `unsupported browser tool: ${params.tool}` }
     }
 
-    return {
-      success: result.ok,
-      contentItems: [
-        { type: 'inputText', text: JSON.stringify(result) },
-        ...imageUrls.map((imageUrl) => ({ type: 'inputImage' as const, imageUrl }))
-      ]
-    }
+    if (isBrowserTool) dependencies.browserAgent.blockTurnBrowserWork(owner, result)
+    return dynamicToolResponse(result, imageUrls)
   } catch (error) {
     return {
       success: false,
@@ -146,6 +145,16 @@ export async function routeDynamicToolCall(
         text: JSON.stringify({ ok: false, error: error instanceof Error ? error.message : String(error) })
       }]
     }
+  }
+}
+
+function dynamicToolResponse(result: { ok: boolean }, imageUrls: string[] = []): DynamicToolCallResponse {
+  return {
+    success: result.ok,
+    contentItems: [
+      { type: 'inputText', text: JSON.stringify(result) },
+      ...imageUrls.map((imageUrl) => ({ type: 'inputImage' as const, imageUrl }))
+    ]
   }
 }
 

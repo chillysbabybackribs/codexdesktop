@@ -190,6 +190,7 @@ type QueuedOperation<T> = Promise<T>
 export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
   private readonly turnOperations = new Map<string, Set<AbortController>>()
+  private readonly blockedTurnBrowserWork = new Map<string, BrowserFailure>()
   private readonly getTabs: () => TabManager | null
   private readonly artifactStore?: CdpArtifactStore
 
@@ -234,8 +235,39 @@ export class BrowserAgentController {
     }
   }
 
+  /**
+   * Records that this turn lost its browser target. A later tool call in the
+   * same turn must not silently select whatever tab happens to become active.
+   */
+  blockTurnBrowserWork(owner: BrowserOperationOwner, result: BrowserAgentResult): void {
+    if (result.ok || (result.errorCode !== 'targetClosed' && result.errorCode !== 'targetChanged')) return
+    const failure = result.failure ?? {
+      code: result.errorCode,
+      phase: 'targetLifecycle' as const,
+      message: result.error ?? 'browser target is no longer available'
+    }
+    this.blockedTurnBrowserWork.set(turnOperationKey(owner.threadId, owner.turnId), failure)
+  }
+
+  /** Returns the terminal browser result for a turn whose target was lost. */
+  blockedTurnBrowserResult(owner: BrowserOperationOwner): BrowserAgentResult | null {
+    const failure = this.blockedTurnBrowserWork.get(turnOperationKey(owner.threadId, owner.turnId))
+    if (!failure) return null
+    return {
+      ok: false,
+      error: `${failure.message}. Browser work for this turn has stopped; start a new user request before using another tab.`,
+      errorCode: failure.code,
+      failure
+    }
+  }
+
+  completeTurn(threadId: string, turnId: string): void {
+    this.blockedTurnBrowserWork.delete(turnOperationKey(threadId, turnId))
+  }
+
   cancelTurn(threadId: string, turnId: string): void {
     const key = turnOperationKey(threadId, turnId)
+    this.blockedTurnBrowserWork.delete(key)
     const operations = this.turnOperations.get(key)
     if (!operations) return
     for (const controller of operations) controller.abort()

@@ -469,6 +469,7 @@ export class CodexClient extends EventEmitter {
     } else if (notification.method === 'thread/tokenUsage/updated') {
       this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
     } else if (notification.method === 'turn/completed') {
+      this.browserAgent.completeTurn(notification.params.threadId, notification.params.turn.id)
       this.maybeAutoCompact(notification.params.threadId)
     } else if (notification.method === 'thread/compacted') {
       this.compactionsInFlight.delete(notification.params.threadId)
