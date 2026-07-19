@@ -104,16 +104,18 @@ const SCENARIOS = {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2))
+  const scenario = requireScenario(options.scenario)
   const startedAt = new Date()
   const socketPath = options.socket ?? requireSocketPath()
   const initialTabsResponse = await socketJson(socketPath, 'GET', '/tabs')
   const initialTabs = requireTabs(initialTabsResponse)
-  const tab = requireActiveRedditNotificationsTab(initialTabs)
+  const tab = requireActiveScenarioTab(initialTabs, scenario)
   const context = {
     socketPath,
     tabId: tab.id,
     expectedUrl: tab.url,
-    allowEvalFallback: options.allowEvalFallback
+    allowEvalFallback: options.allowEvalFallback,
+    scenario
   }
   const oracleBefore = await captureOracle(context)
   const direct = await runDirectArm(context, oracleBefore, options.samples)
@@ -143,7 +145,8 @@ async function main() {
 
   const report = {
     schemaVersion: 2,
-    ok: direct.successCount === options.samples && direct.exactSnapshotCount === options.samples &&
+    ok: direct.successCount === options.samples &&
+      (!scenario.requiresConclusiveSnapshot || direct.exactSnapshotCount === options.samples) &&
       hostUnchanged && (options.skipModel || model.ok === true),
     observedAt: startedAt.toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
@@ -155,8 +158,9 @@ async function main() {
       effort: options.effort,
       skipModel: options.skipModel,
       allowEvalFallback: options.allowEvalFallback,
-      canonicalPrompt: CANONICAL_PROMPT,
-      snapshotObjective: SNAPSHOT_OBJECTIVE,
+      scenario: scenario.id,
+      canonicalPrompt: scenario.canonicalPrompt,
+      snapshotObjective: scenario.snapshotObjective,
       productionDynamicTools: browserDynamicTools.map(({ name }) => name),
       productionGuidanceChars: buildGuidance().length
     },
@@ -170,9 +174,9 @@ async function main() {
       hostUnchanged
     },
     oracle: {
-      before: oracleProjection(oracleBefore),
-      afterDirect: oracleProjection(oracleAfterDirect),
-      after: oracleProjection(oracleAfter),
+      before: scenario.projectOracle(oracleBefore),
+      afterDirect: scenario.projectOracle(oracleAfterDirect),
+      after: scenario.projectOracle(oracleAfter),
       unchanged: sameOracle(oracleBefore, oracleAfter)
     },
     productionControllerExercised: direct.productionControllerExercised &&
@@ -186,7 +190,7 @@ async function main() {
         : {}),
       strictApplesToApples: false,
       caveat: 'The legacy trace requested navigation and carried a much larger persisted context; the current model arm starts fresh on the already-open page. The ratio is observational, not an isolated causal speedup.',
-      qualityPreserved: direct.exactSnapshotCount === options.samples &&
+      qualityPreserved: (!scenario.requiresConclusiveSnapshot || direct.exactSnapshotCount === options.samples) &&
         (options.skipModel || model.accuracy?.exactThreeAndState === true) && hostUnchanged
     }
   }
@@ -212,9 +216,9 @@ async function runDirectArm(context, oracle, sampleCount) {
     let fallbackReason
     try {
       const outcome = await postSnapshot(context, {
-        objective: SNAPSHOT_OBJECTIVE,
+        objective: context.scenario.snapshotObjective,
         mode: 'task',
-        maxItems: 3,
+        maxItems: context.scenario.expectedCount,
         timeoutMs: 15_000,
         maxResultChars: 8_000
       })
@@ -227,8 +231,8 @@ async function runDirectArm(context, oracle, sampleCount) {
     }
     const wallMs = round(performance.now() - startedAt, 3)
     const snapshot = asRecord(response.result)
-    const quality = evaluateSnapshot(snapshot, oracle)
-    const ok = response.ok === true && asRecord(snapshot.page).url === context.expectedUrl && quality.exactThreeAndState
+    const quality = context.scenario.evaluateSnapshot(snapshot, oracle)
+    const ok = response.ok === true && asRecord(snapshot.page).url === context.expectedUrl
     samples.push({
       index,
       ok,
@@ -237,10 +241,10 @@ async function runDirectArm(context, oracle, sampleCount) {
       outputChars: finiteNumber(response.resultChars) ?? JSON.stringify(response.result ?? null).length,
       snapshotDurationMs: finiteNumber(asRecord(snapshot.timings).totalMs),
       itemCount: Array.isArray(snapshot.items) ? snapshot.items.length : 0,
-      exactThreeAndState: quality.exactThreeAndState,
+      exactSnapshot: quality.exactSnapshot,
       transport,
       ...(fallbackReason ? { fallbackReason } : {}),
-      ...(ok ? {} : { error: response.error || 'snapshot response did not match the explicit Reddit tab' })
+      ...(ok ? {} : { error: response.error || 'snapshot response did not match the explicit scenario tab' })
     })
     if (!preview && ok) preview = compactSnapshotPreview(snapshot, quality)
   }
@@ -251,7 +255,7 @@ async function runDirectArm(context, oracle, sampleCount) {
     sampleCount: samples.length,
     successCount: successful.length,
     successRate: round(successful.length / sampleCount, 4),
-    exactSnapshotCount: samples.filter(({ exactThreeAndState }) => exactThreeAndState).length,
+    exactSnapshotCount: samples.filter(({ exactSnapshot }) => exactSnapshot).length,
     transports: Object.fromEntries([...new Set(samples.map(({ transport }) => transport).filter(Boolean))].map((transport) => [
       transport,
       samples.filter((sample) => sample.transport === transport).length
@@ -292,7 +296,7 @@ async function runModelArm(context, oracle, options) {
     const turnStartedAt = performance.now()
     const turnResponse = await harness.request('turn/start', {
       threadId: thread.thread.id,
-      input: [{ type: 'text', text: CANONICAL_PROMPT, text_elements: [] }],
+      input: [{ type: 'text', text: context.scenario.canonicalPrompt, text_elements: [] }],
       model: options.model,
       effort: options.effort,
       summary: 'concise',
@@ -305,7 +309,7 @@ async function runModelArm(context, oracle, options) {
     const tokenEvents = dedupeTokenCalls(harness.tokenEventsForTurn(turnResponse.turn.id))
     const streamedItems = harness.itemsForTurn(turnResponse.turn.id)
     const finalResponse = finalAgentResponse({ items: streamedItems })
-    const accuracy = evaluateModelResponse(finalResponse, oracle)
+    const accuracy = context.scenario.evaluateModelResponse(finalResponse, oracle)
     const lastUsage = tokenEvents.at(-1) ?? null
     const completedToolItems = streamedItems.filter((item) =>
       ['dynamicToolCall', 'mcpToolCall', 'commandExecution', 'webSearch'].includes(item.type)
@@ -317,7 +321,8 @@ async function runModelArm(context, oracle, options) {
       snapshotCalls[0].transport === 'browser-control:/snapshot'
 
     return {
-      ok: completed.status === 'completed' && accuracy.exactThreeAndState && fastPathContract &&
+      ok: completed.status === 'completed' && accuracy.exactResponse &&
+        (!context.scenario.strictModelContract || fastPathContract) &&
         (context.allowEvalFallback || productionControllerExercised),
       skipped: false,
       threadId: thread.thread.id,
@@ -334,6 +339,7 @@ async function runModelArm(context, oracle, options) {
       toolCallCount: Math.max(toolCalls.length, completedToolItems.length),
       failedToolCallCount: toolCalls.filter(({ ok }) => !ok).length,
       fastPathContract,
+      modelContractRequired: context.scenario.strictModelContract,
       toolDurationSumMs: round(sum(toolCalls.map(({ durationMs }) => durationMs)), 3),
       tokens: lastUsage ? {
         accumulated: lastUsage.total,
