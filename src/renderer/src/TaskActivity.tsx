@@ -1,18 +1,24 @@
 import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import type { CommandAction } from '../../shared/session-protocol'
 import type { ThreadItem } from '../../shared/session-protocol'
 import type { WebSearchAction } from '../../shared/session-protocol'
 import { cleanCommand, commandDescriptionOf, narrateCommand } from './command-narrate'
 import { parseUnifiedDiff, type DiffLine, type DiffSegment } from './diff'
 import { langForPath, useLineTokens, type ThemedToken } from './highlight'
-import type { TurnMeta, TurnTokenTelemetry } from './turn-telemetry'
+import type { TurnMeta } from './turn-telemetry'
 import { latestItemProgress, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
 import { browserLinkComponents } from './MarkdownContent'
+import { basename, blockStatus, displayDir, fmtDuration, fmtTokens, formatBytes, itemDurationMs, previewJson, stripAnsi, truncate, type BlockStatus } from './activity-format'
+import { cdpFileArtifact, cdpScreenshotArtifact, type CdpScreenshotArtifact } from './cdp-artifacts'
+import { currentActionLabel, isBrowseAction, tokenTooltip, turnSummaryParts } from './turn-summary'
 
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
 export { workItemTypes } from './activity-model'
 export type { ItemMeta, TurnPlanItem, WorkItem } from './activity-model'
+export { fmtDuration, fmtTokens } from './activity-format'
+export { currentActionLabel } from './turn-summary'
+export { cdpScreenshotArtifacts } from './cdp-artifacts'
+export type { CdpScreenshotArtifact } from './cdp-artifacts'
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
@@ -21,23 +27,6 @@ type DynamicToolCallItem = Extract<ThreadItem, { type: 'dynamicToolCall' }>
 type ReasoningItem = Extract<ThreadItem, { type: 'reasoning' }>
 type PlanItem = Extract<ThreadItem, { type: 'plan' }>
 type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
-
-export type CdpScreenshotArtifact = {
-  artifactPath: string
-  fileName: string
-  mediaType: string
-  bytes: number
-  width: number | null
-  height: number | null
-}
-
-type CdpFileArtifact = {
-  artifactPath: string
-  fileName: string
-  mediaType: string
-  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
-  bytes: number
-}
 
 // ---------------------------------------------------------------------------
 // File review context — the Keep/Undo flow (Cursor-style post-hoc review).
@@ -158,125 +147,6 @@ export function AutoFollow({
       <div ref={contentRef}>{children}</div>
     </div>
   )
-}
-
-export function fmtDuration(ms: number): string {
-  if (ms < 1000) {
-    return `${(ms / 1000).toFixed(1)}s`
-  }
-  const seconds = Math.round(ms / 1000)
-  if (seconds < 60) {
-    return `${seconds}s`
-  }
-  const minutes = Math.floor(seconds / 60)
-  return `${minutes}m ${String(seconds % 60).padStart(2, '0')}s`
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-export function fmtTokens(count: number): string {
-  if (count < 1000) {
-    return String(count)
-  }
-  if (count < 1_000_000) {
-    return `${(count / 1000).toFixed(1)}k`
-  }
-  return `${(count / 1_000_000).toFixed(2)}M`
-}
-
-function basename(path: string): string {
-  const clean = path.replace(/\/+$/, '')
-  return clean.split('/').pop() || clean
-}
-
-function dirOf(path: string): string {
-  const clean = path.replace(/\/+$/, '')
-  const index = clean.lastIndexOf('/')
-  return index > 0 ? clean.slice(0, index) : ''
-}
-
-// Directory label for file cards: relative to the workspace when inside it
-// (Cursor-style), absolute otherwise. Empty at the workspace root.
-function displayDir(path: string, workspace: string | null): string {
-  const dir = dirOf(path)
-  if (!dir || !workspace) {
-    return dir
-  }
-  const root = workspace.replace(/\/+$/, '')
-  if (dir === root) {
-    return ''
-  }
-  if (dir.startsWith(`${root}/`)) {
-    return dir.slice(root.length + 1)
-  }
-  return dir
-}
-
-function truncate(text: string, max: number): string {
-  const flat = text.replace(/\s+/g, ' ').trim()
-  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
-}
-
-// biome-ignore lint/suspicious/noControlCharactersInRegex: intentionally matches ANSI escape sequences to strip them
-const ansiPattern = /\[[0-9;?]*[ -/]*[@-~]/g
-
-function stripAnsi(text: string): string {
-  return text.replace(ansiPattern, '')
-}
-
-function previewJson(value: unknown, max: number): string | null {
-  if (value === null || value === undefined) {
-    return null
-  }
-  try {
-    const text = typeof value === 'string' ? value : JSON.stringify(value)
-    if (!text || text === '{}' || text === 'null') {
-      return null
-    }
-    return truncate(text, max)
-  } catch {
-    return null
-  }
-}
-
-function itemDurationMs(item: WorkItem, meta: ItemMeta | undefined): number | null {
-  if ('durationMs' in item && typeof item.durationMs === 'number') {
-    return item.durationMs
-  }
-  if (meta?.startedAtMs && meta?.completedAtMs) {
-    return Math.max(0, meta.completedAtMs - meta.startedAtMs)
-  }
-  return null
-}
-
-// Effective display status: items abandoned by an interrupted/failed turn keep
-// status "inProgress" forever — once the turn is no longer live they render as
-// stopped, not running.
-type BlockStatus = 'running' | 'done' | 'failed' | 'declined' | 'stopped'
-
-function blockStatus(item: WorkItem, live: boolean): BlockStatus {
-  const raw =
-    item.type === 'commandExecution' ||
-    item.type === 'fileChange' ||
-    item.type === 'mcpToolCall' ||
-    item.type === 'dynamicToolCall'
-      ? item.status
-      : null
-
-  if (raw === 'failed') {
-    return 'failed'
-  }
-  if (raw === 'declined') {
-    return 'declined'
-  }
-  if (raw === 'inProgress') {
-    return live ? 'running' : 'stopped'
-  }
-  return 'done'
 }
 
 // ---------------------------------------------------------------------------
@@ -519,10 +389,6 @@ function ThoughtBlock({
 // Command execution — compact Cursor-style rows for read/list/search, a real
 // terminal card for everything else
 // ---------------------------------------------------------------------------
-
-function isBrowseAction(action: CommandAction): boolean {
-  return action.type === 'read' || action.type === 'listFiles' || action.type === 'search'
-}
 
 function CompactActionRows({
   item,
@@ -1096,77 +962,6 @@ function ImageViewPreview({ path, fileName }: { path: string; fileName: string }
   )
 }
 
-function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact | null {
-  if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot' && item.tool !== 'app_screenshot') return null
-
-  for (const content of item.contentItems ?? []) {
-    if (content.type !== 'inputText') continue
-    try {
-      const parsed = JSON.parse(content.text) as { result?: unknown; screenshot?: Partial<CdpScreenshotArtifact> }
-      const payload = parsed.result && typeof parsed.result === 'object' ? parsed.result as { screenshot?: Partial<CdpScreenshotArtifact> } : parsed
-      const screenshot = payload.screenshot
-      if (!screenshot || typeof screenshot.artifactPath !== 'string' || typeof screenshot.fileName !== 'string') continue
-      if (typeof screenshot.mediaType !== 'string' || typeof screenshot.bytes !== 'number') continue
-      return {
-        artifactPath: screenshot.artifactPath,
-        fileName: screenshot.fileName,
-        mediaType: screenshot.mediaType,
-        bytes: screenshot.bytes,
-        width: typeof screenshot.width === 'number' ? screenshot.width : null,
-        height: typeof screenshot.height === 'number' ? screenshot.height : null
-      }
-    } catch {
-      // A failed or non-JSON CDP result is not an image artifact.
-    }
-  }
-  return null
-}
-
-export function cdpScreenshotArtifacts(items: WorkItem[]): CdpScreenshotArtifact[] {
-  const artifacts = new Map<string, CdpScreenshotArtifact>()
-  for (const item of items) {
-    if (item.type !== 'dynamicToolCall') continue
-    const artifact = cdpScreenshotArtifact(item)
-    if (artifact && !artifacts.has(artifact.artifactPath)) {
-      artifacts.set(artifact.artifactPath, artifact)
-    }
-  }
-  return [...artifacts.values()]
-}
-
-function cdpFileArtifact(item: DynamicToolCallItem): CdpFileArtifact | null {
-  if (item.tool !== 'browser_cdp') return null
-
-  for (const content of item.contentItems ?? []) {
-    if (content.type !== 'inputText') continue
-    try {
-      const parsed = JSON.parse(content.text) as {
-        result?: unknown
-        pdf?: Partial<CdpFileArtifact>
-        trace?: Partial<CdpFileArtifact>
-        snapshot?: Partial<CdpFileArtifact>
-        responseBody?: Partial<CdpFileArtifact>
-      }
-      const result = parsed.result && typeof parsed.result === 'object'
-        ? parsed.result as typeof parsed
-        : parsed
-      const artifact = result.pdf ?? result.trace ?? result.snapshot ?? result.responseBody
-      if (!artifact || typeof artifact.artifactPath !== 'string' || typeof artifact.fileName !== 'string') continue
-      if ((artifact.kind !== 'pdf' && artifact.kind !== 'trace' && artifact.kind !== 'snapshot' && artifact.kind !== 'response-body') || typeof artifact.bytes !== 'number') continue
-      return {
-        artifactPath: artifact.artifactPath,
-        fileName: artifact.fileName,
-        mediaType: typeof artifact.mediaType === 'string' ? artifact.mediaType : '',
-        kind: artifact.kind,
-        bytes: artifact.bytes
-      }
-    } catch {
-      // A failed or non-JSON CDP result is not a file artifact.
-    }
-  }
-  return null
-}
-
 function webSearchDescription(action: WebSearchAction | null, query: string): { verb: string; detail: string | null } {
   if (action?.type === 'openPage') {
     return { verb: 'Opened page', detail: action.url ?? null }
@@ -1351,125 +1146,6 @@ export function WorkGroup({
 // Turn tail — live shimmer status while running, permanent receipt when done
 // ---------------------------------------------------------------------------
 
-// Human label for what Codex is doing right now, from the newest live item.
-export function currentActionLabel(
-  items: WorkItem[],
-  itemMeta: Record<string, ItemMeta>,
-  streamingMessage: boolean
-): string {
-  // The turn plan is a status board, not an action — skip it when deciding
-  // what Codex is doing right now.
-  const scan = items.filter((item) => item.type !== 'turnPlan')
-
-  for (let i = scan.length - 1; i >= 0; i -= 1) {
-    const item = scan[i]
-    const running =
-      'status' in item && typeof item.status === 'string'
-        ? item.status === 'inProgress'
-        : i === scan.length - 1 && !itemMeta[item.id]?.completedAtMs
-
-    if (!running) {
-      continue
-    }
-
-    switch (item.type) {
-      case 'reasoning':
-        return 'Thinking'
-      case 'plan':
-        return 'Planning'
-      case 'commandExecution': {
-        const action = item.commandActions.find(isBrowseAction)
-        if (action && item.commandActions.every(isBrowseAction)) {
-          if (action.type === 'read') {
-            return `Reading ${action.name}`
-          }
-          if (action.type === 'search') {
-            return action.query ? `Searching "${truncate(action.query, 32)}"` : 'Searching files'
-          }
-          return 'Listing files'
-        }
-        const narration = narrateCommand(item.command, item.commandActions, commandDescriptionOf(item))
-        return narration.natural ? truncate(narration.running, 48) : `Running ${truncate(cleanCommand(item.command), 38)}`
-      }
-      case 'fileChange': {
-        const path = item.changes[0]?.path
-        return path ? `Editing ${basename(path)}` : 'Editing files'
-      }
-      case 'mcpToolCall':
-        return `Calling ${item.server}.${item.tool}`
-      case 'dynamicToolCall': {
-        const progress = item.tool === 'research_web' ? latestItemProgress(itemMeta[item.id]) : null
-        if (progress) return progress
-        return `Calling ${item.tool}`
-      }
-      case 'webSearch':
-        return 'Searching the web'
-      case 'imageGeneration':
-        return 'Generating image'
-      case 'subAgentActivity':
-      case 'collabAgentToolCall':
-        return 'Coordinating agents'
-      case 'sleep':
-        return 'Waiting'
-      default:
-        break
-    }
-  }
-
-  return streamingMessage ? 'Writing' : 'Working'
-}
-
-function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string[] {
-  const parts: string[] = []
-
-  const diffSummary = meta?.diffSummary
-  if (diffSummary && diffSummary.files > 0) {
-    parts.push(
-      `${diffSummary.files} ${diffSummary.files === 1 ? 'file' : 'files'} +${diffSummary.adds} −${diffSummary.dels}`
-    )
-  } else {
-    const fileItems = items.filter((item): item is FileChangeItem => item.type === 'fileChange')
-    if (fileItems.length) {
-      const paths = new Set(fileItems.flatMap((item) => item.changes.map((change) => change.path)))
-      let adds = 0
-      let dels = 0
-      for (const fileItem of fileItems) {
-        for (const change of fileItem.changes) {
-          const parsed = parseUnifiedDiff(
-            change.diff,
-            change.kind.type === 'add' ? 'add' : change.kind.type === 'delete' ? 'del' : undefined
-          )
-          adds += parsed.adds
-          dels += parsed.dels
-        }
-      }
-      parts.push(`${paths.size} ${paths.size === 1 ? 'file' : 'files'} +${adds} −${dels}`)
-    }
-  }
-
-  const commands = items.filter((item) => item.type === 'commandExecution').length
-  if (commands) {
-    parts.push(`${commands} ${commands === 1 ? 'command' : 'commands'}`)
-  }
-
-  const searches = items.filter((item) => item.type === 'webSearch').length
-  if (searches) {
-    parts.push(`${searches} ${searches === 1 ? 'search' : 'searches'}`)
-  }
-
-  const toolCalls = items.filter((item) => item.type === 'mcpToolCall' || item.type === 'dynamicToolCall').length
-  if (toolCalls) {
-    parts.push(`${toolCalls} ${toolCalls === 1 ? 'tool call' : 'tool calls'}`)
-  }
-
-  const tokens = meta?.tokens?.turn.totalTokens
-  if (tokens) {
-    parts.push(`${fmtTokens(tokens)} tokens`)
-  }
-
-  return parts
-}
-
 export function TurnTail({
   live,
   items,
@@ -1578,23 +1254,4 @@ export function TurnTail({
       <span className="tail-rule" aria-hidden="true" />
     </div>
   )
-}
-
-function tokenTooltip(tokens: TurnTokenTelemetry | undefined): string | undefined {
-  if (!tokens) {
-    return undefined
-  }
-  const { turn, latestCall } = tokens
-  const parts = [
-    `${tokens.modelCallCount} model ${tokens.modelCallCount === 1 ? 'call' : 'calls'}`,
-    `turn input ${fmtTokens(turn.inputTokens)}`,
-    `cached ${fmtTokens(turn.cachedInputTokens)}`,
-    `output ${fmtTokens(turn.outputTokens)}`,
-    `reasoning ${fmtTokens(turn.reasoningOutputTokens)}`,
-    `latest call ${fmtTokens(latestCall.totalTokens)}`
-  ]
-  if (tokens.modelContextWindow) {
-    parts.push(`context ${fmtTokens(tokens.modelContextWindow)}`)
-  }
-  return parts.join(' · ')
 }
