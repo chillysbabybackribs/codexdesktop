@@ -144,7 +144,7 @@ export function ReviewBar({
               aria-expanded={actionsOpen}
               onClick={() => setActionsOpen((open) => !open)}
             >
-              <ReviewMenuChevron />
+              <ReviewMenuDots />
             </button>
             {actionsOpen ? (
               <div
@@ -156,8 +156,21 @@ export function ReviewBar({
               >
                 <button
                   type="button"
-                  className={`review-action-menu-item ${confirmingUndoAll ? 'is-confirming' : ''}`}
+                  className="review-action-menu-item"
                   role="menuitem"
+                  onClick={() => {
+                    setActionsOpen(false);
+                    onKeepAll();
+                  }}
+                >
+                  <MenuCheckIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">Keep all</span>
+                </button>
+                <button
+                  type="button"
+                  className={`review-action-menu-item is-danger ${confirmingUndoAll ? 'is-confirming' : ''}`}
+                  role="menuitem"
+                  title="Restore every workspace file to how it was before this turn. The current state is checkpointed first."
                   onClick={() => {
                     if (confirmingUndoAll) {
                       setActionsOpen(false);
@@ -167,33 +180,26 @@ export function ReviewBar({
                     }
                   }}
                 >
-                  <span>{confirmingUndoAll ? 'Confirm undo?' : 'Undo all'}</span>
+                  <MenuUndoIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">
+                    {confirmingUndoAll ? 'Confirm undo all?' : 'Undo all'}
+                  </span>
                 </button>
+                <div className="review-action-menu-divider" role="separator" />
                 <button
                   type="button"
                   className="review-action-menu-item"
                   role="menuitemcheckbox"
                   aria-checked={true}
+                  title="Future edits are kept automatically. Click to turn off."
                   onClick={() => {
                     setActionsOpen(false);
                     onSetAlwaysKeepAll(false);
                   }}
                 >
-                  <span>
-                    Always keep all
-                    <span className="review-action-menu-check" aria-hidden="true">✓</span>
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="review-action-menu-item"
-                  role="menuitem"
-                  onClick={() => {
-                    setActionsOpen(false);
-                    onKeepAll();
-                  }}
-                >
-                  <span>Keep all</span>
+                  <MenuRepeatIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">Always keep all</span>
+                  <MenuCheckIcon className="review-action-menu-state" />
                 </button>
               </div>
             ) : null}
@@ -317,16 +323,73 @@ function ReviewChevron({ className }: { className?: string }): React.JSX.Element
   );
 }
 
-function ReviewMenuChevron(): React.JSX.Element {
+function ReviewMenuDots(): React.JSX.Element {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="m7 14.5 5-5 5 5"
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="5" cy="12" r="1.7" />
+      <circle cx="12" cy="12" r="1.7" />
+      <circle cx="19" cy="12" r="1.7" />
+    </svg>
+  );
+}
+
+function MenuCheckIcon({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <svg
+      className={className}
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function MenuUndoIcon({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <svg
+      className={className}
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+    </svg>
+  );
+}
+
+function MenuRepeatIcon({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <svg
+      className={className}
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m17 2 4 4-4 4" />
+      <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+      <path d="m7 22-4-4 4-4" />
+      <path d="M21 13v1a4 4 0 0 1-4 4H3" />
     </svg>
   );
 }
