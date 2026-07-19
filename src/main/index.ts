@@ -309,7 +309,7 @@ function bootstrap(): void {
     // first message, so setting it here is always in time. Bound to a getter so
     // it survives window close/reopen swapping the TabManager instance.
     try {
-      browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
+      browserControl = await startBrowserControlServer(() => tabManager, browserAgent, researchRunner)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
       verificationBrowserControlReady = true
