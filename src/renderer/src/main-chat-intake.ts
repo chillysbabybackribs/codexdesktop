@@ -1,4 +1,4 @@
-import { dockRoleOf, type AgentLiteMessage, type AgentSession } from './agent-session-model'
+import { dockRoleOf, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import type { Model } from '../../shared/session-protocol'
 
 // Conversational prompt intake for a paired main chat (beginning-phase
