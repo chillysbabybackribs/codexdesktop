@@ -104,7 +104,8 @@ test('dynamic tool router forwards one-call network capture without losing match
       statusMin: 200,
       statusMax: 299
     },
-    captureBody: true,
+    captureBody: false,
+    stream: { transport: 'websocket', maxMessages: 25, idleMs: 250 },
     readySelector: '.results',
     quietMs: 80,
     maxSettleMs: 500,
@@ -131,7 +132,8 @@ test('dynamic tool router forwards one-call network capture without losing match
         statusMin: 200,
         statusMax: 299
       },
-      captureBody: true,
+      captureBody: false,
+      stream: { transport: 'websocket', maxMessages: 25, idleMs: 250 },
       readySelector: '.results',
       quietMs: 80,
       maxSettleMs: 500
