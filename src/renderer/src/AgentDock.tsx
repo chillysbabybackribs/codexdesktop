@@ -674,6 +674,64 @@ function AgentContextPill({
   )
 }
 
+// The auto-audit request, rendered as a compact collapsible card instead of
+// the full prompt verbatim. Collapsed by default: a one-line "Auditing turn"
+// headline with the changed-file summary. Expanding reveals the user's
+// request and the ordered step log the auditor was briefed with.
+function AuditRequestCard({ audit }: { audit: AuditRequestSummary }): React.JSX.Element {
+  const [expanded, setExpanded] = useState(false)
+  const fileLabel = auditSummaryLabel(audit.files)
+  return (
+    <div className={`agent-audit-card ${expanded ? 'is-expanded' : ''}`}>
+      <button
+        type="button"
+        className="agent-audit-summary"
+        aria-expanded={expanded}
+        onClick={() => setExpanded((current) => !current)}
+      >
+        <EyeIcon />
+        <span className="agent-audit-headline">
+          <strong>Auditing turn</strong>
+          <span className="agent-audit-files">{fileLabel}</span>
+        </span>
+        <span className="agent-audit-chevron" aria-hidden="true">
+          <ChevronDownIcon />
+        </span>
+      </button>
+      {expanded ? (
+        <div className="agent-audit-detail">
+          {audit.userText ? (
+            <div className="agent-audit-section">
+              <span className="agent-audit-label">Request</span>
+              <p className="agent-audit-request">{audit.userText}</p>
+            </div>
+          ) : null}
+          {audit.files.length ? (
+            <div className="agent-audit-section">
+              <span className="agent-audit-label">Changed files ({audit.files.length})</span>
+              <ul className="agent-audit-list">
+                {audit.files.map((file) => (
+                  <li key={file}><code>{file}</code></li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {audit.steps.length ? (
+            <div className="agent-audit-section">
+              <span className="agent-audit-label">Steps</span>
+              <ol className="agent-audit-steps">
+                {audit.steps.map((step, index) => (
+                  <li key={index}><code>{step}</code></li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.JSX.Element {
   if (status === 'working') {
     return <span className="agent-status agent-status-spinner" role="status" aria-label="Working" />
