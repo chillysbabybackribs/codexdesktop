@@ -2302,7 +2302,7 @@ export default function App(): React.JSX.Element {
   ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
     const cached = sessionStoreRef.current.peek(activeMainChatTabKeyRef.current)
-    const canReconcileCachedTranscript = cached?.threadId === thread.id
+    const cachedSession = cached?.threadId === thread.id ? cached : null
 
     precedingModelInputByTurnRef.current = new Map()
     pendingCompactionByTurnRef.current = new Set()
@@ -2348,9 +2348,9 @@ export default function App(): React.JSX.Element {
     // A fast disk restore may already have older rows on screen. The resumed
     // server tail is authoritative for duplicate ids, while cached-only rows
     // remain visible until their normal lazy server page arrives.
-    const reconciledItems = canReconcileCachedTranscript ? upsertMany(cached.items, nextItems) : nextItems
-    const reconciledItemMeta = canReconcileCachedTranscript ? { ...cached.itemMeta, ...nextItemMeta } : nextItemMeta
-    const reconciledTurnMeta = canReconcileCachedTranscript ? { ...cached.turnMeta, ...nextTurnMeta } : nextTurnMeta
+    const reconciledItems = cachedSession ? upsertMany(cachedSession.items, nextItems) : nextItems
+    const reconciledItemMeta = cachedSession ? { ...cachedSession.itemMeta, ...nextItemMeta } : nextItemMeta
+    const reconciledTurnMeta = cachedSession ? { ...cachedSession.turnMeta, ...nextTurnMeta } : nextTurnMeta
     itemsRef.current = reconciledItems
     itemMetaRef.current = reconciledItemMeta
     turnMetaRef.current = reconciledTurnMeta
