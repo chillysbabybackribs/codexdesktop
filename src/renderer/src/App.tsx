@@ -71,6 +71,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import {
+  defaultThreadTitle,
   cloneGoal,
   hasObservedTerminalTurn,
   isRecoverableTurnError,
@@ -607,6 +608,30 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     activeThreadTitleRef.current = activeThreadTitle;
   }, [activeThreadTitle]);
+
+  // Covers a thread that began before this renderer loaded (for example after
+  // a hot reload or resume). A submitted chat should never wait for the
+  // server's eventual title-generation pass just to stop reading "New Chat".
+  useEffect(() => {
+    const tabKey = activeMainChatTabKeyRef.current;
+    const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
+    if (!tab?.threadId || tab.title !== defaultThreadTitle) return;
+
+    const firstUserMessage = items.find(
+      (item): item is Extract<ThreadItem, { type: 'userMessage' }> => item.type === 'userMessage',
+    );
+    const prompt = firstUserMessage?.content
+      .filter((content) => content.type === 'text')
+      .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+      .join('\n')
+      .trim() ?? '';
+    const title = provisionalThreadTitle(prompt);
+    if (title === defaultThreadTitle) return;
+
+    patchMainChatTab(tabKey, (current) => ({ ...current, title }));
+    activeThreadTitleRef.current = title;
+    setActiveThreadTitle(title);
+  }, [activeMainChatTabKey, activeThreadId, activeThreadTitle, items]);
 
   useEffect(() => {
     activeTurnIdRef.current = activeTurnId;
@@ -1392,12 +1417,16 @@ export default function App(): React.JSX.Element {
     watchThreadIdRef.current = activeThreadId;
     const threadId = activeThreadIdRef.current;
     const existingTab = mainChatTabStateRef.current.tabs.find((tab) => tab.key === targetTabKey);
-    const priorTitle = existingTab?.title ?? 'New Chat';
+    const priorTitle = existingTab?.title ?? defaultThreadTitle;
     const provisionalTitle = threadId
       ? null
       : provisionalThreadTitle(trimmed || attachments[0]?.name || '');
     const appliedProvisionalTitle =
-      Boolean(provisionalTitle && provisionalTitle !== 'New Chat' && priorTitle === 'New Chat');
+      Boolean(
+        provisionalTitle &&
+          provisionalTitle !== defaultThreadTitle &&
+          priorTitle === defaultThreadTitle,
+      );
     if (appliedProvisionalTitle && provisionalTitle) {
       patchMainChatTab(targetTabKey, (tab) => ({ ...tab, title: provisionalTitle }));
       activeThreadTitleRef.current = provisionalTitle;
