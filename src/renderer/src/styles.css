@@ -6016,6 +6016,56 @@ button {
     0 0 0 2px var(--focus-halo);
 }
 
+/* Omnibox identity readout. The field wraps the input so an opaque, idle-only
+   overlay can sit on top of the raw URL. It is click-through, so focus/select
+   behaviour on the input beneath is untouched. */
+.omnibox-field {
+  position: relative;
+  min-width: 0;
+}
+
+.omnibox-identity {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #0e0e0f;
+  color: #e5e5e5;
+  font-size: 13.5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.omnibox-identity .oi-icon {
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  color: #93999f;
+}
+
+.omnibox-identity .oi-host {
+  flex: 0 0 auto;
+  color: #edeff1;
+  letter-spacing: -0.005em;
+}
+
+.omnibox-identity .oi-rest {
+  min-width: 0;
+  overflow: hidden;
+  color: #6c6f73;
+  text-overflow: ellipsis;
+}
+
+.omnibox-identity .oi-insecure {
+  flex: 0 0 auto;
+  color: #c69b4e;
+  font-weight: 560;
+}
+
 .browser-frame {
   min-width: 0;
   min-height: 0;
