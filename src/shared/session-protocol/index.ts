@@ -10,6 +10,7 @@
 // Boundary rule (grep-enforced): `codex-protocol` may appear only under
 // src/main/codex/ and in this file.
 
+export type { ProviderCapabilities, ProviderId } from './provider'
 export type { ReasoningEffort } from '../codex-protocol/ReasoningEffort'
 export type { ServerNotification } from '../codex-protocol/ServerNotification'
 export type { AppSummary } from '../codex-protocol/v2/AppSummary'
