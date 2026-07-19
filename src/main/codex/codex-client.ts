@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
+import { codexCapabilities, type SessionProvider } from '../providers/session-provider.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
@@ -59,7 +60,9 @@ import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-histo
 // long threads stay responsive instead of riding the limit.
 const autoCompactContextRatio = 0.8
 
-export class CodexClient extends EventEmitter {
+export class CodexClient extends EventEmitter implements SessionProvider {
+  readonly id = 'codex' as const
+  readonly capabilities = codexCapabilities
   private readonly appServer: AppServerProcess
   private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))

@@ -22,6 +22,8 @@ import { CodexClient } from './codex-client.js'
 import type { MemoryStore } from '../memory-store.js'
 import type { AttachmentStore } from '../attachment-store.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
+import type { SessionProvider } from '../providers/session-provider.js'
+import type { ProviderId } from '../../shared/session-protocol/provider.js'
 
 export function registerSessionIpc(
   getWindow: () => BrowserWindow | null,
@@ -32,6 +34,13 @@ export function registerSessionIpc(
   checkpointStore: TurnCheckpointStore | null = null
 ): CodexClient {
   const client = new CodexClient(browserAgent, researchRunner, checkpointStore)
+  // Provider registry (Claude-prep step 4): every session:* handler below
+  // resolves its provider through this map. Single-entry today; a Claude
+  // adapter registers here and inherits the entire IPC surface. Multi-provider
+  // payload routing (provider field on requests) lands with adapter #2.
+  const providers = new Map<ProviderId, SessionProvider>([[client.id, client]])
+  const resolveProvider = (id?: ProviderId): SessionProvider => providers.get(id ?? 'codex') ?? client
+  void resolveProvider
 
   client.on('event', (event: SessionEvent) => {
     getWindow()?.webContents.send(ipcChannels.sessionEvent, event)
