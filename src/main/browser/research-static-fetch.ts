@@ -114,19 +114,20 @@ export async function fetchStaticResearchPage(
     if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body', currentUrl)
 
     try {
-      const page = responseKind === 'html'
+      const extraction = responseKind === 'html'
         ? await extractHtmlResearchPage(body.text, currentUrl, response.status, contentType)
         : extractStructuredResearchPage(body.text, currentUrl, response.status, contentType, responseKind)
-      if (!page) {
+      if (!extraction.page) {
         return result(
           'fallback',
           startedAt,
           bytes,
           redirects,
-          responseKind === 'html' ? 'static extraction confidence is too low' : 'structured response confidence is too low',
+          extraction.reason,
           currentUrl
         )
       }
+      const page = extraction.page
       return {
         kind: 'accepted',
         page,
@@ -147,15 +148,18 @@ async function extractHtmlResearchPage(
   url: string,
   status: number,
   mediaType: string
-): Promise<StaticResearchPage | null> {
+): Promise<{ page: StaticResearchPage | null; reason: string }> {
   const extraction = await extractStaticPage(html, url)
-  if (!extraction.ok) return null
+  if (!extraction.ok) return { page: null, reason: extraction.reason }
   return {
-    ...extraction.page,
-    status,
-    html,
-    mediaType,
-    extractionPath: 'static-html'
+    page: {
+      ...extraction.page,
+      status,
+      html,
+      mediaType,
+      extractionPath: 'static-html'
+    },
+    reason: ''
   }
 }
 
@@ -165,33 +169,38 @@ function extractStructuredResearchPage(
   status: number,
   mediaType: string,
   kind: 'json' | 'ndjson'
-): StaticResearchPage | null {
+): { page: StaticResearchPage | null; reason: string } {
   let content: string
   try {
     if (kind === 'json') {
       content = JSON.stringify(JSON.parse(body), null, 2)
     } else {
       const records = body.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)
-      if (records.length === 0) return null
+      if (records.length === 0) return { page: null, reason: 'structured response has no records' }
       content = records.map((record) => JSON.stringify(JSON.parse(record), null, 2)).join('\n')
     }
   } catch {
-    return null
+    return { page: null, reason: 'structured response is not valid JSON' }
   }
   const normalized = content.trim()
   const wordCount = normalized ? normalized.split(/\s+/).length : 0
-  if (normalized.length < 240 || wordCount < 40) return null
+  if (normalized.length < 240 || wordCount < 40) {
+    return { page: null, reason: 'structured response confidence is too low' }
+  }
   const title = structuredResponseTitle(url, kind)
   return {
-    title,
-    url,
-    content: normalized,
-    wordCount,
-    status,
-    truncated: false,
-    html: `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title></head><body><pre>${escapeHtml(body)}</pre></body></html>`,
-    mediaType,
-    extractionPath: 'network-response'
+    page: {
+      title,
+      url,
+      content: normalized,
+      wordCount,
+      status,
+      truncated: false,
+      html: `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title></head><body><pre>${escapeHtml(body)}</pre></body></html>`,
+      mediaType,
+      extractionPath: 'network-response'
+    },
+    reason: ''
   }
 }
 

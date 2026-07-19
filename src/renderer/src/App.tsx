@@ -332,9 +332,10 @@ export default function App(): React.JSX.Element {
       () => crypto.randomUUID(),
       {
         // One-time migration source for tab state saved before model choices
-        // were isolated per chat.
+        // and workspace selection were isolated per chat.
         model: window.localStorage.getItem(modelStorageKey),
         reasoningEffort: window.localStorage.getItem(reasoningEffortStorageKey),
+        workspace: window.localStorage.getItem('codexdesktop.workspace'),
       },
     );
     return initialWorkspaceLayoutMode === 'browser-middle'
@@ -387,9 +388,7 @@ export default function App(): React.JSX.Element {
   const [threadsNextCursor, setThreadsNextCursor] = useState<string | null>(null);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const [threadsError, setThreadsError] = useState<string | null>(null);
-  const [workspace, setWorkspace] = useState<string | null>(() =>
-    window.localStorage.getItem('codexdesktop.workspace'),
-  );
+  const workspace = initialMainChatTab.workspace;
   const [models, setModels] = useState<Model[]>([]);
   // The active tab projects its saved model choice into the composer. `null`
   // means no explicit override, so turns use the CLI-configured default.
@@ -476,6 +475,8 @@ export default function App(): React.JSX.Element {
   const optimisticUserMessageIdRef = useRef<string | null>(null);
   const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort);
   const fastModeRef = useRef(fastMode);
+  // This ref is only the focused tab's display value. All asynchronous work
+  // must resolve its owning tab or thread explicitly (see helpers below).
   const workspaceRef = useRef<string | null>(workspace);
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
@@ -975,6 +976,7 @@ export default function App(): React.JSX.Element {
     selectedReasoningEffortRef.current = tab.reasoningEffort;
     setSelectedModel(tab.model);
     setSelectedReasoningEffort(tab.reasoningEffort);
+    workspaceRef.current = tab.workspace;
     // Route notifications for this tab's thread to the focused view even
     // before the session learns its threadId from hydration.
     watchThreadIdRef.current = session?.threadId ?? tab.threadId;
@@ -987,14 +989,6 @@ export default function App(): React.JSX.Element {
     }
     setIsGoalUpdating(false);
   }
-
-  useEffect(() => {
-    if (workspace) {
-      window.localStorage.setItem('codexdesktop.workspace', workspace);
-    } else {
-      window.localStorage.removeItem('codexdesktop.workspace');
-    }
-  }, [workspace]);
 
   useEffect(() => {
     if (!hasAutoRestoredRef.current) {
