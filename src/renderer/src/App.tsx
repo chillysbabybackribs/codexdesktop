@@ -3440,13 +3440,19 @@ export default function App(): React.JSX.Element {
     <div ref={appRef} className="app-shell">
       <TitleBar />
       <main
-        className={`workspace ${isBrowserFullscreen ? 'is-browser-fullscreen' : ''}`}
+        className={`workspace ${isBrowserFullscreen ? 'is-browser-fullscreen' : ''} ${
+          browserMiddleColumns ? 'is-browser-middle' : ''
+        }`}
         style={{
           gridTemplateColumns: isBrowserFullscreen
             ? '1fr'
-            : `${split}% ${dividerWidth}px 1fr`,
+            : browserMiddleColumns
+              ? `${browserMiddleColumnWidths.left}% ${dividerWidth}px minmax(${minBrowserWidth}px, 1fr) ${dividerWidth}px ${browserMiddleColumnWidths.right}%`
+              : `${split}% ${dividerWidth}px 1fr`,
         }}
       >
+        {!browserMiddleColumns ? (
+          <>
         <ChatPane
           turnCheckpoints={turnCheckpoints}
           onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
@@ -3467,6 +3473,8 @@ export default function App(): React.JSX.Element {
           onReorderMainChatTabs={handleReorderMainChatTabs}
           onCloseMainChatTab={handleCloseMainChatTab}
           onNewMainChatTab={handleNewMainChatTab}
+          isBrowserMiddle={false}
+          onToggleBrowserMiddle={toggleBrowserMiddleLayout}
           splitLayout={chatSplitLayout}
           onDropTabOnPane={handleDropTabOnSplitPane}
           onCloseSplitPane={handleCloseSplitPane}
@@ -3553,6 +3561,39 @@ export default function App(): React.JSX.Element {
           isFullscreen={isBrowserFullscreen}
           onToggleFullscreen={toggleBrowserFullscreen}
         />
+          </>
+        ) : (
+          <>
+            {renderChatPane(browserMiddleColumns.first, {
+              id: 'main-chat-pane-left',
+              pathPrefix: 'f',
+              showTabBar: true,
+              side: 'left',
+            })}
+            <div
+              className="split-divider"
+              onPointerDown={(event) => handleBrowserMiddleDividerPointerDown(event, 'left')}
+            />
+            <BrowserPane
+              state={browserState}
+              activeTab={activeTab}
+              viewHostRef={viewHostRef}
+              viewBounds={viewBounds}
+              isFullscreen={isBrowserFullscreen}
+              onToggleFullscreen={toggleBrowserFullscreen}
+            />
+            <div
+              className="split-divider"
+              onPointerDown={(event) => handleBrowserMiddleDividerPointerDown(event, 'right')}
+            />
+            {renderChatPane(browserMiddleColumns.second, {
+              id: 'main-chat-pane-right',
+              pathPrefix: 's',
+              showTabBar: false,
+              side: 'right',
+            })}
+          </>
+        )}
       </main>
     </div>
   );
