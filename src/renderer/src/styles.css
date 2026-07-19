@@ -5966,6 +5966,23 @@ button {
   margin-bottom: 0;
 }
 
+.agent-audit-verdict {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #8b93a3;
+}
+
+.agent-audit-verdict.is-flag {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #dfe2e6;
+}
+
 .agent-mini-message.is-assistant {
   align-self: stretch;
   color: #d6d8db;

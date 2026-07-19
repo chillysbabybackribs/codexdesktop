@@ -3,11 +3,16 @@ import test from 'node:test'
 import {
   auditBriefMarkdown,
   auditSummaryLabel,
+  buildAuditFeedbackMessage,
   buildAuditPrompt,
+  isAuditFeedback,
   isAuditPrompt,
   liveTurnGlance,
   parseAuditPrompt,
+  parseAuditVerdict,
+  shouldSendAuditFeedback,
   shouldTriggerAudit,
+  stripVerdictLine,
   turnAnswerText,
   turnChangedFiles,
   turnStepLines
