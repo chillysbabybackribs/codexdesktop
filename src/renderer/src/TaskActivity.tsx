@@ -1395,7 +1395,8 @@ export function currentActionLabel(
           }
           return 'Listing files'
         }
-        return `Running ${truncate(item.command, 38)}`
+        const narration = narrateCommand(item.command, item.commandActions, commandDescriptionOf(item))
+        return narration.natural ? truncate(narration.running, 48) : `Running ${truncate(cleanCommand(item.command), 38)}`
       }
       case 'fileChange': {
         const path = item.changes[0]?.path

@@ -2133,14 +2133,50 @@ button {
 .term-command {
   flex: 1;
   min-width: 0;
-  max-height: 60px;
   overflow: hidden;
   color: #d1d1d1;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 12px;
+  line-height: 19px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Natural-language headline for classified commands; raw stays in the
+   tooltip and the expanded echo line. */
+.term-summary {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: #c9c9c9;
+  font-size: 12.5px;
+  line-height: 19px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.term-cmdline {
+  padding: 7px 14px;
+  border-top: 1px solid #242424;
+  background: #161616;
+}
+
+.term-cmdline + .term-output pre {
+  padding-top: 0;
+}
+
+.term-cmdline code {
+  display: block;
+  color: #7e7e7e;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.term-cmdline + .term-output {
+  border-top: 0;
 }
 
 .term-meta {
