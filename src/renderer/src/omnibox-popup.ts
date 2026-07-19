@@ -22,7 +22,7 @@ const icons: Record<string, string> = {
 }
 
 const card = document.getElementById('card') as HTMLDivElement
-card.setAttribute('role', 'listbox')
+card.setAttribute('role', 'list')
 card.setAttribute('aria-label', 'Address suggestions')
 
 function trustedFavicon(value: string | null): string | null {
@@ -60,8 +60,8 @@ function render(payload: OmniboxRenderPayload): void {
     ...payload.suggestions.map((suggestion, index) => {
       const row = document.createElement('div')
       row.className = `row${index === payload.selectedIndex ? ' is-selected' : ''}`
-      row.setAttribute('role', 'option')
-      row.setAttribute('aria-selected', String(index === payload.selectedIndex))
+      row.setAttribute('role', 'listitem')
+      if (index === payload.selectedIndex) row.setAttribute('aria-current', 'true')
       row.setAttribute('aria-label', suggestion.detail ? `${suggestion.text}, ${suggestion.detail}` : suggestion.text)
 
       const icon = renderIcon(suggestion)

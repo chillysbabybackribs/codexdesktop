@@ -209,12 +209,19 @@ function BrowserToolbar({
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const typedTextRef = useRef('')
   const focusingOmniboxFromPointerRef = useRef(false)
+  const refocusingAfterHistoryDeleteRef = useRef(false)
+  const omniboxBlurTimerRef = useRef<number | null>(null)
   const querySeqRef = useRef(0)
   const pendingInlineRef = useRef<{ start: number; end: number } | null>(null)
 
   useEffect(() => {
     if (!isEditing) setInput(activeTab?.url ?? '')
   }, [activeTab?.url, isEditing])
+  useEffect(() => () => {
+    if (omniboxBlurTimerRef.current !== null) {
+      window.clearTimeout(omniboxBlurTimerRef.current)
+    }
+  }, [])
 
   useLayoutEffect(() => {
     const range = pendingInlineRef.current
@@ -298,6 +305,11 @@ function BrowserToolbar({
     ))
     setSelectedIndex(-1)
     setInput(typedTextRef.current)
+    refocusingAfterHistoryDeleteRef.current = true
+    omniboxRef.current?.focus({ preventScroll: true })
+    window.requestAnimationFrame(() => {
+      refocusingAfterHistoryDeleteRef.current = false
+    })
   }), [])
   // Guest pages forward F11 through the main process (focus lives in the
   // native view); this subscription handles it alongside chrome-focused F11.
@@ -405,7 +417,15 @@ function BrowserToolbar({
           aria-label="Address"
           onFocus={(event) => {
             const input = event.currentTarget
+            if (omniboxBlurTimerRef.current !== null) {
+              window.clearTimeout(omniboxBlurTimerRef.current)
+              omniboxBlurTimerRef.current = null
+            }
             setIsEditing(true)
+            if (refocusingAfterHistoryDeleteRef.current) {
+              refocusingAfterHistoryDeleteRef.current = false
+              return
+            }
             typedTextRef.current = input.value
             if (!focusingOmniboxFromPointerRef.current) input.select()
             // Let the focus gesture finish before a native suggestion surface
@@ -427,7 +447,19 @@ function BrowserToolbar({
               focusingOmniboxFromPointerRef.current = false
             }
           }}
-          onBlur={() => { setIsEditing(false); closePopup() }}
+          onBlur={() => {
+            setIsEditing(false)
+            if (omniboxBlurTimerRef.current !== null) {
+              window.clearTimeout(omniboxBlurTimerRef.current)
+            }
+            // Native popup pointer actions briefly transfer focus out of this
+            // document. Give delete a chance to restore the input; a genuine
+            // page/chrome click still closes the dropdown after the grace.
+            omniboxBlurTimerRef.current = window.setTimeout(() => {
+              omniboxBlurTimerRef.current = null
+              if (document.activeElement !== omniboxRef.current) closePopup()
+            }, 160)
+          }}
           onChange={(event) => {
             const text = event.target.value
             setInput(text)
