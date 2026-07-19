@@ -1670,71 +1670,6 @@ export default function App(): React.JSX.Element {
     }
   }
 
-  function backgroundMainChatSnapshot(tab: MainChatTab): MainChatSnapshot {
-    return mainChatSnapshotsRef.current.get(tab.key) ?? {
-      threadId: tab.threadId,
-      title: tab.title,
-      turnId: null,
-      goal: null,
-      reasoningEffort: null,
-      items: [],
-      itemMeta: {},
-      turnMeta: {},
-      contextUsage: null,
-      isCompacting: false,
-      activeCompaction: null,
-      precedingModelInputByTurn: new Map<string, ModelCallAttribution>(),
-      pendingCompactionByTurn: new Set<string>()
-    }
-  }
-
-  function reduceBackgroundTurnSnapshot(
-    tab: MainChatTab,
-    turn: Turn,
-    completed: boolean
-  ): MainChatSnapshot {
-    const current = backgroundMainChatSnapshot(tab)
-    const nextItemMeta = { ...current.itemMeta }
-    for (const item of turn.items) {
-      nextItemMeta[item.id] = { ...nextItemMeta[item.id], turnId: turn.id }
-    }
-    const status = completed
-      ? (turn.status === 'inProgress' ? 'completed' : turn.status)
-      : 'inProgress'
-    const nextTurnMeta = reduceTurnTelemetry(current.turnMeta, {
-      type: 'patch',
-      turnId: turn.id,
-      patch: {
-        status,
-        origin: 'live',
-        model: current.turnMeta[turn.id]?.model ?? tab.model,
-        reasoningEffort: current.turnMeta[turn.id]?.reasoningEffort ?? current.reasoningEffort,
-        workspace: current.turnMeta[turn.id]?.workspace ?? workspaceRef.current,
-        startedAtMs: turn.startedAt ? turn.startedAt * 1000 : current.turnMeta[turn.id]?.startedAtMs,
-        ...(completed ? {
-          completedAtMs: turn.completedAt ? turn.completedAt * 1000 : Date.now(),
-          durationMs: turn.durationMs ?? undefined,
-          errorMessage: turn.error?.message,
-          goalAtEnd: cloneGoal(current.goal)
-        } : {
-          goalAtStart: cloneGoal(current.goal),
-          goalAtEnd: cloneGoal(current.goal)
-        })
-      }
-    })
-    const next: MainChatSnapshot = {
-      ...current,
-      turnId: completed ? null : turn.id,
-      items: upsertMany(current.items, turn.items),
-      itemMeta: nextItemMeta,
-      turnMeta: nextTurnMeta,
-      isCompacting: completed ? false : current.isCompacting,
-      activeCompaction: completed ? null : current.activeCompaction
-    }
-    mainChatSnapshotsRef.current.set(tab.key, next)
-    return next
-  }
-
   function persistBackgroundMainChatCompletion(
     tab: MainChatTab,
     threadId: string,
@@ -1793,59 +1728,29 @@ export default function App(): React.JSX.Element {
     tab: MainChatTab,
     notification: ServerNotification
   ): void {
-    if (isItemNotification(notification)) {
-      const current = backgroundMainChatSnapshot(tab)
-      const nextPrecedingModelInput = new Map(current.precedingModelInputByTurn)
-      const nextPendingCompaction = new Set(current.pendingCompactionByTurn)
-      let nextActiveCompaction = current.activeCompaction
-      if (notification.method === 'item/started' || notification.method === 'item/completed') {
-        const item = notification.params.item
-        if (item.type === 'contextCompaction') {
-          nextPendingCompaction.add(notification.params.turnId)
-        } else {
-          const attribution = modelCallAttributionForItem(item)
-          if (attribution) nextPrecedingModelInput.set(notification.params.turnId, attribution)
-        }
-        if (notification.method === 'item/started' && item.type === 'contextCompaction') {
-          nextActiveCompaction = {
-            itemId: item.id,
-            turnId: notification.params.turnId,
-            beforeTokens: current.contextUsage?.last.totalTokens ?? null
-          }
-        }
-      }
-      const optimisticId = current.items.find((item) => item.id.startsWith('optimistic-user-'))?.id ?? null
-      const incomingItems = notification.method === 'item/started' || notification.method === 'item/completed'
-        ? [notification.params.item]
-        : []
-      const nextItems = reduceItemNotificationItems(
-        stripOptimisticUserMessage(current.items, optimisticId, incomingItems),
-        notification
-      )
-      const nextItemMeta = reduceItemNotificationMeta(current.itemMeta, notification)
-      const compactionStarted = notification.method === 'item/started' && notification.params.item.type === 'contextCompaction'
-      const compactionCompleted = notification.method === 'item/completed' && notification.params.item.type === 'contextCompaction'
-      mainChatSnapshotsRef.current.set(tab.key, {
-        ...current,
-        items: nextItems,
-        itemMeta: nextItemMeta,
-        isCompacting: compactionStarted ? true : compactionCompleted ? false : current.isCompacting,
-        activeCompaction: compactionCompleted ? null : nextActiveCompaction,
-        precedingModelInputByTurn: nextPrecedingModelInput,
-        pendingCompactionByTurn: nextPendingCompaction
+    const store = sessionStoreRef.current
+    const existing = store.peek(tab.key)
+    // Session presence under a tab key means "cached transcript" and gates
+    // hydration (needsMainChatTabHydration), so a rename for a tab that never
+    // cached one must not conjure an empty session.
+    let nextState: SessionRenderState | null = existing ?? null
+    if (existing || notification.method !== 'thread/name/updated') {
+      const seeded = existing ?? emptySessionState({ threadId: tab.threadId, title: tab.title })
+      const next = reduceSessionNotification(seeded, notification, {
+        atMs: Date.now(),
+        fallbackModel: tab.model,
+        workspace: workspaceRef.current
       })
-      return
+      // A freshly seeded session is stored only when the notification actually
+      // touched it — untouched seeds would also read as "cached".
+      if (existing || next !== seeded) {
+        store.set(tab.key, next)
+        nextState = next
+      }
     }
 
     switch (notification.method) {
       case 'thread/name/updated':
-        if (mainChatSnapshotsRef.current.has(tab.key)) {
-          const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
-          mainChatSnapshotsRef.current.set(tab.key, {
-            ...snapshot,
-            title: notification.params.threadName || 'New Chat'
-          })
-        }
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           title: notification.params.threadName || 'New Chat'
@@ -1853,7 +1758,6 @@ export default function App(): React.JSX.Element {
         void refreshThreads()
         return
       case 'turn/started':
-        reduceBackgroundTurnSnapshot(tab, notification.params.turn, false)
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'working',
@@ -1862,7 +1766,6 @@ export default function App(): React.JSX.Element {
         return
       case 'turn/completed': {
         const turn = notification.params.turn
-        const snapshot = reduceBackgroundTurnSnapshot(tab, turn, true)
         patchMainChatTab(tab.key, (current) => ({
           ...current,
           status: 'attention',
@@ -1874,79 +1777,14 @@ export default function App(): React.JSX.Element {
           status: turn.status === 'failed' ? 'failed' : 'completed',
           message: turn.error?.message ?? null
         })
-        persistBackgroundMainChatCompletion(tab, notification.params.threadId, turn.id, snapshot)
+        if (nextState) {
+          persistBackgroundMainChatCompletion(tab, notification.params.threadId, turn.id, nextState)
+        }
         void refreshThreads()
-        return
-      }
-      case 'thread/goal/updated': {
-        const current = backgroundMainChatSnapshot(tab)
-        mainChatSnapshotsRef.current.set(tab.key, {
-          ...current,
-          goal: cloneGoal(notification.params.goal)
-        })
-        return
-      }
-      case 'thread/goal/cleared': {
-        const current = backgroundMainChatSnapshot(tab)
-        mainChatSnapshotsRef.current.set(tab.key, { ...current, goal: null })
-        return
-      }
-      case 'thread/tokenUsage/updated': {
-        const current = backgroundMainChatSnapshot(tab)
-        const existing = current.turnMeta[notification.params.turnId]?.tokens
-        const isNewCall = existing
-          ? notification.params.tokenUsage.total.totalTokens > existing.threadTotalAtEnd.totalTokens
-          : notification.params.tokenUsage.last.totalTokens > 0
-        const compactedBeforeCall = isNewCall
-          ? current.pendingCompactionByTurn.delete(notification.params.turnId)
-          : false
-        mainChatSnapshotsRef.current.set(tab.key, {
-          ...current,
-          contextUsage: notification.params.tokenUsage,
-          turnMeta: reduceTurnTelemetry(current.turnMeta, {
-            type: 'tokenUsage',
-            turnId: notification.params.turnId,
-            tokenUsage: notification.params.tokenUsage,
-            atMs: Date.now(),
-            precedingItem: current.precedingModelInputByTurn.get(notification.params.turnId) ?? null,
-            compactedBeforeCall
-          })
-        })
-        return
-      }
-      case 'model/rerouted': {
-        const current = backgroundMainChatSnapshot(tab)
-        mainChatSnapshotsRef.current.set(tab.key, {
-          ...current,
-          turnMeta: reduceTurnTelemetry(current.turnMeta, {
-            type: 'modelRerouted',
-            turnId: notification.params.turnId,
-            atMs: Date.now(),
-            fromModel: notification.params.fromModel,
-            toModel: notification.params.toModel,
-            reason: notification.params.reason
-          })
-        })
-        return
-      }
-      case 'turn/diff/updated': {
-        const current = backgroundMainChatSnapshot(tab)
-        mainChatSnapshotsRef.current.set(tab.key, {
-          ...current,
-          turnMeta: reduceTurnTelemetry(current.turnMeta, {
-            type: 'patch',
-            turnId: notification.params.turnId,
-            patch: { diffSummary: summarizeTurnDiff(notification.params.diff) }
-          })
-        })
         return
       }
       case 'error':
         if (!notification.params.willRetry) {
-          if (mainChatSnapshotsRef.current.has(tab.key)) {
-            const snapshot = mainChatSnapshotsRef.current.get(tab.key)!
-            mainChatSnapshotsRef.current.set(tab.key, { ...snapshot, turnId: null })
-          }
           patchMainChatTab(tab.key, (current) => ({ ...current, status: 'attention', turnId: null }))
         }
         return
