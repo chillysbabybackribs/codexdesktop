@@ -39,6 +39,7 @@ import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
+import { TorVpnManager } from './browser/vpn-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerSessionIpc, type RegisteredSessionProviders } from './codex/codex-ipc.js'
 import { TurnTraceStore } from './turn-trace-store.js'
@@ -99,6 +100,7 @@ const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactSto
 const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore(() => join(app.getPath('userData'), 'browser-state.json'))
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
+const vpnManager = new TorVpnManager()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 let verificationBrowserControlReady = false
 let verificationBrowserRestored = false
@@ -209,6 +211,7 @@ function createWindow(): void {
   })
 
   tabManager = new TabManager(mainWindow)
+  tabManager.setVpnStatusSource(() => vpnManager.status())
   tabManager.onState((state) => {
     sendToMainRenderer(ipcChannels.browserState, state)
   })
@@ -286,6 +289,7 @@ function bootstrap(): void {
     }
     quitPreparationStarted = true
 
+    vpnManager.dispose()
     researchRunner.dispose()
     sessionProviders?.dispose()
     sessionProviders = null
@@ -309,6 +313,10 @@ function bootstrap(): void {
         tabManager?.isUserVisibleWebContents(webContents) ?? false
     })
     await browserHistoryStore.load()
+    vpnManager.onChange(() => tabManager?.refreshState())
+    // Reconnect in the background when the user last left the VPN on; the
+    // toolbar shows bootstrap progress while tabs restore in parallel.
+    void vpnManager.restoreFromDisk()
     registerIpc()
     createWindow()
 

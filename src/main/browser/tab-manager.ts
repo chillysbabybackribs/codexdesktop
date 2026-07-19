@@ -1,5 +1,5 @@
 import type { BrowserWindow, WebContents } from 'electron'
-import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
+import type { BrowserBounds, BrowserState, BrowserTabState, BrowserVpnStatus } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import {
@@ -55,6 +55,13 @@ export class TabManager {
   // overlay is open, the same trick used during a divider drag.
   private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
+  // VPN status is session-wide, owned by TorVpnManager; injected here so the
+  // renderer receives one coherent BrowserState payload.
+  private vpnStatusSource: () => BrowserVpnStatus = () => ({
+    state: 'off',
+    bootstrapProgress: 0,
+    detail: null
+  })
   private persistListener: (() => void) | null = null
   private visitListener: BrowserVisitListener | null = null
   private disposed = false
@@ -73,6 +80,15 @@ export class TabManager {
 
   onPersist(listener: () => void): void {
     this.persistListener = listener
+  }
+
+  setVpnStatusSource(source: () => BrowserVpnStatus): void {
+    this.vpnStatusSource = source
+  }
+
+  /** Re-broadcast browser state after out-of-band changes (e.g. VPN status). */
+  refreshState(): void {
+    this.pushState()
   }
 
   onVisit(listener: BrowserVisitListener): void {
@@ -591,6 +607,7 @@ export class TabManager {
 
     this.stateListener?.({
       activeTabId: this.activeTabId,
+      vpn: this.vpnStatusSource(),
       tabs: Array.from(this.tabs.values()).map((tab): BrowserTabState => {
         const navigation = readTabNavigation(tab)
 

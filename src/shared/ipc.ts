@@ -5,6 +5,7 @@ export type {
   BrowserTabState,
   BrowserFindResult,
   BrowserState,
+  BrowserVpnStatus,
   OmniboxSuggestion,
   OmniboxAnchor,
   OmniboxRenderPayload,
