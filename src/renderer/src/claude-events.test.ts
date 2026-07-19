@@ -160,11 +160,182 @@ test('thinking blocks render as reasoning; tool_use renders as a tool call that 
 
   const reasoning = state.items.find((item) => item.type === 'reasoning');
   assert.deepEqual((reasoning as { summary: string[] }).summary, ['pondering…']);
-  const tool = state.items.find((item) => item.type === 'mcpToolCall');
+  // Bash now maps to the same commandExecution item type Codex emits.
+  const tool = state.items.find((item) => item.type === 'commandExecution');
   assert.equal((tool as { status: string }).status, 'completed');
-  assert.equal((tool as { tool: string }).tool, 'Bash');
   const answer = state.items.find((item) => item.id.includes('msg-answer'));
   assert.equal((answer as { text: string }).text, 'done');
+});
+
+const inputJsonDelta = (index: number, partialJson: string) => ({
+  type: 'stream_event',
+  event: {
+    type: 'content_block_delta',
+    index,
+    delta: { type: 'input_json_delta', partial_json: partialJson },
+  },
+});
+const toolResult = (id: string, content: unknown, isError = false) => ({
+  type: 'user',
+  message: {
+    content: [{ type: 'tool_result', tool_use_id: id, content, is_error: isError }],
+  },
+});
+
+test('Bash maps to a commandExecution with command, output, and duration', () => {
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-bash'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_bash', name: 'Bash' }),
+      inputJsonDelta(0, '{"command": "npm te'),
+      inputJsonDelta(0, 'st", "description": "Run tests"}'),
+      blockStop(0),
+      toolResult('toolu_bash', [{ type: 'text', text: 'ok\n42 passing' }]),
+    ],
+    'run the tests',
+  );
+
+  const tool = state.items.find((item) => item.type === 'commandExecution') as {
+    command: string;
+    aggregatedOutput: string;
+    status: string;
+    exitCode: number | null;
+    durationMs: number | null;
+  };
+  assert.equal(tool.command, 'npm test');
+  assert.equal(tool.aggregatedOutput, 'ok\n42 passing');
+  assert.equal(tool.status, 'completed');
+  assert.equal(tool.exitCode, 0);
+  assert.equal(typeof tool.durationMs, 'number');
+});
+
+test('Read maps to a commandExecution with a compact read action', () => {
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-read'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_read', name: 'Read' }),
+      inputJsonDelta(0, '{"file_path": "/tmp/ws/src/app.ts"}'),
+      blockStop(0),
+      toolResult('toolu_read', 'file contents…'),
+    ],
+    'read the file',
+  );
+
+  const tool = state.items.find((item) => item.type === 'commandExecution') as {
+    commandActions: Array<{ type: string; name: string; path: string }>;
+    status: string;
+  };
+  assert.equal(tool.status, 'completed');
+  assert.deepEqual(tool.commandActions, [
+    { type: 'read', command: 'Read /tmp/ws/src/app.ts', name: 'app.ts', path: '/tmp/ws/src/app.ts' },
+  ]);
+});
+
+test('Edit maps to a fileChange with a synthesized diff that completes', () => {
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-edit'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_edit', name: 'Edit' }),
+      blockStop(0),
+      {
+        type: 'assistant',
+        message: {
+          id: 'msg-edit',
+          content: [
+            {
+              type: 'tool_use',
+              id: 'toolu_edit',
+              name: 'Edit',
+              input: {
+                file_path: '/tmp/ws/src/app.ts',
+                old_string: 'const a = 1',
+                new_string: 'const a = 2',
+              },
+            },
+          ],
+        },
+      },
+      toolResult('toolu_edit', 'edited'),
+    ],
+    'edit the file',
+  );
+
+  const tool = state.items.find((item) => item.type === 'fileChange') as {
+    status: string;
+    changes: Array<{ path: string; kind: { type: string }; diff: string }>;
+  };
+  assert.equal(tool.status, 'completed');
+  assert.equal(tool.changes[0].path, '/tmp/ws/src/app.ts');
+  assert.equal(tool.changes[0].kind.type, 'update');
+  assert.equal(tool.changes[0].diff, '-const a = 1\n+const a = 2');
+});
+
+test('WebSearch maps to a webSearch item; unknown tools stay mcpToolCall', () => {
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-web'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_web', name: 'WebSearch' }),
+      inputJsonDelta(0, '{"query": "cursor chat ui"}'),
+      blockStop(0),
+      toolResult('toolu_web', 'results…'),
+      blockStart(1, { type: 'tool_use', id: 'toolu_mcp', name: 'mcp__browser__app_screenshot' }),
+      inputJsonDelta(1, '{}'),
+      blockStop(1),
+      toolResult('toolu_mcp', 'shot'),
+    ],
+    'search the web',
+  );
+
+  const search = state.items.find((item) => item.type === 'webSearch') as {
+    query: string;
+    action: { type: string; query: string | null };
+  };
+  assert.equal(search.query, 'cursor chat ui');
+  assert.equal(search.action.type, 'search');
+  const mcp = state.items.find((item) => item.type === 'mcpToolCall') as {
+    tool: string;
+    status: string;
+  };
+  assert.equal(mcp.tool, 'mcp__browser__app_screenshot');
+  assert.equal(mcp.status, 'completed');
+});
+
+test('TodoWrite emits turn/plan/updated and no transcript item', () => {
+  const { context } = makeContext();
+  const translator = new ClaudeTurnTranslator(context);
+  const notifications: Array<{ method: string; params: Record<string, unknown> }> = [];
+  const messages = [
+    init,
+    messageStart('msg-plan'),
+    blockStart(0, { type: 'tool_use', id: 'toolu_todo', name: 'TodoWrite' }),
+    inputJsonDelta(
+      0,
+      '{"todos": [{"content": "Map the UI", "status": "completed"}, {"content": "Ship it", "status": "in_progress"}]}',
+    ),
+    blockStop(0),
+    toolResult('toolu_todo', 'ok'),
+  ];
+  for (const message of messages) {
+    for (const notification of translator.handle(message).notifications) {
+      notifications.push(notification as unknown as { method: string; params: Record<string, unknown> });
+    }
+  }
+
+  const plan = notifications.find((notification) => notification.method === 'turn/plan/updated');
+  assert.ok(plan, 'plan notification emitted');
+  assert.deepEqual(plan?.params.plan, [
+    { step: 'Map the UI', status: 'completed' },
+    { step: 'Ship it', status: 'inProgress' },
+  ]);
+  assert.equal(
+    notifications.filter((notification) => notification.method.startsWith('item/')).length,
+    0,
+    'no transcript item for the todo board',
+  );
 });
 
 test('content-block indexes are scoped to each assistant message', () => {
