@@ -7,6 +7,7 @@ import {
   collapseAdjacentAssistantDuplicates,
   completeAgentMessage,
   createAgentSession,
+  latestAuditReport,
   parseAgentDock,
   resetAgentSession,
   serializeAgentDock,
@@ -138,6 +139,30 @@ test('agent dock persistence keeps only durable metadata', () => {
 test('main chat context is removed from restored helper messages', () => {
   assert.equal(stripMainChatContext('<main-chat-context>summary</main-chat-context>\n\nQuestion'), 'Question')
   assert.equal(stripMainChatContext('Question'), 'Question')
+})
+
+test('latestAuditReport joins the reply to the newest audit briefing only', () => {
+  const audit = { userText: 'do it', files: ['a.ts'], steps: [], answerText: '' }
+  assert.equal(
+    latestAuditReport([
+      { id: 'u1', role: 'user', text: '[auto-audit] …', audit },
+      { id: 'a1', role: 'assistant', text: 'Checking the diff.' },
+      { id: 'a2', role: 'assistant', text: 'Bug found.\nVERDICT: flag' }
+    ]),
+    'Checking the diff.\nBug found.\nVERDICT: flag'
+  )
+  assert.equal(
+    latestAuditReport([
+      { id: 'u1', role: 'user', text: '[auto-audit] …', audit },
+      { id: 'a1', role: 'assistant', text: 'Fine.\nVERDICT: pass' },
+      { id: 'u2', role: 'user', text: 'unrelated manual question' },
+      { id: 'a2', role: 'assistant', text: 'manual answer' }
+    ]),
+    null,
+    'a manual exchange after the audit is never treated as a report'
+  )
+  assert.equal(latestAuditReport([{ id: 'u1', role: 'user', text: '[auto-audit] …', audit }]), null, 'no reply yet')
+  assert.equal(latestAuditReport([]), null)
 })
 
 test('adjacent identical assistant messages collapse; non-adjacent repeats stay', () => {
