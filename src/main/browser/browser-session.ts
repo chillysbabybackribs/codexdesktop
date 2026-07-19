@@ -2,6 +2,7 @@ import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
 import { browserUserAgentFallback } from './browser-identity.js'
+import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import { safeDownloadName } from './download-policy.js'
 
 export const browserPartition = 'persist:codex-browser'
@@ -43,6 +44,8 @@ export function configureBrowserSession(options: BrowserSessionOptions): void {
       console.warn('Blocked a download initiated by a hidden browser surface', item.getURL())
       return
     }
+
+    if (browserDownloadCaptureBroker.handleWillDownload(item, webContents)) return
 
     const window = options.getWindow()
     if (!window) {
