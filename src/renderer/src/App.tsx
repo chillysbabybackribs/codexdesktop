@@ -104,7 +104,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
-import { agentSessionsForMainChatTab } from './agent-session-model';
+import { agentSessionsForMainChatTab, latestAuditReport } from './agent-session-model';
 import {
   pluginInstallParams,
   pluginUninstallId,
