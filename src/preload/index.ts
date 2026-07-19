@@ -18,6 +18,7 @@ import type {
   CodexPluginInstallParams,
   CodexPluginQueryParams,
   CodexPluginReadParams,
+  CodexResumeThreadParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
   CodexStartThreadParams,
@@ -100,8 +101,7 @@ export const api = {
     listThreads: (params?: CodexListThreadsParams) =>
       ipcRenderer.invoke(ipcChannels.codexListThreads, params),
     startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.codexStartThread, params),
-    resumeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexResumeThread, threadId),
-    readThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexReadThread, threadId),
+    resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.codexResumeThread, params),
     getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexGetGoal, threadId),
     setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.codexSetGoal, params),
     clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexClearGoal, threadId),

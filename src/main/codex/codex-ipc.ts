@@ -7,6 +7,7 @@ import type {
   CodexPluginInstallParams,
   CodexPluginQueryParams,
   CodexPluginReadParams,
+  CodexResumeThreadParams,
   MemoryPersistParams,
   CodexSendMessageParams,
   CodexSetGoalParams,
@@ -41,8 +42,9 @@ export function registerCodexIpc(
   ipcMain.handle(ipcChannels.codexStartThread, (_event, params?: CodexStartThreadParams) =>
     client.startThread(params?.cwd, params?.model)
   )
-  ipcMain.handle(ipcChannels.codexResumeThread, (_event, threadId: string) => client.resumeThread(threadId))
-  ipcMain.handle(ipcChannels.codexReadThread, (_event, threadId: string) => client.readThread(threadId))
+  ipcMain.handle(ipcChannels.codexResumeThread, (_event, params: CodexResumeThreadParams) =>
+    client.resumeThread(params.threadId, params.history)
+  )
   ipcMain.handle(ipcChannels.codexGetGoal, (_event, threadId: string) => client.getGoal(threadId))
   ipcMain.handle(ipcChannels.codexSetGoal, (_event, params: CodexSetGoalParams) => client.setGoal(params))
   ipcMain.handle(ipcChannels.codexClearGoal, (_event, threadId: string) => client.clearGoal(threadId))

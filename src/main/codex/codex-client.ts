@@ -20,7 +20,6 @@ import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/Thr
 import type { ThreadGoalGetResponse } from '../../shared/codex-protocol/v2/ThreadGoalGetResponse.js'
 import type { ThreadGoalSetParams } from '../../shared/codex-protocol/v2/ThreadGoalSetParams.js'
 import type { ThreadGoalSetResponse } from '../../shared/codex-protocol/v2/ThreadGoalSetResponse.js'
-import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js'
 import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
 import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
 import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js'
@@ -50,6 +49,7 @@ import {
   resolveTurnPolicy
 } from './codex-config.js'
 import { LocalSkillRegistry } from './local-skill-registry.js'
+import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-history.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
@@ -210,7 +210,7 @@ export class CodexClient extends EventEmitter {
     return response
   }
 
-  async resumeThread(threadId: string): Promise<ThreadResumeResponse> {
+  async resumeThread(threadId: string, history: ResumeHistoryConsumer = 'main'): Promise<ThreadResumeResponse> {
     await this.ensureStarted()
     const response = await this.request<ThreadResumeResponse>('thread/resume', {
       threadId,
@@ -222,23 +222,11 @@ export class CodexClient extends EventEmitter {
       // bounded bootstrap payload; requesting populated thread.turns as well
       // duplicates that history and makes large persisted chats feel frozen.
       excludeTurns: true,
-      initialTurnsPage: {
-        limit: 500,
-        sortDirection: 'asc',
-        itemsView: 'full'
-      }
+      initialTurnsPage: resumeHistoryPageFor(history)
     })
     this.threadModels.set(threadId, response.model)
     this.threadReasoningEfforts.set(threadId, response.reasoningEffort)
     return response
-  }
-
-  async readThread(threadId: string): Promise<ThreadReadResponse> {
-    await this.ensureStarted()
-    return this.request<ThreadReadResponse>('thread/read', {
-      threadId,
-      includeTurns: true
-    })
   }
 
   async getGoal(threadId: string): Promise<ThreadGoal | null> {

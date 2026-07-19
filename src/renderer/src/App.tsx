@@ -1212,7 +1212,7 @@ export default function App(): React.JSX.Element {
     watchThreadIdRef.current = threadId
 
     try {
-      const resumed = await window.api.codex.resumeThread(threadId)
+      const resumed = await window.api.codex.resumeThread({ threadId, history: 'main' })
 
       if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
         return false
@@ -1233,17 +1233,9 @@ export default function App(): React.JSX.Element {
       setSelectedReasoningEffort(reasoningEffort)
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
-      hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
-
-      if (resumed.thread.turns.length === 0 && !resumed.initialTurnsPage?.data?.length) {
-        const read = await window.api.codex.readThread(threadId)
-
-        if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
-          return false
-        }
-
-        hydrateThread(read.thread, undefined, environment)
-      }
+      // Resume pages are newest-first for fast retrieval. The transcript is
+      // rendered in reading order, so reverse its bounded page exactly once.
+      hydrateThread(resumed.thread, [...(resumed.initialTurnsPage?.data ?? [])].reverse(), environment)
 
       try {
         const goal = await window.api.codex.getGoal(threadId)
@@ -2360,7 +2352,7 @@ export default function App(): React.JSX.Element {
       const wave = backgroundTabs.slice(index, index + 3)
       await Promise.all(wave.map(async (tab) => {
         try {
-          const resumed = await window.api.codex.resumeThread(tab.threadId!)
+          const resumed = await window.api.codex.resumeThread({ threadId: tab.threadId!, history: 'background' })
           const turns: Turn[] = resumed.thread.turns.length
             ? resumed.thread.turns
             : (resumed.initialTurnsPage?.data ?? [])
