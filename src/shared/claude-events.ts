@@ -278,7 +278,11 @@ export class ClaudeTurnTranslator {
         ? {
             message: errorMessage,
             codexErrorInfo: this.pendingError?.codexErrorInfo ?? classifyClaudeError(errorMessage),
-            additionalDetails: sdkErrors.length > 1 ? sdkErrors.slice(1).join('\n') : null
+            additionalDetails: this.pendingError && sdkErrors.length > 0
+              ? sdkErrors.join('\n')
+              : sdkErrors.length > 1
+                ? sdkErrors.slice(1).join('\n')
+                : null
           }
         : null,
       startedAt: null,

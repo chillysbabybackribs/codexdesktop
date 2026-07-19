@@ -156,12 +156,13 @@ test('rate-limit and SDK error details survive into the failed turn', () => {
     duration_ms: 20
   })
   const completed = translation.notifications.at(-1) as unknown as {
-    params: { turn: { status: string; error: { message: string; codexErrorInfo: string } } }
+    params: { turn: { status: string; error: { message: string; codexErrorInfo: string; additionalDetails: string } } }
   }
 
   assert.equal(completed.params.turn.status, 'failed')
   assert.match(completed.params.turn.error.message, /usage limit reached/i)
   assert.equal(completed.params.turn.error.codexErrorInfo, 'usageLimitExceeded')
+  assert.equal(completed.params.turn.error.additionalDetails, 'provider detail')
 })
 
 test('a failed result marks the turn failed with the error message', () => {
