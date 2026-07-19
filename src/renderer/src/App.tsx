@@ -1459,6 +1459,10 @@ export default function App(): React.JSX.Element {
     watchThreadIdRef.current = activeThreadId;
     const threadId = activeThreadIdRef.current;
     const existingTab = mainChatTabStateRef.current.tabs.find((tab) => tab.key === targetTabKey);
+    // Capture the target tab's folder before any awaited reviewer work. The
+    // user may switch panes while it is preparing, but that must not redirect
+    // this turn (or the thread it creates) into the newly focused folder.
+    const targetWorkspace = existingTab?.workspace ?? null;
     const priorTitle = existingTab?.title ?? defaultThreadTitle;
     const provisionalTitle = threadId
       ? null
@@ -1546,7 +1550,7 @@ export default function App(): React.JSX.Element {
         threadId,
         text: outgoingText,
         attachments,
-        cwd: workspace,
+        cwd: targetWorkspace,
         model: selectedModel,
         effort: selectedReasoningEffort,
         fastMode,
@@ -1570,6 +1574,7 @@ export default function App(): React.JSX.Element {
       patchMainChatTab(targetTabKey, (tab) => ({
         ...tab,
         threadId: response.threadId,
+        workspace: tab.workspace ?? targetWorkspace,
         // The completion handler already chose idle vs attention based on
         // whether this tab was focused when it finished. Preserve that exact
         // settled presentation if the invoke response arrives afterward.
@@ -1614,7 +1619,7 @@ export default function App(): React.JSX.Element {
         requestedModel: selectedModel,
         model: response.model,
         reasoningEffort: response.reasoningEffort,
-        workspace,
+        workspace: targetWorkspace,
         goalAtStart: goalSnapshot,
         goalAtEnd: goalSnapshot,
         goalContinuation: false,
