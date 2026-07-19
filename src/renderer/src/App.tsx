@@ -263,12 +263,15 @@ function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTab
 type MainChatSnapshot = SessionRenderState;
 
 export default function App(): React.JSX.Element {
+  const initialWorkspaceLayoutMode = parseWorkspaceLayoutMode(
+    window.localStorage.getItem(workspaceLayoutStorageKey),
+  );
   const [split, setSplit] = useState(() => {
     const stored = Number(window.localStorage.getItem('codexdesktop.split'));
     return Number.isFinite(stored) && stored > 20 && stored < 70 ? stored : 37;
   });
-  const [mainChatTabState, setMainChatTabState] = useState<MainChatTabState>(() =>
-    parseMainChatTabState(
+  const [mainChatTabState, setMainChatTabState] = useState<MainChatTabState>(() => {
+    const parsed = parseMainChatTabState(
       window.localStorage.getItem(mainChatTabsStorageKey),
       window.localStorage.getItem(lastThreadStorageKey),
       () => crypto.randomUUID(),
@@ -278,8 +281,11 @@ export default function App(): React.JSX.Element {
         model: window.localStorage.getItem(modelStorageKey),
         reasoningEffort: window.localStorage.getItem(reasoningEffortStorageKey),
       },
-    ),
-  );
+    );
+    return initialWorkspaceLayoutMode === 'browser-middle'
+      ? ensureBrowserMiddleTabAssignments(parsed)
+      : parsed;
+  });
   const mainChatTabs = mainChatTabState.tabs;
   const activeMainChatTabKey = mainChatTabState.activeKey;
   const initialMainChatTab =
@@ -296,8 +302,18 @@ export default function App(): React.JSX.Element {
   );
   const chatSplitLayoutRef = useRef(chatSplitLayout);
   const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(() =>
-    parseWorkspaceLayoutMode(window.localStorage.getItem(workspaceLayoutStorageKey)),
+    initialWorkspaceLayoutMode,
   );
+  const [browserMiddleActiveTabKeys, setBrowserMiddleActiveTabKeys] =
+    useState<BrowserMiddleActiveTabKeys>(() =>
+      reconcileBrowserMiddleActiveTabKeys(
+        parseBrowserMiddleActiveTabKeys(
+          window.localStorage.getItem(browserMiddleActiveTabsStorageKey),
+        ),
+        mainChatTabState.tabs,
+        mainChatTabState.activeKey,
+      ),
+    );
   const [browserMiddleColumnWidths, setBrowserMiddleColumnWidths] =
     useState<BrowserMiddleColumnWidths>(() =>
       parseBrowserMiddleColumnWidths(
@@ -365,6 +381,7 @@ export default function App(): React.JSX.Element {
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
+    handleSpawnedAgent,
     handleOpenAgent,
     handleMinimizeAgent,
     handleToggleWatchAgent,
@@ -421,6 +438,7 @@ export default function App(): React.JSX.Element {
   const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map());
   const mainChatTabStateRef = useRef(mainChatTabState);
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey);
+  const browserMiddleActiveTabKeysRef = useRef(browserMiddleActiveTabKeys);
   const olderHistoryCursorByThreadRef = useRef<Map<string, string | null>>(new Map());
   const olderHistoryLoadsRef = useRef<Set<string>>(new Set());
   // A failed resume is transient transport state, not proof that the thread is
@@ -618,6 +636,14 @@ export default function App(): React.JSX.Element {
   }, [browserMiddleColumnWidths]);
 
   useEffect(() => {
+    browserMiddleActiveTabKeysRef.current = browserMiddleActiveTabKeys;
+    window.localStorage.setItem(
+      browserMiddleActiveTabsStorageKey,
+      JSON.stringify(browserMiddleActiveTabKeys),
+    );
+  }, [browserMiddleActiveTabKeys]);
+
+  useEffect(() => {
     activeGoalRef.current = activeGoal;
   }, [activeGoal]);
 
@@ -671,6 +697,18 @@ export default function App(): React.JSX.Element {
     mainChatTabStateRef.current = next;
     activeMainChatTabKeyRef.current = next.activeKey;
     setMainChatTabState(next);
+    const nextBrowserMiddleActiveTabKeys = reconcileBrowserMiddleActiveTabKeys(
+      browserMiddleActiveTabKeysRef.current,
+      next.tabs,
+      next.activeKey,
+    );
+    if (
+      nextBrowserMiddleActiveTabKeys.left !== browserMiddleActiveTabKeysRef.current.left ||
+      nextBrowserMiddleActiveTabKeys.right !== browserMiddleActiveTabKeysRef.current.right
+    ) {
+      browserMiddleActiveTabKeysRef.current = nextBrowserMiddleActiveTabKeys;
+      setBrowserMiddleActiveTabKeys(nextBrowserMiddleActiveTabKeys);
+    }
     // Every tab mutation flows through here, so this is the single place the
     // split layout is forced back to its invariants: panes only show open
     // tabs, and the active tab is always visible — appearing where the
