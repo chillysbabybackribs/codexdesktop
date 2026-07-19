@@ -638,12 +638,6 @@ button {
   background: rgb(255 255 255 / 4.5%);
 }
 
-.main-chat-workspace-layout.is-active {
-  color: #e2e5e8;
-  background: rgb(255 255 255 / 8%);
-  box-shadow: inset 0 -2px 0 var(--focus-ink);
-}
-
 .main-chat-tab-new {
   font-size: 18px;
   font-weight: 350;
@@ -807,7 +801,7 @@ button {
 
 .thread-select-wrap.is-tabbar .thread-menu {
   top: calc(100% + 8px);
-  right: -40px;
+  right: 0;
   bottom: auto;
   left: auto;
   width: min(620px, calc(100vw - 32px));
@@ -815,6 +809,164 @@ button {
   transform: none;
   transform-origin: top right;
   animation: model-menu-in 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* One quiet overflow control now owns the tab bar's workspace commands. The
+   first view stays compact and explicit; history expands in place only when
+   requested, so the header no longer reads as a row of unexplained glyphs. */
+.thread-select-wrap.is-tabbar .thread-menu.header-options-menu {
+  width: 274px;
+  max-height: none;
+  padding: 6px;
+  border-radius: 9px;
+}
+
+.header-options-heading {
+  padding: 7px 9px 6px;
+  color: #74777b;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.header-options-list {
+  display: grid;
+  gap: 1px;
+}
+
+.header-options-item {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #c3c6ca;
+  cursor: default;
+  text-align: left;
+}
+
+.header-options-item.starts-global-section {
+  position: relative;
+  margin-top: 7px;
+}
+
+.header-options-item.starts-global-section::before {
+  position: absolute;
+  top: -4px;
+  right: 3px;
+  left: 3px;
+  height: 1px;
+  background: rgb(255 255 255 / 7%);
+  content: '';
+}
+
+.header-options-item:hover:not(:disabled),
+.header-options-item:focus-visible {
+  background: rgb(255 255 255 / 6%);
+  color: #eef0f2;
+  outline: none;
+}
+
+.header-options-item.is-active {
+  color: #e4e7e9;
+}
+
+.header-options-item:disabled {
+  color: #585b5f;
+}
+
+.header-options-icon {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: #8b8f94;
+}
+
+.header-options-item:hover:not(:disabled) .header-options-icon,
+.header-options-item:focus-visible .header-options-icon,
+.header-options-item.is-active .header-options-icon {
+  color: #cdd0d4;
+}
+
+.header-options-icon svg,
+.header-options-disclosure svg,
+.thread-menu-back svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.header-options-copy {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.header-options-label {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 520;
+  letter-spacing: -0.005em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-options-hint {
+  flex: 0 0 auto;
+  color: #666a6f;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9.5px;
+}
+
+.header-options-disclosure,
+.header-options-check {
+  display: grid;
+  min-width: 16px;
+  place-items: center;
+  color: #777b80;
+  font-size: 11px;
+}
+
+.thread-menu-view-header {
+  display: flex;
+  flex: 0 0 40px;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
+  color: #c6c9cd;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.thread-menu-back {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #8d9196;
+}
+
+.thread-menu-back:hover,
+.thread-menu-back:focus-visible {
+  background: rgb(255 255 255 / 6%);
+  color: #e1e4e7;
+  outline: none;
 }
 
 .thread-select-wrap.is-composer .thread-select {
