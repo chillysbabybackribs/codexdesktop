@@ -5718,17 +5718,38 @@ function Composer({
     event.preventDefault();
 
     const text = value.trim();
-    if ((!text && !attachments.length) || isLoading) {
+    if ((!text && !attachments.length && !mentions.length) || isLoading) {
       return;
     }
 
     setValue('');
     const submittedAttachments = attachments;
+    const submittedMentions = mentions;
     if (!isTurnActive) setAttachments([]);
-    const accepted = isTurnActive ? await onSteer(text) : await onSend(text, submittedAttachments);
+    setMentions([]);
+
+    // Cursor-style resolution: mentioned files/folders are read now and ride
+    // along inside a marker block the transcript strips from display.
+    let outgoing = text;
+    if (submittedMentions.length && workspace) {
+      const resolved = await Promise.all(
+        submittedMentions.map(async (mention) => ({
+          ...mention,
+          ...(await window.api.mentions
+            .read({ workspace, path: mention.path, kind: mention.kind })
+            .catch(() => ({ content: null, truncated: false }))),
+        })),
+      );
+      outgoing = `${text}${buildMentionContext(resolved)}`;
+    }
+
+    const accepted = isTurnActive
+      ? await onSteer(outgoing)
+      : await onSend(outgoing, submittedAttachments);
     if (!accepted) {
       setValue((current) => (current ? `${text}\n${current}` : text));
       if (!isTurnActive) setAttachments(submittedAttachments);
+      setMentions(submittedMentions);
     } else {
       composerDrafts.delete(draftKey);
     }
@@ -5760,19 +5781,59 @@ function Composer({
       }}
     >
       {pluginMenuState !== 'closed' ? (
-        <PluginMentionMenu
-          state={pluginMenuState}
-          plugins={mentionPlugins}
-          selectedIndex={pluginSelectionIndex}
-          onChoose={choosePlugin}
-          onBrowse={() => {
-            setPluginMenuState('closed');
-            onBrowsePlugins();
-          }}
-          onUninstalled={(pluginId) =>
-            onInstalledPluginsChange(installedPlugins.filter((plugin) => plugin.id !== pluginId))
-          }
-        />
+        <div className="composer-mention-stack">
+          {fileCandidates.length ? (
+            <FileMentionMenu
+              candidates={fileCandidates}
+              selectedIndex={pluginSelectionIndex}
+              onChoose={chooseMention}
+            />
+          ) : null}
+          <PluginMentionMenu
+            state={pluginMenuState}
+            plugins={mentionPlugins}
+            selectedIndex={pluginSelectionIndex - fileCandidates.length}
+            onChoose={choosePlugin}
+            onBrowse={() => {
+              setPluginMenuState('closed');
+              onBrowsePlugins();
+            }}
+            onUninstalled={(pluginId) =>
+              onInstalledPluginsChange(installedPlugins.filter((plugin) => plugin.id !== pluginId))
+            }
+          />
+        </div>
+      ) : null}
+      {mentions.length ? (
+        <div className="mention-strip" aria-label="Attached context">
+          {mentions.map((mention) => (
+            <span
+              key={`${mention.kind}:${mention.path}`}
+              className="mention-pill"
+              title={mention.path}
+            >
+              <MentionGlyph kind={mention.kind} />
+              <span className="mention-pill-name">
+                {mention.path.split('/').pop() || mention.path}
+              </span>
+              <button
+                type="button"
+                className="mention-pill-remove"
+                aria-label={`Remove ${mention.path}`}
+                onClick={() =>
+                  setMentions((current) =>
+                    current.filter(
+                      (existing) =>
+                        !(existing.path === mention.path && existing.kind === mention.kind),
+                    ),
+                  )
+                }
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
       ) : null}
       <AttachmentStrip
         attachments={attachments}
