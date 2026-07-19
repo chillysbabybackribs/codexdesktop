@@ -235,6 +235,78 @@ export function assessExtractedPage(page: {
   return { verified: true }
 }
 
+/**
+ * True when a requested URL landed on a different host — the signature of a
+ * cross-host redirect (docs domains moving into another product's docs app).
+ * `www.` prefixes are not treated as a host change.
+ */
+export function isCrossHostLanding(requestedUrl: string, landedUrl: string): boolean {
+  let requested: URL
+  let landed: URL
+  try {
+    requested = new URL(requestedUrl)
+    landed = new URL(landedUrl)
+  } catch {
+    return false
+  }
+  const normalize = (host: string): string => host.replace(/^www\./i, '').toLowerCase()
+  return normalize(requested.hostname) !== normalize(landed.hostname)
+}
+
+const NAV_LINK_PATTERN = /<a\b[^>]*?href\s*=\s*(?:"([^"]*)"|'([^']*)')[^>]*>([\s\S]*?)<\/a>/gi
+const MAX_NAV_LINK_SCANS = 400
+
+export type ResearchNavLink = { url: string; title: string }
+
+/**
+ * Harvest same-host navigation links from a landing page's HTML so a redirect
+ * that dumps a deep docs URL onto a hub page can be followed one hop instead
+ * of being reported as "bounded extraction found nothing." Deterministic and
+ * bounded: same host as the landing page, http(s) only, fragments stripped,
+ * deduplicated, first `limit` kept in document order.
+ */
+export function extractSameHostNavLinks(html: string, landedUrl: string, limit: number): ResearchNavLink[] {
+  let base: URL
+  try {
+    base = new URL(landedUrl)
+  } catch {
+    return []
+  }
+  const maxLinks = Math.max(1, Math.min(24, Math.round(limit)))
+  const normalizeHost = (host: string): string => host.replace(/^www\./i, '').toLowerCase()
+  const baseHost = normalizeHost(base.hostname)
+  const selfUrl = `${base.origin}${base.pathname}`
+  const links: ResearchNavLink[] = []
+  const seen = new Set<string>()
+  NAV_LINK_PATTERN.lastIndex = 0
+  let scans = 0
+  let match: RegExpExecArray | null
+  while ((match = NAV_LINK_PATTERN.exec(html)) !== null) {
+    scans += 1
+    if (scans > MAX_NAV_LINK_SCANS || links.length >= maxLinks) break
+    const href = (match[1] ?? match[2] ?? '').trim()
+    if (!href || href.startsWith('#')) continue
+    let resolved: URL
+    try {
+      resolved = new URL(href, base)
+    } catch {
+      continue
+    }
+    if (!/^https?:$/.test(resolved.protocol)) continue
+    if (normalizeHost(resolved.hostname) !== baseHost) continue
+    const canonical = `${resolved.origin}${resolved.pathname}${resolved.search}`
+    if (canonical === selfUrl || seen.has(canonical)) continue
+    seen.add(canonical)
+    const title = match[3]
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 300)
+    links.push({ url: canonical, title: title || resolved.pathname })
+  }
+  return links
+}
+
 function isLoadingShell(content: string): boolean {
   const lines = content
     .split(/\n+/)

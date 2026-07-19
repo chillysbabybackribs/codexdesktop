@@ -25,7 +25,9 @@ import {
   assessExtractedPage,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
+  extractSameHostNavLinks,
   googleSearchUrl,
+  isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
   rankSerpCandidates,
@@ -48,6 +50,8 @@ const STATIC_PREFLIGHT_TIMEOUT_MS = 2_000
 const STATIC_PREFLIGHT_MAX_BYTES = 750_000
 const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
+const REDIRECT_HUB_LINK_LIMIT = 8
+const MAX_REDIRECT_FOLLOW_UPS = 16
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
 const PAGE_CACHE_TTL_MS = 5 * 60_000
 const MAX_PAGE_CACHE_ENTRIES = 12
@@ -314,6 +318,29 @@ export class ResearchRunner {
         (total, gap) => total + Math.max(0, gap.requiredSources - gap.matchedSources),
         0
       )
+    }
+    // Direct URLs that redirect onto a different host frequently land on a
+    // navigation hub (docs sites migrating domains). Harvest the hub's own
+    // same-host links so they can be attempted one hop deep instead of the
+    // run ending with "the requested page had nothing."
+    const redirectFollowUps: SerpCandidate[] = []
+    const harvestRedirectHubLinks = (candidate: ResearchCandidate, extracted: { url: string; html: string }): void => {
+      if (candidate.sourceKind !== 'direct') return
+      if (redirectFollowUps.length >= MAX_REDIRECT_FOLLOW_UPS) return
+      const landedUrl = extracted.url || candidate.url
+      if (!isCrossHostLanding(candidate.url, landedUrl)) return
+      for (const link of extractSameHostNavLinks(extracted.html, landedUrl, REDIRECT_HUB_LINK_LIMIT)) {
+        if (redirectFollowUps.length >= MAX_REDIRECT_FOLLOW_UPS) break
+        if (attemptedUrls.has(link.url) || discoveredUrls.has(link.url)) continue
+        discoveredUrls.add(link.url)
+        redirectFollowUps.push({
+          url: link.url,
+          title: link.title,
+          snippet: '',
+          rank: redirectFollowUps.length + 1,
+          query: candidate.query
+        })
+      }
     }
     const coversUnresolvedFocus = (
       candidate: ResearchCandidate,
