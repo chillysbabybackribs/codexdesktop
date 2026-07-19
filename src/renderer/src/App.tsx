@@ -1241,6 +1241,23 @@ export default function App(): React.JSX.Element {
     return true
   }
 
+  async function restoreCachedTranscript(threadId: string, tabKey: string): Promise<void> {
+    try {
+      const cached = parseTranscriptSession(await window.api.transcriptCache.load(threadId), threadId)
+      if (!cached) return
+      sessionStoreRef.current.set(tabKey, { ...emptySessionState(), ...cached })
+      patchMainChatTab(tabKey, (tab) => ({
+        ...tab,
+        threadId,
+        title: cached.title ?? tab.title,
+        status: cached.turnId ? 'working' : 'idle',
+        turnId: cached.turnId ?? null
+      }))
+    } catch (error) {
+      console.warn(`Failed to restore cached transcript for ${threadId}`, error)
+    }
+  }
+
   async function resumeThreadById(
     threadId: string,
     options: { silent?: boolean; tabKey?: string } = {}
@@ -2284,6 +2301,8 @@ export default function App(): React.JSX.Element {
     }
   ): void {
     const turns = thread.turns.length > 0 ? thread.turns : (fallbackTurns ?? [])
+    const cached = sessionStoreRef.current.peek(activeMainChatTabKeyRef.current)
+    const canReconcileCachedTranscript = cached?.threadId === thread.id
 
     precedingModelInputByTurnRef.current = new Map()
     pendingCompactionByTurnRef.current = new Set()
@@ -2326,12 +2345,18 @@ export default function App(): React.JSX.Element {
       }
     }
 
-    itemsRef.current = nextItems
-    itemMetaRef.current = nextItemMeta
-    turnMetaRef.current = nextTurnMeta
-    setItems(nextItems)
-    setItemMeta(nextItemMeta)
-    setTurnMeta(nextTurnMeta)
+    // A fast disk restore may already have older rows on screen. The resumed
+    // server tail is authoritative for duplicate ids, while cached-only rows
+    // remain visible until their normal lazy server page arrives.
+    const reconciledItems = canReconcileCachedTranscript ? upsertMany(cached.items, nextItems) : nextItems
+    const reconciledItemMeta = canReconcileCachedTranscript ? { ...cached.itemMeta, ...nextItemMeta } : nextItemMeta
+    const reconciledTurnMeta = canReconcileCachedTranscript ? { ...cached.turnMeta, ...nextTurnMeta } : nextTurnMeta
+    itemsRef.current = reconciledItems
+    itemMetaRef.current = reconciledItemMeta
+    turnMetaRef.current = reconciledTurnMeta
+    setItems(reconciledItems)
+    setItemMeta(reconciledItemMeta)
+    setTurnMeta(reconciledTurnMeta)
     patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
       ...tab,
       threadId: thread.id,
