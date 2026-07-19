@@ -81,6 +81,7 @@ import {
   type SessionRenderState
 } from './session-store'
 import { parseTranscriptSession, serializeTranscriptSession } from './transcript-cache-model'
+import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles } from './audit-trigger'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -234,6 +235,7 @@ export default function App(): React.JSX.Element {
     handleOpenAgent,
     handleMinimizeAgent,
     handleToggleWatchAgent,
+    handleToggleAuditAgent,
     handleSetAgentModel
   } = useAgentSessions(agentDockStorageKey, sessionStoreRef.current, {
     schedule: maybeScheduleAgentRecovery,
@@ -2132,6 +2134,7 @@ export default function App(): React.JSX.Element {
             status: 'idle',
             turnId: null
           }))
+          maybeTriggerAuditors(turn.id)
           if (turn.status === 'failed') {
             maybeScheduleAutoRecovery(notification.params.threadId, turn.id, turn.error)
           } else {
@@ -2587,6 +2590,37 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, { type: 'system', id: crypto.randomUUID(), level, text }])
   }
 
+  // Codex-doer / Claude-auditor pairing: when the focused main chat completes
+  // a turn that changed files, idle dock agents in audit mode receive a
+  // compact workspace-reading prompt (the auditor runs `git diff` itself —
+  // no transcript piping). Failed/interrupted turns trigger too: partial
+  // changes are prime audit material. Busy auditors are skipped, not queued.
+  function maybeTriggerAuditors(turnId: string): void {
+    const auditors = agentSessionsRef.current.filter((session) => session.auditsMain)
+    if (!auditors.length) return
+    const changed = turnChangedFiles(itemsRef.current, itemMetaRef.current, turnId)
+    if (!changed.length) return
+    const userItem = itemsRef.current.find(
+      (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId
+    )
+    const userText = userItem && userItem.type === 'userMessage'
+      ? userItem.content
+          .filter((content) => content.type === 'text')
+          .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
+          .join('\n')
+          .trim() || '(request text unavailable)'
+      : '(request text unavailable)'
+    const prompt = buildAuditPrompt({ userText, files: changed })
+    for (const auditor of auditors) {
+      if (!shouldTriggerAudit({
+        auditorStatus: auditor.status,
+        auditorTurnId: auditor.turnId,
+        changedFiles: changed
+      })) continue
+      void handleAgentSend(auditor.key, prompt)
+    }
+  }
+
   // Phase 4 ledger: turnId -> checkpointId for the focused thread, refreshed on
   // thread switches and turn completion (checkpoints bind their turn id
   // shortly after the turn starts). Reversibility only — never a gate.
@@ -2686,6 +2720,7 @@ export default function App(): React.JSX.Element {
           onOpenAgent={handleOpenAgent}
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
+          onToggleAuditAgent={handleToggleAuditAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
           onNewAgent={handleNewAgent}
@@ -3107,6 +3142,7 @@ function ChatPane({
   onOpenAgent,
   onMinimizeAgent,
   onToggleWatchAgent,
+  onToggleAuditAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
   onNewAgent,
@@ -3174,6 +3210,7 @@ function ChatPane({
   onOpenAgent: (key: string) => void
   onMinimizeAgent: (key: string) => void
   onToggleWatchAgent: (key: string) => void
+  onToggleAuditAgent: (key: string) => void
   onSetAgentModel: (key: string, model: string) => void
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onNewAgent: () => void
@@ -3450,6 +3487,7 @@ function ChatPane({
             onResetSession={onResetAgentSession}
             onPromote={onPromoteAgent}
             onToggleWatch={onToggleWatchAgent}
+            onToggleAudit={onToggleAuditAgent}
             onSend={onAgentSend}
             onSteer={onAgentSteer}
             onStop={onAgentStop}
