@@ -3085,6 +3085,7 @@ export default function App(): React.JSX.Element {
           onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
           onUndoTurnAll={handleUndoTurnAll}
           onUndoFile={handleUndoFile}
+          agentSessionStore={sessionStoreRef.current}
           mainChatTabs={mainChatTabs}
           activeMainChatTabKey={activeMainChatTabKey}
           mainChatTabsDisabled={
@@ -3551,6 +3552,7 @@ function ChatPane({
   onSetAlwaysKeepAll,
   onUndoTurnAll,
   onUndoFile,
+  agentSessionStore,
   mainChatTabs,
   activeMainChatTabKey,
   mainChatTabsDisabled,
@@ -3628,6 +3630,7 @@ function ChatPane({
   onSetAlwaysKeepAll: (enabled: boolean) => void;
   onUndoTurnAll: (turnId: string) => Promise<void>;
   onUndoFile: (turnId: string, path: string) => Promise<void>;
+  agentSessionStore: SessionStore;
   mainChatTabs: MainChatTab[];
   activeMainChatTabKey: string;
   mainChatTabsDisabled: boolean;
