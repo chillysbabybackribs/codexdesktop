@@ -4967,9 +4967,6 @@ button {
   grid-template-columns: 24px 42px 24px;
   height: 26px;
   align-items: center;
-  border: 1px solid var(--hairline);
-  border-radius: 7px;
-  overflow: hidden;
 }
 
 .browser-zoom button,
@@ -4978,6 +4975,7 @@ button {
   height: 100%;
   place-items: center;
   border: 0;
+  border-radius: 6px;
   background: transparent;
   color: var(--chrome-fg);
   cursor: pointer;

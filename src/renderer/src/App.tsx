@@ -46,13 +46,16 @@ import {
 } from './turn-telemetry';
 import {
   AutoFollow,
+  FileReviewContext,
   TurnTail,
   WorkGroup,
+  type FileReviewActions,
   type ItemMeta,
   type TurnMeta,
   type TurnPlanItem,
   type WorkItem,
 } from './TaskActivity';
+import { ReviewBar, type ReviewChange } from './ReviewBar';
 import { selectCompletedWork } from './memory-work';
 import {
   AttachmentButton,
@@ -2993,18 +2996,65 @@ export default function App(): React.JSX.Element {
     };
   }, [activeThreadId, activeTurnId]);
 
-  async function handleRevertTurn(turnId: string): Promise<void> {
+  async function handleRevertTurn(turnId: string): Promise<boolean> {
     const checkpointId = turnCheckpoints[turnId];
-    if (!checkpointId) return;
+    if (!checkpointId) return false;
     try {
       await window.api.checkpoints.revert({ checkpointId });
       addSystemItem(
         'Workspace files restored to before this turn. The pre-revert state was checkpointed too, so this revert can itself be reverted.',
       );
+      return true;
     } catch (error) {
       addSystemItem(`Revert failed: ${(error as Error).message}`, 'error');
+      return false;
     }
   }
+
+  // Review flow (Cursor-style Keep/Undo): edits auto-apply during the turn;
+  // once it settles, the review bar and per-file Undo buttons offer post-hoc
+  // control backed by the same turn checkpoints. Client-side state only —
+  // "kept" simply dismisses the review surface for that turn.
+  const [turnReviews, setTurnReviews] = useState<Record<string, 'kept' | 'undone'>>({});
+  const [undoneFiles, setUndoneFiles] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    setTurnReviews({});
+    setUndoneFiles({});
+  }, [activeThreadId]);
+
+  const handleKeepTurn = useCallback((turnId: string): void => {
+    setTurnReviews((current) => ({ ...current, [turnId]: 'kept' }));
+  }, []);
+
+  const handleUndoTurnAll = useCallback(
+    async (turnId: string): Promise<void> => {
+      if (await handleRevertTurn(turnId)) {
+        setTurnReviews((current) => ({ ...current, [turnId]: 'undone' }));
+      }
+    },
+    // handleRevertTurn is a plain closure over turnCheckpoints.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [turnCheckpoints],
+  );
+
+  const handleUndoFile = useCallback(
+    async (turnId: string, path: string): Promise<void> => {
+      const checkpointId = turnCheckpoints[turnId];
+      if (!checkpointId) return;
+      try {
+        await window.api.checkpoints.revertFiles({ checkpointId, paths: [path] });
+        setUndoneFiles((current) => ({
+          ...current,
+          [turnId]: [...(current[turnId] ?? []), path],
+        }));
+      } catch (error) {
+        addSystemItem(`Undo failed: ${(error as Error).message}`, 'error');
+      }
+    },
+    // addSystemItem is a stable plain closure; turnCheckpoints is the real dep.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [turnCheckpoints],
+  );
 
   return (
     <div ref={appRef} className="app-shell">
