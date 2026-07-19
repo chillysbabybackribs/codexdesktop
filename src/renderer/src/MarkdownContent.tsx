@@ -1,7 +1,8 @@
-import { Children, isValidElement, memo } from 'react'
+import { Children, Fragment, isValidElement, memo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { resolveLang, useHighlightTokens } from './highlight'
 import { classifyMarkdownHref } from './markdown-link'
 import { chunkMarkdownSegments, splitMarkdownSegments } from './streaming-markdown'
 
