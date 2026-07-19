@@ -1,4 +1,4 @@
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import type { CommandAction } from '../../shared/session-protocol'
 import type { ThreadItem } from '../../shared/session-protocol'
@@ -37,6 +37,24 @@ type CdpFileArtifact = {
   kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
   bytes: number
 }
+
+// ---------------------------------------------------------------------------
+// File review context — the Keep/Undo flow (Cursor-style post-hoc review).
+// Provided by ChatPane; consumed by DiffCard so every settled diff card offers
+// a per-file Undo without threading callbacks through the memoized layers.
+// ---------------------------------------------------------------------------
+
+export type FileReviewActions = {
+  canUndo: (turnId: string | null | undefined) => boolean
+  isUndone: (turnId: string | null | undefined, path: string) => boolean
+  undoFile: (turnId: string, path: string) => void
+}
+
+export const FileReviewContext = createContext<FileReviewActions>({
+  canUndo: () => false,
+  isUndone: () => false,
+  undoFile: () => {}
+})
 
 // ---------------------------------------------------------------------------
 // Small shared utilities

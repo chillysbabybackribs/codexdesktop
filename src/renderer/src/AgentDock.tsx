@@ -240,6 +240,7 @@ const AgentWindow = memo(function AgentWindow({
   onToggleWatch,
   onToggleAudit,
   onToggleReport,
+  onSendFeedback,
   onSend,
   onSteer,
   onStop,
@@ -322,12 +323,17 @@ const AgentWindow = memo(function AgentWindow({
 
   // The audit briefing renders as a retractable markdown doc (the artifact the
   // auditor reads); the report that follows is a plain assistant message.
-  const messageNodes = session.messages.map((message) => (
+  const messageNodes = session.messages.map((message, index) => (
     <div key={message.id} className={`agent-mini-message is-${message.audit ? 'audit' : message.role}`}>
       {message.audit ? (
         <AuditBriefDoc audit={message.audit} />
       ) : message.role === 'assistant' ? (
-        <AssistantMessage text={message.text} />
+        <AssistantMessage
+          text={message.text}
+          // Manual escalation targets the latest audit exchange; only its
+          // report gets an actionable flag badge.
+          onSendFlagged={index === session.messages.length - 1 ? () => onSendFeedback(session.key) : undefined}
+        />
       ) : (
         <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
       )}
@@ -850,16 +856,35 @@ function AuditStandby({
 
 // Assistant text with audit-verdict awareness: a trailing "VERDICT: …" line
 // (the auditor's machine-readable close) renders as a quiet badge instead of
-// prose. Non-audit replies have no verdict line and render unchanged.
-function AssistantMessage({ text }: { text: string }): React.JSX.Element {
+// prose. A flagged badge with a send action is a button — manual escalation
+// into the main chat for reports the auto path did not (or could not) send.
+function AssistantMessage({
+  text,
+  onSendFlagged
+}: {
+  text: string
+  onSendFlagged?: () => void
+}): React.JSX.Element {
   const verdict = parseAuditVerdict(text)
   if (!verdict) return <MarkdownContent text={text} />
+  const actionable = verdict === 'flag' && onSendFlagged
   return (
     <>
       <MarkdownContent text={stripVerdictLine(text)} />
-      <span className={`agent-audit-verdict is-${verdict}`}>
-        {verdict === 'pass' ? '✓ pass' : '⚑ flagged'}
-      </span>
+      {actionable ? (
+        <button
+          type="button"
+          className="agent-audit-verdict is-flag is-actionable"
+          title="Send this report to the main chat"
+          onClick={onSendFlagged}
+        >
+          ⚑ flagged · send to main chat
+        </button>
+      ) : (
+        <span className={`agent-audit-verdict is-${verdict}`}>
+          {verdict === 'pass' ? '✓ pass' : '⚑ flagged'}
+        </span>
+      )}
     </>
   )
 }
