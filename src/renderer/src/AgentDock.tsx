@@ -157,6 +157,7 @@ export function AgentColumn({
             onPromote={onPromote}
             onToggleWatch={onToggleWatch}
             onToggleAudit={onToggleAudit}
+            onToggleReport={onToggleReport}
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
@@ -211,6 +212,7 @@ type AgentWindowProps = {
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onToggleAudit: (key: string) => void
+  onToggleReport: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -233,6 +235,7 @@ const AgentWindow = memo(function AgentWindow({
   onPromote,
   onToggleWatch,
   onToggleAudit,
+  onToggleReport,
   onSend,
   onSteer,
   onStop,
