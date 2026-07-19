@@ -264,6 +264,7 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
 type AgentWindowProps = {
   session: AgentSession
   isSelected: boolean
+  isExtended: boolean
   sessionStore: SessionStore
   workspace: string | null
   models: Model[]
@@ -281,6 +282,8 @@ type AgentWindowProps = {
   onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
   onSendFeedback: (key: string) => void
+  onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
+  onToggleExtend: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -294,6 +297,7 @@ const emptyAgentRenderState = emptySessionState()
 const AgentWindow = memo(function AgentWindow({
   session,
   isSelected,
+  isExtended,
   sessionStore,
   workspace,
   models,
@@ -311,6 +315,8 @@ const AgentWindow = memo(function AgentWindow({
   onToggleAudit,
   onToggleReport,
   onSendFeedback,
+  onDecideSendPolicy,
+  onToggleExtend,
   onSend,
   onSteer,
   onStop,
