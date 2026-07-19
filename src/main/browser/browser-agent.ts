@@ -244,7 +244,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
-      throwIfAborted(options.signal)
+      if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -345,7 +345,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
-      throwIfAborted(options.signal)
+      if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         const failure = browserFailureFor(
@@ -443,7 +443,7 @@ export class BrowserAgentController {
     const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
-      throwIfAborted(options.signal)
+      if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -458,7 +458,7 @@ export class BrowserAgentController {
       try {
         const result = await tabs.navigateAndWait(tabId, url, {
           timeoutMs,
-          signal: options.signal,
+          ...(options.signal ? { signal: options.signal } : {}),
           ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
           ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
           ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
@@ -546,7 +546,7 @@ export class BrowserAgentController {
 
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
-      throwIfAborted(options.signal)
+      if (options.signal?.aborted) return cancelledResult()
       let webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return {
@@ -562,7 +562,7 @@ export class BrowserAgentController {
         if (requestedUrl) {
           const navigation = await tabs.navigateAndWait(tabId, requestedUrl, {
             timeoutMs,
-            signal: options.signal,
+            ...(options.signal ? { signal: options.signal } : {}),
             ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {}),
             ...(options.quietMs === null || options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
             ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
@@ -794,7 +794,7 @@ export class BrowserAgentController {
     )
     const startedAt = Date.now()
     try {
-      throwIfAborted(options.signal)
+      if (options.signal?.aborted) return cancelledResult()
       const session = cdpSessionFor(webContents)
       await session.prepareForEvent(method)
       const rawResult = await withTimeout(
@@ -1511,6 +1511,13 @@ function throwIfAborted(signal: AbortSignal | undefined): void {
   if (signal?.aborted) {
     throw operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
   }
+}
+
+function cancelledResult(): BrowserAgentFailure {
+  const failure = browserFailureFor(
+    operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
+  )
+  return { ok: false, error: failure.message, errorCode: failure.code, failure }
 }
 
 function boundResult(value: unknown, maxChars: number): { value: unknown; chars: number; truncated: boolean } {
