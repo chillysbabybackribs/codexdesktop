@@ -1,8 +1,17 @@
-# Codex Desktop — Capability Audit & Direction (2026-07-19, branch `stacked-subagents`)
+# Codex Desktop — Capability Audit & Direction (2026-07-19, branch `master`)
 
+> **Refreshed 2026-07-19 (same day, post-merge):** `stacked-subagents` was merged into
+> `master`, and three capabilities shipped after the original audit was written — the
+> `spawn_subagent` primitive (blocking single, both providers), the dock-card **Role
+> radio** (Reviewer / Helper / read-only Worker), and the **conversational prompt-intake
+> protocol** (paired-thread restate → confirm → reviewer-authored plan). All three are
+> live-verified; the test count is now **590/590**. The capability claims below were
+> re-verified against the current `master` checkout — earlier "missing" items that have
+> since shipped are corrected in place.
+>
 > Purpose: an accurate, current map of what this app can do, plus a working hypothesis
 > about where it's headed. Verified against the working tree — typecheck clean,
-> **550/550 tests pass**, 0 TODO/FIXME markers, every non-trivial source file has a
+> **590/590 tests pass**, 0 TODO/FIXME markers, every non-trivial source file has a
 > sibling test. Supersedes `docs/codebase-audit-2026-07-19.md`, which predates the
 > Claude runtime, the 1–4 pane split, turn checkpoints, and the doer/auditor loop and
 > is therefore materially stale on capabilities (it remains useful as a dated
@@ -67,8 +76,8 @@ Three facts reframe the product:
 | **Browser tools** | `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `app_screenshot`, `ui_review` (desktop/tablet/mobile + audit), `browser_flow`, `browser_run`, `browser_extract_page`, `browser_cdp` (15 sub-ops), `research_web`. |
 | **Chat UI** | Up to 12 tabs; **1–4 pane split** with drag-to-tear, each pane independently live; Shiki code, inline chart fences, live diff cards, terminal cards, thought/reasoning blocks, plan checklists, turn-tail receipts. |
 | **Review** | Keep/Undo bar (per-file + whole-turn + "always keep"), checkpoint revert, deep per-turn Trace modal (per-call token/context-growth attribution). |
-| **Agent dock** | Spawn reviewers, cross-provider model auto-derivation, audit mode, report-to-main auto-feedback (Send / Always send / Keep), promote-to-main, extend/zoom, recency-weighted capsules. |
-| **Context** | @file/@folder/@plugin mentions (git-indexed), attachments/images, mid-turn steering (Codex), auto-compaction watchdog at 80%, prior-chat memory, local skills. |
+| **Agent dock** | Born-a-reviewer cards with a **Role radio** (Reviewer / Helper; spawned Workers show a read-only role line), cross-provider model auto-derivation, audit mode, report-to-main auto-feedback (Send / Always send / Keep), model-spawned worker cards via `spawn_subagent` (blocking single; orchestrator in `src/main/agents/`), promote-to-main, extend/zoom, recency-weighted capsules. |
+| **Context** | @file/@folder/@plugin mentions (git-indexed), attachments/images, mid-turn steering (Codex), auto-compaction watchdog at 80%, prior-chat memory, local skills, conversational prompt-intake on paired fresh threads (doer restates → user confirms in chat → reviewer plans; `main-chat-intake.ts`). |
 | **Studio** | 10 skills, filesystem venture pipeline (`$studio-scout/hunt/validate/launch/pulse`), autosnapshot git watcher, disposable `verify:app` instance. |
 
 ---
@@ -85,6 +94,11 @@ Compared against Cursor 2.x/3.5, Claude Code (2026), and the OpenAI Codex app (2
 - **Reversible, cross-provider multi-agent review**: checkpoint-backed undo of even
   shell writes, plus a different-family reviewer by construction. No incumbent pairs
   these.
+- **Reviewer-authored plans with an enforcer** (shipped in the post-merge refresh): on
+  a paired fresh thread the doer restates the ask, the user confirms in natural
+  language — no buttons — and the reviewer writes the plan *in its own thread*, so its
+  later audits hold the doer to that plan's done-criteria (live-verified: "✓ pass …
+  matches the plan's done-criteria"). Incumbents' plan modes produce inert documents.
 
 **Conspicuously missing (build map in §4)**
 - No true **subagent spawn primitive** — "stacked subagents" is UI pane layout plus
