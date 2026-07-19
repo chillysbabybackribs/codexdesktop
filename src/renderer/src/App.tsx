@@ -93,6 +93,7 @@ import {
   buildAuditFeedbackMessage,
   buildAuditPrompt,
   liveTurnGlance,
+  parseAuditFeedback,
   parseAuditVerdict,
   shouldSendAuditFeedback,
   shouldTriggerAudit,
@@ -5077,6 +5078,16 @@ const ChatItemView = memo(function ChatItemView({
       .map((content) => stripAutomaticSkillMarker(stripInjectedMemory(content.text)))
       .join('\n');
     const attachments = attachmentsFromUserInput(item.content);
+    // Auditor feedback renders as a compact retractable card, not the raw
+    // block the doer model receives.
+    const feedback = parseAuditFeedback(text);
+    if (feedback) {
+      return (
+        <article className="message message-audit-feedback" data-turn-id={turnId ?? undefined}>
+          <AuditFeedbackCard agentTitle={feedback.agentTitle} report={feedback.report} />
+        </article>
+      );
+    }
 
     return (
       <article className="message message-user" data-turn-id={turnId ?? undefined}>
