@@ -1119,7 +1119,11 @@ export default function App(): React.JSX.Element {
         : tab),
       activeKey: key
     }))
-    const snapshot = sessionStoreRef.current.peek(key)
+    let snapshot = sessionStoreRef.current.peek(key)
+    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
+      await restoreCachedTranscript(target.threadId, key)
+      snapshot = sessionStoreRef.current.peek(key)
+    }
     focusMainChatTab(target, snapshot)
     persistLastThreadId(target.threadId)
 
@@ -2265,6 +2269,10 @@ export default function App(): React.JSX.Element {
     const backgroundTabs = mainChatTabStateRef.current.tabs.filter(
       (tab) => tab.threadId && tab.threadId !== activeThreadId
     )
+    // Paint every persisted tab from its own cache before a user can switch to
+    // it. These reads are tiny and parallel; server resumes below still own
+    // live status and metadata reconciliation.
+    await Promise.all(backgroundTabs.map((tab) => restoreCachedTranscript(tab.threadId!, tab.key)))
     // Resume in small waves: each call can return a substantial initial turn
     // page, and restoring a full working set should not stampede app-server.
     for (let index = 0; index < backgroundTabs.length; index += 3) {
