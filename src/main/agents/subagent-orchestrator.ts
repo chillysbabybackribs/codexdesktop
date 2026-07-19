@@ -73,7 +73,12 @@ function finalAnswerFromItems(items: ThreadItem[], maxChars = 4000): string {
   for (const item of items) {
     if (item.type === 'agentMessage' && item.text.trim()) answer = item.text
   }
-  const flat = answer.trim()
+  return clip(answer, maxChars)
+}
+
+// Clip a child answer so a runaway subagent can't flood the parent's context.
+function clip(text: string, maxChars = 4000): string {
+  const flat = text.trim()
   return flat.length > maxChars ? `${flat.slice(0, maxChars).trimEnd()}…` : flat
 }
 
