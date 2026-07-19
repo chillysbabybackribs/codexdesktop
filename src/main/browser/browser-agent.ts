@@ -1,4 +1,4 @@
-import type { WebContents, WebFrameMain } from 'electron'
+import type { WebContents } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { runBrowserFlow } from './browser-flow.js'
@@ -29,10 +29,7 @@ import {
   type BrowserAgentSuccess,
   type BrowserFailure,
   type BrowserFailureCode,
-  type BrowserFailurePhase,
-  type BrowserFrameDescriptor,
-  type BrowserSnapshotCompletion,
-  type BrowserTargetLease
+  type BrowserSnapshotCompletion
 } from './browser-operation.js'
 
 export type {
@@ -1391,160 +1388,8 @@ function requirePageProgramResult(value: unknown): unknown {
   )
 }
 
-function liveFrames(mainFrame: WebFrameMain): WebFrameMain[] {
-  try {
-    return mainFrame.framesInSubtree.filter((frame) => !frame.isDestroyed() && !frame.detached)
-  } catch {
-    return mainFrame.isDestroyed() || mainFrame.detached ? [] : [mainFrame]
-  }
-}
-
-function describeFrame(frame: WebFrameMain, mainFrame: WebFrameMain): BrowserFrameDescriptor {
-  return {
-    frameId: String(frame.frameTreeNodeId),
-    parentFrameId: frame.parent ? String(frame.parent.frameTreeNodeId) : null,
-    name: frame.name,
-    url: frame.url,
-    origin: frame.origin,
-    isMainFrame: frame === mainFrame
-  }
-}
-
-class BrowserOperationError extends Error {
-  readonly failure: BrowserFailure
-
-  constructor(failure: BrowserFailure) {
-    super(failure.message)
-    this.name = failure.name ?? 'BrowserOperationError'
-    this.failure = failure
-    if (failure.stack) this.stack = failure.stack
-  }
-}
-
-function operationError(
-  code: BrowserFailureCode,
-  phase: BrowserFailurePhase,
-  message: string,
-  details: Pick<BrowserFailure, 'name' | 'stack'> = {}
-): BrowserOperationError {
-  return new BrowserOperationError({ code, phase, message, ...details })
-}
-
-function errorMessage(error: unknown): string {
-  try {
-    return error instanceof Error ? error.message : String(error)
-  } catch {
-    return 'unknown browser error'
-  }
-}
-
-function browserFailureFor(
-  error: unknown,
-  fallbackCode: BrowserFailureCode = 'executionError',
-  fallbackPhase: BrowserFailurePhase = 'controller'
-): BrowserFailure {
-  if (error instanceof BrowserOperationError) return error.failure
-  if (error instanceof BrowserFlowError) {
-    return {
-      code: error.code,
-      phase: error.phase,
-      message: error.message,
-      name: error.name,
-      ...(error.stack ? { stack: error.stack.slice(0, 4_000) } : {})
-    }
-  }
-  const message = errorMessage(error)
-  const name = error instanceof Error && error.name ? error.name.slice(0, 120) : undefined
-  const stack = error instanceof Error && error.stack ? error.stack.slice(0, 4_000) : undefined
-  if (/browser operation timed out|navigation timed out|CDP event wait timed out/i.test(message)) {
-    return { code: 'timeout', phase: 'controller', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/no live frame with id/i.test(message)) {
-    return { code: 'frameNotFound', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/frame.*(?:disposed|detached|destroyed)|render frame was disposed/i.test(message)) {
-    return { code: 'frameDetached', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/execution context was destroyed|cannot find context|cannot execute JavaScript in this frame|target changed/i.test(message)) {
-    return { code: 'targetChanged', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/target.*(?:closed|destroyed)|webcontents.*destroyed|page was closed/i.test(message)) {
-    return { code: 'targetClosed', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/not JSON serializable|could not be cloned|object could not be cloned|serialize/i.test(message)) {
-    return { code: 'resultSerializationError', phase: 'resultSerialization', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  return {
-    code: fallbackCode,
-    phase: fallbackPhase,
-    message,
-    ...(name ? { name } : {}),
-    ...(stack ? { stack } : {})
-  }
-}
-
-function browserFailureFields(
-  error: unknown,
-  fallbackCode: BrowserFailureCode = 'executionError',
-  fallbackPhase: BrowserFailurePhase = 'controller'
-): Pick<BrowserAgentFailure, 'error' | 'errorCode' | 'failure'> {
-  const failure = browserFailureFor(error, fallbackCode, fallbackPhase)
-  return { error: failure.message, errorCode: failure.code, failure }
-}
-
-function isLifecycleFailure(code: BrowserFailureCode | undefined): boolean {
-  return code === 'timeout' || code === 'targetClosed' || code === 'targetChanged' || code === 'frameDetached' || code === 'frameNotFound'
-}
-
-function frameInventory(webContents: WebContents): BrowserFrameDescriptor[] {
-  try {
-    const mainFrame = webContents.mainFrame
-    return liveFrames(mainFrame).map((frame) => describeFrame(frame, mainFrame))
-  } catch {
-    return []
-  }
-}
-
-function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-  onTimeout?: () => void | Promise<void>,
-  signal?: AbortSignal
-): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  let settled = false
-  const cancel = (reject: (reason?: unknown) => void, error: Error): void => {
-    if (settled) return
-    settled = true
-    void Promise.resolve(onTimeout?.()).finally(() => reject(error))
-  }
-  const timeout = new Promise<T>((_resolve, reject) => {
-    timer = setTimeout(() => {
-      cancel(reject, operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`))
-    }, timeoutMs)
-    signal?.addEventListener('abort', () => {
-      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
-    }, { once: true })
-    if (signal?.aborted) {
-      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
-    }
-  })
-
-  return Promise.race([promise, timeout]).finally(() => {
-    settled = true
-    if (timer) clearTimeout(timer)
-  })
-}
-
 function turnOperationKey(threadId: string, turnId: string): string {
   return `${threadId}\u0000${turnId}`
-}
-
-function cancelledResult(): BrowserAgentFailure {
-  const failure = browserFailureFor(
-    operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
-  )
-  return { ok: false, error: failure.message, errorCode: failure.code, failure }
 }
 
 function snapshotCompletion(value: unknown, truncated: boolean): BrowserSnapshotCompletion {
@@ -1574,44 +1419,6 @@ function snapshotCompletion(value: unknown, truncated: boolean): BrowserSnapshot
       : 'snapshot coverage is not complete',
     gaps: unresolved
   }
-}
-
-function boundResult(value: unknown, maxChars: number): { value: unknown; chars: number; truncated: boolean } {
-  let serialized: string
-
-  try {
-    serialized = JSON.stringify(value) ?? 'null'
-  } catch (error) {
-    throw operationError(
-      'resultSerializationError',
-      'resultSerialization',
-      `browser result is not JSON serializable: ${error instanceof Error ? error.message : String(error)}`
-    )
-  }
-
-  if (serialized.length <= maxChars) {
-    return { value, chars: serialized.length, truncated: false }
-  }
-
-  return {
-    value: structuredPreview(serialized, maxChars),
-    chars: serialized.length,
-    truncated: true
-  }
-}
-
-function structuredPreview(serialized: string, maxChars: number): { truncated: true; originalChars: number; preview: string } {
-  const originalChars = serialized.length
-  const empty = { truncated: true as const, originalChars, preview: '' }
-  const overhead = JSON.stringify(empty).length
-  let preview = serialized.slice(0, Math.max(0, maxChars - overhead - 4))
-  let value = { ...empty, preview }
-  while (preview.length > 0 && JSON.stringify(value).length > maxChars) {
-    const excess = JSON.stringify(value).length - maxChars
-    preview = preview.slice(0, Math.max(0, preview.length - Math.max(1, excess)))
-    value = { ...empty, preview }
-  }
-  return value
 }
 
 function fanoutItemBudget(maxChars: number, itemCount: number, metadataAllowance: number): number {
@@ -1716,27 +1523,6 @@ function clampNumber(value: number | null | undefined, fallback: number, minimum
   return Math.min(maximum, Math.max(minimum, Math.round(value)))
 }
 
-function captureTargetLease(tabs: TabManager, tabId: string): BrowserTargetLease | null {
-  const webContents = tabs.resolveWebContents(tabId)
-  if (!webContents) return null
-  // Test doubles and the legacy socket adapter may not expose epochs yet; the
-  // WebContents identity still protects target close/replacement in that path.
-  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
-  return { tabId, webContents, epoch: epochReader?.call(tabs, tabId) ?? 0 }
-}
-
-function assertTargetLeaseCurrent(tabs: TabManager, lease: BrowserTargetLease): void {
-  const current = tabs.resolveWebContents(lease.tabId)
-  if (!current) {
-    throw operationError('targetClosed', 'targetLifecycle', `browser target ${lease.tabId} closed during operation`)
-  }
-  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
-  const epoch = epochReader?.call(tabs, lease.tabId)
-  if (current !== lease.webContents || (epoch !== undefined && epoch !== null && epoch !== lease.epoch)) {
-    throw operationError('targetChanged', 'targetLifecycle', `browser target ${lease.tabId} changed during operation`)
-  }
-}
-
 function isLikelyLoadingSnapshot(value: unknown): boolean {
   const result = asRecord(value)
   const page = asRecord(result.page)
@@ -1773,20 +1559,4 @@ function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Pr
     timer = setInterval(tick, 50);
     tick();
   })`, true) as Promise<boolean>
-}
-
-function safeUrl(webContents: WebContents): string {
-  try {
-    return webContents.getURL()
-  } catch {
-    return ''
-  }
-}
-
-function safeTitle(webContents: WebContents): string {
-  try {
-    return webContents.getTitle()
-  } catch {
-    return ''
-  }
 }
