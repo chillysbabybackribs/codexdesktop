@@ -181,4 +181,22 @@ test('page assessment accepts substantial content and rejects extraction failure
     }),
     { verified: false, reason: 'login-page' }
   )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Sign in to Example',
+      url: 'https://example.com/login',
+      content: 'Account access help and product navigation. '.repeat(80),
+      wordCount: 400
+    }),
+    { verified: false, reason: 'login-page' }
+  )
+  assert.deepEqual(
+    assessExtractedPage({
+      title: 'Application',
+      url: 'https://example.com/app',
+      content: Array.from({ length: 40 }, () => 'Loading…').join('\n'),
+      wordCount: 40
+    }),
+    { verified: false, reason: 'insufficient-content' }
+  )
 })

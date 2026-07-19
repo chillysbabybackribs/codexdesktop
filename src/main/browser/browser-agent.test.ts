@@ -356,6 +356,39 @@ test('browser snapshot batches navigation, readiness, and objective extraction i
   assert.equal((result.result as { items: unknown[] }).items.length, 1)
 })
 
+test('browser snapshot retries one loading shell when a mutation-ready document becomes useful', async () => {
+  let snapshots = 0
+  let mutationWaits = 0
+  const controller = new BrowserAgentController(() => fakeTabs(async (program: string) => {
+    if (program.includes('MutationObserver')) {
+      mutationWaits += 1
+      return true
+    }
+    snapshots += 1
+    if (snapshots === 1) {
+      return {
+        page: { url: 'https://example.com/app', title: 'Loading…', readyState: 'interactive' },
+        mode: 'content', scope: { selector: null, matched: true }, items: [], content: 'Loading…', passages: [],
+        coverage: { objectiveTerms: [], matchedTerms: [], gaps: [], complete: true },
+        timings: { traversalMs: 1, rankingMs: 1, totalMs: 2 }, truncated: false
+      }
+    }
+    return {
+      page: { url: 'https://example.com/app', title: 'Release notes', readyState: 'complete' },
+      mode: 'content', scope: { selector: null, matched: true }, items: [],
+      content: 'Concrete release details, migration guidance, and verified compatibility notes. '.repeat(12), passages: [],
+      coverage: { objectiveTerms: [], matchedTerms: [], gaps: [], complete: true },
+      timings: { traversalMs: 1, rankingMs: 1, totalMs: 2 }, truncated: false
+    }
+  }))
+
+  const result = await controller.snapshot({ objective: 'extract the release notes', mode: 'content' })
+
+  assert.equal(result.ok, true)
+  assert.equal(mutationWaits, 1)
+  assert.equal(snapshots, 2)
+})
+
 test('browser snapshot returns structured scope failures without claiming success', async () => {
   const controller = new BrowserAgentController(() => fakeTabs(async () => ({
     page: { url: 'https://example.com', title: 'Example' },
