@@ -61,12 +61,51 @@ export function turnStartedNotification(
   return asNotification('turn/started', { threadId: context.threadId, turn });
 }
 
+// Tool calls are translated to the richest ThreadItem type the tool name
+// implies, so Claude turns hit the exact same UI components as Codex turns
+// (terminal cards, compact read/search rows, diff cards, web-search rows, the
+// plan board) instead of a flat generic tool row.
+type ClaudeToolKind = 'command' | 'fileChange' | 'webSearch' | 'plan' | 'mcp';
+
+type ClaudeToolState = {
+  name: string;
+  kind: ClaudeToolKind;
+  startedAtMs: number;
+  command: string;
+  commandActions: unknown[];
+  changes: Array<{ path: string; kind: unknown; diff: string }>;
+  query: string;
+  action: unknown;
+  arguments: unknown;
+};
+
+function classifyClaudeTool(name: string): ClaudeToolKind {
+  switch (name) {
+    case 'Bash':
+    case 'Read':
+    case 'Grep':
+    case 'Glob':
+      return 'command';
+    case 'Edit':
+    case 'Write':
+    case 'MultiEdit':
+      return 'fileChange';
+    case 'WebSearch':
+    case 'WebFetch':
+      return 'webSearch';
+    case 'TodoWrite':
+      return 'plan';
+    default:
+      return 'mcp';
+  }
+}
+
 export class ClaudeTurnTranslator {
   private readonly blocks = new Map<
     number,
     { id: string; kind: 'text' | 'thinking' | 'tool'; text: string }
   >();
-  private readonly toolNames = new Map<string, string>();
+  private readonly tools = new Map<string, ClaudeToolState>();
   private readonly context: ClaudeTurnContext;
   private messageSequence = 0;
   private messageKey = 'm0';
@@ -180,22 +219,8 @@ export class ClaudeTurnTranslator {
         const id =
           typeof block.id === 'string' ? block.id : `${turnId}:${this.messageKey}:b${index}`;
         this.blocks.set(index, { id, kind: 'tool', text: '' });
-        this.toolNames.set(id, typeof block.name === 'string' ? block.name : 'tool');
         return {
-          notifications: [
-            asNotification('item/started', {
-              threadId,
-              turnId,
-              startedAtMs: this.context.nowMs(),
-              item: {
-                type: 'mcpToolCall',
-                id,
-                server: 'claude',
-                tool: typeof block.name === 'string' ? block.name : 'tool',
-                status: 'inProgress',
-              } as unknown as ThreadItem,
-            }),
-          ],
+          notifications: this.startToolCall(id, typeof block.name === 'string' ? block.name : 'tool'),
         };
       }
       return { notifications: [] };
