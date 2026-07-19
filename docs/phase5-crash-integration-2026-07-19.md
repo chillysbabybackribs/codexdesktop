@@ -50,8 +50,30 @@ profile and browser-control socket during controlled shutdown. The top-level
 interrupted to end the otherwise interactive verifier; that is a harness exit
 reporting limitation, not an observed boot or cleanup failure.
 
+## Increment 3 — lifecycle silent-failure sweep (landed)
+
+The remaining lifecycle-oriented suppressed failures were classified rather
+than broadly converted into noise:
+
+- a failed Stop request now leaves an actionable message in the still-visible
+  agent session, rather than appearing to stop a turn that may still run;
+- failures to interrupt or unsubscribe a background agent after its UI closes
+  now log the operation and thread id;
+- failures to unsubscribe a reset or closed main-chat thread now log the
+  detached thread id; and
+- invalid or unreadable saved browser state now logs recovery context (except
+  the expected first-run `ENOENT` case) before starting a fresh browser
+  session.
+
+Queue-tail guards, expected native-view/CDP detach races, Chromium's
+user-visible navigation failures, and best-effort post-EOF stream cleanup
+remain intentionally quiet: they preserve a reusable internal queue or have a
+separate visible/error-bearing outcome already.
+
+Regression coverage pins Stop feedback, closed-agent cleanup logging, and
+corrupt browser-state recovery.
+
 ## Remaining
 
-1. Continue the silent-failure sweep across the remaining lifecycle seams.
-2. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
+1. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
    duplicate paths.
