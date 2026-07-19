@@ -106,11 +106,29 @@ export async function restoreAgentDock(options: {
       }))
     }
     const anyOpenFlag = entries.some((entry) => entry.open)
-    const openKeys = anyOpenFlag
-      ? restored.filter((_, index) => entries[index].open).map((session) => session.key)
-      : restored.map((session) => session.key)
-    if (openKeys.length) store.setOpenKeys((current) => [...current, ...openKeys])
+    const requestedOpen = anyOpenFlag
+      ? restored.filter((_, index) => entries[index].open)
+      : restored
+    // Older snapshots may have accumulated several large agent windows for a
+    // single main-chat tab. Restore one detail selection per tab; keep the
+    // explicitly selected open agent when there is one.
     const selectedIndex = entries.findIndex((entry) => entry.selected)
+    const selectedOpenKey =
+      selectedIndex >= 0 && (!anyOpenFlag || entries[selectedIndex].open)
+        ? restored[selectedIndex]?.key ?? null
+        : null
+    const openByMainChatTab = new Map<string | null, string>()
+    for (const session of requestedOpen) {
+      if (!openByMainChatTab.has(session.mainChatTabKey)) {
+        openByMainChatTab.set(session.mainChatTabKey, session.key)
+      }
+    }
+    if (selectedOpenKey) {
+      const selected = restored.find((session) => session.key === selectedOpenKey)
+      if (selected) openByMainChatTab.set(selected.mainChatTabKey, selected.key)
+    }
+    const openKeys = [...openByMainChatTab.values()]
+    if (openKeys.length) store.setOpenKeys((current) => [...current, ...openKeys])
     if (selectedIndex >= 0) store.setSelectedKey(() => restored[selectedIndex].key)
 
     await Promise.all(restored.map(async (session) => {
