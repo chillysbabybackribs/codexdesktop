@@ -42,6 +42,14 @@ The suite is deterministic and uses fakes only at Electron/process edges; the
 ownership, routing, queueing, persistence-model, and cleanup implementations
 under test are the real production code.
 
+Verified: the focused golden suite (4 tests), full suite (348 tests), and
+typecheck pass. The isolated Electron verifier also completed its production
+build, launched a labeled verification instance, and removed its temporary
+profile and browser-control socket during controlled shutdown. The top-level
+`npm run verify:app` invocation still reports exit 1 when deliberately
+interrupted to end the otherwise interactive verifier; that is a harness exit
+reporting limitation, not an observed boot or cleanup failure.
+
 ## Remaining
 
 1. Continue the silent-failure sweep across the remaining lifecycle seams.
