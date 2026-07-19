@@ -155,10 +155,13 @@ loop its alignment gate (doer restates, user confirms, reviewer authors the plan
 will later audit against — see `docs/prompt-intake-2026-07-19.md`), and the **middle
 phase shipped the same day**: a mid-turn watchdog (sparse, silence-by-default
 trajectory checks; `STEER:` corrections delivered into the running turn through the
-steer channel). The missing piece is the **loop-to-done controller**: a bounded, converging cycle
-(doer produces → reviewer flags → doer fixes → reviewer re-checks → …) with a clear
-termination condition (reviewer passes, or a max-iteration / budget ceiling), built on
-the existing checkpoint machinery so every iteration is reversible.
+steer channel). The **loop-to-done controller also shipped** the same day
+(`audit-loop-controller.ts`): a flagged audit of a fix turn now bounces again under
+policy — round ceiling (3), real progress required (checkpoint-diff ground truth),
+no repeated flags — with every round, convergence ("Reviewer passed — loop complete"),
+and stop announced in the transcript, and the flagged report always left clickable for
+manual continuation. Convergence = the reviewer's pass verdict; everything else is a
+bounded, explained stop.
 
 **The optimistic-but-possible horizon** these two combine into: a **long-running,
 high-quality, start-to-finish pipeline** — a cheap doer + strong reviewer loop that can
@@ -183,13 +186,13 @@ studio back-half run itself.
    `SubagentOrchestrator.spawnAndAwait` in main, provider-neutral router, `agentSpawned`
    announce, interrupt cascade, dock worker cards — blocking single. Remaining scope:
    **parallel gather** (Phase 2) and any spawn-tree persistence.
-2. **RSI loop-to-done controller.** The bounded, converging doer↔reviewer cycle described
-   in §3, with cheap-doer/strong-reviewer economics, checkpoint-reversible iterations,
-   and explicit termination (reviewer pass or budget/iteration ceiling). Start from
-   `audit-trigger.ts`; the hard part is convergence and stop conditions, not the plumbing.
-   The beginning phase (intake) and middle phase (mid-turn watchdog) are both shipped
-   (`docs/prompt-intake-2026-07-19.md`); what remains is the loop itself — bounded
-   doer↔reviewer convergence with explicit termination.
+2. **RSI loop-to-done controller.** *Shipped 2026-07-19 (post-audit):* the flat
+   one-bounce cap became controller policy in `audit-loop-controller.ts` +
+   `maybeSendAuditFeedback` — 3-round ceiling, no-progress stop (fix turn changed no
+   files), repeated-flag stop, reload-safe (never resumes blind), all exits announced.
+   The full supervision stack (intake plan → watchdog → verdict → fix loop) is now
+   closed; remaining scope here is tuning ceilings against real use and an optional
+   best-iteration checkpoint pointer.
 3. **Plan mode.** *Conversational form shipped 2026-07-19 (post-audit):* paired-thread
    intake — doer restates, user confirms buttonlessly, reviewer authors the plan and
    audits against it. Remaining scope, if real use demands it: a file-by-file
@@ -244,7 +247,8 @@ substrate and unblocking the studio are the same work.
 ## 6. One-line summary
 
 The substrate — logged-in agent browser + reversible cross-provider review, now with a
-shipped subagent primitive and full beginning/middle/end reviewer supervision — is
-ahead of the incumbents on the things that matter most for solo autonomous work; the
-gap between it and "unstoppable" is the RSI loop-to-done controller and scheduling,
-which are also exactly what would let the studio pipeline run itself.
+shipped subagent primitive and the complete RSI supervision stack (reviewer-authored
+plan → mid-turn watchdog → diff-grounded verdict → bounded fix loop) — is ahead of the
+incumbents on the things that matter most for solo autonomous work; the gap between it
+and "unstoppable" is scheduling and parallel subagent gather, which are also exactly
+what would let the studio pipeline run itself.
