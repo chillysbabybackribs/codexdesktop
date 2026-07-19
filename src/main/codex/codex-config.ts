@@ -494,7 +494,7 @@ const spawnSubagentSchema = {
   },
   required: ['task'],
   additionalProperties: false
-} as const
+}
 
 // Subagent-spawn tools. Kept in a separate array from browserDynamicTools so
 // each surface's tool set reads by intent, but authored in this one file (the

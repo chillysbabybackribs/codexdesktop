@@ -22,6 +22,7 @@ export type {
   ResearchProgressStage,
   ResearchProgress,
   CodexResearchProgressEvent,
+  AgentSpawnedEvent,
   SessionEvent,
   CodexEvent,
   CodexSendMessageParams,
