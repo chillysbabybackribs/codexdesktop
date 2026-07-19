@@ -1,5 +1,6 @@
 import {
   type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
