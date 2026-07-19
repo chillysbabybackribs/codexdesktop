@@ -244,7 +244,7 @@ export class ResearchRunner {
       MAX_CANDIDATE_ATTEMPTS,
       Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages * CANDIDATE_ATTEMPTS_PER_SOURCE)
     )
-    const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, targetPages, MAX_CANDIDATE_ATTEMPTS)
+    const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, MIN_CANDIDATE_ATTEMPTS, MAX_CANDIDATE_ATTEMPTS)
     const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
     const researchId = crypto.randomUUID()
     const artifactRoot = join(app.getPath('userData'), 'research')
