@@ -396,7 +396,19 @@ export function ChatPaneView({
           />
         ) : null}
         {dockExtras?.agentColumn}
-        {dockExtras?.composerHeaderContext}
+        {dockExtras?.composerHeaderContext ? (
+          <div className="composer-header-controls">
+            {dockExtras.composerHeaderContext}
+            <ContextPill
+              usage={session.contextUsage}
+              disabled={Boolean(paneTurnId) || mainChatTabsDisabled}
+              compacting={session.isCompacting}
+              onCompact={async () => {
+                await runFocused(onCompactThread);
+              }}
+            />
+          </div>
+        ) : null}
         <Composer
           draftKey={tabKey}
           docked={hasContent}
@@ -431,16 +443,6 @@ export function ChatPaneView({
           onNewThread={() => void runFocused(onNewThread)}
           providerId={providerId}
           footerContext={dockExtras?.composerFooterContext}
-          footerTrailing={
-            <ContextPill
-              usage={session.contextUsage}
-              disabled={Boolean(paneTurnId) || mainChatTabsDisabled}
-              compacting={session.isCompacting}
-              onCompact={async () => {
-                await runFocused(onCompactThread);
-              }}
-            />
-          }
         />
       </div>
       {dropZone ? (

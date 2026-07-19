@@ -45,7 +45,6 @@ export function Composer({
   providerId = 'codex',
   footerLeading,
   footerContext,
-  footerTrailing,
 }: {
   draftKey: string;
   docked: boolean;
@@ -63,7 +62,6 @@ export function Composer({
   providerId?: ProviderId;
   footerLeading?: React.ReactNode;
   footerContext?: React.ReactNode;
-  footerTrailing?: React.ReactNode;
 }): React.JSX.Element {
   const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '');
   const [attachments, setAttachments] = useState<ChatAttachment[]>(
@@ -444,7 +442,6 @@ export function Composer({
           <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
         ) : null}
         {footerContext ? <div className="composer-control-context">{footerContext}</div> : null}
-        {footerTrailing ? <div className="composer-trailing-actions">{footerTrailing}</div> : null}
       </div>
     </>
   );
