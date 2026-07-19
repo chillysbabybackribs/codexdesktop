@@ -54,6 +54,18 @@ test('objective expansion removes request language and distinguishes imperative 
   ])
 })
 
+test('objective expansion does not mistake news or list-order language for unread state evidence', () => {
+  const terms = expandPageSnapshotObjectiveTerms(
+    'Extract the top 10 Hacker News front-page stories in displayed rank order with title, points, and direct story URL'
+  ).map(({ term }) => term)
+
+  assert.equal(terms.includes('unread'), false)
+  assert.equal(terms.includes('read'), false)
+  assert.equal(terms.includes('front'), false)
+  assert.equal(terms.includes('rank'), false)
+  assert.equal(terms.includes('order'), false)
+})
+
 test('task snapshot ranks Reddit-like notification rows but returns them in document order', () => {
   const result = executeSnapshot(`<!doctype html><html lang="en"><head><title>Notifications</title></head><body>
     <main>

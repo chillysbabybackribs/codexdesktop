@@ -177,6 +177,18 @@ test('browser agent runs a program against the active tab', async () => {
   assert.equal(result.url, 'https://example.com/article')
 })
 
+test('browser agent reports a missing top-level browser_run result instead of successful empty data', async () => {
+  const controller = new BrowserAgentController(
+    () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
+  )
+
+  const result = await controller.run('(() => ({ answer: 42 }))()')
+
+  assert.equal(result.ok, false)
+  assert.equal(result.errorCode, 'noResult')
+  assert.match(result.error ?? '', /return the value explicitly/i)
+})
+
 test('browser agent reports page-authored exceptions as structured page script errors', async () => {
   const controller = new BrowserAgentController(
     () => fakeTabs(async (program: string) => new Function(`return ${program}`)())
@@ -393,6 +405,32 @@ test('browser snapshot retries one loading shell when a mutation-ready document 
   assert.equal(result.ok, true)
   assert.equal(mutationWaits, 1)
   assert.equal(snapshots, 2)
+})
+
+test('browser snapshot retains verified evidence when an optional readiness selector misses', async () => {
+  const tabs = {
+    ...fakeTabs(async () => ({
+      page: { url: 'https://example.com/results', title: 'Results', lang: 'en', readyState: 'complete' },
+      mode: 'task', scope: { selector: null, matched: true },
+      items: [{ ref: 'e1', text: 'Verified result', name: null, href: 'https://example.com/result', state: {} }],
+      content: '', passages: [],
+      coverage: { objectiveTerms: ['result'], matchedTerms: ['result'], gaps: [], complete: true },
+      timings: { traversalMs: 1, rankingMs: 1, totalMs: 2 }, truncated: false
+    })),
+    navigateAndWait: async () => ({ settleReason: 'selector-deadline', durationMs: 20, domReadyMs: 10, settleMs: 10 })
+  } as unknown as TabManager
+
+  const result = await new BrowserAgentController(() => tabs).snapshot({
+    url: 'https://example.com/results', objective: 'one verified result', readySelector: '.result-row'
+  })
+
+  assert.equal(result.ok, true)
+  assert.deepEqual(result.readiness, {
+    selector: '.result-row',
+    settleReason: 'selector-deadline',
+    matched: false
+  })
+  assert.equal(result.completion?.nextAction, 'answer')
 })
 
 test('browser snapshot identifies only the unresolved coverage gaps for a targeted follow-up', async () => {
