@@ -711,6 +711,82 @@ function safeId(value: string): string {
   return value.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 120) || 'message';
 }
 
+function str(value: unknown): string | null {
+  return typeof value === 'string' ? value : null;
+}
+
+function basename(path: string): string {
+  const clean = path.replace(/\/+$/, '');
+  const index = clean.lastIndexOf('/');
+  return index >= 0 ? clean.slice(index + 1) || clean : clean;
+}
+
+function parseJsonRecord(text: string): Record<string, unknown> {
+  if (!text.trim()) return {};
+  try {
+    return asRecord(JSON.parse(text));
+  } catch {
+    return {};
+  }
+}
+
+// Every line gets an explicit +/- marker so file content containing its own
+// leading "+"/"-" characters can never be misparsed by the diff renderer.
+function prefixLines(text: string, prefix: '+' | '-'): string {
+  if (!text) return '';
+  return text
+    .split('\n')
+    .map((line) => `${prefix}${line}`)
+    .join('\n');
+}
+
+function synthesizeReplaceDiff(oldText: string, newText: string): string {
+  const parts = [prefixLines(oldText, '-'), prefixLines(newText, '+')].filter(Boolean);
+  return parts.join('\n');
+}
+
+const maxToolOutputChars = 40_000;
+
+function extractToolResultText(content: unknown): string {
+  let text = '';
+  if (typeof content === 'string') {
+    text = content;
+  } else if (Array.isArray(content)) {
+    text = content
+      .map((entry) => {
+        const record = asRecord(entry);
+        return record.type === 'text' && typeof record.text === 'string' ? record.text : '';
+      })
+      .filter(Boolean)
+      .join('\n');
+  }
+  return text.length > maxToolOutputChars
+    ? `${text.slice(0, maxToolOutputChars)}\n… [output truncated]`
+    : text;
+}
+
+function planStepsFrom(
+  value: unknown,
+): Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }> {
+  if (!Array.isArray(value)) return [];
+  const steps: Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }> = [];
+  for (const entry of value) {
+    const record = asRecord(entry);
+    const label = str(record.content) ?? str(record.activeForm);
+    if (!label) continue;
+    steps.push({
+      step: label,
+      status:
+        record.status === 'completed'
+          ? 'completed'
+          : record.status === 'in_progress'
+            ? 'inProgress'
+            : 'pending',
+    });
+  }
+  return steps;
+}
+
 function classifyClaudeError(
   message: string,
 ):
