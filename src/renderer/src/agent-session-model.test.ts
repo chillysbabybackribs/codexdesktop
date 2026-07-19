@@ -248,3 +248,81 @@ test('adjacent identical assistant messages collapse; non-adjacent repeats stay'
   ])
   assert.deepEqual(separated.map(({ id }) => id), ['a1', 'u1', 'a2'])
 })
+
+function workingSession(session: AgentSession): AgentSession {
+  return { ...session, status: 'working' }
+}
+function doneSession(session: AgentSession): AgentSession {
+  return { ...session, status: 'done' }
+}
+
+test('createWorkerSession links to its parent and never audits', () => {
+  const worker = createWorkerSession('w1', 'summarize', 'tab-1', 'lead-1', 'turn-9', 'gpt-x')
+  assert.equal(worker.role, 'worker')
+  assert.equal(worker.parentAgentKey, 'lead-1')
+  assert.equal(worker.spawnedByTurnId, 'turn-9')
+  assert.equal(worker.mainChatTabKey, 'tab-1')
+  assert.equal(worker.model, 'gpt-x')
+  assert.equal(worker.auditsMain, false)
+})
+
+test('createAgentSession defaults to a parentless reviewer', () => {
+  const session = createAgentSession('a', 'Reviewer')
+  assert.equal(session.role, 'reviewer')
+  assert.equal(session.parentAgentKey, null)
+  assert.equal(session.spawnedByTurnId, null)
+})
+
+test('buildAgentRoster nests workers under their lead', () => {
+  const lead = { ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const }
+  const workerA = createWorkerSession('wa', 'A', 'tab', 'lead', 'turn-1', null)
+  const workerB = createWorkerSession('wb', 'B', 'tab', 'lead', 'turn-1', null)
+  const roster = buildAgentRoster([lead, workerA, workerB])
+  assert.equal(roster.length, 1)
+  assert.equal(roster[0].session.key, 'lead')
+  assert.deepEqual(roster[0].children.map((node) => node.session.key), ['wa', 'wb'])
+})
+
+test('buildAgentRoster promotes an orphan whose parent is absent', () => {
+  // Parent closed but the worker is still around — it must not vanish.
+  const orphan = createWorkerSession('wa', 'A', 'tab', 'missing-lead', 'turn-1', null)
+  const roster = buildAgentRoster([orphan])
+  assert.equal(roster.length, 1)
+  assert.equal(roster[0].session.key, 'wa')
+  assert.equal(roster[0].children.length, 0)
+})
+
+test('buildAgentRoster preserves top-level order', () => {
+  const first = { ...createAgentSession('one', 'One', 'tab'), role: 'lead' as const }
+  const second = { ...createAgentSession('two', 'Two', 'tab'), role: 'lead' as const }
+  const roster = buildAgentRoster([first, second])
+  assert.deepEqual(roster.map((node) => node.session.key), ['one', 'two'])
+})
+
+test('rollupStatus reports working when any descendant is working', () => {
+  const lead = { ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const }
+  const busyWorker = workingSession(createWorkerSession('w', 'A', 'tab', 'lead', 't', null))
+  const [node] = buildAgentRoster([lead, busyWorker])
+  assert.equal(node.rollup, 'working')
+})
+
+test('rollupStatus reports done when the subtree only completed', () => {
+  const lead = doneSession({ ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const })
+  const doneWorker = doneSession(createWorkerSession('w', 'A', 'tab', 'lead', 't', null))
+  const [node] = buildAgentRoster([lead, doneWorker])
+  assert.equal(node.rollup, 'done')
+})
+
+test('rollupStatus surfaces attention over working so a failed child never hides', () => {
+  const lead = { ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const }
+  const busyWorker = workingSession(createWorkerSession('w1', 'A', 'tab', 'lead', 't', null))
+  const failedWorker = createWorkerSession('w2', 'B', 'tab', 'lead', 't', null)
+  const [node] = buildAgentRoster([lead, busyWorker, failedWorker], new Set(['w2']))
+  assert.equal(node.rollup, 'attention')
+})
+
+test('rollupStatus is idle for a lone idle node', () => {
+  const lead = { ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const }
+  const [node] = buildAgentRoster([lead])
+  assert.equal(node.rollup, 'idle')
+})
