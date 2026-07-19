@@ -39,10 +39,7 @@ import {
 import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
 import { stripMentionContext } from './mention-model';
 import { selectCompletedWork } from './memory-work';
-import {
-  stripAutomaticSkillMarker,
-  stripInjectedMemory,
-} from './ChatTranscript';
+import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
 import { ChatPaneView } from './ChatPaneView';
 import { SettingsModal, WorkspacePill } from './ChatControls';
 import type { ChatAttachment } from '../../shared/ipc';
