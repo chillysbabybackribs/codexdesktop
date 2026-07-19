@@ -73,6 +73,13 @@ separate visible/error-bearing outcome already.
 Regression coverage pins Stop feedback, closed-agent cleanup logging, and
 corrupt browser-state recovery.
 
+Verified: focused lifecycle coverage (14 tests), full suite (351 tests),
+typecheck, and production build pass. An isolated Electron instance launched
+and removed its temporary profile on controlled shutdown; its browser-control
+socket was also removed. As above, intentionally interrupting the interactive
+verifier makes the outer `npm` command report exit 1 despite successful app
+cleanup.
+
 ## Remaining
 
 1. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
