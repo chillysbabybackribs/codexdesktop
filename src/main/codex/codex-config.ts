@@ -278,7 +278,8 @@ const browserNetworkSchema = {
       required: ['urlContains'],
       additionalProperties: false
     },
-    captureBody: { type: 'boolean', description: 'Persist the matched completed response body as an artifact. Defaults to true when stream is omitted; cannot be true with stream.' },
+    captureBody: { type: 'boolean', description: 'Persist the matched completed response body as an artifact. Defaults to true when stream and download are omitted; cannot be true with either.' },
+    download: { type: 'boolean', description: 'Capture a true Chromium download handoff directly as an artifact, bypassing the manual save dialog for this exact call. Uses match.urlContains.' },
     stream: {
       type: 'object',
       description: 'Capture a bounded live stream instead of waiting for a completed response body.',
@@ -505,7 +506,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_network',
-    description: 'Capture one exact network result in one model call: start a fresh journal, navigate or run an interaction flow, then persist either a completed response body or a bounded SSE/WebSocket stream as an artifact. Use for JSON, GraphQL, XHR/fetch, live model/event streams, and downloads exposed as ordinary HTTP responses.',
+    description: 'Capture one exact network result in one model call: start a fresh journal, navigate or run an interaction flow, then persist a completed response body, bounded SSE/WebSocket stream, or true Chromium download handoff as an artifact. Use for JSON, GraphQL, XHR/fetch, live model/event streams, and browser downloads.',
     inputSchema: browserNetworkSchema
   },
   {

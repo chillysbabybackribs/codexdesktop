@@ -123,6 +123,7 @@ export async function runBrowserTool(
         steps: args.steps,
         match: readNetworkMatch(args.match),
         captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
+        download: args.download === true,
         stream: readNetworkStream(args.stream),
         readySelector: readString(args.readySelector),
         quietMs: readNumber(args.quietMs),

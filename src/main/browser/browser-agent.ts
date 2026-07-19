@@ -8,6 +8,7 @@ import type { NetworkJournalQuery, NetworkStreamTransport } from './network-jour
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import { captureAppWindowImage } from './app-window-screenshot.js'
+import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import type { TabManager } from './tab-manager.js'
 import {
   KeyedOperationQueue,
@@ -97,6 +98,7 @@ export type BrowserNetworkCaptureParams = {
   steps?: unknown
   match?: NetworkJournalQuery | null
   captureBody?: boolean | null
+  download?: boolean | null
   stream?: {
     transport?: NetworkStreamTransport | null
     maxMessages?: number | null
@@ -997,9 +999,15 @@ export class BrowserAgentController {
     if (params.stream && params.captureBody === true) {
       return { ok: false, error: 'browser_network cannot combine stream capture with captureBody: true' } satisfies BrowserAgentFailure
     }
-    const captureBody = !params.stream && params.captureBody !== false
+    if (params.download && params.stream) {
+      return { ok: false, error: 'browser_network cannot combine download and stream capture' } satisfies BrowserAgentFailure
+    }
+    if (params.download && params.captureBody === true) {
+      return { ok: false, error: 'browser_network cannot combine download capture with captureBody: true' } satisfies BrowserAgentFailure
+    }
+    const captureBody = !params.stream && !params.download && params.captureBody !== false
     const artifactStore = this.artifactStore
-    if ((captureBody || params.stream) && !artifactStore) {
+    if ((captureBody || params.stream || params.download) && !artifactStore) {
       return { ok: false, error: 'network artifact storage is not available' } satisfies BrowserAgentFailure
     }
 
@@ -1028,8 +1036,16 @@ export class BrowserAgentController {
         await session.startNetworkJournal()
         try {
           const normalizedMatch = { ...match, urlContains: match.urlContains?.trim() }
-          const waiting = (streamTransport
-            ? session.waitForNetworkStream(
+          const waiting = (params.download && artifactStore
+            ? browserDownloadCaptureBroker.waitForDownload(
+                webContents,
+                normalizedMatch.urlContains ?? '',
+                artifactStore,
+                timeoutMs,
+                captureController.signal
+              ).then((download) => ({ kind: 'download' as const, download }))
+            : streamTransport
+              ? session.waitForNetworkStream(
                 streamTransport,
                 normalizedMatch,
                 clampNumber(params.stream?.maxMessages, 50, 1, 1_000),
@@ -1037,7 +1053,7 @@ export class BrowserAgentController {
                 timeoutMs,
                 captureController.signal
               ).then((stream) => ({ kind: 'stream' as const, stream }))
-            : session.waitForNetworkRequest(
+              : session.waitForNetworkRequest(
                 { ...normalizedMatch, completedOnly: true },
                 timeoutMs,
                 captureController.signal
@@ -1068,6 +1084,7 @@ export class BrowserAgentController {
           if (!matched.ok) throw matched.error
           let responseBody: Record<string, unknown> | undefined
           let streamCapture: Record<string, unknown> | undefined
+          let downloadCapture: Record<string, unknown> | undefined
           let request: unknown
           if (matched.capture.kind === 'request') {
             request = matched.capture.request
@@ -1100,6 +1117,9 @@ export class BrowserAgentController {
               omittedMessages: Math.max(0, messages.length - 10)
             }
           }
+          if (matched.capture.kind === 'download') {
+            downloadCapture = matched.capture.download
+          }
 
           return {
             network: {
@@ -1107,6 +1127,7 @@ export class BrowserAgentController {
               ...(request ? { request } : {}),
               ...(responseBody ? { responseBody } : {}),
               ...(streamCapture ? { stream: streamCapture } : {}),
+              ...(downloadCapture ? { download: downloadCapture } : {}),
               action: boundResult(actionResult, Math.min(3_000, Math.max(1_000, Math.floor(maxResultChars / 2)))).value
             }
           }
