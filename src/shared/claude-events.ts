@@ -331,7 +331,7 @@ export class ClaudeTurnTranslator {
 }
 
 export function claudeContextWindowFor(model: string | null): number {
-  return model && model.includes('[1m]') ? 1_000_000 : 200_000
+  return model?.includes('[1m]') ? 1_000_000 : 200_000
 }
 
 function asNotification(method: string, params: Record<string, unknown>): ServerNotification {
