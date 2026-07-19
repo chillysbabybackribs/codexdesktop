@@ -335,19 +335,19 @@ test('the dynamic tool surface includes verified research primitives', () => {
   }).properties
   const researchSchema = researchWeb.inputSchema as { anyOf?: Array<{ required?: string[] }> }
   assert.deepEqual(Object.keys(researchProperties), [
-    'queries', 'urls', 'focus', 'maxResults', 'maxPages', 'maxAttempts', 'snippetChars'
+    'queries', 'urls', 'focus', 'maxResults', 'maxAttempts', 'snippetChars'
   ])
   assert.deepEqual(researchSchema.anyOf, [{ required: ['queries'] }, { required: ['urls'] }])
   assert.equal(researchProperties.urls?.maxItems, 8)
   assert.equal(researchProperties.focus?.maxItems, 6)
   assert.deepEqual(researchProperties.focus?.items?.required, ['id', 'need'])
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.minimum, 1)
-  assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 3)
-  assert.equal(researchProperties.maxPages?.maximum, 3)
-  assert.equal(researchProperties.maxAttempts?.maximum, 8)
+  assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 6)
+  assert.equal(researchProperties.maxAttempts?.maximum, 24)
   assert.match(researchProperties.queries?.description ?? '', /primary discovery query/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
+  assert.match(researchWeb.description, /model-authored evidence needs/i)
 })
 
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {

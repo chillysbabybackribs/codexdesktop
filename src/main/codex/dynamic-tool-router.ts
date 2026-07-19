@@ -119,7 +119,6 @@ export async function routeDynamicToolCall(
         urls: readStringArray(args.urls),
         focus: readResearchFocus(args.focus),
         maxResults: readNumber(args.maxResults),
-        maxPages: readNumber(args.maxPages),
         maxAttempts: readNumber(args.maxAttempts),
         snippetChars: readNumber(args.snippetChars)
       }, {

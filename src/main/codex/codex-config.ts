@@ -379,15 +379,14 @@ const researchWebSchema = {
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
           need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
-          minSources: { type: 'number', minimum: 1, maximum: 3, description: 'Distinct matching source target. Defaults to 1; the model must still judge source independence.' }
+          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Distinct matching source target. Defaults to 1; use only the diversity needed for the claim. The model must still judge source independence.' }
         },
         required: ['id', 'need'],
         additionalProperties: false
       }
     },
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxPages: { type: 'number', minimum: 1, maximum: 3, description: 'Verified-page target, from 1 to 3. Defaults to the focus/direct-source need when supplied, otherwise 3.' },
-    maxAttempts: { type: 'number', minimum: 1, maximum: 8, description: 'Optional candidate-attempt ceiling, from 1 to 8. Defaults to 6 and stops early when maxPages is met.' },
+    maxAttempts: { type: 'number', minimum: 1, maximum: 24, description: 'Optional candidate-attempt safety ceiling, from 1 to 24. Defaults from the model-authored evidence demand and stops immediately when that evidence is covered.' },
     snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Saved text uses a separate larger artifact bound.' }
   },
   anyOf: [{ required: ['queries'] }, { required: ['urls'] }],
@@ -446,7 +445,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Verify direct public URLs or adaptively discover, rank, and save up to three public web pages. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
+    description: 'Verify direct public URLs or adaptively discover, rank, and save the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]

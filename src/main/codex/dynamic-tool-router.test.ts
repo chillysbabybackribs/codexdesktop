@@ -208,7 +208,6 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version', minSources: Number.NaN }
     ],
     maxResults: 4,
-    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   }), {
@@ -226,7 +225,6 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version' }
     ],
     maxResults: 4,
-    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   })

@@ -34,10 +34,10 @@ import {
 
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
-const DEFAULT_TARGET_PAGES = 3
-const MAX_TARGET_PAGES = 3
-const DEFAULT_MAX_ATTEMPTS = 6
-const MAX_MAX_ATTEMPTS = 8
+const DEFAULT_UNFOCUSED_SOURCE_TARGET = 1
+const MIN_CANDIDATE_ATTEMPTS = 3
+const CANDIDATE_ATTEMPTS_PER_SOURCE = 2
+const MAX_CANDIDATE_ATTEMPTS = 24
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
@@ -57,7 +57,6 @@ export type ResearchRequest = {
   urls?: string[]
   focus?: Array<{ id?: unknown; need?: unknown; minSources?: unknown }>
   maxResults?: number | null
-  maxPages?: number | null
   maxAttempts?: number | null
   snippetChars?: number | null
 }
@@ -162,8 +161,8 @@ type NavigationMetrics = ResearchMetrics['navigation']
 
 /**
  * A compact, adaptive research pipeline. Work is serialized per thread with a
- * small global concurrency bound. Source lanes and page candidates stop as soon
- * as the requested page or focused-evidence target is satisfied.
+ * small global concurrency bound. The model's evidence needs determine how
+ * many sources to keep; source lanes stop as soon as those needs are covered.
  */
 export class ResearchRunner {
   private readonly searchViews = new Set<WebContentsView>()
@@ -231,17 +230,21 @@ export class ResearchRunner {
 
     const executionStartedAt = Date.now()
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
-    const focusTarget = focus.length > 0
-      ? Math.min(MAX_TARGET_PAGES, Math.max(focus.length, ...focus.map(({ minSources }) => minSources)))
-      : null
-    const directTarget = queries.length === 0 && urls.length > 0 ? Math.min(urls.length, MAX_TARGET_PAGES) : null
-    const targetPages = clamp(
-      request.maxPages,
-      focusTarget ?? directTarget ?? DEFAULT_TARGET_PAGES,
-      1,
-      MAX_TARGET_PAGES
+    // Do not impose a fixed verified-page count. Focus is the model-authored
+    // research contract: each item asks for a number of distinct sources. A
+    // page can satisfy several items, so coverage still stops earlier when it
+    // can. When no focus is supplied, one discovered source is the deliberately
+    // conservative default; explicitly supplied direct URLs are all in scope.
+    const targetPages = focus.length > 0
+      ? focus.reduce((total, { minSources }) => total + minSources, 0)
+      : urls.length > 0
+        ? urls.length
+        : DEFAULT_UNFOCUSED_SOURCE_TARGET
+    const defaultMaxAttempts = Math.min(
+      MAX_CANDIDATE_ATTEMPTS,
+      Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages * CANDIDATE_ATTEMPTS_PER_SOURCE)
     )
-    const maxAttempts = clamp(request.maxAttempts, DEFAULT_MAX_ATTEMPTS, targetPages, MAX_MAX_ATTEMPTS)
+    const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, targetPages, MAX_CANDIDATE_ATTEMPTS)
     const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
     const researchId = crypto.randomUUID()
     const artifactRoot = join(app.getPath('userData'), 'research')

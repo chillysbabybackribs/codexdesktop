@@ -1,4 +1,4 @@
-# Phase 5 — Crash, integration, and maintainability (2026-07-19, in progress)
+# Phase 5 — Crash, integration, and maintainability (2026-07-19, complete)
 
 Goal: remove runtime paths that can fail silently, then prove the critical
 chat/browser lifecycle seams with focused integration coverage. Development
@@ -45,10 +45,7 @@ under test are the real production code.
 Verified: the focused golden suite (4 tests), full suite (348 tests), and
 typecheck pass. The isolated Electron verifier also completed its production
 build, launched a labeled verification instance, and removed its temporary
-profile and browser-control socket during controlled shutdown. The top-level
-`npm run verify:app` invocation still reports exit 1 when deliberately
-interrupted to end the otherwise interactive verifier; that is a harness exit
-reporting limitation, not an observed boot or cleanup failure.
+profile and browser-control socket during controlled shutdown.
 
 ## Increment 3 — lifecycle silent-failure sweep (landed)
 
@@ -76,11 +73,26 @@ corrupt browser-state recovery.
 Verified: focused lifecycle coverage (14 tests), full suite (351 tests),
 typecheck, and production build pass. An isolated Electron instance launched
 and removed its temporary profile on controlled shutdown; its browser-control
-socket was also removed. As above, intentionally interrupting the interactive
-verifier makes the outer `npm` command report exit 1 despite successful app
-cleanup.
+socket was also removed.
+
+## Increment 4 — controlled restart/crash sweep (landed)
+
+The disposable verifier now waits for both browser-control readiness and the
+completed browser-tab restore path before closing its window through Electron's
+normal lifecycle. It no longer depends on terminal interruption, so
+`npm run verify:app` reports the app's real exit status.
+
+The final sweep passed:
+
+- a clean production verifier run exits 0 after browser-control startup and
+  normal browser/CDP/persistence cleanup; and
+- two retained-profile verification launches both exit 0 and preserve a valid
+  saved browser-state payload containing at least one tab across the restart.
+
+Together with the deterministic golden flows for cancellation, background
+work, and browser ownership, this completes the Phase 5 lifecycle/crash sweep.
 
 ## Remaining
 
-1. Run focused lifecycle/crash sweeps and simplify only confirmed fragile or
-   duplicate paths.
+None. Phase 5's silent-failure, integration, lifecycle/crash, and fragile-path
+completion criteria are met.
