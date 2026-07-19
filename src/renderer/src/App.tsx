@@ -3103,34 +3103,37 @@ export default function App(): React.JSX.Element {
     }));
   }
 
-  // Phase 4 ledger: turnId -> checkpointId for the focused thread, refreshed on
-  // thread switches and turn completion (checkpoints bind their turn id
-  // shortly after the turn starts). Reversibility only — never a gate.
+  // Phase 4 ledger: turnId -> checkpointId for every open chat. Split panes
+  // stay mounted concurrently, so their review controls need the same
+  // checkpoint view as the focused chat rather than a focus-dependent subset.
   const [turnCheckpoints, setTurnCheckpoints] = useState<Record<string, string>>({});
+  const checkpointThreadIds = useMemo(
+    () =>
+      [...new Set(mainChatTabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])))].sort(),
+    [mainChatTabs],
+  );
   useEffect(() => {
-    if (!activeThreadId) {
+    if (!checkpointThreadIds.length) {
       setTurnCheckpoints({});
       return;
     }
     let stale = false;
-    void window.api.checkpoints
-      .list(activeThreadId)
-      .then((records) => {
+    void Promise.all(
+      checkpointThreadIds.map((threadId) => window.api.checkpoints.list(threadId).catch(() => [])),
+    ).then((recordsByThread) => {
         if (stale) return;
         const byTurn: Record<string, string> = {};
-        for (const record of records) {
-          if (record.turnId) byTurn[record.turnId] = record.id;
+        for (const records of recordsByThread) {
+          for (const record of records) {
+            if (record.turnId) byTurn[record.turnId] = record.id;
+          }
         }
         setTurnCheckpoints(byTurn);
-      })
-      .catch(() => {
-        // No checkpoints (non-git workspace or store failure): the ledger simply
-        // offers no revert.
       });
     return () => {
       stale = true;
     };
-  }, [activeThreadId, activeTurnId]);
+  }, [checkpointThreadIds, activeTurnId]);
 
   async function handleRevertTurn(turnId: string): Promise<boolean> {
     const checkpointId = turnCheckpoints[turnId];
@@ -3153,10 +3156,6 @@ export default function App(): React.JSX.Element {
   // "kept" simply dismisses the review surface for that turn.
   const [turnReviews, setTurnReviews] = useState<Record<string, 'kept' | 'undone'>>({});
   const [undoneFiles, setUndoneFiles] = useState<Record<string, string[]>>({});
-  useEffect(() => {
-    setTurnReviews({});
-    setUndoneFiles({});
-  }, [activeThreadId]);
 
   const handleKeepTurn = useCallback((turnId: string): void => {
     setTurnReviews((current) => ({ ...current, [turnId]: 'kept' }));

@@ -155,11 +155,11 @@ export function ChatPaneView({
     return true;
   };
 
-  // Review target: the newest settled turn that edited files, still
-  // unreviewed and revertible. Focused pane only — Keep/Undo act on the
-  // active tab's checkpoints.
+  // Review target: the newest settled turn that edited files and remains
+  // unreviewed and revertible. This is pane-owned state, so a background
+  // split keeps its review summary instead of changing with focus.
   const reviewTarget = useMemo((): { turnId: string; changes: ReviewChange[] } | null => {
-    if (!isActive || paneTurnId) return null;
+    if (paneTurnId) return null;
     for (let i = rows.length - 1; i >= 0; i -= 1) {
       const row = rows[i];
       if (row.kind !== 'tail') continue;
@@ -173,7 +173,7 @@ export function ChatPaneView({
       return { turnId: row.turnId, changes };
     }
     return null;
-  }, [isActive, rows, turnWork, paneTurnId, turnReviews, turnCheckpoints]);
+  }, [rows, turnWork, paneTurnId, turnReviews, turnCheckpoints]);
 
   // Context for per-file Undo on diff cards. Identity is stable across
   // streaming renders (deps change on turn boundaries and review actions
@@ -387,10 +387,12 @@ export function ChatPaneView({
             workspace={workspace}
             undonePaths={new Set(undoneFiles[reviewTarget.turnId] ?? [])}
             alwaysKeepAll={alwaysKeepAll}
-            onKeepAll={() => onKeepTurn(reviewTarget.turnId)}
+            onKeepAll={() => void runFocused(() => onKeepTurn(reviewTarget.turnId))}
             onSetAlwaysKeepAll={onSetAlwaysKeepAll}
-            onUndoAll={() => void onUndoTurnAll(reviewTarget.turnId)}
-            onUndoFile={(path) => void onUndoFile(reviewTarget.turnId, path)}
+            onUndoAll={() => void runFocused(() => onUndoTurnAll(reviewTarget.turnId))}
+            onUndoFile={(path) =>
+              void runFocused(() => onUndoFile(reviewTarget.turnId, path))
+            }
           />
         ) : null}
         {dockExtras?.agentColumn}
