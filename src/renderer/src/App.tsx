@@ -83,6 +83,7 @@ import {
   threadTitle,
 } from './app-helpers';
 import { useAgentSessions } from './useAgentSessions';
+import { shouldHandleChatSplitShortcut } from './keyboard-shortcuts';
 import {
   buildDeclinedInjection,
   buildExecutionInjection,
@@ -2327,9 +2328,10 @@ export default function App(): React.JSX.Element {
         return;
       }
 
-      // Ctrl+\ splits the focused pane to the right; Ctrl+Shift+\ (which
-      // reports as '|' on most layouts) splits it downward.
-      if (event.key === '\\' || event.key === '|') {
+      // Ctrl+\ splits the focused pane to the right; Ctrl+Shift+\ splits it
+      // downward. Require the physical key and ignore editor-owned events so
+      // a composer submit can never be misread as a workspace split command.
+      if (shouldHandleChatSplitShortcut(event)) {
         event.preventDefault();
         handleSplitActivePane(
           activeMainChatTabKeyRef.current,

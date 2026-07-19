@@ -4,7 +4,9 @@ import {
   assessExtractedPage,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
+  extractSameHostNavLinks,
   googleSearchUrl,
+  isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
   rankSerpCandidates,
@@ -199,4 +201,40 @@ test('page assessment accepts substantial content and rejects extraction failure
     }),
     { verified: false, reason: 'insufficient-content' }
   )
+})
+
+test('cross-host landings are detected without treating www as a host change', () => {
+  assert.equal(isCrossHostLanding('https://developers.openai.com/codex', 'https://learn.chatgpt.com/docs'), true)
+  assert.equal(isCrossHostLanding('https://docs.roocode.com/', 'https://roocodeinc.github.io/Roo-Code/'), true)
+  assert.equal(isCrossHostLanding('https://example.com/docs', 'https://www.example.com/docs/latest'), false)
+  assert.equal(isCrossHostLanding('https://example.com/docs', 'https://example.com/other'), false)
+  assert.equal(isCrossHostLanding('not a url', 'https://example.com/'), false)
+  assert.equal(isCrossHostLanding('https://example.com/', ''), false)
+})
+
+test('redirect-hub link harvesting keeps bounded, deduplicated same-host navigation links', () => {
+  const html = `
+    <nav>
+      <a href="/codex/app">Desktop <b>app</b></a>
+      <a href="/codex/app#features">App features anchor</a>
+      <a href='/codex/cli'>CLI</a>
+      <a href="https://learn.chatgpt.com/codex/cloud">Cloud</a>
+      <a href="https://www.learn.chatgpt.com/codex/ide">IDE</a>
+      <a href="https://other-host.example/away">External</a>
+      <a href="mailto:docs@example.com">Mail</a>
+      <a href="javascript:void(0)">Noop</a>
+      <a href="#top">Top</a>
+      <a href="/docs">Self</a>
+      <a href="/codex/changelog">Changelog</a>
+    </nav>`
+  const links = extractSameHostNavLinks(html, 'https://learn.chatgpt.com/docs', 4)
+
+  assert.deepEqual(links, [
+    { url: 'https://learn.chatgpt.com/codex/app', title: 'Desktop app' },
+    { url: 'https://learn.chatgpt.com/codex/cli', title: 'CLI' },
+    { url: 'https://learn.chatgpt.com/codex/cloud', title: 'Cloud' },
+    { url: 'https://www.learn.chatgpt.com/codex/ide', title: 'IDE' }
+  ])
+  assert.deepEqual(extractSameHostNavLinks('<p>no links</p>', 'https://learn.chatgpt.com/docs', 4), [])
+  assert.deepEqual(extractSameHostNavLinks(html, 'not a url', 4), [])
 })
