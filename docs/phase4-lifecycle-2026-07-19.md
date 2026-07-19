@@ -16,6 +16,16 @@ No model, tool, or user-flow restrictions are part of this phase.
 - The main window persists its browser snapshot before that teardown, so a
   normal close still restores tabs while no hidden WebContentsView survives.
 
+## Slice 2 — resilient chat resume (landed)
+
+- A failed resume no longer clears the remembered thread pointer.
+- The cached transcript stays visible, with a temporary warning row explaining
+  the reconnect failure. The affected tab is marked for attention, not erased.
+- Selecting an affected tab retries its server resume; success removes the
+  warning and clears the retry marker. New, closed, and repurposed tabs clear
+  the marker so it cannot cross conversation boundaries.
+- Background tab resume failures use the same marker and recovery path.
+
 ## Verification
 
 - Added lifecycle coverage that proves disposal detaches CDP, rejects a pending
@@ -27,9 +37,6 @@ No model, tool, or user-flow restrictions are part of this phase.
 
 ## Remaining
 
-- Harden resume failure semantics: retain the visible cached transcript and
-  make a failed cold resume observable and retryable instead of silently
-  clearing the remembered thread pointer.
 - Add a focused close/reopen smoke that exercises persisted browser tabs while
   a CDP operation is active, then confirm the restored target owns a fresh CDP
   session.
