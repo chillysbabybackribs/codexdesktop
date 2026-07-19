@@ -26,7 +26,7 @@ test('browser-middle creates a chat on both sides from a one-pane layout', () =>
   });
 });
 
-test('browser-middle preserves columns and normalizes each side to a vertical stack', () => {
+test('browser-middle preserves explicit split columns as vertical stacks', () => {
   const layout: SplitNode = {
     kind: 'split',
     direction: 'row',
@@ -34,6 +34,7 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
     first: {
       kind: 'split',
       direction: 'row',
+      explicit: true,
       ratio: 0.5,
       first: splitLeaf('left-top'),
       second: splitLeaf('left-bottom'),
@@ -41,6 +42,7 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
     second: {
       kind: 'split',
       direction: 'column',
+      explicit: true,
       ratio: 0.5,
       first: splitLeaf('right-top'),
       second: splitLeaf('right-bottom'),
@@ -63,6 +65,7 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
     first: {
       kind: 'split',
       direction: 'column',
+      explicit: true,
       ratio: 0.5,
       first: splitLeaf('left-top'),
       second: splitLeaf('left-bottom'),
@@ -70,6 +73,7 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
     second: {
       kind: 'split',
       direction: 'column',
+      explicit: true,
       ratio: 0.5,
       first: splitLeaf('right-top'),
       second: splitLeaf('right-bottom'),
@@ -111,6 +115,7 @@ test('browser-middle preserves a user-created stack when selecting another tab',
       first: {
         kind: 'split',
         direction: 'column',
+        explicit: true,
         ratio: 0.5,
         first: splitLeaf('left-primary'),
         second: splitLeaf('left-secondary'),
@@ -131,11 +136,40 @@ test('browser-middle preserves a user-created stack when selecting another tab',
     first: {
       kind: 'split',
       direction: 'column',
+      explicit: true,
       ratio: 0.5,
       first: splitLeaf('left-primary'),
       second: splitLeaf('left-next'),
     },
     second: splitLeaf('right-one'),
+  });
+});
+
+test('browser-middle migrates a legacy automatic stack to one full-height chat', () => {
+  const result = browserMiddleChatLayout(
+    {
+      kind: 'split',
+      direction: 'row',
+      ratio: 0.5,
+      first: splitLeaf('left-one'),
+      second: {
+        kind: 'split',
+        direction: 'column',
+        ratio: 0.5,
+        first: splitLeaf('right-old'),
+        second: splitLeaf('right-active'),
+      },
+    },
+    { left: ['left-one'], right: ['right-old', 'right-active'] },
+    { left: 'left-one', right: 'right-active' },
+  );
+
+  assert.deepEqual(result, {
+    kind: 'split',
+    direction: 'row',
+    ratio: 0.5,
+    first: splitLeaf('left-one'),
+    second: splitLeaf('right-active'),
   });
 });
 
