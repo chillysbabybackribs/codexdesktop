@@ -3077,6 +3077,7 @@ export default function App(): React.JSX.Element {
           onToggleWatchAgent={handleToggleWatchAgent}
           onToggleAuditAgent={handleToggleAuditAgent}
           onToggleReportAgent={handleToggleReportAgent}
+          onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
           onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
@@ -3529,6 +3530,7 @@ function ChatPane({
   onToggleWatchAgent,
   onToggleAuditAgent,
   onToggleReportAgent,
+  onSendAuditFeedback,
   onSetAgentModel,
   onSetAgentModelEffort,
   onNewAgent,
@@ -3602,6 +3604,7 @@ function ChatPane({
   onToggleWatchAgent: (key: string) => void;
   onToggleAuditAgent: (key: string) => void;
   onToggleReportAgent: (key: string) => void;
+  onSendAuditFeedback: (key: string) => void;
   onSetAgentModel: (key: string, model: string) => void;
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void;
   onNewAgent: (mainChatTabKey: string) => void;
@@ -3899,6 +3902,7 @@ function ChatPane({
               onToggleWatch={onToggleWatchAgent}
               onToggleAudit={onToggleAuditAgent}
               onToggleReport={onToggleReportAgent}
+              onSendFeedback={onSendAuditFeedback}
               onSend={onAgentSend}
               onSteer={onAgentSteer}
               onStop={onAgentStop}

@@ -57,6 +57,7 @@ export function AgentColumn({
   onToggleWatch,
   onToggleAudit,
   onToggleReport,
+  onSendFeedback,
   onSend,
   onSteer,
   onStop,
@@ -78,6 +79,7 @@ export function AgentColumn({
   onToggleWatch: (key: string) => void
   onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
+  onSendFeedback: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -158,6 +160,7 @@ export function AgentColumn({
             onToggleWatch={onToggleWatch}
             onToggleAudit={onToggleAudit}
             onToggleReport={onToggleReport}
+            onSendFeedback={onSendFeedback}
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
@@ -213,6 +216,7 @@ type AgentWindowProps = {
   onToggleWatch: (key: string) => void
   onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
+  onSendFeedback: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
