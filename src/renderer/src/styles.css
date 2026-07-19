@@ -5609,14 +5609,173 @@ button {
   white-space: pre-wrap;
 }
 
-/* The auto-audit request renders as a full-width collapsible card, not the
-   default right-aligned user bubble. */
-.agent-mini-message.is-user:has(.agent-audit-card) {
+/* ── Agent empty-state mode selector ─────────────────────────────────── */
+
+.agent-mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: auto 0;
+  padding: 4px 2px;
+}
+
+.agent-mode-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.agent-mode-heading strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #e0e3e7;
+}
+
+.agent-mode-heading span {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #8b93a3;
+}
+
+.agent-mode-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.agent-mode-option:hover {
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.agent-mode-option.is-on {
+  border-color: rgba(126, 231, 135, 0.35);
+  background: rgba(126, 231, 135, 0.06);
+}
+
+.agent-mode-icon {
+  flex: none;
+  display: inline-flex;
+  color: #8b93a3;
+}
+
+.agent-mode-option.is-on .agent-mode-icon {
+  color: #7ee787;
+}
+
+.agent-mode-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.agent-mode-copy strong {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #dfe2e6;
+}
+
+.agent-mode-copy small {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #7f8798;
+}
+
+.agent-mode-switch {
+  flex: none;
+  width: 30px;
+  height: 17px;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.15s ease;
+}
+
+.agent-mode-switch.is-on {
+  background: rgba(126, 231, 135, 0.75);
+}
+
+.agent-mode-knob {
+  display: block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #10121a;
+  transition: transform 0.15s ease;
+}
+
+.agent-mode-switch.is-on .agent-mode-knob {
+  transform: translateX(13px);
+}
+
+/* ── Auditor live watch strip ────────────────────────────────────────── */
+
+.agent-audit-live {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  align-self: stretch;
+  padding: 9px 11px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.agent-audit-live-pulse {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #7ee787;
+  animation: agent-audit-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes agent-audit-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.agent-audit-live-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.agent-audit-live-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #c9cdd3;
+}
+
+.agent-audit-live-stats {
+  font-size: 11px;
+  color: #8b93a3;
+}
+
+.agent-audit-live-step {
+  font-size: 11px;
+  color: #7f8798;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Audit exchange card ─────────────────────────────────────────────── */
+
+.agent-mini-message.is-audit {
   align-self: stretch;
   max-width: 100%;
-  padding: 0;
-  background: none;
-  border-radius: 0;
 }
 
 .agent-audit-card {
@@ -5644,9 +5803,16 @@ button {
   background: rgba(255, 255, 255, 0.045);
 }
 
-.agent-audit-summary svg {
+.agent-audit-badge {
   flex: none;
-  color: #8b93a3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(126, 231, 135, 0.12);
+  color: #7ee787;
 }
 
 .agent-audit-headline {
@@ -5727,6 +5893,31 @@ button {
   font-size: 11.5px;
   color: #b8bcc4;
   overflow-wrap: anywhere;
+}
+
+.agent-audit-report {
+  padding: 9px 11px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: #d6d8db;
+}
+
+.agent-audit-report .markdown-body {
+  color: inherit;
+  font-size: 12.5px;
+  line-height: 1.52;
+}
+
+.agent-audit-report .markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.agent-audit-report .markdown-body > :last-child {
+  margin-bottom: 0;
+}
+
+.agent-audit-report.is-pending {
+  font-size: 12px;
+  color: #8b93a3;
 }
 
 .agent-mini-message.is-assistant {
