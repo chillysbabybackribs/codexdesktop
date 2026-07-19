@@ -273,6 +273,11 @@ export default function App(): React.JSX.Element {
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
   const olderHistoryCursorByThreadRef = useRef<Map<string, string | null>>(new Map())
   const olderHistoryLoadsRef = useRef<Set<string>>(new Set())
+  // A failed resume is transient transport state, not proof that the thread is
+  // gone. Keep the persisted tab/thread pointer and retry on the next tab
+  // selection instead of silently turning a recoverable startup hiccup into a
+  // blank new chat.
+  const resumeFailuresByTabRef = useRef<Map<string, string>>(new Map())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
   const pendingThreadStartOwnersRef = useRef<PendingThreadStartOwner[]>([])
   const reconcilingMainChatTabKeyRef = useRef<string | null>(null)
@@ -1107,10 +1112,24 @@ export default function App(): React.JSX.Element {
   }
 
   const handleSelectMainChatTab = async (key: string): Promise<boolean> => {
-    if (key === activeMainChatTabKeyRef.current) return true
+    const retryThreadId = resumeFailuresByTabRef.current.get(key) ?? null
+    if (key === activeMainChatTabKeyRef.current && !retryThreadId) return true
     if (isMainChatTransitionLocked()) return false
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
     if (!target) return false
+
+    if (key === activeMainChatTabKeyRef.current && retryThreadId === target.threadId) {
+      reconcilingMainChatTabKeyRef.current = key
+      setReconcilingMainChatTabKey(key)
+      setIsRestoring(true)
+      const resumed = await resumeThreadById(target.threadId, { silent: true, tabKey: key })
+      if (activeMainChatTabKeyRef.current === key) {
+        setIsRestoring(false)
+        setReconcilingMainChatTabKey(null)
+        reconcilingMainChatTabKeyRef.current = null
+      }
+      return resumed
+    }
 
     flushActiveMainChatSession()
     cancelAutoRecovery()
@@ -1122,7 +1141,9 @@ export default function App(): React.JSX.Element {
       activeKey: key
     }))
     let snapshot = sessionStoreRef.current.peek(key)
-    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
+    const needsRemoteResume = needsMainChatTabHydration(target, snapshot?.threadId) ||
+      resumeFailuresByTabRef.current.get(key) === target.threadId
+    if (needsRemoteResume) {
       await restoreCachedTranscript(target.threadId, key)
       snapshot = sessionStoreRef.current.peek(key)
     }
@@ -1154,6 +1175,7 @@ export default function App(): React.JSX.Element {
     if (wasActive) flushActiveMainChatSession()
     const next = closeMainChatTab(current, key, () => crypto.randomUUID())
     sessionStoreRef.current.remove(key)
+    resumeFailuresByTabRef.current.delete(key)
     discardComposerDraft(key)
     updateMainChatTabs(() => next)
 
@@ -1264,6 +1286,41 @@ export default function App(): React.JSX.Element {
     }
   }
 
+  function resumeFailureItemId(threadId: string): string {
+    return `resume-failure-${threadId}`
+  }
+
+  function markResumeFailure(tabKey: string, threadId: string, error: unknown): void {
+    resumeFailuresByTabRef.current.set(tabKey, threadId)
+    const message = (error as Error).message || String(error)
+    const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey)
+    sessionStoreRef.current.update(tabKey, (session) => ({
+      ...session,
+      threadId,
+      title: session.title || tab?.title || 'Chat',
+      turnId: null,
+      isCompacting: false,
+      activeCompaction: null,
+      items: upsertMany(session.items, [{
+        type: 'system',
+        id: resumeFailureItemId(threadId),
+        level: 'warning',
+        text: `Could not reconnect to this conversation: ${message}. The cached transcript is still available; select this chat to retry.`
+      }])
+    }))
+    patchMainChatTab(tabKey, (current) => ({ ...current, status: 'attention', turnId: null }))
+  }
+
+  function clearResumeFailure(tabKey: string, threadId: string): void {
+    if (resumeFailuresByTabRef.current.get(tabKey) !== threadId) return
+    resumeFailuresByTabRef.current.delete(tabKey)
+    const itemId = resumeFailureItemId(threadId)
+    sessionStoreRef.current.update(tabKey, (session) => {
+      const items = session.items.filter((item) => item.id !== itemId)
+      return items.length === session.items.length ? session : { ...session, items }
+    })
+  }
+
   async function resumeThreadById(
     threadId: string,
     options: { silent?: boolean; tabKey?: string } = {}
@@ -1324,6 +1381,7 @@ export default function App(): React.JSX.Element {
       }
 
       persistLastThreadId(threadId)
+      clearResumeFailure(tabKey, threadId)
       return true
     } catch (error) {
       if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
@@ -1332,11 +1390,7 @@ export default function App(): React.JSX.Element {
 
       watchThreadIdRef.current = activeThreadIdRef.current
 
-      if (!options.silent) {
-        addSystemItem(`Thread resume failed: ${(error as Error).message}`, 'error')
-      } else {
-        persistLastThreadId(null)
-      }
+      markResumeFailure(tabKey, threadId, error)
       return false
     }
   }
@@ -2303,8 +2357,10 @@ export default function App(): React.JSX.Element {
             status: inProgress ? 'working' : 'idle',
             turnId: inProgress?.id ?? null
           }))
+          clearResumeFailure(tab.key, tab.threadId!)
         } catch (error) {
           console.warn(`Failed to restore background chat tab ${tab.threadId}`, error)
+          markResumeFailure(tab.key, tab.threadId!, error)
         }
       }))
     }
