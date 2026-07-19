@@ -133,6 +133,11 @@ import {
   type MainChatTab,
   type MainChatTabState,
 } from './main-chat-tabs';
+import {
+  alwaysKeepAllStorageKey,
+  isAlwaysKeepAllStored,
+  storedAlwaysKeepAllValue,
+} from './review-preference';
 
 function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model);
@@ -148,7 +153,6 @@ const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
 const fastModeStorageKey = 'codexdesktop.fastMode';
-const alwaysKeepAllStorageKey = 'codexdesktop.alwaysKeepAll';
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted';
@@ -233,7 +237,7 @@ export default function App(): React.JSX.Element {
     () => window.localStorage.getItem(fastModeStorageKey) === '1',
   );
   const [alwaysKeepAll, setAlwaysKeepAll] = useState(
-    () => window.localStorage.getItem(alwaysKeepAllStorageKey) === '1',
+    () => isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
   );
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
@@ -3033,7 +3037,7 @@ export default function App(): React.JSX.Element {
 
   const handleSetAlwaysKeepAll = useCallback((enabled: boolean): void => {
     setAlwaysKeepAll(enabled);
-    window.localStorage.setItem(alwaysKeepAllStorageKey, enabled ? '1' : '0');
+    window.localStorage.setItem(alwaysKeepAllStorageKey, storedAlwaysKeepAllValue(enabled));
   }, []);
 
   const handleUndoTurnAll = useCallback(
