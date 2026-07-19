@@ -178,17 +178,20 @@ Ordered by leverage. The top three are also precisely the features that would le
 studio back-half run itself.
 
 **Tier 1**
-1. **Subagent spawn primitive.** Promote the doer/auditor pattern into a real
-   main-process `subagent.spawn / await / gather` API on top of the provider +
-   checkpoint layers. The dock becomes one *view* of it, not the whole thing. This is
-   the substrate the RSI loop-controller should be built on.
+1. **Subagent spawn primitive.** *Shipped 2026-07-19 (Phase 1, post-audit):*
+   `SubagentOrchestrator.spawnAndAwait` in main, provider-neutral router, `agentSpawned`
+   announce, interrupt cascade, dock worker cards — blocking single. Remaining scope:
+   **parallel gather** (Phase 2) and any spawn-tree persistence.
 2. **RSI loop-to-done controller.** The bounded, converging doer↔reviewer cycle described
    in §3, with cheap-doer/strong-reviewer economics, checkpoint-reversible iterations,
    and explicit termination (reviewer pass or budget/iteration ceiling). Start from
    `audit-trigger.ts`; the hard part is convergence and stop conditions, not the plumbing.
-3. **Plan mode.** Agent proposes a file-by-file plan → user edits/approves → executes.
-   Highest-ROI single feature Cursor shipped; fits the existing checkpoint + diff
-   machinery; turns "trust it on a big task" from aspiration into default.
+   The beginning phase (intake) is shipped; next increment is the mid-turn watchdog
+   (`docs/prompt-intake-2026-07-19.md` §build increments).
+3. **Plan mode.** *Conversational form shipped 2026-07-19 (post-audit):* paired-thread
+   intake — doer restates, user confirms buttonlessly, reviewer authors the plan and
+   audits against it. Remaining scope, if real use demands it: a file-by-file
+   plan-edit/approve surface on top of the existing checkpoint + diff machinery.
 4. **Scheduling / background turns.** The unlock for the studio back-half and for
    long-running RSI runs. The harness already exposes scheduled-task tooling; wire the
    app to it.
@@ -238,8 +241,8 @@ substrate and unblocking the studio are the same work.
 
 ## 6. One-line summary
 
-The substrate — logged-in agent browser + reversible cross-provider review — is ahead of
-the incumbents on the two things that matter most for solo autonomous work; the gap
-between it and "unstoppable" is a real subagent primitive, an RSI loop-to-done
-controller, and scheduling, which are also exactly what would let the studio pipeline run
-itself.
+The substrate — logged-in agent browser + reversible cross-provider review, now with a
+shipped subagent primitive and a reviewer-authored plan loop — is ahead of the
+incumbents on the things that matter most for solo autonomous work; the gap between it
+and "unstoppable" is the mid-turn watchdog, the RSI loop-to-done controller, and
+scheduling, which are also exactly what would let the studio pipeline run itself.
