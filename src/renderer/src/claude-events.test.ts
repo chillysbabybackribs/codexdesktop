@@ -232,3 +232,27 @@ test('context window inference: 1m-tagged models get the large window', () => {
   assert.equal(claudeContextWindowFor('claude-opus-4-8'), 200_000)
   assert.equal(claudeContextWindowFor(null), 200_000)
 })
+
+test('result modelUsage overrides the fallback context-window guess', () => {
+  const { context } = makeContext()
+  const translator = new ClaudeTurnTranslator(context)
+  const initialized = translator.handle(init)
+  assert.equal(initialized.model, 'claude-opus-4-8')
+
+  const translation = translator.handle({
+    type: 'result',
+    subtype: 'success',
+    usage: { input_tokens: 10, output_tokens: 5 },
+    modelUsage: {
+      'claude-opus-4-8': {
+        inputTokens: 10,
+        outputTokens: 5,
+        contextWindow: 1_000_000
+      }
+    }
+  })
+  const usage = (translation.notifications[0] as unknown as {
+    params: { tokenUsage: { modelContextWindow: number } }
+  }).params.tokenUsage
+  assert.equal(usage.modelContextWindow, 1_000_000)
+})

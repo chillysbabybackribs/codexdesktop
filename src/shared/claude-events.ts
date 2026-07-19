@@ -32,6 +32,7 @@ export type ClaudeTurnContext = {
 export type ClaudeTranslation = {
   notifications: ServerNotification[]
   sessionId?: string
+  model?: string
   turnEnded?: boolean
 }
 
@@ -67,6 +68,7 @@ export class ClaudeTurnTranslator {
   // assistant text idempotent even after the streaming block map resets.
   private readonly emittedTextIds = new Map<string, string>()
   private textIdCounter = 0
+  private resolvedModel: string | null = null
   private pendingError: { message: string; codexErrorInfo: 'usageLimitExceeded' | 'serverOverloaded' | 'internalServerError' | 'unauthorized' | 'badRequest' | 'other' } | null = null
 
   constructor(context: ClaudeTurnContext) {
@@ -78,10 +80,14 @@ export class ClaudeTurnTranslator {
     const type = message.type
 
     if (type === 'system') {
-      // init repeats per message/resume; only the session id matters.
-      return message.subtype === 'init' && typeof message.session_id === 'string'
-        ? { notifications: [], sessionId: message.session_id }
-        : { notifications: [] }
+      // Init repeats per message/resume. Refresh both provider-owned facts.
+      if (message.subtype !== 'init') return { notifications: [] }
+      if (typeof message.model === 'string') this.resolvedModel = message.model
+      return {
+        notifications: [],
+        ...(typeof message.session_id === 'string' ? { sessionId: message.session_id } : {}),
+        ...(this.resolvedModel ? { model: this.resolvedModel } : {})
+      }
     }
 
     if (type === 'stream_event') return this.handleStreamEvent(asRecord(message.event))
@@ -278,6 +284,11 @@ export class ClaudeTurnTranslator {
       reasoningOutputTokens: 0
     }
     const { total } = this.context.tokens.addLast(last)
+    const modelContextWindow = readModelContextWindow(
+      message.modelUsage ?? message.model_usage,
+      this.resolvedModel,
+      this.context.tokens.contextWindow
+    )
 
     const failed = message.subtype !== 'success'
     const sdkErrors = Array.isArray(message.errors)
@@ -314,7 +325,7 @@ export class ClaudeTurnTranslator {
         asNotification('thread/tokenUsage/updated', {
           threadId,
           turnId,
-          tokenUsage: { total, last, modelContextWindow: this.context.tokens.contextWindow }
+          tokenUsage: { total, last, modelContextWindow }
         }),
         asNotification('turn/completed', { threadId, turn })
       ],
@@ -367,6 +378,19 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function readCount(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function readModelContextWindow(value: unknown, resolvedModel: string | null, fallback: number): number {
+  const usage = asRecord(value)
+  if (resolvedModel) {
+    const preferred = readCount(asRecord(usage[resolvedModel]).contextWindow)
+    if (preferred > 0) return preferred
+  }
+  for (const entry of Object.values(usage)) {
+    const contextWindow = readCount(asRecord(entry).contextWindow)
+    if (contextWindow > 0) return contextWindow
+  }
+  return fallback
 }
 
 function safeId(value: string): string {
