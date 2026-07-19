@@ -311,3 +311,114 @@ Policies:
 - **browser-control-server exposure**: unauthenticated arbitrary JS/CDP/tab control, but reachable only via the Unix socket (filesystem permissions are the boundary; web pages cannot `fetch()` it, per the design comment at `browser-control-server.ts:15-18`). Socket path is per-PID; stale sockets are unlinked on start (`browser-control-server.ts:294-301`).
 - **Host-process self-protection** is prompt-level only: `buildGuidance()` injects developer instructions telling the agent not to kill the host Electron/dev-server PIDs when `CODEX_DESKTOP_SELF_HOSTED=1` (`codex-config.ts:31-45`); nothing technically enforces it given `danger-full-access`.
 
+## 7. HEALTH SNAPSHOT
+
+### 7A. Lines of code by language (hand-written; excludes node_modules, out/, dist/, and generated src/shared/codex-protocol/)
+
+| Category | Lines | Notes |
+|---|---:|---|
+| .ts (non-test) | 16,409 | src/, excluding src/shared/codex-protocol/ |
+| .tsx | 8,807 | all in src/renderer/src/ |
+| .test.ts | 6,220 | 48 files |
+| .css | 6,919 | src/renderer/src/styles.css (5,813) + landing.css |
+| .html | 110 | 3 files: src/renderer/index.html (16), src/renderer/landing.html (13), src/renderer/omnibox-popup.html (81) |
+| scripts/*.mjs | 2,381 | 7 files |
+| **Total hand-written** | **40,846** | |
+
+Per-directory (non-test .ts/.tsx): src/main 12,817; src/renderer 11,823; src/shared 303 (only src/shared/ipc.ts outside the generated folder); src/preload 273; scripts 2,381 (.mjs).
+
+**Generated code (reported separately):** src/shared/codex-protocol/ contains 2,004 files (8.1 MB), all tracked in git: 668 generated .ts type files (7,517 lines excluding .d.ts), plus checked-in compiler output — 668 .js and 668 .d.ts. It is regenerated via `npm run gen:codex-protocol` (`codex app-server generate-ts`, package.json:26) and must not be hand-edited (AGENTS.md:32).
+
+**.js "source shadows":** all 668 .js files currently under src/ live inside src/shared/codex-protocol/ — that folder is explicitly exempted by the guard (scripts/source-shadow-guard.mjs:9,16). The shadow problem the guard exists for: compiled `.js`/`.js.map`/`.d.ts`/`.d.ts.map` files emitted beside `.ts` sources under src/main, src/preload, src/shared (scan roots at source-shadow-guard.mjs:8; extension match at line 50; sibling-source mapping at lines 54–59) can shadow the live TypeScript at runtime. `--fix` deletes them (lines 26–31); `--check` fails the build (lines 33–36). The guard is wired as `predev`, `prebuild`, `pretypecheck`, and `pretest` hooks (package.json:9,17,19–20). A `tsconfig.node.tsbuildinfo` at the repo root evidences the `tsc -b tsconfig.node.json` builds that produce such output. At audit time the tree is clean: zero shadows outside the exempted protocol folder.
+
+### 7B. Largest 10 hand-written source files
+
+| Lines | File |
+|---:|---|
+| 5,125 | src/renderer/src/App.tsx |
+| 1,578 | src/main/browser/browser-agent.ts |
+| 1,361 | src/renderer/src/TaskActivity.tsx |
+| 1,189 | src/main/browser/page-snapshot.ts |
+| 883 | src/main/browser/research-runner.ts |
+| 790 | src/renderer/src/trace.ts |
+| 770 | src/renderer/src/AgentDock.tsx |
+| 570 | src/main/browser/cdp-session.ts |
+| 558 | src/main/browser/performance-diagnostics.ts |
+| 552 | src/main/browser/browser-flow.ts |
+
+### 7C. TODO / FIXME / HACK / XXX markers
+
+Count: **0**. Case-sensitive grep for `TODO|FIXME|HACK|XXX` across all non-generated .ts/.tsx/.mjs returns nothing. A case-insensitive pass matches only the literal string "Hacker News" in test fixtures (src/main/browser/omnibox-suggestions.test.ts:50,59) — not markers.
+
+### 7D. Tests
+
+- **48 test files, 287 test cases** (counted as lines matching `test(`/`it(` at statement start; every sampled file imports `test from 'node:test'`, e.g. src/main/codex/codex-config.test.ts:1).
+- Distribution: src/main/browser 24 files, src/main/codex 7, src/main root 4 (attachment-store, memory-format, memory-store, turn-trace-store), src/renderer/src 13.
+- Runner: `npm test` = `node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/renderer/src/*.test.ts` (package.json:21). The custom loader remaps NodeNext `./x.js` import specifiers back to `./x.ts` when the TS source exists (scripts/test-loader.mjs:7–17).
+- Heaviest coverage: browser-agent (34 cases), page-snapshot (30), codex-config (25), omnibox-suggestions (10), research-evidence (10).
+- **Zero dedicated test coverage** (no test file imports the module, verified by grep): src/renderer/src/App.tsx (5,125 lines), src/renderer/src/TaskActivity.tsx, src/renderer/src/AgentDock.tsx (agent-session-model.test.ts:8–10,99–113 covers only `serializeAgentDock`/`parseAgentDock`, not the component), src/renderer/src/BrowserPane.tsx, src/renderer/src/useAgentSessions.ts, src/main/codex/codex-client.ts (524 lines, zero test references), src/main/codex/codex-ipc.ts, src/main/browser/tab-manager.ts (referenced in browser-agent.test.ts:8 only as a mocked type, `} as unknown as TabManager` at lines 49, 277, 302), src/main/browser/browser-control-server.ts, all three omnibox-popup files, src/main/index.ts.
+
+### 7E. Fragile areas (verified by reading code; facts only)
+
+**Empty or comment-only catch blocks — 25 in non-test source** (body empty after stripping `//` comments): src/main/attachment-store.ts:194; src/main/browser/browser-agent.ts:817; browser-control-server.ts:300,321; browser-history-store.ts:38; cdp-artifact-store.ts:280; cdp-session.ts:42,102,332,358,363,368,380,389 (8 in one file); omnibox-popup.ts:90; page-snapshot.ts:495; research-runner.ts:840; tab-manager.ts:434,456 (both comment-annotated: "View may already be detached when OAuth popups self-close" / "Already removed."); src/renderer/src/agent-commands.ts:106; TaskActivity.tsx:911,956; trace.ts:614,666,699.
+
+**Swallowed promise rejections — 13 occurrences of `.catch(() => {})`** in non-test source, including src/main/browser/tab-manager.ts:136,188 (all navigations fired from `createTab`/`navigate` discard errors), src/renderer/src/agent-lifecycle.ts:132,134,153 (interruptTurn/unsubscribeThread on close/reset), src/renderer/src/App.tsx:1046,1117,4793, src/main/turn-trace-store.ts:34, src/main/browser/browser-history-store.ts:127, browser-state-store.ts:42, page-navigation.ts:49, src/renderer/src/AutoCopySelection.tsx:41.
+
+**app-server-rpc.ts stream-parsing failure mode** (src/main/codex/app-server-rpc.ts:113–140): when a line fails to parse as JSON and either a partial buffer exists or the line starts with `{`, the parser buffers it (line 131) and concatenates every subsequent line onto it. A single `{`-prefixed line that never completes into valid JSON therefore absorbs all following valid JSON-RPC lines — responses and notifications in that window are lost — until the buffer exceeds `maxBufferedMessageChars` = 16,000,000 (line 33), at which point the whole buffer is dropped via `onInvalidLine`. Pending requests affected this way fail only via the 30 s default timeout (`defaultRequestTimeoutMs`, line 32; timeout handler lines 77–83). Cleanup paths otherwise look complete: timeout deletes from `pending` (line 81), `rejectPending` clears all with timers (lines 157–164).
+
+**tab-manager.ts** (src/main/browser/tab-manager.ts): `find()` (lines 237–249) attaches a `found-in-page` listener that is removed only when a result with matching `requestId` and `finalUpdate` arrives (lines 240–241); if the page navigates or the find is superseded, the listener and the pending Promise are never released. `restoreFromSnapshot` hydrates background tabs fire-and-forget with concurrency 2 (`void runWithConcurrency(...)`, lines 96–102). `startNavigation` does implement correct abort/last-writer-wins via per-tab AbortControllers (lines 378–406).
+
+**agent-lifecycle.ts** (src/renderer/src/agent-lifecycle.ts): recovery timer fires `void runRecovery(key, nextModel)` fire-and-forget (lines 82–85); `runRecovery` silently returns without clearing recovery state if the session has no threadId or a turn is already running (line 91).
+
+**useAgentSessions.ts** (src/renderer/src/useAgentSessions.ts): streaming deltas are buffered and flushed only via `requestAnimationFrame` (lines 96–98) or on the next non-delta notification (lines 102–104). `handleAgentNotification` receives a caller-captured `session` snapshot (line 101) and reads `session.title` at turn completion time (line 124); all state writes go through key-based lookups on `agentSessionsRef` (lines 57–64), which limits but does not eliminate snapshot staleness.
+
+**Duplication (verified):** the two files named omnibox-popup.ts in src/preload/ (23 lines) and src/renderer/src/ (56 lines) are **not** duplicated content — the preload one is a contextBridge IPC shim, the renderer one is the dropdown DOM view. Actual intentional duplication: IPC channel string literals `'browser:omniboxRender'`/`'browser:omniboxCommit'` in src/preload/omnibox-popup.ts:7–8 duplicate `ipcChannels` from src/shared/ipc.ts, documented as deliberate because sandboxed preloads cannot import the shared chunk (src/preload/omnibox-popup.ts:4–6); the renderer file structurally re-declares the preload API shape (src/renderer/src/omnibox-popup.ts:3–12); and pixel metrics `ROW_HEIGHT`/`CARD_CHROME`/`SHADOW_SPACE` in src/main/browser/omnibox-popup.ts:8–11 must be kept in sync by hand with src/renderer/omnibox-popup.html (comment at src/main/browser/omnibox-popup.ts:7).
+
+### 7F. Dead code / unused exports
+
+An automated scan found **97 exported symbols with zero references outside their defining file** (search covered all non-generated .ts/.tsx/.mjs including tests). The majority are `type`/`interface` exports. Spot-verification of 6 value exports confirmed each is **used inside its own file but imported nowhere else** — i.e., unnecessary `export` keywords rather than fully dead code: `pruneResearchArtifacts` (src/main/browser/research-artifacts.ts:98, used only as a default parameter at line 77), `isRemotePlugin` (src/renderer/src/plugin-lifecycle.ts:6), `fmtDuration`/`fmtTokens`/`currentActionLabel` (src/renderer/src/TaskActivity.tsx:143,161,1141), `itemNotificationId` (src/renderer/src/item-notifications.ts:43), `DEFAULT_BROWSER_RESULT_CHARS`/`MAX_BROWSER_RESULT_CHARS` (src/main/browser/browser-agent.ts:16–17). No export was verified as fully unused (unreferenced even within its own file).
+
+## 8. GLOSSARY
+
+- **Codex / app-server** — OpenAI's Codex CLI run as a `codex app-server --stdio` subprocess speaking JSON-RPC over stdio; lifecycle in src/main/codex/app-server-process.ts, framing in app-server-rpc.ts (AGENTS.md:12; CLI 0.144.1 on this machine).
+- **thread** — an app-server conversation with a persistent `threadId`; started/resumed via codex-client.ts.
+- **turn** — one user-message→completion cycle within a thread; tracked via `turn/started`/`turn/completed` notifications (src/renderer/src/useAgentSessions.ts:107–137).
+- **item** — a protocol unit inside a turn (e.g., `agentMessage`, `commandExecution`, `contextCompaction`) delivered via `item/started`/`item/completed` (useAgentSessions.ts:142–155).
+- **rollout** — the Codex CLI's persisted per-session JSONL log under `~/.codex/sessions/` (HANDOFF.md:56,62). The word appears nowhere in app code; docs-only term.
+- **dynamic tools** — the 9 tools this app declares to the app-server: `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `ui_review`, `browser_flow`, `browser_run`, `browser_extract_page`, `browser_cdp`, `research_web` (src/main/codex/codex-config.ts:397–452), dispatched by src/main/codex/dynamic-tool-router.ts.
+- **CDP** — Chrome DevTools Protocol; raw protocol access to embedded browser tabs via the `browser_cdp` tool and `CdpSession` (src/main/browser/cdp-session.ts).
+- **browser control server / CODEX_BROWSER_SOCK** — a Unix-domain-socket HTTP server letting the agent's shell drive the visible browser (`curl --unix-socket "$CODEX_BROWSER_SOCK" http://x/eval`); deliberately unrestricted, off-TCP (src/main/browser/browser-control-server.ts:8–18).
+- **research runner** — main-process pipeline behind `research_web`: fetches pages into browser views, writes extracted pages as on-disk artifacts, returns compact metadata (src/main/browser/research-runner.ts; artifacts in research-artifacts.ts).
+- **ui_review** — dynamic tool that screenshots a page across desktop/tablet/mobile viewports for UI review (src/main/codex/ui-review.ts:3–12).
+- **browser_flow** — declarative multi-step browser interaction primitive (steps/matches/failure codes in src/main/browser/browser-flow.ts).
+- **omnibox** — the browser pane's combined address/search input; suggestion ranking in src/main/browser/omnibox-suggestions.ts; its dropdown is a separate transparent `WebContentsView` floated above the native tab views because renderer DOM cannot overlay them (src/main/browser/omnibox-popup.ts:14–20).
+- **AgentDock** — renderer UI docking multiple background "lite" agent chat sessions alongside the main chat (src/renderer/src/AgentDock.tsx, 770 lines); persisted to localStorage via `serializeAgentDock` (src/renderer/src/agent-session-model.ts).
+- **agent session** — a background agent with its own thread, model, recovery state, and message list (`AgentSession`, src/renderer/src/agent-session-model.ts); auto-retry/model-fallback logic in src/renderer/src/agent-lifecycle.ts.
+- **promote** — moving a dock agent's thread into the main chat and removing the dock session (`handlePromoteAgent`, src/renderer/src/agent-lifecycle.ts:157–170).
+- **watchesMain** — per-agent-session flag enabling the `<main-chat-context>` digest prepend (src/renderer/src/agent-session-model.ts:19); toggled by `handleToggleWatchAgent` (useAgentSessions.ts:199–201).
+- **main chat tabs** — up to 12 tabbed main-chat conversations (`maxMainChatTabs = 12`, src/renderer/src/main-chat-tabs.ts:3).
+- **WorkBlock** — memoized React component rendering one contiguous block of agent work items in the transcript (src/renderer/src/TaskActivity.tsx:1070).
+- **ThreadScroll** — the chat scroll container component (src/renderer/src/App.tsx:3705) implementing "pin newest user message to viewport top" anchoring; the pure anchor decision lives in src/renderer/src/thread-scroll-state.ts (`decideTurnAnchor`).
+- **trace / turn trace** — per-turn debugging record of model input items, per-call token usage, and artifacts, built in src/renderer/src/trace.ts + turn-telemetry.ts, viewed in TraceModal.tsx, persisted by `TurnTraceStore` (src/main/turn-trace-store.ts:13; 5 MB per-trace cap at line 4).
+- **prior-chat-memory** — skill that recovers context from the previous conversation's Markdown checkpoint (skills/prior-chat-memory/SKILL.md); the checkpoint (`last-chat.md` plus per-chat files) is written by `MemoryStore` (src/main/memory-store.ts:10–15, formatting in memory-format.ts).
+- **attachment store** — main-process persistence for chat attachments (src/main/attachment-store.ts); converted to turn inputs by src/main/codex/attachment-input.ts.
+- **skills (local)** — SKILL.md packages under skills/ (10 present) discovered and attached to turns by src/main/codex/local-skill-registry.ts.
+- **studio system** — docs/studio-system.md: framing of Codex Desktop as "the operations department of a one-person app studio," built around a filesystem pipeline and the logged-in agent-drivable browser.
+- **studio-hunt** — skill: evidence-informed opportunity hunt generating and kill-ranking app ideas; invoked `$studio-hunt` (skills/studio-hunt/SKILL.md).
+- **studio-scout** — skill: mines logged-in communities/marketplaces for pain points, emitting idea seed files into ideas/ (skills/studio-scout/SKILL.md).
+- **studio-validate** — skill: kill-biased validation of one idea (competitor/demand/distribution/monetization) producing PROCEED/KILL/PARK (skills/studio-validate/SKILL.md).
+- **studio-launch** — skill: distribution checklist execution (directory submissions, launch posts) via the embedded browser (skills/studio-launch/SKILL.md).
+- **studio-pulse** — skill: weekly metrics/uptime/review sweep across shipped apps (skills/studio-pulse/SKILL.md).
+- **hunts/** — dated output directories of $studio-hunt runs (e.g., hunts/2026-07-11-1/ containing dossier.md/html, corpus, mechanical.json, mined.md); 5 runs present, all dated 2026-07-11.
+- **ideas/** — the idea pipeline: one directory per idea with an idea.md carrying frontmatter (slug, status, source, confidence — e.g., ideas/1071-intake-lite/idea.md); `_killed/` holds killed ideas; 11 live idea dirs present.
+- **market-motion/** — immutable market-snapshot directories (`hn/snapshots`, `trustmrr/snapshots`) for longitudinal cohort comparison (sources/DIRECTORY.md:40).
+- **sources/DIRECTORY.md** — curated source directory with fetch recipes; defines "verified vs discovered" evidence and a 70/30 directory/frontier harvest budget (sources/DIRECTORY.md:5–7).
+- **sites/verified-skills** — a static site titled "Verified Skills — Codex Desktop" (sites/verified-skills/index.html:7).
+- **source shadows** — compiled .js/.js.map/.d.ts/.d.ts.map files sitting beside their .ts sources under src/main|preload|shared, which can shadow live TypeScript; detected/deleted by scripts/source-shadow-guard.mjs (see 7A).
+- **autosnapshot** — scripts/git-autosnapshot.mjs watcher started by `npm run dev`; auto-commits ("chore: autosnapshot development changes") and pushes to the current branch (AGENTS.md:46–49).
+- **verify:app / verify-instance** — `npm run verify:app` builds and launches a visibly labelled disposable app instance with isolated user data (AGENTS.md:67; scripts/verify-instance.mjs).
+- **token baseline** — `npm run benchmark:tokens` (scripts/token-baseline.mjs) and its recorded results (docs/token-baseline-2026-07-10.md), part of the token-bloat audit documented in HANDOFF.md.
+- **browser-eval** — `npm run benchmark:browser` harness (scripts/browser-eval.mjs).
+- **landing page** — public marketing page (src/renderer/src/LandingPage.tsx, src/renderer/landing.html) linking to GitHub releases at github.com/chillysbabybackribs/codexdesktop (LandingPage.tsx:4).
+- **stacked subagents** — **unverified as a code term**: this is only the current git branch name; the strings "stacked subagent"/"subagent" appear nowhere in src/ or scripts/. The feature it names is the AgentDock's vertically stacked, scroll-snapped agent cards (see 2E). (The only "stacked" in code refers to the omnibox popup WebContentsView being stacked above tab views, src/main/browser/omnibox-popup.ts:16.)
+- **Claude client / claude-items** — **not present on this branch**: no claude-client.ts or claude-items.ts exists under src/ despite appearing in prior session notes; grep for "claude" in src/main returns nothing.
