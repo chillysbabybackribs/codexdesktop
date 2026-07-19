@@ -154,7 +154,10 @@ export function ReviewBar({
                 aria-label="Review actions"
                 onKeyDown={handleActionsKeyDown}
               >
-                <div className="review-action-menu-label">Review actions</div>
+                <div className="review-action-menu-label">
+                  <span className="review-action-menu-live" aria-hidden="true" />
+                  <span>Always keep all is on</span>
+                </div>
                 <button
                   type="button"
                   className={`review-action-menu-item ${confirmingUndoAll ? 'is-confirming' : ''}`}
@@ -179,7 +182,7 @@ export function ReviewBar({
                   type="button"
                   className="review-action-menu-item"
                   role="menuitemcheckbox"
-                  aria-checked="true"
+                  aria-checked={true}
                   onClick={() => {
                     setActionsOpen(false);
                     onSetAlwaysKeepAll(false);
