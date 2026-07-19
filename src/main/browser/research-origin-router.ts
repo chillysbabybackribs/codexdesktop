@@ -37,22 +37,29 @@ type OriginProfile = {
  */
 export class ResearchOriginRouter {
   private readonly profiles = new Map<string, OriginProfile>()
+  private readonly ttlMs: number
+  private readonly maxProfiles: number
+  private readonly now: () => number
 
   constructor(
-    private readonly ttlMs = DEFAULT_PROFILE_TTL_MS,
-    private readonly maxProfiles = DEFAULT_MAX_PROFILES,
-    private readonly now: () => number = Date.now
-  ) {}
+    ttlMs = DEFAULT_PROFILE_TTL_MS,
+    maxProfiles = DEFAULT_MAX_PROFILES,
+    now: () => number = Date.now
+  ) {
+    this.ttlMs = ttlMs
+    this.maxProfiles = maxProfiles
+    this.now = now
+  }
 
   begin(url: string): ResearchOriginRoute {
     const origin = originKey(url)
     if (!origin) return inertBrowserRoute('browser-proven')
 
     const profile = this.read(origin)
-    if (profile?.score < 0) {
+    if (profile && profile.score < 0) {
       return inertBrowserRoute('browser-proven')
     }
-    if (profile?.score === 0 && profile.staticProbeInFlight) {
+    if (profile && profile.score === 0 && profile.staticProbeInFlight) {
       return inertBrowserRoute('static-probe-in-flight')
     }
 
