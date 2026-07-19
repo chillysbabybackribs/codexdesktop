@@ -1,5 +1,5 @@
 import { attachmentsFromUserInput } from './Attachments.js'
-import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
+import { collapseAdjacentAssistantDuplicates, parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import { isAuditPrompt, parseAuditPrompt } from './audit-trigger.js'
 import type { ChatItem } from './transcript-model.js'
 import { emptySessionState, type SessionRenderState } from './session-store.js'
@@ -32,16 +32,10 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
       }
     } else if (item.type === 'agentMessage' && item.text) {
-      // Adjacent identical assistant items are stream-restate artifacts (the
-      // translator dedupes new turns at the source; this also cleans threads
-      // persisted before that fix). A model genuinely repeating itself
-      // verbatim back-to-back carries no information worth double-rendering.
-      const previous = messages.at(-1)
-      if (previous?.role === 'assistant' && previous.text === item.text) continue
       messages.push({ id: item.id, role: 'assistant', text: item.text })
     }
   }
-  return messages
+  return collapseAdjacentAssistantDuplicates(messages)
 }
 
 export async function restoreAgentDock(options: {

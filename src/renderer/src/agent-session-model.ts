@@ -68,6 +68,18 @@ export function createAgentSession(key: string, title: string): AgentSession {
   }
 }
 
+// Adjacent identical assistant messages are stream-restate artifacts (the
+// Claude translator dedupes new turns at the source; this also cleans threads
+// persisted before that fix). A model genuinely repeating itself verbatim
+// back-to-back carries no information worth double-rendering.
+export function collapseAdjacentAssistantDuplicates(messages: AgentLiteMessage[]): AgentLiteMessage[] {
+  return messages.filter((message, index) => {
+    if (message.role !== 'assistant') return true
+    const previous = messages[index - 1]
+    return !(previous?.role === 'assistant' && previous.text === message.text)
+  })
+}
+
 export function resetAgentSession(session: AgentSession): AgentSession {
   return {
     ...session,

@@ -1,24 +1,25 @@
-import {
-  claudeRuntimeModel,
-  normalizeClaudeEffort,
-  type ClaudeEffort
-} from './claude-models.js'
+import { claudeRuntimeModel, normalizeClaudeEffort, type ClaudeEffort } from './claude-models.js';
 
-export { claudeDefaultModelId } from './claude-models.js'
+export { claudeDefaultModelId } from './claude-models.js';
 
 export type ClaudeQuerySession = {
-  cwd: string
-  model: string | null
-  effort: ClaudeEffort | null
-  fastMode: boolean
-  claudeSessionId: string | null
-}
+  cwd: string;
+  model: string | null;
+  effort: ClaudeEffort | null;
+  fastMode: boolean;
+  claudeSessionId: string | null;
+};
 
-export function buildClaudeQueryOptions(session: ClaudeQuerySession, mcpServerConfig: unknown | null) {
+export function buildClaudeQueryOptions(
+  session: ClaudeQuerySession,
+  mcpServerConfig: unknown | null,
+) {
   return {
     cwd: session.cwd,
     ...(claudeRuntimeModel(session.model) ? { model: claudeRuntimeModel(session.model)! } : {}),
-    ...(normalizeClaudeEffort(session.effort) ? { effort: normalizeClaudeEffort(session.effort)! } : {}),
+    ...(normalizeClaudeEffort(session.effort)
+      ? { effort: normalizeClaudeEffort(session.effort)! }
+      : {}),
     ...(session.fastMode ? { settings: { fastMode: true, fastModePerSessionOptIn: true } } : {}),
     ...(session.claudeSessionId ? { resume: session.claudeSessionId } : {}),
     includePartialMessages: true,
@@ -29,6 +30,6 @@ export function buildClaudeQueryOptions(session: ClaudeQuerySession, mcpServerCo
     // Spike-verified isolation: the user's ~/.claude settings never bleed
     // into app sessions.
     settingSources: [],
-    ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {})
-  }
+    ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {}),
+  };
 }

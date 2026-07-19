@@ -1,43 +1,51 @@
-import type { Model } from '../../shared/session-protocol/index.js'
+import type { Model } from '../../shared/session-protocol/index.js';
 
-export const claudeDefaultModelId = 'claude-default'
-const claudeModelPrefix = 'claude:'
+export const claudeDefaultModelId = 'claude-default';
+const claudeModelPrefix = 'claude:';
 
-export type ClaudeEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max'
+export type ClaudeEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
 
 export type ClaudeSdkModelInfo = {
-  value: string
-  resolvedModel?: string
-  displayName: string
-  description: string
-  supportsEffort?: boolean
-  supportedEffortLevels?: ClaudeEffort[]
-  supportsAdaptiveThinking?: boolean
-  supportsFastMode?: boolean
-}
+  value: string;
+  resolvedModel?: string;
+  displayName: string;
+  description: string;
+  supportsEffort?: boolean;
+  supportedEffortLevels?: ClaudeEffort[];
+  supportsAdaptiveThinking?: boolean;
+  supportsFastMode?: boolean;
+};
 
 export function claudeModelId(runtimeModel: string): string {
-  return `${claudeModelPrefix}${encodeURIComponent(runtimeModel)}`
+  return `${claudeModelPrefix}${encodeURIComponent(runtimeModel)}`;
 }
 
 export function isClaudeModelId(model: string | null | undefined): boolean {
-  return model === claudeDefaultModelId || model?.startsWith(claudeModelPrefix) === true || model?.startsWith('claude-') === true
+  return (
+    model === claudeDefaultModelId ||
+    model?.startsWith(claudeModelPrefix) === true ||
+    model?.startsWith('claude-') === true
+  );
 }
 
 export function claudeRuntimeModel(model: string | null | undefined): string | null {
-  if (!model || model === claudeDefaultModelId) return null
-  if (!model.startsWith(claudeModelPrefix)) return model
+  if (!model || model === claudeDefaultModelId) return null;
+  if (!model.startsWith(claudeModelPrefix)) return model;
   try {
-    return decodeURIComponent(model.slice(claudeModelPrefix.length)) || null
+    return decodeURIComponent(model.slice(claudeModelPrefix.length)) || null;
   } catch {
-    return null
+    return null;
   }
 }
 
 export function normalizeClaudeEffort(effort: string | null | undefined): ClaudeEffort | null {
-  return effort === 'low' || effort === 'medium' || effort === 'high' || effort === 'xhigh' || effort === 'max'
+  return effort === 'low' ||
+    effort === 'medium' ||
+    effort === 'high' ||
+    effort === 'xhigh' ||
+    effort === 'max'
     ? effort
-    : null
+    : null;
 }
 
 export function claudeDefaultModel(): Model {
@@ -61,30 +69,33 @@ export function claudeDefaultModel(): Model {
     additionalSpeedTiers: [],
     serviceTiers: [],
     defaultServiceTier: null,
-    isDefault: false
-  }
+    isDefault: false,
+  };
 }
 
 export function mapClaudeModel(info: ClaudeSdkModelInfo): Model {
-  const effortLevels = info.supportsEffort === false ? [] : [...new Set(info.supportedEffortLevels ?? [])]
-  const defaultEffort = effortLevels.includes('high') ? 'high' : effortLevels[0] ?? 'high'
-  const model = claudeModelId(info.value)
+  const effortLevels =
+    info.supportsEffort === false ? [] : [...new Set(info.supportedEffortLevels ?? [])];
+  const defaultEffort = effortLevels.includes('high') ? 'high' : (effortLevels[0] ?? 'high');
+  const model = claudeModelId(info.value);
   return {
     id: model,
     model,
     providerId: 'claude',
     runtimeModel: info.value,
+    resolvedModel: info.resolvedModel,
     upgrade: null,
     upgradeInfo: null,
     availabilityNux: null,
     displayName: info.displayName,
-    description: info.resolvedModel && info.resolvedModel !== info.value
-      ? `${info.description} Resolves to ${info.resolvedModel}.`
-      : info.description,
+    description:
+      info.resolvedModel && info.resolvedModel !== info.value
+        ? `${info.description} Resolves to ${info.resolvedModel}.`
+        : info.description,
     hidden: false,
     supportedReasoningEfforts: effortLevels.map((reasoningEffort) => ({
       reasoningEffort,
-      description: claudeEffortDescription(reasoningEffort)
+      description: claudeEffortDescription(reasoningEffort),
     })),
     defaultReasoningEffort: defaultEffort,
     inputModalities: ['text'],
@@ -94,27 +105,27 @@ export function mapClaudeModel(info: ClaudeSdkModelInfo): Model {
     additionalSpeedTiers: [],
     serviceTiers: [],
     defaultServiceTier: null,
-    isDefault: false
-  }
+    isDefault: false,
+  };
 }
 
 export function buildClaudeModelCatalog(infos: ClaudeSdkModelInfo[]): Model[] {
-  const models = new Map<string, Model>()
-  models.set(claudeDefaultModelId, claudeDefaultModel())
+  const models = new Map<string, Model>();
+  models.set(claudeDefaultModelId, claudeDefaultModel());
   for (const info of infos) {
-    if (!info.value.trim()) continue
-    const model = mapClaudeModel(info)
-    models.set(model.model, model)
+    if (!info.value.trim()) continue;
+    const model = mapClaudeModel(info);
+    models.set(model.model, model);
   }
-  return [...models.values()]
+  return [...models.values()];
 }
 
 function claudeEffortDescription(effort: ClaudeEffort): string {
-  return ({
+  return {
     low: 'Minimal thinking for the fastest response',
     medium: 'Moderate thinking for routine work',
     high: 'Deep reasoning for complex work',
     xhigh: 'Extra-deep reasoning for difficult work',
-    max: 'Maximum available reasoning effort'
-  })[effort]
+    max: 'Maximum available reasoning effort',
+  }[effort];
 }

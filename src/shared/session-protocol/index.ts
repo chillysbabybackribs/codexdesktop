@@ -26,6 +26,7 @@ export type { FileUpdateChange } from '../codex-protocol/v2/FileUpdateChange'
 export type Model = CodexModel & {
   providerId?: ProviderId
   runtimeModel?: string
+  resolvedModel?: string
   supportsFastMode?: boolean
   supportsAdaptiveThinking?: boolean
 }
