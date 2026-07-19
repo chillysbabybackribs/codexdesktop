@@ -117,12 +117,27 @@ export class AppServerRpc {
     const candidate = this.partialMessage ? `${this.partialMessage}${line}` : line
 
     try {
-      const parsed = JSON.parse(candidate) as unknown
-      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-        throw new Error('Expected a JSON-RPC object')
-      }
-      message = parsed as JsonRpcMessage
+      message = parseJsonRpcMessage(candidate)
     } catch (error) {
+      // If a malformed object-shaped fragment is buffered, a later complete
+      // JSON-RPC envelope must not be swallowed into it. Physical line
+      // splitting is still supported when the following fragment is not a
+      // routable envelope of its own.
+      if (this.partialMessage) {
+        try {
+          const standalone = parseJsonRpcMessage(line)
+          if (isRoutableMessage(standalone)) {
+            const partial = this.partialMessage
+            this.partialMessage = ''
+            this.onInvalidLine(partial, error)
+            this.routeMessage(standalone)
+            return
+          }
+        } catch {
+          // This is a genuine continuation fragment, handled below.
+        }
+      }
+
       // Remote plugin catalogs can contain multi-line descriptions. Some
       // app-server versions stream those very large JSON responses across
       // physical stdout lines, so retain an object-shaped prefix until the
@@ -138,7 +153,10 @@ export class AppServerRpc {
     }
 
     this.partialMessage = ''
+    this.routeMessage(message)
+  }
 
+  private routeMessage(message: JsonRpcMessage): void {
     if (message.id !== undefined && (message.result !== undefined || message.error !== undefined)) {
       this.handleResponse(message)
       return
@@ -182,4 +200,16 @@ export class AppServerRpc {
       pending.resolve(message.result)
     }
   }
+}
+
+function parseJsonRpcMessage(input: string): JsonRpcMessage {
+  const parsed = JSON.parse(input) as unknown
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Expected a JSON-RPC object')
+  }
+  return parsed as JsonRpcMessage
+}
+
+function isRoutableMessage(message: JsonRpcMessage): boolean {
+  return Boolean(message.method) || (message.id !== undefined && (message.result !== undefined || message.error !== undefined))
 }
