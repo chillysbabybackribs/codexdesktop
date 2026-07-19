@@ -71,6 +71,7 @@ type FlowOptions = {
 }
 
 const MAX_FLOW_STEPS = 24
+const MAX_STEP_ID_CHARS = 120
 const MAX_SELECTOR_CHARS = 2_000
 const MAX_FILL_CHARS = 100_000
 const DEFAULT_STABLE_MS = 90
@@ -179,6 +180,7 @@ function validateSteps(value: unknown): BrowserFlowStep[] {
     const record = asRecord(raw)
     const type = readString(record.type)
     const id = readString(record.id)
+    if (id && id.length > MAX_STEP_ID_CHARS) throw invalidStep(index, `id exceeds ${MAX_STEP_ID_CHARS} characters`)
     if (id && ids.has(id)) throw new BrowserFlowError('conditionNotMet', `browser_flow step id "${id}" is duplicated`)
     if (id) ids.add(id)
     const base = id ? { id } : {}
@@ -277,7 +279,8 @@ function buildActionProgram(step: Extract<BrowserFlowStep, { type: 'fill' | 'cli
       }
       element.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
       element.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-      return { ok: true, result: { tag: element.tagName.toLowerCase(), value: 'value' in element ? String(element.value) : element.textContent } };
+      const currentValue = 'value' in element ? String(element.value) : String(element.textContent || '');
+      return { ok: true, result: { tag: element.tagName.toLowerCase(), value: currentValue.slice(0, 1000) } };
     }
     if (step.type === 'submit') {
       const form = element instanceof HTMLFormElement ? element : element.closest('form');

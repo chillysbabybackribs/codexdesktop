@@ -213,7 +213,7 @@ const browserFlowSchema = {
       items: {
         type: 'object',
         properties: {
-          id: { type: 'string', description: 'Optional unique step label used in results and errors.' },
+          id: { type: 'string', maxLength: 120, description: 'Optional unique step label used in results and errors.' },
           type: { type: 'string', enum: ['fill', 'click', 'submit', 'wait', 'find'] },
           selector: { type: 'string', description: 'CSS selector, including descendants of open shadow roots.' },
           value: { type: 'string', description: 'Value for a fill step.' },
