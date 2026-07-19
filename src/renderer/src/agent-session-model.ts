@@ -123,7 +123,7 @@ export function createReviewerSession(
   title: string,
   mainChatTabKey: string | null,
   model: string | null,
-  workspace: string | null,
+  workspace: string | null = null,
 ): AgentSession {
   return { ...createAgentSession(key, title, mainChatTabKey, workspace), auditsMain: true, model }
 }
@@ -140,7 +140,7 @@ export function createWorkerSession(
   parentAgentKey: string,
   spawnedByTurnId: string | null,
   model: string | null,
-  workspace: string | null,
+  workspace: string | null = null,
 ): AgentSession {
   return {
     ...createAgentSession(key, title, mainChatTabKey, workspace),

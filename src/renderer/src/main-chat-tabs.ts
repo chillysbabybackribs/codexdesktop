@@ -66,7 +66,7 @@ export function parseMainChatTabState(
   raw: string | null,
   legacyThreadId: string | null,
   createKey: () => string,
-  legacySelection: { model: string | null; reasoningEffort: string | null; workspace: string | null } = {
+  legacySelection: { model: string | null; reasoningEffort: string | null; workspace?: string | null } = {
     model: null,
     reasoningEffort: null,
     workspace: null
@@ -96,7 +96,7 @@ export function parseMainChatTabState(
           : 'New Chat'
         const workspace = typeof candidate.workspace === 'string' && candidate.workspace
           ? candidate.workspace
-          : legacySelection.workspace
+          : legacySelection.workspace ?? null
         const model = typeof candidate.model === 'string' && candidate.model
           ? candidate.model
           : legacySelection.model
@@ -119,7 +119,7 @@ export function parseMainChatTabState(
       legacySelection.model,
       legacySelection.reasoningEffort,
       null,
-      legacySelection.workspace,
+      legacySelection.workspace ?? null,
     ))
   } else if (legacyThreadId && !seenThreads.has(legacyThreadId)) {
     // Preserve the pre-tabs last-thread preference during the migration.

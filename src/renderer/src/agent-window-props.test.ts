@@ -13,6 +13,7 @@ function makeSession(overrides: Partial<AgentSession> = {}): AgentSession {
   return {
     key: 'agent-1',
     mainChatTabKey: null,
+    workspace: null,
     role: 'reviewer',
     parentAgentKey: null,
     spawnedByTurnId: null,
