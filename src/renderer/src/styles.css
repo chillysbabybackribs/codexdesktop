@@ -320,9 +320,9 @@ button {
 }
 
 .chat-pane-view-close svg {
-  width: 13px;
-  height: 13px;
-  stroke-width: 1.65;
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.7;
 }
 
 .chat-pane-view-close:hover {

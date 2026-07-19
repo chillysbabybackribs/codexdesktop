@@ -8,7 +8,7 @@ import type {
 export function CloseIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="m4.25 4.25 7.5 7.5m0-7.5-7.5 7.5" stroke="currentColor" strokeLinecap="round" />
+      <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" strokeLinecap="round" />
     </svg>
   );
 }
