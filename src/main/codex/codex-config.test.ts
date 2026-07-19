@@ -48,6 +48,14 @@ const imagegenSkill: SkillMetadata = {
   enabled: true
 }
 
+const editorialWaitlistSkill: SkillMetadata = {
+  name: 'superdesign-editorial-waitlist',
+  description: 'Build editorial waitlist landing pages with the Superdesign reference contract',
+  path: '/app/skills/superdesign-editorial-waitlist/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
 test('web research turns attach the extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Research the latest Electron navigation guidance', [webResearchSkill]),
@@ -113,6 +121,23 @@ test('product dashboards do not attach image generation guidance by default', ()
   assert.deepEqual(
     selectTurnSkills('Design a responsive operations dashboard UI', [polishedUiSkill, imagegenSkill]),
     [polishedUiSkill]
+  )
+})
+
+test('editorial waitlist requests attach the reference skill with polished UI guidance', () => {
+  assert.deepEqual(
+    selectTurnSkills(
+      'Build an editorial waitlist landing page for an invite-only architecture studio',
+      [polishedUiSkill, editorialWaitlistSkill]
+    ),
+    [polishedUiSkill, editorialWaitlistSkill]
+  )
+})
+
+test('ordinary waitlist requests do not force the editorial reference skill', () => {
+  assert.deepEqual(
+    selectTurnSkills('Build a simple waitlist landing page for a new app', [editorialWaitlistSkill]),
+    []
   )
 })
 

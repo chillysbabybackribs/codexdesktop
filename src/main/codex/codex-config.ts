@@ -172,6 +172,8 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
   const mediaLedUiTask = polishedUiTask &&
     /\b(landing page|website|marketing|brand|shop|store|restaurant|cafe|coffee|hotel|travel|fashion|beauty|food|product page|portfolio|editorial|event)\b/.test(normalized)
+  const editorialWaitlistTask = polishedUiTask &&
+    /\b(?:editorial[\s-]*(?:style[\s-]*)?waitlist|waitlist[\s-]*(?:landing[\s-]*page[\s-]*)?editorial)\b/.test(normalized)
 
   return skills.filter((skill) => {
     if (normalized.includes(`$${skill.name.toLowerCase()}`)) {
@@ -184,6 +186,10 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
 
     if (skill.name === 'imagegen') {
       return mediaLedUiTask
+    }
+
+    if (skill.name === 'superdesign-editorial-waitlist') {
+      return editorialWaitlistTask
     }
 
     return skill.name === 'build-polished-ui' && polishedUiTask
