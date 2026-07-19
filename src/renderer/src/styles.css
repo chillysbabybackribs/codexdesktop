@@ -5609,6 +5609,126 @@ button {
   white-space: pre-wrap;
 }
 
+/* The auto-audit request renders as a full-width collapsible card, not the
+   default right-aligned user bubble. */
+.agent-mini-message.is-user:has(.agent-audit-card) {
+  align-self: stretch;
+  max-width: 100%;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+.agent-audit-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+}
+
+.agent-audit-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 11px;
+  border: none;
+  background: none;
+  color: #c9cdd3;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.agent-audit-summary:hover {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.agent-audit-summary svg {
+  flex: none;
+  color: #8b93a3;
+}
+
+.agent-audit-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  flex: 1;
+}
+
+.agent-audit-headline strong {
+  font-weight: 600;
+  color: #e0e3e7;
+}
+
+.agent-audit-files {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #8b93a3;
+  font-size: 12px;
+}
+
+.agent-audit-chevron {
+  display: inline-flex;
+  transition: transform 0.15s ease;
+}
+
+.agent-audit-card.is-expanded .agent-audit-chevron {
+  transform: rotate(180deg);
+}
+
+.agent-audit-detail {
+  padding: 2px 11px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.agent-audit-section {
+  margin-top: 9px;
+}
+
+.agent-audit-label {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7f8798;
+}
+
+.agent-audit-request {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #c4c8ce;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.agent-audit-list,
+.agent-audit-steps {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agent-audit-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.agent-audit-list code,
+.agent-audit-steps code {
+  font-size: 11.5px;
+  color: #b8bcc4;
+  overflow-wrap: anywhere;
+}
+
 .agent-mini-message.is-assistant {
   align-self: stretch;
   color: #d6d8db;
