@@ -446,6 +446,29 @@ const AgentWindow = memo(function AgentWindow({
               <button
                 type="button"
                 className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.reportsToMain}
+                onClick={() => {
+                  onToggleReport(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.reportsToMain ? 'Sending findings to main chat' : 'Send findings to main chat'}</strong>
+                  <small>
+                    {session.reportsToMain
+                      ? 'Flagged audits go to the doer automatically'
+                      : 'Flagged audits auto-send · one round per turn'}
+                  </small>
+                </span>
+                <span className={`agent-menu-status ${session.reportsToMain ? 'is-active' : ''}`}>
+                  {session.reportsToMain ? 'On' : 'Off'}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="agent-menu-item"
                 role="menuitem"
                 onClick={() => {
                   onPromote(session.key)
