@@ -277,6 +277,103 @@ export class BrowserAgentController {
   }
 
   /**
+   * Execute a declarative main-frame interaction flow. Each step is evaluated
+   * in the currently live document, so waits and finds survive full-document
+   * and SPA navigation. A find with no matches is successful `not_found` data
+   * unless the caller explicitly marks it as required.
+   */
+  async flow(steps: unknown, options: BrowserFlowOptions = {}): Promise<BrowserAgentResult> {
+    const tabs = this.getTabs()
+    if (!tabs) {
+      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+    if (options.tabId === 'all') {
+      return { ok: false, error: 'browser.flow requires one existing tab, not "all"' } satisfies BrowserAgentFailure
+    }
+
+    const tabId = options.tabId ?? tabs.getActiveTabId()
+    if (!tabId) {
+      return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
+    }
+    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const maxResultChars = clampNumber(
+      options.maxResultChars,
+      DEFAULT_BROWSER_RESULT_CHARS,
+      1_000,
+      MAX_BROWSER_RESULT_CHARS
+    )
+
+    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
+    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+      const webContents = tabs.resolveWebContents(tabId)
+      if (!webContents) {
+        const failure = browserFailureFor(
+          operationError('targetClosed', 'targetLifecycle', `no browser target with id ${tabId}`)
+        )
+        return {
+          ok: false,
+          error: failure.message,
+          errorCode: failure.code,
+          failure,
+          targetState: { targets: tabs.listTargets() }
+        } satisfies BrowserAgentFailure
+      }
+
+      const startedAt = Date.now()
+      try {
+        const rawResult = await withTimeout(
+          runBrowserFlow(webContents, steps, { timeoutMs }),
+          timeoutMs,
+          () => cdpSessionFor(webContents).terminateExecution()
+        )
+        const bounded = boundResult(rawResult, maxResultChars)
+        let artifact: CdpFileArtifact | undefined
+        if (bounded.truncated && this.artifactStore) {
+          try {
+            artifact = await this.artifactStore.persistBrowserResult(JSON.stringify(rawResult))
+          } catch (error) {
+            console.warn('Could not persist oversized browser flow result artifact', error)
+          }
+        }
+        return {
+          ok: true,
+          result: bounded.value,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          resultChars: bounded.chars,
+          truncated: bounded.truncated,
+          ...(artifact ? { artifact } : {})
+        } satisfies BrowserAgentSuccess
+      } catch (error) {
+        const failureFields = browserFailureFields(error)
+        return {
+          ok: false,
+          ...failureFields,
+          tabId,
+          url: safeUrl(webContents),
+          title: safeTitle(webContents),
+          durationMs: Date.now() - startedAt,
+          ...(isLifecycleFailure(failureFields.errorCode)
+            ? { targetState: { frames: frameInventory(webContents), targets: tabs.listTargets() } }
+            : {})
+        } satisfies BrowserAgentFailure
+      }
+    })
+
+    const queueTail = operation.then(
+      () => undefined,
+      () => undefined
+    )
+    this.tabQueues.set(tabId, queueTail)
+    void queueTail.then(() => {
+      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
+    })
+    return operation
+  }
+
+  /**
    * Navigate the visible tab until the requested DOM state is usable. This
    * deliberately uses DOM readiness and a short settle window, never network
    * idleness: modern applications commonly retain background connections long
@@ -1248,6 +1345,15 @@ function browserFailureFor(
   fallbackPhase: BrowserFailurePhase = 'controller'
 ): BrowserFailure {
   if (error instanceof BrowserOperationError) return error.failure
+  if (error instanceof BrowserFlowError) {
+    return {
+      code: error.code,
+      phase: error.phase,
+      message: error.message,
+      name: error.name,
+      ...(error.stack ? { stack: error.stack.slice(0, 4_000) } : {})
+    }
+  }
   const message = errorMessage(error)
   const name = error instanceof Error && error.name ? error.name.slice(0, 120) : undefined
   const stack = error instanceof Error && error.stack ? error.stack.slice(0, 4_000) : undefined
