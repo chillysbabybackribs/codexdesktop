@@ -53,6 +53,7 @@ export function AgentColumn({
   mainModel,
   mainReasoningEffort,
   liveMainTurn,
+  isMainFocused,
   onSetModel,
   onSetModelEffort,
   onSelect,
@@ -64,6 +65,7 @@ export function AgentColumn({
   onToggleAudit,
   onToggleReport,
   onSendFeedback,
+  onDecideSendPolicy,
   onSend,
   onSteer,
   onStop,
@@ -77,6 +79,7 @@ export function AgentColumn({
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
   liveMainTurn: LiveTurnGlance | null
+  isMainFocused: boolean
   onSetModel: (key: string, model: string) => void
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
@@ -88,6 +91,7 @@ export function AgentColumn({
   onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
   onSendFeedback: (key: string) => void
+  onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -96,6 +100,42 @@ export function AgentColumn({
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const [hiddenAbove, setHiddenAbove] = useState(0)
   const [hiddenBelow, setHiddenBelow] = useState(0)
+  // The extend state: one card at a time grows to a real reading surface.
+  // Entering is explicit (the header button); exiting is implicit — focusing
+  // the main chat, Escape, or extending another card. No mode to clean up.
+  const [extendedKey, setExtendedKey] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isMainFocused) setExtendedKey(null)
+  }, [isMainFocused])
+
+  useEffect(() => {
+    if (!extendedKey) return
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setExtendedKey(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [extendedKey])
+
+  // Closed/minimized cards can no longer hold the extend.
+  useEffect(() => {
+    if (extendedKey && !sessions.some((session) => session.key === extendedKey)) {
+      setExtendedKey(null)
+    }
+  }, [extendedKey, sessions])
+
+  const toggleExtend = (key: string): void => {
+    setExtendedKey((current) => (current === key ? null : key))
+    onSelect(key)
+    // The card grows to the full column height — align its top to the
+    // column so the reading surface starts where the eye is.
+    requestAnimationFrame(() => {
+      document
+        .querySelector(`[data-agent-key="${key}"]`)
+        ?.scrollIntoView({ block: 'start', behavior: 'auto' })
+    })
+  }
 
   const updateChevrons = (): void => {
     const node = scrollRef.current
