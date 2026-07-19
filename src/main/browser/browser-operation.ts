@@ -103,6 +103,12 @@ export type BrowserTargetLease = {
   epoch: number
 }
 
+type BrowserResultContext = {
+  tabId: string
+  webContents: WebContents
+  startedAt: number
+}
+
 /** Serializes work by key while allowing unrelated keys to run concurrently. */
 export class KeyedOperationQueue {
   private readonly tails = new Map<string, Promise<void>>()
@@ -344,6 +350,41 @@ export function boundResult(
     value: structuredPreview(serialized, maxChars),
     chars: serialized.length,
     truncated: true
+  }
+}
+
+export function createBoundedSuccessResult(
+  rawResult: unknown,
+  maxResultChars: number,
+  context: BrowserResultContext
+): BrowserAgentSuccess {
+  const bounded = boundResult(rawResult, maxResultChars)
+  return {
+    ok: true,
+    result: bounded.value,
+    tabId: context.tabId,
+    url: safeUrl(context.webContents),
+    title: safeTitle(context.webContents),
+    durationMs: Date.now() - context.startedAt,
+    resultChars: bounded.chars,
+    truncated: bounded.truncated
+  }
+}
+
+export function createFailureResult(
+  error: unknown,
+  context: BrowserResultContext
+): BrowserAgentFailure {
+  const failure = browserFailureFor(error)
+  return {
+    ok: false,
+    error: failure.message,
+    errorCode: failure.code,
+    failure,
+    tabId: context.tabId,
+    url: safeUrl(context.webContents),
+    title: safeTitle(context.webContents),
+    durationMs: Date.now() - context.startedAt
   }
 }
 

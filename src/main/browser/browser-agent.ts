@@ -16,6 +16,8 @@ import {
   browserFailureFor,
   cancelledResult,
   captureTargetLease,
+  createBoundedSuccessResult,
+  createFailureResult,
   describeFrame,
   frameInventory,
   isLifecycleFailure,
@@ -226,13 +228,8 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
 
     return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
@@ -295,7 +292,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
   }
 
   /**
@@ -317,13 +313,8 @@ export class BrowserAgentController {
     if (!tabId) {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
 
     return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
@@ -384,7 +375,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
   }
 
   /**
@@ -412,7 +402,7 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const timeoutMs = operationTimeoutMs(options)
     return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
@@ -464,7 +454,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
   }
 
   /**
@@ -487,13 +476,8 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
     const requestedUrl = options.url?.trim() ?? ''
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
     const program = buildPageSnapshotProgram({
       objective: options.objective,
       mode: options.mode,
@@ -646,7 +630,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
   }
 
   private async runAcrossTargets(code: string, options: BrowserRunOptions): Promise<BrowserAgentResult> {
@@ -655,12 +638,7 @@ export class BrowserAgentController {
       return { ok: false, error: 'no browser targets are available' } satisfies BrowserAgentFailure
     }
     const startedAt = Date.now()
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const maxResultChars = operationResultChars(options)
     const perTargetBudget = fanoutItemBudget(maxResultChars, targets.length, 700)
     const results = await mapWithConcurrency(targets, MAX_PARALLEL_BROWSER_TARGETS, async (target) => {
       const result = await this.run(code, { ...options, tabId: target.id, maxResultChars: perTargetBudget })
@@ -754,7 +732,7 @@ export class BrowserAgentController {
       return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+    const timeoutMs = operationTimeoutMs(options)
     if (options.signal?.aborted) return cancelledResult()
 
     try {
@@ -814,13 +792,8 @@ export class BrowserAgentController {
       return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
     }
     const { webContents } = lease
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
     const startedAt = Date.now()
     try {
       if (options.signal?.aborted) return cancelledResult()
@@ -833,29 +806,9 @@ export class BrowserAgentController {
         options.signal
       )
       assertTargetLeaseCurrent(tabs, lease)
-      const bounded = boundResult(rawResult, maxResultChars)
-      return {
-        ok: true,
-        result: bounded.value,
-        tabId,
-        url: safeUrl(webContents),
-        title: safeTitle(webContents),
-        durationMs: Date.now() - startedAt,
-        resultChars: bounded.chars,
-        truncated: bounded.truncated
-      } satisfies BrowserAgentSuccess
+      return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
     } catch (error) {
-      const failure = browserFailureFor(error)
-      return {
-        ok: false,
-        error: failure.message,
-        errorCode: failure.code,
-        failure,
-        tabId,
-        url: safeUrl(webContents),
-        title: safeTitle(webContents),
-        durationMs: Date.now() - startedAt
-      } satisfies BrowserAgentFailure
+      return createFailureResult(error, { tabId, webContents, startedAt })
     }
   }
 
@@ -1015,13 +968,8 @@ export class BrowserAgentController {
       return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
     return this.tabOperations.run(tabId, async (): Promise<BrowserAgentResult> => {
       if (options.signal?.aborted) return cancelledResult()
       const lease = options.requireStableTarget ? captureTargetLease(tabs, tabId) : null
@@ -1041,32 +989,11 @@ export class BrowserAgentController {
           options.signal
         )
         if (lease) assertTargetLeaseCurrent(tabs, lease)
-        const bounded = boundResult(rawResult, maxResultChars)
-        return {
-          ok: true,
-          result: bounded.value,
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt,
-          resultChars: bounded.chars,
-          truncated: bounded.truncated
-        } satisfies BrowserAgentSuccess
+        return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
       } catch (error) {
-        const failure = browserFailureFor(error)
-        return {
-          ok: false,
-          error: failure.message,
-          errorCode: failure.code,
-          failure,
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt
-        } satisfies BrowserAgentFailure
+        return createFailureResult(error, { tabId, webContents, startedAt })
       }
     })
-
   }
 
   private async materializeCdpResult(
@@ -1521,6 +1448,14 @@ function isObservationalCdpMethod(method: string): boolean {
 function clampNumber(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return fallback
   return Math.min(maximum, Math.max(minimum, Math.round(value)))
+}
+
+function operationTimeoutMs(options: BrowserAgentOptions): number {
+  return clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
+}
+
+function operationResultChars(options: BrowserAgentOptions): number {
+  return clampNumber(options.maxResultChars, DEFAULT_BROWSER_RESULT_CHARS, 1_000, MAX_BROWSER_RESULT_CHARS)
 }
 
 function isLikelyLoadingSnapshot(value: unknown): boolean {
