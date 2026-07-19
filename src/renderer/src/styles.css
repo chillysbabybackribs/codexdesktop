@@ -3814,24 +3814,20 @@ button {
   height: 28px;
   align-items: center;
   justify-content: center;
-  padding: 0 9px;
-  border: 1px solid #38383b;
-  border-radius: 7px;
-  background: #29292b;
+  padding: 0 3px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
   color: #d9d9db;
   font-size: 12.5px;
   line-height: 1;
   cursor: pointer;
-  transition:
-    border-color 120ms ease,
-    background 120ms ease,
-    color 120ms ease;
+  transition: color 120ms ease;
 }
 
 .selector-trigger:hover:not(:disabled),
 .selector-trigger[aria-expanded="true"] {
-  border-color: #4b4b4f;
-  background: #333335;
+  background: transparent;
   color: #f0f0f1;
 }
 
