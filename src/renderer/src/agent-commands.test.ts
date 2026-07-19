@@ -3,7 +3,7 @@ import test from 'node:test'
 import { createAgentCommands } from './agent-commands.ts'
 import { createAgentSession, type AgentLiteMessage, type AgentSession } from './agent-session-model.ts'
 
-function commandHarness(acceptsImages = true): {
+function commandHarness(acceptsImages = true, isTurnTerminal = false): {
   sessions: AgentSession[]
   messages: AgentLiteMessage[]
   threadStartEvents: string[]
@@ -29,6 +29,7 @@ function commandHarness(acceptsImages = true): {
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
     cancelRecovery: () => {},
+    isTurnTerminal: () => isTurnTerminal,
     queueThreadStart: (key) => threadStartEvents.push(`queued:${key}`),
     settleThreadStart: (key) => threadStartEvents.push(`settled:${key}`)
   })
@@ -123,6 +124,37 @@ test('agent stop surfaces an interrupt failure instead of leaving a working agen
 
     assert.match(messages[0]?.text ?? '', /Could not stop the running turn: app-server unavailable/)
     assert.match(messages[0]?.text ?? '', /try Stop again/)
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
+
+test('agent send does not resurrect a turn completed before its start response resolves', async () => {
+  const previousWindow = globalThis.window
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        session: {
+          sendMessage: async () => ({ threadId: 'thread-1', turn: { id: 'turn-1' } })
+        }
+      }
+    }
+  })
+
+  try {
+    const { sessions, commands } = commandHarness(true, true)
+    sessions[0].threadId = 'thread-1'
+    sessions[0].status = 'done'
+    sessions[0].turnId = null
+
+    assert.equal(await commands.handleAgentSend('agent-1', 'Fast task'), true)
+    assert.equal(sessions[0]?.status, 'done')
+    assert.equal(sessions[0]?.turnId, null)
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })

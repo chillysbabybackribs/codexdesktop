@@ -26,6 +26,7 @@ import type { SessionProvider } from '../providers/session-provider.js';
 import { ClaudeProvider } from '../providers/claude-provider.js';
 import { isClaudeModelId } from '../providers/claude-models.js';
 import type { ProviderId } from '../../shared/session-protocol/provider.js';
+import { SubagentOrchestrator } from '../agents/subagent-orchestrator.js';
 
 export type RegisteredSessionProviders = {
   codexClient: CodexClient;
@@ -57,9 +58,25 @@ export function registerSessionIpc(
     isClaudeModelId(model) ? claude : client;
   void providers;
 
+  // The subagent spawn primitive. It selects the child's runtime the same way
+  // a new user thread does (so a codex lead can spawn a claude worker and vice
+  // versa) and emits child events + the agentSpawned announcement to the
+  // window. Injected into both providers so their spawn_subagent tool calls
+  // reach it (the construction cycle — orchestrator needs providers, providers
+  // need the orchestrator — is broken by these setters).
+  const orchestrator = new SubagentOrchestrator(
+    (model) => forNewThread(model),
+    (event) => getWindow()?.webContents.send(ipcChannels.sessionEvent, event),
+  );
+  client.setSubagentSpawner(orchestrator);
+  claude.setSubagentSpawner(orchestrator);
+
   for (const provider of [client, claude]) {
     provider.on('event', (event: SessionEvent) => {
-      getWindow()?.webContents.send(ipcChannels.sessionEvent, event);
+      // Tag child-thread events with parentage so the renderer roster can nest
+      // them (a no-op for ordinary main/dock threads) and let the orchestrator
+      // settle a pending spawn on the child's terminal event.
+      getWindow()?.webContents.send(ipcChannels.sessionEvent, orchestrator.tagEvent(event));
     });
   }
 

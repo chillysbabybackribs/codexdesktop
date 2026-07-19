@@ -72,6 +72,7 @@ import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import {
   cloneGoal,
+  hasObservedTerminalTurn,
   isRecoverableTurnError,
   isTerminalTurnStatus,
   modelAcceptsImages,
@@ -1224,19 +1225,29 @@ export default function App(): React.JSX.Element {
         auditFeedbackTurnIdsRef.current.add(response.turn.id);
         pendingAuditFeedbackRef.current = false;
       }
+      // Notifications and invoke responses travel over separate Electron
+      // channels. A very fast turn can therefore complete before this awaited
+      // start response resumes. The terminal notification is authoritative:
+      // never resurrect that turn as working after its completion UI painted.
+      const responseSnapshot = sessionStoreRef.current.peek(targetTabKey);
+      const terminalAlreadyObserved = hasObservedTerminalTurn(
+        responseSnapshot?.turnMeta ?? {},
+        response.turn.id,
+      );
+      const targetIsActive = activeMainChatTabKeyRef.current === targetTabKey;
       patchMainChatTab(targetTabKey, (tab) => ({
         ...tab,
         threadId: response.threadId,
-        status: 'working',
-        turnId: response.turn.id,
+        status: terminalAlreadyObserved ? (targetIsActive ? 'idle' : 'attention') : 'working',
+        turnId: terminalAlreadyObserved ? null : response.turn.id,
       }));
-      if (activeMainChatTabKeyRef.current !== targetTabKey) {
-        const snapshot = sessionStoreRef.current.peek(targetTabKey);
+      if (!targetIsActive) {
+        const snapshot = responseSnapshot;
         if (snapshot) {
           sessionStoreRef.current.set(targetTabKey, {
             ...snapshot,
             threadId: response.threadId,
-            turnId: response.turn.id,
+            turnId: terminalAlreadyObserved ? null : response.turn.id,
             reasoningEffort: response.reasoningEffort,
           });
         }
@@ -1246,15 +1257,18 @@ export default function App(): React.JSX.Element {
       activeThreadIdRef.current = response.threadId;
       setActiveThreadId(response.threadId);
       persistLastThreadId(response.threadId);
-      const turnAlreadyObserved = activeTurnIdRef.current === response.turn.id;
+      const turnAlreadyObserved =
+        terminalAlreadyObserved || activeTurnIdRef.current === response.turn.id;
       if (!turnAlreadyObserved) userRequestedTurnIdRef.current = response.turn.id;
-      setActiveTurnId(response.turn.id);
-      activeTurnIdRef.current = response.turn.id;
+      if (!terminalAlreadyObserved) {
+        setActiveTurnId(response.turn.id);
+        activeTurnIdRef.current = response.turn.id;
+      }
       setActiveReasoningEffort(response.reasoningEffort);
       activeReasoningEffortRef.current = response.reasoningEffort;
       const goalSnapshot = cloneGoal(activeGoalRef.current);
       noteTurn(response.turn.id, {
-        status: 'inProgress',
+        ...(terminalAlreadyObserved ? {} : { status: 'inProgress' as const }),
         origin: 'live',
         requestedModel: selectedModel,
         model: response.model,
@@ -2052,6 +2066,8 @@ export default function App(): React.JSX.Element {
     acceptsImages: (model) => modelAcceptsImages(modelsRef.current, model),
     buildMainChatContext,
     cancelRecovery: cancelAgentRecovery,
+    isTurnTerminal: (key, turnId) =>
+      hasObservedTerminalTurn(sessionStoreRef.current.peek(key)?.turnMeta ?? {}, turnId),
     queueThreadStart: (key) => pendingThreadStartOwnersRef.current.push({ kind: 'agent', key }),
     settleThreadStart: (key) => {
       pendingThreadStartOwnersRef.current = pendingThreadStartOwnersRef.current.filter(
@@ -2078,6 +2094,8 @@ export default function App(): React.JSX.Element {
     recoveryDelayMs: autoRecoveryDelayMs,
     recoveryPrompt: autoRecoveryPrompt,
     isRecoverable: (error) => Boolean(error && isRecoverableTurnError(error.codexErrorInfo)),
+    isTurnTerminal: (key, turnId) =>
+      hasObservedTerminalTurn(sessionStoreRef.current.peek(key)?.turnMeta ?? {}, turnId),
     getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
     getActiveThreadId: () => activeThreadIdRef.current,

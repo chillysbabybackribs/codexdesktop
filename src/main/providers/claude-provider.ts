@@ -471,6 +471,36 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     return {};
   }
 
+  setSubagentSpawner(spawner: SubagentSpawner | null): void {
+    this.subagentSpawner = spawner;
+  }
+
+  // Parent context for a spawn_subagent call arriving over MCP. The tool call
+  // happens inside a live turn, so the spawning lead is the session currently
+  // working. Phase 1 is blocking-single (one active lead), so a single working
+  // session is unambiguous; if none is found we fall back to nulls and the
+  // orchestrator still runs the child, just un-nested.
+  private activeSpawnOrigin(): {
+    parentThreadId: string | null;
+    parentTurnId: string | null;
+    parentAgentKey: string | null;
+    cwd: string | null;
+  } {
+    let origin: ClaudeSession | null = null;
+    for (const session of this.sessions.values()) {
+      if (session.working && session.activeTurnId) {
+        origin = session;
+        break;
+      }
+    }
+    return {
+      parentThreadId: origin?.threadId ?? null,
+      parentTurnId: origin?.activeTurnId ?? null,
+      parentAgentKey: null,
+      cwd: origin?.cwd ?? null,
+    };
+  }
+
   async steerTurn(): Promise<unknown> {
     throw new Error('the claude provider does not support mid-turn steering');
   }

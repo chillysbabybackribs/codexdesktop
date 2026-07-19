@@ -1,5 +1,7 @@
 export type MainChatTabStatus = 'idle' | 'working' | 'attention'
 
+export type BrowserMiddleSide = 'left' | 'right'
+
 export const maxMainChatTabs = 12
 
 export type MainChatTab = {
@@ -10,6 +12,10 @@ export type MainChatTab = {
   // these on the tab lets several main chats run with different models.
   model: string | null
   reasoningEffort: string | null
+  // Browser-centered workspaces own two independent tab collections. The
+  // assignment is ignored in the regular chat/browser layout, but persists so
+  // a chat always returns to the side where it was created.
+  browserMiddleSide: BrowserMiddleSide | null
   status: MainChatTabStatus
   turnId: string | null
 }
@@ -31,6 +37,7 @@ type PersistedMainChatTab = {
   title?: unknown
   model?: unknown
   reasoningEffort?: unknown
+  browserMiddleSide?: unknown
 }
 
 type PersistedMainChatTabState = {
@@ -43,9 +50,10 @@ export function createMainChatTab(
   threadId: string | null = null,
   title = 'New Chat',
   model: string | null = null,
-  reasoningEffort: string | null = null
+  reasoningEffort: string | null = null,
+  browserMiddleSide: BrowserMiddleSide | null = null,
 ): MainChatTab {
-  return { key, threadId, title, model, reasoningEffort, status: 'idle', turnId: null }
+  return { key, threadId, title, model, reasoningEffort, browserMiddleSide, status: 'idle', turnId: null }
 }
 
 export function parseMainChatTabState(
@@ -85,7 +93,11 @@ export function parseMainChatTabState(
         const reasoningEffort = typeof candidate.reasoningEffort === 'string' && candidate.reasoningEffort
           ? candidate.reasoningEffort
           : legacySelection.reasoningEffort
-        return [createMainChatTab(key, threadId, title, model, reasoningEffort)]
+        const browserMiddleSide =
+          candidate.browserMiddleSide === 'left' || candidate.browserMiddleSide === 'right'
+            ? candidate.browserMiddleSide
+            : null
+        return [createMainChatTab(key, threadId, title, model, reasoningEffort, browserMiddleSide)]
       }).slice(0, maxMainChatTabs)
     : []
 
@@ -119,12 +131,13 @@ export function parseMainChatTabState(
 export function serializeMainChatTabState(state: MainChatTabState): string {
   return JSON.stringify({
     activeKey: state.activeKey,
-    tabs: state.tabs.map(({ key, threadId, title, model, reasoningEffort }) => ({
+    tabs: state.tabs.map(({ key, threadId, title, model, reasoningEffort, browserMiddleSide }) => ({
       key,
       threadId,
       title,
       model,
-      reasoningEffort
+      reasoningEffort,
+      browserMiddleSide
     }))
   })
 }

@@ -35,6 +35,14 @@ export function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'interrupted';
 }
 
+export function hasObservedTerminalTurn(
+  turnMeta: Readonly<Record<string, TurnMeta>>,
+  turnId: string,
+): boolean {
+  const status = turnMeta[turnId]?.status;
+  return status ? isTerminalTurnStatus(status) : false;
+}
+
 export function isRecoverableTurnError(info: CodexErrorInfo | null): boolean {
   if (!info) return false;
   if (info === 'serverOverloaded' || info === 'internalServerError') return true;
