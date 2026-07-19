@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
-import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ServerNotification } from '../../shared/session-protocol'
+import type { TurnError } from '../../shared/session-protocol'
+import type { ReasoningEffort } from '../../shared/session-protocol'
 import {
   createAgentSession,
   findAgentSessionByThread,

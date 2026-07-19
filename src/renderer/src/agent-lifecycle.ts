@@ -1,4 +1,4 @@
-import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
+import type { TurnError } from '../../shared/session-protocol'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }

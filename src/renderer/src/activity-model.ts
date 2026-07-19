@@ -1,5 +1,5 @@
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
-import type { TurnPlanStep } from '../../shared/codex-protocol/v2/TurnPlanStep'
+import type { ThreadItem } from '../../shared/session-protocol'
+import type { TurnPlanStep } from '../../shared/session-protocol'
 import type { CodexResearchProgressEvent } from '../../shared/ipc.js'
 
 export type TurnPlanItem = {

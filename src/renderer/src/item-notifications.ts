@@ -1,4 +1,4 @@
-import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
+import type { ServerNotification } from '../../shared/session-protocol'
 import type { ItemMeta } from './activity-model.js'
 import {
   appendAgentMessageDelta,

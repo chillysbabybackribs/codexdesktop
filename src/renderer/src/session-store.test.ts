@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.ts'
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
-import type { Turn } from '../../shared/codex-protocol/v2/Turn.ts'
-import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.ts'
+import type { ServerNotification } from '../../shared/session-protocol/index.ts'
+import type { ThreadItem } from '../../shared/session-protocol/index.ts'
+import type { Turn } from '../../shared/session-protocol/index.ts'
+import type { ThreadTokenUsage } from '../../shared/session-protocol/index.ts'
 import {
   SessionStore,
   emptySessionState,

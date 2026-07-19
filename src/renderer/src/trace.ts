@@ -1,5 +1,5 @@
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
-import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown'
+import type { ThreadItem } from '../../shared/session-protocol'
+import type { TokenUsageBreakdown } from '../../shared/session-protocol'
 import type { ItemMeta, TurnMeta, TurnPlanItem } from './TaskActivity'
 
 const maxTextChars = 30_000

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
-import type { Model } from '../../shared/codex-protocol/v2/Model'
+import type { ReasoningEffort } from '../../shared/session-protocol'
+import type { Model } from '../../shared/session-protocol'
 
 // Shared model selector pill: used by the main composer and by each agent
 // window header. Lives in its own module so both App and AgentDock can import

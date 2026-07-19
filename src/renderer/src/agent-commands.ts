@@ -1,5 +1,5 @@
 import type { ChatAttachment } from '../../shared/ipc'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }

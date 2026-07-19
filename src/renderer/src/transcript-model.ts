@@ -1,5 +1,5 @@
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
-import type { FileUpdateChange } from '../../shared/codex-protocol/v2/FileUpdateChange'
+import type { ThreadItem } from '../../shared/session-protocol'
+import type { FileUpdateChange } from '../../shared/session-protocol'
 import {
   workItemTypes,
   type ItemMeta,

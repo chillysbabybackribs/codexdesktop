@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { AttachmentSaveInput, ChatAttachment } from '../../shared/ipc'
-import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
+import type { UserInput } from '../../shared/session-protocol'
 
 export function AttachmentButton({ disabled, onAdd, onError }: { disabled?: boolean; onAdd: (items: ChatAttachment[]) => void; onError?: (message: string) => void }): React.JSX.Element {
   const [busy, setBusy] = useState(false)

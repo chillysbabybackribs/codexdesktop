@@ -1,5 +1,5 @@
-import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ThreadTokenUsage } from '../../shared/session-protocol'
+import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
 
 export type AgentLiteMessage = {
