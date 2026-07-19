@@ -105,6 +105,42 @@ export function buildAuditPrompt(input: { userText: string; files: string[]; ste
   ].join('\n')
 }
 
+// True when a stored user message is an auto-audit request. Cheap marker check
+// so the restore path can rebuild the collapsed card instead of showing the
+// full prompt verbatim after an app restart.
+export function isAuditPrompt(text: string): boolean {
+  return text.startsWith('[auto-audit]')
+}
+
+// Reconstruct a display summary from a stored audit prompt (restore path only;
+// live audits carry the structured data directly). Per-file paths past the
+// clipped list aren't recoverable from prose, so the file list holds what the
+// prompt showed — enough for the collapsed headline and the expanded detail.
+export function parseAuditPrompt(text: string): AuditRequestSummary {
+  const requestMatch = text.match(/The user's request was: "([\s\S]*?)"\n/)
+  const userText = requestMatch ? requestMatch[1] : ''
+
+  const files: string[] = []
+  const fileMatch = text.match(/The turn changed \d+ file\(s\): (.+?)\.\n/)
+  if (fileMatch) {
+    for (const part of fileMatch[1].split(',')) {
+      const name = part.replace(/\band \d+ more\b/, '').trim()
+      if (name) files.push(name)
+    }
+  }
+
+  const steps: string[] = []
+  const stepBlock = text.match(/Steps the main chat took, in order:\n([\s\S]*?)\nThe turn changed/)
+  if (stepBlock) {
+    for (const line of stepBlock[1].split('\n')) {
+      const step = line.trim()
+      if (step) steps.push(step)
+    }
+  }
+
+  return { userText, files, steps }
+}
+
 export function shouldTriggerAudit(input: {
   auditorStatus: 'idle' | 'working' | 'done'
   auditorTurnId: string | null

@@ -1,5 +1,6 @@
 import { attachmentsFromUserInput } from './Attachments.js'
 import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
+import { isAuditPrompt, parseAuditPrompt } from './audit-trigger.js'
 import type { ChatItem } from './transcript-model.js'
 import { emptySessionState, type SessionRenderState } from './session-store.js'
 
@@ -25,7 +26,11 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         .map((content) => content.text)
         .join('\n')
       const attachments = attachmentsFromUserInput(item.content)
-      if (text || attachments.length) messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
+      if (isAuditPrompt(text)) {
+        messages.push({ id: item.id, role: 'user', text, attachments, audit: parseAuditPrompt(text) })
+      } else if (text || attachments.length) {
+        messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
+      }
     } else if (item.type === 'agentMessage' && item.text) {
       messages.push({ id: item.id, role: 'assistant', text: item.text })
     }
