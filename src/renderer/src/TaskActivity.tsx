@@ -738,7 +738,9 @@ function DiffCard({
   )
 }
 
-function DiffLines({ lines }: { lines: DiffLine[] }): React.JSX.Element {
+function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }): React.JSX.Element {
+  const lineTokens = useLineTokens(lines, lang, lang !== null)
+
   return (
     <div className="diff-lines">
       {lines.map((line, index) =>
@@ -750,24 +752,77 @@ function DiffLines({ lines }: { lines: DiffLine[] }): React.JSX.Element {
         ) : (
           <div key={index} className={`diff-line diff-${line.kind}`}>
             <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '−' : ''}</span>
-            <span className="diff-text">
-              {line.segments
-                ? line.segments.map((segment, si) =>
-                    segment.emph ? (
-                      <mark key={si} className="diff-emph">
-                        {segment.text}
-                      </mark>
-                    ) : (
-                      <span key={si}>{segment.text}</span>
-                    )
-                  )
-                : line.text || ' '}
-            </span>
+            <span className="diff-text">{renderDiffText(line, lineTokens?.[index] ?? null)}</span>
           </div>
         )
       )}
     </div>
   )
+}
+
+function renderDiffText(line: DiffLine, tokens: ThemedToken[] | null): React.ReactNode {
+  if (tokens) {
+    return renderHighlightedDiffText(tokens, line.segments)
+  }
+  if (line.segments) {
+    return line.segments.map((segment, si) =>
+      segment.emph ? (
+        <mark key={si} className="diff-emph">
+          {segment.text}
+        </mark>
+      ) : (
+        <span key={si}>{segment.text}</span>
+      )
+    )
+  }
+  return line.text || ' '
+}
+
+// Overlay Shiki tokens with the intra-line emphasis ranges: tokens are split
+// at emphasis boundaries so the changed span keeps its darker tint while every
+// piece keeps its syntax color.
+function renderHighlightedDiffText(tokens: ThemedToken[], segments: DiffSegment[] | undefined): React.ReactNode[] {
+  const ranges: Array<[number, number]> = []
+  if (segments) {
+    let offset = 0
+    for (const segment of segments) {
+      if (segment.emph && segment.text) {
+        ranges.push([offset, offset + segment.text.length])
+      }
+      offset += segment.text.length
+    }
+  }
+
+  const out: React.ReactNode[] = []
+  let pos = 0
+  let key = 0
+  for (const token of tokens) {
+    const start = pos
+    const end = pos + token.content.length
+    const style = token.color ? { color: token.color } : undefined
+    let cursor = start
+    while (cursor < end) {
+      const active = ranges.find(([from, to]) => cursor >= from && cursor < to)
+      const next = active
+        ? Math.min(end, active[1])
+        : Math.min(end, ranges.find(([from]) => from > cursor)?.[0] ?? end)
+      const piece = token.content.slice(cursor - start, next - start)
+      out.push(
+        active ? (
+          <mark key={key++} className="diff-emph" style={style}>
+            {piece}
+          </mark>
+        ) : (
+          <span key={key++} style={style}>
+            {piece}
+          </span>
+        )
+      )
+      cursor = next
+    }
+    pos = end
+  }
+  return out
 }
 
 function FileChangeBlock({
