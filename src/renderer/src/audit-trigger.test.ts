@@ -88,3 +88,47 @@ test('the audit prompt embeds the step log between request and file list', () =>
   const without = buildAuditPrompt({ userText: 'x', files: ['a.ts'] })
   assert.ok(!without.includes('Steps the main chat took'))
 })
+
+test('auditSummaryLabel headlines file count + names', () => {
+  assert.equal(auditSummaryLabel([]), 'no files changed')
+  assert.equal(auditSummaryLabel(['src/codex-config.ts']), 'codex-config.ts')
+  assert.equal(auditSummaryLabel(['a/x.ts', 'b/y.ts']), 'x.ts, y.ts')
+  assert.equal(auditSummaryLabel(['src/codex-config.ts', 'b.ts', 'c.ts']), 'codex-config.ts +2 more')
+})
+
+test('isAuditPrompt recognizes only the auto-audit marker', () => {
+  assert.equal(isAuditPrompt('[auto-audit] The main chat just completed a turn'), true)
+  assert.equal(isAuditPrompt('fix the tests'), false)
+  assert.equal(isAuditPrompt('  [auto-audit] leading space'), false, 'marker must lead')
+})
+
+test('parseAuditPrompt round-trips buildAuditPrompt for the restore path', () => {
+  const prompt = buildAuditPrompt({
+    userText: 'fix the screenshot error',
+    files: ['src/codex-config.ts', 'src/foo.ts'],
+    steps: ['$ npm test (exit 1)', 'edited: src/codex-config.ts', '$ npm test (exit 0)']
+  })
+  const parsed = parseAuditPrompt(prompt)
+  assert.equal(parsed.userText, 'fix the screenshot error')
+  assert.deepEqual(parsed.files, ['src/codex-config.ts', 'src/foo.ts'])
+  assert.deepEqual(parsed.steps, ['$ npm test (exit 1)', 'edited: src/codex-config.ts', '$ npm test (exit 0)'])
+})
+
+test('parseAuditPrompt drops the "and N more" placeholder from the clipped file list', () => {
+  const prompt = buildAuditPrompt({
+    userText: 'big refactor',
+    files: ['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts', 'f.ts', 'g.ts', 'h.ts']
+  })
+  const parsed = parseAuditPrompt(prompt)
+  // Only the 6 shown paths are recoverable from prose; "and 2 more" is not a path.
+  assert.deepEqual(parsed.files, ['a.ts', 'b.ts', 'c.ts', 'd.ts', 'e.ts', 'f.ts'])
+  assert.equal(auditSummaryLabel(parsed.files), 'a.ts +5 more')
+})
+
+test('parseAuditPrompt handles a prompt with no step log', () => {
+  const prompt = buildAuditPrompt({ userText: 'quick fix', files: ['a.ts'] })
+  const parsed = parseAuditPrompt(prompt)
+  assert.equal(parsed.userText, 'quick fix')
+  assert.deepEqual(parsed.files, ['a.ts'])
+  assert.deepEqual(parsed.steps, [])
+})

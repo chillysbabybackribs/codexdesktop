@@ -41,12 +41,22 @@ export async function routeDynamicToolCall(
     dependencies
   )
 
+  // The app-server's functions.exec bridge flattens dynamic-tool content into
+  // one JavaScript string. A metadata text item followed by an image item
+  // therefore becomes `{...}\ndata:image/...`, which is not a valid image URL
+  // when passed to image(). Screenshot tools have exactly one image, so return
+  // that image alone and preserve a directly usable data URI across the bridge.
+  const isSingleImageScreenshot =
+    (params.tool === 'app_screenshot' || params.tool === 'browser_screenshot') && imageUrls.length === 1
+
   return {
     success: result.ok,
-    contentItems: [
-      { type: 'inputText', text: JSON.stringify(result) },
-      ...imageUrls.map((imageUrl) => ({ type: 'inputImage' as const, imageUrl }))
-    ]
+    contentItems: isSingleImageScreenshot
+      ? [{ type: 'inputImage', imageUrl: imageUrls[0] }]
+      : [
+          { type: 'inputText', text: JSON.stringify(result) },
+          ...imageUrls.map((imageUrl) => ({ type: 'inputImage' as const, imageUrl }))
+        ]
   }
 }
 

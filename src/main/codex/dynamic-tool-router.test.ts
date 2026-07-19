@@ -168,7 +168,7 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   })
 })
 
-test('dynamic tool router returns app screenshot image content', async () => {
+test('dynamic tool router returns a standalone data URI for app screenshots', async () => {
   const browserAgent = withTurnRunner({
     captureAppScreenshot: async () => ({
       ok: true,
@@ -191,10 +191,27 @@ test('dynamic tool router returns app screenshot image content', async () => {
   })
 
   assert.equal(response.success, true)
-  assert.equal(response.contentItems.length, 2)
-  assert.equal(response.contentItems[1]?.type, 'inputImage')
-  if (response.contentItems[1]?.type === 'inputImage') {
-    assert.equal(response.contentItems[1].imageUrl, 'data:image/png;base64,abc')
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,abc'
+  }])
+})
+
+test('dynamic tool router preserves screenshot errors as text', async () => {
+  const browserAgent = withTurnRunner({
+    captureAppScreenshot: async () => ({ ok: false, error: 'capture unavailable' })
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, false)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputText',
+    text: JSON.stringify({ ok: false, error: 'capture unavailable' })
+  }])
+})
   }
 })
 
