@@ -133,3 +133,58 @@ test('network journal request waits are cancellable', async () => {
   controller.abort()
   await assert.rejects(waiting, /cancelled/)
 })
+
+test('network journal captures bounded native EventSource messages without waiting for response completion', async () => {
+  const journal = new NetworkJournal()
+  journal.start()
+  const waiting = journal.waitForStream('sse', {
+    urlContains: '/events',
+    resourceType: 'EventSource',
+    mimeType: 'text/event-stream',
+    statusMin: 200,
+    statusMax: 299
+  }, 2, 500, 1_000)
+
+  journal.record('Network.requestWillBeSent', {
+    requestId: 'sse-1', type: 'EventSource',
+    request: { url: 'https://example.com/events', method: 'GET' }
+  })
+  journal.record('Network.responseReceived', {
+    requestId: 'sse-1', type: 'EventSource',
+    response: { status: 200, mimeType: 'text/event-stream' }
+  })
+  journal.record('Network.eventSourceMessageReceived', {
+    requestId: 'sse-1', eventName: 'token', eventId: '1', data: '{"token":"hel"}'
+  })
+  journal.record('Network.eventSourceMessageReceived', {
+    requestId: 'sse-1', eventName: 'token', eventId: '2', data: '{"token":"lo"}'
+  })
+
+  const capture = await waiting
+  assert.equal(capture.transport, 'sse')
+  assert.equal(capture.completedReason, 'limit')
+  assert.equal(capture.messageCount, 2)
+  assert.equal(capture.messages[0].eventName, 'token')
+  assert.equal(capture.messages[1].data, '{"token":"lo"}')
+})
+
+test('network journal captures sent and received WebSocket frames with binary encoding metadata', async () => {
+  const journal = new NetworkJournal()
+  journal.start()
+  const waiting = journal.waitForStream('websocket', { urlContains: '/socket' }, 2, 500, 1_000)
+
+  journal.record('Network.webSocketCreated', { requestId: 'ws-1', url: 'wss://example.com/socket' })
+  journal.record('Network.webSocketHandshakeResponseReceived', { requestId: 'ws-1', response: { status: 101 } })
+  journal.record('Network.webSocketFrameSent', {
+    requestId: 'ws-1', response: { opcode: 1, payloadData: 'subscribe' }
+  })
+  journal.record('Network.webSocketFrameReceived', {
+    requestId: 'ws-1', response: { opcode: 2, payloadData: 'aGVsbG8=' }
+  })
+
+  const capture = await waiting
+  assert.equal(capture.status, 101)
+  assert.deepEqual(capture.messages.map(({ direction }) => direction), ['sent', 'received'])
+  assert.equal(capture.messages[1].encoding, 'base64')
+  assert.equal(capture.messages[1].bytes, 5)
+})
