@@ -7,7 +7,7 @@ import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
-import type { AuditRequestSummary } from './audit-trigger'
+import type { AuditRequestSummary, LiveTurnGlance } from './audit-trigger'
 import { auditSummaryLabel } from './audit-trigger'
 import { MarkdownContent } from './MarkdownContent'
 
@@ -46,6 +46,7 @@ export function AgentColumn({
   models,
   mainModel,
   mainReasoningEffort,
+  liveMainTurn,
   onSetModel,
   onSetModelEffort,
   onSelect,
@@ -65,6 +66,7 @@ export function AgentColumn({
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
+  liveMainTurn: LiveTurnGlance | null
   onSetModel: (key: string, model: string) => void
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
@@ -143,6 +145,7 @@ export function AgentColumn({
             models={models}
             mainModel={mainModel}
             mainReasoningEffort={mainReasoningEffort}
+            liveMainTurn={liveMainTurn}
             onSetModel={onSetModel}
             onSetModelEffort={onSetModelEffort}
             onSelect={onSelect}
@@ -196,6 +199,7 @@ type AgentWindowProps = {
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
+  liveMainTurn: LiveTurnGlance | null
   onSetModel: (key: string, model: string) => void
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
