@@ -609,22 +609,24 @@ export class BrowserAgentController {
         // mutations instead of adding delay to ordinary completed pages.
         if (!assessment.verified && isLikelyLoadingSnapshot(rawResult)) {
           const retryBudgetMs = Math.min(1_500, Math.max(250, timeoutMs - (Date.now() - startedAt)))
-          await withTimeout(
+          const contentReady = await withTimeout(
             waitForSnapshotContent(targetContents, retryBudgetMs),
             retryBudgetMs,
             () => cdpSessionFor(targetContents).terminateExecution(),
             options.signal
           )
           assertTargetLeaseCurrent(tabs, lease)
-          const remainingRetryMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
-          rawResult = await withTimeout(
-            executePageProgram(targetContents, program, options.frame, maxResultChars),
-            remainingRetryMs,
-            () => cdpSessionFor(targetContents).terminateExecution(),
-            options.signal
-          )
-          assertTargetLeaseCurrent(tabs, lease)
-          assessment = assessBrowserExtractionResult(rawResult)
+          if (contentReady) {
+            const remainingRetryMs = Math.max(250, timeoutMs - (Date.now() - startedAt))
+            rawResult = await withTimeout(
+              executePageProgram(targetContents, program, options.frame, maxResultChars),
+              remainingRetryMs,
+              () => cdpSessionFor(targetContents).terminateExecution(),
+              options.signal
+            )
+            assertTargetLeaseCurrent(tabs, lease)
+            assessment = assessBrowserExtractionResult(rawResult)
+          }
         }
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
@@ -1723,6 +1725,44 @@ function assertTargetLeaseCurrent(tabs: TabManager, lease: BrowserTargetLease): 
   if (current !== lease.webContents || (epoch !== undefined && epoch !== null && epoch !== lease.epoch)) {
     throw operationError('targetChanged', 'targetLifecycle', `browser target ${lease.tabId} changed during operation`)
   }
+}
+
+function isLikelyLoadingSnapshot(value: unknown): boolean {
+  const result = asRecord(value)
+  const page = asRecord(result.page)
+  const text = `${String(page.title ?? '')}\n${String(result.content ?? '')}`.trim().toLowerCase()
+  return /^(?:loading(?:\.{1,3})?|please wait(?:\.{1,3})?|fetching|initializing|preparing|content is loading|skeleton|shimmer)/.test(text)
+}
+
+function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Promise<boolean> {
+  const maxWait = Math.max(100, Math.min(1_500, Math.round(maxWaitMs)))
+  return webContents.executeJavaScript(`new Promise((resolve) => {
+    const startedAt = performance.now();
+    let observer;
+    let timer;
+    let finished = false;
+    const finish = (ready) => {
+      if (finished) return;
+      finished = true;
+      observer?.disconnect();
+      clearInterval(timer);
+      resolve(ready);
+    };
+    const loadingShell = (value) => /^(?:loading(?:\\.{1,3})?|please wait(?:\\.{1,3})?|fetching|initializing|preparing|content is loading|skeleton|shimmer)/i.test(value.trim());
+    const useful = () => {
+      const text = (document.body?.innerText || '').replace(/\\s+/g, ' ').trim();
+      const busy = document.querySelector('[aria-busy="true"], [role="progressbar"], [data-loading="true"]');
+      return text.length >= 240 && !loadingShell(text) && !busy;
+    };
+    const tick = () => {
+      if (useful()) return finish(true);
+      if (performance.now() - startedAt >= ${maxWait}) finish(false);
+    };
+    observer = new MutationObserver(tick);
+    if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
+    timer = setInterval(tick, 50);
+    tick();
+  })`, true) as Promise<boolean>
 }
 
 function safeUrl(webContents: WebContents): string {
