@@ -1,14 +1,20 @@
-import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { parseUnifiedDiff } from './diff'
-import type { ThreadItem } from '../../shared/session-protocol'
+import {
+  type KeyboardEvent as ReactKeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { parseUnifiedDiff } from './diff';
+import type { ThreadItem } from '../../shared/session-protocol';
 
 // Cursor-style post-generation review bar: after a turn that edited files
 // settles, this bar floats above the composer summarizing the changes with
 // Keep all / Undo all and per-file undo. Edits are already applied (the app
 // auto-applies, like Cursor 2.x) — this is the post-hoc review surface.
 
-type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
-export type ReviewChange = FileChangeItem['changes'][number]
+type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>;
+export type ReviewChange = FileChangeItem['changes'][number];
 
 export function ReviewBar({
   changes,
@@ -18,89 +24,98 @@ export function ReviewBar({
   onKeepAll,
   onSetAlwaysKeepAll,
   onUndoAll,
-  onUndoFile
+  onUndoFile,
 }: {
-  changes: ReviewChange[]
-  workspace: string | null
-  undonePaths: ReadonlySet<string>
-  alwaysKeepAll: boolean
-  onKeepAll: () => void
-  onSetAlwaysKeepAll: (enabled: boolean) => void
-  onUndoAll: () => void
-  onUndoFile: (path: string) => void
+  changes: ReviewChange[];
+  workspace: string | null;
+  undonePaths: ReadonlySet<string>;
+  alwaysKeepAll: boolean;
+  onKeepAll: () => void;
+  onSetAlwaysKeepAll: (enabled: boolean) => void;
+  onUndoAll: () => void;
+  onUndoFile: (path: string) => void;
 }): React.JSX.Element {
-  const [expanded, setExpanded] = useState(false)
-  const [confirmingUndoAll, setConfirmingUndoAll] = useState(false)
-  const [actionsOpen, setActionsOpen] = useState(false)
-  const actionsRef = useRef<HTMLDivElement | null>(null)
-  const actionsTriggerRef = useRef<HTMLButtonElement | null>(null)
-  const actionsMenuRef = useRef<HTMLDivElement | null>(null)
+  const [expanded, setExpanded] = useState(false);
+  const [confirmingUndoAll, setConfirmingUndoAll] = useState(false);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const actionsRef = useRef<HTMLDivElement | null>(null);
+  const actionsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const actionsMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!alwaysKeepAll) setActionsOpen(false)
-  }, [alwaysKeepAll])
+    if (!alwaysKeepAll) setActionsOpen(false);
+  }, [alwaysKeepAll]);
 
   useEffect(() => {
     if (!actionsOpen) {
-      setConfirmingUndoAll(false)
-      return
+      setConfirmingUndoAll(false);
+      return;
     }
 
     const animationFrame = window.requestAnimationFrame(() => {
-      actionsMenuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
-    })
+      actionsMenuRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
+    });
     const closeOnOutsidePointer = (event: PointerEvent): void => {
-      if (actionsRef.current && event.target instanceof Node && !actionsRef.current.contains(event.target)) {
-        setActionsOpen(false)
+      if (
+        actionsRef.current &&
+        event.target instanceof Node &&
+        !actionsRef.current.contains(event.target)
+      ) {
+        setActionsOpen(false);
       }
-    }
+    };
     const closeOnEscape = (event: KeyboardEvent): void => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      setActionsOpen(false)
-      actionsTriggerRef.current?.focus()
-    }
-    document.addEventListener('pointerdown', closeOnOutsidePointer)
-    document.addEventListener('keydown', closeOnEscape)
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      setActionsOpen(false);
+      actionsTriggerRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
     return () => {
-      window.cancelAnimationFrame(animationFrame)
-      document.removeEventListener('pointerdown', closeOnOutsidePointer)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [actionsOpen])
+      window.cancelAnimationFrame(animationFrame);
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [actionsOpen]);
 
   const files = useMemo(
     () =>
       changes.map((change) => {
         const parsed = parseUnifiedDiff(
           change.diff,
-          change.kind.type === 'add' ? 'add' : change.kind.type === 'delete' ? 'del' : undefined
-        )
-        return { path: change.path, adds: parsed.adds, dels: parsed.dels }
+          change.kind.type === 'add' ? 'add' : change.kind.type === 'delete' ? 'del' : undefined,
+        );
+        return { path: change.path, adds: parsed.adds, dels: parsed.dels };
       }),
-    [changes]
-  )
-  const totalAdds = files.reduce((sum, file) => sum + file.adds, 0)
-  const totalDels = files.reduce((sum, file) => sum + file.dels, 0)
+    [changes],
+  );
+  const totalAdds = files.reduce((sum, file) => sum + file.adds, 0);
+  const totalDels = files.reduce((sum, file) => sum + file.dels, 0);
 
   const handleActionsKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>): void => {
-    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
-    const items = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button'))
-    if (!items.length) return
-    event.preventDefault()
-    const current = items.indexOf(document.activeElement as HTMLButtonElement)
-    const next = event.key === 'Home'
-      ? 0
-      : event.key === 'End'
-        ? items.length - 1
-        : event.key === 'ArrowDown'
-          ? (current + 1) % items.length
-          : (current - 1 + items.length) % items.length
-    items[next]?.focus()
-  }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+    const items = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button'));
+    if (!items.length) return;
+    event.preventDefault();
+    const current = items.indexOf(document.activeElement as HTMLButtonElement);
+    const next =
+      event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? items.length - 1
+          : event.key === 'ArrowDown'
+            ? (current + 1) % items.length
+            : (current - 1 + items.length) % items.length;
+    items[next]?.focus();
+  };
 
   return (
-    <div className={`review-bar ${actionsOpen ? 'is-action-menu-open' : ''}`} role="region" aria-label="Review changes">
+    <div
+      className={`review-bar ${actionsOpen ? 'is-action-menu-open' : ''}`}
+      role="region"
+      aria-label="Review changes"
+    >
       <div className="review-bar-head">
         <button
           type="button"
@@ -146,15 +161,19 @@ export function ReviewBar({
                   role="menuitem"
                   onClick={() => {
                     if (confirmingUndoAll) {
-                      setActionsOpen(false)
-                      onUndoAll()
+                      setActionsOpen(false);
+                      onUndoAll();
                     } else {
-                      setConfirmingUndoAll(true)
+                      setConfirmingUndoAll(true);
                     }
                   }}
                 >
                   <span>{confirmingUndoAll ? 'Confirm undo all' : 'Undo all'}</span>
-                  <small>{confirmingUndoAll ? 'Restore every changed file' : 'Restore this turn’s changes'}</small>
+                  <small>
+                    {confirmingUndoAll
+                      ? 'Restore every changed file'
+                      : 'Restore this turn’s changes'}
+                  </small>
                 </button>
                 <button
                   type="button"
@@ -162,21 +181,23 @@ export function ReviewBar({
                   role="menuitemcheckbox"
                   aria-checked="true"
                   onClick={() => {
-                    setActionsOpen(false)
-                    onSetAlwaysKeepAll(false)
+                    setActionsOpen(false);
+                    onSetAlwaysKeepAll(false);
                   }}
                 >
                   <span>Always keep all</span>
                   <small>On · click to turn off</small>
-                  <span className="review-action-menu-check" aria-hidden="true">✓</span>
+                  <span className="review-action-menu-check" aria-hidden="true">
+                    ✓
+                  </span>
                 </button>
                 <button
                   type="button"
                   className="review-action-menu-item"
                   role="menuitem"
                   onClick={() => {
-                    setActionsOpen(false)
-                    onKeepAll()
+                    setActionsOpen(false);
+                    onKeepAll();
                   }}
                 >
                   <span>Keep all</span>
@@ -193,10 +214,10 @@ export function ReviewBar({
               title="Restore every workspace file to how it was before this turn (including files changed by shell commands). The current state is checkpointed first."
               onClick={() => {
                 if (confirmingUndoAll) {
-                  setConfirmingUndoAll(false)
-                  onUndoAll()
+                  setConfirmingUndoAll(false);
+                  onUndoAll();
                 } else {
-                  setConfirmingUndoAll(true)
+                  setConfirmingUndoAll(true);
                 }
               }}
               onBlur={() => setConfirmingUndoAll(false)}
@@ -210,7 +231,9 @@ export function ReviewBar({
               title="Automatically keep future edits while continuing to show each turn's change summary and Undo controls."
               onClick={() => onSetAlwaysKeepAll(true)}
             >
-              <span className="review-always-keep-mark" aria-hidden="true">✓</span>
+              <span className="review-always-keep-mark" aria-hidden="true">
+                ✓
+              </span>
               Always keep all
             </button>
             <button type="button" className="review-keep-all" onClick={onKeepAll}>
@@ -222,7 +245,7 @@ export function ReviewBar({
       {expanded ? (
         <div className="review-files">
           {files.map((file) => {
-            const undone = undonePaths.has(file.path)
+            const undone = undonePaths.has(file.path);
             return (
               <div key={file.path} className={`review-file ${undone ? 'is-undone' : ''}`}>
                 <button
@@ -241,42 +264,46 @@ export function ReviewBar({
                 {undone ? (
                   <span className="work-chip chip-muted">undone</span>
                 ) : (
-                  <button type="button" className="review-file-undo" onClick={() => onUndoFile(file.path)}>
+                  <button
+                    type="button"
+                    className="review-file-undo"
+                    onClick={() => onUndoFile(file.path)}
+                  >
                     Undo
                   </button>
                 )}
               </div>
-            )
+            );
           })}
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 
 // Scroll the thread to the file's diff card and flash it (mirrors the agent
 // focus affordance). Best-effort: silently no-ops if the card is not mounted.
 function scrollToDiffCard(path: string): void {
-  const node = document.querySelector(`[data-diff-path="${CSS.escape(path)}"]`)
-  if (!(node instanceof HTMLElement)) return
-  node.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  node.classList.add('is-flash')
-  window.setTimeout(() => node.classList.remove('is-flash'), 900)
+  const node = document.querySelector(`[data-diff-path="${CSS.escape(path)}"]`);
+  if (!(node instanceof HTMLElement)) return;
+  node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  node.classList.add('is-flash');
+  window.setTimeout(() => node.classList.remove('is-flash'), 900);
 }
 
 function fileBase(path: string): string {
-  const clean = path.replace(/\/+$/, '')
-  return clean.split('/').pop() || clean
+  const clean = path.replace(/\/+$/, '');
+  return clean.split('/').pop() || clean;
 }
 
 function fileDir(path: string, workspace: string | null): string {
-  const clean = path.replace(/\/+$/, '')
-  const index = clean.lastIndexOf('/')
-  const dir = index > 0 ? clean.slice(0, index) : ''
-  if (!dir || !workspace) return dir
-  const root = workspace.replace(/\/+$/, '')
-  if (dir === root) return ''
-  return dir.startsWith(`${root}/`) ? dir.slice(root.length + 1) : dir
+  const clean = path.replace(/\/+$/, '');
+  const index = clean.lastIndexOf('/');
+  const dir = index > 0 ? clean.slice(0, index) : '';
+  if (!dir || !workspace) return dir;
+  const root = workspace.replace(/\/+$/, '');
+  if (dir === root) return '';
+  return dir.startsWith(`${root}/`) ? dir.slice(root.length + 1) : dir;
 }
 
 function ReviewChevron({ className }: { className?: string }): React.JSX.Element {
@@ -295,7 +322,7 @@ function ReviewChevron({ className }: { className?: string }): React.JSX.Element
     >
       <path d="m8.5 6 6 6-6 6" />
     </svg>
-  )
+  );
 }
 
 function ReviewMenuChevron(): React.JSX.Element {
@@ -309,5 +336,5 @@ function ReviewMenuChevron(): React.JSX.Element {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }

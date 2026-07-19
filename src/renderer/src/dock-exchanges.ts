@@ -1,12 +1,12 @@
-import type { RenderRow } from './transcript-model'
+import type { RenderRow } from './transcript-model.js'
 import {
   auditSummaryLabel,
   isAuditPrompt,
   parseAuditPrompt,
   parseAuditVerdict,
   type AuditRequestSummary
-} from './audit-trigger'
-import { stripMainChatContext } from './agent-session-model'
+} from './audit-trigger.js'
+import { stripMainChatContext } from './agent-session-model.js'
 
 // Recency-weighted density for the small dock window: the transcript groups
 // into exchanges (a user message plus everything until the next one). The
