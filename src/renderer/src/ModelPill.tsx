@@ -188,7 +188,12 @@ export function EffortSelector({
               <span>Faster</span>
               <span>Smarter</span>
             </div>
-            <div className="effort-scale" role="radiogroup" aria-label="Reasoning effort">
+            <div
+              className="effort-scale"
+              role="radiogroup"
+              aria-label="Reasoning effort"
+              style={{ '--effort-count': efforts.length } as React.CSSProperties}
+            >
               {efforts.map((option, index) => {
                 const isActive = option.reasoningEffort === effectiveEffort;
                 return (
