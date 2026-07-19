@@ -8,7 +8,7 @@ import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
 import type { AuditRequestSummary, LiveTurnGlance } from './audit-trigger'
-import { auditBriefMarkdown, auditSummaryLabel } from './audit-trigger'
+import { auditBriefMarkdown, auditSummaryLabel, parseAuditVerdict, stripVerdictLine } from './audit-trigger'
 import { MarkdownContent } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
@@ -789,6 +789,21 @@ function AgentModeSelector({
           <small>Second viewpoint on every turn — diffs, answers, ideas · defaults to Claude</small>
         </span>
         <span className={`agent-mode-switch ${session.auditsMain ? 'is-on' : ''}`} aria-hidden="true">
+          <span className="agent-mode-knob" />
+        </span>
+      </button>
+      <button
+        type="button"
+        className="agent-mode-option"
+        role="switch"
+        aria-checked={session.reportsToMain}
+        onClick={() => onToggleReport(session.key)}
+      >
+        <span className="agent-mode-copy">
+          <strong>Send findings to main chat</strong>
+          <small>Flagged audits auto-send to the doer · one round per turn</small>
+        </span>
+        <span className={`agent-mode-switch ${session.reportsToMain ? 'is-on' : ''}`} aria-hidden="true">
           <span className="agent-mode-knob" />
         </span>
       </button>
