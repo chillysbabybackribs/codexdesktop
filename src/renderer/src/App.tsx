@@ -13,12 +13,10 @@ import {
 } from 'react';
 import { AgentColumn, AgentTabStrip, SendArrowIcon } from './AgentDock';
 import { ModelPill } from './ModelPill';
-import type { AgentLiteMessage, AgentSession } from './AgentDock';
+import type { AgentSession } from './AgentDock';
 import type {
   BrowserBounds,
   BrowserState,
-  SessionEvent,
-  CodexPluginAppStatus,
   MemoryPersistParams,
 } from '../../shared/ipc';
 import type { ServerNotification } from '../../shared/session-protocol';
@@ -31,10 +29,7 @@ import type { ThreadGoal } from '../../shared/session-protocol';
 import type { ThreadGoalStatus } from '../../shared/session-protocol';
 import type { ThreadItem } from '../../shared/session-protocol';
 import type { ThreadTokenUsage } from '../../shared/session-protocol';
-import type { PluginMarketplaceEntry } from '../../shared/session-protocol';
 import type { PluginSummary } from '../../shared/session-protocol';
-import type { AppSummary } from '../../shared/session-protocol';
-import type { PluginAuthPolicy } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
 import { TraceModal, formatTokens } from './TraceModal';
@@ -42,7 +37,6 @@ import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
-  type ModelCallAttribution,
 } from './turn-telemetry';
 import {
   AutoFollow,
@@ -116,12 +110,8 @@ import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
 import { agentSessionsForMainChatTab, defaultReviewerModel, latestAuditReport } from './agent-session-model';
-import {
-  pluginInstallParams,
-  pluginUninstallId,
-  safePluginAuthUrl,
-  unresolvedPluginApps,
-} from './plugin-lifecycle';
+import { pluginUninstallId } from './plugin-lifecycle';
+import { flattenPlugins, PluginBrowserView, PluginGlyph } from './PluginBrowser';
 import {
   buildOptimisticUserMessage,
   hasAuthoritativeUserMessage,
@@ -5501,23 +5491,6 @@ function formatGoalTime(seconds: number): string {
   return seconds < 3_600
     ? `${minutes}m ${Math.round(seconds % 60)}s`
     : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
-}
-
-function GoalIcon(): React.JSX.Element {
-  return (
-    <svg
-      className="workspace-pill-icon"
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M12 4V2.5M20 12h1.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
 }
 
 type ComposerDraft = {
