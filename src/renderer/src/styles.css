@@ -3545,12 +3545,12 @@ button {
 }
 
 .fast-mode-setting {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   margin-top: 4px;
-  padding: 8px 10px 6px;
+  padding: 10px;
   border-top: 1px solid rgb(255 255 255 / 7%);
 }
 
@@ -3571,14 +3571,15 @@ button {
   color: #777f87;
   font-size: 11px;
   line-height: 1.3;
+  text-wrap: balance;
 }
 
 .fast-mode-switch {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  width: 28px;
-  height: 17px;
+  width: 36px;
+  height: 21px;
   padding: 2px;
   border: 0;
   border-radius: 999px;
@@ -3597,8 +3598,8 @@ button {
 }
 
 .fast-mode-switch-knob {
-  width: 13px;
-  height: 13px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: #dce1e5;
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
@@ -3606,7 +3607,7 @@ button {
 }
 
 .fast-mode-switch.is-active .fast-mode-switch-knob {
-  transform: translateX(11px);
+  transform: translateX(15px);
 }
 
 .reasoning-menu {

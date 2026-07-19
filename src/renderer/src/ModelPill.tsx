@@ -216,11 +216,11 @@ export function ModelPill({
                   type="button"
                   role="switch"
                   aria-checked={fastMode}
+                  aria-label={`${fastMode ? 'Disable' : 'Enable'} Fast mode`}
                   className={`fast-mode-switch ${fastMode ? 'is-active' : ''}`}
                   onClick={() => onToggleFastMode(!fastMode)}
                 >
                   <span className="fast-mode-switch-knob" />
-                  <span className="sr-only">{fastMode ? 'Disable' : 'Enable'} Fast mode</span>
                 </button>
               </div>
             ) : null}
