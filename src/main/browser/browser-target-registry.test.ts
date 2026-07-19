@@ -54,6 +54,10 @@ test('registers, resolves, lists, and removes popup targets', () => {
   registry.registerPopup(popupContents as unknown as WebContents, tab.id)
 
   assert.equal(registry.resolvePopup('popup-2'), popupContents)
+  assert.equal(registry.getPopupEpoch('popup-2'), 0)
+  popupContents.emit('did-start-navigation', {}, 'https://login.example/next', false, true)
+  popupContents.emit('did-navigate-in-page', {}, 'https://login.example/next#done', true)
+  assert.equal(registry.getPopupEpoch('popup-2'), 2)
   assert.equal(registry.contains(popupContents as unknown as WebContents), true)
   assert.deepEqual(registry.list([tab], tab.id), [
     {
@@ -77,6 +81,7 @@ test('registers, resolves, lists, and removes popup targets', () => {
   popupContents.destroyed = true
   popupContents.emit('destroyed')
   assert.equal(registry.resolvePopup('popup-2'), null)
+  assert.equal(registry.getPopupEpoch('popup-2'), null)
   assert.equal(registry.list([tab], tab.id).length, 1)
 })
 

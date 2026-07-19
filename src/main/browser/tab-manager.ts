@@ -328,7 +328,7 @@ export class TabManager {
    * their own lifetime check in the agent controller.
    */
   getTargetEpoch(tabId: string): number | null {
-    return this.targetEpochs.get(tabId) ?? (this.targets.resolvePopup(tabId) ? 0 : null)
+    return this.targetEpochs.get(tabId) ?? this.targets.getPopupEpoch(tabId)
   }
 
   listTabs(): Array<{ id: string; url: string; title: string; active: boolean }> {
@@ -432,7 +432,7 @@ export class TabManager {
       onBack: () => this.goBack(tab.id),
       onForward: () => this.goForward(tab.id),
       onReload: () => this.reload(tab.id),
-      onMainFrameNavigationStarted: () => this.bumpTargetEpoch(tab.id),
+      onMainFrameNavigation: () => this.bumpTargetEpoch(tab.id),
       onStateChanged: () => this.pushState(),
       onRecordVisit: (url, title) => this.visitListener?.recordVisit(url, title),
       onUpdateVisitTitle: (url, title) => this.visitListener?.updateTitle(url, title),

@@ -12,13 +12,20 @@ export type BrowserTarget = {
 }
 
 export class BrowserTargetRegistry {
-  private readonly popups = new Map<string, { webContents: WebContents; openerTabId: string }>()
+  private readonly popups = new Map<string, { webContents: WebContents; openerTabId: string; epoch: number }>()
 
   registerPopup(webContents: WebContents, openerTabId: string): void {
     if (webContents.isDestroyed()) return
 
     const id = `popup-${webContents.id}`
-    this.popups.set(id, { webContents, openerTabId })
+    const popup = { webContents, openerTabId, epoch: 0 }
+    this.popups.set(id, popup)
+    webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
+      if (isMainFrame && !isInPlace) popup.epoch += 1
+    })
+    webContents.on('did-navigate-in-page', (_event, _url, isMainFrame) => {
+      if (isMainFrame) popup.epoch += 1
+    })
     webContents.once('destroyed', () => {
       this.popups.delete(id)
     })
@@ -27,6 +34,11 @@ export class BrowserTargetRegistry {
   resolvePopup(id: string): WebContents | null {
     const webContents = this.popups.get(id)?.webContents
     return webContents && !webContents.isDestroyed() ? webContents : null
+  }
+
+  getPopupEpoch(id: string): number | null {
+    const popup = this.popups.get(id)
+    return popup && !popup.webContents.isDestroyed() ? popup.epoch : null
   }
 
   contains(webContents: WebContents): boolean {
