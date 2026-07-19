@@ -6,10 +6,12 @@ import { createAgentSession, type AgentLiteMessage, type AgentSession } from './
 function commandHarness(acceptsImages = true): {
   sessions: AgentSession[]
   messages: AgentLiteMessage[]
+  threadStartEvents: string[]
   commands: ReturnType<typeof createAgentCommands>
 } {
   const sessions = [createAgentSession('agent-1', 'Agent 2')]
   const messages: AgentLiteMessage[] = []
+  const threadStartEvents: string[] = []
   const commands = createAgentCommands({
     store: {
       sessionsRef: { current: sessions },
@@ -27,10 +29,10 @@ function commandHarness(acceptsImages = true): {
     acceptsImages: () => acceptsImages,
     buildMainChatContext: () => 'context',
     cancelRecovery: () => {},
-    queueThreadStart: () => {},
-    settleThreadStart: () => {}
+    queueThreadStart: (key) => threadStartEvents.push(`queued:${key}`),
+    settleThreadStart: (key) => threadStartEvents.push(`settled:${key}`)
   })
-  return { sessions, messages, commands }
+  return { sessions, messages, threadStartEvents, commands }
 }
 
 test('agent thread binding preserves an existing thread', () => {
@@ -79,7 +81,7 @@ test('agent send forwards the agent reasoning effort', async () => {
   })
 
   try {
-    const { sessions, commands } = commandHarness()
+    const { sessions, threadStartEvents, commands } = commandHarness()
     sessions[0].reasoningEffort = 'xhigh'
     const sent = await commands.handleAgentSend('agent-1', 'Solve this')
 
@@ -89,6 +91,7 @@ test('agent send forwards the agent reasoning effort', async () => {
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
     assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
     assert.equal(sessions[0]?.threadId, 'thread-1')
+    assert.deepEqual(threadStartEvents, ['queued:agent-1', 'settled:agent-1'])
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
