@@ -119,13 +119,24 @@ import {
   type SplitDropZone,
   type SplitNode,
 } from './chat-split';
+import {
+  browserMiddleChatLayout,
+  parseBrowserMiddleColumnWidths,
+  parseWorkspaceLayoutMode,
+  serializeBrowserMiddleColumnWidths,
+  type BrowserMiddleColumnWidths,
+  type WorkspaceLayoutMode,
+} from './workspace-layout';
 
 const minChatWidth = 280;
+const minBrowserMiddleChatWidth = 220;
 const minBrowserWidth = 420;
 const dividerWidth = 8;
 const lastThreadStorageKey = 'codexdesktop.lastThreadId';
 const mainChatTabsStorageKey = 'codexdesktop.mainChatTabs.v1';
 const chatSplitStorageKey = 'codexdesktop.chatSplit.v1';
+const workspaceLayoutStorageKey = 'codexdesktop.workspaceLayout.v1';
+const browserMiddleColumnWidthsStorageKey = 'codexdesktop.browserMiddleColumnWidths.v1';
 const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
@@ -187,6 +198,15 @@ export default function App(): React.JSX.Element {
     ),
   );
   const chatSplitLayoutRef = useRef(chatSplitLayout);
+  const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(() =>
+    parseWorkspaceLayoutMode(window.localStorage.getItem(workspaceLayoutStorageKey)),
+  );
+  const [browserMiddleColumnWidths, setBrowserMiddleColumnWidths] =
+    useState<BrowserMiddleColumnWidths>(() =>
+      parseBrowserMiddleColumnWidths(
+        window.localStorage.getItem(browserMiddleColumnWidthsStorageKey),
+      ),
+    );
   // The pane that most recently held the active tab — where a newly selected
   // hidden tab should appear, mirroring how a single pane swaps content.
   const focusedPaneTabKeyRef = useRef(mainChatTabState.activeKey);
@@ -490,6 +510,17 @@ export default function App(): React.JSX.Element {
   }, [chatSplitLayout]);
 
   useEffect(() => {
+    window.localStorage.setItem(workspaceLayoutStorageKey, workspaceLayoutMode);
+  }, [workspaceLayoutMode]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      browserMiddleColumnWidthsStorageKey,
+      serializeBrowserMiddleColumnWidths(browserMiddleColumnWidths),
+    );
+  }, [browserMiddleColumnWidths]);
+
+  useEffect(() => {
     activeGoalRef.current = activeGoal;
   }, [activeGoal]);
 
@@ -626,6 +657,40 @@ export default function App(): React.JSX.Element {
 
   function handleSetSplitRatio(path: string, ratio: number): void {
     updateChatSplitLayout((layout) => updateSplitRatio(layout, path, ratio));
+  }
+
+  function toggleBrowserMiddleLayout(): void {
+    if (isMainChatTransitionLocked()) return;
+
+    if (workspaceLayoutMode === 'browser-middle') {
+      setWorkspaceLayoutMode('chat-browser');
+      return;
+    }
+
+    // A browser-centered workspace needs a conversation on each side. Keep
+    // the current tab focused and create its companion in the background.
+    if (mainChatTabStateRef.current.tabs.length < 2) {
+      const active = mainChatTabStateRef.current.tabs.find(
+        (tab) => tab.key === activeMainChatTabKeyRef.current,
+      );
+      const companion = createMainChatTab(
+        crypto.randomUUID(),
+        null,
+        'New Chat',
+        active?.model ?? selectedModelRef.current,
+        active?.reasoningEffort ?? selectedReasoningEffortRef.current,
+      );
+      updateMainChatTabs((state) => ({ ...state, tabs: [...state.tabs, companion] }));
+    }
+
+    updateChatSplitLayout((layout) =>
+      browserMiddleChatLayout(
+        layout,
+        mainChatTabStateRef.current.tabs.map((tab) => tab.key),
+        activeMainChatTabKeyRef.current,
+      ),
+    );
+    setWorkspaceLayoutMode('browser-middle');
   }
 
   // Split the focused pane and open a fresh chat in the new half — the
