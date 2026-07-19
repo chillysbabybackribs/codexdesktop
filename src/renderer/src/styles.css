@@ -6752,6 +6752,12 @@ button {
   overflow: hidden;
 }
 
+.review-bar.is-action-menu-open {
+  position: relative;
+  z-index: 8;
+  overflow: visible;
+}
+
 .review-bar-head {
   display: flex;
   align-items: center;
@@ -6799,6 +6805,125 @@ button {
   display: inline-flex;
   gap: 7px;
   flex: none;
+}
+
+.review-compact-actions {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.review-actions-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--chrome-fg);
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+.review-actions-trigger:hover,
+.review-actions-trigger.is-open {
+  border-color: rgb(255 255 255 / 14%);
+  background: rgb(255 255 255 / 6%);
+  color: var(--chrome-fg-strong);
+}
+
+.review-actions-trigger svg {
+  transition: transform 140ms ease;
+}
+
+.review-actions-trigger.is-open svg {
+  transform: rotate(180deg);
+}
+
+.review-action-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 7px);
+  z-index: 30;
+  width: 224px;
+  padding: 7px;
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 10px;
+  background: rgb(26 27 28 / 98%);
+  box-shadow: 0 16px 34px rgb(0 0 0 / 42%), inset 0 1px 0 rgb(255 255 255 / 7%);
+  animation: review-action-menu-in 150ms ease-out;
+}
+
+@keyframes review-action-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.review-action-menu-label {
+  padding: 3px 8px 6px;
+  color: #868686;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.review-action-menu-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 42px;
+  padding: 7px 30px 7px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #d8dce0;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.review-action-menu-item:hover,
+.review-action-menu-item:focus-visible {
+  background: rgb(255 255 255 / 9%);
+  color: #fff;
+}
+
+.review-action-menu-item.is-confirming {
+  background: rgb(229 83 75 / 8%);
+  color: #f1a09a;
+}
+
+.review-action-menu-item > span:first-child {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.review-action-menu-item small {
+  color: #8c8c8c;
+  font-size: 10.5px;
+  line-height: 1.25;
+}
+
+.review-action-menu-check {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  color: #dfe1e3;
+  font-size: 11px;
+  transform: translateY(-50%);
 }
 
 .review-undo-all {
@@ -6988,6 +7113,8 @@ button {
 }
 
 .review-bar-summary:focus-visible,
+.review-actions-trigger:focus-visible,
+.review-action-menu-item:focus-visible,
 .review-undo-all:focus-visible,
 .review-always-keep:focus-visible,
 .review-keep-all:focus-visible,
@@ -7011,10 +7138,21 @@ button {
     justify-content: flex-end;
     padding-left: 24px;
   }
+
+  .review-compact-actions {
+    margin-left: auto;
+  }
+
+  .review-actions-trigger {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .review-chevron,
+  .review-actions-trigger,
+  .review-actions-trigger svg,
   .review-undo-all,
   .review-always-keep,
   .review-always-keep-mark,
@@ -7022,6 +7160,10 @@ button {
   .review-file,
   .review-file-undo {
     transition: none;
+  }
+
+  .review-action-menu {
+    animation: none;
   }
 }
 

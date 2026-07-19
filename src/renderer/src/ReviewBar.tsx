@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { parseUnifiedDiff } from './diff'
 import type { ThreadItem } from '../../shared/session-protocol'
 
@@ -31,6 +31,43 @@ export function ReviewBar({
 }): React.JSX.Element {
   const [expanded, setExpanded] = useState(false)
   const [confirmingUndoAll, setConfirmingUndoAll] = useState(false)
+  const [actionsOpen, setActionsOpen] = useState(false)
+  const actionsRef = useRef<HTMLDivElement | null>(null)
+  const actionsTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const actionsMenuRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!alwaysKeepAll) setActionsOpen(false)
+  }, [alwaysKeepAll])
+
+  useEffect(() => {
+    if (!actionsOpen) {
+      setConfirmingUndoAll(false)
+      return
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      actionsMenuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+    })
+    const closeOnOutsidePointer = (event: PointerEvent): void => {
+      if (actionsRef.current && event.target instanceof Node && !actionsRef.current.contains(event.target)) {
+        setActionsOpen(false)
+      }
+    }
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      setActionsOpen(false)
+      actionsTriggerRef.current?.focus()
+    }
+    document.addEventListener('pointerdown', closeOnOutsidePointer)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      document.removeEventListener('pointerdown', closeOnOutsidePointer)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [actionsOpen])
 
   const files = useMemo(
     () =>
@@ -46,8 +83,24 @@ export function ReviewBar({
   const totalAdds = files.reduce((sum, file) => sum + file.adds, 0)
   const totalDels = files.reduce((sum, file) => sum + file.dels, 0)
 
+  const handleActionsKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>): void => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+    const items = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button'))
+    if (!items.length) return
+    event.preventDefault()
+    const current = items.indexOf(document.activeElement as HTMLButtonElement)
+    const next = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? items.length - 1
+        : event.key === 'ArrowDown'
+          ? (current + 1) % items.length
+          : (current - 1 + items.length) % items.length
+    items[next]?.focus()
+  }
+
   return (
-    <div className="review-bar" role="region" aria-label="Review changes">
+    <div className={`review-bar ${actionsOpen ? 'is-action-menu-open' : ''}`} role="region" aria-label="Review changes">
       <div className="review-bar-head">
         <button
           type="button"
@@ -64,39 +117,107 @@ export function ReviewBar({
             {totalDels > 0 ? <span className="diff-count-del">−{totalDels}</span> : null}
           </span>
         </button>
-        <div className="review-bar-actions">
-          <button
-            type="button"
-            className={`review-undo-all ${confirmingUndoAll ? 'is-confirming' : ''}`}
-            title="Restore every workspace file to how it was before this turn (including files changed by shell commands). The current state is checkpointed first."
-            onClick={() => {
-              if (confirmingUndoAll) {
-                setConfirmingUndoAll(false)
-                onUndoAll()
-              } else {
-                setConfirmingUndoAll(true)
-              }
-            }}
-            onBlur={() => setConfirmingUndoAll(false)}
-          >
-            {confirmingUndoAll ? 'Undo all changes?' : 'Undo all'}
-          </button>
-          <button
-            type="button"
-            className={`review-always-keep ${alwaysKeepAll ? 'is-active' : ''}`}
-            aria-pressed={alwaysKeepAll}
-            title="Automatically keep future edits while continuing to show each turn's change summary and Undo controls."
-            onClick={() => onSetAlwaysKeepAll(!alwaysKeepAll)}
-          >
-            <span className="review-always-keep-mark" aria-hidden="true">
-              ✓
-            </span>
-            Always keep all
-          </button>
-          <button type="button" className="review-keep-all" onClick={onKeepAll}>
-            Keep all
-          </button>
-        </div>
+        {alwaysKeepAll ? (
+          <div className="review-compact-actions" ref={actionsRef}>
+            <button
+              ref={actionsTriggerRef}
+              type="button"
+              className={`review-actions-trigger ${actionsOpen ? 'is-open' : ''}`}
+              aria-label="Review actions"
+              title="Review actions"
+              aria-haspopup="menu"
+              aria-expanded={actionsOpen}
+              onClick={() => setActionsOpen((open) => !open)}
+            >
+              <ReviewMenuChevron />
+            </button>
+            {actionsOpen ? (
+              <div
+                ref={actionsMenuRef}
+                className="review-action-menu"
+                role="menu"
+                aria-label="Review actions"
+                onKeyDown={handleActionsKeyDown}
+              >
+                <div className="review-action-menu-label">Review actions</div>
+                <button
+                  type="button"
+                  className={`review-action-menu-item ${confirmingUndoAll ? 'is-confirming' : ''}`}
+                  role="menuitem"
+                  onClick={() => {
+                    if (confirmingUndoAll) {
+                      setActionsOpen(false)
+                      onUndoAll()
+                    } else {
+                      setConfirmingUndoAll(true)
+                    }
+                  }}
+                >
+                  <span>{confirmingUndoAll ? 'Confirm undo all' : 'Undo all'}</span>
+                  <small>{confirmingUndoAll ? 'Restore every changed file' : 'Restore this turn’s changes'}</small>
+                </button>
+                <button
+                  type="button"
+                  className="review-action-menu-item"
+                  role="menuitemcheckbox"
+                  aria-checked="true"
+                  onClick={() => {
+                    setActionsOpen(false)
+                    onSetAlwaysKeepAll(false)
+                  }}
+                >
+                  <span>Always keep all</span>
+                  <small>On · click to turn off</small>
+                  <span className="review-action-menu-check" aria-hidden="true">✓</span>
+                </button>
+                <button
+                  type="button"
+                  className="review-action-menu-item"
+                  role="menuitem"
+                  onClick={() => {
+                    setActionsOpen(false)
+                    onKeepAll()
+                  }}
+                >
+                  <span>Keep all</span>
+                  <small>Dismiss this change summary</small>
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <div className="review-bar-actions">
+            <button
+              type="button"
+              className={`review-undo-all ${confirmingUndoAll ? 'is-confirming' : ''}`}
+              title="Restore every workspace file to how it was before this turn (including files changed by shell commands). The current state is checkpointed first."
+              onClick={() => {
+                if (confirmingUndoAll) {
+                  setConfirmingUndoAll(false)
+                  onUndoAll()
+                } else {
+                  setConfirmingUndoAll(true)
+                }
+              }}
+              onBlur={() => setConfirmingUndoAll(false)}
+            >
+              {confirmingUndoAll ? 'Undo all changes?' : 'Undo all'}
+            </button>
+            <button
+              type="button"
+              className="review-always-keep"
+              aria-pressed="false"
+              title="Automatically keep future edits while continuing to show each turn's change summary and Undo controls."
+              onClick={() => onSetAlwaysKeepAll(true)}
+            >
+              <span className="review-always-keep-mark" aria-hidden="true">✓</span>
+              Always keep all
+            </button>
+            <button type="button" className="review-keep-all" onClick={onKeepAll}>
+              Keep all
+            </button>
+          </div>
+        )}
       </div>
       {expanded ? (
         <div className="review-files">
@@ -173,6 +294,20 @@ function ReviewChevron({ className }: { className?: string }): React.JSX.Element
       aria-hidden="true"
     >
       <path d="m8.5 6 6 6-6 6" />
+    </svg>
+  )
+}
+
+function ReviewMenuChevron(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="m7 9.5 5 5 5-5"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }
