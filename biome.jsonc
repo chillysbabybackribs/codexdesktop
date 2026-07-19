@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
   // a11y is OFF by design: accessibility hardening is deferred to the final phase
-  // (see biome.strict.json / `npm run lint:strict`). Every other group stays on to
+  // (see biome.strict.jsonc / `npm run lint:strict`). Every other group stays on to
   // catch real bugs during the build-out. Nothing here gates build/commit, and there
   // is no editor integration — findings appear only when you run `npm run lint`.
   "vcs": {

@@ -1,9 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
-  // FINAL-PHASE ruleset. Same as biome.json but with a11y turned back ON.
+  // FINAL-PHASE ruleset. Same as biome.jsonc but with a11y turned back ON.
   // NOT used by `npm run lint`; run `npm run lint:strict` during accessibility/
   // security hardening to surface the deferred a11y findings.
-  "extends": ["./biome.json"],
+  "extends": ["./biome.jsonc"],
   "linter": {
     "enabled": true,
     "rules": {

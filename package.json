@@ -25,7 +25,7 @@
     "check:source-shadows": "node scripts/source-shadow-guard.mjs --check",
     "lint": "biome lint",
     "lint:fix": "biome lint --write",
-    "lint:strict": "biome lint --config-path=biome.strict.json",
+    "lint:strict": "biome lint --config-path=biome.strict.jsonc",
     "format": "biome format --write",
     "check": "biome check",
     "check:fix": "biome check --write",
