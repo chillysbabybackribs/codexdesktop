@@ -91,6 +91,29 @@ const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore(() => join(app.getPath('userData'), 'browser-state.json'))
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
+let verificationBrowserControlReady = false
+let verificationBrowserRestored = false
+let verificationCloseScheduled = false
+
+function maybeCloseVerificationInstance(): void {
+  if (
+    instanceRole !== 'verification' ||
+    process.env.CODEX_DESKTOP_VERIFY_AUTO_CLOSE !== '1' ||
+    !verificationBrowserControlReady ||
+    !verificationBrowserRestored ||
+    verificationCloseScheduled
+  ) {
+    return
+  }
+
+  verificationCloseScheduled = true
+  // The browser-control surface and restored tab snapshot are both live. Use
+  // BrowserWindow.close() so the normal browser persistence/CDP teardown path
+  // is what the verifier observes, not a terminal-signal shortcut.
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
+  }, 250)
+}
 
 function scheduleBrowserPersist(): void {
   if (persistBrowserTimer) {
@@ -197,7 +220,10 @@ function createWindow(): void {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
-    void restoreBrowserTabs()
+    void restoreBrowserTabs().finally(() => {
+      verificationBrowserRestored = true
+      maybeCloseVerificationInstance()
+    })
   })
 
   // The omnibox dropdown is a native view anchored to the toolbar. Renderer
@@ -285,16 +311,8 @@ function bootstrap(): void {
       browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
-      if (instanceRole === 'verification' && process.env.CODEX_DESKTOP_VERIFY_AUTO_CLOSE === '1') {
-        // `Browser control socket` is the verifier's readiness boundary: the
-        // native window, tab manager, and agent-facing browser surface are
-        // live. Close through BrowserWindow so normal persistence and CDP
-        // cleanup run; unlike SIGINT, this leaves npm with the app's real exit
-        // status.
-        setTimeout(() => {
-          if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
-        }, 250)
-      }
+      verificationBrowserControlReady = true
+      maybeCloseVerificationInstance()
     } catch (error) {
       console.error('Failed to start browser control server', error)
     }
