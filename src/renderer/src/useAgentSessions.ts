@@ -51,6 +51,7 @@ export function useAgentSessions(
   handleMinimizeAgent: (key: string) => void;
   handleToggleWatchAgent: (key: string) => void;
   handleToggleAuditAgent: (key: string) => void;
+  handleToggleReportAgent: (key: string) => void;
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort | null) => void;
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([]);
@@ -290,12 +291,29 @@ export function useAgentSessions(
     patchAgentSession(key, (session) => ({
       ...session,
       auditsMain: !session.auditsMain,
+      // Feedback requires an audit to exist: disabling audit disables it.
+      reportsToMain: session.auditsMain ? false : session.reportsToMain,
       lastAuditNote: null,
       // The headline pairing: enabling audit mode on a session that has not
       // chosen a runtime yet defaults it to the Claude provider, so the main
       // chat's doer (codex) is reviewed by a different model family.
       model:
         !session.auditsMain && !session.threadId && !session.model
+          ? 'claude-default'
+          : session.model,
+    }));
+  }
+
+  function handleToggleReportAgent(key: string): void {
+    patchAgentSession(key, (session) => ({
+      ...session,
+      reportsToMain: !session.reportsToMain,
+      // Feedback without an audit is meaningless: enabling it arms audit mode
+      // too (with the same cross-provider model default).
+      auditsMain: session.reportsToMain ? session.auditsMain : true,
+      lastAuditNote: null,
+      model:
+        !session.reportsToMain && !session.auditsMain && !session.threadId && !session.model
           ? 'claude-default'
           : session.model,
     }));
@@ -363,6 +381,7 @@ export function useAgentSessions(
     handleMinimizeAgent,
     handleToggleWatchAgent,
     handleToggleAuditAgent,
+    handleToggleReportAgent,
     handleSetAgentModel,
   };
 }
