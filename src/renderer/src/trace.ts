@@ -636,7 +636,7 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'browser_run')) {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'browser_flow' || item.tool === 'browser_run')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
