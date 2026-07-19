@@ -32,7 +32,7 @@ test('ui review returns one model image per viewport and clears emulation', asyn
     cdpEvents: async (): Promise<BrowserAgentResult> => ({ ok: true, result: { events: [] } })
   } as unknown as BrowserAgentController
 
-  const review = await runUiReview(browserAgent, ['desktop', 'mobile'], 'tab-1')
+  const review = await runUiReview(browserAgent, ['desktop', 'mobile'], { tabId: 'tab-1' })
   assert.equal(review.result.ok, true)
   assert.equal(review.imageUrls.length, 2)
   assert.deepEqual(calls, [

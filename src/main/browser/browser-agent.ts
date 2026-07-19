@@ -794,9 +794,15 @@ export class BrowserAgentController {
     )
     const startedAt = Date.now()
     try {
+      throwIfAborted(options.signal)
       const session = cdpSessionFor(webContents)
       await session.prepareForEvent(method)
-      const rawResult = await session.waitForEvent(toEventQuery(options, method), timeoutMs)
+      const rawResult = await withTimeout(
+        session.waitForEvent(toEventQuery(options, method), timeoutMs),
+        timeoutMs,
+        undefined,
+        options.signal
+      )
       const bounded = boundResult(rawResult, maxResultChars)
       return {
         ok: true,
@@ -809,9 +815,12 @@ export class BrowserAgentController {
         truncated: bounded.truncated
       } satisfies BrowserAgentSuccess
     } catch (error) {
+      const failure = browserFailureFor(error)
       return {
         ok: false,
-        error: errorMessage(error),
+        error: failure.message,
+        errorCode: failure.code,
+        failure,
         tabId,
         url: safeUrl(webContents),
         title: safeTitle(webContents),
@@ -985,6 +994,7 @@ export class BrowserAgentController {
     )
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation = previous.then(async (): Promise<BrowserAgentResult> => {
+      throwIfAborted(options.signal)
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
         return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
@@ -993,7 +1003,13 @@ export class BrowserAgentController {
       const startedAt = Date.now()
       try {
         const context = { tabId, url: safeUrl(webContents), title: safeTitle(webContents), webContents }
-        const rawResult = await execute(cdpSessionFor(webContents), timeoutMs, context)
+        const session = cdpSessionFor(webContents)
+        const rawResult = await withTimeout(
+          execute(session, timeoutMs, context),
+          timeoutMs,
+          () => session.terminateExecution(),
+          options.signal
+        )
         const bounded = boundResult(rawResult, maxResultChars)
         return {
           ok: true,
@@ -1006,9 +1022,12 @@ export class BrowserAgentController {
           truncated: bounded.truncated
         } satisfies BrowserAgentSuccess
       } catch (error) {
+        const failure = browserFailureFor(error)
         return {
           ok: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: failure.message,
+          errorCode: failure.code,
+          failure,
           tabId,
           url: safeUrl(webContents),
           title: safeTitle(webContents),
@@ -1456,20 +1475,42 @@ function frameInventory(webContents: WebContents): BrowserFrameDescriptor[] {
 function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
-  onTimeout?: () => void | Promise<void>
+  onTimeout?: () => void | Promise<void>,
+  signal?: AbortSignal
 ): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | null = null
+  let settled = false
+  const cancel = (reject: (reason?: unknown) => void, error: Error): void => {
+    if (settled) return
+    settled = true
+    void Promise.resolve(onTimeout?.()).finally(() => reject(error))
+  }
   const timeout = new Promise<T>((_resolve, reject) => {
     timer = setTimeout(() => {
-      void Promise.resolve(onTimeout?.()).finally(() => {
-        reject(operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`))
-      })
+      cancel(reject, operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`))
     }, timeoutMs)
+    signal?.addEventListener('abort', () => {
+      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
+    }, { once: true })
+    if (signal?.aborted) {
+      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
+    }
   })
 
   return Promise.race([promise, timeout]).finally(() => {
+    settled = true
     if (timer) clearTimeout(timer)
   })
+}
+
+function turnOperationKey(threadId: string, turnId: string): string {
+  return `${threadId}\u0000${turnId}`
+}
+
+function throwIfAborted(signal: AbortSignal | undefined): void {
+  if (signal?.aborted) {
+    throw operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
+  }
 }
 
 function boundResult(value: unknown, maxChars: number): { value: unknown; chars: number; truncated: boolean } {
