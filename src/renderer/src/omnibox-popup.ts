@@ -83,9 +83,23 @@ function render(payload: OmniboxRenderPayload): void {
         deleteButton.title = 'Remove from history'
         deleteButton.setAttribute('aria-label', `Remove ${suggestion.text} from history`)
         deleteButton.innerHTML = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 4.5h9M6 4.5V3.25h4V4.5m-5.25 0 .55 8.25h5.4l.55-8.25M6.75 6.5v4.25m2.5-4.25v4.25" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        let deleteRequestedOnPointerDown = false
         deleteButton.addEventListener('pointerdown', (event) => {
           event.preventDefault()
           event.stopPropagation()
+          deleteRequestedOnPointerDown = true
+          window.omniboxPopup.deleteHistory(suggestion.url)
+        })
+        // Native button activation from the keyboard or assistive technology
+        // arrives as click without pointerdown. Pointer activation already
+        // commits early so the popup cannot disappear between down and up.
+        deleteButton.addEventListener('click', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          if (deleteRequestedOnPointerDown) {
+            deleteRequestedOnPointerDown = false
+            return
+          }
           window.omniboxPopup.deleteHistory(suggestion.url)
         })
         row.append(deleteButton)
