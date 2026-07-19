@@ -275,6 +275,11 @@ export type CheckpointRevertParams = {
   checkpointId: string
 }
 
+export type CheckpointChangedFilesParams = {
+  threadId: string
+  turnId: string
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -333,6 +338,7 @@ export const ipcChannels = {
   transcriptCachePersist: 'transcript-cache:persist',
   checkpointList: 'checkpoint:list',
   checkpointRevert: 'checkpoint:revert',
+  checkpointChangedFiles: 'checkpoint:changedFiles',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
   imageViewPreview: 'image-view:preview',

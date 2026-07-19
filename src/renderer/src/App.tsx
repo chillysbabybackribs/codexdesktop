@@ -2134,7 +2134,7 @@ export default function App(): React.JSX.Element {
             status: 'idle',
             turnId: null
           }))
-          maybeTriggerAuditors(turn.id)
+          void maybeTriggerAuditors(turn.id)
           if (turn.status === 'failed') {
             maybeScheduleAutoRecovery(notification.params.threadId, turn.id, turn.error)
           } else {
@@ -2595,10 +2595,17 @@ export default function App(): React.JSX.Element {
   // compact workspace-reading prompt (the auditor runs `git diff` itself —
   // no transcript piping). Failed/interrupted turns trigger too: partial
   // changes are prime audit material. Busy auditors are skipped, not queued.
-  function maybeTriggerAuditors(turnId: string): void {
+  async function maybeTriggerAuditors(turnId: string): Promise<void> {
     const auditors = agentSessionsRef.current.filter((session) => session.auditsMain)
     if (!auditors.length) return
-    const changed = turnChangedFiles(itemsRef.current, itemMetaRef.current, turnId)
+    const threadId = activeThreadIdRef.current
+    // fileChange items only cover editor-tool edits; the checkpoint diff is
+    // ground truth and also catches shell-command writes (the doer's most
+    // common editing mode).
+    let changed = turnChangedFiles(itemsRef.current, itemMetaRef.current, turnId)
+    if (!changed.length && threadId) {
+      changed = await window.api.checkpoints.changedFiles({ threadId, turnId }).catch(() => [])
+    }
     if (!changed.length) return
     const userItem = itemsRef.current.find(
       (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId

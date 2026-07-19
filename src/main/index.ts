@@ -18,6 +18,7 @@ import type {
   TracePersistParams,
   TranscriptCachePersistParams,
   CheckpointRevertParams,
+  CheckpointChangedFilesParams,
   CheckpointSummary,
   TraceSaveParams,
   TraceSaveResult
@@ -521,6 +522,10 @@ function registerIpc(): void {
   })
   ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
     await checkpointStore.revert(params.checkpointId)
+  })
+  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[]> => {
+    const record = await checkpointStore.find(params.threadId, params.turnId)
+    return record ? checkpointStore.changedFiles(record.id) : []
   })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {
