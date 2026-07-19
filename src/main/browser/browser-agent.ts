@@ -319,7 +319,11 @@ export class BrowserAgentController {
           ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
         })
         if (options.readySelector?.trim() && result.settleReason !== 'selector-ready') {
-          throw new Error(`navigation readiness failed: ${result.settleReason}`)
+          throw operationError(
+            'conditionTimeout',
+            'navigationReadiness',
+            `navigation readiness failed: ${result.settleReason}`
+          )
         }
         return {
           ok: true,
@@ -332,16 +336,15 @@ export class BrowserAgentController {
           truncated: false
         } satisfies BrowserAgentSuccess
       } catch (error) {
-        const errorCode = classifyBrowserFailure(error)
+        const failureFields = browserFailureFields(error)
         return {
           ok: false,
-          error: errorMessage(error),
-          errorCode,
+          ...failureFields,
           tabId,
           url: safeUrl(webContents),
           title: safeTitle(webContents),
           durationMs: Date.now() - startedAt,
-          ...(isLifecycleFailure(errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
+          ...(isLifecycleFailure(failureFields.errorCode) ? { targetState: { frames: frameInventory(webContents) } } : {})
         } satisfies BrowserAgentFailure
       }
     })
@@ -418,10 +421,16 @@ export class BrowserAgentController {
             ...(options.maxSettleMs === null || options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs })
           })
           if (options.readySelector?.trim() && navigation.settleReason !== 'selector-ready') {
-            throw new Error(`navigation readiness failed: ${navigation.settleReason}`)
+            throw operationError(
+              'conditionTimeout',
+              'navigationReadiness',
+              `navigation readiness failed: ${navigation.settleReason}`
+            )
           }
           webContents = tabs.resolveWebContents(tabId)
-          if (!webContents) throw new Error(`browser target ${tabId} closed during navigation`)
+          if (!webContents) {
+            throw operationError('targetClosed', 'targetLifecycle', `browser target ${tabId} closed during navigation`)
+          }
         }
 
         const targetContents = webContents
@@ -436,11 +445,23 @@ export class BrowserAgentController {
         const nestedTruncated = rawMetadata.truncated === true
         const assessment = assessBrowserExtractionResult(rawResult)
         if (!assessment.verified) {
+          const reason = assessment.reason ?? 'unknown'
+          const code: BrowserFailureCode = reason.startsWith('invalid selector:')
+            ? 'invalidSelector'
+            : reason === 'selector-not-found'
+              ? 'selectorNotFound'
+              : 'conditionNotMet'
+          const failure: BrowserFailure = {
+            code,
+            phase: 'snapshotVerification',
+            message: `page snapshot verification failed: ${reason}`
+          }
           return {
             ok: false,
             result: bounded.value,
-            error: `page snapshot verification failed: ${assessment.reason ?? 'unknown'}`,
-            errorCode: 'executionError',
+            error: failure.message,
+            errorCode: failure.code,
+            failure,
             tabId,
             url: safeUrl(targetContents),
             title: safeTitle(targetContents),
@@ -470,17 +491,16 @@ export class BrowserAgentController {
           ...(artifact ? { artifact } : {})
         } satisfies BrowserAgentSuccess
       } catch (error) {
-        const errorCode = classifyBrowserFailure(error)
+        const failureFields = browserFailureFields(error, 'pageScriptError', 'pageScript')
         const failureContents = webContents ?? tabs.resolveWebContents(tabId)
         return {
           ok: false,
-          error: errorMessage(error),
-          errorCode,
+          ...failureFields,
           tabId,
           url: failureContents ? safeUrl(failureContents) : '',
           title: failureContents ? safeTitle(failureContents) : '',
           durationMs: Date.now() - startedAt,
-          ...(isLifecycleFailure(errorCode) && failureContents
+          ...(isLifecycleFailure(failureFields.errorCode) && failureContents
             ? { targetState: { frames: frameInventory(failureContents) } }
             : {})
         } satisfies BrowserAgentFailure
@@ -518,7 +538,7 @@ export class BrowserAgentController {
         ok: result.ok,
         ...(result.ok
           ? { result: result.result, resultChars: result.resultChars ?? 0 }
-          : { error: result.error, errorCode: result.errorCode }),
+          : { error: result.error, errorCode: result.errorCode, failure: result.failure }),
         durationMs: result.durationMs ?? 0,
         truncated: result.truncated === true
       }

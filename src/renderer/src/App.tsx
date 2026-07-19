@@ -1233,6 +1233,14 @@ export default function App(): React.JSX.Element {
         workspace: resumed.cwd,
         reasoningEffort: resumed.reasoningEffort
       }
+      const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey)
+      const model = resumed.model ?? tab?.model ?? null
+      const reasoningEffort = resumed.reasoningEffort ?? tab?.reasoningEffort ?? null
+      patchMainChatTab(tabKey, (current) => ({ ...current, model, reasoningEffort }))
+      selectedModelRef.current = model
+      selectedReasoningEffortRef.current = reasoningEffort
+      setSelectedModel(model)
+      setSelectedReasoningEffort(reasoningEffort)
       setActiveReasoningEffort(resumed.reasoningEffort)
       activeReasoningEffortRef.current = resumed.reasoningEffort
       hydrateThread(resumed.thread, resumed.initialTurnsPage?.data, environment)
@@ -1595,10 +1603,15 @@ export default function App(): React.JSX.Element {
     if (activeTurnIdRef.current || userTurnRequestPendingRef.current) return
     if (activeThreadIdRef.current !== threadId) return
 
-    if (model && model !== selectedModelRef.current) {
-      selectedModelRef.current = model
-      setSelectedModel(model)
-      window.localStorage.setItem(modelStorageKey, model)
+    if (model !== selectedModelRef.current) {
+      const selected = modelsRef.current.find((candidate) => candidate.model === model) ??
+        modelsRef.current.find((candidate) => candidate.isDefault) ??
+        null
+      const supported = selected?.supportedReasoningEfforts.map((option) => option.reasoningEffort) ?? []
+      const reasoningEffort = selectedReasoningEffortRef.current && supported.includes(selectedReasoningEffortRef.current)
+        ? selectedReasoningEffortRef.current
+        : selected?.defaultReasoningEffort ?? null
+      setActiveMainChatModelSelection(model, reasoningEffort)
     }
 
     try {
@@ -1702,7 +1715,7 @@ export default function App(): React.JSX.Element {
       patch: {
         status,
         origin: 'live',
-        model: current.turnMeta[turn.id]?.model ?? selectedModelRef.current,
+        model: current.turnMeta[turn.id]?.model ?? tab.model,
         reasoningEffort: current.turnMeta[turn.id]?.reasoningEffort ?? current.reasoningEffort,
         workspace: current.turnMeta[turn.id]?.workspace ?? workspaceRef.current,
         startedAtMs: turn.startedAt ? turn.startedAt * 1000 : current.turnMeta[turn.id]?.startedAtMs,
@@ -1738,7 +1751,7 @@ export default function App(): React.JSX.Element {
   ): void {
     const meta = snapshot.turnMeta[turnId]
     if (!meta) return
-    const model = meta.model ?? selectedModelRef.current
+    const model = meta.model ?? tab.model
     const workspace = meta.workspace ?? workspaceRef.current
     const trace = buildTurnTrace({
       threadId,
@@ -2338,6 +2351,8 @@ export default function App(): React.JSX.Element {
           patchMainChatTab(tab.key, (current) => ({
             ...current,
             title: threadTitle(resumed.thread),
+            model: resumed.model ?? current.model,
+            reasoningEffort: resumed.reasoningEffort ?? current.reasoningEffort,
             status: inProgress ? 'working' : 'idle',
             turnId: inProgress?.id ?? null
           }))
