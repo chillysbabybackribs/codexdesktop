@@ -66,6 +66,7 @@ export async function restoreAgentDock(options: {
       messages: [],
       watchesMain: Boolean(entry.watchesMain),
       auditsMain: Boolean(entry.auditsMain),
+      lastAuditNote: null,
       model: entry.model ?? null,
       reasoningEffort: entry.reasoningEffort ?? null,
       contextUsage: null,

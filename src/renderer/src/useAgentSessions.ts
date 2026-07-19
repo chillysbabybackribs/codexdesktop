@@ -260,6 +260,7 @@ export function useAgentSessions(
     patchAgentSession(key, (session) => ({
       ...session,
       auditsMain: !session.auditsMain,
+      lastAuditNote: null,
       // The headline pairing: enabling audit mode on a session that has not
       // chosen a runtime yet defaults it to the Claude provider, so the main
       // chat's doer (codex) is reviewed by a different model family.

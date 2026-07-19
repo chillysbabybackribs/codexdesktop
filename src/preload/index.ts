@@ -156,7 +156,7 @@ export const api = {
   checkpoints: {
     list: (threadId: string): Promise<CheckpointSummary[]> => ipcRenderer.invoke(ipcChannels.checkpointList, threadId),
     revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params),
-    changedFiles: (params: CheckpointChangedFilesParams): Promise<string[]> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
+    changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>

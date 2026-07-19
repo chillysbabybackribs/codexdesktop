@@ -22,6 +22,10 @@ export type AgentSession = {
   messages: AgentLiteMessage[]
   watchesMain: boolean
   auditsMain: boolean
+  // Transient: why the last completed main-chat turn did not trigger an audit
+  // (no changes detected / detection unavailable). Shown in the standby view
+  // so an armed auditor never silently looks hung. Not persisted.
+  lastAuditNote: string | null
   model: string | null
   reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
@@ -56,6 +60,7 @@ export function createAgentSession(key: string, title: string): AgentSession {
     messages: [],
     watchesMain: false,
     auditsMain: false,
+    lastAuditNote: null,
     model: null,
     reasoningEffort: null,
     contextUsage: null,
@@ -70,6 +75,7 @@ export function resetAgentSession(session: AgentSession): AgentSession {
     status: 'idle',
     turnId: null,
     messages: [],
+    lastAuditNote: null,
     contextUsage: null,
     isCompacting: false
   }

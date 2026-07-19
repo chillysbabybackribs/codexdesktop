@@ -522,9 +522,12 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
     await checkpointStore.revert(params.checkpointId)
   })
-  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[]> => {
+  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
     const record = await checkpointStore.find(params.threadId, params.turnId)
-    return record ? checkpointStore.changedFiles(record.id) : []
+    // null = detection unavailable (no checkpoint for this turn — typically a
+    // non-git workspace), distinct from a genuinely empty diff. The audit
+    // trigger uses the difference to explain itself instead of silently idling.
+    return record ? checkpointStore.changedFiles(record.id) : null
   })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {

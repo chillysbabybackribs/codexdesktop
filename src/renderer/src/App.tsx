@@ -2601,12 +2601,26 @@ export default function App(): React.JSX.Element {
     const threadId = activeThreadIdRef.current
     // fileChange items only cover editor-tool edits; the checkpoint diff is
     // ground truth and also catches shell-command writes (the doer's most
-    // common editing mode).
+    // common editing mode). null = detection unavailable (no checkpoint for
+    // this turn — typically a non-git workspace), distinct from an empty diff.
     let changed = turnChangedFiles(itemsRef.current, itemMetaRef.current, turnId)
+    let detectionUnavailable = false
     if (!changed.length && threadId) {
-      changed = await window.api.checkpoints.changedFiles({ threadId, turnId }).catch(() => [])
+      const diffed = await window.api.checkpoints.changedFiles({ threadId, turnId }).catch(() => null)
+      if (diffed === null) detectionUnavailable = true
+      else changed = diffed
     }
-    if (!changed.length) return
+    if (!changed.length) {
+      // Tell armed auditors why nothing fired — an armed auditor that stays
+      // silent with no explanation reads as hung.
+      const note = detectionUnavailable
+        ? 'Last turn finished, but change detection needs a git workspace'
+        : 'Last turn finished with no file changes'
+      for (const auditor of auditors) {
+        patchAgentSession(auditor.key, (session) => ({ ...session, lastAuditNote: note }))
+      }
+      return
+    }
     const userItem = itemsRef.current.find(
       (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId
     )
@@ -2628,6 +2642,7 @@ export default function App(): React.JSX.Element {
         auditorTurnId: auditor.turnId,
         changedFiles: changed
       })) continue
+      patchAgentSession(auditor.key, (session) => ({ ...session, lastAuditNote: null }))
       void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary })
     }
   }

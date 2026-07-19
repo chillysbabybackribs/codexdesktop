@@ -521,7 +521,7 @@ const AgentWindow = memo(function AgentWindow({
         >
           {session.messages.length === 0 ? (
             session.auditsMain ? (
-              <AuditStandby live={liveMainTurn} />
+              <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
             ) : (
               <AgentModeSelector
                 session={session}
@@ -767,7 +767,14 @@ function AgentModeSelector({
 
 // Centered standby for an armed auditor with no conversation yet: waiting for
 // the main chat, then live progress from the auditor's POV once a turn runs.
-function AuditStandby({ live }: { live: LiveTurnGlance | null }): React.JSX.Element {
+// `note` explains the last turn that completed without triggering an audit.
+function AuditStandby({
+  live,
+  note
+}: {
+  live: LiveTurnGlance | null
+  note: string | null
+}): React.JSX.Element {
   return (
     <div className="agent-audit-standby" role="status">
       <span className="agent-standby-spinner" aria-hidden="true" />
@@ -784,7 +791,7 @@ function AuditStandby({ live }: { live: LiveTurnGlance | null }): React.JSX.Elem
       ) : (
         <>
           <span className="agent-standby-title">Waiting for the main chat</span>
-          <span className="agent-standby-meta">Audits run when a turn changes files</span>
+          <span className="agent-standby-meta">{note ?? 'Audits run when a turn changes files'}</span>
         </>
       )}
     </div>
