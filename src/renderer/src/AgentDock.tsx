@@ -221,6 +221,7 @@ const AgentWindow = memo(function AgentWindow({
   models,
   mainModel,
   mainReasoningEffort,
+  liveMainTurn,
   onSetModel,
   onSetModelEffort,
   onSelect,
