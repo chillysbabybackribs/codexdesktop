@@ -802,27 +802,19 @@ export default function App(): React.JSX.Element {
       return;
     }
 
-    // A browser-centered workspace needs a conversation on each side. Keep
-    // the current tab focused and create its companion in the background.
-    if (mainChatTabStateRef.current.tabs.length < 2) {
-      const active = mainChatTabStateRef.current.tabs.find(
-        (tab) => tab.key === activeMainChatTabKeyRef.current,
-      );
-      const companion = createMainChatTab(
-        crypto.randomUUID(),
-        null,
-        'New Chat',
-        active?.model ?? selectedModelRef.current,
-        active?.reasoningEffort ?? selectedReasoningEffortRef.current,
-      );
-      updateMainChatTabs((state) => ({ ...state, tabs: [...state.tabs, companion] }));
+    // Browser-centered workspaces own two independent tab collections. Older
+    // saved tab state had no side assignment, so normalize it at the boundary
+    // and seed the missing side with a real fresh chat when necessary.
+    const normalized = ensureBrowserMiddleTabAssignments(mainChatTabStateRef.current);
+    if (normalized !== mainChatTabStateRef.current) {
+      updateMainChatTabs(() => normalized);
     }
 
     updateChatSplitLayout((layout) =>
       browserMiddleChatLayout(
         layout,
-        mainChatTabStateRef.current.tabs.map((tab) => tab.key),
-        activeMainChatTabKeyRef.current,
+        browserMiddleTabKeys(mainChatTabStateRef.current.tabs),
+        browserMiddleActiveTabKeysRef.current,
       ),
     );
     setWorkspaceLayoutMode('browser-middle');
@@ -830,10 +822,13 @@ export default function App(): React.JSX.Element {
 
   // Split the focused pane and open a fresh chat in the new half — the
   // no-drag path to a 2x2 grid: Split right, then Split down on each column.
-  function handleSplitActivePane(direction: 'right' | 'down'): boolean {
+  function handleSplitActivePane(
+    targetKey: string,
+    direction: 'right' | 'down',
+  ): boolean {
     if (isMainChatTransitionLocked()) return false;
     if (mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false;
-    const focusedKey = activeMainChatTabKeyRef.current;
+    const focusedKey = targetKey;
     if (!canSplitPaneAt(chatSplitLayoutRef.current, focusedKey)) return false;
     flushActiveMainChatSession();
     cancelAutoRecovery();
@@ -844,6 +839,8 @@ export default function App(): React.JSX.Element {
       'New Chat',
       selectedModelRef.current,
       selectedReasoningEffortRef.current,
+      mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === focusedKey)
+        ?.browserMiddleSide ?? null,
     );
     // The pane is placed before its tab exists (raw layout op, no validation);
     // the tab update right after adds the tab and focuses it, so its
@@ -1074,6 +1071,28 @@ export default function App(): React.JSX.Element {
         if (isRelevantThread(event.threadId)) {
           setItemMeta((current) => reduceResearchProgressMeta(current, event));
         }
+        return;
+      }
+
+      if (event.type === 'agentSpawned') {
+        // Resolve which main-chat tab owns the spawning thread so the worker
+        // docks in the right chat: a main tab spawned it → that tab; a dock
+        // agent spawned it → that agent's owning tab; otherwise the active tab.
+        const parentThreadId = event.parentThreadId;
+        const owningTabKey =
+          (parentThreadId ? mainChatTabForThread(parentThreadId)?.key : null) ??
+          (parentThreadId ? backgroundSessionForThread(parentThreadId)?.mainChatTabKey : null) ??
+          activeMainChatTabKeyRef.current;
+        const parentAgentKey = parentThreadId
+          ? (backgroundSessionForThread(parentThreadId)?.key ?? null)
+          : null;
+        handleSpawnedAgent({
+          agentKey: event.agentKey,
+          parentAgentKey,
+          mainChatTabKey: owningTabKey,
+          title: event.title,
+          model: event.model,
+        });
         return;
       }
 
