@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { buildAuditPrompt, shouldTriggerAudit, turnChangedFiles, turnStepLines } from './audit-trigger.ts'
+import {
+  auditSummaryLabel,
+  buildAuditPrompt,
+  isAuditPrompt,
+  parseAuditPrompt,
+  shouldTriggerAudit,
+  turnChangedFiles,
+  turnStepLines
+} from './audit-trigger.ts'
 import type { ChatItem } from './transcript-model.ts'
 
 const fileChange = (id: string, paths: string[]): ChatItem =>
