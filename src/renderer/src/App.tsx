@@ -210,6 +210,8 @@ export default function App(): React.JSX.Element {
   const [fastMode, setFastMode] = useState(() => window.localStorage.getItem(fastModeStorageKey) === '1')
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null })
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null)
+  const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore)
+  if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore()
   const {
     agentSessions,
     openAgentKeys,
@@ -224,6 +226,7 @@ export default function App(): React.JSX.Element {
     patchAgentSession,
     appendAgentMessage,
     appendAgentMessageOnce,
+    setAgentSessionRender,
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
@@ -231,7 +234,7 @@ export default function App(): React.JSX.Element {
     handleMinimizeAgent,
     handleToggleWatchAgent,
     handleSetAgentModel
-  } = useAgentSessions(agentDockStorageKey, {
+  } = useAgentSessions(agentDockStorageKey, sessionStoreRef.current, {
     schedule: maybeScheduleAgentRecovery,
     cancel: cancelAgentRecovery
   })
@@ -267,8 +270,6 @@ export default function App(): React.JSX.Element {
   const persistedMemoryFingerprintsRef = useRef<Map<string, string>>(new Map())
   const mainChatTabStateRef = useRef(mainChatTabState)
   const activeMainChatTabKeyRef = useRef(activeMainChatTabKey)
-  const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore)
-  if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore()
   const olderHistoryCursorByThreadRef = useRef<Map<string, string | null>>(new Map())
   const olderHistoryLoadsRef = useRef<Set<string>>(new Set())
   const mainThreadStartsInFlightRef = useRef<Set<string>>(new Set())
@@ -1499,7 +1500,8 @@ export default function App(): React.JSX.Element {
         setOpenKeys: setOpenAgentKeys,
         setSelectedKey: setSelectedAgentKey,
         patchSession: patchAgentSession,
-        appendMessage: appendAgentMessage
+        appendMessage: appendAgentMessage,
+        setRenderState: setAgentSessionRender
       }
     })
   }

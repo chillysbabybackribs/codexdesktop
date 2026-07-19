@@ -4,7 +4,6 @@ import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import {
   createAgentSession,
-  completeAgentMessage,
   findAgentSessionByThread,
   serializeAgentDock,
   updateAgentSession,
@@ -13,7 +12,7 @@ import {
 } from './agent-session-model'
 import { buildOptimisticUserMessage } from './optimistic-user-message'
 import { upsertMany } from './transcript-model'
-import { emptySessionState, reduceSessionNotification, type SessionStore } from './session-store'
+import { emptySessionState, reduceSessionNotification, type SessionRenderState, type SessionStore } from './session-store'
 import { liteMessagesFromItems } from './agent-dock-restore'
 
 export function useAgentSessions(
@@ -37,6 +36,7 @@ export function useAgentSessions(
   patchAgentSession: (key: string, update: (session: AgentSession) => AgentSession) => void
   appendAgentMessage: (key: string, message: AgentLiteMessage) => void
   appendAgentMessageOnce: (key: string, message: AgentLiteMessage) => void
+  setAgentSessionRender: (key: string, state: SessionRenderState) => void
   backgroundSessionForThread: (threadId: string) => AgentSession | null
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
   handleNewAgent: () => void
@@ -117,6 +117,11 @@ export function useAgentSessions(
 
   function appendAgentMessageOnce(key: string, message: AgentLiteMessage): void {
     appendAgentMessage(key, message, true)
+  }
+
+  function setAgentSessionRender(key: string, state: SessionRenderState): void {
+    sessionStore.set(key, state)
+    syncAgentSession(key)
   }
 
   function backgroundSessionForThread(threadId: string): AgentSession | null {
@@ -279,6 +284,7 @@ export function useAgentSessions(
     patchAgentSession,
     appendAgentMessage,
     appendAgentMessageOnce,
+    setAgentSessionRender,
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,

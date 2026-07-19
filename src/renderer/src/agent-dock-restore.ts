@@ -2,6 +2,7 @@ import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 import { attachmentsFromUserInput } from './Attachments.js'
 import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import type { ChatItem } from './transcript-model.js'
+import { emptySessionState, type SessionRenderState } from './session-store.js'
 
 type MutableRef<T> = { current: T }
 
@@ -13,6 +14,7 @@ type AgentDockStore = {
   setSelectedKey: (update: (key: string | null) => string | null) => void
   patchSession: (key: string, update: (session: AgentSession) => AgentSession) => void
   appendMessage: (key: string, message: AgentLiteMessage) => void
+  setRenderState: (key: string, state: SessionRenderState) => void
 }
 
 export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
@@ -24,7 +26,7 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         .map((content) => content.text)
         .join('\n')
       const attachments = attachmentsFromUserInput(item.content)
-      if (text || attachments.length) messages.push({ id: item.id, role: 'user', text, attachments })
+      if (text || attachments.length) messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
     } else if (item.type === 'agentMessage' && item.text) {
       messages.push({ id: item.id, role: 'assistant', text: item.text })
     }
@@ -86,25 +88,19 @@ export async function restoreAgentDock(options: {
           // order before taking its recent tail.
           : [...(resumed.initialTurnsPage?.data ?? [])].reverse()
 
-        const messages: AgentLiteMessage[] = []
-        for (const turn of turns) {
-          for (const item of turn.items) {
-            if (item.type === 'userMessage') {
-              const text = item.content
-                .flatMap((content: UserInput) => content.type === 'text' ? [content.text] : [])
-                .join('\n')
-              const attachments = attachmentsFromUserInput(item.content)
-              if (text || attachments.length) {
-                messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
-              }
-            } else if (item.type === 'agentMessage' && item.text) {
-              messages.push({ id: item.id, role: 'assistant', text: item.text })
-            }
-          }
-        }
+        const items = turns.flatMap((turn) => turn.items)
+        const itemMeta = Object.fromEntries(
+          turns.flatMap((turn) => turn.items.map((item) => [item.id, { turnId: turn.id }]))
+        )
+        store.setRenderState(session.key, emptySessionState({
+          threadId: session.threadId,
+          title: session.title,
+          items,
+          itemMeta,
+          reasoningEffort: resumed.reasoningEffort ?? session.reasoningEffort
+        }))
         store.patchSession(session.key, (current) => ({
           ...current,
-          messages: messages.slice(-4),
           reasoningEffort: resumed.reasoningEffort ?? current.reasoningEffort
         }))
       } catch (error) {
