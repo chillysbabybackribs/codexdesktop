@@ -87,8 +87,11 @@ import {
 } from './session-store';
 import { parseTranscriptSession, serializeTranscriptSession } from './transcript-cache-model';
 import {
+  buildAuditFeedbackMessage,
   buildAuditPrompt,
   liveTurnGlance,
+  parseAuditVerdict,
+  shouldSendAuditFeedback,
   shouldTriggerAudit,
   turnAnswerText,
   turnChangedFiles,
@@ -3036,6 +3039,7 @@ export default function App(): React.JSX.Element {
           onMinimizeAgent={handleMinimizeAgent}
           onToggleWatchAgent={handleToggleWatchAgent}
           onToggleAuditAgent={handleToggleAuditAgent}
+          onToggleReportAgent={handleToggleReportAgent}
           onSetAgentModel={handleSelectAgentModel}
           onSetAgentModelEffort={handleSelectAgentModelEffort}
           onNewAgent={handleNewAgent}
