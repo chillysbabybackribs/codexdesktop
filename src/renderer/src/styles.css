@@ -3611,24 +3611,20 @@ button {
   flex: 0 0 auto;
   width: 28px;
   height: 28px;
-  margin-left: 4px;
+  margin-left: 2px;
   place-items: center;
-  border: 1px solid #2c2c2c;
-  border-radius: 7px;
-  background: #1c1c1c;
-  color: #d5d7da;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #96969a;
   cursor: pointer;
   transition:
-    background 120ms ease,
-    border-color 120ms ease,
     color 120ms ease,
     transform 90ms ease;
 }
 
 .composer-new-agent-button:hover {
-  border-color: #404040;
-  background: #262629;
-  color: #ffffff;
+  color: #e8e8ea;
 }
 
 .composer-new-agent-button:active {

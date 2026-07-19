@@ -412,14 +412,11 @@ export function ChatPane({
             openKeys={openAgentKeys}
             onFocus={focusAgent}
           />
-          {/* Always available: a reviewer armed while idle audits the very
-              next turn — the born-a-reviewer default is most useful BEFORE
-              the work starts, not only mid-turn. */}
           <button
             type="button"
             className="composer-new-agent-button"
-            aria-label="Open a new reviewer agent"
-            title="New agent — born a reviewer"
+            aria-label="New agent"
+            title="New agent"
             onClick={() => onNewAgent(activeMainChatTabKey)}
           >
             <NewAgentIcon />
