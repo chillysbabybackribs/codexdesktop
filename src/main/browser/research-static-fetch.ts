@@ -1,14 +1,10 @@
-import { parseHTML } from 'linkedom'
-import { buildPageExtractionProgram } from './browser-agent.js'
-import { assessExtractedPage } from './research-utils.js'
+import { extractStaticPage } from '../workers/static-extract-client.js'
 
-// Keep inert parsing bounded on Electron's main thread. Larger documents move
-// directly to Chromium, where parsing cannot stall the application event loop.
+// Byte limits bound network reads; parsing itself runs in a utility-process
+// worker (Phase 5) so large documents cannot stall the application event loop.
+// Larger-than-limit documents move directly to Chromium.
 const DEFAULT_MAX_BYTES = 750_000
 const DEFAULT_MAX_REDIRECTS = 5
-const STATIC_ARTIFACT_CHARS = 100_000
-const MIN_STATIC_WORDS = 80
-const MIN_STATIC_CONTENT_CHARS = 500
 
 export type StaticResearchPage = {
   title: string
@@ -39,15 +35,6 @@ export type StaticResearchFetchOptions = {
   signal: AbortSignal
   maxBytes?: number
   maxRedirects?: number
-}
-
-const runStaticExtraction = new Function(
-  'document',
-  'location',
-  'Node',
-  buildPageExtractionProgram(STATIC_ARTIFACT_CHARS)
-) as (document: unknown, location: { href: string }, node: unknown) => Omit<StaticResearchPage, 'html' | 'status'> & {
-  status?: number
 }
 
 export async function fetchStaticResearchPage(
@@ -122,23 +109,14 @@ export async function fetchStaticResearchPage(
     if (body.text === null) return result('fallback', startedAt, bytes, redirects, 'static response has no body', currentUrl)
 
     try {
-      const { document, Node } = parseHTML(body.text)
-      if (!document.querySelector('article, main, [role="main"], [itemprop="articleBody"]')) {
-        return result('fallback', startedAt, bytes, redirects, 'static document has no confident content root', currentUrl)
+      const extraction = await extractStaticPage(body.text, currentUrl)
+      if (!extraction.ok) {
+        return result('fallback', startedAt, bytes, redirects, extraction.reason, currentUrl)
       }
-      const extracted = runStaticExtraction(document, { href: currentUrl }, Node)
       const page: StaticResearchPage = {
-        ...extracted,
-        url: currentUrl,
+        ...extraction.page,
         status: response.status,
         html: body.text
-      }
-      const assessment = assessExtractedPage(page)
-      if (!assessment.verified) {
-        return result('fallback', startedAt, bytes, redirects, `static verification failed: ${assessment.reason}`, currentUrl)
-      }
-      if (page.wordCount < MIN_STATIC_WORDS || page.content.length < MIN_STATIC_CONTENT_CHARS) {
-        return result('fallback', startedAt, bytes, redirects, 'static extraction confidence is too low', currentUrl)
       }
       return {
         kind: 'accepted',
