@@ -59,8 +59,11 @@ export function turnStartedNotification(context: ClaudeTurnContext, userText: st
 
 export class ClaudeTurnTranslator {
   private readonly blocks = new Map<number, { id: string; kind: 'text' | 'thinking' | 'tool'; text: string }>()
+  private readonly context: ClaudeTurnContext
 
-  constructor(private readonly context: ClaudeTurnContext) {}
+  constructor(context: ClaudeTurnContext) {
+    this.context = context
+  }
 
   handle(raw: unknown): ClaudeTranslation {
     const message = asRecord(raw)
