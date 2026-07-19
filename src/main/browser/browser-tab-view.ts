@@ -56,6 +56,12 @@ export function attachBrowserTabViewEvents(
       event.preventDefault()
       window.webContents.send('browser:findRequested')
     }
+    if (input.key === 'F11' && input.type === 'keyDown') {
+      // Keyboard focus lives in the guest page; forward the browser-fullscreen
+      // toggle to the chrome renderer, which owns the workspace layout.
+      event.preventDefault()
+      window.webContents.send('browser:fullscreenToggleRequested')
+    }
     if ((input.control || input.meta) && input.key.toLowerCase() === 'l') {
       event.preventDefault()
       // Keyboard focus is in the page's webContents; hand it back to the

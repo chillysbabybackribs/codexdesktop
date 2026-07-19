@@ -86,6 +86,13 @@ export const api = {
         ipcRenderer.off(ipcChannels.browserFindRequested, wrapped)
       }
     },
+    onFullscreenToggleRequested: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.browserFullscreenToggleRequested, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserFullscreenToggleRequested, wrapped)
+      }
+    },
     setBounds: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserSetBounds, bounds),
     beginDividerDrag: () => ipcRenderer.invoke(ipcChannels.browserBeginDividerDrag),
     endDividerDrag: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserEndDividerDrag, bounds),

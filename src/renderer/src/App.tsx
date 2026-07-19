@@ -218,6 +218,10 @@ export default function App(): React.JSX.Element {
   );
   const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null, vpn: { state: 'off', bootstrapProgress: 0, detail: null } });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
+  // Browser-fullscreen hides the chat pane and divider so the browser fills
+  // the workspace. Renderer-only: the native view follows via the normal
+  // host-measurement pipeline (ResizeObserver -> setBounds).
+  const [isBrowserFullscreen, setIsBrowserFullscreen] = useState(false);
   const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore);
   if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore();
   // Declared before useAgentSessions so its reviewer-model derivation can
@@ -967,9 +971,13 @@ export default function App(): React.JSX.Element {
     [measureBrowserBounds],
   );
 
+  const toggleBrowserFullscreen = useCallback(() => {
+    setIsBrowserFullscreen((current) => !current);
+  }, []);
+
   useEffect(() => {
     updateBrowserBounds(true);
-  }, [split, updateBrowserBounds]);
+  }, [split, isBrowserFullscreen, updateBrowserBounds]);
 
   useEffect(() => {
     const host = viewHostRef.current;
@@ -3191,8 +3199,12 @@ export default function App(): React.JSX.Element {
     <div ref={appRef} className="app-shell">
       <TitleBar />
       <main
-        className="workspace"
-        style={{ gridTemplateColumns: `${split}% ${dividerWidth}px 1fr` }}
+        className={`workspace ${isBrowserFullscreen ? 'is-browser-fullscreen' : ''}`}
+        style={{
+          gridTemplateColumns: isBrowserFullscreen
+            ? '1fr'
+            : `${split}% ${dividerWidth}px 1fr`,
+        }}
       >
         <ChatPane
           turnCheckpoints={turnCheckpoints}
@@ -3297,6 +3309,8 @@ export default function App(): React.JSX.Element {
           activeTab={activeTab}
           viewHostRef={viewHostRef}
           viewBounds={viewBounds}
+          isFullscreen={isBrowserFullscreen}
+          onToggleFullscreen={toggleBrowserFullscreen}
         />
       </main>
     </div>
