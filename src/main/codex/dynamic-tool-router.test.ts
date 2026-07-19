@@ -86,6 +86,60 @@ test('dynamic tool router validates and forwards navigation-aware browser flows'
   })
 })
 
+test('dynamic tool router forwards one-call network capture without losing match fields', async () => {
+  let received: unknown = null
+  const browserAgent = withTurnRunner({
+    captureNetwork: async (capture: unknown, options: unknown) => {
+      received = { capture, options }
+      return { ok: true, result: { network: { request: { requestId: 'one' } } } }
+    }
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_network', {
+    url: 'https://example.com/results',
+    match: {
+      urlContains: '/graphql',
+      method: 'POST',
+      resourceType: 'Fetch',
+      mimeType: 'json',
+      statusMin: 200,
+      statusMax: 299
+    },
+    captureBody: true,
+    readySelector: '.results',
+    quietMs: 80,
+    maxSettleMs: 500,
+    tab: 'tab-1',
+    timeoutMs: 4_000,
+    maxResultChars: 6_000
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  const record = received as {
+    capture: Record<string, unknown>
+    options: { signal?: AbortSignal } & Record<string, unknown>
+  }
+  assert.equal(record.options.signal instanceof AbortSignal, true)
+  assert.deepEqual({ capture: record.capture, options: omitSignal(record.options) }, {
+    capture: {
+      url: 'https://example.com/results',
+      steps: undefined,
+      match: {
+        urlContains: '/graphql',
+        method: 'POST',
+        resourceType: 'Fetch',
+        mimeType: 'json',
+        statusMin: 200,
+        statusMax: 299
+      },
+      captureBody: true,
+      readySelector: '.results',
+      quietMs: 80,
+      maxSettleMs: 500
+    },
+    options: { tabId: 'tab-1', timeoutMs: 4_000, maxResultChars: 6_000 }
+  })
+})
+
 test('dynamic tool router validates and forwards the one-call browser snapshot', async () => {
   const rejected = await routeDynamicToolCall(params('browser_snapshot', { objective: '   ' }), {
     browserAgent: unusedBrowser,
