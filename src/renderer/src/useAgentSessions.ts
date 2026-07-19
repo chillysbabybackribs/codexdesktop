@@ -308,12 +308,13 @@ export function useAgentSessions(
       // Feedback requires an audit to exist: disabling audit disables it.
       reportsToMain: session.auditsMain ? false : session.reportsToMain,
       lastAuditNote: null,
-      // The headline pairing: enabling audit mode on a session that has not
-      // chosen a runtime yet defaults it to the Claude provider, so the main
-      // chat's doer (codex) is reviewed by a different model family.
+      // The headline pairing: arming audit on a session that has not chosen a
+      // runtime yet derives a model from a different family than the main
+      // chat's current model — cross-provider review whichever direction the
+      // pairing runs. Explicit choices are never overridden.
       model:
         !session.auditsMain && !session.threadId && !session.model
-          ? 'claude-default'
+          ? deriveReviewerModel()
           : session.model,
     }));
   }
@@ -322,14 +323,29 @@ export function useAgentSessions(
     patchAgentSession(key, (session) => ({
       ...session,
       reportsToMain: !session.reportsToMain,
+      // An explicit toggle IS the send-policy decision — the first-flag
+      // prompt never needs to ask this agent.
+      sendPolicyDecided: true,
       // Feedback without an audit is meaningless: enabling it arms audit mode
       // too (with the same cross-provider model default).
       auditsMain: session.reportsToMain ? session.auditsMain : true,
       lastAuditNote: null,
       model:
         !session.reportsToMain && !session.auditsMain && !session.threadId && !session.model
-          ? 'claude-default'
+          ? deriveReviewerModel()
           : session.model,
+    }));
+  }
+
+  // The first-flag decision, made with a real finding on screen: "always"
+  // arms auto-send from here on, "keep" leaves reports in the dock (the
+  // manual flag badge still works either way).
+  function handleDecideSendPolicy(key: string, policy: 'always' | 'keep'): void {
+    patchAgentSession(key, (session) => ({
+      ...session,
+      sendPolicyDecided: true,
+      reportsToMain: policy === 'always' ? true : session.reportsToMain,
+      auditsMain: policy === 'always' ? true : session.auditsMain,
     }));
   }
 
@@ -396,6 +412,7 @@ export function useAgentSessions(
     handleToggleWatchAgent,
     handleToggleAuditAgent,
     handleToggleReportAgent,
+    handleDecideSendPolicy,
     handleSetAgentModel,
   };
 }
