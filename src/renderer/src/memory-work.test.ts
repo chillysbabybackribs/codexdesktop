@@ -25,3 +25,14 @@ test('failures and test results outrank browser activity', () => {
     'Command failed with exit 1: npm run build'
   ])
 })
+
+test('browser flow completion is retained as high-value browser work', () => {
+  assert.deepEqual(selectCompletedWork([
+    'Tool completed: browser_extract_page',
+    'Command succeeded: inspect current page',
+    'Tool completed: browser_flow'
+  ]), [
+    'Command succeeded: inspect current page',
+    'Tool completed: browser_flow'
+  ])
+})
