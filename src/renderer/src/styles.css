@@ -7017,11 +7017,10 @@ button {
   display: flex;
   width: max-content;
   max-width: 100cqw;
-  padding: 6px 6px 8px;
-  gap: 5px;
+  padding: 0;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
-  border-radius: 12px 12px 0 0;
+  border-radius: 11px 11px 0 0;
   /* Same white overlay the bar head uses (1.5%) stacked on --surface-card,
      so the menu grey is identical to the bar it grows out of. */
   background-color: var(--surface-card);
