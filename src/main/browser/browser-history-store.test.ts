@@ -115,6 +115,28 @@ test('shares a restored tab favicon across same-site history and future visits',
   }
 })
 
+test('removes one exact history url durably without deleting sibling pages', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
+  try {
+    const filePath = join(directory, 'history.json')
+    const store = new BrowserHistoryStore(() => filePath)
+    await store.load()
+    store.recordVisit('https://example.com/first', 'First', 1000)
+    store.recordVisit('https://example.com/second', 'Second', 2000)
+
+    assert.equal(store.remove('https://example.com/first'), true)
+    assert.equal(store.remove('https://example.com/first'), false)
+    assert.equal(store.remove('javascript:alert(1)'), false)
+    await store.flush()
+
+    const reloaded = new BrowserHistoryStore(() => filePath)
+    await reloaded.load()
+    assert.deepEqual(reloaded.entries().map((entry) => entry.url), ['https://example.com/second'])
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
 test('flush reports a failed write and leaves the save queue reusable', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
   try {

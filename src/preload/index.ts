@@ -103,6 +103,13 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.browserOmniboxQuery, text, anchor),
     omniboxSelect: (index: number) => ipcRenderer.invoke(ipcChannels.browserOmniboxSelect, index),
     omniboxClose: () => ipcRenderer.invoke(ipcChannels.browserOmniboxClose),
+    onHistoryRemoved: (listener: (url: string) => void) => {
+      const wrapped = (_event: Electron.IpcRendererEvent, url: string): void => listener(url)
+      ipcRenderer.on(ipcChannels.browserHistoryRemoved, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserHistoryRemoved, wrapped)
+      }
+    },
     menuOpen: (anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
       ipcRenderer.invoke(ipcChannels.browserMenuOpen, anchor, items),
     menuUpdate: (items: BrowserMenuItem[]) => ipcRenderer.invoke(ipcChannels.browserMenuUpdate, items),

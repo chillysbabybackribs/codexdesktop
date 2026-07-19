@@ -137,6 +137,15 @@ export class BrowserHistoryStore {
     return Array.from(this.entriesByUrl.values())
   }
 
+  remove(url: string): boolean {
+    if (!isRecordableUrl(url) || !this.entriesByUrl.delete(url)) {
+      return false
+    }
+
+    this.scheduleSave()
+    return true
+  }
+
   async flush(): Promise<void> {
     if (this.saveTimer) {
       clearTimeout(this.saveTimer)

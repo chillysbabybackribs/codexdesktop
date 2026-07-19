@@ -292,6 +292,13 @@ function BrowserToolbar({
     input?.focus()
     input?.select()
   }), [])
+  useEffect(() => window.api.browser.onHistoryRemoved((url) => {
+    setSuggestions((current) => current.filter(
+      (suggestion) => suggestion.kind !== 'history' || suggestion.url !== url
+    ))
+    setSelectedIndex(-1)
+    setInput(typedTextRef.current)
+  }), [])
   // Guest pages forward F11 through the main process (focus lives in the
   // native view); this subscription handles it alongside chrome-focused F11.
   useEffect(

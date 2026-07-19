@@ -7,6 +7,7 @@ declare global {
     omniboxPopup: {
       onRender: (listener: (payload: OmniboxRenderPayload) => void) => () => void
       commit: (url: string) => void
+      deleteHistory: (url: string) => void
     }
   }
 }
@@ -74,6 +75,21 @@ function render(payload: OmniboxRenderPayload): void {
       detail.textContent = suggestion.detail
 
       row.append(icon, text, detail)
+
+      if (suggestion.kind === 'history') {
+        const deleteButton = document.createElement('button')
+        deleteButton.className = 'row-delete'
+        deleteButton.type = 'button'
+        deleteButton.title = 'Remove from history'
+        deleteButton.setAttribute('aria-label', `Remove ${suggestion.text} from history`)
+        deleteButton.innerHTML = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 4.5h9M6 4.5V3.25h4V4.5m-5.25 0 .55 8.25h5.4l.55-8.25M6.75 6.5v4.25m2.5-4.25v4.25" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        deleteButton.addEventListener('pointerdown', (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          window.omniboxPopup.deleteHistory(suggestion.url)
+        })
+        row.append(deleteButton)
+      }
       // pointerdown, not click: the click's mouseup can be lost when focus
       // shifts away from the main renderer and the popup gets hidden mid-press.
       row.addEventListener('pointerdown', (event) => {

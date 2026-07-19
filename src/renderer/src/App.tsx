@@ -3715,9 +3715,16 @@ export default function App(): React.JSX.Element {
       auditContextByAuditorRef.current.set(auditor.key, {
         threadId,
         auditedTurnWasFeedback: auditFeedbackTurnIdsRef.current.has(turnId),
-        // Ground truth for the controller's progress check; null = detection
-        // unavailable (non-git workspace), which is skipped, not zero.
-        changedFileCount: detectionUnavailable ? null : changed.length,
+        // Ground truth for the controller's progress check. null = signal not
+        // applicable: either detection was unavailable (non-git workspace) or
+        // the turn was chat-style work (an answer with no file changes —
+        // research/review tasks), where "changed no files" is normal, not
+        // stagnation. The ceiling and repeated-flag checks still bound those
+        // loops.
+        changedFileCount:
+          detectionUnavailable || (changed.length === 0 && Boolean(answerText))
+            ? null
+            : changed.length,
       });
       void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary });
     }

@@ -240,13 +240,23 @@ function createWindow(): void {
     updateFavicon: (url, favicon) => browserHistoryStore.updateFavicon(url, favicon)
   })
 
-  omniboxPopup = new OmniboxPopup(mainWindow, (url) => {
-    const activeTabId = tabManager?.getActiveTabId()
+  omniboxPopup = new OmniboxPopup(
+    mainWindow,
+    (url) => {
+      const activeTabId = tabManager?.getActiveTabId()
 
-    if (activeTabId) {
-      tabManager?.navigate(activeTabId, url)
+      if (activeTabId) {
+        tabManager?.navigate(activeTabId, url)
+      }
+    },
+    (url) => {
+      const removed = browserHistoryStore.remove(url)
+      if (removed) {
+        sendToMainRenderer(ipcChannels.browserHistoryRemoved, url)
+      }
+      return removed
     }
-  })
+  )
 
   browserMenuPopup = new BrowserMenuPopup(
     mainWindow,
