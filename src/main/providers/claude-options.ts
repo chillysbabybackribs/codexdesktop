@@ -1,15 +1,25 @@
-export const claudeDefaultModelId = 'claude-default'
+import {
+  claudeRuntimeModel,
+  normalizeClaudeEffort,
+  type ClaudeEffort
+} from './claude-models.js'
+
+export { claudeDefaultModelId } from './claude-models.js'
 
 export type ClaudeQuerySession = {
   cwd: string
   model: string | null
+  effort: ClaudeEffort | null
+  fastMode: boolean
   claudeSessionId: string | null
 }
 
 export function buildClaudeQueryOptions(session: ClaudeQuerySession, mcpServerConfig: unknown | null) {
   return {
     cwd: session.cwd,
-    ...(session.model && session.model !== claudeDefaultModelId ? { model: session.model } : {}),
+    ...(claudeRuntimeModel(session.model) ? { model: claudeRuntimeModel(session.model)! } : {}),
+    ...(normalizeClaudeEffort(session.effort) ? { effort: normalizeClaudeEffort(session.effort)! } : {}),
+    ...(session.fastMode ? { settings: { fastMode: true, fastModePerSessionOptIn: true } } : {}),
     ...(session.claudeSessionId ? { resume: session.claudeSessionId } : {}),
     includePartialMessages: true,
     // The pinned SDK requires this explicit acknowledgement whenever bypass

@@ -24,6 +24,7 @@ import type { AttachmentStore } from '../attachment-store.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
 import type { SessionProvider } from '../providers/session-provider.js'
 import { ClaudeProvider } from '../providers/claude-provider.js'
+import { isClaudeModelId } from '../providers/claude-models.js'
 import type { ProviderId } from '../../shared/session-protocol/provider.js'
 
 export type RegisteredSessionProviders = {
@@ -53,7 +54,7 @@ export function registerSessionIpc(
   const byThread = (threadId?: string | null): SessionProvider =>
     threadId?.startsWith('claude-') ? claude : client
   const forNewThread = (model?: string | null): SessionProvider =>
-    model?.startsWith('claude') ? claude : client
+    isClaudeModelId(model) ? claude : client
   void providers
 
   for (const provider of [client, claude]) {
@@ -64,8 +65,14 @@ export function registerSessionIpc(
 
   ipcMain.handle(ipcChannels.sessionGetAuthStatus, () => client.getAuthStatus())
   ipcMain.handle(ipcChannels.sessionListModels, async () => {
-    const [codexModels, claudeModels] = await Promise.all([client.listModels(), claude.listModels()])
-    return [...codexModels, ...claudeModels]
+    const [codexModels, claudeModels] = await Promise.allSettled([client.listModels(), claude.listModels()])
+    if (codexModels.status === 'rejected') console.warn('failed to list Codex models:', codexModels.reason)
+    if (claudeModels.status === 'rejected') console.warn('failed to list Claude models:', claudeModels.reason)
+    if (codexModels.status === 'rejected' && claudeModels.status === 'rejected') throw codexModels.reason
+    return [
+      ...(codexModels.status === 'fulfilled' ? codexModels.value : []),
+      ...(claudeModels.status === 'fulfilled' ? claudeModels.value : [])
+    ]
   })
   ipcMain.handle(ipcChannels.sessionListThreads, (_event, params?: CodexListThreadsParams) =>
     client.listThreads(params)

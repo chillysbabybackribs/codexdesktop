@@ -1,7 +1,7 @@
 import type { ProviderCapabilities, ProviderId } from '../../shared/session-protocol/provider.js'
 import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
-import type { Model } from '../../shared/codex-protocol/v2/Model.js'
+import type { Model } from '../../shared/session-protocol/index.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
