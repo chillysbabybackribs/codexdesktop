@@ -11,7 +11,11 @@ export default defineConfig({
           index: resolve('src/main/index.ts'),
           // utilityProcess entry: research static-lane HTML extraction runs
           // off the main thread (Phase 5).
-          'static-extract-worker': resolve('src/main/workers/static-extract-worker.ts')
+          'static-extract-worker': resolve('src/main/workers/static-extract-worker.ts'),
+          // Standalone MCP stdio facade over the browser tools; spawned by an
+          // MCP client (Claude CLI) with plain node, proxies to the unix
+          // control socket (Claude-prep step 6).
+          'mcp-browser-shim': resolve('src/main/workers/mcp-browser-shim.ts')
         }
       }
     }
