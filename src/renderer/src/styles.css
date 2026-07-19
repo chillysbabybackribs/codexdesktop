@@ -5151,10 +5151,6 @@ button {
   }
 }
 
-.composer-primary-action {
-  right: 14px;
-}
-
 .settings-overlay {
   position: fixed;
   inset: 0;
@@ -5369,29 +5365,6 @@ button {
   background: #1c1c1c;
   color: #4a4d52;
   box-shadow: none;
-}
-
-/* The "+" create button stays a quiet ghost square, matching the leading
-   icons rather than competing with the send accent. */
-.composer .composer-primary-action .send-button.composer-new-chat {
-  border-color: #2c2c2c;
-  background: #1c1c1c;
-  color: #cfcfcf;
-  box-shadow: none;
-}
-
-.composer .composer-primary-action .send-button.composer-new-chat:not(:disabled):hover {
-  border-color: #404040;
-  background: #262629;
-  color: #ececec;
-}
-
-.composer .composer-primary-action .stop-square-button {
-  width: 44px;
-  height: 44px;
-  border-radius: 11px;
-  border-color: #2c2c2c;
-  background: #1c1c1c;
 }
 
 .composer .send-button:not(:disabled):hover {
@@ -7305,7 +7278,7 @@ code.agent-audit-live-step {
   .composer-create-menu,
   .message-assistant.is-streaming > *:last-child::after,
   .task-activity-message.is-streaming .markdown-body > *:last-child::after,
-  .context-pill.is-compacting .context-pill-fill,
+  .context-pill.is-compacting .context-pill-ring-fill,
   .work-spinner,
   .tab-favicon-spinner,
   .agent-status-spinner,
