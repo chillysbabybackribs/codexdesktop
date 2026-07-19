@@ -1,7 +1,7 @@
 import {
-  FormEvent,
-  KeyboardEvent as ReactKeyboardEvent,
-  PointerEvent,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent,
   memo,
   useCallback,
   useEffect,

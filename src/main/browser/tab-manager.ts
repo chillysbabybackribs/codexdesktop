@@ -587,7 +587,7 @@ export class TabManager {
           canGoForward: navigation.canGoForward,
           isAudible: tab.isAudible,
           isMuted: tab.isMuted,
-          zoomPercent: Math.round(100 * Math.pow(1.2, tab.view.webContents.getZoomLevel()))
+          zoomPercent: Math.round(100 * 1.2 ** tab.view.webContents.getZoomLevel())
         }
       })
     })

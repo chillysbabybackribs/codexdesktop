@@ -1,7 +1,7 @@
 import {
-  FormEvent,
-  KeyboardEvent as ReactKeyboardEvent,
-  RefObject,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type RefObject,
   useEffect,
   useLayoutEffect,
   useRef,
