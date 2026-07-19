@@ -650,7 +650,7 @@ export default function App(): React.JSX.Element {
           const supported = active.supportedReasoningEfforts.map((option) => option.reasoningEffort)
           const reasoningEffort = tab.reasoningEffort && supported.includes(tab.reasoningEffort)
             ? tab.reasoningEffort
-            : active.defaultReasoningEffort
+            : supported.length ? active.defaultReasoningEffort : null
           return { ...tab, model, reasoningEffort }
         }
         const activeTab = normalizeTab(
@@ -980,7 +980,7 @@ export default function App(): React.JSX.Element {
     const supported = selected.supportedReasoningEfforts.map((option) => option.reasoningEffort)
     const nextEffort = selectedReasoningEffortRef.current && supported.includes(selectedReasoningEffortRef.current)
       ? selectedReasoningEffortRef.current
-      : selected.defaultReasoningEffort
+      : supported.length ? selected.defaultReasoningEffort : null
     setActiveMainChatModelSelection(model, nextEffort)
   }
 
@@ -1004,7 +1004,7 @@ export default function App(): React.JSX.Element {
     const supported = selected.supportedReasoningEfforts.map((option) => option.reasoningEffort)
     const nextEffort = session.reasoningEffort && supported.includes(session.reasoningEffort)
       ? session.reasoningEffort
-      : selected.defaultReasoningEffort
+      : supported.length ? selected.defaultReasoningEffort : null
     handleSetAgentModel(key, model, nextEffort)
   }
 
@@ -1767,7 +1767,7 @@ export default function App(): React.JSX.Element {
       const supported = selected?.supportedReasoningEfforts.map((option) => option.reasoningEffort) ?? []
       const reasoningEffort = selectedReasoningEffortRef.current && supported.includes(selectedReasoningEffortRef.current)
         ? selectedReasoningEffortRef.current
-        : selected?.defaultReasoningEffort ?? null
+        : supported.length ? selected?.defaultReasoningEffort ?? null : null
       setActiveMainChatModelSelection(model, reasoningEffort)
     }
 

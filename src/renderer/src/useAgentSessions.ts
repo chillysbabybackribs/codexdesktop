@@ -46,7 +46,7 @@ export function useAgentSessions(
   handleMinimizeAgent: (key: string) => void
   handleToggleWatchAgent: (key: string) => void
   handleToggleAuditAgent: (key: string) => void
-  handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort) => void
+  handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort | null) => void
 } {
   const [agentSessions, setAgentSessions] = useState<AgentSession[]>([])
   const [openAgentKeys, setOpenAgentKeys] = useState<string[]>([])
@@ -268,11 +268,11 @@ export function useAgentSessions(
     }))
   }
 
-  function handleSetAgentModel(key: string, model: string, effort?: ReasoningEffort): void {
+  function handleSetAgentModel(key: string, model: string, effort?: ReasoningEffort | null): void {
     patchAgentSession(key, (session) => ({
       ...session,
       model,
-      ...(effort ? { reasoningEffort: effort } : {})
+      reasoningEffort: effort ?? null
     }))
   }
 

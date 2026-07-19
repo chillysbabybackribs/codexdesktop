@@ -93,6 +93,9 @@ export function ModelPill({
   const expandedIndex = models.findIndex((model) => model.model === expandedModel)
   const expanded = expandedIndex >= 0 ? models[expandedIndex] : null
   const expandedEfforts = expanded?.supportedReasoningEfforts ?? []
+  const canToggleFastMode = Boolean(
+    onToggleFastMode && (active?.providerId !== 'claude' || active.supportsFastMode === true)
+  )
 
   useLayoutEffect(() => {
     if (!expandedModel || !expandedEfforts.length) {
@@ -206,7 +209,7 @@ export function ModelPill({
                 </div>
               )
             })}
-            {onToggleFastMode ? (
+            {canToggleFastMode && onToggleFastMode ? (
               <div className="fast-mode-setting">
                 <span className="fast-mode-copy">
                   <span className="fast-mode-label">Fast mode</span>
@@ -277,6 +280,7 @@ function reasoningEffortLabel(effort: ReasoningEffort): string {
     medium: 'Medium',
     high: 'High',
     xhigh: 'Extra High',
+    max: 'Maximum',
     ultra: 'Ultra'
   } as Record<string, string>)[effort] ?? effort
 }

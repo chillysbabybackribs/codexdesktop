@@ -32,6 +32,12 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
       }
     } else if (item.type === 'agentMessage' && item.text) {
+      // Adjacent identical assistant items are stream-restate artifacts (the
+      // translator dedupes new turns at the source; this also cleans threads
+      // persisted before that fix). A model genuinely repeating itself
+      // verbatim back-to-back carries no information worth double-rendering.
+      const previous = messages.at(-1)
+      if (previous?.role === 'assistant' && previous.text === item.text) continue
       messages.push({ id: item.id, role: 'assistant', text: item.text })
     }
   }
