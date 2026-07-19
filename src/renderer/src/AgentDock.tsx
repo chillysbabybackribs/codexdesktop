@@ -572,6 +572,8 @@ const AgentWindow = memo(function AgentWindow({
       <AgentComposer
         session={session}
         working={working}
+        models={models}
+        mainModel={mainModel}
         textareaRef={textareaRef}
         onSend={onSend}
         onSteer={onSteer}

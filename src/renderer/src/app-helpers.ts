@@ -1,9 +1,34 @@
-import type { CodexErrorInfo, Model, Thread, ThreadGoal } from '../../shared/session-protocol';
+import type {
+  CodexErrorInfo,
+  Model,
+  ProviderId,
+  Thread,
+  ThreadGoal,
+} from '../../shared/session-protocol';
 import type { TurnMeta } from './TaskActivity';
 
 export function modelAcceptsImages(models: Model[], model: string | null): boolean {
   const selected = models.find((candidate) => candidate.model === model || candidate.id === model);
   return !selected || selected.inputModalities.includes('image');
+}
+
+export function resolveModelEntry(models: Model[], modelId: string | null): Model | undefined {
+  if (modelId) {
+    return models.find((candidate) => candidate.model === modelId || candidate.id === modelId);
+  }
+  return models.find((candidate) => candidate.isDefault) ?? models[0];
+}
+
+export function resolveModelProvider(models: Model[], modelId: string | null): ProviderId {
+  return resolveModelEntry(models, modelId)?.providerId ?? 'codex';
+}
+
+export function providerDisplayName(providerId: ProviderId): string {
+  return providerId === 'claude' ? 'Claude Code' : 'Codex';
+}
+
+export function steerComposerPlaceholder(providerId: ProviderId): string {
+  return `Add guidance while ${providerDisplayName(providerId)} works…`;
 }
 
 export function isTerminalTurnStatus(status: TurnMeta['status']): boolean {

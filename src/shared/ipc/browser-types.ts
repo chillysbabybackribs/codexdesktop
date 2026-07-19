@@ -59,6 +59,39 @@ export type OmniboxAnchor = {
   width: number
 }
 
+/** Commands the browser overflow (kebab) menu can dispatch. */
+export type BrowserMenuCommand =
+  | 'find'
+  | 'mute'
+  | 'vpn'
+  | 'zoom-out'
+  | 'zoom-reset'
+  | 'zoom-in'
+  | 'fullscreen'
+
+export type BrowserMenuItem =
+  | {
+      kind: 'action'
+      command: Exclude<BrowserMenuCommand, 'zoom-out' | 'zoom-reset' | 'zoom-in'>
+      label: string
+      /** Icon key resolved by the popup document (it has its own svg set). */
+      icon: 'find' | 'volume' | 'volume-muted' | 'shield' | 'fullscreen' | 'fullscreen-exit'
+      disabled?: boolean
+      checked?: boolean
+    }
+  | { kind: 'zoom'; percent: number; disabled?: boolean }
+  | { kind: 'separator' }
+
+/** Anchor in window content coordinates: the menu button rect's bottom-right corner. */
+export type BrowserMenuAnchor = {
+  x: number
+  y: number
+}
+
+export type BrowserMenuRenderPayload = {
+  items: BrowserMenuItem[]
+}
+
 export type OmniboxRenderPayload = {
   suggestions: OmniboxSuggestion[]
   selectedIndex: number

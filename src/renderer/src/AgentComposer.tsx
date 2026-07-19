@@ -1,7 +1,9 @@
 import { useLayoutEffect, useState } from 'react'
 import type { FormEvent, RefObject } from 'react'
 import type { ChatAttachment } from '../../shared/ipc'
+import type { Model } from '../../shared/session-protocol'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
+import { resolveModelProvider, steerComposerPlaceholder } from './app-helpers'
 import type { AgentSession } from './agent-session-model'
 
 // The per-agent composer at the bottom of an agent window: autosizing
@@ -11,6 +13,8 @@ import type { AgentSession } from './agent-session-model'
 export function AgentComposer({
   session,
   working,
+  models,
+  mainModel,
   textareaRef,
   onSend,
   onSteer,
@@ -19,6 +23,8 @@ export function AgentComposer({
 }: {
   session: AgentSession
   working: boolean
+  models: Model[]
+  mainModel: string | null
   textareaRef: RefObject<HTMLTextAreaElement | null>
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
@@ -38,6 +44,7 @@ export function AgentComposer({
   }, [value])
 
   const hasDraft = Boolean(value.trim() || attachments.length)
+  const providerId = resolveModelProvider(models, session.model ?? mainModel)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -84,7 +91,11 @@ export function AgentComposer({
           ref={textareaRef}
           value={value}
           rows={1}
-          placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
+          placeholder={
+            working
+              ? steerComposerPlaceholder(providerId)
+              : 'Message this agent…'
+          }
           disabled={isSending}
           onChange={(event) => setValue(event.target.value)}
           onPaste={(event) => {

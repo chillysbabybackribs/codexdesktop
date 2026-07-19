@@ -9,7 +9,11 @@ export type {
   OmniboxSuggestion,
   OmniboxAnchor,
   OmniboxRenderPayload,
-  OmniboxQueryResult
+  OmniboxQueryResult,
+  BrowserMenuCommand,
+  BrowserMenuItem,
+  BrowserMenuAnchor,
+  BrowserMenuRenderPayload
 } from './ipc/browser-types.js'
 export type {
   CodexConnectionStatus,

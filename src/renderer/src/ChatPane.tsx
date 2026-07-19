@@ -448,6 +448,7 @@ export function ChatPane({
           dropZone={paneDropTarget?.tabKey === node.tabKey ? paneDropTarget.zone : null}
           sessionStore={agentSessionStore}
           workspace={workspace}
+          models={models}
           codexStatus={status}
           isRestoring={isRestoring}
           isBusy={isBusy}

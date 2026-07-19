@@ -7,7 +7,8 @@ import {
   useState,
 } from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
-import type { PluginSummary } from '../../shared/session-protocol';
+import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
+import { steerComposerPlaceholder } from './app-helpers';
 import { SendArrowIcon } from './AgentDock';
 import {
   AttachmentButton,
@@ -42,6 +43,7 @@ export function Composer({
   onStop,
   onNewThread,
   onNewAgent,
+  providerId = 'codex',
   footerLeading,
   footerTrailing,
 }: {
@@ -59,6 +61,7 @@ export function Composer({
   onStop: () => Promise<void>;
   onNewThread: () => void;
   onNewAgent: () => void;
+  providerId?: ProviderId;
   footerLeading?: React.ReactNode;
   footerTrailing?: React.ReactNode;
 }): React.JSX.Element {
@@ -358,7 +361,7 @@ export function Composer({
         rows={1}
         placeholder={
           isTurnActive
-            ? 'Add guidance while Codex works…'
+            ? steerComposerPlaceholder(providerId)
             : docked
               ? 'Reply…'
               : 'Plan, build, or ask anything…'

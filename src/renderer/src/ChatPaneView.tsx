@@ -7,7 +7,8 @@ import {
   useSyncExternalStore,
 } from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
-import type { PluginSummary } from '../../shared/session-protocol';
+import type { Model, PluginSummary } from '../../shared/session-protocol';
+import { resolveModelProvider } from './app-helpers';
 import { Composer } from './Composer';
 import { ContextPill, UnsplitIcon } from './ChatControls';
 import { ChatItemView, TaskActivityCard } from './ChatTranscript';
@@ -53,6 +54,7 @@ export function ChatPaneView({
   dropZone,
   sessionStore,
   workspace,
+  models,
   codexStatus,
   isRestoring,
   isBusy,
@@ -87,6 +89,7 @@ export function ChatPaneView({
   dropZone: SplitDropZone | null;
   sessionStore: SessionStore;
   workspace: string | null;
+  models: Model[];
   codexStatus: string;
   isRestoring: boolean;
   isBusy: boolean;
@@ -129,6 +132,7 @@ export function ChatPaneView({
   const paneTurnId = session.turnId;
   const paneThreadId = session.threadId;
   const hasContent = items.length > 0;
+  const providerId = resolveModelProvider(models, tab?.model ?? null);
 
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null);
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null);
@@ -419,6 +423,7 @@ export function ChatPaneView({
           }}
           onNewThread={() => void runFocused(onNewThread)}
           onNewAgent={() => void runFocused(onNewAgent)}
+          providerId={providerId}
           footerTrailing={
             <ContextPill
               usage={session.contextUsage}
