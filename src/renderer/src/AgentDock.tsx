@@ -865,6 +865,7 @@ function areAgentWindowPropsEqual(
 ): boolean {
   return previous.session === next.session &&
     previous.isSelected === next.isSelected &&
+    previous.isExtended === next.isExtended &&
     previous.models === next.models &&
     previous.mainModel === next.mainModel &&
     previous.mainReasoningEffort === next.mainReasoningEffort &&
@@ -1084,32 +1085,85 @@ function AgentActivity({
 
 function AssistantMessage({
   text,
-  onSendFlagged
+  onSendFlagged,
+  sendPrompt
 }: {
   text: string
   onSendFlagged?: () => void
+  sendPrompt?: SendPolicyPrompt | null
 }): React.JSX.Element {
   const verdict = parseAuditVerdict(text)
   if (!verdict) return <MarkdownContent text={text} />
-  const actionable = verdict === 'flag' && onSendFlagged
+  // The undecided first flag asks instead of acting: the user judges a real
+  // finding before granting (or declining) the standing auto-send.
+  const asksPolicy = verdict === 'flag' && sendPrompt
+  const actionable = verdict === 'flag' && !asksPolicy && onSendFlagged
   return (
     <>
-      <MarkdownContent text={stripVerdictLine(text)} />
       {actionable ? (
         <button
           type="button"
-          className="agent-audit-verdict is-flag is-actionable"
+          className="agent-audit-verdict is-flag is-actionable is-lead"
           title="Send this report to the main chat"
           onClick={onSendFlagged}
         >
           ⚑ flagged · send to main chat
         </button>
       ) : (
-        <span className={`agent-audit-verdict is-${verdict}`}>
+        <span className={`agent-audit-verdict is-${verdict} is-lead`}>
           {verdict === 'pass' ? '✓ pass' : '⚑ flagged'}
         </span>
       )}
+      <MarkdownContent text={stripVerdictLine(text)} />
+      {asksPolicy ? (
+        <div className="agent-send-prompt" role="group" aria-label="Send this report to the main chat?">
+          <span className="agent-send-prompt-copy">Send this report to the main chat?</span>
+          <div className="agent-send-prompt-actions">
+            <button type="button" className="agent-send-prompt-button is-primary" onClick={sendPrompt.onSendOnce}>
+              Send
+            </button>
+            <button type="button" className="agent-send-prompt-button" onClick={sendPrompt.onAlways}>
+              Always send
+            </button>
+            <button type="button" className="agent-send-prompt-button is-quiet" onClick={sendPrompt.onKeep}>
+              Keep here
+            </button>
+          </div>
+        </div>
+      ) : null}
     </>
+  )
+}
+
+// A collapsed exchange: verdict glyph + one-line headline. Click to expand
+// the full-fidelity rows in place; click again on the open capsule to fold.
+function ExchangeCapsule({
+  exchange,
+  open,
+  onToggle
+}: {
+  exchange: DockExchange
+  open: boolean
+  onToggle: (id: string) => void
+}): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      className={`agent-exchange-capsule ${open ? 'is-open' : ''}`}
+      aria-expanded={open}
+      onClick={() => onToggle(exchange.id)}
+    >
+      <span
+        className={`agent-capsule-verdict ${exchange.verdict ? `is-${exchange.verdict}` : 'is-none'}`}
+        aria-hidden="true"
+      >
+        {exchange.verdict === 'pass' ? '✓' : exchange.verdict === 'flag' ? '⚑' : '·'}
+      </span>
+      <span className="agent-capsule-headline">{exchange.headline}</span>
+      <span className="agent-capsule-chevron" aria-hidden="true">
+        <ChevronDownIcon />
+      </span>
+    </button>
   )
 }
 
@@ -1247,6 +1301,32 @@ function ExpandIcon(): React.JSX.Element {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  )
+}
+
+// Extend (corners out) vs collapse (corners in) for the window-size toggle —
+// distinct from ExpandIcon, which the menu uses for "Switch to main chat".
+function ExtendIcon({ active }: { active: boolean }): React.JSX.Element {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      {active ? (
+        <path
+          d="M10 4v6H4M14 20v-6h6M10 10 4 4M14 14l6 6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <path
+          d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
     </svg>
   )
 }

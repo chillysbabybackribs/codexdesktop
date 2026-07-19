@@ -329,7 +329,7 @@ function ReviewMenuChevron(): React.JSX.Element {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
-        d="m7 9.5 5 5 5-5"
+        d="m7 14.5 5-5 5 5"
         stroke="currentColor"
         strokeWidth="1.9"
         strokeLinecap="round"

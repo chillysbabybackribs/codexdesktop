@@ -6845,6 +6845,7 @@ button {
 
 .review-action-menu {
   position: absolute;
+  top: auto;
   right: 0;
   bottom: calc(100% + 7px);
   z-index: 30;
