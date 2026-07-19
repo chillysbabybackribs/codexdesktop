@@ -1744,6 +1744,40 @@ export default function App(): React.JSX.Element {
     if (!closing || closing.status === 'working') return;
     const wasActive = current.activeKey === key;
     if (wasActive) flushActiveMainChatSession();
+
+    // Each centered column must remain independently usable. Closing its last
+    // tab clears that slot into a fresh chat instead of silently deleting the
+    // entire right or left collection.
+    if (
+      workspaceLayoutMode === 'browser-middle' &&
+      closing.browserMiddleSide &&
+      current.tabs.filter((tab) => tab.browserMiddleSide === closing.browserMiddleSide).length === 1
+    ) {
+      const replacement = createMainChatTab(
+        closing.key,
+        null,
+        'New Chat',
+        closing.model,
+        closing.reasoningEffort,
+        closing.browserMiddleSide,
+      );
+      sessionStoreRef.current.remove(key);
+      resumeFailuresByTabRef.current.delete(key);
+      discardComposerDraft(key);
+      updateMainChatTabs((state) => ({
+        ...state,
+        tabs: state.tabs.map((tab) => (tab.key === key ? replacement : tab)),
+      }));
+      if (closing.threadId) unsubscribeDetachedMainThread(closing.threadId);
+      if (wasActive) {
+        cancelAutoRecovery();
+        focusMainChatTab(replacement);
+        persistLastThreadId(null);
+        focusActiveComposer();
+      }
+      return;
+    }
+
     let next = closeMainChatTab(current, key, () => crypto.randomUUID());
     // Closing a chat that is on screen in a split: focus stays in the split
     // (its spatial sibling) instead of jumping to a hidden neighbor tab. The
@@ -2147,7 +2181,10 @@ export default function App(): React.JSX.Element {
       // reports as '|' on most layouts) splits it downward.
       if (event.key === '\\' || event.key === '|') {
         event.preventDefault();
-        handleSplitActivePane(event.key === '|' || event.shiftKey ? 'down' : 'right');
+        handleSplitActivePane(
+          activeMainChatTabKeyRef.current,
+          event.key === '|' || event.shiftKey ? 'down' : 'right',
+        );
         return;
       }
 

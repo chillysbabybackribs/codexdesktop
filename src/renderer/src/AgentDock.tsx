@@ -3,7 +3,7 @@ import { EffortSelector, ModelSelector } from './ModelPill'
 import type { Model } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
-import type { AgentSession } from './agent-session-model'
+import { buildAgentRoster, type AgentRosterNode, type AgentSession, type RosterRollupStatus } from './agent-session-model'
 import type { LiveTurnGlance } from './audit-trigger'
 import { exchangeHasTurn, groupDockExchanges } from './dock-exchanges'
 import { buildRows } from './transcript-model'
@@ -19,6 +19,10 @@ import { AgentContextPill, AuditStandby, GlanceActionLine } from './agent-audit-
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 export { SendArrowIcon } from './AgentComposer'
 
+// The roster spine: a shallow master-detail map of the tab's agents. Top-level
+// agents (reviewers, spawn leads) render as chips; a lead that spawned workers
+// shows a rolled-up status glyph and its workers nested one level beneath.
+// Clicking any chip focuses that agent's full transcript in the dock (detail).
 export function AgentTabStrip({
   sessions,
   openKeys,
@@ -28,22 +32,83 @@ export function AgentTabStrip({
   openKeys: string[]
   onFocus: (key: string) => void
 }): React.JSX.Element {
+  const roster = useMemo(() => buildAgentRoster(sessions), [sessions])
   return (
     <div className="agent-tabs">
-      {sessions.map((session) => (
-        <button
-          type="button"
-          key={session.key}
-          className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''}`}
-          title={session.title}
-          onClick={() => onFocus(session.key)}
-        >
-          <AgentStatusIcon status={session.status} />
-          <span className="agent-tab-title">{session.title}</span>
-        </button>
+      {roster.map((node) => (
+        <RosterNodeChips key={node.session.key} node={node} openKeys={openKeys} onFocus={onFocus} />
       ))}
     </div>
   )
+}
+
+function RosterNodeChips({
+  node,
+  openKeys,
+  onFocus,
+  depth = 0
+}: {
+  node: AgentRosterNode
+  openKeys: string[]
+  onFocus: (key: string) => void
+  depth?: number
+}): React.JSX.Element {
+  const { session, children, rollup } = node
+  const hasChildren = children.length > 0
+  const workingCount = countByStatus(node, 'working')
+  const totalDescendants = countDescendants(node)
+  return (
+    <>
+      <button
+        type="button"
+        className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''} ${depth > 0 ? 'is-child' : ''}`}
+        title={session.title}
+        onClick={() => onFocus(session.key)}
+      >
+        {depth > 0 ? <span className="agent-tab-branch" aria-hidden="true" /> : null}
+        <RollupStatusIcon rollup={hasChildren ? rollup : session.status} />
+        <span className="agent-tab-title">{session.title}</span>
+        {hasChildren ? (
+          <span className="agent-tab-count" title={`${workingCount} of ${totalDescendants} working`}>
+            {workingCount > 0 ? `${workingCount}/${totalDescendants}` : totalDescendants}
+          </span>
+        ) : null}
+      </button>
+      {children.map((child) => (
+        <RosterNodeChips
+          key={child.session.key}
+          node={child}
+          openKeys={openKeys}
+          onFocus={onFocus}
+          depth={depth + 1}
+        />
+      ))}
+    </>
+  )
+}
+
+function countDescendants(node: AgentRosterNode): number {
+  return node.children.reduce((sum, child) => sum + 1 + countDescendants(child), 0)
+}
+
+function countByStatus(node: AgentRosterNode, status: AgentSession['status']): number {
+  return node.children.reduce(
+    (sum, child) => sum + (child.session.status === status ? 1 : 0) + countByStatus(child, status),
+    0
+  )
+}
+
+// A lead's chip shows the rolled-up subtree status; a leaf shows its own. The
+// rollup adds 'attention' (a failed descendant) over the plain agent statuses.
+function RollupStatusIcon({
+  rollup
+}: {
+  rollup: RosterRollupStatus | AgentSession['status']
+}): React.JSX.Element {
+  if (rollup === 'attention') {
+    return <span className="agent-status agent-status-attention" role="status" aria-label="Needs attention" />
+  }
+  return <AgentStatusIcon status={rollup} />
 }
 
 export function AgentColumn({

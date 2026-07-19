@@ -40,6 +40,7 @@ export function ChatPane({
   agentSessionStore,
   mainChatTabs,
   activeMainChatTabKey,
+  headerActiveMainChatTabKey = activeMainChatTabKey,
   mainChatTabsDisabled,
   onSelectMainChatTab,
   onReorderMainChatTabs,
@@ -128,6 +129,7 @@ export function ChatPane({
   agentSessionStore: SessionStore;
   mainChatTabs: MainChatTab[];
   activeMainChatTabKey: string;
+  headerActiveMainChatTabKey?: string;
   mainChatTabsDisabled: boolean;
   onSelectMainChatTab: (key: string) => Promise<boolean>;
   onReorderMainChatTabs: (
@@ -136,7 +138,7 @@ export function ChatPane({
     placement: 'before' | 'after',
   ) => void;
   onCloseMainChatTab: (key: string) => Promise<void>;
-  onNewMainChatTab: () => void;
+  onNewMainChatTab: (side?: 'left' | 'right') => void;
   paneId?: string;
   showTabBar?: boolean;
   browserMiddleSide?: 'left' | 'right' | null;
@@ -147,7 +149,7 @@ export function ChatPane({
   onCloseSplitPane: (tabKey: string) => void;
   onSetSplitRatio: (path: string, ratio: number) => void;
   canSplitForDrop: (targetKey: string, sourceKey: string) => boolean;
-  onSplitActivePane: (direction: 'right' | 'down') => boolean;
+  onSplitActivePane: (targetKey: string, direction: 'right' | 'down') => boolean;
   canSplitActivePane: boolean;
   items: ChatItem[];
   itemMeta: Record<string, ItemMeta>;
@@ -557,17 +559,17 @@ export function ChatPane({
             idPrefix={headerIdPrefix}
             showGlobalActions={showGlobalHeaderActions}
             tabs={mainChatTabs}
-            activeKey={activeMainChatTabKey}
+            activeKey={headerActiveMainChatTabKey}
             disabled={mainChatTabsDisabled}
             onSelect={onSelectMainChatTab}
             onReorder={onReorderMainChatTabs}
             onPaneDragUpdate={setPaneDropTarget}
             onDropOnPane={onDropTabOnPane}
             canSplitForDrop={canSplitForDrop}
-            onSplitActivePane={onSplitActivePane}
+            onSplitActivePane={(direction) => onSplitActivePane(headerActiveMainChatTabKey, direction)}
             canSplitActivePane={canSplitActivePane}
             onClose={onCloseMainChatTab}
-            onNew={onNewMainChatTab}
+            onNew={() => onNewMainChatTab(browserMiddleSide ?? undefined)}
             isBrowserMiddle={isBrowserMiddle}
             onToggleBrowserMiddle={onToggleBrowserMiddle}
             onOpenSettings={() => setIsSettingsOpen(true)}
