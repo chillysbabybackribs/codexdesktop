@@ -24,10 +24,16 @@ workspace. No transcript piping.
   Phase 4 checkpoint store for `changedFiles` (pre-turn snapshot vs current
   tree via a temp-index diff: modifications + additions + deletions,
   gitignore-respected). Caught-by-test and live.
-- **The audit prompt is tiny by design**: the user's request (truncated), the
-  changed file list, and instructions to run `git diff HEAD` itself, reply
-  under 120 words, and append durable findings to `AUDIT.md` (create if
-  missing) — the filesystem-blackboard both agents share.
+- **The briefing carries the whole story, gathered for free.** The app
+  "watches" the task at zero model cost (it already holds every work item)
+  and the single audit prompt contains: the user's request (truncated), an
+  ordered **step log** (`turnStepLines` — commands with exit codes, edited
+  paths, searches, tool calls; capped at 20 clipped lines), and the changed
+  file list. The auditor uses the log to choose per-file depth — `git diff`
+  only what looks consequential, skim the rest — which keeps the final audit
+  fast and cheap (one model call per task, no mid-turn monitoring turns).
+  Findings under 120 words; durable issues appended to `AUDIT.md` — the
+  filesystem blackboard both agents share.
 
 ## Verified
 
