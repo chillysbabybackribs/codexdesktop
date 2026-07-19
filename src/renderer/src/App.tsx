@@ -3491,6 +3491,7 @@ function ChatPane({
   onMinimizeAgent,
   onToggleWatchAgent,
   onToggleAuditAgent,
+  onToggleReportAgent,
   onSetAgentModel,
   onSetAgentModelEffort,
   onNewAgent,
@@ -3563,6 +3564,7 @@ function ChatPane({
   onMinimizeAgent: (key: string) => void;
   onToggleWatchAgent: (key: string) => void;
   onToggleAuditAgent: (key: string) => void;
+  onToggleReportAgent: (key: string) => void;
   onSetAgentModel: (key: string, model: string) => void;
   onSetAgentModelEffort: (key: string, model: string, effort: ReasoningEffort) => void;
   onNewAgent: () => void;
@@ -3855,6 +3857,7 @@ function ChatPane({
               onPromote={onPromoteAgent}
               onToggleWatch={onToggleWatchAgent}
               onToggleAudit={onToggleAuditAgent}
+              onToggleReport={onToggleReportAgent}
               onSend={onAgentSend}
               onSteer={onAgentSteer}
               onStop={onAgentStop}

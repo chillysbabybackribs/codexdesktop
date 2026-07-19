@@ -56,6 +56,7 @@ export function AgentColumn({
   onPromote,
   onToggleWatch,
   onToggleAudit,
+  onToggleReport,
   onSend,
   onSteer,
   onStop,
@@ -76,6 +77,7 @@ export function AgentColumn({
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
   onToggleAudit: (key: string) => void
+  onToggleReport: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
