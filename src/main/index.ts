@@ -94,6 +94,7 @@ let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 let verificationBrowserControlReady = false
 let verificationBrowserRestored = false
 let verificationCloseScheduled = false
+const verificationAutoCloseDelayMs = 1_000
 
 function maybeCloseVerificationInstance(): void {
   if (
@@ -112,7 +113,7 @@ function maybeCloseVerificationInstance(): void {
   // is what the verifier observes, not a terminal-signal shortcut.
   setTimeout(() => {
     if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
-  }, 250)
+  }, verificationAutoCloseDelayMs)
 }
 
 function scheduleBrowserPersist(): void {
