@@ -824,12 +824,12 @@ button {
 }
 
 .thread-menu-item.is-active {
-  background: rgb(95 131 224 / 12%);
+  background: rgb(255 255 255 / 7%);
   box-shadow: inset 2px 0 0 #5f83e0;
 }
 
 .thread-menu-item.is-active.is-highlighted {
-  background: rgb(95 131 224 / 18%);
+  background: rgb(255 255 255 / 10%);
 }
 
 .thread-menu-item-icon {
@@ -844,7 +844,7 @@ button {
 }
 
 .thread-menu-item.is-active .thread-menu-item-icon {
-  color: #a7bbec;
+  color: #a9afb6;
 }
 
 .thread-menu-item-title {
