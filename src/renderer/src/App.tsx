@@ -2630,6 +2630,10 @@ export default function App(): React.JSX.Element {
           onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
           onAgentCompact={handleAgentCompact}
+          onLoadOlderHistory={() => {
+            const threadId = activeThreadIdRef.current
+            if (threadId) void loadOlderThreadHistory(threadId, activeMainChatTabKeyRef.current)
+          }}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
         <BrowserPane
@@ -2855,7 +2859,8 @@ function ChatPane({
   onAgentSend,
   onAgentSteer,
   onAgentStop,
-  onAgentCompact
+  onAgentCompact,
+  onLoadOlderHistory
 }: {
   mainChatTabs: MainChatTab[]
   activeMainChatTabKey: string
@@ -2919,6 +2924,7 @@ function ChatPane({
   onAgentSteer: (key: string, text: string) => Promise<boolean>
   onAgentStop: (key: string) => Promise<void>
   onAgentCompact: (key: string) => Promise<void>
+  onLoadOlderHistory: () => void
 }): React.JSX.Element {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isPluginBrowserOpen, setIsPluginBrowserOpen] = useState(false)
@@ -3107,10 +3113,7 @@ function ChatPane({
         resetKey={activeThreadId}
         activeTurnId={activeTurnId}
         dependencies={[items, itemMeta, activeTurnId]}
-        onReachStart={() => {
-          const threadId = activeThreadIdRef.current
-          if (threadId) void loadOlderThreadHistory(threadId, activeMainChatTabKeyRef.current)
-        }}
+        onReachStart={onLoadOlderHistory}
       >
         {isRestoring ? (
           <div className="chat-restore-status" role="status" aria-live="polite">
