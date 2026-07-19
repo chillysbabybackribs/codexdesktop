@@ -26,7 +26,7 @@ export type CdpFileArtifact = {
   artifactPath: string
   fileName: string
   mediaType: string
-  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body' | 'browser-result'
+  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body' | 'network-stream' | 'browser-result'
   bytes: number
   createdAt: string
 }
@@ -121,6 +121,13 @@ export class CdpArtifactStore {
     const normalizedMimeType = normalizeMimeType(mimeType)
     const extension = responseBodyExtension(normalizedMimeType, url)
     return this.persistBufferArtifact(buffer, 'response-body', extension, normalizedMimeType, 'response-body')
+  }
+
+  async persistNetworkStream(serialized: string): Promise<CdpFileArtifact> {
+    const buffer = Buffer.from(serialized, 'utf8')
+    if (buffer.length === 0) throw new Error('Network stream capture returned no data')
+    if (buffer.length > maxResponseBodyBytes) throw new Error('Network stream capture exceeds the 25 MB artifact limit')
+    return this.persistBufferArtifact(buffer, 'network-stream', 'ndjson', 'application/x-ndjson', 'network-stream')
   }
 
   async persistBrowserResult(serialized: string): Promise<CdpFileArtifact> {

@@ -1,5 +1,12 @@
 import type { WebContents } from 'electron'
-import { NetworkJournal, type NetworkJournalPage, type NetworkJournalQuery, type NetworkRequestSummary } from './network-journal.js'
+import {
+  NetworkJournal,
+  type NetworkJournalPage,
+  type NetworkJournalQuery,
+  type NetworkRequestSummary,
+  type NetworkStreamCapture,
+  type NetworkStreamTransport
+} from './network-journal.js'
 import {
   PERFORMANCE_TIMELINE_EVENT_TYPES,
   PerformanceDiagnostics,
@@ -278,6 +285,17 @@ export class CdpSession {
     signal?: AbortSignal
   ): Promise<NetworkRequestSummary> {
     return this.networkJournal.waitForRequest(query, timeoutMs, signal)
+  }
+
+  waitForNetworkStream(
+    transport: NetworkStreamTransport,
+    query: NetworkJournalQuery,
+    maxMessages: number,
+    idleMs: number,
+    timeoutMs: number,
+    signal?: AbortSignal
+  ): Promise<NetworkStreamCapture> {
+    return this.networkJournal.waitForStream(transport, query, maxMessages, idleMs, timeoutMs, signal)
   }
 
   async startPerformanceDiagnostics(): Promise<PerformanceDiagnosticsPage> {
