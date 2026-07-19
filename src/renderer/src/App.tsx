@@ -1884,6 +1884,21 @@ export default function App(): React.JSX.Element {
           void refreshThreads()
           return
         }
+        // Dock threads also reduce into the session store under the agent key,
+        // so the store is the complete record of every surface. The lite dock
+        // view still renders from AgentSession; dock cards that want rich data
+        // (work items, turn telemetry) read the store. The full view-model
+        // swap is deferred to the dock UI upgrade (see phase2 doc).
+        sessionStoreRef.current.update(backgroundSession.key, (current) => {
+          const seeded = current.threadId === null && backgroundSession.threadId
+            ? { ...current, threadId: backgroundSession.threadId, title: backgroundSession.title }
+            : current
+          return reduceSessionNotification(seeded, notification, {
+            atMs: Date.now(),
+            fallbackModel: backgroundSession.model ?? selectedModelRef.current,
+            workspace: workspaceRef.current
+          })
+        })
         handleAgentNotification(backgroundSession, notification)
         return
       }
