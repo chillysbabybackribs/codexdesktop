@@ -5360,7 +5360,8 @@ button {
 
 .browser-toolbar {
   display: grid;
-  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px auto;
+  /* back, forward, reload, omnibox, find, mute, vpn, zoom, fullscreen */
+  grid-template-columns: 32px 32px 32px minmax(120px, 1fr) 32px 32px 32px auto 32px;
   position: relative;
   align-items: center;
   gap: 4px;
