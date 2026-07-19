@@ -902,7 +902,7 @@ button {
 
 .thread-menu-item.is-active {
   background: rgb(255 255 255 / 7%);
-  box-shadow: inset 2px 0 0 #838383;
+  box-shadow: inset 2px 0 0 #e6e6e6;
 }
 
 .thread-menu-item.is-active.is-highlighted {
@@ -3782,7 +3782,7 @@ button {
 
 .model-option.is-active {
   background: rgb(255 255 255 / 5%);
-  box-shadow: inset 2px 0 0 #838383;
+  box-shadow: inset 2px 0 0 #e6e6e6;
 }
 
 .model-option.is-active:hover {
@@ -3858,7 +3858,7 @@ button {
 }
 
 .fast-mode-switch.is-active {
-  background: #838383;
+  background: #d8d8d8;
 }
 
 .fast-mode-switch:focus-visible {
@@ -3935,7 +3935,7 @@ button {
 
 .reasoning-option.is-active {
   background: rgb(255 255 255 / 5%);
-  box-shadow: inset 2px 0 0 #838383;
+  box-shadow: inset 2px 0 0 #e6e6e6;
 }
 
 .reasoning-option-desc {
@@ -4726,7 +4726,7 @@ button {
   margin-top: 2px;
   width: 16px;
   height: 16px;
-  accent-color: #838383;
+  accent-color: #b9b9b9;
 }
 
 .send-button {
@@ -6550,6 +6550,7 @@ button {
 /* --- Review bar: Cursor-style Keep/Undo after a turn that edited files --- */
 
 .review-bar {
+  container-type: inline-size;
   margin: 0 0 8px;
   border: 1px solid var(--hairline-strong);
   border-radius: 10px;
@@ -6796,6 +6797,34 @@ button {
 .review-file-undo:focus-visible {
   outline: 2px solid var(--focus-ink);
   outline-offset: 2px;
+}
+
+@container (max-width: 430px) {
+  .review-bar-head {
+    flex-wrap: wrap;
+  }
+
+  .review-bar-summary {
+    flex-basis: 100%;
+  }
+
+  .review-bar-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-left: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-chevron,
+  .review-undo-all,
+  .review-always-keep,
+  .review-always-keep-mark,
+  .review-keep-all,
+  .review-file,
+  .review-file-undo {
+    transition: none;
+  }
 }
 
 /* Per-file Undo on diff cards + undone/flash treatments */
