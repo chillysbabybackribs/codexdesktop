@@ -77,12 +77,60 @@ export function createAgentSession(key: string, title: string, mainChatTabKey: s
     watchesMain: false,
     auditsMain: false,
     reportsToMain: false,
+    sendPolicyDecided: false,
     lastAuditNote: null,
     model: null,
     reasoningEffort: null,
     contextUsage: null,
     isCompacting: false
   }
+}
+
+// Born-a-reviewer: the dock's default birth. Audit mode armed from the first
+// paint (the standby card is the empty state, zero configuration), model
+// pre-derived cross-family, send policy deliberately undecided — the first
+// flagged report asks.
+export function createReviewerSession(
+  key: string,
+  title: string,
+  mainChatTabKey: string | null,
+  model: string | null
+): AgentSession {
+  return { ...createAgentSession(key, title, mainChatTabKey), auditsMain: true, model }
+}
+
+// "Reviewer", then "Reviewer 2"… per owning tab — identity over enumeration
+// (the old "Agent 79" told the user nothing about what the window does).
+export function reviewerTitle(sessions: AgentSession[], mainChatTabKey: string | null): string {
+  const peers = sessions.filter(
+    (session) =>
+      session.mainChatTabKey === mainChatTabKey && /^Reviewer( \d+)?$/.test(session.title)
+  ).length
+  return peers === 0 ? 'Reviewer' : `Reviewer ${peers + 1}`
+}
+
+// The reviewer's model default: cross-family by construction, never a lock.
+// Picks a visible model from a different provider than the main chat's
+// current model, so the doer is reviewed by uncorrelated weights whichever
+// direction the pairing runs. Returns null when no other family is
+// configured — a null agent model follows the main chat's model, which is
+// the correct single-provider default. Callers only apply this when the
+// session has no explicit model; a user's choice is never overridden.
+export function defaultReviewerModel(mainModel: string | null, models: Model[]): string | null {
+  const mainEntry = mainModel ? models.find((model) => model.id === mainModel) : undefined
+  // A null main model means the CLI-configured default — the codex runtime.
+  const mainProvider = mainEntry?.providerId ?? 'codex'
+  const candidates = models.filter(
+    (model) => !model.hidden && (model.providerId ?? 'codex') !== mainProvider
+  )
+  if (!candidates.length) return null
+  return (
+    // Account-default entries first ('claude-default' resolves to whatever the
+    // user's Claude account prefers), then the catalog default, then anything.
+    candidates.find((model) => model.id === 'claude-default') ??
+    candidates.find((model) => model.isDefault) ??
+    candidates[0]
+  ).id
 }
 
 // Adjacent identical assistant messages are stream-restate artifacts (the
@@ -218,6 +266,7 @@ export function serializeAgentDock(
       watchesMain: session.watchesMain,
       auditsMain: session.auditsMain,
       reportsToMain: session.reportsToMain,
+      sendPolicyDecided: session.sendPolicyDecided,
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),

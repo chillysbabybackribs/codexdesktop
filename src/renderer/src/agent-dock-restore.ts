@@ -77,6 +77,9 @@ export async function restoreAgentDock(options: {
       watchesMain: Boolean(entry.watchesMain),
       auditsMain: Boolean(entry.auditsMain),
       reportsToMain: Boolean(entry.reportsToMain),
+      // Legacy records predate the first-flag prompt: auto-send on was an
+      // explicit decision; off means the prompt never existed, so ask once.
+      sendPolicyDecided: Boolean(entry.sendPolicyDecided ?? entry.reportsToMain),
       lastAuditNote: null,
       model: entry.model ?? null,
       reasoningEffort: entry.reasoningEffort ?? null,

@@ -4,7 +4,9 @@ import type { TurnError } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import {
   createAgentSession,
+  createReviewerSession,
   findAgentSessionByThread,
+  reviewerTitle,
   serializeAgentDock,
   updateAgentSession,
   type AgentLiteMessage,
@@ -27,6 +29,11 @@ export function useAgentSessions(
     schedule: (key: string, turnId: string, error: TurnError | null) => void;
     cancel: (key: string) => void;
   },
+  // Cross-family reviewer default, computed against the CURRENT main-chat
+  // model at the moment an agent is born or armed (never applied over an
+  // explicit user choice). Returns null when only one provider is configured
+  // — a null agent model follows the main chat's model.
+  deriveReviewerModel: () => string | null,
 ): {
   agentSessions: AgentSession[];
   openAgentKeys: string[];
