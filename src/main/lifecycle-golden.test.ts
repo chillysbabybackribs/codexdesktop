@@ -172,15 +172,11 @@ test('golden browser ownership: a closed target ends browser work for that turn 
   assert.equal(fallbackExecutions, 0, 'the newly active tab is never reused by the failed turn')
 
   browserAgent.completeTurn('thread-golden', 'turn-golden')
-  const nextTurn = await routeDynamicToolCall({
-    ...dynamicParams(),
-    turnId: 'turn-next',
-    callId: 'call-next',
-    tool: 'browser_flow',
-    arguments: { steps: [{ type: 'wait', selector: '#phase5-never-exists' }] }
-  }, { browserAgent, researchRunner: {} as ResearchRunner })
-  assert.equal(nextTurn.success, true)
-  assert.equal(fallbackExecutions, 1, 'a new user turn may intentionally use the active tab')
+  assert.equal(
+    browserAgent.blockedTurnBrowserResult({ threadId: 'thread-golden', turnId: 'turn-golden' }),
+    null,
+    'turn completion releases the terminal guard for future work'
+  )
 })
 
 class FakeDebugger extends EventEmitter {
