@@ -123,6 +123,14 @@ export type AttachmentPreviewResult = {
   dataUrl: string | null
 }
 
+export type ImageViewPreviewParams = {
+  path: string
+}
+
+export type ImageViewPreviewResult = {
+  dataUrl: string | null
+}
+
 export type CodexSendMessageParams = {
   threadId?: string | null
   text: string
@@ -327,6 +335,7 @@ export const ipcChannels = {
   checkpointRevert: 'checkpoint:revert',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
+  imageViewPreview: 'image-view:preview',
   attachmentPick: 'attachment:pick',
   attachmentSave: 'attachment:save',
   attachmentPreview: 'attachment:preview',

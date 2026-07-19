@@ -1759,6 +1759,24 @@ button {
   margin-left: 27px;
 }
 
+.image-view-preview {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  width: min(460px, calc(100% - 27px));
+  max-width: calc(100% - 27px);
+  margin-left: 27px;
+}
+
+.image-view-preview img {
+  display: block;
+  width: min(360px, 100%);
+  max-height: 240px;
+  object-fit: contain;
+  object-position: left top;
+  border-radius: 6px;
+}
+
 .cdp-screenshot-preview {
   display: block;
   width: min(360px, 100%);

@@ -890,6 +890,30 @@ export function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArti
   )
 }
 
+function ImageViewPreview({ path, fileName }: { path: string; fileName: string }): React.JSX.Element | null {
+  const [dataUrl, setDataUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    let active = true
+    void window.api.imageView.preview({ path }).then((result) => {
+      if (active) setDataUrl(result.dataUrl)
+    }).catch(() => {
+      if (active) setDataUrl(null)
+    })
+    return () => {
+      active = false
+    }
+  }, [path])
+
+  if (!dataUrl) return null
+  return (
+    <div className="image-view-preview">
+      <img src={dataUrl} alt={`Image viewed by the model: ${fileName}`} />
+      <span className="cdp-screenshot-filename">{fileName}</span>
+    </div>
+  )
+}
+
 function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact | null {
   if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot' && item.tool !== 'app_screenshot') return null
 
@@ -1037,7 +1061,12 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
     case 'sleep':
       return <ToolRow icon={<ClockIcon />} status={status} verb="Waited" detail={`${Math.round(item.durationMs / 1000)}s`} />
     case 'imageView':
-      return <ToolRow icon={<ImageIcon />} status={status} verb="Viewed" detail={basename(item.path)} detailTitle={item.path} />
+      return (
+        <div className="screenshot-tool-step">
+          <ToolRow icon={<ImageIcon />} status={status} verb="Viewed" detail={basename(item.path)} detailTitle={item.path} />
+          <ImageViewPreview path={item.path} fileName={basename(item.path)} />
+        </div>
+      )
     case 'imageGeneration':
       return (
         <ToolRow

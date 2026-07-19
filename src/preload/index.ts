@@ -5,6 +5,8 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
+  ImageViewPreviewParams,
+  ImageViewPreviewResult,
   ChatAttachment,
   BackgroundTurnNotificationParams,
   BrowserBounds,
@@ -159,6 +161,10 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.artifactReadImage, params),
     openImage: (params: ArtifactReadImageParams): Promise<boolean> =>
       ipcRenderer.invoke(ipcChannels.artifactOpenImage, params)
+  },
+  imageView: {
+    preview: (params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> =>
+      ipcRenderer.invoke(ipcChannels.imageViewPreview, params)
   },
   attachments: {
     pick: (): Promise<ChatAttachment[]> => ipcRenderer.invoke(ipcChannels.attachmentPick),

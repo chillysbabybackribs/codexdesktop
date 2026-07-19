@@ -8,6 +8,8 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
+  ImageViewPreviewParams,
+  ImageViewPreviewResult,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   OmniboxAnchor,
@@ -37,6 +39,7 @@ import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
+import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
 
@@ -399,6 +402,9 @@ function registerIpc(): void {
     tabManager.createTab(dataUrl)
     return true
   })
+  ipcMain.handle(ipcChannels.imageViewPreview, async (_event, params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> => ({
+    dataUrl: await readImageViewDataUrl(params.path)
+  }))
   ipcMain.handle(ipcChannels.attachmentPick, async () => {
     if (!mainWindow) return []
     const result = await dialog.showOpenDialog(mainWindow, {
