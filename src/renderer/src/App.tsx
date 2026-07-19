@@ -251,6 +251,7 @@ export default function App(): React.JSX.Element {
     handleMinimizeAgent,
     handleToggleWatchAgent,
     handleToggleAuditAgent,
+    handleToggleReportAgent,
     handleSetAgentModel,
   } = useAgentSessions(agentDockStorageKey, sessionStoreRef.current, {
     schedule: maybeScheduleAgentRecovery,
@@ -263,6 +264,13 @@ export default function App(): React.JSX.Element {
   const isDraggingDividerRef = useRef(false);
   const splitRef = useRef(split);
   const userTurnRequestPendingRef = useRef(false);
+  // Audit feedback loop bookkeeping: which main-chat turns were started by an
+  // auditor's flagged report (bounce cap), what each auditor last audited
+  // (same-thread + bounce gates), and the in-flight marker consumed by
+  // handleSend to tag the feedback turn it starts.
+  const auditFeedbackTurnIdsRef = useRef<Set<string>>(new Set());
+  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean }>>(new Map());
+  const pendingAuditFeedbackRef = useRef(false);
   const userRequestedTurnIdRef = useRef<string | null>(null);
   const optimisticUserMessageIdRef = useRef<string | null>(null);
   const selectedModelRef = useRef<string | null>(selectedModel);
@@ -961,6 +969,12 @@ export default function App(): React.JSX.Element {
         effort: selectedReasoningEffort,
         fastMode,
       });
+      if (pendingAuditFeedbackRef.current) {
+        // This turn was started by an auditor's flagged report; its own audit
+        // will run and display, but cannot auto-send again (bounce cap).
+        auditFeedbackTurnIdsRef.current.add(response.turn.id);
+        pendingAuditFeedbackRef.current = false;
+      }
       patchMainChatTab(targetTabKey, (tab) => ({
         ...tab,
         threadId: response.threadId,
