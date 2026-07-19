@@ -7012,7 +7012,7 @@ button {
   position: absolute;
   top: auto;
   right: 0;
-  bottom: calc(100% - 2px);
+  bottom: calc(100% - 4px);
   z-index: 30;
   display: flex;
   width: max-content;
