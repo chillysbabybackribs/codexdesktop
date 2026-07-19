@@ -545,7 +545,31 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     }
   }
 
+  setSubagentSpawner(spawner: SubagentSpawner | null): void {
+    this.subagentSpawner = spawner
+  }
+
   private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
+    if (params.namespace === null && isAgentTool(params.tool)) {
+      const { result } = await routeAgentToolCall(
+        params.tool,
+        asToolArgs(params.arguments),
+        {
+          parentThreadId: params.threadId,
+          parentTurnId: params.turnId,
+          // The roster key is renderer-side; the orchestrator nests children by
+          // parentThreadId, so a null key here is correct for a codex lead.
+          parentAgentKey: null,
+          cwd: this.threadCwds.get(params.threadId) ?? null,
+        },
+        this.subagentSpawner,
+      )
+      this.rpc.respond(id, {
+        success: result.ok,
+        contentItems: [{ type: 'inputText', text: JSON.stringify(result) }],
+      })
+      return
+    }
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
       researchRunner: this.researchRunner,
@@ -569,4 +593,10 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       message
     } satisfies SessionEvent)
   }
+}
+
+function asToolArgs(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
 }
