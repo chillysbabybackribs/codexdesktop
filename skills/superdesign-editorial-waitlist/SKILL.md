@@ -11,6 +11,12 @@ Use this as a visual contract for an editorial waitlist or invite-only landing p
 
 Use this direction for luxury technology, architecture, creative agencies, exclusive memberships, or other products that should convey quiet confidence and deliberate scarcity. Do not add fake member counts, launch dates, testimonials, or availability claims.
 
+## Brief-specific discovery
+
+When the studio's name, commission type, location, audience, or desired relationship with prospective clients is not supplied, ask only for the answers that would change the proposition or call to action. While awaiting an answer, research live examples that fit the known category; after the user responds, refine the search using their language and discard mismatched references.
+
+Use research to understand current editorial architecture and private-practice conventions, not to imitate a particular studio. Never invent project locations, project dates, awards, client names, credentials, or availability claims. Let the resulting visual contract inherit the shared UI skill's ambiguity and live-research policy.
+
 ## Visual contract
 
 - Set the primary canvas to matte charcoal `#181818`; use warm beige `#EBDCC4` for dominant text.
