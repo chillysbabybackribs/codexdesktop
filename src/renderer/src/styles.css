@@ -7017,8 +7017,8 @@ button {
   display: flex;
   width: max-content;
   max-width: 100cqw;
-  padding: 4px;
-  gap: 2px;
+  padding: 6px 6px 8px;
+  gap: 5px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
   border-radius: 12px 12px 0 0;
@@ -7043,6 +7043,8 @@ button {
   }
 }
 
+/* Each option is its own clean monochrome button: a raised chip with a
+   hairline edge and a soft inner highlight so it reads as pressable. */
 .review-action-menu-item {
   position: relative;
   display: inline-flex;
@@ -7050,57 +7052,57 @@ button {
   justify-content: center;
   gap: 5px;
   min-height: 30px;
-  padding: 0 14px;
-  border: 0;
+  padding: 0 15px;
+  border: 1px solid var(--hairline);
   border-radius: 8px;
-  background: transparent;
+  background: rgb(255 255 255 / 4%);
   color: var(--chrome-fg-strong);
   white-space: nowrap;
   cursor: pointer;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-
-/* Hairline separators between options — drawn as a right border on all but
-   the last, inset vertically so they read as dividers, not full-height rules. */
-.review-action-menu-item:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: 7px;
-  bottom: 7px;
-  width: 1px;
-  background: var(--hairline);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 6%),
+    inset 0 -1px 0 rgb(0 0 0 / 20%);
+  transition: background-color 120ms ease, border-color 120ms ease,
+    color 120ms ease, box-shadow 120ms ease, transform 60ms ease;
 }
 
 .review-action-menu-item > span:first-child {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
-  font-weight: 550;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .review-action-menu-item:hover,
 .review-action-menu-item:focus-visible {
-  background: rgb(255 255 255 / 7%);
+  background: rgb(255 255 255 / 8.5%);
+  border-color: rgb(255 255 255 / 18%);
   color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 9%),
+    inset 0 -1px 0 rgb(0 0 0 / 22%);
 }
 
-/* Undo is destructive — warm it on hover and in the confirm state. */
-.review-action-menu-item[role="menuitem"]:first-child:hover,
-.review-action-menu-item[role="menuitem"]:first-child:focus-visible {
-  background: rgb(229 83 75 / 14%);
-  color: #f4b3ad;
+/* Pressed: sink in — invert the inner shadow so the chip depresses. */
+.review-action-menu-item:active {
+  transform: translateY(0.5px);
+  background: rgb(255 255 255 / 5%);
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 32%);
 }
 
 .review-action-menu-item.is-confirming {
-  background: rgb(229 83 75 / 16%);
-  color: #f4b3ad;
+  background: rgb(255 255 255 / 11%);
+  border-color: rgb(255 255 255 / 24%);
+  color: #fff;
 }
 
 .review-action-menu-check {
   color: var(--live-signal);
   font-size: 10px;
+  opacity: 0.85;
 }
 
 .review-undo-all {
