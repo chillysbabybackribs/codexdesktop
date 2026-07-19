@@ -6986,9 +6986,10 @@ button {
   bottom: calc(100% - 2px);
   z-index: 30;
   display: flex;
-  width: min(430px, 100cqw);
-  padding: 5px;
-  gap: 4px;
+  width: max-content;
+  max-width: 100cqw;
+  padding: 4px;
+  gap: 2px;
   border: 1px solid var(--hairline-strong);
   border-bottom: 0;
   border-radius: 12px 12px 0 0;
