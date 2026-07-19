@@ -1,5 +1,11 @@
 # Codex Desktop — Codebase Audit (2026-07-19, branch `stacked-subagents`)
 
+> **PARTIALLY STALE — see `docs/capability-audit-2026-07-19.md` for the current capability map.**
+> This doc predates the Claude Agent SDK runtime, the 1–4 pane split, turn checkpoints,
+> and the doer/auditor loop; its claim that "No Claude integration exists on this branch"
+> (§3.A) is no longer true. It remains accurate and useful as a dated, file-by-file
+> reference for the subsystems it covers.
+
 > Prepared for an external AI assistant with no prior exposure to this project. Facts only; every claim cites a real file. Items that could not be verified are marked as such. Line numbers refer to the working tree at commit `471dc6c`.
 
 ## 1. IDENTITY & PURPOSE

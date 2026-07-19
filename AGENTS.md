@@ -2,7 +2,7 @@
 
 ## What this repository is
 
-Codex Desktop is an Electron client with a React renderer, a native Chromium browser surface, and a Codex app-server process. Treat the current checkout and its call sites as the source of truth; older notes and generated artifacts can drift.
+Codex Desktop is an Electron app with a React renderer and a native, agent-drivable Chromium browser surface, running two interchangeable model runtimes behind one `SessionProvider` abstraction: the OpenAI Codex app-server (`codex app-server --stdio`) and the Claude Agent SDK (routed by model-id prefix). On top it adds turn-level workspace checkpoints (reversible even for shell writes) and a cross-provider doer/auditor review loop. Treat the current checkout and its call sites as the source of truth; older notes and generated artifacts can drift. For a current capability map and direction, see `docs/capability-audit-2026-07-19.md`.
 
 ## Start with these files
 
