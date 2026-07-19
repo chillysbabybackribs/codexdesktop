@@ -475,3 +475,43 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     inputSchema: researchWebSchema
   }
 ]
+
+const spawnSubagentSchema = {
+  type: 'object',
+  properties: {
+    task: {
+      type: 'string',
+      description: 'The complete, self-contained instruction for the subagent. The subagent does NOT see this conversation, so include every fact, path, and constraint it needs. It works in the same workspace directory as you.'
+    },
+    title: {
+      type: 'string',
+      description: 'Optional short roster label for the subagent, e.g. "auth refactor" or "summarize package.json". Defaults to a generic worker name.'
+    },
+    model: {
+      type: 'string',
+      description: 'Optional model id for the subagent. Defaults to your own model. A different model family (e.g. spawning a Claude worker from a Codex lead, or vice versa) is allowed and useful for an independent perspective.'
+    }
+  },
+  required: ['task'],
+  additionalProperties: false
+} as const
+
+// Subagent-spawn tools. Kept in a separate array from browserDynamicTools so
+// each surface's tool set reads by intent, but authored in this one file (the
+// single schema-authoring point every transport shares). Phase 1 exposes one
+// blocking tool: the parent's call runs the child's whole turn and returns its
+// final answer as the tool result — the same synchronous shape research_web
+// already uses.
+export const agentDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'function',
+    name: 'spawn_subagent',
+    description: 'Delegate a self-contained subtask to a fresh subagent and wait for its result. The subagent runs its own full turn in the same workspace with access to the same tools, then returns its final answer to you as this tool\'s result. It does not see your conversation, so make `task` fully self-contained. Use for well-scoped work you want handled independently (research a question, review a diff, draft a file) or to get a second-model perspective. The call blocks until the subagent finishes, so spawn one focused subtask at a time.',
+    inputSchema: spawnSubagentSchema
+  }
+]
+
+// The single list every transport declares to its runtime: browser tools plus
+// subagent tools. Consumers (codex thread config, the Claude MCP server, the
+// stdio shim) read THIS so a new tool is authored once and appears everywhere.
+export const allDynamicTools: DynamicToolSpec[] = [...browserDynamicTools, ...agentDynamicTools]

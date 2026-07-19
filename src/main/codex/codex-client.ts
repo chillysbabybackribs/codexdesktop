@@ -46,7 +46,7 @@ import {
 import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
 import {
-  browserDynamicTools,
+  allDynamicTools,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
@@ -211,7 +211,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
       config: newThreadConfig,
-      dynamicTools: browserDynamicTools,
+      dynamicTools: allDynamicTools,
       developerInstructions: buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)

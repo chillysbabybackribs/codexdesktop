@@ -1,5 +1,5 @@
 import { z, type ZodType } from 'zod'
-import { browserToolSpecs } from '../tools/browser-tool-specs.js'
+import { allToolSpecs } from '../tools/browser-tool-specs.js'
 import type { BrowserToolOutcome } from '../tools/browser-tool-registry.js'
 
 // In-process MCP browser tools for Claude sessions (the step-6 fast-follow):
@@ -66,7 +66,7 @@ export function buildClaudeBrowserMcpServer(
   sdk: { tool: SdkToolFactory; createSdkMcpServer: SdkServerFactory },
   dispatch: ClaudeMcpToolDispatch
 ): unknown {
-  const tools = browserToolSpecs
+  const tools = allToolSpecs
     .filter((spec): spec is Extract<typeof spec, { type: 'function' }> => spec.type === 'function')
     .map((spec) =>
       sdk.tool(
