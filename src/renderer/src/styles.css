@@ -5983,6 +5983,24 @@ button {
   color: #dfe2e6;
 }
 
+.agent-audit-verdict.is-actionable {
+  background: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.agent-audit-verdict.is-actionable:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.agent-audit-note {
+  align-self: stretch;
+  padding: 6px 2px 0;
+  font-size: 11px;
+  color: #7f8798;
+}
+
 .agent-mini-message.is-assistant {
   align-self: stretch;
   color: #d6d8db;

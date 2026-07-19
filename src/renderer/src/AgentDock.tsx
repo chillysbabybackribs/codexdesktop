@@ -587,6 +587,9 @@ const AgentWindow = memo(function AgentWindow({
               </div>
             </div>
           ) : null}
+          {session.messages.length > 0 && !working && session.lastAuditNote ? (
+            <div className="agent-audit-note" role="status">{session.lastAuditNote}</div>
+          ) : null}
           {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
         </div>
       </div>

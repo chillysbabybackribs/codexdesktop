@@ -682,15 +682,19 @@ function DiffCard({
   kind,
   diff,
   status,
-  workspace
+  workspace,
+  turnId
 }: {
   path: string
   kind: FileChangeItem['changes'][number]['kind']
   diff: string
   status: BlockStatus
   workspace: string | null
+  turnId: string | null
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
+  const [confirmingUndo, setConfirmingUndo] = useState(false)
+  const review = useContext(FileReviewContext)
   const parsed = useMemo(
     () => parseUnifiedDiff(diff, kind.type === 'add' ? 'add' : kind.type === 'delete' ? 'del' : undefined),
     [diff, kind.type]
@@ -707,8 +711,11 @@ function DiffCard({
   const overflow = !running && !showAll ? Math.max(0, parsed.lines.length - collapsedDiffLines) : 0
   const shownLines = overflow > 0 ? parsed.lines.slice(0, collapsedDiffLines) : parsed.lines
 
+  const undone = review.isUndone(turnId, path)
+  const undoable = !running && !undone && turnId !== null && review.canUndo(turnId)
+
   return (
-    <div className={`diff-card status-${status}`}>
+    <div className={`diff-card status-${status}${undone ? ' is-undone' : ''}`} data-diff-path={path}>
       <div className="diff-head">
         <span className="diff-file-icon">{running ? <Spinner /> : <FilePenIcon />}</span>
         <span className="diff-file" title={path}>
@@ -724,7 +731,26 @@ function DiffCard({
         <span className="diff-counts">
           {parsed.adds > 0 ? <span className="diff-count-add">+{parsed.adds}</span> : null}
           {parsed.dels > 0 ? <span className="diff-count-del">−{parsed.dels}</span> : null}
+          {undone ? <span className="work-chip chip-muted">undone</span> : null}
           <StatusChip status={status} />
+          {undoable ? (
+            <button
+              type="button"
+              className={`diff-undo-button ${confirmingUndo ? 'is-confirming' : ''}`}
+              title="Restore this file to how it was before this turn. The current state is checkpointed first."
+              onClick={() => {
+                if (confirmingUndo) {
+                  setConfirmingUndo(false)
+                  if (turnId) review.undoFile(turnId, path)
+                } else {
+                  setConfirmingUndo(true)
+                }
+              }}
+              onBlur={() => setConfirmingUndo(false)}
+            >
+              {confirmingUndo ? 'Undo file?' : 'Undo'}
+            </button>
+          ) : null}
         </span>
       </div>
       {parsed.lines.length > 0 ? (
@@ -845,10 +871,12 @@ function renderHighlightedDiffText(tokens: ThemedToken[], segments: DiffSegment[
 
 function FileChangeBlock({
   item,
+  meta,
   live,
   workspace
 }: {
   item: FileChangeItem
+  meta: ItemMeta | undefined
   live: boolean
   workspace: string | null
 }): React.JSX.Element {
@@ -864,6 +892,7 @@ function FileChangeBlock({
           diff={change.diff}
           status={status}
           workspace={workspace}
+          turnId={meta?.turnId ?? null}
         />
       ))}
       {item.changes.length === 0 && status === 'running' ? (
@@ -1238,7 +1267,7 @@ const WorkBlock = memo(function WorkBlock({
     case 'commandExecution':
       return <CommandBlock item={item} meta={meta} live={live} />
     case 'fileChange':
-      return <FileChangeBlock item={item} live={live} workspace={workspace} />
+      return <FileChangeBlock item={item} meta={meta} live={live} workspace={workspace} />
     case 'mcpToolCall':
       return <McpBlock item={item} meta={meta} live={live} />
     case 'dynamicToolCall':
