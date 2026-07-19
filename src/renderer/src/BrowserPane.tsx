@@ -319,6 +319,17 @@ function VolumeIcon({ muted }: { muted: boolean }): React.JSX.Element {
   )
 }
 
+function ShieldIcon({ active }: { active: boolean }): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3.4 5.6 5.9v5.4c0 4 2.6 6.9 6.4 8.7 3.8-1.8 6.4-4.7 6.4-8.7V5.9L12 3.4Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      {active ? (
+        <path d="m9.2 11.9 2 2 3.7-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      ) : null}
+    </svg>
+  )
+}
+
 function PlusIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
