@@ -408,7 +408,7 @@ export function serializeAgentDock(
     counter,
     sessions: sessions.map((session) => ({
       mainChatTabKey: session.mainChatTabKey,
-      workspace: session.workspace,
+      ...(session.workspace ? { workspace: session.workspace } : {}),
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,
