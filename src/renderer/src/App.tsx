@@ -3719,10 +3719,11 @@ export default function App(): React.JSX.Element {
 
   // Audit feedback: when an auditor with "send findings to main chat" enabled
   // finishes an audit with VERDICT: flag, the report flows into the main chat
-  // as a visible turn for the doer to act on. Gated (pure, tested): flag-only
-  // (pass verdicts converge the loop), main idle, same thread, and one bounce
-  // per user-initiated turn — feedback-started turns are re-audited and
-  // display their verdict, but never auto-send again.
+  // as a visible turn for the doer to act on. Gated (pure, tested): flag-only,
+  // main idle, same thread — and fix-turn audits bounce again only under the
+  // loop-to-done controller's policy (round ceiling, real progress, no
+  // repeated flag). A pass on a fix turn converges the loop; every stop is
+  // announced in the transcript.
   async function maybeSendAuditFeedback(sessionKey: string): Promise<void> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === sessionKey);
     if (!session?.reportsToMain) return;
@@ -3733,7 +3734,16 @@ export default function App(): React.JSX.Element {
     if (!report) return;
     // One auto-send attempt per audit, whatever the outcome.
     auditContextByAuditorRef.current.delete(sessionKey);
-    if (parseAuditVerdict(report) !== 'flag') return;
+    const verdict = parseAuditVerdict(report);
+    if (verdict !== 'flag') {
+      const loop = auditLoopRef.current.get(sessionKey);
+      if (loop && verdict === 'pass' && context?.auditedTurnWasFeedback) {
+        // The reviewer approved a fix round: the loop is done — say so.
+        addSystemItem(loopConvergedMessage(loop.rounds), 'info');
+      }
+      auditLoopRef.current.delete(sessionKey);
+      return;
+    }
     // A flagged report that does NOT flow explains itself — a silently
     // suppressed sendback reads as broken (and the flag badge stays clickable
     // for manual escalation).
@@ -3744,6 +3754,23 @@ export default function App(): React.JSX.Element {
       explainSkip('Flagged — not auto-sent (audit predates this session); click the flag to send');
       return;
     }
+    // Loop-to-done controller: decide whether this fix-turn flag earns another
+    // round before consulting the send gate.
+    let loopDecision: LoopDecision | null = null;
+    if (context.auditedTurnWasFeedback) {
+      loopDecision = decideLoopContinuation({
+        state: auditLoopRef.current.get(sessionKey) ?? null,
+        fixTurnChangedFiles: context.changedFileCount,
+        report,
+      });
+      if (loopDecision.kind === 'stop') {
+        const rounds = auditLoopRef.current.get(sessionKey)?.rounds ?? 0;
+        auditLoopRef.current.delete(sessionKey);
+        addSystemItem(loopStopMessage(loopDecision.reason, rounds), 'warning');
+        explainSkip(`Flagged — loop stopped (${loopDecision.reason}); click the flag to send`);
+        return;
+      }
+    }
     if (
       !shouldSendAuditFeedback({
         verdict: 'flag',
@@ -3751,14 +3778,13 @@ export default function App(): React.JSX.Element {
         mainIdle: !activeTurnIdRef.current,
         sameThread: context.threadId !== null && context.threadId === activeThreadIdRef.current,
         auditedTurnWasFeedback: context.auditedTurnWasFeedback,
+        loopMayContinue: loopDecision?.kind === 'continue',
       })
     ) {
       explainSkip(
-        context.auditedTurnWasFeedback
-          ? 'Flagged — auto-send capped at one round per turn; click the flag to send'
-          : activeTurnIdRef.current
-            ? 'Flagged — main chat was busy; click the flag to send'
-            : 'Flagged — main chat moved on; click the flag to send',
+        activeTurnIdRef.current
+          ? 'Flagged — main chat was busy; click the flag to send'
+          : 'Flagged — main chat moved on; click the flag to send',
       );
       return;
     }
@@ -3766,6 +3792,12 @@ export default function App(): React.JSX.Element {
     const sent = await handleSend(buildAuditFeedbackMessage({ agentTitle: session.title, report }));
     pendingAuditFeedbackRef.current = false;
     if (sent) {
+      // Advance the ledger only on a dispatched round, and announce it.
+      const previous = auditLoopRef.current.get(sessionKey);
+      const next =
+        context.auditedTurnWasFeedback && previous ? continueLoop(previous, report) : startLoop(report);
+      auditLoopRef.current.set(sessionKey, next);
+      addSystemItem(loopRoundMessage(next.rounds), 'info');
       patchAgentSession(sessionKey, (current) => ({ ...current, lastAuditNote: null }));
     } else {
       explainSkip('Flagged — main chat became busy; click the flag to send');
