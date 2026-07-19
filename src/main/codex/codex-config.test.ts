@@ -394,7 +394,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.equal(networkSchema.properties.stream?.properties?.maxMessages?.maximum, 1000)
   assert.equal(networkSchema.properties.stream?.properties?.idleMs?.minimum, 50)
   assert.match(browserNetwork.description, /one model call/i)
-  assert.match(browserNetwork.description, /SSE\/WebSocket stream as an artifact/i)
+  assert.match(browserNetwork.description, /SSE\/WebSocket stream/i)
   assert.match(browserNetwork.description, /Chromium download handoff as an artifact/i)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')

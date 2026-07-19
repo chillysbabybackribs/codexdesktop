@@ -27,15 +27,15 @@ type DownloadWaiter = {
 export class BrowserDownloadCaptureBroker {
   private readonly waiters = new Set<DownloadWaiter>()
 
-  async waitForDownload(
+  async prepareDownload(
     webContents: WebContents,
     urlContains: string,
     artifactStore: CdpArtifactStore,
     timeoutMs: number,
     signal?: AbortSignal
-  ): Promise<BrowserDownloadCapture> {
+  ): Promise<{ capture: Promise<BrowserDownloadCapture> }> {
     const reservation = await artifactStore.prepareDownloadCapture()
-    return new Promise<BrowserDownloadCapture>((resolve, reject) => {
+    const capture = new Promise<BrowserDownloadCapture>((resolve, reject) => {
       const waiter: DownloadWaiter = {
         webContents,
         urlContains: urlContains.toLowerCase(),
@@ -57,6 +57,7 @@ export class BrowserDownloadCaptureBroker {
       this.waiters.add(waiter)
       if (signal?.aborted) waiter.onAbort?.()
     })
+    return { capture }
   }
 
   handleWillDownload(item: DownloadItem, webContents: WebContents): boolean {

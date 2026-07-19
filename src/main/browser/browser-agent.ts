@@ -1036,14 +1036,17 @@ export class BrowserAgentController {
         await session.startNetworkJournal()
         try {
           const normalizedMatch = { ...match, urlContains: match.urlContains?.trim() }
-          const waiting = (params.download && artifactStore
-            ? browserDownloadCaptureBroker.waitForDownload(
+          const preparedDownload = params.download && artifactStore
+            ? await browserDownloadCaptureBroker.prepareDownload(
                 webContents,
                 normalizedMatch.urlContains ?? '',
                 artifactStore,
                 timeoutMs,
                 captureController.signal
-              ).then((download) => ({ kind: 'download' as const, download }))
+              )
+            : null
+          const waiting = (preparedDownload
+            ? preparedDownload.capture.then((download) => ({ kind: 'download' as const, download }))
             : streamTransport
               ? session.waitForNetworkStream(
                 streamTransport,

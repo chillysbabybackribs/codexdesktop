@@ -25,13 +25,12 @@ test('download capture broker claims one targeted download and materializes it a
     cancel: () => {}
   }) as unknown as DownloadItem
 
-  const waiting = broker.waitForDownload(
+  const { capture: waiting } = await broker.prepareDownload(
     webContents,
     '/exports/report',
     new CdpArtifactStore(root),
     1_000
   )
-  await new Promise<void>((resolve) => setImmediate(resolve))
   assert.equal(broker.handleWillDownload(item, webContents), true)
   assert.match(savePath, /download-.+\.pdf$/)
   await writeFile(savePath, 'PDFDATA')
@@ -49,14 +48,13 @@ test('download capture broker ignores other tabs and supports cancellation befor
   const controller = new AbortController()
   const broker = new BrowserDownloadCaptureBroker()
   const webContents = {} as WebContents
-  const waiting = broker.waitForDownload(
+  const { capture: waiting } = await broker.prepareDownload(
     webContents,
     '/target',
     new CdpArtifactStore(root),
     5_000,
     controller.signal
   )
-  await new Promise<void>((resolve) => setImmediate(resolve))
   const item = { getURL: () => 'https://example.com/target' } as DownloadItem
   assert.equal(broker.handleWillDownload(item, {} as WebContents), false)
   controller.abort()
