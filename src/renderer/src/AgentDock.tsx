@@ -772,7 +772,9 @@ function isSameLiveGlance(a: LiveTurnGlance | null, b: LiveTurnGlance | null): b
 const agentZoomStorageKey = (key: string): string => `codexdesktop.agent-zoom.${key}`
 
 function readAgentZoom(key: string): number {
-  const stored = Number(window.localStorage.getItem(agentZoomStorageKey(key)))
+  const storedValue = window.localStorage.getItem(agentZoomStorageKey(key))
+  if (storedValue === null) return 100
+  const stored = Number(storedValue)
   return Number.isFinite(stored) ? Math.max(80, Math.min(140, stored)) : 100
 }
 
