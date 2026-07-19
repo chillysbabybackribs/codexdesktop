@@ -5485,14 +5485,6 @@ button {
   }
 }
 
-.browser-zoom {
-  display: grid;
-  grid-template-columns: 24px 42px 24px;
-  height: 26px;
-  align-items: center;
-}
-
-.browser-zoom button,
 .browser-find button {
   display: grid;
   height: 100%;
@@ -5505,18 +5497,11 @@ button {
   transition: background 120ms ease, color 120ms ease;
 }
 
-.browser-zoom button:hover,
 .browser-find button:hover {
   background: #262626;
   color: #e0e0e0;
 }
 
-.browser-zoom .zoom-value {
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-
-.browser-zoom svg,
 .browser-find svg {
   width: 13px;
   height: 13px;
@@ -5635,7 +5620,6 @@ button {
 .tab-close:focus-visible,
 .new-tab-button:focus-visible,
 .browser-nav-button:focus-visible,
-.browser-zoom button:focus-visible,
 .browser-find button:focus-visible {
   position: relative;
   z-index: 1;
