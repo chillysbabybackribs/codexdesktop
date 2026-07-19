@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { classifyMarkdownHref } from './markdown-link'
+import { chunkMarkdownSegments, splitMarkdownSegments } from './streaming-markdown'
 
 type ChartDatum = {
   label: string
@@ -27,6 +28,33 @@ export const MarkdownContent = memo(function MarkdownContent({ text }: { text: s
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
         {text}
       </ReactMarkdown>
+    </div>
+  )
+})
+
+const MarkdownFragment = memo(function MarkdownFragment({ text }: { text: string }): React.JSX.Element {
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+      {text}
+    </ReactMarkdown>
+  )
+})
+
+// Streaming variant: the document is split into stable segments so each delta
+// re-parses only the trailing segment instead of the whole message. Callers
+// must switch to MarkdownContent once the item completes — the single parse is
+// the fidelity guarantee for segment-boundary edge cases.
+export const StreamingMarkdownContent = memo(function StreamingMarkdownContent({
+  text
+}: {
+  text: string
+}): React.JSX.Element {
+  const segments = chunkMarkdownSegments(splitMarkdownSegments(text))
+  return (
+    <div className="markdown-body">
+      {segments.map((segment, index) => (
+        <MarkdownFragment key={index} text={segment} />
+      ))}
     </div>
   )
 })

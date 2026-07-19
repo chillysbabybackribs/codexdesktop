@@ -75,7 +75,7 @@ import {
 } from './item-notifications'
 import { reduceResearchProgressMeta } from './activity-model'
 import { BrowserPane } from './BrowserPane'
-import { MarkdownContent } from './MarkdownContent'
+import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -3324,12 +3324,17 @@ function TaskActivityCard({
     }
 
     flushWork()
+    const messageStreaming = live && item.id === newestActivityId && !itemMeta[item.id]?.completedAtMs
     content.push(
       <div
-        className={`task-activity-message ${live && item.id === newestActivityId && !itemMeta[item.id]?.completedAtMs ? 'is-streaming' : ''}`}
+        className={`task-activity-message ${messageStreaming ? 'is-streaming' : ''}`}
         key={item.id}
       >
-        <MarkdownContent text={item.text || ' '} />
+        {messageStreaming ? (
+          <StreamingMarkdownContent text={item.text || ' '} />
+        ) : (
+          <MarkdownContent text={item.text || ' '} />
+        )}
       </div>
     )
   }
@@ -4254,7 +4259,11 @@ const AssistantMessage = memo(function AssistantMessage({
         streaming ? 'is-streaming' : ''
       }`}
     >
-      <MarkdownContent text={text || ' '} />
+      {streaming ? (
+        <StreamingMarkdownContent text={text || ' '} />
+      ) : (
+        <MarkdownContent text={text || ' '} />
+      )}
     </article>
   )
 })
