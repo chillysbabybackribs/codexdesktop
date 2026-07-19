@@ -351,7 +351,6 @@ function stripPrefixes(tokens: string[]): string[] {
 
 const PLUMBING = new Set(['cd', 'true', 'false', ':', 'exit', 'set', 'export', 'echo', 'printf', 'pwd', 'tee'])
 
-// eslint-disable-next-line complexity -- a flat command table reads better split than clever
 function classify(tokens: string[]): Part | null {
   const name = basename(tokens[0]).toLowerCase()
   const args = tokens.slice(1)
@@ -381,12 +380,14 @@ function classify(tokens: string[]): Part | null {
       return { verb: 'read', obj: files.length === 1 ? basename(files[0]) : `${files.length} files` }
     }
     case 'sed': {
-      const files = positional(args).filter((arg) => !/[/,]?\d+[,p]/.test(arg) || /[\\/.]/.test(arg))
-      const target = files.at(-1)
-      if (args.includes('-i') || args.some((arg) => arg.startsWith('-i'))) {
-        return { verb: 'edit', obj: target ? basename(target) : 'a file' }
+      // Positional args are the script (`120,160p`, `s/x/y/`) then files —
+      // only a trailing token that looks like a path counts as the target.
+      const target = positional(args).at(-1)
+      const isFile = !!target && /[\\/.]/.test(target) && !/^s[/#|]/.test(target)
+      if (args.some((arg) => arg.startsWith('-i'))) {
+        return { verb: 'edit', obj: isFile ? basename(target) : 'a file' }
       }
-      return target ? { verb: 'read', obj: basename(target) } : null
+      return isFile ? { verb: 'read', obj: basename(target) } : null
     }
     case 'wc': {
       const target = positional(args).at(-1)
