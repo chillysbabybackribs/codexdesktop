@@ -542,6 +542,8 @@ export class ClaudeTurnTranslator {
         type: 'commandExecution',
         id,
         command: state.command,
+        // Extra-protocol field: the renderer narrates from it when present.
+        commandDescription: state.description || null,
         cwd: '',
         processId: null,
         source: 'agent',
