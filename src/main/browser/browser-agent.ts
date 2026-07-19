@@ -2,6 +2,7 @@ import type { WebContents } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { runBrowserFlow } from './browser-flow.js'
+import { executePageJavaScript } from './page-execution.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
@@ -1207,7 +1208,7 @@ async function executePageProgram(
   const wrapped = buildWrappedPageProgram(code)
   const selector = frameSelector?.trim()
   if (!selector || selector === 'main') {
-    return requirePageProgramResult(unwrapPageProgramResult(await webContents.executeJavaScript(wrapped, true)))
+    return requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(webContents, wrapped, true)))
   }
 
   const mainFrame = webContents.mainFrame
@@ -1217,7 +1218,7 @@ async function executePageProgram(
     const results = await mapWithConcurrency(frames, MAX_PARALLEL_BROWSER_FRAMES, async (frame) => {
       const descriptor = describeFrame(frame, mainFrame)
       try {
-        const result = requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
+        const result = requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(frame, wrapped, true)))
         const bounded = boundResult(result, perFrameBudget)
         return {
           frame: descriptor,
@@ -1252,7 +1253,7 @@ async function executePageProgram(
   if (!frame) throw new Error(`no live frame with id ${selector}`)
   return {
     frame: describeFrame(frame, mainFrame),
-    result: requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
+    result: requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(frame, wrapped, true)))
   }
 }
 
@@ -1467,7 +1468,7 @@ function isLikelyLoadingSnapshot(value: unknown): boolean {
 
 function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Promise<boolean> {
   const maxWait = Math.max(100, Math.min(1_500, Math.round(maxWaitMs)))
-  return webContents.executeJavaScript(`new Promise((resolve) => {
+  return executePageJavaScript(webContents, `new Promise((resolve) => {
     const startedAt = performance.now();
     let observer;
     let timer;
@@ -1493,5 +1494,5 @@ function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Pr
     if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
     timer = setInterval(tick, 50);
     tick();
-  })`, true) as Promise<boolean>
+  })`) as Promise<boolean>
 }

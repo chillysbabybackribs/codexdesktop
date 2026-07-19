@@ -18,7 +18,7 @@ import {
 } from './browser-tab-session.js'
 import { createBrowserTabView, attachBrowserTabViewEvents } from './browser-tab-view.js'
 import { BrowserTargetRegistry, type BrowserTarget } from './browser-target-registry.js'
-import { chromeLikeUserAgent } from './browser-session.js'
+import { ensureBrowserIdentity } from './browser-session.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 import { disposeCdpSession } from './cdp-session.js'
@@ -138,7 +138,7 @@ export class TabManager {
       this.activateTab(id)
     }
     if (options.load !== false) {
-      void this.startNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
+      void this.startUserNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
     }
     this.pushState()
     return id
@@ -218,7 +218,7 @@ export class TabManager {
       return
     }
 
-    void this.startNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
+    void this.startUserNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
   }
 
   async navigateAndWait(
@@ -424,8 +424,9 @@ export class TabManager {
 
   private async hydrateSavedTab(tab: ManagedBrowserTab, saved: SavedBrowserTab): Promise<void> {
     try {
+      await ensureBrowserIdentity(tab.view.webContents)
       await hydrateSavedBrowserTab(tab, saved, defaultTabUrl, (url) =>
-        this.startNavigation(tab, url).then(() => {})
+        this.startUserNavigation(tab, url).then(() => {})
       )
     } finally {
       this.pushState()
@@ -447,7 +448,8 @@ export class TabManager {
   private async startNavigation(
     tab: ManagedBrowserTab,
     url: string,
-    options: NavigateAndWaitOptions = {}
+    options: NavigateAndWaitOptions = {},
+    settleDocument = true
   ): Promise<PageNavigationResult> {
     this.cancelNavigation(tab.id)
     this.bumpTargetEpoch(tab.id)
@@ -457,10 +459,12 @@ export class TabManager {
     options.signal?.addEventListener('abort', abortFromCaller, { once: true })
 
     try {
+      await ensureBrowserIdentity(tab.view.webContents)
+      if (controller.signal.aborted) throw new DOMException('navigation aborted', 'AbortError')
       return await loadPageAndSettle(tab.view.webContents, url, {
         timeoutMs: options.timeoutMs ?? 15_000,
-        userAgent: chromeLikeUserAgent(),
         signal: controller.signal,
+        settleDocument,
         ...(options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
         ...(options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs }),
         ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {})
@@ -471,6 +475,13 @@ export class TabManager {
         this.navigationControllers.delete(tab.id)
       }
     }
+  }
+
+  private startUserNavigation(tab: ManagedBrowserTab, url: string): Promise<PageNavigationResult> {
+    // Human address-bar navigation should be indistinguishable from ordinary
+    // Chromium navigation. Agent callers use navigateAndWait(), which opts into
+    // DOM readiness probing in an isolated world.
+    return this.startNavigation(tab, url, {}, false)
   }
 
   private cancelNavigation(tabId: string): void {
