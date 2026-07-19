@@ -1042,7 +1042,13 @@ export default function App(): React.JSX.Element {
 
   useEffect(() => {
     updateBrowserBounds(true);
-  }, [split, isBrowserFullscreen, updateBrowserBounds]);
+  }, [
+    split,
+    workspaceLayoutMode,
+    browserMiddleColumnWidths,
+    isBrowserFullscreen,
+    updateBrowserBounds,
+  ]);
 
   useEffect(() => {
     const host = viewHostRef.current;
@@ -1104,6 +1110,56 @@ export default function App(): React.JSX.Element {
       if (latestBounds) {
         void window.api.browser.endDividerDrag(latestBounds);
       }
+    };
+
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', finishDrag, { once: true });
+    window.addEventListener('pointercancel', finishDrag, { once: true });
+  };
+
+  const handleBrowserMiddleDividerPointerDown = (
+    event: PointerEvent<HTMLDivElement>,
+    side: keyof BrowserMiddleColumnWidths,
+  ): void => {
+    const app = appRef.current;
+    if (!app) return;
+
+    isDraggingDividerRef.current = true;
+    void window.api.browser.beginDividerDrag();
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    const appRect = app.getBoundingClientRect();
+    const maxSideWidth =
+      appRect.width - minBrowserWidth - minBrowserMiddleChatWidth - dividerWidth * 2;
+    let latestWidths = browserMiddleColumnWidths;
+
+    const handleMove = (moveEvent: globalThis.PointerEvent): void => {
+      const rawWidth =
+        side === 'left'
+          ? moveEvent.clientX - appRect.left
+          : appRect.right - moveEvent.clientX;
+      const clamped = Math.min(
+        Math.max(rawWidth, minBrowserMiddleChatWidth),
+        Math.max(minBrowserMiddleChatWidth, maxSideWidth),
+      );
+      latestWidths = { ...latestWidths, [side]: (clamped / appRect.width) * 100 };
+      setBrowserMiddleColumnWidths(latestWidths);
+    };
+
+    let dragFinished = false;
+    const finishDrag = (): void => {
+      if (dragFinished) return;
+      dragFinished = true;
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', finishDrag);
+      window.removeEventListener('pointercancel', finishDrag);
+      window.localStorage.setItem(
+        browserMiddleColumnWidthsStorageKey,
+        serializeBrowserMiddleColumnWidths(latestWidths),
+      );
+      isDraggingDividerRef.current = false;
+      const latestBounds = measureBrowserBounds() ?? pendingBoundsRef.current;
+      if (latestBounds) void window.api.browser.endDividerDrag(latestBounds);
     };
 
     window.addEventListener('pointermove', handleMove);
