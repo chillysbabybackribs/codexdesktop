@@ -164,9 +164,8 @@ export function ContextPill({
   const window = usage?.modelContextWindow;
   const contextTokens = usage?.last.totalTokens ?? 0;
   const hasUsage = Boolean(usage && window && contextTokens > 0);
-  const percent = hasUsage && window
-    ? Math.min(100, Math.round((contextTokens / window) * 100))
-    : 0;
+  const percent =
+    hasUsage && window ? Math.min(100, Math.round((contextTokens / window) * 100)) : 0;
   const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : '';
   const title = compacting
     ? 'Compacting the conversation…'
