@@ -3229,6 +3229,13 @@ export default function App(): React.JSX.Element {
           onReorderMainChatTabs={handleReorderMainChatTabs}
           onCloseMainChatTab={handleCloseMainChatTab}
           onNewMainChatTab={handleNewMainChatTab}
+          splitLayout={chatSplitLayout}
+          onDropTabOnPane={handleDropTabOnSplitPane}
+          onCloseSplitPane={handleCloseSplitPane}
+          onSetSplitRatio={handleSetSplitRatio}
+          canSplitForDrop={(targetKey, sourceKey) =>
+            canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+          }
           items={items}
           itemMeta={itemMeta}
           turnMeta={turnMeta}
@@ -3293,9 +3300,8 @@ export default function App(): React.JSX.Element {
           onAgentSteer={handleAgentSteer}
           onAgentStop={handleAgentStop}
           onAgentCompact={handleAgentCompact}
-          onLoadOlderHistory={() => {
-            const threadId = activeThreadIdRef.current;
-            if (threadId) void loadOlderThreadHistory(threadId, activeMainChatTabKeyRef.current);
+          onLoadOlderHistory={(tabKey, threadId) => {
+            void loadOlderThreadHistory(threadId, tabKey);
           }}
         />
         <div className="split-divider" onPointerDown={handleDividerPointerDown} />
