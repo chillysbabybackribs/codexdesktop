@@ -118,6 +118,16 @@ export class SubagentOrchestrator {
       console.error(`[subagent] tag ${(notification as { method?: string })?.method} thread=${threadId} key=${child.agentKey}`)
     }
 
+    // Capture the child's answer as it streams: the terminal turn/completed
+    // arrives with itemsView:'notLoaded', so the final text lives in the
+    // item/completed events, not the turn payload.
+    if (notification?.method === 'item/completed') {
+      const item = notification.params.item
+      if (item.type === 'agentMessage' && item.text.trim()) {
+        child.lastAgentText = item.text
+      }
+    }
+
     this.maybeSettle(child, notification)
 
     // Tag at the envelope only — the wire ServerNotification is never mutated.
@@ -230,10 +240,14 @@ export class SubagentOrchestrator {
     if (!notification || child.settled) return
     if (notification.method === 'turn/completed') {
       const turn = notification.params.turn
-      const finalText = finalAnswerFromItems(turn.items ?? [])
+      // Prefer the answer accumulated from the stream; fall back to the turn
+      // payload's items on the rare chance they are loaded.
+      const finalText = child.lastAgentText.trim()
+        ? clip(child.lastAgentText)
+        : finalAnswerFromItems(turn.items ?? [])
       if (process.env.CODEX_DESKTOP_SUBAGENT_DEBUG === '1') {
         console.error(
-          `[subagent] settle key=${child.agentKey} itemsView=${turn.itemsView} items=${(turn.items ?? []).length} types=${(turn.items ?? []).map((i) => i.type).join(',')} finalLen=${finalText.length} final="${finalText.slice(0, 80)}"`,
+          `[subagent] settle key=${child.agentKey} itemsView=${turn.itemsView} streamLen=${child.lastAgentText.length} finalLen=${finalText.length} final="${finalText.slice(0, 80)}"`,
         )
       }
       const failed = turn.status === 'failed'
