@@ -1,4 +1,4 @@
-import { splitLeaf, splitPaneKeys, type SplitNode } from './chat-split';
+import { splitLeaf, splitPaneKeys, type SplitNode } from './chat-split.ts';
 
 export type WorkspaceLayoutMode = 'chat-browser' | 'browser-middle';
 
