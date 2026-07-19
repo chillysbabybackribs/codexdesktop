@@ -23,6 +23,11 @@
     "benchmark:browser": "node --no-warnings --experimental-strip-types --loader ./scripts/test-loader.mjs scripts/browser-eval.mjs",
     "clean:source-shadows": "node scripts/source-shadow-guard.mjs --fix",
     "check:source-shadows": "node scripts/source-shadow-guard.mjs --check",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "format": "biome format --write",
+    "check": "biome check",
+    "check:fix": "biome check --write",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
   "dependencies": {
