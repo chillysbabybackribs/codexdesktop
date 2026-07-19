@@ -1,13 +1,57 @@
 import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
+import { buildBrowserIdentity, type BrowserIdentity } from './browser-identity.js'
+import { cdpSessionFor } from './cdp-session.js'
 import { safeDownloadName } from './download-policy.js'
 
 export const browserPartition = 'persist:codex-browser'
 
-// Google rejects user agents containing "Electron" — sign-in pages go blank.
+let cachedBrowserIdentity: BrowserIdentity | null = null
+const browserIdentityPromises = new WeakMap<WebContents, Promise<void>>()
+
+function browserIdentity(): BrowserIdentity {
+  cachedBrowserIdentity ??= buildBrowserIdentity({
+    chromeVersion: process.versions.chrome || chromeVersionFromFallback(app.userAgentFallback),
+    platform: process.platform,
+    architecture: process.arch
+  })
+  return cachedBrowserIdentity
+}
+
+// Trust-sensitive sites reject both Electron and application-name UA tokens.
 export function chromeLikeUserAgent(): string {
-  return app.userAgentFallback.replace(/\sElectron\/\S+/g, '').trim()
+  return browserIdentity().userAgent
+}
+
+/**
+ * Apply the same identity to HTTP headers, navigator.userAgent, and UA Client
+ * Hints before a guest page loads. Session.setUserAgent alone leaves
+ * navigator.userAgentData empty in Electron, which is itself a strong shell
+ * fingerprint on sites that compare the two surfaces.
+ */
+export function ensureBrowserIdentity(webContents: WebContents): Promise<void> {
+  if (webContents.isDestroyed()) return Promise.resolve()
+  webContents.setUserAgent(chromeLikeUserAgent())
+
+  const existing = browserIdentityPromises.get(webContents)
+  if (existing) return existing
+
+  const identity = browserIdentity()
+  const ready = withTimeout(
+    cdpSessionFor(webContents).send('Network.setUserAgentOverride', {
+      userAgent: identity.userAgent,
+      acceptLanguage: identity.acceptLanguage,
+      userAgentMetadata: identity.userAgentMetadata
+    }),
+    2_000
+  ).catch((error) => {
+    // A closing target or open DevTools client can temporarily own the CDP
+    // channel. The clean session/WebContents UA remains the compatibility floor.
+    console.warn('Could not apply browser UA Client Hints override', error)
+  })
+  browserIdentityPromises.set(webContents, ready)
+  return ready
 }
 
 export type BrowserSessionOptions = {
@@ -25,7 +69,8 @@ const allowedGuestPermissions = new Set(['fullscreen', 'pointerLock'])
 
 export function configureBrowserSession(options: BrowserSessionOptions): void {
   const browserSession = session.fromPartition(browserPartition)
-  browserSession.setUserAgent(chromeLikeUserAgent())
+  const identity = browserIdentity()
+  browserSession.setUserAgent(identity.userAgent, identity.acceptLanguage)
   browserSession.setSpellCheckerLanguages(['en-US'])
   browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
     callback(allowedGuestPermissions.has(permission))
@@ -64,4 +109,16 @@ export function configureBrowserSession(options: BrowserSessionOptions): void {
       item.cancel()
     })
   })
+}
+
+function chromeVersionFromFallback(userAgent: string): string {
+  return /\bChrome\/([\d.]+)/.exec(userAgent)?.[1] ?? '1.0.0.0'
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timer = setTimeout(() => reject(new Error(`browser identity setup timed out after ${timeoutMs}ms`)), timeoutMs)
+  })
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer))
 }
