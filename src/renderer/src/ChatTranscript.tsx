@@ -1,6 +1,6 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { ItemMeta, WorkItem } from './TaskActivity';
-import { AutoFollow, WorkGroup } from './TaskActivity';
+import { AutoFollow, isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from './TaskActivity';
 import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
@@ -20,16 +20,19 @@ export function TaskActivityCard({
   itemMeta,
   live,
   workspace,
+  streamingMessage = false,
 }: {
   items: ActivityItem[];
   itemMeta: Record<string, ItemMeta>;
   live: boolean;
   workspace: string | null;
+  streamingMessage?: boolean;
 }): React.JSX.Element {
   // null = default by liveness: live turns show everything, settled turns
   // collapse their step rows to a "N steps" toggle.
   const [stepsOpen, setStepsOpen] = useState<boolean | null>(null);
   const showSteps = live || (stepsOpen ?? false);
+  const workItems = useMemo(() => items.filter(isWorkItem), [items]);
   const hiddenStepCount = live
     ? 0
     : items.filter((item) => isWorkItem(item) && !isEssentialWorkItem(item)).length;
@@ -46,7 +49,10 @@ export function TaskActivityCard({
   let workRun: WorkItem[] = [];
 
   const flushWork = (): void => {
-    const visible = showSteps ? workRun : workRun.filter(isEssentialWorkItem);
+    let visible = showSteps ? workRun : workRun.filter(isEssentialWorkItem);
+    if (live) {
+      visible = visible.filter((item) => !isHiddenDuringLiveStep(item, live));
+    }
     workRun = [];
     if (!visible.length) {
       return;
@@ -104,6 +110,13 @@ export function TaskActivityCard({
           <StepsChevronIcon className={`activity-steps-chevron ${showSteps ? 'is-open' : ''}`} />
           {hiddenStepCount} {hiddenStepCount === 1 ? 'step' : 'steps'}
         </button>
+      ) : null}
+      {live ? (
+        <LiveActivityFeed
+          items={workItems}
+          itemMeta={itemMeta}
+          streamingMessage={streamingMessage}
+        />
       ) : null}
       <AutoFollow className="task-activity-card-scroll">
         <div className="task-activity-card-content">{content}</div>

@@ -10,13 +10,14 @@ import { latestItemProgress, type ItemMeta, type TurnPlanItem, type WorkItem } f
 import { browserLinkComponents } from './MarkdownContent'
 import { basename, blockStatus, displayDir, fmtDuration, fmtTokens, formatBytes, itemDurationMs, previewJson, stripAnsi, truncate, type BlockStatus } from './activity-format'
 import { cdpFileArtifact, cdpScreenshotArtifact, type CdpScreenshotArtifact } from './cdp-artifacts'
-import { currentActionLabel, isBrowseAction, tokenTooltip, turnSummaryParts } from './turn-summary'
+import { currentActionLabel, isBrowseAction, activityFeedLines, tokenTooltip, turnSummaryParts } from './turn-summary'
 
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry'
 export { workItemTypes } from './activity-model'
 export type { ItemMeta, TurnPlanItem, WorkItem } from './activity-model'
 export { fmtDuration, fmtTokens } from './activity-format'
-export { currentActionLabel } from './turn-summary'
+export { currentActionLabel, activityFeedLines } from './turn-summary'
+export type { ActivityFeedLine } from './turn-summary'
 export { cdpScreenshotArtifacts } from './cdp-artifacts'
 export type { CdpScreenshotArtifact } from './cdp-artifacts'
 
@@ -29,7 +30,7 @@ type PlanItem = Extract<ThreadItem, { type: 'plan' }>
 type WebSearchItem = Extract<ThreadItem, { type: 'webSearch' }>
 
 // ---------------------------------------------------------------------------
-// File review context ‚Äî the Keep/Undo flow (Cursor-style post-hoc review).
+// File review context ù the Keep/Undo flow (Cursor-style post-hoc review).
 // Provided by ChatPane; consumed by DiffCard so every settled diff card offers
 // a per-file Undo without threading callbacks through the memoized layers.
 // ---------------------------------------------------------------------------
@@ -126,7 +127,7 @@ export function AutoFollow({
       })
     }
 
-    // Observe the inner content box, which grows as streamed text is appended ‚Äî
+    // Observe the inner content box, which grows as streamed text is appended ù
     // the scroll container's own border box does not. This catches growth with
     // a coalesced resize callback instead of a subtree characterData
     // MutationObserver firing once per streamed character.
@@ -150,7 +151,7 @@ export function AutoFollow({
 }
 
 // ---------------------------------------------------------------------------
-// Icons ‚Äî quiet 15px strokes matching the app's existing inline icon style
+// Icons ù quiet 15px strokes matching the app's existing inline icon style
 // ---------------------------------------------------------------------------
 
 function Icon({ children, className }: { children: React.ReactNode; className?: string }): React.JSX.Element {
@@ -318,7 +319,7 @@ function StatusChip({ status, exitCode }: { status: BlockStatus; exitCode?: numb
 }
 
 // ---------------------------------------------------------------------------
-// Thought (reasoning) ‚Äî the streamed model narration
+// Thought (reasoning) ù the streamed model narration
 // ---------------------------------------------------------------------------
 
 function reasoningText(item: ReasoningItem): string {
@@ -354,7 +355,7 @@ function ThoughtBlock({
     !streaming && meta?.startedAtMs && meta?.completedAtMs ? Math.max(0, meta.completedAtMs - meta.startedAtMs) : null
   const label = streaming
     ? elapsedMs !== null && elapsedMs >= 3000
-      ? `Thinking ¬∑ ${fmtDuration(elapsedMs)}`
+      ? `Thinking ù ${fmtDuration(elapsedMs)}`
       : 'Thinking'
     : durationMs !== null
       ? `Thought for ${fmtDuration(durationMs)}`
@@ -386,7 +387,7 @@ function ThoughtBlock({
 }
 
 // ---------------------------------------------------------------------------
-// Command execution ‚Äî compact Cursor-style rows for read/list/search, a real
+// Command execution ù compact Cursor-style rows for read/list/search, a real
 // terminal card for everything else
 // ---------------------------------------------------------------------------
 
@@ -465,7 +466,7 @@ function TerminalCard({
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
   // Cursor-style step row: settled commands collapse to their header line
-  // (failures stay open ‚Äî the error is the payload). Live commands always
+  // (failures stay open ù the error is the payload). Live commands always
   // stream their output.
   const [open, setOpen] = useState<boolean | null>(null)
   const running = status === 'running'
@@ -532,7 +533,7 @@ function TerminalCard({
           <div className="term-output">
             {hiddenCount > 0 ? (
               <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
-                ‚ãØ show {hiddenCount} earlier {hiddenCount === 1 ? 'line' : 'lines'}
+                ? show {hiddenCount} earlier {hiddenCount === 1 ? 'line' : 'lines'}
               </button>
             ) : null}
             <pre>{shownLines.join('\n')}</pre>
@@ -575,7 +576,7 @@ function CommandBlock({
 }
 
 // ---------------------------------------------------------------------------
-// File changes ‚Äî live-streaming diff cards
+// File changes ù live-streaming diff cards
 // ---------------------------------------------------------------------------
 
 const collapsedDiffLines = 18
@@ -603,7 +604,7 @@ function DiffCard({
     [diff, kind.type]
   )
   const running = status === 'running'
-  // Syntax highlighting is deferred until the edit settles ‚Äî live patches
+  // Syntax highlighting is deferred until the edit settles ù live patches
   // re-render per delta and tokenizing every visible line each frame is waste.
   const lang = useMemo(() => (running ? null : langForPath(path)), [running, path])
 
@@ -628,12 +629,12 @@ function DiffCard({
         {kindBadge ? <span className="work-chip chip-muted">{kindBadge}</span> : null}
         {kind.type === 'update' && kind.move_path ? (
           <span className="diff-file-dir" title={kind.move_path}>
-            ‚Üí {basename(kind.move_path)}
+            ? {basename(kind.move_path)}
           </span>
         ) : null}
         <span className="diff-counts">
           {parsed.adds > 0 ? <span className="diff-count-add">+{parsed.adds}</span> : null}
-          {parsed.dels > 0 ? <span className="diff-count-del">‚àí{parsed.dels}</span> : null}
+          {parsed.dels > 0 ? <span className="diff-count-del">?{parsed.dels}</span> : null}
           {undone ? <span className="work-chip chip-muted">undone</span> : null}
           <StatusChip status={status} />
           {undoable ? (
@@ -666,7 +667,7 @@ function DiffCard({
             <DiffLines lines={shownLines} lang={lang} />
             {overflow > 0 ? (
               <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
-                ‚ãØ show full diff ¬∑ {overflow} more {overflow === 1 ? 'line' : 'lines'}
+                ? show full diff ù {overflow} more {overflow === 1 ? 'line' : 'lines'}
               </button>
             ) : null}
             {showAll && parsed.lines.length > collapsedDiffLines ? (
@@ -698,7 +699,7 @@ function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }):
           </div>
         ) : (
           <div key={index} className={`diff-line diff-${line.kind}`}>
-            <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '‚àí' : ''}</span>
+            <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '?' : ''}</span>
             <span className="diff-text">{renderDiffText(line, lineTokens?.[index] ?? null)}</span>
           </div>
         )
@@ -798,8 +799,8 @@ function FileChangeBlock({
           turnId={meta?.turnId ?? null}
         />
       ))}
-      {item.changes.length === 0 && status === 'running' ? (
-        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="‚Ä¶" />
+      {item.changes.length === 0 && status === 'running' && !live ? (
+        <ToolRow icon={<FilePenIcon />} status={status} verb="Editing" detail="Ö" />
       ) : null}
     </>
   )
@@ -861,7 +862,7 @@ function DynamicToolBlock({
   const progress = status === 'running' && item.tool === 'research_web' ? latestItemProgress(meta) : null
 
   if (screenshot) {
-    const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}√ó${screenshot.height}` : null
+    const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}ù${screenshot.height}` : null
     return (
       <div className="screenshot-tool-step">
         <ToolRow
@@ -870,7 +871,7 @@ function DynamicToolBlock({
           verb="Captured screenshot"
           detail={screenshot.fileName}
           detailTitle={screenshot.artifactPath}
-          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' ¬∑ ')}
+          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' ù ')}
         />
         <CdpScreenshotPreview artifact={screenshot} />
       </div>
@@ -1054,7 +1055,7 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
         />
       )
     case 'subAgentActivity':
-      return <ToolRow icon={<BotIcon />} status={status} verb="Sub-agent" detail={`${item.kind} ¬∑ ${basename(item.agentPath)}`} />
+      return <ToolRow icon={<BotIcon />} status={status} verb="Sub-agent" detail={`${item.kind} ù ${basename(item.agentPath)}`} />
     case 'collabAgentToolCall':
       return (
         <ToolRow
@@ -1067,6 +1068,98 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
     default:
       return null
   }
+}
+
+export function isHiddenDuringLiveStep(item: WorkItem, live: boolean): boolean {
+  if (!live) {
+    return false
+  }
+
+  switch (item.type) {
+    case 'commandExecution': {
+      if (item.status === 'failed' || item.status === 'declined') {
+        return false
+      }
+      return item.commandActions.length > 0 && item.commandActions.every(isBrowseAction)
+    }
+    case 'mcpToolCall':
+    case 'webSearch':
+    case 'imageGeneration':
+      return true
+    case 'dynamicToolCall':
+      if (cdpScreenshotArtifact(item) || cdpFileArtifact(item)) {
+        return false
+      }
+      return true
+    case 'subAgentActivity':
+    case 'collabAgentToolCall':
+      return item.status !== 'inProgress'
+    default:
+      return false
+  }
+}
+
+function CurrentActivityLine({ text }: { text: string }): React.JSX.Element {
+  const [display, setDisplay] = useState(text)
+  const [phase, setPhase] = useState<'in' | 'out'>('in')
+
+  useEffect(() => {
+    if (text === display) {
+      return
+    }
+    setPhase('out')
+    const timer = window.setTimeout(() => {
+      setDisplay(text)
+      setPhase('in')
+    }, 180)
+    return () => window.clearTimeout(timer)
+  }, [text, display])
+
+  return (
+    <div
+      className={`live-activity-line is-current shimmer-text ${phase === 'out' ? 'is-exiting' : 'is-entering'}`}
+      aria-live="polite"
+    >
+      {display}
+    </div>
+  )
+}
+
+export function LiveActivityFeed({
+  items,
+  itemMeta,
+  streamingMessage
+}: {
+  items: WorkItem[]
+  itemMeta: Record<string, ItemMeta>
+  streamingMessage: boolean
+}): React.JSX.Element | null {
+  const lines = useMemo(
+    () => activityFeedLines(items, itemMeta, streamingMessage),
+    [items, itemMeta, streamingMessage]
+  )
+
+  if (!lines.length) {
+    return null
+  }
+
+  const history = lines.slice(0, -1)
+  const current = lines[lines.length - 1]
+
+  return (
+    <div className="live-activity-feed" aria-label="Current activity">
+      {history.map((line) => (
+        <div key={line.id} className={`live-activity-line tone-${line.tone}`}>
+          {line.text}
+        </div>
+      ))}
+      {current?.tone === 'current' ? (
+        <CurrentActivityLine key="current" text={current.text} />
+      ) : current ? (
+        <div className={`live-activity-line tone-${current.tone}`}>{current.text}</div>
+      ) : null}
+    </div>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -1143,7 +1236,7 @@ export function WorkGroup({
 }
 
 // ---------------------------------------------------------------------------
-// Turn tail ‚Äî live shimmer status while running, permanent receipt when done
+// Turn tail ù live shimmer status while running, permanent receipt when done
 // ---------------------------------------------------------------------------
 
 export function TurnTail({
@@ -1165,7 +1258,7 @@ export function TurnTail({
 }): React.JSX.Element | null {
   const now = useNow(live)
   // Two-click inline confirm: reverting rewrites workspace files, so a lone
-  // misclick shouldn't fire it ‚Äî but no dialogs; the revert itself is also
+  // misclick shouldn't fire it ù but no dialogs; the revert itself is also
   // checkpointed, so even a confirmed mistake is undoable.
   const [confirmingRevert, setConfirmingRevert] = useState(false)
 
@@ -1192,7 +1285,7 @@ export function TurnTail({
 
     return (
       <div className="turn-tail is-live">
-        <span className="shimmer-text tail-label">{label}‚Ä¶</span>
+        <span className="shimmer-text tail-label">{label}ù</span>
         {elapsed !== null && elapsed >= 1000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
         {tokens ? (
           <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
@@ -1229,8 +1322,8 @@ export function TurnTail({
     <div className={`turn-tail is-done ${tone}`}>
       <span className="tail-rule" aria-hidden="true" />
       <span className="tail-summary">
-        {[lead, ...parts].join(' ¬∑ ')}
-        {meta?.status === 'failed' && meta.errorMessage ? ` ‚Äî ${truncate(meta.errorMessage, 160)}` : ''}
+        {[lead, ...parts].join(' ù ')}
+        {meta?.status === 'failed' && meta.errorMessage ? ` ù ${truncate(meta.errorMessage, 160)}` : ''}
       </span>
       {onRevert ? (
         <button

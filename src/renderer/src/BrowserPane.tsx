@@ -9,6 +9,7 @@ import {
 } from 'react'
 import type {
   BrowserBounds,
+  BrowserMenuItem,
   BrowserState,
   BrowserTabState,
   BrowserVpnStatus,
@@ -96,17 +97,45 @@ function GlobeIcon(): React.JSX.Element {
   )
 }
 
-function vpnLabel(vpn: BrowserVpnStatus): string {
+function vpnMenuLabel(vpn: BrowserVpnStatus): string {
   switch (vpn.state) {
     case 'on':
-      return 'VPN on — tabs are routed through Tor. Click to disable.'
+      return 'VPN on (Tor)'
     case 'starting':
-      return `Connecting VPN… ${vpn.bootstrapProgress}%${vpn.detail ? ` — ${vpn.detail}` : ''}. Click to cancel.`
+      return `Connecting VPN… ${vpn.bootstrapProgress}%`
     case 'error':
-      return `VPN error: ${vpn.detail ?? 'unknown'}. Click to retry.`
+      return 'VPN error — retry'
     default:
-      return 'Enable VPN — route tabs through the built-in Tor tunnel'
+      return 'Enable VPN (Tor)'
   }
+}
+
+function buildMenuItems(
+  activeTab: BrowserTabState | null,
+  vpn: BrowserVpnStatus,
+  isFullscreen: boolean
+): BrowserMenuItem[] {
+  return [
+    { kind: 'action', command: 'find', label: 'Find in page', icon: 'find', disabled: !activeTab },
+    {
+      kind: 'action',
+      command: 'mute',
+      label: activeTab?.isMuted ? 'Unmute tab' : 'Mute tab',
+      icon: activeTab?.isMuted ? 'volume-muted' : 'volume',
+      disabled: !activeTab || (!activeTab.isAudible && !activeTab.isMuted)
+    },
+    { kind: 'action', command: 'vpn', label: vpnMenuLabel(vpn), icon: 'shield', checked: vpn.state === 'on' },
+    { kind: 'separator' },
+    { kind: 'zoom', percent: activeTab?.zoomPercent ?? 100, disabled: !activeTab },
+    { kind: 'separator' },
+    {
+      kind: 'action',
+      command: 'fullscreen',
+      label: isFullscreen ? 'Exit full screen' : 'Full screen',
+      icon: isFullscreen ? 'fullscreen-exit' : 'fullscreen',
+      checked: isFullscreen
+    }
+  ]
 }
 
 function BrowserToolbar({
@@ -127,8 +156,10 @@ function BrowserToolbar({
   const [findOpen, setFindOpen] = useState(false)
   const [findText, setFindText] = useState('')
   const [findResult, setFindResult] = useState({ activeMatchOrdinal: 0, matches: 0 })
+  const [menuOpen, setMenuOpen] = useState(false)
   const findInputRef = useRef<HTMLInputElement>(null)
   const omniboxRef = useRef<HTMLInputElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const typedTextRef = useRef('')
   const justFocusedRef = useRef(false)
   const focusFromMouseRef = useRef(false)

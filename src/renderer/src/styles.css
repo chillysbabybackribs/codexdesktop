@@ -1831,6 +1831,67 @@ button {
   margin: 0 0 18px;
 }
 
+/* Cursor-style live feed: muted aggregate lines + one shimmering current line. */
+.live-activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: min(860px, 100%);
+  margin: 0 0 10px;
+  padding: 0 5px 0 0;
+}
+
+.live-activity-line {
+  overflow: hidden;
+  color: #727272;
+  font-size: 13px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.live-activity-line.tone-settled {
+  color: #666666;
+}
+
+.live-activity-line.tone-active {
+  color: #7a7a7a;
+}
+
+.live-activity-line.is-current {
+  font-weight: 550;
+}
+
+.live-activity-line.is-current.is-exiting {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.live-activity-line.is-current.is-entering {
+  animation: live-activity-enter 240ms ease-out;
+}
+
+@keyframes live-activity-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-activity-card.is-live .live-activity-feed + .task-activity-card-scroll {
+  margin-top: 2px;
+}
+
+.task-activity-card.is-live .task-activity-card-content {
+  padding-top: 0;
+}
+
 /* Shared shimmering label — the signature "model is working" text. Bright
    white sweep over a light base so it reads as animated white, not gray. */
 .shimmer-text {

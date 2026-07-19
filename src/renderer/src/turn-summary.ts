@@ -7,6 +7,18 @@ import { latestItemProgress, type ItemMeta, type WorkItem } from './activity-mod
 import type { TurnMeta, TurnTokenTelemetry } from './turn-telemetry'
 
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
+type TurnPlanItem = Extract<WorkItem, { type: 'turnPlan' }>
+
+export type ActivityFeedLine = {
+  id: string
+  text: string
+  tone: 'settled' | 'active' | 'current'
+}
+
+type BrowseCounts = {
+  files: number
+  searches: number
+}
 
 export function isBrowseAction(action: CommandAction): boolean {
   return action.type === 'read' || action.type === 'listFiles' || action.type === 'search'
@@ -78,6 +90,112 @@ export function currentActionLabel(
   }
 
   return streamingMessage ? 'Writing' : 'Working'
+}
+
+function countBrowseActions(items: WorkItem[], phase: 'completed' | 'running'): BrowseCounts {
+  const counts: BrowseCounts = { files: 0, searches: 0 }
+
+  for (const item of items) {
+    if (item.type === 'webSearch') {
+      const running = item.status === 'inProgress'
+      if (phase === 'running' && running) {
+        counts.searches += 1
+      } else if (phase === 'completed' && !running) {
+        counts.searches += 1
+      }
+      continue
+    }
+
+    if (item.type !== 'commandExecution') {
+      continue
+    }
+
+    const running = item.status === 'inProgress'
+    if (phase === 'running' && !running) {
+      continue
+    }
+    if (phase === 'completed' && item.status !== 'completed') {
+      continue
+    }
+
+    for (const action of item.commandActions) {
+      if (!isBrowseAction(action)) {
+        continue
+      }
+      if (action.type === 'search') {
+        counts.searches += 1
+      } else {
+        counts.files += 1
+      }
+    }
+  }
+
+  return counts
+}
+
+function browseSummaryLabel(counts: BrowseCounts, tense: 'past' | 'present'): string | null {
+  if (counts.files === 0 && counts.searches === 0) {
+    return null
+  }
+
+  const verb = tense === 'past' ? 'Explored' : 'Exploring'
+  const parts: string[] = []
+  if (counts.files > 0) {
+    parts.push(`${counts.files} ${counts.files === 1 ? 'file' : 'files'}`)
+  }
+  if (counts.searches > 0) {
+    parts.push(`${counts.searches} ${counts.searches === 1 ? 'search' : 'searches'}`)
+  }
+  return `${verb} ${parts.join(', ')}`
+}
+
+function isBrowseStatusLabel(label: string): boolean {
+  return /^(Reading|Searching|Listing)\b/.test(label)
+}
+
+function planningFeedLine(items: WorkItem[], current: string): string | null {
+  const turnPlan = items.find((item): item is TurnPlanItem => item.type === 'turnPlan')
+  if (!turnPlan?.steps.some((step) => step.status === 'inProgress')) {
+    return null
+  }
+  if (current === 'Thinking' || current === 'Planning' || current === 'Working') {
+    return 'Planning next moves'
+  }
+  return null
+}
+
+// Cursor-style live feed: aggregate browse totals plus one rotating current line.
+export function activityFeedLines(
+  items: WorkItem[],
+  itemMeta: Record<string, ItemMeta>,
+  streamingMessage: boolean
+): ActivityFeedLine[] {
+  const lines: ActivityFeedLine[] = []
+
+  const explored = countBrowseActions(items, 'completed')
+  const exploring = countBrowseActions(items, 'running')
+
+  const exploredLabel = browseSummaryLabel(explored, 'past')
+  if (exploredLabel) {
+    lines.push({ id: 'explored', text: exploredLabel, tone: 'settled' })
+  }
+
+  const exploringLabel = browseSummaryLabel(exploring, 'present')
+  if (exploringLabel && exploringLabel !== exploredLabel) {
+    lines.push({ id: 'exploring', text: exploringLabel, tone: 'active' })
+  }
+
+  const current = currentActionLabel(items, itemMeta, streamingMessage)
+  const planned = planningFeedLine(items, current)
+  const currentText = planned ?? current
+
+  const browseCurrent = isBrowseStatusLabel(currentText)
+  const skipCurrent = Boolean(exploringLabel && browseCurrent)
+  if (currentText && !skipCurrent) {
+    lines.push({ id: `current:${currentText}`, text: currentText, tone: 'current' })
+  }
+
+  return lines.slice(-3)
 }
 
 export function turnSummaryParts(items: WorkItem[], meta: TurnMeta | undefined): string[] {

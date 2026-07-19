@@ -3,7 +3,7 @@ import test from 'node:test'
 import type { ThreadItem } from '../../shared/session-protocol/index.ts'
 import type { ItemMeta, TurnPlanItem, WorkItem } from './activity-model.ts'
 import type { TurnMeta, TurnTokenTelemetry } from './turn-telemetry.ts'
-import { currentActionLabel, isBrowseAction, tokenTooltip, turnSummaryParts } from './turn-summary.ts'
+import { currentActionLabel, activityFeedLines, isBrowseAction, tokenTooltip, turnSummaryParts } from './turn-summary.ts'
 
 type CommandExecutionItem = Extract<ThreadItem, { type: 'commandExecution' }>
 type FileChangeItem = Extract<ThreadItem, { type: 'fileChange' }>
@@ -190,6 +190,43 @@ test('turnSummaryParts counts commands, searches, tool calls, and tokens', () =>
     '2 tool calls',
     '1.5k tokens'
   ])
+})
+
+test('activityFeedLines aggregates browse work and rotates the current line', () => {
+  const reads = commandItem({
+    id: 'read-1',
+    status: 'completed',
+    commandActions: [
+      { type: 'read', command: 'cat a.ts', name: 'a.ts', path: '/ws/a.ts' },
+      { type: 'read', command: 'cat b.ts', name: 'b.ts', path: '/ws/b.ts' }
+    ]
+  })
+  const searching = commandItem({
+    id: 'search-1',
+    status: 'inProgress',
+    commandActions: [{ type: 'search', command: 'rg foo', query: 'foo', path: null }]
+  })
+  const items: WorkItem[] = [reads, searching]
+
+  assert.deepEqual(activityFeedLines(items, {}, false).map((line) => line.text), [
+    'Explored 2 files',
+    'Exploring 1 search'
+  ])
+})
+
+test('activityFeedLines shows planning copy when the turn plan is active', () => {
+  const items: WorkItem[] = [reasoningItem, turnPlanItem]
+  assert.deepEqual(activityFeedLines(items, {}, false).map((line) => line.text), [
+    'Planning next moves'
+  ])
+})
+
+test('activityFeedLines skips redundant browse current labels', () => {
+  const searching = commandItem({
+    status: 'inProgress',
+    commandActions: [{ type: 'search', command: 'rg foo', query: 'foo', path: null }]
+  })
+  assert.deepEqual(activityFeedLines([searching], {}, false).map((line) => line.text), ['Exploring 1 search'])
 })
 
 test('tokenTooltip summarizes per-turn usage with optional context window', () => {

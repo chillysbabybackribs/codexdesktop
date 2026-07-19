@@ -337,6 +337,9 @@ export function ChatPaneView({
                   itemMeta={itemMeta}
                   live={Boolean(paneTurnId) && row.turnId === paneTurnId}
                   workspace={workspace}
+                  streamingMessage={
+                    Boolean(streamingMessageId) && row.turnId === paneTurnId
+                  }
                 />
               );
             }
