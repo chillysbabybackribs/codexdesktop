@@ -171,7 +171,7 @@ test('browser agent runs a program against the active tab', async () => {
 
   const result = await controller.run('return { answer: 42 }')
 
-  assert.equal(result.ok, false)
+  assert.equal(result.ok, true)
   assert.deepEqual(result.result, { answer: 42 })
   assert.equal(result.tabId, 'tab-1')
   assert.equal(result.url, 'https://example.com/article')
@@ -412,7 +412,7 @@ test('browser snapshot identifies only the unresolved coverage gaps for a target
 
   const result = await controller.snapshot({ objective: 'latest unread notification' })
 
-  assert.equal(result.ok, true)
+  assert.equal(result.ok, false)
   assert.deepEqual(result.completion, {
     status: 'incomplete',
     nextAction: 'targeted-gap-fill',
