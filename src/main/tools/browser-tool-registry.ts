@@ -117,6 +117,21 @@ export async function runBrowserTool(
             signal
           }))
         : { ok: false, error: 'browser_flow requires a non-empty "steps" array' }
+    } else if (tool === 'browser_network') {
+      result = await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
+        url: readString(args.url),
+        steps: args.steps,
+        match: toNetworkJournalQuery(asRecord(args.match)),
+        captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
+        readySelector: readString(args.readySelector),
+        quietMs: readNumber(args.quietMs),
+        maxSettleMs: readNumber(args.maxSettleMs)
+      }, {
+        tabId: resolveAgentTab(readString(args.tab)),
+        timeoutMs: readNumber(args.timeoutMs),
+        maxResultChars: readNumber(args.maxResultChars),
+        signal
+      }))
     } else if (tool === 'browser_run') {
       const code = readString(args.code)
       result = code

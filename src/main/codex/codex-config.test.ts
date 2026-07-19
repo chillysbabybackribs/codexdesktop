@@ -310,7 +310,7 @@ test('simple current-UI checks use one low-effort visual pass', () => {
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_network', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')
@@ -363,6 +363,24 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(flowSchema.properties.steps?.items?.properties?.type?.enum, ['fill', 'click', 'submit', 'wait', 'find'])
   assert.deepEqual(flowSchema.properties.steps?.items?.properties?.onMissing?.enum, ['stop', 'error'])
   assert.match(browserFlow.description, /missing find is successful/i)
+  const browserNetwork = browserDynamicTools.find(({ name }) => name === 'browser_network')
+  assert.equal(browserNetwork?.type, 'function')
+  if (!browserNetwork || browserNetwork.type !== 'function') assert.fail('browser_network function tool is missing')
+  const networkSchema = browserNetwork.inputSchema as {
+    required?: string[]
+    properties: {
+      match?: { required?: string[] }
+      steps?: { minItems?: number; maxItems?: number }
+      captureBody?: { type?: string }
+    }
+  }
+  assert.deepEqual(networkSchema.required, ['match'])
+  assert.deepEqual(networkSchema.properties.match?.required, ['urlContains'])
+  assert.equal(networkSchema.properties.steps?.minItems, 1)
+  assert.equal(networkSchema.properties.steps?.maxItems, 24)
+  assert.equal(networkSchema.properties.captureBody?.type, 'boolean')
+  assert.match(browserNetwork.description, /one model call/i)
+  assert.match(browserNetwork.description, /response body as an artifact/i)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')

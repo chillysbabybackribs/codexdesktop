@@ -256,6 +256,40 @@ const browserFlowSchema = {
   additionalProperties: false
 }
 
+const browserNetworkSchema = {
+  type: 'object',
+  properties: {
+    url: { type: 'string', description: 'Optional navigation input that triggers the request. Provide exactly one of url or steps.' },
+    steps: {
+      ...browserFlowSchema.properties.steps,
+      description: 'Optional interaction flow that triggers the request. Provide exactly one of url or steps.'
+    },
+    match: {
+      type: 'object',
+      description: 'Response matcher. urlContains is required; optional fields narrow the exact request.',
+      properties: {
+        urlContains: { type: 'string', description: 'Case-insensitive URL substring required on the matched response.' },
+        method: { type: 'string', description: 'Optional exact HTTP method.' },
+        resourceType: { type: 'string', description: 'Optional exact CDP resource type such as Fetch or XHR.' },
+        mimeType: { type: 'string', description: 'Optional response MIME-type substring.' },
+        statusMin: { type: 'number', description: 'Optional minimum HTTP status.' },
+        statusMax: { type: 'number', description: 'Optional maximum HTTP status.' }
+      },
+      required: ['urlContains'],
+      additionalProperties: false
+    },
+    captureBody: { type: 'boolean', description: 'Persist the matched response body as an artifact. Defaults to true.' },
+    readySelector: { type: 'string', description: 'For url triggers, optional selector that marks navigation readiness.' },
+    quietMs: { type: 'number', description: 'For url triggers, optional DOM-quiet window after readiness.' },
+    maxSettleMs: { type: 'number', description: 'For url triggers, optional maximum DOM-settle time.' },
+    tab: { type: 'string', description: 'Optional existing visible tab id. Defaults to the active tab; `all` is not supported.' },
+    timeoutMs: { type: 'number', description: 'Total capture timeout from 250 to 60000 milliseconds.' },
+    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
+  },
+  required: ['match'],
+  additionalProperties: false
+}
+
 const browserNavigateSchema = {
   type: 'object',
   properties: {
@@ -456,6 +490,12 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_flow',
     description: 'Run a navigation-aware declarative flow in one visible tab. Fill, click, or submit; use wait for a required page or list state; then use find for a one-shot lookup. A missing find is successful `not_found` data by default, avoiding desired-item polling and page-script exceptions.',
     inputSchema: browserFlowSchema
+  },
+  {
+    type: 'function',
+    name: 'browser_network',
+    description: 'Capture one exact network response in one model call: start a fresh journal, navigate or run an interaction flow, wait for a matching completed request, and persist its response body as an artifact. Use for JSON, GraphQL, XHR/fetch, and downloads exposed as ordinary HTTP responses.',
+    inputSchema: browserNetworkSchema
   },
   {
     type: 'function',
