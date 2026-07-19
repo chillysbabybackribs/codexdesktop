@@ -6,21 +6,12 @@ import type {
   PluginSummary,
 } from '../../shared/session-protocol';
 import {
+  flattenPlugins,
   pluginInstallParams,
   pluginUninstallId,
   safePluginAuthUrl,
   unresolvedPluginApps,
 } from './plugin-lifecycle';
-
-export function flattenPlugins(marketplaces: PluginMarketplaceEntry[]): PluginSummary[] {
-  return [
-    ...new Map(
-      marketplaces
-        .flatMap((marketplace) => marketplace.plugins)
-        .map((plugin) => [plugin.id, plugin]),
-    ).values(),
-  ];
-}
 
 export function PluginGlyph({ plugin }: { plugin: PluginSummary }): React.JSX.Element {
   const icon =

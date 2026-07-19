@@ -110,8 +110,8 @@ import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
 import { agentSessionsForMainChatTab, defaultReviewerModel, latestAuditReport } from './agent-session-model';
-import { pluginUninstallId } from './plugin-lifecycle';
-import { flattenPlugins, PluginBrowserView, PluginGlyph } from './PluginBrowser';
+import { flattenPlugins, pluginUninstallId } from './plugin-lifecycle';
+import { PluginBrowserView, PluginGlyph } from './PluginBrowser';
 import {
   buildOptimisticUserMessage,
   hasAuthoritativeUserMessage,

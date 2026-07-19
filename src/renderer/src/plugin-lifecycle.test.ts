@@ -2,7 +2,13 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PluginMarketplaceEntry } from '../../shared/session-protocol/index.ts'
 import type { PluginSummary } from '../../shared/session-protocol/index.ts'
-import { pluginInstallParams, pluginUninstallId, safePluginAuthUrl, unresolvedPluginApps } from './plugin-lifecycle.ts'
+import {
+  flattenPlugins,
+  pluginInstallParams,
+  pluginUninstallId,
+  safePluginAuthUrl,
+  unresolvedPluginApps
+} from './plugin-lifecycle.ts'
 
 function plugin(overrides: Partial<PluginSummary> = {}): PluginSummary {
   return {
@@ -58,6 +64,25 @@ test('marketplace-backed local plugin lifecycle keeps name and installed id', ()
     remoteMarketplaceName: null
   })
   assert.equal(pluginUninstallId(local), 'lifecycle-smoke@personal')
+})
+
+test('plugin catalogs flatten by id and keep the latest marketplace metadata', () => {
+  const original = plugin({ installed: false })
+  const updated = plugin({ installed: true })
+  const local = plugin({
+    id: 'lifecycle-smoke@personal',
+    remotePluginId: null,
+    name: 'lifecycle-smoke',
+    source: { type: 'local', path: '/tmp/lifecycle-smoke' }
+  })
+
+  assert.deepEqual(
+    flattenPlugins([
+      marketplace({ plugins: [original, local] }),
+      marketplace({ name: 'secondary', plugins: [updated] })
+    ]),
+    [updated, local]
+  )
 })
 
 test('remote plugins without a backend id fail closed', () => {
