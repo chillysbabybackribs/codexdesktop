@@ -240,3 +240,45 @@ test('parseAuditPrompt handles a prompt with no step log', () => {
   assert.deepEqual(parsed.files, ['a.ts'])
   assert.deepEqual(parsed.steps, [])
 })
+
+test('the audit prompt demands a machine-readable verdict in both flavors', () => {
+  assert.match(buildAuditPrompt({ userText: 'x', files: ['a.ts'] }), /"VERDICT: pass".*"VERDICT: flag"/)
+  assert.match(buildAuditPrompt({ userText: 'x', files: [], answerText: 'idea' }), /"VERDICT: pass".*"VERDICT: flag"/)
+})
+
+test('parseAuditVerdict reads the last verdict line; stripVerdictLine removes it', () => {
+  assert.equal(parseAuditVerdict('Looks solid.\nVERDICT: pass'), 'pass')
+  assert.equal(parseAuditVerdict('Bug in a.ts.\nverdict: FLAG'), 'flag', 'case-insensitive')
+  assert.equal(parseAuditVerdict('Discussing VERDICT: pass mid-sentence counts only at line start'), null)
+  assert.equal(parseAuditVerdict('First take.\nVERDICT: flag\nOn reflection…\nVERDICT: pass'), 'pass', 'last one wins')
+  assert.equal(parseAuditVerdict('No verdict here.'), null)
+  assert.equal(stripVerdictLine('Bug found.\nVERDICT: flag'), 'Bug found.')
+  assert.equal(stripVerdictLine('No verdict.'), 'No verdict.')
+})
+
+test('audit feedback message carries the report without the verdict line', () => {
+  const message = buildAuditFeedbackMessage({ agentTitle: 'Agent 2', report: 'Off-by-one in loop.\nVERDICT: flag' })
+  assert.ok(isAuditFeedback(message))
+  assert.match(message, /Agent 2 reviewed the last turn and flagged issues:/)
+  assert.match(message, /Off-by-one in loop\./)
+  assert.ok(!message.includes('VERDICT'), 'verdict line is machine plumbing, not doer input')
+  assert.match(message, /push back with a reason/)
+  assert.equal(isAuditFeedback('hello'), false)
+})
+
+test('feedback sends only on flag, idle, same thread, within the bounce cap', () => {
+  const base = {
+    verdict: 'flag' as const,
+    reportsToMain: true,
+    mainIdle: true,
+    sameThread: true,
+    auditedTurnWasFeedback: false
+  }
+  assert.equal(shouldSendAuditFeedback(base), true)
+  assert.equal(shouldSendAuditFeedback({ ...base, verdict: 'pass' }), false, 'pass converges the loop')
+  assert.equal(shouldSendAuditFeedback({ ...base, verdict: null }), false, 'missing verdicts fail quiet')
+  assert.equal(shouldSendAuditFeedback({ ...base, reportsToMain: false }), false)
+  assert.equal(shouldSendAuditFeedback({ ...base, mainIdle: false }), false, 'never interrupts a working doer')
+  assert.equal(shouldSendAuditFeedback({ ...base, sameThread: false }), false, 'never crosses threads')
+  assert.equal(shouldSendAuditFeedback({ ...base, auditedTurnWasFeedback: true }), false, 'one bounce per user turn')
+})
