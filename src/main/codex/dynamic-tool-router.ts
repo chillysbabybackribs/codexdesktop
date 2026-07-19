@@ -59,6 +59,14 @@ export async function routeDynamicToolCall(
             maxResultChars: readNumber(args.maxResultChars)
           })
         : { ok: false, error: 'browser_snapshot requires a string "objective" argument' }
+    } else if (params.tool === 'browser_flow') {
+      result = Array.isArray(args.steps)
+        ? await dependencies.browserAgent.flow(args.steps, {
+            tabId: resolveAgentTab(readString(args.tab)),
+            timeoutMs: readNumber(args.timeoutMs),
+            maxResultChars: readNumber(args.maxResultChars)
+          })
+        : { ok: false, error: 'browser_flow requires a non-empty "steps" array' }
     } else if (params.tool === 'browser_run') {
       const code = readString(args.code)
       result = code

@@ -6,7 +6,7 @@ const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
-  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; it can navigate, wait, and return task-focused items. On an older resumed thread where that tool is absent, use one `browser_run` call for the visible page, or `browser_navigate` followed by one `browser_run` call when the page must change. Batch ordered actions, inspection, and verification into one `browser_run` program when interaction is required.',
+  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; it can navigate, wait, and return task-focused items. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -202,6 +202,39 @@ const browserRunSchema = {
   additionalProperties: false
 }
 
+const browserFlowSchema = {
+  type: 'object',
+  properties: {
+    steps: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 24,
+      description: 'Ordered main-frame actions and checks. Use wait for a required containing state; use find for an item that may legitimately be absent.',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', description: 'Optional unique step label used in results and errors.' },
+          type: { type: 'string', enum: ['fill', 'click', 'submit', 'wait', 'find'] },
+          selector: { type: 'string', description: 'CSS selector, including descendants of open shadow roots.' },
+          value: { type: 'string', description: 'Value for a fill step.' },
+          navigation: { type: 'string', enum: ['auto', 'required', 'none'], description: 'Navigation expectation for click or submit. Defaults to auto.' },
+          urlContains: { type: 'string', description: 'Required URL substring for a wait step. Use instead of selector.' },
+          stableMs: { type: 'number', minimum: 0, maximum: 2000, description: 'How long a wait condition must remain stable. Defaults to 90 ms.' },
+          limit: { type: 'number', minimum: 1, maximum: 100, description: 'Maximum structured matches returned by a find step.' },
+          onMissing: { type: 'string', enum: ['stop', 'error'], description: 'A find miss returns successful not_found data and stops by default; use error only when presence is required.' }
+        },
+        required: ['type'],
+        additionalProperties: false
+      }
+    },
+    tab: { type: 'string', description: 'Optional existing visible tab id. Defaults to the active tab; `all` is not supported.' },
+    timeoutMs: { type: 'number', description: 'Total flow timeout from 250 to 60000 milliseconds.' },
+    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
+  },
+  required: ['steps'],
+  additionalProperties: false
+}
+
 const browserNavigateSchema = {
   type: 'object',
   properties: {
@@ -388,8 +421,14 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   },
   {
     type: 'function',
+    name: 'browser_flow',
+    description: 'Run a navigation-aware declarative flow in one visible tab. Fill, click, or submit; use wait for a required page or list state; then use find for a one-shot lookup. A missing find is successful `not_found` data by default, avoiding desired-item polling and page-script exceptions.',
+    inputSchema: browserFlowSchema
+  },
+  {
+    type: 'function',
     name: 'browser_run',
-    description: 'Run a batched JavaScript program in a visible browser target. Inspect, act, wait, and verify in one call. Use tab or frame all for parallel target/frame execution; return compact JSON. Page-origin CORS rules apply within each frame.',
+    description: 'Run bespoke JavaScript in a stable visible browser document. Top-level return and await are supported. Return expected missing states as data instead of throwing, and end the batch before an action that triggers full or SPA navigation. Use browser_flow for common navigation-aware interactions. Page-origin CORS rules apply within each frame.',
     inputSchema: browserRunSchema
   },
   {

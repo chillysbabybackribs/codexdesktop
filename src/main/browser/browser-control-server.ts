@@ -142,6 +142,27 @@ async function route(
       return
     }
 
+    if (req.method === 'POST' && path === '/flow') {
+      const body = await readBody(req)
+      let parsed: Record<string, unknown>
+      try {
+        parsed = asRecord(body ? JSON.parse(body) : {})
+      } catch {
+        sendJson(res, 400, { ok: false, error: 'body must be a JSON browser flow request' })
+        return
+      }
+      if (!Array.isArray(parsed.steps) || parsed.steps.length === 0) {
+        sendJson(res, 400, { ok: false, error: 'flow requires a non-empty "steps" array' })
+        return
+      }
+      sendJson(res, 200, await browserAgent.flow(parsed.steps, {
+        tabId: typeof parsed.tab === 'string' ? parsed.tab : tabParam(req),
+        timeoutMs: typeof parsed.timeoutMs === 'number' ? parsed.timeoutMs : numberParam(req, 'timeoutMs'),
+        maxResultChars: typeof parsed.maxResultChars === 'number' ? parsed.maxResultChars : numberParam(req, 'maxResultChars')
+      }))
+      return
+    }
+
     if (req.method === 'POST' && path === '/snapshot') {
       const body = await readBody(req)
       let parsed: Record<string, unknown>
