@@ -1018,7 +1018,7 @@ export default function App(): React.JSX.Element {
     activeCompactionRef.current = null
     precedingModelInputByTurnRef.current.clear()
     pendingCompactionByTurnRef.current.clear()
-    mainChatSnapshotsRef.current.delete(tabKey)
+    sessionStoreRef.current.remove(tabKey)
     discardComposerDraft(tabKey)
     patchMainChatTab(tabKey, (tab) => ({
       ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort),
@@ -1068,7 +1068,7 @@ export default function App(): React.JSX.Element {
         : tab),
       activeKey: key
     }))
-    const snapshot = mainChatSnapshotsRef.current.get(key)
+    const snapshot = sessionStoreRef.current.peek(key)
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
 
@@ -1096,7 +1096,7 @@ export default function App(): React.JSX.Element {
     const wasActive = current.activeKey === key
     if (wasActive) captureActiveMainChatSnapshot()
     const next = closeMainChatTab(current, key, () => crypto.randomUUID())
-    mainChatSnapshotsRef.current.delete(key)
+    sessionStoreRef.current.remove(key)
     discardComposerDraft(key)
     updateMainChatTabs(() => next)
 
@@ -1107,7 +1107,7 @@ export default function App(): React.JSX.Element {
 
     cancelAutoRecovery()
     const target = next.tabs.find((tab) => tab.key === next.activeKey) ?? next.tabs[0]
-    const snapshot = mainChatSnapshotsRef.current.get(target.key)
+    const snapshot = sessionStoreRef.current.peek(target.key)
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
     if (needsMainChatTabHydration(target, Boolean(snapshot))) {
@@ -1148,8 +1148,8 @@ export default function App(): React.JSX.Element {
         )
 
     captureActiveMainChatSnapshot()
-    const previousSnapshot = mainChatSnapshotsRef.current.get(previousState.activeKey)
-    if (reuseCurrent) mainChatSnapshotsRef.current.delete(target.key)
+    const previousSnapshot = sessionStoreRef.current.peek(previousState.activeKey)
+    if (reuseCurrent) sessionStoreRef.current.remove(target.key)
     updateMainChatTabs((state) => ({
       tabs: reuseCurrent
         ? state.tabs.map((tab) => tab.key === target.key ? target : tab)
@@ -1167,9 +1167,9 @@ export default function App(): React.JSX.Element {
       reconcilingMainChatTabKeyRef.current = null
     }
     if (!resumed) {
-      mainChatSnapshotsRef.current.delete(target.key)
+      sessionStoreRef.current.remove(target.key)
       if (previousSnapshot) {
-        mainChatSnapshotsRef.current.set(previousState.activeKey, previousSnapshot)
+        sessionStoreRef.current.set(previousState.activeKey, previousSnapshot)
       }
       updateMainChatTabs((state) => ({
         tabs: reuseCurrent
