@@ -285,6 +285,16 @@ function bootstrap(): void {
       browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
+      if (instanceRole === 'verification' && process.env.CODEX_DESKTOP_VERIFY_AUTO_CLOSE === '1') {
+        // `Browser control socket` is the verifier's readiness boundary: the
+        // native window, tab manager, and agent-facing browser surface are
+        // live. Close through BrowserWindow so normal persistence and CDP
+        // cleanup run; unlike SIGINT, this leaves npm with the app's real exit
+        // status.
+        setTimeout(() => {
+          if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
+        }, 250)
+      }
     } catch (error) {
       console.error('Failed to start browser control server', error)
     }

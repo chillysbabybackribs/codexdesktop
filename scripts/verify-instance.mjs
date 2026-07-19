@@ -20,7 +20,11 @@ const env = {
   ...process.env,
   CODEX_DESKTOP_INSTANCE_ROLE: 'verification',
   CODEX_DESKTOP_HOST_SESSION_ID: sessionId,
-  CODEX_DESKTOP_USER_DATA: userData
+  CODEX_DESKTOP_USER_DATA: userData,
+  // The verification instance exits itself after its browser-control surface
+  // is ready, exercising the app's real close path without sending a terminal
+  // signal to npm (which would make an otherwise healthy check report failure).
+  CODEX_DESKTOP_VERIFY_AUTO_CLOSE: '1'
 }
 
 // A production build must never inherit the host development renderer URL.
