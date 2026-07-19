@@ -156,6 +156,54 @@ function createInputStream(): InputStream {
   };
 }
 
+// Media types the Anthropic API accepts as image content blocks.
+const claudeImageMediaTypes = new Set(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+
+type ClaudeContentBlock =
+  | { type: 'text'; text: string }
+  | { type: 'image'; source: { type: 'base64'; media_type: string; data: string } };
+
+// Build the user-turn content: pasted/attached images become base64 image
+// blocks (placed before the text, per Anthropic vision guidance); any other
+// attachment is referenced by absolute path so the SDK's Read tool can open it.
+async function buildClaudeUserContent(
+  text: string,
+  attachments: ChatAttachment[],
+): Promise<string | ClaudeContentBlock[]> {
+  if (!attachments.length) return text;
+  const blocks: ClaudeContentBlock[] = [];
+  const pathMentions: string[] = [];
+  for (const attachment of attachments) {
+    if (attachment.kind === 'image' && claudeImageMediaTypes.has(attachment.mediaType)) {
+      try {
+        const data = await readFile(attachment.path);
+        blocks.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: attachment.mediaType,
+            data: data.toString('base64'),
+          },
+        });
+        continue;
+      } catch (error) {
+        console.warn(
+          `claude attachment read failed (${attachment.path}): ${(error as Error).message}`,
+        );
+      }
+    }
+    pathMentions.push(`- ${attachment.name}: ${attachment.path}`);
+  }
+  const textParts = [text];
+  if (pathMentions.length) {
+    textParts.push(`Attached files (read them from disk as needed):\n${pathMentions.join('\n')}`);
+  }
+  const joined = textParts.filter(Boolean).join('\n\n');
+  if (!blocks.length) return joined;
+  if (joined) blocks.push({ type: 'text', text: joined });
+  return blocks;
+}
+
 function emptyBreakdown(): TokenUsageBreakdown {
   return {
     totalTokens: 0,
@@ -298,7 +346,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     text: string,
     cwd?: string | null,
     model?: string | null,
-    _attachments: ChatAttachment[] = [],
+    attachments: ChatAttachment[] = [],
     effort?: ReasoningEffort | null,
     fastMode = false,
   ): Promise<
@@ -374,12 +422,13 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     };
 
     try {
+      const content = await buildClaudeUserContent(text, attachments);
       await this.ensureLive(session);
       await synchronizeClaudeRuntimeSettings(session.runtime!, session);
       void this.persistSessions();
       session.runtime!.input.push({
         type: 'user',
-        message: { role: 'user', content: text },
+        message: { role: 'user', content },
         parent_tool_use_id: null,
         session_id: session.claudeSessionId ?? 'pending',
       });
