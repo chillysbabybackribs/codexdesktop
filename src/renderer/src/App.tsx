@@ -710,15 +710,23 @@ export default function App(): React.JSX.Element {
       setBrowserMiddleActiveTabKeys(nextBrowserMiddleActiveTabKeys);
     }
     // Every tab mutation flows through here, so this is the single place the
-    // split layout is forced back to its invariants: panes only show open
-    // tabs, and the active tab is always visible — appearing where the
-    // previously focused pane was, exactly like the one-pane content swap.
-    const reconciled = reconcileChatSplitLayout(
-      chatSplitLayoutRef.current,
-      next.tabs.map((tab) => tab.key),
-      next.activeKey,
-      focusedPaneTabKeyRef.current,
-    );
+    // split layout is forced back to its invariants. In the browser-centered
+    // workspace each branch belongs to one side; applying the ordinary
+    // active-pane replacement there could move a left tab into the right raw
+    // branch (and make the next left-side split target the wrong tree).
+    const reconciled =
+      workspaceLayoutMode === 'browser-middle'
+        ? browserMiddleChatLayout(
+            chatSplitLayoutRef.current,
+            browserMiddleTabKeys(next.tabs),
+            nextBrowserMiddleActiveTabKeys,
+          )
+        : reconcileChatSplitLayout(
+            chatSplitLayoutRef.current,
+            next.tabs.map((tab) => tab.key),
+            next.activeKey,
+            focusedPaneTabKeyRef.current,
+          );
     if (reconciled !== chatSplitLayoutRef.current) {
       chatSplitLayoutRef.current = reconciled;
       setChatSplitLayoutState(reconciled);
