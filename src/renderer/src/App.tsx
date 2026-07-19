@@ -624,6 +624,59 @@ export default function App(): React.JSX.Element {
     updateMainChatTabs((state) => reorderMainChatTabs(state, sourceKey, targetKey, placement));
   }
 
+  // With several composers mounted (one per pane), "focus the composer" must
+  // target the active pane's textarea, not the first one in DOM order.
+  function focusActiveComposer(): void {
+    requestAnimationFrame(() => {
+      const key = activeMainChatTabKeyRef.current;
+      const scoped = document.querySelector<HTMLTextAreaElement>(
+        `[data-split-pane-key="${CSS.escape(key)}"] .composer textarea`,
+      );
+      (scoped ?? document.querySelector<HTMLTextAreaElement>('.composer textarea'))?.focus();
+    });
+  }
+
+  function handleDropTabOnSplitPane(
+    sourceKey: string,
+    targetKey: string,
+    zone: SplitDropZone,
+  ): void {
+    if (isMainChatTransitionLocked()) return;
+    if (!mainChatTabStateRef.current.tabs.some((tab) => tab.key === sourceKey)) return;
+    updateChatSplitLayout((layout) =>
+      zone === 'center'
+        ? replaceSplitPane(layout, targetKey, sourceKey)
+        : insertSplitPane(layout, targetKey, sourceKey, zone),
+    );
+    // The dropped chat is where the user's attention goes; selecting it also
+    // runs hydration for a tab that never had the focused path. Select sees
+    // the source already visible, so the layout it just landed in stays put.
+    void handleSelectMainChatTab(sourceKey);
+  }
+
+  function handleCloseSplitPane(tabKey: string): void {
+    const layout = chatSplitLayoutRef.current;
+    if (countSplitPanes(layout) <= 1 || !splitHasPane(layout, tabKey)) return;
+    if (tabKey !== activeMainChatTabKeyRef.current) {
+      updateChatSplitLayout((current) => removeSplitPane(current, tabKey));
+      return;
+    }
+    // Closing the focused pane: hand focus to its split sibling first so the
+    // active tab never points at a hidden chat. A locked transition (send or
+    // hydration in flight) aborts the close instead of breaking the invariant.
+    const sibling = adjacentSplitPaneKey(layout, tabKey);
+    if (!sibling) return;
+    void (async () => {
+      if (await handleSelectMainChatTab(sibling)) {
+        updateChatSplitLayout((current) => removeSplitPane(current, tabKey));
+      }
+    })();
+  }
+
+  function handleSetSplitRatio(path: string, ratio: number): void {
+    updateChatSplitLayout((layout) => updateSplitRatio(layout, path, ratio));
+  }
+
   function mainChatTabForThread(threadId: string): MainChatTab | null {
     return tabForThread(mainChatTabStateRef.current.tabs, threadId);
   }
@@ -1315,9 +1368,7 @@ export default function App(): React.JSX.Element {
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }));
     focusMainChatTab(tab);
     persistLastThreadId(null);
-    requestAnimationFrame(() =>
-      document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus(),
-    );
+    focusActiveComposer();
     return true;
   };
 
