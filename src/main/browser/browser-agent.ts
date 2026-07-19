@@ -34,6 +34,28 @@ export type BrowserFailureCode =
   | 'frameDetached'
   | 'frameNotFound'
   | 'executionError'
+  | 'pageScriptError'
+  | 'conditionNotMet'
+  | 'conditionTimeout'
+  | 'selectorNotFound'
+  | 'invalidSelector'
+  | 'resultSerializationError'
+
+export type BrowserFailurePhase =
+  | 'pageScript'
+  | 'targetLifecycle'
+  | 'navigationReadiness'
+  | 'snapshotVerification'
+  | 'resultSerialization'
+  | 'controller'
+
+export type BrowserFailure = {
+  code: BrowserFailureCode
+  phase: BrowserFailurePhase
+  message: string
+  name?: string
+  stack?: string
+}
 
 export type BrowserAgentOptions = {
   tabId?: string | null
@@ -97,6 +119,7 @@ export type BrowserAgentResult = {
   resultChars?: number
   truncated?: boolean
   errorCode?: BrowserFailureCode
+  failure?: BrowserFailure
   artifact?: CdpFileArtifact
   targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
 }
