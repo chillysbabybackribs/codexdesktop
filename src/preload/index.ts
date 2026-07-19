@@ -36,6 +36,10 @@ import type {
   CheckpointRevertFilesParams,
   CheckpointChangedFilesParams,
   CheckpointSummary,
+  MentionIndexParams,
+  MentionIndexResult,
+  MentionReadParams,
+  MentionReadIpcResult,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -160,6 +164,12 @@ export const api = {
     revertFiles: (params: CheckpointRevertFilesParams): Promise<void> =>
       ipcRenderer.invoke(ipcChannels.checkpointRevertFiles, params),
     changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
+  },
+  mentions: {
+    index: (params: MentionIndexParams): Promise<MentionIndexResult> =>
+      ipcRenderer.invoke(ipcChannels.mentionIndex, params),
+    read: (params: MentionReadParams): Promise<MentionReadIpcResult> =>
+      ipcRenderer.invoke(ipcChannels.mentionRead, params)
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>

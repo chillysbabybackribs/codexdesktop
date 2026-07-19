@@ -21,6 +21,10 @@ import type {
   CheckpointRevertFilesParams,
   CheckpointChangedFilesParams,
   CheckpointSummary,
+  MentionIndexParams,
+  MentionIndexResult,
+  MentionReadParams,
+  MentionReadIpcResult,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -43,6 +47,7 @@ import { AttachmentStore } from './attachment-store.js'
 import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
+import { MentionIndexService } from './mention-index.js'
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -350,6 +355,7 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
+  const mentionIndexService = new MentionIndexService()
   sessionProviders = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
@@ -526,6 +532,12 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.checkpointRevertFiles, async (_event, params: CheckpointRevertFilesParams): Promise<void> => {
     await checkpointStore.revertFiles(params.checkpointId, params.paths)
   })
+  ipcMain.handle(ipcChannels.mentionIndex, (_event, params: MentionIndexParams): Promise<MentionIndexResult> =>
+    mentionIndexService.index(params.workspace)
+  )
+  ipcMain.handle(ipcChannels.mentionRead, (_event, params: MentionReadParams): Promise<MentionReadIpcResult> =>
+    mentionIndexService.read(params.workspace, params.path, params.kind)
+  )
   ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
     const record = await checkpointStore.find(params.threadId, params.turnId)
     // null = detection unavailable (no checkpoint for this turn — typically a

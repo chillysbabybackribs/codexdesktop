@@ -285,6 +285,26 @@ export type CheckpointRevertFilesParams = {
   paths: string[]
 }
 
+export type MentionIndexParams = {
+  workspace: string
+}
+
+export type MentionIndexResult = {
+  files: string[]
+  dirs: string[]
+}
+
+export type MentionReadParams = {
+  workspace: string
+  path: string
+  kind: 'file' | 'folder'
+}
+
+export type MentionReadIpcResult = {
+  content: string | null
+  truncated: boolean
+}
+
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -345,6 +365,8 @@ export const ipcChannels = {
   checkpointRevert: 'checkpoint:revert',
   checkpointRevertFiles: 'checkpoint:revertFiles',
   checkpointChangedFiles: 'checkpoint:changedFiles',
+  mentionIndex: 'mention:index',
+  mentionRead: 'mention:read',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
   imageViewPreview: 'image-view:preview',
