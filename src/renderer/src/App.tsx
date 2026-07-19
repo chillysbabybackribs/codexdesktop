@@ -1118,7 +1118,7 @@ export default function App(): React.JSX.Element {
     const target = mainChatTabStateRef.current.tabs.find((tab) => tab.key === key)
     if (!target) return false
 
-    if (key === activeMainChatTabKeyRef.current && retryThreadId === target.threadId) {
+    if (key === activeMainChatTabKeyRef.current && target.threadId && retryThreadId === target.threadId) {
       reconcilingMainChatTabKeyRef.current = key
       setReconcilingMainChatTabKey(key)
       setIsRestoring(true)
@@ -1141,8 +1141,11 @@ export default function App(): React.JSX.Element {
       activeKey: key
     }))
     let snapshot = sessionStoreRef.current.peek(key)
-    const needsRemoteResume = needsMainChatTabHydration(target, snapshot?.threadId) ||
-      resumeFailuresByTabRef.current.get(key) === target.threadId
+    const targetThreadId = target.threadId
+    const needsRemoteResume = targetThreadId !== null && (
+      needsMainChatTabHydration(target, snapshot?.threadId) ||
+      resumeFailuresByTabRef.current.get(key) === targetThreadId
+    )
     if (needsRemoteResume) {
       await restoreCachedTranscript(target.threadId, key)
       snapshot = sessionStoreRef.current.peek(key)
