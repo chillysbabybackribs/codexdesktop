@@ -1,6 +1,6 @@
 import type { ItemMeta } from './TaskActivity'
 import type { TraceInputItem, TurnTraceEvent } from './trace-types'
-import { clip, iso, maxTextChars, singleLine } from './trace-utils.ts'
+import { clip, iso, maxTextChars, singleLine } from './trace-utils.js'
 
 const maxFieldChars = 8_000
 

@@ -8,12 +8,12 @@ import type {
   TraceTruncation,
   TurnTrace
 } from './trace-types'
-import { traceArtifacts } from './trace-artifacts.ts'
-import { traceSources } from './trace-sources.ts'
-import { traceEvent } from './trace-timeline.ts'
-import { traceTruncations } from './trace-truncation.ts'
-import { traceTiming, turnDuration, usageAccounting } from './trace-usage.ts'
-import { clip, iso, maxTextChars, singleLine } from './trace-utils.ts'
+import { traceArtifacts } from './trace-artifacts.js'
+import { traceSources } from './trace-sources.js'
+import { traceEvent } from './trace-timeline.js'
+import { traceTruncations } from './trace-truncation.js'
+import { traceTiming, turnDuration, usageAccounting } from './trace-usage.js'
+import { clip, iso, maxTextChars, singleLine } from './trace-utils.js'
 
 export type * from './trace-types'
 
