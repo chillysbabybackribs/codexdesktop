@@ -6888,7 +6888,6 @@ button {
 .review-bar.is-action-menu-open {
   position: relative;
   z-index: 8;
-  border-top-right-radius: 0;
   overflow: visible;
 }
 
@@ -6962,6 +6961,7 @@ button {
 }
 
 .review-compact-actions {
+  position: relative;
   display: inline-flex;
   flex: none;
 }
@@ -6986,14 +6986,6 @@ button {
   border-color: rgb(255 255 255 / 14%);
   background: rgb(255 255 255 / 6%);
   color: var(--chrome-fg-strong);
-}
-
-.review-actions-trigger svg {
-  transition: transform 140ms ease;
-}
-
-.review-actions-trigger.is-open svg {
-  transform: rotate(180deg);
 }
 
 /* Grows upward out of the top of the "files changed" bar as one cohesive
