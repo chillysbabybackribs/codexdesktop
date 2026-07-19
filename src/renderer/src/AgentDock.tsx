@@ -13,6 +13,7 @@ import { MarkdownContent } from './MarkdownContent'
 import { buildRows, isWorkItem, type ActivityItem, type RenderRow } from './transcript-model'
 import { WorkGroup, type ItemMeta, type WorkItem } from './TaskActivity'
 import { emptySessionState, type SessionStore } from './session-store'
+import { agentZoomStorageKey, storedAgentZoom } from './agent-zoom'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
 
@@ -769,13 +770,8 @@ function isSameLiveGlance(a: LiveTurnGlance | null, b: LiveTurnGlance | null): b
     a.lastStep === b.lastStep
 }
 
-const agentZoomStorageKey = (key: string): string => `codexdesktop.agent-zoom.${key}`
-
 function readAgentZoom(key: string): number {
-  const storedValue = window.localStorage.getItem(agentZoomStorageKey(key))
-  if (storedValue === null) return 100
-  const stored = Number(storedValue)
-  return Number.isFinite(stored) ? Math.max(80, Math.min(140, stored)) : 100
+  return storedAgentZoom(window.localStorage.getItem(agentZoomStorageKey(key)))
 }
 
 function AgentContextPill({
