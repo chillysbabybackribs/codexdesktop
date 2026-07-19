@@ -5,8 +5,8 @@ import { buildSuggestions, inlineCompletion, MAX_OMNIBOX_ROWS } from './omnibox-
 
 const NOW = 1_000_000_000_000
 
-function entry(url: string, title: string, visitCount: number, ageHours = 1): HistoryEntry {
-  return { url, title, visitCount, lastVisitAt: NOW - ageHours * 3_600_000 }
+function entry(url: string, title: string, visitCount: number, ageHours = 1, favicon: string | null = null): HistoryEntry {
+  return { url, title, favicon, visitCount, lastVisitAt: NOW - ageHours * 3_600_000 }
 }
 
 test('empty input returns top sites by frecency', () => {
@@ -32,8 +32,17 @@ test('typed input puts interpretation first, then history matches', () => {
 
   assert.equal(rows[0].kind, 'search')
   assert.equal(rows[0].text, 'git')
+  assert.equal(rows[0].favicon, null)
   assert.equal(rows[1].url, 'https://github.com/')
   assert.equal(rows[2].url, 'https://gitlab.com/')
+})
+
+test('history suggestions carry the favicon captured by browser tabs', () => {
+  const favicon = 'https://github.com/favicon.ico'
+  const rows = buildSuggestions('', [entry('https://github.com/', 'GitHub', 20, 1, favicon)], NOW)
+
+  assert.equal(rows[0].kind, 'history')
+  assert.equal(rows[0].favicon, favicon)
 })
 
 test('url-like input yields a navigate row and dedupes the identical history row', () => {

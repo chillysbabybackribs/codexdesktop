@@ -20,6 +20,7 @@ test('records visits, increments counts, and backfills titles', async () => {
     assert.equal(entries[0].visitCount, 2)
     assert.equal(entries[0].lastVisitAt, 2000)
     assert.equal(entries[0].title, 'Example Domain')
+    assert.equal(entries[0].favicon, null)
   } finally {
     await rm(directory, { recursive: true, force: true })
   }
@@ -48,7 +49,7 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
     const filePath = join(directory, 'history.json')
     const store = new BrowserHistoryStore(() => filePath)
     await store.load()
-    store.recordVisit('https://example.com/', 'Example', 5000)
+    store.recordVisit('https://example.com/', 'Example', 5000, 'https://example.com/favicon.ico')
     store.recordVisit('https://example.com/', 'Example Domain', 6000)
     await store.flush()
 
@@ -60,8 +61,32 @@ test('persists to disk and reloads, dropping malformed entries', async () => {
     await reloaded.load()
 
     assert.deepEqual(reloaded.entries(), [
-      { url: 'https://example.com/', title: 'Example Domain', visitCount: 2, lastVisitAt: 6000 }
+      {
+        url: 'https://example.com/',
+        title: 'Example Domain',
+        favicon: 'https://example.com/favicon.ico',
+        visitCount: 2,
+        lastVisitAt: 6000
+      }
     ])
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test('backfills only trusted, bounded favicons', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-history-'))
+  try {
+    const store = new BrowserHistoryStore(() => join(directory, 'history.json'))
+    await store.load()
+    store.recordVisit('https://example.com/', 'Example', 5000)
+
+    store.updateFavicon('https://example.com/', 'https://cdn.example.com/favicon.png')
+    assert.equal(store.entries()[0].favicon, 'https://cdn.example.com/favicon.png')
+
+    store.updateFavicon('https://example.com/', 'javascript:alert(1)')
+    store.updateFavicon('https://example.com/', `data:image/png;base64,${'a'.repeat(128 * 1024)}`)
+    assert.equal(store.entries()[0].favicon, 'https://cdn.example.com/favicon.png')
   } finally {
     await rm(directory, { recursive: true, force: true })
   }
