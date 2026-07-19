@@ -1661,12 +1661,6 @@ function turnOperationKey(threadId: string, turnId: string): string {
   return `${threadId}\u0000${turnId}`
 }
 
-function throwIfAborted(signal: AbortSignal | undefined): void {
-  if (signal?.aborted) {
-    throw operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
-  }
-}
-
 function cancelledResult(): BrowserAgentFailure {
   const failure = browserFailureFor(
     operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')

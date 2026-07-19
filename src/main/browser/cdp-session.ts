@@ -153,7 +153,6 @@ type EventWaiter = {
 const sessions = new WeakMap<WebContents, CdpSession>()
 
 export class CdpSession {
-  private attached = false
   private disposed = false
   private readonly webContents: WebContents
   private capabilitiesPromise: Promise<CdpCapabilities> | null = null
@@ -167,12 +166,10 @@ export class CdpSession {
     this.recordEvent(method, params, sessionId)
   }
   private readonly onDetach = (): void => {
-    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP debugger detached while waiting for an event'))
   }
   private readonly onDestroyed = (): void => {
-    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP target was destroyed while waiting for an event'))
     this.releaseListeners()
@@ -394,7 +391,6 @@ export class CdpSession {
         // Best-effort cleanup while a tab is closing.
       }
     }
-    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP debugger detached'))
   }
@@ -425,7 +421,6 @@ export class CdpSession {
       this.webContents.debugger.attach()
       this.capabilitiesPromise = null
     }
-    this.attached = true
   }
 
   private ensureCapabilities(): Promise<CdpCapabilities> {
