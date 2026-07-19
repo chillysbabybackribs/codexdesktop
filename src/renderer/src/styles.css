@@ -7008,11 +7008,17 @@ button {
   display: flex;
   justify-content: flex-end;
   align-items: stretch;
+  /* Fixed width so the SVG tab maps 1:1 (no stretch distortion of the curve).
+     Labels are stable, so this stays correct. */
+  width: 340px;
+  max-width: 100cqw;
   /* Left padding is the curve's horizontal run: buttons sit right of the
      sweep. Bottom padding keeps them clear of the fused baseline. */
   padding: 0 0 4px 78px;
   border: 0;
   filter: drop-shadow(0 -10px 24px rgb(0 0 0 / 32%));
+  transform-origin: bottom right;
+  animation: review-action-menu-in 170ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* The tab silhouette: a flat top over the buttons that tapers on the left
@@ -7024,15 +7030,8 @@ button {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    /* outline stroke */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 340 44'%3E%3Cpath d='M0 44 C 40 44 44 2 84 2 L 330 2 A 10 10 0 0 1 340 12 L 340 44 Z' fill='%231c1c1d' stroke='rgba(255,255,255,0.13)' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 340 44'%3E%3Cpath d='M0 44 C 40 44 44 2 84 2 L 330 2 A 10 10 0 0 1 340 12 L 340 44 Z' fill='%231c1c1d' stroke='rgba(255,255,255,0.13)' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
   background-size: 100% 100%;
-}
-
-.review-action-menu {
-  animation: review-action-menu-in 170ms cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: bottom right;
 }
 
 @keyframes review-action-menu-in {
