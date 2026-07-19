@@ -113,8 +113,8 @@ test('truncate flattens whitespace and clips at max with an ellipsis', () => {
 })
 
 test('stripAnsi removes escape sequences and keeps plain text', () => {
-  assert.equal(stripAnsi('[31mred[0m'), 'red')
-  assert.equal(stripAnsi('[2K[1Gdone'), 'done')
+  assert.equal(stripAnsi('\u001b[31mred\u001b[0m'), 'red')
+  assert.equal(stripAnsi('\u001b[2K\u001b[1Gdone'), 'done')
   assert.equal(stripAnsi('plain output'), 'plain output')
 })
 
