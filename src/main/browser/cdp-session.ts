@@ -272,6 +272,14 @@ export class CdpSession {
     return this.networkJournal.request(requestId)
   }
 
+  waitForNetworkRequest(
+    query: NetworkJournalQuery,
+    timeoutMs: number,
+    signal?: AbortSignal
+  ): Promise<NetworkRequestSummary> {
+    return this.networkJournal.waitForRequest(query, timeoutMs, signal)
+  }
+
   async startPerformanceDiagnostics(): Promise<PerformanceDiagnosticsPage> {
     this.performanceDiagnostics.start()
     try {

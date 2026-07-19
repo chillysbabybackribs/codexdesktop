@@ -40,10 +40,13 @@ export type WebSocketSummary = {
 export type NetworkJournalQuery = {
   limit?: number | null
   urlContains?: string | null
+  method?: string | null
   resourceType?: string | null
+  mimeType?: string | null
   statusMin?: number | null
   statusMax?: number | null
   failedOnly?: boolean | null
+  completedOnly?: boolean | null
 }
 
 export type NetworkJournalPage = {
@@ -64,6 +67,15 @@ type MutableRequest = NetworkRequestSummary & {
 
 type MutableWebSocket = WebSocketSummary
 
+type NetworkRequestWaiter = {
+  query: NetworkJournalQuery
+  resolve: (request: NetworkRequestSummary) => void
+  reject: (error: Error) => void
+  timer: ReturnType<typeof setTimeout>
+  signal?: AbortSignal
+  onAbort?: () => void
+}
+
 export class NetworkJournal {
   private active = false
   private startedAt: string | null = null
@@ -74,8 +86,10 @@ export class NetworkJournal {
   private readonly requestsById = new Map<string, MutableRequest>()
   private readonly webSockets: MutableWebSocket[] = []
   private readonly webSocketsById = new Map<string, MutableWebSocket>()
+  private readonly requestWaiters = new Set<NetworkRequestWaiter>()
 
   start(): void {
+    this.rejectRequestWaiters(new Error('network journal restarted while waiting for a request'))
     this.active = true
     this.startedAt = new Date().toISOString()
     this.sequence = 0
@@ -89,6 +103,7 @@ export class NetworkJournal {
 
   stop(): void {
     this.active = false
+    this.rejectRequestWaiters(new Error('network journal stopped while waiting for a request'))
   }
 
   isActive(): boolean {
@@ -116,6 +131,7 @@ export class NetworkJournal {
       request.protocol = readString(response.protocol)
       request.fromDiskCache = response.fromDiskCache === true
       request.fromServiceWorker = response.fromServiceWorker === true
+      this.resolveRequestWaiters(request)
       return
     }
     if (method === 'Network.dataReceived') {
@@ -133,6 +149,7 @@ export class NetworkJournal {
       if (!request) return
       request.encodedDataLength = readNumber(params.encodedDataLength) ?? request.encodedDataLength
       this.completeRequest(request, params)
+      this.resolveRequestWaiters(request)
       return
     }
     if (method === 'Network.loadingFailed') {
@@ -143,6 +160,7 @@ export class NetworkJournal {
       request.errorText = readString(params.errorText)
       request.blockedReason = readString(params.blockedReason)
       this.completeRequest(request, params)
+      this.resolveRequestWaiters(request)
       return
     }
     if (method === 'Network.webSocketCreated') {
@@ -186,6 +204,38 @@ export class NetworkJournal {
   request(requestId: string): NetworkRequestSummary | null {
     const request = this.requestsById.get(requestId)
     return request ? publicRequest(request) : null
+  }
+
+  waitForRequest(
+    query: NetworkJournalQuery,
+    timeoutMs: number,
+    signal?: AbortSignal
+  ): Promise<NetworkRequestSummary> {
+    const existing = this.requests.find((request) => matchesRequest(request, query))
+    if (existing) return Promise.resolve(publicRequest(existing))
+    if (!this.active) return Promise.reject(new Error('network journal is not active'))
+
+    return new Promise<NetworkRequestSummary>((resolve, reject) => {
+      const waiter: NetworkRequestWaiter = {
+        query,
+        resolve,
+        reject,
+        timer: setTimeout(() => {
+          this.settleRequestWaiter(waiter)
+          reject(new Error(`network request wait timed out after ${timeoutMs}ms${query.urlContains ? ` (url contains "${query.urlContains}")` : ''}`))
+        }, timeoutMs),
+        ...(signal ? { signal } : {})
+      }
+      if (signal) {
+        waiter.onAbort = () => {
+          this.settleRequestWaiter(waiter)
+          reject(new Error('network request wait cancelled'))
+        }
+        signal.addEventListener('abort', waiter.onAbort, { once: true })
+      }
+      this.requestWaiters.add(waiter)
+      if (signal?.aborted) waiter.onAbort?.()
+    })
   }
 
   private recordRequest(requestId: string, params: Record<string, unknown>): void {
@@ -267,6 +317,27 @@ export class NetworkJournal {
       this.droppedWebSockets += 1
     }
   }
+
+  private resolveRequestWaiters(request: MutableRequest): void {
+    for (const waiter of [...this.requestWaiters]) {
+      if (!matchesRequest(request, waiter.query)) continue
+      this.settleRequestWaiter(waiter)
+      waiter.resolve(publicRequest(request))
+    }
+  }
+
+  private rejectRequestWaiters(error: Error): void {
+    for (const waiter of [...this.requestWaiters]) {
+      this.settleRequestWaiter(waiter)
+      waiter.reject(error)
+    }
+  }
+
+  private settleRequestWaiter(waiter: NetworkRequestWaiter): void {
+    clearTimeout(waiter.timer)
+    this.requestWaiters.delete(waiter)
+    if (waiter.signal && waiter.onAbort) waiter.signal.removeEventListener('abort', waiter.onAbort)
+  }
 }
 
 function publicRequest(request: MutableRequest): NetworkRequestSummary {
@@ -276,10 +347,13 @@ function publicRequest(request: MutableRequest): NetworkRequestSummary {
 
 function matchesRequest(request: MutableRequest, query: NetworkJournalQuery): boolean {
   if (query.urlContains && !request.url.toLowerCase().includes(query.urlContains.toLowerCase())) return false
+  if (query.method && request.method.toLowerCase() !== query.method.toLowerCase()) return false
   if (query.resourceType && request.resourceType?.toLowerCase() !== query.resourceType.toLowerCase()) return false
+  if (query.mimeType && !request.mimeType?.toLowerCase().includes(query.mimeType.toLowerCase())) return false
   if (query.statusMin !== null && query.statusMin !== undefined && (request.status ?? -1) < query.statusMin) return false
   if (query.statusMax !== null && query.statusMax !== undefined && (request.status ?? Number.MAX_SAFE_INTEGER) > query.statusMax) return false
   if (query.failedOnly && !request.failed && (request.status === null || request.status < 400)) return false
+  if (query.completedOnly && request.completedAt === null) return false
   return true
 }
 

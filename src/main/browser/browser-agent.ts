@@ -92,6 +92,16 @@ export type BrowserNavigateOptions = BrowserAgentOptions & {
   maxSettleMs?: number | null
 }
 
+export type BrowserNetworkCaptureParams = {
+  url?: string | null
+  steps?: unknown
+  match?: NetworkJournalQuery | null
+  captureBody?: boolean | null
+  readySelector?: string | null
+  quietMs?: number | null
+  maxSettleMs?: number | null
+}
+
 export type BrowserSnapshotOptions = BrowserRunOptions & {
   url?: string | null
   objective?: string | null
@@ -959,6 +969,127 @@ export class BrowserAgentController {
     })
   }
 
+  async captureNetwork(
+    params: BrowserNetworkCaptureParams,
+    options: BrowserAgentOptions = {}
+  ): Promise<BrowserAgentResult> {
+    const requestedUrl = params.url?.trim() ?? ''
+    const hasSteps = Array.isArray(params.steps) && params.steps.length > 0
+    if (Boolean(requestedUrl) === hasSteps) {
+      return { ok: false, error: 'browser_network requires exactly one trigger: "url" or non-empty "steps"' } satisfies BrowserAgentFailure
+    }
+    const match = params.match ?? {}
+    if (!match.urlContains?.trim()) {
+      return { ok: false, error: 'browser_network requires match.urlContains' } satisfies BrowserAgentFailure
+    }
+    const captureBody = params.captureBody !== false
+    const artifactStore = this.artifactStore
+    if (captureBody && !artifactStore) {
+      return { ok: false, error: 'network response-body artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+
+    const tabs = this.getTabs()
+    if (!tabs) return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    if (options.tabId === 'all') {
+      return { ok: false, error: 'browser_network requires one existing tab, not "all"' } satisfies BrowserAgentFailure
+    }
+    const tabId = options.tabId ?? tabs.getActiveTabId()
+    if (!tabId) return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
+
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
+    return this.tabOperations.run(tabId, async () => {
+      if (options.signal?.aborted) return cancelledResult()
+      const lease = captureTargetLease(tabs, tabId)
+      if (!lease) {
+        return { ok: false, error: `no tab with id ${tabId}`, errorCode: 'targetClosed' } satisfies BrowserAgentFailure
+      }
+      const { webContents } = lease
+      const session = cdpSessionFor(webContents)
+      const captureController = new AbortController()
+      const startedAt = Date.now()
+
+      const executeCapture = async (): Promise<unknown> => {
+        await session.startNetworkJournal()
+        try {
+          const waiting = session.waitForNetworkRequest(
+            { ...match, urlContains: match.urlContains?.trim(), completedOnly: true },
+            timeoutMs,
+            captureController.signal
+          ).then(
+            (request) => ({ ok: true as const, request }),
+            (error) => ({ ok: false as const, error })
+          )
+
+          let actionResult: unknown
+          try {
+            actionResult = requestedUrl
+              ? await tabs.navigateAndWait(tabId, requestedUrl, {
+                  timeoutMs,
+                  signal: captureController.signal,
+                  ...(params.readySelector?.trim() ? { readySelector: params.readySelector.trim() } : {}),
+                  ...(params.quietMs === null || params.quietMs === undefined ? {} : { quietMs: params.quietMs }),
+                  ...(params.maxSettleMs === null || params.maxSettleMs === undefined ? {} : { maxSettleMs: params.maxSettleMs })
+                })
+              : await runBrowserFlow(webContents, params.steps, { timeoutMs })
+          } catch (error) {
+            captureController.abort()
+            await waiting
+            throw error
+          }
+
+          const matched = await waiting
+          if (!matched.ok) throw matched.error
+          const request = matched.request
+          if (request.failed) {
+            throw new Error(`matched network request failed: ${request.errorText ?? request.blockedReason ?? request.url}`)
+          }
+
+          let responseBody: Record<string, unknown> | undefined
+          if (captureBody && artifactStore) {
+            const response = asRecord(await session.send('Network.getResponseBody', { requestId: request.requestId }))
+            if (typeof response.body !== 'string') throw new Error('Network.getResponseBody returned no body')
+            responseBody = await artifactStore.persistResponseBody(
+              response.body,
+              response.base64Encoded === true,
+              request.mimeType,
+              request.url
+            )
+          }
+
+          return {
+            network: {
+              trigger: requestedUrl ? 'navigate' : 'flow',
+              request,
+              ...(responseBody ? { responseBody } : {}),
+              action: boundResult(actionResult, Math.min(3_000, Math.max(1_000, Math.floor(maxResultChars / 2)))).value
+            }
+          }
+        } finally {
+          session.stopNetworkJournal()
+        }
+      }
+
+      try {
+        const rawResult = await withTimeout(
+          executeCapture(),
+          timeoutMs,
+          () => {
+            captureController.abort()
+            session.terminateExecution()
+          },
+          options.signal
+        )
+        assertTargetLeaseCurrent(tabs, lease)
+        captureController.abort()
+        return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
+      } catch (error) {
+        captureController.abort()
+        return createFailureResult(error, { tabId, webContents, startedAt })
+      }
+    })
+  }
+
   private async runCdpOperation(
     options: BrowserAgentOptions,
     execute: (session: CdpSession, timeoutMs: number, context: CdpOperationContext) => Promise<unknown>
@@ -1426,10 +1557,13 @@ function toNetworkJournalQuery(value: object): NetworkJournalQuery {
   return {
     limit: typeof params.limit === 'number' ? params.limit : null,
     urlContains: typeof params.urlContains === 'string' ? params.urlContains : null,
+    method: typeof params.method === 'string' ? params.method : null,
     resourceType: typeof params.resourceType === 'string' ? params.resourceType : null,
+    mimeType: typeof params.mimeType === 'string' ? params.mimeType : null,
     statusMin: typeof params.statusMin === 'number' ? params.statusMin : null,
     statusMax: typeof params.statusMax === 'number' ? params.statusMax : null,
-    failedOnly: params.failedOnly === true
+    failedOnly: params.failedOnly === true,
+    completedOnly: params.completedOnly === true
   }
 }
 
