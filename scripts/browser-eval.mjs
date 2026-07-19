@@ -8,8 +8,6 @@ import { createInterface } from 'node:readline'
 import { browserDynamicTools, buildGuidance } from '../src/main/codex/codex-config.js'
 import { buildPageSnapshotProgram } from '../src/main/browser/page-snapshot.js'
 
-const CANONICAL_PROMPT = 'Using the already-open Reddit notifications page, tell me the latest 3 notifications and whether each is read or unread. Do not click anything or change notification state.'
-const SNAPSHOT_OBJECTIVE = 'latest 3 Reddit notifications and whether each is read or unread'
 const MODEL_TIMEOUT_MS = 5 * 60_000
 const LEGACY_REFERENCE = {
   kind: 'static-audit-reference',
@@ -47,6 +45,62 @@ const ORACLE_PROGRAM = `return (() => {
     })
   };
 })();`
+
+const HACKER_NEWS_ORACLE_PROGRAM = `return (() => {
+  const clean = (value) => String(value || '').replace(/\\s+/g, ' ').trim();
+  const rows = Array.from(document.querySelectorAll('tr.athing')).slice(0, 10);
+  return {
+    url: location.href,
+    title: document.title,
+    rows: rows.map((row, index) => {
+      const title = row.querySelector('.titleline > a');
+      const siblings = Array.from(row.parentElement?.children || []);
+      const metadata = siblings[siblings.indexOf(row) + 1];
+      const points = clean(metadata?.querySelector('.score')?.textContent || '');
+      return {
+        rank: index + 1,
+        title: clean(title?.textContent || ''),
+        href: title?.href || '',
+        points: Number.parseInt(points, 10)
+      };
+    })
+  };
+})();`
+
+const SCENARIOS = {
+  'reddit-notifications': {
+    id: 'reddit-notifications',
+    pageLabel: 'Reddit notifications',
+    canonicalPrompt: 'Using the already-open Reddit notifications page, tell me the latest 3 notifications and whether each is read or unread. Do not click anything or change notification state.',
+    snapshotObjective: 'latest 3 Reddit notifications and whether each is read or unread',
+    expectedCount: 3,
+    requiresConclusiveSnapshot: true,
+    strictModelContract: true,
+    oracleProgram: ORACLE_PROGRAM,
+    matchesUrl: isRedditNotificationsUrl,
+    validateOracle: validateRedditOracle,
+    projectOracle: projectRedditOracle,
+    evaluateSnapshot: evaluateRedditSnapshot,
+    evaluateModelResponse: evaluateRedditModelResponse
+  },
+  'hacker-news-top-stories': {
+    id: 'hacker-news-top-stories',
+    pageLabel: 'Hacker News front page',
+    canonicalPrompt: 'Using the already-open Hacker News front page, give me the top 10 story titles, their points, and links in a compact numbered list.',
+    snapshotObjective: 'Return the top 10 Hacker News front-page stories in ranking order, including each story title, points, and direct story link.',
+    expectedCount: 10,
+    // This scenario intentionally records the current structured-list gap. It becomes strict only after
+    // the generalized snapshot-to-structured-extraction planner is implemented.
+    requiresConclusiveSnapshot: false,
+    strictModelContract: false,
+    oracleProgram: HACKER_NEWS_ORACLE_PROGRAM,
+    matchesUrl: isHackerNewsUrl,
+    validateOracle: validateHackerNewsOracle,
+    projectOracle: projectHackerNewsOracle,
+    evaluateSnapshot: evaluateHackerNewsSnapshot,
+    evaluateModelResponse: evaluateHackerNewsModelResponse
+  }
+}
 
 async function main() {
   const options = parseArgs(process.argv.slice(2))
