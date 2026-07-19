@@ -84,6 +84,17 @@ test('app-server RPC reassembles a JSON response split across stdout lines', asy
   assert.deepEqual(await response, { description: 'First part\n\nSecond part' })
 })
 
+test('app-server RPC discards a partial message when its transport stops', () => {
+  const { rpc, notifications } = createRpc()
+
+  rpc.handleLine('{"jsonrpc":"2.0","method":"thread/started","params":')
+  rpc.rejectPending(new Error('app-server stopped'))
+  rpc.handleLine('{"jsonrpc":"2.0","method":"thread/started","params":{"threadId":"thread-2"}}')
+
+  assert.equal(notifications.length, 1)
+  assert.equal(notifications[0]?.method, 'thread/started')
+})
+
 test('app-server RPC clears a pending request when writing fails', async () => {
   const rpc = new AppServerRpc({
     write: () => { throw new Error('pipe closed') },

@@ -93,17 +93,22 @@ test('app-server process cleans up a failed initialization and can retry', async
   const firstChild = createChild()
   const secondChild = createChild()
   const children = [firstChild, secondChild]
+  const statuses: Array<{ status: CodexConnectionStatus; message?: string }> = []
+  const stopped: Error[] = []
   const process = new AppServerProcess({
     spawnProcess: () => children.shift()!,
     onLine: () => {},
-    onStopped: () => {},
-    onStatus: () => {}
+    onStopped: (error) => stopped.push(error),
+    onStatus: (status, message) => statuses.push({ status, message })
   })
 
   await assert.rejects(process.ensureStarted(async () => {
     throw new Error('initialization failed')
   }), /initialization failed/)
   assert.equal(firstChild.killed, true)
+  assert.equal(statuses.at(-1)?.status, 'error')
+  assert.match(statuses.at(-1)?.message ?? '', /initialization failed/)
+  assert.match(stopped[0]?.message ?? '', /initialization failed/)
 
   await process.ensureStarted(async () => {})
   process.write({ method: 'ready' })

@@ -155,6 +155,12 @@ export class AppServerRpc {
   }
 
   rejectPending(error: Error): void {
+    // A partial stdout fragment is meaningful only for the current child
+    // process. Retaining it across a crash/restart makes the first valid line
+    // from the replacement process look like a continuation and can silently
+    // swallow all following RPC traffic.
+    this.partialMessage = ''
+
     for (const pending of this.pending.values()) {
       clearTimeout(pending.timer)
       pending.reject(error)

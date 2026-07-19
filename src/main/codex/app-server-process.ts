@@ -95,6 +95,9 @@ export class AppServerProcess {
     } catch (error) {
       if (this.child === child) {
         this.child = null
+        const initializationError = error instanceof Error ? error : new Error(String(error))
+        this.onStatus('error', initializationError.message)
+        this.onStopped(initializationError)
         child.kill()
       }
       throw error
