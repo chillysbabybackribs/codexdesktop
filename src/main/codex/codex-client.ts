@@ -6,7 +6,7 @@ import type { TurnCheckpointStore } from '../turn-checkpoint.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
-  CodexEvent,
+  SessionEvent,
   CodexListThreadTurnsParams,
   CodexPluginAppStatusResponse
 } from '../../shared/ipc.js'
@@ -486,7 +486,7 @@ export class CodexClient extends EventEmitter {
     this.emit('event', {
       type: 'notification',
       notification
-    } satisfies CodexEvent)
+    } satisfies SessionEvent)
   }
 
   private noteThreadTokenUsage(threadId: string, tokenUsage: ThreadTokenUsage): void {
@@ -547,7 +547,7 @@ export class CodexClient extends EventEmitter {
           turnId: params.turnId,
           itemId: params.callId,
           progress
-        } satisfies CodexEvent)
+        } satisfies SessionEvent)
       }
     })
     this.rpc.respond(id, response)
@@ -558,6 +558,6 @@ export class CodexClient extends EventEmitter {
       type: 'status',
       status,
       message
-    } satisfies CodexEvent)
+    } satisfies SessionEvent)
   }
 }

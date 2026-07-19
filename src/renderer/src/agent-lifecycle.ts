@@ -96,7 +96,7 @@ export function createAgentLifecycle(options: {
     }
 
     try {
-      const response = await window.api.codex.sendMessage({
+      const response = await window.api.session.sendMessage({
         threadId: session.threadId,
         text: options.recoveryPrompt,
         cwd: options.getWorkspace(),
@@ -139,10 +139,10 @@ export function createAgentLifecycle(options: {
     const session = removeSession(key)
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
-        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+        void window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
           .catch((error) => reportThreadCleanupFailure('interrupt', session.threadId!, error))
       }
-      void window.api.codex.unsubscribeThread(session.threadId)
+      void window.api.session.unsubscribeThread(session.threadId)
         .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }
@@ -163,7 +163,7 @@ export function createAgentLifecycle(options: {
     }))
     store.resetRenderState(key, session.title)
     if (session.threadId && session.threadId !== options.getActiveThreadId()) {
-      void window.api.codex.unsubscribeThread(session.threadId)
+      void window.api.session.unsubscribeThread(session.threadId)
         .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }

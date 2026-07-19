@@ -86,7 +86,7 @@ export async function restoreAgentDock(options: {
     await Promise.all(restored.map(async (session) => {
       if (!session.threadId) return
       try {
-        const resumed = await window.api.codex.resumeThread({ threadId: session.threadId, history: 'agent' })
+        const resumed = await window.api.session.resumeThread({ threadId: session.threadId, history: 'agent' })
         const turns: Array<{ id: string; items: ChatItem[] }> = resumed.thread.turns.length > 0
           ? resumed.thread.turns
           // The shared resume request asks for newest-first to keep startup

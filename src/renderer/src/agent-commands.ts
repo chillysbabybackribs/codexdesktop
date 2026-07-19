@@ -67,7 +67,7 @@ export function createAgentCommands(options: {
 
       store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
       const outgoingText = session.watchesMain ? `${options.buildMainChatContext()}\n\n${text}` : text
-      const response = await window.api.codex.sendMessage({
+      const response = await window.api.session.sendMessage({
         threadId,
         text: outgoingText,
         attachments,
@@ -100,7 +100,7 @@ export function createAgentCommands(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || !session.turnId) return
     try {
-      await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+      await window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
     } catch (error) {
       // A completed turn is harmless, but a transport/server failure used to
       // leave the still-visible agent looking like it was stopped when it was
@@ -118,7 +118,7 @@ export function createAgentCommands(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || session.turnId || session.isCompacting) return
     try {
-      await window.api.codex.compactThread(session.threadId)
+      await window.api.session.compactThread(session.threadId)
     } catch (error) {
       store.appendMessage(key, {
         id: crypto.randomUUID(),
@@ -133,7 +133,7 @@ export function createAgentCommands(options: {
     const trimmed = text.trim()
     if (!trimmed || !session?.threadId || !session.turnId) return false
     try {
-      await window.api.codex.steerTurn({
+      await window.api.session.steerTurn({
         threadId: session.threadId,
         turnId: session.turnId,
         text: trimmed

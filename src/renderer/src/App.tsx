@@ -17,7 +17,7 @@ import type { AgentLiteMessage, AgentSession } from './AgentDock'
 import type {
   BrowserBounds,
   BrowserState,
-  CodexEvent,
+  SessionEvent,
   CodexPluginAppStatus,
   MemoryPersistParams
 } from '../../shared/ipc'
@@ -622,7 +622,7 @@ export default function App(): React.JSX.Element {
 
     let cancelled = false
 
-    window.api.codex.listModels().then(
+    window.api.session.listModels().then(
       (list: Model[]) => {
         if (cancelled || !list.length) {
           return
@@ -665,7 +665,7 @@ export default function App(): React.JSX.Element {
   }, [codexStatus, models.length])
 
   useEffect(() => {
-    const dispose = window.api.codex.onEvent((event) => {
+    const dispose = window.api.session.onEvent((event) => {
       if (event.type === 'status') {
         setCodexStatus(event.status)
 
@@ -692,7 +692,7 @@ export default function App(): React.JSX.Element {
       )
       const lastThreadId = activeTab?.threadId ?? null
       initializationPromiseRef.current = (async () => {
-        const authPromise = window.api.codex.getAuthStatus().catch((error) => {
+        const authPromise = window.api.session.getAuthStatus().catch((error) => {
           addSystemItem(`Codex auth check failed: ${(error as Error).message}`, 'error')
         })
         const threadsPromise = refreshThreads()
@@ -870,7 +870,7 @@ export default function App(): React.JSX.Element {
         pendingThreadStartOwnersRef.current.push({ kind: 'main', key: targetTabKey })
       }
 
-      const response = await window.api.codex.sendMessage({
+      const response = await window.api.session.sendMessage({
         threadId,
         text: trimmed,
         attachments,
@@ -951,7 +951,7 @@ export default function App(): React.JSX.Element {
     }
 
     try {
-      await window.api.codex.steerTurn({ threadId, turnId, text: trimmed })
+      await window.api.session.steerTurn({ threadId, turnId, text: trimmed })
       return true
     } catch (error) {
       addSystemItem(`Could not add guidance to the active turn: ${(error as Error).message}`, 'error')
@@ -1012,7 +1012,7 @@ export default function App(): React.JSX.Element {
     }
 
     try {
-      await window.api.codex.interruptTurn({ threadId: activeThreadId, turnId: activeTurnId })
+      await window.api.session.interruptTurn({ threadId: activeThreadId, turnId: activeTurnId })
     } catch (error) {
       addSystemItem(`Stop failed: ${(error as Error).message}`, 'error')
     }
@@ -1027,7 +1027,7 @@ export default function App(): React.JSX.Element {
     try {
       // No optimistic message: the server's contextCompaction item arrives
       // within ~100ms and renders the live progress row itself.
-      await window.api.codex.compactThread(threadId)
+      await window.api.session.compactThread(threadId)
     } catch (error) {
       addSystemItem(`Compaction failed: ${(error as Error).message}`, 'error')
     }
@@ -1046,7 +1046,7 @@ export default function App(): React.JSX.Element {
     // This thread no longer has a renderer owner. The request is best-effort,
     // but a failure must remain diagnosable: otherwise an app-server outage
     // leaves an invisible subscription behind with no recovery signal.
-    void window.api.codex.unsubscribeThread(threadId).catch((error) => {
+    void window.api.session.unsubscribeThread(threadId).catch((error) => {
       console.warn(`Failed to unsubscribe detached main thread ${threadId}`, error)
     })
   }
@@ -1362,7 +1362,7 @@ export default function App(): React.JSX.Element {
     watchThreadIdRef.current = threadId
 
     try {
-      const resumed = await window.api.codex.resumeThread({ threadId, history: 'main' })
+      const resumed = await window.api.session.resumeThread({ threadId, history: 'main' })
 
       if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) {
         return false
@@ -1394,7 +1394,7 @@ export default function App(): React.JSX.Element {
       }, 0)
 
       try {
-        const goal = await window.api.codex.getGoal(threadId)
+        const goal = await window.api.session.getGoal(threadId)
         if (generation !== resumeGenerationRef.current || activeMainChatTabKeyRef.current !== tabKey) return false
         setActiveGoal(goal)
         activeGoalRef.current = goal
@@ -1433,7 +1433,7 @@ export default function App(): React.JSX.Element {
     const existingThreadId = activeThreadIdRef.current
     if (existingThreadId) return existingThreadId
 
-    const started = await window.api.codex.startThread({
+    const started = await window.api.session.startThread({
       cwd: workspaceRef.current,
       model: selectedModelRef.current
     })
@@ -1462,7 +1462,7 @@ export default function App(): React.JSX.Element {
     setIsGoalUpdating(true)
     try {
       const threadId = await ensureThreadForGoal()
-      const goal = await window.api.codex.setGoal({
+      const goal = await window.api.session.setGoal({
         threadId,
         objective: trimmed,
         status: 'active',
@@ -1485,7 +1485,7 @@ export default function App(): React.JSX.Element {
 
     setIsGoalUpdating(true)
     try {
-      const goal = await window.api.codex.setGoal({ threadId, status })
+      const goal = await window.api.session.setGoal({ threadId, status })
       setActiveGoal(goal)
       activeGoalRef.current = goal
     } catch (error) {
@@ -1501,7 +1501,7 @@ export default function App(): React.JSX.Element {
 
     setIsGoalUpdating(true)
     try {
-      await window.api.codex.clearGoal(threadId)
+      await window.api.session.clearGoal(threadId)
       setActiveGoal(null)
       activeGoalRef.current = null
     } catch (error) {
@@ -1764,7 +1764,7 @@ export default function App(): React.JSX.Element {
     try {
       // Turn bookkeeping (active turn id, telemetry, items) happens in the
       // `turn/started` notification handler, same as goal-continuation turns.
-      await window.api.codex.sendMessage({
+      await window.api.session.sendMessage({
         threadId,
         text: autoRecoveryPrompt,
         cwd: workspaceRef.current,
@@ -2325,7 +2325,7 @@ export default function App(): React.JSX.Element {
         setThreadsError(null)
       }
 
-      const response = await window.api.codex.listThreads({
+      const response = await window.api.session.listThreads({
         // Ref, not state: refreshThreads is invoked from the mount-only codex
         // event handler (e.g. agent turn/completed), whose closure captured the
         // launch-time `workspace`. Using the ref refetches the current workspace.
@@ -2366,7 +2366,7 @@ export default function App(): React.JSX.Element {
       const wave = backgroundTabs.slice(index, index + 3)
       await Promise.all(wave.map(async (tab) => {
         try {
-          const resumed = await window.api.codex.resumeThread({ threadId: tab.threadId!, history: 'background' })
+          const resumed = await window.api.session.resumeThread({ threadId: tab.threadId!, history: 'background' })
           const turns: Turn[] = resumed.thread.turns.length
             ? resumed.thread.turns
             : (resumed.initialTurnsPage?.data ?? [])
@@ -2469,7 +2469,7 @@ export default function App(): React.JSX.Element {
 
     olderHistoryLoadsRef.current.add(threadId)
     try {
-      const page = await window.api.codex.listThreadTurns({ threadId, cursor, limit: 10 })
+      const page = await window.api.session.listThreadTurns({ threadId, cursor, limit: 10 })
       olderHistoryCursorByThreadRef.current.set(threadId, page.nextCursor)
       if (activeThreadIdRef.current !== threadId || activeMainChatTabKeyRef.current !== tabKey) return
 
@@ -4670,7 +4670,7 @@ function Composer({
 
     let cancelled = false
     setPluginMenuState('loading')
-    void window.api.codex.listInstalledPlugins({ cwd: workspace }).then((result) => {
+    void window.api.session.listInstalledPlugins({ cwd: workspace }).then((result) => {
       if (cancelled) return
       onInstalledPluginsChange(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
       setPluginMenuState('ready')
@@ -4918,7 +4918,7 @@ function PluginMentionMenu({ state, plugins, selectedIndex, onChoose, onBrowse, 
     const uninstallId = pluginUninstallId(plugin)
     if (!uninstallId) return
     setRemoving(plugin.id)
-    void window.api.codex.uninstallPlugin(uninstallId).then(() => {
+    void window.api.session.uninstallPlugin(uninstallId).then(() => {
       onUninstalled(plugin.id)
       setArmed(null)
     }).finally(() => setRemoving(null))
@@ -4990,13 +4990,13 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
     const detailResults = await Promise.allSettled(installed.map(async ({ marketplace, plugin }) => {
       const params = pluginInstallParams(plugin, marketplace)
       if (!params) return { pluginId: plugin.id, apps: [] as AppSummary[] }
-      const response = await window.api.codex.readPlugin(params)
+      const response = await window.api.session.readPlugin(params)
       return { pluginId: plugin.id, apps: response.plugin.apps }
     }))
     const appGroups = detailResults.flatMap((result) => result.status === 'fulfilled' ? [result.value] : [])
     const appIds = [...new Set(appGroups.flatMap((group) => group.apps.map((app) => app.id)))]
     const statuses = appIds.length
-      ? (await window.api.codex.getPluginAppStatuses({ appIds })).apps
+      ? (await window.api.session.getPluginAppStatuses({ appIds })).apps
       : []
     const nextConnections: Record<string, PluginConnectionInfo> = {}
     for (const group of appGroups) {
@@ -5011,7 +5011,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
   const load = useCallback(async (showLoading = true): Promise<void> => {
     if (showLoading) setState('loading')
     try {
-      const result = await window.api.codex.listPlugins({ cwd: workspace })
+      const result = await window.api.session.listPlugins({ cwd: workspace })
       setMarketplaces(result.marketplaces)
       onChanged(flattenPlugins(result.marketplaces).filter((plugin) => plugin.installed))
       setState('ready')
@@ -5059,7 +5059,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
     setActionError(null)
     setBusyId(plugin.id)
     try {
-      const result = await window.api.codex.installPlugin(params)
+      const result = await window.api.session.installPlugin(params)
       await load(false)
       if (result.appsNeedingAuth.length) {
         setConnectionByPluginId((current) => ({
@@ -5094,7 +5094,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
     setActionError(null)
     setBusyId(plugin.id)
     try {
-      await window.api.codex.uninstallPlugin(uninstallId)
+      await window.api.session.uninstallPlugin(uninstallId)
       setSetup((current) => current?.plugin.id === plugin.id ? null : current)
       await load(false)
     } catch (error) {
@@ -5129,7 +5129,7 @@ function PluginBrowserView({ workspace, onClose, onChanged }: {
     if (!setup || setup.phase !== 'waiting') return
     setIsCheckingAuth(true)
     try {
-      const response = await window.api.codex.getPluginAppStatuses({
+      const response = await window.api.session.getPluginAppStatuses({
         appIds: setup.apps.map((app) => app.id),
         forceRefetch: true
       })

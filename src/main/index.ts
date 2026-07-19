@@ -32,7 +32,7 @@ import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
-import { registerCodexIpc } from './codex/codex-ipc.js'
+import { registerSessionIpc } from './codex/codex-ipc.js'
 import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
@@ -346,7 +346,7 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
+  codexClient = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
   void codexClient.warmUp()

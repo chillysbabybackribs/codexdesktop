@@ -10,7 +10,7 @@ import type {
   BrowserBounds,
   BrowserFindResult,
   BrowserState,
-  CodexEvent,
+  SessionEvent,
   CodexInterruptTurnParams,
   CodexListThreadTurnsParams,
   CodexListThreadsParams,
@@ -99,41 +99,41 @@ export const api = {
       }
     }
   },
-  codex: {
-    getAuthStatus: () => ipcRenderer.invoke(ipcChannels.codexGetAuthStatus),
-    listModels: () => ipcRenderer.invoke(ipcChannels.codexListModels),
+  session: {
+    getAuthStatus: () => ipcRenderer.invoke(ipcChannels.sessionGetAuthStatus),
+    listModels: () => ipcRenderer.invoke(ipcChannels.sessionListModels),
     listThreads: (params?: CodexListThreadsParams) =>
-      ipcRenderer.invoke(ipcChannels.codexListThreads, params),
-    startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.codexStartThread, params),
-    resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.codexResumeThread, params),
+      ipcRenderer.invoke(ipcChannels.sessionListThreads, params),
+    startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.sessionStartThread, params),
+    resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.sessionResumeThread, params),
     listThreadTurns: (params: CodexListThreadTurnsParams) =>
-      ipcRenderer.invoke(ipcChannels.codexListThreadTurns, params),
-    getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexGetGoal, threadId),
-    setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.codexSetGoal, params),
-    clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexClearGoal, threadId),
-    sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
-    steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.codexSteerTurn, params),
-    interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
+      ipcRenderer.invoke(ipcChannels.sessionListThreadTurns, params),
+    getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionGetGoal, threadId),
+    setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.sessionSetGoal, params),
+    clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionClearGoal, threadId),
+    sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.sessionSendMessage, params),
+    steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.sessionSteerTurn, params),
+    interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.sessionInterruptTurn, params),
     compactThread: (threadId: string): Promise<{ started: boolean }> =>
-      ipcRenderer.invoke(ipcChannels.codexCompactThread, threadId),
-    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
+      ipcRenderer.invoke(ipcChannels.sessionCompactThread, threadId),
+    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionUnsubscribeThread, threadId),
     listInstalledPlugins: (params?: CodexPluginQueryParams): Promise<PluginInstalledResponse> =>
-      ipcRenderer.invoke(ipcChannels.codexListInstalledPlugins, params),
+      ipcRenderer.invoke(ipcChannels.sessionListInstalledPlugins, params),
     listPlugins: (params?: CodexPluginQueryParams): Promise<PluginListResponse> =>
-      ipcRenderer.invoke(ipcChannels.codexListPlugins, params),
+      ipcRenderer.invoke(ipcChannels.sessionListPlugins, params),
     readPlugin: (params: CodexPluginReadParams): Promise<PluginReadResponse> =>
-      ipcRenderer.invoke(ipcChannels.codexReadPlugin, params),
+      ipcRenderer.invoke(ipcChannels.sessionReadPlugin, params),
     getPluginAppStatuses: (params: CodexPluginAppStatusParams): Promise<CodexPluginAppStatusResponse> =>
-      ipcRenderer.invoke(ipcChannels.codexGetPluginAppStatuses, params),
+      ipcRenderer.invoke(ipcChannels.sessionGetPluginAppStatuses, params),
     installPlugin: (params: CodexPluginInstallParams): Promise<PluginInstallResponse> =>
-      ipcRenderer.invoke(ipcChannels.codexInstallPlugin, params),
+      ipcRenderer.invoke(ipcChannels.sessionInstallPlugin, params),
     uninstallPlugin: (pluginId: string): Promise<void> =>
-      ipcRenderer.invoke(ipcChannels.codexUninstallPlugin, pluginId),
-    onEvent: (listener: (event: CodexEvent) => void) => {
+      ipcRenderer.invoke(ipcChannels.sessionUninstallPlugin, pluginId),
+    onEvent: (listener: (event: SessionEvent) => void) => {
       const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
-      ipcRenderer.on(ipcChannels.codexEvent, wrapped)
+      ipcRenderer.on(ipcChannels.sessionEvent, wrapped)
       return () => {
-        ipcRenderer.off(ipcChannels.codexEvent, wrapped)
+        ipcRenderer.off(ipcChannels.sessionEvent, wrapped)
       }
     }
   },

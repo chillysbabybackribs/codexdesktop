@@ -96,7 +96,9 @@ export type CodexResearchProgressEvent = {
   progress: ResearchProgress
 }
 
-export type CodexEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
+export type SessionEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
+/** @deprecated alias kept for migration; import SessionEvent. */
+export type CodexEvent = SessionEvent
 
 export type ChatAttachment = {
   id: string
@@ -294,27 +296,27 @@ export const ipcChannels = {
   browserFocusOmnibox: 'browser:focusOmnibox',
   browserSelectionCopy: 'browser:selectionCopy',
   clipboardWrite: 'clipboard:write',
-  codexGetAuthStatus: 'codex:getAuthStatus',
-  codexListModels: 'codex:listModels',
-  codexListThreads: 'codex:listThreads',
-  codexStartThread: 'codex:startThread',
-  codexResumeThread: 'codex:resumeThread',
-  codexListThreadTurns: 'codex:listThreadTurns',
-  codexGetGoal: 'codex:getGoal',
-  codexSetGoal: 'codex:setGoal',
-  codexClearGoal: 'codex:clearGoal',
-  codexSendMessage: 'codex:sendMessage',
-  codexSteerTurn: 'codex:steerTurn',
-  codexInterruptTurn: 'codex:interruptTurn',
-  codexCompactThread: 'codex:compactThread',
-  codexUnsubscribeThread: 'codex:unsubscribeThread',
-  codexListInstalledPlugins: 'codex:listInstalledPlugins',
-  codexListPlugins: 'codex:listPlugins',
-  codexReadPlugin: 'codex:readPlugin',
-  codexGetPluginAppStatuses: 'codex:getPluginAppStatuses',
-  codexInstallPlugin: 'codex:installPlugin',
-  codexUninstallPlugin: 'codex:uninstallPlugin',
-  codexEvent: 'codex:event',
+  sessionGetAuthStatus: 'session:getAuthStatus',
+  sessionListModels: 'session:listModels',
+  sessionListThreads: 'session:listThreads',
+  sessionStartThread: 'session:startThread',
+  sessionResumeThread: 'session:resumeThread',
+  sessionListThreadTurns: 'session:listThreadTurns',
+  sessionGetGoal: 'session:getGoal',
+  sessionSetGoal: 'session:setGoal',
+  sessionClearGoal: 'session:clearGoal',
+  sessionSendMessage: 'session:sendMessage',
+  sessionSteerTurn: 'session:steerTurn',
+  sessionInterruptTurn: 'session:interruptTurn',
+  sessionCompactThread: 'session:compactThread',
+  sessionUnsubscribeThread: 'session:unsubscribeThread',
+  sessionListInstalledPlugins: 'session:listInstalledPlugins',
+  sessionListPlugins: 'session:listPlugins',
+  sessionReadPlugin: 'session:readPlugin',
+  sessionGetPluginAppStatuses: 'session:getPluginAppStatuses',
+  sessionInstallPlugin: 'session:installPlugin',
+  sessionUninstallPlugin: 'session:uninstallPlugin',
+  sessionEvent: 'session:event',
   memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',
