@@ -108,6 +108,7 @@ test('agent dock persistence keeps only durable metadata', () => {
       title: 'Research',
       watchesMain: true,
       auditsMain: false,
+      reportsToMain: false,
       model: 'gpt-5',
       reasoningEffort: 'high',
       open: true,
