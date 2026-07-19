@@ -63,6 +63,7 @@ export class ClaudeTurnTranslator {
   private readonly context: ClaudeTurnContext
   private messageSequence = 0
   private messageKey = 'm0'
+  private partialMessageOpen = false
   private pendingError: { message: string; codexErrorInfo: 'usageLimitExceeded' | 'serverOverloaded' | 'internalServerError' | 'unauthorized' | 'badRequest' | 'other' } | null = null
 
   constructor(context: ClaudeTurnContext) {
@@ -107,12 +108,15 @@ export class ClaudeTurnTranslator {
     if (event.type === 'message_start') {
       const message = asRecord(event.message)
       this.messageSequence += 1
-      this.messageKey = safeId(typeof message.id === 'string' ? message.id : `m${this.messageSequence}`)
+      const providerId = typeof message.id === 'string' ? `-${safeId(message.id)}` : ''
+      this.messageKey = `m${this.messageSequence}${providerId}`
+      this.partialMessageOpen = true
       this.blocks.clear()
       return { notifications: [] }
     }
 
     if (event.type === 'content_block_start') {
+      this.partialMessageOpen = true
       const index = Number(event.index ?? 0)
       const block = asRecord(event.content_block)
       if (block.type === 'text') {
@@ -198,9 +202,10 @@ export class ClaudeTurnTranslator {
   // idempotent through the store's upsert/longest-text-wins merge.
   private handleAssistant(message: Record<string, unknown>): ClaudeTranslation {
     const notifications: ServerNotification[] = []
-    const messageId = typeof message.id === 'string' ? safeId(message.id) : null
-    if (messageId && messageId !== this.messageKey) {
-      this.messageKey = messageId
+    if (!this.partialMessageOpen) {
+      this.messageSequence += 1
+      const providerId = typeof message.id === 'string' ? `-${safeId(message.id)}` : ''
+      this.messageKey = `m${this.messageSequence}${providerId}`
       this.blocks.clear()
     }
     const content = Array.isArray(message.content) ? message.content : []
@@ -213,6 +218,7 @@ export class ClaudeTurnTranslator {
         notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }))
       }
     })
+    this.partialMessageOpen = false
     return { notifications }
   }
 
