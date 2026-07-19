@@ -37,13 +37,23 @@ export function ensureBrowserIdentity(webContents: WebContents): Promise<void> {
 
   if (!watchedBrowserIdentities.has(webContents)) {
     watchedBrowserIdentities.add(webContents)
+    const debuggerClient = webContents.debugger
     const onDebuggerDetach = (): void => {
       // DevTools can temporarily replace our debugger client. Retry the native
       // UA-CH override before the next app-driven navigation.
       browserIdentityPromises.delete(webContents)
     }
-    webContents.debugger.on('detach', onDebuggerDetach)
-    webContents.once('destroyed', () => webContents.debugger.off('detach', onDebuggerDetach))
+    debuggerClient.on('detach', onDebuggerDetach)
+    webContents.once('destroyed', () => {
+      // Accessing webContents.debugger after the destroyed event can throw
+      // "Object has been destroyed" in Electron. The retained Debugger handle
+      // remains an EventEmitter long enough for best-effort listener cleanup.
+      try {
+        debuggerClient.off('detach', onDebuggerDetach)
+      } catch {
+        // The native debugger object may already be finalized too.
+      }
+    })
   }
 
   const existing = browserIdentityPromises.get(webContents)
