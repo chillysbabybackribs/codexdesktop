@@ -76,7 +76,7 @@ test('browser-middle preserves columns and normalizes each side to a vertical st
   });
 });
 
-test('browser-middle keeps a newly selected tab in its own column', () => {
+test('browser-middle opens a newly selected tab at full height in its own column', () => {
   const result = browserMiddleChatLayout(
     {
       kind: 'split',
@@ -96,12 +96,43 @@ test('browser-middle keeps a newly selected tab in its own column', () => {
     kind: 'split',
     direction: 'row',
     ratio: 0.5,
+    first: splitLeaf('left-two'),
+    second: splitLeaf('right-one'),
+  });
+});
+
+test('browser-middle preserves a user-created stack when selecting another tab', () => {
+  const result = browserMiddleChatLayout(
+    {
+      kind: 'split',
+      direction: 'row',
+      ratio: 0.5,
+      first: {
+        kind: 'split',
+        direction: 'column',
+        ratio: 0.5,
+        first: splitLeaf('left-primary'),
+        second: splitLeaf('left-secondary'),
+      },
+      second: splitLeaf('right-one'),
+    },
+    {
+      left: ['left-primary', 'left-secondary', 'left-next'],
+      right: ['right-one'],
+    },
+    { left: 'left-next', right: 'right-one' },
+  );
+
+  assert.deepEqual(result, {
+    kind: 'split',
+    direction: 'row',
+    ratio: 0.5,
     first: {
       kind: 'split',
       direction: 'column',
       ratio: 0.5,
-      first: splitLeaf('left-one'),
-      second: splitLeaf('left-two'),
+      first: splitLeaf('left-primary'),
+      second: splitLeaf('left-next'),
     },
     second: splitLeaf('right-one'),
   });

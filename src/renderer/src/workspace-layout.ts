@@ -40,9 +40,10 @@ export function serializeBrowserMiddleColumnWidths(widths: BrowserMiddleColumnWi
 
 /**
  * Reuses the chat split tree for the centered-browser workspace: its root is
- * the left/right divide and each branch is a vertical stack. Each branch is
- * supplied from its own tab collection, so the headers never mirror each
- * other and a selected tab stays on the side where it was created.
+ * the left/right divide and each branch is one chat or an explicitly created
+ * vertical stack. Each branch is supplied from its own tab collection, so the
+ * headers never mirror each other and a selected tab stays on the side where
+ * it was created.
  */
 export function browserMiddleChatLayout(
   layout: SplitNode,
@@ -77,12 +78,19 @@ function visibleKeysForSide(
   const visible = unique(splitPaneKeys(branch).filter((key) => valid.has(key))).slice(0, 2);
 
   if (activeKey && valid.has(activeKey) && !visible.includes(activeKey)) {
-    // A selected hidden tab replaces the lower pane, preserving the primary
-    // pane while ensuring every header selection has a visible conversation.
-    return unique([...visible.slice(0, 1), activeKey, ...tabKeys]).slice(0, 2);
+    // Selecting or creating a tab must not create a split by itself. A single
+    // visible chat is replaced at full height; only a split the user already
+    // made by dragging keeps its primary pane while the active tab replaces
+    // the secondary pane.
+    return visible.length > 1 ? [visible[0]!, activeKey] : [activeKey];
   }
 
-  return unique([...visible, ...tabKeys]).slice(0, 2);
+  if (visible.length) return visible;
+
+  // A column with no usable saved pane still needs one chat. Prefer its
+  // side-specific active tab, then fall back to the first tab assigned there.
+  const fallback = activeKey && valid.has(activeKey) ? activeKey : tabKeys[0];
+  return fallback ? [fallback] : [];
 }
 
 function stackColumn(keys: readonly string[]): SplitNode {
