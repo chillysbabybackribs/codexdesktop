@@ -1,6 +1,7 @@
 import {
   type FormEvent,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -65,6 +66,7 @@ export function Composer({
   footerContext?: React.ReactNode;
   footerTrailing?: React.ReactNode;
 }): React.JSX.Element {
+  const formId = useId();
   const [value, setValue] = useState(() => composerDrafts.get(draftKey)?.value ?? '');
   const [attachments, setAttachments] = useState<ChatAttachment[]>(
     () => composerDrafts.get(draftKey)?.attachments ?? [],
@@ -241,25 +243,27 @@ export function Composer({
   };
 
   return (
-    <form
-      className="composer"
-      onSubmit={handleSubmit}
-      onDragOver={(event) => {
-        if (!isTurnActive && event.dataTransfer.types.includes('Files')) event.preventDefault();
-      }}
-      onDrop={(event) => {
-        if (isTurnActive) return;
-        const files = Array.from(event.dataTransfer.files);
-        if (!files.length) return;
-        event.preventDefault();
-        setAttachmentError(null);
-        void saveBrowserFiles(files)
-          .then((items) => setAttachments((current) => [...current, ...items]))
-          .catch((error: unknown) =>
-            setAttachmentError(error instanceof Error ? error.message : String(error)),
-          );
-      }}
-    >
+    <>
+      <form
+        id={formId}
+        className="composer"
+        onSubmit={handleSubmit}
+        onDragOver={(event) => {
+          if (!isTurnActive && event.dataTransfer.types.includes('Files')) event.preventDefault();
+        }}
+        onDrop={(event) => {
+          if (isTurnActive) return;
+          const files = Array.from(event.dataTransfer.files);
+          if (!files.length) return;
+          event.preventDefault();
+          setAttachmentError(null);
+          void saveBrowserFiles(files)
+            .then((items) => setAttachments((current) => [...current, ...items]))
+            .catch((error: unknown) =>
+              setAttachmentError(error instanceof Error ? error.message : String(error)),
+            );
+        }}
+      >
       {pluginMenuState !== 'closed' ? (
         <div className="composer-mention-stack">
           {fileCandidates.length ? (
@@ -386,7 +390,8 @@ export function Composer({
           }
         }}
       />
-      <div className="composer-footer">
+      </form>
+      <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
           <button
             type="button"
@@ -435,6 +440,7 @@ export function Composer({
           ) : hasDraft ? (
             <button
               type="submit"
+              form={formId}
               className="send-button"
               aria-label="Send message"
               disabled={isLoading}
@@ -444,7 +450,7 @@ export function Composer({
           ) : null}
         </div>
       </div>
-    </form>
+    </>
   );
 }
 
