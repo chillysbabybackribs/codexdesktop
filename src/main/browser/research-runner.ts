@@ -20,6 +20,7 @@ import {
   retainValuesReducingDeficit
 } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
+import { ResearchOriginRouter, type ResearchOriginRouteOutcome } from './research-origin-router.js'
 import { fetchStaticResearchPage } from './research-static-fetch.js'
 import {
   assessExtractedPage,
@@ -46,7 +47,6 @@ const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
 const PAGE_WORKER_CONCURRENCY = 3
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
-const STATIC_PREFLIGHT_TIMEOUT_MS = 2_000
 const STATIC_PREFLIGHT_MAX_BYTES = 750_000
 const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
@@ -102,6 +102,8 @@ export type ResearchMetrics = {
   pageCacheHits: number
   staticFetchAttempts: number
   staticFetchHits: number
+  staticFetchSkipped: number
+  staticFetchTimeouts: number
   staticFetchMs: number
   browserPageLoads: number
   targetMet: boolean
@@ -174,6 +176,7 @@ export class ResearchRunner {
   private readonly activeRuns = new Map<string, ActiveResearchRun>()
   private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
   private readonly pageCache = new ResearchMemoryCache<ExtractedResearchPage>(PAGE_CACHE_TTL_MS, MAX_PAGE_CACHE_ENTRIES)
+  private readonly originRouter = new ResearchOriginRouter()
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
   private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
@@ -283,6 +286,8 @@ export class ResearchRunner {
     let pageCacheHits = 0
     let staticFetchAttempts = 0
     let staticFetchHits = 0
+    let staticFetchSkipped = 0
+    let staticFetchTimeouts = 0
     let staticFetchMs = 0
     let browserPageLoads = 0
     let evidenceRevision = -1
@@ -468,44 +473,65 @@ export class ResearchRunner {
             }
           }
 
+          const route = this.originRouter.begin(candidate.url)
           const staticTimeout = new AbortController()
           const staticStartedAt = Date.now()
-          const staticTimer = setTimeout(() => staticTimeout.abort(), STATIC_PREFLIGHT_TIMEOUT_MS)
+          const staticTimer = route.mode === 'static'
+            ? setTimeout(() => staticTimeout.abort(), route.timeoutMs)
+            : undefined
           const preflight = linkAbortSignals(signal, stopSignal, staticTimeout.signal)
           let staticResult: Awaited<ReturnType<typeof fetchStaticResearchPage>>
-          try {
-            staticFetchAttempts += 1
-            staticResult = await fetchStaticResearchPage(candidate.url, {
-              fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
-              validateUrl: assertPublicResearchUrl,
-              signal: preflight.signal,
-              maxBytes: STATIC_PREFLIGHT_MAX_BYTES
-            })
-          } catch (error) {
-            if (signal.aborted) {
-              preflight.dispose()
-              throw error
+          let routeOutcome: ResearchOriginRouteOutcome = { kind: 'cancelled' }
+          if (route.mode === 'browser') {
+            staticFetchSkipped += 1
+            staticResult = {
+              kind: 'fallback',
+              reason: `adaptive route selected Chromium: ${route.reason}`,
+              durationMs: 0,
+              bytes: 0,
+              redirects: 0,
+              finalUrl: candidate.url
             }
-            if (stopSignal.aborted) {
-              preflight.dispose()
-              return null
-            }
-            if (staticTimeout.signal.aborted) {
-              staticResult = {
-                kind: 'fallback',
-                reason: `static preflight timed out after ${STATIC_PREFLIGHT_TIMEOUT_MS}ms`,
-                durationMs: Date.now() - staticStartedAt,
-                bytes: 0,
-                redirects: 0,
-                finalUrl: candidate.url
+          } else {
+            try {
+              staticFetchAttempts += 1
+              staticResult = await fetchStaticResearchPage(candidate.url, {
+                fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
+                validateUrl: assertPublicResearchUrl,
+                signal: preflight.signal,
+                maxBytes: STATIC_PREFLIGHT_MAX_BYTES
+              })
+              routeOutcome = { kind: staticResult.kind, durationMs: staticResult.durationMs }
+            } catch (error) {
+              if (signal.aborted) {
+                preflight.dispose()
+                throw error
               }
-            } else {
-              preflight.dispose()
-              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
-              return null
+              if (stopSignal.aborted) {
+                preflight.dispose()
+                return null
+              }
+              if (staticTimeout.signal.aborted) {
+                staticFetchTimeouts += 1
+                const durationMs = Date.now() - staticStartedAt
+                routeOutcome = { kind: 'timeout', durationMs }
+                staticResult = {
+                  kind: 'fallback',
+                  reason: `static preflight timed out after ${route.timeoutMs}ms`,
+                  durationMs,
+                  bytes: 0,
+                  redirects: 0,
+                  finalUrl: candidate.url
+                }
+              } else {
+                preflight.dispose()
+                recordResearchError(errors, { url: candidate.url, error: formatError(error) })
+                return null
+              }
+            } finally {
+              if (staticTimer !== undefined) clearTimeout(staticTimer)
+              route.finish(routeOutcome)
             }
-          } finally {
-            clearTimeout(staticTimer)
           }
           staticFetchMs += staticResult.durationMs
           if (staticResult.kind === 'blocked') {
@@ -770,6 +796,8 @@ export class ResearchRunner {
       pageCacheHits,
       staticFetchAttempts,
       staticFetchHits,
+      staticFetchSkipped,
+      staticFetchTimeouts,
       staticFetchMs,
       browserPageLoads,
       targetMet: goalMet(),

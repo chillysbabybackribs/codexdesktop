@@ -17,8 +17,11 @@ test('research runner stays artifact-first without creating or activating visibl
   assert.match(source, /shouldStop:[\s\S]*focusCoverageDeficit/)
   assert.match(source, /retainValuesReducingDeficit/)
   assert.match(source, /static preflight timed out/)
-  assert.match(source, /STATIC_PREFLIGHT_TIMEOUT_MS = 2_000/)
   assert.match(source, /STATIC_PREFLIGHT_MAX_BYTES = 750_000/)
+  assert.match(source, /new ResearchOriginRouter\(\)/)
+  assert.match(source, /adaptive route selected Chromium/)
+  assert.match(source, /staticFetchSkipped/)
+  assert.match(source, /staticFetchTimeouts/)
   assert.match(source, /PAGE_WORKER_CONCURRENCY = 3/)
   assert.doesNotMatch(source, /MAX_TARGET_PAGES|DEFAULT_TARGET_PAGES|maxPages/)
 
