@@ -40,18 +40,6 @@ export type SpawnResult = {
   error?: string
 }
 
-// Emitted (as a SessionEvent) the instant a child is created, before any of
-// its turn events, so the renderer can register the worker session and route
-// subsequent tagged notifications to it.
-export type AgentSpawnedEvent = {
-  type: 'agentSpawned'
-  agentKey: string
-  parentAgentKey: string | null
-  parentThreadId: string | null
-  title: string
-  model: string | null
-}
-
 type PendingChild = {
   agentKey: string
   parentThreadId: string | null
