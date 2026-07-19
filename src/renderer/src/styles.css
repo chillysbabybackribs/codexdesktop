@@ -5811,3 +5811,12 @@ button {
     animation: none;
   }
 }
+
+/* Offscreen transcript rows skip layout and paint entirely; `auto` keeps the
+   last rendered size so scroll geometry (bottom pin, top anchor, spacer math)
+   stays stable. Streaming rows are always on-screen and unaffected. */
+.thread-scroll-content > .message,
+.thread-scroll-content > .task-activity-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
+}
