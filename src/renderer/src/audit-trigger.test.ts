@@ -8,6 +8,7 @@ import {
   isAuditFeedback,
   isAuditPrompt,
   liveTurnGlance,
+  parseAuditFeedback,
   parseAuditPrompt,
   parseAuditVerdict,
   shouldSendAuditFeedback,
