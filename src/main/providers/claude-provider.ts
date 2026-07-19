@@ -77,13 +77,23 @@ type LiveRuntime = {
   interrupt: () => Promise<void>
 }
 
+type SlotWaiter = {
+  session: ClaudeSession
+  resolve: () => void
+  reject: (error: Error) => void
+}
+
 type ClaudeSession = {
   threadId: string
   claudeSessionId: string | null
   cwd: string
   model: string | null
   runtime: LiveRuntime | null
+  startPromise: Promise<void> | null
+  slotReserved: boolean
+  waitingForSlot: boolean
   working: boolean
+  activeTurnId: string | null
   translator: ClaudeTurnTranslator | null
   lastActivityMs: number
   idleTimer: NodeJS.Timeout | null
@@ -122,18 +132,39 @@ function emptyBreakdown(): TokenUsageBreakdown {
   return { totalTokens: 0, inputTokens: 0, cachedInputTokens: 0, outputTokens: 0, reasoningOutputTokens: 0 }
 }
 
+export function buildClaudeQueryOptions(
+  session: Pick<ClaudeSession, 'cwd' | 'model' | 'claudeSessionId'>,
+  mcpServerConfig: unknown | null
+) {
+  return {
+    cwd: session.cwd,
+    ...(session.model && session.model !== claudeDefaultModelId ? { model: session.model } : {}),
+    ...(session.claudeSessionId ? { resume: session.claudeSessionId } : {}),
+    includePartialMessages: true,
+    // The pinned SDK requires this explicit acknowledgement whenever bypass
+    // mode is selected; permissionMode alone is not a valid pairing.
+    permissionMode: 'bypassPermissions' as const,
+    allowDangerouslySkipPermissions: true,
+    // Spike-verified isolation: the user's ~/.claude settings never bleed
+    // into app sessions.
+    settingSources: [] as const,
+    ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {})
+  }
+}
+
 export class ClaudeProvider extends EventEmitter implements SessionProvider {
   readonly id = 'claude' as const
   readonly capabilities = claudeCapabilities
 
   private readonly sessions = new Map<string, ClaudeSession>()
-  private readonly slotWaiters: Array<() => void> = []
+  private readonly slotWaiters: SlotWaiter[] = []
   private readonly statePath: string
   private persisted: PersistedSessions | null = null
   private readonly checkpoints: TurnCheckpointStore | null
   private readonly browserAgent: BrowserAgentController | null
   private readonly researchRunner: ResearchRunner | null
   private mcpServerConfig: unknown | null = null
+  private disposed = false
 
   constructor(
     checkpoints: TurnCheckpointStore | null = null,
@@ -247,8 +278,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         .catch((error) => console.warn('claude turn checkpoint failed:', (error as Error).message))
     }
 
-    await this.ensureLive(session)
-
     const context: ClaudeTurnContext = {
       threadId: activeThreadId,
       turnId,
@@ -269,18 +298,12 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     }
     session.translator = new ClaudeTurnTranslator(context)
     session.working = true
+    session.activeTurnId = turnId
     session.lastActivityMs = Date.now()
     this.clearIdleTimer(session)
 
     this.emitNotification(turnStartedNotification(context, text))
-    session.runtime!.input.push({
-      type: 'user',
-      message: { role: 'user', content: text },
-      parent_tool_use_id: null,
-      session_id: session.claudeSessionId ?? 'pending'
-    })
-
-    return {
+    const response = {
       turn: {
         id: turnId,
         items: [],
@@ -295,6 +318,23 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       model: session.model,
       reasoningEffort: null
     } as unknown as TurnStartResponse & { threadId: string; model: string | null; reasoningEffort: ReasoningEffort | null }
+
+    try {
+      await this.ensureLive(session)
+      session.runtime!.input.push({
+        type: 'user',
+        message: { role: 'user', content: text },
+        parent_tool_use_id: null,
+        session_id: session.claudeSessionId ?? 'pending'
+      })
+    } catch (error) {
+      if (session.working && session.activeTurnId === turnId) {
+        this.emitNotification(this.failedTurnNotification(session, turnId, `claude runtime failed to start: ${(error as Error).message}`))
+        this.finishTurn(session)
+      }
+    }
+
+    return response
   }
 
   async interruptTurn(threadId: string, _turnId: string): Promise<unknown> {
@@ -315,6 +355,25 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     const session = this.sessions.get(threadId)
     if (session && !session.working) this.killSession(session)
     return {} as ThreadUnsubscribeResponse
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    for (const waiter of this.slotWaiters.splice(0)) {
+      waiter.session.waitingForSlot = false
+      waiter.reject(new Error('claude provider disposed'))
+    }
+    for (const session of this.sessions.values()) {
+      this.clearIdleTimer(session)
+      session.runtime?.input.end()
+      session.runtime = null
+      session.slotReserved = false
+      session.waitingForSlot = false
+      session.working = false
+      session.activeTurnId = null
+      session.translator = null
+    }
   }
 
   async getGoal(_threadId: string): Promise<ThreadGoal | null> {
@@ -364,7 +423,11 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         cwd,
         model,
         runtime: null,
+        startPromise: null,
+        slotReserved: false,
+        waitingForSlot: false,
         working: false,
+        activeTurnId: null,
         translator: null,
         lastActivityMs: Date.now(),
         idleTimer: null,
@@ -377,67 +440,66 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   }
 
   private liveSessions(): ClaudeSession[] {
-    return [...this.sessions.values()].filter((session) => session.runtime !== null)
+    return [...this.sessions.values()].filter((session) => session.slotReserved)
   }
 
   private async ensureLive(session: ClaudeSession): Promise<void> {
     if (session.runtime) return
+    if (session.startPromise) return session.startPromise
 
-    // D2: cap live processes; evict the oldest idle, else wait for a slot.
-    while (this.liveSessions().length >= maxLiveSessions) {
-      const idle = this.liveSessions()
-        .filter((candidate) => !candidate.working)
-        .sort((a, b) => a.lastActivityMs - b.lastActivityMs)[0]
-      if (idle) {
-        this.killSession(idle)
-        break
-      }
-      await new Promise<void>((resolve) => this.slotWaiters.push(resolve))
+    const startPromise = this.startLive(session)
+    session.startPromise = startPromise
+    try {
+      await startPromise
+    } finally {
+      if (session.startPromise === startPromise) session.startPromise = null
     }
-
-    const sdk = await import('@anthropic-ai/claude-agent-sdk')
-    const { query } = sdk
-    // In-process MCP browser tools (built once): Claude sessions drive the
-    // SAME embedded browser through the SAME neutral dispatch the codex
-    // dynamic tools use — ownerless, like the socket transport.
-    if (!this.mcpServerConfig && this.browserAgent) {
-      const browserAgent = this.browserAgent
-      const researchRunner = this.researchRunner ?? undefined
-      this.mcpServerConfig = buildClaudeBrowserMcpServer(
-        sdk as never,
-        (tool, args) => runBrowserTool(
-          { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
-          { browserAgent, researchRunner }
-        )
-      )
-    }
-    const input = createInputStream()
-    const handle = query({
-      prompt: input.stream() as AsyncIterable<never>,
-      options: {
-        cwd: session.cwd,
-        ...(session.model && session.model !== claudeDefaultModelId ? { model: session.model } : {}),
-        ...(session.claudeSessionId ? { resume: session.claudeSessionId } : {}),
-        includePartialMessages: true,
-        // Unrestricted dev parity with codex `danger-full-access` (standing
-        // directive; Phase 6 revisits before launch).
-        permissionMode: 'bypassPermissions',
-        // Spike-verified isolation: the user's ~/.claude settings never bleed
-        // into app sessions.
-        settingSources: [],
-        ...(this.mcpServerConfig ? { mcpServers: { browser: this.mcpServerConfig as never } } : {})
-      }
-    })
-    session.runtime = {
-      input,
-      interrupt: async () => {
-        await handle.interrupt()
-      }
-    }
-    void this.consume(session, handle as AsyncIterable<unknown>)
   }
 
-  private async consume(session: ClaudeSession, stream: AsyncIterable<unknown>): Promise<void> {
+  private async startLive(session: ClaudeSession): Promise<void> {
+    await this.acquireSlot(session)
+    if (this.disposed) {
+      this.releaseSlot(session)
+      throw new Error('claude provider disposed')
+    }
+
+    try {
+      const sdk = await import('@anthropic-ai/claude-agent-sdk')
+      const { query } = sdk
+      // In-process MCP browser tools (built once): Claude sessions drive the
+      // SAME embedded browser through the SAME neutral dispatch the codex
+      // dynamic tools use — ownerless, like the socket transport.
+      if (!this.mcpServerConfig && this.browserAgent) {
+        const browserAgent = this.browserAgent
+        const researchRunner = this.researchRunner ?? undefined
+        this.mcpServerConfig = buildClaudeBrowserMcpServer(
+          sdk as never,
+          (tool, args) => runBrowserTool(
+            { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
+            { browserAgent, researchRunner }
+          )
+        )
+      }
+      const input = createInputStream()
+      const handle = query({
+        prompt: input.stream() as AsyncIterable<never>,
+        options: buildClaudeQueryOptions(session, this.mcpServerConfig)
+      })
+      const runtime: LiveRuntime = {
+        input,
+        interrupt: async () => {
+          await handle.interrupt()
+        }
+      }
+      session.runtime = runtime
+      void this.consume(session, runtime, handle as AsyncIterable<unknown>)
+    } catch (error) {
+      this.releaseSlot(session)
+      throw error
+    }
+  }
+
+  private async consume(session: ClaudeSession, runtime: LiveRuntime, stream: AsyncIterable<unknown>): Promise<void> {
     try {
       for await (const message of stream) {
         session.lastActivityMs = Date.now()
@@ -450,44 +512,34 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         for (const notification of translation.notifications) this.emitNotification(notification)
         if (translation.turnEnded) this.finishTurn(session)
       }
+      if (!this.disposed && session.runtime === runtime && session.working && session.activeTurnId) {
+        this.emitNotification(this.failedTurnNotification(session, session.activeTurnId, 'claude stream ended before the turn completed'))
+        this.finishTurn(session)
+      }
     } catch (error) {
       console.warn(`claude session ${session.threadId} stream failed:`, (error as Error).message)
-      if (session.working && session.translator) {
+      if (!this.disposed && session.working && session.activeTurnId) {
         // Surface the failure as a failed turn so the UI never hangs on a
         // silent stream death (Phase 5 rules).
-        this.emitNotification({
-          method: 'turn/completed',
-          params: {
-            threadId: session.threadId,
-            turn: {
-              id: 'unknown',
-              items: [],
-              itemsView: 'full',
-              status: 'failed',
-              error: { message: `claude stream failed: ${(error as Error).message}` },
-              startedAt: null,
-              completedAt: Math.floor(Date.now() / 1000),
-              durationMs: null
-            }
-          }
-        } as never)
+        this.emitNotification(this.failedTurnNotification(session, session.activeTurnId, `claude stream failed: ${(error as Error).message}`))
       }
       this.finishTurn(session)
     } finally {
       // Stream closed (idle-kill, interrupt-exit, or crash): free the slot.
-      if (session.runtime) {
+      if (session.runtime === runtime) {
         session.runtime = null
-        this.wakeSlotWaiter()
+        this.releaseSlot(session)
       }
     }
   }
 
   private finishTurn(session: ClaudeSession): void {
     session.working = false
+    session.activeTurnId = null
     session.translator = null
     session.lastActivityMs = Date.now()
-    this.scheduleIdleKill(session)
-    this.wakeSlotWaiter()
+    if (!this.disposed) this.scheduleIdleKill(session)
+    this.drainSlotWaiters()
   }
 
   private scheduleIdleKill(session: ClaudeSession): void {
@@ -505,16 +557,77 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     }
   }
 
-  private killSession(session: ClaudeSession): void {
+  private killSession(session: ClaudeSession, drain = true): void {
     this.clearIdleTimer(session)
     session.runtime?.input.end()
     session.runtime = null
-    this.wakeSlotWaiter()
+    this.releaseSlot(session, drain)
   }
 
-  private wakeSlotWaiter(): void {
-    const waiter = this.slotWaiters.shift()
-    waiter?.()
+  private acquireSlot(session: ClaudeSession): Promise<void> {
+    if (session.slotReserved) return Promise.resolve()
+    if (this.disposed) return Promise.reject(new Error('claude provider disposed'))
+
+    if (this.liveSessions().length >= maxLiveSessions) {
+      const idle = this.liveSessions()
+        .filter((candidate) => candidate.runtime && !candidate.working)
+        .sort((a, b) => a.lastActivityMs - b.lastActivityMs)[0]
+      if (idle) this.killSession(idle, false)
+    }
+    if (this.liveSessions().length < maxLiveSessions) {
+      session.slotReserved = true
+      return Promise.resolve()
+    }
+
+    session.waitingForSlot = true
+    return new Promise<void>((resolve, reject) => this.slotWaiters.push({ session, resolve, reject }))
+  }
+
+  private releaseSlot(session: ClaudeSession, drain = true): void {
+    session.slotReserved = false
+    if (drain) this.drainSlotWaiters()
+  }
+
+  private drainSlotWaiters(): void {
+    while (this.slotWaiters.length > 0) {
+      const waiter = this.slotWaiters[0]
+      if (this.disposed || !waiter.session.working) {
+        this.slotWaiters.shift()
+        waiter.session.waitingForSlot = false
+        waiter.reject(new Error(this.disposed ? 'claude provider disposed' : 'claude turn was cancelled while queued'))
+        continue
+      }
+      if (this.liveSessions().length >= maxLiveSessions) {
+        const idle = this.liveSessions()
+          .filter((candidate) => candidate.runtime && !candidate.working)
+          .sort((a, b) => a.lastActivityMs - b.lastActivityMs)[0]
+        if (!idle) return
+        this.killSession(idle, false)
+      }
+      this.slotWaiters.shift()
+      waiter.session.waitingForSlot = false
+      waiter.session.slotReserved = true
+      waiter.resolve()
+    }
+  }
+
+  private failedTurnNotification(session: ClaudeSession, turnId: string, message: string): unknown {
+    return {
+      method: 'turn/completed',
+      params: {
+        threadId: session.threadId,
+        turn: {
+          id: turnId,
+          items: [],
+          itemsView: 'full',
+          status: 'failed',
+          error: { message, codexErrorInfo: 'other', additionalDetails: null },
+          startedAt: null,
+          completedAt: Math.floor(Date.now() / 1000),
+          durationMs: null
+        }
+      }
+    }
   }
 
   private emitNotification(notification: unknown): void {
