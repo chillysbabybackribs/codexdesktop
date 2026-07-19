@@ -123,6 +123,7 @@ export async function runBrowserTool(
         steps: args.steps,
         match: readNetworkMatch(args.match),
         captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
+        stream: readNetworkStream(args.stream),
         readySelector: readString(args.readySelector),
         quietMs: readNumber(args.quietMs),
         maxSettleMs: readNumber(args.maxSettleMs)
@@ -304,6 +305,21 @@ function readNetworkMatch(value: unknown): {
     mimeType: readString(match.mimeType),
     statusMin: readNumber(match.statusMin),
     statusMax: readNumber(match.statusMax)
+  }
+}
+
+function readNetworkStream(value: unknown): {
+  transport?: 'sse' | 'websocket'
+  maxMessages?: number
+  idleMs?: number
+} | null {
+  const stream = asRecord(value)
+  const transport = stream.transport === 'sse' || stream.transport === 'websocket' ? stream.transport : undefined
+  if (!transport && Object.keys(stream).length === 0) return null
+  return {
+    transport,
+    maxMessages: readNumber(stream.maxMessages),
+    idleMs: readNumber(stream.idleMs)
   }
 }
 
