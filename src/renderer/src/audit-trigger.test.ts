@@ -282,3 +282,11 @@ test('feedback sends only on flag, idle, same thread, within the bounce cap', ()
   assert.equal(shouldSendAuditFeedback({ ...base, sameThread: false }), false, 'never crosses threads')
   assert.equal(shouldSendAuditFeedback({ ...base, auditedTurnWasFeedback: true }), false, 'one bounce per user turn')
 })
+
+test('parseAuditFeedback recovers title and body for the main-chat card', () => {
+  const message = buildAuditFeedbackMessage({ agentTitle: 'Agent 2', report: 'Off-by-one in loop.\nVERDICT: flag' })
+  const parsed = parseAuditFeedback(message)
+  assert.equal(parsed?.agentTitle, 'Agent 2')
+  assert.equal(parsed?.report, 'Off-by-one in loop.')
+  assert.equal(parseAuditFeedback('a normal user message'), null)
+})

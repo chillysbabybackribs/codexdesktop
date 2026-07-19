@@ -141,7 +141,7 @@ test('main chat context is removed from restored helper messages', () => {
   assert.equal(stripMainChatContext('Question'), 'Question')
 })
 
-test('latestAuditReport joins the reply to the newest audit briefing only', () => {
+test('latestAuditReport returns the final reply to the newest audit briefing only', () => {
   const audit = { userText: 'do it', files: ['a.ts'], steps: [], answerText: '' }
   assert.equal(
     latestAuditReport([
@@ -149,7 +149,8 @@ test('latestAuditReport joins the reply to the newest audit briefing only', () =
       { id: 'a1', role: 'assistant', text: 'Checking the diff.' },
       { id: 'a2', role: 'assistant', text: 'Bug found.\nVERDICT: flag' }
     ]),
-    'Checking the diff.\nBug found.\nVERDICT: flag'
+    'Bug found.\nVERDICT: flag',
+    'interim narration stays out of the forwarded report'
   )
   assert.equal(
     latestAuditReport([
