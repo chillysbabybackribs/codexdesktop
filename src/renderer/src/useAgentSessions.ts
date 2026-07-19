@@ -37,6 +37,8 @@ export function useAgentSessions(
   appendAgentMessage: (key: string, message: AgentLiteMessage) => void
   appendAgentMessageOnce: (key: string, message: AgentLiteMessage) => void
   setAgentSessionRender: (key: string, state: SessionRenderState) => void
+  resetAgentSessionRender: (key: string, title: string) => void
+  removeAgentSessionRender: (key: string) => void
   backgroundSessionForThread: (threadId: string) => AgentSession | null
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void
   handleNewAgent: () => void
@@ -124,21 +126,37 @@ export function useAgentSessions(
     syncAgentSession(key)
   }
 
+  function resetAgentSessionRender(key: string, title: string): void {
+    setAgentSessionRender(key, emptySessionState({ title }))
+  }
+
+  function removeAgentSessionRender(key: string): void {
+    sessionStore.remove(key)
+  }
+
   function backgroundSessionForThread(threadId: string): AgentSession | null {
     return findAgentSessionByThread(agentSessionsRef.current, threadId)
   }
 
-  function applyAgentNotification(key: string, notification: ServerNotification): void {
+  function applyAgentNotifications(key: string, notifications: ServerNotification[]): void {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return
-    sessionStore.update(key, (state) => reduceSessionNotification(state, notification, {
-      atMs: Date.now(),
-      fallbackModel: session.model,
-      workspace: null
-    }))
-    syncAgentSession(key, notification.method === 'turn/started'
+    sessionStore.update(key, (state) => notifications.reduce(
+      (current, notification) => reduceSessionNotification(current, notification, {
+        atMs: Date.now(),
+        fallbackModel: session.model,
+        workspace: null
+      }),
+      state
+    ))
+    const terminal = notifications.at(-1)
+    syncAgentSession(key, terminal?.method === 'turn/started'
       ? 'working'
-      : notification.method === 'turn/completed' ? 'done' : undefined)
+      : terminal?.method === 'turn/completed' ? 'done' : undefined)
+  }
+
+  function applyAgentNotification(key: string, notification: ServerNotification): void {
+    applyAgentNotifications(key, [notification])
   }
 
   function flushAgentDeltas(): void {
@@ -149,9 +167,7 @@ export function useAgentSessions(
     const buffer = agentDeltaBufferRef.current
     if (!buffer.size) return
     agentDeltaBufferRef.current = new Map()
-    for (const [key, notifications] of buffer) {
-      for (const notification of notifications) applyAgentNotification(key, notification)
-    }
+    for (const [key, notifications] of buffer) applyAgentNotifications(key, notifications)
   }
 
   function enqueueAgentDelta(key: string, notification: ServerNotification): void {
@@ -285,6 +301,8 @@ export function useAgentSessions(
     appendAgentMessage,
     appendAgentMessageOnce,
     setAgentSessionRender,
+    resetAgentSessionRender,
+    removeAgentSessionRender,
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,

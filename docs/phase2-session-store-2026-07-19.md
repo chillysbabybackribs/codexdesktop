@@ -73,13 +73,28 @@ goal + terminal error) through `reduceSessionNotification`, asserting the
 render-model shape the UI draws. This is the regression net for the dock
 migration and future provider adapters.
 
-## Remaining in Phase 2
+## Slice 5 — dock dual-write (landed); view-model swap deferred by design
 
-- Dock agent sessions onto the store (lite path in `useAgentSessions.ts` /
-  `agent-session-model.ts`): route dock threads through
-  `reduceSessionNotification` under the dock session key, keep dock-only
-  metadata (watchesMain, model override, open/selected) separate, synthesize
-  the `AgentSession[]` prop AgentDock already consumes. Side effects (OS
-  notification, auto-recovery) stay caller-side. Consider batching dock store
-  notifies per rAF (dock deltas currently coalesce per frame; keep that
-  property).
+Dock threads now ALSO reduce into the SessionStore under the agent's session
+key (routing site in App.tsx `handleCodexNotification`, seeded with the
+session's threadId/title), and close/reset/promote retire the store record
+(wrappers above the lifecycle verbs in App.tsx). The store is therefore the
+complete record of every surface — active tab, background tabs, dock agents —
+through one reducer.
+
+The dock's *view* still renders from the lite `AgentSession` model
+(`useAgentSessions.ts` / `agent-session-model.ts`, ~880 lines across five
+files). Swapping it to store-derived selectors was deliberately deferred: the
+migration's payoff (work items, turn telemetry, live action labels in dock
+cards) arrives exactly when the dock UI is upgraded to mission-control cards,
+and doing the state surgery without the rendering upgrade pays the full cost
+for no visible benefit. When that product work starts, the store already holds
+everything the new cards need — synthesize `AgentSession[]` from
+store + dock metadata (watchesMain, model override, open/selected) and delete
+the lite reducer then.
+
+Cost of the interim dual-write: dock notifications reduce twice (lite + full).
+Dock traffic is low-volume next to the main transcript; measured impact nil.
+
+Verified: 333/333 tests, build clean, live dock smoke (spawn agent → send →
+reply renders in card, main transcript isolated, lifecycle cleanup wired).

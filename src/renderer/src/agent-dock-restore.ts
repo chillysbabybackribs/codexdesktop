@@ -1,4 +1,3 @@
-import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 import { attachmentsFromUserInput } from './Attachments.js'
 import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import type { ChatItem } from './transcript-model.js'
@@ -81,7 +80,7 @@ export async function restoreAgentDock(options: {
       if (!session.threadId) return
       try {
         const resumed = await window.api.codex.resumeThread({ threadId: session.threadId, history: 'agent' })
-        let turns = resumed.thread.turns.length > 0
+        const turns: Array<{ id: string; items: ChatItem[] }> = resumed.thread.turns.length > 0
           ? resumed.thread.turns
           // The shared resume request asks for newest-first to keep startup
           // payloads small. Rebuild the compact agent transcript in reading

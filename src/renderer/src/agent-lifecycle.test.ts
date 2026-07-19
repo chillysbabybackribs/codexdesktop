@@ -38,6 +38,8 @@ function lifecycleHarness(
       appendMessageOnce: (_key, message) => {
         if (!messages.some((existing) => existing.id === message.id)) messages.push(message)
       },
+      resetRenderState: () => {},
+      removeRenderState: () => {},
       setOpenKeys: (update) => openKeys.splice(0, openKeys.length, ...update(openKeys)),
       setSelectedKey: (update) => { selectedKey = update(selectedKey) }
     },

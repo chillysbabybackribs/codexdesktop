@@ -39,7 +39,6 @@ import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import { summarizeTurnDiff } from './diff'
 import { TraceModal, formatTokens } from './TraceModal'
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace'
-import { resetAgentSession } from './agent-session-model'
 import {
   modelCallAttributionForItem,
   reduceTurnTelemetry,
@@ -227,6 +226,8 @@ export default function App(): React.JSX.Element {
     appendAgentMessage,
     appendAgentMessageOnce,
     setAgentSessionRender,
+    resetAgentSessionRender,
+    removeAgentSessionRender,
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
@@ -1564,6 +1565,8 @@ export default function App(): React.JSX.Element {
       patchSession: patchAgentSession,
       appendMessage: appendAgentMessage,
       appendMessageOnce: appendAgentMessageOnce,
+      resetRenderState: resetAgentSessionRender,
+      removeRenderState: removeAgentSessionRender,
       setOpenKeys: setOpenAgentKeys,
       setSelectedKey: setSelectedAgentKey
     },
