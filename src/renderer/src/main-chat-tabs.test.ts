@@ -3,6 +3,7 @@ import test from 'node:test'
 import {
   closeMainChatTab,
   createMainChatTab,
+  needsMainChatTabHydration,
   parseMainChatTabState,
   serializeMainChatTabState
 } from './main-chat-tabs.ts'
@@ -45,4 +46,16 @@ test('closing the only tab leaves a fresh usable tab', () => {
     activeKey: 'tab-new',
     tabs: [createMainChatTab('tab-new')]
   })
+})
+
+test('cached running tabs keep their live transcript instead of rehydrating', () => {
+  const running = {
+    ...createMainChatTab('tab-running', 'thread-running', 'Running task'),
+    status: 'working' as const,
+    turnId: 'turn-running'
+  }
+
+  assert.equal(needsMainChatTabHydration(running, true), false)
+  assert.equal(needsMainChatTabHydration(running, false), true)
+  assert.equal(needsMainChatTabHydration(createMainChatTab('tab-new'), false), false)
 })

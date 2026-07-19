@@ -95,6 +95,7 @@ import {
   closeMainChatTab,
   createMainChatTab,
   maxMainChatTabs,
+  needsMainChatTabHydration,
   parseMainChatTabState,
   serializeMainChatTabState,
   tabForThread,
@@ -1041,7 +1042,7 @@ export default function App(): React.JSX.Element {
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
 
-    if (target.threadId) {
+    if (needsMainChatTabHydration(target, Boolean(snapshot))) {
       reconcilingMainChatTabKeyRef.current = key
       setReconcilingMainChatTabKey(key)
       if (!snapshot) setIsRestoring(true)
@@ -1079,7 +1080,7 @@ export default function App(): React.JSX.Element {
     const snapshot = mainChatSnapshotsRef.current.get(target.key)
     applyMainChatSnapshot(target, snapshot)
     persistLastThreadId(target.threadId)
-    if (target.threadId) {
+    if (needsMainChatTabHydration(target, Boolean(snapshot))) {
       reconcilingMainChatTabKeyRef.current = target.key
       setReconcilingMainChatTabKey(target.key)
       if (!snapshot) setIsRestoring(true)

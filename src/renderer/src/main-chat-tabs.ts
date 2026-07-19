@@ -109,3 +109,16 @@ export function closeMainChatTab(
 export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab | null {
   return tabs.find((tab) => tab.threadId === threadId) ?? null
 }
+
+/**
+ * Open tabs remain subscribed and their in-memory snapshots receive every live
+ * notification. Rehydrating a cached tab from bounded thread history can erase
+ * newer reasoning, commentary, and tool-call state, so only uncached
+ * thread-backed tabs need a server resume.
+ */
+export function needsMainChatTabHydration(
+  tab: MainChatTab,
+  snapshotAvailable: boolean
+): tab is MainChatTab & { threadId: string } {
+  return Boolean(tab.threadId && !snapshotAvailable)
+}
