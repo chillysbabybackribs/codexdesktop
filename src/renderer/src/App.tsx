@@ -4026,6 +4026,8 @@ function ChatPane({
           {openAgentSessions.length ? (
             <AgentColumn
               sessions={openAgentSessions}
+              sessionStore={agentSessionStore}
+              workspace={workspace}
               selectedKey={selectedActiveAgentKey}
               models={models}
               mainModel={selectedModel}
