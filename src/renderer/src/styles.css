@@ -874,10 +874,6 @@ button {
   outline: none;
 }
 
-.header-options-item.is-active {
-  color: #e4e7e9;
-}
-
 .header-options-item:disabled {
   color: #585b5f;
 }
@@ -891,8 +887,7 @@ button {
 }
 
 .header-options-item:hover:not(:disabled) .header-options-icon,
-.header-options-item:focus-visible .header-options-icon,
-.header-options-item.is-active .header-options-icon {
+.header-options-item:focus-visible .header-options-icon {
   color: #cdd0d4;
 }
 

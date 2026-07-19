@@ -198,6 +198,5 @@ test('secondary browser-middle header keeps only pane layout commands', () => {
     'split-down'
   ])
   assert.equal(commands[0]?.label, 'Move browser right')
-  assert.equal(commands[0]?.active, true)
   assert.equal(commands[1]?.disabled, true)
 })
