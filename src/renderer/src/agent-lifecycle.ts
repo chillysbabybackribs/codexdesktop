@@ -128,13 +128,22 @@ export function createAgentLifecycle(options: {
     return session
   }
 
+  function reportThreadCleanupFailure(action: 'interrupt' | 'unsubscribe', threadId: string, error: unknown): void {
+    // The session has intentionally left the UI, so an inline message is no
+    // longer possible. Keep the failure observable with enough context to
+    // diagnose a still-running or still-subscribed background thread.
+    console.warn(`Failed to ${action} background agent thread ${threadId}`, error)
+  }
+
   function handleCloseAgentSession(key: string): void {
     const session = removeSession(key)
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
-        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
+        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+          .catch((error) => reportThreadCleanupFailure('interrupt', session.threadId!, error))
       }
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void window.api.codex.unsubscribeThread(session.threadId)
+        .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }
 
@@ -154,7 +163,8 @@ export function createAgentLifecycle(options: {
     }))
     store.resetRenderState(key, session.title)
     if (session.threadId && session.threadId !== options.getActiveThreadId()) {
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void window.api.codex.unsubscribeThread(session.threadId)
+        .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }
 
