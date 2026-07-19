@@ -297,6 +297,23 @@ const AgentWindow = memo(function AgentWindow({
     }
   }, [isMenuOpen])
 
+  // Phase 5: the dock renders the FULL transcript from the shared session
+  // store — the same ThreadItem → rows pipeline as the main chat, so agents
+  // get thought blocks, tool rows, terminal cards, and diff cards instead of
+  // a prose-only projection.
+  const subscribeRenderState = useCallback(
+    (onChange: () => void) => sessionStore.subscribe(session.key, onChange),
+    [sessionStore, session.key]
+  )
+  const renderState = useSyncExternalStore(
+    subscribeRenderState,
+    () => sessionStore.peek(session.key) ?? emptyAgentRenderState
+  )
+  const { rows } = useMemo(
+    () => buildRows(renderState.items, renderState.itemMeta, renderState.turnId),
+    [renderState.items, renderState.itemMeta, renderState.turnId]
+  )
+
   const followTail = useCallback(() => {
     const node = scrollRef.current
     if (!node || !pinnedRef.current) return
@@ -337,23 +354,6 @@ const AgentWindow = memo(function AgentWindow({
   }, [value])
 
   const working = session.status === 'working'
-
-  // Phase 5: the dock renders the FULL transcript from the shared session
-  // store — the same ThreadItem → rows pipeline as the main chat, so agents
-  // get thought blocks, tool rows, terminal cards, and diff cards instead of
-  // a prose-only projection.
-  const subscribeRenderState = useCallback(
-    (onChange: () => void) => sessionStore.subscribe(session.key, onChange),
-    [sessionStore, session.key]
-  )
-  const renderState = useSyncExternalStore(
-    subscribeRenderState,
-    () => sessionStore.peek(session.key) ?? emptyAgentRenderState
-  )
-  const { rows } = useMemo(
-    () => buildRows(renderState.items, renderState.itemMeta, renderState.turnId),
-    [renderState.items, renderState.itemMeta, renderState.turnId]
-  )
 
   // Adjacent identical assistant restatements carry no information (same
   // policy the lite projection applied).
