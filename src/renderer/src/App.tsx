@@ -4090,17 +4090,18 @@ function ChatPane({
               />
             ) : null}
             <AgentTabStrip sessions={activeAgentSessions} openKeys={openAgentKeys} onFocus={focusAgent} />
-            {activeTurnId ? (
-              <button
-                type="button"
-                className="composer-new-agent-button"
-                aria-label="Open a new agent"
-                title="New agent"
-                onClick={() => onNewAgent(activeMainChatTabKey)}
-              >
-                <NewAgentIcon />
-              </button>
-            ) : null}
+            {/* Always available: a reviewer armed while idle audits the very
+                next turn — the born-a-reviewer default is most useful BEFORE
+                the work starts, not only mid-turn. */}
+            <button
+              type="button"
+              className="composer-new-agent-button"
+              aria-label="Open a new reviewer agent"
+              title="New agent — born a reviewer"
+              onClick={() => onNewAgent(activeMainChatTabKey)}
+            >
+              <NewAgentIcon />
+            </button>
           </div>
           <Composer
             key={activeMainChatTabKey}
