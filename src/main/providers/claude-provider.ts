@@ -437,6 +437,39 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     throw new Error('the claude provider does not support plugins')
   }
 
+  private async discoverModels(): Promise<Model[]> {
+    const sdk = await import('@anthropic-ai/claude-agent-sdk')
+    const input = createInputStream()
+    const handle = sdk.query({
+      prompt: input.stream() as AsyncIterable<never>,
+      options: {
+        ...buildClaudeQueryOptions({
+          cwd: process.env.HOME ?? process.cwd(),
+          model: null,
+          effort: null,
+          fastMode: false,
+          claudeSessionId: null
+        }, null),
+        persistSession: false
+      }
+    })
+    try {
+      const models = await withTimeout(
+        handle.supportedModels(),
+        15_000,
+        'Claude model discovery timed out'
+      )
+      return buildClaudeModelCatalog(models as ClaudeSdkModelInfo[])
+    } finally {
+      input.end()
+      handle.close()
+    }
+  }
+
+  private supportsFastMode(model: string | null, requested: boolean): boolean {
+    return requested && this.modelsById.get(model ?? '')?.supportsFastMode === true
+  }
+
   // ---- lifecycle internals -------------------------------------------------
 
   private ensureSessionRecord(
@@ -526,13 +559,41 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
         input,
         interrupt: async () => {
           await handle.interrupt()
-        }
+        },
+        setModel: async (model) => {
+          await handle.setModel(model ?? undefined)
+        },
+        applySettings: async (settings) => {
+          await handle.applyFlagSettings({
+            effortLevel: settings.effort,
+            fastMode: settings.fastMode,
+            fastModePerSessionOptIn: true
+          } as never)
+        },
+        model: claudeRuntimeModel(session.model),
+        effort: session.effort,
+        fastMode: session.fastMode
       }
       session.runtime = runtime
       void this.consume(session, runtime, handle as AsyncIterable<unknown>)
     } catch (error) {
       this.releaseSlot(session)
       throw error
+    }
+  }
+
+  private async synchronizeRuntimeSettings(session: ClaudeSession): Promise<void> {
+    const runtime = session.runtime
+    if (!runtime) throw new Error('claude runtime is unavailable')
+    const model = claudeRuntimeModel(session.model)
+    if (runtime.model !== model) {
+      await runtime.setModel(model)
+      runtime.model = model
+    }
+    if (runtime.effort !== session.effort || runtime.fastMode !== session.fastMode) {
+      await runtime.applySettings({ effort: session.effort, fastMode: session.fastMode })
+      runtime.effort = session.effort
+      runtime.fastMode = session.fastMode
     }
   }
 
@@ -547,6 +608,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
           session.claudeSessionId = translation.sessionId
           void this.persistSessions()
         }
+        if (translation.model) session.resolvedModel = translation.model
         for (const notification of translation.notifications) this.emitNotification(notification)
         if (translation.turnEnded) this.finishTurn(session)
       }
@@ -707,7 +769,9 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       persisted[session.threadId] = {
         claudeSessionId: session.claudeSessionId,
         cwd: session.cwd,
-        model: session.model
+        model: session.model,
+        effort: session.effort,
+        fastMode: session.fastMode
       }
     }
     try {

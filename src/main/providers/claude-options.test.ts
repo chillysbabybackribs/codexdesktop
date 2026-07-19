@@ -6,6 +6,8 @@ test('bypass permission mode includes the SDK safety acknowledgement', () => {
   const options = buildClaudeQueryOptions({
     cwd: '/tmp/workspace',
     model: claudeDefaultModelId,
+    effort: null,
+    fastMode: false,
     claudeSessionId: null
   }, null)
 
@@ -19,11 +21,16 @@ test('resume, explicit model, and browser MCP configuration are forwarded', () =
   const browser = { type: 'sdk', name: 'browser' }
   const options = buildClaudeQueryOptions({
     cwd: '/tmp/workspace',
-    model: 'claude-opus-4-8',
+    model: 'claude:opus',
+    effort: 'max',
+    fastMode: true,
     claudeSessionId: 'session-123'
   }, browser)
 
-  assert.equal(options.model, 'claude-opus-4-8')
+  assert.equal(options.model, 'opus')
+  assert.equal(options.effort, 'max')
+  assert.equal(options.settings?.fastMode, true)
+  assert.equal(options.settings?.fastModePerSessionOptIn, true)
   assert.equal(options.resume, 'session-123')
   assert.equal(options.mcpServers?.browser, browser)
 })
