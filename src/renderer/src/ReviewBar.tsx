@@ -167,12 +167,7 @@ export function ReviewBar({
                     }
                   }}
                 >
-                  <span>{confirmingUndoAll ? 'Confirm undo all' : 'Undo all'}</span>
-                  <small>
-                    {confirmingUndoAll
-                      ? 'Restore every changed file'
-                      : 'Restore this turn’s changes'}
-                  </small>
+                  <span>{confirmingUndoAll ? 'Confirm undo?' : 'Undo all'}</span>
                 </button>
                 <button
                   type="button"
@@ -188,7 +183,6 @@ export function ReviewBar({
                     Always keep all
                     <span className="review-action-menu-check" aria-hidden="true">✓</span>
                   </span>
-                  <small>On · click to turn off</small>
                 </button>
                 <button
                   type="button"
@@ -200,7 +194,6 @@ export function ReviewBar({
                   }}
                 >
                   <span>Keep all</span>
-                  <small>Dismiss this change summary</small>
                 </button>
               </div>
             ) : null}
