@@ -4,7 +4,7 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
-import type { WebContents, WebFrameMain } from 'electron'
+import type { DownloadItem, WebContents, WebFrameMain } from 'electron'
 import type { TabManager } from './tab-manager.ts'
 import {
   BrowserAgentController,
@@ -16,6 +16,7 @@ import {
   buildPageExtractionProgram
 } from './browser-agent.ts'
 import { CdpArtifactStore } from './cdp-artifact-store.ts'
+import { browserDownloadCaptureBroker } from './browser-download-capture.ts'
 
 const onePixelPng = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL9WAAAAABJRU5ErkJggg=='
 const minimalPdf = Buffer.from('%PDF-1.4\nminimal\n%%EOF').toString('base64')
@@ -1192,6 +1193,56 @@ test('browser agent captures a bounded WebSocket stream and persists NDJSON in o
   assert.equal(lines[2].data, '{"delta":"two"}')
 })
 
+test('browser agent captures a true Chromium download handoff in one flow call', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-download-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/exports',
+    getTitle: () => 'Exports'
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-1', url: 'https://example.com/exports', title: 'Exports', active: true }],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      let savePath = ''
+      const item = Object.assign(new EventEmitter(), {
+        getURL: () => 'https://example.com/exports/archive.zip',
+        getFilename: () => 'archive.zip',
+        getMimeType: () => 'application/zip',
+        getTotalBytes: () => 8,
+        getReceivedBytes: () => 8,
+        setSavePath: (value: string) => { savePath = value },
+        isDestroyed: () => false,
+        cancel: () => {}
+      }) as unknown as DownloadItem
+      assert.equal(browserDownloadCaptureBroker.handleWillDownload(item, webContents), true)
+      await (await import('node:fs/promises')).writeFile(savePath, 'ZIPBYTES')
+      item.emit('done', {}, 'completed')
+      return { url: 'https://example.com/exports', durationMs: 3, domReadyMs: 2, settleMs: 1, settleReason: 'dom-ready' }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureNetwork({
+    url: 'https://example.com/exports',
+    match: { urlContains: '/exports/archive.zip' },
+    download: true
+  })
+
+  assert.equal(result.ok, true)
+  const download = (result.result as {
+    network: { download: { suggestedFilename: string; artifact: { artifactPath: string; kind: string } } }
+  }).network.download
+  assert.equal(download.suggestedFilename, 'archive.zip')
+  assert.equal(download.artifact.kind, 'download')
+  assert.equal(await (await import('node:fs/promises')).readFile(download.artifact.artifactPath, 'utf8'), 'ZIPBYTES')
+})
+
 test('browser network capture requires one trigger and a targeted URL matcher', async () => {
   const controller = new BrowserAgentController(() => null)
   assert.match((await controller.captureNetwork({ match: { urlContains: '/api' } })).error ?? '', /exactly one trigger/)
@@ -1201,6 +1252,9 @@ test('browser network capture requires one trigger and a targeted URL matcher', 
   })).error ?? '', /stream\.transport/)
   assert.match((await controller.captureNetwork({
     url: 'https://example.com', match: { urlContains: '/events' }, captureBody: true, stream: { transport: 'sse' }
+  })).error ?? '', /cannot combine/)
+  assert.match((await controller.captureNetwork({
+    url: 'https://example.com', match: { urlContains: '/download' }, captureBody: true, download: true
   })).error ?? '', /cannot combine/)
 })
 

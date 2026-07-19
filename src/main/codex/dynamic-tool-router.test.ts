@@ -133,6 +133,7 @@ test('dynamic tool router forwards one-call network capture without losing match
         statusMax: 299
       },
       captureBody: false,
+      download: false,
       stream: { transport: 'websocket', maxMessages: 25, idleMs: 250 },
       readySelector: '.results',
       quietMs: 80,
