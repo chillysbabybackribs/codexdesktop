@@ -1096,6 +1096,22 @@ export default function App(): React.JSX.Element {
         return;
       }
 
+      // A tagged child notification carries the spawning worker's agentKey. The
+      // worker session was created with a null threadId (the orchestrator
+      // announced it before its turn started), so bind the real child threadId
+      // the first time we see it — from then on the ordinary threadId routing
+      // in handleCodexNotification reaches the worker.
+      if (event.agentKey) {
+        const childThreadId = (event.notification as { params?: { threadId?: string } } | undefined)
+          ?.params?.threadId;
+        if (childThreadId) {
+          const worker = agentSessionsRef.current.find((session) => session.key === event.agentKey);
+          if (worker && worker.threadId !== childThreadId) {
+            patchAgentSession(event.agentKey, (session) => ({ ...session, threadId: childThreadId }));
+          }
+        }
+      }
+
       handleCodexNotification(event.notification as ServerNotification);
     });
 
@@ -1628,18 +1644,26 @@ export default function App(): React.JSX.Element {
     }
   };
 
-  const handleNewMainChatTab = (): boolean => {
+  const handleNewMainChatTab = (requestedSide: BrowserMiddleSide | null = null): boolean => {
     if (isMainChatTransitionLocked() || mainChatTabStateRef.current.tabs.length >= maxMainChatTabs)
       return false;
     flushActiveMainChatSession();
     cancelAutoRecovery();
     setIsThreadMenuOpen(false);
+    const active = mainChatTabStateRef.current.tabs.find(
+      (tab) => tab.key === activeMainChatTabKeyRef.current,
+    );
+    const browserMiddleSide =
+      workspaceLayoutMode === 'browser-middle'
+        ? requestedSide ?? active?.browserMiddleSide ?? 'left'
+        : null;
     const tab = createMainChatTab(
       crypto.randomUUID(),
       null,
       'New Chat',
       selectedModelRef.current,
       selectedReasoningEffortRef.current,
+      browserMiddleSide,
     );
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }));
     focusMainChatTab(tab);
@@ -1777,6 +1801,8 @@ export default function App(): React.JSX.Element {
 
     const previousState = mainChatTabStateRef.current;
     const current = previousState.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current);
+    const browserMiddleSide =
+      workspaceLayoutMode === 'browser-middle' ? current?.browserMiddleSide ?? 'left' : null;
     const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0);
     if (!reuseCurrent && previousState.tabs.length >= maxMainChatTabs) return false;
     const target = reuseCurrent
@@ -1791,6 +1817,7 @@ export default function App(): React.JSX.Element {
           threads.find((thread) => thread.id === threadId)?.name ?? 'Chat',
           selectedModelRef.current,
           selectedReasoningEffortRef.current,
+          browserMiddleSide,
         );
 
     flushActiveMainChatSession();
