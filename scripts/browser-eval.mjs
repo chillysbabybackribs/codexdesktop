@@ -629,7 +629,7 @@ async function routeModelBrowserTool(params, context) {
       timeoutMs: clampNumber(args.timeoutMs, 15_000, 250, 60_000),
       maxResultChars: clampNumber(args.maxResultChars, 20_000, 1_000, 100_000)
     })
-    if (response.url && !isRedditNotificationsUrl(response.url)) {
+    if (response.url && !context.scenario.matchesUrl(response.url)) {
       throw new Error(`Browser target left Reddit notifications: ${response.url}`)
     }
     return hostToolResponse(response)
@@ -708,17 +708,15 @@ function validateReadOnlyCdp(args) {
 }
 
 async function captureOracle(context) {
-  const response = await postEval(context, ORACLE_PROGRAM, { timeoutMs: 5_000, maxResultChars: 20_000 })
-  if (!response.ok) throw new Error(`Could not capture Reddit oracle: ${response.error ?? 'unknown error'}`)
+  const response = await postEval(context, context.scenario.oracleProgram, { timeoutMs: 5_000, maxResultChars: 20_000 })
+  if (!response.ok) throw new Error(`Could not capture ${context.scenario.pageLabel} oracle: ${response.error ?? 'unknown error'}`)
   const result = asRecord(response.result)
-  if (result.url !== context.expectedUrl) throw new Error(`Reddit oracle URL changed to ${String(result.url)}`)
-  if (!Array.isArray(result.rows) || result.rows.length !== 3) {
-    throw new Error(`Expected exactly 3 Reddit notification rows, found ${Array.isArray(result.rows) ? result.rows.length : 0}`)
-  }
+  if (result.url !== context.expectedUrl) throw new Error(`${context.scenario.pageLabel} oracle URL changed to ${String(result.url)}`)
+  context.scenario.validateOracle(result)
   return result
 }
 
-function evaluateSnapshot(snapshot, oracle) {
+function evaluateRedditSnapshot(snapshot, oracle) {
   const items = Array.isArray(snapshot.items) ? snapshot.items.map(asRecord) : []
   const used = new Set()
   const matches = oracle.rows.map((row) => {
@@ -751,10 +749,10 @@ function evaluateSnapshot(snapshot, oracle) {
       score: bestScore
     }
   })
-  return { matches, exactThreeAndState: matches.every(({ matched, correctState }) => matched && correctState) }
+  return { matches, exactSnapshot: matches.every(({ matched, correctState }) => matched && correctState) }
 }
 
-function evaluateModelResponse(finalResponse, oracle) {
+function evaluateRedditModelResponse(finalResponse, oracle) {
   const lines = finalResponse.split(/\n+/).map((line) => line.trim()).filter(Boolean)
   const used = new Set()
   const matches = oracle.rows.map((row) => {
@@ -784,10 +782,68 @@ function evaluateModelResponse(finalResponse, oracle) {
   })
   const ordered = matches.every((match, index) => index === 0 || match.lineIndex > matches[index - 1].lineIndex)
   return {
-    exactThreeAndState: matches.every(({ matched, correctState }) => matched && correctState) && ordered,
+    exactResponse: matches.every(({ matched, correctState }) => matched && correctState) && ordered,
     ordered,
     matches
   }
+}
+
+function validateRedditOracle(oracle) {
+  if (!Array.isArray(oracle.rows) || oracle.rows.length !== 3) {
+    throw new Error(`Expected exactly 3 Reddit notification rows, found ${Array.isArray(oracle.rows) ? oracle.rows.length : 0}`)
+  }
+}
+
+function projectRedditOracle(oracle) {
+  return {
+    url: oracle.url,
+    rows: oracle.rows.map(({ id, unread, read, text, href, datetime }) => ({ id, unread, read, text, href, datetime }))
+  }
+}
+
+function evaluateHackerNewsSnapshot(snapshot, oracle) {
+  const coverage = asRecord(snapshot.coverage)
+  const gaps = Array.isArray(coverage.gaps) ? coverage.gaps : []
+  const expectedGapSet = new Set(['ranking', 'title', 'link'])
+  return {
+    exactSnapshot: false,
+    expectedStructuredListGap: gaps.length > 0 && gaps.every((gap) => expectedGapSet.has(gap)),
+    observedGaps: gaps,
+    expectedCount: oracle.rows.length
+  }
+}
+
+function evaluateHackerNewsModelResponse(finalResponse, oracle) {
+  const lines = finalResponse.split(/\n+/).map((line) => line.trim()).filter(Boolean)
+  const matches = oracle.rows.map((row) => {
+    const lineIndex = lines.findIndex((line) => line.toLowerCase().includes(row.title.toLowerCase()))
+    const line = lineIndex >= 0 ? lines[lineIndex] : ''
+    const points = Number.parseInt(line.match(/(\d+)\s+points?\b/i)?.[1] || '', 10)
+    return {
+      rank: row.rank,
+      matched: Boolean(line),
+      correctPoints: points === row.points,
+      correctLink: line.includes(row.href),
+      lineIndex,
+      line
+    }
+  })
+  const ordered = matches.every((match, index) => index === 0 || match.lineIndex > matches[index - 1].lineIndex)
+  return {
+    exactResponse: matches.every(({ matched, correctPoints, correctLink }) => matched && correctPoints && correctLink) && ordered,
+    ordered,
+    matches
+  }
+}
+
+function validateHackerNewsOracle(oracle) {
+  if (!Array.isArray(oracle.rows) || oracle.rows.length !== 10 || oracle.rows.some(({ title, href, points }) => !title || !href || !Number.isFinite(points))) {
+    throw new Error('Expected 10 Hacker News rows with a title, direct link, and points.')
+  }
+}
+
+function projectHackerNewsOracle(oracle) {
+  return { url: oracle.url, rows: oracle.rows.map(({ rank, title, href, points }) => ({ rank, title, href, points })) }
 }
 
 function identityOverlap(row, candidate) {
@@ -824,7 +880,7 @@ async function postEval(context, code, options) {
     maxResultChars: String(options.maxResultChars)
   })
   const response = await socketJson(context.socketPath, 'POST', `/eval?${query}`, code, 'application/javascript')
-  if (response.url && !isRedditNotificationsUrl(response.url)) throw new Error(`Browser target left Reddit notifications: ${response.url}`)
+  if (response.url && !context.scenario.matchesUrl(response.url)) throw new Error(`Browser target left ${context.scenario.pageLabel}: ${response.url}`)
   return response
 }
 
@@ -835,8 +891,8 @@ async function postSnapshot(context, args) {
   }
   try {
     const response = await socketJson(context.socketPath, 'POST', '/snapshot', request)
-    if (response.url && !isRedditNotificationsUrl(response.url)) {
-      throw new Error(`Browser target left Reddit notifications: ${response.url}`)
+    if (response.url && !context.scenario.matchesUrl(response.url)) {
+      throw new Error(`Browser target left ${context.scenario.pageLabel}: ${response.url}`)
     }
     return { response, transport: 'browser-control:/snapshot' }
   } catch (error) {
