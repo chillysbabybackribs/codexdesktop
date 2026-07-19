@@ -126,6 +126,7 @@ import {
   parseBrowserMiddleColumnWidths,
   parseWorkspaceLayoutMode,
   serializeBrowserMiddleColumnWidths,
+  showChatAtFullHeight,
   type BrowserMiddleActiveTabKeys,
   type BrowserMiddleTabKeys,
   type BrowserMiddleColumnWidths,
@@ -1685,6 +1686,10 @@ export default function App(): React.JSX.Element {
       selectedReasoningEffortRef.current,
       browserMiddleSide,
     );
+    // New-tab creation is intentionally not a split command. The fresh chat
+    // owns the full chat height; users can drag tabs onto pane edges when they
+    // want a horizontal or vertical split.
+    updateChatSplitLayout((layout) => showChatAtFullHeight(layout, tab.key, browserMiddleSide));
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }));
     focusMainChatTab(tab);
     persistLastThreadId(null);

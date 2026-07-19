@@ -62,6 +62,23 @@ export function browserMiddleChatLayout(
   };
 }
 
+/**
+ * Make a newly created chat the only pane in its chat region. In the ordinary
+ * workspace that means the whole chat surface; in browser-middle it collapses
+ * only the originating column and leaves the opposite column untouched.
+ */
+export function showChatAtFullHeight(
+  layout: SplitNode,
+  tabKey: string,
+  side: BrowserMiddleSide | null,
+): SplitNode {
+  if (!side) return splitLeaf(tabKey);
+  if (layout.kind !== 'split' || layout.direction !== 'row') return splitLeaf(tabKey);
+  return side === 'left'
+    ? { ...layout, first: splitLeaf(tabKey) }
+    : { ...layout, second: splitLeaf(tabKey) };
+}
+
 function visibleKeysForSide(
   layout: SplitNode,
   side: BrowserMiddleSide,

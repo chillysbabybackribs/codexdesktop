@@ -7,6 +7,7 @@ import {
   parseBrowserMiddleColumnWidths,
   parseWorkspaceLayoutMode,
   serializeBrowserMiddleColumnWidths,
+  showChatAtFullHeight,
 } from './workspace-layout.ts';
 
 test('browser-middle creates a chat on both sides from a one-pane layout', () => {
@@ -136,6 +137,36 @@ test('browser-middle preserves a user-created stack when selecting another tab',
     },
     second: splitLeaf('right-one'),
   });
+});
+
+test('a new chat collapses only its browser-middle column to full height', () => {
+  const rightColumn: SplitNode = {
+    kind: 'split',
+    direction: 'column',
+    ratio: 0.5,
+    first: splitLeaf('right-top'),
+    second: splitLeaf('right-bottom'),
+  };
+  const layout: SplitNode = {
+    kind: 'split',
+    direction: 'row',
+    ratio: 0.5,
+    first: {
+      kind: 'split',
+      direction: 'column',
+      ratio: 0.5,
+      first: splitLeaf('left-top'),
+      second: splitLeaf('left-bottom'),
+    },
+    second: rightColumn,
+  };
+
+  assert.deepEqual(showChatAtFullHeight(layout, 'left-new', 'left'), {
+    ...layout,
+    first: splitLeaf('left-new'),
+    second: rightColumn,
+  });
+  assert.deepEqual(showChatAtFullHeight(layout, 'standalone-new', null), splitLeaf('standalone-new'));
 });
 
 test('workspace-layout persistence rejects malformed values', () => {
