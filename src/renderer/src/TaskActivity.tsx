@@ -440,15 +440,36 @@ function reasoningText(item: ReasoningItem): string {
   return item.content.map((part) => part.trim()).filter(Boolean).join('\n\n')
 }
 
-// The streamed model narration renders as bare muted text — no per-block
-// "Thought" header (the live tail already signals thinking, and the narration
-// carries its own headlines).
-function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boolean }): React.JSX.Element | null {
+// Cursor-style collapsed thinking: a "Thought for Xs" disclosure header with a
+// hover chevron. While streaming, the header shimmers with a live elapsed
+// label; expanding works mid-stream (the body auto-follows its own growth).
+function ThoughtBlock({
+  item,
+  meta,
+  streaming
+}: {
+  item: ReasoningItem
+  meta: ItemMeta | undefined
+  streaming: boolean
+}): React.JSX.Element | null {
+  const [expanded, setExpanded] = useState(false)
+  const now = useNow(streaming)
   const text = reasoningText(item)
 
-  if (!text) {
+  if (!text && !streaming) {
     return null
   }
+
+  const elapsedMs = streaming && meta?.startedAtMs ? Math.max(0, now - meta.startedAtMs) : null
+  const durationMs =
+    !streaming && meta?.startedAtMs && meta?.completedAtMs ? Math.max(0, meta.completedAtMs - meta.startedAtMs) : null
+  const label = streaming
+    ? elapsedMs !== null && elapsedMs >= 3000
+      ? `Thinking · ${fmtDuration(elapsedMs)}`
+      : 'Thinking'
+    : durationMs !== null
+      ? `Thought for ${fmtDuration(durationMs)}`
+      : 'Thought'
 
   const body = (
     <div className="thought-text">
@@ -457,8 +478,20 @@ function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boo
   )
 
   return (
-    <div className={`thought-block ${streaming ? 'is-streaming' : ''}`}>
-      {streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body}
+    <div
+      className={`thought-block ${streaming ? 'is-streaming' : ''}${expanded ? ' is-expanded' : ''}`}
+    >
+      <button
+        type="button"
+        className="thought-toggle"
+        aria-expanded={expanded}
+        disabled={!text}
+        onClick={() => setExpanded((value) => !value)}
+      >
+        <span className={`thought-label${streaming ? ' shimmer-text' : ''}`}>{label}</span>
+        <ChevronDownIcon className="thought-chevron" />
+      </button>
+      {expanded && text ? (streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body) : null}
     </div>
   )
 }
@@ -645,6 +678,9 @@ function DiffCard({
     [diff, kind.type]
   )
   const running = status === 'running'
+  // Syntax highlighting is deferred until the edit settles — live patches
+  // re-render per delta and tokenizing every visible line each frame is waste.
+  const lang = useMemo(() => (running ? null : langForPath(path)), [running, path])
 
   const kindBadge =
     kind.type === 'add' ? 'new' : kind.type === 'delete' ? 'deleted' : kind.move_path ? 'renamed' : null
@@ -676,11 +712,11 @@ function DiffCard({
       {parsed.lines.length > 0 ? (
         running ? (
           <AutoFollow className="diff-body is-live">
-            <DiffLines lines={parsed.lines} />
+            <DiffLines lines={parsed.lines} lang={null} />
           </AutoFollow>
         ) : (
           <div className="diff-body">
-            <DiffLines lines={shownLines} />
+            <DiffLines lines={shownLines} lang={lang} />
             {overflow > 0 ? (
               <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
                 ⋯ show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
@@ -1121,7 +1157,7 @@ const WorkBlock = memo(function WorkBlock({
 }): React.JSX.Element | null {
   switch (item.type) {
     case 'reasoning':
-      return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
+      return <ThoughtBlock item={item} meta={meta} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'plan':
       return <PlanTextBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'turnPlan':
