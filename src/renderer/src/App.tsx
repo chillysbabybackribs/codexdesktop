@@ -5570,13 +5570,35 @@ function Composer({
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0);
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/);
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null;
-  const hasDraft = Boolean(value.trim() || attachments.length);
+  const hasDraft = Boolean(value.trim() || attachments.length || mentions.length);
   const isQuietStatus = status === 'idle' || status === 'ready';
   const visibleStatus = attachmentError ?? (isTurnActive || isQuietStatus ? null : status);
 
   useEffect(() => {
-    composerDrafts.set(draftKey, { value, attachments });
-  }, [draftKey, value, attachments]);
+    composerDrafts.set(draftKey, { value, attachments, mentions });
+  }, [draftKey, value, attachments, mentions]);
+
+  // Workspace file index for @-mentions: fetched when a mention token opens,
+  // cached for the life of that menu (the main process caches the git listing
+  // too, so re-opens stay cheap).
+  useEffect(() => {
+    if (pluginQuery === null || !workspace) {
+      setMentionIndex(null);
+      return;
+    }
+    if (mentionIndex) return;
+    let cancelled = false;
+    void window.api.mentions.index({ workspace }).then(
+      (result) => {
+        if (!cancelled) setMentionIndex(result);
+      },
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pluginQuery === null, workspace]);
 
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
