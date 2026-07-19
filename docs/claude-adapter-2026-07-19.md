@@ -54,7 +54,14 @@ unchanged because the adapter speaks the shared notification vocabulary.
 - Claude history pages are empty on resume — the transcript cache paints
   history; live turns stream. Claude threads don't appear in the thread-menu
   history list (codex-only listing).
-- Browser tools are not yet exposed to Claude sessions (Claude's built-in
-  Bash/Edit tools work); wiring the in-process MCP server
-  (`createSdkMcpServer` over the neutral registry) is the designated
-  fast-follow.
+- ~~Browser tools not yet exposed~~ **DONE (same session)**: Claude sessions
+  get all 10 browser tools via an in-process MCP server
+  (`src/main/providers/claude-mcp-tools.ts` — JSON-schema→zod conversion of
+  the canonical specs, handlers calling `runBrowserTool` directly, ownerless
+  like the socket transport; wired through `mcpServers` in the provider).
+  Verified: 369/369 tests (converter/required-ness/handler-mapping suite) and
+  live — a Claude turn called `browser_navigate` through the in-process
+  server, the EMBEDDED browser actually navigated (ground-truthed via the
+  control socket's tab list), and Claude answered with the page title.
+  Claude's shell can also reach the socket transport (`CODEX_BROWSER_SOCK`
+  is inherited), matching codex's two-lane tool access exactly.
