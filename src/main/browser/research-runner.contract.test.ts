@@ -21,4 +21,19 @@ test('research runner stays artifact-first without creating or activating visibl
   assert.match(source, /STATIC_PREFLIGHT_MAX_BYTES = 750_000/)
   assert.match(source, /PAGE_WORKER_CONCURRENCY = 3/)
   assert.doesNotMatch(source, /MAX_TARGET_PAGES|DEFAULT_TARGET_PAGES|maxPages/)
+
+  // Both fetch lanes must apply the same page assessment: without the static
+  // lane assessing, an HTTP error body with enough text is silently verified.
+  assert.match(source, /const staticAssessment = assessExtractedPage\(extracted\)/)
+  assert.match(source, /assessExtractedPage\(result\)/)
+  // HTTP failures must surface their status code instead of reading as
+  // "page had no usable content".
+  assert.match(source, /http-error \(status \$\{extracted\.status\}/)
+  assert.match(source, /\(status \$\{result\.status\}\)/)
+  // Direct URLs that redirect cross-host onto a nav hub are followed one hop.
+  assert.match(source, /harvestRedirectHubLinks/)
+  assert.match(source, /extractSameHostNavLinks/)
+  assert.match(source, /isCrossHostLanding/)
+  assert.match(source, /MAX_REDIRECT_FOLLOW_UPS = 16/)
+  assert.match(source, /REDIRECT_HUB_LINK_LIMIT = 8/)
 })
