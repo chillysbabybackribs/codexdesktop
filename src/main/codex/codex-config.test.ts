@@ -8,6 +8,7 @@ import {
   isFastPathTask,
   isInteractiveBrowserTask,
   isLightweightVisualCheck,
+  isLiveSiteCloneTask,
   isReadOnlyBrowserMicrotask,
   isWebResearchTask,
   resolveTurnPolicy,
@@ -52,6 +53,14 @@ const editorialWaitlistSkill: SkillMetadata = {
   name: 'superdesign-editorial-waitlist',
   description: 'Build editorial waitlist landing pages with the Superdesign reference contract',
   path: '/app/skills/superdesign-editorial-waitlist/SKILL.md',
+  scope: 'user',
+  enabled: true
+}
+
+const cloneLiveSiteSkill: SkillMetadata = {
+  name: 'clone-live-site',
+  description: 'Faithfully clone a permitted live site as a local frontend',
+  path: '/app/skills/clone-live-site/SKILL.md',
   scope: 'user',
   enabled: true
 }
@@ -139,6 +148,28 @@ test('ordinary waitlist requests do not force the editorial reference skill', ()
     selectTurnSkills('Build a simple waitlist landing page for a new app', [editorialWaitlistSkill]),
     []
   )
+})
+
+test('exact live-site clone requests attach clone and polished UI guidance', () => {
+  const prompt = 'Clone https://example.com as an interactive local website'
+
+  assert.equal(isLiveSiteCloneTask(prompt), true)
+  assert.deepEqual(
+    selectTurnSkills(prompt, [cloneLiveSiteSkill, polishedUiSkill]),
+    [cloneLiveSiteSkill, polishedUiSkill]
+  )
+})
+
+test('site redesign and inspiration requests do not attach the clone workflow', () => {
+  for (const prompt of [
+    'Build a better website like https://example.com',
+    'Redesign https://example.com as a premium responsive website',
+    'Improve the current website UI',
+    'Create a site inspired by https://example.com'
+  ]) {
+    assert.equal(isLiveSiteCloneTask(prompt), false, prompt)
+    assert.deepEqual(selectTurnSkills(prompt, [cloneLiveSiteSkill]), [], prompt)
+  }
 })
 
 test('unrelated coding turns do not load the polished UI skill', () => {

@@ -164,9 +164,22 @@ export function shouldAttachPriorChatMemory(text: string): boolean {
   )
 }
 
+export function isLiveSiteCloneTask(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (!normalized) return false
+
+  const cloneIntent = /\b(clone|recreate|replicate|mirror)\b/.test(normalized)
+  const liveSiteTarget = /https?:\/\//.test(normalized) ||
+    /\b(?:this|the|current|existing|live|target)\s+(?:site|website|webpage|web page|page|frontend|front-end)\b/.test(normalized)
+  const redesignIntent = /\b(like|better|redesign|improve|inspired by|in the style of)\b/.test(normalized)
+
+  return cloneIntent && liveSiteTarget && !redesignIntent
+}
+
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
   const normalized = text.trim().toLowerCase()
   const webResearchTask = isWebResearchTask(text)
+  const liveSiteCloneTask = isLiveSiteCloneTask(text)
   const polishedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
@@ -192,7 +205,11 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
       return editorialWaitlistTask
     }
 
-    return skill.name === 'build-polished-ui' && polishedUiTask
+    if (skill.name === 'clone-live-site') {
+      return liveSiteCloneTask
+    }
+
+    return skill.name === 'build-polished-ui' && (polishedUiTask || liveSiteCloneTask)
   })
 }
 
