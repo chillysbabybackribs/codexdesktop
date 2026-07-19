@@ -12,6 +12,8 @@ import type {
   ImageViewPreviewResult,
   BackgroundTurnNotificationParams,
   BrowserBounds,
+  BrowserMenuAnchor,
+  BrowserMenuItem,
   OmniboxAnchor,
   OmniboxQueryResult,
   TraceLoadParams,
@@ -31,6 +33,7 @@ import type {
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
+import { BrowserMenuPopup } from './browser/browser-menu-popup.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
 import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
@@ -90,6 +93,7 @@ if (!hasSingleInstanceLock) {
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
+let browserMenuPopup: BrowserMenuPopup | null = null
 let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
@@ -231,6 +235,34 @@ function createWindow(): void {
     }
   })
 
+  browserMenuPopup = new BrowserMenuPopup(
+    mainWindow,
+    (command) => {
+      const activeTabId = tabManager?.getActiveTabId()
+
+      switch (command) {
+        case 'find':
+          sendToMainRenderer(ipcChannels.browserFindRequested, undefined)
+          break
+        case 'fullscreen':
+          sendToMainRenderer(ipcChannels.browserFullscreenToggleRequested, undefined)
+          break
+        case 'mute':
+          if (activeTabId) tabManager?.toggleMute(activeTabId)
+          break
+        case 'vpn':
+          void vpnManager.toggle()
+          break
+        case 'zoom-out':
+        case 'zoom-reset':
+        case 'zoom-in':
+          if (activeTabId) tabManager?.zoom(activeTabId, command === 'zoom-out' ? 'out' : command === 'zoom-in' ? 'in' : 'reset')
+          break
+      }
+    },
+    () => sendToMainRenderer(ipcChannels.browserMenuClosed, undefined)
+  )
+
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
     void restoreBrowserTabs().finally(() => {
@@ -244,6 +276,7 @@ function createWindow(): void {
   // document.activeElement), so dismiss it here when the window loses focus.
   mainWindow.on('blur', () => {
     omniboxPopup?.hide()
+    browserMenuPopup?.hide()
   })
 
   // Capture while the native views still exist. On macOS a normal window
@@ -260,6 +293,8 @@ function createWindow(): void {
     tabManager?.dispose()
     omniboxPopup?.dispose()
     omniboxPopup = null
+    browserMenuPopup?.dispose()
+    browserMenuPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -494,6 +529,10 @@ function registerIpc(): void {
   )
   ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))
   ipcMain.handle(ipcChannels.browserOmniboxClose, () => omniboxPopup?.hide())
+  ipcMain.handle(ipcChannels.browserMenuOpen, (_event, anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
+    browserMenuPopup?.show(anchor, items))
+  ipcMain.handle(ipcChannels.browserMenuUpdate, (_event, items: BrowserMenuItem[]) => browserMenuPopup?.update(items))
+  ipcMain.handle(ipcChannels.browserMenuClose, () => browserMenuPopup?.hide())
 
   ipcMain.handle(
     ipcChannels.notificationBackgroundTurn,
