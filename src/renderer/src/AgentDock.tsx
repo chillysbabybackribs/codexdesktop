@@ -740,14 +740,14 @@ const AgentWindow = memo(function AgentWindow({
               <span className="agent-audit-live-pulse" aria-hidden="true" />
               <div className="agent-audit-live-copy">
                 <span className="agent-audit-live-title shimmer-text">Watching main chat</span>
+                {liveMainTurn.lastStep ? (
+                  <GlanceActionLine className="agent-audit-live-step" text={liveMainTurn.lastStep} />
+                ) : null}
                 <span className="agent-audit-live-stats">
                   {liveMainTurn.stepCount} step{liveMainTurn.stepCount === 1 ? '' : 's'}
                   {' · '}
                   {liveMainTurn.fileCount} file{liveMainTurn.fileCount === 1 ? '' : 's'} touched
                 </span>
-                {liveMainTurn.lastStep ? (
-                  <code className="agent-audit-live-step">{liveMainTurn.lastStep}</code>
-                ) : null}
               </div>
             </div>
           ) : null}
@@ -922,6 +922,16 @@ function AgentContextPill({
   )
 }
 
+// The glance caption is prose ("Checking git status") except when narration
+// fell back to the raw command line — keep that in code so it reads as one.
+function GlanceActionLine({ text, className }: { text: string; className: string }): React.JSX.Element {
+  return text.startsWith('$ ') ? (
+    <code className={className}>{text}</code>
+  ) : (
+    <span className={className}>{text}</span>
+  )
+}
+
 // Centered standby for an armed auditor with no conversation yet: waiting for
 // the main chat, then live progress from the auditor's POV once a turn runs.
 // `note` explains the last turn that completed without triggering an audit.
@@ -938,12 +948,14 @@ function AuditStandby({
       {live ? (
         <>
           <span className="agent-standby-title shimmer-text">Watching main chat</span>
+          {live.lastStep ? (
+            <GlanceActionLine className="agent-standby-action" text={live.lastStep} />
+          ) : null}
           <span className="agent-standby-meta">
             {live.stepCount} step{live.stepCount === 1 ? '' : 's'}
             {' · '}
             {live.fileCount} file{live.fileCount === 1 ? '' : 's'} touched
           </span>
-          {live.lastStep ? <code className="agent-standby-step">{live.lastStep}</code> : null}
         </>
       ) : (
         <>
