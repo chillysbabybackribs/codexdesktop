@@ -402,12 +402,8 @@ export function ChatPane({
           <EffortSelector
             models={models}
             selectedModel={tab?.model ?? null}
-            selectedEffort={
-              (tab?.reasoningEffort as ReasoningEffort | null | undefined) ?? null
-            }
-            onSelectEffort={(model, effort) =>
-              void selectPaneModelEffort(tabKey, model, effort)
-            }
+            selectedEffort={(tab?.reasoningEffort as ReasoningEffort | null | undefined) ?? null}
+            onSelectEffort={(model, effort) => void selectPaneModelEffort(tabKey, model, effort)}
           />
         </div>
       </div>

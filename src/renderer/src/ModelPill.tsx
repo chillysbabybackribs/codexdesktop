@@ -210,7 +210,10 @@ export function EffortSelector({
                       if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
                       event.preventDefault();
                       const direction = event.key === 'ArrowRight' ? 1 : -1;
-                      const nextIndex = Math.min(efforts.length - 1, Math.max(0, index + direction));
+                      const nextIndex = Math.min(
+                        efforts.length - 1,
+                        Math.max(0, index + direction),
+                      );
                       const next = efforts[nextIndex];
                       if (next) selectEffort(next.reasoningEffort);
                     }}
@@ -221,7 +224,9 @@ export function EffortSelector({
               })}
             </div>
             <div className="effort-menu-description">
-              {activeIndex >= 0 ? efforts[activeIndex]?.description : 'Choose how deeply the model reasons.'}
+              {activeIndex >= 0
+                ? efforts[activeIndex]?.description
+                : 'Choose how deeply the model reasons.'}
             </div>
           </div>
         </div>
