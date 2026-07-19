@@ -115,7 +115,7 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import { useAgentSessions } from './useAgentSessions';
-import { agentSessionsForMainChatTab, latestAuditReport } from './agent-session-model';
+import { agentSessionsForMainChatTab, defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   pluginInstallParams,
   pluginUninstallId,
@@ -250,6 +250,10 @@ export default function App(): React.JSX.Element {
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
   const sessionStoreRef = useRef<SessionStore>(null as unknown as SessionStore);
   if (!sessionStoreRef.current) sessionStoreRef.current = new SessionStore();
+  // Declared before useAgentSessions so its reviewer-model derivation can
+  // close over them; synced further down alongside the other mirrors.
+  const selectedModelRef = useRef<string | null>(selectedModel);
+  const modelsRef = useRef<Model[]>(models);
   const {
     agentSessions,
     openAgentKeys,
@@ -275,11 +279,20 @@ export default function App(): React.JSX.Element {
     handleToggleWatchAgent,
     handleToggleAuditAgent,
     handleToggleReportAgent,
+    handleDecideSendPolicy,
     handleSetAgentModel,
-  } = useAgentSessions(agentDockStorageKey, sessionStoreRef.current, {
-    schedule: maybeScheduleAgentRecovery,
-    cancel: cancelAgentRecovery,
-  });
+  } = useAgentSessions(
+    agentDockStorageKey,
+    sessionStoreRef.current,
+    {
+      schedule: maybeScheduleAgentRecovery,
+      cancel: cancelAgentRecovery,
+    },
+    // Cross-family reviewer default: derived against the active tab's model
+    // at the moment an agent is born or armed. Null (single provider) makes
+    // the agent follow the main chat's model — the correct fallback.
+    () => defaultReviewerModel(selectedModelRef.current, modelsRef.current),
+  );
   const appRef = useRef<HTMLDivElement | null>(null);
   const viewHostRef = useRef<HTMLDivElement | null>(null);
   const pendingBoundsRef = useRef<BrowserBounds | null>(null);
