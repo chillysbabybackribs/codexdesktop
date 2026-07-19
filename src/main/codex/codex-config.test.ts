@@ -263,7 +263,7 @@ test('simple read-only browser tasks use the fastest supported effort while comp
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'ui_review', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')
@@ -287,6 +287,25 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.equal(uiReview?.type, 'function')
   if (!uiReview || uiReview.type !== 'function') assert.fail('ui_review function tool is missing')
   assert.deepEqual(Object.keys((uiReview.inputSchema as { properties: Record<string, unknown> }).properties), ['tab', 'viewports'])
+  const browserFlow = browserDynamicTools.find(({ name }) => name === 'browser_flow')
+  assert.equal(browserFlow?.type, 'function')
+  if (!browserFlow || browserFlow.type !== 'function') assert.fail('browser_flow function tool is missing')
+  const flowSchema = browserFlow.inputSchema as {
+    required?: string[]
+    properties: {
+      steps?: {
+        minItems?: number
+        maxItems?: number
+        items?: { properties?: Record<string, { enum?: string[]; description?: string }> }
+      }
+    }
+  }
+  assert.deepEqual(flowSchema.required, ['steps'])
+  assert.equal(flowSchema.properties.steps?.minItems, 1)
+  assert.equal(flowSchema.properties.steps?.maxItems, 24)
+  assert.deepEqual(flowSchema.properties.steps?.items?.properties?.type?.enum, ['fill', 'click', 'submit', 'wait', 'find'])
+  assert.deepEqual(flowSchema.properties.steps?.items?.properties?.onMissing?.enum, ['stop', 'error'])
+  assert.match(browserFlow.description, /missing find is successful/i)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')
