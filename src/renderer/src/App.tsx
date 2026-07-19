@@ -1042,6 +1042,15 @@ export default function App(): React.JSX.Element {
     )
   }
 
+  function unsubscribeDetachedMainThread(threadId: string): void {
+    // This thread no longer has a renderer owner. The request is best-effort,
+    // but a failure must remain diagnosable: otherwise an app-server outage
+    // leaves an invisible subscription behind with no recovery signal.
+    void window.api.codex.unsubscribeThread(threadId).catch((error) => {
+      console.warn(`Failed to unsubscribe detached main thread ${threadId}`, error)
+    })
+  }
+
   const handleNewThread = (): void => {
     if (isMainChatTransitionLocked() || activeTurnIdRef.current) return
     const previousThreadId = activeThreadIdRef.current
@@ -1089,7 +1098,7 @@ export default function App(): React.JSX.Element {
       !backgroundSessionForThread(previousThreadId) &&
       !mainChatTabStateRef.current.tabs.some((tab) => tab.key !== tabKey && tab.threadId === previousThreadId)
     ) {
-      void window.api.codex.unsubscribeThread(previousThreadId).catch(() => {})
+      unsubscribeDetachedMainThread(previousThreadId)
     }
   }
 
@@ -1185,7 +1194,7 @@ export default function App(): React.JSX.Element {
     updateMainChatTabs(() => next)
 
     if (closing.threadId) {
-      void window.api.codex.unsubscribeThread(closing.threadId).catch(() => {})
+      unsubscribeDetachedMainThread(closing.threadId)
     }
     if (!wasActive) return
 
