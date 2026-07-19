@@ -52,6 +52,7 @@ export function AgentColumn({
   onResetSession,
   onPromote,
   onToggleWatch,
+  onToggleAudit,
   onSend,
   onSteer,
   onStop,
@@ -70,6 +71,7 @@ export function AgentColumn({
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
+  onToggleAudit: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -147,6 +149,7 @@ export function AgentColumn({
             onResetSession={onResetSession}
             onPromote={onPromote}
             onToggleWatch={onToggleWatch}
+            onToggleAudit={onToggleAudit}
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
@@ -199,6 +202,7 @@ type AgentWindowProps = {
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
   onToggleWatch: (key: string) => void
+  onToggleAudit: (key: string) => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -219,6 +223,7 @@ const AgentWindow = memo(function AgentWindow({
   onResetSession,
   onPromote,
   onToggleWatch,
+  onToggleAudit,
   onSend,
   onSteer,
   onStop,
@@ -384,6 +389,29 @@ const AgentWindow = memo(function AgentWindow({
                 </span>
                 <span className={`agent-menu-status ${session.watchesMain ? 'is-active' : ''}`}>
                   {session.watchesMain ? 'On' : 'Off'}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.auditsMain}
+                onClick={() => {
+                  onToggleAudit(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.auditsMain ? 'Auditing main-chat turns' : 'Audit main-chat turns'}</strong>
+                  <small>
+                    {session.auditsMain
+                      ? 'Reviews the diff after each file-changing turn'
+                      : 'Auto-review file changes (defaults to Claude)'}
+                  </small>
+                </span>
+                <span className={`agent-menu-status ${session.auditsMain ? 'is-active' : ''}`}>
+                  {session.auditsMain ? 'On' : 'Off'}
                 </span>
               </button>
               <button
