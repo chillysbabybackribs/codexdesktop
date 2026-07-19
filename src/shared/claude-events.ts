@@ -1,7 +1,7 @@
-import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.js'
-import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown.js'
-import type { Turn } from '../../shared/codex-protocol/v2/Turn.js'
+import type { ServerNotification } from './codex-protocol/ServerNotification.js'
+import type { ThreadItem } from './codex-protocol/v2/ThreadItem.js'
+import type { TokenUsageBreakdown } from './codex-protocol/v2/TokenUsageBreakdown.js'
+import type { Turn } from './codex-protocol/v2/Turn.js'
 
 // Pure translation layer (Claude adapter): Agent SDK stream messages → the
 // shared notification vocabulary reduceSessionNotification consumes. One
@@ -163,7 +163,7 @@ export class ClaudeTurnTranslator {
     if (event.type === 'content_block_stop') {
       const block = this.blocks.get(Number(event.index ?? 0))
       if (!block || block.kind === 'tool') return { notifications: [] }
-      return { notifications: [this.completedBlockNotification(block)] }
+      return { notifications: [this.completedBlockNotification({ id: block.id, kind: block.kind as 'text' | 'thinking', text: block.text })] }
     }
 
     return { notifications: [] }

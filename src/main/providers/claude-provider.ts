@@ -37,7 +37,7 @@ import {
   claudeContextWindowFor,
   turnStartedNotification,
   type ClaudeTurnContext
-} from './claude-events.js'
+} from '../../shared/claude-events.js'
 
 // The Claude adapter: SessionProvider #2, driving the Agent SDK under the
 // approved lifecycle policy (docs/claude-prep-step7-process-policy-2026-07-19.md):
@@ -401,7 +401,9 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     })
     session.runtime = {
       input,
-      interrupt: () => handle.interrupt()
+      interrupt: async () => {
+        await handle.interrupt()
+      }
     }
     void this.consume(session, handle as AsyncIterable<unknown>)
   }

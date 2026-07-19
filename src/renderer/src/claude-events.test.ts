@@ -5,12 +5,12 @@ import {
   claudeContextWindowFor,
   turnStartedNotification,
   type ClaudeTurnContext
-} from './claude-events.ts'
+} from '../../shared/claude-events.ts'
 import {
   emptySessionState,
   reduceSessionNotification,
   type SessionRenderState
-} from '../../renderer/src/session-store.ts'
+} from './session-store.ts'
 import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown.ts'
 
 // End-to-end contract: spike-shaped SDK messages → translator → the SAME
