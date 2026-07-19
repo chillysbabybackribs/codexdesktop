@@ -913,6 +913,119 @@ function AuditStandby({
 // (the auditor's machine-readable close) renders as a quiet badge instead of
 // prose. A flagged badge with a send action is a button — manual escalation
 // into the main chat for reports the auto path did not (or could not) send.
+// One transcript row for the dock's full-fidelity view. Chat rows keep the
+// dock's compact message chrome (audit docs, verdict badges); activity rows
+// reuse the main chat's WorkGroup so tool rows, terminal cards, thought
+// blocks, and diff cards render identically at dock scale. Turn tails are
+// skipped — the window header and Working shimmer already carry status.
+function renderAgentRow(
+  row: RenderRow,
+  context: {
+    itemMeta: Record<string, ItemMeta>
+    activeTurnId: string | null
+    workspace: string | null
+    duplicateAssistantIds: ReadonlySet<string>
+    lastAssistantTextId: string | null
+    onSendFlagged: () => void
+  }
+): React.JSX.Element | null {
+  if (row.kind === 'tail') return null
+
+  if (row.kind === 'activity') {
+    return (
+      <AgentActivity
+        key={row.id}
+        items={row.items}
+        itemMeta={context.itemMeta}
+        live={row.turnId !== null && row.turnId === context.activeTurnId}
+        workspace={context.workspace}
+      />
+    )
+  }
+
+  const item = row.item
+  if (item.type === 'userMessage') {
+    const text = item.content
+      .filter((content) => content.type === 'text')
+      .map((content) => content.text)
+      .join('\n')
+    const attachments = attachmentsFromUserInput(item.content)
+    const audit = isAuditPrompt(text) ? parseAuditPrompt(text) : null
+    if (!audit && !text && !attachments.length) return null
+    return (
+      <div key={item.id} className={`agent-mini-message is-${audit ? 'audit' : 'user'}`}>
+        {audit ? (
+          <AuditBriefDoc audit={audit} />
+        ) : (
+          <>
+            {text ? <span>{stripMainChatContext(text)}</span> : null}
+            <AttachmentStrip attachments={attachments} compact />
+          </>
+        )}
+      </div>
+    )
+  }
+
+  if (item.type === 'agentMessage') {
+    if (!item.text || context.duplicateAssistantIds.has(item.id)) return null
+    return (
+      <div key={item.id} className="agent-mini-message is-assistant">
+        <AssistantMessage
+          text={item.text}
+          // Manual escalation targets the latest audit exchange; only its
+          // report gets an actionable flag badge.
+          onSendFlagged={item.id === context.lastAssistantTextId ? context.onSendFlagged : undefined}
+        />
+      </div>
+    )
+  }
+
+  // System notices, compaction markers, and other main-chat-only chrome stay
+  // out of the mini windows.
+  return null
+}
+
+// Activity rows interleave work items with commentary prose. Consecutive work
+// items share a WorkGroup (the main chat's component); commentary renders as
+// muted markdown between groups.
+function AgentActivity({
+  items,
+  itemMeta,
+  live,
+  workspace
+}: {
+  items: ActivityItem[]
+  itemMeta: Record<string, ItemMeta>
+  live: boolean
+  workspace: string | null
+}): React.JSX.Element {
+  const nodes: React.JSX.Element[] = []
+  let run: WorkItem[] = []
+  const flush = (): void => {
+    if (!run.length) return
+    nodes.push(
+      <WorkGroup key={`work-${run[0].id}`} items={run} itemMeta={itemMeta} live={live} workspace={workspace} />
+    )
+    run = []
+  }
+  for (const item of items) {
+    if (isWorkItem(item)) {
+      run.push(item)
+      continue
+    }
+    flush()
+    if (item.text) {
+      nodes.push(
+        <div key={item.id} className="agent-mini-commentary">
+          <MarkdownContent text={item.text} />
+        </div>
+      )
+    }
+  }
+  flush()
+  return <div className="agent-mini-activity">{nodes}</div>
+}
+
 function AssistantMessage({
   text,
   onSendFlagged
