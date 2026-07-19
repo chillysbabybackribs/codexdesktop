@@ -14,13 +14,15 @@ import {
   dockRoleFlags,
   dockRoleOf,
   latestAuditReport,
+  openAgentForMainChatTab,
   parseAgentDock,
   resetAgentSession,
   reviewerTitle,
   rollupStatus,
   serializeAgentDock,
   stripMainChatContext,
-  updateAgentSession
+  updateAgentSession,
+  visibleAgentForMainChatTab
 } from './agent-session-model.ts'
 import type { AgentSession } from './agent-session-model.ts'
 import type { Model } from '../../shared/session-protocol'
@@ -46,6 +48,36 @@ test('agent windows belong to one main chat tab', () => {
   assert.deepEqual(
     agentSessionsForMainChatTab([first, second, legacy], 'tab-b').map((session) => session.key),
     ['two'],
+  )
+})
+
+test('opening an agent replaces the visible detail in only its main chat tab', () => {
+  const reviewer = createAgentSession('reviewer', 'Reviewer', 'tab-a')
+  const worker = createAgentSession('worker', 'Worker', 'tab-a')
+  const otherTabAgent = createAgentSession('other', 'Other reviewer', 'tab-b')
+
+  assert.deepEqual(
+    openAgentForMainChatTab(
+      [reviewer, worker, otherTabAgent],
+      ['reviewer', 'other'],
+      'worker',
+    ),
+    ['other', 'worker'],
+  )
+})
+
+test('one selected agent detail is mounted from legacy multi-open state', () => {
+  const reviewer = createAgentSession('reviewer', 'Reviewer', 'tab-a')
+  const worker = createAgentSession('worker', 'Worker', 'tab-a')
+  const sessions = [reviewer, worker]
+
+  assert.equal(
+    visibleAgentForMainChatTab(sessions, 'tab-a', ['reviewer', 'worker'], 'worker')?.key,
+    'worker',
+  )
+  assert.equal(
+    visibleAgentForMainChatTab(sessions, 'tab-a', ['reviewer', 'worker'], null)?.key,
+    'reviewer',
   )
 })
 

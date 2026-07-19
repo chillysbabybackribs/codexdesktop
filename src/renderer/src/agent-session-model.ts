@@ -256,6 +256,39 @@ export function agentSessionsForMainChatTab(
   return sessions.filter((session) => session.mainChatTabKey === mainChatTabKey)
 }
 
+// The dock is a tabbed detail surface, not a pane accumulator. Opening an
+// agent replaces whichever agent detail is currently visible for the same
+// main-chat tab while preserving the visible agent chosen in other tabs.
+export function openAgentForMainChatTab(
+  sessions: AgentSession[],
+  openKeys: string[],
+  key: string,
+): string[] {
+  const target = sessions.find((session) => session.key === key)
+  if (!target) return openKeys
+
+  const byKey = new Map(sessions.map((session) => [session.key, session]))
+  return [
+    ...openKeys.filter((candidateKey) => {
+      const candidate = byKey.get(candidateKey)
+      return !candidate || candidate.mainChatTabKey !== target.mainChatTabKey
+    }),
+    key,
+  ]
+}
+
+export function visibleAgentForMainChatTab(
+  sessions: AgentSession[],
+  mainChatTabKey: string,
+  openKeys: string[],
+  selectedKey: string | null,
+): AgentSession | null {
+  const open = agentSessionsForMainChatTab(sessions, mainChatTabKey).filter((session) =>
+    openKeys.includes(session.key),
+  )
+  return open.find((session) => session.key === selectedKey) ?? open[0] ?? null
+}
+
 // The roster is the master-detail "map": a shallow tree of agents grouped by
 // their spawning session. A node's `rollup` folds the whole subtree's status
 // into one glyph so a collapsed lead still signals "a child is working" or
