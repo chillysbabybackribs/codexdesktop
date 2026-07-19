@@ -22,6 +22,9 @@ export type AgentSession = {
   messages: AgentLiteMessage[]
   watchesMain: boolean
   auditsMain: boolean
+  // Flagged audit reports auto-send into the main chat for the doer to act
+  // on (verdict-gated, one bounce per user turn). Implies auditsMain.
+  reportsToMain: boolean
   // Transient: why the last completed main-chat turn did not trigger an audit
   // (no changes detected / detection unavailable). Shown in the standby view
   // so an armed auditor never silently looks hung. Not persisted.
@@ -37,6 +40,7 @@ export type PersistedAgentSession = {
   title?: string
   watchesMain?: boolean
   auditsMain?: boolean
+  reportsToMain?: boolean
   model?: string | null
   reasoningEffort?: ReasoningEffort | null
   open?: boolean
@@ -60,6 +64,7 @@ export function createAgentSession(key: string, title: string): AgentSession {
     messages: [],
     watchesMain: false,
     auditsMain: false,
+    reportsToMain: false,
     lastAuditNote: null,
     model: null,
     reasoningEffort: null,
@@ -171,6 +176,7 @@ export function serializeAgentDock(
       title: session.title,
       watchesMain: session.watchesMain,
       auditsMain: session.auditsMain,
+      reportsToMain: session.reportsToMain,
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
