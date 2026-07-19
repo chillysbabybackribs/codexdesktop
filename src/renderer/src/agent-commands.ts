@@ -101,8 +101,16 @@ export function createAgentCommands(options: {
     if (!session?.threadId || !session.turnId) return
     try {
       await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
-    } catch {
-      // The turn may have already finished; notifications settle the state.
+    } catch (error) {
+      // A completed turn is harmless, but a transport/server failure used to
+      // leave the still-visible agent looking like it was stopped when it was
+      // not. Keep the notification path authoritative and give the user a
+      // retryable, actionable signal.
+      store.appendMessage(key, {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        text: `⚠ Could not stop the running turn: ${(error as Error).message}. It may have already finished; wait for the status update or try Stop again.`
+      })
     }
   }
 

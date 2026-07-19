@@ -18,8 +18,15 @@ export class BrowserStateStore {
   async load(): Promise<SavedBrowserState | null> {
     try {
       const raw = await readFile(this.path(), 'utf8')
-      return parseSavedBrowserState(raw)
-    } catch {
+      const saved = parseSavedBrowserState(raw)
+      if (!saved) {
+        console.warn('Ignoring invalid saved browser state; starting a new browser session')
+      }
+      return saved
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        console.warn('Failed to load saved browser state; starting a new browser session', error)
+      }
       return null
     }
   }

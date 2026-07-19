@@ -100,3 +100,34 @@ test('agent send forwards the agent reasoning effort', async () => {
     }
   }
 })
+
+test('agent stop surfaces an interrupt failure instead of leaving a working agent silently stuck', async () => {
+  const previousWindow = globalThis.window
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        codex: {
+          interruptTurn: async () => { throw new Error('app-server unavailable') }
+        }
+      }
+    }
+  })
+
+  try {
+    const { sessions, messages, commands } = commandHarness()
+    sessions[0].threadId = 'thread-1'
+    sessions[0].turnId = 'turn-1'
+
+    await commands.handleAgentStop('agent-1')
+
+    assert.match(messages[0]?.text ?? '', /Could not stop the running turn: app-server unavailable/)
+    assert.match(messages[0]?.text ?? '', /try Stop again/)
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
