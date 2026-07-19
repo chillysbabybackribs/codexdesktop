@@ -2,7 +2,6 @@ import {
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent,
-  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -41,10 +40,8 @@ import {
   reduceTurnTelemetry,
 } from './turn-telemetry';
 import {
-  AutoFollow,
   FileReviewContext,
   TurnTail,
-  WorkGroup,
   type FileReviewActions,
   type ItemMeta,
   type TurnMeta,
@@ -54,14 +51,18 @@ import {
 import { ReviewBar, type ReviewChange } from './ReviewBar';
 import { stripMentionContext } from './mention-model';
 import { selectCompletedWork } from './memory-work';
-import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { ThreadScroll } from './ThreadScroll';
+import {
+  ChatItemView,
+  TaskActivityCard,
+  stripAutomaticSkillMarker,
+  stripInjectedMemory,
+} from './ChatTranscript';
 import type { ChatAttachment } from '../../shared/ipc';
 import {
   buildRows,
   isWorkItem,
   upsertMany,
-  type ActivityItem,
   type ChatItem,
   type SystemItem,
 } from './transcript-model';
@@ -74,7 +75,6 @@ import {
 } from './item-notifications';
 import { reduceResearchProgressMeta } from './activity-model';
 import { BrowserPane } from './BrowserPane';
-import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import {
   SessionStore,
   emptySessionState,
