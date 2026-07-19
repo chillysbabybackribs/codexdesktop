@@ -4,12 +4,14 @@ import { dirname } from 'node:path'
 export type HistoryEntry = {
   url: string
   title: string
+  favicon: string | null
   visitCount: number
   lastVisitAt: number
 }
 
 const MAX_HISTORY_ENTRIES = 2000
 const SAVE_DEBOUNCE_MS = 1000
+const MAX_FAVICON_LENGTH = 128 * 1024
 
 // Global visited-URL history powering omnibox autocomplete. Distinct from
 // browser-state.json (session restore): entries survive tab close and carry
@@ -40,7 +42,7 @@ export class BrowserHistoryStore {
     }
   }
 
-  recordVisit(url: string, title: string, now = Date.now()): void {
+  recordVisit(url: string, title: string, now = Date.now(), favicon: string | null = null): void {
     if (!isRecordableUrl(url)) {
       return
     }
@@ -53,6 +55,10 @@ export class BrowserHistoryStore {
       if (title.trim()) {
         existing.title = title.trim()
       }
+      const safeFavicon = sanitizeHistoryFavicon(favicon)
+      if (safeFavicon) {
+        existing.favicon = safeFavicon
+      }
       // Re-insert so map order approximates recency, which prune() relies on.
       this.entriesByUrl.delete(url)
       this.entriesByUrl.set(url, existing)
@@ -60,6 +66,7 @@ export class BrowserHistoryStore {
       this.entriesByUrl.set(url, {
         url,
         title: title.trim(),
+        favicon: sanitizeHistoryFavicon(favicon),
         visitCount: 1,
         lastVisitAt: now
       })
@@ -76,6 +83,18 @@ export class BrowserHistoryStore {
 
     if (entry && title.trim()) {
       entry.title = title.trim()
+      this.scheduleSave()
+    }
+  }
+
+  // Favicons often arrive after navigation and title events. Preserve the
+  // latest trusted site identity without counting another visit.
+  updateFavicon(url: string, favicon: string | null): void {
+    const entry = this.entriesByUrl.get(url)
+    const safeFavicon = sanitizeHistoryFavicon(favicon)
+
+    if (entry && safeFavicon && entry.favicon !== safeFavicon) {
+      entry.favicon = safeFavicon
       this.scheduleSave()
     }
   }
@@ -150,7 +169,7 @@ function parseHistoryEntries(parsed: unknown): HistoryEntry[] {
       continue
     }
 
-    const { url, title, visitCount, lastVisitAt } = candidate as Record<string, unknown>
+    const { url, title, favicon, visitCount, lastVisitAt } = candidate as Record<string, unknown>
 
     if (typeof url !== 'string' || !isRecordableUrl(url)) {
       continue
@@ -159,10 +178,33 @@ function parseHistoryEntries(parsed: unknown): HistoryEntry[] {
     entries.push({
       url,
       title: typeof title === 'string' ? title : '',
+      favicon: sanitizeHistoryFavicon(favicon),
       visitCount: typeof visitCount === 'number' && Number.isFinite(visitCount) ? Math.max(1, Math.round(visitCount)) : 1,
       lastVisitAt: typeof lastVisitAt === 'number' && Number.isFinite(lastVisitAt) ? lastVisitAt : 0
     })
   }
 
   return entries
+}
+
+// Keep persisted history bounded and aligned with the tab favicon contract.
+// Remote HTTP and arbitrary schemes are rejected before they cross into the
+// sandboxed popup document.
+export function sanitizeHistoryFavicon(favicon: unknown): string | null {
+  if (typeof favicon !== 'string') {
+    return null
+  }
+
+  const trimmed = favicon.trim()
+  const lower = trimmed.toLowerCase()
+
+  if (!trimmed || trimmed.length > MAX_FAVICON_LENGTH) {
+    return null
+  }
+
+  if (lower.startsWith('https://') || lower.startsWith('data:image/')) {
+    return trimmed
+  }
+
+  return null
 }

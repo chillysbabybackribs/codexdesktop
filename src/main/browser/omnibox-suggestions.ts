@@ -18,8 +18,8 @@ export function buildSuggestions(input: string, entries: HistoryEntry[], now = D
   const typed = describeNavigationInput(text)
   const typedRow: OmniboxSuggestion =
     typed.kind === 'search'
-      ? { kind: 'search', url: typed.url, text, detail: 'Google Search' }
-      : { kind: 'navigate', url: typed.url, text: typed.url, detail: '' }
+      ? { kind: 'search', url: typed.url, text, detail: 'Google Search', favicon: null }
+      : { kind: 'navigate', url: typed.url, text: typed.url, detail: '', favicon: null }
 
   const needles = text.toLowerCase().split(/\s+/).filter(Boolean)
   const matches = entries
@@ -47,7 +47,8 @@ function historyRow(entry: HistoryEntry): OmniboxSuggestion {
     kind: 'history',
     url: entry.url,
     text: entry.title || displayUrl(entry.url),
-    detail: displayUrl(entry.url)
+    detail: displayUrl(entry.url),
+    favicon: entry.favicon
   }
 }
 

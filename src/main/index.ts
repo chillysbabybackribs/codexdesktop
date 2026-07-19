@@ -228,8 +228,9 @@ function createWindow(): void {
     scheduleBrowserPersist()
   })
   tabManager.onVisit({
-    recordVisit: (url, title) => browserHistoryStore.recordVisit(url, title),
-    updateTitle: (url, title) => browserHistoryStore.updateTitle(url, title)
+    recordVisit: (url, title, favicon) => browserHistoryStore.recordVisit(url, title, Date.now(), favicon),
+    updateTitle: (url, title) => browserHistoryStore.updateTitle(url, title),
+    updateFavicon: (url, favicon) => browserHistoryStore.updateFavicon(url, favicon)
   })
 
   omniboxPopup = new OmniboxPopup(mainWindow, (url) => {

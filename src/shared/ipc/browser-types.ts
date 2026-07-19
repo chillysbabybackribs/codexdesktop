@@ -50,6 +50,8 @@ export type OmniboxSuggestion = {
   text: string
   /** Secondary display text: display URL for history rows, engine label for search. */
   detail: string
+  /** Sanitized site identity captured by the browser tab, when available. */
+  favicon: string | null
 }
 
 /** Dropdown anchor in window content coordinates: the omnibox rect's bottom edge. */

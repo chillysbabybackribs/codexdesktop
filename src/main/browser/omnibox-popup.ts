@@ -5,7 +5,7 @@ import type { OmniboxAnchor, OmniboxRenderPayload, OmniboxSuggestion } from '../
 import { ipcChannels } from '../../shared/ipc.js'
 
 // Keep in sync with the row/card metrics in src/renderer/omnibox-popup.html.
-const ROW_HEIGHT = 34
+const ROW_HEIGHT = 40
 const CARD_CHROME = 14
 const SHADOW_SPACE = 14
 
