@@ -13,7 +13,7 @@ import { NewAgentIcon } from './Composer';
 import { ChatPaneView } from './ChatPaneView';
 import { SettingsModal, WorkspacePill } from './ChatControls';
 import { MainChatTabStrip } from './MainChatTabStrip';
-import { ModelPill } from './ModelPill';
+import { EffortSelector, ModelSelector } from './ModelPill';
 import { PluginBrowserView } from './PluginBrowser';
 import { type ItemMeta } from './TaskActivity';
 import { liveTurnGlance } from './audit-trigger';
@@ -392,17 +392,25 @@ export function ChatPane({
   const paneComposerModelContext = (tabKey: string, tab: MainChatTab | null) =>
     models.length ? (
       <div className="composer-context composer-model-context">
-        <ModelPill
-          models={models}
-          selectedModel={tab?.model ?? null}
-          selectedEffort={(tab?.reasoningEffort as ReasoningEffort | null | undefined) ?? null}
-          onSelectModel={(model) => void selectPaneModel(tabKey, model)}
-          onSelectModelEffort={(model, effort) =>
-            void selectPaneModelEffort(tabKey, model, effort)
-          }
-          fastMode={fastMode}
-          onToggleFastMode={onSetFastMode}
-        />
+        <div className="model-controls">
+          <ModelSelector
+            models={models}
+            selectedModel={tab?.model ?? null}
+            onSelectModel={(model) => void selectPaneModel(tabKey, model)}
+            fastMode={fastMode}
+            onToggleFastMode={onSetFastMode}
+          />
+          <EffortSelector
+            models={models}
+            selectedModel={tab?.model ?? null}
+            selectedEffort={
+              (tab?.reasoningEffort as ReasoningEffort | null | undefined) ?? null
+            }
+            onSelectEffort={(model, effort) =>
+              void selectPaneModelEffort(tabKey, model, effort)
+            }
+          />
+        </div>
       </div>
     ) : null;
 

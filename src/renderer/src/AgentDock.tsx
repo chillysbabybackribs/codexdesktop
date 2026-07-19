@@ -1,5 +1,5 @@
 import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { ModelPill } from './ModelPill'
+import { EffortSelector, ModelSelector } from './ModelPill'
 import type { Model } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
@@ -551,14 +551,21 @@ const AgentWindow = memo(function AgentWindow({
       {models.length || session.contextUsage ? (
         <div className="agent-overlay-context">
           {models.length ? (
-            <ModelPill
-              models={models}
-              selectedModel={session.model ?? mainModel}
-              selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
-              onSelectModel={(model) => onSetModel(session.key, model)}
-              onSelectModelEffort={(model, effort) => onSetModelEffort(session.key, model, effort)}
-              reasoningMenuSide="left"
-            />
+            <div className="model-controls">
+              <ModelSelector
+                models={models}
+                selectedModel={session.model ?? mainModel}
+                onSelectModel={(model) => onSetModel(session.key, model)}
+              />
+              <EffortSelector
+                models={models}
+                selectedModel={session.model ?? mainModel}
+                selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
+                onSelectEffort={(model, effort) =>
+                  onSetModelEffort(session.key, model, effort)
+                }
+              />
+            </div>
           ) : null}
           <AgentContextPill
             usage={session.contextUsage}
