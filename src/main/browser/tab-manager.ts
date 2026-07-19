@@ -44,6 +44,7 @@ export type { BrowserTarget } from './browser-target-registry.js'
 export class TabManager {
   private readonly tabs = new Map<string, ManagedBrowserTab>()
   private readonly navigationControllers = new Map<string, AbortController>()
+  private readonly targetEpochs = new Map<string, number>()
   private readonly targets = new BrowserTargetRegistry()
   private activeTabId: string | null = null
   private bounds: BrowserBounds = hiddenBrowserBounds
@@ -129,6 +130,7 @@ export class TabManager {
     }
 
     this.tabs.set(id, tab)
+    this.targetEpochs.set(id, 0)
     this.attachEvents(tab)
     if (options.activate !== false) {
       this.activateTab(id)
@@ -148,6 +150,7 @@ export class TabManager {
     }
 
     this.cancelNavigation(id)
+    this.targetEpochs.delete(id)
     this.window.contentView.removeChildView(tab.view)
 
     if (!tab.view.webContents.isDestroyed()) {
@@ -318,6 +321,16 @@ export class TabManager {
     return webContents
   }
 
+  /**
+   * Monotonic page identity for a live tab. Browser-agent read operations use
+   * this to reject a result collected from a document that navigated away
+   * while it was running. Popups have unique WebContents identities and use
+   * their own lifetime check in the agent controller.
+   */
+  getTargetEpoch(tabId: string): number | null {
+    return this.targetEpochs.get(tabId) ?? (this.targets.resolvePopup(tabId) ? 0 : null)
+  }
+
   listTabs(): Array<{ id: string; url: string; title: string; active: boolean }> {
     return Array.from(this.tabs.values()).map((tab) => ({
       id: tab.id,
@@ -382,6 +395,7 @@ export class TabManager {
     options: NavigateAndWaitOptions = {}
   ): Promise<PageNavigationResult> {
     this.cancelNavigation(tab.id)
+    this.bumpTargetEpoch(tab.id)
     const controller = new AbortController()
     this.navigationControllers.set(tab.id, controller)
     const abortFromCaller = (): void => controller.abort()
@@ -418,6 +432,7 @@ export class TabManager {
       onBack: () => this.goBack(tab.id),
       onForward: () => this.goForward(tab.id),
       onReload: () => this.reload(tab.id),
+      onMainFrameNavigationStarted: () => this.bumpTargetEpoch(tab.id),
       onStateChanged: () => this.pushState(),
       onRecordVisit: (url, title) => this.visitListener?.recordVisit(url, title),
       onUpdateVisitTitle: (url, title) => this.visitListener?.updateTitle(url, title),
@@ -427,6 +442,7 @@ export class TabManager {
 
   private handleDestroyedTab(tab: ManagedBrowserTab): void {
     this.cancelNavigation(tab.id)
+    this.targetEpochs.delete(tab.id)
     if (!this.tabs.has(tab.id)) {
       return
     }
@@ -460,6 +476,7 @@ export class TabManager {
       }
 
       this.tabs.delete(id)
+      this.targetEpochs.delete(id)
       if (this.activeTabId === id) {
         removedActiveTabId = id
         this.activeTabId = null
@@ -484,6 +501,11 @@ export class TabManager {
     } else {
       this.createTab()
     }
+  }
+
+  private bumpTargetEpoch(tabId: string): void {
+    const current = this.targetEpochs.get(tabId)
+    if (current !== undefined) this.targetEpochs.set(tabId, current + 1)
   }
 
   private getActiveTab(): ManagedBrowserTab | null {

@@ -121,6 +121,12 @@ type CdpOperationContext = {
   webContents: WebContents
 }
 
+type BrowserTargetLease = {
+  tabId: string
+  webContents: WebContents
+  epoch: number
+}
+
 export type BrowserAgentResult = {
   ok: boolean
   result?: unknown
@@ -245,8 +251,8 @@ export class BrowserAgentController {
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
       if (options.signal?.aborted) return cancelledResult()
-      const webContents = tabs.resolveWebContents(tabId)
-      if (!webContents) {
+      const lease = captureTargetLease(tabs, tabId)
+      if (!lease) {
         return {
           ok: false,
           error: `no browser target with id ${tabId}`,
@@ -254,6 +260,8 @@ export class BrowserAgentController {
           targetState: { targets: tabs.listTargets() }
         } satisfies BrowserAgentFailure
       }
+
+      const { webContents } = lease
 
       const startedAt = Date.now()
       const execution = executePageProgram(webContents, code, options.frame, maxResultChars)
@@ -265,6 +273,7 @@ export class BrowserAgentController {
           () => cdpSessionFor(webContents).terminateExecution(),
           options.signal
         )
+        assertTargetLeaseCurrent(tabs, lease)
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
         const nestedTruncated = rawMetadata.truncated === true
@@ -547,8 +556,8 @@ export class BrowserAgentController {
     const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
     const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
       if (options.signal?.aborted) return cancelledResult()
-      let webContents = tabs.resolveWebContents(tabId)
-      if (!webContents) {
+      let lease = captureTargetLease(tabs, tabId)
+      if (!lease) {
         return {
           ok: false,
           error: `no browser target with id ${tabId}`,
@@ -556,6 +565,8 @@ export class BrowserAgentController {
           targetState: { targets: tabs.listTargets() }
         } satisfies BrowserAgentFailure
       }
+
+      let webContents = lease.webContents
 
       const startedAt = Date.now()
       try {
@@ -574,10 +585,11 @@ export class BrowserAgentController {
               `navigation readiness failed: ${navigation.settleReason}`
             )
           }
-          webContents = tabs.resolveWebContents(tabId)
-          if (!webContents) {
+          lease = captureTargetLease(tabs, tabId)
+          if (!lease) {
             throw operationError('targetClosed', 'targetLifecycle', `browser target ${tabId} closed during navigation`)
           }
+          webContents = lease.webContents
         }
 
         const targetContents = webContents
@@ -588,6 +600,7 @@ export class BrowserAgentController {
           () => cdpSessionFor(targetContents).terminateExecution(),
           options.signal
         )
+        assertTargetLeaseCurrent(tabs, lease)
         const bounded = boundResult(rawResult, maxResultChars)
         const rawMetadata = asRecord(rawResult)
         const nestedTruncated = rawMetadata.truncated === true
@@ -781,10 +794,11 @@ export class BrowserAgentController {
     if (!tabs || !tabId) {
       return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
     }
-    const webContents = tabs.resolveWebContents(tabId)
-    if (!webContents) {
+    const lease = captureTargetLease(tabs, tabId)
+    if (!lease) {
       return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
     }
+    const { webContents } = lease
     const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
     const maxResultChars = clampNumber(
       options.maxResultChars,
@@ -803,6 +817,7 @@ export class BrowserAgentController {
         undefined,
         options.signal
       )
+      assertTargetLeaseCurrent(tabs, lease)
       const bounded = boundResult(rawResult, maxResultChars)
       return {
         ok: true,

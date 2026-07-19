@@ -14,6 +14,7 @@ export type BrowserTabViewHandlers = {
   onBack(): void
   onForward(): void
   onReload(): void
+  onMainFrameNavigationStarted(): void
   onStateChanged(): void
   onRecordVisit(url: string, title: string): void
   onUpdateVisitTitle(url: string, title: string): void
@@ -119,6 +120,9 @@ export function attachBrowserTabViewEvents(
   })
 
   webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
+    if (isMainFrame && !isInPlace) {
+      handlers.onMainFrameNavigationStarted()
+    }
     if (isMainFrame && !isInPlace && tab.favicon !== null) {
       tab.favicon = null
       handlers.onStateChanged()
