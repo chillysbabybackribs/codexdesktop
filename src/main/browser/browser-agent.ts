@@ -666,6 +666,7 @@ export class BrowserAgentController {
             durationMs: Date.now() - startedAt,
             resultChars: bounded.chars,
             truncated: bounded.truncated || nestedTruncated
+            ,completion: snapshotCompletion(rawResult, bounded.truncated || nestedTruncated)
           } satisfies BrowserAgentFailure
         }
 
