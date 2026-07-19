@@ -19,6 +19,10 @@ limit or a request timeout.
 - Regression tests cover recovery of both an awaited response and a
   notification after a malformed partial line.
 
+Verified: focused RPC coverage (10 tests), full suite (344 tests), production
+build, and a disposable Electron launch/shutdown smoke all passed. The
+verification profile and browser-control socket were removed after shutdown.
+
 ## Remaining
 
 1. Continue the silent-failure sweep across the remaining lifecycle seams.
