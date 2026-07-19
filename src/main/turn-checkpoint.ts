@@ -227,6 +227,48 @@ export class TurnCheckpointStore {
     })
   }
 
+  /**
+   * Restore a subset of files to their checkpoint state (per-file "Undo" in
+   * the review flow). Files the checkpoint holds are checked out from the
+   * checkpoint commit; files created since (absent from the checkpoint) are
+   * deleted. Paths may be absolute or repo-relative; anything resolving
+   * outside the repo root is ignored. The current state is checkpointed first
+   * so a per-file undo is itself revertible.
+   */
+  async revertFiles(checkpointId: string, paths: string[]): Promise<CheckpointRecord> {
+    const index = await this.readIndex()
+    const record = index.checkpoints.find((candidate) => candidate.id === checkpointId)
+    if (!record) throw new Error(`unknown checkpoint ${checkpointId}`)
+    if (paths.length === 0) return record
+
+    const safety = await this.createCheckpoint(
+      record.workspace,
+      record.threadId,
+      `pre-undo of files from ${record.label}`
+    )
+    if (!safety) throw new Error('workspace is no longer a git work tree')
+
+    return this.enqueue(async () => {
+      const root = record.repoRoot
+      const checkpointRaw = await git(root, ['ls-tree', '-r', '-z', '--name-only', record.commit])
+      const checkpointFiles = new Set(checkpointRaw.split('\0').filter(Boolean))
+
+      for (const path of paths) {
+        const absolute = resolve(root, path)
+        if (absolute !== root && !absolute.startsWith(root + sep)) continue
+        const relative = absolute.slice(root.length + 1).split(sep).join('/')
+        if (!relative) continue
+        if (checkpointFiles.has(relative)) {
+          await git(root, ['checkout', record.commit, '--', relative])
+        } else {
+          // The file did not exist at checkpoint time — undo means delete.
+          await unlink(absolute).catch(() => undefined)
+        }
+      }
+      return record
+    })
+  }
+
   private async pruneLocked(threadId: string): Promise<void> {
     const index = await this.readIndex()
     const forThread = index.checkpoints.filter((record) => record.threadId === threadId)
