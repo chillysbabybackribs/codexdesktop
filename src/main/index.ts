@@ -398,7 +398,10 @@ function registerIpc(): void {
       properties: ['openDirectory', 'createDirectory']
     })
 
-    return result.canceled ? null : (result.filePaths[0] ?? null)
+    const picked = result.canceled ? null : (result.filePaths[0] ?? null)
+    // A user-picked folder is a legitimate mention root even outside git.
+    if (picked) await mentionIndexService.approveWorkspace(picked)
+    return picked
   })
   ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
     dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
