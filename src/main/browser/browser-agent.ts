@@ -47,6 +47,7 @@ export type BrowserFailurePhase =
   | 'navigationReadiness'
   | 'snapshotVerification'
   | 'resultSerialization'
+  | 'browserFlow'
   | 'controller'
 
 export type BrowserFailure = {
