@@ -121,7 +121,7 @@ export async function runBrowserTool(
       result = await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
         url: readString(args.url),
         steps: args.steps,
-        match: toNetworkJournalQuery(asRecord(args.match)),
+        match: readNetworkMatch(args.match),
         captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
         readySelector: readString(args.readySelector),
         quietMs: readNumber(args.quietMs),
@@ -286,6 +286,25 @@ function readResearchFocus(value: unknown): Array<{ id: string; need: string; mi
     const minSources = readNumber(record.minSources)
     return [{ id, need, ...(minSources === undefined ? {} : { minSources }) }]
   })
+}
+
+function readNetworkMatch(value: unknown): {
+  urlContains?: string
+  method?: string
+  resourceType?: string
+  mimeType?: string
+  statusMin?: number
+  statusMax?: number
+} {
+  const match = asRecord(value)
+  return {
+    urlContains: readString(match.urlContains),
+    method: readString(match.method),
+    resourceType: readString(match.resourceType),
+    mimeType: readString(match.mimeType),
+    statusMin: readNumber(match.statusMin),
+    statusMax: readNumber(match.statusMax)
+  }
 }
 
 function readStringRecord(value: unknown): Record<string, string> {
