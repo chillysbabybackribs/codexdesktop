@@ -122,6 +122,28 @@ test('tool attribution records model-visible argument and result sizes', () => {
   })
 })
 
+test('screenshot attribution excludes the raw vision data while retaining text metadata', () => {
+  const text = JSON.stringify({ ok: true, result: { screenshot: { fileName: 'composer.png' } } })
+  const item: ThreadItem = {
+    type: 'dynamicToolCall',
+    id: 'screenshot-1',
+    namespace: null,
+    tool: 'app_screenshot',
+    arguments: {},
+    status: 'completed',
+    contentItems: [
+      { type: 'inputText', text },
+      { type: 'inputImage', imageUrl: 'data:image/png;base64,this-is-not-text-output' }
+    ],
+    success: true,
+    durationMs: 12
+  }
+
+  const attribution = modelCallAttributionForItem(item)
+  assert.equal(attribution?.resultChars, JSON.stringify([{ type: 'inputText', text }]).length)
+  assert.notEqual(attribution?.resultChars, JSON.stringify(item.contentItems).length)
+})
+
 test('retryable errors remain non-terminal while final errors fail the turn', () => {
   const retrying = reduceTurnTelemetry({}, {
     type: 'error',

@@ -8,6 +8,7 @@ const taskShapingGuidance = [
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
   '- For simple browser reads, prefer one `browser_snapshot` call when it is available; state every requested field and list count in its objective. It can navigate, wait, and return task-focused items. If a snapshot reports `completion.nextAction: "answer"`, use that evidence directly and do not repeat a page read. If it reports `targeted-gap-fill`, resolve only its named coverage gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
   '- When reviewing or editing Codex Desktop\'s own UI in a live dev session, use `app_screenshot` for the full Electron window (chat plus embedded browser). Use `browser_screenshot` for page content inside the browser tab only.',
+  '- For a simple visual confirmation of the current app UI, take one `app_screenshot`, let its artifact preview remain visible in chat, and answer directly. Do not load skills, prior-chat memory, source files, or an additional image viewer unless the user asks for analysis or a change.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -77,7 +78,8 @@ export function resolveTurnPolicy(
 ): { summary: 'concise'; effort?: ReasoningEffort } {
   const supported = new Set(options.supportedEfforts ?? [])
   const browserMicrotask = isReadOnlyBrowserMicrotask(text) && isFastPathTask(text)
-  const fastEffort = browserMicrotask
+  const lightweightVisualCheck = isLightweightVisualCheck(text)
+  const fastEffort = browserMicrotask || lightweightVisualCheck
     ? (supported.has('none') ? 'none' : supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
     : options.fastMode && isFastPathTask(text)
       ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
@@ -98,8 +100,18 @@ export function isFastPathTask(text: string): boolean {
   if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security)\b/.test(normalized)) {
     return false
   }
+  if (isLightweightVisualCheck(text)) return true
   return /^(?:(?:can|could|would) you |please |ok )?(?:check|go to|list|navigate(?: to)?|open|read|show|tell me|visit)\b/.test(normalized) ||
     isInteractiveBrowserTask(text)
+}
+
+export function isLightweightVisualCheck(text: string): boolean {
+  const normalized = text.trim().toLowerCase()
+  if (!normalized || normalized.length > 240) return false
+
+  const visualVerb = /^(?:(?:can|could|would) you |please |ok )?(?:view|see|show|look at|inspect)\b/.test(normalized)
+  const currentAppSurface = /\b(?:current|live|this)\b[\s\S]{0,48}\b(?:ui|interface|composer|chat|window|screen)\b/.test(normalized)
+  return visualVerb && currentAppSurface
 }
 
 export function isInteractiveBrowserTask(text: string): boolean {

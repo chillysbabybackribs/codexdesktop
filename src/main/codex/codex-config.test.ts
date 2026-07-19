@@ -7,6 +7,7 @@ import {
   formatSkillInvocationText,
   isFastPathTask,
   isInteractiveBrowserTask,
+  isLightweightVisualCheck,
   isReadOnlyBrowserMicrotask,
   isWebResearchTask,
   resolveTurnPolicy,
@@ -170,6 +171,8 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /prefer one `browser_snapshot` call/i)
   assert.match(guidance, /app_screenshot.*full Electron window/i)
   assert.match(guidance, /browser_screenshot.*browser tab only/i)
+  assert.match(guidance, /simple visual confirmation.*one `app_screenshot`/i)
+  assert.match(guidance, /artifact preview remain visible in chat/i)
   assert.match(guidance, /completion\.nextAction: "answer"/i)
   assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
@@ -262,6 +265,18 @@ test('simple read-only browser tasks use the fastest supported effort while comp
     requestedEffort: 'high',
     supportedEfforts: ['high']
   }), { summary: 'concise' })
+})
+
+test('simple current-UI checks use one low-effort visual pass', () => {
+  const prompt = 'Can you view the current UI of the composer?'
+
+  assert.equal(isLightweightVisualCheck(prompt), true)
+  assert.equal(isFastPathTask(prompt), true)
+  assert.equal(isLightweightVisualCheck('Review the current UI of the composer for accessibility problems'), false)
+  assert.deepEqual(resolveTurnPolicy(prompt, {
+    requestedEffort: 'high',
+    supportedEfforts: ['none', 'low', 'medium', 'high']
+  }), { summary: 'concise', effort: 'none' })
 })
 
 test('the dynamic tool surface includes verified research primitives', () => {

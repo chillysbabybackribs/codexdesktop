@@ -250,7 +250,7 @@ export function modelCallAttributionForItem(item: ThreadItem): ModelCallAttribut
         item,
         item.namespace ? `${item.namespace}/${item.tool}` : item.tool,
         serializedChars(item.arguments),
-        serializedChars(item.contentItems)
+        dynamicToolTextChars(item.contentItems)
       )
     case 'collabAgentToolCall':
       return attribution(item, item.tool, item.prompt?.length ?? null, serializedChars(item.agentsStates))
@@ -315,6 +315,13 @@ function serializedChars(value: unknown): number | null {
   } catch {
     return null
   }
+}
+
+function dynamicToolTextChars(contentItems: Extract<ThreadItem, { type: 'dynamicToolCall' }>['contentItems']): number | null {
+  if (!contentItems) return null
+  return serializedChars(contentItems
+    .filter((item) => item.type === 'inputText')
+    .map((item) => ({ type: item.type, text: item.text })))
 }
 
 function roundPercent(value: number): number {
