@@ -266,7 +266,7 @@ const browserNetworkSchema = {
     },
     match: {
       type: 'object',
-      description: 'Response matcher. urlContains is required; optional fields narrow the exact request.',
+      description: 'Response matcher. urlContains is required; optional fields narrow HTTP and SSE requests. WebSocket streams support urlContains plus status bounds.',
       properties: {
         urlContains: { type: 'string', description: 'Case-insensitive URL substring required on the matched response.' },
         method: { type: 'string', description: 'Optional exact HTTP method.' },

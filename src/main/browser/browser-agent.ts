@@ -991,6 +991,9 @@ export class BrowserAgentController {
     if (params.stream && streamTransport !== 'sse' && streamTransport !== 'websocket') {
       return { ok: false, error: 'browser_network stream.transport must be "sse" or "websocket"' } satisfies BrowserAgentFailure
     }
+    if (streamTransport === 'websocket' && (match.method || match.resourceType || match.mimeType)) {
+      return { ok: false, error: 'browser_network WebSocket matching supports urlContains and optional status bounds, not HTTP method/resourceType/mimeType' } satisfies BrowserAgentFailure
+    }
     if (params.stream && params.captureBody === true) {
       return { ok: false, error: 'browser_network cannot combine stream capture with captureBody: true' } satisfies BrowserAgentFailure
     }

@@ -243,6 +243,7 @@ export class NetworkJournal {
     if (!socket) return
     if (method === 'Network.webSocketHandshakeResponseReceived') {
       socket.status = readNumber(asRecord(params.response).status)
+      this.selectStreamWaiters('websocket', requestId, socket.url, socket.status)
       this.updateStreamWaiterStatus(requestId, socket.status)
     } else if (method === 'Network.webSocketFrameSent') {
       const frame = asRecord(params.response)
@@ -354,7 +355,7 @@ export class NetworkJournal {
       }
       this.streamWaiters.add(waiter)
       if (transport === 'websocket') {
-        const socket = this.webSockets.find((candidate) => matchesStreamUrl(candidate.url, query))
+        const socket = this.webSockets.find((candidate) => matchesWebSocket(candidate.url, candidate.status, query))
         if (socket) this.selectStreamWaiter(waiter, socket.requestId, socket.url, socket.status)
       } else {
         const request = this.requests.find((candidate) => matchesRequest(candidate, { ...query, completedOnly: false }))
@@ -515,7 +516,7 @@ export class NetworkJournal {
       if (waiter.transport !== transport || waiter.requestId) continue
       const matches = request
         ? matchesRequest(request, { ...waiter.query, completedOnly: false })
-        : matchesStreamUrl(url, waiter.query)
+        : matchesWebSocket(url, status, waiter.query)
       if (matches) this.selectStreamWaiter(waiter, requestId, url, status)
     }
   }
@@ -588,8 +589,11 @@ function matchesRequest(request: MutableRequest, query: NetworkJournalQuery): bo
   return true
 }
 
-function matchesStreamUrl(url: string, query: NetworkJournalQuery): boolean {
-  return !query.urlContains || url.toLowerCase().includes(query.urlContains.toLowerCase())
+function matchesWebSocket(url: string, status: number | null, query: NetworkJournalQuery): boolean {
+  if (query.urlContains && !url.toLowerCase().includes(query.urlContains.toLowerCase())) return false
+  if (query.statusMin !== null && query.statusMin !== undefined && (status ?? -1) < query.statusMin) return false
+  if (query.statusMax !== null && query.statusMax !== undefined && (status ?? Number.MAX_SAFE_INTEGER) > query.statusMax) return false
+  return true
 }
 
 function frameBytes(frame: Record<string, unknown>): number {
