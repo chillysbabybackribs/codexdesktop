@@ -56,17 +56,10 @@ export function createAgentCommands(options: {
         return false
       }
 
-      let threadId = session.threadId
-      if (!threadId) {
+      const threadId = session.threadId
+      const startsNewThread = !threadId
+      if (startsNewThread) {
         store.startQueueRef.current.push(key)
-        const started = await window.api.codex.startThread({
-          cwd: options.getWorkspace(),
-          model: agentModel
-        })
-        threadId = started.thread.id
-        store.startQueueRef.current = store.startQueueRef.current.filter((queued) => queued !== key)
-        if (!threadId) throw new Error('Thread start returned no thread id')
-        bindAgentThread(key, threadId)
       }
 
       store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
@@ -80,6 +73,7 @@ export function createAgentCommands(options: {
         effort: session.reasoningEffort ?? options.getSelectedEffort(),
         fastMode: options.getFastMode()
       })
+      if (startsNewThread) bindAgentThread(key, response.threadId)
       store.patchSession(key, (current) => ({
         ...current,
         status: 'working',
@@ -93,6 +87,8 @@ export function createAgentCommands(options: {
         text: `⚠ Agent turn failed to start: ${(error as Error).message}`
       })
       return false
+    } finally {
+      store.startQueueRef.current = store.startQueueRef.current.filter((queued) => queued !== key)
     }
   }
 
