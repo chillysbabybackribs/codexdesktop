@@ -323,7 +323,7 @@ const AgentWindow = memo(function AgentWindow({
       {message.audit ? (
         <AuditBriefDoc audit={message.audit} />
       ) : message.role === 'assistant' ? (
-        <MarkdownContent text={message.text} />
+        <AssistantMessage text={message.text} />
       ) : (
         <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
       )}
@@ -841,6 +841,22 @@ function AuditStandby({
         </>
       )}
     </div>
+  )
+}
+
+// Assistant text with audit-verdict awareness: a trailing "VERDICT: …" line
+// (the auditor's machine-readable close) renders as a quiet badge instead of
+// prose. Non-audit replies have no verdict line and render unchanged.
+function AssistantMessage({ text }: { text: string }): React.JSX.Element {
+  const verdict = parseAuditVerdict(text)
+  if (!verdict) return <MarkdownContent text={text} />
+  return (
+    <>
+      <MarkdownContent text={stripVerdictLine(text)} />
+      <span className={`agent-audit-verdict is-${verdict}`}>
+        {verdict === 'pass' ? '✓ pass' : '⚑ flagged'}
+      </span>
+    </>
   )
 }
 
