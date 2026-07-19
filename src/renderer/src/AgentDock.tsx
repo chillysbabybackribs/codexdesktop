@@ -8,7 +8,7 @@ import type { ChatAttachment } from '../../shared/ipc'
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
 import type { AgentSession } from './agent-session-model'
 import type { AuditRequestSummary, LiveTurnGlance } from './audit-trigger'
-import { auditSummaryLabel } from './audit-trigger'
+import { auditBriefMarkdown, auditSummaryLabel } from './audit-trigger'
 import { MarkdownContent } from './MarkdownContent'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
@@ -718,8 +718,8 @@ function AgentContextPill({
   )
 }
 
-// The empty-state setup panel: instead of prose, the agent's pairing modes as
-// clean toggleable options. The same flags live in the header menu afterwards.
+// The empty-state setup panel: the agent's pairing modes as minimal
+// text-and-toggle rows. The same flags live in the header menu afterwards.
 function AgentModeSelector({
   session,
   onToggleWatch,
@@ -731,21 +731,13 @@ function AgentModeSelector({
 }): React.JSX.Element {
   return (
     <div className="agent-mode-selector">
-      <div className="agent-mode-heading">
-        <strong>Independent agent</strong>
-        <span>
-          Runs in parallel and shares your workspace. Pick how it pairs with the main
-          chat — or just send it a message.
-        </span>
-      </div>
       <button
         type="button"
-        className={`agent-mode-option ${session.watchesMain ? 'is-on' : ''}`}
+        className="agent-mode-option"
         role="switch"
         aria-checked={session.watchesMain}
         onClick={() => onToggleWatch(session.key)}
       >
-        <span className="agent-mode-icon" aria-hidden="true"><EyeIcon /></span>
         <span className="agent-mode-copy">
           <strong>Share main-chat context</strong>
           <small>Each message carries a snapshot of the main conversation</small>
@@ -756,12 +748,11 @@ function AgentModeSelector({
       </button>
       <button
         type="button"
-        className={`agent-mode-option ${session.auditsMain ? 'is-on' : ''}`}
+        className="agent-mode-option"
         role="switch"
         aria-checked={session.auditsMain}
         onClick={() => onToggleAudit(session.key)}
       >
-        <span className="agent-mode-icon" aria-hidden="true"><ShieldCheckIcon /></span>
         <span className="agent-mode-copy">
           <strong>Audit main-chat turns</strong>
           <small>Auto-reviews the diff after each file-changing turn · defaults to Claude</small>
@@ -774,89 +765,56 @@ function AgentModeSelector({
   )
 }
 
-// One audit exchange as a single card: compact briefing header (expandable to
-// the request, changed files, and step log) with the auditor's report as the
-// body — streaming in while the audit runs.
-function AuditExchangeCard({
-  audit,
-  report,
-  working
-}: {
-  audit: AuditRequestSummary
-  report: string | null
-  working: boolean
-}): React.JSX.Element {
-  const [expanded, setExpanded] = useState(false)
-  const fileLabel = auditSummaryLabel(audit.files)
+// Centered standby for an armed auditor with no conversation yet: waiting for
+// the main chat, then live progress from the auditor's POV once a turn runs.
+function AuditStandby({ live }: { live: LiveTurnGlance | null }): React.JSX.Element {
   return (
-    <div className={`agent-audit-card ${expanded ? 'is-expanded' : ''}`}>
-      <button
-        type="button"
-        className="agent-audit-summary"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((current) => !current)}
-      >
-        <span className="agent-audit-badge" aria-hidden="true"><ShieldCheckIcon /></span>
-        <span className="agent-audit-headline">
-          <strong>Audit</strong>
-          <span className="agent-audit-files">{fileLabel}</span>
-        </span>
-        <span className="agent-audit-chevron" aria-hidden="true">
-          <ChevronDownIcon />
-        </span>
-      </button>
-      {expanded ? (
-        <div className="agent-audit-detail">
-          {audit.userText ? (
-            <div className="agent-audit-section">
-              <span className="agent-audit-label">Request</span>
-              <p className="agent-audit-request">{audit.userText}</p>
-            </div>
-          ) : null}
-          {audit.files.length ? (
-            <div className="agent-audit-section">
-              <span className="agent-audit-label">Changed files ({audit.files.length})</span>
-              <ul className="agent-audit-list">
-                {audit.files.map((file) => (
-                  <li key={file}><code>{file}</code></li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {audit.steps.length ? (
-            <div className="agent-audit-section">
-              <span className="agent-audit-label">Steps</span>
-              <ol className="agent-audit-steps">
-                {audit.steps.map((step, index) => (
-                  <li key={index}><code>{step}</code></li>
-                ))}
-              </ol>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-      {report ? (
-        <div className="agent-audit-report">
-          <MarkdownContent text={report} />
-        </div>
-      ) : working ? (
-        <div className="agent-audit-report is-pending shimmer-text">Reviewing changes…</div>
-      ) : null}
+    <div className="agent-audit-standby" role="status">
+      <span className="agent-standby-spinner" aria-hidden="true" />
+      {live ? (
+        <>
+          <span className="agent-standby-title shimmer-text">Watching main chat</span>
+          <span className="agent-standby-meta">
+            {live.stepCount} step{live.stepCount === 1 ? '' : 's'}
+            {' · '}
+            {live.fileCount} file{live.fileCount === 1 ? '' : 's'} touched
+          </span>
+          {live.lastStep ? <code className="agent-standby-step">{live.lastStep}</code> : null}
+        </>
+      ) : (
+        <>
+          <span className="agent-standby-title">Waiting for the main chat</span>
+          <span className="agent-standby-meta">Audits run when a turn changes files</span>
+        </>
+      )}
     </div>
   )
 }
 
-function ShieldCheckIcon(): React.JSX.Element {
+// The audit briefing as a retractable markdown doc — a quiet, tool-call-style
+// row that expands to a scrollable rendering of what the auditor was given.
+function AuditBriefDoc({ audit }: { audit: AuditRequestSummary }): React.JSX.Element {
+  const [open, setOpen] = useState(false)
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 3 5 6v5c0 4.4 3 8.4 7 9.6 4-1.2 7-5.2 7-9.6V6l-7-3Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <div className={`agent-audit-doc ${open ? 'is-open' : ''}`}>
+      <button
+        type="button"
+        className="agent-audit-doc-row"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="agent-audit-doc-name">audit-brief.md</span>
+        <span className="agent-audit-doc-files">{auditSummaryLabel(audit.files)}</span>
+        <span className="agent-audit-chevron" aria-hidden="true">
+          <ChevronDownIcon />
+        </span>
+      </button>
+      {open ? (
+        <div className="agent-audit-doc-body">
+          <MarkdownContent text={auditBriefMarkdown(audit)} />
+        </div>
+      ) : null}
+    </div>
   )
 }
 
