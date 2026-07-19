@@ -10,6 +10,9 @@
 // Boundary rule (grep-enforced): `codex-protocol` may appear only under
 // src/main/codex/ and in this file.
 
+import type { Model as CodexModel } from '../codex-protocol/v2/Model'
+import type { ProviderId } from './provider'
+
 export type { ProviderCapabilities, ProviderId } from './provider'
 export type { ReasoningEffort } from '../codex-protocol/ReasoningEffort'
 export type { ServerNotification } from '../codex-protocol/ServerNotification'
@@ -17,7 +20,15 @@ export type { AppSummary } from '../codex-protocol/v2/AppSummary'
 export type { CodexErrorInfo } from '../codex-protocol/v2/CodexErrorInfo'
 export type { CommandAction } from '../codex-protocol/v2/CommandAction'
 export type { FileUpdateChange } from '../codex-protocol/v2/FileUpdateChange'
-export type { Model } from '../codex-protocol/v2/Model'
+// Provider-neutral extension of the app-server model row. Codex rows remain
+// valid unchanged; external providers can attach the routing/runtime metadata
+// the shared picker needs without editing generated protocol files.
+export type Model = CodexModel & {
+  providerId?: ProviderId
+  runtimeModel?: string
+  supportsFastMode?: boolean
+  supportsAdaptiveThinking?: boolean
+}
 export type { ModelRerouteReason } from '../codex-protocol/v2/ModelRerouteReason'
 export type { PluginAuthPolicy } from '../codex-protocol/v2/PluginAuthPolicy'
 export type { PluginMarketplaceEntry } from '../codex-protocol/v2/PluginMarketplaceEntry'
