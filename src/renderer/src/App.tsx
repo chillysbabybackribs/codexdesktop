@@ -83,6 +83,7 @@ import {
   reduceSessionNotification,
   type SessionRenderState
 } from './session-store'
+import { parseTranscriptSession, serializeTranscriptSession } from './transcript-cache-model'
 import { liteMessagesFromItems, restoreAgentDock as restorePersistedAgentDock } from './agent-dock-restore'
 import { createAgentCommands } from './agent-commands'
 import { createAgentLifecycle } from './agent-lifecycle'
@@ -387,6 +388,19 @@ export default function App(): React.JSX.Element {
     activeThreadIdRef.current = activeThreadId
   }, [activeThreadId])
 
+  // Keep one compact, renderer-owned transcript snapshot per active thread.
+  // Debouncing lets streaming settle before disk work and makes the cache an
+  // instant-paint aid, not another source of per-token render pressure.
+  useEffect(() => {
+    const snapshot = serializeTranscriptSession(activeSession)
+    if (!snapshot) return
+    const timer = window.setTimeout(() => {
+      void window.api.transcriptCache.persist({ threadId: snapshot.session.threadId!, snapshot })
+        .catch((error) => console.warn('Failed to persist transcript cache', error))
+    }, 300)
+    return () => window.clearTimeout(timer)
+  }, [activeSession])
+
   useEffect(() => {
     activeThreadTitleRef.current = activeThreadTitle
   }, [activeThreadTitle])
@@ -679,7 +693,10 @@ export default function App(): React.JSX.Element {
         // resume calls don't race a cold start. The dock restore then skips
         // any thread the main view already owns.
         const restorePromise = (async () => {
-          if (lastThreadId) await resumeThreadById(lastThreadId, { silent: true })
+          if (lastThreadId) {
+            await restoreCachedTranscript(lastThreadId, activeTab?.key ?? activeMainChatTabKeyRef.current)
+            await resumeThreadById(lastThreadId, { silent: true })
+          }
           await restoreBackgroundMainChatTabs(lastThreadId)
           await restoreAgentDock()
         })()
