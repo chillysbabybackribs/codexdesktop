@@ -1,5 +1,6 @@
 const maxRequests = 256
 const maxWebSockets = 64
+const maxStreamCaptureBytes = 20 * 1024 * 1024
 
 export type NetworkStreamTransport = 'sse' | 'websocket'
 
@@ -25,7 +26,7 @@ export type NetworkStreamCapture = {
   messages: NetworkStreamMessage[]
   messageCount: number
   bytes: number
-  completedReason: 'idle' | 'limit' | 'closed'
+  completedReason: 'idle' | 'limit' | 'bytes' | 'closed'
   startedAt: string
   completedAt: string
 }
@@ -488,6 +489,10 @@ export class NetworkJournal {
     }
     for (const waiter of [...this.streamWaiters]) {
       if (waiter.transport !== entry.transport || waiter.requestId !== entry.requestId) continue
+      if (waiter.bytes + entry.bytes > maxStreamCaptureBytes) {
+        this.resolveStreamWaiter(waiter, 'bytes')
+        continue
+      }
       waiter.messages.push(entry)
       waiter.bytes += entry.bytes
       if (waiter.idleTimer) clearTimeout(waiter.idleTimer)
