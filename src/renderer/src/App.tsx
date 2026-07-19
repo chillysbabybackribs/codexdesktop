@@ -137,6 +137,7 @@ import {
 } from './review-preference';
 import {
   adjacentSplitPaneKey,
+  canSplitPaneAt,
   canSplitPaneForDrop,
   countSplitPanes,
   insertSplitPane,
@@ -679,6 +680,36 @@ export default function App(): React.JSX.Element {
 
   function handleSetSplitRatio(path: string, ratio: number): void {
     updateChatSplitLayout((layout) => updateSplitRatio(layout, path, ratio));
+  }
+
+  // Split the focused pane and open a fresh chat in the new half — the
+  // no-drag path to a 2x2 grid: Split right, then Split down on each column.
+  function handleSplitActivePane(direction: 'right' | 'down'): boolean {
+    if (isMainChatTransitionLocked()) return false;
+    if (mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false;
+    const focusedKey = activeMainChatTabKeyRef.current;
+    if (!canSplitPaneAt(chatSplitLayoutRef.current, focusedKey)) return false;
+    flushActiveMainChatSession();
+    cancelAutoRecovery();
+    setIsThreadMenuOpen(false);
+    const tab = createMainChatTab(
+      crypto.randomUUID(),
+      null,
+      'New Chat',
+      selectedModelRef.current,
+      selectedReasoningEffortRef.current,
+    );
+    // The pane is placed before its tab exists (raw layout op, no validation);
+    // the tab update right after adds the tab and focuses it, so its
+    // reconcile already sees a fully valid layout and keeps it.
+    updateChatSplitLayout((layout) =>
+      insertSplitPane(layout, focusedKey, tab.key, direction === 'right' ? 'right' : 'bottom'),
+    );
+    updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }));
+    focusMainChatTab(tab);
+    persistLastThreadId(null);
+    focusActiveComposer();
+    return true;
   }
 
   function mainChatTabForThread(threadId: string): MainChatTab | null {
@@ -1841,6 +1872,14 @@ export default function App(): React.JSX.Element {
       if (event.key.toLowerCase() === 'w' && !event.shiftKey) {
         event.preventDefault();
         void handleCloseMainChatTab(activeMainChatTabKeyRef.current);
+        return;
+      }
+
+      // Ctrl+\ splits the focused pane to the right; Ctrl+Shift+\ (which
+      // reports as '|' on most layouts) splits it downward.
+      if (event.key === '\\' || event.key === '|') {
+        event.preventDefault();
+        handleSplitActivePane(event.key === '|' || event.shiftKey ? 'down' : 'right');
         return;
       }
 
@@ -3239,6 +3278,11 @@ export default function App(): React.JSX.Element {
           onSetSplitRatio={handleSetSplitRatio}
           canSplitForDrop={(targetKey, sourceKey) =>
             canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+          }
+          onSplitActivePane={handleSplitActivePane}
+          canSplitActivePane={
+            canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
+            mainChatTabs.length < maxMainChatTabs
           }
           items={items}
           itemMeta={itemMeta}
