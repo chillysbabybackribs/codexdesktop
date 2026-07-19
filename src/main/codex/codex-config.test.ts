@@ -171,6 +171,8 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /prefer one `browser_snapshot` call/i)
   assert.match(guidance, /app_screenshot.*full Electron window/i)
   assert.match(guidance, /browser_screenshot.*browser tab only/i)
+  assert.match(guidance, /Never pass the whole result to `image\(\)`/)
+  assert.match(guidance, /extract the URI first/i)
   assert.match(guidance, /simple visual confirmation.*one `app_screenshot`/i)
   assert.match(guidance, /artifact preview remain visible in chat/i)
   assert.match(guidance, /completion\.nextAction: "answer"/i)
