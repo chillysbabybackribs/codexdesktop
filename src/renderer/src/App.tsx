@@ -46,10 +46,8 @@ import {
 } from './turn-telemetry'
 import {
   AutoFollow,
-  CdpScreenshotPreview,
   TurnTail,
   WorkGroup,
-  cdpScreenshotArtifacts,
   type ItemMeta,
   type TurnMeta,
   type TurnPlanItem,
@@ -3388,7 +3386,6 @@ function TaskActivityCard({
   live: boolean
   workspace: string | null
 }): React.JSX.Element {
-  const screenshotArtifacts = cdpScreenshotArtifacts(items.filter(isWorkItem))
   let newestWorkItemId: string | undefined
   for (let i = items.length - 1; i >= 0; i -= 1) {
     if (isWorkItem(items[i])) {
@@ -3442,20 +3439,11 @@ function TaskActivityCard({
   flushWork()
 
   return (
-    <>
-      <section className={`task-activity-card ${live ? 'is-live' : ''}`} aria-label="In-task activity" aria-live={live ? 'polite' : 'off'}>
-        <AutoFollow className="task-activity-card-scroll">
-          <div className="task-activity-card-content">{content}</div>
-        </AutoFollow>
-      </section>
-      {screenshotArtifacts.length ? (
-        <div className="cdp-screenshot-attachments" aria-label="Browser screenshots">
-          {screenshotArtifacts.map((artifact) => (
-            <CdpScreenshotPreview key={artifact.artifactPath} artifact={artifact} />
-          ))}
-        </div>
-      ) : null}
-    </>
+    <section className={`task-activity-card ${live ? 'is-live' : ''}`} aria-label="In-task activity" aria-live={live ? 'polite' : 'off'}>
+      <AutoFollow className="task-activity-card-scroll">
+        <div className="task-activity-card-content">{content}</div>
+      </AutoFollow>
+    </section>
   )
 }
 

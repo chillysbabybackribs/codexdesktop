@@ -815,14 +815,17 @@ function DynamicToolBlock({
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
     return (
-      <ToolRow
-        icon={<ImageIcon />}
-        status={item.success === false ? 'failed' : status}
-        verb="Captured screenshot"
-        detail={screenshot.fileName}
-        detailTitle={screenshot.artifactPath}
-        meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
-      />
+      <div className="screenshot-tool-step">
+        <ToolRow
+          icon={<ImageIcon />}
+          status={item.success === false ? 'failed' : status}
+          verb="Captured screenshot"
+          detail={screenshot.fileName}
+          detailTitle={screenshot.artifactPath}
+          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
+        />
+        <CdpScreenshotPreview artifact={screenshot} />
+      </div>
     )
   }
 

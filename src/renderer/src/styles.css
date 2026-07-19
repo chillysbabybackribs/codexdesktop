@@ -1730,12 +1730,13 @@ button {
   font-size: 13px;
 }
 
-.cdp-screenshot-attachments {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  max-width: min(920px, 100%);
-  margin: -7px 0 20px;
+.screenshot-tool-step {
+  display: grid;
+  gap: 6px;
+}
+
+.task-activity-card .screenshot-tool-step {
+  padding: 2px 0 3px;
 }
 
 .cdp-screenshot-attachment {
@@ -1750,6 +1751,12 @@ button {
   font: inherit;
   text-align: left;
   cursor: pointer;
+}
+
+.screenshot-tool-step .cdp-screenshot-attachment {
+  width: min(460px, calc(100% - 27px));
+  max-width: calc(100% - 27px);
+  margin-left: 27px;
 }
 
 .cdp-screenshot-preview {
