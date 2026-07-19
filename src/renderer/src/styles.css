@@ -241,7 +241,54 @@ button {
 }
 
 .main-chat-tab.is-dragging {
-  opacity: 0.54;
+  opacity: 0.22;
+}
+
+.main-chat-tab-drag-preview {
+  position: fixed;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  min-width: 112px;
+  max-width: 220px;
+  padding: 0 8px 0 12px;
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 6px;
+  background: #242425;
+  color: #e1e3e5;
+  box-shadow:
+    0 12px 26px rgb(0 0 0 / 38%),
+    inset 0 1px 0 rgb(255 255 255 / 7%);
+  cursor: grabbing;
+  opacity: 0.84;
+  pointer-events: none;
+  user-select: none;
+  will-change: left, top;
+}
+
+.main-chat-tab-drag-preview .main-chat-tab-glyph {
+  color: #b3b8bd;
+  opacity: 0.9;
+}
+
+.main-chat-tab-drag-preview .main-chat-tab-spinner,
+.main-chat-tab-drag-preview .main-chat-tab-attention {
+  margin-left: auto;
+}
+
+.main-chat-tab-drag-preview-close {
+  display: grid;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+  place-items: center;
+  border-radius: 5px;
+  color: #9ba0a5;
+  font-size: 17px;
+  line-height: 1;
 }
 
 .main-chat-tab.is-drop-before::before,

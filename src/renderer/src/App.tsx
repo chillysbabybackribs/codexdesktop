@@ -2779,6 +2779,10 @@ function MainChatTabStrip({
     pointerId: number
     sourceKey: string
     startX: number
+    startY: number
+    pointerOffsetX: number
+    pointerOffsetY: number
+    width: number
     hasMoved: boolean
     targetKey: string | null
     placement: 'before' | 'after'
@@ -2788,6 +2792,9 @@ function MainChatTabStrip({
     sourceKey: string
     targetKey: string | null
     placement: 'before' | 'after'
+    previewLeft: number
+    previewTop: number
+    width: number
   } | null>(null)
 
   useEffect(() => {
@@ -2814,11 +2821,17 @@ function MainChatTabStrip({
 
   const beginTabDrag = (event: PointerEvent<HTMLButtonElement>, sourceKey: string): void => {
     if (disabled || event.button !== 0) return
+    const tab = event.currentTarget.closest<HTMLElement>('[data-main-chat-tab-key]')
+    const rect = tab?.getBoundingClientRect() ?? event.currentTarget.getBoundingClientRect()
     event.currentTarget.setPointerCapture(event.pointerId)
     dragStateRef.current = {
       pointerId: event.pointerId,
       sourceKey,
       startX: event.clientX,
+      startY: event.clientY,
+      pointerOffsetX: event.clientX - rect.left,
+      pointerOffsetY: event.clientY - rect.top,
+      width: rect.width,
       hasMoved: false,
       targetKey: null,
       placement: 'before'
@@ -2829,7 +2842,7 @@ function MainChatTabStrip({
     const drag = dragStateRef.current
     if (!drag || drag.pointerId !== event.pointerId) return
 
-    if (!drag.hasMoved && Math.abs(event.clientX - drag.startX) < 6) return
+    if (!drag.hasMoved && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < 6) return
     drag.hasMoved = true
 
     const target = document.elementFromPoint(event.clientX, event.clientY)
@@ -2843,10 +2856,27 @@ function MainChatTabStrip({
 
     drag.targetKey = canTarget ? targetKey : null
     drag.placement = placement
+    const tabStripBounds = stripRef.current?.getBoundingClientRect()
+    const minPreviewLeft = tabStripBounds?.left ?? 0
+    const maxPreviewLeft = Math.max(
+      minPreviewLeft,
+      (tabStripBounds?.right ?? window.innerWidth) - drag.width
+    )
+    const previewLeft = Math.min(
+      Math.max(event.clientX - drag.pointerOffsetX, minPreviewLeft),
+      maxPreviewLeft
+    )
+    const previewTop = Math.min(
+      Math.max(event.clientY - drag.pointerOffsetY, 0),
+      window.innerHeight - 40
+    )
     setDragging({
       sourceKey: drag.sourceKey,
       targetKey: drag.targetKey,
-      placement: drag.placement
+      placement: drag.placement,
+      previewLeft,
+      previewTop,
+      width: drag.width
     })
   }
 
@@ -2868,6 +2898,10 @@ function MainChatTabStrip({
     dragStateRef.current = null
     setDragging(null)
   }
+
+  const draggingTab = dragging
+    ? tabs.find((tab) => tab.key === dragging.sourceKey) ?? null
+    : null
 
   return (
     <header className="main-chat-tabbar">
@@ -2939,6 +2973,22 @@ function MainChatTabStrip({
           )
         })}
       </div>
+      {dragging && draggingTab ? (
+        <div
+          className={`main-chat-tab-drag-preview ${draggingTab.key === activeKey ? 'is-active' : ''} is-${draggingTab.status}`}
+          style={{ left: dragging.previewLeft, top: dragging.previewTop, width: dragging.width }}
+          aria-hidden="true"
+        >
+          <MainChatGlyph />
+          <span className="main-chat-tab-title">{draggingTab.title}</span>
+          {draggingTab.status === 'working' ? (
+            <span className="main-chat-tab-spinner" />
+          ) : draggingTab.status === 'attention' ? (
+            <span className="main-chat-tab-attention" />
+          ) : null}
+          <span className="main-chat-tab-drag-preview-close">×</span>
+        </div>
+      ) : null}
       <button
         type="button"
         className="main-chat-tab-action main-chat-tab-new"
