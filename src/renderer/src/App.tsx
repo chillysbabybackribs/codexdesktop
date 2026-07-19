@@ -1586,7 +1586,21 @@ export default function App(): React.JSX.Element {
     agentLifecycle.scheduleRecovery(key, turnId, error)
   }
 
-  const { handleCloseAgentSession, handleResetAgentSession, handlePromoteAgent } = agentLifecycle
+  // Store cleanup rides along with the lifecycle verbs: close/reset retire the
+  // agent key's session record; promote hands the thread to a main tab, which
+  // owns its own key, so the agent-key record is stale either way.
+  const handleCloseAgentSession = (key: string): void => {
+    sessionStoreRef.current.remove(key)
+    agentLifecycle.handleCloseAgentSession(key)
+  }
+  const handleResetAgentSession = (key: string): void => {
+    sessionStoreRef.current.remove(key)
+    agentLifecycle.handleResetAgentSession(key)
+  }
+  const handlePromoteAgent = async (key: string): Promise<void> => {
+    sessionStoreRef.current.remove(key)
+    await agentLifecycle.handlePromoteAgent(key)
+  }
 
   // ---- End background agent sessions ---------------------------------------
 
