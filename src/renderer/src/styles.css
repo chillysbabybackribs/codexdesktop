@@ -6888,7 +6888,6 @@ button {
 .review-bar.is-action-menu-open {
   position: relative;
   z-index: 8;
-  border-top-left-radius: 0;
   border-top-right-radius: 0;
   overflow: visible;
 }
