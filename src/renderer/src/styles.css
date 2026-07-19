@@ -7266,7 +7266,6 @@ button {
 
 .review-bar-summary:focus-visible,
 .review-actions-trigger:focus-visible,
-.review-action-menu-item:focus-visible,
 .review-undo-all:focus-visible,
 .review-always-keep:focus-visible,
 .review-keep-all:focus-visible,
@@ -7274,6 +7273,11 @@ button {
 .review-file-undo:focus-visible {
   outline: 2px solid var(--focus-ink);
   outline-offset: 2px;
+}
+
+.review-action-menu-item:focus-visible {
+  outline: 2px solid var(--focus-ink);
+  outline-offset: -2px;
 }
 
 @container (max-width: 430px) {
