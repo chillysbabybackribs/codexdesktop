@@ -3761,6 +3761,19 @@ button {
   margin-left: 2px;
 }
 
+/* Each split pane keeps its own compact model + reasoning readout. The
+   visible effort makes a four-quadrant layout scannable without opening a
+   menu, while remaining small enough to fit the narrow panes. */
+.model-pill-effort {
+  flex: 0 0 auto;
+  margin-left: 2px;
+  padding-left: 7px;
+  border-left: 1px solid rgb(255 255 255 / 12%);
+  color: #a7a7a9;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .goal-status-dot {
   width: 6px;
   height: 6px;

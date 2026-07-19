@@ -153,13 +153,20 @@ export function ModelPill({
       <button
         type="button"
         className="workspace-pill"
-        title={active ? `${active.displayName} — ${active.description}` : 'Choose model'}
+        title={
+          active
+            ? `${active.displayName}${selectedEffort ? ` — ${reasoningEffortLabel(selectedEffort)}` : ''} — ${active.description}`
+            : 'Choose model'
+        }
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((open) => !open)}
       >
         <ModelIcon />
         <span className="workspace-pill-name">{active?.displayName ?? 'Model'}</span>
+        {selectedEffort ? (
+          <span className="model-pill-effort">{reasoningEffortLabel(selectedEffort)}</span>
+        ) : null}
         <span className="workspace-pill-caret">⌄</span>
       </button>
       {isOpen ? (

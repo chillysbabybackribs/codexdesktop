@@ -342,73 +342,96 @@ export function ChatPane({
 
   const multiPane = countSplitPanes(splitLayout) > 1;
 
-  // The dock extras belong to the workspace, not to a pane: the agent column
-  // and the composer context row (workspace, model, agent capsules) render
-  // once, inside whichever pane is focused — exactly where they lived when
-  // there was only one pane.
-  const activeDockExtras = {
-    agentColumn: openAgentSessions.length ? (
-      <AgentColumn
-        sessions={openAgentSessions}
-        sessionStore={agentSessionStore}
-        workspace={workspace}
-        selectedKey={selectedActiveAgentKey}
-        models={models}
-        mainModel={selectedModel}
-        mainReasoningEffort={selectedReasoningEffort}
-        liveMainTurn={liveMainTurn}
-        isMainFocused={isMainFocused}
-        onSetModel={onSetAgentModel}
-        onSetModelEffort={onSetAgentModelEffort}
-        onSelect={onSelectAgent}
-        onMinimize={onMinimizeAgent}
-        onCloseSession={onCloseAgentSession}
-        onResetSession={onResetAgentSession}
-        onPromote={onPromoteAgent}
-        onToggleWatch={onToggleWatchAgent}
-        onToggleAudit={onToggleAuditAgent}
-        onToggleReport={onToggleReportAgent}
-        onSendFeedback={onSendAuditFeedback}
-        onDecideSendPolicy={onDecideAgentSendPolicy}
-        onSend={onAgentSend}
-        onSteer={onAgentSteer}
-        onStop={onAgentStop}
-        onCompact={onAgentCompact}
-      />
-    ) : null,
-    composerContext: (
-      <div className="composer-context">
-        <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} />
-        {models.length ? (
-          <ModelPill
-            models={models}
-            selectedModel={selectedModel}
-            selectedEffort={selectedReasoningEffort}
-            onSelectModel={onSelectModel}
-            onSelectModelEffort={onSelectModelEffort}
-            fastMode={fastMode}
-            onToggleFastMode={onSetFastMode}
-          />
-        ) : null}
-        <AgentTabStrip
-          sessions={activeAgentSessions}
-          openKeys={openAgentKeys}
-          onFocus={focusAgent}
+  // The agent column belongs to the focused workspace. Model selection does
+  // not: each visible chat owns a model and reasoning choice, so its composer
+  // must retain that control even when it is not the focused pane.
+  const activeAgentColumn = openAgentSessions.length ? (
+    <AgentColumn
+      sessions={openAgentSessions}
+      sessionStore={agentSessionStore}
+      workspace={workspace}
+      selectedKey={selectedActiveAgentKey}
+      models={models}
+      mainModel={selectedModel}
+      mainReasoningEffort={selectedReasoningEffort}
+      liveMainTurn={liveMainTurn}
+      isMainFocused={isMainFocused}
+      onSetModel={onSetAgentModel}
+      onSetModelEffort={onSetAgentModelEffort}
+      onSelect={onSelectAgent}
+      onMinimize={onMinimizeAgent}
+      onCloseSession={onCloseAgentSession}
+      onResetSession={onResetAgentSession}
+      onPromote={onPromoteAgent}
+      onToggleWatch={onToggleWatchAgent}
+      onToggleAudit={onToggleAuditAgent}
+      onToggleReport={onToggleReportAgent}
+      onSendFeedback={onSendAuditFeedback}
+      onDecideSendPolicy={onDecideAgentSendPolicy}
+      onSend={onAgentSend}
+      onSteer={onAgentSteer}
+      onStop={onAgentStop}
+      onCompact={onAgentCompact}
+    />
+  ) : null;
+
+  const selectPaneModel = async (key: string, model: string): Promise<void> => {
+    if (!(await onSelectMainChatTab(key))) return;
+    onSelectModel(model);
+  };
+
+  const selectPaneModelEffort = async (
+    key: string,
+    model: string,
+    effort: ReasoningEffort,
+  ): Promise<void> => {
+    if (!(await onSelectMainChatTab(key))) return;
+    onSelectModelEffort(model, effort);
+  };
+
+  const paneComposerContext = (tabKey: string, tab: MainChatTab | null, isActivePane: boolean) => (
+    <div className="composer-context">
+      {isActivePane ? <WorkspacePill workspace={workspace} onPickWorkspace={onPickWorkspace} /> : null}
+      {models.length ? (
+        <ModelPill
+          models={models}
+          selectedModel={tab?.model ?? null}
+          selectedEffort={(tab?.reasoningEffort as ReasoningEffort | null | undefined) ?? null}
+          onSelectModel={(model) => void selectPaneModel(tabKey, model)}
+          onSelectModelEffort={(model, effort) =>
+            void selectPaneModelEffort(tabKey, model, effort)
+          }
+          fastMode={fastMode}
+          onToggleFastMode={onSetFastMode}
         />
-        {/* Always available: a reviewer armed while idle audits the very
-            next turn — the born-a-reviewer default is most useful BEFORE
-            the work starts, not only mid-turn. */}
-        <button
-          type="button"
-          className="composer-new-agent-button"
-          aria-label="Open a new reviewer agent"
-          title="New agent — born a reviewer"
-          onClick={() => onNewAgent(activeMainChatTabKey)}
-        >
-          <NewAgentIcon />
-        </button>
-      </div>
-    ),
+      ) : null}
+      {isActivePane ? (
+        <>
+          <AgentTabStrip
+            sessions={activeAgentSessions}
+            openKeys={openAgentKeys}
+            onFocus={focusAgent}
+          />
+          {/* Always available: a reviewer armed while idle audits the very
+              next turn — the born-a-reviewer default is most useful BEFORE
+              the work starts, not only mid-turn. */}
+          <button
+            type="button"
+            className="composer-new-agent-button"
+            aria-label="Open a new reviewer agent"
+            title="New agent — born a reviewer"
+            onClick={() => onNewAgent(activeMainChatTabKey)}
+          >
+            <NewAgentIcon />
+          </button>
+        </>
+      ) : null}
+    </div>
+  );
+
+  /* The focused pane also carries the workspace-level reviewer column. */
+  const activeDockExtras = {
+    agentColumn: activeAgentColumn,
   };
 
   const renderSplitNode = (node: SplitNode, path: string): React.JSX.Element => {
@@ -450,7 +473,10 @@ export function ChatPane({
           onSelectPane={onSelectMainChatTab}
           onCloseSplitPane={onCloseSplitPane}
           onLoadOlderHistory={onLoadOlderHistory}
-          dockExtras={isActivePane ? activeDockExtras : null}
+          dockExtras={{
+            agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
+            composerContext: paneComposerContext(node.tabKey, tab, isActivePane),
+          }}
         />
       );
     }
