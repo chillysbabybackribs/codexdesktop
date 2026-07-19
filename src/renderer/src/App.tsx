@@ -3353,6 +3353,9 @@ function MainChatTabStrip({
   disabled,
   onSelect,
   onReorder,
+  onPaneDragUpdate,
+  onDropOnPane,
+  canSplitForDrop,
   onClose,
   onNew,
   onOpenSettings,
@@ -3372,6 +3375,9 @@ function MainChatTabStrip({
   disabled: boolean;
   onSelect: (key: string) => Promise<boolean>;
   onReorder: (sourceKey: string, targetKey: string, placement: 'before' | 'after') => void;
+  onPaneDragUpdate: (target: { tabKey: string; zone: SplitDropZone } | null) => void;
+  onDropOnPane: (sourceKey: string, targetKey: string, zone: SplitDropZone) => void;
+  canSplitForDrop: (targetKey: string, sourceKey: string) => boolean;
   onClose: (key: string) => Promise<void>;
   onNew: () => void;
   onOpenSettings: () => void;
@@ -3399,6 +3405,7 @@ function MainChatTabStrip({
     hasMoved: boolean;
     targetKey: string | null;
     placement: 'before' | 'after';
+    paneTarget: { tabKey: string; zone: SplitDropZone } | null;
   } | null>(null);
   const suppressClickRef = useRef(false);
   const [dragging, setDragging] = useState<{
@@ -3455,6 +3462,7 @@ function MainChatTabStrip({
       hasMoved: false,
       targetKey: null,
       placement: 'before',
+      paneTarget: null,
     };
   };
 
