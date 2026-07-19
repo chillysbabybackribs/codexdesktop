@@ -1,4 +1,4 @@
-import { nativeImage, type BrowserWindow, type WebContents } from 'electron'
+import type { BrowserWindow, WebContents } from 'electron'
 import type { BrowserBounds } from '../../shared/ipc.js'
 
 export type AppWindowCaptureTarget = {
@@ -87,7 +87,7 @@ export async function captureAppWindowImage(
     )
   }
 
-  return nativeImage.createFromBitmap(composite, {
+  return (await import('electron')).nativeImage.createFromBitmap(composite, {
     width: shellSize.width,
     height: shellSize.height,
     scaleFactor
