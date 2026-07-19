@@ -579,7 +579,10 @@ function CommandBlock({
 // File changes · live-streaming diff cards
 // ---------------------------------------------------------------------------
 
-const collapsedDiffLines = 18
+// Keep completed file changes scannable in the transcript. Six lines preserve
+// enough code context to recognize the edit without letting one file consume
+// the entire conversation; the full patch remains a single click away.
+const collapsedDiffLines = 6
 
 function DiffCard({
   path,
@@ -666,12 +669,12 @@ function DiffCard({
           <div className="diff-body">
             <DiffLines lines={shownLines} lang={lang} />
             {overflow > 0 ? (
-              <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
+              <button type="button" className="diff-expand" aria-expanded={false} onClick={() => setShowAll(true)}>
                 ? show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
               </button>
             ) : null}
             {showAll && parsed.lines.length > collapsedDiffLines ? (
-              <button type="button" className="output-expand" onClick={() => setShowAll(false)}>
+              <button type="button" className="diff-expand" aria-expanded={true} onClick={() => setShowAll(false)}>
                 collapse diff
               </button>
             ) : null}
