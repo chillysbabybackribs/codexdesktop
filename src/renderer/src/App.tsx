@@ -1142,22 +1142,23 @@ export default function App(): React.JSX.Element {
     }))
     let snapshot = sessionStoreRef.current.peek(key)
     const targetThreadId = target.threadId
+    const needsHydration = targetThreadId !== null && needsMainChatTabHydration(target, snapshot?.threadId)
     const needsRemoteResume = targetThreadId !== null && (
-      needsMainChatTabHydration(target, snapshot?.threadId) ||
+      needsHydration ||
       resumeFailuresByTabRef.current.get(key) === targetThreadId
     )
-    if (needsRemoteResume) {
-      await restoreCachedTranscript(target.threadId, key)
+    if (needsHydration) {
+      await restoreCachedTranscript(targetThreadId, key)
       snapshot = sessionStoreRef.current.peek(key)
     }
     focusMainChatTab(target, snapshot)
     persistLastThreadId(target.threadId)
 
-    if (needsMainChatTabHydration(target, snapshot?.threadId)) {
+    if (needsRemoteResume && targetThreadId) {
       reconcilingMainChatTabKeyRef.current = key
       setReconcilingMainChatTabKey(key)
       if (!snapshot) setIsRestoring(true)
-      const resumed = await resumeThreadById(target.threadId, { silent: true, tabKey: key })
+      const resumed = await resumeThreadById(targetThreadId, { silent: true, tabKey: key })
       if (activeMainChatTabKeyRef.current === key) {
         setIsRestoring(false)
         setReconcilingMainChatTabKey(null)
