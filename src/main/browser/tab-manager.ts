@@ -424,7 +424,9 @@ export class TabManager {
 
   private async hydrateSavedTab(tab: ManagedBrowserTab, saved: SavedBrowserTab): Promise<void> {
     try {
-      await ensureBrowserIdentity(tab.view.webContents)
+      // Queue the native UA-CH override before restoring history, but do not
+      // await it: Chromium can defer this CDP command until navigation starts.
+      void ensureBrowserIdentity(tab.view.webContents)
       await hydrateSavedBrowserTab(tab, saved, defaultTabUrl, (url) =>
         this.startUserNavigation(tab, url).then(() => {})
       )
@@ -459,7 +461,11 @@ export class TabManager {
     options.signal?.addEventListener('abort', abortFromCaller, { once: true })
 
     try {
-      await ensureBrowserIdentity(tab.view.webContents)
+      // Queue identity setup first, then let navigation begin immediately.
+      // Awaiting Network.setUserAgentOverride on a brand-new about:blank target
+      // can deadlock because Chromium completes it only after a real document
+      // starts loading.
+      void ensureBrowserIdentity(tab.view.webContents)
       if (controller.signal.aborted) throw new Error('navigation aborted')
       return await loadPageAndSettle(tab.view.webContents, url, {
         timeoutMs: options.timeoutMs ?? 15_000,

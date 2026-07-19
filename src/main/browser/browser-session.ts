@@ -61,7 +61,9 @@ export function ensureBrowserIdentity(webContents: WebContents): Promise<void> {
   ).then(() => undefined).catch((error) => {
     // A closing target or open DevTools client can temporarily own the CDP
     // channel. The clean session/WebContents UA remains the compatibility floor.
-    console.warn('Could not apply browser UA Client Hints override', error)
+    if (!/target closed|destroyed|disposed|detached/i.test(String(error))) {
+      console.warn('Could not apply browser UA Client Hints override', error)
+    }
     if (browserIdentityPromises.get(webContents) === ready) {
       browserIdentityPromises.delete(webContents)
     }

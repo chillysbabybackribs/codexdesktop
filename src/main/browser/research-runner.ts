@@ -785,7 +785,7 @@ async function loadSearchPage(
   url: string,
   signal: AbortSignal
 ): Promise<PageNavigationResult> {
-  await ensureBrowserIdentity(webContents)
+  void ensureBrowserIdentity(webContents)
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
     signal,
@@ -800,7 +800,7 @@ async function loadPage(
   url: string,
   signal: AbortSignal
 ): Promise<PageNavigationResult> {
-  await ensureBrowserIdentity(webContents)
+  void ensureBrowserIdentity(webContents)
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
     signal,
