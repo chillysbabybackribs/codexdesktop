@@ -527,7 +527,6 @@ export function PluginBrowserView({
   );
 }
 
-
 function PluginSetupPanel({
   setup,
   checking,
