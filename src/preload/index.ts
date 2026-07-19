@@ -11,6 +11,8 @@ import type {
   BackgroundTurnNotificationParams,
   BrowserBounds,
   BrowserFindResult,
+  BrowserMenuAnchor,
+  BrowserMenuItem,
   BrowserState,
   BrowserVpnStatus,
   SessionEvent,
@@ -101,6 +103,17 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.browserOmniboxQuery, text, anchor),
     omniboxSelect: (index: number) => ipcRenderer.invoke(ipcChannels.browserOmniboxSelect, index),
     omniboxClose: () => ipcRenderer.invoke(ipcChannels.browserOmniboxClose),
+    menuOpen: (anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
+      ipcRenderer.invoke(ipcChannels.browserMenuOpen, anchor, items),
+    menuUpdate: (items: BrowserMenuItem[]) => ipcRenderer.invoke(ipcChannels.browserMenuUpdate, items),
+    menuClose: () => ipcRenderer.invoke(ipcChannels.browserMenuClose),
+    onMenuClosed: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.browserMenuClosed, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.browserMenuClosed, wrapped)
+      }
+    },
     onFocusOmnibox: (listener: () => void) => {
       const wrapped = (): void => listener()
       ipcRenderer.on(ipcChannels.browserFocusOmnibox, wrapped)
