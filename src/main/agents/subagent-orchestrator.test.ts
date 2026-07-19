@@ -147,7 +147,7 @@ test('a failed child turn resolves ok:false (never rejects) so the parent sees i
   await Promise.resolve()
   await Promise.resolve()
 
-  orchestrator.tagEvent(turnCompleted('child-1', [], 'failed'))
+  orchestrator.tagEvent(turnCompleted('child-1', 'failed'))
   const result = await pending
   assert.equal(result.ok, false)
   assert.equal(result.status, 'failed')
