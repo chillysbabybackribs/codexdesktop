@@ -45,6 +45,8 @@ function makeContext(): { context: ClaudeTurnContext; totals: () => TokenUsageBr
 const init = { type: 'system', subtype: 'init', session_id: 'sdk-session-1', model: 'claude-opus-4-8' }
 const blockStart = (index: number, block: Record<string, unknown>) =>
   ({ type: 'stream_event', event: { type: 'content_block_start', index, content_block: block } })
+const messageStart = (id: string) =>
+  ({ type: 'stream_event', event: { type: 'message_start', message: { id } } })
 const textDelta = (index: number, text: string) =>
   ({ type: 'stream_event', event: { type: 'content_block_delta', index, delta: { type: 'text_delta', text } } })
 const blockStop = (index: number) => ({ type: 'stream_event', event: { type: 'content_block_stop', index } })
@@ -97,15 +99,17 @@ test('a full claude turn renders through the shared reducer', () => {
 test('thinking blocks render as reasoning; tool_use renders as a tool call that completes', () => {
   const { state } = replayTurn([
     init,
+    messageStart('msg-tool'),
     blockStart(0, { type: 'thinking' }),
     { type: 'stream_event', event: { type: 'content_block_delta', index: 0, delta: { type: 'thinking_delta', thinking: 'pondering…' } } },
     blockStop(0),
     blockStart(1, { type: 'tool_use', id: 'toolu_123', name: 'Bash' }),
     blockStop(1),
     { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'toolu_123', is_error: false }] } },
-    blockStart(2, { type: 'text' }),
-    textDelta(2, 'done'),
-    blockStop(2),
+    messageStart('msg-answer'),
+    blockStart(0, { type: 'text' }),
+    textDelta(0, 'done'),
+    blockStop(0),
     result({ input_tokens: 10, output_tokens: 5 })
   ], 'run something')
 
@@ -114,8 +118,48 @@ test('thinking blocks render as reasoning; tool_use renders as a tool call that 
   const tool = state.items.find((item) => item.type === 'mcpToolCall')
   assert.equal((tool as { status: string }).status, 'completed')
   assert.equal((tool as { tool: string }).tool, 'Bash')
-  const answer = state.items.find((item) => item.id.endsWith(':b2'))
+  const answer = state.items.find((item) => item.id.includes('msg-answer'))
   assert.equal((answer as { text: string }).text, 'done')
+})
+
+test('content-block indexes are scoped to each assistant message', () => {
+  const { state } = replayTurn([
+    messageStart('msg-first'),
+    blockStart(0, { type: 'text' }),
+    textDelta(0, 'first'),
+    blockStop(0),
+    { type: 'assistant', message: { id: 'msg-first', content: [{ type: 'text', text: 'first' }] } },
+    messageStart('msg-second'),
+    blockStart(0, { type: 'text' }),
+    textDelta(0, 'second response'),
+    blockStop(0),
+    { type: 'assistant', message: { id: 'msg-second', content: [{ type: 'text', text: 'second response' }] } }
+  ], 'use a tool')
+
+  const messages = state.items.filter((item) => item.type === 'agentMessage') as Array<{ id: string; text: string }>
+  assert.deepEqual(messages.map(({ text }) => text), ['first', 'second response'])
+  assert.equal(new Set(messages.map(({ id }) => id)).size, 2)
+})
+
+test('rate-limit and SDK error details survive into the failed turn', () => {
+  const { state } = replayTurn([
+    {
+      type: 'rate_limit_event',
+      rate_limit_info: { status: 'rejected', resetsAt: 2_000_000_000 }
+    },
+    {
+      type: 'result',
+      subtype: 'error_during_execution',
+      usage: { input_tokens: 1, output_tokens: 0 },
+      errors: ['provider detail'],
+      duration_ms: 20
+    }
+  ], 'continue')
+
+  const meta = state.turnMeta['claude-t1-turn1']
+  assert.equal(meta?.status, 'failed')
+  assert.match(meta?.errorMessage ?? '', /usage limit reached/i)
+  assert.equal(meta?.error?.codexErrorInfo, 'usageLimitExceeded')
 })
 
 test('a failed result marks the turn failed with the error message', () => {
