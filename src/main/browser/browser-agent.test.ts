@@ -449,6 +449,27 @@ test('browser agent serializes programs targeting the same tab', async () => {
   assert.equal(maximumActive, 1)
 })
 
+test('browser agent surfaces browser flow not_found as a successful tool result', async () => {
+  const webContents = Object.assign(new EventEmitter(), {
+    executeJavaScript: async () => ({ url: 'https://example.com/search', count: 0, matches: [] }),
+    getURL: () => 'https://example.com/search',
+    getTitle: () => 'Search',
+    isDestroyed: () => false
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [],
+    listTargets: () => []
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs)
+
+  const result = await controller.flow([{ id: 'target', type: 'find', selector: 'a.target' }])
+
+  assert.equal(result.ok, true)
+  assert.equal((result.result as { outcome: string }).outcome, 'not_found')
+})
+
 test('passive CDP waits do not block the same-tab navigation that satisfies them', async () => {
   class DebuggerFixture extends EventEmitter {
     attached = false
