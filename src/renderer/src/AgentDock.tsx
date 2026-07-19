@@ -581,6 +581,10 @@ const AgentWindow = memo(function AgentWindow({
           {!hasTranscript ? (
             session.auditsMain ? (
               <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
+            ) : session.role === 'worker' ? (
+              <div className="agent-empty-hint" role="note">
+                {working ? 'Working on the delegated task…' : 'Spawned subagent — its work will appear here.'}
+              </div>
             ) : (
               <div className="agent-empty-hint" role="note">
                 Message this agent below — or turn on “Audit main-chat turns” from the
