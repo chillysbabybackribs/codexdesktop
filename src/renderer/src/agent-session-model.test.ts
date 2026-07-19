@@ -28,6 +28,7 @@ test('resetting an agent starts a fresh chat in the same configured slot', () =>
     status: 'done' as const,
     messages: [{ id: 'answer', role: 'assistant' as const, text: 'Complete' }],
     watchesMain: true,
+    auditsMain: false,
     model: 'gpt-5'
   }
   const reset = resetAgentSession(session)
@@ -93,6 +94,7 @@ test('agent dock persistence keeps only durable metadata', () => {
     ...createAgentSession('one', 'Research'),
     threadId: 'thread-1',
     watchesMain: true,
+    auditsMain: false,
     model: 'gpt-5',
     reasoningEffort: 'high'
   }
@@ -104,6 +106,7 @@ test('agent dock persistence keeps only durable metadata', () => {
       threadId: 'thread-1',
       title: 'Research',
       watchesMain: true,
+      auditsMain: false,
       model: 'gpt-5',
       reasoningEffort: 'high',
       open: true,
