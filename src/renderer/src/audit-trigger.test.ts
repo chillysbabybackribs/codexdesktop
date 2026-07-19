@@ -229,7 +229,7 @@ test('liveTurnGlance reports true counts and the genuinely-latest step, uncapped
   assert.equal(glance.turnId, 't1')
   assert.equal(glance.stepCount, 26, 'no 20-line cap, no overflow summary line')
   assert.equal(glance.fileCount, 2)
-  assert.equal(glance.lastStep, 'edited: src/a.ts, src/b.ts')
+  assert.equal(glance.lastStep, 'Edited a.ts, b.ts', 'narrated, not the raw step-log line')
   const idle = liveTurnGlance(items, meta, 'other-turn')
   assert.deepEqual(idle, { turnId: 'other-turn', stepCount: 0, fileCount: 0, lastStep: null })
 })
