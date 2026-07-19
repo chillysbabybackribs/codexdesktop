@@ -201,7 +201,7 @@ function truncate(text: string, max: number): string {
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
 }
 
-// eslint-disable-next-line no-control-regex
+// biome-ignore lint/suspicious/noControlCharactersInRegex: intentionally matches ANSI escape sequences to strip them
 const ansiPattern = /\[[0-9;?]*[ -/]*[@-~]/g
 
 function stripAnsi(text: string): string {
