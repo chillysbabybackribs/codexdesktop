@@ -1,4 +1,16 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, webFrame } from 'electron'
+import {
+  BROWSER_AUTOMATION_WORLD_ID,
+  browserAutomationWorldInfo
+} from '../shared/browser-automation-world.js'
+
+// Configure the automation world before browser-owned page programs can run.
+// This keeps normal DOM evaluation available while blocking eval(), Function(),
+// and string-valued timers inside that world. The page's own CSP is untouched.
+webFrame.setIsolatedWorldInfo(
+  BROWSER_AUTOMATION_WORLD_ID,
+  browserAutomationWorldInfo(window.location.origin)
+)
 
 // Channel name duplicated from shared/ipc.ts ipcChannels on purpose: preloads
 // run sandboxed and cannot require() the shared chunk rollup emits for a

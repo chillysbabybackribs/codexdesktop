@@ -302,7 +302,8 @@ export class CdpSession {
     try {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: installPerformanceObserverExpression(longTaskTimelineError !== null),
-        returnByValue: true
+        returnByValue: true,
+        allowUnsafeEvalBlockedByCSP: false
       }))
       const support = asRecord(evaluated.result).value
       this.performanceDiagnostics.setObserverSupport(support)
@@ -327,7 +328,8 @@ export class CdpSession {
     try {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: drainPerformanceObserverExpression,
-        returnByValue: true
+        returnByValue: true,
+        allowUnsafeEvalBlockedByCSP: false
       }))
       this.performanceDiagnostics.recordObservedData(asRecord(evaluated.result).value)
     } catch {
@@ -338,7 +340,8 @@ export class CdpSession {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: performanceNavigationExpression,
         returnByValue: true,
-        awaitPromise: false
+        awaitPromise: false,
+        allowUnsafeEvalBlockedByCSP: false
       }))
       const result = asRecord(evaluated.result)
       navigation = asNullableRecord(result.value)
@@ -365,7 +368,11 @@ export class CdpSession {
       // PerformanceTimeline is experimental and may not exist on this Chromium build.
     }
     try {
-      await this.send('Runtime.evaluate', { expression: stopPerformanceObserverExpression, returnByValue: true })
+      await this.send('Runtime.evaluate', {
+        expression: stopPerformanceObserverExpression,
+        returnByValue: true,
+        allowUnsafeEvalBlockedByCSP: false
+      })
     } catch {
       // The page may have navigated since the observer was installed.
     }

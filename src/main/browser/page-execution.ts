@@ -1,16 +1,15 @@
 import type { WebContents, WebFrameMain, WebSource } from 'electron'
+import { BROWSER_AUTOMATION_WORLD_ID } from '../../shared/browser-automation-world.js'
 
-// Electron reserves world 999 for its context-isolated preload. Keep browser
-// automation in a separate, stable world so strict page CSP remains intact and
-// page scripts cannot observe our temporary helpers on globalThis.
-export const BROWSER_AUTOMATION_WORLD_ID = 1_001
+export { BROWSER_AUTOMATION_WORLD_ID } from '../../shared/browser-automation-world.js'
 
 type PageExecutionTarget = WebContents | WebFrameMain
 
 /**
- * Execute browser-owned code in an isolated world whenever Electron exposes
- * that API. WebFrameMain does not currently provide an isolated-world method,
- * so subframe execution retains Electron's privileged frame evaluator.
+ * Execute browser-owned code in the constrained isolated world configured by
+ * the guest preload whenever Electron exposes that API. WebFrameMain does not
+ * currently provide an isolated-world method, so subframe execution retains
+ * Electron's frame evaluator and the frame's own CSP.
  */
 export function executePageJavaScript(
   target: PageExecutionTarget,
