@@ -3750,9 +3750,13 @@ function ChatPane({
   onReorderMainChatTabs,
   onCloseMainChatTab,
   onNewMainChatTab,
+  splitLayout,
+  onDropTabOnPane,
+  onCloseSplitPane,
+  onSetSplitRatio,
+  canSplitForDrop,
   items,
   itemMeta,
-  turnMeta,
   title,
   status,
   isRestoring,
@@ -3786,8 +3790,6 @@ function ChatPane({
   onSaveGoal,
   onSetGoalStatus,
   onClearGoal,
-  contextUsage,
-  isCompacting,
   onCompactThread,
   agentSessions,
   openAgentKeys,
@@ -3833,9 +3835,13 @@ function ChatPane({
   ) => void;
   onCloseMainChatTab: (key: string) => Promise<void>;
   onNewMainChatTab: () => void;
+  splitLayout: SplitNode;
+  onDropTabOnPane: (sourceKey: string, targetKey: string, zone: SplitDropZone) => void;
+  onCloseSplitPane: (tabKey: string) => void;
+  onSetSplitRatio: (path: string, ratio: number) => void;
+  canSplitForDrop: (targetKey: string, sourceKey: string) => boolean;
   items: ChatItem[];
   itemMeta: Record<string, ItemMeta>;
-  turnMeta: Record<string, TurnMeta>;
   title: string;
   status: string;
   isRestoring: boolean;

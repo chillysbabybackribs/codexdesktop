@@ -248,7 +248,9 @@ function splitTopLevel(command: string): string[][] {
     const ch = command[i]
     if (quote) {
       if (ch === '\\' && quote === '"' && i + 1 < command.length) {
-        current += command[i + 1]
+        // Bash keeps the backslash unless it escapes ", `, $ or \ itself.
+        const next = command[i + 1]
+        current += '"`$\\'.includes(next) ? next : `\\${next}`
         i += 1
       } else if (ch === quote) {
         quote = null
@@ -639,12 +641,15 @@ function positional(args: string[]): string[] {
 }
 
 // `/bin/bash -lc "…"`, `sh -c '…'`, `/usr/bin/env bash -c …` → the inner command.
+// A double-quoted wrapper reaches us with its inner quoting escaped
+// (`rg -n \"a|b\"`), so unwrapping also unescapes per bash double-quote rules —
+// otherwise the inner quotes never engage and `|` reads as a pipe.
 function stripShellWrapper(command: string): string {
   let text = command.trim()
   for (let i = 0; i < 2; i += 1) {
     const match = /^(?:\/[\w./-]*\/)?(?:env\s+)?(?:ba|z|da)?sh\s+(?:-[a-z]+\s+)*(['"]?)([\s\S]+)\1$/.exec(text)
     if (!match || !match[2]) break
-    text = match[2].trim()
+    text = match[1] === '"' ? match[2].replace(/\\([\\"$`])/g, '$1').trim() : match[2].trim()
   }
   return text
 }
