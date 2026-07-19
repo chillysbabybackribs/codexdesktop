@@ -442,16 +442,59 @@ const AgentWindow = memo(function AgentWindow({
     }
   }
 
-  const messageNodes = rows.map((row) =>
-    renderAgentRow(row, {
-      itemMeta: renderState.itemMeta,
-      activeTurnId: renderState.turnId,
-      workspace,
-      duplicateAssistantIds,
-      lastAssistantTextId,
-      onSendFlagged: () => onSendFeedback(session.key)
+  const renderContext: AgentRowContext = {
+    itemMeta: renderState.itemMeta,
+    activeTurnId: renderState.turnId,
+    workspace,
+    duplicateAssistantIds,
+    lastAssistantTextId,
+    onSendFlagged: () => onSendFeedback(session.key),
+    // The first-flag decision moment: shown on the latest flagged report
+    // until the user settles the send policy (here or via the menu toggle).
+    sendPolicyPrompt:
+      session.auditsMain && !session.sendPolicyDecided && !session.reportsToMain
+        ? {
+            onSendOnce: () => onSendFeedback(session.key),
+            onAlways: () => {
+              onDecideSendPolicy(session.key, 'always')
+              onSendFeedback(session.key)
+            },
+            onKeep: () => onDecideSendPolicy(session.key, 'keep')
+          }
+        : null
+  }
+
+  // Recency-weighted density: the newest exchange (and any exchange still
+  // streaming) renders at full fidelity; older ones collapse to one-line
+  // capsules that expand in place. Nothing is dropped from the transcript —
+  // pixels just favor "now" inside the small window.
+  const exchanges = useMemo(() => groupDockExchanges(rows), [rows])
+  const toggleExchange = (id: string): void => {
+    setExpandedExchanges((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
     })
-  )
+  }
+  const messageNodes = exchanges.map((exchange, index) => {
+    const pinnedOpen =
+      index === exchanges.length - 1 || exchangeHasTurn(exchange, renderState.turnId)
+    if (pinnedOpen) {
+      return (
+        <Fragment key={exchange.id}>
+          {exchange.rows.map((row) => renderAgentRow(row, renderContext))}
+        </Fragment>
+      )
+    }
+    const isOpen = expandedExchanges.has(exchange.id)
+    return (
+      <div key={exchange.id} className={`agent-exchange ${isOpen ? 'is-open' : ''}`}>
+        <ExchangeCapsule exchange={exchange} open={isOpen} onToggle={toggleExchange} />
+        {isOpen ? exchange.rows.map((row) => renderAgentRow(row, renderContext)) : null}
+      </div>
+    )
+  })
   const hasTranscript = rows.some((row) => row.kind !== 'tail')
   // The audit watch strip: while the main chat's turn is in flight and this
   // agent is armed to audit, show the doer's progress from the auditor's POV.
@@ -502,7 +545,7 @@ const AgentWindow = memo(function AgentWindow({
 
   return (
     <div
-      className={`agent-overlay ${isSelected ? 'is-selected' : ''}`}
+      className={`agent-overlay ${isSelected ? 'is-selected' : ''} ${isExtended ? 'is-extended' : ''}`}
       data-agent-key={session.key}
       role="dialog"
       aria-label={`Agent: ${session.title}`}
@@ -645,6 +688,15 @@ const AgentWindow = memo(function AgentWindow({
           ) : null}
         </div>
         <div className="agent-overlay-actions">
+          <button
+            type="button"
+            className={`icon-button ${isExtended ? 'is-active' : ''}`}
+            aria-label={isExtended ? 'Collapse window' : 'Extend window'}
+            title={isExtended ? 'Collapse' : 'Extend — click the main chat to collapse'}
+            onClick={() => onToggleExtend(session.key)}
+          >
+            <ExtendIcon active={isExtended} />
+          </button>
           <button
             type="button"
             className="icon-button"
