@@ -79,7 +79,11 @@ export function ComposerHistoryMenu({
   );
 
   return (
-    <div className="composer-popover composer-history-menu" role="dialog" aria-label="Prompt history">
+    <div
+      className="composer-popover composer-history-menu"
+      role="dialog"
+      aria-label="Prompt history"
+    >
       <label className="composer-history-search">
         <SearchIcon />
         <input
@@ -132,7 +136,13 @@ function SearchIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="10.75" cy="10.75" r="5.75" fill="none" stroke="currentColor" strokeWidth="1.7" />
-      <path d="m15 15 4 4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path
+        d="m15 15 4 4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

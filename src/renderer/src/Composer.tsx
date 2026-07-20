@@ -11,11 +11,7 @@ import { ArrowUp, Plus } from 'lucide-react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
 import { steerComposerPlaceholder } from './app-helpers';
-import {
-  AttachmentButton,
-  AttachmentStrip,
-  saveBrowserFiles,
-} from './Attachments';
+import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments';
 import { composerDrafts } from './composer-draft';
 import {
   getQueuedComposerMessage,
@@ -184,7 +180,9 @@ export function Composer({
     if (slashQuery === null) return [];
     return options.filter((option) => {
       if (!slashQuery) return true;
-      return `${option.command} ${option.title} ${option.detail}`.toLowerCase().includes(slashQuery);
+      return `${option.command} ${option.title} ${option.detail}`
+        .toLowerCase()
+        .includes(slashQuery);
     });
   }, [isLoading, isTurnActive, onNewAgent, slashQuery]);
 
@@ -402,7 +400,9 @@ export function Composer({
     if (index < fileCandidates.length) {
       chooseMention(fileCandidates[index]);
     } else if (mentionPlugins.length) {
-      choosePlugin(mentionPlugins[Math.min(index - fileCandidates.length, mentionPlugins.length - 1)]);
+      choosePlugin(
+        mentionPlugins[Math.min(index - fileCandidates.length, mentionPlugins.length - 1)],
+      );
     }
   };
 
@@ -477,7 +477,10 @@ export function Composer({
     if (option.id !== 'history') requestAnimationFrame(() => textareaRef.current?.focus());
   };
 
-  const resolveMentionText = async (text: string, selectedMentions: FileMention[]): Promise<string> => {
+  const resolveMentionText = async (
+    text: string,
+    selectedMentions: FileMention[],
+  ): Promise<string> => {
     if (!selectedMentions.length || !workspace) return text;
     const resolved = await Promise.all(
       selectedMentions.map(async (mention) => ({
@@ -544,6 +547,15 @@ export function Composer({
       : effectiveTurnAction === 'stop-send'
         ? 'Stop & send'
         : 'Queue';
+  const activePlaceholder = queuedMessage
+    ? canSteer
+      ? steerComposerPlaceholder(providerId)
+      : 'A follow-up is already queued…'
+    : effectiveTurnAction === 'steer'
+      ? steerComposerPlaceholder(providerId)
+      : effectiveTurnAction === 'stop-send'
+        ? 'Write what should run after stopping…'
+        : 'Write the next message…';
 
   return (
     <div
@@ -568,220 +580,218 @@ export function Composer({
             );
         }}
       >
-      {slashQuery !== null && !commandMenuDismissed && !isHistoryOpen ? (
-        <ComposerCommandMenu
-          options={commandOptions}
-          selectedIndex={Math.min(commandSelectionIndex, Math.max(0, commandOptions.length - 1))}
-          onChoose={chooseCommand}
-        />
-      ) : null}
-      {isHistoryOpen ? (
-        <ComposerHistoryMenu
-          entries={historyEntries}
-          onSearch={setHistoryQuery}
-          onChoose={(entry) => {
-            setValue(entry);
-            setIsHistoryOpen(false);
-            requestAnimationFrame(() => textareaRef.current?.focus());
-          }}
-          onClose={() => {
-            setIsHistoryOpen(false);
-            requestAnimationFrame(() => textareaRef.current?.focus());
-          }}
-        />
-      ) : null}
-      {pluginMenuState !== 'closed' ? (
-        <div className="composer-mention-stack">
-          {fileCandidates.length ? (
-            <FileMentionMenu
-              candidates={fileCandidates}
-              selectedIndex={pluginSelectionIndex}
-              onChoose={chooseMention}
-            />
-          ) : null}
-          <PluginMentionMenu
-            state={pluginMenuState}
-            plugins={mentionPlugins}
-            selectedIndex={pluginSelectionIndex - fileCandidates.length}
-            onChoose={choosePlugin}
-            onBrowse={() => {
-              setPluginMenuState('closed');
-              onBrowsePlugins();
-            }}
-            onUninstalled={(pluginId) =>
-              onInstalledPluginsChange(installedPlugins.filter((plugin) => plugin.id !== pluginId))
-            }
+        {slashQuery !== null && !commandMenuDismissed && !isHistoryOpen ? (
+          <ComposerCommandMenu
+            options={commandOptions}
+            selectedIndex={Math.min(commandSelectionIndex, Math.max(0, commandOptions.length - 1))}
+            onChoose={chooseCommand}
           />
-        </div>
-      ) : null}
-      {queuedMessage ? (
-        <div className="composer-queued-message" role="status">
-          <span className="composer-queued-mark" aria-hidden="true" />
-          <span className="composer-queued-copy">
-            <strong>{isDispatchingQueued ? 'Sending next' : 'Queued next'}</strong>
-            <span>
-              {queuedMessage.displayText ||
-                queuedMessage.attachments.map((attachment) => attachment.name).join(', ') ||
-                'Context message'}
-            </span>
-          </span>
-          {!isDispatchingQueued ? (
-            <button
-              type="button"
-              aria-label="Cancel queued message"
-              title="Cancel queued message"
-              onClick={() => setQueuedMessageState(null)}
-            >
-              ×
-            </button>
-          ) : null}
-        </div>
-      ) : null}
-      {mentions.length ? (
-        <div className="mention-strip" aria-label="Attached context">
-          {mentions.map((mention) => (
-            <span
-              key={`${mention.kind}:${mention.path}`}
-              className="mention-pill"
-              title={mention.path}
-            >
-              <MentionGlyph kind={mention.kind} />
-              <span className="mention-pill-name">
-                {mention.path.split('/').pop() || mention.path}
+        ) : null}
+        {isHistoryOpen ? (
+          <ComposerHistoryMenu
+            entries={historyEntries}
+            onSearch={setHistoryQuery}
+            onChoose={(entry) => {
+              setValue(entry);
+              setIsHistoryOpen(false);
+              requestAnimationFrame(() => textareaRef.current?.focus());
+            }}
+            onClose={() => {
+              setIsHistoryOpen(false);
+              requestAnimationFrame(() => textareaRef.current?.focus());
+            }}
+          />
+        ) : null}
+        {pluginMenuState !== 'closed' ? (
+          <div className="composer-mention-stack">
+            {fileCandidates.length ? (
+              <FileMentionMenu
+                candidates={fileCandidates}
+                selectedIndex={pluginSelectionIndex}
+                onChoose={chooseMention}
+              />
+            ) : null}
+            <PluginMentionMenu
+              state={pluginMenuState}
+              plugins={mentionPlugins}
+              selectedIndex={pluginSelectionIndex - fileCandidates.length}
+              onChoose={choosePlugin}
+              onBrowse={() => {
+                setPluginMenuState('closed');
+                onBrowsePlugins();
+              }}
+              onUninstalled={(pluginId) =>
+                onInstalledPluginsChange(
+                  installedPlugins.filter((plugin) => plugin.id !== pluginId),
+                )
+              }
+            />
+          </div>
+        ) : null}
+        {queuedMessage ? (
+          <div className="composer-queued-message" role="status">
+            <span className="composer-queued-mark" aria-hidden="true" />
+            <span className="composer-queued-copy">
+              <strong>{isDispatchingQueued ? 'Sending next' : 'Queued next'}</strong>
+              <span>
+                {queuedMessage.displayText ||
+                  queuedMessage.attachments.map((attachment) => attachment.name).join(', ') ||
+                  'Context message'}
               </span>
+            </span>
+            {!isDispatchingQueued ? (
               <button
                 type="button"
-                className="mention-pill-remove"
-                aria-label={`Remove ${mention.path}`}
-                onClick={() =>
-                  setMentions((current) =>
-                    current.filter(
-                      (existing) =>
-                        !(existing.path === mention.path && existing.kind === mention.kind),
-                    ),
-                  )
-                }
+                aria-label="Cancel queued message"
+                title="Cancel queued message"
+                onClick={() => setQueuedMessageState(null)}
               >
                 ×
               </button>
-            </span>
-          ))}
-        </div>
-      ) : null}
-      <AttachmentStrip
-        attachments={attachments}
-        removable
-        onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))}
-      />
-      <textarea
-        ref={textareaRef}
-        value={value}
-        rows={1}
-        placeholder={
-          isTurnActive
-            ? steerComposerPlaceholder(providerId)
-            : docked
-              ? 'Reply…'
-              : 'Plan, build, or ask anything…'
-        }
-        disabled={isLoading}
-        onChange={(event) => {
-          setValue(event.target.value);
-          setCommandMenuDismissed(false);
-        }}
-        onPaste={(event) => {
-          const images = Array.from(event.clipboardData.files).filter((file) =>
-            file.type.startsWith('image/'),
-          );
-          if (!images.length) return;
-          const pastedText = event.clipboardData.getData('text/plain');
-          const start = event.currentTarget.selectionStart;
-          const end = event.currentTarget.selectionEnd;
-          event.preventDefault();
-          if (pastedText)
-            setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`);
-          setAttachmentError(null);
-          void saveBrowserFiles(images)
-            .then((items) => setAttachments((current) => [...current, ...items]))
-            .catch((error: unknown) =>
-              setAttachmentError(error instanceof Error ? error.message : String(error)),
+            ) : null}
+          </div>
+        ) : null}
+        {mentions.length ? (
+          <div className="mention-strip" aria-label="Attached context">
+            {mentions.map((mention) => (
+              <span
+                key={`${mention.kind}:${mention.path}`}
+                className="mention-pill"
+                title={mention.path}
+              >
+                <MentionGlyph kind={mention.kind} />
+                <span className="mention-pill-name">
+                  {mention.path.split('/').pop() || mention.path}
+                </span>
+                <button
+                  type="button"
+                  className="mention-pill-remove"
+                  aria-label={`Remove ${mention.path}`}
+                  onClick={() =>
+                    setMentions((current) =>
+                      current.filter(
+                        (existing) =>
+                          !(existing.path === mention.path && existing.kind === mention.kind),
+                      ),
+                    )
+                  }
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <AttachmentStrip
+          attachments={attachments}
+          removable
+          onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))}
+        />
+        <textarea
+          ref={textareaRef}
+          value={value}
+          rows={1}
+          placeholder={
+            isTurnActive ? activePlaceholder : docked ? 'Reply…' : 'Plan, build, or ask anything…'
+          }
+          disabled={isLoading}
+          onChange={(event) => {
+            setValue(event.target.value);
+            setCommandMenuDismissed(false);
+          }}
+          onPaste={(event) => {
+            const images = Array.from(event.clipboardData.files).filter((file) =>
+              file.type.startsWith('image/'),
             );
-        }}
-        onKeyDown={(event) => {
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r') {
+            if (!images.length) return;
+            const pastedText = event.clipboardData.getData('text/plain');
+            const start = event.currentTarget.selectionStart;
+            const end = event.currentTarget.selectionEnd;
             event.preventDefault();
-            openHistory();
-            return;
-          }
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
-            event.preventDefault();
-            toggleStash();
-            return;
-          }
-          if (slashQuery !== null && !commandMenuDismissed) {
-            if (event.key === 'Escape') {
+            if (pastedText)
+              setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`);
+            setAttachmentError(null);
+            void saveBrowserFiles(images)
+              .then((items) => setAttachments((current) => [...current, ...items]))
+              .catch((error: unknown) =>
+                setAttachmentError(error instanceof Error ? error.message : String(error)),
+              );
+          }}
+          onKeyDown={(event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r') {
               event.preventDefault();
-              setCommandMenuDismissed(true);
+              openHistory();
               return;
             }
-            if (event.key === 'ArrowDown' && commandOptions.length) {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
               event.preventDefault();
-              setCommandSelectionIndex((current) => (current + 1) % commandOptions.length);
+              toggleStash();
               return;
             }
-            if (event.key === 'ArrowUp' && commandOptions.length) {
+            if (slashQuery !== null && !commandMenuDismissed) {
+              if (event.key === 'Escape') {
+                event.preventDefault();
+                setCommandMenuDismissed(true);
+                return;
+              }
+              if (event.key === 'ArrowDown' && commandOptions.length) {
+                event.preventDefault();
+                setCommandSelectionIndex((current) => (current + 1) % commandOptions.length);
+                return;
+              }
+              if (event.key === 'ArrowUp' && commandOptions.length) {
+                event.preventDefault();
+                setCommandSelectionIndex(
+                  (current) => (current - 1 + commandOptions.length) % commandOptions.length,
+                );
+                return;
+              }
+              if (event.key === 'Enter' && !event.shiftKey && commandOptions.length) {
+                event.preventDefault();
+                chooseCommand(
+                  commandOptions[Math.min(commandSelectionIndex, commandOptions.length - 1)],
+                );
+                return;
+              }
+            }
+            if (event.key === 'ArrowUp' && !value && listComposerPrompts(draftKey).length) {
               event.preventDefault();
-              setCommandSelectionIndex(
-                (current) => (current - 1 + commandOptions.length) % commandOptions.length,
+              setValue(listComposerPrompts(draftKey)[0]);
+              return;
+            }
+            if (event.key === 'Escape' && pluginMenuState !== 'closed') {
+              event.preventDefault();
+              setPluginMenuState('closed');
+              return;
+            }
+            if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowDown') {
+              event.preventDefault();
+              setPluginSelectionIndex((current) => (current + 1) % mentionOptionCount);
+              return;
+            }
+            if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowUp') {
+              event.preventDefault();
+              setPluginSelectionIndex(
+                (current) => (current - 1 + mentionOptionCount) % mentionOptionCount,
               );
               return;
             }
-            if (event.key === 'Enter' && !event.shiftKey && commandOptions.length) {
+            if (
+              pluginMenuState === 'ready' &&
+              mentionOptionCount &&
+              event.key === 'Enter' &&
+              !event.shiftKey
+            ) {
               event.preventDefault();
-              chooseCommand(
-                commandOptions[Math.min(commandSelectionIndex, commandOptions.length - 1)],
-              );
+              chooseMentionOption(Math.min(pluginSelectionIndex, mentionOptionCount - 1));
               return;
             }
-          }
-          if (event.key === 'ArrowUp' && !value && listComposerPrompts(draftKey).length) {
-            event.preventDefault();
-            setValue(listComposerPrompts(draftKey)[0]);
-            return;
-          }
-          if (event.key === 'Escape' && pluginMenuState !== 'closed') {
-            event.preventDefault();
-            setPluginMenuState('closed');
-            return;
-          }
-          if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowDown') {
-            event.preventDefault();
-            setPluginSelectionIndex((current) => (current + 1) % mentionOptionCount);
-            return;
-          }
-          if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowUp') {
-            event.preventDefault();
-            setPluginSelectionIndex(
-              (current) => (current - 1 + mentionOptionCount) % mentionOptionCount,
-            );
-            return;
-          }
-          if (
-            pluginMenuState === 'ready' &&
-            mentionOptionCount &&
-            event.key === 'Enter' &&
-            !event.shiftKey
-          ) {
-            event.preventDefault();
-            chooseMentionOption(Math.min(pluginSelectionIndex, mentionOptionCount - 1));
-            return;
-          }
-          if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            event.currentTarget.form?.requestSubmit();
-          }
-        }}
-      />
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault();
+              event.currentTarget.form?.requestSubmit();
+            }
+          }}
+        />
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
@@ -1008,7 +1018,13 @@ function TurnActionMenuItem({
 function ChevronIcon(): React.JSX.Element {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="m3.25 4.75 2.75 2.5 2.75-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="m3.25 4.75 2.75 2.5 2.75-2.5"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

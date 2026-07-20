@@ -61,10 +61,7 @@ export function hasStashedComposerDraft(key: string): boolean {
   return stashedDrafts.has(key);
 }
 
-export function setQueuedComposerMessage(
-  key: string,
-  message: QueuedComposerMessage | null,
-): void {
+export function setQueuedComposerMessage(key: string, message: QueuedComposerMessage | null): void {
   if (message) queuedMessages.set(key, message);
   else queuedMessages.delete(key);
 }
