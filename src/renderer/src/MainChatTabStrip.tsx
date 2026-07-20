@@ -1,4 +1,5 @@
 import { type PointerEvent, useEffect, useRef, useState } from 'react';
+import { MessageSquare, Plus, X } from 'lucide-react';
 import type { Thread } from '../../shared/session-protocol';
 import {
   findMainChatTabDropTarget,
@@ -7,6 +8,7 @@ import {
 } from './main-chat-tabs';
 import { splitDropZoneAt, type SplitDropZone } from './chat-split';
 import { ThreadMenu } from './ThreadMenu';
+import { IconButton } from './UiPrimitives';
 
 export function MainChatTabStrip({
   idPrefix,
@@ -311,22 +313,22 @@ export function MainChatTabStrip({
                   <span className="main-chat-tab-attention" aria-label="Awaiting your attention" />
                 ) : null}
               </button>
-              <button
-                type="button"
+              <IconButton
                 className="main-chat-tab-close"
-                aria-label={
+                label={
                   tab.status === 'working' ? `${tab.title} is running` : `Close ${tab.title}`
                 }
-                title={
+                tooltip={
                   tab.status === 'working'
                     ? 'Stop this chat before closing it'
-                    : 'Close chat (Ctrl+W)'
+                    : 'Close chat'
                 }
+                shortcut={tab.status === 'working' ? undefined : 'Ctrl+W'}
                 disabled={disabled || tab.status === 'working'}
                 onClick={() => void onClose(tab.key)}
               >
-                <span aria-hidden="true">×</span>
-              </button>
+                <X aria-hidden="true" />
+              </IconButton>
             </div>
           );
         })}
@@ -347,20 +349,21 @@ export function MainChatTabStrip({
           <span className="main-chat-tab-drag-preview-close">×</span>
         </div>
       ) : null}
-      <button
-        type="button"
+      <IconButton
         className="main-chat-tab-action main-chat-tab-new"
-        aria-label={tabs.length >= maxMainChatTabs ? 'Chat tab limit reached' : 'New chat tab'}
-        title={
+        label={tabs.length >= maxMainChatTabs ? 'Chat tab limit reached' : 'New chat tab'}
+        tooltip={
           tabs.length >= maxMainChatTabs
             ? `Up to ${maxMainChatTabs} chats can stay open`
-            : 'New chat tab (Ctrl+T)'
+            : 'New chat tab'
         }
+        shortcut={tabs.length >= maxMainChatTabs ? undefined : 'Ctrl+T'}
+        side="bottom"
         disabled={disabled || tabs.length >= maxMainChatTabs}
         onClick={onNew}
       >
-        <span aria-hidden="true">+</span>
-      </button>
+        <Plus aria-hidden="true" />
+      </IconButton>
       <div className="main-chat-tabbar-spacer" />
       <ThreadMenu
         placement="tabbar"
@@ -385,9 +388,5 @@ export function MainChatTabStrip({
 }
 
 function MainChatGlyph(): React.JSX.Element {
-  return (
-    <svg className="main-chat-tab-glyph" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4 4.75A1.75 1.75 0 0 1 5.75 3h4.5A1.75 1.75 0 0 1 12 4.75v3.5A1.75 1.75 0 0 1 10.25 10H7l-2.4 2v-2.15A1.75 1.75 0 0 1 4 8.5V4.75Z" />
-    </svg>
-  );
+  return <MessageSquare className="main-chat-tab-glyph" strokeWidth={1.6} aria-hidden="true" />;
 }
