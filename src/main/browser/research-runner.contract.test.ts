@@ -19,6 +19,10 @@ test('research runner stays hidden without creating or activating visible tabs',
   assert.match(source, /retainValuesReducingDeficit/)
   assert.match(source, /static preflight timed out/)
   assert.match(source, /STATIC_PREFLIGHT_MAX_BYTES = 750_000/)
+  // Operator queries (site:, inurl:, …) must bypass the inert providers —
+  // they ignore operators and answer with brand-navigational pages.
+  assert.match(source, /usesSearchOperators\(query\)[\s\S]{0,120}?await fetchFastSearchCandidates/)
+  assert.match(source, /\(\^\|\\s\)\(site:\|inurl:\|intitle:\|filetype:\)/)
   assert.match(source, /new ResearchOriginRouter\(\)/)
   assert.match(source, /adaptive route selected Chromium/)
   assert.match(source, /staticFetchSkipped/)

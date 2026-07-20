@@ -122,7 +122,11 @@ export async function runBrowserTool(
           }, {
             signal,
             onProgress: deps.onResearchProgress,
-            tailMsAfterFirstCandidates: 750,
+            // Generous tail: the destination page snapshot runs concurrently
+            // and usually takes longer than the remaining lanes, so letting
+            // them finish costs no wall time — a 750ms cutoff was starving
+            // the merged ranking that alternates and betterAlternate need.
+            tailMsAfterFirstCandidates: 3500,
             onFirstCandidates: (candidates) => {
               startWork(candidates)
             }
@@ -131,11 +135,37 @@ export async function runBrowserTool(
             if (!discovery.ok || !discovery.candidates[0]) return discovery
             startWork(discovery.candidates)
           }
-          const [page, background] = await Promise.all([
+          const [firstPage, background] = await Promise.all([
             lane.page!,
             lane.background ?? Promise.resolve(null)
           ])
-          const destination = lane.navigated!
+          let page = firstPage
+          let destination = lane.navigated!
+          // Early navigation commits to the FIRST lane's best candidate for
+          // latency; the merged ranking across all lanes lands afterwards.
+          // A failed early page retries once on the merged best; a successful
+          // one that the merged ranking clearly beat is flagged instead of
+          // silently presented as the final word (live-caught: navigated to a
+          // score-71 brand page while a score-126 source sat in alternates).
+          const mergedTop = discovery.candidates[0]
+          if (!page.ok && mergedTop && mergedTop.url !== destination.url) {
+            notifyNavigationStart(deps, mergedTop)
+            page = await deps.browserAgent.snapshot({
+              objective,
+              url: mergedTop.url,
+              tabId: resolveAgentTab(readString(args.tab)),
+              mode: 'task',
+              maxItems: readNumber(args.maxItems) ?? 10,
+              timeoutMs: readNumber(args.timeoutMs),
+              signal
+            })
+            destination = mergedTop
+          }
+          const betterAlternate =
+            page.ok && mergedTop && mergedTop.url !== destination.url &&
+            mergedTop.score >= destination.score + 15
+              ? mergedTop
+              : null
           const ok = page.ok && (!includeBackground || background?.ok === true)
           return {
             ok,
@@ -143,6 +173,14 @@ export async function runBrowserTool(
               ? 'hidden-discovery-direct-navigation-plus-research'
               : 'hidden-discovery-direct-navigation',
             destination: compactDestination(destination),
+            ...(betterAlternate
+              ? {
+                  betterAlternate: {
+                    ...compactDestination(betterAlternate),
+                    note: 'The merged ranking across all search lanes scored this source higher than the auto-navigated destination. Navigate to it directly if it serves the objective better.'
+                  }
+                }
+              : {}),
             alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
             discovery: compactDiscovery(discovery),
             page,

@@ -973,7 +973,13 @@ export class ResearchRunner {
           continue
         }
 
-        const fastSearch = await fetchFastSearchCandidates(query, maxResults, searchSignal)
+        // The inert providers ignore search operators (site:, inurl:, …) and
+        // answer them with brand-navigational pages — live-caught: a
+        // site:reddit.com query "verified" claude.com/download. Operator
+        // queries go straight to the Chromium Google lane, which honors them.
+        const fastSearch = usesSearchOperators(query)
+          ? { candidates: [], errors: ['operator query routed past inert providers'] }
+          : await fetchFastSearchCandidates(query, maxResults, searchSignal)
         if (fastSearch.candidates.length > 0) {
           this.searchCache.set(cacheKey, {
             expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
@@ -1073,6 +1079,10 @@ export class ResearchRunner {
     this.searchViews.delete(view)
     if (!view.webContents.isDestroyed()) view.webContents.close()
   }
+}
+
+export function usesSearchOperators(query: string): boolean {
+  return /(^|\s)(site:|inurl:|intitle:|filetype:)\S/i.test(query)
 }
 
 async function fetchFastSearchCandidates(

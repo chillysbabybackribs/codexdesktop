@@ -521,7 +521,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_live_search',
-    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded independent evidence in parallel for quality-max research. Search result pages are never shown. Never creates a tab.',
+    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded independent evidence in parallel for quality-max research. If the result carries `betterAlternate`, the merged ranking found a stronger source than the auto-navigated page — navigate to it directly when it fits the objective. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserLiveSearchSchema
   },
   {

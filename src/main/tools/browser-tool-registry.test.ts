@@ -78,7 +78,7 @@ test('browser_live_search navigates on the earliest lane candidate before discov
 
   assert.ok(events.indexOf(`snapshot:${early.url}`) < events.indexOf('discover-done'),
     `navigation must start before discovery finishes: ${events.join(' -> ')}`)
-  assert.ok(events.includes('tail-budget:750'))
+  assert.ok(events.includes('tail-budget:3500'))
   const destination = result.destination as { url: string }
   assert.equal(destination.url, early.url)
   const alternates = result.alternates as Array<{ url: string }>
@@ -120,6 +120,57 @@ test('browser_live_search background mode starts live and independent evidence w
   assert.deepEqual(alternates.map(({ url }) => url), [best.url, alternate.url])
   const timings = result.timings as { firstUrlMs: number; totalMs: number }
   assert.ok(timings.firstUrlMs < 20, `first URL dispatch regressed: ${JSON.stringify(timings)}`)
+})
+
+test('browser_live_search flags a clearly better merged candidate instead of hiding it in alternates', async () => {
+  const events: string[] = []
+  const strong = candidate('https://strong.example/page', 1, 126)
+  const weakEarly = candidate('https://weak-early.example/page', 1, 71)
+  const deps = fakeDeps({ fireEarly: true, events })
+  ;(deps.researchRunner as unknown as { discover: unknown }).discover = async (
+    _request: unknown,
+    context: { onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void },
+  ) => {
+    context.onFirstCandidates?.([weakEarly])
+    return {
+      ok: true,
+      queries: ['example query'],
+      candidates: [strong, weakEarly],
+      discoveredCount: 2,
+      metrics: { durationMs: 20, searchesAttempted: 1, cacheHits: 0, navigation: { count: 1, domReadyMs: 5, settleMs: 5, settleReasons: {} } }
+    }
+  }
+  const { result } = await runBrowserTool(
+    { tool: 'browser_live_search', args: { objective: 'facts', query: 'example query' }, owner: null, callId: 'c5' },
+    deps
+  )
+
+  const destination = result.destination as { url: string }
+  assert.equal(destination.url, weakEarly.url, 'early navigation is kept when it succeeded')
+  const better = result.betterAlternate as { url: string; note: string }
+  assert.equal(better.url, strong.url)
+  assert.ok(better.note.includes('scored this source higher'))
+})
+
+test('browser_live_search retries the merged best candidate when the early page fails', async () => {
+  const events: string[] = []
+  const deps = fakeDeps({ fireEarly: true, events })
+  let snapshots = 0
+  ;(deps.browserAgent as unknown as { snapshot: unknown }).snapshot = async (options: { url?: string }) => {
+    snapshots += 1
+    events.push(`snapshot:${options.url}`)
+    return snapshots === 1 ? { ok: false, error: 'blocked' } : { ok: true, url: options.url }
+  }
+  const { result } = await runBrowserTool(
+    { tool: 'browser_live_search', args: { objective: 'facts', query: 'example query' }, owner: null, callId: 'c6' },
+    deps
+  )
+
+  assert.equal(snapshots, 2, 'failed early page must retry once on the merged best')
+  assert.ok(events.includes(`snapshot:${best.url}`))
+  const destination = result.destination as { url: string }
+  assert.equal(destination.url, best.url)
+  assert.equal(result.ok, true)
 })
 
 test('browser_live_search does not emit the legacy alias shape', async () => {
