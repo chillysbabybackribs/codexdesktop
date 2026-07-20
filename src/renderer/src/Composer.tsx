@@ -860,8 +860,156 @@ export function Composer({
           <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
         ) : null}
         {footerContext ? <div className="composer-control-context">{footerContext}</div> : null}
+        <div className="composer-primary-action">
+          {isTurnActive ? (
+            <>
+              {hasDraft ? (
+                <div className="composer-turn-action" ref={turnActionMenuRef}>
+                  <button
+                    type="submit"
+                    form={composerFormId}
+                    className="composer-turn-submit"
+                    aria-label={`${turnActionLabel} with this message`}
+                    disabled={Boolean(queuedMessage && effectiveTurnAction !== 'steer')}
+                  >
+                    <ArrowUp strokeWidth={2} aria-hidden="true" />
+                    <span>{turnActionLabel}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="composer-turn-action-toggle"
+                    aria-label="Choose how to send this message"
+                    aria-haspopup="menu"
+                    aria-expanded={isTurnActionMenuOpen}
+                    onClick={() => setIsTurnActionMenuOpen((open) => !open)}
+                  >
+                    <ChevronIcon />
+                  </button>
+                  {isTurnActionMenuOpen ? (
+                    <div className="composer-turn-action-menu" role="menu">
+                      {canSteer ? (
+                        <TurnActionMenuItem
+                          mode="steer"
+                          selected={effectiveTurnAction === 'steer'}
+                          disabled={Boolean(attachments.length)}
+                          title="Steer current turn"
+                          detail={
+                            attachments.length
+                              ? 'Attachments can only be queued'
+                              : 'Add guidance after the current tool finishes'
+                          }
+                          onChoose={(mode) => {
+                            setTurnAction(mode);
+                            setIsTurnActionMenuOpen(false);
+                          }}
+                        />
+                      ) : null}
+                      <TurnActionMenuItem
+                        mode="queue"
+                        selected={effectiveTurnAction === 'queue'}
+                        disabled={Boolean(queuedMessage)}
+                        title="Queue next"
+                        detail="Send automatically when this turn completes"
+                        onChoose={(mode) => {
+                          setTurnAction(mode);
+                          setIsTurnActionMenuOpen(false);
+                        }}
+                      />
+                      <TurnActionMenuItem
+                        mode="stop-send"
+                        selected={effectiveTurnAction === 'stop-send'}
+                        disabled={Boolean(queuedMessage)}
+                        title="Stop & send"
+                        detail="Interrupt the current turn, then send this"
+                        onChoose={(mode) => {
+                          setTurnAction(mode);
+                          setIsTurnActionMenuOpen(false);
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+              <IconButton
+                type="button"
+                className="stop-square-button"
+                label="Stop turn"
+                tooltip="Stop response"
+                side="top"
+                onClick={() => void onStop()}
+              >
+                <span className="stop-square" aria-hidden="true" />
+              </IconButton>
+            </>
+          ) : hasDraft ? (
+            <IconButton
+              type="submit"
+              form={composerFormId}
+              className="send-button"
+              label="Send message"
+              tooltip="Send"
+              shortcut="Enter"
+              side="top"
+              disabled={isLoading || isDispatchingQueued}
+            >
+              <ArrowUp strokeWidth={2} aria-hidden="true" />
+            </IconButton>
+          ) : hasStash ? (
+            <button
+              type="button"
+              className="composer-restore-draft"
+              onClick={toggleStash}
+              title="Restore stashed draft (Ctrl+S)"
+            >
+              Restore draft
+            </button>
+          ) : null}
+        </div>
       </div>
-    </>
+    </div>
+  );
+}
+
+function TurnActionMenuItem({
+  mode,
+  selected,
+  disabled,
+  title,
+  detail,
+  onChoose,
+}: {
+  mode: ComposerActionMode;
+  selected: boolean;
+  disabled?: boolean;
+  title: string;
+  detail: string;
+  onChoose: (mode: ComposerActionMode) => void;
+}): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked={selected}
+      className={selected ? 'is-selected' : ''}
+      disabled={disabled}
+      onClick={() => onChoose(mode)}
+    >
+      <span className="composer-turn-action-check" aria-hidden="true">
+        {selected ? '✓' : ''}
+      </span>
+      <span>
+        <strong>{title}</strong>
+        <small>{detail}</small>
+      </span>
+    </button>
+  );
+}
+
+function ChevronIcon(): React.JSX.Element {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="m3.25 4.75 2.75 2.5 2.75-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
