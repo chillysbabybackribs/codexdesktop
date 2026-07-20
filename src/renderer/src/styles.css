@@ -8349,11 +8349,20 @@ code.agent-audit-live-step {
 .agent-overlay-composer {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  gap: 5px;
   flex: 0 0 auto;
-  padding: 8px 8px 9px;
-  border-top: 1px solid rgb(255 255 255 / 6%);
-  background: rgb(0 0 0 / 10%);
+  margin: 7px 8px 8px;
+  padding: 6px;
+  border: 1px solid rgb(255 255 255 / 11%);
+  border-radius: 11px;
+  background: #19191a;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.agent-overlay-composer:focus-within {
+  border-color: rgb(255 255 255 / 22%);
+  background: #1b1b1c;
 }
 
 .agent-composer-body {
@@ -8402,11 +8411,11 @@ code.agent-audit-live-step {
   min-height: 34px;
   max-height: 120px;
   resize: none;
-  padding: 7px 9px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  color: #d8d8d8;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #e1e1e2;
   font-size: 13px;
   line-height: 1.4;
   outline: none;
@@ -8418,8 +8427,7 @@ code.agent-audit-live-step {
 }
 
 .agent-overlay-composer textarea:focus {
-  border-color: var(--focus-ink);
-  box-shadow: 0 0 0 2px var(--focus-halo);
+  box-shadow: none;
 }
 
 .agent-overlay-composer textarea {
