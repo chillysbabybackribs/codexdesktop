@@ -350,7 +350,7 @@ test('simple current-UI checks use one low-effort visual pass', () => {
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_network', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_live_search', 'browser_research_dual', 'browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_network', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')

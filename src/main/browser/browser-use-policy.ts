@@ -61,9 +61,9 @@ export function buildBrowserUseGuidance(env: NodeJS.ProcessEnv = process.env): s
     `Codex Desktop browser-use preset: ${preset}.`,
     '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
     '- Use browser_live_search or browser_snapshot for visible verification. The existing browser tab is a user-visible workspace: reuse an explicit existing tab and never create a tab unless the user requested one.',
-    '- Use research_web for independent public-web breadth. It is an artifact-first background lane and does not replace visible verification of the live browser.',
+    '- Use the artifact-first background research lane for independent public-web breadth. Background research does not replace visible verification of the live browser.',
     ...(preset === 'quality-max'
-      ? ['- In quality-max mode, current/public research should normally use browser_research_dual so visible search and bounded background research run together. For authenticated or interactive work, use the live lane as the authority and add research_web only when independent public evidence helps.']
+      ? ['- In quality-max mode, current/public research should normally use browser_research_dual so visible search and bounded background research run together. For authenticated or interactive work, use the live lane as the authority and add the background lane only when independent public evidence helps.']
       : preset === 'balanced'
         ? ['- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background for broad public research, and dual only for consequential comparisons.']
         : ['- In manual mode, browse only when the user explicitly requests browsing or the task directly names a live browser surface.']),

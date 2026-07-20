@@ -438,7 +438,6 @@ export function serializeAgentDock(
   return JSON.stringify({
     counter,
     sessions: sessions.map((session) => ({
-      key: session.key,
       mainChatTabKey: session.mainChatTabKey,
       ...(session.workspace ? { workspace: session.workspace } : {}),
       threadId: session.threadId,
@@ -451,17 +450,20 @@ export function serializeAgentDock(
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
       selected: session.key === selectedKey,
-      role: session.role,
-      parentAgentKey: session.parentAgentKey,
-      sourceProvider: session.sourceProvider,
-      executionLane: session.executionLane,
-      nativeRunId: session.nativeRunId,
-      runStatus: session.runStatus,
-      runTask: session.runTask,
-      runProgress: session.runProgress,
-      runResultSummary: session.runResultSummary,
-      runOutputPath: session.runOutputPath,
-      wakeStatus: session.wakeStatus
+      ...(session.sourceProvider ? {
+        key: session.key,
+        role: session.role,
+        parentAgentKey: session.parentAgentKey,
+        sourceProvider: session.sourceProvider,
+        executionLane: session.executionLane ?? null,
+        nativeRunId: session.nativeRunId ?? null,
+        runStatus: session.runStatus ?? null,
+        runTask: session.runTask ?? null,
+        runProgress: session.runProgress ?? null,
+        runResultSummary: session.runResultSummary ?? null,
+        runOutputPath: session.runOutputPath ?? null,
+        wakeStatus: session.wakeStatus ?? 'none'
+      } : {})
     }))
   })
 }
