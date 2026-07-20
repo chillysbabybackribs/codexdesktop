@@ -846,6 +846,24 @@ function extractToolResultText(content: unknown): string {
     : text;
 }
 
+function extractToolResultImages(content: unknown): string[] {
+  if (!Array.isArray(content)) return [];
+  const urls: string[] = [];
+  for (const entry of content) {
+    const record = asRecord(entry);
+    if (record.type !== 'image') continue;
+    const source = asRecord(record.source);
+    if (
+      source.type === 'base64' &&
+      typeof source.media_type === 'string' &&
+      typeof source.data === 'string'
+    ) {
+      urls.push(`data:${source.media_type};base64,${source.data}`);
+    }
+  }
+  return urls;
+}
+
 function planStepsFrom(
   value: unknown,
 ): Array<{ step: string; status: 'pending' | 'inProgress' | 'completed' }> {
