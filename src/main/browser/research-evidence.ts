@@ -199,6 +199,8 @@ function bestDocumentPassage(
     const matchedTerms = passageFocusTokens.filter((token) => windowTokens.has(token))
     if (matchedTerms.length < requiredMatches) continue
     if (!clausesCovered(windowTokens, passageClauses)) continue
+    const requiredExactTerms = passageFocusTokens.filter((token) => /\d/.test(token))
+    if (requiredExactTerms.some((token) => !windowTokens.has(token))) continue
     const normalizedLine = indexed.windowText[lineIndex] ?? ''
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
@@ -214,6 +216,7 @@ function bestDocumentPassage(
     const visibleMatchedTerms = passageFocusTokens.filter((token) => visibleTokens.has(token))
     if (visibleMatchedTerms.length < requiredMatches) continue
     if (!clausesCovered(visibleTokens, passageClauses)) continue
+    if (passageFocusTokens.some((token) => /\d/.test(token) && !visibleTokens.has(token))) continue
     const score = scorePassageText(window.text, passageFocusTokens, indexed.tokenFrequency) + preliminaryScore / 100
     if (!best || score > best.score) best = { ...window, score, matchedTerms: visibleMatchedTerms }
   }
