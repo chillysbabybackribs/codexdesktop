@@ -4,7 +4,7 @@ import type { Model, PluginSummary } from '../../shared/session-protocol';
 import { resolveModelProvider } from './app-helpers';
 import { Composer } from './Composer';
 import { CloseIcon, ContextPill } from './ChatControls';
-import { ChatItemView, TaskActivityCard, visibleUserMessageText } from './ChatTranscript';
+import { ChatItemView, TaskActivity, visibleUserMessageText } from './ChatTranscript';
 import { ThreadScroll, type MessageScrollerAnchor } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
@@ -357,7 +357,7 @@ export function ChatPaneView({
           {rows.map((row) => {
             if (row.kind === 'activity') {
               return (
-                <TaskActivityCard
+                <TaskActivity
                   key={row.id}
                   items={row.items}
                   itemMeta={itemMeta}

@@ -16,7 +16,7 @@ function isEssentialWorkItem(item: WorkItem): boolean {
   return item.type === 'fileChange' || item.type === 'turnPlan';
 }
 
-export function TaskActivityCard({
+export function TaskActivity({
   items,
   itemMeta,
   live,

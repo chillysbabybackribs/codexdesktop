@@ -19,13 +19,13 @@ transcripts cheap to render. No behavior/restriction changes.
      `.markdown-body` wrapper — per delta, only the trailing segment re-parses
      instead of the whole message.
    - Used only while an item is streaming: the main assistant message
-     (`AssistantMessage`, App.tsx) and the activity-card commentary message
+     (`AssistantMessage`, App.tsx) and the in-task commentary message
      switch back to the single-parse `MarkdownContent` on completion, so final
      fidelity is byte-identical to the pre-change render.
 
 2. **Native row virtualization.** `content-visibility: auto` +
    `contain-intrinsic-size: auto 120px` on `.thread-scroll-content > .message`
-   and `> .task-activity-card` (end of styles.css). Offscreen transcript rows
+   and `> .task-activity` (end of styles.css). Offscreen transcript rows
    skip layout and paint; `auto` intrinsic sizing remembers each row's last
    rendered size, so ThreadScroll's bottom-pin / top-anchor / spacer math stays
    stable (those paths measure live rects of on-screen nodes plus scrollHeight,
