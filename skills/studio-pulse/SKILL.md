@@ -18,8 +18,8 @@ On first run for an app, build its `## Sources` block from `launch.md` and open 
 
 For each idea with `status: shipped`:
 
-1. **Liveness.** Load the app's production URL in a tab; a smoke check via `browser_run` (page renders, no console explosion). Down = lead the report with it.
-2. **Metrics.** Read each source dashboard via `browser_run` on the logged-in session: visitors, signups, revenue/MRR, conversion — whatever the Sources block names. Record absolute value + delta vs. last entry.
+1. **Liveness.** Load the app's production URL in a tab; a smoke check via one `browser_snapshot` (page renders, expected content present; use `ui_review` only when you need runtime-exception or failed-request evidence). Down = lead the report with it.
+2. **Metrics.** Read each source dashboard via `browser_snapshot` on the logged-in session, stating every metric field in the objective: visitors, signups, revenue/MRR, conversion — whatever the Sources block names. Record absolute value + delta vs. last entry. Fall back to `browser_run` only for bespoke widgets a snapshot cannot express.
 3. **Voice of user.** New reviews, support emails surfaced in a dashboard, community mentions since last pulse. Quote anything actionable verbatim.
 4. **Competitors.** Cheap check only: the top competitor's changelog/pricing page from the validation memo. Note changes; do not re-research.
 

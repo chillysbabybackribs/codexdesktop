@@ -30,8 +30,8 @@ Filling forms, saving drafts, and preparing listings is autonomous work. **Final
 
 Work the checklist top-down, a few targets per run:
 
-1. Skim the target's submission page first (`browser_run` on a visible tab); confirm the fields against the assets block.
-2. Fill via `browser_run`. OAuth/login popups are supported — reuse the visible logged-in session.
+1. Skim the target's submission page first (`browser_snapshot` on a visible tab, listing the form fields in the objective); confirm the fields against the assets block.
+2. Fill via `browser_flow` (fill/click/submit steps; `browser_run` only for bespoke widgets a flow step cannot express). OAuth/login popups are supported — reuse the visible logged-in session.
 3. Record the resulting listing URL and status in `launch.md` immediately after each target.
 
 ## Crystallize
