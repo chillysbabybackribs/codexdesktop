@@ -3,11 +3,10 @@ import { join } from 'node:path'
 import { app } from 'electron'
 import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { TurnCheckpointStore } from '../turn-checkpoint.js'
-import { codexCapabilities, type SessionProvider } from '../providers/session-provider.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
-  SessionEvent,
+  CodexEvent,
   CodexListThreadTurnsParams,
   CodexPluginAppStatusResponse
 } from '../../shared/ipc.js'
@@ -60,9 +59,7 @@ import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-histo
 // long threads stay responsive instead of riding the limit.
 const autoCompactContextRatio = 0.8
 
-export class CodexClient extends EventEmitter implements SessionProvider {
-  readonly id = 'codex' as const
-  readonly capabilities = codexCapabilities
+export class CodexClient extends EventEmitter {
   private readonly appServer: AppServerProcess
   private readonly rpc: AppServerRpc
   private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
@@ -472,7 +469,6 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     } else if (notification.method === 'thread/tokenUsage/updated') {
       this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
     } else if (notification.method === 'turn/completed') {
-      this.browserAgent.completeTurn(notification.params.threadId, notification.params.turn.id)
       this.maybeAutoCompact(notification.params.threadId)
     } else if (notification.method === 'thread/compacted') {
       this.compactionsInFlight.delete(notification.params.threadId)
@@ -489,7 +485,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     this.emit('event', {
       type: 'notification',
       notification
-    } satisfies SessionEvent)
+    } satisfies CodexEvent)
   }
 
   private noteThreadTokenUsage(threadId: string, tokenUsage: ThreadTokenUsage): void {
@@ -550,7 +546,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
           turnId: params.turnId,
           itemId: params.callId,
           progress
-        } satisfies SessionEvent)
+        } satisfies CodexEvent)
       }
     })
     this.rpc.respond(id, response)
@@ -561,6 +557,6 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       type: 'status',
       status,
       message
-    } satisfies SessionEvent)
+    } satisfies CodexEvent)
   }
 }

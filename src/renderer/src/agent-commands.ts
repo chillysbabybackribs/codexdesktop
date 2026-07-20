@@ -1,11 +1,6 @@
 import type { ChatAttachment } from '../../shared/ipc'
-import type { ReasoningEffort } from '../../shared/session-protocol'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
-import type { AuditRequestSummary } from './audit-trigger.js'
-
-// Extra send options. `audit` is set only by the auto-audit trigger so the
-// card can show a compact card while the model still gets the full prompt.
-export type AgentSendOptions = { audit?: AuditRequestSummary }
 
 type MutableRef<T> = { current: T }
 
@@ -29,12 +24,7 @@ export function createAgentCommands(options: {
   settleThreadStart: (key: string) => void
 }): {
   bindAgentThread: (key: string, threadId: string) => void
-  handleAgentSend: (
-    key: string,
-    text: string,
-    attachments?: ChatAttachment[],
-    opts?: AgentSendOptions
-  ) => Promise<boolean>
+  handleAgentSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   handleAgentStop: (key: string) => Promise<void>
   handleAgentCompact: (key: string) => Promise<void>
   handleAgentSteer: (key: string, text: string) => Promise<boolean>
@@ -51,8 +41,7 @@ export function createAgentCommands(options: {
   async function handleAgentSend(
     key: string,
     text: string,
-    attachments: ChatAttachment[] = [],
-    opts: AgentSendOptions = {}
+    attachments: ChatAttachment[] = []
   ): Promise<boolean> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session) return false
@@ -76,9 +65,9 @@ export function createAgentCommands(options: {
         options.queueThreadStart(key)
       }
 
-      store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments, audit: opts.audit })
+      store.appendMessage(key, { id: crypto.randomUUID(), role: 'user', text, attachments })
       const outgoingText = session.watchesMain ? `${options.buildMainChatContext()}\n\n${text}` : text
-      const response = await window.api.session.sendMessage({
+      const response = await window.api.codex.sendMessage({
         threadId,
         text: outgoingText,
         attachments,
@@ -111,17 +100,9 @@ export function createAgentCommands(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || !session.turnId) return
     try {
-      await window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
-    } catch (error) {
-      // A completed turn is harmless, but a transport/server failure used to
-      // leave the still-visible agent looking like it was stopped when it was
-      // not. Keep the notification path authoritative and give the user a
-      // retryable, actionable signal.
-      store.appendMessage(key, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        text: `⚠ Could not stop the running turn: ${(error as Error).message}. It may have already finished; wait for the status update or try Stop again.`
-      })
+      await window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+    } catch {
+      // The turn may have already finished; notifications settle the state.
     }
   }
 
@@ -129,7 +110,7 @@ export function createAgentCommands(options: {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (!session?.threadId || session.turnId || session.isCompacting) return
     try {
-      await window.api.session.compactThread(session.threadId)
+      await window.api.codex.compactThread(session.threadId)
     } catch (error) {
       store.appendMessage(key, {
         id: crypto.randomUUID(),
@@ -144,7 +125,7 @@ export function createAgentCommands(options: {
     const trimmed = text.trim()
     if (!trimmed || !session?.threadId || !session.turnId) return false
     try {
-      await window.api.session.steerTurn({
+      await window.api.codex.steerTurn({
         threadId: session.threadId,
         turnId: session.turnId,
         text: trimmed

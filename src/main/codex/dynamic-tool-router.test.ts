@@ -9,17 +9,12 @@ function params(tool: string, args: DynamicToolCallParams['arguments'], namespac
   return { threadId: 'thread-1', turnId: 'turn-1', callId: 'call-1', namespace, tool, arguments: args }
 }
 
-const unusedBrowser = {
-  blockedTurnBrowserResult: () => null,
-  blockTurnBrowserWork: () => {}
-} as unknown as BrowserAgentController
+const unusedBrowser = {} as BrowserAgentController
 const unusedResearch = {} as ResearchRunner
 
 function withTurnRunner<T extends object>(browserAgent: T): T & Pick<BrowserAgentController, 'runForTurn'> {
   return {
     ...browserAgent,
-    blockedTurnBrowserResult: () => null,
-    blockTurnBrowserWork: () => {},
     runForTurn: async (_owner, execute) => execute(new AbortController().signal)
   } as T & Pick<BrowserAgentController, 'runForTurn'>
 }
@@ -168,157 +163,9 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   })
 })
 
-test('dynamic tool router returns a standalone data URI for app screenshots', async () => {
-  const browserAgent = withTurnRunner({
-    captureAppScreenshot: async () => ({
-      ok: true,
-      result: {
-        screenshot: {
-          artifactPath: '/tmp/app-window.png',
-          fileName: 'app-window.png',
-          mediaType: 'image/png',
-          bytes: 42,
-          width: 800,
-          height: 600
-        }
-      }
-    }),
-    readScreenshotDataUrl: async () => 'data:image/png;base64,abc'
-  }) as unknown as BrowserAgentController
-  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
-    browserAgent,
-    researchRunner: unusedResearch
-  })
-
-  assert.equal(response.success, true)
-  assert.deepEqual(response.contentItems, [{
-    type: 'inputImage',
-    imageUrl: 'data:image/png;base64,abc'
-  }])
-})
-
-test('app screenshots remain available after a browser tab target is lost', async () => {
-  let captured = false
-  let recordedBrowserBlock = false
-  const browserAgent = {
-    blockedTurnBrowserResult: () => ({
-      ok: false,
-      error: 'the previous browser tab closed',
-      errorCode: 'targetClosed'
-    }),
-    blockTurnBrowserWork: () => { recordedBrowserBlock = true },
-    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
-      execute(new AbortController().signal),
-    captureAppScreenshot: async () => {
-      captured = true
-      return {
-        ok: true,
-        result: {
-          screenshot: {
-            artifactPath: '/tmp/app-window-after-tab-close.png',
-            fileName: 'app-window-after-tab-close.png',
-            mediaType: 'image/png',
-            bytes: 42,
-            width: 800,
-            height: 600
-          }
-        }
-      }
-    },
-    readScreenshotDataUrl: async () => 'data:image/png;base64,still-valid'
-  } as unknown as BrowserAgentController
-
-  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
-    browserAgent,
-    researchRunner: unusedResearch
-  })
-
-  assert.equal(captured, true)
-  assert.equal(recordedBrowserBlock, false)
-  assert.equal(response.success, true)
-  assert.deepEqual(response.contentItems, [{
-    type: 'inputImage',
-    imageUrl: 'data:image/png;base64,still-valid'
-  }])
-})
-
-test('tab screenshots stay blocked after their browser target is lost', async () => {
-  let captured = false
-  const browserAgent = {
-    blockedTurnBrowserResult: () => ({
-      ok: false,
-      error: 'the previous browser tab closed',
-      errorCode: 'targetClosed'
-    }),
-    blockTurnBrowserWork: () => {},
-    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
-      execute(new AbortController().signal),
-    captureScreenshot: async () => {
-      captured = true
-      return { ok: true }
-    }
-  } as unknown as BrowserAgentController
-
-  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
-    browserAgent,
-    researchRunner: unusedResearch
-  })
-
-  assert.equal(captured, false)
-  assert.equal(response.success, false)
-  assert.match(textResult(response).error ?? '', /previous browser tab closed/)
-})
-
-test('dynamic tool router returns a standalone data URI for browser screenshots', async () => {
-  const browserAgent = withTurnRunner({
-    captureScreenshot: async () => ({
-      ok: true,
-      result: {
-        screenshot: {
-          artifactPath: '/tmp/browser-tab.png',
-          fileName: 'browser-tab.png',
-          mediaType: 'image/png',
-          bytes: 42,
-          width: 800,
-          height: 600
-        }
-      }
-    }),
-    readScreenshotDataUrl: async () => 'data:image/png;base64,def'
-  }) as unknown as BrowserAgentController
-  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
-    browserAgent,
-    researchRunner: unusedResearch
-  })
-
-  assert.equal(response.success, true)
-  assert.deepEqual(response.contentItems, [{
-    type: 'inputImage',
-    imageUrl: 'data:image/png;base64,def'
-  }])
-})
-
-test('dynamic tool router preserves screenshot errors as text', async () => {
-  const browserAgent = withTurnRunner({
-    captureAppScreenshot: async () => ({ ok: false, error: 'capture unavailable' })
-  }) as unknown as BrowserAgentController
-  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
-    browserAgent,
-    researchRunner: unusedResearch
-  })
-
-  assert.equal(response.success, false)
-  assert.deepEqual(response.contentItems, [{
-    type: 'inputText',
-    text: JSON.stringify({ ok: false, error: 'capture unavailable' })
-  }])
-})
-
 test('dynamic browser calls carry their exact owning turn', async () => {
   let owner: unknown = null
   const browserAgent = {
-    blockedTurnBrowserResult: () => null,
-    blockTurnBrowserWork: () => {},
     runForTurn: async (nextOwner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) => {
       owner = nextOwner
       return execute(new AbortController().signal)
@@ -361,6 +208,7 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version', minSources: Number.NaN }
     ],
     maxResults: 4,
+    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   }), {
@@ -378,6 +226,7 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version' }
     ],
     maxResults: 4,
+    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   })

@@ -1,9 +1,9 @@
-import type { ModelRerouteReason } from '../../shared/session-protocol'
-import type { ReasoningEffort } from '../../shared/session-protocol'
-import type { ThreadGoal } from '../../shared/session-protocol'
-import type { ThreadItem } from '../../shared/session-protocol'
-import type { ThreadTokenUsage } from '../../shared/session-protocol'
-import type { TokenUsageBreakdown } from '../../shared/session-protocol'
+import type { ModelRerouteReason } from '../../shared/codex-protocol/v2/ModelRerouteReason'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown'
 import type { TurnDiffSummary } from './diff'
 
 export type TurnMetaStatus = 'inProgress' | 'completed' | 'failed' | 'interrupted'
@@ -250,7 +250,7 @@ export function modelCallAttributionForItem(item: ThreadItem): ModelCallAttribut
         item,
         item.namespace ? `${item.namespace}/${item.tool}` : item.tool,
         serializedChars(item.arguments),
-        dynamicToolTextChars(item.contentItems)
+        serializedChars(item.contentItems)
       )
     case 'collabAgentToolCall':
       return attribution(item, item.tool, item.prompt?.length ?? null, serializedChars(item.agentsStates))
@@ -315,13 +315,6 @@ function serializedChars(value: unknown): number | null {
   } catch {
     return null
   }
-}
-
-function dynamicToolTextChars(contentItems: Extract<ThreadItem, { type: 'dynamicToolCall' }>['contentItems']): number | null {
-  if (!contentItems) return null
-  return serializedChars(contentItems
-    .filter((item) => item.type === 'inputText')
-    .map((item) => ({ type: item.type, text: item.text })))
 }
 
 function roundPercent(value: number): number {

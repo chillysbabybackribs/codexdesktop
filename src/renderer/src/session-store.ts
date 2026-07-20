@@ -1,8 +1,8 @@
-import type { ServerNotification } from '../../shared/session-protocol'
-import type { ReasoningEffort } from '../../shared/session-protocol'
-import type { ThreadGoal } from '../../shared/session-protocol'
-import type { ThreadTokenUsage } from '../../shared/session-protocol'
-import type { Turn } from '../../shared/session-protocol'
+import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import type { Turn } from '../../shared/codex-protocol/v2/Turn'
 import type { ItemMeta } from './activity-model.js'
 import {
   isItemNotification,

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { PluginMarketplaceEntry } from '../../shared/session-protocol/index.ts'
-import type { PluginSummary } from '../../shared/session-protocol/index.ts'
+import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry.ts'
+import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary.ts'
 import { pluginInstallParams, pluginUninstallId, safePluginAuthUrl, unresolvedPluginApps } from './plugin-lifecycle.ts'
 
 function plugin(overrides: Partial<PluginSummary> = {}): PluginSummary {

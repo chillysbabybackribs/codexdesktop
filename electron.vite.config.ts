@@ -1,6 +1,6 @@
-import { resolve } from 'node:path';
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
-import react from '@vitejs/plugin-react';
+import { resolve } from 'node:path'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
@@ -11,14 +11,10 @@ export default defineConfig({
           index: resolve('src/main/index.ts'),
           // utilityProcess entry: research static-lane HTML extraction runs
           // off the main thread (Phase 5).
-          'static-extract-worker': resolve('src/main/workers/static-extract-worker.ts'),
-          // Standalone MCP stdio facade over the browser tools; spawned by an
-          // MCP client (Claude CLI) with plain node, proxies to the unix
-          // control socket (Claude-prep step 6).
-          'mcp-browser-shim': resolve('src/main/workers/mcp-browser-shim.ts'),
-        },
-      },
-    },
+          'static-extract-worker': resolve('src/main/workers/static-extract-worker.ts')
+        }
+      }
+    }
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
@@ -27,14 +23,14 @@ export default defineConfig({
         input: {
           index: resolve('src/preload/index.ts'),
           'omnibox-popup': resolve('src/preload/omnibox-popup.ts'),
-          'browser-page': resolve('src/preload/browser-page.ts'),
+          'browser-page': resolve('src/preload/browser-page.ts')
         },
         output: {
           format: 'cjs',
-          entryFileNames: '[name].cjs',
-        },
-      },
-    },
+          entryFileNames: '[name].cjs'
+        }
+      }
+    }
   },
   renderer: {
     root: resolve('src/renderer'),
@@ -44,9 +40,9 @@ export default defineConfig({
         input: {
           index: resolve('src/renderer/index.html'),
           landing: resolve('src/renderer/landing.html'),
-          'omnibox-popup': resolve('src/renderer/omnibox-popup.html'),
-        },
-      },
-    },
-  },
-});
+          'omnibox-popup': resolve('src/renderer/omnibox-popup.html')
+        }
+      }
+    }
+  }
+})

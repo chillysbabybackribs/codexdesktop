@@ -7,7 +7,6 @@ import {
   formatSkillInvocationText,
   isFastPathTask,
   isInteractiveBrowserTask,
-  isLightweightVisualCheck,
   isReadOnlyBrowserMicrotask,
   isWebResearchTask,
   resolveTurnPolicy,
@@ -169,12 +168,6 @@ test('global guidance stays limited to product-wide behavior', () => {
 
   assert.match(guidance, /reuse the active visible browser tab/i)
   assert.match(guidance, /prefer one `browser_snapshot` call/i)
-  assert.match(guidance, /app_screenshot.*full Electron window/i)
-  assert.match(guidance, /browser_screenshot.*browser tab only/i)
-  assert.match(guidance, /only pass the result to `image\(\)`.*beginning with `data:image\//i)
-  assert.match(guidance, /failed capture returns error text/i)
-  assert.match(guidance, /simple visual confirmation.*one `app_screenshot`/i)
-  assert.match(guidance, /artifact preview remain visible in chat/i)
   assert.match(guidance, /completion\.nextAction: "answer"/i)
   assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
@@ -269,22 +262,10 @@ test('simple read-only browser tasks use the fastest supported effort while comp
   }), { summary: 'concise' })
 })
 
-test('simple current-UI checks use one low-effort visual pass', () => {
-  const prompt = 'Can you view the current UI of the composer?'
-
-  assert.equal(isLightweightVisualCheck(prompt), true)
-  assert.equal(isFastPathTask(prompt), true)
-  assert.equal(isLightweightVisualCheck('Review the current UI of the composer for accessibility problems'), false)
-  assert.deepEqual(resolveTurnPolicy(prompt, {
-    requestedEffort: 'high',
-    supportedEfforts: ['none', 'low', 'medium', 'high']
-  }), { summary: 'concise', effort: 'none' })
-})
-
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')
@@ -308,12 +289,6 @@ test('the dynamic tool surface includes verified research primitives', () => {
   if (!browserScreenshot || browserScreenshot.type !== 'function') assert.fail('browser_screenshot function tool is missing')
   assert.deepEqual(Object.keys((browserScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), ['tab'])
   assert.deepEqual((browserScreenshot.inputSchema as { required?: string[] }).required, undefined)
-  const appScreenshot = browserDynamicTools.find(({ name }) => name === 'app_screenshot')
-  assert.equal(appScreenshot?.type, 'function')
-  if (!appScreenshot || appScreenshot.type !== 'function') assert.fail('app_screenshot function tool is missing')
-  assert.deepEqual(Object.keys((appScreenshot.inputSchema as { properties: Record<string, unknown> }).properties), [])
-  assert.match(appScreenshot.description, /full Codex Desktop window/i)
-  assert.match(appScreenshot.description, /browser_screenshot/i)
   const uiReview = browserDynamicTools.find(({ name }) => name === 'ui_review')
   assert.equal(uiReview?.type, 'function')
   if (!uiReview || uiReview.type !== 'function') assert.fail('ui_review function tool is missing')
@@ -360,19 +335,19 @@ test('the dynamic tool surface includes verified research primitives', () => {
   }).properties
   const researchSchema = researchWeb.inputSchema as { anyOf?: Array<{ required?: string[] }> }
   assert.deepEqual(Object.keys(researchProperties), [
-    'queries', 'urls', 'focus', 'maxResults', 'maxAttempts', 'snippetChars'
+    'queries', 'urls', 'focus', 'maxResults', 'maxPages', 'maxAttempts', 'snippetChars'
   ])
   assert.deepEqual(researchSchema.anyOf, [{ required: ['queries'] }, { required: ['urls'] }])
   assert.equal(researchProperties.urls?.maxItems, 8)
   assert.equal(researchProperties.focus?.maxItems, 6)
   assert.deepEqual(researchProperties.focus?.items?.required, ['id', 'need'])
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.minimum, 1)
-  assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 6)
-  assert.equal(researchProperties.maxAttempts?.maximum, 24)
+  assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 3)
+  assert.equal(researchProperties.maxPages?.maximum, 3)
+  assert.equal(researchProperties.maxAttempts?.maximum, 8)
   assert.match(researchProperties.queries?.description ?? '', /primary discovery query/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
-  assert.match(researchWeb.description, /model-authored evidence needs/i)
 })
 
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {

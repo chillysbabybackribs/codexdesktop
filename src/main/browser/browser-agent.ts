@@ -6,7 +6,6 @@ import { buildDomSnapshotModel } from './dom-snapshot.js'
 import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
-import { captureAppWindowImage } from './app-window-screenshot.js'
 import type { TabManager } from './tab-manager.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
@@ -191,7 +190,6 @@ type QueuedOperation<T> = Promise<T>
 export class BrowserAgentController {
   private readonly tabQueues = new Map<string, Promise<void>>()
   private readonly turnOperations = new Map<string, Set<AbortController>>()
-  private readonly blockedTurnBrowserWork = new Map<string, BrowserFailure>()
   private readonly getTabs: () => TabManager | null
   private readonly artifactStore?: CdpArtifactStore
 
@@ -236,39 +234,8 @@ export class BrowserAgentController {
     }
   }
 
-  /**
-   * Records that this turn lost its browser target. A later tool call in the
-   * same turn must not silently select whatever tab happens to become active.
-   */
-  blockTurnBrowserWork(owner: BrowserOperationOwner, result: BrowserAgentResult): void {
-    if (result.ok || (result.errorCode !== 'targetClosed' && result.errorCode !== 'targetChanged')) return
-    const failure = result.failure ?? {
-      code: result.errorCode,
-      phase: 'targetLifecycle' as const,
-      message: result.error ?? 'browser target is no longer available'
-    }
-    this.blockedTurnBrowserWork.set(turnOperationKey(owner.threadId, owner.turnId), failure)
-  }
-
-  /** Returns the terminal browser result for a turn whose target was lost. */
-  blockedTurnBrowserResult(owner: BrowserOperationOwner): BrowserAgentResult | null {
-    const failure = this.blockedTurnBrowserWork.get(turnOperationKey(owner.threadId, owner.turnId))
-    if (!failure) return null
-    return {
-      ok: false,
-      error: `${failure.message}. Browser work for this turn has stopped; start a new user request before using another tab.`,
-      errorCode: failure.code,
-      failure
-    }
-  }
-
-  completeTurn(threadId: string, turnId: string): void {
-    this.blockedTurnBrowserWork.delete(turnOperationKey(threadId, turnId))
-  }
-
   cancelTurn(threadId: string, turnId: string): void {
     const key = turnOperationKey(threadId, turnId)
-    this.blockedTurnBrowserWork.delete(key)
     const operations = this.turnOperations.get(key)
     if (!operations) return
     for (const controller of operations) controller.abort()
@@ -854,48 +821,6 @@ export class BrowserAgentController {
         }
       }
     })
-  }
-
-  async captureAppScreenshot(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
-    const artifactStore = this.artifactStore
-    if (!artifactStore) {
-      return { ok: false, error: 'screenshot artifact storage is not available' } satisfies BrowserAgentFailure
-    }
-
-    const tabs = this.getTabs()
-    if (!tabs) {
-      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
-    }
-
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    if (options.signal?.aborted) return cancelledResult()
-
-    try {
-      const window = tabs.getWindow()
-      const browser = tabs.getVisibleBrowserCaptureTarget()
-      const image = await captureAppWindowImage({ window, browser }, timeoutMs)
-      const buffer = image.toPNG()
-      const screenshot = await artifactStore.persistScreenshot(buffer.toString('base64'), 'png')
-      const [contentWidth, contentHeight] = window.getContentSize()
-      return {
-        ok: true,
-        result: {
-          screenshot: {
-            ...screenshot,
-            scope: 'appWindow',
-            contentWidth,
-            contentHeight,
-            browserVisible: Boolean(browser),
-            ...(browser ? { tabId: tabs.getActiveTabId(), bounds: browser.bounds } : {})
-          }
-        }
-      }
-    } catch (error) {
-      return {
-        ok: false,
-        error: error instanceof Error ? error.message : String(error)
-      } satisfies BrowserAgentFailure
-    }
   }
 
   async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {

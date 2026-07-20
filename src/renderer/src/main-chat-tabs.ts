@@ -19,12 +19,6 @@ export type MainChatTabState = {
   activeKey: string
 }
 
-export type MainChatTabDropCandidate = {
-  key: string
-  left: number
-  right: number
-}
-
 type PersistedMainChatTab = {
   key?: unknown
   threadId?: unknown
@@ -153,61 +147,6 @@ export function closeMainChatTab(
   if (state.activeKey !== key) return { tabs, activeKey: state.activeKey }
   const next = tabs[Math.min(index, tabs.length - 1)]
   return { tabs, activeKey: next.key }
-}
-
-export function reorderMainChatTabs(
-  state: MainChatTabState,
-  sourceKey: string,
-  targetKey: string,
-  placement: 'before' | 'after'
-): MainChatTabState {
-  if (sourceKey === targetKey) return state
-
-  const source = state.tabs.find((tab) => tab.key === sourceKey)
-  if (!source || !state.tabs.some((tab) => tab.key === targetKey)) return state
-
-  const withoutSource = state.tabs.filter((tab) => tab.key !== sourceKey)
-  const targetIndex = withoutSource.findIndex((tab) => tab.key === targetKey)
-  const insertAt = placement === 'before' ? targetIndex : targetIndex + 1
-  const tabs = [
-    ...withoutSource.slice(0, insertAt),
-    source,
-    ...withoutSource.slice(insertAt)
-  ]
-
-  return { ...state, tabs }
-}
-
-export function findMainChatTabDropTarget(
-  sourceKey: string,
-  sourceLeft: number,
-  previewLeft: number,
-  previewWidth: number,
-  candidates: MainChatTabDropCandidate[],
-  overlapRatio = 0.1
-): { key: string; placement: 'before' | 'after' } | null {
-  const previewRight = previewLeft + previewWidth
-  const minimumOverlap = previewWidth * overlapRatio
-  const previewCenter = previewLeft + previewWidth / 2
-
-  const target = candidates
-    .filter((candidate) => candidate.key !== sourceKey)
-    .map((candidate) => ({
-      candidate,
-      overlap: Math.max(0, Math.min(previewRight, candidate.right) - Math.max(previewLeft, candidate.left))
-    }))
-    .filter(({ overlap }) => overlap >= minimumOverlap)
-    .sort((first, second) => (
-      second.overlap - first.overlap ||
-      Math.abs((first.candidate.left + first.candidate.right) / 2 - previewCenter) -
-        Math.abs((second.candidate.left + second.candidate.right) / 2 - previewCenter)
-    ))[0]?.candidate
-
-  if (!target) return null
-  return {
-    key: target.key,
-    placement: previewLeft > sourceLeft ? 'after' : 'before'
-  }
 }
 
 export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab | null {

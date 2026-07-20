@@ -56,7 +56,7 @@ test('page extraction program removes media and low-value components', () => {
   assert.match(program, /const maxChars = 1200/)
   assert.match(program, /script.*style.*img.*nav.*footer/s)
   assert.match(program, /removedImages: true/)
-  assert.match(program, /return \{\n {4}title/)
+  assert.match(program, /return \{\n    title/)
   assert.equal((PAGE_EXTRACTION_REMOVE_SELECTORS as readonly string[]).includes('header'), false)
   assert.equal(lowValuePattern.test('commentary'), false)
   assert.equal(lowValuePattern.test('social-share'), true)

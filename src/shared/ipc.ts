@@ -96,9 +96,7 @@ export type CodexResearchProgressEvent = {
   progress: ResearchProgress
 }
 
-export type SessionEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
-/** @deprecated alias kept for migration; import SessionEvent. */
-export type CodexEvent = SessionEvent
+export type CodexEvent = CodexStatusEvent | CodexNotificationEvent | CodexResearchProgressEvent
 
 export type ChatAttachment = {
   id: string
@@ -120,14 +118,6 @@ export type AttachmentPreviewParams = {
 }
 
 export type AttachmentPreviewResult = {
-  dataUrl: string | null
-}
-
-export type ImageViewPreviewParams = {
-  path: string
-}
-
-export type ImageViewPreviewResult = {
   dataUrl: string | null
 }
 
@@ -275,36 +265,6 @@ export type CheckpointRevertParams = {
   checkpointId: string
 }
 
-export type CheckpointChangedFilesParams = {
-  threadId: string
-  turnId: string
-}
-
-export type CheckpointRevertFilesParams = {
-  checkpointId: string
-  paths: string[]
-}
-
-export type MentionIndexParams = {
-  workspace: string
-}
-
-export type MentionIndexResult = {
-  files: string[]
-  dirs: string[]
-}
-
-export type MentionReadParams = {
-  workspace: string
-  path: string
-  kind: 'file' | 'folder'
-}
-
-export type MentionReadIpcResult = {
-  content: string | null
-  truncated: boolean
-}
-
 export const ipcChannels = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggleMaximize',
@@ -334,27 +294,27 @@ export const ipcChannels = {
   browserFocusOmnibox: 'browser:focusOmnibox',
   browserSelectionCopy: 'browser:selectionCopy',
   clipboardWrite: 'clipboard:write',
-  sessionGetAuthStatus: 'session:getAuthStatus',
-  sessionListModels: 'session:listModels',
-  sessionListThreads: 'session:listThreads',
-  sessionStartThread: 'session:startThread',
-  sessionResumeThread: 'session:resumeThread',
-  sessionListThreadTurns: 'session:listThreadTurns',
-  sessionGetGoal: 'session:getGoal',
-  sessionSetGoal: 'session:setGoal',
-  sessionClearGoal: 'session:clearGoal',
-  sessionSendMessage: 'session:sendMessage',
-  sessionSteerTurn: 'session:steerTurn',
-  sessionInterruptTurn: 'session:interruptTurn',
-  sessionCompactThread: 'session:compactThread',
-  sessionUnsubscribeThread: 'session:unsubscribeThread',
-  sessionListInstalledPlugins: 'session:listInstalledPlugins',
-  sessionListPlugins: 'session:listPlugins',
-  sessionReadPlugin: 'session:readPlugin',
-  sessionGetPluginAppStatuses: 'session:getPluginAppStatuses',
-  sessionInstallPlugin: 'session:installPlugin',
-  sessionUninstallPlugin: 'session:uninstallPlugin',
-  sessionEvent: 'session:event',
+  codexGetAuthStatus: 'codex:getAuthStatus',
+  codexListModels: 'codex:listModels',
+  codexListThreads: 'codex:listThreads',
+  codexStartThread: 'codex:startThread',
+  codexResumeThread: 'codex:resumeThread',
+  codexListThreadTurns: 'codex:listThreadTurns',
+  codexGetGoal: 'codex:getGoal',
+  codexSetGoal: 'codex:setGoal',
+  codexClearGoal: 'codex:clearGoal',
+  codexSendMessage: 'codex:sendMessage',
+  codexSteerTurn: 'codex:steerTurn',
+  codexInterruptTurn: 'codex:interruptTurn',
+  codexCompactThread: 'codex:compactThread',
+  codexUnsubscribeThread: 'codex:unsubscribeThread',
+  codexListInstalledPlugins: 'codex:listInstalledPlugins',
+  codexListPlugins: 'codex:listPlugins',
+  codexReadPlugin: 'codex:readPlugin',
+  codexGetPluginAppStatuses: 'codex:getPluginAppStatuses',
+  codexInstallPlugin: 'codex:installPlugin',
+  codexUninstallPlugin: 'codex:uninstallPlugin',
+  codexEvent: 'codex:event',
   memoryPersist: 'memory:persist',
   tracePersist: 'trace:persist',
   traceLoad: 'trace:load',
@@ -363,13 +323,8 @@ export const ipcChannels = {
   transcriptCachePersist: 'transcript-cache:persist',
   checkpointList: 'checkpoint:list',
   checkpointRevert: 'checkpoint:revert',
-  checkpointRevertFiles: 'checkpoint:revertFiles',
-  checkpointChangedFiles: 'checkpoint:changedFiles',
-  mentionIndex: 'mention:index',
-  mentionRead: 'mention:read',
   artifactReadImage: 'artifact:readImage',
   artifactOpenImage: 'artifact:openImage',
-  imageViewPreview: 'image-view:preview',
   attachmentPick: 'attachment:pick',
   attachmentSave: 'attachment:save',
   attachmentPreview: 'attachment:preview',

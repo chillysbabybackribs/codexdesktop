@@ -66,7 +66,7 @@ test('agent send forwards the agent reasoning effort', async () => {
     configurable: true,
     value: {
       api: {
-        session: {
+        codex: {
           startThread: async () => {
             startThreadCalls += 1
             return { thread: { id: 'thread-1' } }
@@ -92,37 +92,6 @@ test('agent send forwards the agent reasoning effort', async () => {
     assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
     assert.equal(sessions[0]?.threadId, 'thread-1')
     assert.deepEqual(threadStartEvents, ['queued:agent-1', 'settled:agent-1'])
-  } finally {
-    if (previousWindow) {
-      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
-    } else {
-      Reflect.deleteProperty(globalThis, 'window')
-    }
-  }
-})
-
-test('agent stop surfaces an interrupt failure instead of leaving a working agent silently stuck', async () => {
-  const previousWindow = globalThis.window
-  Object.defineProperty(globalThis, 'window', {
-    configurable: true,
-    value: {
-      api: {
-        session: {
-          interruptTurn: async () => { throw new Error('app-server unavailable') }
-        }
-      }
-    }
-  })
-
-  try {
-    const { sessions, messages, commands } = commandHarness()
-    sessions[0].threadId = 'thread-1'
-    sessions[0].turnId = 'turn-1'
-
-    await commands.handleAgentStop('agent-1')
-
-    assert.match(messages[0]?.text ?? '', /Could not stop the running turn: app-server unavailable/)
-    assert.match(messages[0]?.text ?? '', /try Stop again/)
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })

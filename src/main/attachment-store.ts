@@ -158,7 +158,6 @@ function detectImage(buffer: Buffer): { mediaType: string; extension: string } |
 
 function safeName(value: string): string {
   const cleaned = basename(value || 'attachment')
-    // biome-ignore lint/suspicious/noControlCharactersInRegex: intentionally strips control and bidi-override chars from filenames
     .replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g, '')
     .replace(/[^\p{L}\p{N}._()\- ]/gu, '_')
     .trim()

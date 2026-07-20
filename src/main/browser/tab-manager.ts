@@ -269,30 +269,16 @@ export class TabManager {
     }
     return new Promise((resolve) => {
       const requestId = webContents.findInPage(text, { forward, findNext: true })
-      // A superseded find or a navigation mid-search never delivers this
-      // requestId's finalUpdate; without the timeout the listener leaks and
-      // the caller hangs forever.
-      let settled = false
-      const settle = (result: { activeMatchOrdinal: number; matches: number; finalUpdate: boolean }): void => {
-        if (settled) return
-        settled = true
-        clearTimeout(timer)
-        webContents.off('found-in-page', onResult)
-        webContents.off('destroyed', onGone)
-        resolve(result)
-      }
       const onResult = (_event: Electron.Event, result: Electron.FoundInPageResult): void => {
         if (result.requestId !== requestId || !result.finalUpdate) return
-        settle({
+        webContents.off('found-in-page', onResult)
+        resolve({
           activeMatchOrdinal: result.activeMatchOrdinal,
           matches: result.matches,
           finalUpdate: result.finalUpdate
         })
       }
-      const onGone = (): void => settle({ activeMatchOrdinal: 0, matches: 0, finalUpdate: true })
-      const timer = setTimeout(onGone, 2000)
       webContents.on('found-in-page', onResult)
-      webContents.once('destroyed', onGone)
     })
   }
 
@@ -351,18 +337,6 @@ export class TabManager {
 
   getActiveTabId(): string | null {
     return this.activeTabId
-  }
-
-  getWindow(): BrowserWindow {
-    return this.window
-  }
-
-  getVisibleBrowserCaptureTarget(): { webContents: WebContents; bounds: BrowserBounds } | null {
-    if (this.isDraggingDivider || this.isOverlayOpen) return null
-    const tab = this.getActiveTab()
-    if (!tab || this.bounds.x < 0 || this.bounds.y < 0) return null
-    if (tab.view.webContents.isDestroyed()) return null
-    return { webContents: tab.view.webContents, bounds: { ...this.bounds } }
   }
 
   resolveWebContents(tabId?: string | null): WebContents | null {
@@ -587,7 +561,7 @@ export class TabManager {
           canGoForward: navigation.canGoForward,
           isAudible: tab.isAudible,
           isMuted: tab.isMuted,
-          zoomPercent: Math.round(100 * 1.2 ** tab.view.webContents.getZoomLevel())
+          zoomPercent: Math.round(100 * Math.pow(1.2, tab.view.webContents.getZoomLevel()))
         }
       })
     })

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { ThreadItem } from '../../shared/session-protocol/index.ts'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
 import { buildTurnTrace, isTurnTrace } from './trace.ts'
 
 const turnUsage = {

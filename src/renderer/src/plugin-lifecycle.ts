@@ -1,7 +1,7 @@
 import type { CodexPluginInstallParams, CodexPluginAppStatus } from '../../shared/ipc'
-import type { AppSummary } from '../../shared/session-protocol'
-import type { PluginMarketplaceEntry } from '../../shared/session-protocol'
-import type { PluginSummary } from '../../shared/session-protocol'
+import type { AppSummary } from '../../shared/codex-protocol/v2/AppSummary'
+import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry'
+import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary'
 
 export function isRemotePlugin(plugin: PluginSummary): boolean {
   return plugin.source.type === 'remote'

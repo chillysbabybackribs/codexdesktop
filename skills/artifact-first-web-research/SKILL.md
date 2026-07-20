@@ -12,11 +12,11 @@ Treat research as a claim-coverage problem. Define the evidence needed for the r
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
 2. If exact official source URLs are already known, pass them through `urls`; otherwise use one focused primary `queries` entry with up to two genuine fallback lanes.
 3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
-4. Make one `research_web` call. Give it concrete `focus` needs (and `minSources` only where independent corroboration matters); the model-authored evidence contract determines how many sources are gathered and stops early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
+4. Make one `research_web` call. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
 5. Answer from the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
 6. Make at most one focused gap-fill call. Preserve unresolved uncertainty rather than searching for a higher source count.
 
-Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
+Leave `maxPages`, `maxAttempts`, and `snippetChars` omitted unless the task genuinely needs different bounds. `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
 
 ## Choose The Cheapest Reliable Lane
 

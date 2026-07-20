@@ -3,10 +3,8 @@ import test from 'node:test'
 import {
   closeMainChatTab,
   createMainChatTab,
-  findMainChatTabDropTarget,
   needsMainChatTabHydration,
   parseMainChatTabState,
-  reorderMainChatTabs,
   serializeMainChatTabState
 } from './main-chat-tabs.ts'
 
@@ -78,49 +76,6 @@ test('closing the only tab leaves a fresh usable tab', () => {
     activeKey: 'tab-new',
     tabs: [createMainChatTab('tab-new')]
   })
-})
-
-test('reorders open tabs while keeping the active tab stable', () => {
-  const state = {
-    activeKey: 'tab-b',
-    tabs: [createMainChatTab('tab-a'), createMainChatTab('tab-b'), createMainChatTab('tab-c')]
-  }
-
-  const movedAfter = reorderMainChatTabs(state, 'tab-a', 'tab-c', 'after')
-  assert.deepEqual(movedAfter.tabs.map((tab) => tab.key), ['tab-b', 'tab-c', 'tab-a'])
-  assert.equal(movedAfter.activeKey, 'tab-b')
-
-  const movedBefore = reorderMainChatTabs(movedAfter, 'tab-a', 'tab-b', 'before')
-  assert.deepEqual(movedBefore.tabs.map((tab) => tab.key), ['tab-a', 'tab-b', 'tab-c'])
-})
-
-test('leaves tab state unchanged when a reorder target is invalid', () => {
-  const state = {
-    activeKey: 'tab-a',
-    tabs: [createMainChatTab('tab-a'), createMainChatTab('tab-b')]
-  }
-
-  assert.equal(reorderMainChatTabs(state, 'missing', 'tab-b', 'before'), state)
-  assert.equal(reorderMainChatTabs(state, 'tab-a', 'missing', 'after'), state)
-  assert.equal(reorderMainChatTabs(state, 'tab-a', 'tab-a', 'before'), state)
-})
-
-test('accepts a drop when 10 percent of the floating tab overlaps a neighbor', () => {
-  const candidates = [
-    { key: 'tab-a', left: 0, right: 120 },
-    { key: 'tab-b', left: 120, right: 240 },
-    { key: 'tab-c', left: 240, right: 360 }
-  ]
-
-  assert.equal(findMainChatTabDropTarget('tab-a', 0, 11, 120, candidates), null)
-  assert.deepEqual(
-    findMainChatTabDropTarget('tab-a', 0, 12, 120, candidates),
-    { key: 'tab-b', placement: 'after' }
-  )
-  assert.deepEqual(
-    findMainChatTabDropTarget('tab-c', 240, 228, 120, candidates),
-    { key: 'tab-b', placement: 'before' }
-  )
 })
 
 test('cached running tabs keep their live transcript instead of rehydrating', () => {

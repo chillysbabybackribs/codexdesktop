@@ -1,5 +1,5 @@
-import type { ThreadItem } from '../../shared/session-protocol'
-import type { UserInput } from '../../shared/session-protocol'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { UserInput } from '../../shared/codex-protocol/v2/UserInput'
 import type { ChatAttachment } from '../../shared/ipc'
 import type { ChatItem } from './transcript-model.js'
 

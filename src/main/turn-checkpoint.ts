@@ -163,30 +163,6 @@ export class TurnCheckpointStore {
   }
 
   /**
-   * Ground-truth change detection: which non-ignored files differ between a
-   * checkpoint (the pre-turn workspace snapshot) and the worktree NOW. Unlike
-   * protocol fileChange items, this catches shell-command writes — the same
-   * completeness argument as the checkpoints themselves.
-   */
-  async changedFiles(checkpointId: string, limit = 50): Promise<string[]> {
-    const index = await this.readIndex()
-    const record = index.checkpoints.find((candidate) => candidate.id === checkpointId)
-    if (!record) return []
-    const root = record.repoRoot
-
-    const currentRaw = await git(root, ['ls-files', '-z', '-co', '--exclude-standard'])
-    const current = new Set(currentRaw.split('\0').filter(Boolean))
-    const checkpointRaw = await git(root, ['ls-tree', '-r', '-z', '--name-only', record.commit])
-    const checkpointFiles = new Set(checkpointRaw.split('\0').filter(Boolean))
-    const modifiedRaw = await git(root, ['diff', '--name-only', '-z', record.commit, '--', '.'])
-
-    const changed = new Set<string>(modifiedRaw.split('\0').filter(Boolean))
-    for (const file of current) if (!checkpointFiles.has(file)) changed.add(file)
-    for (const file of checkpointFiles) if (!current.has(file)) changed.add(file)
-    return [...changed].slice(0, limit)
-  }
-
-  /**
    * Make the worktree match the checkpoint exactly for non-ignored files:
    * restore every file the checkpoint holds and delete files created since.
    * The current state is checkpointed first ("pre-revert"), so this operation
@@ -222,48 +198,6 @@ export class TurnCheckpointStore {
 
       if (checkpointFiles.size > 0) {
         await git(root, ['checkout', record.commit, '--', ':/'])
-      }
-      return record
-    })
-  }
-
-  /**
-   * Restore a subset of files to their checkpoint state (per-file "Undo" in
-   * the review flow). Files the checkpoint holds are checked out from the
-   * checkpoint commit; files created since (absent from the checkpoint) are
-   * deleted. Paths may be absolute or repo-relative; anything resolving
-   * outside the repo root is ignored. The current state is checkpointed first
-   * so a per-file undo is itself revertible.
-   */
-  async revertFiles(checkpointId: string, paths: string[]): Promise<CheckpointRecord> {
-    const index = await this.readIndex()
-    const record = index.checkpoints.find((candidate) => candidate.id === checkpointId)
-    if (!record) throw new Error(`unknown checkpoint ${checkpointId}`)
-    if (paths.length === 0) return record
-
-    const safety = await this.createCheckpoint(
-      record.workspace,
-      record.threadId,
-      `pre-undo of files from ${record.label}`
-    )
-    if (!safety) throw new Error('workspace is no longer a git work tree')
-
-    return this.enqueue(async () => {
-      const root = record.repoRoot
-      const checkpointRaw = await git(root, ['ls-tree', '-r', '-z', '--name-only', record.commit])
-      const checkpointFiles = new Set(checkpointRaw.split('\0').filter(Boolean))
-
-      for (const path of paths) {
-        const absolute = resolve(root, path)
-        if (absolute !== root && !absolute.startsWith(root + sep)) continue
-        const relative = absolute.slice(root.length + 1).split(sep).join('/')
-        if (!relative) continue
-        if (checkpointFiles.has(relative)) {
-          await git(root, ['checkout', record.commit, '--', relative])
-        } else {
-          // The file did not exist at checkpoint time — undo means delete.
-          await unlink(absolute).catch(() => undefined)
-        }
       }
       return record
     })

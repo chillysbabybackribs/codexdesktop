@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Signal Notes is a local mock prototype for a reviewable AI meeting follow-through workflow." />
+    <title>Signal Notes — Meeting follow-through</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <main class="app-shell" id="workspace">
+      <header class="topbar">
+        <div class="brand" aria-label="Signal Notes"><span class="brand-mark" aria-hidden="true">S</span><span>signal<span class="brand-light">notes</span></span></div>
+        <div class="meeting-crumb"><span class="status-dot" aria-hidden="true"></span><span>Imported meeting</span><strong>Product planning · July 18</strong></div>
+        <div class="top-actions">
+          <button class="button button-quiet" id="importButton" type="button">Import</button>
+          <button class="button button-primary" id="exportButton" type="button"><span aria-hidden="true">↓</span> Export handoff</button>
+        </div>
+      </header>
+
+      <section class="intro" aria-labelledby="meeting-title">
+        <div>
+          <p class="eyebrow">FOLLOW-THROUGH WORKSPACE</p>
+          <h1 id="meeting-title">Pricing &amp; packaging working session</h1>
+          <p class="meeting-meta">Fri, Jul 18 · 46 min · 5 participants · Imported from <strong>planning-session.txt</strong></p>
+        </div>
+        <div class="review-status" aria-label="Meeting review status"><span class="check-mark" aria-hidden="true">✓</span><span><strong id="confirmedCount">3 of 5</strong> commitments confirmed</span></div>
+      </section>
+
+      <section class="workflow-strip" aria-label="Meeting workflow status">
+        <div class="workflow-step done"><span>1</span><div><strong>Imported</strong><small>Transcript ready</small></div></div>
+        <div class="workflow-line done" aria-hidden="true"></div>
+        <div class="workflow-step active"><span>2</span><div><strong>Review outcomes</strong><small>2 fields need attention</small></div></div>
+        <div class="workflow-line" aria-hidden="true"></div>
+        <div class="workflow-step"><span>3</span><div><strong>Share handoff</strong><small>Export when ready</small></div></div>
+      </section>
+
+      <section class="command-bar" aria-label="Search and filter meeting information">
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search transcript, decisions, or people" autocomplete="off" /><kbd>⌘ K</kbd></label>
+        <div class="filters" role="group" aria-label="Filter commitments">
+          <button class="filter is-selected" type="button" data-filter="all">All <span>5</span></button>
+          <button class="filter" type="button" data-filter="needs-review">Needs review <span>2</span></button>
+          <button class="filter" type="button" data-filter="assigned">Assigned <span>4</span></button>
+          <button class="filter" type="button" data-filter="decision">Decisions <span>2</span></button>
+        </div>
+      </section>
+
+      <section class="workspace-grid" aria-label="Meeting review workspace">
+        <aside class="transcript-panel panel">
+          <div class="panel-heading"><div><p class="eyebrow">SOURCE</p><h2>Transcript highlights</h2></div><span class="count-badge">46:12</span></div>
+          <div class="speaker-key" aria-label="Speakers"><span><i class="avatar avatar-maya">M</i>Maya</span><span><i class="avatar avatar-eli">E</i>Eli</span><span><i class="avatar avatar-nia">N</i>Nia</span></div>
+          <div class="transcript-list" id="transcriptList">
+            <article class="transcript-item highlight-decision" data-search="pricing beta teams maya decision">
+              <time>08:42</time><div><div class="speaker"><i class="avatar avatar-maya">M</i><strong>Maya</strong><span>Product</span></div><p>“Let’s keep the beta focused on <mark>small product teams</mark>; enterprise can wait until the handoff is reliable.”</p><button class="source-tag decision-tag" type="button" data-jump="decision-1">Decision captured <span>→</span></button></div>
+            </article>
+            <article class="transcript-item highlight-action" data-search="interview customers eli action research">
+              <time>17:05</time><div><div class="speaker"><i class="avatar avatar-eli">E</i><strong>Eli</strong><span>Research</span></div><p>“I can line up five customer interviews next week and use the prototype to test the review step.”</p><button class="source-tag action-tag" type="button" data-jump="action-1">Action captured <span>→</span></button></div>
+            </article>
+            <article class="transcript-item highlight-question" data-search="pricing price nia question">
+              <time>25:18</time><div><div class="speaker"><i class="avatar avatar-nia">N</i><strong>Nia</strong><span>Design</span></div><p>“Can we validate whether organizers will pay for <mark>reviewed outcomes</mark>, not another transcript?”</p><span class="source-tag question-tag">Open question</span></div>
+            </article>
+            <article class="transcript-item highlight-action" data-search="export handoff maya action"> <time>38:29</time><div><div class="speaker"><i class="avatar avatar-maya">M</i><strong>Maya</strong><span>Product</span></div><p>“I’ll draft the exported handoff so it includes source links and only confirmed commitments.”</p><button class="source-tag action-tag" type="button" data-jump="action-3">Action captured <span>→</span></button></div></article>
+          </div>
+        </aside>
+
+        <section class="outcomes-panel">
+          <div class="panel-heading outcomes-heading"><div><p class="eyebrow">REVIEW QUEUE</p><h2>Decisions &amp; commitments</h2></div><button class="text-button" id="reviewButton" type="button">Review next <span aria-hidden="true">→</span></button></div>
+          <div class="summary-callout"><div class="sparkle" aria-hidden="true">✦</div><p><strong>AI extracted 5 outcomes.</strong> Confirm the ambiguous fields before sharing the handoff.</p><span class="callout-progress">60% reviewed</span></div>
+
+          <div class="section-label"><span>DECISIONS</span><span>2</span></div>
+          <div class="outcome-list" id="outcomeList">
+            <article class="outcome-card decision-card is-confirmed" id="decision-1" data-type="decision" data-search="beta small product teams enterprise maya confirmed">
+              <div class="outcome-icon" aria-hidden="true">◇</div><div class="outcome-content"><div class="outcome-topline"><span class="type-label">DECISION</span><span class="confirmed-pill">✓ Confirmed</span></div><h3>Target small product teams for the beta.</h3><p>Enterprise workflows stay out of scope until the follow-through loop is proven.</p><div class="source-line"><button type="button" class="timestamp" data-source="08:42">↗ 08:42</button><span>said by Maya</span></div></div><button class="more-button" type="button" aria-label="More options for decision">•••</button>
+            </article>
+            <article class="outcome-card decision-card needs-review" id="decision-2" data-type="decision" data-search="price active organizer monthly pricing nia review">
+              <div class="outcome-icon" aria-hidden="true">◇</div><div class="outcome-content"><div class="outcome-topline"><span class="type-label">DECISION</span><span class="review-pill">Needs wording</span></div><h3>Test pricing by active organizer, not recording minutes.</h3><p class="muted-edit"><span aria-hidden="true">✎</span> Confirm the initial price range before export.</p><div class="source-line"><button type="button" class="timestamp" data-source="25:18">↗ 25:18</button><span>said by Nia</span></div></div><button class="more-button" type="button" aria-label="More options for decision">•••</button>
+            </article>
+
+            <div class="section-label"><span>ACTION ITEMS</span><span>3</span></div>
+            <article class="outcome-card action-card is-confirmed" id="action-1" data-type="action" data-search="eli interview five customers july 24 research confirmed">
+              <button class="task-check is-done" type="button" aria-label="Mark customer interviews incomplete">✓</button><div class="outcome-content"><div class="outcome-topline"><span class="type-label">ACTION ITEM</span><span class="confirmed-pill">✓ Confirmed</span></div><h3>Recruit 5 target users for prototype interviews.</h3><div class="metadata"><span class="person-chip"><i class="avatar avatar-eli">E</i>Eli</span><span class="date-chip">Due Jul 24</span><button type="button" class="timestamp" data-source="17:05">↗ 17:05</button></div></div><button class="more-button" type="button" aria-label="More options for action item">•••</button>
+            </article>
+            <article class="outcome-card action-card needs-review" id="action-2" data-type="action" data-search="nia prototype empty upload review jul 22 owner missing">
+              <button class="task-check" type="button" aria-label="Mark prototype review task complete"></button><div class="outcome-content"><div class="outcome-topline"><span class="type-label">ACTION ITEM</span><span class="review-pill">Owner missing</span></div><h3>Design the import and empty-review states.</h3><div class="metadata"><button class="assign-button" type="button">Assign owner <span>+</span></button><span class="date-chip">Due Jul 22</span><button type="button" class="timestamp" data-source="31:44">↗ 31:44</button></div></div><button class="more-button" type="button" aria-label="More options for action item">•••</button>
+            </article>
+            <article class="outcome-card action-card is-confirmed" id="action-3" data-type="action" data-search="maya export handoff source links jul 23 confirmed">
+              <button class="task-check is-done" type="button" aria-label="Mark handoff draft incomplete">✓</button><div class="outcome-content"><div class="outcome-topline"><span class="type-label">ACTION ITEM</span><span class="confirmed-pill">✓ Confirmed</span></div><h3>Draft the confirmed-only handoff export.</h3><div class="metadata"><span class="person-chip"><i class="avatar avatar-maya">M</i>Maya</span><span class="date-chip">Due Jul 23</span><button type="button" class="timestamp" data-source="38:29">↗ 38:29</button></div></div><button class="more-button" type="button" aria-label="More options for action item">•••</button>
+            </article>
+          </div>
+          <div class="no-results" id="noResults" hidden><span aria-hidden="true">⌕</span><h3>No meeting outcomes found</h3><p>Try a person, date, or key phrase from the transcript.</p></div>
+        </section>
+
+        <aside class="insights-rail panel">
+          <div class="panel-heading"><div><p class="eyebrow">AT A GLANCE</p><h2>Handoff health</h2></div><button class="icon-button" type="button" aria-label="Handoff settings">•••</button></div>
+          <div class="health-score"><div class="score-ring"><strong>78</strong><span>/100</span></div><div><strong>Almost share-ready</strong><p>Resolve two fields to send a clean handoff.</p></div></div>
+          <div class="mini-metric"><span>Confirmed outcomes</span><strong>3 <small>of 5</small></strong><div class="progress"><i style="width:60%"></i></div></div>
+          <div class="mini-metric"><span>Owners assigned</span><strong>4 <small>of 5</small></strong><div class="progress mint"><i style="width:80%"></i></div></div>
+          <div class="insight-divider"></div>
+          <h3 class="rail-subheading">Needs your attention</h3>
+          <button class="attention-item" type="button" data-jump="decision-2"><span class="attention-number">1</span><span><strong>Price decision lacks a range</strong><small>Clarify wording · 25:18</small></span><b aria-hidden="true">→</b></button>
+          <button class="attention-item" type="button" data-jump="action-2"><span class="attention-number">2</span><span><strong>Import state has no owner</strong><small>Assign an owner · 31:44</small></span><b aria-hidden="true">→</b></button>
+        </aside>
+      </section>
+    </main>
+
+    <div class="modal-backdrop" id="importModal" hidden>
+      <section class="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-title">
+        <button class="modal-close" id="closeImport" type="button" aria-label="Close import dialog">×</button>
+        <p class="eyebrow">LOCAL IMPORT</p><h2 id="import-title">Bring in a meeting transcript</h2><p>Choose a text, VTT, or SRT file. This static prototype keeps it in your browser only.</p>
+        <label class="dropzone" for="fileInput" role="button" tabindex="0"><span aria-hidden="true">↑</span><strong>Choose a local file</strong><small>TXT, VTT, or SRT · mock import</small></label>
+        <input id="fileInput" type="file" accept=".txt,.vtt,.srt" hidden />
+        <div id="importStatus" class="import-status" aria-live="polite"></div>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="app.js"></script>
+  </body>
+</html>

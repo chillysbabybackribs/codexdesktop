@@ -2,11 +2,8 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { existsSync, unlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { randomUUID } from 'node:crypto'
 import { BrowserAgentController } from './browser-agent.js'
 import type { TabManager } from './tab-manager.js'
-import type { ResearchRunner } from './research-runner.js'
-import { runBrowserTool } from '../tools/browser-tool-registry.js'
 
 // A localhost control surface for the Codex agent, bound to a Unix domain
 // socket (not a TCP port) so the agent's shell can drive the *visible* browser
@@ -106,7 +103,6 @@ function pathOf(req: IncomingMessage): string {
 async function route(
   getTabs: TabsGetter,
   browserAgent: BrowserAgentController,
-  researchRunner: ResearchRunner | undefined,
   req: IncomingMessage,
   res: ServerResponse
 ): Promise<void> {
@@ -270,29 +266,6 @@ async function route(
       return
     }
 
-    // Generic transport over the neutral tool registry (Claude-prep step 6):
-    // POST /tool/<name> with JSON args runs any declared browser tool. The
-    // MCP stdio shim proxies through this route; shell callers can use it
-    // instead of the bespoke routes above. Ownerless: direct execution, no
-    // per-turn queueing — the socket's existing semantics.
-    if (req.method === 'POST' && path.startsWith('/tool/')) {
-      const tool = decodeURIComponent(path.slice('/tool/'.length))
-      const body = await readBody(req)
-      let args: Record<string, unknown>
-      try {
-        args = asRecord(body ? JSON.parse(body) : {})
-      } catch {
-        sendJson(res, 400, { ok: false, error: 'body must be a JSON arguments object' })
-        return
-      }
-      const outcome = await runBrowserTool(
-        { tool, args, owner: null, callId: `socket-${randomUUID()}` },
-        { browserAgent, researchRunner }
-      )
-      sendJson(res, 200, outcome)
-      return
-    }
-
     if (req.method === 'POST' && path === '/tabs') {
       sendJson(res, 200, await handleTabsAction(tabs, await readBody(req)))
       return
@@ -314,8 +287,7 @@ function stringRecord(value: unknown): Record<string, string> {
 
 export function startBrowserControlServer(
   getTabs: TabsGetter,
-  browserAgent = new BrowserAgentController(getTabs),
-  researchRunner?: ResearchRunner
+  browserAgent = new BrowserAgentController(getTabs)
 ): Promise<BrowserControlServer> {
   const path = socketPath()
 
@@ -329,7 +301,7 @@ export function startBrowserControlServer(
   }
 
   const server: Server = createServer((req, res) => {
-    void route(getTabs, browserAgent, researchRunner, req, res)
+    void route(getTabs, browserAgent, req, res)
   })
 
   return new Promise((resolve, reject) => {

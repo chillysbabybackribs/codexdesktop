@@ -1,5 +1,5 @@
-import type { ThreadItem } from '../../shared/session-protocol'
-import type { TokenUsageBreakdown } from '../../shared/session-protocol'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { TokenUsageBreakdown } from '../../shared/codex-protocol/v2/TokenUsageBreakdown'
 import type { ItemMeta, TurnMeta, TurnPlanItem } from './TaskActivity'
 
 const maxTextChars = 30_000
@@ -636,7 +636,7 @@ function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'app_screenshot' || item.tool === 'browser_flow' || item.tool === 'browser_run')) {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'browser_flow' || item.tool === 'browser_run')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
@@ -752,9 +752,7 @@ function collectTruncations(value: unknown, path: string, truncations: TraceTrun
     return
   }
   if (Array.isArray(value)) {
-    value.forEach((part, index) => {
-      collectTruncations(part, `${path}[${index}]`, truncations)
-    })
+    value.forEach((part, index) => collectTruncations(part, `${path}[${index}]`, truncations))
     return
   }
   if (!value || typeof value !== 'object') return

@@ -1,7 +1,7 @@
 import {
-  type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type RefObject,
+  FormEvent,
+  KeyboardEvent as ReactKeyboardEvent,
+  RefObject,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -98,7 +98,6 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   const omniboxRef = useRef<HTMLInputElement>(null)
   const typedTextRef = useRef('')
   const justFocusedRef = useRef(false)
-  const focusFromMouseRef = useRef(false)
   const querySeqRef = useRef(0)
   const pendingInlineRef = useRef<{ start: number; end: number } | null>(null)
 
@@ -208,15 +207,8 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
         spellCheck={false}
         autoComplete="off"
         aria-label="Address"
-        onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; if (!focusFromMouseRef.current) event.target.select(); runQuery('') }}
-        onMouseDown={(event) => { justFocusedRef.current = document.activeElement !== event.currentTarget; focusFromMouseRef.current = true }}
-        onMouseUp={(event) => {
-          focusFromMouseRef.current = false
-          // First click focuses the field: select the whole URL so a keystroke
-          // replaces it. Any later click (already focused) leaves the caret the
-          // browser just placed, so you can edit character-by-character.
-          if (justFocusedRef.current) { justFocusedRef.current = false; event.currentTarget.select() }
-        }}
+        onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; justFocusedRef.current = true; event.target.select(); runQuery('') }}
+        onMouseUp={(event) => { if (justFocusedRef.current) { event.preventDefault(); justFocusedRef.current = false } }}
         onBlur={() => { setIsEditing(false); closePopup() }}
         onChange={(event) => {
           const text = event.target.value

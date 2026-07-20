@@ -8,8 +8,6 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
-  ImageViewPreviewParams,
-  ImageViewPreviewResult,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   OmniboxAnchor,
@@ -18,13 +16,7 @@ import type {
   TracePersistParams,
   TranscriptCachePersistParams,
   CheckpointRevertParams,
-  CheckpointRevertFilesParams,
-  CheckpointChangedFilesParams,
   CheckpointSummary,
-  MentionIndexParams,
-  MentionIndexResult,
-  MentionReadParams,
-  MentionReadIpcResult,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -40,14 +32,13 @@ import { ResearchRunner } from './browser/research-runner.js'
 import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
-import { registerSessionIpc, type RegisteredSessionProviders } from './codex/codex-ipc.js'
+import { registerCodexIpc } from './codex/codex-ipc.js'
+import type { CodexClient } from './codex/codex-client.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
-import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
-import { MentionIndexService } from './mention-index.js'
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -89,7 +80,7 @@ if (!hasSingleInstanceLock) {
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
-let sessionProviders: RegisteredSessionProviders | null = null
+let codexClient: CodexClient | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
 let quitReady = false
@@ -100,30 +91,6 @@ const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore(() => join(app.getPath('userData'), 'browser-state.json'))
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
-let verificationBrowserControlReady = false
-let verificationBrowserRestored = false
-let verificationCloseScheduled = false
-const verificationAutoCloseDelayMs = 1_000
-
-function maybeCloseVerificationInstance(): void {
-  if (
-    instanceRole !== 'verification' ||
-    process.env.CODEX_DESKTOP_VERIFY_AUTO_CLOSE !== '1' ||
-    !verificationBrowserControlReady ||
-    !verificationBrowserRestored ||
-    verificationCloseScheduled
-  ) {
-    return
-  }
-
-  verificationCloseScheduled = true
-  // The browser-control surface and restored tab snapshot are both live. Use
-  // BrowserWindow.close() so the normal browser persistence/CDP teardown path
-  // is what the verifier observes, not a terminal-signal shortcut.
-  setTimeout(() => {
-    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
-  }, verificationAutoCloseDelayMs)
-}
 
 function scheduleBrowserPersist(): void {
   if (persistBrowserTimer) {
@@ -230,10 +197,7 @@ function createWindow(): void {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
-    void restoreBrowserTabs().finally(() => {
-      verificationBrowserRestored = true
-      maybeCloseVerificationInstance()
-    })
+    void restoreBrowserTabs()
   })
 
   // The omnibox dropdown is a native view anchored to the toolbar. Renderer
@@ -287,8 +251,8 @@ function bootstrap(): void {
     quitPreparationStarted = true
 
     researchRunner.dispose()
-    sessionProviders?.dispose()
-    sessionProviders = null
+    codexClient?.dispose()
+    codexClient = null
     const closingBrowserControl = browserControl?.close()
     browserControl = null
 
@@ -318,11 +282,9 @@ function bootstrap(): void {
     // first message, so setting it here is always in time. Bound to a getter so
     // it survives window close/reopen swapping the TabManager instance.
     try {
-      browserControl = await startBrowserControlServer(() => tabManager, browserAgent, researchRunner)
+      browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
-      verificationBrowserControlReady = true
-      maybeCloseVerificationInstance()
     } catch (error) {
       console.error('Failed to start browser control server', error)
     }
@@ -355,11 +317,10 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
-  const mentionIndexService = new MentionIndexService()
-  sessionProviders = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
+  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
-  void sessionProviders.codexClient.warmUp()
+  void codexClient.warmUp()
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
   const transcriptCache = new TranscriptCache(join(app.getPath('userData'), 'transcript-cache'))
 
@@ -398,10 +359,7 @@ function registerIpc(): void {
       properties: ['openDirectory', 'createDirectory']
     })
 
-    const picked = result.canceled ? null : (result.filePaths[0] ?? null)
-    // A user-picked folder is a legitimate mention root even outside git.
-    if (picked) await mentionIndexService.approveWorkspace(picked)
-    return picked
+    return result.canceled ? null : (result.filePaths[0] ?? null)
   })
   ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
     dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
@@ -412,9 +370,6 @@ function registerIpc(): void {
     tabManager.createTab(dataUrl)
     return true
   })
-  ipcMain.handle(ipcChannels.imageViewPreview, async (_event, params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> => ({
-    dataUrl: await readImageViewDataUrl(params.path)
-  }))
   ipcMain.handle(ipcChannels.attachmentPick, async () => {
     if (!mainWindow) return []
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -531,22 +486,6 @@ function registerIpc(): void {
   })
   ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
     await checkpointStore.revert(params.checkpointId)
-  })
-  ipcMain.handle(ipcChannels.checkpointRevertFiles, async (_event, params: CheckpointRevertFilesParams): Promise<void> => {
-    await checkpointStore.revertFiles(params.checkpointId, params.paths)
-  })
-  ipcMain.handle(ipcChannels.mentionIndex, (_event, params: MentionIndexParams): Promise<MentionIndexResult> =>
-    mentionIndexService.index(params.workspace)
-  )
-  ipcMain.handle(ipcChannels.mentionRead, (_event, params: MentionReadParams): Promise<MentionReadIpcResult> =>
-    mentionIndexService.read(params.workspace, params.path, params.kind)
-  )
-  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
-    const record = await checkpointStore.find(params.threadId, params.turnId)
-    // null = detection unavailable (no checkpoint for this turn — typically a
-    // non-git workspace), distinct from a genuinely empty diff. The audit
-    // trigger uses the difference to explain itself instead of silently idling.
-    return record ? checkpointStore.changedFiles(record.id) : null
   })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {

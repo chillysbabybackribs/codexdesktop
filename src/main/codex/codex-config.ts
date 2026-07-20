@@ -7,9 +7,6 @@ const taskShapingGuidance = [
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
   '- For simple browser reads, prefer one `browser_snapshot` call when it is available; state every requested field and list count in its objective. It can navigate, wait, and return task-focused items. If a snapshot reports `completion.nextAction: "answer"`, use that evidence directly and do not repeat a page read. If it reports `targeted-gap-fill`, resolve only its named coverage gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
-  '- When reviewing or editing Codex Desktop\'s own UI in a live dev session, use `app_screenshot` for the full Electron window (chat plus embedded browser). Use `browser_screenshot` for page content inside the browser tab only.',
-  '- When calling `app_screenshot` or `browser_screenshot` from `functions.exec`, only pass the result to `image()` when it is a string beginning with `data:image/`. A failed capture returns error text; forwarding that text as an image creates an invalid `image_url` and poisons later turns.',
-  '- For a simple visual confirmation of the current app UI, take one `app_screenshot`, let its artifact preview remain visible in chat, and answer directly. Do not load skills, prior-chat memory, source files, or an additional image viewer unless the user asks for analysis or a change.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
   '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
@@ -79,8 +76,7 @@ export function resolveTurnPolicy(
 ): { summary: 'concise'; effort?: ReasoningEffort } {
   const supported = new Set(options.supportedEfforts ?? [])
   const browserMicrotask = isReadOnlyBrowserMicrotask(text) && isFastPathTask(text)
-  const lightweightVisualCheck = isLightweightVisualCheck(text)
-  const fastEffort = browserMicrotask || lightweightVisualCheck
+  const fastEffort = browserMicrotask
     ? (supported.has('none') ? 'none' : supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
     : options.fastMode && isFastPathTask(text)
       ? (supported.has('low') ? 'low' : supported.has('minimal') ? 'minimal' : undefined)
@@ -101,18 +97,8 @@ export function isFastPathTask(text: string): boolean {
   if (/\b(audit|analy[sz]e|build|compare|debug|design|fix|implement|investigate|migrate|plan|refactor|research|review|security)\b/.test(normalized)) {
     return false
   }
-  if (isLightweightVisualCheck(text)) return true
   return /^(?:(?:can|could|would) you |please |ok )?(?:check|go to|list|navigate(?: to)?|open|read|show|tell me|visit)\b/.test(normalized) ||
     isInteractiveBrowserTask(text)
-}
-
-export function isLightweightVisualCheck(text: string): boolean {
-  const normalized = text.trim().toLowerCase()
-  if (!normalized || normalized.length > 240) return false
-
-  const visualVerb = /^(?:(?:can|could|would) you |please |ok )?(?:view|see|show|look at|inspect)\b/.test(normalized)
-  const currentAppSurface = /\b(?:current|live|this)\b[\s\S]{0,48}\b(?:ui|interface|composer|chat|window|screen)\b/.test(normalized)
-  return visualVerb && currentAppSurface
 }
 
 export function isInteractiveBrowserTask(text: string): boolean {
@@ -349,12 +335,6 @@ const browserScreenshotSchema = {
   additionalProperties: false
 }
 
-const appScreenshotSchema = {
-  type: 'object',
-  properties: {},
-  additionalProperties: false
-}
-
 const uiReviewSchema = {
   type: 'object',
   properties: {
@@ -399,14 +379,15 @@ const researchWebSchema = {
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
           need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
-          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Distinct matching source target. Defaults to 1; use only the diversity needed for the claim. The model must still judge source independence.' }
+          minSources: { type: 'number', minimum: 1, maximum: 3, description: 'Distinct matching source target. Defaults to 1; the model must still judge source independence.' }
         },
         required: ['id', 'need'],
         additionalProperties: false
       }
     },
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
-    maxAttempts: { type: 'number', minimum: 1, maximum: 24, description: 'Optional candidate-attempt safety ceiling, from 1 to 24. Defaults from the model-authored evidence demand and stops immediately when that evidence is covered.' },
+    maxPages: { type: 'number', minimum: 1, maximum: 3, description: 'Verified-page target, from 1 to 3. Defaults to the focus/direct-source need when supplied, otherwise 3.' },
+    maxAttempts: { type: 'number', minimum: 1, maximum: 8, description: 'Optional candidate-attempt ceiling, from 1 to 8. Defaults to 6 and stops early when maxPages is met.' },
     snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Saved text uses a separate larger artifact bound.' }
   },
   anyOf: [{ required: ['queries'] }, { required: ['urls'] }],
@@ -431,12 +412,6 @@ export const browserDynamicTools: DynamicToolSpec[] = [
     name: 'browser_screenshot',
     description: 'Capture the visible viewport of this thread\'s browser tab and view it directly. Returns the screenshot to the model as an image plus compact artifact metadata.',
     inputSchema: browserScreenshotSchema
-  },
-  {
-    type: 'function',
-    name: 'app_screenshot',
-    description: 'Capture the full Codex Desktop window, including the chat pane and embedded browser, for model vision. Use when reviewing or iterating on the app UI itself. Returns the screenshot as an image plus compact artifact metadata. Use browser_screenshot for page content inside the browser tab only.',
-    inputSchema: appScreenshotSchema
   },
   {
     type: 'function',
@@ -471,7 +446,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Verify direct public URLs or adaptively discover, rank, and save the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
+    description: 'Verify direct public URLs or adaptively discover, rank, and save up to three public web pages. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]

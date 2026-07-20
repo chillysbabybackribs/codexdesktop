@@ -18,31 +18,21 @@
     "pretypecheck": "npm run check:source-shadows",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "pretest": "npm run check:source-shadows",
-    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/main/providers/*.test.ts src/renderer/src/*.test.ts",
+    "test": "node --experimental-strip-types --loader ./scripts/test-loader.mjs --test src/main/*.test.ts src/main/browser/*.test.ts src/main/codex/*.test.ts src/renderer/src/*.test.ts",
     "benchmark:tokens": "node scripts/token-baseline.mjs",
     "benchmark:browser": "node --no-warnings --experimental-strip-types --loader ./scripts/test-loader.mjs scripts/browser-eval.mjs",
     "clean:source-shadows": "node scripts/source-shadow-guard.mjs --fix",
     "check:source-shadows": "node scripts/source-shadow-guard.mjs --check",
-    "lint": "biome lint",
-    "lint:fix": "biome lint --write",
-    "lint:strict": "biome lint --config-path=biome.strict.jsonc",
-    "format": "biome format --write",
-    "check": "biome check",
-    "check:fix": "biome check --write",
     "gen:codex-protocol": "codex app-server generate-ts --experimental --out src/shared/codex-protocol"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "0.3.215",
     "linkedom": "^0.18.13",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
-    "shiki": "^4.3.1",
-    "zod": "^4.0.0"
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.4",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

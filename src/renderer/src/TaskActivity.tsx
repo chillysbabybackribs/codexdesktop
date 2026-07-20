@@ -1,10 +1,9 @@
-import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import type { CommandAction } from '../../shared/session-protocol'
-import type { ThreadItem } from '../../shared/session-protocol'
-import type { WebSearchAction } from '../../shared/session-protocol'
-import { parseUnifiedDiff, type DiffLine, type DiffSegment, type TurnDiffSummary } from './diff'
-import { langForPath, useLineTokens, type ThemedToken } from './highlight'
+import type { CommandAction } from '../../shared/codex-protocol/v2/CommandAction'
+import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem'
+import type { WebSearchAction } from '../../shared/codex-protocol/v2/WebSearchAction'
+import { parseUnifiedDiff, type DiffLine, type TurnDiffSummary } from './diff'
 import type { TurnMeta, TurnMetaStatus, TurnTokenTelemetry } from './turn-telemetry'
 import { latestItemProgress, workItemTypes, type ItemMeta, type TurnPlanItem, type WorkItem } from './activity-model'
 import { browserLinkComponents } from './MarkdownContent'
@@ -37,24 +36,6 @@ type CdpFileArtifact = {
   kind: 'pdf' | 'trace' | 'snapshot' | 'response-body'
   bytes: number
 }
-
-// ---------------------------------------------------------------------------
-// File review context — the Keep/Undo flow (Cursor-style post-hoc review).
-// Provided by ChatPane; consumed by DiffCard so every settled diff card offers
-// a per-file Undo without threading callbacks through the memoized layers.
-// ---------------------------------------------------------------------------
-
-export type FileReviewActions = {
-  canUndo: (turnId: string | null | undefined) => boolean
-  isUndone: (turnId: string | null | undefined, path: string) => boolean
-  undoFile: (turnId: string, path: string) => void
-}
-
-export const FileReviewContext = createContext<FileReviewActions>({
-  canUndo: () => false,
-  isUndone: () => false,
-  undoFile: () => {}
-})
 
 // ---------------------------------------------------------------------------
 // Small shared utilities
@@ -220,7 +201,7 @@ function truncate(text: string, max: number): string {
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
 }
 
-// biome-ignore lint/suspicious/noControlCharactersInRegex: intentionally matches ANSI escape sequences to strip them
+// eslint-disable-next-line no-control-regex
 const ansiPattern = /\[[0-9;?]*[ -/]*[@-~]/g
 
 function stripAnsi(text: string): string {
@@ -380,12 +361,6 @@ const ClockIcon = (): React.JSX.Element => (
   </Icon>
 )
 
-const ChevronDownIcon = ({ className }: { className?: string }): React.JSX.Element => (
-  <Icon className={className}>
-    <path d="m6.5 9.5 5.5 5.5 5.5-5.5" />
-  </Icon>
-)
-
 function Spinner(): React.JSX.Element {
   return <span className="work-spinner" />
 }
@@ -458,36 +433,15 @@ function reasoningText(item: ReasoningItem): string {
   return item.content.map((part) => part.trim()).filter(Boolean).join('\n\n')
 }
 
-// Cursor-style collapsed thinking: a "Thought for Xs" disclosure header with a
-// hover chevron. While streaming, the header shimmers with a live elapsed
-// label; expanding works mid-stream (the body auto-follows its own growth).
-function ThoughtBlock({
-  item,
-  meta,
-  streaming
-}: {
-  item: ReasoningItem
-  meta: ItemMeta | undefined
-  streaming: boolean
-}): React.JSX.Element | null {
-  const [expanded, setExpanded] = useState(false)
-  const now = useNow(streaming)
+// The streamed model narration renders as bare muted text — no per-block
+// "Thought" header (the live tail already signals thinking, and the narration
+// carries its own headlines).
+function ThoughtBlock({ item, streaming }: { item: ReasoningItem; streaming: boolean }): React.JSX.Element | null {
   const text = reasoningText(item)
 
-  if (!text && !streaming) {
+  if (!text) {
     return null
   }
-
-  const elapsedMs = streaming && meta?.startedAtMs ? Math.max(0, now - meta.startedAtMs) : null
-  const durationMs =
-    !streaming && meta?.startedAtMs && meta?.completedAtMs ? Math.max(0, meta.completedAtMs - meta.startedAtMs) : null
-  const label = streaming
-    ? elapsedMs !== null && elapsedMs >= 3000
-      ? `Thinking · ${fmtDuration(elapsedMs)}`
-      : 'Thinking'
-    : durationMs !== null
-      ? `Thought for ${fmtDuration(durationMs)}`
-      : 'Thought'
 
   const body = (
     <div className="thought-text">
@@ -496,20 +450,8 @@ function ThoughtBlock({
   )
 
   return (
-    <div
-      className={`thought-block ${streaming ? 'is-streaming' : ''}${expanded ? ' is-expanded' : ''}`}
-    >
-      <button
-        type="button"
-        className="thought-toggle"
-        aria-expanded={expanded}
-        disabled={!text}
-        onClick={() => setExpanded((value) => !value)}
-      >
-        <span className={`thought-label${streaming ? ' shimmer-text' : ''}`}>{label}</span>
-        <ChevronDownIcon className="thought-chevron" />
-      </button>
-      {expanded && text ? (streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body) : null}
+    <div className={`thought-block ${streaming ? 'is-streaming' : ''}`}>
+      {streaming ? <AutoFollow className="thought-stream">{body}</AutoFollow> : body}
     </div>
   )
 }
@@ -597,15 +539,10 @@ function TerminalCard({
   liveNow: number
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
-  // Cursor-style step row: settled commands collapse to their header line
-  // (failures stay open — the error is the payload). Live commands always
-  // stream their output.
-  const [open, setOpen] = useState<boolean | null>(null)
   const running = status === 'running'
   const output = useMemo(() => stripAnsi(item.aggregatedOutput ?? '').replace(/\n+$/, ''), [item.aggregatedOutput])
   const lines = useMemo(() => (output ? output.split('\n') : []), [output])
 
-  const expanded = running || (open ?? status === 'failed')
   const hiddenCount = !running && !showAll ? Math.max(0, lines.length - collapsedOutputLines) : 0
   const shownLines = hiddenCount > 0 ? lines.slice(hiddenCount) : lines
 
@@ -613,31 +550,19 @@ function TerminalCard({
   const elapsed = elapsedMs !== null && elapsedMs >= 2500 ? fmtDuration(elapsedMs) : null
 
   return (
-    <div className={`term-card status-${status} ${expanded ? 'is-open' : 'is-collapsed'}`}>
-      <button
-        type="button"
-        className="term-head"
-        aria-expanded={expanded}
-        disabled={running}
-        onClick={() => {
-          if (!running) setOpen(!expanded)
-        }}
-      >
+    <div className={`term-card status-${status}`}>
+      <div className="term-head">
         <span className="term-icon">{running ? <Spinner /> : <TerminalIcon />}</span>
         <code className="term-command" title={item.command}>
           {item.command}
         </code>
         <span className="term-meta">
-          {!expanded && lines.length > 0 ? (
-            <span className="term-line-count">{lines.length === 1 ? '1 line' : `${lines.length} lines`}</span>
-          ) : null}
           {running && elapsed ? <span className="term-elapsed">{elapsed}</span> : null}
           {!running && duration ? <span className="term-elapsed">{fmtDuration(duration)}</span> : null}
           <StatusChip status={status} exitCode={item.exitCode} />
-          {!running ? <ChevronDownIcon className={`term-chevron ${expanded ? 'is-open' : ''}`} /> : null}
         </span>
-      </button>
-      {expanded && lines.length > 0 ? (
+      </div>
+      {lines.length > 0 ? (
         running ? (
           <AutoFollow className="term-output is-live">
             <pre>{output}</pre>
@@ -699,27 +624,20 @@ function DiffCard({
   kind,
   diff,
   status,
-  workspace,
-  turnId
+  workspace
 }: {
   path: string
   kind: FileChangeItem['changes'][number]['kind']
   diff: string
   status: BlockStatus
   workspace: string | null
-  turnId: string | null
 }): React.JSX.Element {
   const [showAll, setShowAll] = useState(false)
-  const [confirmingUndo, setConfirmingUndo] = useState(false)
-  const review = useContext(FileReviewContext)
   const parsed = useMemo(
     () => parseUnifiedDiff(diff, kind.type === 'add' ? 'add' : kind.type === 'delete' ? 'del' : undefined),
     [diff, kind.type]
   )
   const running = status === 'running'
-  // Syntax highlighting is deferred until the edit settles — live patches
-  // re-render per delta and tokenizing every visible line each frame is waste.
-  const lang = useMemo(() => (running ? null : langForPath(path)), [running, path])
 
   const kindBadge =
     kind.type === 'add' ? 'new' : kind.type === 'delete' ? 'deleted' : kind.move_path ? 'renamed' : null
@@ -728,11 +646,8 @@ function DiffCard({
   const overflow = !running && !showAll ? Math.max(0, parsed.lines.length - collapsedDiffLines) : 0
   const shownLines = overflow > 0 ? parsed.lines.slice(0, collapsedDiffLines) : parsed.lines
 
-  const undone = review.isUndone(turnId, path)
-  const undoable = !running && !undone && turnId !== null && review.canUndo(turnId)
-
   return (
-    <div className={`diff-card status-${status}${undone ? ' is-undone' : ''}`} data-diff-path={path}>
+    <div className={`diff-card status-${status}`}>
       <div className="diff-head">
         <span className="diff-file-icon">{running ? <Spinner /> : <FilePenIcon />}</span>
         <span className="diff-file" title={path}>
@@ -748,36 +663,17 @@ function DiffCard({
         <span className="diff-counts">
           {parsed.adds > 0 ? <span className="diff-count-add">+{parsed.adds}</span> : null}
           {parsed.dels > 0 ? <span className="diff-count-del">−{parsed.dels}</span> : null}
-          {undone ? <span className="work-chip chip-muted">undone</span> : null}
           <StatusChip status={status} />
-          {undoable ? (
-            <button
-              type="button"
-              className={`diff-undo-button ${confirmingUndo ? 'is-confirming' : ''}`}
-              title="Restore this file to how it was before this turn. The current state is checkpointed first."
-              onClick={() => {
-                if (confirmingUndo) {
-                  setConfirmingUndo(false)
-                  if (turnId) review.undoFile(turnId, path)
-                } else {
-                  setConfirmingUndo(true)
-                }
-              }}
-              onBlur={() => setConfirmingUndo(false)}
-            >
-              {confirmingUndo ? 'Undo file?' : 'Undo'}
-            </button>
-          ) : null}
         </span>
       </div>
       {parsed.lines.length > 0 ? (
         running ? (
           <AutoFollow className="diff-body is-live">
-            <DiffLines lines={parsed.lines} lang={null} />
+            <DiffLines lines={parsed.lines} />
           </AutoFollow>
         ) : (
           <div className="diff-body">
-            <DiffLines lines={shownLines} lang={lang} />
+            <DiffLines lines={shownLines} />
             {overflow > 0 ? (
               <button type="button" className="output-expand" onClick={() => setShowAll(true)}>
                 ⋯ show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
@@ -799,9 +695,7 @@ function DiffCard({
   )
 }
 
-function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }): React.JSX.Element {
-  const lineTokens = useLineTokens(lines, lang, lang !== null)
-
+function DiffLines({ lines }: { lines: DiffLine[] }): React.JSX.Element {
   return (
     <div className="diff-lines">
       {lines.map((line, index) =>
@@ -813,7 +707,19 @@ function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }):
         ) : (
           <div key={index} className={`diff-line diff-${line.kind}`}>
             <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '−' : ''}</span>
-            <span className="diff-text">{renderDiffText(line, lineTokens?.[index] ?? null)}</span>
+            <span className="diff-text">
+              {line.segments
+                ? line.segments.map((segment, si) =>
+                    segment.emph ? (
+                      <mark key={si} className="diff-emph">
+                        {segment.text}
+                      </mark>
+                    ) : (
+                      <span key={si}>{segment.text}</span>
+                    )
+                  )
+                : line.text || ' '}
+            </span>
           </div>
         )
       )}
@@ -821,79 +727,12 @@ function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }):
   )
 }
 
-function renderDiffText(line: DiffLine, tokens: ThemedToken[] | null): React.ReactNode {
-  if (tokens) {
-    return renderHighlightedDiffText(tokens, line.segments)
-  }
-  if (line.segments) {
-    return line.segments.map((segment, si) =>
-      segment.emph ? (
-        <mark key={si} className="diff-emph">
-          {segment.text}
-        </mark>
-      ) : (
-        <span key={si}>{segment.text}</span>
-      )
-    )
-  }
-  return line.text || ' '
-}
-
-// Overlay Shiki tokens with the intra-line emphasis ranges: tokens are split
-// at emphasis boundaries so the changed span keeps its darker tint while every
-// piece keeps its syntax color.
-function renderHighlightedDiffText(tokens: ThemedToken[], segments: DiffSegment[] | undefined): React.ReactNode[] {
-  const ranges: Array<[number, number]> = []
-  if (segments) {
-    let offset = 0
-    for (const segment of segments) {
-      if (segment.emph && segment.text) {
-        ranges.push([offset, offset + segment.text.length])
-      }
-      offset += segment.text.length
-    }
-  }
-
-  const out: React.ReactNode[] = []
-  let pos = 0
-  let key = 0
-  for (const token of tokens) {
-    const start = pos
-    const end = pos + token.content.length
-    const style = token.color ? { color: token.color } : undefined
-    let cursor = start
-    while (cursor < end) {
-      const active = ranges.find(([from, to]) => cursor >= from && cursor < to)
-      const next = active
-        ? Math.min(end, active[1])
-        : Math.min(end, ranges.find(([from]) => from > cursor)?.[0] ?? end)
-      const piece = token.content.slice(cursor - start, next - start)
-      out.push(
-        active ? (
-          <mark key={key++} className="diff-emph" style={style}>
-            {piece}
-          </mark>
-        ) : (
-          <span key={key++} style={style}>
-            {piece}
-          </span>
-        )
-      )
-      cursor = next
-    }
-    pos = end
-  }
-  return out
-}
-
 function FileChangeBlock({
   item,
-  meta,
   live,
   workspace
 }: {
   item: FileChangeItem
-  meta: ItemMeta | undefined
   live: boolean
   workspace: string | null
 }): React.JSX.Element {
@@ -909,7 +748,6 @@ function FileChangeBlock({
           diff={change.diff}
           status={status}
           workspace={workspace}
-          turnId={meta?.turnId ?? null}
         />
       ))}
       {item.changes.length === 0 && status === 'running' ? (
@@ -977,17 +815,14 @@ function DynamicToolBlock({
   if (screenshot) {
     const dimensions = screenshot.width && screenshot.height ? `${screenshot.width}×${screenshot.height}` : null
     return (
-      <div className="screenshot-tool-step">
-        <ToolRow
-          icon={<ImageIcon />}
-          status={item.success === false ? 'failed' : status}
-          verb="Captured screenshot"
-          detail={screenshot.fileName}
-          detailTitle={screenshot.artifactPath}
-          meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
-        />
-        <CdpScreenshotPreview artifact={screenshot} />
-      </div>
+      <ToolRow
+        icon={<ImageIcon />}
+        status={item.success === false ? 'failed' : status}
+        verb="Captured screenshot"
+        detail={screenshot.fileName}
+        detailTitle={screenshot.artifactPath}
+        meta={[dimensions, formatBytes(screenshot.bytes)].filter(Boolean).join(' · ')}
+      />
     )
   }
 
@@ -1052,32 +887,8 @@ export function CdpScreenshotPreview({ artifact }: { artifact: CdpScreenshotArti
   )
 }
 
-function ImageViewPreview({ path, fileName }: { path: string; fileName: string }): React.JSX.Element | null {
-  const [dataUrl, setDataUrl] = useState<string | null>(null)
-
-  useEffect(() => {
-    let active = true
-    void window.api.imageView.preview({ path }).then((result) => {
-      if (active) setDataUrl(result.dataUrl)
-    }).catch(() => {
-      if (active) setDataUrl(null)
-    })
-    return () => {
-      active = false
-    }
-  }, [path])
-
-  if (!dataUrl) return null
-  return (
-    <div className="image-view-preview">
-      <img src={dataUrl} alt={`Image viewed by the model: ${fileName}`} />
-      <span className="cdp-screenshot-filename">{fileName}</span>
-    </div>
-  )
-}
-
 function cdpScreenshotArtifact(item: DynamicToolCallItem): CdpScreenshotArtifact | null {
-  if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot' && item.tool !== 'app_screenshot') return null
+  if (item.tool !== 'browser_cdp' && item.tool !== 'browser_screenshot') return null
 
   for (const content of item.contentItems ?? []) {
     if (content.type !== 'inputText') continue
@@ -1223,12 +1034,7 @@ function GenericBlock({ item, live }: { item: WorkItem; live: boolean }): React.
     case 'sleep':
       return <ToolRow icon={<ClockIcon />} status={status} verb="Waited" detail={`${Math.round(item.durationMs / 1000)}s`} />
     case 'imageView':
-      return (
-        <div className="screenshot-tool-step">
-          <ToolRow icon={<ImageIcon />} status={status} verb="Viewed" detail={basename(item.path)} detailTitle={item.path} />
-          <ImageViewPreview path={item.path} fileName={basename(item.path)} />
-        </div>
-      )
+      return <ToolRow icon={<ImageIcon />} status={status} verb="Viewed" detail={basename(item.path)} detailTitle={item.path} />
     case 'imageGeneration':
       return (
         <ToolRow
@@ -1276,7 +1082,7 @@ const WorkBlock = memo(function WorkBlock({
 }): React.JSX.Element | null {
   switch (item.type) {
     case 'reasoning':
-      return <ThoughtBlock item={item} meta={meta} streaming={live && isNewest && !meta?.completedAtMs} />
+      return <ThoughtBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'plan':
       return <PlanTextBlock item={item} streaming={live && isNewest && !meta?.completedAtMs} />
     case 'turnPlan':
@@ -1284,7 +1090,7 @@ const WorkBlock = memo(function WorkBlock({
     case 'commandExecution':
       return <CommandBlock item={item} meta={meta} live={live} />
     case 'fileChange':
-      return <FileChangeBlock item={item} meta={meta} live={live} workspace={workspace} />
+      return <FileChangeBlock item={item} live={live} workspace={workspace} />
     case 'mcpToolCall':
       return <McpBlock item={item} meta={meta} live={live} />
     case 'dynamicToolCall':

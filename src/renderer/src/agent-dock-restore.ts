@@ -1,6 +1,5 @@
 import { attachmentsFromUserInput } from './Attachments.js'
-import { collapseAdjacentAssistantDuplicates, parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
-import { isAuditPrompt, parseAuditPrompt } from './audit-trigger.js'
+import { parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import type { ChatItem } from './transcript-model.js'
 import { emptySessionState, type SessionRenderState } from './session-store.js'
 
@@ -26,26 +25,20 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         .map((content) => content.text)
         .join('\n')
       const attachments = attachmentsFromUserInput(item.content)
-      if (isAuditPrompt(text)) {
-        messages.push({ id: item.id, role: 'user', text, attachments, audit: parseAuditPrompt(text) })
-      } else if (text || attachments.length) {
-        messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
-      }
+      if (text || attachments.length) messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
     } else if (item.type === 'agentMessage' && item.text) {
       messages.push({ id: item.id, role: 'assistant', text: item.text })
     }
   }
-  return collapseAdjacentAssistantDuplicates(messages)
+  return messages
 }
 
 export async function restoreAgentDock(options: {
   storageKey: string
   mainThreadIds: ReadonlySet<string>
-  mainChatTabKeys: ReadonlySet<string>
-  activeMainChatTabKey: string
   store: AgentDockStore
 }): Promise<void> {
-  const { storageKey, mainThreadIds, mainChatTabKeys, activeMainChatTabKey, store } = options
+  const { storageKey, mainThreadIds, store } = options
   try {
     const raw = window.localStorage.getItem(storageKey)
     if (!raw) return
@@ -55,32 +48,18 @@ export async function restoreAgentDock(options: {
       store.counterRef.current = parsed.counter
     }
     const entries = parsed.sessions.filter(
-      (entry) =>
-        (!entry.threadId || !mainThreadIds.has(entry.threadId)) &&
-        (!entry.mainChatTabKey || mainChatTabKeys.has(entry.mainChatTabKey))
+      (entry) => !entry.threadId || !mainThreadIds.has(entry.threadId)
     )
     if (!entries.length) return
 
     const restored: AgentSession[] = entries.map((entry) => ({
       key: crypto.randomUUID(),
-      // Pre-ownership dock records are legacy global agents. Keep them
-      // reachable in the chat that was active during restore; newer records
-      // retain their exact owning tab.
-      mainChatTabKey: typeof entry.mainChatTabKey === 'string' && entry.mainChatTabKey
-        ? entry.mainChatTabKey
-        : activeMainChatTabKey,
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
       status: 'idle',
       turnId: null,
       messages: [],
       watchesMain: Boolean(entry.watchesMain),
-      auditsMain: Boolean(entry.auditsMain),
-      reportsToMain: Boolean(entry.reportsToMain),
-      // Legacy records predate the first-flag prompt: auto-send on was an
-      // explicit decision; off means the prompt never existed, so ask once.
-      sendPolicyDecided: Boolean(entry.sendPolicyDecided ?? entry.reportsToMain),
-      lastAuditNote: null,
       model: entry.model ?? null,
       reasoningEffort: entry.reasoningEffort ?? null,
       contextUsage: null,
@@ -107,7 +86,7 @@ export async function restoreAgentDock(options: {
     await Promise.all(restored.map(async (session) => {
       if (!session.threadId) return
       try {
-        const resumed = await window.api.session.resumeThread({ threadId: session.threadId, history: 'agent' })
+        const resumed = await window.api.codex.resumeThread({ threadId: session.threadId, history: 'agent' })
         const turns: Array<{ id: string; items: ChatItem[] }> = resumed.thread.turns.length > 0
           ? resumed.thread.turns
           // The shared resume request asks for newest-first to keep startup

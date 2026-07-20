@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -26,23 +26,6 @@ test('browser state store serializes overlapping saves and flushes the latest st
 
     assert.deepEqual(await store.load(), state('Second', 'https://second.example'))
   } finally {
-    await rm(directory, { recursive: true, force: true })
-  }
-})
-
-test('browser state store reports corrupt persisted state instead of silently resetting the browser session', async () => {
-  const directory = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-state-'))
-  const filePath = join(directory, 'browser-state.json')
-  const previousWarn = console.warn
-  const warnings: unknown[][] = []
-  console.warn = (...args: unknown[]) => { warnings.push(args) }
-  try {
-    await writeFile(filePath, '{"version":1,"tabs":"not-an-array"}\n', 'utf8')
-
-    assert.equal(await new BrowserStateStore(filePath).load(), null)
-    assert.match(String(warnings[0]?.[0] ?? ''), /Ignoring invalid saved browser state/)
-  } finally {
-    console.warn = previousWarn
     await rm(directory, { recursive: true, force: true })
   }
 })

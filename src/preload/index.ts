@@ -5,14 +5,12 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
-  ImageViewPreviewParams,
-  ImageViewPreviewResult,
   ChatAttachment,
   BackgroundTurnNotificationParams,
   BrowserBounds,
   BrowserFindResult,
   BrowserState,
-  SessionEvent,
+  CodexEvent,
   CodexInterruptTurnParams,
   CodexListThreadTurnsParams,
   CodexListThreadsParams,
@@ -33,13 +31,7 @@ import type {
   TracePersistParams,
   TranscriptCachePersistParams,
   CheckpointRevertParams,
-  CheckpointRevertFilesParams,
-  CheckpointChangedFilesParams,
   CheckpointSummary,
-  MentionIndexParams,
-  MentionIndexResult,
-  MentionReadParams,
-  MentionReadIpcResult,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
@@ -107,41 +99,41 @@ export const api = {
       }
     }
   },
-  session: {
-    getAuthStatus: () => ipcRenderer.invoke(ipcChannels.sessionGetAuthStatus),
-    listModels: () => ipcRenderer.invoke(ipcChannels.sessionListModels),
+  codex: {
+    getAuthStatus: () => ipcRenderer.invoke(ipcChannels.codexGetAuthStatus),
+    listModels: () => ipcRenderer.invoke(ipcChannels.codexListModels),
     listThreads: (params?: CodexListThreadsParams) =>
-      ipcRenderer.invoke(ipcChannels.sessionListThreads, params),
-    startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.sessionStartThread, params),
-    resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.sessionResumeThread, params),
+      ipcRenderer.invoke(ipcChannels.codexListThreads, params),
+    startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.codexStartThread, params),
+    resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.codexResumeThread, params),
     listThreadTurns: (params: CodexListThreadTurnsParams) =>
-      ipcRenderer.invoke(ipcChannels.sessionListThreadTurns, params),
-    getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionGetGoal, threadId),
-    setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.sessionSetGoal, params),
-    clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionClearGoal, threadId),
-    sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.sessionSendMessage, params),
-    steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.sessionSteerTurn, params),
-    interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.sessionInterruptTurn, params),
+      ipcRenderer.invoke(ipcChannels.codexListThreadTurns, params),
+    getGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexGetGoal, threadId),
+    setGoal: (params: CodexSetGoalParams) => ipcRenderer.invoke(ipcChannels.codexSetGoal, params),
+    clearGoal: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexClearGoal, threadId),
+    sendMessage: (params: CodexSendMessageParams) => ipcRenderer.invoke(ipcChannels.codexSendMessage, params),
+    steerTurn: (params: CodexSteerTurnParams) => ipcRenderer.invoke(ipcChannels.codexSteerTurn, params),
+    interruptTurn: (params: CodexInterruptTurnParams) => ipcRenderer.invoke(ipcChannels.codexInterruptTurn, params),
     compactThread: (threadId: string): Promise<{ started: boolean }> =>
-      ipcRenderer.invoke(ipcChannels.sessionCompactThread, threadId),
-    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.sessionUnsubscribeThread, threadId),
+      ipcRenderer.invoke(ipcChannels.codexCompactThread, threadId),
+    unsubscribeThread: (threadId: string) => ipcRenderer.invoke(ipcChannels.codexUnsubscribeThread, threadId),
     listInstalledPlugins: (params?: CodexPluginQueryParams): Promise<PluginInstalledResponse> =>
-      ipcRenderer.invoke(ipcChannels.sessionListInstalledPlugins, params),
+      ipcRenderer.invoke(ipcChannels.codexListInstalledPlugins, params),
     listPlugins: (params?: CodexPluginQueryParams): Promise<PluginListResponse> =>
-      ipcRenderer.invoke(ipcChannels.sessionListPlugins, params),
+      ipcRenderer.invoke(ipcChannels.codexListPlugins, params),
     readPlugin: (params: CodexPluginReadParams): Promise<PluginReadResponse> =>
-      ipcRenderer.invoke(ipcChannels.sessionReadPlugin, params),
+      ipcRenderer.invoke(ipcChannels.codexReadPlugin, params),
     getPluginAppStatuses: (params: CodexPluginAppStatusParams): Promise<CodexPluginAppStatusResponse> =>
-      ipcRenderer.invoke(ipcChannels.sessionGetPluginAppStatuses, params),
+      ipcRenderer.invoke(ipcChannels.codexGetPluginAppStatuses, params),
     installPlugin: (params: CodexPluginInstallParams): Promise<PluginInstallResponse> =>
-      ipcRenderer.invoke(ipcChannels.sessionInstallPlugin, params),
+      ipcRenderer.invoke(ipcChannels.codexInstallPlugin, params),
     uninstallPlugin: (pluginId: string): Promise<void> =>
-      ipcRenderer.invoke(ipcChannels.sessionUninstallPlugin, pluginId),
-    onEvent: (listener: (event: SessionEvent) => void) => {
-      const wrapped = (_event: Electron.IpcRendererEvent, event: SessionEvent): void => listener(event)
-      ipcRenderer.on(ipcChannels.sessionEvent, wrapped)
+      ipcRenderer.invoke(ipcChannels.codexUninstallPlugin, pluginId),
+    onEvent: (listener: (event: CodexEvent) => void) => {
+      const wrapped = (_event: Electron.IpcRendererEvent, event: CodexEvent): void => listener(event)
+      ipcRenderer.on(ipcChannels.codexEvent, wrapped)
       return () => {
-        ipcRenderer.off(ipcChannels.sessionEvent, wrapped)
+        ipcRenderer.off(ipcChannels.codexEvent, wrapped)
       }
     }
   },
@@ -160,26 +152,13 @@ export const api = {
   },
   checkpoints: {
     list: (threadId: string): Promise<CheckpointSummary[]> => ipcRenderer.invoke(ipcChannels.checkpointList, threadId),
-    revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params),
-    revertFiles: (params: CheckpointRevertFilesParams): Promise<void> =>
-      ipcRenderer.invoke(ipcChannels.checkpointRevertFiles, params),
-    changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
-  },
-  mentions: {
-    index: (params: MentionIndexParams): Promise<MentionIndexResult> =>
-      ipcRenderer.invoke(ipcChannels.mentionIndex, params),
-    read: (params: MentionReadParams): Promise<MentionReadIpcResult> =>
-      ipcRenderer.invoke(ipcChannels.mentionRead, params)
+    revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params)
   },
   artifact: {
     readImage: (params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> =>
       ipcRenderer.invoke(ipcChannels.artifactReadImage, params),
     openImage: (params: ArtifactReadImageParams): Promise<boolean> =>
       ipcRenderer.invoke(ipcChannels.artifactOpenImage, params)
-  },
-  imageView: {
-    preview: (params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> =>
-      ipcRenderer.invoke(ipcChannels.imageViewPreview, params)
   },
   attachments: {
     pick: (): Promise<ChatAttachment[]> => ipcRenderer.invoke(ipcChannels.attachmentPick),
