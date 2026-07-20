@@ -166,7 +166,10 @@ export async function runBrowserTool(
             mergedTop.score >= destination.score + 15
               ? mergedTop
               : null
-          const ok = page.ok && (!includeBackground || background?.ok === true)
+          // Background corroboration is additive. A readable visible result
+          // must not be turned into a failed search because the optional
+          // research lane exhausted its candidates or retained coverage gaps.
+          const ok = page.ok || background?.ok === true
           return {
             ok,
             mode: includeBackground

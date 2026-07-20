@@ -122,6 +122,25 @@ test('browser_live_search background mode starts live and independent evidence w
   assert.ok(timings.firstUrlMs < 20, `first URL dispatch regressed: ${JSON.stringify(timings)}`)
 })
 
+test('browser_live_search keeps a readable live result when optional background research has gaps', async () => {
+  const events: string[] = []
+  const deps = fakeDeps({ fireEarly: true, events })
+  ;(deps.researchRunner as unknown as { run: unknown }).run = async () => ({
+    ok: false,
+    pages: [],
+    gaps: [{ focusId: 'missing', reason: 'no-relevant-passage' }]
+  })
+
+  const { result } = await runBrowserTool(
+    { tool: 'browser_live_search', args: { objective: 'facts', query: 'example query', background: true }, owner: null, callId: 'c-background-gap' },
+    deps
+  )
+
+  assert.equal(result.ok, true)
+  assert.equal((result.page as { ok: boolean }).ok, true)
+  assert.equal((result.background as { ok: boolean }).ok, false)
+})
+
 test('browser_live_search flags a clearly better merged candidate instead of hiding it in alternates', async () => {
   const events: string[] = []
   const strong = candidate('https://strong.example/page', 1, 126)
