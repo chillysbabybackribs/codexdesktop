@@ -34,7 +34,7 @@ function turnEvent(method: 'turn/started' | 'turn/completed', threadId: string, 
     type: 'notification',
     notification: {
       method,
-      params: { threadId, turn: { id: turnId } },
+      params: { threadId, turn: { id: turnId, status: method === 'turn/started' ? 'inProgress' : 'completed' } },
     },
   }
 }
@@ -84,7 +84,26 @@ test('Codex collab receiver threads normalize into first-class runs', () => {
 })
 
 test('Codex native agent turns are tracked until their matching completion', () => {
-  const bridge = new AgentRunBridge(() => {})
+  const events: AgentRunEvent[] = []
+  const bridge = new AgentRunBridge((event) => events.push(event))
+  bridge.ingestCodex({
+    type: 'notification',
+    notification: {
+      method: 'item/started',
+      params: {
+        threadId: 'parent',
+        turnId: 'origin-turn',
+        item: {
+          type: 'collabAgentToolCall',
+          senderThreadId: 'parent',
+          receiverThreadIds: ['child'],
+          prompt: 'Check the implementation',
+          status: 'inProgress',
+          agentsStates: { child: { status: 'running' } },
+        },
+      },
+    },
+  })
   bridge.ingestCodex(turnEvent('turn/started', 'child', 'child-turn'))
   assert.equal(bridge.codexActiveTurnId('child'), 'child-turn')
 
@@ -93,6 +112,40 @@ test('Codex native agent turns are tracked until their matching completion', () 
 
   bridge.ingestCodex(turnEvent('turn/completed', 'child', 'child-turn'))
   assert.equal(bridge.codexActiveTurnId('child'), null)
+  assert.equal(events.at(-1)?.run.status, 'completed')
+})
+
+test('Codex interrupted child turn immediately publishes a stopped run', () => {
+  const events: AgentRunEvent[] = []
+  const bridge = new AgentRunBridge((event) => events.push(event))
+  bridge.ingestCodex({
+    type: 'notification',
+    notification: {
+      method: 'item/started',
+      params: {
+        threadId: 'parent',
+        turnId: 'origin-turn',
+        item: {
+          type: 'collabAgentToolCall',
+          senderThreadId: 'parent',
+          receiverThreadIds: ['child'],
+          prompt: 'Check the implementation',
+          status: 'inProgress',
+          agentsStates: { child: { status: 'running' } },
+        },
+      },
+    },
+  })
+  bridge.ingestCodex({
+    type: 'notification',
+    notification: {
+      method: 'turn/completed',
+      params: { threadId: 'child', turn: { id: 'child-turn', status: 'interrupted' } },
+    },
+  })
+
+  assert.equal(events.at(-1)?.run.status, 'stopped')
+  assert.equal(events.at(-1)?.run.progress, 'Agent stopped')
 })
 
 test('idle parent is resumed once for duplicate completion events', async () => {

@@ -58,9 +58,25 @@ export class AgentRunBridge {
       return
     }
     if (notification.method === 'turn/completed') {
-      const turnId = text(record(params.turn).id)
+      const turn = record(params.turn)
+      const turnId = text(turn.id)
       if (threadId && (!turnId || this.codexActiveTurns.get(threadId) === turnId)) {
         this.codexActiveTurns.delete(threadId)
+      }
+      const previous = threadId ? this.runs.get(`codex:${threadId}`) : null
+      if (previous) {
+        const status = codexStatus(turn.status, turn.status)
+        const error = record(turn.error)
+        this.publish({
+          ...previous,
+          status,
+          progress: status === 'stopped' ? 'Agent stopped' : previous.progress,
+          resultSummary: status === 'failed'
+            ? clip(text(error.message) ?? previous.resultSummary)
+            : previous.resultSummary,
+          updatedAtMs: Date.now(),
+          completedAtMs: terminal(status) ? Date.now() : null,
+        })
       }
       return
     }
