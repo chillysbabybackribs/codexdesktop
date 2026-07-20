@@ -34,6 +34,47 @@ export type AgentSpawnedEvent = {
   model: string | null
 }
 
+export type AgentRunProvider = 'app' | 'codex' | 'claude'
+export type AgentRunLane = 'model' | 'browser-live' | 'browser-background'
+export type AgentRunStatus = 'queued' | 'working' | 'waiting' | 'completed' | 'failed' | 'stopped'
+export type AgentWakeStatus = 'none' | 'pending' | 'queued' | 'resumed' | 'suppressed'
+
+export type AgentRunSnapshot = {
+  id: string
+  nativeId: string
+  provider: AgentRunProvider
+  lane: AgentRunLane
+  parentThreadId: string | null
+  parentTurnId: string | null
+  parentAgentKey: string | null
+  title: string
+  task: string | null
+  status: AgentRunStatus
+  progress: string | null
+  resultSummary: string | null
+  outputPath: string | null
+  wakeStatus: AgentWakeStatus
+  startedAtMs: number
+  updatedAtMs: number
+  completedAtMs: number | null
+}
+
+export type AgentRunEvent = {
+  type: 'agentRun'
+  run: AgentRunSnapshot
+}
+
+export type BrowserDecisionEvent = {
+  type: 'browserDecision'
+  threadId: string
+  turnId: string
+  provider: 'codex' | 'claude'
+  preset: 'quality-max' | 'balanced' | 'manual'
+  mode: 'none' | 'live' | 'background' | 'dual'
+  required: boolean
+  reason: string
+}
+
 export type ResearchProgressStage = 'queued' | 'preparing' | 'discovering' | 'verifying' | 'finalizing' | 'complete'
 
 export type ResearchProgress = {
@@ -59,6 +100,8 @@ export type SessionEvent =
   | CodexNotificationEvent
   | CodexResearchProgressEvent
   | AgentSpawnedEvent
+  | AgentRunEvent
+  | BrowserDecisionEvent
 /** @deprecated alias kept for migration; import SessionEvent. */
 export type CodexEvent = SessionEvent
 
