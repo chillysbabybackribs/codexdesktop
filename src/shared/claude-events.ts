@@ -138,6 +138,12 @@ export class ClaudeTurnTranslator {
   // (provider message id, text) → emitted item id: keeps restated/replayed
   // assistant text idempotent even after the streaming block map resets.
   private readonly emittedTextIds = new Map<string, string>();
+  // Any assistant text followed by a tool call is task narration, not the
+  // turn's final answer. Keep the latest text for each item so a later tool
+  // start can retroactively move already-streamed prose into the activity
+  // surface without creating a second transcript item.
+  private readonly textById = new Map<string, string>();
+  private readonly commentaryTextIds = new Set<string>();
   private textIdCounter = 0;
   private resolvedModel: string | null = null;
   private pendingError: {
@@ -209,6 +215,7 @@ export class ClaudeTurnTranslator {
       if (block.type === 'text') {
         const id = `${turnId}:${this.messageKey}:b${index}`;
         this.blocks.set(index, { id, kind: 'text', text: '' });
+        this.textById.set(id, '');
         return {
           notifications: [
             asNotification('item/started', {
@@ -246,7 +253,10 @@ export class ClaudeTurnTranslator {
           typeof block.id === 'string' ? block.id : `${turnId}:${this.messageKey}:b${index}`;
         this.blocks.set(index, { id, kind: 'tool', text: '' });
         return {
-          notifications: this.startToolCall(id, typeof block.name === 'string' ? block.name : 'tool'),
+          notifications: [
+            ...this.markPriorTextAsCommentary(),
+            ...this.startToolCall(id, typeof block.name === 'string' ? block.name : 'tool'),
+          ],
         };
       }
       return { notifications: [] };
@@ -258,6 +268,7 @@ export class ClaudeTurnTranslator {
       const delta = asRecord(event.delta);
       if (block.kind === 'text' && typeof delta.text === 'string') {
         block.text += delta.text;
+        this.textById.set(block.id, block.text);
         return {
           notifications: [
             asNotification('item/agentMessage/delta', {
@@ -329,6 +340,7 @@ export class ClaudeTurnTranslator {
         // Restated tool_use carries the complete input — the enrichment path
         // for runs without stream events, and an idempotent re-emit otherwise.
         if (!this.tools.has(block.id)) {
+          notifications.push(...this.markPriorTextAsCommentary());
           notifications.push(
             ...this.startToolCall(block.id, typeof block.name === 'string' ? block.name : 'tool'),
           );
@@ -344,6 +356,7 @@ export class ClaudeTurnTranslator {
         id = streamed?.id ?? `${this.context.turnId}:${providerId}:t${this.textIdCounter++}`;
         this.emittedTextIds.set(memoKey, id);
       }
+      this.textById.set(id, block.text);
       notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }));
     }
     return { notifications };
@@ -667,7 +680,7 @@ export class ClaudeTurnTranslator {
             type: 'agentMessage',
             id: block.id,
             text: block.text,
-            phase: null,
+            phase: this.commentaryTextIds.has(block.id) ? 'commentary' : null,
             memoryCitation: null,
           } as ThreadItem)
         : ({
@@ -682,6 +695,16 @@ export class ClaudeTurnTranslator {
       completedAtMs: this.context.nowMs(),
       item,
     });
+  }
+
+  private markPriorTextAsCommentary(): ServerNotification[] {
+    const notifications: ServerNotification[] = [];
+    for (const [id, text] of this.textById) {
+      if (this.commentaryTextIds.has(id)) continue;
+      this.commentaryTextIds.add(id);
+      notifications.push(this.completedBlockNotification({ id, kind: 'text', text }));
+    }
+    return notifications;
   }
 
   private rememberAssistantError(message: Record<string, unknown>): void {
