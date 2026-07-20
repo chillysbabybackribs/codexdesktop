@@ -49,46 +49,6 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'research_web' || item.tool === 'browser_live_search')) {
-      for (const content of item.contentItems ?? []) {
-        if (content.type !== 'inputText') continue
-        try {
-          const parsed = JSON.parse(content.text) as {
-            artifactDir?: unknown
-            pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
-            background?: {
-              artifactDir?: unknown
-              pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
-            }
-          }
-          // The search tools carry their artifact-first lane under `background`;
-          // research_web returns the research result at the top level.
-          const result = item.tool === 'research_web' ? parsed : parsed.background ?? {}
-          if (typeof result.artifactDir === 'string') {
-            addTraceArtifact(artifacts, {
-              path: result.artifactDir,
-              kind: 'researchCapsule',
-              originEventId: item.id,
-              availability: 'pathOnly'
-            })
-          }
-          for (const page of Array.isArray(result.pages) ? result.pages : []) {
-            for (const path of [page.artifactPath, page.htmlPath]) {
-              if (typeof path !== 'string') continue
-              addTraceArtifact(artifacts, {
-                path,
-                kind: 'generatedFile',
-                originEventId: item.id,
-                availability: 'pathOnly'
-              })
-            }
-          }
-        } catch {
-          // A failed or partial tool result is not promoted into the artifact index.
-        }
-      }
-      continue
-    }
     if (item.type !== 'commandExecution') continue
     const searchable = `${item.command}\n${item.aggregatedOutput ?? ''}`
     for (const match of searchable.matchAll(/\/tmp\/codexdesktop-tasks\/[A-Za-z0-9._/-]+/g)) {
