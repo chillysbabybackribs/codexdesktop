@@ -14,7 +14,6 @@ import type {
   BrowserBounds,
   BrowserMenuAnchor,
   BrowserMenuItem,
-  TitlebarCalendarAnchor,
   OmniboxAnchor,
   OmniboxQueryResult,
   TraceLoadParams,
@@ -36,7 +35,6 @@ import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserMenuPopup } from './browser/browser-menu-popup.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
-import { TitlebarCalendarPopup } from './titlebar-calendar-popup.js'
 import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
@@ -101,7 +99,6 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
 let browserMenuPopup: BrowserMenuPopup | null = null
-let titlebarCalendarPopup: TitlebarCalendarPopup | null = null
 let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
@@ -282,16 +279,11 @@ function createWindow(): void {
         case 'zoom-out':
         case 'zoom-reset':
         case 'zoom-in':
-          if (activeTabId)
-            tabManager?.zoom(activeTabId, command === 'zoom-out' ? 'out' : command === 'zoom-in' ? 'in' : 'reset')
+          if (activeTabId) tabManager?.zoom(activeTabId, command === 'zoom-out' ? 'out' : command === 'zoom-in' ? 'in' : 'reset')
           break
       }
     },
     () => sendToMainRenderer(ipcChannels.browserMenuClosed, undefined)
-  )
-
-  titlebarCalendarPopup = new TitlebarCalendarPopup(mainWindow, () =>
-    sendToMainRenderer(ipcChannels.titlebarCalendarClosed, undefined)
   )
 
   mainWindow.once('ready-to-show', () => {
@@ -308,7 +300,6 @@ function createWindow(): void {
   mainWindow.on('blur', () => {
     omniboxPopup?.hide()
     browserMenuPopup?.hide()
-    titlebarCalendarPopup?.hide()
   })
 
   // Capture while the native views still exist. On macOS a normal window
@@ -327,8 +318,6 @@ function createWindow(): void {
     omniboxPopup = null
     browserMenuPopup?.dispose()
     browserMenuPopup = null
-    titlebarCalendarPopup?.dispose()
-    titlebarCalendarPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -378,7 +367,8 @@ function bootstrap(): void {
   void app.whenReady().then(async () => {
     configureBrowserSession({
       getWindow: () => mainWindow,
-      isUserVisibleWebContents: (webContents) => tabManager?.isUserVisibleWebContents(webContents) ?? false
+      isUserVisibleWebContents: (webContents) =>
+        tabManager?.isUserVisibleWebContents(webContents) ?? false
     })
     await browserHistoryStore.load()
     vpnManager.onChange(() => tabManager?.refreshState())
@@ -432,14 +422,7 @@ function registerIpc(): void {
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
   const mentionIndexService = new MentionIndexService()
-  sessionProviders = registerSessionIpc(
-    () => mainWindow,
-    browserAgent,
-    researchRunner,
-    memoryStore,
-    attachmentStore,
-    checkpointStore
-  )
+  sessionProviders = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
   void sessionProviders.codexClient.warmUp()
@@ -486,95 +469,42 @@ function registerIpc(): void {
     if (picked) await mentionIndexService.approveWorkspace(picked)
     return picked
   })
-  ipcMain.handle(
-    ipcChannels.artifactReadImage,
-    async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
-      dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
-    })
-  )
+  ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
+    dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
+  }))
   ipcMain.handle(ipcChannels.artifactOpenImage, async (_event, params: ArtifactReadImageParams): Promise<boolean> => {
     const dataUrl = await cdpArtifactStore.readImageDataUrl(params.artifactPath)
     if (!dataUrl || !tabManager) return false
     tabManager.createTab(dataUrl)
     return true
   })
-  ipcMain.handle(
-    ipcChannels.imageViewPreview,
-    async (_event, params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> => ({
-      dataUrl: await readImageViewDataUrl(params.path)
-    })
-  )
+  ipcMain.handle(ipcChannels.imageViewPreview, async (_event, params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> => ({
+    dataUrl: await readImageViewDataUrl(params.path)
+  }))
   ipcMain.handle(ipcChannels.attachmentPick, async () => {
     if (!mainWindow) return []
     const result = await dialog.showOpenDialog(mainWindow, {
       title: 'Add images or files',
       properties: ['openFile', 'multiSelections'],
-      filters: [
-        {
-          name: 'Supported files',
-          extensions: [
-            'png',
-            'jpg',
-            'jpeg',
-            'webp',
-            'gif',
-            'pdf',
-            'txt',
-            'md',
-            'csv',
-            'json',
-            'jsonl',
-            'yaml',
-            'yml',
-            'xml',
-            'html',
-            'css',
-            'js',
-            'jsx',
-            'ts',
-            'tsx',
-            'py',
-            'rb',
-            'go',
-            'rs',
-            'java',
-            'c',
-            'h',
-            'cpp',
-            'hpp',
-            'sh',
-            'sql',
-            'log',
-            'doc',
-            'docx',
-            'xls',
-            'xlsx',
-            'ppt',
-            'pptx',
-            'rtf'
-          ]
-        }
-      ]
+      filters: [{
+        name: 'Supported files',
+        extensions: ['png', 'jpg', 'jpeg', 'webp', 'gif', 'pdf', 'txt', 'md', 'csv', 'json', 'jsonl', 'yaml', 'yml', 'xml', 'html', 'css', 'js', 'jsx', 'ts', 'tsx', 'py', 'rb', 'go', 'rs', 'java', 'c', 'h', 'cpp', 'hpp', 'sh', 'sql', 'log', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf']
+      }]
     })
     if (result.canceled) return []
-    const inputs: AttachmentSaveInput[] = await Promise.all(
-      result.filePaths.map(async (path) => ({
-        name: path.split(/[\\/]/).pop() ?? 'attachment',
-        mediaType: 'application/octet-stream',
-        data: new Uint8Array(await readFile(path))
-      }))
-    )
+    const inputs: AttachmentSaveInput[] = await Promise.all(result.filePaths.map(async (path) => ({
+      name: path.split(/[\\/]/).pop() ?? 'attachment',
+      mediaType: 'application/octet-stream',
+      data: new Uint8Array(await readFile(path))
+    })))
     return attachmentStore.persistFiles(inputs)
   })
   ipcMain.handle(ipcChannels.attachmentSave, (_event, files: AttachmentSaveInput[]) =>
     attachmentStore.persistFiles(files)
   )
-  ipcMain.handle(
-    ipcChannels.attachmentPreview,
-    async (_event, params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> => ({
-      dataUrl: await attachmentStore.preview(params.path)
-    })
-  )
+  ipcMain.handle(ipcChannels.attachmentPreview, async (_event, params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> => ({
+    dataUrl: await attachmentStore.preview(params.path)
+  }))
   ipcMain.handle(ipcChannels.attachmentOpen, async (_event, params: AttachmentPreviewParams): Promise<boolean> => {
     const dataUrl = await attachmentStore.preview(params.path)
     if (!dataUrl || !tabManager) return false
@@ -593,74 +523,63 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserForward, (_event, tabId: string) => tabManager?.goForward(tabId))
   ipcMain.handle(ipcChannels.browserReload, (_event, tabId: string) => tabManager?.reload(tabId))
   ipcMain.handle(ipcChannels.browserFind, (_event, tabId: string, text: string, forward: boolean) =>
-    tabManager?.find(tabId, text, forward)
-  )
-  ipcMain.handle(
-    ipcChannels.browserStopFind,
-    (_event, tabId: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
-      tabManager?.stopFind(tabId, action)
-  )
+    tabManager?.find(tabId, text, forward))
+  ipcMain.handle(ipcChannels.browserStopFind, (_event, tabId: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
+    tabManager?.stopFind(tabId, action))
   ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
-    tabManager?.zoom(tabId, direction)
-  )
+    tabManager?.zoom(tabId, direction))
   ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
   ipcMain.handle(ipcChannels.browserToggleVpn, () => vpnManager.toggle())
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
-  ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) =>
-    tabManager?.endDividerDrag(bounds)
-  )
+  ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
   ipcMain.handle(ipcChannels.browserSetOverlayOpen, (_event, open: boolean) => tabManager?.setOverlayOpen(open))
-  ipcMain.handle(ipcChannels.browserOmniboxQuery, (_event, text: string, anchor: OmniboxAnchor): OmniboxQueryResult => {
-    const input = String(text ?? '')
-    const entries = browserHistoryStore.entries()
-    const suggestions = buildSuggestions(input, entries)
+  ipcMain.handle(
+    ipcChannels.browserOmniboxQuery,
+    (_event, text: string, anchor: OmniboxAnchor): OmniboxQueryResult => {
+      const input = String(text ?? '')
+      const entries = browserHistoryStore.entries()
+      const suggestions = buildSuggestions(input, entries)
 
-    if (suggestions.length > 0) {
-      omniboxPopup?.show(anchor, suggestions)
-    } else {
-      omniboxPopup?.hide()
+      if (suggestions.length > 0) {
+        omniboxPopup?.show(anchor, suggestions)
+      } else {
+        omniboxPopup?.hide()
+      }
+
+      return { suggestions, inline: inlineCompletion(input, entries) }
     }
-
-    return { suggestions, inline: inlineCompletion(input, entries) }
-  })
+  )
   ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))
   ipcMain.handle(ipcChannels.browserOmniboxClose, () => omniboxPopup?.hide())
   ipcMain.handle(ipcChannels.browserMenuOpen, (_event, anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
-    browserMenuPopup?.show(anchor, items)
-  )
+    browserMenuPopup?.show(anchor, items))
   ipcMain.handle(ipcChannels.browserMenuUpdate, (_event, items: BrowserMenuItem[]) => browserMenuPopup?.update(items))
   ipcMain.handle(ipcChannels.browserMenuClose, () => browserMenuPopup?.hide())
-  ipcMain.handle(ipcChannels.titlebarCalendarOpen, (event, anchor: TitlebarCalendarAnchor) => {
-    if (event.sender !== mainWindow?.webContents) return
-    omniboxPopup?.hide()
-    browserMenuPopup?.hide()
-    titlebarCalendarPopup?.show(anchor)
-  })
-  ipcMain.handle(ipcChannels.titlebarCalendarClose, (event) => {
-    if (event.sender === mainWindow?.webContents) titlebarCalendarPopup?.hide()
-  })
 
-  ipcMain.handle(ipcChannels.notificationBackgroundTurn, (_event, params: BackgroundTurnNotificationParams): void => {
-    const window = mainWindow
-    if (!window || window.isFocused() || !Notification.isSupported()) return
+  ipcMain.handle(
+    ipcChannels.notificationBackgroundTurn,
+    (_event, params: BackgroundTurnNotificationParams): void => {
+      const window = mainWindow
+      if (!window || window.isFocused() || !Notification.isSupported()) return
 
-    const notification = new Notification({
-      title: params.status === 'failed' ? `${params.title} failed` : `${params.title} finished`,
-      body:
-        params.message?.trim() ||
-        (params.status === 'failed' ? 'The background turn failed.' : 'The background turn completed.'),
-      silent: false
-    })
-    notification.on('click', () => {
-      if (window.isMinimized()) window.restore()
-      window.show()
-      window.focus()
-    })
-    notification.show()
-  })
+      const notification = new Notification({
+        title: params.status === 'failed' ? `${params.title} failed` : `${params.title} finished`,
+        body: params.message?.trim() || (params.status === 'failed' ? 'The background turn failed.' : 'The background turn completed.'),
+        silent: false
+      })
+      notification.on('click', () => {
+        if (window.isMinimized()) window.restore()
+        window.show()
+        window.focus()
+      })
+      notification.show()
+    }
+  )
 
-  ipcMain.handle(ipcChannels.tracePersist, (_event, params: TracePersistParams) => turnTraceStore.persist(params))
+  ipcMain.handle(ipcChannels.tracePersist, (_event, params: TracePersistParams) =>
+    turnTraceStore.persist(params)
+  )
   ipcMain.handle(ipcChannels.traceLoad, (_event, params: TraceLoadParams) =>
     turnTraceStore.load(params.threadId, params.turnId)
   )
@@ -684,31 +603,22 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
     await checkpointStore.revert(params.checkpointId)
   })
-  ipcMain.handle(
-    ipcChannels.checkpointRevertFiles,
-    async (_event, params: CheckpointRevertFilesParams): Promise<void> => {
-      await checkpointStore.revertFiles(params.checkpointId, params.paths)
-    }
+  ipcMain.handle(ipcChannels.checkpointRevertFiles, async (_event, params: CheckpointRevertFilesParams): Promise<void> => {
+    await checkpointStore.revertFiles(params.checkpointId, params.paths)
+  })
+  ipcMain.handle(ipcChannels.mentionIndex, (_event, params: MentionIndexParams): Promise<MentionIndexResult> =>
+    mentionIndexService.index(params.workspace)
   )
-  ipcMain.handle(
-    ipcChannels.mentionIndex,
-    (_event, params: MentionIndexParams): Promise<MentionIndexResult> => mentionIndexService.index(params.workspace)
+  ipcMain.handle(ipcChannels.mentionRead, (_event, params: MentionReadParams): Promise<MentionReadIpcResult> =>
+    mentionIndexService.read(params.workspace, params.path, params.kind)
   )
-  ipcMain.handle(
-    ipcChannels.mentionRead,
-    (_event, params: MentionReadParams): Promise<MentionReadIpcResult> =>
-      mentionIndexService.read(params.workspace, params.path, params.kind)
-  )
-  ipcMain.handle(
-    ipcChannels.checkpointChangedFiles,
-    async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
-      const record = await checkpointStore.find(params.threadId, params.turnId)
-      // null = detection unavailable (no checkpoint for this turn — typically a
-      // non-git workspace), distinct from a genuinely empty diff. The audit
-      // trigger uses the difference to explain itself instead of silently idling.
-      return record ? checkpointStore.changedFiles(record.id) : null
-    }
-  )
+  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
+    const record = await checkpointStore.find(params.threadId, params.turnId)
+    // null = detection unavailable (no checkpoint for this turn — typically a
+    // non-git workspace), distinct from a genuinely empty diff. The audit
+    // trigger uses the difference to explain itself instead of silently idling.
+    return record ? checkpointStore.changedFiles(record.id) : null
+  })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {
     if (!mainWindow) {

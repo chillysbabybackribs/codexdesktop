@@ -13,8 +13,7 @@ export type {
   BrowserMenuCommand,
   BrowserMenuItem,
   BrowserMenuAnchor,
-  BrowserMenuRenderPayload,
-  TitlebarCalendarAnchor
+  BrowserMenuRenderPayload
 } from './ipc/browser-types.js'
 export type {
   CodexConnectionStatus,

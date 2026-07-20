@@ -13,7 +13,6 @@ import type {
   BrowserFindResult,
   BrowserMenuAnchor,
   BrowserMenuItem,
-  TitlebarCalendarAnchor,
   BrowserState,
   BrowserVpnStatus,
   SessionEvent,
@@ -55,8 +54,7 @@ import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
   runtime: {
-    instanceRole:
-      process.env.CODEX_DESKTOP_INSTANCE_ROLE === 'verification' ? ('verification' as const) : ('host' as const),
+    instanceRole: process.env.CODEX_DESKTOP_INSTANCE_ROLE === 'verification' ? 'verification' as const : 'host' as const,
     sessionId: process.env.CODEX_DESKTOP_HOST_SESSION_ID ?? ''
   },
   clipboard: {
@@ -66,17 +64,6 @@ export const api = {
     minimize: () => ipcRenderer.invoke(ipcChannels.windowMinimize),
     toggleMaximize: () => ipcRenderer.invoke(ipcChannels.windowToggleMaximize),
     close: () => ipcRenderer.invoke(ipcChannels.windowClose)
-  },
-  titlebarCalendar: {
-    open: (anchor: TitlebarCalendarAnchor) => ipcRenderer.invoke(ipcChannels.titlebarCalendarOpen, anchor),
-    close: () => ipcRenderer.invoke(ipcChannels.titlebarCalendarClose),
-    onClosed: (listener: () => void) => {
-      const wrapped = (): void => listener()
-      ipcRenderer.on(ipcChannels.titlebarCalendarClosed, wrapped)
-      return () => {
-        ipcRenderer.off(ipcChannels.titlebarCalendarClosed, wrapped)
-      }
-    }
   },
   browser: {
     newTab: (url?: string): Promise<string | undefined> => ipcRenderer.invoke(ipcChannels.browserNewTab, url),
@@ -152,7 +139,8 @@ export const api = {
   session: {
     getAuthStatus: () => ipcRenderer.invoke(ipcChannels.sessionGetAuthStatus),
     listModels: () => ipcRenderer.invoke(ipcChannels.sessionListModels),
-    listThreads: (params?: CodexListThreadsParams) => ipcRenderer.invoke(ipcChannels.sessionListThreads, params),
+    listThreads: (params?: CodexListThreadsParams) =>
+      ipcRenderer.invoke(ipcChannels.sessionListThreads, params),
     startThread: (params?: CodexStartThreadParams) => ipcRenderer.invoke(ipcChannels.sessionStartThread, params),
     resumeThread: (params: CodexResumeThreadParams) => ipcRenderer.invoke(ipcChannels.sessionResumeThread, params),
     listThreadTurns: (params: CodexListThreadTurnsParams) =>
@@ -204,8 +192,7 @@ export const api = {
     revert: (params: CheckpointRevertParams): Promise<void> => ipcRenderer.invoke(ipcChannels.checkpointRevert, params),
     revertFiles: (params: CheckpointRevertFilesParams): Promise<void> =>
       ipcRenderer.invoke(ipcChannels.checkpointRevertFiles, params),
-    changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> =>
-      ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
+    changedFiles: (params: CheckpointChangedFilesParams): Promise<string[] | null> => ipcRenderer.invoke(ipcChannels.checkpointChangedFiles, params)
   },
   mentions: {
     index: (params: MentionIndexParams): Promise<MentionIndexResult> =>
@@ -229,7 +216,8 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.attachmentSave, files),
     preview: (params: AttachmentPreviewParams): Promise<AttachmentPreviewResult> =>
       ipcRenderer.invoke(ipcChannels.attachmentPreview, params),
-    open: (params: AttachmentPreviewParams): Promise<boolean> => ipcRenderer.invoke(ipcChannels.attachmentOpen, params)
+    open: (params: AttachmentPreviewParams): Promise<boolean> =>
+      ipcRenderer.invoke(ipcChannels.attachmentOpen, params)
   },
   notifications: {
     backgroundTurn: (params: BackgroundTurnNotificationParams): Promise<void> =>
