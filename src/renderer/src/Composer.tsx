@@ -203,10 +203,7 @@ export function Composer({
     });
   }, [installedSkills, isLoading, isTurnActive, onNewAgent, providerId, slashQuery]);
 
-  const historyEntries = useMemo(
-    () => listComposerPrompts(draftKey, historyQuery),
-    [draftKey, historyQuery, isHistoryOpen],
-  );
+  const historyEntries = listComposerPrompts(draftKey, historyQuery);
 
   useEffect(() => {
     composerDrafts.set(draftKey, { value, attachments, mentions });
@@ -224,8 +221,6 @@ export function Composer({
     if (canSteer || turnAction !== 'steer') return;
     setTurnAction('queue');
   }, [canSteer, turnAction]);
-
-  useEffect(() => setCommandSelectionIndex(0), [slashQuery]);
 
   useEffect(() => {
     if (slashQuery === null || providerId !== 'codex' || installedSkills.length) return;
@@ -737,6 +732,7 @@ export function Composer({
           disabled={isLoading}
           onChange={(event) => {
             setValue(event.target.value);
+            setCommandSelectionIndex(0);
             setCommandMenuDismissed(false);
           }}
           onPaste={(event) => {
@@ -898,6 +894,7 @@ export function Composer({
             side="top"
             onClick={() => {
               setValue('/');
+              setCommandSelectionIndex(0);
               setCommandMenuDismissed(false);
               requestAnimationFrame(() => textareaRef.current?.focus());
             }}

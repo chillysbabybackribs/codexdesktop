@@ -71,8 +71,6 @@ export function ComposerHistoryMenu({
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => setSelectedIndex(0), [entries]);
-
   const selected = useMemo(
     () => entries[Math.min(selectedIndex, Math.max(0, entries.length - 1))],
     [entries, selectedIndex],
@@ -91,7 +89,10 @@ export function ComposerHistoryMenu({
           type="search"
           placeholder="Search prompt history"
           aria-label="Search prompt history"
-          onChange={(event) => onSearch(event.target.value)}
+          onChange={(event) => {
+            setSelectedIndex(0);
+            onSearch(event.target.value);
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
               event.preventDefault();
@@ -114,7 +115,7 @@ export function ComposerHistoryMenu({
         {entries.length ? (
           entries.map((entry, index) => (
             <button
-              key={`${index}:${entry}`}
+              key={entry}
               type="button"
               role="option"
               aria-selected={index === selectedIndex}
