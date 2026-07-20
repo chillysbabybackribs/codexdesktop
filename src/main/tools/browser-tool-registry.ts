@@ -1,8 +1,8 @@
 import type { BrowserAgentController } from '../browser/browser-agent.js'
-import type { ResearchRunner } from '../browser/research-runner.js'
+import type { ResearchRunner, SearchDiscoveryResult } from '../browser/research-runner.js'
+import type { RankedSerpCandidate } from '../browser/research-utils.js'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { runUiReview } from '../codex/ui-review.js'
-import { normalizeNavigationInput } from '../browser/url-utils.js'
 
 // The provider-neutral browser tool dispatch (Claude-prep step 6): one
 // implementation consumed by three transports — the Codex dynamic-tool
@@ -117,39 +117,39 @@ export async function runBrowserTool(
         if (!discovery.ok || !destination) {
           result = discovery
         } else {
-        const [live, background] = await Promise.all([
-          runBrowserOperation((signal) => deps.browserAgent.snapshot({
-            objective,
-            url: destination.url,
-            tabId: resolveAgentTab(readString(args.tab)),
-            mode: 'task',
-            maxItems: readNumber(args.maxResults) ?? 6,
-            timeoutMs: readNumber(args.timeoutMs),
-            signal
-          })),
-          deps.researchRunner.run({
-            queries,
-            focus: readResearchFocus(args.focus),
-            maxResults: readNumber(args.maxResults),
-            maxAttempts: readNumber(args.maxAttempts),
-            snippetChars: readNumber(args.snippetChars)
-          }, {
-            runId: `${callId}:background`,
-            threadId: owner?.threadId ?? 'external',
-            turnId: owner?.turnId ?? callId,
-            onProgress: deps.onResearchProgress
-          })
-        ])
-        result = {
-          ok: live.ok && background.ok,
-          mode: 'hidden-discovery-direct-navigation-plus-research',
-          destination: compactDestination(destination),
-          alternates: discovery.candidates.slice(1).map(compactDestination),
-          discovery: compactDiscovery(discovery),
-          live,
-          background,
-          ...(live.ok && background.ok ? {} : { error: 'one or more dual research lanes failed' })
-        }
+          const [live, background] = await Promise.all([
+            runBrowserOperation((signal) => deps.browserAgent.snapshot({
+              objective,
+              url: destination.url,
+              tabId: resolveAgentTab(readString(args.tab)),
+              mode: 'task',
+              maxItems: readNumber(args.maxResults) ?? 6,
+              timeoutMs: readNumber(args.timeoutMs),
+              signal
+            })),
+            deps.researchRunner.run({
+              queries,
+              focus: readResearchFocus(args.focus),
+              maxResults: readNumber(args.maxResults),
+              maxAttempts: readNumber(args.maxAttempts),
+              snippetChars: readNumber(args.snippetChars)
+            }, {
+              runId: `${callId}:background`,
+              threadId: owner?.threadId ?? 'external',
+              turnId: owner?.turnId ?? callId,
+              onProgress: deps.onResearchProgress
+            })
+          ])
+          result = {
+            ok: live.ok && background.ok,
+            mode: 'hidden-discovery-direct-navigation-plus-research',
+            destination: compactDestination(destination),
+            alternates: discovery.candidates.slice(1).map(compactDestination),
+            discovery: compactDiscovery(discovery),
+            live,
+            background,
+            ...(live.ok && background.ok ? {} : { error: 'one or more dual research lanes failed' })
+          }
         }
       }
     } else if (tool === 'browser_screenshot') {
@@ -371,6 +371,31 @@ function readSnapshotOrder(value: unknown): 'document' | 'reverse-document' | un
 
 function readStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+}
+
+function readSearchQueries(args: Record<string, unknown>): string[] {
+  const primary = readString(args.query)
+  const variants = readStringArray(args.queries)
+  return [...new Set([...(primary ? [primary] : []), ...variants].map((query) => query.trim()).filter(Boolean))]
+}
+
+function compactDestination(candidate: RankedSerpCandidate): Record<string, unknown> {
+  return {
+    url: candidate.url,
+    title: candidate.title,
+    domain: candidate.domain,
+    sourceTier: candidate.sourceTier,
+    score: candidate.score
+  }
+}
+
+function compactDiscovery(discovery: SearchDiscoveryResult): Record<string, unknown> {
+  return {
+    queries: discovery.queries,
+    discoveredCount: discovery.discoveredCount,
+    metrics: discovery.metrics,
+    ...(discovery.errors ? { errors: discovery.errors } : {})
+  }
 }
 
 function readResearchFocus(value: unknown): Array<{ id: string; need: string; minSources?: number }> {
