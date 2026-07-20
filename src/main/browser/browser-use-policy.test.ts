@@ -27,5 +27,5 @@ test('quality-max guidance prioritizes the live browser without mandatory dual r
   assert.match(guidance, /prefer the live browser first/i)
   assert.match(guidance, /browser_research_dual only/i)
   assert.doesNotMatch(guidance, /should normally use browser_research_dual/i)
-  assert.doesNotMatch(guidance, /mandatory follow-up/i)
+  assert.doesNotMatch(guidance, /requires visible verification plus independent/i)
 })
