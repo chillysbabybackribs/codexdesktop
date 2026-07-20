@@ -198,6 +198,77 @@ export function Composer({
   }, [draftKey, value, attachments, mentions]);
 
   useEffect(() => {
+    setQueuedComposerMessage(draftKey, queuedMessage);
+  }, [draftKey, queuedMessage]);
+
+  useEffect(() => {
+    if (!isTurnActive) setIsTurnActionMenuOpen(false);
+  }, [isTurnActive]);
+
+  useEffect(() => {
+    if (canSteer || turnAction !== 'steer') return;
+    setTurnAction('queue');
+  }, [canSteer, turnAction]);
+
+  useEffect(() => setCommandSelectionIndex(0), [slashQuery]);
+
+  useEffect(() => {
+    if (!isTurnActionMenuOpen) return;
+    const closeOnOutsidePointer = (event: PointerEvent): void => {
+      if (
+        turnActionMenuRef.current &&
+        event.target instanceof Node &&
+        !turnActionMenuRef.current.contains(event.target)
+      ) {
+        setIsTurnActionMenuOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setIsTurnActionMenuOpen(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isTurnActionMenuOpen]);
+
+  useEffect(() => {
+    if (!queuedMessage || isTurnActive || isLoading || queuedDispatchRef.current) return;
+    queuedDispatchRef.current = true;
+    setIsDispatchingQueued(true);
+    const resolveQueuedText = async (): Promise<string> => {
+      if (!queuedMessage.mentions.length || !workspace) return queuedMessage.text;
+      const resolved = await Promise.all(
+        queuedMessage.mentions.map(async (mention) => ({
+          ...mention,
+          ...(await window.api.mentions
+            .read({ workspace, path: mention.path, kind: mention.kind })
+            .catch(() => ({ content: null, truncated: false }))),
+        })),
+      );
+      return `${queuedMessage.text}${buildMentionContext(resolved)}`;
+    };
+    void resolveQueuedText()
+      .then((text) => onSend(text, queuedMessage.attachments))
+      .then((accepted) => {
+        if (accepted) {
+          setQueuedMessageState(null);
+          return;
+        }
+        setValue(queuedMessage.displayText);
+        setAttachments(queuedMessage.attachments);
+        setMentions(queuedMessage.mentions);
+        setQueuedMessageState(null);
+      })
+      .finally(() => {
+        queuedDispatchRef.current = false;
+        setIsDispatchingQueued(false);
+      });
+  }, [isLoading, isTurnActive, onSend, queuedMessage, workspace]);
+
+  useEffect(() => {
     if (!isCreateMenuOpen) return;
 
     const animationFrame = window.requestAnimationFrame(() => {
