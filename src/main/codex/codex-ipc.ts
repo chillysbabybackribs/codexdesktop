@@ -184,8 +184,11 @@ export function registerSessionIpc(
     return byThread(params.threadId).interruptTurn(params.threadId, params.turnId);
   });
   ipcMain.handle(ipcChannels.sessionCancelAgentRun, (_event, params: AgentRunCancelParams) => {
-    if (params.provider !== 'claude') {
-      throw new Error('Codex native-agent cancellation is not exposed by this app-server protocol');
+    if (params.provider === 'codex') {
+      return client.stopNativeAgent(
+        params.nativeId,
+        nativeAgentBridge.codexActiveTurnId(params.nativeId),
+      );
     }
     return claude.stopBackgroundTask(params.parentThreadId, params.nativeId);
   });

@@ -113,14 +113,14 @@ export function createAgentCommands(options: {
   async function handleAgentStop(key: string): Promise<void> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
     if (
-      session?.sourceProvider === 'claude' &&
+      (session?.sourceProvider === 'claude' || session?.sourceProvider === 'codex') &&
       session.runParentThreadId &&
       session.nativeRunId &&
       session.status === 'working'
     ) {
       try {
         await window.api.session.cancelAgentRun({
-          provider: 'claude',
+          provider: session.sourceProvider,
           parentThreadId: session.runParentThreadId,
           nativeId: session.nativeRunId
         })
@@ -128,7 +128,7 @@ export function createAgentCommands(options: {
         store.appendMessage(key, {
           id: crypto.randomUUID(),
           role: 'assistant',
-          text: `⚠ Could not stop the native Claude task: ${(error as Error).message}`
+          text: `⚠ Could not stop the native ${session.sourceProvider === 'codex' ? 'Codex' : 'Claude'} task: ${(error as Error).message}`
         })
       }
       return

@@ -571,7 +571,7 @@ const AgentWindow = memo(function AgentWindow({
             aria-label="Close agent"
             title={
               nativeRun
-                ? session.sourceProvider === 'claude' && working
+                ? working
                   ? 'Close agent and stop its native task'
                   : 'Close agent status'
                 : 'Close agent (stops the turn and unsubscribes the thread)'
@@ -659,7 +659,7 @@ const AgentWindow = memo(function AgentWindow({
       {nativeRun ? (
         <div className="agent-native-footer">
           <span>{working ? 'Managed by the parent turn' : wakeLabel(session.wakeStatus)}</span>
-          {working && session.sourceProvider === 'claude' ? (
+          {working ? (
             <button type="button" onClick={() => onStop(session.key)}>Stop</button>
           ) : null}
         </div>

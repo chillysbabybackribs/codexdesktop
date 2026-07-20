@@ -83,6 +83,18 @@ test('Codex collab receiver threads normalize into first-class runs', () => {
   assert.equal(events[0].run.parentThreadId, 'parent')
 })
 
+test('Codex native agent turns are tracked until their matching completion', () => {
+  const bridge = new AgentRunBridge(() => {})
+  bridge.ingestCodex(turnEvent('turn/started', 'child', 'child-turn'))
+  assert.equal(bridge.codexActiveTurnId('child'), 'child-turn')
+
+  bridge.ingestCodex(turnEvent('turn/completed', 'child', 'different-turn'))
+  assert.equal(bridge.codexActiveTurnId('child'), 'child-turn')
+
+  bridge.ingestCodex(turnEvent('turn/completed', 'child', 'child-turn'))
+  assert.equal(bridge.codexActiveTurnId('child'), null)
+})
+
 test('idle parent is resumed once for duplicate completion events', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'agent-coordinator-'))
   const prompts: string[] = []

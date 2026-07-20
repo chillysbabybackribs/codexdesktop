@@ -134,6 +134,45 @@ test('agent stop surfaces an interrupt failure instead of leaving a working agen
   }
 })
 
+test('native Codex agent stop uses the provider cancellation path', async () => {
+  const previousWindow = globalThis.window
+  const cancelled: unknown[] = []
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        session: {
+          cancelAgentRun: async (params: unknown) => { cancelled.push(params) }
+        }
+      }
+    }
+  })
+
+  try {
+    const { sessions, commands } = commandHarness()
+    Object.assign(sessions[0], {
+      sourceProvider: 'codex',
+      runParentThreadId: 'parent-thread',
+      nativeRunId: 'child-thread',
+      status: 'working'
+    })
+
+    await commands.handleAgentStop('agent-1')
+
+    assert.deepEqual(cancelled, [{
+      provider: 'codex',
+      parentThreadId: 'parent-thread',
+      nativeId: 'child-thread'
+    }])
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
+
 test('agent send does not resurrect a turn completed before its start response resolves', async () => {
   const previousWindow = globalThis.window
   Object.defineProperty(globalThis, 'window', {

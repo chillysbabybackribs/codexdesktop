@@ -40,6 +40,7 @@ function codexStatus(value: unknown, fallback: unknown): AgentRunStatus {
 
 export class AgentRunBridge {
   private readonly runs = new Map<string, AgentRunSnapshot>()
+  private readonly codexActiveTurns = new Map<string, string>()
   private readonly emit: EmitRun
 
   constructor(emit: EmitRun) {
@@ -49,8 +50,21 @@ export class AgentRunBridge {
   ingestCodex(event: SessionEvent): void {
     if (event.type !== 'notification') return
     const notification = record(event.notification)
-    if (notification.method !== 'item/started' && notification.method !== 'item/completed') return
     const params = record(notification.params)
+    const threadId = text(params.threadId)
+    if (notification.method === 'turn/started') {
+      const turnId = text(record(params.turn).id)
+      if (threadId && turnId) this.codexActiveTurns.set(threadId, turnId)
+      return
+    }
+    if (notification.method === 'turn/completed') {
+      const turnId = text(record(params.turn).id)
+      if (threadId && (!turnId || this.codexActiveTurns.get(threadId) === turnId)) {
+        this.codexActiveTurns.delete(threadId)
+      }
+      return
+    }
+    if (notification.method !== 'item/started' && notification.method !== 'item/completed') return
     const item = record(params.item)
     const now = Date.now()
 
@@ -113,6 +127,10 @@ export class AgentRunBridge {
         completedAtMs: terminal(status) ? now : null,
       })
     }
+  }
+
+  codexActiveTurnId(threadId: string): string | null {
+    return this.codexActiveTurns.get(threadId) ?? null
   }
 
   ingestClaude(raw: unknown, context: { threadId: string; turnId: string | null }): void {

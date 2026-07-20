@@ -19,6 +19,7 @@ import type { Model } from '../../shared/codex-protocol/v2/Model.js';
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js';
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js';
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js';
+import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js';
 import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js';
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js';
 import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js';
@@ -435,6 +436,24 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     this.browserAgent.cancelTurn(threadId, turnId);
     this.researchRunner.cancel(turnId);
     return this.request('turn/interrupt', { threadId, turnId });
+  }
+
+  async stopNativeAgent(threadId: string, knownTurnId?: string | null): Promise<unknown> {
+    await this.ensureStarted();
+    let turnId = knownTurnId ?? null;
+    if (!turnId) {
+      const response = await this.request<ThreadReadResponse>('thread/read', {
+        threadId,
+        includeTurns: true,
+      });
+      turnId = [...response.thread.turns]
+        .reverse()
+        .find((turn) => turn.status === 'inProgress')?.id ?? null;
+    }
+    if (!turnId) {
+      throw new Error('Codex agent no longer has an active turn');
+    }
+    return this.interruptTurn(threadId, turnId);
   }
 
   async steerTurn(threadId: string, turnId: string, text: string): Promise<unknown> {

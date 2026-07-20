@@ -145,3 +145,44 @@ test('closing a background agent logs interrupt and unsubscribe cleanup failures
     }
   }
 })
+
+test('closing a working native Codex agent stops its native turn', async () => {
+  const previousWindow = globalThis.window
+  const cancelled: unknown[] = []
+  Object.defineProperty(globalThis, 'window', {
+    configurable: true,
+    value: {
+      api: {
+        session: {
+          cancelAgentRun: async (params: unknown) => { cancelled.push(params) }
+        }
+      }
+    }
+  })
+
+  try {
+    const session = {
+      ...createAgentSession('agent-1', 'Codex agent'),
+      sourceProvider: 'codex' as const,
+      runParentThreadId: 'parent-thread',
+      nativeRunId: 'child-thread',
+      status: 'working' as const
+    }
+    const { lifecycle } = lifecycleHarness(session)
+
+    lifecycle.handleCloseAgentSession('agent-1')
+    await new Promise((resolve) => setImmediate(resolve))
+
+    assert.deepEqual(cancelled, [{
+      provider: 'codex',
+      parentThreadId: 'parent-thread',
+      nativeId: 'child-thread'
+    }])
+  } finally {
+    if (previousWindow) {
+      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
+    } else {
+      Reflect.deleteProperty(globalThis, 'window')
+    }
+  }
+})
