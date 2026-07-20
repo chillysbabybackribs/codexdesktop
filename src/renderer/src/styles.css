@@ -25,6 +25,16 @@
   --focus-halo: rgb(255 255 255 / 18%);
   --live-signal: #e6e6e6;
 
+  /* Code and diff surfaces stay deliberately neutral. Syntax and change
+     semantics can carry color; the material itself should never read blue. */
+  --code-canvas: #111112;
+  --code-surface: #161617;
+  --code-surface-raised: #1b1b1c;
+  --code-border: rgb(255 255 255 / 9%);
+  --code-border-strong: rgb(255 255 255 / 13%);
+  --code-text: #d1d1d2;
+  --code-muted: #777779;
+
   /* Film-grain tile at ~4% alpha; reads as material, not pattern. Applied to
      chassis surfaces and agent glass only — never the chat reading surface. */
   --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.04'/></feComponentTransfer></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
@@ -2043,10 +2053,10 @@ samp {
   margin: 17px 0 20px;
   padding: 15px 17px;
   overflow: auto;
-  border: 1px solid #343434;
-  border-radius: 10px;
-  background: #14171a;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
+  border: 1px solid var(--code-border);
+  border-radius: 9px;
+  background: var(--code-canvas);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 2.5%);
   scrollbar-width: thin;
 }
 
@@ -2054,10 +2064,12 @@ samp {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #d2d2d2;
+  color: var(--code-text);
   font-family: var(--font-mono);
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 15px;
+  font-variant-ligatures: none;
+  font-weight: 430;
+  line-height: 1.62;
   white-space: pre;
 }
 
@@ -2066,9 +2078,10 @@ samp {
 .code-block {
   margin: 17px 0 20px;
   overflow: hidden;
-  border: 1px solid #343434;
-  border-radius: 10px;
-  background: #14171a;
+  border: 1px solid var(--code-border);
+  border-radius: 9px;
+  background: var(--code-canvas);
+  box-shadow: 0 5px 18px rgb(0 0 0 / 12%);
 }
 
 .code-block-head {
@@ -2076,15 +2089,16 @@ samp {
   align-items: center;
   justify-content: space-between;
   padding: 5px 10px 5px 15px;
-  border-bottom: 1px solid #2a2a2a;
-  background: #181c20;
+  border-bottom: 1px solid var(--code-border);
+  background: var(--code-surface);
 }
 
 .code-block-lang {
-  color: #7c7c7c;
+  color: var(--code-muted);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.02em;
+  font-size: 10.5px;
+  font-weight: 520;
+  letter-spacing: 0.035em;
 }
 
 .code-copy {
@@ -2093,15 +2107,15 @@ samp {
   border: 0;
   border-radius: 5px;
   background: none;
-  color: #878787;
+  color: #858587;
   font: inherit;
   font-size: 11.5px;
   cursor: pointer;
 }
 
 .code-copy:hover {
-  background: #272727;
-  color: #b9b9b9;
+  background: rgb(255 255 255 / 6%);
+  color: #d0d0d1;
 }
 
 .markdown-body .code-block pre {
@@ -3102,9 +3116,20 @@ samp {
 
 .diff-card {
   overflow: hidden;
-  border: 1px solid #303030;
-  border-radius: 8px;
-  background: #191919;
+  border: 1px solid var(--code-border);
+  border-radius: 9px;
+  background: var(--code-surface);
+  box-shadow:
+    0 4px 14px rgb(0 0 0 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 2%);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.diff-card:hover {
+  border-color: var(--code-border-strong);
+  box-shadow:
+    0 6px 18px rgb(0 0 0 / 15%),
+    inset 0 1px 0 rgb(255 255 255 / 2.5%);
 }
 
 .diff-card.status-failed {
@@ -3115,16 +3140,16 @@ samp {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 34px;
-  padding: 7px 11px;
-  background: #1d1d1d;
+  min-height: 36px;
+  padding: 7px 12px;
+  background: var(--code-surface-raised);
 }
 
 .diff-file-icon {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  color: #7c7c7c;
+  color: #858587;
 }
 
 .diff-file {
@@ -3138,9 +3163,10 @@ samp {
 .diff-file-name {
   min-width: 0;
   overflow: hidden;
-  color: #e7e7e7;
+  color: #e2e2e3;
   font-size: 12.5px;
-  font-weight: 600;
+  font-weight: 570;
+  letter-spacing: -0.008em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -3148,8 +3174,8 @@ samp {
 .diff-file-dir {
   min-width: 0;
   overflow: hidden;
-  color: #737373;
-  font-size: 11px;
+  color: var(--code-muted);
+  font-size: 10.75px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -3160,22 +3186,23 @@ samp {
   align-items: center;
   gap: 7px;
   margin-left: auto;
-  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 
 .diff-count-add {
-  color: #57ab5a;
+  color: #74b87a;
 }
 
 .diff-count-del {
-  color: #e5534b;
+  color: #d97872;
 }
 
 .diff-body {
-  border-top: 1px solid #2a2a2a;
-  background: #181818;
+  border-top: 1px solid var(--code-border);
+  background: var(--code-canvas);
 }
 
 .diff-body.is-live {
@@ -3183,7 +3210,7 @@ samp {
 }
 
 .diff-lines {
-  padding: 3px 0;
+  padding: 4px 0;
 }
 
 .diff-line {
@@ -3193,37 +3220,42 @@ samp {
 }
 
 .diff-gutter {
-  color: #666666;
+  color: #606062;
   font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1.55;
   text-align: center;
   user-select: none;
 }
 
 .diff-text {
-  color: #c7c7c7;
+  color: var(--code-text);
   font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 11.75px;
+  font-variant-ligatures: none;
+  font-weight: 430;
+  letter-spacing: -0.005em;
+  line-height: 1.55;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .diff-line.diff-add {
-  background: rgb(63 185 80 / 12%);
+  background: rgb(79 132 86 / 15%);
 }
 
 .diff-line.diff-add .diff-gutter {
-  color: #6bc46d;
+  color: #74b87a;
 }
 
 .diff-line.diff-del {
-  background: rgb(248 81 73 / 11%);
+  background: rgb(146 75 70 / 15%);
 }
 
 .diff-line.diff-del .diff-gutter {
-  color: #e5534b;
+  color: #d97872;
 }
 
 .diff-emph {
@@ -3232,22 +3264,25 @@ samp {
 }
 
 .diff-add .diff-emph {
-  background: rgb(63 185 80 / 32%);
+  background: rgb(102 158 108 / 30%);
 }
 
 .diff-del .diff-emph {
-  background: rgb(248 81 73 / 30%);
+  background: rgb(177 91 85 / 28%);
 }
 
 .diff-line.diff-hunk {
   padding-top: 2px;
   padding-bottom: 2px;
-  background: rgb(101 134 255 / 5%);
+  border-top: 1px solid rgb(255 255 255 / 2%);
+  border-bottom: 1px solid rgb(255 255 255 / 2%);
+  background: rgb(255 255 255 / 2.5%);
 }
 
 .diff-line.diff-hunk .diff-text {
-  color: #747474;
+  color: #6f6f71;
   font-size: 10.5px;
+  font-weight: 450;
 }
 
 .diff-expand {
@@ -3256,25 +3291,25 @@ samp {
   min-height: 30px;
   padding: 5px 12px;
   border: 0;
-  border-top: 1px solid #242424;
-  background: #1a1a1a;
-  color: #969696;
+  border-top: 1px solid var(--code-border);
+  background: var(--code-surface);
+  color: #89898b;
   font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-size: 10.75px;
+  font-weight: 520;
+  letter-spacing: 0.015em;
   text-align: left;
   cursor: pointer;
   transition: background 160ms ease, color 160ms ease;
 }
 
 .diff-expand:hover {
-  background: #202020;
-  color: #d0d0d0;
+  background: var(--code-surface-raised);
+  color: #d4d4d5;
 }
 
 .diff-expand:focus-visible {
-  outline: 2px solid #8ab4f8;
+  outline: 2px solid var(--focus-ink);
   outline-offset: -2px;
 }
 

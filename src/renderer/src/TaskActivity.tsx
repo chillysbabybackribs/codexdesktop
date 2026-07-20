@@ -632,12 +632,12 @@ function DiffCard({
         {kindBadge ? <span className="work-chip chip-muted">{kindBadge}</span> : null}
         {kind.type === 'update' && kind.move_path ? (
           <span className="diff-file-dir" title={kind.move_path}>
-            ? {basename(kind.move_path)}
+          → {basename(kind.move_path)}
           </span>
         ) : null}
         <span className="diff-counts">
           {parsed.adds > 0 ? <span className="diff-count-add">+{parsed.adds}</span> : null}
-          {parsed.dels > 0 ? <span className="diff-count-del">?{parsed.dels}</span> : null}
+          {parsed.dels > 0 ? <span className="diff-count-del">−{parsed.dels}</span> : null}
           {undone ? <span className="work-chip chip-muted">undone</span> : null}
           <StatusChip status={status} />
           {undoable ? (
@@ -670,7 +670,7 @@ function DiffCard({
             <DiffLines lines={shownLines} lang={lang} />
             {overflow > 0 ? (
               <button type="button" className="diff-expand" aria-expanded={false} onClick={() => setShowAll(true)}>
-                ? show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
+                › show full diff · {overflow} more {overflow === 1 ? 'line' : 'lines'}
               </button>
             ) : null}
             {showAll && parsed.lines.length > collapsedDiffLines ? (
@@ -702,7 +702,7 @@ function DiffLines({ lines, lang }: { lines: DiffLine[]; lang: string | null }):
           </div>
         ) : (
           <div key={index} className={`diff-line diff-${line.kind}`}>
-            <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '?' : ''}</span>
+            <span className="diff-gutter">{line.kind === 'add' ? '+' : line.kind === 'del' ? '−' : ''}</span>
             <span className="diff-text">{renderDiffText(line, lineTokens?.[index] ?? null)}</span>
           </div>
         )
