@@ -490,7 +490,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.minimum, 1)
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 6)
   assert.equal(researchProperties.maxAttempts?.maximum, 24)
-  assert.match(researchProperties.queries?.description ?? '', /semantic discovery variations/i)
+  assert.match(researchProperties.queries?.description ?? '', /single-angle phrase a person would actually type/i)
   assert.match(researchProperties.queries?.description ?? '', /parallel hidden Chromium workers/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
