@@ -8779,6 +8779,15 @@ code.agent-audit-live-step {
   color: #d9756e;
 }
 
+.review-bar-elapsed {
+  flex: none;
+  color: #777779;
+  font-size: 10.75px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 470;
+  white-space: nowrap;
+}
+
 .review-bar-actions {
   display: inline-flex;
   gap: 7px;

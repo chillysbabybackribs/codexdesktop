@@ -8,7 +8,14 @@ import { ChatItemView, TaskActivityCard, visibleUserMessageText } from './ChatTr
 import { ThreadScroll, type MessageScrollerAnchor } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
-import { FileReviewContext, TurnTail, type FileReviewActions, type WorkItem } from './TaskActivity';
+import {
+  FileReviewContext,
+  TurnTail,
+  fmtDuration,
+  type FileReviewActions,
+  type TurnMeta,
+  type WorkItem,
+} from './TaskActivity';
 import { ReviewBar, type ReviewChange } from './ReviewBar';
 import { buildRows } from './transcript-model';
 import { type SessionStore, emptySessionState } from './session-store';
@@ -376,6 +383,7 @@ export function ChatPaneView({
                       ? () => void runFocused(() => onRevertTurn(row.turnId))
                       : undefined
                   }
+                  embeddedInReviewBar={reviewTarget?.turnId === row.turnId}
                 />
               );
             }
@@ -403,10 +411,15 @@ export function ChatPaneView({
             workspace={workspace}
             undonePaths={new Set(undoneFiles[reviewTarget.turnId] ?? [])}
             alwaysKeepAll={alwaysKeepAll}
+            elapsedLabel={completedTurnElapsedLabel(turnMeta[reviewTarget.turnId])}
             onKeepAll={() => void runFocused(() => onKeepTurn(reviewTarget.turnId))}
             onSetAlwaysKeepAll={onSetAlwaysKeepAll}
             onUndoAll={() => void runFocused(() => onUndoTurnAll(reviewTarget.turnId))}
             onUndoFile={(path) => void runFocused(() => onUndoFile(reviewTarget.turnId, path))}
+            onRestoreCheckpoint={() =>
+              void runFocused(() => onRevertTurn(reviewTarget.turnId))
+            }
+            onOpenTrace={() => openTrace(reviewTarget.turnId)}
           />
         ) : null}
         {dockExtras?.agentColumn}
@@ -477,4 +490,16 @@ export function ChatPaneView({
       ) : null}
     </section>
   );
+}
+
+function completedTurnElapsedLabel(meta: TurnMeta | undefined): string | null {
+  const durationMs =
+    meta?.durationMs ??
+    (meta?.startedAtMs && meta?.completedAtMs
+      ? Math.max(0, meta.completedAtMs - meta.startedAtMs)
+      : null);
+  if (durationMs === null) return null;
+  if (meta?.status === 'failed') return `Failed after ${fmtDuration(durationMs)}`;
+  if (meta?.status === 'interrupted') return `Stopped after ${fmtDuration(durationMs)}`;
+  return `Worked for ${fmtDuration(durationMs)}`;
 }

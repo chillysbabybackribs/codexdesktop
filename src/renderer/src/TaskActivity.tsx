@@ -1233,7 +1233,8 @@ export function TurnTail({
   meta,
   streamingMessage,
   onOpenTrace,
-  onRevert
+  onRevert,
+  embeddedInReviewBar = false
 }: {
   live: boolean
   items: WorkItem[]
@@ -1242,6 +1243,7 @@ export function TurnTail({
   streamingMessage: boolean
   onOpenTrace?: () => void
   onRevert?: () => void
+  embeddedInReviewBar?: boolean
 }): React.JSX.Element | null {
   const now = useNow(live)
   // Two-click inline confirm: reverting rewrites workspace files, so a lone
@@ -1286,6 +1288,10 @@ export function TurnTail({
   }
 
   if (!items.length) {
+    return null
+  }
+
+  if (embeddedInReviewBar) {
     return null
   }
 
