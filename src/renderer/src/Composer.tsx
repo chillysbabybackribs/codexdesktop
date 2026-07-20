@@ -568,6 +568,28 @@ export function Composer({
             );
         }}
       >
+      {slashQuery !== null && !commandMenuDismissed && !isHistoryOpen ? (
+        <ComposerCommandMenu
+          options={commandOptions}
+          selectedIndex={Math.min(commandSelectionIndex, Math.max(0, commandOptions.length - 1))}
+          onChoose={chooseCommand}
+        />
+      ) : null}
+      {isHistoryOpen ? (
+        <ComposerHistoryMenu
+          entries={historyEntries}
+          onSearch={setHistoryQuery}
+          onChoose={(entry) => {
+            setValue(entry);
+            setIsHistoryOpen(false);
+            requestAnimationFrame(() => textareaRef.current?.focus());
+          }}
+          onClose={() => {
+            setIsHistoryOpen(false);
+            requestAnimationFrame(() => textareaRef.current?.focus());
+          }}
+        />
+      ) : null}
       {pluginMenuState !== 'closed' ? (
         <div className="composer-mention-stack">
           {fileCandidates.length ? (
@@ -590,6 +612,29 @@ export function Composer({
               onInstalledPluginsChange(installedPlugins.filter((plugin) => plugin.id !== pluginId))
             }
           />
+        </div>
+      ) : null}
+      {queuedMessage ? (
+        <div className="composer-queued-message" role="status">
+          <span className="composer-queued-mark" aria-hidden="true" />
+          <span className="composer-queued-copy">
+            <strong>{isDispatchingQueued ? 'Sending next' : 'Queued next'}</strong>
+            <span>
+              {queuedMessage.displayText ||
+                queuedMessage.attachments.map((attachment) => attachment.name).join(', ') ||
+                'Context message'}
+            </span>
+          </span>
+          {!isDispatchingQueued ? (
+            <button
+              type="button"
+              aria-label="Cancel queued message"
+              title="Cancel queued message"
+              onClick={() => setQueuedMessageState(null)}
+            >
+              ×
+            </button>
+          ) : null}
         </div>
       ) : null}
       {mentions.length ? (
@@ -640,9 +685,11 @@ export function Composer({
               : 'Plan, build, or ask anything…'
         }
         disabled={isLoading}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => {
+          setValue(event.target.value);
+          setCommandMenuDismissed(false);
+        }}
         onPaste={(event) => {
-          if (isTurnActive) return;
           const images = Array.from(event.clipboardData.files).filter((file) =>
             file.type.startsWith('image/'),
           );
@@ -661,6 +708,47 @@ export function Composer({
             );
         }}
         onKeyDown={(event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r') {
+            event.preventDefault();
+            openHistory();
+            return;
+          }
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+            event.preventDefault();
+            toggleStash();
+            return;
+          }
+          if (slashQuery !== null && !commandMenuDismissed) {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              setCommandMenuDismissed(true);
+              return;
+            }
+            if (event.key === 'ArrowDown' && commandOptions.length) {
+              event.preventDefault();
+              setCommandSelectionIndex((current) => (current + 1) % commandOptions.length);
+              return;
+            }
+            if (event.key === 'ArrowUp' && commandOptions.length) {
+              event.preventDefault();
+              setCommandSelectionIndex(
+                (current) => (current - 1 + commandOptions.length) % commandOptions.length,
+              );
+              return;
+            }
+            if (event.key === 'Enter' && !event.shiftKey && commandOptions.length) {
+              event.preventDefault();
+              chooseCommand(
+                commandOptions[Math.min(commandSelectionIndex, commandOptions.length - 1)],
+              );
+              return;
+            }
+          }
+          if (event.key === 'ArrowUp' && !value && listComposerPrompts(draftKey).length) {
+            event.preventDefault();
+            setValue(listComposerPrompts(draftKey)[0]);
+            return;
+          }
           if (event.key === 'Escape' && pluginMenuState !== 'closed') {
             event.preventDefault();
             setPluginMenuState('closed');
