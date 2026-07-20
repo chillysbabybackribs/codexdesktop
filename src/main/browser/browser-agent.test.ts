@@ -4,7 +4,7 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
-import type { WebContents, WebFrameMain } from 'electron'
+import type { DownloadItem, WebContents, WebFrameMain } from 'electron'
 import type { TabManager } from './tab-manager.ts'
 import {
   BrowserAgentController,
@@ -16,6 +16,7 @@ import {
   buildPageExtractionProgram
 } from './browser-agent.ts'
 import { CdpArtifactStore } from './cdp-artifact-store.ts'
+import { browserDownloadCaptureBroker } from './browser-download-capture.ts'
 
 const onePixelPng = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL9WAAAAABJRU5ErkJggg=='
 const minimalPdf = Buffer.from('%PDF-1.4\nminimal\n%%EOF').toString('base64')
@@ -56,7 +57,7 @@ test('page extraction program removes media and low-value components', () => {
   assert.match(program, /const maxChars = 1200/)
   assert.match(program, /script.*style.*img.*nav.*footer/s)
   assert.match(program, /removedImages: true/)
-  assert.match(program, /return \{\n    title/)
+  assert.match(program, /return \{\n {4}title/)
   assert.equal((PAGE_EXTRACTION_REMOVE_SELECTORS as readonly string[]).includes('header'), false)
   assert.equal(lowValuePattern.test('commentary'), false)
   assert.equal(lowValuePattern.test('social-share'), true)
@@ -1068,6 +1069,198 @@ test('browser agent returns a bounded network journal and materializes a respons
   assert.equal(body.kind, 'response-body')
   assert.equal(body.requestUrl, 'https://example.com/api/data')
   assert.equal(await (await import('node:fs/promises')).readFile(body.artifactPath, 'utf8'), '{"ok":true}')
+})
+
+test('browser agent captures a matched completed response and body in one navigation call', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-network-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/results',
+    getTitle: () => 'Results'
+  }) as unknown as WebContents
+  let targetEpoch = 7
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    getTargetEpoch: () => targetEpoch,
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-1', url: 'https://example.com/results', title: 'Results', active: true }],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      // Controlled navigation advances the document epoch. The capture must
+      // adopt this epoch instead of reporting its own action as target loss.
+      targetEpoch += 1
+      debuggerApi.emit('message', {}, 'Network.requestWillBeSent', {
+        requestId: 'graphql-1', type: 'Fetch', timestamp: 2,
+        request: { url: 'https://example.com/graphql?operation=Results', method: 'POST' }
+      })
+      debuggerApi.emit('message', {}, 'Network.responseReceived', {
+        requestId: 'graphql-1', type: 'Fetch',
+        response: { status: 200, mimeType: 'application/graphql-response+json', protocol: 'h2' }
+      })
+      debuggerApi.emit('message', {}, 'Network.loadingFinished', {
+        requestId: 'graphql-1', timestamp: 2.04, encodedDataLength: 11
+      })
+      return { url: 'https://example.com/results', durationMs: 5, domReadyMs: 3, settleMs: 2, settleReason: 'dom-ready' }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureNetwork({
+    url: 'https://example.com/results',
+    match: {
+      urlContains: '/graphql',
+      method: 'POST',
+      resourceType: 'Fetch',
+      mimeType: 'json',
+      statusMin: 200,
+      statusMax: 299
+    }
+  })
+
+  assert.equal(result.ok, true)
+  const network = (result.result as {
+    network: {
+      trigger: string
+      request: { requestId: string; completedAt: string | null }
+      responseBody: { artifactPath: string; kind: string }
+    }
+  }).network
+  assert.equal(network.trigger, 'navigate')
+  assert.equal(network.request.requestId, 'graphql-1')
+  assert.equal(typeof network.request.completedAt, 'string')
+  assert.equal(network.responseBody.kind, 'response-body')
+  assert.equal(await (await import('node:fs/promises')).readFile(network.responseBody.artifactPath, 'utf8'), '{"ok":true}')
+})
+
+test('browser agent captures a bounded WebSocket stream and persists NDJSON in one navigation call', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-stream-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/live',
+    getTitle: () => 'Live'
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-1', url: 'https://example.com/live', title: 'Live', active: true }],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      debuggerApi.emit('message', {}, 'Network.webSocketCreated', {
+        requestId: 'ws-live', url: 'wss://example.com/socket/live'
+      })
+      debuggerApi.emit('message', {}, 'Network.webSocketHandshakeResponseReceived', {
+        requestId: 'ws-live', response: { status: 101 }
+      })
+      debuggerApi.emit('message', {}, 'Network.webSocketFrameReceived', {
+        requestId: 'ws-live', response: { opcode: 1, payloadData: '{"delta":"one"}' }
+      })
+      debuggerApi.emit('message', {}, 'Network.webSocketFrameReceived', {
+        requestId: 'ws-live', response: { opcode: 1, payloadData: '{"delta":"two"}' }
+      })
+      return { url: 'https://example.com/live', durationMs: 4, domReadyMs: 2, settleMs: 2, settleReason: 'dom-ready' }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureNetwork({
+    url: 'https://example.com/live',
+    match: { urlContains: '/socket/live' },
+    stream: { transport: 'websocket', maxMessages: 2, idleMs: 100 }
+  })
+
+  assert.equal(result.ok, true)
+  const stream = (result.result as {
+    network: {
+      stream: {
+        transport: string
+        messageCount: number
+        completedReason: string
+        artifact: { artifactPath: string; kind: string; mediaType: string }
+        messages: Array<{ data: string }>
+      }
+    }
+  }).network.stream
+  assert.equal(stream.transport, 'websocket')
+  assert.equal(stream.messageCount, 2)
+  assert.equal(stream.completedReason, 'limit')
+  assert.equal(stream.artifact.kind, 'network-stream')
+  assert.equal(stream.artifact.mediaType, 'application/x-ndjson')
+  assert.equal(stream.messages[1].data, '{"delta":"two"}')
+  const artifact = await (await import('node:fs/promises')).readFile(stream.artifact.artifactPath, 'utf8')
+  assert.match(artifact, /"type":"network-stream"/)
+  const lines = artifact.trim().split('\n').map((line) => JSON.parse(line) as { data?: string })
+  assert.equal(lines[2].data, '{"delta":"two"}')
+})
+
+test('browser agent captures a true Chromium download handoff in one flow call', async (context) => {
+  const root = await mkdtemp(join(tmpdir(), 'codexdesktop-browser-download-'))
+  context.after(() => rm(root, { recursive: true, force: true }))
+  const debuggerApi = new FakeDebugger()
+  const webContents = Object.assign(new EventEmitter(), {
+    debugger: debuggerApi,
+    isDestroyed: () => false,
+    getURL: () => 'https://example.com/exports',
+    getTitle: () => 'Exports'
+  }) as unknown as WebContents
+  const tabs = {
+    getActiveTabId: () => 'tab-1',
+    resolveWebContents: () => webContents,
+    listTabs: () => [{ id: 'tab-1', url: 'https://example.com/exports', title: 'Exports', active: true }],
+    listTargets: () => [],
+    navigateAndWait: async () => {
+      let savePath = ''
+      const item = Object.assign(new EventEmitter(), {
+        getURL: () => 'https://example.com/exports/archive.zip',
+        getFilename: () => 'archive.zip',
+        getMimeType: () => 'application/zip',
+        getTotalBytes: () => 8,
+        getReceivedBytes: () => 8,
+        setSavePath: (value: string) => { savePath = value },
+        isDestroyed: () => false,
+        cancel: () => {}
+      }) as unknown as DownloadItem
+      assert.equal(browserDownloadCaptureBroker.handleWillDownload(item, webContents), true)
+      await (await import('node:fs/promises')).writeFile(savePath, 'ZIPBYTES')
+      item.emit('done', {}, 'completed')
+      return { url: 'https://example.com/exports', durationMs: 3, domReadyMs: 2, settleMs: 1, settleReason: 'dom-ready' }
+    }
+  } as unknown as TabManager
+  const controller = new BrowserAgentController(() => tabs, new CdpArtifactStore(root))
+
+  const result = await controller.captureNetwork({
+    url: 'https://example.com/exports',
+    match: { urlContains: '/exports/archive.zip' },
+    download: true
+  })
+
+  assert.equal(result.ok, true)
+  const download = (result.result as {
+    network: { download: { suggestedFilename: string; artifact: { artifactPath: string; kind: string } } }
+  }).network.download
+  assert.equal(download.suggestedFilename, 'archive.zip')
+  assert.equal(download.artifact.kind, 'download')
+  assert.equal(await (await import('node:fs/promises')).readFile(download.artifact.artifactPath, 'utf8'), 'ZIPBYTES')
+})
+
+test('browser network capture requires one trigger and a targeted URL matcher', async () => {
+  const controller = new BrowserAgentController(() => null)
+  assert.match((await controller.captureNetwork({ match: { urlContains: '/api' } })).error ?? '', /exactly one trigger/)
+  assert.match((await controller.captureNetwork({ url: 'https://example.com', match: {} })).error ?? '', /match\.urlContains/)
+  assert.match((await controller.captureNetwork({
+    url: 'https://example.com', match: { urlContains: '/events' }, stream: { transport: null }
+  })).error ?? '', /stream\.transport/)
+  assert.match((await controller.captureNetwork({
+    url: 'https://example.com', match: { urlContains: '/events' }, captureBody: true, stream: { transport: 'sse' }
+  })).error ?? '', /cannot combine/)
+  assert.match((await controller.captureNetwork({
+    url: 'https://example.com', match: { urlContains: '/download' }, captureBody: true, download: true
+  })).error ?? '', /cannot combine/)
 })
 
 class FakeDebugger extends EventEmitter {

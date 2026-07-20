@@ -9,12 +9,17 @@ function params(tool: string, args: DynamicToolCallParams['arguments'], namespac
   return { threadId: 'thread-1', turnId: 'turn-1', callId: 'call-1', namespace, tool, arguments: args }
 }
 
-const unusedBrowser = {} as BrowserAgentController
+const unusedBrowser = {
+  blockedTurnBrowserResult: () => null,
+  blockTurnBrowserWork: () => {}
+} as unknown as BrowserAgentController
 const unusedResearch = {} as ResearchRunner
 
 function withTurnRunner<T extends object>(browserAgent: T): T & Pick<BrowserAgentController, 'runForTurn'> {
   return {
     ...browserAgent,
+    blockedTurnBrowserResult: () => null,
+    blockTurnBrowserWork: () => {},
     runForTurn: async (_owner, execute) => execute(new AbortController().signal)
   } as T & Pick<BrowserAgentController, 'runForTurn'>
 }
@@ -44,6 +49,110 @@ test('dynamic tool router validates required browser_run code', async () => {
 
   assert.equal(response.success, false)
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
+})
+
+test('first-class live search hides parallel discovery and opens only a direct destination', async () => {
+  let received: Record<string, unknown> | null = null
+  let discoveryQueries: string[] = []
+  const browserAgent = withTurnRunner({
+    snapshot: async (options: Record<string, unknown>) => {
+      received = options
+      return { ok: true, result: { items: [] } }
+    }
+  }) as unknown as BrowserAgentController
+  const researchRunner = {
+    discover: async (request: { queries?: string[] }, context: ResearchRunContext) => {
+      discoveryQueries = request.queries ?? []
+      context.onProgress?.({ stage: 'discovering', message: 'Discovering source URLs in 3 hidden search lanes…' })
+      return {
+        ok: true,
+        queries: discoveryQueries,
+        candidates: [{
+          url: 'https://status.example.com/current',
+          title: 'Current platform status',
+          snippet: 'Operational status',
+          rank: 1,
+          query: discoveryQueries[0],
+          score: 100,
+          domain: 'status.example.com',
+          sourceTier: 'official'
+        }],
+        discoveredCount: 1,
+        metrics: { durationMs: 12, searchesAttempted: 3, cacheHits: 0, navigation: { count: 3, domReadyMs: 3, settleMs: 3, settleReasons: {} } }
+      }
+    }
+  } as unknown as ResearchRunner
+  const response = await routeDynamicToolCall(params('browser_live_search', {
+    queries: ['current platform status', 'official platform uptime', 'platform incident history'],
+    objective: 'Return the official status result',
+    tab: 'tab-1',
+    maxItems: 5
+  }), { browserAgent, researchRunner })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(discoveryQueries, ['current platform status', 'official platform uptime', 'platform incident history'])
+  const captured = received as unknown as Record<string, unknown>
+  assert.equal(captured.url, 'https://status.example.com/current')
+  assert.equal(captured.tabId, 'tab-1')
+  assert.equal(captured.objective, 'Return the official status result')
+  const item = response.contentItems[0]
+  assert.equal(item.type, 'inputText')
+  if (item.type !== 'inputText') assert.fail('expected text result')
+  const result = JSON.parse(item.text) as { mode: string; destination: { url: string } }
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation')
+  assert.equal(result.destination.url, 'https://status.example.com/current')
+})
+
+test('live search background mode opens a direct destination while independent evidence runs', async () => {
+  let liveStarted = false
+  let backgroundStarted = false
+  const browserAgent = withTurnRunner({
+    snapshot: async () => {
+      liveStarted = true
+      await Promise.resolve()
+      assert.equal(backgroundStarted, true)
+      return { ok: true, result: { items: ['visible'] } }
+    }
+  }) as unknown as BrowserAgentController
+  const researchRunner = {
+    discover: async () => ({
+      ok: true,
+      queries: ['latest runtime release'],
+      candidates: [{
+        url: 'https://runtime.example.com/releases/latest',
+        title: 'Latest runtime release',
+        snippet: '',
+        rank: 1,
+        query: 'latest runtime release',
+        score: 100,
+        domain: 'runtime.example.com',
+        sourceTier: 'official'
+      }],
+      discoveredCount: 1,
+      metrics: { durationMs: 10, searchesAttempted: 1, cacheHits: 0, navigation: { count: 1, domReadyMs: 1, settleMs: 1, settleReasons: {} } }
+    }),
+    run: async () => {
+      backgroundStarted = true
+      await Promise.resolve()
+      assert.equal(liveStarted, true)
+      return { ok: true, pages: [{ url: 'https://example.com' }] }
+    }
+  } as unknown as ResearchRunner
+  const response = await routeDynamicToolCall(params('browser_live_search', {
+    query: 'latest runtime release',
+    objective: 'Find the official release and date',
+    background: true
+  }), { browserAgent, researchRunner })
+
+  assert.equal(response.success, true)
+  const item = response.contentItems[0]
+  assert.equal(item.type, 'inputText')
+  if (item.type !== 'inputText') assert.fail('expected text result')
+  const result = JSON.parse(item.text) as { mode: string; destination: { url: string }; page: { ok: boolean }; background: { ok: boolean } }
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
+  assert.equal(result.destination.url, 'https://runtime.example.com/releases/latest')
+  assert.equal(result.page.ok, true)
+  assert.equal(result.background.ok, true)
 })
 
 test('dynamic tool router validates and forwards navigation-aware browser flows', async () => {
@@ -77,6 +186,63 @@ test('dynamic tool router validates and forwards navigation-aware browser flows'
   assert.equal(receivedRecord.options.signal instanceof AbortSignal, true)
   assert.deepEqual({ steps: receivedRecord.steps, options: omitSignal(receivedRecord.options) }, {
     steps,
+    options: { tabId: 'tab-1', timeoutMs: 4_000, maxResultChars: 6_000 }
+  })
+})
+
+test('dynamic tool router forwards one-call network capture without losing match fields', async () => {
+  let received: unknown = null
+  const browserAgent = withTurnRunner({
+    captureNetwork: async (capture: unknown, options: unknown) => {
+      received = { capture, options }
+      return { ok: true, result: { network: { request: { requestId: 'one' } } } }
+    }
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_network', {
+    url: 'https://example.com/results',
+    match: {
+      urlContains: '/graphql',
+      method: 'POST',
+      resourceType: 'Fetch',
+      mimeType: 'json',
+      statusMin: 200,
+      statusMax: 299
+    },
+    captureBody: false,
+    stream: { transport: 'websocket', maxMessages: 25, idleMs: 250 },
+    readySelector: '.results',
+    quietMs: 80,
+    maxSettleMs: 500,
+    tab: 'tab-1',
+    timeoutMs: 4_000,
+    maxResultChars: 6_000
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  const record = received as {
+    capture: Record<string, unknown>
+    options: { signal?: AbortSignal } & Record<string, unknown>
+  }
+  assert.equal(record.options.signal instanceof AbortSignal, true)
+  assert.deepEqual({ capture: record.capture, options: omitSignal(record.options) }, {
+    capture: {
+      url: 'https://example.com/results',
+      steps: undefined,
+      match: {
+        urlContains: '/graphql',
+        method: 'POST',
+        resourceType: 'Fetch',
+        mimeType: 'json',
+        statusMin: 200,
+        statusMax: 299
+      },
+      captureBody: false,
+      download: false,
+      stream: { transport: 'websocket', maxMessages: 25, idleMs: 250 },
+      readySelector: '.results',
+      quietMs: 80,
+      maxSettleMs: 500
+    },
     options: { tabId: 'tab-1', timeoutMs: 4_000, maxResultChars: 6_000 }
   })
 })
@@ -163,9 +329,185 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   })
 })
 
+test('agent navigation tools reject visible search inputs and explicit SERP URLs', async () => {
+  let called = false
+  const browserAgent = withTurnRunner({
+    navigate: async () => {
+      called = true
+      return { ok: true }
+    },
+    snapshot: async () => {
+      called = true
+      return { ok: true }
+    }
+  }) as unknown as BrowserAgentController
+
+  const queryNavigation = await routeDynamicToolCall(params('browser_navigate', {
+    url: 'best Electron browser automation patterns'
+  }), { browserAgent, researchRunner: unusedResearch })
+  const serpSnapshot = await routeDynamicToolCall(params('browser_snapshot', {
+    objective: 'Find useful results',
+    url: 'https://www.google.com/search?q=electron+browser+automation'
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(queryNavigation.success, false)
+  assert.equal(serpSnapshot.success, false)
+  assert.match(textResult(queryNavigation).error ?? '', /direct destination URL/i)
+  assert.match(textResult(serpSnapshot).error ?? '', /browser_live_search/i)
+  assert.equal(called, false)
+})
+
+test('dynamic tool router returns a standalone data URI for app screenshots', async () => {
+  const browserAgent = withTurnRunner({
+    captureAppScreenshot: async () => ({
+      ok: true,
+      result: {
+        screenshot: {
+          artifactPath: '/tmp/app-window.png',
+          fileName: 'app-window.png',
+          mediaType: 'image/png',
+          bytes: 42,
+          width: 800,
+          height: 600
+        }
+      }
+    }),
+    readScreenshotDataUrl: async () => 'data:image/png;base64,abc'
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,abc'
+  }])
+})
+
+test('app screenshots remain available after a browser tab target is lost', async () => {
+  let captured = false
+  let recordedBrowserBlock = false
+  const browserAgent = {
+    blockedTurnBrowserResult: () => ({
+      ok: false,
+      error: 'the previous browser tab closed',
+      errorCode: 'targetClosed'
+    }),
+    blockTurnBrowserWork: () => { recordedBrowserBlock = true },
+    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
+      execute(new AbortController().signal),
+    captureAppScreenshot: async () => {
+      captured = true
+      return {
+        ok: true,
+        result: {
+          screenshot: {
+            artifactPath: '/tmp/app-window-after-tab-close.png',
+            fileName: 'app-window-after-tab-close.png',
+            mediaType: 'image/png',
+            bytes: 42,
+            width: 800,
+            height: 600
+          }
+        }
+      }
+    },
+    readScreenshotDataUrl: async () => 'data:image/png;base64,still-valid'
+  } as unknown as BrowserAgentController
+
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(captured, true)
+  assert.equal(recordedBrowserBlock, false)
+  assert.equal(response.success, true)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,still-valid'
+  }])
+})
+
+test('tab screenshots stay blocked after their browser target is lost', async () => {
+  let captured = false
+  const browserAgent = {
+    blockedTurnBrowserResult: () => ({
+      ok: false,
+      error: 'the previous browser tab closed',
+      errorCode: 'targetClosed'
+    }),
+    blockTurnBrowserWork: () => {},
+    runForTurn: async (_owner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) =>
+      execute(new AbortController().signal),
+    captureScreenshot: async () => {
+      captured = true
+      return { ok: true }
+    }
+  } as unknown as BrowserAgentController
+
+  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(captured, false)
+  assert.equal(response.success, false)
+  assert.match(textResult(response).error ?? '', /previous browser tab closed/)
+})
+
+test('dynamic tool router returns a standalone data URI for browser screenshots', async () => {
+  const browserAgent = withTurnRunner({
+    captureScreenshot: async () => ({
+      ok: true,
+      result: {
+        screenshot: {
+          artifactPath: '/tmp/browser-tab.png',
+          fileName: 'browser-tab.png',
+          mediaType: 'image/png',
+          bytes: 42,
+          width: 800,
+          height: 600
+        }
+      }
+    }),
+    readScreenshotDataUrl: async () => 'data:image/png;base64,def'
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, true)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputImage',
+    imageUrl: 'data:image/png;base64,def'
+  }])
+})
+
+test('dynamic tool router preserves screenshot errors as text', async () => {
+  const browserAgent = withTurnRunner({
+    captureAppScreenshot: async () => ({ ok: false, error: 'capture unavailable' })
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('app_screenshot', {}), {
+    browserAgent,
+    researchRunner: unusedResearch
+  })
+
+  assert.equal(response.success, false)
+  assert.deepEqual(response.contentItems, [{
+    type: 'inputText',
+    text: JSON.stringify({ ok: false, error: 'capture unavailable' })
+  }])
+})
+
 test('dynamic browser calls carry their exact owning turn', async () => {
   let owner: unknown = null
   const browserAgent = {
+    blockedTurnBrowserResult: () => null,
+    blockTurnBrowserWork: () => {},
     runForTurn: async (nextOwner: unknown, execute: (signal: AbortSignal) => Promise<unknown>) => {
       owner = nextOwner
       return execute(new AbortController().signal)
@@ -208,7 +550,6 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version', minSources: Number.NaN }
     ],
     maxResults: 4,
-    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   }), {
@@ -226,7 +567,6 @@ test('dynamic tool router normalizes research arguments and forwards run context
       { id: 'current', need: 'current version' }
     ],
     maxResults: 4,
-    maxPages: 2,
     maxAttempts: 3,
     snippetChars: 1200
   })

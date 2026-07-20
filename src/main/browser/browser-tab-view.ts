@@ -16,8 +16,9 @@ export type BrowserTabViewHandlers = {
   onReload(): void
   onMainFrameNavigation(): void
   onStateChanged(): void
-  onRecordVisit(url: string, title: string): void
+  onRecordVisit(url: string, title: string, favicon: string | null): void
   onUpdateVisitTitle(url: string, title: string): void
+  onUpdateVisitFavicon(url: string, favicon: string | null): void
   onDestroyed(): void
 }
 
@@ -55,6 +56,12 @@ export function attachBrowserTabViewEvents(
     if ((input.control || input.meta) && input.key.toLowerCase() === 'f') {
       event.preventDefault()
       window.webContents.send('browser:findRequested')
+    }
+    if (input.key === 'F11' && input.type === 'keyDown') {
+      // Keyboard focus lives in the guest page; forward the browser-fullscreen
+      // toggle to the chrome renderer, which owns the workspace layout.
+      event.preventDefault()
+      window.webContents.send('browser:fullscreenToggleRequested')
     }
     if ((input.control || input.meta) && input.key.toLowerCase() === 'l') {
       event.preventDefault()
@@ -111,6 +118,7 @@ export function attachBrowserTabViewEvents(
 
   webContents.on('page-favicon-updated', (_event, favicons) => {
     tab.favicon = pickFavicon(favicons)
+    handlers.onUpdateVisitFavicon(webContents.getURL(), tab.favicon)
     handlers.onStateChanged()
   })
 
@@ -133,13 +141,14 @@ export function attachBrowserTabViewEvents(
     tab.isLoading = false
     tab.url = webContents.getURL()
     tab.title = webContents.getTitle() || tab.url || 'New Tab'
+    handlers.onUpdateVisitFavicon(tab.url, tab.favicon)
     handlers.onStateChanged()
   })
 
   webContents.on('did-navigate', (_event, url) => {
     tab.url = url
     if (!tab.suppressVisits) {
-      handlers.onRecordVisit(url, webContents.getTitle())
+      handlers.onRecordVisit(url, webContents.getTitle(), tab.favicon)
     }
     handlers.onStateChanged()
   })
@@ -149,7 +158,7 @@ export function attachBrowserTabViewEvents(
       handlers.onMainFrameNavigation()
       tab.url = url
       if (!tab.suppressVisits) {
-        handlers.onRecordVisit(url, webContents.getTitle())
+        handlers.onRecordVisit(url, webContents.getTitle(), tab.favicon)
       }
       handlers.onStateChanged()
     }

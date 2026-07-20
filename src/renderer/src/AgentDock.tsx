@@ -1,16 +1,28 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
-import { ModelPill } from './ModelPill'
-import type { Model } from '../../shared/codex-protocol/v2/Model'
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort'
-import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage'
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { EffortSelector, ModelSelector } from './ModelPill'
+import type { Model } from '../../shared/session-protocol'
+import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
-import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments'
-import type { AgentSession } from './agent-session-model'
-import { MarkdownContent } from './MarkdownContent'
+import { buildAgentRoster, type AgentRosterNode, type AgentSession, type RosterRollupStatus } from './agent-session-model'
+import type { LiveTurnGlance } from './audit-trigger'
+import { exchangeHasTurn, groupDockExchanges } from './dock-exchanges'
+import { buildRows } from './transcript-model'
+import { emptySessionState, type SessionStore } from './session-store'
+import { agentZoomStorageKey, storedAgentZoom } from './agent-zoom'
+import { areAgentWindowPropsEqual, type AgentWindowProps } from './agent-window-props'
+import { hiddenAgentCounts, windowScrollTarget, type AgentColumnMetrics } from './agent-column-scroll'
+import { AgentComposer } from './AgentComposer'
+import { AgentWindowMenu } from './AgentWindowMenu'
+import { ExchangeCapsule, renderAgentRow, type AgentRowContext } from './agent-row-render'
+import { AgentContextPill, AuditStandby, GlanceActionLine } from './agent-audit-ui'
 
 export type { AgentLiteMessage, AgentSession } from './agent-session-model'
+export { SendArrowIcon } from './AgentComposer'
 
+// The roster spine: a shallow master-detail map of the tab's agents. Top-level
+// agents (reviewers, spawn leads) render as chips; a lead that spawned workers
+// shows a rolled-up status glyph and its workers nested one level beneath.
+// Clicking any chip focuses that agent's full transcript in the dock (detail).
 export function AgentTabStrip({
   sessions,
   openKeys,
@@ -20,30 +32,95 @@ export function AgentTabStrip({
   openKeys: string[]
   onFocus: (key: string) => void
 }): React.JSX.Element {
+  const roster = useMemo(() => buildAgentRoster(sessions), [sessions])
   return (
     <div className="agent-tabs">
-      {sessions.map((session) => (
-        <button
-          type="button"
-          key={session.key}
-          className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''}`}
-          title={session.title}
-          onClick={() => onFocus(session.key)}
-        >
-          <AgentStatusIcon status={session.status} />
-          <span className="agent-tab-title">{session.title}</span>
-        </button>
+      {roster.map((node) => (
+        <RosterNodeChips key={node.session.key} node={node} openKeys={openKeys} onFocus={onFocus} />
       ))}
     </div>
   )
 }
 
+function RosterNodeChips({
+  node,
+  openKeys,
+  onFocus,
+  depth = 0
+}: {
+  node: AgentRosterNode
+  openKeys: string[]
+  onFocus: (key: string) => void
+  depth?: number
+}): React.JSX.Element {
+  const { session, children, rollup } = node
+  const hasChildren = children.length > 0
+  const workingCount = countByStatus(node, 'working')
+  const totalDescendants = countDescendants(node)
+  return (
+    <>
+      <button
+        type="button"
+        className={`agent-tab ${openKeys.includes(session.key) ? 'is-open' : ''} ${depth > 0 ? 'is-child' : ''}`}
+        title={session.title}
+        onClick={() => onFocus(session.key)}
+      >
+        {depth > 0 ? <span className="agent-tab-branch" aria-hidden="true" /> : null}
+        <RollupStatusIcon rollup={hasChildren ? rollup : session.status} />
+        <span className="agent-tab-title">{session.title}</span>
+        {hasChildren ? (
+          <span className="agent-tab-count" title={`${workingCount} of ${totalDescendants} working`}>
+            {workingCount > 0 ? `${workingCount}/${totalDescendants}` : totalDescendants}
+          </span>
+        ) : null}
+      </button>
+      {children.map((child) => (
+        <RosterNodeChips
+          key={child.session.key}
+          node={child}
+          openKeys={openKeys}
+          onFocus={onFocus}
+          depth={depth + 1}
+        />
+      ))}
+    </>
+  )
+}
+
+function countDescendants(node: AgentRosterNode): number {
+  return node.children.reduce((sum, child) => sum + 1 + countDescendants(child), 0)
+}
+
+function countByStatus(node: AgentRosterNode, status: AgentSession['status']): number {
+  return node.children.reduce(
+    (sum, child) => sum + (child.session.status === status ? 1 : 0) + countByStatus(child, status),
+    0
+  )
+}
+
+// A lead's chip shows the rolled-up subtree status; a leaf shows its own. The
+// rollup adds 'attention' (a failed descendant) over the plain agent statuses.
+function RollupStatusIcon({
+  rollup
+}: {
+  rollup: RosterRollupStatus | AgentSession['status']
+}): React.JSX.Element {
+  if (rollup === 'attention') {
+    return <span className="agent-status agent-status-attention" role="status" aria-label="Needs attention" />
+  }
+  return <AgentStatusIcon status={rollup} />
+}
+
 export function AgentColumn({
   sessions,
   selectedKey,
+  sessionStore,
+  workspace,
   models,
   mainModel,
   mainReasoningEffort,
+  liveMainTurn,
+  isMainFocused,
   onSetModel,
   onSetModelEffort,
   onSelect,
@@ -51,7 +128,10 @@ export function AgentColumn({
   onCloseSession,
   onResetSession,
   onPromote,
-  onToggleWatch,
+  onSetRole,
+  onToggleReport,
+  onSendFeedback,
+  onDecideSendPolicy,
   onSend,
   onSteer,
   onStop,
@@ -59,9 +139,13 @@ export function AgentColumn({
 }: {
   sessions: AgentSession[]
   selectedKey: string | null
+  sessionStore: SessionStore
+  workspace: string | null
   models: Model[]
   mainModel: string | null
   mainReasoningEffort: ReasoningEffort | null
+  liveMainTurn: LiveTurnGlance | null
+  isMainFocused: boolean
   onSetModel: (key: string, model: string) => void
   onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
   onSelect: (key: string) => void
@@ -69,7 +153,10 @@ export function AgentColumn({
   onCloseSession: (key: string) => void
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
+  onSetRole: (key: string, role: 'reviewer' | 'helper') => void
+  onToggleReport: (key: string) => void
+  onSendFeedback: (key: string) => void
+  onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
   onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
   onSteer: (key: string, text: string) => Promise<boolean>
   onStop: (key: string) => Promise<void>
@@ -78,17 +165,57 @@ export function AgentColumn({
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const [hiddenAbove, setHiddenAbove] = useState(0)
   const [hiddenBelow, setHiddenBelow] = useState(0)
+  // The extend state: one card at a time grows to a real reading surface.
+  // Entering is explicit (the header button); exiting is implicit — focusing
+  // the main chat, Escape, or extending another card. No mode to clean up.
+  const [extendedKey, setExtendedKey] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (isMainFocused) setExtendedKey(null)
+  }, [isMainFocused])
+
+  useEffect(() => {
+    if (!extendedKey) return
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setExtendedKey(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [extendedKey])
+
+  // Closed/minimized cards can no longer hold the extend.
+  useEffect(() => {
+    if (extendedKey && !sessions.some((session) => session.key === extendedKey)) {
+      setExtendedKey(null)
+    }
+  }, [extendedKey, sessions])
+
+  const toggleExtend = (key: string): void => {
+    setExtendedKey((current) => (current === key ? null : key))
+    onSelect(key)
+    // The card grows to the full column height — align its top to the
+    // column so the reading surface starts where the eye is.
+    requestAnimationFrame(() => {
+      document
+        .querySelector(`[data-agent-key="${key}"]`)
+        ?.scrollIntoView({ block: 'start', behavior: 'auto' })
+    })
+  }
+
+  const readColumnMetrics = (node: HTMLDivElement): AgentColumnMetrics => {
+    const first = node.firstElementChild
+    return {
+      scrollTop: node.scrollTop,
+      scrollHeight: node.scrollHeight,
+      clientHeight: node.clientHeight,
+      firstItemHeight: first instanceof HTMLElement ? first.offsetHeight : null
+    }
+  }
 
   const updateChevrons = (): void => {
     const node = scrollRef.current
     if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    const above = Math.max(0, Math.round(node.scrollTop / slot))
-    const below = Math.max(
-      0,
-      Math.round((node.scrollHeight - node.scrollTop - node.clientHeight) / slot)
-    )
+    const { above, below } = hiddenAgentCounts(readColumnMetrics(node))
     setHiddenAbove(above)
     setHiddenBelow(below)
   }
@@ -106,17 +233,20 @@ export function AgentColumn({
   const scrollByWindow = (direction: 1 | -1): void => {
     const node = scrollRef.current
     if (!node) return
-    const first = node.firstElementChild
-    const slot = first instanceof HTMLElement ? first.offsetHeight + 10 : node.clientHeight / 2
-    // Absolute target from the CURRENT slot index — repeated clicks land on
-    // exact snap points instead of compounding relative deltas mid-animation.
-    const index = Math.round(node.scrollTop / slot) + direction
-    const target = Math.max(0, Math.min(index * slot, node.scrollHeight - node.clientHeight))
+    const target = windowScrollTarget(readColumnMetrics(node), direction)
     node.scrollTo({ top: target, behavior: 'smooth' })
   }
 
   return (
-    <div className="agent-column-shell">
+    <>
+      {extendedKey ? (
+        <div
+          className="agent-extend-scrim"
+          aria-hidden="true"
+          onClick={() => setExtendedKey(null)}
+        />
+      ) : null}
+      <div className={`agent-column-shell ${extendedKey ? 'has-extended' : ''}`}>
       {hiddenAbove > 0 ? (
         <button
           type="button"
@@ -130,15 +260,19 @@ export function AgentColumn({
           </span>
         </button>
       ) : null}
-      <div ref={scrollRef} className="agent-column" onScroll={updateChevrons}>
+      <div ref={scrollRef} className={`agent-column ${extendedKey ? 'has-extended' : ''}`} onScroll={updateChevrons}>
         {sessions.map((session) => (
           <AgentWindow
             key={session.key}
             session={session}
             isSelected={session.key === selectedKey}
+            isExtended={session.key === extendedKey}
+            sessionStore={sessionStore}
+            workspace={workspace}
             models={models}
             mainModel={mainModel}
             mainReasoningEffort={mainReasoningEffort}
+            liveMainTurn={liveMainTurn}
             onSetModel={onSetModel}
             onSetModelEffort={onSetModelEffort}
             onSelect={onSelect}
@@ -146,7 +280,11 @@ export function AgentColumn({
             onCloseSession={onCloseSession}
             onResetSession={onResetSession}
             onPromote={onPromote}
-            onToggleWatch={onToggleWatch}
+            onSetRole={onSetRole}
+            onToggleReport={onToggleReport}
+            onSendFeedback={onSendFeedback}
+            onDecideSendPolicy={onDecideSendPolicy}
+            onToggleExtend={toggleExtend}
             onSend={onSend}
             onSteer={onSteer}
             onStop={onStop}
@@ -167,7 +305,8 @@ export function AgentColumn({
           </span>
         </button>
       ) : null}
-    </div>
+      </div>
+    </>
   )
 }
 
@@ -185,32 +324,20 @@ function ChevronIcon({ direction }: { direction: 'up' | 'down' }): React.JSX.Ele
   )
 }
 
-type AgentWindowProps = {
-  session: AgentSession
-  isSelected: boolean
-  models: Model[]
-  mainModel: string | null
-  mainReasoningEffort: ReasoningEffort | null
-  onSetModel: (key: string, model: string) => void
-  onSetModelEffort: (key: string, model: string, effort: ReasoningEffort) => void
-  onSelect: (key: string) => void
-  onMinimize: (key: string) => void
-  onCloseSession: (key: string) => void
-  onResetSession: (key: string) => void
-  onPromote: (key: string) => void
-  onToggleWatch: (key: string) => void
-  onSend: (key: string, text: string, attachments?: ChatAttachment[]) => Promise<boolean>
-  onSteer: (key: string, text: string) => Promise<boolean>
-  onStop: (key: string) => Promise<void>
-  onCompact: (key: string) => Promise<void>
-}
+// Stable empty fallback for sessions the store has not seen yet —
+// useSyncExternalStore requires a referentially stable snapshot.
+const emptyAgentRenderState = emptySessionState()
 
 const AgentWindow = memo(function AgentWindow({
   session,
   isSelected,
+  isExtended,
+  sessionStore,
+  workspace,
   models,
   mainModel,
   mainReasoningEffort,
+  liveMainTurn,
   onSetModel,
   onSetModelEffort,
   onSelect,
@@ -218,20 +345,20 @@ const AgentWindow = memo(function AgentWindow({
   onCloseSession,
   onResetSession,
   onPromote,
-  onToggleWatch,
+  onSetRole,
+  onToggleReport,
+  onSendFeedback,
+  onDecideSendPolicy,
+  onToggleExtend,
   onSend,
   onSteer,
   onStop,
   onCompact
 }: AgentWindowProps): React.JSX.Element {
-  const [value, setValue] = useState('')
-  const [attachments, setAttachments] = useState<ChatAttachment[]>([])
-  const [attachmentError, setAttachmentError] = useState<string | null>(null)
-  const [isSending, setIsSending] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [zoomPercent, setZoomPercent] = useState(() => readAgentZoom(session.key))
+  // Older exchanges the user re-opened from their capsules.
+  const [expandedExchanges, setExpandedExchanges] = useState<ReadonlySet<string>>(() => new Set())
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const menuRef = useRef<HTMLDivElement | null>(null)
   const pinnedRef = useRef(true)
   const suppressScrollRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -240,23 +367,22 @@ const AgentWindow = memo(function AgentWindow({
     window.localStorage.setItem(agentZoomStorageKey(session.key), String(zoomPercent))
   }, [session.key, zoomPercent])
 
-  useEffect(() => {
-    if (!isMenuOpen) return
-    const closeOnOutsidePointer = (event: PointerEvent): void => {
-      if (menuRef.current && event.target instanceof Node && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false)
-      }
-    }
-    const closeOnEscape = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setIsMenuOpen(false)
-    }
-    document.addEventListener('pointerdown', closeOnOutsidePointer)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeOnOutsidePointer)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [isMenuOpen])
+  // Phase 5: the dock renders the FULL transcript from the shared session
+  // store — the same ThreadItem → rows pipeline as the main chat, so agents
+  // get thought blocks, tool rows, terminal cards, and diff cards instead of
+  // a prose-only projection.
+  const subscribeRenderState = useCallback(
+    (onChange: () => void) => sessionStore.subscribe(session.key, onChange),
+    [sessionStore, session.key]
+  )
+  const renderState = useSyncExternalStore(
+    subscribeRenderState,
+    () => sessionStore.peek(session.key) ?? emptyAgentRenderState
+  )
+  const { rows } = useMemo(
+    () => buildRows(renderState.items, renderState.itemMeta, renderState.turnId),
+    [renderState.items, renderState.itemMeta, renderState.turnId]
+  )
 
   const followTail = useCallback(() => {
     const node = scrollRef.current
@@ -269,7 +395,7 @@ const AgentWindow = memo(function AgentWindow({
 
   useEffect(() => {
     followTail()
-  }, [followTail, session.messages, session.status])
+  }, [followTail, rows, session.status, liveMainTurn])
 
   const handleScroll = useCallback(() => {
     // Ignore the scroll event caused by our own bottom-follow write.
@@ -290,45 +416,96 @@ const AgentWindow = memo(function AgentWindow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useLayoutEffect(() => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-    textarea.style.height = '0px'
-    textarea.style.height = `${Math.min(120, Math.max(34, textarea.scrollHeight))}px`
-  }, [value])
-
   const working = session.status === 'working'
-  const hasDraft = Boolean(value.trim() || attachments.length)
+  const nativeRun = session.sourceProvider === 'codex' || session.sourceProvider === 'claude'
+
+  // Adjacent identical assistant restatements carry no information (same
+  // policy the lite projection applied).
+  const duplicateAssistantIds = useMemo(() => {
+    const skip = new Set<string>()
+    let previous: { text: string } | null = null
+    for (const item of renderState.items) {
+      if (item.type === 'agentMessage') {
+        if (previous && previous.text === item.text) skip.add(item.id)
+        previous = item
+      } else if (item.type === 'userMessage') {
+        previous = null
+      }
+    }
+    return skip
+  }, [renderState.items])
+
+  let lastAssistantTextId: string | null = null
+  for (let index = rows.length - 1; index >= 0; index -= 1) {
+    const row = rows[index]
+    if (row.kind === 'chat' && row.item.type === 'agentMessage' && row.item.text && !duplicateAssistantIds.has(row.item.id)) {
+      lastAssistantTextId = row.item.id
+      break
+    }
+  }
+
+  const renderContext: AgentRowContext = {
+    itemMeta: renderState.itemMeta,
+    activeTurnId: renderState.turnId,
+    workspace,
+    duplicateAssistantIds,
+    lastAssistantTextId,
+    onSendFlagged: () => onSendFeedback(session.key),
+    // The first-flag decision moment: shown on the latest flagged report
+    // until the user settles the send policy (here or via the menu toggle).
+    sendPolicyPrompt:
+      session.auditsMain && !session.sendPolicyDecided && !session.reportsToMain
+        ? {
+            onSendOnce: () => onSendFeedback(session.key),
+            onAlways: () => {
+              onDecideSendPolicy(session.key, 'always')
+              onSendFeedback(session.key)
+            },
+            onKeep: () => onDecideSendPolicy(session.key, 'keep')
+          }
+        : null
+  }
+
+  // Recency-weighted density: the newest exchange (and any exchange still
+  // streaming) renders at full fidelity; older ones collapse to one-line
+  // capsules that expand in place. Nothing is dropped from the transcript —
+  // pixels just favor "now" inside the small window.
+  const exchanges = useMemo(() => groupDockExchanges(rows), [rows])
+  const toggleExchange = (id: string): void => {
+    setExpandedExchanges((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+  const messageNodes = exchanges.map((exchange, index) => {
+    const pinnedOpen =
+      index === exchanges.length - 1 || exchangeHasTurn(exchange, renderState.turnId)
+    if (pinnedOpen) {
+      return (
+        <Fragment key={exchange.id}>
+          {exchange.rows.map((row) => renderAgentRow(row, renderContext))}
+        </Fragment>
+      )
+    }
+    const isOpen = expandedExchanges.has(exchange.id)
+    return (
+      <div key={exchange.id} className={`agent-exchange ${isOpen ? 'is-open' : ''}`}>
+        <ExchangeCapsule exchange={exchange} open={isOpen} onToggle={toggleExchange} />
+        {isOpen ? exchange.rows.map((row) => renderAgentRow(row, renderContext)) : null}
+      </div>
+    )
+  })
+  const hasTranscript = rows.some((row) => row.kind !== 'tail')
+  // The audit watch strip: while the main chat's turn is in flight and this
+  // agent is armed to audit, show the doer's progress from the auditor's POV.
+  const watchingMain = session.auditsMain && liveMainTurn !== null && !working
 
   const adjustZoom = (direction: 'in' | 'out' | 'reset'): void => {
     setZoomPercent((current) => direction === 'reset'
       ? 100
       : Math.max(80, Math.min(140, current + (direction === 'in' ? 10 : -10))))
-  }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault()
-    const text = value.trim()
-    if ((!text && !attachments.length) || isSending) return
-    setValue('')
-    const submittedAttachments = attachments
-    if (!working) setAttachments([])
-    setIsSending(true)
-    try {
-      // While a turn runs, typed text steers it instead of starting a new turn
-      // — same routing as the main composer.
-      const accepted = working
-        ? await onSteer(session.key, text)
-        : await onSend(session.key, text, submittedAttachments)
-      if (!accepted) {
-        setValue((current) => (current ? `${text}\n${current}` : text))
-        if (!working) setAttachments(submittedAttachments)
-      }
-    } finally {
-      setIsSending(false)
-      // The composer stays text-ready: refocus once the textarea re-enables.
-      requestAnimationFrame(() => textareaRef.current?.focus())
-    }
   }
 
   // Click-anywhere-to-type: clicking empty window space focuses the composer,
@@ -344,7 +521,7 @@ const AgentWindow = memo(function AgentWindow({
 
   return (
     <div
-      className={`agent-overlay ${isSelected ? 'is-selected' : ''}`}
+      className={`agent-overlay ${isSelected ? 'is-selected' : ''} ${isExtended ? 'is-extended' : ''}`}
       data-agent-key={session.key}
       role="dialog"
       aria-label={`Agent: ${session.title}`}
@@ -353,94 +530,32 @@ const AgentWindow = memo(function AgentWindow({
     >
       <div className="agent-overlay-header">
         <AgentStatusIcon status={session.status} />
-        <div className="agent-overlay-menu-wrap" ref={menuRef}>
+        <AgentWindowMenu
+          session={session}
+          zoomPercent={zoomPercent}
+          adjustZoom={adjustZoom}
+          onSetRole={onSetRole}
+          onToggleReport={onToggleReport}
+          onPromote={onPromote}
+        />
+        {session.sourceProvider ? (
+          <div className="agent-run-badges" aria-label="Agent runtime">
+            <span className="agent-run-badge">{session.sourceProvider}</span>
+            {session.executionLane ? (
+              <span className="agent-run-badge is-lane">{laneLabel(session.executionLane)}</span>
+            ) : null}
+          </div>
+        ) : null}
+        <div className="agent-overlay-actions">
           <button
             type="button"
-            className={`agent-overlay-title-button ${isMenuOpen ? 'is-open' : ''}`}
-            aria-expanded={isMenuOpen}
-            aria-haspopup="menu"
-            onClick={() => setIsMenuOpen((open) => !open)}
+            className={`icon-button ${isExtended ? 'is-active' : ''}`}
+            aria-label={isExtended ? 'Collapse window' : 'Extend window'}
+            title={isExtended ? 'Collapse' : 'Extend — click the main chat to collapse'}
+            onClick={() => onToggleExtend(session.key)}
           >
-            <span className="agent-overlay-title">{session.title}</span>
-            <ChevronDownIcon />
+            <ExtendIcon active={isExtended} />
           </button>
-          {isMenuOpen ? (
-            <div className="agent-overlay-menu" role="menu" aria-label={`${session.title} controls`}>
-              <div className="agent-menu-label">Agent controls</div>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitemcheckbox"
-                aria-checked={session.watchesMain}
-                onClick={() => {
-                  onToggleWatch(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <EyeIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>{session.watchesMain ? 'Sharing main-chat context' : 'Share main-chat context'}</strong>
-                  <small>{session.watchesMain ? 'Helper mode is on' : 'Keep this agent independent'}</small>
-                </span>
-                <span className={`agent-menu-status ${session.watchesMain ? 'is-active' : ''}`}>
-                  {session.watchesMain ? 'On' : 'Off'}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="agent-menu-item"
-                role="menuitem"
-                onClick={() => {
-                  onPromote(session.key)
-                  setIsMenuOpen(false)
-                }}
-              >
-                <ExpandIcon />
-                <span className="agent-menu-item-copy">
-                  <strong>Switch to main chat</strong>
-                  <small>Save this conversation to chat history</small>
-                </span>
-              </button>
-              <div className="agent-menu-divider" />
-              <div className="agent-menu-zoom" role="group" aria-label="Chat zoom">
-                <span className="agent-menu-zoom-label">
-                  <ZoomIcon />
-                  <span>Chat zoom</span>
-                </span>
-                <div className="agent-zoom-controls">
-                  <button
-                    type="button"
-                    aria-label="Zoom chat out"
-                    title="Zoom out"
-                    disabled={zoomPercent <= 80}
-                    onClick={() => adjustZoom('out')}
-                  >
-                    <MinusIcon />
-                  </button>
-                  <button
-                    type="button"
-                    className="agent-zoom-value"
-                    aria-label="Reset chat zoom"
-                    title="Reset chat zoom"
-                    onClick={() => adjustZoom('reset')}
-                  >
-                    {zoomPercent}%
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Zoom chat in"
-                    title="Zoom in"
-                    disabled={zoomPercent >= 140}
-                    onClick={() => adjustZoom('in')}
-                  >
-                    <PlusIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
-        <div className="agent-overlay-actions">
           <button
             type="button"
             className="icon-button"
@@ -454,7 +569,13 @@ const AgentWindow = memo(function AgentWindow({
             type="button"
             className="icon-button"
             aria-label="Close agent"
-            title="Close agent (stops the turn and unsubscribes the thread)"
+            title={
+              nativeRun
+                ? working
+                  ? 'Close agent and stop its native task'
+                  : 'Close agent status'
+                : 'Close agent (stops the turn and unsubscribes the thread)'
+            }
             onClick={() => onCloseSession(session.key)}
           >
             <CloseIcon />
@@ -467,37 +588,64 @@ const AgentWindow = memo(function AgentWindow({
           className="agent-overlay-content"
           style={{ '--agent-chat-zoom': `${zoomPercent / 100}` } as React.CSSProperties}
         >
-          {session.messages.length === 0 ? (
-            <div className="agent-overlay-empty">
-              An independent agent with its own conversation, running in parallel and sharing the
-              workspace. Use the menu above to share main-chat context or switch back to the main chat.
-            </div>
-          ) : (
-            session.messages.map((message) => (
-              <div key={message.id} className={`agent-mini-message is-${message.role}`}>
-                {message.role === 'assistant' ? (
-                  <MarkdownContent text={message.text} />
-                ) : (
-                  <>{message.text ? <span>{message.text}</span> : null}<AttachmentStrip attachments={message.attachments ?? []} compact /></>
-                )}
+          {session.runStatus ? <AgentRunReceipt session={session} /> : null}
+          {!hasTranscript ? (
+            nativeRun ? null : session.auditsMain ? (
+              <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
+            ) : session.role === 'worker' ? (
+              <div className="agent-empty-hint" role="note">
+                {working ? 'Working on the delegated task…' : 'Spawned subagent — its work will appear here.'}
               </div>
-            ))
+            ) : (
+              <div className="agent-empty-hint" role="note">
+                Message this agent below — or set its role to “Reviewer” from the
+                title menu to make it an auditor again.
+              </div>
+            )
+          ) : (
+            messageNodes
           )}
+          {hasTranscript && watchingMain && liveMainTurn ? (
+            <div className="agent-audit-live" role="status">
+              <span className="agent-audit-live-pulse" aria-hidden="true" />
+              <div className="agent-audit-live-copy">
+                <span className="agent-audit-live-title shimmer-text">Watching main chat</span>
+                {liveMainTurn.lastStep ? (
+                  <GlanceActionLine className="agent-audit-live-step" text={liveMainTurn.lastStep} />
+                ) : null}
+                <span className="agent-audit-live-stats">
+                  {liveMainTurn.stepCount} step{liveMainTurn.stepCount === 1 ? '' : 's'}
+                  {' · '}
+                  {liveMainTurn.fileCount} file{liveMainTurn.fileCount === 1 ? '' : 's'} touched
+                </span>
+              </div>
+            </div>
+          ) : null}
+          {hasTranscript && !working && session.lastAuditNote ? (
+            <div className="agent-audit-note" role="status">{session.lastAuditNote}</div>
+          ) : null}
           {working ? <div className="agent-overlay-working shimmer-text">Working…</div> : null}
         </div>
       </div>
 
-      {models.length || session.contextUsage ? (
+      {!nativeRun && (models.length || session.contextUsage) ? (
         <div className="agent-overlay-context">
           {models.length ? (
-            <ModelPill
-              models={models}
-              selectedModel={session.model ?? mainModel}
-              selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
-              onSelectModel={(model) => onSetModel(session.key, model)}
-              onSelectModelEffort={(model, effort) => onSetModelEffort(session.key, model, effort)}
-              reasoningMenuSide="left"
-            />
+            <div className="model-controls">
+              <ModelSelector
+                models={models}
+                selectedModel={session.model ?? mainModel}
+                onSelectModel={(model) => onSetModel(session.key, model)}
+              />
+              <EffortSelector
+                models={models}
+                selectedModel={session.model ?? mainModel}
+                selectedEffort={session.reasoningEffort ?? mainReasoningEffort}
+                onSelectEffort={(model, effort) =>
+                  onSetModelEffort(session.key, model, effort)
+                }
+              />
+            </div>
           ) : null}
           <AgentContextPill
             usage={session.contextUsage}
@@ -508,138 +656,85 @@ const AgentWindow = memo(function AgentWindow({
         </div>
       ) : null}
 
-      <form
-        className="agent-overlay-composer"
-        onSubmit={handleSubmit}
-        onDragOver={(event) => { if (!working && event.dataTransfer.types.includes('Files')) event.preventDefault() }}
-        onDrop={(event) => {
-          if (working) return
-          const files = Array.from(event.dataTransfer.files)
-          if (!files.length) return
-          event.preventDefault()
-          setAttachmentError(null)
-          void saveBrowserFiles(files).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
-        }}
-      >
-        <div className="agent-composer-body">
-          <AttachmentStrip attachments={attachments} removable compact onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))} />
-        <textarea
-          ref={textareaRef}
-          value={value}
-          rows={1}
-          placeholder={working ? 'Add guidance while the agent works…' : 'Message this agent…'}
-          disabled={isSending}
-          onChange={(event) => setValue(event.target.value)}
-          onPaste={(event) => {
-            if (working) return
-            const images = Array.from(event.clipboardData.files).filter((file) => file.type.startsWith('image/'))
-            if (!images.length) return
-            const pastedText = event.clipboardData.getData('text/plain')
-            const start = event.currentTarget.selectionStart
-            const end = event.currentTarget.selectionEnd
-            event.preventDefault()
-            if (pastedText) setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`)
-            setAttachmentError(null)
-            void saveBrowserFiles(images).then((items) => setAttachments((current) => [...current, ...items])).catch((error: unknown) => setAttachmentError(error instanceof Error ? error.message : String(error)))
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault()
-              event.currentTarget.form?.requestSubmit()
-            }
-          }}
-        />
-          {attachmentError ? <span className="agent-attachment-error" role="status">{attachmentError}</span> : null}
+      {nativeRun ? (
+        <div className="agent-native-footer">
+          <span>{working ? 'Managed by the parent turn' : wakeLabel(session.wakeStatus)}</span>
+          {working ? (
+            <button type="button" onClick={() => onStop(session.key)}>Stop</button>
+          ) : null}
         </div>
-        <AttachmentButton disabled={working || isSending} onAdd={(items) => { setAttachmentError(null); setAttachments((current) => [...current, ...items]) }} onError={setAttachmentError} />
-        {working ? (
-          <button
-            type="button"
-            className="stop-square-button"
-            aria-label="Stop agent turn"
-            title="Stop"
-            onClick={() => void onStop(session.key)}
-          >
-            <span className="stop-square" aria-hidden="true" />
-          </button>
-        ) : hasDraft ? (
-          <button
-            type="submit"
-            className="send-button"
-            aria-label="Send to agent"
-            disabled={isSending}
-          >
-            <SendArrowIcon />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="send-button agent-new-chat-button"
-            aria-label="Start a new agent chat"
-            title="New chat"
-            disabled={isSending}
-            onClick={() => onResetSession(session.key)}
-          >
-            <NewChatPlusIcon />
-          </button>
-        )}
-      </form>
+      ) : (
+        <AgentComposer
+          session={session}
+          working={working}
+          models={models}
+          mainModel={mainModel}
+          textareaRef={textareaRef}
+          onSend={onSend}
+          onSteer={onSteer}
+          onStop={onStop}
+          onResetSession={onResetSession}
+        />
+      )}
     </div>
   )
 }, areAgentWindowPropsEqual)
 
-function areAgentWindowPropsEqual(
-  previous: AgentWindowProps,
-  next: AgentWindowProps
-): boolean {
-  return previous.session === next.session &&
-    previous.isSelected === next.isSelected &&
-    previous.models === next.models &&
-    previous.mainModel === next.mainModel &&
-    previous.mainReasoningEffort === next.mainReasoningEffort
+function AgentRunReceipt({ session }: { session: AgentSession }): React.JSX.Element {
+  const status = session.runStatus ?? 'working'
+  const terminal = session.runStatus === 'completed' || session.runStatus === 'failed' || session.runStatus === 'stopped'
+  return (
+    <section className={`agent-run-receipt is-${status}`} aria-label="Agent handoff status">
+      <div className="agent-handoff-rail" aria-hidden="true">
+        <span className="is-complete" />
+        <i />
+        <span className={terminal ? 'is-complete' : 'is-active'} />
+        <i />
+        <span className={session.wakeStatus === 'resumed' ? 'is-complete' : session.wakeStatus === 'queued' ? 'is-active' : ''} />
+      </div>
+      <div className="agent-run-receipt-copy">
+        <div className="agent-run-receipt-head">
+          <strong>{runStatusLabel(status)}</strong>
+          <span>{wakeLabel(session.wakeStatus)}</span>
+        </div>
+        {session.runTask ? <p className="agent-run-task">{session.runTask}</p> : null}
+        {session.runProgress && !terminal ? <p className="agent-run-progress">{session.runProgress}</p> : null}
+        {session.runResultSummary ? <p className="agent-run-result">{session.runResultSummary}</p> : null}
+        {session.runOutputPath ? <code className="agent-run-output">{session.runOutputPath}</code> : null}
+      </div>
+    </section>
+  )
 }
 
-const agentZoomStorageKey = (key: string): string => `codexdesktop.agent-zoom.${key}`
+function laneLabel(lane: NonNullable<AgentSession['executionLane']>): string {
+  if (lane === 'browser-live') return 'live'
+  if (lane === 'browser-background') return 'background'
+  return 'agent'
+}
+
+function runStatusLabel(status: NonNullable<AgentSession['runStatus']>): string {
+  switch (status) {
+    case 'queued': return 'Queued'
+    case 'working': return 'Working'
+    case 'waiting': return 'Waiting'
+    case 'completed': return 'Completed'
+    case 'failed': return 'Failed'
+    case 'stopped': return 'Stopped'
+  }
+}
+
+function wakeLabel(status: AgentSession['wakeStatus']): string {
+  switch (status) {
+    case 'pending': return 'Handoff pending'
+    case 'queued': return 'Parent wake queued'
+    case 'resumed': return 'Parent resumed'
+    case 'suppressed': return 'Wake suppressed'
+    default: return 'No wake required'
+  }
+}
 
 function readAgentZoom(key: string): number {
-  const stored = Number(window.localStorage.getItem(agentZoomStorageKey(key)))
-  return Number.isFinite(stored) ? Math.max(80, Math.min(140, stored)) : 100
-}
-
-function AgentContextPill({
-  usage,
-  disabled,
-  compacting,
-  onCompact
-}: {
-  usage: ThreadTokenUsage | null
-  disabled: boolean
-  compacting: boolean
-  onCompact: () => Promise<void>
-}): React.JSX.Element | null {
-  const window = usage?.modelContextWindow
-  const contextTokens = usage?.last.totalTokens ?? 0
-  if (!usage || !window || contextTokens <= 0) return null
-
-  const percent = Math.min(100, Math.round((contextTokens / window) * 100))
-  const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : ''
-
-  return (
-    <button
-      type="button"
-      className={`context-pill agent-context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
-      disabled={disabled}
-      title={compacting
-        ? 'Compacting this agent conversation…'
-        : `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact this agent conversation.`}
-      onClick={() => void onCompact()}
-    >
-      <span className="context-pill-track" aria-hidden="true">
-        <span className="context-pill-fill" style={{ width: `${percent}%` }} />
-      </span>
-      <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
-    </button>
-  )
+  return storedAgentZoom(window.localStorage.getItem(agentZoomStorageKey(key)))
 }
 
 function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.JSX.Element {
@@ -670,85 +765,28 @@ function AgentStatusIcon({ status }: { status: AgentSession['status'] }): React.
   return <span className="agent-status agent-status-dot" aria-hidden="true" />
 }
 
-export function SendArrowIcon(): React.JSX.Element {
+// Extend (corners out) vs collapse (corners in) for the window-size toggle —
+// distinct from ExpandIcon, which the menu uses for "Switch to main chat".
+function ExtendIcon({ active }: { active: boolean }): React.JSX.Element {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 19V5M5.5 11.5L12 5l6.5 6.5"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function NewChatPlusIcon(): React.JSX.Element {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function EyeIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  )
-}
-
-function ZoomIcon(): React.JSX.Element {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" strokeWidth="1.7" />
-      <path d="m15 15 5 5M8 10.5h5M10.5 8v5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function ChevronDownIcon(): React.JSX.Element {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function MinusIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function PlusIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function ExpandIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      {active ? (
+        <path
+          d="M10 4v6H4M14 20v-6h6M10 10 4 4M14 14l6 6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <path
+          d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
     </svg>
   )
 }

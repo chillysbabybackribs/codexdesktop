@@ -1,10 +1,19 @@
 import type { CodexPluginInstallParams, CodexPluginAppStatus } from '../../shared/ipc'
-import type { AppSummary } from '../../shared/codex-protocol/v2/AppSummary'
-import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry'
-import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary'
+import type { AppSummary } from '../../shared/session-protocol'
+import type { PluginMarketplaceEntry } from '../../shared/session-protocol'
+import type { PluginSummary } from '../../shared/session-protocol'
 
 export function isRemotePlugin(plugin: PluginSummary): boolean {
   return plugin.source.type === 'remote'
+}
+
+export function flattenPlugins(marketplaces: PluginMarketplaceEntry[]): PluginSummary[] {
+  const pluginsByName = new Map<string, PluginSummary>()
+  for (const plugin of marketplaces.flatMap((marketplace) => marketplace.plugins)) {
+    const existing = pluginsByName.get(plugin.name)
+    if (!existing || plugin.installed || !existing.installed) pluginsByName.set(plugin.name, plugin)
+  }
+  return [...pluginsByName.values()]
 }
 
 export function pluginInstallParams(

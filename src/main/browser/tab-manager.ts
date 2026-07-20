@@ -1,5 +1,5 @@
 import type { BrowserWindow, WebContents } from 'electron'
-import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
+import type { BrowserBounds, BrowserState, BrowserTabState, BrowserVpnStatus } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import {
@@ -18,7 +18,6 @@ import {
 } from './browser-tab-session.js'
 import { createBrowserTabView, attachBrowserTabViewEvents } from './browser-tab-view.js'
 import { BrowserTargetRegistry, type BrowserTarget } from './browser-target-registry.js'
-import { chromeLikeUserAgent } from './browser-session.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 import { disposeCdpSession } from './cdp-session.js'
@@ -28,8 +27,9 @@ const defaultTabUrl = 'https://www.google.com'
 type BrowserStateListener = (state: BrowserState) => void
 
 export type BrowserVisitListener = {
-  recordVisit(url: string, title: string): void
+  recordVisit(url: string, title: string, favicon: string | null): void
   updateTitle(url: string, title: string): void
+  updateFavicon(url: string, favicon: string | null): void
 }
 
 export type NavigateAndWaitOptions = {
@@ -55,6 +55,13 @@ export class TabManager {
   // overlay is open, the same trick used during a divider drag.
   private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
+  // VPN status is session-wide, owned by TorVpnManager; injected here so the
+  // renderer receives one coherent BrowserState payload.
+  private vpnStatusSource: () => BrowserVpnStatus = () => ({
+    state: 'off',
+    bootstrapProgress: 0,
+    detail: null
+  })
   private persistListener: (() => void) | null = null
   private visitListener: BrowserVisitListener | null = null
   private disposed = false
@@ -73,6 +80,15 @@ export class TabManager {
 
   onPersist(listener: () => void): void {
     this.persistListener = listener
+  }
+
+  setVpnStatusSource(source: () => BrowserVpnStatus): void {
+    this.vpnStatusSource = source
+  }
+
+  /** Re-broadcast browser state after out-of-band changes (e.g. VPN status). */
+  refreshState(): void {
+    this.pushState()
   }
 
   onVisit(listener: BrowserVisitListener): void {
@@ -138,7 +154,7 @@ export class TabManager {
       this.activateTab(id)
     }
     if (options.load !== false) {
-      void this.startNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
+      void this.startUserNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
     }
     this.pushState()
     return id
@@ -218,7 +234,7 @@ export class TabManager {
       return
     }
 
-    void this.startNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
+    void this.startUserNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
   }
 
   async navigateAndWait(
@@ -269,16 +285,30 @@ export class TabManager {
     }
     return new Promise((resolve) => {
       const requestId = webContents.findInPage(text, { forward, findNext: true })
+      // A superseded find or a navigation mid-search never delivers this
+      // requestId's finalUpdate; without the timeout the listener leaks and
+      // the caller hangs forever.
+      let settled = false
+      const settle = (result: { activeMatchOrdinal: number; matches: number; finalUpdate: boolean }): void => {
+        if (settled) return
+        settled = true
+        clearTimeout(timer)
+        webContents.off('found-in-page', onResult)
+        webContents.off('destroyed', onGone)
+        resolve(result)
+      }
       const onResult = (_event: Electron.Event, result: Electron.FoundInPageResult): void => {
         if (result.requestId !== requestId || !result.finalUpdate) return
-        webContents.off('found-in-page', onResult)
-        resolve({
+        settle({
           activeMatchOrdinal: result.activeMatchOrdinal,
           matches: result.matches,
           finalUpdate: result.finalUpdate
         })
       }
+      const onGone = (): void => settle({ activeMatchOrdinal: 0, matches: 0, finalUpdate: true })
+      const timer = setTimeout(onGone, 2000)
       webContents.on('found-in-page', onResult)
+      webContents.once('destroyed', onGone)
     })
   }
 
@@ -337,6 +367,18 @@ export class TabManager {
 
   getActiveTabId(): string | null {
     return this.activeTabId
+  }
+
+  getWindow(): BrowserWindow {
+    return this.window
+  }
+
+  getVisibleBrowserCaptureTarget(): { webContents: WebContents; bounds: BrowserBounds } | null {
+    if (this.isDraggingDivider || this.isOverlayOpen) return null
+    const tab = this.getActiveTab()
+    if (!tab || this.bounds.x < 0 || this.bounds.y < 0) return null
+    if (tab.view.webContents.isDestroyed()) return null
+    return { webContents: tab.view.webContents, bounds: { ...this.bounds } }
   }
 
   resolveWebContents(tabId?: string | null): WebContents | null {
@@ -399,7 +441,7 @@ export class TabManager {
   private async hydrateSavedTab(tab: ManagedBrowserTab, saved: SavedBrowserTab): Promise<void> {
     try {
       await hydrateSavedBrowserTab(tab, saved, defaultTabUrl, (url) =>
-        this.startNavigation(tab, url).then(() => {})
+        this.startUserNavigation(tab, url).then(() => {})
       )
     } finally {
       this.pushState()
@@ -421,7 +463,8 @@ export class TabManager {
   private async startNavigation(
     tab: ManagedBrowserTab,
     url: string,
-    options: NavigateAndWaitOptions = {}
+    options: NavigateAndWaitOptions = {},
+    settleDocument = true
   ): Promise<PageNavigationResult> {
     this.cancelNavigation(tab.id)
     this.bumpTargetEpoch(tab.id)
@@ -431,10 +474,11 @@ export class TabManager {
     options.signal?.addEventListener('abort', abortFromCaller, { once: true })
 
     try {
+      if (controller.signal.aborted) throw new Error('navigation aborted')
       return await loadPageAndSettle(tab.view.webContents, url, {
         timeoutMs: options.timeoutMs ?? 15_000,
-        userAgent: chromeLikeUserAgent(),
         signal: controller.signal,
+        settleDocument,
         ...(options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
         ...(options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs }),
         ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {})
@@ -445,6 +489,13 @@ export class TabManager {
         this.navigationControllers.delete(tab.id)
       }
     }
+  }
+
+  private startUserNavigation(tab: ManagedBrowserTab, url: string): Promise<PageNavigationResult> {
+    // Human address-bar navigation should be indistinguishable from ordinary
+    // Chromium navigation. Agent callers use navigateAndWait(), which opts into
+    // DOM readiness probing in an isolated world.
+    return this.startNavigation(tab, url, {}, false)
   }
 
   private cancelNavigation(tabId: string): void {
@@ -463,8 +514,9 @@ export class TabManager {
       onReload: () => this.reload(tab.id),
       onMainFrameNavigation: () => this.bumpTargetEpoch(tab.id),
       onStateChanged: () => this.pushState(),
-      onRecordVisit: (url, title) => this.visitListener?.recordVisit(url, title),
+      onRecordVisit: (url, title, favicon) => this.visitListener?.recordVisit(url, title, favicon),
       onUpdateVisitTitle: (url, title) => this.visitListener?.updateTitle(url, title),
+      onUpdateVisitFavicon: (url, favicon) => this.visitListener?.updateFavicon(url, favicon),
       onDestroyed: () => this.handleDestroyedTab(tab)
     })
   }
@@ -548,6 +600,7 @@ export class TabManager {
 
     this.stateListener?.({
       activeTabId: this.activeTabId,
+      vpn: this.vpnStatusSource(),
       tabs: Array.from(this.tabs.values()).map((tab): BrowserTabState => {
         const navigation = readTabNavigation(tab)
 
@@ -561,7 +614,7 @@ export class TabManager {
           canGoForward: navigation.canGoForward,
           isAudible: tab.isAudible,
           isMuted: tab.isMuted,
-          zoomPercent: Math.round(100 * Math.pow(1.2, tab.view.webContents.getZoomLevel()))
+          zoomPercent: Math.round(100 * 1.2 ** tab.view.webContents.getZoomLevel())
         }
       })
     })

@@ -1,13 +1,22 @@
 import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
+import { browserUserAgentFallback } from './browser-identity.js'
+import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import { safeDownloadName } from './download-policy.js'
 
 export const browserPartition = 'persist:codex-browser'
+// Background public-web workers must not inherit the visible browser's login
+// cookies or local storage. Authenticated/account work stays in the live lane.
+export const researchPartition = 'persist:codex-research'
 
-// Google rejects user agents containing "Electron" — sign-in pages go blank.
-export function chromeLikeUserAgent(): string {
-  return app.userAgentFallback.replace(/\sElectron\/\S+/g, '').trim()
+/**
+ * Must run before Chromium creates any browser session or WebContents. Keeping
+ * this at the app fallback layer preserves Chromium's native UA Client Hints
+ * and avoids attaching DevTools to tabs during ordinary manual browsing.
+ */
+export function configureBrowserUserAgentFallback(): void {
+  app.userAgentFallback = browserUserAgentFallback(app.userAgentFallback, app.getName())
 }
 
 export type BrowserSessionOptions = {
@@ -24,44 +33,47 @@ export type BrowserSessionOptions = {
 const allowedGuestPermissions = new Set(['fullscreen', 'pointerLock'])
 
 export function configureBrowserSession(options: BrowserSessionOptions): void {
-  const browserSession = session.fromPartition(browserPartition)
-  browserSession.setUserAgent(chromeLikeUserAgent())
-  browserSession.setSpellCheckerLanguages(['en-US'])
-  browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
-    callback(allowedGuestPermissions.has(permission))
-  })
-  browserSession.setPermissionCheckHandler((_webContents, permission) =>
-    allowedGuestPermissions.has(permission)
-  )
-  browserSession.on('will-download', (event, item, webContents) => {
-    if (!options.isUserVisibleWebContents(webContents)) {
-      event.preventDefault()
-      console.warn('Blocked a download initiated by a hidden browser surface', item.getURL())
-      return
-    }
-
-    const window = options.getWindow()
-    if (!window) {
-      event.preventDefault()
-      return
-    }
-
-    item.pause()
-    const filename = safeDownloadName(item.getFilename())
-    void dialog.showSaveDialog(window, {
-      title: 'Save download',
-      defaultPath: join(app.getPath('downloads'), filename)
-    }).then((result) => {
-      if (result.canceled || !result.filePath) {
-        item.cancel()
+  for (const partition of [browserPartition, researchPartition]) {
+    const browserSession = session.fromPartition(partition)
+    browserSession.setSpellCheckerLanguages(['en-US'])
+    browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
+      callback(allowedGuestPermissions.has(permission))
+    })
+    browserSession.setPermissionCheckHandler((_webContents, permission) =>
+      allowedGuestPermissions.has(permission)
+    )
+    browserSession.on('will-download', (event, item, webContents) => {
+      if (partition === researchPartition || !options.isUserVisibleWebContents(webContents)) {
+        event.preventDefault()
+        console.warn('Blocked a download initiated by a hidden browser surface', item.getURL())
         return
       }
 
-      item.setSavePath(result.filePath)
-      item.resume()
-    }).catch((error) => {
-      console.error('Failed to choose a download destination', error)
-      item.cancel()
+      if (browserDownloadCaptureBroker.handleWillDownload(item, webContents)) return
+
+      const window = options.getWindow()
+      if (!window) {
+        event.preventDefault()
+        return
+      }
+
+      item.pause()
+      const filename = safeDownloadName(item.getFilename())
+      void dialog.showSaveDialog(window, {
+        title: 'Save download',
+        defaultPath: join(app.getPath('downloads'), filename)
+      }).then((result) => {
+        if (result.canceled || !result.filePath) {
+          item.cancel()
+          return
+        }
+
+        item.setSavePath(result.filePath)
+        item.resume()
+      }).catch((error) => {
+        console.error('Failed to choose a download destination', error)
+        item.cancel()
+      })
     })
-  })
+  }
 }

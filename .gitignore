@@ -30,3 +30,9 @@ Thumbs.db
 node_modules
 electron.vite.config.js
 electron.vite.config.d.ts
+
+# Bundled Tor Expert Bundle for the built-in VPN (npm run fetch:tor)
+resources/tor/
+
+# TS incremental build state — machine-local, never track
+*.tsbuildinfo

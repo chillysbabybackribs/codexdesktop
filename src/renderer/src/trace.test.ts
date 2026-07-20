@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.ts'
+import type { ThreadItem } from '../../shared/session-protocol/index.ts'
 import { buildTurnTrace, isTurnTrace } from './trace.ts'
 
 const turnUsage = {
@@ -257,8 +257,7 @@ test('buildTurnTrace marks bounded captures and indexes sources and artifacts', 
   ])
 })
 
-test('research tool artifacts contribute to observed goal evidence', () => {
-  const artifactDir = '/home/dp/.config/codexdesktop/research/run-1'
+test('research tools contribute successful-tool evidence without advertising saved files', () => {
   const items: ThreadItem[] = [
     {
       type: 'dynamicToolCall',
@@ -271,10 +270,9 @@ test('research tool artifacts contribute to observed goal evidence', () => {
         type: 'inputText',
         text: JSON.stringify({
           ok: true,
-          artifactDir,
           pages: [{
-            artifactPath: `${artifactDir}/page-01.txt`,
-            htmlPath: `${artifactDir}/page-01.html`
+            url: 'https://example.com/electron-migration',
+            title: 'Electron migration'
           }]
         })
       }],
@@ -316,8 +314,8 @@ test('research tool artifacts contribute to observed goal evidence', () => {
     }
   })
 
-  assert.equal(trace.artifactIndex?.items.length, 3)
-  assert.equal(trace.goal?.observedCompletionEvidence.artifactCount, 3)
+  assert.equal(trace.artifactIndex?.items.length ?? 0, 0)
+  assert.equal(trace.goal?.observedCompletionEvidence.artifactCount, 0)
   assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
 })
 

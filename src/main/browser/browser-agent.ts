@@ -1,12 +1,49 @@
-import type { WebContents, WebFrameMain } from 'electron'
+import type { WebContents } from 'electron'
 import { cdpSessionFor, type CdpEventQuery, type CdpSession } from './cdp-session.js'
 import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
-import { BrowserFlowError, runBrowserFlow } from './browser-flow.js'
+import { runBrowserFlow } from './browser-flow.js'
+import { executePageJavaScript } from './page-execution.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
-import type { NetworkJournalQuery } from './network-journal.js'
+import type { NetworkJournalQuery, NetworkStreamTransport } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
+import { captureAppWindowImage } from './app-window-screenshot.js'
+import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import type { TabManager } from './tab-manager.js'
+import {
+  KeyedOperationQueue,
+  assertTargetLeaseCurrent,
+  boundResult,
+  browserFailureFields,
+  browserFailureFor,
+  cancelledResult,
+  captureTargetLease,
+  createBoundedSuccessResult,
+  createFailureResult,
+  describeFrame,
+  frameInventory,
+  isLifecycleFailure,
+  liveFrames,
+  operationError,
+  safeTitle,
+  safeUrl,
+  withTimeout,
+  type BrowserAgentFailure,
+  type BrowserAgentResult,
+  type BrowserAgentSuccess,
+  type BrowserFailure,
+  type BrowserFailureCode,
+  type BrowserSnapshotCompletion
+} from './browser-operation.js'
+
+export type {
+  BrowserAgentResult,
+  BrowserFailure,
+  BrowserFailureCode,
+  BrowserFailurePhase,
+  BrowserFrameDescriptor,
+  BrowserSnapshotCompletion
+} from './browser-operation.js'
 
 export const DEFAULT_BROWSER_TIMEOUT_MS = 15_000
 export const MAX_BROWSER_TIMEOUT_MS = 60_000
@@ -27,39 +64,6 @@ export const PAGE_EXTRACTION_REMOVE_SELECTORS = [
 ] as const
 export const PAGE_EXTRACTION_LOW_VALUE_PATTERN =
   '(^|[-_\\s])(advert|ad|banner|cookie|consent|modal|dialog|popup|newsletter|subscribe|social|share|related|recommend|breadcrumb|pagination|sidebar|toolbar|menu|promo|sponsor)([-_\\s]|$)'
-
-export type BrowserFailureCode =
-  | 'cancelled'
-  | 'noResult'
-  | 'timeout'
-  | 'targetClosed'
-  | 'targetChanged'
-  | 'frameDetached'
-  | 'frameNotFound'
-  | 'executionError'
-  | 'pageScriptError'
-  | 'conditionNotMet'
-  | 'conditionTimeout'
-  | 'selectorNotFound'
-  | 'invalidSelector'
-  | 'resultSerializationError'
-
-export type BrowserFailurePhase =
-  | 'pageScript'
-  | 'targetLifecycle'
-  | 'navigationReadiness'
-  | 'snapshotVerification'
-  | 'resultSerialization'
-  | 'browserFlow'
-  | 'controller'
-
-export type BrowserFailure = {
-  code: BrowserFailureCode
-  phase: BrowserFailurePhase
-  message: string
-  name?: string
-  stack?: string
-}
 
 export type BrowserOperationOwner = {
   threadId: string
@@ -89,6 +93,22 @@ export type BrowserNavigateOptions = BrowserAgentOptions & {
   maxSettleMs?: number | null
 }
 
+export type BrowserNetworkCaptureParams = {
+  url?: string | null
+  steps?: unknown
+  match?: NetworkJournalQuery | null
+  captureBody?: boolean | null
+  download?: boolean | null
+  stream?: {
+    transport?: NetworkStreamTransport | null
+    maxMessages?: number | null
+    idleMs?: number | null
+  } | null
+  readySelector?: string | null
+  quietMs?: number | null
+  maxSettleMs?: number | null
+}
+
 export type BrowserSnapshotOptions = BrowserRunOptions & {
   url?: string | null
   objective?: string | null
@@ -99,15 +119,6 @@ export type BrowserSnapshotOptions = BrowserRunOptions & {
   readySelector?: string | null
   quietMs?: number | null
   maxSettleMs?: number | null
-}
-
-export type BrowserFrameDescriptor = {
-  frameId: string
-  parentFrameId: string | null
-  name: string
-  url: string
-  origin: string
-  isMainFrame: boolean
 }
 
 export type BrowserCdpEventOptions = BrowserAgentOptions & {
@@ -124,63 +135,6 @@ type CdpOperationContext = {
   webContents: WebContents
 }
 
-type BrowserTargetLease = {
-  tabId: string
-  webContents: WebContents
-  epoch: number
-}
-
-export type BrowserAgentResult = {
-  ok: boolean
-  result?: unknown
-  error?: string
-  tabId?: string
-  url?: string
-  title?: string
-  durationMs?: number
-  resultChars?: number
-  truncated?: boolean
-  errorCode?: BrowserFailureCode
-  failure?: BrowserFailure
-  artifact?: CdpFileArtifact
-  targetState?: { frames?: BrowserFrameDescriptor[]; targets?: ReturnType<TabManager['listTargets']> }
-  /** Snapshot-specific execution hint derived from structured coverage, not model reasoning. */
-  completion?: BrowserSnapshotCompletion
-  /** Navigation selector state retained when a snapshot can still verify the requested evidence. */
-  readiness?: {
-    selector: string
-    settleReason: string
-    matched: boolean
-  }
-}
-
-export type BrowserSnapshotCompletion = {
-  /** `complete` means the returned snapshot is sufficient to answer from directly. */
-  status: 'complete' | 'incomplete'
-  /** The next evidence operation, if any; this never removes browser capabilities. */
-  nextAction: 'answer' | 'targeted-gap-fill'
-  reason: string
-  gaps: string[]
-}
-
-type BrowserAgentSuccess = BrowserAgentResult & {
-  ok: true
-  result: unknown
-  tabId: string
-  url: string
-  title: string
-  durationMs: number
-  resultChars: number
-  truncated: boolean
-}
-
-type BrowserAgentFailure = BrowserAgentResult & {
-  ok: false
-  error: string
-}
-
-type QueuedOperation<T> = Promise<T>
-
 /**
  * Shared browser execution surface for Codex and the legacy Unix-socket API.
  * Operations on one tab are serialized; different tabs can still run in
@@ -188,8 +142,9 @@ type QueuedOperation<T> = Promise<T>
  * it, preventing the next program from racing a still-running page script.
  */
 export class BrowserAgentController {
-  private readonly tabQueues = new Map<string, Promise<void>>()
+  private readonly tabOperations = new KeyedOperationQueue()
   private readonly turnOperations = new Map<string, Set<AbortController>>()
+  private readonly blockedTurnBrowserWork = new Map<string, BrowserFailure>()
   private readonly getTabs: () => TabManager | null
   private readonly artifactStore?: CdpArtifactStore
 
@@ -234,8 +189,39 @@ export class BrowserAgentController {
     }
   }
 
+  /**
+   * Records that this turn lost its browser target. A later tool call in the
+   * same turn must not silently select whatever tab happens to become active.
+   */
+  blockTurnBrowserWork(owner: BrowserOperationOwner, result: BrowserAgentResult): void {
+    if (result.ok || (result.errorCode !== 'targetClosed' && result.errorCode !== 'targetChanged')) return
+    const failure = result.failure ?? {
+      code: result.errorCode,
+      phase: 'targetLifecycle' as const,
+      message: result.error ?? 'browser target is no longer available'
+    }
+    this.blockedTurnBrowserWork.set(turnOperationKey(owner.threadId, owner.turnId), failure)
+  }
+
+  /** Returns the terminal browser result for a turn whose target was lost. */
+  blockedTurnBrowserResult(owner: BrowserOperationOwner): BrowserAgentResult | null {
+    const failure = this.blockedTurnBrowserWork.get(turnOperationKey(owner.threadId, owner.turnId))
+    if (!failure) return null
+    return {
+      ok: false,
+      error: `${failure.message}. Browser work for this turn has stopped; start a new user request before using another tab.`,
+      errorCode: failure.code,
+      failure
+    }
+  }
+
+  completeTurn(threadId: string, turnId: string): void {
+    this.blockedTurnBrowserWork.delete(turnOperationKey(threadId, turnId))
+  }
+
   cancelTurn(threadId: string, turnId: string): void {
     const key = turnOperationKey(threadId, turnId)
+    this.blockedTurnBrowserWork.delete(key)
     const operations = this.turnOperations.get(key)
     if (!operations) return
     for (const controller of operations) controller.abort()
@@ -260,16 +246,10 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const lease = captureTargetLease(tabs, tabId)
       if (!lease) {
@@ -330,19 +310,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) {
-        this.tabQueues.delete(tabId)
-      }
-    })
-
-    return operation
   }
 
   /**
@@ -364,16 +331,10 @@ export class BrowserAgentController {
     if (!tabId) {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
@@ -432,16 +393,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-    return operation
   }
 
   /**
@@ -469,9 +420,8 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    const timeoutMs = operationTimeoutMs(options)
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       const webContents = tabs.resolveWebContents(tabId)
       if (!webContents) {
@@ -522,19 +472,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) {
-        this.tabQueues.delete(tabId)
-      }
-    })
-
-    return operation
   }
 
   /**
@@ -557,13 +494,8 @@ export class BrowserAgentController {
       return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
     }
     const requestedUrl = options.url?.trim() ?? ''
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
     const program = buildPageSnapshotProgram({
       objective: options.objective,
       mode: options.mode,
@@ -573,8 +505,7 @@ export class BrowserAgentController {
       maxChars: maxResultChars
     })
 
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation: QueuedOperation<BrowserAgentResult> = previous.then(async () => {
+    return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
       let lease = captureTargetLease(tabs, tabId)
       if (!lease) {
@@ -717,16 +648,6 @@ export class BrowserAgentController {
         } satisfies BrowserAgentFailure
       }
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-    return operation
   }
 
   private async runAcrossTargets(code: string, options: BrowserRunOptions): Promise<BrowserAgentResult> {
@@ -735,12 +656,7 @@ export class BrowserAgentController {
       return { ok: false, error: 'no browser targets are available' } satisfies BrowserAgentFailure
     }
     const startedAt = Date.now()
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const maxResultChars = operationResultChars(options)
     const perTargetBudget = fanoutItemBudget(maxResultChars, targets.length, 700)
     const results = await mapWithConcurrency(targets, MAX_PARALLEL_BROWSER_TARGETS, async (target) => {
       const result = await this.run(code, { ...options, tabId: target.id, maxResultChars: perTargetBudget })
@@ -823,6 +739,48 @@ export class BrowserAgentController {
     })
   }
 
+  async captureAppScreenshot(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
+    const artifactStore = this.artifactStore
+    if (!artifactStore) {
+      return { ok: false, error: 'screenshot artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+
+    const tabs = this.getTabs()
+    if (!tabs) {
+      return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    }
+
+    const timeoutMs = operationTimeoutMs(options)
+    if (options.signal?.aborted) return cancelledResult()
+
+    try {
+      const window = tabs.getWindow()
+      const browser = tabs.getVisibleBrowserCaptureTarget()
+      const image = await captureAppWindowImage({ window, browser }, timeoutMs)
+      const buffer = image.toPNG()
+      const screenshot = await artifactStore.persistScreenshot(buffer.toString('base64'), 'png')
+      const [contentWidth, contentHeight] = window.getContentSize()
+      return {
+        ok: true,
+        result: {
+          screenshot: {
+            ...screenshot,
+            scope: 'appWindow',
+            contentWidth,
+            contentHeight,
+            browserVisible: Boolean(browser),
+            ...(browser ? { tabId: tabs.getActiveTabId(), bounds: browser.bounds } : {})
+          }
+        }
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      } satisfies BrowserAgentFailure
+    }
+  }
+
   async cdpCapabilities(options: BrowserAgentOptions = {}): Promise<BrowserAgentResult> {
     return this.runCdpOperation(options, (session) => session.capabilities())
   }
@@ -852,13 +810,8 @@ export class BrowserAgentController {
       return { ok: false, error: `no tab with id ${tabId}` } satisfies BrowserAgentFailure
     }
     const { webContents } = lease
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
     const startedAt = Date.now()
     try {
       if (options.signal?.aborted) return cancelledResult()
@@ -871,29 +824,9 @@ export class BrowserAgentController {
         options.signal
       )
       assertTargetLeaseCurrent(tabs, lease)
-      const bounded = boundResult(rawResult, maxResultChars)
-      return {
-        ok: true,
-        result: bounded.value,
-        tabId,
-        url: safeUrl(webContents),
-        title: safeTitle(webContents),
-        durationMs: Date.now() - startedAt,
-        resultChars: bounded.chars,
-        truncated: bounded.truncated
-      } satisfies BrowserAgentSuccess
+      return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
     } catch (error) {
-      const failure = browserFailureFor(error)
-      return {
-        ok: false,
-        error: failure.message,
-        errorCode: failure.code,
-        failure,
-        tabId,
-        url: safeUrl(webContents),
-        title: safeTitle(webContents),
-        durationMs: Date.now() - startedAt
-      } satisfies BrowserAgentFailure
+      return createFailureResult(error, { tabId, webContents, startedAt })
     }
   }
 
@@ -1043,6 +976,201 @@ export class BrowserAgentController {
     })
   }
 
+  async captureNetwork(
+    params: BrowserNetworkCaptureParams,
+    options: BrowserAgentOptions = {}
+  ): Promise<BrowserAgentResult> {
+    const requestedUrl = params.url?.trim() ?? ''
+    const hasSteps = Array.isArray(params.steps) && params.steps.length > 0
+    if (Boolean(requestedUrl) === hasSteps) {
+      return { ok: false, error: 'browser_network requires exactly one trigger: "url" or non-empty "steps"' } satisfies BrowserAgentFailure
+    }
+    const match = params.match ?? {}
+    if (!match.urlContains?.trim()) {
+      return { ok: false, error: 'browser_network requires match.urlContains' } satisfies BrowserAgentFailure
+    }
+    const streamTransport = params.stream?.transport
+    if (params.stream && streamTransport !== 'sse' && streamTransport !== 'websocket') {
+      return { ok: false, error: 'browser_network stream.transport must be "sse" or "websocket"' } satisfies BrowserAgentFailure
+    }
+    if (streamTransport === 'websocket' && (match.method || match.resourceType || match.mimeType)) {
+      return { ok: false, error: 'browser_network WebSocket matching supports urlContains and optional status bounds, not HTTP method/resourceType/mimeType' } satisfies BrowserAgentFailure
+    }
+    if (params.stream && params.captureBody === true) {
+      return { ok: false, error: 'browser_network cannot combine stream capture with captureBody: true' } satisfies BrowserAgentFailure
+    }
+    if (params.download && params.stream) {
+      return { ok: false, error: 'browser_network cannot combine download and stream capture' } satisfies BrowserAgentFailure
+    }
+    if (params.download && params.captureBody === true) {
+      return { ok: false, error: 'browser_network cannot combine download capture with captureBody: true' } satisfies BrowserAgentFailure
+    }
+    const captureBody = !params.stream && !params.download && params.captureBody !== false
+    const artifactStore = this.artifactStore
+    if ((captureBody || params.stream || params.download) && !artifactStore) {
+      return { ok: false, error: 'network artifact storage is not available' } satisfies BrowserAgentFailure
+    }
+
+    const tabs = this.getTabs()
+    if (!tabs) return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
+    if (options.tabId === 'all') {
+      return { ok: false, error: 'browser_network requires one existing tab, not "all"' } satisfies BrowserAgentFailure
+    }
+    const tabId = options.tabId ?? tabs.getActiveTabId()
+    if (!tabId) return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
+
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
+    return this.tabOperations.run(tabId, async () => {
+      if (options.signal?.aborted) return cancelledResult()
+      let lease = captureTargetLease(tabs, tabId)
+      if (!lease) {
+        return { ok: false, error: `no tab with id ${tabId}`, errorCode: 'targetClosed' } satisfies BrowserAgentFailure
+      }
+      const { webContents } = lease
+      const session = cdpSessionFor(webContents)
+      const captureController = new AbortController()
+      const startedAt = Date.now()
+
+      const executeCapture = async (): Promise<unknown> => {
+        await session.startNetworkJournal()
+        try {
+          const normalizedMatch = { ...match, urlContains: match.urlContains?.trim() }
+          const preparedDownload = params.download && artifactStore
+            ? await browserDownloadCaptureBroker.prepareDownload(
+                webContents,
+                normalizedMatch.urlContains ?? '',
+                artifactStore,
+                timeoutMs,
+                captureController.signal
+              )
+            : null
+          const waiting = (preparedDownload
+            ? preparedDownload.capture.then((download) => ({ kind: 'download' as const, download }))
+            : streamTransport
+              ? session.waitForNetworkStream(
+                streamTransport,
+                normalizedMatch,
+                clampNumber(params.stream?.maxMessages, 50, 1, 1_000),
+                clampNumber(params.stream?.idleMs, 500, 50, 10_000),
+                timeoutMs,
+                captureController.signal
+              ).then((stream) => ({ kind: 'stream' as const, stream }))
+              : session.waitForNetworkRequest(
+                { ...normalizedMatch, completedOnly: true },
+                timeoutMs,
+                captureController.signal
+              ).then((request) => ({ kind: 'request' as const, request })))
+          .then(
+            (capture) => ({ ok: true as const, capture }),
+            (error) => ({ ok: false as const, error })
+          )
+
+          let actionResult: unknown
+          try {
+            actionResult = requestedUrl
+              ? await tabs.navigateAndWait(tabId, requestedUrl, {
+                  timeoutMs,
+                  signal: captureController.signal,
+                  ...(params.readySelector?.trim() ? { readySelector: params.readySelector.trim() } : {}),
+                  ...(params.quietMs === null || params.quietMs === undefined ? {} : { quietMs: params.quietMs }),
+                  ...(params.maxSettleMs === null || params.maxSettleMs === undefined ? {} : { maxSettleMs: params.maxSettleMs })
+                })
+              : await runBrowserFlow(webContents, params.steps, { timeoutMs })
+          } catch (error) {
+            captureController.abort()
+            await waiting
+            throw error
+          }
+
+          // The trigger is allowed to navigate this tab, so adopt the page
+          // epoch produced by that controlled action. Keep the WebContents
+          // identity strict: replacing or closing the tab is still terminal.
+          const actionLease = captureTargetLease(tabs, tabId)
+          if (!actionLease) {
+            throw operationError('targetClosed', 'targetLifecycle', `browser target ${tabId} closed during network capture`)
+          }
+          if (actionLease.webContents !== webContents) {
+            throw operationError('targetChanged', 'targetLifecycle', `browser target ${tabId} changed during network capture`)
+          }
+          lease = actionLease
+
+          const matched = await waiting
+          if (!matched.ok) throw matched.error
+          let responseBody: Record<string, unknown> | undefined
+          let streamCapture: Record<string, unknown> | undefined
+          let downloadCapture: Record<string, unknown> | undefined
+          let request: unknown
+          if (matched.capture.kind === 'request') {
+            request = matched.capture.request
+            if (matched.capture.request.failed) {
+              throw new Error(`matched network request failed: ${matched.capture.request.errorText ?? matched.capture.request.blockedReason ?? matched.capture.request.url}`)
+            }
+          }
+          if (captureBody && artifactStore && matched.capture.kind === 'request') {
+            const capturedRequest = matched.capture.request
+            const response = asRecord(await session.send('Network.getResponseBody', { requestId: capturedRequest.requestId }))
+            if (typeof response.body !== 'string') throw new Error('Network.getResponseBody returned no body')
+            responseBody = await artifactStore.persistResponseBody(
+              response.body,
+              response.base64Encoded === true,
+              capturedRequest.mimeType,
+              capturedRequest.url
+            )
+          }
+          if (artifactStore && matched.capture.kind === 'stream') {
+            const { messages, ...summary } = matched.capture.stream
+            const serialized = [
+              JSON.stringify({ type: 'network-stream', ...summary }),
+              ...messages.map((message) => JSON.stringify({ type: 'message', ...message }))
+            ].join('\n')
+            const artifact = await artifactStore.persistNetworkStream(`${serialized}\n`)
+            streamCapture = {
+              ...summary,
+              artifact,
+              messages: messages.slice(0, 10),
+              omittedMessages: Math.max(0, messages.length - 10)
+            }
+          }
+          if (matched.capture.kind === 'download') {
+            downloadCapture = matched.capture.download
+          }
+
+          return {
+            network: {
+              trigger: requestedUrl ? 'navigate' : 'flow',
+              ...(request ? { request } : {}),
+              ...(responseBody ? { responseBody } : {}),
+              ...(streamCapture ? { stream: streamCapture } : {}),
+              ...(downloadCapture ? { download: downloadCapture } : {}),
+              action: boundResult(actionResult, Math.min(3_000, Math.max(1_000, Math.floor(maxResultChars / 2)))).value
+            }
+          }
+        } finally {
+          session.stopNetworkJournal()
+        }
+      }
+
+      try {
+        const rawResult = await withTimeout(
+          executeCapture(),
+          timeoutMs,
+          () => {
+            captureController.abort()
+            session.terminateExecution()
+          },
+          options.signal
+        )
+        assertTargetLeaseCurrent(tabs, lease)
+        captureController.abort()
+        return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
+      } catch (error) {
+        captureController.abort()
+        return createFailureResult(error, { tabId, webContents, startedAt })
+      }
+    })
+  }
+
   private async runCdpOperation(
     options: BrowserAgentOptions,
     execute: (session: CdpSession, timeoutMs: number, context: CdpOperationContext) => Promise<unknown>
@@ -1053,15 +1181,9 @@ export class BrowserAgentController {
       return { ok: false, error: tabs ? 'no active tab' : 'browser not ready (no window)' } satisfies BrowserAgentFailure
     }
 
-    const timeoutMs = clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
-    const maxResultChars = clampNumber(
-      options.maxResultChars,
-      DEFAULT_BROWSER_RESULT_CHARS,
-      1_000,
-      MAX_BROWSER_RESULT_CHARS
-    )
-    const previous = this.tabQueues.get(tabId) ?? Promise.resolve()
-    const operation = previous.then(async (): Promise<BrowserAgentResult> => {
+    const timeoutMs = operationTimeoutMs(options)
+    const maxResultChars = operationResultChars(options)
+    return this.tabOperations.run(tabId, async (): Promise<BrowserAgentResult> => {
       if (options.signal?.aborted) return cancelledResult()
       const lease = options.requireStableTarget ? captureTargetLease(tabs, tabId) : null
       const webContents = lease?.webContents ?? tabs.resolveWebContents(tabId)
@@ -1080,42 +1202,11 @@ export class BrowserAgentController {
           options.signal
         )
         if (lease) assertTargetLeaseCurrent(tabs, lease)
-        const bounded = boundResult(rawResult, maxResultChars)
-        return {
-          ok: true,
-          result: bounded.value,
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt,
-          resultChars: bounded.chars,
-          truncated: bounded.truncated
-        } satisfies BrowserAgentSuccess
+        return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
       } catch (error) {
-        const failure = browserFailureFor(error)
-        return {
-          ok: false,
-          error: failure.message,
-          errorCode: failure.code,
-          failure,
-          tabId,
-          url: safeUrl(webContents),
-          title: safeTitle(webContents),
-          durationMs: Date.now() - startedAt
-        } satisfies BrowserAgentFailure
+        return createFailureResult(error, { tabId, webContents, startedAt })
       }
     })
-
-    const queueTail = operation.then(
-      () => undefined,
-      () => undefined
-    )
-    this.tabQueues.set(tabId, queueTail)
-    void queueTail.then(() => {
-      if (this.tabQueues.get(tabId) === queueTail) this.tabQueues.delete(tabId)
-    })
-
-    return operation
   }
 
   private async materializeCdpResult(
@@ -1329,7 +1420,7 @@ async function executePageProgram(
   const wrapped = buildWrappedPageProgram(code)
   const selector = frameSelector?.trim()
   if (!selector || selector === 'main') {
-    return requirePageProgramResult(unwrapPageProgramResult(await webContents.executeJavaScript(wrapped, true)))
+    return requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(webContents, wrapped, true)))
   }
 
   const mainFrame = webContents.mainFrame
@@ -1339,7 +1430,7 @@ async function executePageProgram(
     const results = await mapWithConcurrency(frames, MAX_PARALLEL_BROWSER_FRAMES, async (frame) => {
       const descriptor = describeFrame(frame, mainFrame)
       try {
-        const result = requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
+        const result = requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(frame, wrapped, true)))
         const bounded = boundResult(result, perFrameBudget)
         return {
           frame: descriptor,
@@ -1374,7 +1465,7 @@ async function executePageProgram(
   if (!frame) throw new Error(`no live frame with id ${selector}`)
   return {
     frame: describeFrame(frame, mainFrame),
-    result: requirePageProgramResult(unwrapPageProgramResult(await frame.executeJavaScript(wrapped, true)))
+    result: requirePageProgramResult(unwrapPageProgramResult(await executePageJavaScript(frame, wrapped, true)))
   }
 }
 
@@ -1437,166 +1528,8 @@ function requirePageProgramResult(value: unknown): unknown {
   )
 }
 
-function liveFrames(mainFrame: WebFrameMain): WebFrameMain[] {
-  try {
-    return mainFrame.framesInSubtree.filter((frame) => !frame.isDestroyed() && !frame.detached)
-  } catch {
-    return mainFrame.isDestroyed() || mainFrame.detached ? [] : [mainFrame]
-  }
-}
-
-function describeFrame(frame: WebFrameMain, mainFrame: WebFrameMain): BrowserFrameDescriptor {
-  return {
-    frameId: String(frame.frameTreeNodeId),
-    parentFrameId: frame.parent ? String(frame.parent.frameTreeNodeId) : null,
-    name: frame.name,
-    url: frame.url,
-    origin: frame.origin,
-    isMainFrame: frame === mainFrame
-  }
-}
-
-class BrowserOperationError extends Error {
-  readonly failure: BrowserFailure
-
-  constructor(failure: BrowserFailure) {
-    super(failure.message)
-    this.name = failure.name ?? 'BrowserOperationError'
-    this.failure = failure
-    if (failure.stack) this.stack = failure.stack
-  }
-}
-
-function operationError(
-  code: BrowserFailureCode,
-  phase: BrowserFailurePhase,
-  message: string,
-  details: Pick<BrowserFailure, 'name' | 'stack'> = {}
-): BrowserOperationError {
-  return new BrowserOperationError({ code, phase, message, ...details })
-}
-
-function errorMessage(error: unknown): string {
-  try {
-    return error instanceof Error ? error.message : String(error)
-  } catch {
-    return 'unknown browser error'
-  }
-}
-
-function browserFailureFor(
-  error: unknown,
-  fallbackCode: BrowserFailureCode = 'executionError',
-  fallbackPhase: BrowserFailurePhase = 'controller'
-): BrowserFailure {
-  if (error instanceof BrowserOperationError) return error.failure
-  if (error instanceof BrowserFlowError) {
-    return {
-      code: error.code,
-      phase: error.phase,
-      message: error.message,
-      name: error.name,
-      ...(error.stack ? { stack: error.stack.slice(0, 4_000) } : {})
-    }
-  }
-  const message = errorMessage(error)
-  const name = error instanceof Error && error.name ? error.name.slice(0, 120) : undefined
-  const stack = error instanceof Error && error.stack ? error.stack.slice(0, 4_000) : undefined
-  if (/browser operation timed out|navigation timed out|CDP event wait timed out/i.test(message)) {
-    return { code: 'timeout', phase: 'controller', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/no live frame with id/i.test(message)) {
-    return { code: 'frameNotFound', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/frame.*(?:disposed|detached|destroyed)|render frame was disposed/i.test(message)) {
-    return { code: 'frameDetached', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/execution context was destroyed|cannot find context|cannot execute JavaScript in this frame|target changed/i.test(message)) {
-    return { code: 'targetChanged', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/target.*(?:closed|destroyed)|webcontents.*destroyed|page was closed/i.test(message)) {
-    return { code: 'targetClosed', phase: 'targetLifecycle', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  if (/not JSON serializable|could not be cloned|object could not be cloned|serialize/i.test(message)) {
-    return { code: 'resultSerializationError', phase: 'resultSerialization', message, ...(name ? { name } : {}), ...(stack ? { stack } : {}) }
-  }
-  return {
-    code: fallbackCode,
-    phase: fallbackPhase,
-    message,
-    ...(name ? { name } : {}),
-    ...(stack ? { stack } : {})
-  }
-}
-
-function browserFailureFields(
-  error: unknown,
-  fallbackCode: BrowserFailureCode = 'executionError',
-  fallbackPhase: BrowserFailurePhase = 'controller'
-): Pick<BrowserAgentFailure, 'error' | 'errorCode' | 'failure'> {
-  const failure = browserFailureFor(error, fallbackCode, fallbackPhase)
-  return { error: failure.message, errorCode: failure.code, failure }
-}
-
-function isLifecycleFailure(code: BrowserFailureCode | undefined): boolean {
-  return code === 'timeout' || code === 'targetClosed' || code === 'targetChanged' || code === 'frameDetached' || code === 'frameNotFound'
-}
-
-function frameInventory(webContents: WebContents): BrowserFrameDescriptor[] {
-  try {
-    const mainFrame = webContents.mainFrame
-    return liveFrames(mainFrame).map((frame) => describeFrame(frame, mainFrame))
-  } catch {
-    return []
-  }
-}
-
-function withTimeout<T>(
-  promise: Promise<T>,
-  timeoutMs: number,
-  onTimeout?: () => void | Promise<void>,
-  signal?: AbortSignal
-): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  let settled = false
-  const cancel = (reject: (reason?: unknown) => void, error: Error): void => {
-    if (settled) return
-    settled = true
-    void Promise.resolve(onTimeout?.()).finally(() => reject(error))
-  }
-  const timeout = new Promise<T>((_resolve, reject) => {
-    timer = setTimeout(() => {
-      cancel(reject, operationError('timeout', 'controller', `browser operation timed out after ${timeoutMs}ms`))
-    }, timeoutMs)
-    signal?.addEventListener('abort', () => {
-      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
-    }, { once: true })
-    if (signal?.aborted) {
-      cancel(reject, operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn'))
-    }
-  })
-
-  return Promise.race([promise, timeout]).finally(() => {
-    settled = true
-    if (timer) clearTimeout(timer)
-  })
-}
-
 function turnOperationKey(threadId: string, turnId: string): string {
   return `${threadId}\u0000${turnId}`
-}
-
-function throwIfAborted(signal: AbortSignal | undefined): void {
-  if (signal?.aborted) {
-    throw operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
-  }
-}
-
-function cancelledResult(): BrowserAgentFailure {
-  const failure = browserFailureFor(
-    operationError('cancelled', 'controller', 'browser operation cancelled with its owning turn')
-  )
-  return { ok: false, error: failure.message, errorCode: failure.code, failure }
 }
 
 function snapshotCompletion(value: unknown, truncated: boolean): BrowserSnapshotCompletion {
@@ -1626,44 +1559,6 @@ function snapshotCompletion(value: unknown, truncated: boolean): BrowserSnapshot
       : 'snapshot coverage is not complete',
     gaps: unresolved
   }
-}
-
-function boundResult(value: unknown, maxChars: number): { value: unknown; chars: number; truncated: boolean } {
-  let serialized: string
-
-  try {
-    serialized = JSON.stringify(value) ?? 'null'
-  } catch (error) {
-    throw operationError(
-      'resultSerializationError',
-      'resultSerialization',
-      `browser result is not JSON serializable: ${error instanceof Error ? error.message : String(error)}`
-    )
-  }
-
-  if (serialized.length <= maxChars) {
-    return { value, chars: serialized.length, truncated: false }
-  }
-
-  return {
-    value: structuredPreview(serialized, maxChars),
-    chars: serialized.length,
-    truncated: true
-  }
-}
-
-function structuredPreview(serialized: string, maxChars: number): { truncated: true; originalChars: number; preview: string } {
-  const originalChars = serialized.length
-  const empty = { truncated: true as const, originalChars, preview: '' }
-  const overhead = JSON.stringify(empty).length
-  let preview = serialized.slice(0, Math.max(0, maxChars - overhead - 4))
-  let value = { ...empty, preview }
-  while (preview.length > 0 && JSON.stringify(value).length > maxChars) {
-    const excess = JSON.stringify(value).length - maxChars
-    preview = preview.slice(0, Math.max(0, preview.length - Math.max(1, excess)))
-    value = { ...empty, preview }
-  }
-  return value
 }
 
 function fanoutItemBudget(maxChars: number, itemCount: number, metadataAllowance: number): number {
@@ -1743,10 +1638,13 @@ function toNetworkJournalQuery(value: object): NetworkJournalQuery {
   return {
     limit: typeof params.limit === 'number' ? params.limit : null,
     urlContains: typeof params.urlContains === 'string' ? params.urlContains : null,
+    method: typeof params.method === 'string' ? params.method : null,
     resourceType: typeof params.resourceType === 'string' ? params.resourceType : null,
+    mimeType: typeof params.mimeType === 'string' ? params.mimeType : null,
     statusMin: typeof params.statusMin === 'number' ? params.statusMin : null,
     statusMax: typeof params.statusMax === 'number' ? params.statusMax : null,
-    failedOnly: params.failedOnly === true
+    failedOnly: params.failedOnly === true,
+    completedOnly: params.completedOnly === true
   }
 }
 
@@ -1768,25 +1666,12 @@ function clampNumber(value: number | null | undefined, fallback: number, minimum
   return Math.min(maximum, Math.max(minimum, Math.round(value)))
 }
 
-function captureTargetLease(tabs: TabManager, tabId: string): BrowserTargetLease | null {
-  const webContents = tabs.resolveWebContents(tabId)
-  if (!webContents) return null
-  // Test doubles and the legacy socket adapter may not expose epochs yet; the
-  // WebContents identity still protects target close/replacement in that path.
-  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
-  return { tabId, webContents, epoch: epochReader?.call(tabs, tabId) ?? 0 }
+function operationTimeoutMs(options: BrowserAgentOptions): number {
+  return clampNumber(options.timeoutMs, DEFAULT_BROWSER_TIMEOUT_MS, 250, MAX_BROWSER_TIMEOUT_MS)
 }
 
-function assertTargetLeaseCurrent(tabs: TabManager, lease: BrowserTargetLease): void {
-  const current = tabs.resolveWebContents(lease.tabId)
-  if (!current) {
-    throw operationError('targetClosed', 'targetLifecycle', `browser target ${lease.tabId} closed during operation`)
-  }
-  const epochReader = (tabs as Partial<Pick<TabManager, 'getTargetEpoch'>>).getTargetEpoch
-  const epoch = epochReader?.call(tabs, lease.tabId)
-  if (current !== lease.webContents || (epoch !== undefined && epoch !== null && epoch !== lease.epoch)) {
-    throw operationError('targetChanged', 'targetLifecycle', `browser target ${lease.tabId} changed during operation`)
-  }
+function operationResultChars(options: BrowserAgentOptions): number {
+  return clampNumber(options.maxResultChars, DEFAULT_BROWSER_RESULT_CHARS, 1_000, MAX_BROWSER_RESULT_CHARS)
 }
 
 function isLikelyLoadingSnapshot(value: unknown): boolean {
@@ -1798,7 +1683,7 @@ function isLikelyLoadingSnapshot(value: unknown): boolean {
 
 function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Promise<boolean> {
   const maxWait = Math.max(100, Math.min(1_500, Math.round(maxWaitMs)))
-  return webContents.executeJavaScript(`new Promise((resolve) => {
+  return executePageJavaScript(webContents, `new Promise((resolve) => {
     const startedAt = performance.now();
     let observer;
     let timer;
@@ -1824,21 +1709,5 @@ function waitForSnapshotContent(webContents: WebContents, maxWaitMs: number): Pr
     if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
     timer = setInterval(tick, 50);
     tick();
-  })`, true) as Promise<boolean>
-}
-
-function safeUrl(webContents: WebContents): string {
-  try {
-    return webContents.getURL()
-  } catch {
-    return ''
-  }
-}
-
-function safeTitle(webContents: WebContents): string {
-  try {
-    return webContents.getTitle()
-  } catch {
-    return ''
-  }
+  })`) as Promise<boolean>
 }

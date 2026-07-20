@@ -1,6 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
-import { dirname, join } from 'node:path'
+import { dirname } from 'node:path'
 import { parseSavedBrowserState, sanitizeBrowserState } from './browser-state-sanitize.js'
 import type { SavedBrowserState } from './browser-state-types.js'
 
@@ -18,8 +18,15 @@ export class BrowserStateStore {
   async load(): Promise<SavedBrowserState | null> {
     try {
       const raw = await readFile(this.path(), 'utf8')
-      return parseSavedBrowserState(raw)
-    } catch {
+      const saved = parseSavedBrowserState(raw)
+      if (!saved) {
+        console.warn('Ignoring invalid saved browser state; starting a new browser session')
+      }
+      return saved
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        console.warn('Failed to load saved browser state; starting a new browser session', error)
+      }
       return null
     }
   }

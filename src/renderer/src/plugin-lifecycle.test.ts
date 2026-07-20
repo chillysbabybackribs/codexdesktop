@@ -1,8 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type { PluginMarketplaceEntry } from '../../shared/codex-protocol/v2/PluginMarketplaceEntry.ts'
-import type { PluginSummary } from '../../shared/codex-protocol/v2/PluginSummary.ts'
-import { pluginInstallParams, pluginUninstallId, safePluginAuthUrl, unresolvedPluginApps } from './plugin-lifecycle.ts'
+import type { PluginMarketplaceEntry } from '../../shared/session-protocol/index.ts'
+import type { PluginSummary } from '../../shared/session-protocol/index.ts'
+import {
+  flattenPlugins,
+  pluginInstallParams,
+  pluginUninstallId,
+  safePluginAuthUrl,
+  unresolvedPluginApps
+} from './plugin-lifecycle.ts'
 
 function plugin(overrides: Partial<PluginSummary> = {}): PluginSummary {
   return {
@@ -58,6 +64,45 @@ test('marketplace-backed local plugin lifecycle keeps name and installed id', ()
     remoteMarketplaceName: null
   })
   assert.equal(pluginUninstallId(local), 'lifecycle-smoke@personal')
+})
+
+test('plugin catalogs flatten by stable name and keep the latest marketplace metadata', () => {
+  const original = plugin({ installed: false })
+  const updated = plugin({ installed: true })
+  const local = plugin({
+    id: 'lifecycle-smoke@personal',
+    remotePluginId: null,
+    name: 'lifecycle-smoke',
+    source: { type: 'local', path: '/tmp/lifecycle-smoke' }
+  })
+
+  assert.deepEqual(
+    flattenPlugins([
+      marketplace({ plugins: [original, local] }),
+      marketplace({ name: 'secondary', plugins: [updated] })
+    ]),
+    [updated, local]
+  )
+})
+
+test('plugin catalogs prefer an installed local counterpart over its remote directory entry', () => {
+  const remote = plugin({ installed: false })
+  const local = plugin({
+    id: 'figma@openai-curated',
+    remotePluginId: null,
+    name: remote.name,
+    source: { type: 'local', path: '/tmp/figma' },
+    installed: true,
+    enabled: true
+  })
+
+  assert.deepEqual(
+    flattenPlugins([
+      marketplace({ plugins: [remote] }),
+      marketplace({ name: 'openai-curated', path: '/tmp/marketplace.json', plugins: [local] })
+    ]),
+    [local]
+  )
 })
 
 test('remote plugins without a backend id fail closed', () => {

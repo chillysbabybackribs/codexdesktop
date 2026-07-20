@@ -84,6 +84,29 @@ test('app-server RPC reassembles a JSON response split across stdout lines', asy
   assert.deepEqual(await response, { description: 'First part\n\nSecond part' })
 })
 
+test('app-server RPC resynchronizes after a malformed partial line before a valid response', async () => {
+  const { rpc, invalidLines } = createRpc()
+  const response = rpc.request<{ ready: boolean }>('initialize')
+
+  rpc.handleLine('{"jsonrpc":"2.0","method":"thread/started","params":')
+  rpc.handleLine('{"jsonrpc":"2.0","id":"codexdesktop-1","result":{"ready":true}}')
+
+  assert.deepEqual(await response, { ready: true })
+  assert.equal(invalidLines.length, 1)
+  assert.match(invalidLines[0] ?? '', /thread\/started/)
+})
+
+test('app-server RPC resynchronizes notifications after a malformed partial line', () => {
+  const { rpc, invalidLines, notifications } = createRpc()
+
+  rpc.handleLine('{"jsonrpc":"2.0","method":"thread/started","params":')
+  rpc.handleLine('{"jsonrpc":"2.0","method":"thread/started","params":{"threadId":"thread-2"}}')
+
+  assert.equal(invalidLines.length, 1)
+  assert.equal(notifications.length, 1)
+  assert.equal(notifications[0]?.method, 'thread/started')
+})
+
 test('app-server RPC discards a partial message when its transport stops', () => {
   const { rpc, notifications } = createRpc()
 

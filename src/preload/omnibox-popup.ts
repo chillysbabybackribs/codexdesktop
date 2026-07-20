@@ -6,6 +6,7 @@ import type { OmniboxRenderPayload } from '../shared/ipc.js'
 // cross-entry import, so this file must stay self-contained.
 const renderChannel = 'browser:omniboxRender'
 const commitChannel = 'browser:omniboxCommit'
+const deleteHistoryChannel = 'browser:omniboxDeleteHistory'
 
 export const omniboxPopupApi = {
   onRender: (listener: (payload: OmniboxRenderPayload) => void) => {
@@ -17,6 +18,9 @@ export const omniboxPopupApi = {
   },
   commit: (url: string): void => {
     ipcRenderer.send(commitChannel, url)
+  },
+  deleteHistory: (url: string): void => {
+    ipcRenderer.send(deleteHistoryChannel, url)
   }
 }
 

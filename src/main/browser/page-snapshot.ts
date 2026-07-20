@@ -415,7 +415,7 @@ function pageSnapshotRuntime(config: RuntimePageSnapshotConfig): PageSnapshotRes
   const selectedCandidates = rankedCandidates.sort((left, right) =>
     config.order === 'reverse-document' ? right.order - left.order : left.order - right.order
   )
-  let itemEntries = selectedCandidates.map((candidate) => ({
+  const itemEntries = selectedCandidates.map((candidate) => ({
     candidate,
     item: materializeCandidate(candidate)
   }))

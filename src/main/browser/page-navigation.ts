@@ -1,4 +1,5 @@
 import type { WebContents } from 'electron'
+import { executePageJavaScript } from './page-execution.js'
 
 const DEFAULT_QUIET_MS = 350
 const DEFAULT_MAX_SETTLE_MS = 3_000
@@ -6,11 +7,11 @@ const READY_SELECTOR_STABLE_MS = 90
 
 export type PageNavigationOptions = {
   timeoutMs: number
-  userAgent?: string
   signal?: AbortSignal
   quietMs?: number
   maxSettleMs?: number
   readySelector?: string
+  settleDocument?: boolean
   allowRedirect?: (fromUrl: string, toUrl: string) => boolean
 }
 
@@ -41,9 +42,7 @@ export async function loadPageAndSettle(
   const domReady = waitForMainDocument(webContents, options.signal, url, options.allowRedirect)
 
   webContents.stop()
-  const load = webContents.loadURL(url, {
-    ...(options.userAgent ? { userAgent: options.userAgent } : {})
-  })
+  const load = webContents.loadURL(url)
   // Readiness below intentionally resolves before the full load event. Retain a
   // rejection handler so an eventual cancellation cannot become unhandled.
   void load.catch(() => {})
@@ -51,6 +50,15 @@ export async function loadPageAndSettle(
   try {
     await withDeadline(domReady, deadline, options.signal, () => webContents.stop())
     const domReadyAt = Date.now()
+    if (options.settleDocument === false) {
+      return {
+        url: safeUrl(webContents) || url,
+        durationMs: domReadyAt - startedAt,
+        domReadyMs: domReadyAt - startedAt,
+        settleMs: 0,
+        settleReason: 'dom-ready'
+      }
+    }
     const settle = await withDeadline(
       waitForDocumentSettle(
         webContents,
@@ -141,9 +149,9 @@ async function waitForDocumentSettle(
   maxSettleMs: number,
   readySelector?: string
 ): Promise<{ reason: string }> {
-  return webContents.executeJavaScript(
+  return executePageJavaScript(
+    webContents,
     buildDocumentSettleProgram(quietMs, maxSettleMs, readySelector),
-    true
   ) as Promise<{ reason: string }>
 }
 

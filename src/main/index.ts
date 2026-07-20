@@ -8,37 +8,57 @@ import type {
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   AttachmentSaveInput,
+  ImageViewPreviewParams,
+  ImageViewPreviewResult,
   BackgroundTurnNotificationParams,
   BrowserBounds,
+  BrowserMenuAnchor,
+  BrowserMenuItem,
+  TitlebarCalendarAnchor,
   OmniboxAnchor,
   OmniboxQueryResult,
   TraceLoadParams,
   TracePersistParams,
   TranscriptCachePersistParams,
   CheckpointRevertParams,
+  CheckpointRevertFilesParams,
+  CheckpointChangedFilesParams,
   CheckpointSummary,
+  MentionIndexParams,
+  MentionIndexResult,
+  MentionReadParams,
+  MentionReadIpcResult,
   TraceSaveParams,
   TraceSaveResult
 } from '../shared/ipc.js'
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
+import { BrowserMenuPopup } from './browser/browser-menu-popup.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
+import { TitlebarCalendarPopup } from './titlebar-calendar-popup.js'
 import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
-import { configureBrowserSession } from './browser/browser-session.js'
+import { configureBrowserSession, configureBrowserUserAgentFallback } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
+import { TorVpnManager } from './browser/vpn-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
-import { registerCodexIpc } from './codex/codex-ipc.js'
-import type { CodexClient } from './codex/codex-client.js'
+import { registerSessionIpc, type RegisteredSessionProviders } from './codex/codex-ipc.js'
 import { TurnTraceStore } from './turn-trace-store.js'
 import { MemoryStore } from './memory-store.js'
 import { AttachmentStore } from './attachment-store.js'
+import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
+import { MentionIndexService } from './mention-index.js'
+
+// Establish the guest browser identity before Chromium creates a session. A
+// later Session/WebContents override suppresses native UA Client Hints and the
+// CDP workaround for that would expose DevTools during manual browsing.
+configureBrowserUserAgentFallback()
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -80,7 +100,9 @@ if (!hasSingleInstanceLock) {
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
-let codexClient: CodexClient | null = null
+let browserMenuPopup: BrowserMenuPopup | null = null
+let titlebarCalendarPopup: TitlebarCalendarPopup | null = null
+let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
 let quitReady = false
@@ -90,7 +112,32 @@ const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactSto
 const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore(() => join(app.getPath('userData'), 'browser-state.json'))
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
+const vpnManager = new TorVpnManager()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
+let verificationBrowserControlReady = false
+let verificationBrowserRestored = false
+let verificationCloseScheduled = false
+const verificationAutoCloseDelayMs = 1_000
+
+function maybeCloseVerificationInstance(): void {
+  if (
+    instanceRole !== 'verification' ||
+    process.env.CODEX_DESKTOP_VERIFY_AUTO_CLOSE !== '1' ||
+    !verificationBrowserControlReady ||
+    !verificationBrowserRestored ||
+    verificationCloseScheduled
+  ) {
+    return
+  }
+
+  verificationCloseScheduled = true
+  // The browser-control surface and restored tab snapshot are both live. Use
+  // BrowserWindow.close() so the normal browser persistence/CDP teardown path
+  // is what the verifier observes, not a terminal-signal shortcut.
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
+  }, verificationAutoCloseDelayMs)
+}
 
 function scheduleBrowserPersist(): void {
   if (persistBrowserTimer) {
@@ -176,28 +223,83 @@ function createWindow(): void {
   })
 
   tabManager = new TabManager(mainWindow)
+  tabManager.setVpnStatusSource(() => vpnManager.status())
   tabManager.onState((state) => {
+    // Restored/background tabs already carry Chromium's saved favicon. Seed
+    // history from every tab, not only whichever one is currently active.
+    for (const tab of state.tabs) {
+      if (tab.favicon) {
+        browserHistoryStore.updateFavicon(tab.url, tab.favicon)
+      }
+    }
     sendToMainRenderer(ipcChannels.browserState, state)
   })
   tabManager.onPersist(() => {
     scheduleBrowserPersist()
   })
   tabManager.onVisit({
-    recordVisit: (url, title) => browserHistoryStore.recordVisit(url, title),
-    updateTitle: (url, title) => browserHistoryStore.updateTitle(url, title)
+    recordVisit: (url, title, favicon) => browserHistoryStore.recordVisit(url, title, Date.now(), favicon),
+    updateTitle: (url, title) => browserHistoryStore.updateTitle(url, title),
+    updateFavicon: (url, favicon) => browserHistoryStore.updateFavicon(url, favicon)
   })
 
-  omniboxPopup = new OmniboxPopup(mainWindow, (url) => {
-    const activeTabId = tabManager?.getActiveTabId()
+  omniboxPopup = new OmniboxPopup(
+    mainWindow,
+    (url) => {
+      const activeTabId = tabManager?.getActiveTabId()
 
-    if (activeTabId) {
-      tabManager?.navigate(activeTabId, url)
+      if (activeTabId) {
+        tabManager?.navigate(activeTabId, url)
+      }
+    },
+    (url) => {
+      const removed = browserHistoryStore.remove(url)
+      if (removed) {
+        sendToMainRenderer(ipcChannels.browserHistoryRemoved, url)
+      }
+      return removed
     }
-  })
+  )
+
+  browserMenuPopup = new BrowserMenuPopup(
+    mainWindow,
+    (command) => {
+      const activeTabId = tabManager?.getActiveTabId()
+
+      switch (command) {
+        case 'find':
+          sendToMainRenderer(ipcChannels.browserFindRequested, undefined)
+          break
+        case 'fullscreen':
+          sendToMainRenderer(ipcChannels.browserFullscreenToggleRequested, undefined)
+          break
+        case 'mute':
+          if (activeTabId) tabManager?.toggleMute(activeTabId)
+          break
+        case 'vpn':
+          void vpnManager.toggle()
+          break
+        case 'zoom-out':
+        case 'zoom-reset':
+        case 'zoom-in':
+          if (activeTabId) tabManager?.zoom(activeTabId, command === 'zoom-out' ? 'out' : command === 'zoom-in' ? 'in' : 'reset')
+          break
+      }
+    },
+    () => sendToMainRenderer(ipcChannels.browserMenuClosed, undefined)
+  )
+
+  titlebarCalendarPopup = new TitlebarCalendarPopup(
+    mainWindow,
+    () => sendToMainRenderer(ipcChannels.titlebarCalendarClosed, undefined)
+  )
 
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
-    void restoreBrowserTabs()
+    void restoreBrowserTabs().finally(() => {
+      verificationBrowserRestored = true
+      maybeCloseVerificationInstance()
+    })
   })
 
   // The omnibox dropdown is a native view anchored to the toolbar. Renderer
@@ -205,6 +307,8 @@ function createWindow(): void {
   // document.activeElement), so dismiss it here when the window loses focus.
   mainWindow.on('blur', () => {
     omniboxPopup?.hide()
+    browserMenuPopup?.hide()
+    titlebarCalendarPopup?.hide()
   })
 
   // Capture while the native views still exist. On macOS a normal window
@@ -221,6 +325,10 @@ function createWindow(): void {
     tabManager?.dispose()
     omniboxPopup?.dispose()
     omniboxPopup = null
+    browserMenuPopup?.dispose()
+    browserMenuPopup = null
+    titlebarCalendarPopup?.dispose()
+    titlebarCalendarPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -250,9 +358,10 @@ function bootstrap(): void {
     }
     quitPreparationStarted = true
 
+    vpnManager.dispose()
     researchRunner.dispose()
-    codexClient?.dispose()
-    codexClient = null
+    sessionProviders?.dispose()
+    sessionProviders = null
     const closingBrowserControl = browserControl?.close()
     browserControl = null
 
@@ -273,6 +382,10 @@ function bootstrap(): void {
         tabManager?.isUserVisibleWebContents(webContents) ?? false
     })
     await browserHistoryStore.load()
+    vpnManager.onChange(() => tabManager?.refreshState())
+    // Reconnect in the background when the user last left the VPN on; the
+    // toolbar shows bootstrap progress while tabs restore in parallel.
+    void vpnManager.restoreFromDisk()
     registerIpc()
     createWindow()
 
@@ -282,9 +395,11 @@ function bootstrap(): void {
     // first message, so setting it here is always in time. Bound to a getter so
     // it survives window close/reopen swapping the TabManager instance.
     try {
-      browserControl = await startBrowserControlServer(() => tabManager, browserAgent)
+      browserControl = await startBrowserControlServer(() => tabManager, browserAgent, researchRunner)
       process.env.CODEX_BROWSER_SOCK = browserControl.socketPath
       console.log(`Browser control socket: ${browserControl.socketPath}`)
+      verificationBrowserControlReady = true
+      maybeCloseVerificationInstance()
     } catch (error) {
       console.error('Failed to start browser control server', error)
     }
@@ -317,10 +432,11 @@ function registerIpc(): void {
   process.env.CODEX_DESKTOP_MEMORY_DIR = memoryDirectory
   const memoryStore = new MemoryStore(memoryDirectory)
   const checkpointStore = new TurnCheckpointStore(join(app.getPath('userData'), 'checkpoints'))
-  codexClient = registerCodexIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
+  const mentionIndexService = new MentionIndexService()
+  sessionProviders = registerSessionIpc(() => mainWindow, browserAgent, researchRunner, memoryStore, attachmentStore, checkpointStore)
   // Pre-spawn the app-server (Phase 3): async and non-blocking, so the window
   // paints immediately while the child warms in parallel.
-  void codexClient.warmUp()
+  void sessionProviders.codexClient.warmUp()
   const turnTraceStore = new TurnTraceStore(join(app.getPath('userData'), 'turn-traces'))
   const transcriptCache = new TranscriptCache(join(app.getPath('userData'), 'transcript-cache'))
 
@@ -359,7 +475,10 @@ function registerIpc(): void {
       properties: ['openDirectory', 'createDirectory']
     })
 
-    return result.canceled ? null : (result.filePaths[0] ?? null)
+    const picked = result.canceled ? null : (result.filePaths[0] ?? null)
+    // A user-picked folder is a legitimate mention root even outside git.
+    if (picked) await mentionIndexService.approveWorkspace(picked)
+    return picked
   })
   ipcMain.handle(ipcChannels.artifactReadImage, async (_event, params: ArtifactReadImageParams): Promise<ArtifactReadImageResult> => ({
     dataUrl: await cdpArtifactStore.readImageDataUrl(params.artifactPath)
@@ -370,6 +489,9 @@ function registerIpc(): void {
     tabManager.createTab(dataUrl)
     return true
   })
+  ipcMain.handle(ipcChannels.imageViewPreview, async (_event, params: ImageViewPreviewParams): Promise<ImageViewPreviewResult> => ({
+    dataUrl: await readImageViewDataUrl(params.path)
+  }))
   ipcMain.handle(ipcChannels.attachmentPick, async () => {
     if (!mainWindow) return []
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -418,6 +540,7 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
     tabManager?.zoom(tabId, direction))
   ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
+  ipcMain.handle(ipcChannels.browserToggleVpn, () => vpnManager.toggle())
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
@@ -440,6 +563,19 @@ function registerIpc(): void {
   )
   ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))
   ipcMain.handle(ipcChannels.browserOmniboxClose, () => omniboxPopup?.hide())
+  ipcMain.handle(ipcChannels.browserMenuOpen, (_event, anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
+    browserMenuPopup?.show(anchor, items))
+  ipcMain.handle(ipcChannels.browserMenuUpdate, (_event, items: BrowserMenuItem[]) => browserMenuPopup?.update(items))
+  ipcMain.handle(ipcChannels.browserMenuClose, () => browserMenuPopup?.hide())
+  ipcMain.handle(ipcChannels.titlebarCalendarOpen, (event, anchor: TitlebarCalendarAnchor) => {
+    if (event.sender !== mainWindow?.webContents) return
+    omniboxPopup?.hide()
+    browserMenuPopup?.hide()
+    titlebarCalendarPopup?.show(anchor)
+  })
+  ipcMain.handle(ipcChannels.titlebarCalendarClose, (event) => {
+    if (event.sender === mainWindow?.webContents) titlebarCalendarPopup?.hide()
+  })
 
   ipcMain.handle(
     ipcChannels.notificationBackgroundTurn,
@@ -486,6 +622,22 @@ function registerIpc(): void {
   })
   ipcMain.handle(ipcChannels.checkpointRevert, async (_event, params: CheckpointRevertParams): Promise<void> => {
     await checkpointStore.revert(params.checkpointId)
+  })
+  ipcMain.handle(ipcChannels.checkpointRevertFiles, async (_event, params: CheckpointRevertFilesParams): Promise<void> => {
+    await checkpointStore.revertFiles(params.checkpointId, params.paths)
+  })
+  ipcMain.handle(ipcChannels.mentionIndex, (_event, params: MentionIndexParams): Promise<MentionIndexResult> =>
+    mentionIndexService.index(params.workspace)
+  )
+  ipcMain.handle(ipcChannels.mentionRead, (_event, params: MentionReadParams): Promise<MentionReadIpcResult> =>
+    mentionIndexService.read(params.workspace, params.path, params.kind)
+  )
+  ipcMain.handle(ipcChannels.checkpointChangedFiles, async (_event, params: CheckpointChangedFilesParams): Promise<string[] | null> => {
+    const record = await checkpointStore.find(params.threadId, params.turnId)
+    // null = detection unavailable (no checkpoint for this turn — typically a
+    // non-git workspace), distinct from a genuinely empty diff. The audit
+    // trigger uses the difference to explain itself instead of silently idling.
+    return record ? checkpointStore.changedFiles(record.id) : null
   })
 
   ipcMain.handle(ipcChannels.traceSave, async (_event, params: TraceSaveParams): Promise<TraceSaveResult> => {

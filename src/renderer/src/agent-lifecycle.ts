@@ -1,4 +1,4 @@
-import type { TurnError } from '../../shared/codex-protocol/v2/TurnError'
+import type { TurnError } from '../../shared/session-protocol'
 import type { AgentLiteMessage, AgentSession } from './agent-session-model.js'
 
 type MutableRef<T> = { current: T }
@@ -29,7 +29,8 @@ export function createAgentLifecycle(options: {
   recoveryDelayMs: number
   recoveryPrompt: string
   isRecoverable: (error: TurnError | null) => boolean
-  getWorkspace: () => string | null
+  isTurnTerminal: (key: string, turnId: string) => boolean
+  getWorkspace: (session: AgentSession) => string | null
   getSelectedModel: () => string | null
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
@@ -96,18 +97,20 @@ export function createAgentLifecycle(options: {
     }
 
     try {
-      const response = await window.api.codex.sendMessage({
+      const response = await window.api.session.sendMessage({
         threadId: session.threadId,
         text: options.recoveryPrompt,
-        cwd: options.getWorkspace(),
+        cwd: options.getWorkspace(session),
         model: model ?? session.model ?? options.getSelectedModel(),
         effort: session.reasoningEffort
       })
-      store.patchSession(key, (current) => ({
-        ...current,
-        status: 'working',
-        turnId: response.turn.id
-      }))
+      if (!options.isTurnTerminal(key, response.turn.id)) {
+        store.patchSession(key, (current) => ({
+          ...current,
+          status: 'working',
+          turnId: response.turn.id
+        }))
+      }
     } catch (error) {
       store.appendMessage(key, {
         id: crypto.randomUUID(),
@@ -128,13 +131,36 @@ export function createAgentLifecycle(options: {
     return session
   }
 
+  function reportThreadCleanupFailure(action: 'interrupt' | 'unsubscribe', threadId: string, error: unknown): void {
+    // The session has intentionally left the UI, so an inline message is no
+    // longer possible. Keep the failure observable with enough context to
+    // diagnose a still-running or still-subscribed background thread.
+    console.warn(`Failed to ${action} background agent thread ${threadId}`, error)
+  }
+
   function handleCloseAgentSession(key: string): void {
     const session = removeSession(key)
+    if (
+      (session?.sourceProvider === 'claude' || session?.sourceProvider === 'codex') &&
+      session.status === 'working' &&
+      session.runParentThreadId &&
+      session.nativeRunId
+    ) {
+      void window.api.session.cancelAgentRun({
+        provider: session.sourceProvider,
+        parentThreadId: session.runParentThreadId,
+        nativeId: session.nativeRunId
+      }).catch((error) =>
+        console.warn(`Failed to stop native ${session.sourceProvider} task ${session.nativeRunId}`, error)
+      )
+    }
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
-        void window.api.codex.interruptTurn({ threadId: session.threadId, turnId: session.turnId }).catch(() => {})
+        void window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })
+          .catch((error) => reportThreadCleanupFailure('interrupt', session.threadId!, error))
       }
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void window.api.session.unsubscribeThread(session.threadId)
+        .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }
 
@@ -154,7 +180,8 @@ export function createAgentLifecycle(options: {
     }))
     store.resetRenderState(key, session.title)
     if (session.threadId && session.threadId !== options.getActiveThreadId()) {
-      void window.api.codex.unsubscribeThread(session.threadId).catch(() => {})
+      void window.api.session.unsubscribeThread(session.threadId)
+        .catch((error) => reportThreadCleanupFailure('unsubscribe', session.threadId!, error))
     }
   }
 

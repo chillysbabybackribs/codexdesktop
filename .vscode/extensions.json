@@ -1,0 +1,5 @@
+{
+  // Prompts anyone opening this project (VS Code / Cursor) to install Biome,
+  // which powers the inline lint + format-on-save experience above.
+  "recommendations": ["biomejs.biome"]
+}

@@ -1,15 +1,25 @@
 export type MainChatTabStatus = 'idle' | 'working' | 'attention'
 
+export type BrowserMiddleSide = 'left' | 'right'
+
 export const maxMainChatTabs = 12
 
 export type MainChatTab = {
   key: string
   threadId: string | null
   title: string
+  // Working directory is conversation-scoped. A tab owns the selection until
+  // it starts a thread; a resumed thread refreshes this from the runtime's
+  // canonical cwd. Never resolve work against a window-global folder.
+  workspace: string | null
   // Composer choices belong to the conversation, not the window. Keeping
   // these on the tab lets several main chats run with different models.
   model: string | null
   reasoningEffort: string | null
+  // Browser-centered workspaces own two independent tab collections. The
+  // assignment is ignored in the regular chat/browser layout, but persists so
+  // a chat always returns to the side where it was created.
+  browserMiddleSide: BrowserMiddleSide | null
   status: MainChatTabStatus
   turnId: string | null
 }
@@ -19,12 +29,20 @@ export type MainChatTabState = {
   activeKey: string
 }
 
+export type MainChatTabDropCandidate = {
+  key: string
+  left: number
+  right: number
+}
+
 type PersistedMainChatTab = {
   key?: unknown
   threadId?: unknown
   title?: unknown
+  workspace?: unknown
   model?: unknown
   reasoningEffort?: unknown
+  browserMiddleSide?: unknown
 }
 
 type PersistedMainChatTabState = {
@@ -37,18 +55,21 @@ export function createMainChatTab(
   threadId: string | null = null,
   title = 'New Chat',
   model: string | null = null,
-  reasoningEffort: string | null = null
+  reasoningEffort: string | null = null,
+  browserMiddleSide: BrowserMiddleSide | null = null,
+  workspace: string | null = null,
 ): MainChatTab {
-  return { key, threadId, title, model, reasoningEffort, status: 'idle', turnId: null }
+  return { key, threadId, title, workspace, model, reasoningEffort, browserMiddleSide, status: 'idle', turnId: null }
 }
 
 export function parseMainChatTabState(
   raw: string | null,
   legacyThreadId: string | null,
   createKey: () => string,
-  legacySelection: { model: string | null; reasoningEffort: string | null } = {
+  legacySelection: { model: string | null; reasoningEffort: string | null; workspace?: string | null } = {
     model: null,
-    reasoningEffort: null
+    reasoningEffort: null,
+    workspace: null
   }
 ): MainChatTabState {
   let parsed: PersistedMainChatTabState | null = null
@@ -73,13 +94,20 @@ export function parseMainChatTabState(
         const title = typeof candidate.title === 'string' && candidate.title.trim()
           ? candidate.title.trim()
           : 'New Chat'
+        const workspace = typeof candidate.workspace === 'string' && candidate.workspace
+          ? candidate.workspace
+          : legacySelection.workspace ?? null
         const model = typeof candidate.model === 'string' && candidate.model
           ? candidate.model
           : legacySelection.model
         const reasoningEffort = typeof candidate.reasoningEffort === 'string' && candidate.reasoningEffort
           ? candidate.reasoningEffort
           : legacySelection.reasoningEffort
-        return [createMainChatTab(key, threadId, title, model, reasoningEffort)]
+        const browserMiddleSide =
+          candidate.browserMiddleSide === 'left' || candidate.browserMiddleSide === 'right'
+            ? candidate.browserMiddleSide
+            : null
+        return [createMainChatTab(key, threadId, title, model, reasoningEffort, browserMiddleSide, workspace)]
       }).slice(0, maxMainChatTabs)
     : []
 
@@ -89,7 +117,9 @@ export function parseMainChatTabState(
       legacyThreadId,
       'New Chat',
       legacySelection.model,
-      legacySelection.reasoningEffort
+      legacySelection.reasoningEffort,
+      null,
+      legacySelection.workspace ?? null,
     ))
   } else if (legacyThreadId && !seenThreads.has(legacyThreadId)) {
     // Preserve the pre-tabs last-thread preference during the migration.
@@ -98,7 +128,9 @@ export function parseMainChatTabState(
       legacyThreadId,
       tabs[0].title,
       tabs[0].model,
-      tabs[0].reasoningEffort
+      tabs[0].reasoningEffort,
+      tabs[0].browserMiddleSide,
+      tabs[0].workspace,
     )
   }
 
@@ -113,12 +145,14 @@ export function parseMainChatTabState(
 export function serializeMainChatTabState(state: MainChatTabState): string {
   return JSON.stringify({
     activeKey: state.activeKey,
-    tabs: state.tabs.map(({ key, threadId, title, model, reasoningEffort }) => ({
+    tabs: state.tabs.map(({ key, threadId, title, workspace, model, reasoningEffort, browserMiddleSide }) => ({
       key,
       threadId,
       title,
+      workspace,
       model,
-      reasoningEffort
+      reasoningEffort,
+      browserMiddleSide
     }))
   })
 }
@@ -138,7 +172,9 @@ export function closeMainChatTab(
       null,
       'New Chat',
       previous.model,
-      previous.reasoningEffort
+      previous.reasoningEffort,
+      previous.browserMiddleSide,
+      previous.workspace,
     )
     return { tabs: [replacement], activeKey: replacement.key }
   }
@@ -147,6 +183,61 @@ export function closeMainChatTab(
   if (state.activeKey !== key) return { tabs, activeKey: state.activeKey }
   const next = tabs[Math.min(index, tabs.length - 1)]
   return { tabs, activeKey: next.key }
+}
+
+export function reorderMainChatTabs(
+  state: MainChatTabState,
+  sourceKey: string,
+  targetKey: string,
+  placement: 'before' | 'after'
+): MainChatTabState {
+  if (sourceKey === targetKey) return state
+
+  const source = state.tabs.find((tab) => tab.key === sourceKey)
+  if (!source || !state.tabs.some((tab) => tab.key === targetKey)) return state
+
+  const withoutSource = state.tabs.filter((tab) => tab.key !== sourceKey)
+  const targetIndex = withoutSource.findIndex((tab) => tab.key === targetKey)
+  const insertAt = placement === 'before' ? targetIndex : targetIndex + 1
+  const tabs = [
+    ...withoutSource.slice(0, insertAt),
+    source,
+    ...withoutSource.slice(insertAt)
+  ]
+
+  return { ...state, tabs }
+}
+
+export function findMainChatTabDropTarget(
+  sourceKey: string,
+  sourceLeft: number,
+  previewLeft: number,
+  previewWidth: number,
+  candidates: MainChatTabDropCandidate[],
+  overlapRatio = 0.1
+): { key: string; placement: 'before' | 'after' } | null {
+  const previewRight = previewLeft + previewWidth
+  const minimumOverlap = previewWidth * overlapRatio
+  const previewCenter = previewLeft + previewWidth / 2
+
+  const target = candidates
+    .filter((candidate) => candidate.key !== sourceKey)
+    .map((candidate) => ({
+      candidate,
+      overlap: Math.max(0, Math.min(previewRight, candidate.right) - Math.max(previewLeft, candidate.left))
+    }))
+    .filter(({ overlap }) => overlap >= minimumOverlap)
+    .sort((first, second) => (
+      second.overlap - first.overlap ||
+      Math.abs((first.candidate.left + first.candidate.right) / 2 - previewCenter) -
+        Math.abs((second.candidate.left + second.candidate.right) / 2 - previewCenter)
+    ))[0]?.candidate
+
+  if (!target) return null
+  return {
+    key: target.key,
+    placement: previewLeft > sourceLeft ? 'after' : 'before'
+  }
 }
 
 export function tabForThread(tabs: MainChatTab[], threadId: string): MainChatTab | null {

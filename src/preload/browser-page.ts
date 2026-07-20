@@ -1,4 +1,16 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, webFrame } from 'electron'
+import {
+  BROWSER_AUTOMATION_WORLD_ID,
+  browserAutomationWorldInfo
+} from '../shared/browser-automation-world.js'
+
+// Configure the automation world before browser-owned page programs can run.
+// This keeps normal DOM evaluation available while blocking eval(), Function(),
+// and string-valued timers inside that world. The page's own CSP is untouched.
+webFrame.setIsolatedWorldInfo(
+  BROWSER_AUTOMATION_WORLD_ID,
+  browserAutomationWorldInfo(window.location.origin)
+)
 
 // Channel name duplicated from shared/ipc.ts ipcChannels on purpose: preloads
 // run sandboxed and cannot require() the shared chunk rollup emits for a
@@ -11,16 +23,31 @@ let pointerStart: { x: number; y: number } | null = null
 let copyToast: HTMLElement | null = null
 let copyToastTimer: ReturnType<typeof setTimeout> | null = null
 
-function installSelectionStyle(): void {
-  const selectionStyle = document.createElement('style')
-  selectionStyle.textContent = '::selection { background: rgba(66, 133, 244, 0.28); color: inherit; }'
-  ;(document.head ?? document.documentElement).appendChild(selectionStyle)
+function installPageStyle(): void {
+  const style = document.createElement('style')
+  // Selection tint plus a minimalist dark scrollbar for every page. The thumb
+  // is a translucent light overlay so it reads on any background and never
+  // fights the page's own dark theme; the track stays transparent.
+  style.textContent = `
+::selection { background: rgba(66, 133, 244, 0.28); color: inherit; }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.32); background-clip: content-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+`
+  ;(document.head ?? document.documentElement).appendChild(style)
 }
 
 if (document.head || document.documentElement) {
-  installSelectionStyle()
+  installPageStyle()
 } else {
-  window.addEventListener('DOMContentLoaded', installSelectionStyle, { once: true })
+  window.addEventListener('DOMContentLoaded', installPageStyle, { once: true })
 }
 
 function isEditable(target: EventTarget | null): boolean {

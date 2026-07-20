@@ -1,7 +1,7 @@
 import {
-  FormEvent,
-  KeyboardEvent as ReactKeyboardEvent,
-  RefObject,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type RefObject,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -9,8 +9,10 @@ import {
 } from 'react'
 import type {
   BrowserBounds,
+  BrowserMenuItem,
   BrowserState,
   BrowserTabState,
+  BrowserVpnStatus,
   OmniboxAnchor,
   OmniboxSuggestion
 } from '../../shared/ipc'
@@ -19,18 +21,27 @@ export function BrowserPane({
   state,
   activeTab,
   viewHostRef,
-  viewBounds
+  viewBounds,
+  isFullscreen,
+  onToggleFullscreen
 }: {
   state: BrowserState
   activeTab: BrowserTabState | null
   viewHostRef: RefObject<HTMLDivElement | null>
   viewBounds: BrowserBounds | null
+  isFullscreen: boolean
+  onToggleFullscreen: () => void
 }): React.JSX.Element {
   return (
     <section className="browser-pane">
       <div className="browser-shell">
         <TabStrip state={state} />
-        <BrowserToolbar activeTab={activeTab} />
+        <BrowserToolbar
+          activeTab={activeTab}
+          vpn={state.vpn}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={onToggleFullscreen}
+        />
         <div className="browser-frame">
           <div ref={viewHostRef} className="browser-view-host" data-ready={viewBounds ? 'true' : 'false'} />
         </div>
@@ -41,31 +52,78 @@ export function BrowserPane({
 
 function TabStrip({ state }: { state: BrowserState }): React.JSX.Element {
   return (
-    <div className="tab-strip">
-      {state.tabs.map((tab) => (
-        <button type="button" key={tab.id} className={`tab ${tab.id === state.activeTabId ? 'is-active' : ''}`} onClick={() => void window.api.browser.activateTab(tab.id)}>
-          <TabFavicon favicon={tab.favicon} isLoading={tab.isLoading} />
-          <span className="tab-title">{tab.title || 'New Tab'}</span>
-          <span
-            role="button"
-            tabIndex={0}
-            className="tab-close"
-            aria-label={`Close ${tab.title || 'tab'}`}
-            onClick={(event) => { event.stopPropagation(); void window.api.browser.closeTab(tab.id) }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.stopPropagation()
-                void window.api.browser.closeTab(tab.id)
-              }
-            }}
-          >
-            <CloseIcon />
-          </span>
-        </button>
-      ))}
+    <div className="tab-strip" role="tablist" aria-label="Open tabs">
+      {/* Own flex track so tabs compress/clip here and the + button (a sibling
+          with flex:0 0) can never be pushed off the strip. */}
+      <div className="tab-list">
+        {state.tabs.map((tab) => {
+          const active = tab.id === state.activeTabId
+          const label = tab.title || 'New Tab'
+          return (
+            <div
+              key={tab.id}
+              role="tab"
+              aria-selected={active}
+              tabIndex={0}
+              title={label}
+              className={`tab ${active ? 'is-active' : ''}`}
+              onClick={() => void window.api.browser.activateTab(tab.id)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  void window.api.browser.activateTab(tab.id)
+                }
+              }}
+              onAuxClick={(event) => {
+                // Middle-click closes, as in every mainstream browser.
+                if (event.button === 1) {
+                  event.preventDefault()
+                  void window.api.browser.closeTab(tab.id)
+                }
+              }}
+            >
+              <TabFavicon favicon={tab.favicon} isLoading={tab.isLoading} />
+              <span className="tab-title">{label}</span>
+              {/* A real <button>, not a role-span inside a button — valid
+                  interactive nesting and native keyboard/AT behavior. */}
+              <button
+                type="button"
+                className="tab-close"
+                aria-label={`Close ${label}`}
+                onClick={(event) => { event.stopPropagation(); void window.api.browser.closeTab(tab.id) }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+          )
+        })}
+      </div>
       <button type="button" className="new-tab-button" aria-label="New tab" onClick={() => void window.api.browser.newTab()}><PlusIcon /></button>
     </div>
   )
+}
+
+// Unfocused address readout: lead with the security posture and the site
+// identity (hostname), demote the path. Raw URLs are for editing, not reading.
+function omniboxIdentity(
+  rawUrl: string
+): { kind: 'web' | 'file' | 'other'; secure: boolean; host: string; rest: string } | null {
+  if (!rawUrl) return null
+  let url: URL
+  try {
+    url = new URL(rawUrl)
+  } catch {
+    return null
+  }
+  if (url.protocol === 'http:' || url.protocol === 'https:') {
+    const host = url.hostname.replace(/^www\./, '')
+    const rest = (url.pathname === '/' ? '' : url.pathname) + url.search + url.hash
+    return { kind: 'web', secure: url.protocol === 'https:', host, rest }
+  }
+  if (url.protocol === 'file:') {
+    return { kind: 'file', secure: false, host: 'Local file', rest: url.pathname }
+  }
+  return { kind: 'other', secure: false, host: rawUrl, rest: '' }
 }
 
 function TabFavicon({ favicon, isLoading }: { favicon: string | null; isLoading: boolean }): React.JSX.Element {
@@ -86,7 +144,58 @@ function GlobeIcon(): React.JSX.Element {
   )
 }
 
-function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): React.JSX.Element {
+function vpnMenuLabel(vpn: BrowserVpnStatus): string {
+  switch (vpn.state) {
+    case 'on':
+      return 'VPN on (Tor)'
+    case 'starting':
+      return `Connecting VPN… ${vpn.bootstrapProgress}%`
+    case 'error':
+      return 'VPN error — retry'
+    default:
+      return 'Enable VPN (Tor)'
+  }
+}
+
+function buildMenuItems(
+  activeTab: BrowserTabState | null,
+  vpn: BrowserVpnStatus,
+  isFullscreen: boolean
+): BrowserMenuItem[] {
+  return [
+    { kind: 'action', command: 'find', label: 'Find in page', icon: 'find', disabled: !activeTab },
+    {
+      kind: 'action',
+      command: 'mute',
+      label: activeTab?.isMuted ? 'Unmute tab' : 'Mute tab',
+      icon: activeTab?.isMuted ? 'volume-muted' : 'volume',
+      disabled: !activeTab || (!activeTab.isAudible && !activeTab.isMuted)
+    },
+    { kind: 'action', command: 'vpn', label: vpnMenuLabel(vpn), icon: 'shield', checked: vpn.state === 'on' },
+    { kind: 'separator' },
+    { kind: 'zoom', percent: activeTab?.zoomPercent ?? 100, disabled: !activeTab },
+    { kind: 'separator' },
+    {
+      kind: 'action',
+      command: 'fullscreen',
+      label: isFullscreen ? 'Exit full screen' : 'Full screen',
+      icon: isFullscreen ? 'fullscreen-exit' : 'fullscreen',
+      checked: isFullscreen
+    }
+  ]
+}
+
+function BrowserToolbar({
+  activeTab,
+  vpn,
+  isFullscreen,
+  onToggleFullscreen
+}: {
+  activeTab: BrowserTabState | null
+  vpn: BrowserVpnStatus
+  isFullscreen: boolean
+  onToggleFullscreen: () => void
+}): React.JSX.Element {
   const [input, setInput] = useState('')
   const [isEditing, setIsEditing] = useState(false)
   const [suggestions, setSuggestions] = useState<OmniboxSuggestion[]>([])
@@ -94,16 +203,25 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   const [findOpen, setFindOpen] = useState(false)
   const [findText, setFindText] = useState('')
   const [findResult, setFindResult] = useState({ activeMatchOrdinal: 0, matches: 0 })
+  const [menuOpen, setMenuOpen] = useState(false)
   const findInputRef = useRef<HTMLInputElement>(null)
   const omniboxRef = useRef<HTMLInputElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const typedTextRef = useRef('')
-  const justFocusedRef = useRef(false)
+  const focusingOmniboxFromPointerRef = useRef(false)
+  const refocusingAfterHistoryDeleteRef = useRef(false)
+  const omniboxBlurTimerRef = useRef<number | null>(null)
   const querySeqRef = useRef(0)
   const pendingInlineRef = useRef<{ start: number; end: number } | null>(null)
 
   useEffect(() => {
     if (!isEditing) setInput(activeTab?.url ?? '')
   }, [activeTab?.url, isEditing])
+  useEffect(() => () => {
+    if (omniboxBlurTimerRef.current !== null) {
+      window.clearTimeout(omniboxBlurTimerRef.current)
+    }
+  }, [])
 
   useLayoutEffect(() => {
     const range = pendingInlineRef.current
@@ -114,18 +232,104 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
   useEffect(() => {
     setIsEditing(false)
     closePopup()
+    void window.api.browser.menuClose()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab?.id])
   useEffect(() => window.api.browser.onFindRequested(() => setFindOpen(true)), [])
-  useEffect(() => window.api.browser.onFocusOmnibox(() => omniboxRef.current?.focus()), [])
+  // The menu is a native overlay view; main owns its visibility (it also hides
+  // it on window blur and after non-sticky commands). Mirror that state here.
+  useEffect(() => window.api.browser.onMenuClosed(() => setMenuOpen(false)), [])
+  // Live-refresh the open menu when the state it reflects changes (zoom
+  // percent after a zoom command, mute/vpn/fullscreen toggles).
+  useEffect(() => {
+    if (menuOpen) void window.api.browser.menuUpdate(buildMenuItems(activeTab, vpn, isFullscreen))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    menuOpen,
+    activeTab?.id,
+    activeTab?.isMuted,
+    activeTab?.isAudible,
+    activeTab?.zoomPercent,
+    vpn.state,
+    vpn.bootstrapProgress,
+    isFullscreen
+  ])
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        void window.api.browser.menuClose()
+      }
+    }
+    // Dismiss when clicking anywhere else in the chrome. Clicks on the page or
+    // on the popup itself never reach this document — those are covered by the
+    // window-blur fallback below and by main hiding after commands.
+    const onPointerDown = (event: PointerEvent): void => {
+      if (menuButtonRef.current?.contains(event.target as Node)) return
+      void window.api.browser.menuClose()
+    }
+    // Clicking the page (a native view) moves focus out of this document
+    // without any pointer event here. Close after a grace period — sticky menu
+    // commands (zoom) refocus the chrome immediately, cancelling the timer.
+    let blurTimer: number | null = null
+    const onWindowBlur = (): void => {
+      blurTimer = window.setTimeout(() => void window.api.browser.menuClose(), 160)
+    }
+    const onWindowFocus = (): void => {
+      if (blurTimer !== null) {
+        window.clearTimeout(blurTimer)
+        blurTimer = null
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('pointerdown', onPointerDown, true)
+    window.addEventListener('blur', onWindowBlur)
+    window.addEventListener('focus', onWindowFocus)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('pointerdown', onPointerDown, true)
+      window.removeEventListener('blur', onWindowBlur)
+      window.removeEventListener('focus', onWindowFocus)
+      if (blurTimer !== null) window.clearTimeout(blurTimer)
+    }
+  }, [menuOpen])
+  useEffect(() => window.api.browser.onFocusOmnibox(() => {
+    const input = omniboxRef.current
+    input?.focus()
+    input?.select()
+  }), [])
+  useEffect(() => window.api.browser.onHistoryRemoved((url) => {
+    setSuggestions((current) => current.filter(
+      (suggestion) => suggestion.kind !== 'history' || suggestion.url !== url
+    ))
+    setSelectedIndex(-1)
+    setInput(typedTextRef.current)
+    refocusingAfterHistoryDeleteRef.current = true
+    omniboxRef.current?.focus({ preventScroll: true })
+    window.requestAnimationFrame(() => {
+      refocusingAfterHistoryDeleteRef.current = false
+    })
+  }), [])
+  // Guest pages forward F11 through the main process (focus lives in the
+  // native view); this subscription handles it alongside chrome-focused F11.
+  useEffect(
+    () => window.api.browser.onFullscreenToggleRequested(onToggleFullscreen),
+    [onToggleFullscreen]
+  )
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') { event.preventDefault(); setFindOpen(true) }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') { event.preventDefault(); omniboxRef.current?.focus() }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'l') {
+        event.preventDefault()
+        omniboxRef.current?.focus()
+        omniboxRef.current?.select()
+      }
+      if (event.key === 'F11') { event.preventDefault(); onToggleFullscreen() }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [onToggleFullscreen])
   useEffect(() => {
     const onResize = (): void => {
       if (document.activeElement === omniboxRef.current) omniboxRef.current?.blur()
@@ -195,36 +399,112 @@ function BrowserToolbar({ activeTab }: { activeTab: BrowserTabState | null }): R
     omniboxRef.current?.blur()
   }
 
+  // Only read as identity when the field is idle; while editing, show raw text.
+  const identity = isEditing ? null : omniboxIdentity(activeTab?.url ?? '')
+
   return (
     <form className={`browser-toolbar ${findOpen ? 'has-find' : ''}`} onSubmit={handleSubmit}>
       <button type="button" className="browser-nav-button" aria-label="Back" disabled={!activeTab?.canGoBack} onClick={() => activeTab && void window.api.browser.back(activeTab.id)}><ChevronIcon direction="left" /></button>
       <button type="button" className="browser-nav-button" aria-label="Forward" disabled={!activeTab?.canGoForward} onClick={() => activeTab && void window.api.browser.forward(activeTab.id)}><ChevronIcon direction="right" /></button>
       <button type="button" className="browser-nav-button" aria-label="Reload" disabled={!activeTab} onClick={() => activeTab && void window.api.browser.reload(activeTab.id)}><ReloadIcon /></button>
-      <input
-        ref={omniboxRef}
-        className="omnibox"
-        value={input}
-        spellCheck={false}
-        autoComplete="off"
-        aria-label="Address"
-        onFocus={(event) => { setIsEditing(true); typedTextRef.current = event.target.value; justFocusedRef.current = true; event.target.select(); runQuery('') }}
-        onMouseUp={(event) => { if (justFocusedRef.current) { event.preventDefault(); justFocusedRef.current = false } }}
-        onBlur={() => { setIsEditing(false); closePopup() }}
-        onChange={(event) => {
-          const text = event.target.value
-          setInput(text)
-          typedTextRef.current = text
-          runQuery(text, ((event.nativeEvent as InputEvent).inputType ?? '').startsWith('insert'))
-        }}
-        onKeyDown={handleOmniboxKeyDown}
-      />
-      <button type="button" className="browser-nav-button" aria-label="Find in page" title="Find in page" onClick={() => setFindOpen(true)}><SearchIcon /></button>
-      <button type="button" className={`browser-nav-button ${activeTab?.isMuted ? 'is-active' : ''}`} aria-label={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} title={activeTab?.isMuted ? 'Unmute tab' : 'Mute tab'} disabled={!activeTab || (!activeTab.isAudible && !activeTab.isMuted)} onClick={() => activeTab && void window.api.browser.toggleMute(activeTab.id)}><VolumeIcon muted={Boolean(activeTab?.isMuted)} /></button>
-      <div className="browser-zoom" aria-label="Page zoom">
-        <button type="button" aria-label="Zoom out" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'out')}><MinusIcon /></button>
-        <button type="button" className="zoom-value" aria-label="Reset zoom" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'reset')}>{activeTab?.zoomPercent ?? 100}%</button>
-        <button type="button" aria-label="Zoom in" onClick={() => activeTab && void window.api.browser.zoom(activeTab.id, 'in')}><PlusIcon /></button>
+      <div className="omnibox-field">
+        <input
+          ref={omniboxRef}
+          className="omnibox"
+          value={input}
+          spellCheck={false}
+          autoComplete="off"
+          aria-label="Address"
+          onFocus={(event) => {
+            const input = event.currentTarget
+            if (omniboxBlurTimerRef.current !== null) {
+              window.clearTimeout(omniboxBlurTimerRef.current)
+              omniboxBlurTimerRef.current = null
+            }
+            setIsEditing(true)
+            if (refocusingAfterHistoryDeleteRef.current) {
+              refocusingAfterHistoryDeleteRef.current = false
+              return
+            }
+            typedTextRef.current = input.value
+            if (!focusingOmniboxFromPointerRef.current) input.select()
+            // Let the focus gesture finish before a native suggestion surface
+            // is raised above the page.
+            window.requestAnimationFrame(() => {
+              if (document.activeElement === input) runQuery('')
+            })
+          }}
+          onMouseDown={(event) => {
+            // Claim the first pointer focus synchronously. Waiting for mouseup
+            // is fragile because a native WebContentsView can consume it.
+            if (document.activeElement === event.currentTarget) return
+            event.preventDefault()
+            focusingOmniboxFromPointerRef.current = true
+            try {
+              event.currentTarget.focus()
+              event.currentTarget.select()
+            } finally {
+              focusingOmniboxFromPointerRef.current = false
+            }
+          }}
+          onBlur={() => {
+            setIsEditing(false)
+            if (omniboxBlurTimerRef.current !== null) {
+              window.clearTimeout(omniboxBlurTimerRef.current)
+            }
+            // Native popup pointer actions briefly transfer focus out of this
+            // document. Give delete a chance to restore the input; a genuine
+            // page/chrome click still closes the dropdown after the grace.
+            omniboxBlurTimerRef.current = window.setTimeout(() => {
+              omniboxBlurTimerRef.current = null
+              if (document.activeElement !== omniboxRef.current) closePopup()
+            }, 160)
+          }}
+          onChange={(event) => {
+            const text = event.target.value
+            setInput(text)
+            typedTextRef.current = text
+            runQuery(text, ((event.nativeEvent as InputEvent).inputType ?? '').startsWith('insert'))
+          }}
+          onKeyDown={handleOmniboxKeyDown}
+        />
+        {/* Opaque, click-through overlay: hides the raw URL while unfocused and
+            shows a legible identity. pointer-events:none → a click still lands
+            on the input beneath, focuses it, and this unmounts. */}
+        {identity ? (
+          <div className="omnibox-identity" aria-hidden="true">
+            {identity.kind === 'web' ? (
+              identity.secure ? (
+                <LockIcon />
+              ) : (
+                <span className="oi-insecure">Not secure</span>
+              )
+            ) : null}
+            <span className="oi-host">{identity.host}</span>
+            {identity.rest ? <span className="oi-rest">{identity.rest}</span> : null}
+          </div>
+        ) : null}
       </div>
+      <button
+        ref={menuButtonRef}
+        type="button"
+        className={`browser-nav-button browser-menu-button ${menuOpen ? 'is-active' : ''}`}
+        data-vpn={vpn.state}
+        aria-label="Browser menu"
+        aria-haspopup="menu"
+        aria-expanded={menuOpen}
+        title="Browser menu"
+        onClick={() => {
+          if (menuOpen) {
+            void window.api.browser.menuClose()
+            return
+          }
+          const rect = menuButtonRef.current?.getBoundingClientRect()
+          if (!rect) return
+          setMenuOpen(true)
+          void window.api.browser.menuOpen({ x: rect.right + 2, y: rect.bottom + 4 }, buildMenuItems(activeTab, vpn, isFullscreen))
+        }}
+      ><KebabIcon /></button>
       {findOpen ? (
         <div className="browser-find" role="search">
           <input ref={findInputRef} value={findText} placeholder="Find in page" aria-label="Find in page" onChange={(event) => { setFindText(event.target.value); if (event.target.value && activeTab) void window.api.browser.find(activeTab.id, event.target.value, true).then(setFindResult) }} onKeyDown={(event) => { if (event.key === 'Escape') closeFind(); if (event.key === 'Enter') { event.preventDefault(); void runFind(!event.shiftKey) } }} />
@@ -261,24 +541,12 @@ function ReloadIcon(): React.JSX.Element {
   )
 }
 
-function SearchIcon(): React.JSX.Element {
+function KebabIcon(): React.JSX.Element {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="10.8" cy="10.8" r="5.8" stroke="currentColor" strokeWidth="1.8" />
-      <path d="m15.2 15.2 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function VolumeIcon({ muted }: { muted: boolean }): React.JSX.Element {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4.5 10h3.2L12 6.5v11l-4.3-3.5H4.5z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
-      {muted ? (
-        <path d="m15.5 10.2 4 4m0-4-4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      ) : (
-        <path d="M15.5 9.2a4 4 0 0 1 0 5.6M18 6.7a7.4 7.4 0 0 1 0 10.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      )}
+      <circle cx="12" cy="5.6" r="1.55" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.55" fill="currentColor" />
+      <circle cx="12" cy="18.4" r="1.55" fill="currentColor" />
     </svg>
   )
 }
@@ -291,10 +559,11 @@ function PlusIcon(): React.JSX.Element {
   )
 }
 
-function MinusIcon(): React.JSX.Element {
+function LockIcon(): React.JSX.Element {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5.5 12h13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+    <svg className="oi-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="5" y="10.5" width="14" height="9.5" rx="2.2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M8 10.5V7.9a4 4 0 0 1 8 0v2.6" stroke="currentColor" strokeWidth="1.7" />
     </svg>
   )
 }

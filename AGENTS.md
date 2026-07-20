@@ -2,7 +2,7 @@
 
 ## What this repository is
 
-Codex Desktop is an Electron client with a React renderer, a native Chromium browser surface, and a Codex app-server process. Treat the current checkout and its call sites as the source of truth; older notes and generated artifacts can drift.
+Codex Desktop is an Electron app with a React renderer and a native, agent-drivable Chromium browser surface, running two interchangeable model runtimes behind one `SessionProvider` abstraction: the OpenAI Codex app-server (`codex app-server --stdio`) and the Claude Agent SDK (routed by model-id prefix). On top it adds turn-level workspace checkpoints (reversible even for shell writes) and a cross-provider doer/auditor review loop. Treat the current checkout and its call sites as the source of truth; older notes and generated artifacts can drift. For a current capability map and direction, see `docs/capability-audit-2026-07-19.md`.
 
 ## Start with these files
 
@@ -43,7 +43,7 @@ npm run clean:source-shadows
 
 ## Automatic Git snapshots
 
-- `npm run dev` starts both Electron/Vite and `scripts/git-autosnapshot.mjs --watch`. After the tree settles, the watcher commits safe changes and pushes the autosnapshot to the current branch on `origin` by default.
+- `npm run dev` starts both Electron/Vite and `scripts/git-autosnapshot.mjs --watch`. After the tree settles, the watcher commits safe changes and pushes every autosnapshot to `origin/master` by default, even if a feature branch is checked out. Override the target only with `CODEXDESKTOP_AUTOGIT_TARGET_BRANCH` when branch isolation is explicitly intended.
 - In an auto-Git dev session, let the watcher own routine staging, commits, and pushes. Do not manually commit, push, rewrite history, or disable the watcher unless the user explicitly asks for that Git operation.
 - Git state can change while work is in progress. Re-read `git status`, `HEAD`, and the current branch before Git-sensitive actions or handoff; a clean tree or autosnapshot commit does not prove the task is complete.
 - Set `CODEXDESKTOP_AUTOGIT_PUSH=0` to keep snapshots local, or `CODEXDESKTOP_AUTOGIT=0` to disable the watcher. `npm run dev:app` and `npm run verify:app` do not start a watcher themselves.
