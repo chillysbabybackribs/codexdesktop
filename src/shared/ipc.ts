@@ -14,8 +14,8 @@ export type {
   BrowserMenuItem,
   BrowserMenuAnchor,
   BrowserMenuRenderPayload,
-  TitlebarCalendarAnchor
-} from './ipc/browser-types.js'
+  TitlebarCalendarAnchor,
+} from './ipc/browser-types.js';
 export type {
   CodexConnectionStatus,
   CodexStatusEvent,
@@ -39,16 +39,16 @@ export type {
   CodexPluginReadParams,
   CodexPluginAppStatusParams,
   CodexPluginAppStatus,
-  CodexPluginAppStatusResponse
-} from './ipc/session-types.js'
+  CodexPluginAppStatusResponse,
+} from './ipc/session-types.js';
 export type {
   ChatAttachment,
   AttachmentSaveInput,
   AttachmentPreviewParams,
   AttachmentPreviewResult,
   ImageViewPreviewParams,
-  ImageViewPreviewResult
-} from './ipc/attachment-types.js'
+  ImageViewPreviewResult,
+} from './ipc/attachment-types.js';
 export type {
   MemoryPersistParams,
   TraceSaveParams,
@@ -66,6 +66,6 @@ export type {
   MentionIndexParams,
   MentionIndexResult,
   MentionReadParams,
-  MentionReadIpcResult
-} from './ipc/feature-types.js'
-export { ipcChannels } from './ipc/channels.js'
+  MentionReadIpcResult,
+} from './ipc/feature-types.js';
+export { ipcChannels } from './ipc/channels.js';

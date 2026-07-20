@@ -9,7 +9,6 @@ declare global {
 const monthNames = Array.from({ length: 12 }, (_, month) =>
   new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date(2024, month, 1)),
 );
-const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayLabelFormatter = new Intl.DateTimeFormat('en-US', {
   weekday: 'long',
   month: 'long',
