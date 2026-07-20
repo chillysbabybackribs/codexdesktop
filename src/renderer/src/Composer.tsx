@@ -445,14 +445,6 @@ export function Composer({
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
-          <button
-            type="button"
-            className="composer-auto-mode"
-            disabled
-            title="Security restriction level — automatic (manual controls coming soon)"
-          >
-            Auto
-          </button>
           <div className="composer-create-menu-wrap" ref={createMenuRef}>
             <button
               ref={createMenuTriggerRef}
