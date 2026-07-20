@@ -1944,10 +1944,17 @@ samp {
 /* --- Premium assistant markdown ----------------------------------------- */
 
 .markdown-body {
+  --response-copy-size: 16px;
+  --response-list-size: 15.5px;
+  --response-list-label-size: 16.5px;
+  --response-heading-1-size: 24px;
+  --response-heading-2-size: 20px;
+  --response-heading-3-size: 18px;
+  --response-heading-4-size: 16.5px;
   max-width: 100%;
   color: #d9dde1;
-  font-size: 20px;
-  line-height: 1.65;
+  font-size: var(--response-copy-size);
+  line-height: 1.62;
   overflow-wrap: anywhere;
 }
 
@@ -1960,7 +1967,7 @@ samp {
 }
 
 .markdown-body p {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
 }
 
 .markdown-body h1,
@@ -1973,29 +1980,29 @@ samp {
 }
 
 .markdown-body h1 {
-  margin: 4px 0 18px;
-  font-size: 25px;
+  margin: 4px 0 16px;
+  font-size: var(--response-heading-1-size);
   font-weight: 720;
 }
 
 .markdown-body h2 {
-  margin: 30px 0 12px;
-  padding-top: 17px;
+  margin: 26px 0 10px;
+  padding-top: 15px;
   border-top: 1px solid #2b2e32;
-  font-size: 22px;
+  font-size: var(--response-heading-2-size);
   font-weight: 700;
 }
 
 .markdown-body h3 {
-  margin: 22px 0 9px;
-  font-size: 19px;
+  margin: 20px 0 8px;
+  font-size: var(--response-heading-3-size);
   font-weight: 680;
 }
 
 .markdown-body h4 {
-  margin: 18px 0 7px;
+  margin: 17px 0 7px;
   color: #cdcdcd;
-  font-size: 17px;
+  font-size: var(--response-heading-4-size);
   font-weight: 680;
 }
 
@@ -2022,13 +2029,20 @@ samp {
 
 .markdown-body ul,
 .markdown-body ol {
-  margin: 5px 0 16px;
-  padding-left: 25px;
+  margin: 4px 0 14px;
+  padding-left: 23px;
+  font-size: var(--response-list-size);
 }
 
 .markdown-body li {
-  margin: 5px 0;
+  margin: 4px 0;
   padding-left: 4px;
+}
+
+.markdown-body li > strong:first-child,
+.markdown-body li > p:first-child > strong:first-child {
+  font-size: var(--response-list-label-size);
+  letter-spacing: -0.006em;
 }
 
 .markdown-body li::marker {
@@ -2060,12 +2074,13 @@ samp {
 }
 
 .markdown-body .markdown-quote {
-  margin: 18px 0;
+  margin: 16px 0;
   padding: 11px 16px;
   border-left: 3px solid #747474;
   border-radius: 0 8px 8px 0;
   background: #212121;
   color: #c0c0c0;
+  font-size: 0.95em;
 }
 
 .markdown-body .markdown-quote p:last-child {
@@ -2180,8 +2195,8 @@ samp {
   width: 100%;
   min-width: 460px;
   border-collapse: collapse;
-  font-size: 16px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
   text-align: left;
 }
 
