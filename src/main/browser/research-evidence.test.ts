@@ -101,6 +101,30 @@ test('multi-clause evidence requires the answer-bearing clause instead of lexica
   assert.doesNotMatch(packet.passages[0]?.text ?? '', /^const matches[\s\S]*This example returns/i)
 })
 
+test('a relevant complaint thread is not rejected because the focus lists alternative symptoms', () => {
+  const source: ResearchEvidenceDocument = {
+    ...document('page-01', [
+      '# Desktop app lagging and maxing CPU usage suddenly',
+      '',
+      'The desktop process now maxes out CPU and the interface lags during ordinary conversations.',
+      'This started after the latest update.'
+    ].join('\n')),
+    title: 'Desktop app lagging and maxing CPU usage suddenly'
+  }
+
+  const packet = selectResearchEvidence(
+    [{
+      id: 'performance',
+      need: 'Firsthand complaints that Claude Desktop uses high CPU, freezes, crashes, or is slow, preferably recent.',
+      minSources: 1
+    }],
+    [source]
+  )
+
+  assert.deepEqual(packet.gaps, [])
+  assert.match(packet.passages[0]?.text ?? '', /maxes out CPU/i)
+})
+
 test('evidence selection finds claims beyond the former artifact prefix', () => {
   const filler = Array.from({ length: 600 }, (_, index) => `Background paragraph ${index} with ordinary context.`)
   const content = [...filler, 'The migration requires kernel version 6.8 on Linux.'].join('\n')

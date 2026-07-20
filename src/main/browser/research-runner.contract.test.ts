@@ -13,10 +13,11 @@ test('research runner stays hidden without creating or activating visible tabs',
   assert.match(source, /focus\.reduce\(\(total, \{ minSources \}\) => total \+ minSources, 0\)/)
   assert.match(source, /DEFAULT_UNFOCUSED_SOURCE_TARGET = 1/)
   assert.match(source, /CANDIDATE_ATTEMPTS_PER_SOURCE = 1/)
-  assert.match(source, /coversUnresolvedFocus/)
+  assert.doesNotMatch(source, /coversUnresolvedFocus|recordFocusMismatch/)
   assert.match(source, /focus\.length > 0 \? attemptsRemaining : remainingSuccessTarget\(\)/)
   assert.match(source, /shouldStop:[\s\S]*focusCoverageDeficit/)
-  assert.match(source, /retainValuesReducingDeficit/)
+  assert.match(source, /focus\.length > 0\s*\? rankedDrafts\s*:\s*rankedDrafts\.slice/)
+  assert.match(source, /buildResearchQueryVariants\(queries, MAX_DISCOVERY_QUERIES\)/)
   assert.match(source, /static preflight timed out/)
   assert.match(source, /STATIC_PREFLIGHT_MAX_BYTES = 750_000/)
   // Operator queries (site:, inurl:, …) must bypass the inert providers —

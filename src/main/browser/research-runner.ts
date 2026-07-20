@@ -14,8 +14,7 @@ import {
 import {
   collectWithConcurrencyUntil,
   KeyedTaskScheduler,
-  ResearchMemoryCache,
-  retainValuesReducingDeficit
+  ResearchMemoryCache
 } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { ResearchOriginRouter, type ResearchOriginRouteOutcome } from './research-origin-router.js'
@@ -390,7 +389,10 @@ export class ResearchRunner {
       targetPages
     })
 
-    const plannedQueries = buildResearchQueryVariants(queries)
+    // Preserve every caller-authored lane. The helper's small default is only
+    // for single-query compatibility expansion; applying it here used to drop
+    // queries four through six before discovery even started.
+    const plannedQueries = buildResearchQueryVariants(queries, MAX_DISCOVERY_QUERIES)
     const searchQueries: string[] = []
     const discovered: SerpCandidate[] = []
     const discoveredUrls = new Set(urls)
@@ -463,29 +465,6 @@ export class ResearchRunner {
         })
       }
     }
-    const coversUnresolvedFocus = (
-      candidate: ResearchCandidate,
-      sourceId: string,
-      extracted: ExtractedResearchPage
-    ): boolean => {
-      if (focus.length === 0) return true
-      const unresolved = new Set(evidence().gaps.map(({ focusId }) => focusId))
-      if (unresolved.size === 0) return true
-      const packet = selectResearchEvidence(
-        focus.filter(({ id }) => unresolved.has(id)),
-        [{
-          sourceId,
-          title: extracted.title || candidate.title,
-          url: extracted.url || candidate.url,
-          content: extracted.content,
-          observedAt: extracted.observedAt,
-          ...(candidate.sourceTier ? { sourceTier: candidate.sourceTier } : {})
-        }],
-        passageChars
-      )
-      return packet.passages.length > 0
-    }
-
     const materializePage = async (
       candidate: ResearchCandidate,
       rank: number,
@@ -571,10 +550,6 @@ export class ResearchRunner {
           if (cached) {
             try {
               if (stopSignal.aborted) return null
-              if (!coversUnresolvedFocus(candidate, sourceId, cached)) {
-                recordFocusMismatch(errors, candidate.url)
-                return null
-              }
               const draft = await materializePage(candidate, rank, sourceId, cached, true, stopSignal)
               pageCacheHits += 1
               return draft
@@ -663,11 +638,6 @@ export class ResearchRunner {
             const staticAssessment = assessExtractedPage(extracted)
             if (staticAssessment.verified) {
               try {
-                if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
-                  harvestRedirectHubLinks(candidate, extracted)
-                  recordFocusMismatch(errors, candidate.url)
-                  return null
-                }
                 const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
                 this.cachePage(candidate.url, extracted)
                 if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
@@ -740,11 +710,6 @@ export class ResearchRunner {
             throwIfAborted(linked.signal)
 
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
-            if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
-              harvestRedirectHubLinks(candidate, extracted)
-              recordFocusMismatch(errors, candidate.url)
-              return null
-            }
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
@@ -764,12 +729,12 @@ export class ResearchRunner {
       )
       pageAttempts += batch.attempted
       const rankedDrafts = batch.values.map(({ value }) => value)
+      // Focus guides passage selection and stopping; it is not a page
+      // qualification gate. Keep every successfully extracted page so the
+      // model can judge relevance even when the compact lexical matcher misses
+      // paraphrases, titles, alternatives, or user-authored broad criteria.
       const acceptedDrafts = focus.length > 0
-        ? retainValuesReducingDeficit(
-            rankedDrafts,
-            targetPages - pages.length,
-            (retained) => focusCoverageDeficit(retained)
-          )
+        ? rankedDrafts
         : rankedDrafts.slice(0, targetPages - pages.length)
       for (const draft of acceptedDrafts) {
         pages.push(draft.page)
@@ -779,7 +744,7 @@ export class ResearchRunner {
     }
 
     const drainCandidates = async (candidates: ResearchCandidate[]): Promise<void> => {
-      while (!goalMet() && pageAttempts < maxAttempts && pages.length < targetPages) {
+      while (!goalMet() && pageAttempts < maxAttempts) {
         const remaining = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
         if (remaining.length === 0) return
         const attemptsBefore = pageAttempts
@@ -811,7 +776,7 @@ export class ResearchRunner {
       ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
       await drainCandidates(directCandidates)
 
-      if (!goalMet() && redirectFollowUps.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
+      if (!goalMet() && redirectFollowUps.length > 0 && pageAttempts < maxAttempts) {
         notifyProgress(onProgress, {
           stage: 'verifying',
           message: `Following ${redirectFollowUps.length} same-site ${redirectFollowUps.length === 1 ? 'link' : 'links'} found behind cross-host redirects…`,
@@ -828,7 +793,7 @@ export class ResearchRunner {
       }
     }
 
-    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
+    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts) {
       const discovery = await this.searchHiddenInParallel(plannedQueries, maxResults, signal, onProgress)
       searchQueries.push(...plannedQueries)
       discovered.push(...discovery.candidates)
@@ -897,7 +862,7 @@ export class ResearchRunner {
       ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),
       metrics,
       ...(errors.length > 0 ? { errors } : {}),
-      ...(pages.length === 0 && errors.length === 0 ? { error: 'No qualifying pages found' } : {})
+      ...(pages.length === 0 && errors.length === 0 ? { error: 'No readable pages found' } : {})
     }
   }
 
@@ -1290,16 +1255,6 @@ function clamp(value: number | null | undefined, fallback: number, minimum: numb
 
 function formatError(error: unknown): string {
   return (error instanceof Error ? error.message : String(error)).slice(0, 500)
-}
-
-// A page that verified as real content but added nothing toward the remaining
-// focus needs previously vanished silently, leaving "N attempted, 0 verified"
-// with no explanation in the result.
-function recordFocusMismatch(errors: Array<{ url?: string; error: string }>, url: string): void {
-  recordResearchError(errors, {
-    url,
-    error: 'page verified as real content but did not match the remaining focus needs'
-  })
 }
 
 function recordResearchError(

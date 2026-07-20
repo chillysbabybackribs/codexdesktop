@@ -470,13 +470,13 @@ const researchWebSchema = {
       type: 'array',
       minItems: 1,
       maxItems: 6,
-      description: 'Optional evidence needs. The tool returns bounded exact passage windows and explicit coverage gaps for each item.',
+      description: 'Optional passage-ranking needs. They guide compact passage selection and stopping but never discard a successfully extracted page. The tool returns exact passage windows plus any unresolved gaps.',
       items: {
         type: 'object',
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
           need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the verified sources.' },
-          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Distinct matching source target. Defaults to 1; use only the diversity needed for the claim. The model must still judge source independence.' }
+          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Optional distinct passage target. Defaults to 1. This affects passage coverage, not whether readable pages are returned.' }
         },
         required: ['id', 'need'],
         additionalProperties: false
@@ -587,7 +587,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Verify direct public URLs or adaptively discover and rank the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps. Does not create or navigate a visible tab or persist page copies.',
+    description: 'Fetch direct public URLs or discover and rank public sources, returning every readable extracted page it attempts. Optional focus items rank compact exact passages and report gaps without invalidating pages. Uses an inert static-HTML lane before Chromium fallback and does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]

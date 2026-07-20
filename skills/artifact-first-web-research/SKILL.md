@@ -5,7 +5,7 @@ description: Use for current web research, comparisons, source-backed answers, p
 
 # Evidence-Bounded Web Research
 
-Treat research as a claim-coverage problem. Define the evidence needed for the requested conclusions, gather a bounded set of verified sources, and stop when every material claim has adequate support.
+Treat discovery, extraction, and judgment as separate steps. Keep every readable extracted page available to the model; use focus needs to rank passages and expose gaps, never to invalidate a successfully extracted source.
 
 ## Freshness Priority
 
@@ -26,12 +26,11 @@ Never sacrifice source quality for recency alone. A fresh low-quality summary do
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
 2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. Include recency signals for current-information tasks so discovery can find the latest trustworthy sources before falling back to older ones. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
-3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
-4. Make one `browser_live_search` call with `background: true` — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab as soon as the first viable destination is found while background workers gather bounded independent evidence in the same call. Give it a concrete `objective` for the visible page plus `focus` needs (and `minSources` only where independent corroboration matters); the evidence contract stops gathering early once coverage is complete and returns compact exact passages, source metadata, timings, and explicit gaps.
-5. Answer from the live-verified page and returned passages when coverage is adequate. If a gap or conflict remains, retrieve only the missing evidence from the relevant page or structured public source.
-6. Make at most one focused gap-fill call. Preserve unresolved uncertainty rather than searching for a higher source count.
+3. Pass `focus` only when compact passage ranking will help. Phrase each need narrowly and use `minSources` only when the user actually needs independent corroboration. Focus gaps are diagnostic; returned readable pages remain usable evidence for model judgment.
+4. Make one `browser_live_search` call with `background: true` — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab as soon as the first destination is found while background workers gather public evidence in the same call.
+5. Answer from the live page, returned passages, and readable source pages. If something material is still missing or conflicting, search for that missing thing directly.
 
-Use `research_web` alone only when the user explicitly asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget.
+Use `research_web` alone when the user asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds.
 
 ## Choose The Cheapest Reliable Lane
 
@@ -46,7 +45,7 @@ Use `research_web` alone only when the user explicitly asks for background-only 
 
 Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
 
-Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception; then use the best direct-source fallback or the single permitted gap-fill when justified.
+Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception.
 
 ## Evidence Contract
 
@@ -70,13 +69,13 @@ Use only the fields needed for the answer. A normalized source may include:
 }
 ```
 
-Treat content verification as meaning only that the page is real and substantial. The model must still judge whether a passage supports the claim, whether a report is firsthand, whether sources are independent, and whether version/platform applicability is current.
+Treat page verification as a readability check, not a relevance verdict. The model judges whether a passage supports the claim, whether a report is firsthand, whether sources are independent, and whether version/platform applicability is current.
 
 Never turn an old open issue into a current-version claim. A closed pull request is not necessarily merged. Do not infer platform or version from unrelated page text. Search snippets, challenge pages, login walls, empty shells, and failed fetches are discovery failures rather than evidence.
 
 ## Stopping And Output
 
-Stop when every requested field has adequate evidence and the strongest claims have primary or firsthand support. Make one gap-fill only when sources conflict, current-version applicability remains material, a high-stakes claim lacks primary evidence, or a comparison is missing one side.
+Stop when the available evidence is sufficient to answer the user's actual question. Search again when a material comparison side, conflict, or current-version fact is still missing.
 
 For current-information tasks, do not stop with only older or unknown-age evidence unless a focused gap-fill failed to find newer trustworthy coverage. When falling back, state the newest source date or version found and say what could not be verified as current.
 
