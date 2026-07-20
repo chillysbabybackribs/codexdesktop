@@ -1,5 +1,5 @@
 import { isIP } from 'node:net'
-import { parseHTML } from 'linkedom'
+import { DOMParser, parseHTML } from 'linkedom'
 
 const QUERY_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'about', 'be', 'by', 'for', 'from', 'how', 'in', 'is',
@@ -141,7 +141,7 @@ export function extractBingSearchFeedCandidates(
   xml: string,
   maxResults: number
 ): Array<Omit<SerpCandidate, 'query'>> {
-  const { document } = parseHTML(xml)
+  const document = new DOMParser().parseFromString(xml, 'text/xml')
   const results: Array<Omit<SerpCandidate, 'query'>> = []
   const seen = new Set<string>()
   const limit = Math.max(1, Math.min(MAX_RESEARCH_RESULTS, Math.round(maxResults)))
