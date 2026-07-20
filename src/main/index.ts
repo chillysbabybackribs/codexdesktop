@@ -117,7 +117,7 @@ let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 let verificationBrowserControlReady = false
 let verificationBrowserRestored = false
 let verificationCloseScheduled = false
-const verificationAutoCloseDelayMs = 5_000
+const verificationAutoCloseDelayMs = 1_000
 
 function maybeCloseVerificationInstance(): void {
   if (
