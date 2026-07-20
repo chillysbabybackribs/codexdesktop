@@ -782,30 +782,6 @@ export function Composer({
           }
         }}
       />
-      <div className="composer-primary-action">
-        {isTurnActive ? (
-          <IconButton
-            type="button"
-            className="stop-square-button"
-            label="Stop turn"
-            tooltip="Stop response"
-            onClick={() => void onStop()}
-          >
-            <span className="stop-square" aria-hidden="true" />
-          </IconButton>
-        ) : hasDraft ? (
-          <IconButton
-            type="submit"
-            className="send-button"
-            label="Send message"
-            tooltip="Send"
-            shortcut="Enter"
-            disabled={isLoading}
-          >
-            <ArrowUp strokeWidth={2} aria-hidden="true" />
-          </IconButton>
-        ) : null}
-      </div>
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
@@ -856,13 +832,28 @@ export function Composer({
             ) : null}
           </div>
           <AttachmentButton
-            disabled={isLoading || isTurnActive}
+            disabled={isLoading || isDispatchingQueued}
             onAdd={(items) => {
               setAttachmentError(null);
               setAttachments((current) => [...current, ...items]);
             }}
             onError={setAttachmentError}
           />
+          <IconButton
+            type="button"
+            className="composer-command-trigger"
+            label="Open commands"
+            tooltip="Commands"
+            shortcut="/"
+            side="top"
+            onClick={() => {
+              setValue('/');
+              setCommandMenuDismissed(false);
+              requestAnimationFrame(() => textareaRef.current?.focus());
+            }}
+          >
+            <span aria-hidden="true">/</span>
+          </IconButton>
           {footerLeading}
         </div>
         {visibleStatus ? (
