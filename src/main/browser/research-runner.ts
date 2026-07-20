@@ -667,6 +667,7 @@ export class ResearchRunner {
               try {
                 if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
                   harvestRedirectHubLinks(candidate, extracted)
+                  recordFocusMismatch(errors, candidate.url)
                   return null
                 }
                 const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
@@ -743,6 +744,7 @@ export class ResearchRunner {
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
             if (!coversUnresolvedFocus(candidate, sourceId, extracted)) {
               harvestRedirectHubLinks(candidate, extracted)
+              recordFocusMismatch(errors, candidate.url)
               return null
             }
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
@@ -1124,6 +1126,16 @@ function clamp(value: number | null | undefined, fallback: number, minimum: numb
 
 function formatError(error: unknown): string {
   return (error instanceof Error ? error.message : String(error)).slice(0, 500)
+}
+
+// A page that verified as real content but added nothing toward the remaining
+// focus needs previously vanished silently, leaving "N attempted, 0 verified"
+// with no explanation in the result.
+function recordFocusMismatch(errors: Array<{ url?: string; error: string }>, url: string): void {
+  recordResearchError(errors, {
+    url,
+    error: 'page verified as real content but did not match the remaining focus needs'
+  })
 }
 
 function recordResearchError(
