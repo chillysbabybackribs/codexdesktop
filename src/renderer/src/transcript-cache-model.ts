@@ -1,4 +1,4 @@
-import type { SessionRenderState } from './session-store.js'
+import { isResumeEnumeratedId, type SessionRenderState } from './session-store.js'
 
 const CACHE_VERSION = 1
 
