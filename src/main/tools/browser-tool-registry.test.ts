@@ -27,8 +27,12 @@ type FakeOptions = {
 
 function fakeDeps({ fireEarly, events }: FakeOptions): BrowserToolDeps {
   const researchRunner = {
-    async discover(_request: unknown, context: { onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void }) {
+    async discover(_request: unknown, context: {
+      onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void
+      tailMsAfterFirstCandidates?: number
+    }) {
       events.push('discover-start')
+      events.push(`tail-budget:${context.tailMsAfterFirstCandidates ?? 0}`)
       if (fireEarly) context.onFirstCandidates?.([early, alternate])
       await new Promise((resolve) => setTimeout(resolve, 20))
       events.push('discover-done')
@@ -74,6 +78,7 @@ test('browser_live_search navigates on the earliest lane candidate before discov
 
   assert.ok(events.indexOf(`snapshot:${early.url}`) < events.indexOf('discover-done'),
     `navigation must start before discovery finishes: ${events.join(' -> ')}`)
+  assert.ok(events.includes('tail-budget:750'))
   const destination = result.destination as { url: string }
   assert.equal(destination.url, early.url)
   const alternates = result.alternates as Array<{ url: string }>

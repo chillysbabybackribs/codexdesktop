@@ -156,6 +156,12 @@ export type SearchDiscoveryContext = {
   signal?: AbortSignal
   onProgress?: (progress: ResearchProgress) => void
   /**
+   * Optional grace window for live search. After the first viable candidate
+   * batch arrives, unfinished hidden lanes are cancelled when this window
+   * expires so a slow SERP cannot hold the model response open.
+   */
+  tailMsAfterFirstCandidates?: number
+  /**
    * Fires at most once, as soon as the earliest search lane yields ranked
    * candidates, so callers can begin visible navigation immediately instead of
    * waiting behind the slowest lane. The final ranking may order candidates
@@ -172,6 +178,8 @@ export type SearchDiscoveryResult = {
   discoveredCount: number
   metrics: {
     durationMs: number
+    firstCandidatesMs?: number
+    tailCutoff?: boolean
     searchesAttempted: number
     cacheHits: number
     navigation: NavigationMetrics
@@ -289,17 +297,27 @@ export class ResearchRunner {
     const signal = context.signal ?? new AbortController().signal
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
     const maxCandidates = clamp(request.maxCandidates, Math.max(6, maxResults), 1, MAX_CANDIDATE_ATTEMPTS)
+    const startedAt = Date.now()
     let firstCandidatesFired = false
+    let firstCandidatesMs: number | undefined
     const onLaneCandidates = context.onFirstCandidates
       ? (laneCandidates: SerpCandidate[]): void => {
           if (firstCandidatesFired || laneCandidates.length === 0) return
           const ranked = rankSerpCandidates(laneCandidates, queries, maxCandidates)
           if (ranked.length === 0) return
           firstCandidatesFired = true
+          firstCandidatesMs = Date.now() - startedAt
           context.onFirstCandidates!(ranked)
         }
       : undefined
-    const discovery = await this.searchHiddenInParallel(queries, maxResults, signal, context.onProgress, onLaneCandidates)
+    const discovery = await this.searchHiddenInParallel(
+      queries,
+      maxResults,
+      signal,
+      context.onProgress,
+      onLaneCandidates,
+      clamp(context.tailMsAfterFirstCandidates, 0, 0, 5_000)
+    )
     const candidates = rankSerpCandidates(discovery.candidates, queries, maxCandidates)
 
     return {
@@ -309,6 +327,8 @@ export class ResearchRunner {
       discoveredCount: new Set(discovery.candidates.map(({ url }) => url)).size,
       metrics: {
         durationMs: discovery.durationMs,
+        ...(firstCandidatesMs === undefined ? {} : { firstCandidatesMs }),
+        ...(discovery.tailCutoff ? { tailCutoff: true } : {}),
         searchesAttempted: discovery.searchesAttempted,
         cacheHits: discovery.cacheHits,
         navigation: discovery.navigation
@@ -924,18 +944,33 @@ export class ResearchRunner {
     maxResults: number,
     signal: AbortSignal,
     onProgress?: (progress: ResearchProgress) => void,
-    onLaneCandidates?: (candidates: SerpCandidate[]) => void
+    onLaneCandidates?: (candidates: SerpCandidate[]) => void,
+    tailMsAfterFirstCandidates = 0
   ): Promise<{
     candidates: SerpCandidate[]
     errors: string[]
     durationMs: number
     searchesAttempted: number
     cacheHits: number
+    tailCutoff: boolean
     navigation: NavigationMetrics
   }> {
     const startedAt = Date.now()
     const outcomes: SearchLaneOutcome[] = new Array(queries.length)
     let nextIndex = 0
+    let tailCutoff = false
+    let tailTimer: ReturnType<typeof setTimeout> | undefined
+    const tailController = new AbortController()
+    const linked = linkAbortSignals(signal, tailController.signal)
+    const searchSignal = linked.signal
+    const deliverLaneCandidates = (candidates: SerpCandidate[]): void => {
+      notifyLaneCandidates(onLaneCandidates, candidates)
+      if (!onLaneCandidates || candidates.length === 0 || tailMsAfterFirstCandidates <= 0 || tailTimer) return
+      tailTimer = setTimeout(() => {
+        tailCutoff = true
+        tailController.abort()
+      }, tailMsAfterFirstCandidates)
+    }
 
     notifyProgress(onProgress, {
       stage: 'discovering',
@@ -946,6 +981,7 @@ export class ResearchRunner {
     const worker = async (): Promise<void> => {
       while (true) {
         throwIfAborted(signal)
+        if (tailCutoff) return
         const index = nextIndex
         nextIndex += 1
         if (index >= queries.length) return
@@ -958,13 +994,13 @@ export class ResearchRunner {
             cacheHit: true,
             candidates: cached.candidates.map((candidate) => ({ ...candidate, query }))
           }
-          notifyLaneCandidates(onLaneCandidates, outcomes[index].candidates)
+          deliverLaneCandidates(outcomes[index].candidates)
           continue
         }
 
         const view = this.createHiddenView()
         try {
-          const navigation = await loadSearchPage(view.webContents, googleSearchUrl(query, maxResults), signal)
+          const navigation = await loadSearchPage(view.webContents, googleSearchUrl(query, maxResults), searchSignal)
           const serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
             view.webContents,
             buildSerpExtractionProgram(maxResults)
@@ -979,9 +1015,10 @@ export class ResearchRunner {
             navigation,
             candidates: serp.map((candidate) => ({ ...candidate, query }))
           }
-          notifyLaneCandidates(onLaneCandidates, outcomes[index].candidates)
+          deliverLaneCandidates(outcomes[index].candidates)
         } catch (error) {
           if (signal.aborted) throw error
+          if (tailCutoff) return
           outcomes[index] = {
             query,
             cacheHit: false,
@@ -994,10 +1031,15 @@ export class ResearchRunner {
       }
     }
 
-    await Promise.all(Array.from(
-      { length: Math.min(SEARCH_WORKER_CONCURRENCY, queries.length) },
-      () => worker()
-    ))
+    try {
+      await Promise.all(Array.from(
+        { length: Math.min(SEARCH_WORKER_CONCURRENCY, queries.length) },
+        () => worker()
+      ))
+    } finally {
+      if (tailTimer) clearTimeout(tailTimer)
+      linked.dispose()
+    }
 
     const navigation = createNavigationMetrics()
     for (const outcome of outcomes) {
@@ -1016,6 +1058,7 @@ export class ResearchRunner {
       durationMs: Date.now() - startedAt,
       searchesAttempted: outcomes.length,
       cacheHits: outcomes.filter((outcome) => outcome?.cacheHit).length,
+      tailCutoff,
       navigation
     }
   }

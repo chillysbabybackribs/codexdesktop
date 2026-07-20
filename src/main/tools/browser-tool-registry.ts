@@ -126,6 +126,7 @@ export async function runBrowserTool(
           }, {
             signal,
             onProgress: deps.onResearchProgress,
+            tailMsAfterFirstCandidates: 750,
             onFirstCandidates: (candidates) => {
               startWork(candidates)
             }
