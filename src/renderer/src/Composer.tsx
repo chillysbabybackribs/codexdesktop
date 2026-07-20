@@ -722,112 +722,214 @@ export function Composer({
           removable
           onRemove={(id) => setAttachments((current) => current.filter((item) => item.id !== id))}
         />
-        <textarea
-          ref={textareaRef}
-          value={value}
-          rows={1}
-          placeholder={
-            isTurnActive ? activePlaceholder : docked ? 'Reply…' : 'Plan, build, or ask anything…'
-          }
-          disabled={isLoading}
-          onChange={(event) => {
-            setValue(event.target.value);
-            setCommandSelectionIndex(0);
-            setCommandMenuDismissed(false);
-          }}
-          onPaste={(event) => {
-            const images = Array.from(event.clipboardData.files).filter((file) =>
-              file.type.startsWith('image/'),
-            );
-            if (!images.length) return;
-            const pastedText = event.clipboardData.getData('text/plain');
-            const start = event.currentTarget.selectionStart;
-            const end = event.currentTarget.selectionEnd;
-            event.preventDefault();
-            if (pastedText)
-              setValue((current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`);
-            setAttachmentError(null);
-            void saveBrowserFiles(images)
-              .then((items) => setAttachments((current) => [...current, ...items]))
-              .catch((error: unknown) =>
-                setAttachmentError(error instanceof Error ? error.message : String(error)),
+        <div
+          className={`composer-entry-field ${isTurnActive && hasDraft ? 'has-turn-action' : ''}`}
+        >
+          <textarea
+            ref={textareaRef}
+            value={value}
+            rows={1}
+            placeholder={
+              isTurnActive ? activePlaceholder : docked ? 'Reply…' : 'Plan, build, or ask anything…'
+            }
+            disabled={isLoading}
+            onChange={(event) => {
+              setValue(event.target.value);
+              setCommandSelectionIndex(0);
+              setCommandMenuDismissed(false);
+            }}
+            onPaste={(event) => {
+              const images = Array.from(event.clipboardData.files).filter((file) =>
+                file.type.startsWith('image/'),
               );
-          }}
-          onKeyDown={(event) => {
-            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r') {
+              if (!images.length) return;
+              const pastedText = event.clipboardData.getData('text/plain');
+              const start = event.currentTarget.selectionStart;
+              const end = event.currentTarget.selectionEnd;
               event.preventDefault();
-              openHistory();
-              return;
-            }
-            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
-              event.preventDefault();
-              toggleStash();
-              return;
-            }
-            if (slashQuery !== null && !commandMenuDismissed) {
-              if (event.key === 'Escape') {
+              if (pastedText)
+                setValue(
+                  (current) => `${current.slice(0, start)}${pastedText}${current.slice(end)}`,
+                );
+              setAttachmentError(null);
+              void saveBrowserFiles(images)
+                .then((items) => setAttachments((current) => [...current, ...items]))
+                .catch((error: unknown) =>
+                  setAttachmentError(error instanceof Error ? error.message : String(error)),
+                );
+            }}
+            onKeyDown={(event) => {
+              if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'r') {
                 event.preventDefault();
-                setCommandMenuDismissed(true);
+                openHistory();
                 return;
               }
-              if (event.key === 'ArrowDown' && commandOptions.length) {
+              if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
                 event.preventDefault();
-                setCommandSelectionIndex((current) => (current + 1) % commandOptions.length);
+                toggleStash();
                 return;
               }
-              if (event.key === 'ArrowUp' && commandOptions.length) {
+              if (slashQuery !== null && !commandMenuDismissed) {
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  setCommandMenuDismissed(true);
+                  return;
+                }
+                if (event.key === 'ArrowDown' && commandOptions.length) {
+                  event.preventDefault();
+                  setCommandSelectionIndex((current) => (current + 1) % commandOptions.length);
+                  return;
+                }
+                if (event.key === 'ArrowUp' && commandOptions.length) {
+                  event.preventDefault();
+                  setCommandSelectionIndex(
+                    (current) => (current - 1 + commandOptions.length) % commandOptions.length,
+                  );
+                  return;
+                }
+                if (event.key === 'Enter' && !event.shiftKey && commandOptions.length) {
+                  event.preventDefault();
+                  chooseCommand(
+                    commandOptions[Math.min(commandSelectionIndex, commandOptions.length - 1)],
+                  );
+                  return;
+                }
+              }
+              if (event.key === 'ArrowUp' && !value && listComposerPrompts(draftKey).length) {
                 event.preventDefault();
-                setCommandSelectionIndex(
-                  (current) => (current - 1 + commandOptions.length) % commandOptions.length,
+                setValue(listComposerPrompts(draftKey)[0]);
+                return;
+              }
+              if (event.key === 'Escape' && pluginMenuState !== 'closed') {
+                event.preventDefault();
+                setPluginMenuState('closed');
+                return;
+              }
+              if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowDown') {
+                event.preventDefault();
+                setPluginSelectionIndex((current) => (current + 1) % mentionOptionCount);
+                return;
+              }
+              if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowUp') {
+                event.preventDefault();
+                setPluginSelectionIndex(
+                  (current) => (current - 1 + mentionOptionCount) % mentionOptionCount,
                 );
                 return;
               }
-              if (event.key === 'Enter' && !event.shiftKey && commandOptions.length) {
+              if (
+                pluginMenuState === 'ready' &&
+                mentionOptionCount &&
+                event.key === 'Enter' &&
+                !event.shiftKey
+              ) {
                 event.preventDefault();
-                chooseCommand(
-                  commandOptions[Math.min(commandSelectionIndex, commandOptions.length - 1)],
-                );
+                chooseMentionOption(Math.min(pluginSelectionIndex, mentionOptionCount - 1));
                 return;
               }
-            }
-            if (event.key === 'ArrowUp' && !value && listComposerPrompts(draftKey).length) {
-              event.preventDefault();
-              setValue(listComposerPrompts(draftKey)[0]);
-              return;
-            }
-            if (event.key === 'Escape' && pluginMenuState !== 'closed') {
-              event.preventDefault();
-              setPluginMenuState('closed');
-              return;
-            }
-            if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowDown') {
-              event.preventDefault();
-              setPluginSelectionIndex((current) => (current + 1) % mentionOptionCount);
-              return;
-            }
-            if (pluginMenuState === 'ready' && mentionOptionCount && event.key === 'ArrowUp') {
-              event.preventDefault();
-              setPluginSelectionIndex(
-                (current) => (current - 1 + mentionOptionCount) % mentionOptionCount,
-              );
-              return;
-            }
-            if (
-              pluginMenuState === 'ready' &&
-              mentionOptionCount &&
-              event.key === 'Enter' &&
-              !event.shiftKey
-            ) {
-              event.preventDefault();
-              chooseMentionOption(Math.min(pluginSelectionIndex, mentionOptionCount - 1));
-              return;
-            }
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault();
-              event.currentTarget.form?.requestSubmit();
-            }
-          }}
-        />
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                event.currentTarget.form?.requestSubmit();
+              }
+            }}
+          />
+          <div className="composer-primary-action">
+            {isTurnActive ? (
+              <>
+                {hasDraft ? (
+                  <div className="composer-turn-action" ref={turnActionMenuRef}>
+                    <button
+                      type="submit"
+                      form={composerFormId}
+                      className="composer-turn-submit"
+                      aria-label={`${turnActionLabel} with this message`}
+                      disabled={Boolean(queuedMessage && effectiveTurnAction !== 'steer')}
+                    >
+                      <ArrowUp strokeWidth={2} aria-hidden="true" />
+                      <span>{turnActionLabel}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="composer-turn-action-toggle"
+                      aria-label="Choose how to send this message"
+                      aria-haspopup="menu"
+                      aria-expanded={isTurnActionMenuOpen}
+                      onClick={() => setIsTurnActionMenuOpen((open) => !open)}
+                    >
+                      <ChevronIcon />
+                    </button>
+                    {isTurnActionMenuOpen ? (
+                      <div className="composer-turn-action-menu" role="menu">
+                        {canSteer ? (
+                          <TurnActionMenuItem
+                            mode="steer"
+                            selected={effectiveTurnAction === 'steer'}
+                            disabled={Boolean(attachments.length)}
+                            title="Steer current turn"
+                            detail={
+                              attachments.length
+                                ? 'Attachments can only be queued'
+                                : 'Add guidance after the current tool finishes'
+                            }
+                            onChoose={(mode) => {
+                              setTurnAction(mode);
+                              setIsTurnActionMenuOpen(false);
+                            }}
+                          />
+                        ) : null}
+                        <TurnActionMenuItem
+                          mode="queue"
+                          selected={effectiveTurnAction === 'queue'}
+                          disabled={Boolean(queuedMessage)}
+                          title="Queue next"
+                          detail="Send automatically when this turn completes"
+                          onChoose={(mode) => {
+                            setTurnAction(mode);
+                            setIsTurnActionMenuOpen(false);
+                          }}
+                        />
+                        <TurnActionMenuItem
+                          mode="stop-send"
+                          selected={effectiveTurnAction === 'stop-send'}
+                          disabled={Boolean(queuedMessage)}
+                          title="Stop & send"
+                          detail="Interrupt the current turn, then send this"
+                          onChoose={(mode) => {
+                            setTurnAction(mode);
+                            setIsTurnActionMenuOpen(false);
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+                <IconButton
+                  type="button"
+                  className="stop-square-button"
+                  label="Stop turn"
+                  tooltip="Stop response"
+                  side="left"
+                  onClick={() => void onStop()}
+                >
+                  <span className="stop-square" aria-hidden="true" />
+                </IconButton>
+              </>
+            ) : hasDraft ? (
+              <IconButton
+                type="submit"
+                form={composerFormId}
+                className="send-button"
+                label="Send message"
+                tooltip="Send"
+                shortcut="Enter"
+                side="left"
+                disabled={isLoading || isDispatchingQueued}
+              >
+                <ArrowUp strokeWidth={2} aria-hidden="true" />
+              </IconButton>
+            ) : null}
+          </div>
+        </div>
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
@@ -907,101 +1009,8 @@ export function Composer({
           <span className={`composer-status ${isLoading ? 'is-active' : ''}`}>{visibleStatus}</span>
         ) : null}
         {footerContext ? <div className="composer-control-context">{footerContext}</div> : null}
-        <div className="composer-primary-action">
-          {isTurnActive ? (
-            <>
-              {hasDraft ? (
-                <div className="composer-turn-action" ref={turnActionMenuRef}>
-                  <button
-                    type="submit"
-                    form={composerFormId}
-                    className="composer-turn-submit"
-                    aria-label={`${turnActionLabel} with this message`}
-                    disabled={Boolean(queuedMessage && effectiveTurnAction !== 'steer')}
-                  >
-                    <ArrowUp strokeWidth={2} aria-hidden="true" />
-                    <span>{turnActionLabel}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="composer-turn-action-toggle"
-                    aria-label="Choose how to send this message"
-                    aria-haspopup="menu"
-                    aria-expanded={isTurnActionMenuOpen}
-                    onClick={() => setIsTurnActionMenuOpen((open) => !open)}
-                  >
-                    <ChevronIcon />
-                  </button>
-                  {isTurnActionMenuOpen ? (
-                    <div className="composer-turn-action-menu" role="menu">
-                      {canSteer ? (
-                        <TurnActionMenuItem
-                          mode="steer"
-                          selected={effectiveTurnAction === 'steer'}
-                          disabled={Boolean(attachments.length)}
-                          title="Steer current turn"
-                          detail={
-                            attachments.length
-                              ? 'Attachments can only be queued'
-                              : 'Add guidance after the current tool finishes'
-                          }
-                          onChoose={(mode) => {
-                            setTurnAction(mode);
-                            setIsTurnActionMenuOpen(false);
-                          }}
-                        />
-                      ) : null}
-                      <TurnActionMenuItem
-                        mode="queue"
-                        selected={effectiveTurnAction === 'queue'}
-                        disabled={Boolean(queuedMessage)}
-                        title="Queue next"
-                        detail="Send automatically when this turn completes"
-                        onChoose={(mode) => {
-                          setTurnAction(mode);
-                          setIsTurnActionMenuOpen(false);
-                        }}
-                      />
-                      <TurnActionMenuItem
-                        mode="stop-send"
-                        selected={effectiveTurnAction === 'stop-send'}
-                        disabled={Boolean(queuedMessage)}
-                        title="Stop & send"
-                        detail="Interrupt the current turn, then send this"
-                        onChoose={(mode) => {
-                          setTurnAction(mode);
-                          setIsTurnActionMenuOpen(false);
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
-              <IconButton
-                type="button"
-                className="stop-square-button"
-                label="Stop turn"
-                tooltip="Stop response"
-                side="top"
-                onClick={() => void onStop()}
-              >
-                <span className="stop-square" aria-hidden="true" />
-              </IconButton>
-            </>
-          ) : hasDraft ? (
-            <IconButton
-              type="submit"
-              form={composerFormId}
-              className="send-button"
-              label="Send message"
-              tooltip="Send"
-              shortcut="Enter"
-              side="top"
-              disabled={isLoading || isDispatchingQueued}
-            >
-              <ArrowUp strokeWidth={2} aria-hidden="true" />
-            </IconButton>
-          ) : hasStash ? (
+        {hasStash && !hasDraft && !isTurnActive ? (
+          <div className="composer-primary-action">
             <button
               type="button"
               className="composer-restore-draft"
@@ -1010,8 +1019,8 @@ export function Composer({
             >
               Restore draft
             </button>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
