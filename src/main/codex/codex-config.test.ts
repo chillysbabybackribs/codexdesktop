@@ -250,7 +250,7 @@ test('global guidance stays limited to product-wide behavior', () => {
 
 test('browser guidance avoids obsolete compatibility fallbacks', () => {
   const guidance = buildGuidance({})
-  assert.match(guidance, /browser_snapshot` call when it is available/)
+  assert.match(guidance, /prefer one `browser_snapshot` call/)
   assert.match(guidance, /reserve `browser_run` for bespoke JavaScript/i)
   assert.doesNotMatch(guidance, /older resumed thread where newer tools are absent/)
   assert.doesNotMatch(guidance, /newer tools are absent/)

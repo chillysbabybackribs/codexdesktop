@@ -66,7 +66,7 @@ unchanged because the adapter speaks the shared notification vocabulary.
   history; live turns stream. Claude threads don't appear in the thread-menu
   history list (codex-only listing).
 - ~~Browser tools not yet exposed~~ **DONE (same session)**: Claude sessions
-  get all 10 browser tools via an in-process MCP server
+  get the canonical browser tool set via an in-process MCP server
   (`src/main/providers/claude-mcp-tools.ts` — JSON-schema→zod conversion of
   the canonical specs, handlers calling `runBrowserTool` directly, ownerless
   like the socket transport; wired through `mcpServers` in the provider).

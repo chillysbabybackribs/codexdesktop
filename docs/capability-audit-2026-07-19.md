@@ -73,7 +73,7 @@ Three facts reframe the product:
 | Layer | Real and working |
 |---|---|
 | **Runtimes** | Codex (shared app-server child) + Claude Agent SDK (per-session; 3-slot cap, non-mid-turn idle-kill, resume via session-id map). Capability-declared divergence. |
-| **Browser tools** | `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `app_screenshot`, `ui_review` (desktop/tablet/mobile + audit), `browser_flow`, `browser_run`, `browser_extract_page`, `browser_cdp` (15 sub-ops), `research_web`. |
+| **Browser tools** | `browser_live_search`, `browser_research_dual`, `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `app_screenshot`, `ui_review` (desktop/tablet/mobile + audit), `browser_flow`, `browser_network`, `browser_run`, `browser_extract_page`, `browser_cdp`, `research_web`. |
 | **Chat UI** | Up to 12 tabs; **1–4 pane split** with drag-to-tear, each pane independently live; Shiki code, inline chart fences, live diff cards, terminal cards, thought/reasoning blocks, plan checklists, turn-tail receipts. |
 | **Review** | Keep/Undo bar (per-file + whole-turn + "always keep"), checkpoint revert, deep per-turn Trace modal (per-call token/context-growth attribution). |
 | **Agent dock** | Born-a-reviewer cards with a **Role radio** (Reviewer / Helper; spawned Workers show a read-only role line), cross-provider model auto-derivation, audit mode, report-to-main auto-feedback (Send / Always send / Keep), model-spawned worker cards via `spawn_subagent` (blocking single; orchestrator in `src/main/agents/`), promote-to-main, extend/zoom, recency-weighted capsules. |

@@ -5,6 +5,8 @@
 > and the doer/auditor loop; its claim that "No Claude integration exists on this branch"
 > (§3.A) is no longer true. It remains accurate and useful as a dated, file-by-file
 > reference for the subsystems it covers.
+> Its browser-tool inventory is also historical: the current canonical tool list is
+> declared in `src/main/codex/codex-config.ts` via `allDynamicTools`.
 
 > Prepared for an external AI assistant with no prior exposure to this project. Facts only; every claim cites a real file. Items that could not be verified are marked as such. Line numbers refer to the working tree at commit `471dc6c`.
 
@@ -81,7 +83,7 @@ There is **no** separate BrowserWindow, renderer, or child process for sub-agent
 - **Main ↔ codex child:** JSON-RPC 2.0 over newline-delimited stdio (`AppServerRpc`, `src/main/codex/app-server-rpc.ts`). Request timeout 30,000 ms (`app-server-rpc.ts:32`); multi-line JSON responses buffered up to 16,000,000 chars (`app-server-rpc.ts:33`). Traffic is three-way: client→server requests (`initialize`, `thread/start`, `turn/start`, …), server notifications (`turn/*`, `item/*`, `thread/*`), and server→client requests answered in `CodexClient.handleServerRequest` (`src/main/codex/codex-client.ts:484-498`): `item/tool/requestUserInput` (empty answers), `currentTime/read`, `item/tool/call` (dynamic tools), everything else rejected `-32601`.
 - **Codex agent ↔ embedded browser:** an HTTP server bound to a **Unix domain socket** (not TCP), `startBrowserControlServer` (`src/main/browser/browser-control-server.ts:288-329`), path `$TMPDIR/codex-browser-<pid>.sock` (`browser-control-server.ts:29-32`). Published as `CODEX_BROWSER_SOCK` into `process.env` *before* the codex child spawns (`src/main/index.ts:279-281`) so the agent's shell can `curl --unix-socket`. Routes: `GET /tabs`, `GET /targets`, `POST /eval` (arbitrary in-page JS), `POST /flow`, `POST /snapshot`, `POST /cdp` (operations: `capabilities`, `events`, `wait`, `traceStart`, `traceStop`, `snapshot`, `networkStart`, `network`, `networkBody`, `networkStop`, `performanceStart`, `performance`, `performanceStop`, `command`), `POST /tabs` (create/close/activate/navigate). No auth/origin checks by design (`browser-control-server.ts:8-18`).
 - **CDP:** the main process drives tab pages via `webContents.debugger` (attach/sendCommand, `src/main/browser/cdp-session.ts:168-185`). No WebSocket servers exist (only a `WebSocketSummary` type for observed page traffic in `src/main/browser/network-journal.ts:27`).
-- **Dynamic tool loop:** `thread/start` registers 9 dynamic tools — `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `ui_review`, `browser_flow`, `browser_run`, `browser_extract_page`, `browser_cdp`, `research_web` (`browserDynamicTools`, `src/main/codex/codex-config.ts:400-448`). The child calls back via JSON-RPC `item/tool/call` → `routeDynamicToolCall` (`src/main/codex/dynamic-tool-router.ts`), executed in-main against `BrowserAgentController` / `ResearchRunner` (`codex-client.ts:500-515`).
+- **Dynamic tool loop (historical inventory):** at audit time `thread/start` registered 9 browser dynamic tools. The current runtime now declares the canonical browser/subagent set through `allDynamicTools` in `src/main/codex/codex-config.ts`. The child calls back via JSON-RPC `item/tool/call` → `routeDynamicToolCall`, executed in-main against the provider-neutral browser tool registry.
 - Threads are started with `approvalPolicy: 'never'`, `sandbox: 'danger-full-access'`, `historyMode: 'legacy'`, `developerInstructions: buildGuidance()` (`codex-client.ts:196-211`) — the app never surfaces approval requests.
 
 ### 2B. IPC surface
@@ -178,9 +180,9 @@ The `startQueueRef` plus the main tabs' `mainThreadStartsInFlightRef` disambigua
 
 ### 3.B Tool / function-calling system
 
-Three tool surfaces exist: (1) 9 app-registered **dynamic tools**, (2) the codex CLI's **built-in tools**, (3) a **Unix-socket browser control API** the agent drives from its shell.
+Three tool surfaces existed at audit time: (1) app-registered **dynamic tools**, (2) the codex CLI's **built-in tools**, (3) a **Unix-socket browser control API** the agent drives from its shell. For the current declared tool set, inspect `allDynamicTools` in `src/main/codex/codex-config.ts`.
 
-**Dynamic tools** are declared in `browserDynamicTools` (`codex-config.ts:397-452`), sent with every `thread/start`, and dispatched when the app-server issues an `item/tool/call` request (`codex-client.ts:492-493, 500-515` → `routeDynamicToolCall`, `src/main/codex/dynamic-tool-router.ts:8-140`). Results are returned as JSON in an `inputText` content item; screenshot tools append `inputImage` data URLs (`dynamic-tool-router.ts:124-130`). Any non-null namespace or unknown tool returns an error (`dynamic-tool-router.ts:21-22, 120-122`).
+**Dynamic tools** are declared in `browserDynamicTools` / `allDynamicTools`, sent with every `thread/start`, and dispatched when the app-server issues an `item/tool/call` request through `routeDynamicToolCall` into the provider-neutral browser tool registry. Results are returned as JSON in an `inputText` content item; screenshot tools may append `inputImage` data URLs.
 
 | Tool | What it does | Implementation |
 |---|---|---|
@@ -391,7 +393,7 @@ An automated scan found **97 exported symbols with zero references outside their
 - **turn** — one user-message→completion cycle within a thread; tracked via `turn/started`/`turn/completed` notifications (src/renderer/src/useAgentSessions.ts:107–137).
 - **item** — a protocol unit inside a turn (e.g., `agentMessage`, `commandExecution`, `contextCompaction`) delivered via `item/started`/`item/completed` (useAgentSessions.ts:142–155).
 - **rollout** — the Codex CLI's persisted per-session JSONL log under `~/.codex/sessions/` (HANDOFF.md:56,62). The word appears nowhere in app code; docs-only term.
-- **dynamic tools** — the 9 tools this app declares to the app-server: `browser_snapshot`, `browser_navigate`, `browser_screenshot`, `ui_review`, `browser_flow`, `browser_run`, `browser_extract_page`, `browser_cdp`, `research_web` (src/main/codex/codex-config.ts:397–452), dispatched by src/main/codex/dynamic-tool-router.ts.
+- **dynamic tools** — app-declared tools sent to the app-server; current source of truth is `allDynamicTools` in `src/main/codex/codex-config.ts`, dispatched by `src/main/codex/dynamic-tool-router.ts` into `src/main/tools/browser-tool-registry.ts`.
 - **CDP** — Chrome DevTools Protocol; raw protocol access to embedded browser tabs via the `browser_cdp` tool and `CdpSession` (src/main/browser/cdp-session.ts).
 - **browser control server / CODEX_BROWSER_SOCK** — a Unix-domain-socket HTTP server letting the agent's shell drive the visible browser (`curl --unix-socket "$CODEX_BROWSER_SOCK" http://x/eval`); deliberately unrestricted, off-TCP (src/main/browser/browser-control-server.ts:8–18).
 - **research runner** — main-process pipeline behind `research_web`: fetches pages into browser views, writes extracted pages as on-disk artifacts, returns compact metadata (src/main/browser/research-runner.ts; artifacts in research-artifacts.ts).
