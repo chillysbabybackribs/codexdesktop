@@ -2403,64 +2403,39 @@ samp {
 }
 
 /* ------------------------------------------------------------------------
-   In-task activity — tool calls and narration live in one fixed-height,
-   visually invisible feed. It follows the newest activity without pushing the
-   conversation itself down; completed answers render after this feed.
+   In-task activity — tool calls and narration sit directly in the transcript.
+   The transcript is the only scroll surface; individual tools may still own
+   their purposeful command output or diff disclosure regions.
    ------------------------------------------------------------------------ */
 
-.task-activity-card {
-  /* Size to content up to a cap, rather than a fixed height. Same cap whether
-     the turn is live or done, so completion (which only removes .is-live)
-     never shrinks the card — no retraction. Short runs stay short; long runs
-     grow to the cap and scroll internally past it. */
+.task-activity {
   display: flex;
   flex-direction: column;
-  height: auto;
-  max-height: min(60vh, 620px);
   max-width: min(920px, 100%);
   margin: 0 0 18px;
   content-visibility: auto;
   contain-intrinsic-size: auto 228px;
 }
 
-.task-activity-card.is-live {
+.task-activity.is-live {
   /* Live content is already on screen and changes frequently. Do not let
      content-visibility substitute an estimated height near the viewport edge. */
   content-visibility: visible;
-  contain-intrinsic-size: auto 620px;
+  contain-intrinsic-size: auto 228px;
 }
 
-.task-activity-card-scroll {
-  /* Grow with content; scroll only once the card reaches its max-height cap.
-     min-height:0 lets the flex child shrink so overflow scrolls instead of
-     stretching the card past the cap. */
-  flex: 1 1 auto;
-  min-height: 0;
-  padding-right: 5px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 17px, #000 calc(100% - 14px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 17px, #000 calc(100% - 14px), transparent 100%);
-}
-
-.task-activity-card-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.task-activity-card-content {
+.task-activity-content {
   padding: 3px 5px 16px 0;
 }
 
-.task-activity-card .work-group {
+.task-activity .work-group {
   max-width: none;
   margin: 0;
 }
 
-.task-activity-card .work-group + .work-group,
-.task-activity-card .task-activity-message + .work-group,
-.task-activity-card .work-group + .task-activity-message {
+.task-activity .work-group + .work-group,
+.task-activity .task-activity-message + .work-group,
+.task-activity .work-group + .task-activity-message {
   margin-top: 9px;
 }
 
@@ -2580,11 +2555,11 @@ samp {
   }
 }
 
-.task-activity-card.is-live .live-activity-feed + .task-activity-card-scroll {
+.task-activity.is-live .live-activity-feed + .task-activity-content {
   margin-top: 2px;
 }
 
-.task-activity-card.is-live .task-activity-card-content {
+.task-activity.is-live .task-activity-content {
   padding-top: 0;
 }
 
@@ -2639,26 +2614,6 @@ samp {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 26px);
   mask-image: linear-gradient(180deg, transparent 0, #000 26px);
-}
-
-/* The task feed is the one live viewport users may inspect directly; keep its
-   scrollbar hidden while allowing wheel/trackpad scrolling inside the card. */
-.task-activity-card .task-activity-card-scroll {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-@media (max-height: 700px) {
-  .task-activity-card {
-    /* Content-sized with a shorter cap on small viewports; still no shrink on
-       completion since live and done share the cap. */
-    max-height: min(52vh, 360px);
-    contain-intrinsic-size: auto 180px;
-  }
-
-  .task-activity-card.is-live {
-    contain-intrinsic-size: auto 360px;
-  }
 }
 
 .work-chip {
@@ -2764,19 +2719,19 @@ samp {
 
 /* Keep in-task tool calls at the same comfortable reading scale as the
    narration around them without enlarging tool rows used elsewhere. */
-.task-activity-card .tool-row {
+.task-activity .tool-row {
   font-size: 15px;
 }
 
-.task-activity-card .tool-row-detail {
+.task-activity .tool-row-detail {
   font-size: 14px;
 }
 
-.task-activity-card .tool-row-meta {
+.task-activity .tool-row-meta {
   font-size: 12px;
 }
 
-.task-activity-card .tool-row-sub {
+.task-activity .tool-row-sub {
   font-size: 13px;
 }
 
@@ -2785,7 +2740,7 @@ samp {
   gap: 6px;
 }
 
-.task-activity-card .screenshot-tool-step {
+.task-activity .screenshot-tool-step {
   padding: 2px 0 3px;
 }
 
@@ -8835,7 +8790,7 @@ code.agent-audit-live-step {
    last rendered size so scroll geometry (bottom pin, top anchor, spacer math)
    stays stable. Streaming rows are always on-screen and unaffected. */
 .thread-scroll-content > .message,
-.thread-scroll-content > .task-activity-card {
+.thread-scroll-content > .task-activity {
   content-visibility: auto;
   contain-intrinsic-size: auto 120px;
 }

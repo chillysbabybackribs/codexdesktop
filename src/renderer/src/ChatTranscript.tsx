@@ -1,6 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 import type { ItemMeta, WorkItem } from './TaskActivity';
-import { AutoFollow, isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from './TaskActivity';
+import { isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from './TaskActivity';
 import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
@@ -99,7 +99,7 @@ export function TaskActivityCard({
 
   return (
     <section
-      className={`task-activity-card ${live ? 'is-live' : ''}`}
+      className={`task-activity ${live ? 'is-live' : ''}`}
       data-message-id={turnId ?? undefined}
       aria-label="In-task activity"
       aria-live={live ? 'polite' : 'off'}
@@ -122,9 +122,7 @@ export function TaskActivityCard({
           streamingMessage={streamingMessage}
         />
       ) : null}
-      <AutoFollow className="task-activity-card-scroll">
-        <div className="task-activity-card-content">{content}</div>
-      </AutoFollow>
+      <div className="task-activity-content">{content}</div>
     </section>
   );
 }
