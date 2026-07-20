@@ -7,6 +7,7 @@ export type QueuedComposerMessage = {
   text: string;
   displayText: string;
   attachments: ChatAttachment[];
+  mentions: FileMention[];
 };
 
 export type StashedComposerDraft = {
@@ -77,4 +78,3 @@ export function clearComposerInteractionState(key: string): void {
   stashedDrafts.delete(key);
   queuedMessages.delete(key);
 }
-

@@ -1,6 +1,7 @@
 import {
   type FormEvent,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -16,6 +17,22 @@ import {
   saveBrowserFiles,
 } from './Attachments';
 import { composerDrafts } from './composer-draft';
+import {
+  getQueuedComposerMessage,
+  hasStashedComposerDraft,
+  listComposerPrompts,
+  recordComposerPrompt,
+  setQueuedComposerMessage,
+  stashComposerDraft,
+  takeStashedComposerDraft,
+  type ComposerActionMode,
+  type QueuedComposerMessage,
+} from './composer-interactions';
+import {
+  ComposerCommandMenu,
+  ComposerHistoryMenu,
+  type ComposerCommandOption,
+} from './ComposerMenus';
 import { FileMentionMenu, MentionGlyph } from './FileMentionMenu';
 import {
   buildMentionContext,
@@ -77,9 +94,25 @@ export function Composer({
     null,
   );
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [queuedMessage, setQueuedMessageState] = useState<QueuedComposerMessage | null>(() =>
+    getQueuedComposerMessage(draftKey),
+  );
+  const [turnAction, setTurnAction] = useState<ComposerActionMode>(
+    providerId === 'claude' ? 'queue' : 'steer',
+  );
+  const [isTurnActionMenuOpen, setIsTurnActionMenuOpen] = useState(false);
+  const [commandSelectionIndex, setCommandSelectionIndex] = useState(0);
+  const [commandMenuDismissed, setCommandMenuDismissed] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [historyQuery, setHistoryQuery] = useState('');
+  const [hasStash, setHasStash] = useState(() => hasStashedComposerDraft(draftKey));
+  const [isDispatchingQueued, setIsDispatchingQueued] = useState(false);
+  const composerFormId = useId();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const createMenuRef = useRef<HTMLDivElement | null>(null);
   const createMenuTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const turnActionMenuRef = useRef<HTMLDivElement | null>(null);
+  const queuedDispatchRef = useRef(false);
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [pluginMenuState, setPluginMenuState] = useState<'closed' | 'loading' | 'ready' | 'error'>(
     'closed',
@@ -87,9 +120,78 @@ export function Composer({
   const [pluginSelectionIndex, setPluginSelectionIndex] = useState(0);
   const pluginMention = value.match(/(?:^|\s)@([^\s@]*)$/);
   const pluginQuery = pluginMention?.[1].toLowerCase() ?? null;
+  const slashCommand = value.match(/^\/([^\s]*)$/);
+  const slashQuery = slashCommand?.[1].toLowerCase() ?? null;
   const hasDraft = Boolean(value.trim() || attachments.length || mentions.length);
   const isQuietStatus = status === 'idle' || status === 'ready';
   const visibleStatus = attachmentError ?? (isTurnActive || isQuietStatus ? null : status);
+  const canSteer = providerId === 'codex';
+  const effectiveTurnAction: ComposerActionMode =
+    attachments.length && turnAction === 'steer' ? 'queue' : turnAction;
+
+  const commandOptions = useMemo<ComposerCommandOption[]>(() => {
+    const options: ComposerCommandOption[] = [
+      {
+        id: 'context',
+        command: 'context',
+        title: 'Add workspace context',
+        detail: 'Find a file, folder, or installed plugin',
+        hint: '@',
+      },
+      {
+        id: 'attach',
+        command: 'attach',
+        title: 'Attach files',
+        detail: 'Add images, documents, or source files',
+      },
+      {
+        id: 'history',
+        command: 'history',
+        title: 'Search prompt history',
+        detail: 'Reuse a previous instruction in this chat',
+        hint: 'Ctrl R',
+      },
+      {
+        id: 'new',
+        command: 'new',
+        title: 'New chat',
+        detail: 'Start a fresh main conversation',
+        disabled: isLoading || isTurnActive,
+      },
+      ...(onNewAgent
+        ? [
+            {
+              id: 'agent',
+              command: 'agent',
+              title: 'New agent',
+              detail: 'Open a focused parallel workspace',
+            } satisfies ComposerCommandOption,
+          ]
+        : []),
+      {
+        id: 'plugins',
+        command: 'plugins',
+        title: 'Browse plugins',
+        detail: 'Install tools, apps, and reusable workflows',
+      },
+      {
+        id: 'clear',
+        command: 'clear',
+        title: 'Clear composer',
+        detail: 'Remove text, attachments, and context',
+      },
+    ];
+    if (slashQuery === null) return [];
+    return options.filter((option) => {
+      if (!slashQuery) return true;
+      return `${option.command} ${option.title} ${option.detail}`.toLowerCase().includes(slashQuery);
+    });
+  }, [isLoading, isTurnActive, onNewAgent, slashQuery]);
+
+  const historyEntries = useMemo(
+    () => listComposerPrompts(draftKey, historyQuery),
+    [draftKey, historyQuery, isHistoryOpen],
+  );
 
   useEffect(() => {
     composerDrafts.set(draftKey, { value, attachments, mentions });

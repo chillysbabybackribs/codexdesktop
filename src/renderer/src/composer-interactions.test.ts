@@ -50,7 +50,7 @@ test('stashed composer drafts restore once with attachments and mentions intact'
 
 test('a queued composer message can be replaced or cleared by draft key', () => {
   const key = 'queue';
-  const message = { text: 'Next task', displayText: 'Next task', attachments: [] };
+  const message = { text: 'Next task', displayText: 'Next task', attachments: [], mentions: [] };
   setQueuedComposerMessage(key, message);
   assert.deepEqual(getQueuedComposerMessage(key), message);
   setQueuedComposerMessage(key, null);
