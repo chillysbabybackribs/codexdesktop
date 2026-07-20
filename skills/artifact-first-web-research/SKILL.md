@@ -3,24 +3,13 @@ name: artifact-first-web-research
 description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Default to browser_live_search with background=true so the visible tab verifies live while bounded background evidence gathers in parallel; use a task-local script only when the available primitives cannot express the extraction.
 ---
 
-# Evidence-Bounded Web Research
+# Artifact-First Web Research
 
 Treat discovery, extraction, and judgment as separate steps. Keep every readable extracted page available to the model; use focus needs to rank passages and expose gaps, never to invalidate a successfully extracted source.
 
-## Freshness Priority
+## Freshness
 
-For current-information tasks, treat freshness as a first-class evidence requirement, behind only source authority and direct relevance. Prefer the newest trustworthy source that actually supports the claim: live official pages, APIs, changelogs, release notes, status pages, filings, package registries, GitHub issues/PRs, and dated firsthand reports. Do not use an older source merely because it ranks well if a newer equally reliable source is findable.
-
-Build recency into discovery. At least one query variation should include terms such as `latest`, `current`, `today`, the current year, a version name, `release notes`, `changelog`, `status`, or `GitHub issues` when those terms fit the domain. When a source has no visible publication/update date, version, or live state marker, treat its freshness as unknown even if it was observed today.
-
-Use this fallback ladder when fresh evidence is sparse:
-
-1. Prefer newest official or primary source with an explicit date, version, or live state.
-2. If that is missing, use recent firsthand or repository evidence with an explicit timestamp.
-3. If only older evidence is available, use it only after one focused gap-fill for newer evidence, mark it as older, and answer with a freshness caveat.
-4. If source age is unknown, say so rather than implying the claim is current.
-
-Never sacrifice source quality for recency alone. A fresh low-quality summary does not outrank a slightly older primary source unless it contains independently verifiable new facts.
+For current-information tasks, include a recency-oriented query and prefer newer primary or firsthand sources when they are relevant. Dates, versions, and source types help the model weigh evidence; they are not page-acceptance filters. Older or undated sources may still be useful—label their age instead of discarding them.
 
 ## Fast Path
 
@@ -49,37 +38,17 @@ Wait for the containing state, such as a results list or empty-state marker, rat
 
 ## Evidence Contract
 
-Use only the fields needed for the answer. A normalized source may include:
-
-```json
-{
-  "source": "",
-  "title": "",
-  "url": "",
-  "sourceType": "primary|firsthand|secondary|aggregate",
-  "observedAt": "",
-  "publishedOrUpdatedAt": "",
-  "reportedVersion": "",
-  "targetVersionApplicability": "confirmed|likely|unknown|not-applicable",
-  "freshness": "current|recent|older|unknown",
-  "platform": "",
-  "claim": "",
-  "evidenceStrength": "high|medium|low",
-  "caveat": ""
-}
-```
+Use only the source fields the answer needs: usually title, URL, exact passage, date/version when visible, and a short caveat when applicability is uncertain. Do not force every source through a large normalized schema.
 
 Treat page verification as a readability check, not a relevance verdict. The model judges whether a passage supports the claim, whether a report is firsthand, whether sources are independent, and whether version/platform applicability is current.
 
-Never turn an old open issue into a current-version claim. A closed pull request is not necessarily merged. Do not infer platform or version from unrelated page text. Search snippets, challenge pages, login walls, empty shells, and failed fetches are discovery failures rather than evidence.
+Do not turn an old open issue into a current-version claim, assume a closed pull request was merged, or infer platform/version from unrelated text. Search snippets, challenge pages, login walls, empty shells, and failed fetches are discovery failures rather than evidence.
 
 ## Stopping And Output
 
 Stop when the available evidence is sufficient to answer the user's actual question. Search again when a material comparison side, conflict, or current-version fact is still missing.
 
-For current-information tasks, do not stop with only older or unknown-age evidence unless a focused gap-fill failed to find newer trustworthy coverage. When falling back, state the newest source date or version found and say what could not be verified as current.
-
-Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state freshness limitations precisely.
+Lead the final answer with the decision. Put clickable links next to supported claims, distinguish official guidance from user/developer reports when that matters, and mention material freshness limitations without burying the answer in qualifications.
 
 ## Reliability
 
