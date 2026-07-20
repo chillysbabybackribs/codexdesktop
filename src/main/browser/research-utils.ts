@@ -73,7 +73,7 @@ export function googleSearchUrl(query: string, maxResults: number): string {
  */
 export function buildResearchQueryVariants(queries: string[], maxVariants = 3): string[] {
   const supplied = uniqueStrings(queries)
-  if (supplied.length >= maxVariants) return supplied.slice(0, maxVariants)
+  if (supplied.length !== 1) return supplied.slice(0, maxVariants)
 
   const seed = supplied[0]
   if (!seed) return []

@@ -58,31 +58,69 @@ export async function runBrowserTool(
     let imageUrls: string[] = []
 
     if (tool === 'browser_live_search') {
-      const query = readString(args.query)
+      const queries = readSearchQueries(args)
       const objective = readString(args.objective)
-      result = query && objective
-        ? await runBrowserOperation((signal) => deps.browserAgent.snapshot({
+      if (queries.length === 0 || !objective) {
+        result = { ok: false, error: 'browser_live_search requires "objective" and at least one search query' }
+      } else if (!deps.researchRunner) {
+        result = { ok: false, error: 'browser_live_search hidden discovery is not available on this transport' }
+      } else {
+        result = await runBrowserOperation(async (signal) => {
+          const discovery = await deps.researchRunner!.discover({
+            queries,
+            maxResults: readNumber(args.maxResults),
+            maxCandidates: 10
+          }, {
+            signal,
+            onProgress: deps.onResearchProgress
+          })
+          const destination = discovery.candidates[0]
+          if (!discovery.ok || !destination) return discovery
+
+          const page = await deps.browserAgent.snapshot({
             objective,
-            url: normalizeNavigationInput(query),
+            url: destination.url,
             tabId: resolveAgentTab(readString(args.tab)),
             mode: 'task',
             maxItems: readNumber(args.maxItems) ?? 10,
             timeoutMs: readNumber(args.timeoutMs),
             signal
-          }))
-        : { ok: false, error: 'browser_live_search requires string "query" and "objective" arguments' }
+          })
+          return {
+            ok: page.ok,
+            mode: 'hidden-discovery-direct-navigation',
+            destination: compactDestination(destination),
+            alternates: discovery.candidates.slice(1).map(compactDestination),
+            discovery: compactDiscovery(discovery),
+            page,
+            ...(page.ok ? {} : { error: 'Hidden discovery succeeded, but the destination page snapshot failed' })
+          }
+        })
+      }
     } else if (tool === 'browser_research_dual') {
-      const query = readString(args.query)
+      const queries = readSearchQueries(args)
       const objective = readString(args.objective)
-      if (!query || !objective) {
-        result = { ok: false, error: 'browser_research_dual requires string "query" and "objective" arguments' }
+      if (queries.length === 0 || !objective) {
+        result = { ok: false, error: 'browser_research_dual requires "objective" and at least one search query' }
       } else if (!deps.researchRunner) {
         result = { ok: false, error: 'browser_research_dual background lane is not available on this transport' }
       } else {
+        const discovery = await runBrowserOperation((signal) => deps.researchRunner!.discover({
+          queries,
+          maxResults: readNumber(args.maxResults),
+          maxCandidates: 10
+        }, {
+          signal,
+          onProgress: deps.onResearchProgress
+        }))
+        const destination = discovery.candidates[0]
+        if (!discovery.ok || !destination) {
+          result = discovery
+        } else {
         const [live, background] = await Promise.all([
           runBrowserOperation((signal) => deps.browserAgent.snapshot({
             objective,
-            url: normalizeNavigationInput(query),
+            url: destination.url,
             tabId: resolveAgentTab(readString(args.tab)),
             mode: 'task',
             maxItems: readNumber(args.maxResults) ?? 6,
@@ -90,7 +128,7 @@ export async function runBrowserTool(
             signal
           })),
           deps.researchRunner.run({
-            queries: [query],
+            queries,
             focus: readResearchFocus(args.focus),
             maxResults: readNumber(args.maxResults),
             maxAttempts: readNumber(args.maxAttempts),
@@ -104,10 +142,14 @@ export async function runBrowserTool(
         ])
         result = {
           ok: live.ok && background.ok,
-          mode: 'dual',
+          mode: 'hidden-discovery-direct-navigation-plus-research',
+          destination: compactDestination(destination),
+          alternates: discovery.candidates.slice(1).map(compactDestination),
+          discovery: compactDiscovery(discovery),
           live,
           background,
           ...(live.ok && background.ok ? {} : { error: 'one or more dual research lanes failed' })
+        }
         }
       }
     } else if (tool === 'browser_screenshot') {

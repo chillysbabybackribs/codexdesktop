@@ -318,7 +318,7 @@ export class ResearchRunner {
     const queries = (request.queries ?? [])
       .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
       .map((query) => query.trim().slice(0, 500))
-      .slice(0, 3)
+      .slice(0, MAX_DISCOVERY_QUERIES)
     const urls = normalizeResearchUrls(request.urls ?? [])
     const focus = normalizeResearchFocus(request.focus)
 
@@ -1162,6 +1162,15 @@ function recordNavigation(metrics: NavigationMetrics, result: PageNavigationResu
   metrics.domReadyMs += result.domReadyMs
   metrics.settleMs += result.settleMs
   metrics.settleReasons[result.settleReason] = (metrics.settleReasons[result.settleReason] ?? 0) + 1
+}
+
+function mergeNavigation(metrics: NavigationMetrics, addition: NavigationMetrics): void {
+  metrics.count += addition.count
+  metrics.domReadyMs += addition.domReadyMs
+  metrics.settleMs += addition.settleMs
+  for (const [reason, count] of Object.entries(addition.settleReasons)) {
+    metrics.settleReasons[reason] = (metrics.settleReasons[reason] ?? 0) + count
+  }
 }
 
 function linkAbortSignals(...signals: AbortSignal[]): { signal: AbortSignal; dispose: () => void } {
