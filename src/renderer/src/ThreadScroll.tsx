@@ -9,7 +9,14 @@ import {
 } from 'react';
 import { createContext } from 'react';
 import { resolveMessageScrollerSnapshot } from './message-scroller-visibility';
-import { completionScrollMode } from './thread-scroll-state';
+import {
+  anchorSpacerHeight,
+  completionScrollMode,
+  keyScrollIntent,
+  shouldRepinOnScroll,
+  wheelIntent,
+  type ReaderScrollIntent,
+} from './thread-scroll-state';
 
 export type MessageScrollerAnchor = {
   id: string;
@@ -149,6 +156,12 @@ function ReaderPositionMenu({
 // Keeps the transcript pinned to the bottom as content streams in, but yields to
 // the user the moment they scroll up to read back — re-pinning only when they
 // return to the bottom themselves.
+//
+// Mode releases are driven by real input events (wheel, keys, touch, selection
+// drag), never by bare scroll events: those also fire for browser clamps and
+// for our own scrollTop writes racing streamed content growth, and treating
+// them as reader intent used to silently kill auto-follow mid-stream. A bare
+// scroll event may only re-pin at the live edge.
 export function ThreadScroll({
   children,
   dependencies,
@@ -189,10 +202,17 @@ export function ThreadScroll({
   // A fresh/restored thread may arrive with activeTurnId already set for an
   // in-progress turn; that must NOT yank it to the top — only a live send does.
   const justResetRef = useRef(false);
-  // Programmatic scrollTop writes fire onScroll; without this guard the first
-  // anchor write would immediately release the anchor (bottom-pin doesn't need
-  // it because it re-pins to the same value).
-  const suppressScrollRef = useRef(false);
+  // Latched while the reader's last intent was upward (wheel up, PageUp,
+  // dragging a selection toward the top). While held, reaching the bottom does
+  // NOT re-pin — only a downward intent clears it, so one wheel tick up from
+  // the live edge is not instantly re-captured.
+  const upHoldRef = useRef(false);
+  // True while a primary-button drag is in flight (text selection). Scroll
+  // events during a drag are edge-autoscroll — real reader intent, the one
+  // scroll source that produces no wheel/key/touch event.
+  const selectingRef = useRef(false);
+  const dragOriginRef = useRef<{ x: number; y: number } | null>(null);
+  const lastScrollTopRef = useRef(0);
   const scrollKeyRef = useRef(scrollKey);
   const scrollPositionsRef = useRef(new Map<string, { top: number; pinned: boolean }>());
   const [spacerOn, setSpacerOn] = useState(false);
