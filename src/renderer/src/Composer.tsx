@@ -406,6 +406,90 @@ export function Composer({
     }
   };
 
+  const clearDraft = (): void => {
+    setValue('');
+    setAttachments([]);
+    setMentions([]);
+    setAttachmentError(null);
+    setPluginMenuState('closed');
+    setCommandMenuDismissed(false);
+  };
+
+  const openHistory = (): void => {
+    setHistoryQuery('');
+    setIsHistoryOpen(true);
+  };
+
+  const toggleStash = (): void => {
+    if (hasDraft) {
+      stashComposerDraft(draftKey, { value, attachments, mentions });
+      clearDraft();
+      setHasStash(true);
+      requestAnimationFrame(() => textareaRef.current?.focus());
+      return;
+    }
+    const restored = takeStashedComposerDraft(draftKey);
+    if (!restored) return;
+    setValue(restored.value);
+    setAttachments(restored.attachments);
+    setMentions(restored.mentions);
+    setHasStash(false);
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
+  const chooseCommand = (option: ComposerCommandOption): void => {
+    if (option.disabled) return;
+    setCommandMenuDismissed(true);
+    switch (option.id) {
+      case 'context':
+        setValue('@');
+        break;
+      case 'attach':
+        setValue('');
+        setAttachmentError(null);
+        void window.api.attachments
+          .pick()
+          .then((items) => setAttachments((current) => [...current, ...items]))
+          .catch((error: unknown) =>
+            setAttachmentError(error instanceof Error ? error.message : String(error)),
+          );
+        break;
+      case 'history':
+        setValue('');
+        openHistory();
+        break;
+      case 'new':
+        clearDraft();
+        onNewThread();
+        break;
+      case 'agent':
+        clearDraft();
+        onNewAgent?.();
+        break;
+      case 'plugins':
+        setValue('');
+        onBrowsePlugins();
+        break;
+      case 'clear':
+        clearDraft();
+        break;
+    }
+    if (option.id !== 'history') requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
+  const resolveMentionText = async (text: string, selectedMentions: FileMention[]): Promise<string> => {
+    if (!selectedMentions.length || !workspace) return text;
+    const resolved = await Promise.all(
+      selectedMentions.map(async (mention) => ({
+        ...mention,
+        ...(await window.api.mentions
+          .read({ workspace, path: mention.path, kind: mention.kind })
+          .catch(() => ({ content: null, truncated: false }))),
+      })),
+    );
+    return `${text}${buildMentionContext(resolved)}`;
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
@@ -414,35 +498,42 @@ export function Composer({
       return;
     }
 
-    setValue('');
     const submittedAttachments = attachments;
     const submittedMentions = mentions;
-    if (!isTurnActive) setAttachments([]);
-    setMentions([]);
+    clearDraft();
+
+    if (isTurnActive && effectiveTurnAction !== 'steer') {
+      if (queuedMessage) {
+        setValue(text);
+        setAttachments(submittedAttachments);
+        setMentions(submittedMentions);
+        setAttachmentError('A message is already queued for this chat.');
+        return;
+      }
+      setQueuedMessageState({
+        text,
+        displayText: text,
+        attachments: submittedAttachments,
+        mentions: submittedMentions,
+      });
+      recordComposerPrompt(draftKey, text);
+      composerDrafts.delete(draftKey);
+      if (effectiveTurnAction === 'stop-send') await onStop();
+      return;
+    }
 
     // Cursor-style resolution: mentioned files/folders are read now and ride
     // along inside a marker block the transcript strips from display.
-    let outgoing = text;
-    if (submittedMentions.length && workspace) {
-      const resolved = await Promise.all(
-        submittedMentions.map(async (mention) => ({
-          ...mention,
-          ...(await window.api.mentions
-            .read({ workspace, path: mention.path, kind: mention.kind })
-            .catch(() => ({ content: null, truncated: false }))),
-        })),
-      );
-      outgoing = `${text}${buildMentionContext(resolved)}`;
-    }
-
+    const outgoing = await resolveMentionText(text, submittedMentions);
     const accepted = isTurnActive
       ? await onSteer(outgoing)
       : await onSend(outgoing, submittedAttachments);
     if (!accepted) {
       setValue((current) => (current ? `${text}\n${current}` : text));
-      if (!isTurnActive) setAttachments(submittedAttachments);
+      setAttachments(submittedAttachments);
       setMentions(submittedMentions);
     } else {
+      recordComposerPrompt(draftKey, text);
       composerDrafts.delete(draftKey);
     }
   };
