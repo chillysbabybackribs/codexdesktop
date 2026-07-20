@@ -540,7 +540,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_research_dual',
-    description: 'Quality-max breadth path: run hidden parallel URL discovery, navigate the visible tab directly to the strongest destination, and gather bounded artifact-first evidence. Use when broad source-backed research, consequential comparisons, or conflicts need live verification plus independent public evidence. Search result pages are never shown. Never creates a tab.',
+    description: 'Quality-max default for search-shaped, current-information, or post-cutoff tasks: run hidden parallel URL discovery, navigate the visible tab directly to the strongest destination, and gather bounded artifact-first evidence in parallel. Also the path for broad source-backed research, consequential comparisons, or conflicts that need live verification plus independent public evidence. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserResearchDualSchema
   },
   {
