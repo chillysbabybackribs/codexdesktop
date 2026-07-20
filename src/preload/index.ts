@@ -13,6 +13,7 @@ import type {
   BrowserFindResult,
   BrowserMenuAnchor,
   BrowserMenuItem,
+  TitlebarCalendarAnchor,
   BrowserState,
   BrowserVpnStatus,
   SessionEvent,
@@ -64,6 +65,17 @@ export const api = {
     minimize: () => ipcRenderer.invoke(ipcChannels.windowMinimize),
     toggleMaximize: () => ipcRenderer.invoke(ipcChannels.windowToggleMaximize),
     close: () => ipcRenderer.invoke(ipcChannels.windowClose)
+  },
+  titlebarCalendar: {
+    open: (anchor: TitlebarCalendarAnchor) => ipcRenderer.invoke(ipcChannels.titlebarCalendarOpen, anchor),
+    close: () => ipcRenderer.invoke(ipcChannels.titlebarCalendarClose),
+    onClosed: (listener: () => void) => {
+      const wrapped = (): void => listener()
+      ipcRenderer.on(ipcChannels.titlebarCalendarClosed, wrapped)
+      return () => {
+        ipcRenderer.off(ipcChannels.titlebarCalendarClosed, wrapped)
+      }
+    }
   },
   browser: {
     newTab: (url?: string): Promise<string | undefined> => ipcRenderer.invoke(ipcChannels.browserNewTab, url),
