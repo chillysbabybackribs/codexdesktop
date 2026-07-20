@@ -3453,23 +3453,6 @@ samp {
   background: #382624;
 }
 
-.turn-trace-button {
-  flex: 0 0 auto;
-  padding: 2px 7px;
-  border: 1px solid #343434;
-  border-radius: 5px;
-  background: transparent;
-  color: #7b7b7b;
-  font-size: 10.5px;
-  cursor: pointer;
-}
-
-.turn-trace-button:hover {
-  border-color: #4f4f4f;
-  background: #242424;
-  color: #c3c3c3;
-}
-
 /* --- Streaming assistant message ----------------------------------------- */
 
 .message-commentary {

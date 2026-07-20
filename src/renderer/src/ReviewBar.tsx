@@ -419,27 +419,6 @@ function MenuBookmarkIcon({ className }: { className?: string }): React.JSX.Elem
   );
 }
 
-function MenuTraceIcon({ className }: { className?: string }): React.JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 19h4V5H4" />
-      <path d="M8 8h5a3 3 0 0 1 3 3v0a3 3 0 0 0 3 3h1" />
-      <path d="m18 11 3 3-3 3" />
-    </svg>
-  );
-}
-
 function MenuRepeatIcon({ className }: { className?: string }): React.JSX.Element {
   return (
     <svg
