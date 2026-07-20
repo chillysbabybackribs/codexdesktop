@@ -328,6 +328,34 @@ test('dynamic tool router forwards selector-ready navigation', async () => {
   })
 })
 
+test('agent navigation tools reject visible search inputs and explicit SERP URLs', async () => {
+  let called = false
+  const browserAgent = withTurnRunner({
+    navigate: async () => {
+      called = true
+      return { ok: true }
+    },
+    snapshot: async () => {
+      called = true
+      return { ok: true }
+    }
+  }) as unknown as BrowserAgentController
+
+  const queryNavigation = await routeDynamicToolCall(params('browser_navigate', {
+    url: 'best Electron browser automation patterns'
+  }), { browserAgent, researchRunner: unusedResearch })
+  const serpSnapshot = await routeDynamicToolCall(params('browser_snapshot', {
+    objective: 'Find useful results',
+    url: 'https://www.google.com/search?q=electron+browser+automation'
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(queryNavigation.success, false)
+  assert.equal(serpSnapshot.success, false)
+  assert.match(textResult(queryNavigation).error ?? '', /direct destination URL/i)
+  assert.match(textResult(serpSnapshot).error ?? '', /browser_live_search/i)
+  assert.equal(called, false)
+})
+
 test('dynamic tool router returns a standalone data URI for app screenshots', async () => {
   const browserAgent = withTurnRunner({
     captureAppScreenshot: async () => ({
