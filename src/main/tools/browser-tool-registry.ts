@@ -221,21 +221,21 @@ export async function runBrowserTool(
       result = url && !isDirectAgentNavigation(url)
         ? directNavigationRequired(tool)
         : await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
-        url,
-        steps: args.steps,
-        match: readNetworkMatch(args.match),
-        captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
-        download: args.download === true,
-        stream: readNetworkStream(args.stream),
-        readySelector: readString(args.readySelector),
-        quietMs: readNumber(args.quietMs),
-        maxSettleMs: readNumber(args.maxSettleMs)
-      }, {
-        tabId: resolveAgentTab(readString(args.tab)),
-        timeoutMs: readNumber(args.timeoutMs),
-        maxResultChars: readNumber(args.maxResultChars),
-        signal
-      }))
+            url,
+            steps: args.steps,
+            match: readNetworkMatch(args.match),
+            captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
+            download: args.download === true,
+            stream: readNetworkStream(args.stream),
+            readySelector: readString(args.readySelector),
+            quietMs: readNumber(args.quietMs),
+            maxSettleMs: readNumber(args.maxSettleMs)
+          }, {
+            tabId: resolveAgentTab(readString(args.tab)),
+            timeoutMs: readNumber(args.timeoutMs),
+            maxResultChars: readNumber(args.maxResultChars),
+            signal
+          }))
     } else if (tool === 'browser_run') {
       const code = readString(args.code)
       result = code
