@@ -31,6 +31,7 @@ import {
   isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
+  preferExtractableHost,
   rankSerpCandidates,
   type RankedSerpCandidate,
   type SerpCandidate
@@ -583,7 +584,8 @@ export class ResearchRunner {
             }
           }
 
-          const route = this.originRouter.begin(candidate.url)
+          const fetchUrl = preferExtractableHost(candidate.url)
+          const route = this.originRouter.begin(fetchUrl)
           const staticTimeout = new AbortController()
           const staticStartedAt = Date.now()
           const staticTimer = route.mode === 'static'
@@ -600,12 +602,12 @@ export class ResearchRunner {
               durationMs: 0,
               bytes: 0,
               redirects: 0,
-              finalUrl: candidate.url
+              finalUrl: fetchUrl
             }
           } else {
             try {
               staticFetchAttempts += 1
-              staticResult = await fetchStaticResearchPage(candidate.url, {
+              staticResult = await fetchStaticResearchPage(fetchUrl, {
                 fetch: (url, init) => session.fromPartition(researchPartition).fetch(url, init),
                 validateUrl: assertPublicResearchUrl,
                 signal: preflight.signal,
