@@ -290,7 +290,7 @@ export function ThreadScroll({
     // rather than flush against (or clipped above) the edge.
     const topGap = 12;
 
-    // Size the trailing spacer to the exact shortfall of room below the user
+    // Size the trailing spacer to the shortfall of room below the user
     // message, so it can reach the top without leaving more than one viewport
     // of slack. Measured from the DOM, immune to offsetParent/padding quirks.
     const spacer = spacerRef.current;
@@ -300,8 +300,7 @@ export function ThreadScroll({
       const nodeRect = node.getBoundingClientRect();
       const nodeTopWithin = nodeRect.top - elRect.top + el.scrollTop;
       const contentBelow = el.scrollHeight - priorSpacer - nodeTopWithin;
-      const needed = Math.max(0, el.clientHeight - contentBelow - topGap);
-      const nextHeight = `${needed}px`;
+      const nextHeight = `${anchorSpacerHeight(el.clientHeight, contentBelow, topGap)}px`;
       if (spacer.style.height !== nextHeight) spacer.style.height = nextHeight;
     }
 
@@ -309,8 +308,8 @@ export function ThreadScroll({
     // (minus the gap), rather than computing an absolute offsetTop target.
     const delta = node.getBoundingClientRect().top - el.getBoundingClientRect().top - topGap;
     if (Math.abs(delta) > 1) {
-      suppressScrollRef.current = true;
       el.scrollTop += delta;
+      lastScrollTopRef.current = el.scrollTop;
       rememberScrollPosition();
     }
   }, [rememberScrollPosition]);
