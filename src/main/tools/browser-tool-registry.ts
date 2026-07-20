@@ -67,14 +67,10 @@ export async function runBrowserTool(
     let result: BrowserToolOutcome['result']
     let imageUrls: string[] = []
 
-    if (tool === 'browser_live_search' || tool === 'browser_research_dual') {
+    if (tool === 'browser_live_search') {
       const queries = readSearchQueries(args)
       const objective = readString(args.objective)
-      // browser_research_dual remains as an unadvertised compatibility alias
-      // for resumed turns. New turns use one search tool and opt into the
-      // artifact-first lane without spending a model decision on two nearly
-      // identical tool names.
-      const includeBackground = tool === 'browser_research_dual' || args.background === true
+      const includeBackground = args.background === true
       if (queries.length === 0 || !objective) {
         result = { ok: false, error: `${tool} requires "objective" and at least one search query` }
       } else if (!deps.researchRunner) {
@@ -158,7 +154,6 @@ export async function runBrowserTool(
             ...(ok
               ? {}
               : { error: includeBackground ? 'one or more search lanes failed' : 'Hidden discovery succeeded, but the destination page snapshot failed' }),
-            ...(tool === 'browser_research_dual' ? { live: page } : {})
           }
         })
       }

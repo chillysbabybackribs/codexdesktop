@@ -26,7 +26,7 @@ export function isBrowseAction(action: CommandAction): boolean {
 
 function isBrowserResearchTool(tool: string): boolean {
   const leaf = tool.split('__').at(-1) ?? tool
-  return leaf === 'research_web' || leaf === 'browser_live_search' || leaf === 'browser_research_dual'
+  return leaf === 'research_web' || leaf === 'browser_live_search'
 }
 
 // Human label for what Codex is doing right now, from the newest live item.
@@ -79,12 +79,11 @@ export function currentActionLabel(
         }
         return `Calling ${item.server}.${item.tool}`
       case 'dynamicToolCall': {
-        const progress = item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual'
+        const progress = item.tool === 'research_web' || item.tool === 'browser_live_search'
           ? latestItemProgress(itemMeta[item.id])
           : null
         if (progress) return progress
         if (item.tool === 'browser_live_search') return 'Finding the best source'
-        if (item.tool === 'browser_research_dual') return 'Researching sources'
         return `Calling ${item.tool}`
       }
       case 'webSearch':

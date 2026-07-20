@@ -49,7 +49,7 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual')) {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'research_web' || item.tool === 'browser_live_search')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {

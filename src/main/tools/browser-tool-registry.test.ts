@@ -122,14 +122,14 @@ test('browser_live_search background mode starts live and independent evidence w
   assert.ok(timings.firstUrlMs < 20, `first URL dispatch regressed: ${JSON.stringify(timings)}`)
 })
 
-test('browser_research_dual remains an unadvertised compatibility alias', async () => {
+test('browser_live_search does not emit the legacy alias shape', async () => {
   const events: string[] = []
   const { result } = await runBrowserTool(
-    { tool: 'browser_research_dual', args: { objective: 'facts', query: 'example query' }, owner: null, callId: 'c4' },
+    { tool: 'browser_live_search', args: { objective: 'facts', query: 'example query', background: true }, owner: null, callId: 'c4' },
     fakeDeps({ fireEarly: true, events })
   )
 
   assert.equal(result.ok, true)
   assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
-  assert.equal((result.live as { ok: boolean }).ok, true)
+  assert.equal('live' in result, false)
 })

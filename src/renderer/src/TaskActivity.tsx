@@ -975,7 +975,7 @@ function DynamicToolBlock({
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool;
   const screenshot = cdpScreenshotArtifact(item);
   const fileArtifact = cdpFileArtifact(item);
-  const hiddenSearch = item.tool === 'browser_live_search' || item.tool === 'browser_research_dual';
+  const hiddenSearch = item.tool === 'browser_live_search';
   const destinationUrl = hiddenSearch ? directSearchDestinationUrl(item) : null;
   const progress =
     status === 'running' && (item.tool === 'research_web' || hiddenSearch)

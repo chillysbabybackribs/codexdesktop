@@ -12,8 +12,6 @@ test('every canonical tool spec converts to a zod shape without loss of required
     browserToolSpecs.length,
     'every canonical browser tool spec must be a function spec the MCP server can register'
   )
-  // browser_research_dual is deliberately unpinned: it is being folded into
-  // browser_live_search as an unadvertised compatibility alias.
   for (const name of ['browser_live_search', 'browser_network', 'browser_extract_page', 'browser_cdp']) {
     assert.ok(functionSpecs.some((spec) => spec.name === name), `newer tool ${name} must stay declared`)
   }

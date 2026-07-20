@@ -3,7 +3,7 @@ import test from 'node:test';
 import { stripLegacyBrowserRoutingNote } from './browser-routing-note.ts';
 
 const note =
-  '[browser routing] mode=dual (quality-max): search-shaped or freshness-sensitive: verify live in the visible tab while parallel background research corroborates. Start with browser_research_dual unless the request clearly needs no external evidence.';
+  '[browser routing] mode=dual (quality-max): search-shaped or freshness-sensitive: verify live in the visible tab while parallel background research corroborates. Start with browser_live_search with background=true unless the request clearly needs no external evidence.';
 
 test('legacy browser routing hints are hidden from stored user messages', () => {
   assert.equal(stripLegacyBrowserRoutingNote(`Find the latest release\n\n${note}`), 'Find the latest release');
