@@ -26,8 +26,7 @@ import { summarizeTurnDiff } from './diff';
 import { buildTurnTrace } from './trace';
 import { modelCallAttributionForItem, reduceTurnTelemetry } from './turn-telemetry';
 import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
-import { stripMentionContext } from './mention-model';
-import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
+import { visibleUserMessageText } from './ChatTranscript';
 import { completedMemoryTurns } from './memory-turns';
 import type { ChatAttachment } from '../../shared/ipc';
 import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transcript-model';
@@ -90,7 +89,6 @@ import {
   noPlanReason,
   pickIntakeReviewer,
   reviewerDisplayLabel,
-  stripIntakeInjections,
   type IntakeState,
 } from './main-chat-intake';
 import {
@@ -647,16 +645,7 @@ export default function App(): React.JSX.Element {
     const firstUserMessage = items.find(
       (item): item is Extract<ThreadItem, { type: 'userMessage' }> => item.type === 'userMessage',
     );
-    const prompt =
-      firstUserMessage?.content
-        .filter((content) => content.type === 'text')
-        .map((content) =>
-          stripIntakeInjections(
-            stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-          ),
-        )
-        .join('\n')
-        .trim() ?? '';
+    const prompt = firstUserMessage ? visibleUserMessageText(firstUserMessage).trim() : '';
     const title = provisionalThreadTitle(prompt);
     if (title === defaultThreadTitle) return;
 
@@ -3620,17 +3609,7 @@ export default function App(): React.JSX.Element {
       (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
     );
     if (!userItem || userItem.type !== 'userMessage') return '(request text unavailable)';
-    return (
-      userItem.content
-        .filter((content) => content.type === 'text')
-        .map((content) =>
-          stripIntakeInjections(
-            stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-          ),
-        )
-        .join('\n')
-        .trim() || '(request text unavailable)'
-    );
+    return visibleUserMessageText(userItem).trim() || '(request text unavailable)';
   }
 
   // Mid-turn watchdog (main-chat-watchdog.ts): sparse trajectory checks on the

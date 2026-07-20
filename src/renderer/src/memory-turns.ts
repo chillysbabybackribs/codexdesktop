@@ -1,9 +1,7 @@
 import type { MemoryPersistParams } from '../../shared/ipc';
 import type { ItemMeta, TurnMeta } from './TaskActivity';
-import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
-import { stripIntakeInjections } from './main-chat-intake';
+import { visibleUserMessageText } from './ChatTranscript';
 import { selectCompletedWork } from './memory-work';
-import { stripMentionContext } from './mention-model';
 import type { ChatItem } from './transcript-model';
 
 function isTerminalTurnStatus(status: TurnMeta['status']): boolean {
@@ -25,11 +23,7 @@ export function completedMemoryTurns(
     const turn = turns.get(turnId) ?? { user: '', assistant: '', completedWork: [] };
 
     if (item.type === 'userMessage') {
-      turn.user = item.content
-        .filter((content) => content.type === 'text')
-        .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
-        .join('\n')
-        .trim();
+      turn.user = visibleUserMessageText(item).trim();
     } else if (item.type === 'agentMessage' && item.phase !== 'commentary') {
       turn.assistant = item.text.trim();
     } else {

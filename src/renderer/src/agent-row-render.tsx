@@ -3,6 +3,7 @@ import { AttachmentStrip, attachmentsFromUserInput } from './Attachments'
 import { stripMainChatContext } from './agent-session-model'
 import type { AuditRequestSummary } from './audit-trigger'
 import { auditBriefMarkdown, auditSummaryLabel, isAuditPrompt, parseAuditPrompt, parseAuditVerdict, stripVerdictLine } from './audit-trigger'
+import { stripLegacyBrowserRoutingNote } from './browser-routing-note'
 import type { DockExchange } from './dock-exchanges'
 import { MarkdownContent } from './MarkdownContent'
 import { isWorkItem, type ActivityItem, type RenderRow } from './transcript-model'
@@ -53,10 +54,12 @@ export function renderAgentRow(row: RenderRow, context: AgentRowContext): React.
 
   const item = row.item
   if (item.type === 'userMessage') {
-    const text = item.content
-      .filter((content) => content.type === 'text')
-      .map((content) => content.text)
-      .join('\n')
+    const text = stripLegacyBrowserRoutingNote(
+      item.content
+        .filter((content) => content.type === 'text')
+        .map((content) => content.text)
+        .join('\n'),
+    )
     const attachments = attachmentsFromUserInput(item.content)
     const audit = isAuditPrompt(text) ? parseAuditPrompt(text) : null
     if (!audit && !text && !attachments.length) return null
