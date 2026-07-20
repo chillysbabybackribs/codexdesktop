@@ -29,6 +29,26 @@ export type ExtractedPageAssessment = {
   reason?: 'invalid-url' | 'http-error' | 'challenge-page' | 'login-page' | 'error-page' | 'insufficient-content'
 }
 
+/**
+ * Some hosts serve a JS shell (or a login interstitial) to an anonymous
+ * browser but keep a server-rendered mirror that extracts cleanly and even
+ * satisfies the cheap static lane. Rewrite only the FETCH address — reporting
+ * keeps whatever URL the page itself lands on.
+ */
+export function preferExtractableHost(url: string): string {
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.toLowerCase()
+    if (host === 'www.reddit.com' || host === 'reddit.com') {
+      parsed.hostname = 'old.reddit.com'
+      return parsed.href
+    }
+  } catch {
+    // Not a parseable URL; let downstream validation reject it.
+  }
+  return url
+}
+
 export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] {
   const urls: string[] = []
   const seen = new Set<string>()
