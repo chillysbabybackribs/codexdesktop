@@ -63,6 +63,7 @@ type ProviderSelector = (model: string | null | undefined) => SessionProvider
 // providers need this) via a setter on each provider.
 export interface SubagentSpawner {
   spawnAndAwait(request: SpawnRequest): Promise<SpawnResult>
+  spawnManyAndAwait(requests: SpawnRequest[]): Promise<SpawnResult[]>
 }
 
 // Extract the child's final answer from a completed turn's items — the last
@@ -198,6 +199,14 @@ export class SubagentOrchestrator {
     }
 
     return done
+  }
+
+  // Quality-max fan-out primitive. Each child keeps the ordinary blocking
+  // lifecycle and dock stream, while the parent waits on one gather barrier.
+  // A hard bound prevents native/model-authored prompts from recursively
+  // turning this into unmetered subscription fan-out.
+  async spawnManyAndAwait(requests: SpawnRequest[]): Promise<SpawnResult[]> {
+    return Promise.all(requests.slice(0, 3).map((request) => this.spawnAndAwait(request)))
   }
 
   // Interrupt every in-flight child of a parent turn and settle their promises.

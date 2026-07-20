@@ -619,6 +619,21 @@ const spawnSubagentSchema = {
   additionalProperties: false
 }
 
+const spawnSubagentsParallelSchema = {
+  type: 'object',
+  properties: {
+    tasks: {
+      type: 'array',
+      minItems: 2,
+      maxItems: 3,
+      description: 'Two or three independent, self-contained tasks to run concurrently behind one gather barrier.',
+      items: spawnSubagentSchema
+    }
+  },
+  required: ['tasks'],
+  additionalProperties: false
+}
+
 // Subagent-spawn tools. Kept in a separate array from browserDynamicTools so
 // each surface's tool set reads by intent, but authored in this one file (the
 // single schema-authoring point every transport shares). Phase 1 exposes one
@@ -631,6 +646,12 @@ export const agentDynamicTools: DynamicToolSpec[] = [
     name: 'spawn_subagent',
     description: 'Delegate a self-contained subtask to a fresh subagent and wait for its result. The subagent runs its own full turn in the same workspace with access to the same tools, then returns its final answer to you as this tool\'s result. It does not see your conversation, so make `task` fully self-contained. Use for well-scoped work you want handled independently (research a question, review a diff, draft a file) or to get a second-model perspective. The call blocks until the subagent finishes, so spawn one focused subtask at a time.',
     inputSchema: spawnSubagentSchema
+  },
+  {
+    type: 'function',
+    name: 'spawn_subagents_parallel',
+    description: 'Run two or three independent subagents concurrently and wait for all results. Use in quality-max work for independent research lanes or a doer plus auditor. Each task must be fully self-contained. The app shows every worker in the Agent Dock and returns a bounded gathered result to the parent.',
+    inputSchema: spawnSubagentsParallelSchema
   }
 ]
 

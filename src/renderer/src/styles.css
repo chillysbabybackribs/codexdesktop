@@ -5942,8 +5942,8 @@ samp {
 .composer-shell .composer-primary-action .stop-square-button {
   width: 34px;
   height: 34px;
+  border: 0;
   border-radius: 9px;
-  border-color: #2c2c2c;
   background: #1c1c1c;
 }
 

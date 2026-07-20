@@ -5,7 +5,7 @@ import type { SubagentSpawner, SpawnResult } from './subagent-orchestrator.js'
 // call this, so the tool behaves identically on either runtime. Kept tiny:
 // Phase 1 has exactly one tool.
 
-export const AGENT_TOOL_NAMES = ['spawn_subagent'] as const
+export const AGENT_TOOL_NAMES = ['spawn_subagent', 'spawn_subagents_parallel'] as const
 
 export function isAgentTool(tool: string): boolean {
   return (AGENT_TOOL_NAMES as readonly string[]).includes(tool)
@@ -31,12 +31,33 @@ export async function runAgentTool(
   owner: AgentToolOwner,
   spawner: SubagentSpawner | null,
 ): Promise<AgentToolResult> {
-  if (tool !== 'spawn_subagent') {
+  if (tool !== 'spawn_subagent' && tool !== 'spawn_subagents_parallel') {
     return { ok: false, error: `unknown agent tool: ${tool}` }
   }
   if (!spawner) {
     return { ok: false, error: 'spawn_subagent is not available on this transport' }
   }
+  if (tool === 'spawn_subagents_parallel') {
+    const tasks = Array.isArray(args.tasks)
+      ? args.tasks.slice(0, 3).map(asTaskRequest).filter((task): task is NonNullable<typeof task> => task !== null)
+      : []
+    if (tasks.length < 2) {
+      return { ok: false, error: 'spawn_subagents_parallel requires between 2 and 3 valid tasks' }
+    }
+    const results = await spawner.spawnManyAndAwait(tasks.map((task) => ({
+      ...task,
+      parentThreadId: owner.parentThreadId,
+      parentTurnId: owner.parentTurnId,
+      parentAgentKey: owner.parentAgentKey,
+      cwd: owner.cwd,
+    })))
+    return {
+      ok: results.every((result) => result.ok),
+      status: results.every((result) => result.ok) ? 'completed' : 'partial',
+      results: results.map(summarizeSpawn),
+    }
+  }
+
   const task = typeof args.task === 'string' ? args.task.trim() : ''
   if (!task) {
     return { ok: false, error: 'spawn_subagent requires a non-empty "task"' }
@@ -54,6 +75,18 @@ export async function runAgentTool(
     cwd: owner.cwd,
   })
   return summarizeSpawn(result)
+}
+
+function asTaskRequest(value: unknown): Pick<import('./subagent-orchestrator.js').SpawnRequest, 'task' | 'title' | 'model'> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const record = value as Record<string, unknown>
+  const task = typeof record.task === 'string' ? record.task.trim() : ''
+  if (!task) return null
+  return {
+    task,
+    title: typeof record.title === 'string' ? record.title : null,
+    model: typeof record.model === 'string' ? record.model : null,
+  }
 }
 
 // Shape the parent model reads: the child's answer plus enough status to reason
