@@ -1081,12 +1081,17 @@ test('browser agent captures a matched completed response and body in one naviga
     getURL: () => 'https://example.com/results',
     getTitle: () => 'Results'
   }) as unknown as WebContents
+  let targetEpoch = 7
   const tabs = {
     getActiveTabId: () => 'tab-1',
+    getTargetEpoch: () => targetEpoch,
     resolveWebContents: () => webContents,
     listTabs: () => [{ id: 'tab-1', url: 'https://example.com/results', title: 'Results', active: true }],
     listTargets: () => [],
     navigateAndWait: async () => {
+      // Controlled navigation advances the document epoch. The capture must
+      // adopt this epoch instead of reporting its own action as target loss.
+      targetEpoch += 1
       debuggerApi.emit('message', {}, 'Network.requestWillBeSent', {
         requestId: 'graphql-1', type: 'Fetch', timestamp: 2,
         request: { url: 'https://example.com/graphql?operation=Results', method: 'POST' }

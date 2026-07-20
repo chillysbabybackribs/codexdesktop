@@ -2,8 +2,12 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   assessExtractedPage,
+  bingSearchFeedUrl,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
+  duckDuckGoLiteSearchUrl,
+  extractBingSearchFeedCandidates,
+  extractDuckDuckGoLiteCandidates,
   extractSameHostNavLinks,
   googleSearchUrl,
   isCrossHostLanding,
@@ -53,6 +57,55 @@ test('research search URLs are deterministic and encoded', () => {
     googleSearchUrl('DeepSeek V4 Pro review', 5),
     'https://www.google.com/search?num=10&q=DeepSeek%20V4%20Pro%20review'
   )
+  assert.equal(
+    duckDuckGoLiteSearchUrl('DeepSeek V4 Pro review'),
+    'https://lite.duckduckgo.com/lite/?q=DeepSeek%20V4%20Pro%20review'
+  )
+  assert.equal(
+    bingSearchFeedUrl('DeepSeek V4 Pro review', 5),
+    'https://www.bing.com/search?format=rss&count=10&q=DeepSeek%20V4%20Pro%20review'
+  )
+})
+
+test('DuckDuckGo Lite results decode destinations and keep adjacent snippets', () => {
+  const html = `<!doctype html><html><body><table>
+    <tr><td>1.</td><td><a class="result-link" href="//duckduckgo.com/l/?uddg=https%3A%2F%2Fgithub.com%2Fopenai%2Fcodex%2Fissues%2F10432%3Futm_source%3Dsearch&amp;rut=ignored">High GPU usage in Codex Desktop</a></td></tr>
+    <tr><td></td><td class="result-snippet">Users report 70–90% GPU usage on macOS.</td></tr>
+    <tr><td></td><td><span class="link-text">github.com/openai/codex/issues/10432</span></td></tr>
+    <tr><td>2.</td><td><a class="result-link" href="https://example.com/report">Independent report</a></td></tr>
+    <tr><td></td><td class="result-snippet">A second source.</td></tr>
+  </table></body></html>`
+
+  assert.deepEqual(extractDuckDuckGoLiteCandidates(html, 2), [
+    {
+      url: 'https://github.com/openai/codex/issues/10432',
+      title: 'High GPU usage in Codex Desktop',
+      snippet: 'Users report 70–90% GPU usage on macOS.',
+      rank: 1
+    },
+    {
+      url: 'https://example.com/report',
+      title: 'Independent report',
+      snippet: 'A second source.',
+      rank: 2
+    }
+  ])
+})
+
+test('Bing RSS fallback extracts bounded destination records', () => {
+  const xml = `<?xml version="1.0"?><rss><channel>
+    <item><title>Official release notes</title><link>https://example.com/releases?utm_medium=rss</link><description>Current product changes &amp; fixes.</description></item>
+    <item><title>Issue report</title><link>https://github.com/example/app/issues/42</link><description>A reproducible desktop failure.</description></item>
+  </channel></rss>`
+
+  assert.deepEqual(extractBingSearchFeedCandidates(xml, 1), [
+    {
+      url: 'https://example.com/releases',
+      title: 'Official release notes',
+      snippet: 'Current product changes & fixes.',
+      rank: 1
+    }
+  ])
 })
 
 test('SERP extraction program is bounded and syntactically valid', () => {

@@ -1023,7 +1023,7 @@ export class BrowserAgentController {
     const maxResultChars = operationResultChars(options)
     return this.tabOperations.run(tabId, async () => {
       if (options.signal?.aborted) return cancelledResult()
-      const lease = captureTargetLease(tabs, tabId)
+      let lease = captureTargetLease(tabs, tabId)
       if (!lease) {
         return { ok: false, error: `no tab with id ${tabId}`, errorCode: 'targetClosed' } satisfies BrowserAgentFailure
       }
@@ -1082,6 +1082,18 @@ export class BrowserAgentController {
             await waiting
             throw error
           }
+
+          // The trigger is allowed to navigate this tab, so adopt the page
+          // epoch produced by that controlled action. Keep the WebContents
+          // identity strict: replacing or closing the tab is still terminal.
+          const actionLease = captureTargetLease(tabs, tabId)
+          if (!actionLease) {
+            throw operationError('targetClosed', 'targetLifecycle', `browser target ${tabId} closed during network capture`)
+          }
+          if (actionLease.webContents !== webContents) {
+            throw operationError('targetChanged', 'targetLifecycle', `browser target ${tabId} changed during network capture`)
+          }
+          lease = actionLease
 
           const matched = await waiting
           if (!matched.ok) throw matched.error
