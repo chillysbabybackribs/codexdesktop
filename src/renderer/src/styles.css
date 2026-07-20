@@ -275,28 +275,8 @@ samp {
   color: #d0d0d0;
 }
 
-.titlebar-clock-chevron {
-  width: 10px;
-  height: 10px;
-  color: #686868;
-  transition: transform 160ms ease;
-}
-
-.titlebar-clock-chevron path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.titlebar-clock[aria-expanded='true'] .titlebar-clock-chevron {
-  transform: rotate(180deg);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .titlebar-clock,
-  .titlebar-clock-chevron {
+  .titlebar-clock {
     transition: none;
   }
 }

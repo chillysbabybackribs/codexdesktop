@@ -66,9 +66,6 @@ export function TitlebarCalendar(): React.JSX.Element {
       <time dateTime={now.toISOString()}>
         <span className="titlebar-clock-time">{timeFormatter.format(now)}</span>
       </time>
-      <svg className="titlebar-clock-chevron" viewBox="0 0 12 12" aria-hidden="true">
-        <path d="m3 4.5 3 3 3-3" />
-      </svg>
     </button>
   );
 }
