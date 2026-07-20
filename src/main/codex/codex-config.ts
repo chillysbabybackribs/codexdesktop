@@ -492,7 +492,7 @@ const researchWebSchema = {
 const browserLiveSearchSchema = {
   type: 'object',
   properties: {
-    query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
+    query: { type: 'string', description: 'A direct search query derived from the user request. Preserve the user\'s literal names and intent.' },
     queries: {
       type: 'array',
       minItems: 1,
