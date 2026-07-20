@@ -32,7 +32,6 @@ import type { ProviderCapabilities } from '../../shared/session-protocol/provide
 import type { ResumeHistoryConsumer } from '../codex/resume-history.js';
 import type { TurnCheckpointStore } from '../turn-checkpoint.js';
 import type { BrowserAgentController } from '../browser/browser-agent.js';
-import { decideBrowserUse, formatBrowserDecisionNote } from '../browser/browser-use-policy.js';
 import type { ResearchRunner } from '../browser/research-runner.js';
 import { runBrowserTool } from '../tools/browser-tool-registry.js';
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js';
@@ -432,13 +431,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     };
 
     try {
-      // Same per-turn router verdict the codex lane injects; appended after
-      // the notification above so the UI transcript shows only the user text.
-      const routingNote = formatBrowserDecisionNote(decideBrowserUse(text), 'claude');
-      const content = await buildClaudeUserContent(
-        routingNote ? `${text}\n\n${routingNote}` : text,
-        attachments,
-      );
+      const content = await buildClaudeUserContent(text, attachments);
       await this.ensureLive(session);
       await synchronizeClaudeRuntimeSettings(session.runtime!, session);
       void this.persistSessions();

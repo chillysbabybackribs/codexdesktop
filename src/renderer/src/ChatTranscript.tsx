@@ -6,6 +6,7 @@ import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
 import { stripIntakeInjections } from './main-chat-intake';
 import { parseAuditFeedback } from './audit-trigger';
+import { stripLegacyBrowserRoutingNote } from './browser-routing-note';
 import { formatTokens } from './TraceModal';
 import { isWorkItem, type ActivityItem, type ChatItem } from './transcript-model';
 
@@ -158,7 +159,7 @@ export function stripInjectedMemory(text: string): string {
 }
 
 export function visibleUserMessageText(item: Extract<ChatItem, { type: 'userMessage' }>): string {
-  return item.content
+  const text = item.content
     .filter((content) => content.type === 'text')
     .map((content) =>
       stripIntakeInjections(
@@ -166,6 +167,7 @@ export function visibleUserMessageText(item: Extract<ChatItem, { type: 'userMess
       ),
     )
     .join('\n');
+  return stripLegacyBrowserRoutingNote(text);
 }
 
 // Auditor feedback in the main transcript: a quiet retractable card — header

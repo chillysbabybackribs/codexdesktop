@@ -9,9 +9,24 @@ import {
   isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
+  preferExtractableHost,
   rankSerpCandidates,
   type SerpCandidate
 } from './research-utils.ts'
+
+test('reddit fetches are rewritten to the server-rendered old.reddit.com mirror', () => {
+  assert.equal(
+    preferExtractableHost('https://www.reddit.com/r/ClaudeAI/comments/abc/some_thread/'),
+    'https://old.reddit.com/r/ClaudeAI/comments/abc/some_thread/'
+  )
+  assert.equal(
+    preferExtractableHost('https://reddit.com/r/codex/comments/xyz/'),
+    'https://old.reddit.com/r/codex/comments/xyz/'
+  )
+  assert.equal(preferExtractableHost('https://old.reddit.com/r/codex/'), 'https://old.reddit.com/r/codex/')
+  assert.equal(preferExtractableHost('https://example.com/reddit.com'), 'https://example.com/reddit.com')
+  assert.equal(preferExtractableHost('not a url'), 'not a url')
+})
 
 test('direct research URLs are canonicalized, bounded, and restricted to public web schemes', () => {
   assert.deepEqual(normalizeResearchUrls([

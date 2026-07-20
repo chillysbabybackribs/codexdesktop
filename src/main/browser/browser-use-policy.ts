@@ -106,20 +106,3 @@ export function buildBrowserUseGuidance(
     '- Narrate browsing sparingly: at most one short user-facing line per phase, naming the goal ("Searching for X…", "Opening example.com…"). Never describe internal mechanics such as hidden workers, SERP extraction, ranking, lanes, or tool names, and never restate an unchanged status.',
   ].join('\n')
 }
-
-const modeStartingTools: Record<Exclude<BrowserUseMode, 'none'>, string[]> = {
-  live: ['browser_live_search', 'browser_snapshot'],
-  background: ['research_web'],
-  dual: ['browser_research_dual'],
-}
-
-// One-line router verdict injected into the turn input so the model actually
-// sees the per-turn lane decision (previously it was UI telemetry only).
-export function formatBrowserDecisionNote(
-  decision: BrowserUseDecision,
-  lane: BrowserGuidanceLane = 'codex',
-): string | null {
-  if (!decision.required || decision.mode === 'none') return null
-  const tools = modeStartingTools[decision.mode].map((name) => toolName(name, lane)).join(' or ')
-  return `[browser routing] mode=${decision.mode} (${decision.preset}): ${decision.reason}. Start with ${tools} unless the request clearly needs no external evidence.`
-}

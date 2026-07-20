@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { buildBrowserUseGuidance, decideBrowserUse, formatBrowserDecisionNote } from './browser-use-policy.ts'
+import { buildBrowserUseGuidance, decideBrowserUse } from './browser-use-policy.ts'
 
 test('quality-max routes implicit current information to dual', () => {
   const decision = decideBrowserUse('Who is the current CEO and what is the latest price?', 'quality-max')
@@ -47,19 +47,4 @@ test('claude lane guidance prefixes tools and forbids built-in web tools', () =>
   assert.match(guidance, /should normally use mcp__browser__browser_research_dual/i)
   assert.match(guidance, /mcp__browser__browser_live_search/)
   assert.doesNotMatch(guidance, /Use browser_live_search/)
-})
-
-test('decision note names the starting tool for the chosen lane', () => {
-  const dual = formatBrowserDecisionNote(decideBrowserUse('search the web for the latest release', 'quality-max'))
-  assert.match(dual!, /mode=dual/)
-  assert.match(dual!, /Start with browser_research_dual/)
-
-  const claudeLive = formatBrowserDecisionNote(
-    decideBrowserUse('Check my inbox in the current tab', 'quality-max'),
-    'claude',
-  )
-  assert.match(claudeLive!, /mcp__browser__browser_live_search or mcp__browser__browser_snapshot/)
-
-  assert.equal(formatBrowserDecisionNote(decideBrowserUse('refactor this function', 'quality-max')), null)
-  assert.equal(formatBrowserDecisionNote(decideBrowserUse('What is the latest release?', 'manual')), null)
 })
