@@ -71,8 +71,12 @@ export function currentActionLabel(
       case 'mcpToolCall':
         return `Calling ${item.server}.${item.tool}`
       case 'dynamicToolCall': {
-        const progress = item.tool === 'research_web' ? latestItemProgress(itemMeta[item.id]) : null
+        const progress = item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual'
+          ? latestItemProgress(itemMeta[item.id])
+          : null
         if (progress) return progress
+        if (item.tool === 'browser_live_search') return 'Finding the best source'
+        if (item.tool === 'browser_research_dual') return 'Researching sources'
         return `Calling ${item.tool}`
       }
       case 'webSearch':

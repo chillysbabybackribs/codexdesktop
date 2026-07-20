@@ -974,8 +974,12 @@ function DynamicToolBlock({
   const name = item.namespace ? `${item.namespace}.${item.tool}` : item.tool;
   const screenshot = cdpScreenshotArtifact(item);
   const fileArtifact = cdpFileArtifact(item);
+  const hiddenSearch = item.tool === 'browser_live_search' || item.tool === 'browser_research_dual';
+  const destinationUrl = hiddenSearch ? directSearchDestinationUrl(item) : null;
   const progress =
-    status === 'running' && item.tool === 'research_web' ? latestItemProgress(meta) : null;
+    status === 'running' && (item.tool === 'research_web' || hiddenSearch)
+      ? latestItemProgress(meta)
+      : null;
 
   if (screenshot) {
     const dimensions =
@@ -1020,14 +1024,28 @@ function DynamicToolBlock({
     <ToolRow
       icon={<PlugIcon />}
       status={item.success === false ? 'failed' : status}
-      verb="Tool"
-      detail={args ? `${name} ${args}` : name}
+      verb={hiddenSearch ? (destinationUrl ? 'Opened page' : 'Finding best source') : 'Tool'}
+      detail={hiddenSearch ? destinationUrl : (args ? `${name} ${args}` : name)}
+      detailTitle={destinationUrl ?? undefined}
       meta={duration && duration >= 100 ? fmtDuration(duration) : null}
       sub={
         progress ? <div className="tool-row-sub shimmer-text">{truncate(progress, 120)}</div> : null
       }
     />
   );
+}
+
+function directSearchDestinationUrl(item: DynamicToolCallItem): string | null {
+  for (const content of item.contentItems ?? []) {
+    if (content.type !== 'inputText') continue;
+    try {
+      const parsed = JSON.parse(content.text) as { destination?: { url?: unknown } };
+      if (typeof parsed.destination?.url === 'string') return parsed.destination.url;
+    } catch {
+      // Partial streaming and failed results have no destination yet.
+    }
+  }
+  return null;
 }
 
 export function CdpScreenshotPreview({
