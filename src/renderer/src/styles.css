@@ -150,6 +150,10 @@ button {
   min-width: 0;
 }
 
+.ui-tooltip-anchor > :disabled {
+  pointer-events: none;
+}
+
 .context-tooltip {
   gap: 6px;
   padding: 7px 8px;
