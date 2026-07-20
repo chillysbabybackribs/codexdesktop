@@ -14,6 +14,7 @@ import type {
   BrowserBounds,
   BrowserMenuAnchor,
   BrowserMenuItem,
+  TitlebarCalendarAnchor,
   OmniboxAnchor,
   OmniboxQueryResult,
   TraceLoadParams,
@@ -35,6 +36,7 @@ import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
 import { BrowserMenuPopup } from './browser/browser-menu-popup.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
+import { TitlebarCalendarPopup } from './titlebar-calendar-popup.js'
 import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
@@ -99,6 +101,7 @@ let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
 let browserMenuPopup: BrowserMenuPopup | null = null
+let titlebarCalendarPopup: TitlebarCalendarPopup | null = null
 let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
@@ -286,6 +289,11 @@ function createWindow(): void {
     () => sendToMainRenderer(ipcChannels.browserMenuClosed, undefined)
   )
 
+  titlebarCalendarPopup = new TitlebarCalendarPopup(
+    mainWindow,
+    () => sendToMainRenderer(ipcChannels.titlebarCalendarClosed, undefined)
+  )
+
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
     void restoreBrowserTabs().finally(() => {
@@ -300,6 +308,7 @@ function createWindow(): void {
   mainWindow.on('blur', () => {
     omniboxPopup?.hide()
     browserMenuPopup?.hide()
+    titlebarCalendarPopup?.hide()
   })
 
   // Capture while the native views still exist. On macOS a normal window
@@ -318,6 +327,8 @@ function createWindow(): void {
     omniboxPopup = null
     browserMenuPopup?.dispose()
     browserMenuPopup = null
+    titlebarCalendarPopup?.dispose()
+    titlebarCalendarPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -556,6 +567,15 @@ function registerIpc(): void {
     browserMenuPopup?.show(anchor, items))
   ipcMain.handle(ipcChannels.browserMenuUpdate, (_event, items: BrowserMenuItem[]) => browserMenuPopup?.update(items))
   ipcMain.handle(ipcChannels.browserMenuClose, () => browserMenuPopup?.hide())
+  ipcMain.handle(ipcChannels.titlebarCalendarOpen, (event, anchor: TitlebarCalendarAnchor) => {
+    if (event.sender !== mainWindow?.webContents) return
+    omniboxPopup?.hide()
+    browserMenuPopup?.hide()
+    titlebarCalendarPopup?.show(anchor)
+  })
+  ipcMain.handle(ipcChannels.titlebarCalendarClose, (event) => {
+    if (event.sender === mainWindow?.webContents) titlebarCalendarPopup?.hide()
+  })
 
   ipcMain.handle(
     ipcChannels.notificationBackgroundTurn,

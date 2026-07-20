@@ -43,7 +43,7 @@ export class TitlebarCalendarPopup {
       this.view.setBounds(hiddenBounds);
     }
     if (wasVisible) {
-      this.window.webContents.focus();
+      if (this.window.isFocused()) this.window.webContents.focus();
       this.onClosed();
     }
   }
@@ -88,6 +88,11 @@ export class TitlebarCalendarPopup {
     view.webContents.on('did-finish-load', () => {
       this.pageReady = true;
       if (this.visible) this.present(view);
+    });
+    view.webContents.on('blur', () => {
+      setTimeout(() => {
+        if (this.visible && !view.webContents.isFocused()) this.hide();
+      }, 0);
     });
 
     if (process.env.ELECTRON_RENDERER_URL) {
