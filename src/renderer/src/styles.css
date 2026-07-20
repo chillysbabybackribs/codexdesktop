@@ -1419,7 +1419,17 @@ samp {
   cursor: default;
 }
 
+.thread-scroll-shell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
 .thread-scroll {
+  width: 100%;
+  height: 100%;
   min-height: 0;
   overflow: auto;
   /* The composer occupies its own grid row below the scroll (chat-pane
@@ -1446,6 +1456,267 @@ samp {
 .thread-scroll-anchor-spacer {
   flex: none;
   height: 0;
+}
+
+/* Reader-position rail: a compact transcript affordance that stays out of the
+   content measure until invited, then expands into a turn-level jump menu. */
+.reader-position {
+  position: absolute;
+  z-index: 6;
+  top: 10px;
+  right: 12px;
+  pointer-events: none;
+}
+
+.reader-position-trigger {
+  display: flex;
+  min-width: 74px;
+  height: 34px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 9px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  background: rgb(25 25 26 / 90%);
+  color: #8e9296;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.reader-position-trigger:hover,
+.reader-position.is-open .reader-position-trigger {
+  border-color: rgb(255 255 255 / 18%);
+  background: rgb(34 34 35 / 96%);
+  color: #d7dade;
+}
+
+.reader-position-trigger:active {
+  transform: translateY(1px);
+}
+
+.reader-position-trigger:focus-visible,
+.reader-position-item:focus-visible {
+  outline: 2px solid var(--focus-ink);
+  outline-offset: 2px;
+}
+
+.reader-position-rail {
+  position: relative;
+  width: 2px;
+  height: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.reader-position-rail-fill {
+  position: absolute;
+  inset: 0 0 auto;
+  height: max(3px, var(--reader-progress));
+  border-radius: inherit;
+  background: #dfe3e7;
+}
+
+.reader-position-count {
+  color: currentcolor;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.reader-position-count span {
+  color: #5f6367;
+}
+
+.reader-position-chevron {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+  transition: transform 160ms ease;
+}
+
+.reader-position.is-open .reader-position-chevron {
+  transform: rotate(180deg);
+}
+
+.reader-position-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: min(320px, calc(100cqw - 24px));
+  max-height: min(520px, calc(100cqh - 64px));
+  overflow: hidden;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 12px;
+  background-color: rgb(24 24 25 / 98%);
+  background-image: var(--grain);
+  box-shadow:
+    0 18px 54px rgb(0 0 0 / 48%),
+    inset 0 1px 0 rgb(255 255 255 / 4%);
+  pointer-events: auto;
+  transform-origin: top right;
+  animation: reader-position-menu-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reader-position-menu-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.reader-position-menu-head > div {
+  display: grid;
+  gap: 3px;
+}
+
+.reader-position-menu-head strong {
+  color: #e6e8ea;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.reader-position-eyebrow,
+.reader-position-menu-count {
+  color: #71757a;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.reader-position-menu-count {
+  padding-bottom: 1px;
+  white-space: nowrap;
+}
+
+.reader-position-menu-list {
+  max-height: min(440px, calc(100cqh - 122px));
+  overflow-y: auto;
+  padding: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #3b3b3c transparent;
+}
+
+.reader-position-item {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 44px;
+  grid-template-columns: 28px minmax(0, 1fr) 8px;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #8c9094;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reader-position-item:hover {
+  background: rgb(255 255 255 / 5%);
+  color: #d6d9dc;
+}
+
+.reader-position-item.is-current {
+  background: rgb(255 255 255 / 7%);
+  color: #f0f2f4;
+}
+
+.reader-position-item-index {
+  color: #595d61;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reader-position-item.is-current .reader-position-item-index {
+  color: #b5b9bd;
+}
+
+.reader-position-item-label {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.reader-position-item-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4b4e52;
+  opacity: 0;
+}
+
+.reader-position-item.is-visible .reader-position-item-dot {
+  opacity: 1;
+}
+
+.reader-position-item.is-current .reader-position-item-dot {
+  background: #e2e5e8;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 8%);
+  opacity: 1;
+}
+
+@keyframes reader-position-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+@container (max-width: 520px) {
+  .reader-position {
+    right: 8px;
+  }
+
+  .reader-position-trigger {
+    min-width: 44px;
+    height: 44px;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .reader-position-rail,
+  .reader-position-chevron {
+    display: none;
+  }
+
+  .reader-position-menu {
+    top: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reader-position-menu {
+    animation: none;
+  }
+
+  .reader-position-trigger,
+  .reader-position-chevron {
+    transition: none;
+  }
 }
 
 .message {

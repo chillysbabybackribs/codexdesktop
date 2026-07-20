@@ -11,8 +11,8 @@ import type { Model, PluginSummary } from '../../shared/session-protocol';
 import { resolveModelProvider } from './app-helpers';
 import { Composer } from './Composer';
 import { CloseIcon, ContextPill } from './ChatControls';
-import { ChatItemView, TaskActivityCard } from './ChatTranscript';
-import { ThreadScroll } from './ThreadScroll';
+import { ChatItemView, TaskActivityCard, visibleUserMessageText } from './ChatTranscript';
+import { ThreadScroll, type MessageScrollerAnchor } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
 import {
@@ -147,6 +147,23 @@ export function ChatPaneView({
     () => buildRows(items, itemMeta, paneTurnId),
     [items, itemMeta, paneTurnId],
   );
+
+  const messageAnchors = useMemo((): MessageScrollerAnchor[] => {
+    const anchors: MessageScrollerAnchor[] = [];
+    const seen = new Set<string>();
+    for (const row of rows) {
+      if (row.kind !== 'chat' || row.item.type !== 'userMessage' || !row.turnId || seen.has(row.turnId)) {
+        continue;
+      }
+      seen.add(row.turnId);
+      const text = visibleUserMessageText(row.item).replace(/\s+/g, ' ').trim();
+      anchors.push({
+        id: row.turnId,
+        label: text ? (text.length > 72 ? `${text.slice(0, 71).trimEnd()}…` : text) : 'Attachment',
+      });
+    }
+    return anchors;
+  }, [rows]);
 
   // Interactions in a background pane focus it first — the action handlers
   // all target the active tab. The pointer-down capture in ChatPane already
@@ -327,6 +344,7 @@ export function ChatPaneView({
           scrollKey={tabKey}
           resetKey={paneThreadId}
           activeTurnId={paneTurnId}
+          messageAnchors={messageAnchors}
           dependencies={[items, itemMeta, paneTurnId]}
           onReachStart={
             isActive && paneThreadId ? () => onLoadOlderHistory(tabKey, paneThreadId) : undefined
@@ -349,6 +367,7 @@ export function ChatPaneView({
                   streamingMessage={
                     Boolean(streamingMessageId) && row.turnId === paneTurnId
                   }
+                  turnId={row.turnId}
                 />
               );
             }

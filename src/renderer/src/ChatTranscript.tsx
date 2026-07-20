@@ -22,12 +22,14 @@ export function TaskActivityCard({
   live,
   workspace,
   streamingMessage = false,
+  turnId,
 }: {
   items: ActivityItem[];
   itemMeta: Record<string, ItemMeta>;
   live: boolean;
   workspace: string | null;
   streamingMessage?: boolean;
+  turnId?: string | null;
 }): React.JSX.Element {
   // null = default by liveness: live turns show everything, settled turns
   // collapse their step rows to a "N steps" toggle.
@@ -98,6 +100,7 @@ export function TaskActivityCard({
   return (
     <section
       className={`task-activity-card ${live ? 'is-live' : ''}`}
+      data-message-id={turnId ?? undefined}
       aria-label="In-task activity"
       aria-live={live ? 'polite' : 'off'}
     >
@@ -154,6 +157,19 @@ export function stripInjectedMemory(text: string): string {
     /^<codexdesktop-prior-chat-memory>[\s\S]*?<\/codexdesktop-prior-chat-memory>\s*Current user request:\s*/,
     '',
   );
+}
+
+export function visibleUserMessageText(
+  item: Extract<ChatItem, { type: 'userMessage' }>,
+): string {
+  return item.content
+    .filter((content) => content.type === 'text')
+    .map((content) =>
+      stripIntakeInjections(
+        stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
+      ),
+    )
+    .join('\n');
 }
 
 // Auditor feedback in the main transcript: a quiet retractable card — header
@@ -223,24 +239,31 @@ export const ChatItemView = memo(function ChatItemView({
   }
 
   if (item.type === 'userMessage') {
-    const text = item.content
-      .filter((content) => content.type === 'text')
-      .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
-      .join('\n');
+    const text = visibleUserMessageText(item);
     const attachments = attachmentsFromUserInput(item.content);
     // Auditor feedback renders as a compact retractable card, not the raw
     // block the doer model receives.
     const feedback = parseAuditFeedback(text);
     if (feedback) {
       return (
-        <article className="message message-audit-feedback" data-turn-id={turnId ?? undefined}>
+        <article
+          className="message message-audit-feedback"
+          data-turn-id={turnId ?? undefined}
+          data-message-id={turnId ?? undefined}
+          data-message-anchor-id={turnId ?? undefined}
+        >
           <AuditFeedbackCard agentTitle={feedback.agentTitle} report={feedback.report} />
         </article>
       );
     }
 
     return (
-      <article className="message message-user" data-turn-id={turnId ?? undefined}>
+      <article
+        className="message message-user"
+        data-turn-id={turnId ?? undefined}
+        data-message-id={turnId ?? undefined}
+        data-message-anchor-id={turnId ?? undefined}
+      >
         {text ? <p>{text}</p> : null}
         <AttachmentStrip attachments={attachments} />
       </article>
@@ -255,6 +278,7 @@ export const ChatItemView = memo(function ChatItemView({
         text={item.text}
         streaming={streaming}
         commentary={item.phase === 'commentary'}
+        turnId={turnId}
       />
     );
   }
@@ -280,7 +304,7 @@ export const ChatItemView = memo(function ChatItemView({
     // ones can show the real shrink.
     const shrank = before !== null && after !== null && after < before;
     return (
-      <article className="message message-compaction">
+      <article className="message message-compaction" data-message-id={turnId ?? undefined}>
         {shrank
           ? `Context compacted — ${formatTokens(before)} → ${formatTokens(after)} tokens (${Math.round((1 - after / before) * 100)}% smaller)`
           : 'Context compacted'}
@@ -298,7 +322,7 @@ export const ChatItemView = memo(function ChatItemView({
 
   // Anything else (hookPrompt and future item types) stays quiet but visible.
   return (
-    <article className="message message-tool">
+    <article className="message message-tool" data-message-id={turnId ?? undefined}>
       <strong>{item.type}</strong>
     </article>
   );
@@ -308,16 +332,19 @@ const AssistantMessage = memo(function AssistantMessage({
   text,
   streaming,
   commentary,
+  turnId,
 }: {
   text: string;
   streaming: boolean;
   commentary: boolean;
+  turnId?: string | null;
 }): React.JSX.Element {
   return (
     <article
       className={`message message-assistant ${commentary ? 'message-commentary' : ''} ${
         streaming ? 'is-streaming' : ''
       }`}
+      data-message-id={turnId ?? undefined}
     >
       {streaming ? (
         <StreamingMarkdownContent text={text || ' '} />
