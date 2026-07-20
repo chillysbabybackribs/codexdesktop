@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { SessionProvider } from '../providers/session-provider.js'
-import type { SessionEvent, AgentSpawnedEvent } from '../../shared/ipc.js'
+import type { SessionEvent, AgentSpawnedEvent, AgentRunEvent, AgentRunSnapshot } from '../../shared/ipc.js'
 import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
 import type { ThreadItem } from '../../shared/codex-protocol/v2/ThreadItem.js'
 
@@ -46,6 +46,10 @@ type PendingChild = {
   parentTurnId: string | null
   threadId: string | null
   provider: SessionProvider
+  parentAgentKey: string | null
+  title: string
+  task: string
+  startedAtMs: number
   resolve: (result: SpawnResult) => void
   settled: boolean
   // The child's latest completed agent message, accumulated from streamed
@@ -90,11 +94,11 @@ export class SubagentOrchestrator {
   private readonly byThreadId = new Map<string, PendingChild>()
   private readonly pendingByAgentKey = new Map<string, PendingChild>()
   private readonly selectProvider: ProviderSelector
-  private readonly emit: (event: SessionEvent | AgentSpawnedEvent) => void
+  private readonly emit: (event: SessionEvent | AgentSpawnedEvent | AgentRunEvent) => void
 
   constructor(
     selectProvider: ProviderSelector,
-    emit: (event: SessionEvent | AgentSpawnedEvent) => void,
+    emit: (event: SessionEvent | AgentSpawnedEvent | AgentRunEvent) => void,
   ) {
     this.selectProvider = selectProvider
     this.emit = emit
@@ -151,6 +155,10 @@ export class SubagentOrchestrator {
       parentTurnId: request.parentTurnId,
       threadId: null,
       provider,
+      parentAgentKey: request.parentAgentKey,
+      title,
+      task: request.task,
+      startedAtMs: Date.now(),
       resolve: () => {},
       settled: false,
       lastAgentText: '',
@@ -171,6 +179,7 @@ export class SubagentOrchestrator {
       title,
       model: request.model ?? null,
     })
+    this.emitRun(pending, 'working')
 
     try {
       const response = await provider.sendMessage(
@@ -182,6 +191,7 @@ export class SubagentOrchestrator {
       pending.threadId = response.threadId
       this.byThreadId.set(response.threadId, pending)
       this.pendingByAgentKey.delete(agentKey)
+      this.emitRun(pending, 'working')
     } catch (error) {
       this.pendingByAgentKey.delete(agentKey)
       const message = error instanceof Error ? error.message : String(error)
@@ -279,7 +289,42 @@ export class SubagentOrchestrator {
     child.settled = true
     if (child.threadId) this.byThreadId.delete(child.threadId)
     this.pendingByAgentKey.delete(child.agentKey)
+    this.emitRun(
+      child,
+      result.status === 'completed' ? 'completed' : result.status === 'interrupted' ? 'stopped' : 'failed',
+      result.finalText || result.error || null,
+    )
     child.resolve(result)
+  }
+
+  private emitRun(
+    child: PendingChild,
+    status: AgentRunSnapshot['status'],
+    resultSummary: string | null = null,
+  ): void {
+    const now = Date.now()
+    this.emit({
+      type: 'agentRun',
+      run: {
+        id: child.agentKey,
+        nativeId: child.threadId ?? child.agentKey,
+        provider: 'app',
+        lane: 'model',
+        parentThreadId: child.parentThreadId,
+        parentTurnId: child.parentTurnId,
+        parentAgentKey: child.parentAgentKey,
+        title: child.title,
+        task: child.task,
+        status,
+        progress: status === 'working' ? 'Running delegated task' : null,
+        resultSummary: resultSummary ? clip(resultSummary, 1000) : null,
+        outputPath: null,
+        wakeStatus: status === 'working' ? 'pending' : 'resumed',
+        startedAtMs: child.startedAtMs,
+        updatedAtMs: now,
+        completedAtMs: status === 'working' ? null : now,
+      },
+    })
   }
 }
 
