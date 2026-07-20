@@ -18,6 +18,7 @@ function candidate(url: string, rank: number, score: number): RankedSerpCandidat
 
 const early = candidate('https://early.example/page', 1, 0.6)
 const best = candidate('https://best.example/page', 1, 0.9)
+const alternate = candidate('https://alternate.example/page', 2, 0.5)
 
 type FakeOptions = {
   fireEarly: boolean
@@ -28,14 +29,14 @@ function fakeDeps({ fireEarly, events }: FakeOptions): BrowserToolDeps {
   const researchRunner = {
     async discover(_request: unknown, context: { onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void }) {
       events.push('discover-start')
-      if (fireEarly) context.onFirstCandidates?.([early])
+      if (fireEarly) context.onFirstCandidates?.([early, alternate])
       await new Promise((resolve) => setTimeout(resolve, 20))
       events.push('discover-done')
       return {
         ok: true,
         queries: ['example query'],
-        candidates: [best, early],
-        discoveredCount: 2,
+        candidates: [best, early, alternate],
+        discoveredCount: 3,
         metrics: {
           durationMs: 20,
           searchesAttempted: 1,
@@ -44,8 +45,9 @@ function fakeDeps({ fireEarly, events }: FakeOptions): BrowserToolDeps {
         }
       }
     },
-    async run() {
+    async run(request: { urls?: string[] }) {
       events.push('background-run')
+      events.push(`background-urls:${request.urls?.join(',') ?? ''}`)
       return { ok: true, pages: [] }
     }
   }
@@ -75,7 +77,7 @@ test('browser_live_search navigates on the earliest lane candidate before discov
   const destination = result.destination as { url: string }
   assert.equal(destination.url, early.url)
   const alternates = result.alternates as Array<{ url: string }>
-  assert.deepEqual(alternates.map(({ url }) => url), [best.url])
+  assert.deepEqual(alternates.map(({ url }) => url), [best.url, alternate.url])
 })
 
 test('browser_live_search falls back to the top-ranked candidate when no lane fires early', async () => {
@@ -89,21 +91,40 @@ test('browser_live_search falls back to the top-ranked candidate when no lane fi
   assert.equal(destination.url, best.url)
   assert.ok(events.indexOf(`snapshot:${best.url}`) > events.indexOf('discover-done'))
   const alternates = result.alternates as Array<{ url: string }>
-  assert.deepEqual(alternates.map(({ url }) => url), [early.url])
+  assert.deepEqual(alternates.map(({ url }) => url), [early.url, alternate.url])
 })
 
-test('browser_research_dual navigates early and keeps the navigated candidate as destination', async () => {
+test('browser_live_search background mode starts live and independent evidence work on the first candidate batch', async () => {
   const events: string[] = []
   const { result } = await runBrowserTool(
-    { tool: 'browser_research_dual', args: { objective: 'facts', query: 'example query' }, owner: null, callId: 'c3' },
+    { tool: 'browser_live_search', args: { objective: 'facts', query: 'example query', background: true }, owner: null, callId: 'c3' },
     fakeDeps({ fireEarly: true, events })
   )
 
   assert.ok(events.indexOf(`snapshot:${early.url}`) < events.indexOf('discover-done'),
     `live lane must start before discovery finishes: ${events.join(' -> ')}`)
+  assert.ok(events.indexOf('background-run') < events.indexOf('discover-done'),
+    `background lane must start before discovery finishes: ${events.join(' -> ')}`)
+  assert.ok(events.includes(`background-urls:${alternate.url}`),
+    `background lane should verify an independent early candidate: ${events.join(' -> ')}`)
   assert.equal(result.ok, true)
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
   const destination = result.destination as { url: string }
   assert.equal(destination.url, early.url)
   const alternates = result.alternates as Array<{ url: string }>
-  assert.deepEqual(alternates.map(({ url }) => url), [best.url])
+  assert.deepEqual(alternates.map(({ url }) => url), [best.url, alternate.url])
+  const timings = result.timings as { firstUrlMs: number; totalMs: number }
+  assert.ok(timings.firstUrlMs < 20, `first URL dispatch regressed: ${JSON.stringify(timings)}`)
+})
+
+test('browser_research_dual remains an unadvertised compatibility alias', async () => {
+  const events: string[] = []
+  const { result } = await runBrowserTool(
+    { tool: 'browser_research_dual', args: { objective: 'facts', query: 'example query' }, owner: null, callId: 'c4' },
+    fakeDeps({ fireEarly: true, events })
+  )
+
+  assert.equal(result.ok, true)
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
+  assert.equal((result.live as { ok: boolean }).ok, true)
 })

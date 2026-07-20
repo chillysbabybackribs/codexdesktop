@@ -103,7 +103,7 @@ test('first-class live search hides parallel discovery and opens only a direct d
   assert.equal(result.destination.url, 'https://status.example.com/current')
 })
 
-test('dual research opens a direct destination while the artifact-first lane runs', async () => {
+test('live search background mode opens a direct destination while artifact-first evidence runs', async () => {
   let liveStarted = false
   let backgroundStarted = false
   const browserAgent = withTurnRunner({
@@ -138,19 +138,20 @@ test('dual research opens a direct destination while the artifact-first lane run
       return { ok: true, pages: [{ url: 'https://example.com' }] }
     }
   } as unknown as ResearchRunner
-  const response = await routeDynamicToolCall(params('browser_research_dual', {
+  const response = await routeDynamicToolCall(params('browser_live_search', {
     query: 'latest runtime release',
-    objective: 'Find the official release and date'
+    objective: 'Find the official release and date',
+    background: true
   }), { browserAgent, researchRunner })
 
   assert.equal(response.success, true)
   const item = response.contentItems[0]
   assert.equal(item.type, 'inputText')
   if (item.type !== 'inputText') assert.fail('expected text result')
-  const result = JSON.parse(item.text) as { mode: string; destination: { url: string }; live: { ok: boolean }; background: { ok: boolean } }
+  const result = JSON.parse(item.text) as { mode: string; destination: { url: string }; page: { ok: boolean }; background: { ok: boolean } }
   assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
   assert.equal(result.destination.url, 'https://runtime.example.com/releases/latest')
-  assert.equal(result.live.ok, true)
+  assert.equal(result.page.ok, true)
   assert.equal(result.background.ok, true)
 })
 
