@@ -1,4 +1,5 @@
 import { isIP } from 'node:net'
+import { parseHTML } from 'linkedom'
 
 const QUERY_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'about', 'be', 'by', 'for', 'from', 'how', 'in', 'is',
@@ -85,6 +86,75 @@ export function isPublicResearchAddress(value: string): boolean {
 
 export function googleSearchUrl(query: string, maxResults: number): string {
   return `https://www.google.com/search?num=${maxResults * 2}&q=${encodeURIComponent(query)}`
+}
+
+/**
+ * DuckDuckGo's Lite surface is intentionally small, server rendered, and far
+ * less coupled to a frequently changing result-page DOM than the full search
+ * applications. Hidden discovery fetches this first and keeps Google as a
+ * browser-rendered fallback for provider outages.
+ */
+export function duckDuckGoLiteSearchUrl(query: string): string {
+  return `https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(query)}`
+}
+
+/** Bing's RSS surface is the independent no-script fallback for discovery. */
+export function bingSearchFeedUrl(query: string, maxResults: number): string {
+  return `https://www.bing.com/search?format=rss&count=${Math.max(2, maxResults * 2)}&q=${encodeURIComponent(query)}`
+}
+
+export function extractDuckDuckGoLiteCandidates(
+  html: string,
+  maxResults: number
+): Array<Omit<SerpCandidate, 'query'>> {
+  const { document } = parseHTML(html)
+  const results: Array<Omit<SerpCandidate, 'query'>> = []
+  const seen = new Set<string>()
+  const limit = Math.max(1, Math.min(MAX_RESEARCH_RESULTS, Math.round(maxResults)))
+
+  for (const anchor of document.querySelectorAll('a.result-link[href]')) {
+    const href = anchor.getAttribute('href') ?? ''
+    const url = duckDuckGoDestination(href)
+    const title = compactText(anchor.textContent, 300)
+    if (!url || !title || seen.has(url)) continue
+
+    let snippet = ''
+    let row = anchor.closest('tr')?.nextElementSibling ?? null
+    for (let offset = 0; row && offset < 3; offset += 1, row = row.nextElementSibling) {
+      if (row.querySelector('a.result-link[href]')) break
+      const snippetNode = row.querySelector('.result-snippet')
+      if (snippetNode) {
+        snippet = compactText(snippetNode.textContent, 500)
+        break
+      }
+    }
+
+    seen.add(url)
+    results.push({ url, title, snippet, rank: results.length + 1 })
+    if (results.length >= limit) break
+  }
+  return results
+}
+
+export function extractBingSearchFeedCandidates(
+  xml: string,
+  maxResults: number
+): Array<Omit<SerpCandidate, 'query'>> {
+  const { document } = parseHTML(xml)
+  const results: Array<Omit<SerpCandidate, 'query'>> = []
+  const seen = new Set<string>()
+  const limit = Math.max(1, Math.min(MAX_RESEARCH_RESULTS, Math.round(maxResults)))
+
+  for (const item of document.querySelectorAll('item')) {
+    const url = canonicalizeUrl(item.querySelector('link')?.textContent?.trim() ?? '')
+    const title = compactText(item.querySelector('title')?.textContent ?? '', 300)
+    const snippet = compactText(item.querySelector('description')?.textContent ?? '', 500)
+    if (!url || !title || seen.has(url)) continue
+    seen.add(url)
+    results.push({ url, title, snippet, rank: results.length + 1 })
+    if (results.length >= limit) break
+  }
+  return results
 }
 
 /**
