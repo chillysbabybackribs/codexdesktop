@@ -103,6 +103,7 @@ export function buildBrowserUseGuidance(
           ]
         : ['- In manual mode, browse only when the user explicitly requests browsing or the task directly names a live browser surface.']),
     '- Do not claim a current external fact from memory when this policy requires browsing. If browsing fails, say what could not be verified.',
+    '- Narrate browsing sparingly: at most one short user-facing line per phase, naming the goal ("Searching for X…", "Opening example.com…"). Never describe internal mechanics such as hidden workers, SERP extraction, ranking, lanes, or tool names, and never restate an unchanged status.',
   ].join('\n')
 }
 

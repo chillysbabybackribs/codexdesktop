@@ -36,6 +36,13 @@ export type BrowserToolOutcome = {
   imageUrls: string[]
 }
 
+// Mutable holder for the early-navigation race: object properties keep their
+// declared types across closure assignment, unlike captured `let` bindings.
+type EarlyNavigationLane = {
+  navigated: RankedSerpCandidate | null
+  page: ReturnType<BrowserAgentController['snapshot']> | null
+}
+
 export async function runBrowserTool(
   invocation: BrowserToolInvocation,
   deps: BrowserToolDeps
@@ -67,31 +74,46 @@ export async function runBrowserTool(
         result = { ok: false, error: 'browser_live_search hidden discovery is not available on this transport' }
       } else {
         result = await runBrowserOperation(async (signal) => {
+          // Navigate the visible tab as soon as the earliest hidden search lane
+          // yields a usable destination; remaining lanes keep filling alternates
+          // in the background instead of gating the first page load.
+          const lane: EarlyNavigationLane = { navigated: null, page: null }
+          const startNavigation = (candidate: RankedSerpCandidate): void => {
+            lane.navigated = candidate
+            notifyNavigationStart(deps, candidate)
+            lane.page = deps.browserAgent.snapshot({
+              objective,
+              url: candidate.url,
+              tabId: resolveAgentTab(readString(args.tab)),
+              mode: 'task',
+              maxItems: readNumber(args.maxItems) ?? 10,
+              timeoutMs: readNumber(args.timeoutMs),
+              signal
+            })
+          }
           const discovery = await deps.researchRunner!.discover({
             queries,
             maxResults: readNumber(args.maxResults),
             maxCandidates: 10
           }, {
             signal,
-            onProgress: deps.onResearchProgress
+            onProgress: deps.onResearchProgress,
+            onFirstCandidates: (candidates) => {
+              if (!lane.page && candidates[0]) startNavigation(candidates[0])
+            }
           })
-          const destination = discovery.candidates[0]
-          if (!discovery.ok || !destination) return discovery
-
-          const page = await deps.browserAgent.snapshot({
-            objective,
-            url: destination.url,
-            tabId: resolveAgentTab(readString(args.tab)),
-            mode: 'task',
-            maxItems: readNumber(args.maxItems) ?? 10,
-            timeoutMs: readNumber(args.timeoutMs),
-            signal
-          })
+          if (!lane.page) {
+            const destination = discovery.candidates[0]
+            if (!discovery.ok || !destination) return discovery
+            startNavigation(destination)
+          }
+          const page = await lane.page!
+          const destination = lane.navigated!
           return {
             ok: page.ok,
             mode: 'hidden-discovery-direct-navigation',
             destination: compactDestination(destination),
-            alternates: discovery.candidates.slice(1).map(compactDestination),
+            alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
             discovery: compactDiscovery(discovery),
             page,
             ...(page.ok ? {} : { error: 'Hidden discovery succeeded, but the destination page snapshot failed' })
@@ -106,28 +128,42 @@ export async function runBrowserTool(
       } else if (!deps.researchRunner) {
         result = { ok: false, error: 'browser_research_dual background lane is not available on this transport' }
       } else {
+        // Same early-navigation contract as browser_live_search: the visible
+        // lane starts on the earliest lane's best candidate rather than after
+        // every hidden search lane has settled.
+        const lane: EarlyNavigationLane = { navigated: null, page: null }
+        const startNavigation = (candidate: RankedSerpCandidate): void => {
+          lane.navigated = candidate
+          notifyNavigationStart(deps, candidate)
+          lane.page = runBrowserOperation((signal) => deps.browserAgent.snapshot({
+            objective,
+            url: candidate.url,
+            tabId: resolveAgentTab(readString(args.tab)),
+            mode: 'task',
+            maxItems: readNumber(args.maxResults) ?? 6,
+            timeoutMs: readNumber(args.timeoutMs),
+            signal
+          }))
+        }
         const discovery = await runBrowserOperation((signal) => deps.researchRunner!.discover({
           queries,
           maxResults: readNumber(args.maxResults),
           maxCandidates: 10
         }, {
           signal,
-          onProgress: deps.onResearchProgress
+          onProgress: deps.onResearchProgress,
+          onFirstCandidates: (candidates) => {
+            if (!lane.page && candidates[0]) startNavigation(candidates[0])
+          }
         }))
-        const destination = discovery.candidates[0]
-        if (!discovery.ok || !destination) {
+        if (!lane.page && discovery.ok && discovery.candidates[0]) {
+          startNavigation(discovery.candidates[0])
+        }
+        if (!lane.page) {
           result = discovery
         } else {
           const [live, background] = await Promise.all([
-            runBrowserOperation((signal) => deps.browserAgent.snapshot({
-              objective,
-              url: destination.url,
-              tabId: resolveAgentTab(readString(args.tab)),
-              mode: 'task',
-              maxItems: readNumber(args.maxResults) ?? 6,
-              timeoutMs: readNumber(args.timeoutMs),
-              signal
-            })),
+            lane.page,
             deps.researchRunner.run({
               queries,
               focus: readResearchFocus(args.focus),
@@ -141,11 +177,12 @@ export async function runBrowserTool(
               onProgress: deps.onResearchProgress
             })
           ])
+          const destination = lane.navigated!
           result = {
             ok: live.ok && background.ok,
             mode: 'hidden-discovery-direct-navigation-plus-research',
             destination: compactDestination(destination),
-            alternates: discovery.candidates.slice(1).map(compactDestination),
+            alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
             discovery: compactDiscovery(discovery),
             live,
             background,
@@ -386,6 +423,17 @@ function readSearchQueries(args: Record<string, unknown>): string[] {
   const primary = readString(args.query)
   const variants = readStringArray(args.queries)
   return [...new Set([...(primary ? [primary] : []), ...variants].map((query) => query.trim()).filter(Boolean))]
+}
+
+function notifyNavigationStart(deps: BrowserToolDeps, candidate: RankedSerpCandidate): void {
+  try {
+    deps.onResearchProgress?.({
+      stage: 'discovering',
+      message: `Opening ${candidate.domain} while remaining search lanes finish…`
+    })
+  } catch {
+    // Progress is observational and must never fail the navigation.
+  }
 }
 
 function compactDestination(candidate: RankedSerpCandidate): Record<string, unknown> {

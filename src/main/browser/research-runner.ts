@@ -154,6 +154,14 @@ export type SearchDiscoveryRequest = {
 export type SearchDiscoveryContext = {
   signal?: AbortSignal
   onProgress?: (progress: ResearchProgress) => void
+  /**
+   * Fires at most once, as soon as the earliest search lane yields ranked
+   * candidates, so callers can begin visible navigation immediately instead of
+   * waiting behind the slowest lane. The final ranking may order candidates
+   * differently; callers that navigate early keep the full ranked list as
+   * alternates.
+   */
+  onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void
 }
 
 export type SearchDiscoveryResult = {
@@ -280,7 +288,17 @@ export class ResearchRunner {
     const signal = context.signal ?? new AbortController().signal
     const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
     const maxCandidates = clamp(request.maxCandidates, Math.max(6, maxResults), 1, MAX_CANDIDATE_ATTEMPTS)
-    const discovery = await this.searchHiddenInParallel(queries, maxResults, signal, context.onProgress)
+    let firstCandidatesFired = false
+    const onLaneCandidates = context.onFirstCandidates
+      ? (laneCandidates: SerpCandidate[]): void => {
+          if (firstCandidatesFired || laneCandidates.length === 0) return
+          const ranked = rankSerpCandidates(laneCandidates, queries, maxCandidates)
+          if (ranked.length === 0) return
+          firstCandidatesFired = true
+          context.onFirstCandidates!(ranked)
+        }
+      : undefined
+    const discovery = await this.searchHiddenInParallel(queries, maxResults, signal, context.onProgress, onLaneCandidates)
     const candidates = rankSerpCandidates(discovery.candidates, queries, maxCandidates)
 
     return {
@@ -898,7 +916,8 @@ export class ResearchRunner {
     queries: string[],
     maxResults: number,
     signal: AbortSignal,
-    onProgress?: (progress: ResearchProgress) => void
+    onProgress?: (progress: ResearchProgress) => void,
+    onLaneCandidates?: (candidates: SerpCandidate[]) => void
   ): Promise<{
     candidates: SerpCandidate[]
     errors: string[]
@@ -932,6 +951,7 @@ export class ResearchRunner {
             cacheHit: true,
             candidates: cached.candidates.map((candidate) => ({ ...candidate, query }))
           }
+          notifyLaneCandidates(onLaneCandidates, outcomes[index].candidates)
           continue
         }
 
@@ -952,6 +972,7 @@ export class ResearchRunner {
             navigation,
             candidates: serp.map((candidate) => ({ ...candidate, query }))
           }
+          notifyLaneCandidates(onLaneCandidates, outcomes[index].candidates)
         } catch (error) {
           if (signal.aborted) throw error
           outcomes[index] = {
@@ -1127,6 +1148,17 @@ function allowResearchRedirect(fromValue: string, toValue: string): boolean {
 
 function throwIfAborted(signal: AbortSignal): void {
   if (signal.aborted) throw new Error('research run aborted')
+}
+
+function notifyLaneCandidates(
+  onLaneCandidates: ((candidates: SerpCandidate[]) => void) | undefined,
+  candidates: SerpCandidate[]
+): void {
+  try {
+    onLaneCandidates?.(candidates)
+  } catch {
+    // Early-candidate delivery is observational and must never fail a lane.
+  }
 }
 
 function notifyProgress(onProgress: ((progress: ResearchProgress) => void) | undefined, progress: ResearchProgress): void {
