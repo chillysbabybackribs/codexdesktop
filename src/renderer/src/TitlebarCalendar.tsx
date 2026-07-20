@@ -134,7 +134,7 @@ export function TitlebarCalendar(): React.JSX.Element {
       window.removeEventListener('keydown', handleKeyDown);
       void window.api.browser.setOverlayOpen(false);
     };
-  }, [isOpen, selectedDate]);
+  }, [isOpen]);
 
   const focusDate = (date: Date): void => {
     setSelectedDate(date);

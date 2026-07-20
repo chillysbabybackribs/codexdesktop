@@ -11,11 +11,7 @@ import {
 } from 'react';
 import { discardComposerDraft } from './Composer';
 import { ChatPane } from './ChatPane';
-import type {
-  BrowserBounds,
-  BrowserState,
-  MemoryPersistParams,
-} from '../../shared/ipc';
+import type { BrowserBounds, BrowserState, MemoryPersistParams } from '../../shared/ipc';
 import type { ServerNotification } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import type { CodexErrorInfo } from '../../shared/session-protocol';
@@ -28,10 +24,7 @@ import type { ThreadItem } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
 import { buildTurnTrace } from './trace';
-import {
-  modelCallAttributionForItem,
-  reduceTurnTelemetry,
-} from './turn-telemetry';
+import { modelCallAttributionForItem, reduceTurnTelemetry } from './turn-telemetry';
 import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
 import { stripMentionContext } from './mention-model';
 import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
@@ -208,12 +201,8 @@ type PendingThreadStartOwner = { kind: 'main'; key: string } | { kind: 'agent'; 
 
 function browserMiddleTabKeys(tabs: readonly MainChatTab[]): BrowserMiddleTabKeys {
   return {
-    left: tabs
-      .filter((tab) => tab.browserMiddleSide === 'left')
-      .map((tab) => tab.key),
-    right: tabs
-      .filter((tab) => tab.browserMiddleSide === 'right')
-      .map((tab) => tab.key),
+    left: tabs.filter((tab) => tab.browserMiddleSide === 'left').map((tab) => tab.key),
+    right: tabs.filter((tab) => tab.browserMiddleSide === 'right').map((tab) => tab.key),
   };
 }
 
@@ -238,8 +227,8 @@ function reconcileBrowserMiddleActiveTabKeys(
 ): BrowserMiddleActiveTabKeys {
   const bySide = browserMiddleTabKeys(tabs);
   const next: BrowserMiddleActiveTabKeys = {
-    left: bySide.left.includes(current.left ?? '') ? current.left : bySide.left[0] ?? null,
-    right: bySide.right.includes(current.right ?? '') ? current.right : bySide.right[0] ?? null,
+    left: bySide.left.includes(current.left ?? '') ? current.left : (bySide.left[0] ?? null),
+    right: bySide.right.includes(current.right ?? '') ? current.right : (bySide.right[0] ?? null),
   };
   const active = tabs.find((tab) => tab.key === activeKey);
   if (active?.browserMiddleSide) next[active.browserMiddleSide] = active.key;
@@ -273,7 +262,9 @@ function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTab
   const pickUnassigned = (preferActive: boolean): MainChatTab | null =>
     (preferActive
       ? tabs.find((tab) => tab.key === state.activeKey && tab.browserMiddleSide === null)
-      : null) ?? tabs.find((tab) => tab.browserMiddleSide === null) ?? null;
+      : null) ??
+    tabs.find((tab) => tab.browserMiddleSide === null) ??
+    null;
 
   if (!tabs.some((tab) => tab.browserMiddleSide === 'left')) {
     const target = pickUnassigned(true);
@@ -343,8 +334,8 @@ export default function App(): React.JSX.Element {
     ),
   );
   const chatSplitLayoutRef = useRef(chatSplitLayout);
-  const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(() =>
-    initialWorkspaceLayoutMode,
+  const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(
+    () => initialWorkspaceLayoutMode,
   );
   const [browserMiddleActiveTabKeys, setBrowserMiddleActiveTabKeys] =
     useState<BrowserMiddleActiveTabKeys>(() =>
@@ -385,10 +376,14 @@ export default function App(): React.JSX.Element {
   const [fastMode, setFastMode] = useState(
     () => window.localStorage.getItem(fastModeStorageKey) === '1',
   );
-  const [alwaysKeepAll, setAlwaysKeepAll] = useState(
-    () => isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
+  const [alwaysKeepAll, setAlwaysKeepAll] = useState(() =>
+    isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
   );
-  const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null, vpn: { state: 'off', bootstrapProgress: 0, detail: null } });
+  const [browserState, setBrowserState] = useState<BrowserState>({
+    tabs: [],
+    activeTabId: null,
+    vpn: { state: 'off', bootstrapProgress: 0, detail: null },
+  });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
   // Browser-fullscreen hides the chat pane and divider so the browser fills
   // the workspace. Renderer-only: the native view follows via the normal
@@ -440,7 +435,7 @@ export default function App(): React.JSX.Element {
     () => defaultReviewerModel(selectedModelRef.current, modelsRef.current),
     (tabKey) =>
       tabKey
-        ? mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null
+        ? (mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null)
         : null,
   );
   const appRef = useRef<HTMLDivElement | null>(null);
@@ -455,7 +450,12 @@ export default function App(): React.JSX.Element {
   // (same-thread + bounce gates), and the in-flight marker consumed by
   // handleSend to tag the feedback turn it starts.
   const auditFeedbackTurnIdsRef = useRef<Set<string>>(new Set());
-  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean; changedFileCount: number | null }>>(new Map());
+  const auditContextByAuditorRef = useRef<
+    Map<
+      string,
+      { threadId: string | null; auditedTurnWasFeedback: boolean; changedFileCount: number | null }
+    >
+  >(new Map());
   // Loop-to-done ledger per auditor: rounds dispatched + the last flag's
   // signature (audit-loop-controller.ts). Transient by design — a reload
   // mid-loop stops the loop rather than resuming blind.
@@ -646,11 +646,16 @@ export default function App(): React.JSX.Element {
     const firstUserMessage = items.find(
       (item): item is Extract<ThreadItem, { type: 'userMessage' }> => item.type === 'userMessage',
     );
-    const prompt = firstUserMessage?.content
-      .filter((content) => content.type === 'text')
-      .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
-      .join('\n')
-      .trim() ?? '';
+    const prompt =
+      firstUserMessage?.content
+        .filter((content) => content.type === 'text')
+        .map((content) =>
+          stripIntakeInjections(
+            stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
+          ),
+        )
+        .join('\n')
+        .trim() ?? '';
     const title = provisionalThreadTitle(prompt);
     if (title === defaultThreadTitle) return;
 
@@ -910,10 +915,7 @@ export default function App(): React.JSX.Element {
 
   // Split the focused pane and open a fresh chat in the new half — the
   // no-drag path to a 2x2 grid: Split right, then Split down on each column.
-  function handleSplitActivePane(
-    targetKey: string,
-    direction: 'right' | 'down',
-  ): boolean {
+  function handleSplitActivePane(targetKey: string, direction: 'right' | 'down'): boolean {
     if (isMainChatTransitionLocked()) return false;
     if (mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false;
     const focusedKey = targetKey;
@@ -1187,7 +1189,10 @@ export default function App(): React.JSX.Element {
         if (childThreadId) {
           const worker = agentSessionsRef.current.find((session) => session.key === event.agentKey);
           if (worker && worker.threadId !== childThreadId) {
-            patchAgentSession(event.agentKey, (session) => ({ ...session, threadId: childThreadId }));
+            patchAgentSession(event.agentKey, (session) => ({
+              ...session,
+              threadId: childThreadId,
+            }));
           }
         }
       }
@@ -1385,9 +1390,7 @@ export default function App(): React.JSX.Element {
 
     const handleMove = (moveEvent: globalThis.PointerEvent): void => {
       const rawWidth =
-        side === 'left'
-          ? moveEvent.clientX - appRect.left
-          : appRect.right - moveEvent.clientX;
+        side === 'left' ? moveEvent.clientX - appRect.left : appRect.right - moveEvent.clientX;
       const clamped = Math.min(
         Math.max(rawWidth, minBrowserMiddleChatWidth),
         Math.max(minBrowserMiddleChatWidth, maxSideWidth),
@@ -1455,12 +1458,11 @@ export default function App(): React.JSX.Element {
     const provisionalTitle = threadId
       ? null
       : provisionalThreadTitle(trimmed || attachments[0]?.name || '');
-    const appliedProvisionalTitle =
-      Boolean(
-        provisionalTitle &&
-          provisionalTitle !== defaultThreadTitle &&
-          priorTitle === defaultThreadTitle,
-      );
+    const appliedProvisionalTitle = Boolean(
+      provisionalTitle &&
+        provisionalTitle !== defaultThreadTitle &&
+        priorTitle === defaultThreadTitle,
+    );
     if (appliedProvisionalTitle && provisionalTitle) {
       patchMainChatTab(targetTabKey, (tab) => ({ ...tab, title: provisionalTitle }));
       activeThreadTitleRef.current = provisionalTitle;
@@ -1623,7 +1625,9 @@ export default function App(): React.JSX.Element {
         setItems((current) => current.filter((item) => item.id !== optimisticId));
       }
       if (appliedProvisionalTitle && provisionalTitle) {
-        const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === targetTabKey);
+        const tab = mainChatTabStateRef.current.tabs.find(
+          (candidate) => candidate.key === targetTabKey,
+        );
         if (tab?.threadId === null && tab.title === provisionalTitle) {
           patchMainChatTab(targetTabKey, (current) => ({ ...current, title: priorTitle }));
           if (activeMainChatTabKeyRef.current === targetTabKey) {
@@ -1801,7 +1805,15 @@ export default function App(): React.JSX.Element {
     resumeFailuresByTabRef.current.delete(tabKey);
     discardComposerDraft(tabKey);
     patchMainChatTab(tabKey, (tab) => ({
-      ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort, null, tab.workspace),
+      ...createMainChatTab(
+        tab.key,
+        null,
+        'New Chat',
+        tab.model,
+        tab.reasoningEffort,
+        null,
+        tab.workspace,
+      ),
       key: tab.key,
     }));
 
@@ -1826,7 +1838,7 @@ export default function App(): React.JSX.Element {
     );
     const browserMiddleSide =
       workspaceLayoutMode === 'browser-middle'
-        ? requestedSide ?? active?.browserMiddleSide ?? 'left'
+        ? (requestedSide ?? active?.browserMiddleSide ?? 'left')
         : null;
     const tab = createMainChatTab(
       crypto.randomUUID(),
@@ -2011,7 +2023,7 @@ export default function App(): React.JSX.Element {
     const previousState = mainChatTabStateRef.current;
     const current = previousState.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current);
     const browserMiddleSide =
-      workspaceLayoutMode === 'browser-middle' ? current?.browserMiddleSide ?? 'left' : null;
+      workspaceLayoutMode === 'browser-middle' ? (current?.browserMiddleSide ?? 'left') : null;
     const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0);
     if (!reuseCurrent && previousState.tabs.length >= maxMainChatTabs) return false;
     const target = reuseCurrent
@@ -2893,9 +2905,9 @@ export default function App(): React.JSX.Element {
         const pendingOwner = pendingThreadStartOwnersRef.current.shift();
         if (pendingOwner?.kind === 'main') {
           mainThreadStartsInFlightRef.current.delete(pendingOwner.key);
-          const existingTitle = mainChatTabStateRef.current.tabs.find(
-            (tab) => tab.key === pendingOwner.key,
-          )?.title ?? defaultThreadTitle;
+          const existingTitle =
+            mainChatTabStateRef.current.tabs.find((tab) => tab.key === pendingOwner.key)?.title ??
+            defaultThreadTitle;
           const startedTitle = resolveThreadTitle(
             threadTitle(notification.params.thread),
             existingTitle,
@@ -2923,10 +2935,14 @@ export default function App(): React.JSX.Element {
         persistLastThreadId(notification.params.thread.id);
         activeThreadIdRef.current = notification.params.thread.id;
         setActiveThreadId(notification.params.thread.id);
-        const existingTitle = mainChatTabStateRef.current.tabs.find(
-          (tab) => tab.key === activeMainChatTabKeyRef.current,
-        )?.title ?? defaultThreadTitle;
-        const startedTitle = resolveThreadTitle(threadTitle(notification.params.thread), existingTitle);
+        const existingTitle =
+          mainChatTabStateRef.current.tabs.find(
+            (tab) => tab.key === activeMainChatTabKeyRef.current,
+          )?.title ?? defaultThreadTitle;
+        const startedTitle = resolveThreadTitle(
+          threadTitle(notification.params.thread),
+          existingTitle,
+        );
         activeThreadTitleRef.current = startedTitle;
         setActiveThreadTitle(activeThreadTitleRef.current);
         patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
@@ -3042,7 +3058,9 @@ export default function App(): React.JSX.Element {
             const outside = outOfWorkspacePaths({
               commands,
               filePaths: editedPaths,
-              workspace: turnMetaRef.current[turn.id]?.workspace ?? workspaceForThread(notification.params.threadId),
+              workspace:
+                turnMetaRef.current[turn.id]?.workspace ??
+                workspaceForThread(notification.params.threadId),
             });
             if (outside.length) {
               addSystemItem(
@@ -3357,9 +3375,9 @@ export default function App(): React.JSX.Element {
     setIsCompacting(false);
     activeCompactionRef.current = null;
 
-    const currentTitle = mainChatTabStateRef.current.tabs.find(
-      (tab) => tab.key === activeMainChatTabKeyRef.current,
-    )?.title ?? defaultThreadTitle;
+    const currentTitle =
+      mainChatTabStateRef.current.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current)
+        ?.title ?? defaultThreadTitle;
     const nextTitle = resolveThreadTitle(threadTitle(thread), currentTitle);
     watchThreadIdRef.current = thread.id;
     activeThreadIdRef.current = thread.id;
@@ -3592,7 +3610,11 @@ export default function App(): React.JSX.Element {
     return (
       userItem.content
         .filter((content) => content.type === 'text')
-        .map((content) => stripIntakeInjections(stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text)))))
+        .map((content) =>
+          stripIntakeInjections(
+            stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
+          ),
+        )
         .join('\n')
         .trim() || '(request text unavailable)'
     );
@@ -3737,7 +3759,13 @@ export default function App(): React.JSX.Element {
       }
       return;
     }
-    const prompt = buildAuditPrompt({ userText, files: changed, steps, answerText, detectionUnavailable });
+    const prompt = buildAuditPrompt({
+      userText,
+      files: changed,
+      steps,
+      answerText,
+      detectionUnavailable,
+    });
     // Structured summary rides along on the displayed message so the card can
     // render a compact collapsible card; the model still receives `prompt`.
     const auditSummary = { userText, files: changed, steps, answerText };
@@ -3849,7 +3877,9 @@ export default function App(): React.JSX.Element {
       // Advance the ledger only on a dispatched round, and announce it.
       const previous = auditLoopRef.current.get(sessionKey);
       const next =
-        context.auditedTurnWasFeedback && previous ? continueLoop(previous, report) : startLoop(report);
+        context.auditedTurnWasFeedback && previous
+          ? continueLoop(previous, report)
+          : startLoop(report);
       auditLoopRef.current.set(sessionKey, next);
       addSystemItem(loopRoundMessage(next.rounds), 'info');
       patchAgentSession(sessionKey, (current) => ({ ...current, lastAuditNote: null }));
@@ -3880,8 +3910,7 @@ export default function App(): React.JSX.Element {
   // checkpoint view as the focused chat rather than a focus-dependent subset.
   const [turnCheckpoints, setTurnCheckpoints] = useState<Record<string, string>>({});
   const checkpointThreadIds = useMemo(
-    () =>
-      [...new Set(mainChatTabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])))].sort(),
+    () => [...new Set(mainChatTabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])))].sort(),
     [mainChatTabs],
   );
   useEffect(() => {
@@ -3893,15 +3922,15 @@ export default function App(): React.JSX.Element {
     void Promise.all(
       checkpointThreadIds.map((threadId) => window.api.checkpoints.list(threadId).catch(() => [])),
     ).then((recordsByThread) => {
-        if (stale) return;
-        const byTurn: Record<string, string> = {};
-        for (const records of recordsByThread) {
-          for (const record of records) {
-            if (record.turnId) byTurn[record.turnId] = record.id;
-          }
+      if (stale) return;
+      const byTurn: Record<string, string> = {};
+      for (const records of recordsByThread) {
+        for (const record of records) {
+          if (record.turnId) byTurn[record.turnId] = record.id;
         }
-        setTurnCheckpoints(byTurn);
-      });
+      }
+      setTurnCheckpoints(byTurn);
+    });
     return () => {
       stale = true;
     };
@@ -3987,109 +4016,111 @@ export default function App(): React.JSX.Element {
       ? mainChatTabs.filter((tab) => tab.browserMiddleSide === options.side)
       : mainChatTabs;
     const headerActiveMainChatTabKey = options.side
-      ? browserMiddleActiveTabKeys[options.side] ?? paneTabs[0]?.key ?? activeMainChatTabKey
+      ? (browserMiddleActiveTabKeys[options.side] ?? paneTabs[0]?.key ?? activeMainChatTabKey)
       : activeMainChatTabKey;
 
     return (
       <ChatPane
-      turnCheckpoints={turnCheckpoints}
-      onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
-      turnReviews={turnReviews}
-      undoneFiles={undoneFiles}
-      alwaysKeepAll={alwaysKeepAll}
-      onKeepTurn={handleKeepTurn}
-      onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
-      onUndoTurnAll={handleUndoTurnAll}
-      onUndoFile={handleUndoFile}
-      agentSessionStore={sessionStoreRef.current}
-      mainChatTabs={paneTabs}
-      activeMainChatTabKey={activeMainChatTabKey}
-      headerActiveMainChatTabKey={headerActiveMainChatTabKey}
-      mainChatTabsDisabled={
-        isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
-      }
-      onSelectMainChatTab={handleSelectMainChatTab}
-      onReorderMainChatTabs={handleReorderMainChatTabs}
-      onCloseMainChatTab={handleCloseMainChatTab}
-      onNewMainChatTab={handleNewMainChatTab}
-      paneId={options.id}
-      showTabBar={options.showTabBar}
-      browserMiddleSide={options.side}
-      isBrowserMiddle={workspaceLayoutMode === 'browser-middle'}
-      onToggleBrowserMiddle={toggleBrowserMiddleLayout}
-      splitLayout={layout}
-      onDropTabOnPane={handleDropTabOnSplitPane}
-      onCloseSplitPane={handleCloseSplitPane}
-      onSetSplitRatio={(path, ratio) => handleSetSplitRatio(`${options.pathPrefix}${path}`, ratio)}
-      canSplitForDrop={(targetKey, sourceKey) =>
-        canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
-      }
-      onSplitActivePane={handleSplitActivePane}
-      canSplitActivePane={
-        canSplitPaneAt(chatSplitLayout, headerActiveMainChatTabKey) &&
-        mainChatTabs.length < maxMainChatTabs
-      }
-      items={items}
-      itemMeta={itemMeta}
-      title={activeThreadTitle}
-      status={codexStatus}
-      isRestoring={isRestoring}
-      threads={threads}
-      activeThreadId={activeThreadId}
-      activeTurnId={activeTurnId}
-      activeGoal={activeGoal}
-      isGoalUpdating={isGoalUpdating}
-      threadsNextCursor={threadsNextCursor}
-      threadsLoading={threadsLoading}
-      threadsError={threadsError}
-      hasThreadContent={hasThreadContent}
-      isBusy={
-        isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
-      }
-      workspace={workspace}
-      models={models}
-      selectedModel={selectedModel}
-      selectedReasoningEffort={selectedReasoningEffort}
-      fastMode={fastMode}
-      onSelectModel={handleSelectModel}
-      onSelectModelEffort={handleSelectModelEffort}
-      onSetFastMode={handleSetFastMode}
-      onSend={handleSend}
-      onSteer={handleSteer}
-      onStop={handleStop}
-      onNewThread={handleNewThread}
-      onResumeThread={async (threadId) => {
-        await handleResumeThread(threadId);
-      }}
-      onLoadMoreThreads={loadMoreThreads}
-      onPickWorkspace={handlePickWorkspace}
-      onSaveGoal={handleSaveGoal}
-      onSetGoalStatus={handleSetGoalStatus}
-      onClearGoal={handleClearGoal}
-      onCompactThread={handleCompactThread}
-      agentSessions={agentSessions}
-      openAgentKeys={openAgentKeys}
-      selectedAgentKey={selectedAgentKey}
-      onSelectAgent={setSelectedAgentKey}
-      onOpenAgent={handleOpenAgent}
-      onMinimizeAgent={handleMinimizeAgent}
-      onSetAgentRole={handleSetAgentRole}
-      onToggleReportAgent={handleToggleReportAgent}
-      onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
-      onDecideAgentSendPolicy={handleDecideSendPolicy}
-      onSetAgentModel={handleSelectAgentModel}
-      onSetAgentModelEffort={handleSelectAgentModelEffort}
-      onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
-      onPromoteAgent={(key) => void handlePromoteAgent(key)}
-      onCloseAgentSession={handleCloseAgentSession}
-      onResetAgentSession={handleResetAgentSession}
-      onAgentSend={handleAgentSend}
-      onAgentSteer={handleAgentSteer}
-      onAgentStop={handleAgentStop}
-      onAgentCompact={handleAgentCompact}
-      onLoadOlderHistory={(tabKey, threadId) => {
-        void loadOlderThreadHistory(threadId, tabKey);
-      }}
+        turnCheckpoints={turnCheckpoints}
+        onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+        turnReviews={turnReviews}
+        undoneFiles={undoneFiles}
+        alwaysKeepAll={alwaysKeepAll}
+        onKeepTurn={handleKeepTurn}
+        onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
+        onUndoTurnAll={handleUndoTurnAll}
+        onUndoFile={handleUndoFile}
+        agentSessionStore={sessionStoreRef.current}
+        mainChatTabs={paneTabs}
+        activeMainChatTabKey={activeMainChatTabKey}
+        headerActiveMainChatTabKey={headerActiveMainChatTabKey}
+        mainChatTabsDisabled={
+          isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
+        }
+        onSelectMainChatTab={handleSelectMainChatTab}
+        onReorderMainChatTabs={handleReorderMainChatTabs}
+        onCloseMainChatTab={handleCloseMainChatTab}
+        onNewMainChatTab={handleNewMainChatTab}
+        paneId={options.id}
+        showTabBar={options.showTabBar}
+        browserMiddleSide={options.side}
+        isBrowserMiddle={workspaceLayoutMode === 'browser-middle'}
+        onToggleBrowserMiddle={toggleBrowserMiddleLayout}
+        splitLayout={layout}
+        onDropTabOnPane={handleDropTabOnSplitPane}
+        onCloseSplitPane={handleCloseSplitPane}
+        onSetSplitRatio={(path, ratio) =>
+          handleSetSplitRatio(`${options.pathPrefix}${path}`, ratio)
+        }
+        canSplitForDrop={(targetKey, sourceKey) =>
+          canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+        }
+        onSplitActivePane={handleSplitActivePane}
+        canSplitActivePane={
+          canSplitPaneAt(chatSplitLayout, headerActiveMainChatTabKey) &&
+          mainChatTabs.length < maxMainChatTabs
+        }
+        items={items}
+        itemMeta={itemMeta}
+        title={activeThreadTitle}
+        status={codexStatus}
+        isRestoring={isRestoring}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        activeTurnId={activeTurnId}
+        activeGoal={activeGoal}
+        isGoalUpdating={isGoalUpdating}
+        threadsNextCursor={threadsNextCursor}
+        threadsLoading={threadsLoading}
+        threadsError={threadsError}
+        hasThreadContent={hasThreadContent}
+        isBusy={
+          isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
+        }
+        workspace={workspace}
+        models={models}
+        selectedModel={selectedModel}
+        selectedReasoningEffort={selectedReasoningEffort}
+        fastMode={fastMode}
+        onSelectModel={handleSelectModel}
+        onSelectModelEffort={handleSelectModelEffort}
+        onSetFastMode={handleSetFastMode}
+        onSend={handleSend}
+        onSteer={handleSteer}
+        onStop={handleStop}
+        onNewThread={handleNewThread}
+        onResumeThread={async (threadId) => {
+          await handleResumeThread(threadId);
+        }}
+        onLoadMoreThreads={loadMoreThreads}
+        onPickWorkspace={handlePickWorkspace}
+        onSaveGoal={handleSaveGoal}
+        onSetGoalStatus={handleSetGoalStatus}
+        onClearGoal={handleClearGoal}
+        onCompactThread={handleCompactThread}
+        agentSessions={agentSessions}
+        openAgentKeys={openAgentKeys}
+        selectedAgentKey={selectedAgentKey}
+        onSelectAgent={setSelectedAgentKey}
+        onOpenAgent={handleOpenAgent}
+        onMinimizeAgent={handleMinimizeAgent}
+        onSetAgentRole={handleSetAgentRole}
+        onToggleReportAgent={handleToggleReportAgent}
+        onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+        onDecideAgentSendPolicy={handleDecideSendPolicy}
+        onSetAgentModel={handleSelectAgentModel}
+        onSetAgentModelEffort={handleSelectAgentModelEffort}
+        onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
+        onPromoteAgent={(key) => void handlePromoteAgent(key)}
+        onCloseAgentSession={handleCloseAgentSession}
+        onResetAgentSession={handleResetAgentSession}
+        onAgentSend={handleAgentSend}
+        onAgentSteer={handleAgentSteer}
+        onAgentStop={handleAgentStop}
+        onAgentCompact={handleAgentCompact}
+        onLoadOlderHistory={(tabKey, threadId) => {
+          void loadOlderThreadHistory(threadId, tabKey);
+        }}
       />
     );
   };
@@ -4111,111 +4142,114 @@ export default function App(): React.JSX.Element {
       >
         {!browserMiddleColumns ? (
           <>
-        <ChatPane
-          turnCheckpoints={turnCheckpoints}
-          onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
-          turnReviews={turnReviews}
-          undoneFiles={undoneFiles}
-          alwaysKeepAll={alwaysKeepAll}
-          onKeepTurn={handleKeepTurn}
-          onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
-          onUndoTurnAll={handleUndoTurnAll}
-          onUndoFile={handleUndoFile}
-          agentSessionStore={sessionStoreRef.current}
-          mainChatTabs={mainChatTabs}
-          activeMainChatTabKey={activeMainChatTabKey}
-          mainChatTabsDisabled={
-            isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
-          }
-          onSelectMainChatTab={handleSelectMainChatTab}
-          onReorderMainChatTabs={handleReorderMainChatTabs}
-          onCloseMainChatTab={handleCloseMainChatTab}
-          onNewMainChatTab={handleNewMainChatTab}
-          isBrowserMiddle={false}
-          onToggleBrowserMiddle={toggleBrowserMiddleLayout}
-          splitLayout={chatSplitLayout}
-          onDropTabOnPane={handleDropTabOnSplitPane}
-          onCloseSplitPane={handleCloseSplitPane}
-          onSetSplitRatio={handleSetSplitRatio}
-          canSplitForDrop={(targetKey, sourceKey) =>
-            canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
-          }
-          onSplitActivePane={handleSplitActivePane}
-          canSplitActivePane={
-            canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
-            mainChatTabs.length < maxMainChatTabs
-          }
-          items={items}
-          itemMeta={itemMeta}
-          title={activeThreadTitle}
-          status={codexStatus}
-          isRestoring={isRestoring}
-          threads={threads}
-          activeThreadId={activeThreadId}
-          activeTurnId={activeTurnId}
-          activeGoal={activeGoal}
-          isGoalUpdating={isGoalUpdating}
-          threadsNextCursor={threadsNextCursor}
-          threadsLoading={threadsLoading}
-          threadsError={threadsError}
-          hasThreadContent={hasThreadContent}
-          isBusy={
-            isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
-          }
-          workspace={workspace}
-          models={models}
-          selectedModel={selectedModel}
-          selectedReasoningEffort={selectedReasoningEffort}
-          fastMode={fastMode}
-          onSelectModel={handleSelectModel}
-          onSelectModelEffort={handleSelectModelEffort}
-          onSetFastMode={handleSetFastMode}
-          onSend={handleSend}
-          onSteer={handleSteer}
-          onStop={handleStop}
-          onNewThread={handleNewThread}
-          onResumeThread={async (threadId) => {
-            await handleResumeThread(threadId);
-          }}
-          onLoadMoreThreads={loadMoreThreads}
-          onPickWorkspace={handlePickWorkspace}
-          onSaveGoal={handleSaveGoal}
-          onSetGoalStatus={handleSetGoalStatus}
-          onClearGoal={handleClearGoal}
-          onCompactThread={handleCompactThread}
-          agentSessions={agentSessions}
-          openAgentKeys={openAgentKeys}
-          selectedAgentKey={selectedAgentKey}
-          onSelectAgent={setSelectedAgentKey}
-          onOpenAgent={handleOpenAgent}
-          onMinimizeAgent={handleMinimizeAgent}
-          onSetAgentRole={handleSetAgentRole}
-          onToggleReportAgent={handleToggleReportAgent}
-          onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
-          onDecideAgentSendPolicy={handleDecideSendPolicy}
-          onSetAgentModel={handleSelectAgentModel}
-          onSetAgentModelEffort={handleSelectAgentModelEffort}
-          onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
-          onPromoteAgent={(key) => void handlePromoteAgent(key)}
-          onCloseAgentSession={handleCloseAgentSession}
-          onResetAgentSession={handleResetAgentSession}
-          onAgentSend={handleAgentSend}
-          onAgentSteer={handleAgentSteer}
-          onAgentStop={handleAgentStop}
-          onAgentCompact={handleAgentCompact}
-          onLoadOlderHistory={(tabKey, threadId) => {
-            void loadOlderThreadHistory(threadId, tabKey);
-          }}
-        />
-        <div className="split-divider" onPointerDown={handleDividerPointerDown} />
-        <BrowserPane
-          state={browserState}
-          activeTab={activeTab}
-          viewHostRef={viewHostRef}
-          viewBounds={viewBounds}
-          isFullscreen={isBrowserFullscreen}
-          onToggleFullscreen={toggleBrowserFullscreen}
-        />
+            <ChatPane
+              turnCheckpoints={turnCheckpoints}
+              onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+              turnReviews={turnReviews}
+              undoneFiles={undoneFiles}
+              alwaysKeepAll={alwaysKeepAll}
+              onKeepTurn={handleKeepTurn}
+              onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
+              onUndoTurnAll={handleUndoTurnAll}
+              onUndoFile={handleUndoFile}
+              agentSessionStore={sessionStoreRef.current}
+              mainChatTabs={mainChatTabs}
+              activeMainChatTabKey={activeMainChatTabKey}
+              mainChatTabsDisabled={
+                isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
+              }
+              onSelectMainChatTab={handleSelectMainChatTab}
+              onReorderMainChatTabs={handleReorderMainChatTabs}
+              onCloseMainChatTab={handleCloseMainChatTab}
+              onNewMainChatTab={handleNewMainChatTab}
+              isBrowserMiddle={false}
+              onToggleBrowserMiddle={toggleBrowserMiddleLayout}
+              splitLayout={chatSplitLayout}
+              onDropTabOnPane={handleDropTabOnSplitPane}
+              onCloseSplitPane={handleCloseSplitPane}
+              onSetSplitRatio={handleSetSplitRatio}
+              canSplitForDrop={(targetKey, sourceKey) =>
+                canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+              }
+              onSplitActivePane={handleSplitActivePane}
+              canSplitActivePane={
+                canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
+                mainChatTabs.length < maxMainChatTabs
+              }
+              items={items}
+              itemMeta={itemMeta}
+              title={activeThreadTitle}
+              status={codexStatus}
+              isRestoring={isRestoring}
+              threads={threads}
+              activeThreadId={activeThreadId}
+              activeTurnId={activeTurnId}
+              activeGoal={activeGoal}
+              isGoalUpdating={isGoalUpdating}
+              threadsNextCursor={threadsNextCursor}
+              threadsLoading={threadsLoading}
+              threadsError={threadsError}
+              hasThreadContent={hasThreadContent}
+              isBusy={
+                isRestoring ||
+                isSending ||
+                Boolean(activeTurnId) ||
+                Boolean(reconcilingMainChatTabKey)
+              }
+              workspace={workspace}
+              models={models}
+              selectedModel={selectedModel}
+              selectedReasoningEffort={selectedReasoningEffort}
+              fastMode={fastMode}
+              onSelectModel={handleSelectModel}
+              onSelectModelEffort={handleSelectModelEffort}
+              onSetFastMode={handleSetFastMode}
+              onSend={handleSend}
+              onSteer={handleSteer}
+              onStop={handleStop}
+              onNewThread={handleNewThread}
+              onResumeThread={async (threadId) => {
+                await handleResumeThread(threadId);
+              }}
+              onLoadMoreThreads={loadMoreThreads}
+              onPickWorkspace={handlePickWorkspace}
+              onSaveGoal={handleSaveGoal}
+              onSetGoalStatus={handleSetGoalStatus}
+              onClearGoal={handleClearGoal}
+              onCompactThread={handleCompactThread}
+              agentSessions={agentSessions}
+              openAgentKeys={openAgentKeys}
+              selectedAgentKey={selectedAgentKey}
+              onSelectAgent={setSelectedAgentKey}
+              onOpenAgent={handleOpenAgent}
+              onMinimizeAgent={handleMinimizeAgent}
+              onSetAgentRole={handleSetAgentRole}
+              onToggleReportAgent={handleToggleReportAgent}
+              onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+              onDecideAgentSendPolicy={handleDecideSendPolicy}
+              onSetAgentModel={handleSelectAgentModel}
+              onSetAgentModelEffort={handleSelectAgentModelEffort}
+              onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
+              onPromoteAgent={(key) => void handlePromoteAgent(key)}
+              onCloseAgentSession={handleCloseAgentSession}
+              onResetAgentSession={handleResetAgentSession}
+              onAgentSend={handleAgentSend}
+              onAgentSteer={handleAgentSteer}
+              onAgentStop={handleAgentStop}
+              onAgentCompact={handleAgentCompact}
+              onLoadOlderHistory={(tabKey, threadId) => {
+                void loadOlderThreadHistory(threadId, tabKey);
+              }}
+            />
+            <div className="split-divider" onPointerDown={handleDividerPointerDown} />
+            <BrowserPane
+              state={browserState}
+              activeTab={activeTab}
+              viewHostRef={viewHostRef}
+              viewBounds={viewBounds}
+              isFullscreen={isBrowserFullscreen}
+              onToggleFullscreen={toggleBrowserFullscreen}
+            />
           </>
         ) : (
           <>
@@ -4282,7 +4316,6 @@ function TitleBar(): React.JSX.Element {
     </header>
   );
 }
-
 
 function persistLastThreadId(threadId: string | null): void {
   if (threadId) {
