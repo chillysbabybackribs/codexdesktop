@@ -26,7 +26,7 @@ Prefer sources the embedded browser is logged into — that is this system's edg
 - Money-adjacent surfaces: app-store and Chrome-store reviews of paid tools (1–3 star reviews of a *paid* product are pre-validated demand), G2/Capterra gripes, Upwork/Fiverr job posts describing repetitive manual work.
 - Search phrases that mark unmet demand: "is there a tool that", "I wish there was", "why is there no", "how do I automate", "spreadsheet to do X".
 
-Use `research_web` for public discovery (artifact-first) and `browser_run` on visible logged-in tabs for anything behind auth. Reuse open tabs; do not open tab bursts.
+Use `browser_research_dual` for public discovery (live verification plus artifact-first background evidence; author short single-angle queries). Behind auth, read with `browser_snapshot` on the visible logged-in tab, interact with `browser_flow`, and reserve `browser_run` for bespoke extraction. Reuse open tabs; do not open tab bursts.
 
 ## What qualifies as a seed
 
@@ -63,6 +63,6 @@ score: <pain 1-5>/<frequency 1-5>/<payability 1-5>
 
 ## Budget and stopping
 
-- One `research_web` pass (1–3 queries) plus bounded logged-in browsing. At most one gap-fill pass.
+- One `browser_research_dual` pass (3–6 short single-angle queries) plus bounded logged-in browsing. At most one gap-fill pass.
 - Cap output at 5 new seeds per run. Quality over count: zero seeds is an acceptable, honest result.
 - Finish with a compact table in chat: slug, one-line problem, score, strongest single quote. No prose dumps.
