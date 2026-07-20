@@ -51,29 +51,59 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
-test('first-class live search visibly navigates and snapshots one existing tab', async () => {
+test('first-class live search hides parallel discovery and opens only a direct destination', async () => {
   let received: Record<string, unknown> | null = null
+  let discoveryQueries: string[] = []
   const browserAgent = withTurnRunner({
     snapshot: async (options: Record<string, unknown>) => {
       received = options
       return { ok: true, result: { items: [] } }
     }
   }) as unknown as BrowserAgentController
+  const researchRunner = {
+    discover: async (request: { queries?: string[] }, context: ResearchRunContext) => {
+      discoveryQueries = request.queries ?? []
+      context.onProgress?.({ stage: 'discovering', message: 'Discovering source URLs in 3 hidden search lanes…' })
+      return {
+        ok: true,
+        queries: discoveryQueries,
+        candidates: [{
+          url: 'https://status.example.com/current',
+          title: 'Current platform status',
+          snippet: 'Operational status',
+          rank: 1,
+          query: discoveryQueries[0],
+          score: 100,
+          domain: 'status.example.com',
+          sourceTier: 'official'
+        }],
+        discoveredCount: 1,
+        metrics: { durationMs: 12, searchesAttempted: 3, cacheHits: 0, navigation: { count: 3, domReadyMs: 3, settleMs: 3, settleReasons: {} } }
+      }
+    }
+  } as unknown as ResearchRunner
   const response = await routeDynamicToolCall(params('browser_live_search', {
-    query: 'current platform status',
+    queries: ['current platform status', 'official platform uptime', 'platform incident history'],
     objective: 'Return the official status result',
     tab: 'tab-1',
     maxItems: 5
-  }), { browserAgent, researchRunner: unusedResearch })
+  }), { browserAgent, researchRunner })
 
   assert.equal(response.success, true)
+  assert.deepEqual(discoveryQueries, ['current platform status', 'official platform uptime', 'platform incident history'])
   const captured = received as unknown as Record<string, unknown>
-  assert.equal(captured.url, 'https://www.google.com/search?q=current%20platform%20status')
+  assert.equal(captured.url, 'https://status.example.com/current')
   assert.equal(captured.tabId, 'tab-1')
   assert.equal(captured.objective, 'Return the official status result')
+  const item = response.contentItems[0]
+  assert.equal(item.type, 'inputText')
+  if (item.type !== 'inputText') assert.fail('expected text result')
+  const result = JSON.parse(item.text) as { mode: string; destination: { url: string } }
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation')
+  assert.equal(result.destination.url, 'https://status.example.com/current')
 })
 
-test('dual research runs visible and artifact-first lanes together', async () => {
+test('dual research opens a direct destination while the artifact-first lane runs', async () => {
   let liveStarted = false
   let backgroundStarted = false
   const browserAgent = withTurnRunner({
@@ -85,6 +115,22 @@ test('dual research runs visible and artifact-first lanes together', async () =>
     }
   }) as unknown as BrowserAgentController
   const researchRunner = {
+    discover: async () => ({
+      ok: true,
+      queries: ['latest runtime release'],
+      candidates: [{
+        url: 'https://runtime.example.com/releases/latest',
+        title: 'Latest runtime release',
+        snippet: '',
+        rank: 1,
+        query: 'latest runtime release',
+        score: 100,
+        domain: 'runtime.example.com',
+        sourceTier: 'official'
+      }],
+      discoveredCount: 1,
+      metrics: { durationMs: 10, searchesAttempted: 1, cacheHits: 0, navigation: { count: 1, domReadyMs: 1, settleMs: 1, settleReasons: {} } }
+    }),
     run: async () => {
       backgroundStarted = true
       await Promise.resolve()
@@ -101,8 +147,9 @@ test('dual research runs visible and artifact-first lanes together', async () =>
   const item = response.contentItems[0]
   assert.equal(item.type, 'inputText')
   if (item.type !== 'inputText') assert.fail('expected text result')
-  const result = JSON.parse(item.text) as { mode: string; live: { ok: boolean }; background: { ok: boolean } }
-  assert.equal(result.mode, 'dual')
+  const result = JSON.parse(item.text) as { mode: string; destination: { url: string }; live: { ok: boolean }; background: { ok: boolean } }
+  assert.equal(result.mode, 'hidden-discovery-direct-navigation-plus-research')
+  assert.equal(result.destination.url, 'https://runtime.example.com/releases/latest')
   assert.equal(result.live.ok, true)
   assert.equal(result.background.ok, true)
 })

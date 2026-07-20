@@ -68,6 +68,21 @@ test('firsthand research expands into developer-report source lanes', () => {
   )
 })
 
+test('multiple model-authored semantic variants are preserved without deterministic additions', () => {
+  assert.deepEqual(
+    buildResearchQueryVariants([
+      'Electron WebContentsView official migration guide',
+      'Electron WebContentsView Linux rendering regressions',
+      'Electron WebContentsView developer migration experience'
+    ], 6),
+    [
+      'Electron WebContentsView official migration guide',
+      'Electron WebContentsView Linux rendering regressions',
+      'Electron WebContentsView developer migration experience'
+    ]
+  )
+})
+
 test('candidate ranking boosts primary sources and lowers video results', () => {
   const candidates: SerpCandidate[] = [
     {

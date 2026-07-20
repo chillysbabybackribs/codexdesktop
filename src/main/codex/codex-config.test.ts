@@ -436,6 +436,20 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.match(browserNetwork.description, /one model call/i)
   assert.match(browserNetwork.description, /SSE\/WebSocket stream/i)
   assert.match(browserNetwork.description, /Chromium download handoff as an artifact/i)
+  const browserLiveSearch = browserDynamicTools.find(({ name }) => name === 'browser_live_search')
+  assert.equal(browserLiveSearch?.type, 'function')
+  if (!browserLiveSearch || browserLiveSearch.type !== 'function') assert.fail('browser_live_search function tool is missing')
+  const liveSearchSchema = browserLiveSearch.inputSchema as {
+    required?: string[]
+    anyOf?: Array<{ required?: string[] }>
+    properties: Record<string, { minItems?: number; maxItems?: number }>
+  }
+  assert.deepEqual(liveSearchSchema.required, ['objective'])
+  assert.deepEqual(liveSearchSchema.anyOf, [{ required: ['query'] }, { required: ['queries'] }])
+  assert.equal(liveSearchSchema.properties.queries?.minItems, 2)
+  assert.equal(liveSearchSchema.properties.queries?.maxItems, 6)
+  assert.match(browserLiveSearch.description, /parallel hidden Chromium workers/i)
+  assert.match(browserLiveSearch.description, /Search result pages are never shown/i)
   const browserResearchDual = browserDynamicTools.find(({ name }) => name === 'browser_research_dual')
   assert.equal(browserResearchDual?.type, 'function')
   if (!browserResearchDual || browserResearchDual.type !== 'function') assert.fail('browser_research_dual function tool is missing')
@@ -469,12 +483,14 @@ test('the dynamic tool surface includes verified research primitives', () => {
   ])
   assert.deepEqual(researchSchema.anyOf, [{ required: ['queries'] }, { required: ['urls'] }])
   assert.equal(researchProperties.urls?.maxItems, 8)
+  assert.equal(researchProperties.queries?.maxItems, 6)
   assert.equal(researchProperties.focus?.maxItems, 6)
   assert.deepEqual(researchProperties.focus?.items?.required, ['id', 'need'])
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.minimum, 1)
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 6)
   assert.equal(researchProperties.maxAttempts?.maximum, 24)
-  assert.match(researchProperties.queries?.description ?? '', /primary discovery query/i)
+  assert.match(researchProperties.queries?.description ?? '', /semantic discovery variations/i)
+  assert.match(researchProperties.queries?.description ?? '', /parallel hidden Chromium workers/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
   assert.match(researchWeb.description, /model-authored evidence needs/i)
