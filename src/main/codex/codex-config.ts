@@ -503,27 +503,13 @@ const browserLiveSearchSchema = {
     },
     objective: { type: 'string', description: 'Specific facts or fields to extract after the visible tab navigates directly to the highest-ranked destination page.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
+    background: { type: 'boolean', description: 'Also gather bounded artifact-first evidence from independent public sources. Set true for quality-max current-information, comparison, conflict, or source-backed research; defaults to false for a quick visible lookup.' },
+    focus: researchWebSchema.properties.focus,
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Maximum SERP candidates per hidden query. Defaults to 5.' },
     maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum structured items to return from the selected destination page. Defaults to 10.' },
-    timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' }
-  },
-  required: ['objective'],
-  anyOf: [{ required: ['query'] }, { required: ['queries'] }],
-  additionalProperties: false
-}
-
-const browserResearchDualSchema = {
-  type: 'object',
-  properties: {
-    query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
-    queries: browserLiveSearchSchema.properties.queries,
-    objective: { type: 'string', description: 'Concrete facts and evidence the directly opened destination page should return.' },
-    tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
-    focus: researchWebSchema.properties.focus,
-    maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Candidate/result target for each lane. Defaults to 6.' },
     maxAttempts: researchWebSchema.properties.maxAttempts,
     snippetChars: researchWebSchema.properties.snippetChars,
-    timeoutMs: { type: 'number', description: 'Optional visible-lane timeout from 250 to 60000 milliseconds.' }
+    timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' }
   },
   required: ['objective'],
   anyOf: [{ required: ['query'] }, { required: ['queries'] }],
@@ -534,14 +520,8 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_live_search',
-    description: 'Search-to-page navigation: search three to six model-authored semantic variations in parallel hidden Chromium workers, rank and deduplicate destination URLs, then navigate the existing visible tab directly to the best page and return its objective-ranked snapshot. Search result pages are never shown. Never creates a tab.',
+    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded artifact-first evidence in parallel for quality-max research. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserLiveSearchSchema
-  },
-  {
-    type: 'function',
-    name: 'browser_research_dual',
-    description: 'Quality-max default for search-shaped, current-information, or post-cutoff tasks: run hidden parallel URL discovery, navigate the visible tab directly to the strongest destination, and gather bounded artifact-first evidence in parallel. Also the path for broad source-backed research, consequential comparisons, or conflicts that need live verification plus independent public evidence. Search result pages are never shown. Never creates a tab.',
-    inputSchema: browserResearchDualSchema
   },
   {
     type: 'function',

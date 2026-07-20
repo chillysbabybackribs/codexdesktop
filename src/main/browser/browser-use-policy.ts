@@ -86,7 +86,7 @@ export function buildBrowserUseGuidance(
     `Codex Desktop browser-use preset: ${preset}.`,
     ...(lane === 'claude'
       ? [
-          `- Browse only with the mcp__browser__ tools. The built-in WebSearch and WebFetch tools are disabled; ${t('browser_research_dual')}, ${t('browser_live_search')}, ${t('research_web')}, and ${t('browser_extract_page')} replace them.`,
+          `- Browse only with the mcp__browser__ tools. The built-in WebSearch and WebFetch tools are disabled; ${t('browser_live_search')}, ${t('research_web')}, and ${t('browser_extract_page')} replace them.`,
         ]
       : []),
     '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
@@ -95,11 +95,11 @@ export function buildBrowserUseGuidance(
     `- Background research (${t('research_web')}) complements visible verification instead of replacing it: it gathers bounded independent public evidence in parallel while the visible tab verifies the strongest source live.`,
     ...(preset === 'quality-max'
       ? [
-          `- In quality-max mode, search-shaped, current-information, or post-knowledge-cutoff tasks should normally use ${t('browser_research_dual')}: one call that verifies live in the visible tab while parallel background research corroborates. Use the live browser alone (${t('browser_live_search')}, ${t('browser_snapshot')}) for referenced, authenticated, or interactive pages where source breadth adds nothing, and ${t('research_web')} alone only when the user explicitly asks for background-only research.`,
+          `- In quality-max mode, search-shaped, current-information, or post-knowledge-cutoff tasks should normally use ${t('browser_live_search')} with background=true: one call opens the first viable destination in the visible tab while bounded background evidence corroborates. Omit background for referenced, authenticated, or interactive pages where source breadth adds nothing, and use ${t('research_web')} alone only when the user explicitly asks for background-only research.`,
         ]
       : preset === 'balanced'
         ? [
-            `- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background for broad public research, and ${t('browser_research_dual')} only for consequential comparisons.`,
+            `- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background-only for broad public research, and ${t('browser_live_search')} with background=true only for consequential comparisons.`,
           ]
         : ['- In manual mode, browse only when the user explicitly requests browsing or the task directly names a live browser surface.']),
     '- Do not claim a current external fact from memory when this policy requires browsing. If browsing fails, say what could not be verified.',

@@ -226,7 +226,9 @@ function goalTrace(
         (item.type === 'dynamicToolCall' ? item.success === false : item.error !== null)
       ).length,
       successfulResearchToolCount: structuredItems.filter((item) =>
-        item.type === 'dynamicToolCall' && item.tool === 'research_web' && isStructuredSuccess(item)
+        item.type === 'dynamicToolCall' &&
+        (item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual') &&
+        isStructuredSuccess(item)
       ).length,
       fileChangeCount
     }

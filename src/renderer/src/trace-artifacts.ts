@@ -49,14 +49,21 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && item.tool === 'research_web') {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
-          const result = JSON.parse(content.text) as {
+          const parsed = JSON.parse(content.text) as {
             artifactDir?: unknown
             pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
+            background?: {
+              artifactDir?: unknown
+              pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
+            }
           }
+          // The search tools carry their artifact-first lane under `background`;
+          // research_web returns the research result at the top level.
+          const result = item.tool === 'research_web' ? parsed : parsed.background ?? {}
           if (typeof result.artifactDir === 'string') {
             addTraceArtifact(artifacts, {
               path: result.artifactDir,
