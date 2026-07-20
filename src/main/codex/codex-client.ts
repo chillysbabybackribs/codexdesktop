@@ -1,254 +1,215 @@
-import { EventEmitter } from 'node:events';
-import { join } from 'node:path';
-import { app } from 'electron';
-import type { BrowserAgentController } from '../browser/browser-agent.js';
-import type { TurnCheckpointStore } from '../turn-checkpoint.js';
-import { codexCapabilities, type SessionProvider } from '../providers/session-provider.js';
-import type { ResearchRunner } from '../browser/research-runner.js';
+import { EventEmitter } from 'node:events'
+import { join } from 'node:path'
+import { app } from 'electron'
+import type { BrowserAgentController } from '../browser/browser-agent.js'
+import type { TurnCheckpointStore } from '../turn-checkpoint.js'
+import { codexCapabilities, type SessionProvider } from '../providers/session-provider.js'
+import type { ResearchRunner } from '../browser/research-runner.js'
 import type {
   CodexConnectionStatus,
   SessionEvent,
   CodexListThreadTurnsParams,
-  CodexPluginAppStatusResponse,
-} from '../../shared/ipc.js';
-import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js';
-import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js';
-import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js';
-import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js';
-import type { Model } from '../../shared/codex-protocol/v2/Model.js';
-import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js';
-import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js';
-import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js';
-import type { ThreadReadResponse } from '../../shared/codex-protocol/v2/ThreadReadResponse.js';
-import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js';
-import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js';
-import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js';
-import type { ThreadGoalGetResponse } from '../../shared/codex-protocol/v2/ThreadGoalGetResponse.js';
-import type { ThreadGoalSetParams } from '../../shared/codex-protocol/v2/ThreadGoalSetParams.js';
-import type { ThreadGoalSetResponse } from '../../shared/codex-protocol/v2/ThreadGoalSetResponse.js';
-import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js';
-import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js';
-import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js';
-import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js';
-import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js';
-import type { PluginInstalledResponse } from '../../shared/codex-protocol/v2/PluginInstalledResponse.js';
-import type { PluginListResponse } from '../../shared/codex-protocol/v2/PluginListResponse.js';
-import type { PluginInstallParams } from '../../shared/codex-protocol/v2/PluginInstallParams.js';
-import type { PluginInstallResponse } from '../../shared/codex-protocol/v2/PluginInstallResponse.js';
-import type { PluginReadResponse } from '../../shared/codex-protocol/v2/PluginReadResponse.js';
-import type { AppsListResponse } from '../../shared/codex-protocol/v2/AppsListResponse.js';
-import type { ChatAttachment } from '../../shared/ipc.js';
+  CodexPluginAppStatusResponse
+} from '../../shared/ipc.js'
+import type { GetAuthStatusResponse } from '../../shared/codex-protocol/GetAuthStatusResponse.js'
+import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
+import type { ServerNotification } from '../../shared/codex-protocol/ServerNotification.js'
+import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
+import type { Model } from '../../shared/codex-protocol/v2/Model.js'
+import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
+import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
+import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js'
+import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
+import type { ThreadGoalClearResponse } from '../../shared/codex-protocol/v2/ThreadGoalClearResponse.js'
+import type { ThreadGoalGetResponse } from '../../shared/codex-protocol/v2/ThreadGoalGetResponse.js'
+import type { ThreadGoalSetParams } from '../../shared/codex-protocol/v2/ThreadGoalSetParams.js'
+import type { ThreadGoalSetResponse } from '../../shared/codex-protocol/v2/ThreadGoalSetResponse.js'
+import type { ThreadResumeResponse } from '../../shared/codex-protocol/v2/ThreadResumeResponse.js'
+import type { ThreadStartResponse } from '../../shared/codex-protocol/v2/ThreadStartResponse.js'
+import type { ThreadTokenUsage } from '../../shared/codex-protocol/v2/ThreadTokenUsage.js'
+import type { ThreadUnsubscribeResponse } from '../../shared/codex-protocol/v2/ThreadUnsubscribeResponse.js'
+import type { TurnStartResponse } from '../../shared/codex-protocol/v2/TurnStartResponse.js'
+import type { PluginInstalledResponse } from '../../shared/codex-protocol/v2/PluginInstalledResponse.js'
+import type { PluginListResponse } from '../../shared/codex-protocol/v2/PluginListResponse.js'
+import type { PluginInstallParams } from '../../shared/codex-protocol/v2/PluginInstallParams.js'
+import type { PluginInstallResponse } from '../../shared/codex-protocol/v2/PluginInstallResponse.js'
+import type { PluginReadResponse } from '../../shared/codex-protocol/v2/PluginReadResponse.js'
+import type { AppsListResponse } from '../../shared/codex-protocol/v2/AppsListResponse.js'
+import type { ChatAttachment } from '../../shared/ipc.js'
 import {
   AppServerRpc,
   AppServerRpcError,
   type JsonRpcId,
   type JsonRpcMessage,
-  type JsonRpcRequestMessage,
-} from './app-server-rpc.js';
-import { AppServerProcess } from './app-server-process.js';
-import { routeDynamicToolCall } from './dynamic-tool-router.js';
-import { isAgentTool, routeAgentToolCall } from '../agents/agent-tool-router.js';
-import type { SubagentSpawner } from '../agents/subagent-orchestrator.js';
+  type JsonRpcRequestMessage
+} from './app-server-rpc.js'
+import { AppServerProcess } from './app-server-process.js'
+import { routeDynamicToolCall } from './dynamic-tool-router.js'
+import { isAgentTool, routeAgentToolCall } from '../agents/agent-tool-router.js'
+import type { SubagentSpawner } from '../agents/subagent-orchestrator.js'
 import {
   allDynamicTools,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
-  resolveTurnPolicy,
-} from './codex-config.js';
-import { LocalSkillRegistry } from './local-skill-registry.js';
-import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-history.js';
-import { localCuratedFallbackParams, mergeInstalledPlugins } from './plugin-install-fallback.js';
+  resolveTurnPolicy
+} from './codex-config.js'
+import { LocalSkillRegistry } from './local-skill-registry.js'
+import { resumeHistoryPageFor, type ResumeHistoryConsumer } from './resume-history.js'
 
 // Compact between turns once the last model call's context reaches this share
 // of the model window, well before codex-core's own end-of-window handling, so
 // long threads stay responsive instead of riding the limit.
-const autoCompactContextRatio = 0.8;
+const autoCompactContextRatio = 0.8
 
 export class CodexClient extends EventEmitter implements SessionProvider {
-  readonly id = 'codex' as const;
-  readonly capabilities = codexCapabilities;
-  private readonly appServer: AppServerProcess;
-  private readonly rpc: AppServerRpc;
-  private readonly localSkills = new LocalSkillRegistry(
-    app.getAppPath(),
-    join(app.getAppPath(), 'skills'),
-  );
-  private readonly threadModels = new Map<string, string>();
-  private readonly threadCwds = new Map<string, string>();
-  private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>();
-  private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>();
-  private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>();
-  private readonly compactionsInFlight = new Set<string>();
+  readonly id = 'codex' as const
+  readonly capabilities = codexCapabilities
+  private readonly appServer: AppServerProcess
+  private readonly rpc: AppServerRpc
+  private readonly localSkills = new LocalSkillRegistry(app.getAppPath(), join(app.getAppPath(), 'skills'))
+  private readonly threadModels = new Map<string, string>()
+  private readonly threadCwds = new Map<string, string>()
+  private readonly threadReasoningEfforts = new Map<string, ReasoningEffort | null>()
+  private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>()
+  private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
+  private readonly compactionsInFlight = new Set<string>()
   // Injected after construction (the orchestrator needs the providers first).
   // When set, spawn_subagent tool calls route here; when unset, they return a
   // clean unavailable result so the runtime never hangs.
-  private subagentSpawner: SubagentSpawner | null = null;
+  private subagentSpawner: SubagentSpawner | null = null
   constructor(
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner,
-    private readonly checkpoints: TurnCheckpointStore | null = null,
+    private readonly checkpoints: TurnCheckpointStore | null = null
   ) {
-    super();
+    super()
     this.appServer = new AppServerProcess({
       onLine: (line) => this.rpc.handleLine(line),
       onStopped: (error) => this.rpc.rejectPending(error),
-      onStatus: (status, message) => this.emitStatus(status, message),
-    });
+      onStatus: (status, message) => this.emitStatus(status, message)
+    })
     this.rpc = new AppServerRpc({
       write: (message) => this.appServer.write(message),
       onNotification: (message) => this.handleNotification(message),
-      onRequest: (message) => this.handleServerRequest(message),
-    });
+      onRequest: (message) => this.handleServerRequest(message)
+    })
   }
 
   async getAuthStatus(): Promise<GetAuthStatusResponse> {
-    await this.ensureStarted();
+    await this.ensureStarted()
     return this.request<GetAuthStatusResponse>('getAuthStatus', {
       includeToken: false,
-      refreshToken: false,
-    });
+      refreshToken: false
+    })
   }
 
   async listModels(): Promise<Model[]> {
-    await this.ensureStarted();
-    const models: Model[] = [];
-    let cursor: string | null = null;
+    await this.ensureStarted()
+    const models: Model[] = []
+    let cursor: string | null = null
 
     do {
       const page: ModelListResponse = await this.request<ModelListResponse>('model/list', {
-        ...(cursor ? { cursor } : {}),
-      });
-      models.push(...page.data);
-      cursor = page.nextCursor;
-    } while (cursor);
+        ...(cursor ? { cursor } : {})
+      })
+      models.push(...page.data)
+      cursor = page.nextCursor
+    } while (cursor)
 
-    const visible = models.filter((model) => !model.hidden);
+    const visible = models.filter((model) => !model.hidden)
     for (const model of visible) {
       this.modelReasoningEfforts.set(
         model.model,
-        model.supportedReasoningEfforts.map((option) => option.reasoningEffort),
-      );
+        model.supportedReasoningEfforts.map((option) => option.reasoningEffort)
+      )
     }
-    return visible;
+    return visible
   }
 
-  async listSkills(): Promise<SkillMetadata[]> {
-    await this.ensureStarted();
-    return this.localSkills.list();
-  }
-
-  async listThreads(options?: {
-    cursor?: string | null;
-    cwd?: string | null;
-  }): Promise<ThreadListResponse> {
-    await this.ensureStarted();
+  async listThreads(options?: { cursor?: string | null; cwd?: string | null }): Promise<ThreadListResponse> {
+    await this.ensureStarted()
     return this.request<ThreadListResponse>('thread/list', {
       limit: 30,
       sortKey: 'recency_at',
       sortDirection: 'desc',
       archived: false,
       ...(options?.cursor ? { cursor: options.cursor } : {}),
-      ...(options?.cwd ? { cwd: options.cwd } : {}),
-    });
+      ...(options?.cwd ? { cwd: options.cwd } : {})
+    })
   }
 
   async listInstalledPlugins(cwd?: string | null): Promise<PluginInstalledResponse> {
-    await this.ensureStarted();
+    await this.ensureStarted()
     return this.request<PluginInstalledResponse>('plugin/installed', {
-      ...(cwd ? { cwds: [cwd] } : {}),
-    });
+      ...(cwd ? { cwds: [cwd] } : {})
+    })
   }
 
   async listPlugins(cwd?: string | null): Promise<PluginListResponse> {
-    await this.ensureStarted();
-    const available = await this.request<PluginListResponse>('plugin/list', {
-      ...(cwd ? { cwds: [cwd] } : {}),
-    });
-    try {
-      const installed = await this.request<PluginInstalledResponse>('plugin/installed', {
-        ...(cwd ? { cwds: [cwd] } : {}),
-      });
-      return mergeInstalledPlugins(available, installed);
-    } catch (error) {
-      console.warn('Could not merge installed plugins into the directory response', error);
-      return available;
-    }
+    await this.ensureStarted()
+    return this.request<PluginListResponse>('plugin/list', {
+      ...(cwd ? { cwds: [cwd] } : {})
+    })
   }
 
   async readPlugin(params: PluginInstallParams): Promise<PluginReadResponse> {
-    await this.ensureStarted();
-    return this.request<PluginReadResponse>('plugin/read', params);
+    await this.ensureStarted()
+    return this.request<PluginReadResponse>('plugin/read', params)
   }
 
   async getPluginAppStatuses(
     appIds: string[],
-    forceRefetch = false,
+    forceRefetch = false
   ): Promise<CodexPluginAppStatusResponse> {
-    await this.ensureStarted();
-    const wanted = new Set(appIds.filter(Boolean).slice(0, 24));
-    const apps: CodexPluginAppStatusResponse['apps'] = [];
-    let cursor: string | null = null;
-    let page = 0;
+    await this.ensureStarted()
+    const wanted = new Set(appIds.filter(Boolean).slice(0, 24))
+    const apps: CodexPluginAppStatusResponse['apps'] = []
+    let cursor: string | null = null
+    let page = 0
 
     while (wanted.size && page < 24) {
       const response: AppsListResponse = await this.request<AppsListResponse>('app/list', {
         cursor,
         limit: 500,
-        ...(forceRefetch && page === 0 ? { forceRefetch: true } : {}),
-      });
+        ...(forceRefetch && page === 0 ? { forceRefetch: true } : {})
+      })
 
       for (const appInfo of response.data) {
-        if (!wanted.delete(appInfo.id)) continue;
+        if (!wanted.delete(appInfo.id)) continue
         apps.push({
           id: appInfo.id,
           name: appInfo.name,
           installUrl: appInfo.installUrl,
           isAccessible: appInfo.isAccessible,
-          isEnabled: appInfo.isEnabled,
-        });
+          isEnabled: appInfo.isEnabled
+        })
       }
 
-      cursor = response.nextCursor;
-      page += 1;
-      if (!cursor) break;
+      cursor = response.nextCursor
+      page += 1
+      if (!cursor) break
     }
 
-    return { apps };
+    return { apps }
   }
 
   async installPlugin(params: PluginInstallParams): Promise<PluginInstallResponse> {
-    await this.ensureStarted();
-    let result: PluginInstallResponse;
-    try {
-      result = await this.request<PluginInstallResponse>('plugin/install', params);
-    } catch (error) {
-      const fallbackParams = await localCuratedFallbackParams(params, error);
-      if (!fallbackParams) throw error;
-
-      const remote = await this.request<PluginReadResponse>('plugin/read', params);
-      if (remote.plugin.summary.name !== fallbackParams.pluginName) throw error;
-      result = await this.request<PluginInstallResponse>('plugin/install', fallbackParams);
-    }
-    await this.localSkills.refresh(
-      <T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams),
-      true,
-    );
-    return result;
+    await this.ensureStarted()
+    const result = await this.request<PluginInstallResponse>('plugin/install', params)
+    await this.localSkills.refresh(<T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams), true)
+    return result
   }
 
   async uninstallPlugin(pluginId: string): Promise<void> {
-    await this.ensureStarted();
-    await this.request('plugin/uninstall', { pluginId });
-    await this.localSkills.refresh(
-      <T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams),
-      true,
-    );
+    await this.ensureStarted()
+    await this.request('plugin/uninstall', { pluginId })
+    await this.localSkills.refresh(<T>(method: string, requestParams?: unknown) => this.request<T>(method, requestParams), true)
   }
 
   async startThread(cwd?: string | null, model?: string | null): Promise<ThreadStartResponse> {
-    await this.ensureStarted();
-    const resolvedCwd = cwd ?? process.env.HOME ?? process.cwd();
+    await this.ensureStarted()
+    const resolvedCwd = cwd ?? process.env.HOME ?? process.cwd()
     const response = await this.request<ThreadStartResponse>('thread/start', {
       cwd: resolvedCwd,
       ...(model ? { model } : {}),
@@ -257,19 +218,16 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       historyMode: 'legacy',
       config: newThreadConfig,
       dynamicTools: allDynamicTools,
-      developerInstructions: buildGuidance(),
-    });
-    this.threadModels.set(response.thread.id, response.model);
-    this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort);
-    this.threadCwds.set(response.thread.id, resolvedCwd);
-    return response;
+      developerInstructions: buildGuidance()
+    })
+    this.threadModels.set(response.thread.id, response.model)
+    this.threadReasoningEfforts.set(response.thread.id, response.reasoningEffort)
+    this.threadCwds.set(response.thread.id, resolvedCwd)
+    return response
   }
 
-  async resumeThread(
-    threadId: string,
-    history: ResumeHistoryConsumer = 'main',
-  ): Promise<ThreadResumeResponse> {
-    await this.ensureStarted();
+  async resumeThread(threadId: string, history: ResumeHistoryConsumer = 'main'): Promise<ThreadResumeResponse> {
+    await this.ensureStarted()
     const response = await this.request<ThreadResumeResponse>('thread/resume', {
       threadId,
       approvalPolicy: 'never',
@@ -280,39 +238,39 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       // bounded bootstrap payload; requesting populated thread.turns as well
       // duplicates that history and makes large persisted chats feel frozen.
       excludeTurns: true,
-      initialTurnsPage: resumeHistoryPageFor(history),
-    });
-    this.threadModels.set(threadId, response.model);
-    this.threadReasoningEfforts.set(threadId, response.reasoningEffort);
-    if (response.cwd) this.threadCwds.set(threadId, response.cwd);
-    return response;
+      initialTurnsPage: resumeHistoryPageFor(history)
+    })
+    this.threadModels.set(threadId, response.model)
+    this.threadReasoningEfforts.set(threadId, response.reasoningEffort)
+    if (response.cwd) this.threadCwds.set(threadId, response.cwd)
+    return response
   }
 
   async listThreadTurns(params: CodexListThreadTurnsParams): Promise<ThreadTurnsListResponse> {
-    await this.ensureStarted();
+    await this.ensureStarted()
     return this.request<ThreadTurnsListResponse>('thread/turns/list', {
       ...params,
       limit: params.limit ?? 10,
       sortDirection: 'desc',
-      itemsView: 'full',
-    });
+      itemsView: 'full'
+    })
   }
 
   async getGoal(threadId: string): Promise<ThreadGoal | null> {
-    await this.ensureStarted();
-    const response = await this.request<ThreadGoalGetResponse>('thread/goal/get', { threadId });
-    return response.goal;
+    await this.ensureStarted()
+    const response = await this.request<ThreadGoalGetResponse>('thread/goal/get', { threadId })
+    return response.goal
   }
 
   async setGoal(params: ThreadGoalSetParams): Promise<ThreadGoal> {
-    await this.ensureStarted();
-    const response = await this.request<ThreadGoalSetResponse>('thread/goal/set', params);
-    return response.goal;
+    await this.ensureStarted()
+    const response = await this.request<ThreadGoalSetResponse>('thread/goal/set', params)
+    return response.goal
   }
 
   async clearGoal(threadId: string): Promise<ThreadGoalClearResponse> {
-    await this.ensureStarted();
-    return this.request<ThreadGoalClearResponse>('thread/goal/clear', { threadId });
+    await this.ensureStarted()
+    return this.request<ThreadGoalClearResponse>('thread/goal/clear', { threadId })
   }
 
   async sendMessage(
@@ -322,51 +280,39 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     model?: string | null,
     attachments: ChatAttachment[] = [],
     effort?: ReasoningEffort | null,
-    fastMode = false,
-  ): Promise<
-    TurnStartResponse & {
-      threadId: string;
-      model: string | null;
-      reasoningEffort: ReasoningEffort | null;
-    }
-  > {
-    await this.ensureStarted();
-    const startedThread = threadId ? null : await this.startThread(cwd, model);
-    const activeThreadId = threadId ?? startedThread!.thread.id;
-    const input = this.localSkills.buildTurnInput(text, !threadId, attachments);
-    const requestedEffort =
-      effort ??
-      startedThread?.reasoningEffort ??
-      this.threadReasoningEfforts.get(activeThreadId) ??
-      null;
-    const activeModel =
-      model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null;
+    fastMode = false
+  ): Promise<TurnStartResponse & {
+    threadId: string
+    model: string | null
+    reasoningEffort: ReasoningEffort | null
+  }> {
+    await this.ensureStarted()
+    const startedThread = threadId ? null : await this.startThread(cwd, model)
+    const activeThreadId = threadId ?? startedThread!.thread.id
+    const input = this.localSkills.buildTurnInput(text, !threadId, attachments)
+    const requestedEffort = effort ?? startedThread?.reasoningEffort ?? this.threadReasoningEfforts.get(activeThreadId) ?? null
+    const activeModel = model ?? startedThread?.model ?? this.threadModels.get(activeThreadId) ?? null
     const summaryPolicy = resolveTurnPolicy(text, {
       fastMode,
       requestedEffort,
-      supportedEfforts: activeModel ? this.modelReasoningEfforts.get(activeModel) : undefined,
-    });
-    const turnEffort = summaryPolicy.effort ?? effort;
-    const effectiveEffort = turnEffort ?? requestedEffort;
-    const includeSummaryPolicy = this.isReasoningSummarySupportedForModel(activeModel);
+      supportedEfforts: activeModel ? this.modelReasoningEfforts.get(activeModel) : undefined
+    })
+    const turnEffort = summaryPolicy.effort ?? effort
+    const effectiveEffort = turnEffort ?? requestedEffort
+    const includeSummaryPolicy = this.isReasoningSummarySupportedForModel(activeModel)
 
     // Reversibility (Phase 4): snapshot the workspace before the turn can
     // touch it. Fire-and-forget — a checkpoint failure or a slow `git add`
     // must never gate or delay a send; that turn simply offers no revert.
-    const checkpointCwd = this.threadCwds.get(activeThreadId);
-    const checkpointPromise =
-      this.checkpoints && checkpointCwd
-        ? this.checkpoints
-            .createCheckpoint(
-              checkpointCwd,
-              activeThreadId,
-              `before turn (${new Date().toISOString()})`,
-            )
-            .catch((error) => {
-              console.warn('turn checkpoint failed:', (error as Error).message);
-              return null;
-            })
-        : null;
+    const checkpointCwd = this.threadCwds.get(activeThreadId)
+    const checkpointPromise = this.checkpoints && checkpointCwd
+      ? this.checkpoints
+          .createCheckpoint(checkpointCwd, activeThreadId, `before turn (${new Date().toISOString()})`)
+          .catch((error) => {
+            console.warn('turn checkpoint failed:', (error as Error).message)
+            return null
+          })
+      : null
 
     // `model` overrides this turn and all subsequent turns on the thread, so
     // sending it every turn keeps resumed threads on the picker's selection.
@@ -376,122 +322,102 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       ...(model ? { model } : {}),
       ...(turnEffort ? { effort: turnEffort } : {}),
       ...(includeSummaryPolicy ? summaryPolicy : {}),
-      approvalPolicy: 'never',
-    });
-    if (model) this.threadModels.set(activeThreadId, model);
-    if (effectiveEffort) this.threadReasoningEfforts.set(activeThreadId, effectiveEffort);
+      approvalPolicy: 'never'
+    })
+    if (model) this.threadModels.set(activeThreadId, model)
+    if (effectiveEffort) this.threadReasoningEfforts.set(activeThreadId, effectiveEffort)
     if (checkpointPromise) {
-      const boundTurnId = response.turn.id;
+      const boundTurnId = response.turn.id
       void checkpointPromise.then((record) => {
-        if (record) return this.checkpoints!.assignTurn(record.id, boundTurnId);
-        return undefined;
-      });
+        if (record) return this.checkpoints!.assignTurn(record.id, boundTurnId)
+        return undefined
+      })
     }
 
     return {
       ...response,
       threadId: activeThreadId,
       model: model ?? this.threadModels.get(activeThreadId) ?? null,
-      reasoningEffort: effectiveEffort,
-    };
+      reasoningEffort: effectiveEffort
+    }
   }
 
   private isReasoningSummarySupportedForModel(model: string | null): boolean {
-    if (!model) return true;
-    return !/gpt-5\.3-codex-spark/i.test(model);
+    if (!model) return true
+    return !/gpt-5\.3-codex-spark/i.test(model)
   }
 
   private async startTurnWithSummaryFallback(
-    params: Record<string, unknown> & { summary?: 'auto' | 'concise' },
+    params: Record<string, unknown> & { summary?: 'auto' | 'concise' }
   ): Promise<TurnStartResponse> {
     try {
-      return await this.request<TurnStartResponse>('turn/start', params);
+      return await this.request<TurnStartResponse>('turn/start', params)
     } catch (error) {
       if (params.summary === undefined || !this.isUnsupportedReasoningSummaryError(error)) {
-        throw error;
+        throw error
       }
 
-      const { summary: _summary, ...fallbackParams } = params;
-      console.warn(
-        'Retrying Codex turn without reasoning summary after provider rejected reasoning.summary',
-      );
-      return this.request<TurnStartResponse>('turn/start', fallbackParams);
+      const { summary: _summary, ...fallbackParams } = params
+      console.warn('Retrying Codex turn without reasoning summary after provider rejected reasoning.summary')
+      return this.request<TurnStartResponse>('turn/start', fallbackParams)
     }
   }
 
   private isUnsupportedReasoningSummaryError(error: unknown): boolean {
     const haystack = [
       error instanceof Error ? error.message : String(error),
-      error instanceof AppServerRpcError ? JSON.stringify(error.data) : '',
-    ].join('\n');
+      error instanceof AppServerRpcError ? JSON.stringify(error.data) : ''
+    ].join('\n')
 
     return (
       /unsupported_parameter/i.test(haystack) &&
       /reasoning\.summary|model_reasoning_summary|\bsummary\b/i.test(haystack)
-    );
+    )
   }
 
   async interruptTurn(threadId: string, turnId: string): Promise<unknown> {
-    await this.ensureStarted();
-    this.browserAgent.cancelTurn(threadId, turnId);
-    this.researchRunner.cancel(turnId);
-    return this.request('turn/interrupt', { threadId, turnId });
-  }
-
-  async stopNativeAgent(threadId: string, knownTurnId?: string | null): Promise<unknown> {
-    await this.ensureStarted();
-    let turnId = knownTurnId ?? null;
-    if (!turnId) {
-      const response = await this.request<ThreadReadResponse>('thread/read', {
-        threadId,
-        includeTurns: true,
-      });
-      turnId = [...response.thread.turns]
-        .reverse()
-        .find((turn) => turn.status === 'inProgress')?.id ?? null;
-    }
-    if (!turnId) {
-      throw new Error('Codex agent no longer has an active turn');
-    }
-    return this.interruptTurn(threadId, turnId);
+    await this.ensureStarted()
+    this.browserAgent.cancelTurn(threadId, turnId)
+    this.researchRunner.cancel(turnId)
+    return this.request('turn/interrupt', { threadId, turnId })
   }
 
   async steerTurn(threadId: string, turnId: string, text: string): Promise<unknown> {
-    await this.ensureStarted();
+    await this.ensureStarted()
     return this.request('turn/steer', {
       threadId,
       expectedTurnId: turnId,
-      input: this.localSkills.buildTurnInput(text, false),
-    });
+      input: this.localSkills.buildTurnInput(text, false)
+    })
   }
 
   // Kicks off server-side history compaction (codex summarizes the thread and
   // drops old items). Deduped per thread; the guard clears when token usage
   // reports the context back under the auto-compact threshold.
   async compactThread(threadId: string): Promise<{ started: boolean }> {
-    await this.ensureStarted();
+    await this.ensureStarted()
 
     if (this.compactionsInFlight.has(threadId)) {
-      return { started: false };
+      return { started: false }
     }
 
-    this.compactionsInFlight.add(threadId);
+    this.compactionsInFlight.add(threadId)
     try {
-      await this.request('thread/compact/start', { threadId });
-      return { started: true };
+      await this.request('thread/compact/start', { threadId })
+      return { started: true }
     } catch (error) {
-      this.compactionsInFlight.delete(threadId);
-      throw error;
+      this.compactionsInFlight.delete(threadId)
+      throw error
     }
   }
 
   async unsubscribeThread(threadId: string): Promise<ThreadUnsubscribeResponse> {
-    await this.ensureStarted();
-    return this.request<ThreadUnsubscribeResponse>('thread/unsubscribe', { threadId });
+    await this.ensureStarted()
+    return this.request<ThreadUnsubscribeResponse>('thread/unsubscribe', { threadId })
   }
 
   dispose(): void {
-    this.appServer.dispose();
+    this.appServer.dispose()
   }
 
   // Spawn and initialize the app-server at app launch so the first message or
@@ -499,14 +425,14 @@ export class CodexClient extends EventEmitter implements SessionProvider {
   // request retries the spawn and status events surface the state.
   async warmUp(): Promise<void> {
     try {
-      await this.ensureStarted();
+      await this.ensureStarted()
     } catch (error) {
-      console.warn('codex app-server warm-up failed:', (error as Error).message);
+      console.warn('codex app-server warm-up failed:', (error as Error).message)
     }
   }
 
   private async ensureStarted(): Promise<void> {
-    return this.appServer.ensureStarted(() => this.initialize());
+    return this.appServer.ensureStarted(() => this.initialize())
   }
 
   private async initialize(): Promise<void> {
@@ -514,7 +440,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       clientInfo: {
         name: 'codexdesktop',
         title: 'Codex Desktop',
-        version: '0.1.0',
+        version: '0.1.0'
       },
       capabilities: {
         experimentalApi: true,
@@ -528,63 +454,58 @@ export class CodexClient extends EventEmitter implements SessionProvider {
           'thread/realtime/outputAudio/delta',
           'thread/realtime/sdp',
           'thread/realtime/error',
-          'thread/realtime/closed',
-        ],
-      },
-    });
-    this.rpc.notify('initialized');
-    await this.localSkills.register(<T>(method: string, params?: unknown) =>
-      this.request<T>(method, params),
-    );
+          'thread/realtime/closed'
+        ]
+      }
+    })
+    this.rpc.notify('initialized')
+    await this.localSkills.register(<T>(method: string, params?: unknown) => this.request<T>(method, params))
   }
 
   private request<T = unknown>(method: string, params?: unknown): Promise<T> {
-    return this.rpc.request<T>(method, params);
+    return this.rpc.request<T>(method, params)
   }
 
   private handleNotification(message: JsonRpcMessage & { method: string }): void {
-    const notification = message as ServerNotification;
+    const notification = message as ServerNotification
 
     if (notification.method === 'skills/changed') {
-      void this.localSkills.refresh(
-        <T>(method: string, params?: unknown) => this.request<T>(method, params),
-        true,
-      );
+      void this.localSkills.refresh(<T>(method: string, params?: unknown) => this.request<T>(method, params), true)
     }
 
     if (notification.method === 'model/rerouted') {
-      this.threadModels.set(notification.params.threadId, notification.params.toModel);
+      this.threadModels.set(notification.params.threadId, notification.params.toModel)
     } else if (notification.method === 'thread/tokenUsage/updated') {
-      this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage);
+      this.noteThreadTokenUsage(notification.params.threadId, notification.params.tokenUsage)
     } else if (notification.method === 'turn/completed') {
-      this.browserAgent.completeTurn(notification.params.threadId, notification.params.turn.id);
-      this.maybeAutoCompact(notification.params.threadId);
+      this.browserAgent.completeTurn(notification.params.threadId, notification.params.turn.id)
+      this.maybeAutoCompact(notification.params.threadId)
     } else if (notification.method === 'thread/compacted') {
-      this.compactionsInFlight.delete(notification.params.threadId);
+      this.compactionsInFlight.delete(notification.params.threadId)
     } else if (
       notification.method === 'thread/deleted' ||
       notification.method === 'thread/closed'
     ) {
-      this.threadModels.delete(notification.params.threadId);
-      this.threadReasoningEfforts.delete(notification.params.threadId);
-      this.threadTokenUsage.delete(notification.params.threadId);
-      this.compactionsInFlight.delete(notification.params.threadId);
+      this.threadModels.delete(notification.params.threadId)
+      this.threadReasoningEfforts.delete(notification.params.threadId)
+      this.threadTokenUsage.delete(notification.params.threadId)
+      this.compactionsInFlight.delete(notification.params.threadId)
     }
 
     this.emit('event', {
       type: 'notification',
-      notification,
-    } satisfies SessionEvent);
+      notification
+    } satisfies SessionEvent)
   }
 
   private noteThreadTokenUsage(threadId: string, tokenUsage: ThreadTokenUsage): void {
-    this.threadTokenUsage.set(threadId, tokenUsage);
+    this.threadTokenUsage.set(threadId, tokenUsage)
 
     // Compaction shows up here as the next model call reporting a much
     // smaller context, so this is also where the dedupe guard clears.
-    const window = tokenUsage.modelContextWindow;
+    const window = tokenUsage.modelContextWindow
     if (window && tokenUsage.last.totalTokens < window * autoCompactContextRatio) {
-      this.compactionsInFlight.delete(threadId);
+      this.compactionsInFlight.delete(threadId)
     }
   }
 
@@ -592,16 +513,16 @@ export class CodexClient extends EventEmitter implements SessionProvider {
   // size of the thread's context. Fired from turn/completed so compaction
   // never races an in-flight turn.
   private maybeAutoCompact(threadId: string): void {
-    const usage = this.threadTokenUsage.get(threadId);
-    const window = usage?.modelContextWindow;
+    const usage = this.threadTokenUsage.get(threadId)
+    const window = usage?.modelContextWindow
 
     if (!usage || !window || usage.last.totalTokens < window * autoCompactContextRatio) {
-      return;
+      return
     }
 
     void this.compactThread(threadId).catch((error) => {
-      console.warn(`Auto-compaction failed for thread ${threadId}`, error);
-    });
+      console.warn(`Auto-compaction failed for thread ${threadId}`, error)
+    })
   }
 
   // The app runs fully unrestricted (approvalPolicy: 'never', danger-full-access)
@@ -611,25 +532,21 @@ export class CodexClient extends EventEmitter implements SessionProvider {
   private handleServerRequest(message: JsonRpcRequestMessage): void {
     switch (message.method) {
       case 'item/tool/requestUserInput':
-        this.rpc.respond(message.id, { answers: {} });
-        return;
+        this.rpc.respond(message.id, { answers: {} })
+        return
       case 'currentTime/read':
-        this.rpc.respond(message.id, { currentTimeAt: Math.floor(Date.now() / 1000) });
-        return;
+        this.rpc.respond(message.id, { currentTimeAt: Math.floor(Date.now() / 1000) })
+        return
       case 'item/tool/call':
-        void this.handleDynamicToolCall(message.id, message.params as DynamicToolCallParams);
-        return;
+        void this.handleDynamicToolCall(message.id, message.params as DynamicToolCallParams)
+        return
       default:
-        this.rpc.respondError(
-          message.id,
-          -32601,
-          `Unsupported app-server request: ${message.method}`,
-        );
+        this.rpc.respondError(message.id, -32601, `Unsupported app-server request: ${message.method}`)
     }
   }
 
   setSubagentSpawner(spawner: SubagentSpawner | null): void {
-    this.subagentSpawner = spawner;
+    this.subagentSpawner = spawner
   }
 
   private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
@@ -646,12 +563,12 @@ export class CodexClient extends EventEmitter implements SessionProvider {
           cwd: this.threadCwds.get(params.threadId) ?? null,
         },
         this.subagentSpawner,
-      );
+      )
       this.rpc.respond(id, {
         success: result.ok,
         contentItems: [{ type: 'inputText', text: JSON.stringify(result) }],
-      });
-      return;
+      })
+      return
     }
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
@@ -662,24 +579,24 @@ export class CodexClient extends EventEmitter implements SessionProvider {
           threadId: params.threadId,
           turnId: params.turnId,
           itemId: params.callId,
-          progress,
-        } satisfies SessionEvent);
-      },
-    });
-    this.rpc.respond(id, response);
+          progress
+        } satisfies SessionEvent)
+      }
+    })
+    this.rpc.respond(id, response)
   }
 
   private emitStatus(status: CodexConnectionStatus, message?: string): void {
     this.emit('event', {
       type: 'status',
       status,
-      message,
-    } satisfies SessionEvent);
+      message
+    } satisfies SessionEvent)
   }
 }
 
 function asToolArgs(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
-    : {};
+    : {}
 }

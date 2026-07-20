@@ -5,7 +5,6 @@ import type { ThreadItem } from '../../shared/session-protocol'
 import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { TokenUsageBreakdown } from '../../shared/session-protocol'
 import type { TurnDiffSummary } from './diff'
-import type { AgentRunStatus, AgentWakeStatus, BrowserDecisionEvent } from '../../shared/ipc'
 
 export type TurnMetaStatus = 'inProgress' | 'completed' | 'failed' | 'interrupted'
 export type TurnTelemetryOrigin = 'live' | 'restored'
@@ -78,14 +77,6 @@ export type TurnMeta = {
   modelReroutes?: TurnModelReroute[]
   tokens?: TurnTokenTelemetry
   diffSummary?: TurnDiffSummary
-  browserDecision?: Omit<BrowserDecisionEvent, 'type' | 'threadId' | 'turnId'>
-  agentRuns?: Array<{
-    id: string
-    provider: 'app' | 'codex' | 'claude'
-    status: AgentRunStatus
-    wakeStatus: AgentWakeStatus
-    durationMs: number | null
-  }>
 }
 
 export type TurnTelemetryState = Record<string, TurnMeta>

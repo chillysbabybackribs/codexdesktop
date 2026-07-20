@@ -128,7 +128,8 @@ export function AgentColumn({
   onCloseSession,
   onResetSession,
   onPromote,
-  onSetRole,
+  onToggleWatch,
+  onToggleAudit,
   onToggleReport,
   onSendFeedback,
   onDecideSendPolicy,
@@ -153,7 +154,8 @@ export function AgentColumn({
   onCloseSession: (key: string) => void
   onResetSession: (key: string) => void
   onPromote: (key: string) => void
-  onSetRole: (key: string, role: 'reviewer' | 'helper') => void
+  onToggleWatch: (key: string) => void
+  onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
   onSendFeedback: (key: string) => void
   onDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void
@@ -280,7 +282,8 @@ export function AgentColumn({
             onCloseSession={onCloseSession}
             onResetSession={onResetSession}
             onPromote={onPromote}
-            onSetRole={onSetRole}
+            onToggleWatch={onToggleWatch}
+            onToggleAudit={onToggleAudit}
             onToggleReport={onToggleReport}
             onSendFeedback={onSendFeedback}
             onDecideSendPolicy={onDecideSendPolicy}
@@ -345,7 +348,8 @@ const AgentWindow = memo(function AgentWindow({
   onCloseSession,
   onResetSession,
   onPromote,
-  onSetRole,
+  onToggleWatch,
+  onToggleAudit,
   onToggleReport,
   onSendFeedback,
   onDecideSendPolicy,
@@ -417,7 +421,6 @@ const AgentWindow = memo(function AgentWindow({
   }, [])
 
   const working = session.status === 'working'
-  const nativeRun = session.sourceProvider === 'codex' || session.sourceProvider === 'claude'
 
   // Adjacent identical assistant restatements carry no information (same
   // policy the lite projection applied).
@@ -534,18 +537,11 @@ const AgentWindow = memo(function AgentWindow({
           session={session}
           zoomPercent={zoomPercent}
           adjustZoom={adjustZoom}
-          onSetRole={onSetRole}
+          onToggleWatch={onToggleWatch}
+          onToggleAudit={onToggleAudit}
           onToggleReport={onToggleReport}
           onPromote={onPromote}
         />
-        {session.sourceProvider ? (
-          <div className="agent-run-badges" aria-label="Agent runtime">
-            <span className="agent-run-badge">{session.sourceProvider}</span>
-            {session.executionLane ? (
-              <span className="agent-run-badge is-lane">{laneLabel(session.executionLane)}</span>
-            ) : null}
-          </div>
-        ) : null}
         <div className="agent-overlay-actions">
           <button
             type="button"
@@ -569,13 +565,7 @@ const AgentWindow = memo(function AgentWindow({
             type="button"
             className="icon-button"
             aria-label="Close agent"
-            title={
-              nativeRun
-                ? working
-                  ? 'Close agent and stop its native task'
-                  : 'Close agent status'
-                : 'Close agent (stops the turn and unsubscribes the thread)'
-            }
+            title="Close agent (stops the turn and unsubscribes the thread)"
             onClick={() => onCloseSession(session.key)}
           >
             <CloseIcon />
@@ -588,9 +578,8 @@ const AgentWindow = memo(function AgentWindow({
           className="agent-overlay-content"
           style={{ '--agent-chat-zoom': `${zoomPercent / 100}` } as React.CSSProperties}
         >
-          {session.runStatus ? <AgentRunReceipt session={session} /> : null}
           {!hasTranscript ? (
-            nativeRun ? null : session.auditsMain ? (
+            session.auditsMain ? (
               <AuditStandby live={liveMainTurn} note={session.lastAuditNote} />
             ) : session.role === 'worker' ? (
               <div className="agent-empty-hint" role="note">
@@ -598,8 +587,8 @@ const AgentWindow = memo(function AgentWindow({
               </div>
             ) : (
               <div className="agent-empty-hint" role="note">
-                Message this agent below — or set its role to “Reviewer” from the
-                title menu to make it an auditor again.
+                Message this agent below — or turn on “Audit main-chat turns” from the
+                title menu to make it a reviewer again.
               </div>
             )
           ) : (
@@ -628,7 +617,7 @@ const AgentWindow = memo(function AgentWindow({
         </div>
       </div>
 
-      {!nativeRun && (models.length || session.contextUsage) ? (
+      {models.length || session.contextUsage ? (
         <div className="agent-overlay-context">
           {models.length ? (
             <div className="model-controls">
@@ -656,82 +645,20 @@ const AgentWindow = memo(function AgentWindow({
         </div>
       ) : null}
 
-      {nativeRun ? (
-        <div className="agent-native-footer">
-          <span>{working ? 'Managed by the parent turn' : wakeLabel(session.wakeStatus)}</span>
-          {working ? (
-            <button type="button" onClick={() => onStop(session.key)}>Stop</button>
-          ) : null}
-        </div>
-      ) : (
-        <AgentComposer
-          session={session}
-          working={working}
-          models={models}
-          mainModel={mainModel}
-          textareaRef={textareaRef}
-          onSend={onSend}
-          onSteer={onSteer}
-          onStop={onStop}
-          onResetSession={onResetSession}
-        />
-      )}
+      <AgentComposer
+        session={session}
+        working={working}
+        models={models}
+        mainModel={mainModel}
+        textareaRef={textareaRef}
+        onSend={onSend}
+        onSteer={onSteer}
+        onStop={onStop}
+        onResetSession={onResetSession}
+      />
     </div>
   )
 }, areAgentWindowPropsEqual)
-
-function AgentRunReceipt({ session }: { session: AgentSession }): React.JSX.Element {
-  const status = session.runStatus ?? 'working'
-  const terminal = session.runStatus === 'completed' || session.runStatus === 'failed' || session.runStatus === 'stopped'
-  return (
-    <section className={`agent-run-receipt is-${status}`} aria-label="Agent handoff status">
-      <div className="agent-handoff-rail" aria-hidden="true">
-        <span className="is-complete" />
-        <i />
-        <span className={terminal ? 'is-complete' : 'is-active'} />
-        <i />
-        <span className={session.wakeStatus === 'resumed' ? 'is-complete' : session.wakeStatus === 'queued' ? 'is-active' : ''} />
-      </div>
-      <div className="agent-run-receipt-copy">
-        <div className="agent-run-receipt-head">
-          <strong>{runStatusLabel(status)}</strong>
-          <span>{wakeLabel(session.wakeStatus)}</span>
-        </div>
-        {session.runTask ? <p className="agent-run-task">{session.runTask}</p> : null}
-        {session.runProgress && !terminal ? <p className="agent-run-progress">{session.runProgress}</p> : null}
-        {session.runResultSummary ? <p className="agent-run-result">{session.runResultSummary}</p> : null}
-        {session.runOutputPath ? <code className="agent-run-output">{session.runOutputPath}</code> : null}
-      </div>
-    </section>
-  )
-}
-
-function laneLabel(lane: NonNullable<AgentSession['executionLane']>): string {
-  if (lane === 'browser-live') return 'live'
-  if (lane === 'browser-background') return 'background'
-  return 'agent'
-}
-
-function runStatusLabel(status: NonNullable<AgentSession['runStatus']>): string {
-  switch (status) {
-    case 'queued': return 'Queued'
-    case 'working': return 'Working'
-    case 'waiting': return 'Waiting'
-    case 'completed': return 'Completed'
-    case 'failed': return 'Failed'
-    case 'stopped': return 'Stopped'
-  }
-}
-
-function wakeLabel(status: AgentSession['wakeStatus']): string {
-  switch (status) {
-    case 'pending': return 'Handoff pending'
-    case 'queued': return 'Parent wake queued'
-    case 'resumed': return 'Parent resumed'
-    case 'suppressed': return 'Wake suppressed'
-    default: return 'No wake required'
-  }
-}
 
 function readAgentZoom(key: string): number {
   return storedAgentZoom(window.localStorage.getItem(agentZoomStorageKey(key)))

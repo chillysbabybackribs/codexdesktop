@@ -1,0 +1,163 @@
+Summer Release
+
+Introducing the First Truly Agentic Product Experience Platform
+
+Learn More
+
+Regulation Compliance
+
+# Digital Product Passport 2026: How Brands Turn the DPP Scan Into Revenue
+
+If you use the Digital Product Passport wisely, you can reduce support costs and generate additional revenue without building your own app or launching new advertising channels.
+
+Read on to see how it works in this guest blog from Akeneo partner, sqanit.
+
+Table of Contents
+
+- TL;DR
+
+- The Digital Product Passport: Cost Driver or New Revenue Stream?
+
+- Where Does Revenue Come From and How Do We Measure It?
+
+- The Key Metric: Value per Scan
+
+- Best Ways to Utilize the Digital Product Passport (DPP)
+
+- Revenue Data vs. Compliance Data
+
+- QR Placement: Where Should the Code Live?
+
+- How to Organize Internally
+
+- Common Pitfalls—and How to Avoid Them
+
+- The Next 5 Steps Starting Today
+
+- Conclusion
+
+- Note on QR/GS1 Digital Link & Exit Option
+
+Keywords
+
+Akeneo Community
+
+Digital Product Passport
+
+PIM
+
+PXM
+
+TheDigital Product Passport (DPP)is coming. And for many manufacturers, it initially sounds like nothing more than a cost driver: labels, software, data maintenance – additional expenses required by regulation.
+
+But seeing the DPP only as a compliance obligation means missing out on major potential.
+
+## TL;DR
+
+- The DPP scan gives you a legitimate, high-intent touchpoint directly on the product—and can both reduce costs and increase revenue.
+
+- Three practical playbooks show where the value comes from:Fix(help customers solve issues),Buy(recommend compatible parts and accessories), andBook(drive service appointments).
+
+- Optimize based onvalue per scanand trackrepeat scans.
+
+- Keeprevenue-driving dataseparate fromcompliance data, but make both easily accessible.
+
+- Start with a small pilot: 10 SKUs, one playbook, two QR placements, and measure results for 30 days.
+
+- Update content regularly and visibly to encourage repeat scans
+
+## The Digital Product Passport: Cost Driver or New Revenue Stream?
+
+Yes, the Digital Product Passport costs money. In practice, most expenses fall in the lower cent range per product. QR codes cost around €0.10 to €0.15; NFC tags around €0.25 to €0.30. Including platform and license costs, you typically end up around €0.40 per device at typical volumes.
+
+But once you place a QR code on the product, you’ve already fulfilled three of the four key conditions for effective user activation:
+
+- Right audience: reaching the person who actually uses the product
+
+- Right place: putting it directly on the product
+
+- Right time: producing the right information during use or when something goes wrong
+
+The missing ingredient is:useful, action-oriented content.
+
+And this is where it’s decided whether a scan deliversonlycompliance or real business impact.
+
+## Where Does Revenue Come From and How Do We Measure It?
+
+Every scan can create value through three different mechanisms:
+
+### 1. Fix:
+
+The customer solves a problem without contacting support.This lowers tickets, returns, and call center volume.Measured by:
+
+- Ticket deflection
+
+- First-Time-Fix (FTF)
+
+- Mean Time to Resolve (MTTR)
+
+Even a modest deflection rate around 15% can have a large financial impact.
+
+### 2. Buy:
+
+After scanning, users see accessories or spare parts that are guaranteed to fit their exact model. This removes uncertainty and reduces returns.Measured by:
+
+- Scan-to-cart rate
+
+- Contribution margin
+
+- Accessory AOV
+
+### 3. Book:
+
+The scan leads directly to a service booking like maintenance, installation, upgrade and becomes more predictable
+
+Measured by:
+
+- Scan-to-book rate
+
+- No-show rate
+
+- Service AOV.
+
+## The Key Metric: Value per Scan
+
+Formula:(Accessory revenue + service revenue + avoided support costs) ÷ number of scans
+
+Example
+
+- 1,000 scans × 15% deflection × €12 per ticket =€1,800
+
+- 1,000 scans × 3% scan-to-cart × €50 AOV × 40% margin =€600
+
+- 1,000 scans × 1% scan-to-book × €120 × 50% margin =€600
+
+→€3,000 total value/month → €3 per scan
+
+## Best Ways to Utilize the Digital Product Passport (DPP)
+
+### Playbook A: Fix it fast
+
+Many companies make it unnecessarily hard for users to get help. Hidden contact forms, overloaded hotlines, generic chatbots …
+
+The DPP scan turns that around by offering immediate, product-specific help right where the problem occurs.
+
+#### How it works
+
+- The scan opens a page dedicated to that exact product.
+
+- At the top: a clear button such as“Solve the issue”.
+
+- A short, guided flow with images or 10-second videos leads users toward a solution.
+
+- If the customer doesn’t contact support within 48 hours, it’s counted assuccessful deflection.
+
+- If they do need help, support receives pre-filled details such as serial number or error codes.
+
+#### Why it works
+
+The scan combineshigh intent,context, andtrust.Users want a quick fix and are willing to follow short, targeted instructions.According toZendesk CX Trends 2024, 51% of users prefer self-service for urgent issues.
+
+#### Key KPIs
+
+- Ticket

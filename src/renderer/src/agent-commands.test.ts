@@ -9,7 +9,7 @@ function commandHarness(acceptsImages = true, isTurnTerminal = false): {
   threadStartEvents: string[]
   commands: ReturnType<typeof createAgentCommands>
 } {
-  const sessions = [createAgentSession('agent-1', 'Agent 2', 'tab-1', '/workspace/agent-1')]
+  const sessions = [createAgentSession('agent-1', 'Agent 2')]
   const messages: AgentLiteMessage[] = []
   const threadStartEvents: string[] = []
   const commands = createAgentCommands({
@@ -22,7 +22,7 @@ function commandHarness(acceptsImages = true, isTurnTerminal = false): {
       },
       appendMessage: (_key, message) => messages.push(message)
     },
-    getWorkspace: (session) => session.workspace,
+    getWorkspace: () => '/workspace',
     getSelectedModel: () => 'test-model',
     getSelectedEffort: () => 'high',
     getFastMode: () => true,
@@ -91,7 +91,6 @@ test('agent send forwards the agent reasoning effort', async () => {
     assert.equal((sentParams[0] as { threadId?: string | null }).threadId, null)
     assert.equal((sentParams[0] as { effort?: string }).effort, 'xhigh')
     assert.equal((sentParams[0] as { fastMode?: boolean }).fastMode, true)
-    assert.equal((sentParams[0] as { cwd?: string }).cwd, '/workspace/agent-1')
     assert.equal(sessions[0]?.threadId, 'thread-1')
     assert.deepEqual(threadStartEvents, ['queued:agent-1', 'settled:agent-1'])
   } finally {
@@ -125,45 +124,6 @@ test('agent stop surfaces an interrupt failure instead of leaving a working agen
 
     assert.match(messages[0]?.text ?? '', /Could not stop the running turn: app-server unavailable/)
     assert.match(messages[0]?.text ?? '', /try Stop again/)
-  } finally {
-    if (previousWindow) {
-      Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })
-    } else {
-      Reflect.deleteProperty(globalThis, 'window')
-    }
-  }
-})
-
-test('native Codex agent stop uses the provider cancellation path', async () => {
-  const previousWindow = globalThis.window
-  const cancelled: unknown[] = []
-  Object.defineProperty(globalThis, 'window', {
-    configurable: true,
-    value: {
-      api: {
-        session: {
-          cancelAgentRun: async (params: unknown) => { cancelled.push(params) }
-        }
-      }
-    }
-  })
-
-  try {
-    const { sessions, commands } = commandHarness()
-    Object.assign(sessions[0], {
-      sourceProvider: 'codex',
-      runParentThreadId: 'parent-thread',
-      nativeRunId: 'child-thread',
-      status: 'working'
-    })
-
-    await commands.handleAgentStop('agent-1')
-
-    assert.deepEqual(cancelled, [{
-      provider: 'codex',
-      parentThreadId: 'parent-thread',
-      nativeId: 'child-thread'
-    }])
   } finally {
     if (previousWindow) {
       Object.defineProperty(globalThis, 'window', { configurable: true, value: previousWindow })

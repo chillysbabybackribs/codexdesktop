@@ -1,0 +1,1658 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44514753",
+    "window": "prior-year-comparable-90d",
+    "tag": "show_hn",
+    "score": 414
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fao_"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't think that that makes it ok here, and I think that &quot;laws only being for rich people to use against the poor&quot; is decidedly a position that one should take a standpoint against, and try to fight against when they are able."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fao_",
+          "story_44514753"
+        ],
+        "author": "fao_",
+        "comment_text": "I don&#x27;t think that that makes it ok here, and I think that &quot;laws only being for rich people to use against the poor&quot; is decidedly a position that one should take a standpoint against, and try to fight against when they are able.",
+        "created_at": "2025-07-14T14:09:13Z",
+        "created_at_i": 1752502153,
+        "objectID": "44560493",
+        "parent_id": 44519568,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-14T14:14:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CamperBob2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, if only you were in charge, things would be... different."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CamperBob2",
+          "story_44514753"
+        ],
+        "author": "CamperBob2",
+        "comment_text": "Yes, if only you were in charge, things would be... different.",
+        "created_at": "2025-07-11T16:19:43Z",
+        "created_at_i": 1752250783,
+        "objectID": "44533992",
+        "parent_id": 44528722,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-13T16:50:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xboxnolifes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't think HN was ever much against piracy. At least not personal use piracy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_xboxnolifes",
+          "story_44514753"
+        ],
+        "author": "xboxnolifes",
+        "comment_text": "I don&#x27;t think HN was ever much against piracy. At least not personal use piracy.",
+        "created_at": "2025-07-11T09:09:52Z",
+        "created_at_i": 1752224992,
+        "objectID": "44529947",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hollerith"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My &quot;only&quot; is an exaggeration, but the AI labs are definitely the societal force I'm <i>most</i> worried about. If they were closed down <i>or</i> some talented person figures out how to control AIs (so they stay controlled even if the become more capable than us) I'd be fairly optimistic about humanity's future."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hollerith",
+          "story_44514753"
+        ],
+        "author": "hollerith",
+        "children": [
+          44533992
+        ],
+        "comment_text": "My &quot;only&quot; is an exaggeration, but the AI labs are definitely the societal force I&#x27;m <i>most</i> worried about. If they were closed down <i>or</i> some talented person figures out how to control AIs (so they stay controlled even if the become more capable than us) I&#x27;d be fairly optimistic about humanity&#x27;s future.",
+        "created_at": "2025-07-11T05:41:51Z",
+        "created_at_i": 1752212511,
+        "objectID": "44528722",
+        "parent_id": 44525763,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T16:20:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iosifache"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It was a misunderstanding on my side between a priori copyrighting and patenting for orphaned works. Thus, the first one is possible, the latter not.<p>Thank you so much for taking the time to explain!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iosifache",
+          "story_44514753"
+        ],
+        "author": "iosifache",
+        "comment_text": "It was a misunderstanding on my side between a priori copyrighting and patenting for orphaned works. Thus, the first one is possible, the latter not.<p>Thank you so much for taking the time to explain!",
+        "created_at": "2025-07-11T05:39:48Z",
+        "created_at_i": 1752212388,
+        "objectID": "44528716",
+        "parent_id": 44519884,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T05:41:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GuinansEyebrows"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "maybe not the <i>only</i>... but they're certainly nontrivial in that distinction"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_GuinansEyebrows",
+          "story_44514753"
+        ],
+        "author": "GuinansEyebrows",
+        "children": [
+          44528722
+        ],
+        "comment_text": "maybe not the <i>only</i>... but they&#x27;re certainly nontrivial in that distinction",
+        "created_at": "2025-07-10T21:22:19Z",
+        "created_at_i": 1752182539,
+        "objectID": "44525763",
+        "parent_id": 44523855,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T05:42:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hollerith"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The only sector of our society that needs to be stopped before they hose us all is the AI labs IMHO."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hollerith",
+          "story_44514753"
+        ],
+        "author": "hollerith",
+        "children": [
+          44525763
+        ],
+        "comment_text": "The only sector of our society that needs to be stopped before they hose us all is the AI labs IMHO.",
+        "created_at": "2025-07-10T18:10:41Z",
+        "created_at_i": 1752171041,
+        "objectID": "44523855",
+        "parent_id": 44523537,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:35:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "slim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "IMHO the whole annas archive is a false flag op by a major AI startup"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_slim",
+          "story_44514753"
+        ],
+        "author": "slim",
+        "comment_text": "IMHO the whole annas archive is a false flag op by a major AI startup",
+        "created_at": "2025-07-10T18:07:48Z",
+        "created_at_i": 1752170868,
+        "objectID": "44523817",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T18:09:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CamperBob2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TBH, I'm not super impressed with &quot;ordinary people&quot; lately.  Most of the time, I don't spare &quot;ordinary people&quot; a thought.  Lately, I have, though.  The thought is primarily something along the lines of, &quot;How can these people be stopped before they hose us all?&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CamperBob2",
+          "story_44514753"
+        ],
+        "author": "CamperBob2",
+        "children": [
+          44523855
+        ],
+        "comment_text": "TBH, I&#x27;m not super impressed with &quot;ordinary people&quot; lately.  Most of the time, I don&#x27;t spare &quot;ordinary people&quot; a thought.  Lately, I have, though.  The thought is primarily something along the lines of, &quot;How can these people be stopped before they hose us all?&quot;",
+        "created_at": "2025-07-10T17:43:53Z",
+        "created_at_i": 1752169433,
+        "objectID": "44523537",
+        "parent_id": 44523420,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hollerith"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Lots of things are more important than the evolution of intelligence. This blind faith in technological progress is becoming grossly incompatible with the interests of ordinary people."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hollerith",
+          "story_44514753"
+        ],
+        "author": "hollerith",
+        "children": [
+          44523537
+        ],
+        "comment_text": "Lots of things are more important than the evolution of intelligence. This blind faith in technological progress is becoming grossly incompatible with the interests of ordinary people.",
+        "created_at": "2025-07-10T17:33:50Z",
+        "created_at_i": 1752168830,
+        "objectID": "44523420",
+        "parent_id": 44523367,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CamperBob2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The evolution of intelligence and its intersection with universal access to knowledge is more important than copyright.<p>To the extent copyright interests want to pick a fight with AI, they must lose, and decisively so."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CamperBob2",
+          "story_44514753"
+        ],
+        "author": "CamperBob2",
+        "children": [
+          44523420
+        ],
+        "comment_text": "The evolution of intelligence and its intersection with universal access to knowledge is more important than copyright.<p>To the extent copyright interests want to pick a fight with AI, they must lose, and decisively so.",
+        "created_at": "2025-07-10T17:30:18Z",
+        "created_at_i": 1752168618,
+        "objectID": "44523367",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MisterTea"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Information wants to be free."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MisterTea",
+          "story_44514753"
+        ],
+        "author": "MisterTea",
+        "comment_text": "Information wants to be free.",
+        "created_at": "2025-07-10T16:22:07Z",
+        "created_at_i": 1752164527,
+        "objectID": "44522693",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GuinansEyebrows"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i wonder if you're considering the huge difference between:<p>- individuals pirating copies of things for sole consumption or relatively-miniscule distribution; and<p>- large highly-funded institutions that pirate content for the sole purpose of generating revenue from it<p>...and why that might lead people to feel differently about one and the other (not to mention the outsized punitive response to the former compared to the latter)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_GuinansEyebrows",
+          "story_44514753"
+        ],
+        "author": "GuinansEyebrows",
+        "comment_text": "i wonder if you&#x27;re considering the huge difference between:<p>- individuals pirating copies of things for sole consumption or relatively-miniscule distribution; and<p>- large highly-funded institutions that pirate content for the sole purpose of generating revenue from it<p>...and why that might lead people to feel differently about one and the other (not to mention the outsized punitive response to the former compared to the latter).",
+        "created_at": "2025-07-10T16:20:42Z",
+        "created_at_i": 1752164442,
+        "objectID": "44522679",
+        "parent_id": 44521560,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2026-02-24T19:39:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thedevilslawyer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why is scientific content not saving money, and why can't novels be useful?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thedevilslawyer",
+          "story_44514753"
+        ],
+        "author": "thedevilslawyer",
+        "comment_text": "Why is scientific content not saving money, and why can&#x27;t novels be useful?",
+        "created_at": "2025-07-10T16:13:30Z",
+        "created_at_i": 1752164010,
+        "objectID": "44522604",
+        "parent_id": 44521053,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T16:19:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "recitedropper"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hilariously disingenuous."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_recitedropper",
+          "story_44514753"
+        ],
+        "author": "recitedropper",
+        "comment_text": "Hilariously disingenuous.",
+        "created_at": "2025-07-10T14:51:22Z",
+        "created_at_i": 1752159082,
+        "objectID": "44521757",
+        "parent_id": 44515205,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T21:18:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hombre_fatal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This isn’t about training LLMs at all.<p>Also, HN like the rest of the world was always pro-piracy and getting the fruits of your labor without paying for it.<p>The only time I’ve seen anti-piracy comments has been been wrt LLM training. Suddenly people pretend to care but it feels performative."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hombre_fatal",
+          "story_44514753"
+        ],
+        "author": "hombre_fatal",
+        "children": [
+          44522679
+        ],
+        "comment_text": "This isn’t about training LLMs at all.<p>Also, HN like the rest of the world was always pro-piracy and getting the fruits of your labor without paying for it.<p>The only time I’ve seen anti-piracy comments has been been wrt LLM training. Suddenly people pretend to care but it feels performative.",
+        "created_at": "2025-07-10T14:33:25Z",
+        "created_at_i": 1752158005,
+        "objectID": "44521560",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "artninja1988"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I only see comments complaining about imaginary property &quot;violations&quot; on ai threads funnily enough."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_artninja1988",
+          "story_44514753"
+        ],
+        "author": "artninja1988",
+        "comment_text": "I only see comments complaining about imaginary property &quot;violations&quot; on ai threads funnily enough.",
+        "created_at": "2025-07-10T14:12:54Z",
+        "created_at_i": 1752156774,
+        "objectID": "44521333",
+        "parent_id": 44521139,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T15:33:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "T0Bi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Are you sure? From OPs comment:<p>&gt;I justified the hours I invested by thinking I could search, download, and explore books directly from Claude Desktop.<p>Although you're right that it can be used for use cases like you're describing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_T0Bi",
+          "story_44514753"
+        ],
+        "author": "T0Bi",
+        "comment_text": "Are you sure? From OPs comment:<p>&gt;I justified the hours I invested by thinking I could search, download, and explore books directly from Claude Desktop.<p>Although you&#x27;re right that it can be used for use cases like you&#x27;re describing.",
+        "created_at": "2025-07-10T14:03:54Z",
+        "created_at_i": 1752156234,
+        "objectID": "44521243",
+        "parent_id": 44519582,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-29T11:01:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NitpickLawyer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FastAPI -&gt; MCP is like 1 LoC."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NitpickLawyer",
+          "story_44514753"
+        ],
+        "author": "NitpickLawyer",
+        "comment_text": "FastAPI -&gt; MCP is like 1 LoC.",
+        "created_at": "2025-07-10T14:00:24Z",
+        "created_at_i": 1752156024,
+        "objectID": "44521203",
+        "parent_id": 44517564,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-29T11:00:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "snickerdoodle12"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Insane how HN cheers on piracy nowadays, all because it helps them train their LLMs"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_snickerdoodle12",
+          "story_44514753"
+        ],
+        "author": "snickerdoodle12",
+        "children": [
+          44521560,
+          44521333,
+          44529947,
+          44523817,
+          44523367,
+          44522693
+        ],
+        "comment_text": "Insane how HN cheers on piracy nowadays, all because it helps them train their LLMs",
+        "created_at": "2025-07-10T13:54:59Z",
+        "created_at_i": 1752155699,
+        "objectID": "44521139",
+        "parent_id": 44514753,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-12T18:14:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pjc50"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ai is dependent on piracy .. and apparently that's fine now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pjc50",
+          "story_44514753"
+        ],
+        "author": "pjc50",
+        "comment_text": "Ai is dependent on piracy .. and apparently that&#x27;s fine now.",
+        "created_at": "2025-07-10T13:49:02Z",
+        "created_at_i": 1752155342,
+        "objectID": "44521071",
+        "parent_id": 44518980,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:03:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "9dev"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Phrasing &quot;here's a way to pirate novels using an LLM&quot; as &quot;I'm on a mission to grant everyone access to the wealth of humanity's knowledge&quot; is just disingenuous. Sure do novels count as knowledge, but there's a moral difference between making scientific content available to researchers for use in research versus saving money by pirating books."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_9dev",
+          "story_44514753"
+        ],
+        "author": "9dev",
+        "children": [
+          44522604
+        ],
+        "comment_text": "Phrasing &quot;here&#x27;s a way to pirate novels using an LLM&quot; as &quot;I&#x27;m on a mission to grant everyone access to the wealth of humanity&#x27;s knowledge&quot; is just disingenuous. Sure do novels count as knowledge, but there&#x27;s a moral difference between making scientific content available to researchers for use in research versus saving money by pirating books.",
+        "created_at": "2025-07-10T13:47:31Z",
+        "created_at_i": 1752155251,
+        "objectID": "44521053",
+        "parent_id": 44519424,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:23:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrew_lettuce"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is pretty naive based on my experience. I find it hard to get the LLM to consistently use the tools defined, so &quot;always&quot; is doing some questionable lifting here. I've had easy better luck with pretty simple, linear workflows, so telling your LLM to &quot;know use this clip tool to...&quot; Might be more effective than an agent that has a bunch of tools and might use the expected one. YMMV"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrew_lettuce",
+          "story_44514753"
+        ],
+        "author": "andrew_lettuce",
+        "comment_text": "This is pretty naive based on my experience. I find it hard to get the LLM to consistently use the tools defined, so &quot;always&quot; is doing some questionable lifting here. I&#x27;ve had easy better luck with pretty simple, linear workflows, so telling your LLM to &quot;know use this clip tool to...&quot; Might be more effective than an agent that has a bunch of tools and might use the expected one. YMMV",
+        "created_at": "2025-07-10T13:33:59Z",
+        "created_at_i": 1752154439,
+        "objectID": "44520863",
+        "parent_id": 44518308,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-29T11:01:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aussieguy1234"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Let's say you want to use the tool `ssh` and let's imagine ssh has just been released and it's not in the AI agents training set yet.<p>It won't know in this case how to use the ssh command line tool.<p>MCP provides a standard way to tell an AI agent how and when to use tools. So if you had an SSH MCP server, you'd simply plug that in, now your AI agent automagically has SSH capabilities."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aussieguy1234",
+          "story_44514753"
+        ],
+        "author": "aussieguy1234",
+        "comment_text": "Let&#x27;s say you want to use the tool `ssh` and let&#x27;s imagine ssh has just been released and it&#x27;s not in the AI agents training set yet.<p>It won&#x27;t know in this case how to use the ssh command line tool.<p>MCP provides a standard way to tell an AI agent how and when to use tools. So if you had an SSH MCP server, you&#x27;d simply plug that in, now your AI agent automagically has SSH capabilities.",
+        "created_at": "2025-07-10T13:29:08Z",
+        "created_at_i": 1752154148,
+        "objectID": "44520824",
+        "parent_id": 44519315,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T16:48:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aussieguy1234"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MCP gives the AI agent a list of commands and instructions on how/when to use them in a standard way.<p>A CLI tool, while it can do the same, doesn't do that in a standard way, so if it's a tool not in the agents training set or in its context it won't know how to use the tool."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aussieguy1234",
+          "story_44514753"
+        ],
+        "author": "aussieguy1234",
+        "comment_text": "MCP gives the AI agent a list of commands and instructions on how&#x2F;when to use them in a standard way.<p>A CLI tool, while it can do the same, doesn&#x27;t do that in a standard way, so if it&#x27;s a tool not in the agents training set or in its context it won&#x27;t know how to use the tool.",
+        "created_at": "2025-07-10T13:24:47Z",
+        "created_at_i": 1752153887,
+        "objectID": "44520766",
+        "parent_id": 44515329,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T13:26:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mrweasel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's not piracy if you download the books to train your LLM.... Apparently."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mrweasel",
+          "story_44514753"
+        ],
+        "author": "mrweasel",
+        "comment_text": "It&#x27;s not piracy if you download the books to train your LLM.... Apparently.",
+        "created_at": "2025-07-10T12:50:55Z",
+        "created_at_i": 1752151855,
+        "objectID": "44520431",
+        "parent_id": 44518980,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:03:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "latexr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I <i>think</i> (also not an expert) that depends on jurisdiction. I.e. in some places you can download but not distribute, while in others you can’t even download. Others still turn a blind eye at both (there’s a reason Russian trackers/teams are so prevalent)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_latexr",
+          "story_44514753"
+        ],
+        "author": "latexr",
+        "comment_text": "I <i>think</i> (also not an expert) that depends on jurisdiction. I.e. in some places you can download but not distribute, while in others you can’t even download. Others still turn a blind eye at both (there’s a reason Russian trackers&#x2F;teams are so prevalent).",
+        "created_at": "2025-07-10T12:07:34Z",
+        "created_at_i": 1752149254,
+        "objectID": "44520062",
+        "parent_id": 44515100,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T12:08:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kevindamm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The above is specifically about book copyright on orphaned works.. AFAIK there is no copyrighting of the contents of a blockchain that they could defend (I'm assuming that's what you're referring to).  That copyright would hypothetically cover redistribution, which is kind of a necessary aspect of the shared ledger in the first place.<p>The more appropriate coverage for that would be patents, which protect a process while making its methods public.  Since Bitcoin is open and not patented, that isn't a concern either.  There are, however, methods of using blockchains that are patented.<p>Satoshi couldn't come forth and say that all bitcoin is violating a patent, but it's possible that some aspect of other blockchains or some aspect of an application layer built on blockchain is covered by a patent.  For more details consult a lawyer specializing in IP law (and btw I'm not a lawyer, in case I accidentally gave that impression).<p>To complicate things further with patents, be careful about reading patents if you plan on possibly building anything related.  If it can be shown that you were aware of a (US) patent that you're violating, then any related suit that comes before you may receive triple the damages that were decided in the case.  So, it's very likely that there are some applications violating blockchain-related patents.  Someone could suddenly come forward and sue a lot of people who were being willfully ignorant about it.<p>Hopefully that comes close to answering your question, this space is far too small for all the nuances and I'm not an expert on licenses."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kevindamm",
+          "story_44514753"
+        ],
+        "author": "kevindamm",
+        "children": [
+          44528716
+        ],
+        "comment_text": "The above is specifically about book copyright on orphaned works.. AFAIK there is no copyrighting of the contents of a blockchain that they could defend (I&#x27;m assuming that&#x27;s what you&#x27;re referring to).  That copyright would hypothetically cover redistribution, which is kind of a necessary aspect of the shared ledger in the first place.<p>The more appropriate coverage for that would be patents, which protect a process while making its methods public.  Since Bitcoin is open and not patented, that isn&#x27;t a concern either.  There are, however, methods of using blockchains that are patented.<p>Satoshi couldn&#x27;t come forth and say that all bitcoin is violating a patent, but it&#x27;s possible that some aspect of other blockchains or some aspect of an application layer built on blockchain is covered by a patent.  For more details consult a lawyer specializing in IP law (and btw I&#x27;m not a lawyer, in case I accidentally gave that impression).<p>To complicate things further with patents, be careful about reading patents if you plan on possibly building anything related.  If it can be shown that you were aware of a (US) patent that you&#x27;re violating, then any related suit that comes before you may receive triple the damages that were decided in the case.  So, it&#x27;s very likely that there are some applications violating blockchain-related patents.  Someone could suddenly come forward and sue a lot of people who were being willfully ignorant about it.<p>Hopefully that comes close to answering your question, this space is far too small for all the nuances and I&#x27;m not an expert on licenses.",
+        "created_at": "2025-07-10T11:42:55Z",
+        "created_at_i": 1752147775,
+        "objectID": "44519884",
+        "parent_id": 44518673,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-11T05:40:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UncleEntity"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "People may do things you have no need for or don't agree with.<p>Welcome to Planet Earth."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_UncleEntity",
+          "story_44514753"
+        ],
+        "author": "UncleEntity",
+        "comment_text": "People may do things you have no need for or don&#x27;t agree with.<p>Welcome to Planet Earth.",
+        "created_at": "2025-07-10T11:37:49Z",
+        "created_at_i": 1752147469,
+        "objectID": "44519850",
+        "parent_id": 44519315,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T16:22:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chisleu"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's infinitely useful for people who's workflows involve LLM agents."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chisleu",
+          "story_44514753"
+        ],
+        "author": "chisleu",
+        "comment_text": "It&#x27;s infinitely useful for people who&#x27;s workflows involve LLM agents.",
+        "created_at": "2025-07-10T11:26:25Z",
+        "created_at_i": 1752146785,
+        "objectID": "44519767",
+        "parent_id": 44519725,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T12:17:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zipping1549"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's easy and has the word AI in it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zipping1549",
+          "story_44514753"
+        ],
+        "author": "zipping1549",
+        "children": [
+          44519767
+        ],
+        "comment_text": "It&#x27;s easy and has the word AI in it.",
+        "created_at": "2025-07-10T11:19:16Z",
+        "created_at_i": 1752146356,
+        "objectID": "44519725",
+        "parent_id": 44519315,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:05:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jonasdoesthings"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think the goal of this project is not to simplify the use of Annas Archive for humans (as they could just use the Website anyways), but to allow AI &quot;Agents&quot; to automatically source information out of books while researching without requiring user interaction.<p>The LLM's default web-browsing tool probably won't or can't download books from AA while looking for information on a subject. This enables it to do so."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jonasdoesthings",
+          "story_44514753"
+        ],
+        "author": "jonasdoesthings",
+        "children": [
+          44521243
+        ],
+        "comment_text": "I think the goal of this project is not to simplify the use of Annas Archive for humans (as they could just use the Website anyways), but to allow AI &quot;Agents&quot; to automatically source information out of books while researching without requiring user interaction.<p>The LLM&#x27;s default web-browsing tool probably won&#x27;t or can&#x27;t download books from AA while looking for information on a subject. This enables it to do so.",
+        "created_at": "2025-07-10T10:57:08Z",
+        "created_at_i": 1752145028,
+        "objectID": "44519582",
+        "parent_id": 44519321,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-29T11:01:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mhuffman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;Aren’t they all trained on copyrighted material, and lobbying governments to make that legal?<p>Only for them, not for you.<p>&gt;Should copyright law only apply to the plebs?<p>In a practical sense, hasn't that been the case for most laws?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mhuffman",
+          "story_44514753"
+        ],
+        "author": "mhuffman",
+        "children": [
+          44560493
+        ],
+        "comment_text": "&gt;Aren’t they all trained on copyrighted material, and lobbying governments to make that legal?<p>Only for them, not for you.<p>&gt;Should copyright law only apply to the plebs?<p>In a practical sense, hasn&#x27;t that been the case for most laws?",
+        "created_at": "2025-07-10T10:55:47Z",
+        "created_at_i": 1752144947,
+        "objectID": "44519568",
+        "parent_id": 44515883,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-14T14:10:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stavros"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can just go on the website, search for the book you want, and download it. I'd think this is pretty obvious, as if you visit <a href=\"https://annas-archive.org\" rel=\"nofollow\">https://annas-archive.org</a>, there are multiple search boxes there that lead directly to downloads."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_stavros",
+          "story_44514753"
+        ],
+        "author": "stavros",
+        "comment_text": "You can just go on the website, search for the book you want, and download it. I&#x27;d think this is pretty obvious, as if you visit <a href=\"https:&#x2F;&#x2F;annas-archive.org\" rel=\"nofollow\">https:&#x2F;&#x2F;annas-archive.org</a>, there are multiple search boxes there that lead directly to downloads.",
+        "created_at": "2025-07-10T10:48:16Z",
+        "created_at_i": 1752144496,
+        "objectID": "44519513",
+        "parent_id": 44516777,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T14:00:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mandw"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I recently downloaded a number of magazines froma now defunct publication from late eighties.  No onesells them and annas archive was the only place i found them.  its not exclusivly pirating, its a source for a lot of out of print."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mandw",
+          "story_44514753"
+        ],
+        "author": "mandw",
+        "comment_text": "I recently downloaded a number of magazines froma now defunct publication from late eighties.  No onesells them and annas archive was the only place i found them.  its not exclusivly pirating, its a source for a lot of out of print.",
+        "created_at": "2025-07-10T10:38:11Z",
+        "created_at_i": 1752143891,
+        "objectID": "44519450",
+        "parent_id": 44518980,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T16:49:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thedevilslawyer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was absolutely saying that. Novels are part of the knowledge too - a scientific paper and a novel have equal weight"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thedevilslawyer",
+          "story_44514753"
+        ],
+        "author": "thedevilslawyer",
+        "children": [
+          44521053
+        ],
+        "comment_text": "I was absolutely saying that. Novels are part of the knowledge too - a scientific paper and a novel have equal weight",
+        "created_at": "2025-07-10T10:35:36Z",
+        "created_at_i": 1752143736,
+        "objectID": "44519424",
+        "parent_id": 44518248,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T16:23:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eMPee584"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The real crime is an economic system that limits the spread of knowledge and access to other &quot;human rights&quot; by requiring everyone to hustle to survive (and, if possible, increase capital gains for the financial overlords) when we would already be technologically equipped to feed and house well all of mankind, instead of letting thousands of children starve to death each day and restricting access to education so that billions miss out on their intellectual development - a void easily filled with addictive media full of rage and distraction. Pirating books is just a symptom of this wretched system. And it is not enough - RISE, HN! .. towards RBE &amp; beyond.."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_eMPee584",
+          "story_44514753"
+        ],
+        "author": "eMPee584",
+        "comment_text": "The real crime is an economic system that limits the spread of knowledge and access to other &quot;human rights&quot; by requiring everyone to hustle to survive (and, if possible, increase capital gains for the financial overlords) when we would already be technologically equipped to feed and house well all of mankind, instead of letting thousands of children starve to death each day and restricting access to education so that billions miss out on their intellectual development - a void easily filled with addictive media full of rage and distraction. Pirating books is just a symptom of this wretched system. And it is not enough - RISE, HN! .. towards RBE &amp; beyond..",
+        "created_at": "2025-07-10T10:18:10Z",
+        "created_at_i": 1752142690,
+        "objectID": "44519344",
+        "parent_id": 44518980,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:11:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "latexr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; COMMAND LINE: You have to instruct your AI what this tool is and what it should be used for.<p><i>Or</i>—and please bear with me, I know this may sound insane—you call the command-line tool yourself, reliably, fast, with little overhead, just like it has worked for decades.<p>I know, I know, soon most people won’t even know how to unzip their pants without spending unnecessary amounts of electricity and waiting for several seconds for an LLM response, but believe me that just using your hands is a solution worth checking out."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_latexr",
+          "story_44514753"
+        ],
+        "author": "latexr",
+        "children": [
+          44519582
+        ],
+        "comment_text": "&gt; COMMAND LINE: You have to instruct your AI what this tool is and what it should be used for.<p><i>Or</i>—and please bear with me, I know this may sound insane—you call the command-line tool yourself, reliably, fast, with little overhead, just like it has worked for decades.<p>I know, I know, soon most people won’t even know how to unzip their pants without spending unnecessary amounts of electricity and waiting for several seconds for an LLM response, but believe me that just using your hands is a solution worth checking out.",
+        "created_at": "2025-07-10T10:12:18Z",
+        "created_at_i": 1752142338,
+        "objectID": "44519321",
+        "parent_id": 44518308,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-29T11:01:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ospider"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why do people keep building servers for such a silly protocol?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ospider",
+          "story_44514753"
+        ],
+        "author": "ospider",
+        "children": [
+          44520824,
+          44519725,
+          44519850
+        ],
+        "comment_text": "Why do people keep building servers for such a silly protocol?",
+        "created_at": "2025-07-10T10:11:01Z",
+        "created_at_i": 1752142261,
+        "objectID": "44519315",
+        "parent_id": 44514753,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-12T13:29:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iosifache"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://hn.algolia.com/?q=anna%27s+archive\" rel=\"nofollow\">https://hn.algolia.com/?q=anna%27s+archive</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP server for searching and downloading documents from Anna's Archive"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/iosifache/annas-mcp"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iosifache",
+          "story_44514753"
+        ],
+        "author": "iosifache",
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;hn.algolia.com&#x2F;?q=anna%27s+archive\" rel=\"nofollow\">https:&#x2F;&#x2F;hn.algolia.com&#x2F;?q=anna%27s+archive</a>",
+        "created_at": "2025-07-10T09:44:34Z",
+        "created_at_i": 1752140674,
+        "objectID": "44519145",
+        "parent_id": 44518980,
+        "story_id": 44514753,
+        "story_title": "Show HN: MCP server for searching and downloading documents from Anna's Archive",
+        "story_url": "https://github.com/iosifache/annas-mcp",
+        "updated_at": "2025-07-10T17:03:10Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 79,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44514753&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 25
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        },
+        "merge": {
+          "total": 1
+        },
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 4
+  }
+}

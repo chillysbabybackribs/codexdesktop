@@ -88,14 +88,7 @@ export function turnStartedNotification(
 // implies, so Claude turns hit the exact same UI components as Codex turns
 // (terminal cards, compact read/search rows, diff cards, web-search rows, the
 // plan board) instead of a flat generic tool row.
-type ClaudeToolKind = 'command' | 'fileChange' | 'webSearch' | 'plan' | 'dynamic' | 'mcp';
-
-// The in-process MCP server that carries the canonical browser/subagent tool
-// set is registered under this server name; the SDK namespaces its tool_use
-// names accordingly. Stripping the prefix recovers the canonical tool name,
-// letting these calls emit the same dynamicToolCall items codex turns produce
-// (screenshot previews, CDP artifacts, live-search rows, trace counts).
-const browserMcpToolPrefix = 'mcp__browser__';
+type ClaudeToolKind = 'command' | 'fileChange' | 'webSearch' | 'plan' | 'mcp';
 
 type ClaudeToolState = {
   name: string;
@@ -113,7 +106,6 @@ type ClaudeToolState = {
 };
 
 function classifyClaudeTool(name: string): ClaudeToolKind {
-  if (name.startsWith(browserMcpToolPrefix)) return 'dynamic';
   switch (name) {
     case 'Bash':
     case 'Read':
@@ -146,12 +138,6 @@ export class ClaudeTurnTranslator {
   // (provider message id, text) → emitted item id: keeps restated/replayed
   // assistant text idempotent even after the streaming block map resets.
   private readonly emittedTextIds = new Map<string, string>();
-  // Any assistant text followed by a tool call is task narration, not the
-  // turn's final answer. Keep the latest text for each item so a later tool
-  // start can retroactively move already-streamed prose into the activity
-  // surface without creating a second transcript item.
-  private readonly textById = new Map<string, string>();
-  private readonly commentaryTextIds = new Set<string>();
   private textIdCounter = 0;
   private resolvedModel: string | null = null;
   private pendingError: {
@@ -223,7 +209,6 @@ export class ClaudeTurnTranslator {
       if (block.type === 'text') {
         const id = `${turnId}:${this.messageKey}:b${index}`;
         this.blocks.set(index, { id, kind: 'text', text: '' });
-        this.textById.set(id, '');
         return {
           notifications: [
             asNotification('item/started', {
@@ -261,10 +246,7 @@ export class ClaudeTurnTranslator {
           typeof block.id === 'string' ? block.id : `${turnId}:${this.messageKey}:b${index}`;
         this.blocks.set(index, { id, kind: 'tool', text: '' });
         return {
-          notifications: [
-            ...this.markPriorTextAsCommentary(),
-            ...this.startToolCall(id, typeof block.name === 'string' ? block.name : 'tool'),
-          ],
+          notifications: this.startToolCall(id, typeof block.name === 'string' ? block.name : 'tool'),
         };
       }
       return { notifications: [] };
@@ -276,7 +258,6 @@ export class ClaudeTurnTranslator {
       const delta = asRecord(event.delta);
       if (block.kind === 'text' && typeof delta.text === 'string') {
         block.text += delta.text;
-        this.textById.set(block.id, block.text);
         return {
           notifications: [
             asNotification('item/agentMessage/delta', {
@@ -348,7 +329,6 @@ export class ClaudeTurnTranslator {
         // Restated tool_use carries the complete input — the enrichment path
         // for runs without stream events, and an idempotent re-emit otherwise.
         if (!this.tools.has(block.id)) {
-          notifications.push(...this.markPriorTextAsCommentary());
           notifications.push(
             ...this.startToolCall(block.id, typeof block.name === 'string' ? block.name : 'tool'),
           );
@@ -364,7 +344,6 @@ export class ClaudeTurnTranslator {
         id = streamed?.id ?? `${this.context.turnId}:${providerId}:t${this.textIdCounter++}`;
         this.emittedTextIds.set(memoKey, id);
       }
-      this.textById.set(id, block.text);
       notifications.push(this.completedBlockNotification({ id, kind: 'text', text: block.text }));
     }
     return { notifications };
@@ -407,7 +386,6 @@ export class ClaudeTurnTranslator {
           state,
           block.is_error === true ? 'failed' : 'completed',
           extractToolResultText(block.content),
-          extractToolResultImages(block.content),
         ),
       );
     }
@@ -553,7 +531,6 @@ export class ClaudeTurnTranslator {
     state: ClaudeToolState,
     status: 'inProgress' | 'completed' | 'failed',
     output?: string,
-    images?: string[],
   ): ServerNotification {
     const nowMs = this.context.nowMs();
     const completed = method === 'item/completed';
@@ -584,23 +561,6 @@ export class ClaudeTurnTranslator {
         id,
         query: state.query,
         action: state.action,
-      } as unknown as ThreadItem;
-    } else if (state.kind === 'dynamic') {
-      item = {
-        type: 'dynamicToolCall',
-        id,
-        namespace: null,
-        tool: state.name.slice(browserMcpToolPrefix.length),
-        arguments: state.arguments ?? {},
-        status,
-        contentItems: completed
-          ? [
-              ...(output ? [{ type: 'inputText' as const, text: output }] : []),
-              ...(images ?? []).map((imageUrl) => ({ type: 'inputImage' as const, imageUrl })),
-            ]
-          : null,
-        success: completed ? status === 'completed' : null,
-        durationMs,
       } as unknown as ThreadItem;
     } else {
       item = {
@@ -707,7 +667,7 @@ export class ClaudeTurnTranslator {
             type: 'agentMessage',
             id: block.id,
             text: block.text,
-            phase: this.commentaryTextIds.has(block.id) ? 'commentary' : null,
+            phase: null,
             memoryCitation: null,
           } as ThreadItem)
         : ({
@@ -722,16 +682,6 @@ export class ClaudeTurnTranslator {
       completedAtMs: this.context.nowMs(),
       item,
     });
-  }
-
-  private markPriorTextAsCommentary(): ServerNotification[] {
-    const notifications: ServerNotification[] = [];
-    for (const [id, text] of this.textById) {
-      if (this.commentaryTextIds.has(id)) continue;
-      this.commentaryTextIds.add(id);
-      notifications.push(this.completedBlockNotification({ id, kind: 'text', text }));
-    }
-    return notifications;
   }
 
   private rememberAssistantError(message: Record<string, unknown>): void {
@@ -844,24 +794,6 @@ function extractToolResultText(content: unknown): string {
   return text.length > maxToolOutputChars
     ? `${text.slice(0, maxToolOutputChars)}\n… [output truncated]`
     : text;
-}
-
-function extractToolResultImages(content: unknown): string[] {
-  if (!Array.isArray(content)) return [];
-  const urls: string[] = [];
-  for (const entry of content) {
-    const record = asRecord(entry);
-    if (record.type !== 'image') continue;
-    const source = asRecord(record.source);
-    if (
-      source.type === 'base64' &&
-      typeof source.media_type === 'string' &&
-      typeof source.data === 'string'
-    ) {
-      urls.push(`data:${source.media_type};base64,${source.data}`);
-    }
-  }
-  return urls;
 }
 
 function planStepsFrom(

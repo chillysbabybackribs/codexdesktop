@@ -13,7 +13,6 @@ function makeSession(overrides: Partial<AgentSession> = {}): AgentSession {
   return {
     key: 'agent-1',
     mainChatTabKey: null,
-    workspace: null,
     role: 'reviewer',
     parentAgentKey: null,
     spawnedByTurnId: null,
@@ -67,7 +66,8 @@ function makeProps(overrides: Partial<AgentWindowProps> = {}): AgentWindowProps 
     onCloseSession: noop,
     onResetSession: noop,
     onPromote: noop,
-    onSetRole: noop,
+    onToggleWatch: noop,
+    onToggleAudit: noop,
     onToggleReport: noop,
     onSendFeedback: noop,
     onDecideSendPolicy: noop,

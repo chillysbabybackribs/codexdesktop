@@ -1,5 +1,4 @@
 import { isIP } from 'node:net'
-import { DOMParser, parseHTML } from 'linkedom'
 
 const QUERY_STOP_WORDS = new Set([
   'a', 'an', 'and', 'are', 'about', 'be', 'by', 'for', 'from', 'how', 'in', 'is',
@@ -10,7 +9,6 @@ const QUERY_STOP_WORDS = new Set([
 const VIDEO_HOSTS = new Set(['youtube.com', 'youtu.be', 'vimeo.com', 'dailymotion.com', 'twitch.tv', 'tiktok.com'])
 const COMMUNITY_HOSTS = new Set(['reddit.com', 'quora.com', 'facebook.com', 'x.com', 'twitter.com', 'linkedin.com'])
 const MAX_RESEARCH_URL_CHARS = 2_048
-const MAX_RESEARCH_RESULTS = 10
 
 export type SerpCandidate = {
   url: string
@@ -29,26 +27,6 @@ export type RankedSerpCandidate = SerpCandidate & {
 export type ExtractedPageAssessment = {
   verified: boolean
   reason?: 'invalid-url' | 'http-error' | 'challenge-page' | 'login-page' | 'error-page' | 'insufficient-content'
-}
-
-/**
- * Some hosts serve a JS shell (or a login interstitial) to an anonymous
- * browser but keep a server-rendered mirror that extracts cleanly and even
- * satisfies the cheap static lane. Rewrite only the FETCH address — reporting
- * keeps whatever URL the page itself lands on.
- */
-export function preferExtractableHost(url: string): string {
-  try {
-    const parsed = new URL(url)
-    const host = parsed.hostname.toLowerCase()
-    if (host === 'www.reddit.com' || host === 'reddit.com') {
-      parsed.hostname = 'old.reddit.com'
-      return parsed.href
-    }
-  } catch {
-    // Not a parseable URL; let downstream validation reject it.
-  }
-  return url
 }
 
 export function normalizeResearchUrls(values: unknown[], maxUrls = 8): string[] {
@@ -90,81 +68,12 @@ export function googleSearchUrl(query: string, maxResults: number): string {
 }
 
 /**
- * DuckDuckGo's Lite surface is intentionally small, server rendered, and far
- * less coupled to a frequently changing result-page DOM than the full search
- * applications. Hidden discovery fetches this first and keeps Google as a
- * browser-rendered fallback for provider outages.
- */
-export function duckDuckGoLiteSearchUrl(query: string): string {
-  return `https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(query)}`
-}
-
-/** Bing's RSS surface is the independent no-script fallback for discovery. */
-export function bingSearchFeedUrl(query: string, maxResults: number): string {
-  return `https://www.bing.com/search?format=rss&count=${Math.max(2, maxResults * 2)}&q=${encodeURIComponent(query)}`
-}
-
-export function extractDuckDuckGoLiteCandidates(
-  html: string,
-  maxResults: number
-): Array<Omit<SerpCandidate, 'query'>> {
-  const { document } = parseHTML(html)
-  const results: Array<Omit<SerpCandidate, 'query'>> = []
-  const seen = new Set<string>()
-  const limit = Math.max(1, Math.min(MAX_RESEARCH_RESULTS, Math.round(maxResults)))
-
-  for (const anchor of document.querySelectorAll('a.result-link[href]')) {
-    const href = anchor.getAttribute('href') ?? ''
-    const url = duckDuckGoDestination(href)
-    const title = compactText(anchor.textContent, 300)
-    if (!url || !title || seen.has(url)) continue
-
-    let snippet = ''
-    let row = anchor.closest('tr')?.nextElementSibling ?? null
-    for (let offset = 0; row && offset < 3; offset += 1, row = row.nextElementSibling) {
-      if (row.querySelector('a.result-link[href]')) break
-      const snippetNode = row.querySelector('.result-snippet')
-      if (snippetNode) {
-        snippet = compactText(snippetNode.textContent, 500)
-        break
-      }
-    }
-
-    seen.add(url)
-    results.push({ url, title, snippet, rank: results.length + 1 })
-    if (results.length >= limit) break
-  }
-  return results
-}
-
-export function extractBingSearchFeedCandidates(
-  xml: string,
-  maxResults: number
-): Array<Omit<SerpCandidate, 'query'>> {
-  const document = new DOMParser().parseFromString(xml, 'text/xml')
-  const results: Array<Omit<SerpCandidate, 'query'>> = []
-  const seen = new Set<string>()
-  const limit = Math.max(1, Math.min(MAX_RESEARCH_RESULTS, Math.round(maxResults)))
-
-  for (const item of document.querySelectorAll('item')) {
-    const url = canonicalizeUrl(item.querySelector('link')?.textContent?.trim() ?? '')
-    const title = compactText(item.querySelector('title')?.textContent ?? '', 300)
-    const snippet = compactText(item.querySelector('description')?.textContent ?? '', 500)
-    if (!url || !title || seen.has(url)) continue
-    seen.add(url)
-    results.push({ url, title, snippet, rank: results.length + 1 })
-    if (results.length >= limit) break
-  }
-  return results
-}
-
-/**
  * Keep model-authored variants when present, but make a single-query call
  * useful without asking Codex to spend another turn inventing variants.
  */
 export function buildResearchQueryVariants(queries: string[], maxVariants = 3): string[] {
   const supplied = uniqueStrings(queries)
-  if (supplied.length !== 1) return supplied.slice(0, maxVariants)
+  if (supplied.length >= maxVariants) return supplied.slice(0, maxVariants)
 
   const seed = supplied[0]
   if (!seed) return []
@@ -326,78 +235,6 @@ export function assessExtractedPage(page: {
   return { verified: true }
 }
 
-/**
- * True when a requested URL landed on a different host — the signature of a
- * cross-host redirect (docs domains moving into another product's docs app).
- * `www.` prefixes are not treated as a host change.
- */
-export function isCrossHostLanding(requestedUrl: string, landedUrl: string): boolean {
-  let requested: URL
-  let landed: URL
-  try {
-    requested = new URL(requestedUrl)
-    landed = new URL(landedUrl)
-  } catch {
-    return false
-  }
-  const normalize = (host: string): string => host.replace(/^www\./i, '').toLowerCase()
-  return normalize(requested.hostname) !== normalize(landed.hostname)
-}
-
-const NAV_LINK_PATTERN = /<a\b[^>]*?href\s*=\s*(?:"([^"]*)"|'([^']*)')[^>]*>([\s\S]*?)<\/a>/gi
-const MAX_NAV_LINK_SCANS = 400
-
-export type ResearchNavLink = { url: string; title: string }
-
-/**
- * Harvest same-host navigation links from a landing page's HTML so a redirect
- * that dumps a deep docs URL onto a hub page can be followed one hop instead
- * of being reported as "bounded extraction found nothing." Deterministic and
- * bounded: same host as the landing page, http(s) only, fragments stripped,
- * deduplicated, first `limit` kept in document order.
- */
-export function extractSameHostNavLinks(html: string, landedUrl: string, limit: number): ResearchNavLink[] {
-  let base: URL
-  try {
-    base = new URL(landedUrl)
-  } catch {
-    return []
-  }
-  const maxLinks = Math.max(1, Math.min(24, Math.round(limit)))
-  const normalizeHost = (host: string): string => host.replace(/^www\./i, '').toLowerCase()
-  const baseHost = normalizeHost(base.hostname)
-  const selfUrl = `${base.origin}${base.pathname}`
-  const links: ResearchNavLink[] = []
-  const seen = new Set<string>()
-  NAV_LINK_PATTERN.lastIndex = 0
-  let scans = 0
-  let match: RegExpExecArray | null
-  while ((match = NAV_LINK_PATTERN.exec(html)) !== null) {
-    scans += 1
-    if (scans > MAX_NAV_LINK_SCANS || links.length >= maxLinks) break
-    const href = (match[1] ?? match[2] ?? '').trim()
-    if (!href || href.startsWith('#')) continue
-    let resolved: URL
-    try {
-      resolved = new URL(href, base)
-    } catch {
-      continue
-    }
-    if (!/^https?:$/.test(resolved.protocol)) continue
-    if (normalizeHost(resolved.hostname) !== baseHost) continue
-    const canonical = `${resolved.origin}${resolved.pathname}${resolved.search}`
-    if (canonical === selfUrl || seen.has(canonical)) continue
-    seen.add(canonical)
-    const title = match[3]
-      .replace(/<[^>]*>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 300)
-    links.push({ url: canonical, title: title || resolved.pathname })
-  }
-  return links
-}
-
 function isLoadingShell(content: string): boolean {
   const lines = content
     .split(/\n+/)
@@ -422,10 +259,7 @@ function classifySource(
     [...COMMUNITY_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`)) ||
     (domain === 'github.com' && /\/(issues|discussions|pull)(\/|$)/i.test(pathname))
   ) return 'community'
-  if (/\.(gov|mil|edu)$/i.test(domain)) return 'official'
-  if (/(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) {
-    return distinctiveDomainMatch(domain, queryTokens) >= 8 ? 'official' : 'primary'
-  }
+  if (/\.(gov|mil|edu)$/i.test(domain) || /(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) return 'official'
   if (/\/(docs?|developer|reference|api|spec|standards?)\b/i.test(pathname) || /\bofficial\b/i.test(title)) return 'primary'
   if (distinctiveDomainMatch(domain, queryTokens) >= 8) return 'primary'
   return 'general'
@@ -469,23 +303,6 @@ function canonicalizeUrl(value: string): string {
   } catch {
     return ''
   }
-}
-
-function duckDuckGoDestination(value: string): string {
-  try {
-    const link = new URL(value, 'https://lite.duckduckgo.com/')
-    const host = link.hostname.replace(/^www\./i, '').toLowerCase()
-    const destination = host === 'duckduckgo.com' && link.pathname === '/l/'
-      ? link.searchParams.get('uddg') ?? ''
-      : link.href
-    return canonicalizeUrl(destination)
-  } catch {
-    return ''
-  }
-}
-
-function compactText(value: string | null | undefined, maxChars: number): string {
-  return (value ?? '').replace(/\s+/g, ' ').trim().slice(0, maxChars)
 }
 
 function isObviousPrivateHost(value: string): boolean {

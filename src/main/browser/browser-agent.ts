@@ -4,11 +4,10 @@ import type { CdpArtifactStore, CdpFileArtifact } from './cdp-artifact-store.js'
 import { runBrowserFlow } from './browser-flow.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildDomSnapshotModel } from './dom-snapshot.js'
-import type { NetworkJournalQuery, NetworkStreamTransport } from './network-journal.js'
+import type { NetworkJournalQuery } from './network-journal.js'
 import { buildPageSnapshotProgram, type PageSnapshotMode, type PageSnapshotOrder } from './page-snapshot.js'
 import { assessExtractedPage } from './research-utils.js'
 import { captureAppWindowImage } from './app-window-screenshot.js'
-import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import type { TabManager } from './tab-manager.js'
 import {
   KeyedOperationQueue,
@@ -88,22 +87,6 @@ export type BrowserRunOptions = BrowserAgentOptions & {
 export type BrowserFlowOptions = BrowserAgentOptions
 
 export type BrowserNavigateOptions = BrowserAgentOptions & {
-  readySelector?: string | null
-  quietMs?: number | null
-  maxSettleMs?: number | null
-}
-
-export type BrowserNetworkCaptureParams = {
-  url?: string | null
-  steps?: unknown
-  match?: NetworkJournalQuery | null
-  captureBody?: boolean | null
-  download?: boolean | null
-  stream?: {
-    transport?: NetworkStreamTransport | null
-    maxMessages?: number | null
-    idleMs?: number | null
-  } | null
   readySelector?: string | null
   quietMs?: number | null
   maxSettleMs?: number | null
@@ -976,201 +959,6 @@ export class BrowserAgentController {
     })
   }
 
-  async captureNetwork(
-    params: BrowserNetworkCaptureParams,
-    options: BrowserAgentOptions = {}
-  ): Promise<BrowserAgentResult> {
-    const requestedUrl = params.url?.trim() ?? ''
-    const hasSteps = Array.isArray(params.steps) && params.steps.length > 0
-    if (Boolean(requestedUrl) === hasSteps) {
-      return { ok: false, error: 'browser_network requires exactly one trigger: "url" or non-empty "steps"' } satisfies BrowserAgentFailure
-    }
-    const match = params.match ?? {}
-    if (!match.urlContains?.trim()) {
-      return { ok: false, error: 'browser_network requires match.urlContains' } satisfies BrowserAgentFailure
-    }
-    const streamTransport = params.stream?.transport
-    if (params.stream && streamTransport !== 'sse' && streamTransport !== 'websocket') {
-      return { ok: false, error: 'browser_network stream.transport must be "sse" or "websocket"' } satisfies BrowserAgentFailure
-    }
-    if (streamTransport === 'websocket' && (match.method || match.resourceType || match.mimeType)) {
-      return { ok: false, error: 'browser_network WebSocket matching supports urlContains and optional status bounds, not HTTP method/resourceType/mimeType' } satisfies BrowserAgentFailure
-    }
-    if (params.stream && params.captureBody === true) {
-      return { ok: false, error: 'browser_network cannot combine stream capture with captureBody: true' } satisfies BrowserAgentFailure
-    }
-    if (params.download && params.stream) {
-      return { ok: false, error: 'browser_network cannot combine download and stream capture' } satisfies BrowserAgentFailure
-    }
-    if (params.download && params.captureBody === true) {
-      return { ok: false, error: 'browser_network cannot combine download capture with captureBody: true' } satisfies BrowserAgentFailure
-    }
-    const captureBody = !params.stream && !params.download && params.captureBody !== false
-    const artifactStore = this.artifactStore
-    if ((captureBody || params.stream || params.download) && !artifactStore) {
-      return { ok: false, error: 'network artifact storage is not available' } satisfies BrowserAgentFailure
-    }
-
-    const tabs = this.getTabs()
-    if (!tabs) return { ok: false, error: 'browser not ready (no window)' } satisfies BrowserAgentFailure
-    if (options.tabId === 'all') {
-      return { ok: false, error: 'browser_network requires one existing tab, not "all"' } satisfies BrowserAgentFailure
-    }
-    const tabId = options.tabId ?? tabs.getActiveTabId()
-    if (!tabId) return { ok: false, error: 'no active tab' } satisfies BrowserAgentFailure
-
-    const timeoutMs = operationTimeoutMs(options)
-    const maxResultChars = operationResultChars(options)
-    return this.tabOperations.run(tabId, async () => {
-      if (options.signal?.aborted) return cancelledResult()
-      let lease = captureTargetLease(tabs, tabId)
-      if (!lease) {
-        return { ok: false, error: `no tab with id ${tabId}`, errorCode: 'targetClosed' } satisfies BrowserAgentFailure
-      }
-      const { webContents } = lease
-      const session = cdpSessionFor(webContents)
-      const captureController = new AbortController()
-      const startedAt = Date.now()
-
-      const executeCapture = async (): Promise<unknown> => {
-        await session.startNetworkJournal()
-        try {
-          const normalizedMatch = { ...match, urlContains: match.urlContains?.trim() }
-          const preparedDownload = params.download && artifactStore
-            ? await browserDownloadCaptureBroker.prepareDownload(
-                webContents,
-                normalizedMatch.urlContains ?? '',
-                artifactStore,
-                timeoutMs,
-                captureController.signal
-              )
-            : null
-          const waiting = (preparedDownload
-            ? preparedDownload.capture.then((download) => ({ kind: 'download' as const, download }))
-            : streamTransport
-              ? session.waitForNetworkStream(
-                streamTransport,
-                normalizedMatch,
-                clampNumber(params.stream?.maxMessages, 50, 1, 1_000),
-                clampNumber(params.stream?.idleMs, 500, 50, 10_000),
-                timeoutMs,
-                captureController.signal
-              ).then((stream) => ({ kind: 'stream' as const, stream }))
-              : session.waitForNetworkRequest(
-                { ...normalizedMatch, completedOnly: true },
-                timeoutMs,
-                captureController.signal
-              ).then((request) => ({ kind: 'request' as const, request })))
-          .then(
-            (capture) => ({ ok: true as const, capture }),
-            (error) => ({ ok: false as const, error })
-          )
-
-          let actionResult: unknown
-          try {
-            actionResult = requestedUrl
-              ? await tabs.navigateAndWait(tabId, requestedUrl, {
-                  timeoutMs,
-                  signal: captureController.signal,
-                  ...(params.readySelector?.trim() ? { readySelector: params.readySelector.trim() } : {}),
-                  ...(params.quietMs === null || params.quietMs === undefined ? {} : { quietMs: params.quietMs }),
-                  ...(params.maxSettleMs === null || params.maxSettleMs === undefined ? {} : { maxSettleMs: params.maxSettleMs })
-                })
-              : await runBrowserFlow(webContents, params.steps, { timeoutMs })
-          } catch (error) {
-            captureController.abort()
-            await waiting
-            throw error
-          }
-
-          // The trigger is allowed to navigate this tab, so adopt the page
-          // epoch produced by that controlled action. Keep the WebContents
-          // identity strict: replacing or closing the tab is still terminal.
-          const actionLease = captureTargetLease(tabs, tabId)
-          if (!actionLease) {
-            throw operationError('targetClosed', 'targetLifecycle', `browser target ${tabId} closed during network capture`)
-          }
-          if (actionLease.webContents !== webContents) {
-            throw operationError('targetChanged', 'targetLifecycle', `browser target ${tabId} changed during network capture`)
-          }
-          lease = actionLease
-
-          const matched = await waiting
-          if (!matched.ok) throw matched.error
-          let responseBody: Record<string, unknown> | undefined
-          let streamCapture: Record<string, unknown> | undefined
-          let downloadCapture: Record<string, unknown> | undefined
-          let request: unknown
-          if (matched.capture.kind === 'request') {
-            request = matched.capture.request
-            if (matched.capture.request.failed) {
-              throw new Error(`matched network request failed: ${matched.capture.request.errorText ?? matched.capture.request.blockedReason ?? matched.capture.request.url}`)
-            }
-          }
-          if (captureBody && artifactStore && matched.capture.kind === 'request') {
-            const capturedRequest = matched.capture.request
-            const response = asRecord(await session.send('Network.getResponseBody', { requestId: capturedRequest.requestId }))
-            if (typeof response.body !== 'string') throw new Error('Network.getResponseBody returned no body')
-            responseBody = await artifactStore.persistResponseBody(
-              response.body,
-              response.base64Encoded === true,
-              capturedRequest.mimeType,
-              capturedRequest.url
-            )
-          }
-          if (artifactStore && matched.capture.kind === 'stream') {
-            const { messages, ...summary } = matched.capture.stream
-            const serialized = [
-              JSON.stringify({ type: 'network-stream', ...summary }),
-              ...messages.map((message) => JSON.stringify({ type: 'message', ...message }))
-            ].join('\n')
-            const artifact = await artifactStore.persistNetworkStream(`${serialized}\n`)
-            streamCapture = {
-              ...summary,
-              artifact,
-              messages: messages.slice(0, 10),
-              omittedMessages: Math.max(0, messages.length - 10)
-            }
-          }
-          if (matched.capture.kind === 'download') {
-            downloadCapture = matched.capture.download
-          }
-
-          return {
-            network: {
-              trigger: requestedUrl ? 'navigate' : 'flow',
-              ...(request ? { request } : {}),
-              ...(responseBody ? { responseBody } : {}),
-              ...(streamCapture ? { stream: streamCapture } : {}),
-              ...(downloadCapture ? { download: downloadCapture } : {}),
-              action: boundResult(actionResult, Math.min(3_000, Math.max(1_000, Math.floor(maxResultChars / 2)))).value
-            }
-          }
-        } finally {
-          session.stopNetworkJournal()
-        }
-      }
-
-      try {
-        const rawResult = await withTimeout(
-          executeCapture(),
-          timeoutMs,
-          () => {
-            captureController.abort()
-            session.terminateExecution()
-          },
-          options.signal
-        )
-        assertTargetLeaseCurrent(tabs, lease)
-        captureController.abort()
-        return createBoundedSuccessResult(rawResult, maxResultChars, { tabId, webContents, startedAt })
-      } catch (error) {
-        captureController.abort()
-        return createFailureResult(error, { tabId, webContents, startedAt })
-      }
-    })
-  }
-
   private async runCdpOperation(
     options: BrowserAgentOptions,
     execute: (session: CdpSession, timeoutMs: number, context: CdpOperationContext) => Promise<unknown>
@@ -1638,13 +1426,10 @@ function toNetworkJournalQuery(value: object): NetworkJournalQuery {
   return {
     limit: typeof params.limit === 'number' ? params.limit : null,
     urlContains: typeof params.urlContains === 'string' ? params.urlContains : null,
-    method: typeof params.method === 'string' ? params.method : null,
     resourceType: typeof params.resourceType === 'string' ? params.resourceType : null,
-    mimeType: typeof params.mimeType === 'string' ? params.mimeType : null,
     statusMin: typeof params.statusMin === 'number' ? params.statusMin : null,
     statusMax: typeof params.statusMax === 'number' ? params.statusMax : null,
-    failedOnly: params.failedOnly === true,
-    completedOnly: params.completedOnly === true
+    failedOnly: params.failedOnly === true
   }
 }
 

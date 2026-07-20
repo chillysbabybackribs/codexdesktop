@@ -18,8 +18,8 @@ export function buildSuggestions(input: string, entries: HistoryEntry[], now = D
   const typed = describeNavigationInput(text)
   const typedRow: OmniboxSuggestion =
     typed.kind === 'search'
-      ? { kind: 'search', url: typed.url, text, detail: 'Google Search', favicon: null }
-      : { kind: 'navigate', url: typed.url, text: typed.url, detail: '', favicon: null }
+      ? { kind: 'search', url: typed.url, text, detail: 'Google Search' }
+      : { kind: 'navigate', url: typed.url, text: typed.url, detail: '' }
 
   const needles = text.toLowerCase().split(/\s+/).filter(Boolean)
   const matches = entries
@@ -47,23 +47,7 @@ function historyRow(entry: HistoryEntry): OmniboxSuggestion {
     kind: 'history',
     url: entry.url,
     text: entry.title || displayUrl(entry.url),
-    detail: displayUrl(entry.url),
-    // Legacy history predates favicon persistence. Use the site's own
-    // conventional icon endpoint as a direct fallback; never disclose history
-    // to a third-party favicon proxy.
-    favicon: entry.favicon ?? conventionalFaviconUrl(entry.url)
-  }
-}
-
-export function conventionalFaviconUrl(url: string): string | null {
-  try {
-    const parsed = new URL(url)
-    if (parsed.protocol !== 'https:' || !parsed.hostname) {
-      return null
-    }
-    return `${parsed.origin}/favicon.ico`
-  } catch {
-    return null
+    detail: displayUrl(entry.url)
   }
 }
 

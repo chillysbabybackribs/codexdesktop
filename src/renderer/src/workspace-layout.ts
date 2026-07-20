@@ -40,94 +40,61 @@ export function serializeBrowserMiddleColumnWidths(widths: BrowserMiddleColumnWi
 
 /**
  * Reuses the chat split tree for the centered-browser workspace: its root is
- * the left/right divide and each branch is one chat or an explicitly created
- * vertical stack. Each branch is supplied from its own tab collection, so the
- * headers never mirror each other and a selected tab stays on the side where
- * it was created.
+ * the left/right divide and each branch is a vertical stack. Each branch is
+ * supplied from its own tab collection, so the headers never mirror each
+ * other and a selected tab stays on the side where it was created.
  */
 export function browserMiddleChatLayout(
   layout: SplitNode,
   tabKeys: BrowserMiddleTabKeys,
   activeKeys: BrowserMiddleActiveTabKeys,
 ): SplitNode {
-  const leftBranch = branchForSide(layout, 'left');
-  const rightBranch = branchForSide(layout, 'right');
-  const leftKeys = visibleKeysForSide(leftBranch, tabKeys.left, activeKeys.left);
-  const rightKeys = visibleKeysForSide(rightBranch, tabKeys.right, activeKeys.right);
+  const leftKeys = visibleKeysForSide(layout, 'left', tabKeys.left, activeKeys.left);
+  const rightKeys = visibleKeysForSide(layout, 'right', tabKeys.right, activeKeys.right);
 
   return {
     kind: 'split',
     direction: 'row',
     ratio: 0.5,
-    first: stackColumn(leftKeys, leftBranch.kind === 'split' && leftBranch.explicit === true),
-    second: stackColumn(rightKeys, rightBranch.kind === 'split' && rightBranch.explicit === true),
+    first: stackColumn(leftKeys),
+    second: stackColumn(rightKeys),
   };
 }
 
-/**
- * Make a newly created chat the only pane in its chat region. In the ordinary
- * workspace that means the whole chat surface; in browser-middle it collapses
- * only the originating column and leaves the opposite column untouched.
- */
-export function showChatAtFullHeight(
-  layout: SplitNode,
-  tabKey: string,
-  side: BrowserMiddleSide | null,
-): SplitNode {
-  if (!side) return splitLeaf(tabKey);
-  if (layout.kind !== 'split' || layout.direction !== 'row') return splitLeaf(tabKey);
-  return side === 'left'
-    ? { ...layout, first: splitLeaf(tabKey) }
-    : { ...layout, second: splitLeaf(tabKey) };
-}
-
 function visibleKeysForSide(
-  branch: SplitNode,
+  layout: SplitNode,
+  side: BrowserMiddleSide,
   tabKeys: readonly string[],
   activeKey: string | null,
 ): string[] {
   const valid = new Set(tabKeys);
-  let visible = unique(splitPaneKeys(branch).filter((key) => valid.has(key))).slice(0, 2);
-
-  // Before split intent was persisted, adding a second tab automatically made
-  // a vertical stack. Migrate those unmarked branches to the active full-height
-  // chat; marked edge-drop/command splits continue to preserve both panes.
-  if (visible.length > 1 && !(branch.kind === 'split' && branch.explicit === true)) {
-    visible = [activeKey && valid.has(activeKey) ? activeKey : visible[0]!];
-  }
+  const branch =
+    layout.kind === 'split' && layout.direction === 'row'
+      ? side === 'left'
+        ? layout.first
+        : layout.second
+      : layout;
+  const visible = unique(splitPaneKeys(branch).filter((key) => valid.has(key))).slice(0, 2);
 
   if (activeKey && valid.has(activeKey) && !visible.includes(activeKey)) {
-    // Selecting or creating a tab must not create a split by itself. A single
-    // visible chat is replaced at full height; only a split the user already
-    // made by dragging keeps its primary pane while the active tab replaces
-    // the secondary pane.
-    return visible.length > 1 ? [visible[0]!, activeKey] : [activeKey];
+    // A selected hidden tab replaces the lower pane, preserving the primary
+    // pane while ensuring every header selection has a visible conversation.
+    return unique([...visible.slice(0, 1), activeKey, ...tabKeys]).slice(0, 2);
   }
 
-  if (visible.length) return visible;
-
-  // A column with no usable saved pane still needs one chat. Prefer its
-  // side-specific active tab, then fall back to the first tab assigned there.
-  const fallback = activeKey && valid.has(activeKey) ? activeKey : tabKeys[0];
-  return fallback ? [fallback] : [];
+  return unique([...visible, ...tabKeys]).slice(0, 2);
 }
 
-function stackColumn(keys: readonly string[], explicit: boolean): SplitNode {
+function stackColumn(keys: readonly string[]): SplitNode {
   const [first, second] = keys;
   if (!second) return splitLeaf(first!);
   return {
     kind: 'split',
     direction: 'column',
-    ...(explicit ? { explicit: true as const } : {}),
     ratio: 0.5,
     first: splitLeaf(first!),
     second: splitLeaf(second),
   };
-}
-
-function branchForSide(layout: SplitNode, side: BrowserMiddleSide): SplitNode {
-  if (layout.kind !== 'split' || layout.direction !== 'row') return layout;
-  return side === 'left' ? layout.first : layout.second;
 }
 
 function unique(keys: readonly string[]): string[] {

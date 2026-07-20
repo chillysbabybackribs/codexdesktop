@@ -1,0 +1,704 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48859439",
+    "window": "recent-90d",
+    "tag": "ask_hn",
+    "score": 213
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dadoomer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; neovim + claude + tmux is the goated combo<p>It absolutely is. I don't really understand why people still confine themselves to a full IDE when doing &quot;agentic programming&quot;.<p>Especially with neovim with something like fzf or ctrl-p, which lets just quickly navigate codebases. This is about as far as you need to go. So to me, being terminal-first and being able to do multiple things at once makes more sense (hence tmux)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dadoomer",
+          "story_48859439"
+        ],
+        "author": "dadoomer",
+        "comment_text": "&gt; neovim + claude + tmux is the goated combo<p>It absolutely is. I don&#x27;t really understand why people still confine themselves to a full IDE when doing &quot;agentic programming&quot;.<p>Especially with neovim with something like fzf or ctrl-p, which lets just quickly navigate codebases. This is about as far as you need to go. So to me, being terminal-first and being able to do multiple things at once makes more sense (hence tmux).",
+        "created_at": "2026-07-11T15:28:30Z",
+        "created_at_i": 1783783710,
+        "objectID": "48872878",
+        "parent_id": 48860117,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T15:31:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blmayer"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's vim.NIL"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_blmayer",
+          "story_48859439"
+        ],
+        "author": "blmayer",
+        "comment_text": "It&#x27;s vim.NIL",
+        "created_at": "2026-07-11T13:58:59Z",
+        "created_at_i": 1783778339,
+        "objectID": "48872134",
+        "parent_id": 48859865,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T14:01:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "qup"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just change the idea that vim is the IDE. It's tmux/terminal. That gives you access to thousands of tools right inside your IDE.<p>There's a ton of tools for viewing diffs. I just pipe the diff into a viewer with vim-style navigation.<p>Finding files in vim is great, with the &quot;ctrl+p&quot; plug-in ."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_qup",
+          "story_48859439"
+        ],
+        "author": "qup",
+        "comment_text": "Just change the idea that vim is the IDE. It&#x27;s tmux&#x2F;terminal. That gives you access to thousands of tools right inside your IDE.<p>There&#x27;s a ton of tools for viewing diffs. I just pipe the diff into a viewer with vim-style navigation.<p>Finding files in vim is great, with the &quot;ctrl+p&quot; plug-in .",
+        "created_at": "2026-07-11T13:02:56Z",
+        "created_at_i": 1783774976,
+        "objectID": "48871699",
+        "parent_id": 48862058,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T13:04:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "qup"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have one: don't.<p>Tmux is basically perfect software. It gets right out of your way.<p>It'll never come out of my development stack, or workflows.<p>Writing code isn't everything. Almost every time I start an apt command or something that might run a little while, I regret it if I'm not in a tmux session.<p>I could sooner do without vim than tmux."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_qup",
+          "story_48859439"
+        ],
+        "author": "qup",
+        "comment_text": "I have one: don&#x27;t.<p>Tmux is basically perfect software. It gets right out of your way.<p>It&#x27;ll never come out of my development stack, or workflows.<p>Writing code isn&#x27;t everything. Almost every time I start an apt command or something that might run a little while, I regret it if I&#x27;m not in a tmux session.<p>I could sooner do without vim than tmux.",
+        "created_at": "2026-07-11T12:51:13Z",
+        "created_at_i": 1783774273,
+        "objectID": "48871627",
+        "parent_id": 48864414,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T12:53:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "austin-cheney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use Vim the same as before."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_austin-cheney",
+          "story_48859439"
+        ],
+        "author": "austin-cheney",
+        "comment_text": "I use Vim the same as before.",
+        "created_at": "2026-07-11T12:17:46Z",
+        "created_at_i": 1783772266,
+        "objectID": "48871398",
+        "parent_id": 48859439,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T14:53:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mirmor23"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "'a lot us' you say? just speak for yourself so at least you will sound confident; all you've demonstrated here is your ignorance of LLM, and those who use it, and you amplify that by throwing silly examples to prove your ignorance.<p>llm usage or not, code browsing/refactor etc still need human usable tools like vim/git/tmux etc."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mirmor23",
+          "story_48859439"
+        ],
+        "author": "mirmor23",
+        "comment_text": "&#x27;a lot us&#x27; you say? just speak for yourself so at least you will sound confident; all you&#x27;ve demonstrated here is your ignorance of LLM, and those who use it, and you amplify that by throwing silly examples to prove your ignorance.<p>llm usage or not, code browsing&#x2F;refactor etc still need human usable tools like vim&#x2F;git&#x2F;tmux etc.",
+        "created_at": "2026-07-11T11:16:55Z",
+        "created_at_i": 1783768615,
+        "objectID": "48870980",
+        "parent_id": 48860230,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T11:19:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "locknitpicker"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Editing speed was never the moat — navigation was.<p>This. Also, ergonomics. With vi bindings you can navigate anywhere in a document without moving your hands away from the keyboard. As a neat consequence, you see any repetitive strain injury magically vanish."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_locknitpicker",
+          "story_48859439"
+        ],
+        "author": "locknitpicker",
+        "comment_text": "&gt; Editing speed was never the moat — navigation was.<p>This. Also, ergonomics. With vi bindings you can navigate anywhere in a document without moving your hands away from the keyboard. As a neat consequence, you see any repetitive strain injury magically vanish.",
+        "created_at": "2026-07-11T10:25:01Z",
+        "created_at_i": 1783765501,
+        "objectID": "48870638",
+        "parent_id": 48870478,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T10:26:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PaiDxng"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Editing speed was never the moat — navigation was. I read far more diffs than I write code now, and vim motions are still how I get through them fast."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PaiDxng",
+          "story_48859439"
+        ],
+        "author": "PaiDxng",
+        "children": [
+          48870638
+        ],
+        "comment_text": "Editing speed was never the moat — navigation was. I read far more diffs than I write code now, and vim motions are still how I get through them fast.",
+        "created_at": "2026-07-11T09:55:12Z",
+        "created_at_i": 1783763712,
+        "objectID": "48870478",
+        "parent_id": 48859439,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T10:25:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rstagi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "neovim + claude code + open terminal is exactly my setup! But all the heavy lifting I used to do simply I’m not doing it anymore. I spend most of the time creating new worktrees and reviewing code, and I guess I’m just not interested about the implementation details <i>that</i> much (not that I don’t look at the code, but minor styling things I just ignore them right now)\nI’m transitioning to this new way of work btw, so I still haven’t made up my mind. That’s why I asked for someone else opinion here :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rstagi",
+          "story_48859439"
+        ],
+        "author": "rstagi",
+        "comment_text": "neovim + claude code + open terminal is exactly my setup! But all the heavy lifting I used to do simply I’m not doing it anymore. I spend most of the time creating new worktrees and reviewing code, and I guess I’m just not interested about the implementation details <i>that</i> much (not that I don’t look at the code, but minor styling things I just ignore them right now)\nI’m transitioning to this new way of work btw, so I still haven’t made up my mind. That’s why I asked for someone else opinion here :)",
+        "created_at": "2026-07-11T07:17:13Z",
+        "created_at_i": 1783754233,
+        "objectID": "48869585",
+        "parent_id": 48860117,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T07:33:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Zizizizz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I still look at the files I want to change so that it doesn't go off and grep the entire project unnecessarily, burning tokens or getting the wrong idea.<p>So I still use a ton of fzf.lua to find the files to change and I have just added some keybinds to copy the open file path to the clipboard so that I can paste the path of the file to change it into opencode.<p>Code diffs I definitely look at locally with delta via lazygit or jjui. codediff.nvim is also good for resolving conflicts.<p>The main thing I've changed is just using JJ so merge conflicts can be resolved later by me manually without it blocking bringing in new changes.<p>If I just hand over the thinking entirely and don't know what has changed until I'm looking at it in GitHub I feel that removes the need for me entirely as by that point I'll be biased and will be less likely to change things to how I'd like them to be."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Zizizizz",
+          "story_48859439"
+        ],
+        "author": "Zizizizz",
+        "comment_text": "I still look at the files I want to change so that it doesn&#x27;t go off and grep the entire project unnecessarily, burning tokens or getting the wrong idea.<p>So I still use a ton of fzf.lua to find the files to change and I have just added some keybinds to copy the open file path to the clipboard so that I can paste the path of the file to change it into opencode.<p>Code diffs I definitely look at locally with delta via lazygit or jjui. codediff.nvim is also good for resolving conflicts.<p>The main thing I&#x27;ve changed is just using JJ so merge conflicts can be resolved later by me manually without it blocking bringing in new changes.<p>If I just hand over the thinking entirely and don&#x27;t know what has changed until I&#x27;m looking at it in GitHub I feel that removes the need for me entirely as by that point I&#x27;ll be biased and will be less likely to change things to how I&#x27;d like them to be.",
+        "created_at": "2026-07-11T05:51:13Z",
+        "created_at_i": 1783749073,
+        "objectID": "48869157",
+        "parent_id": 48862099,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T05:54:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ptushantk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I spend more time reading, navigating, reviewing and refining code than generating it and vim is still the fastest tool for that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ptushantk",
+          "story_48859439"
+        ],
+        "author": "ptushantk",
+        "comment_text": "I spend more time reading, navigating, reviewing and refining code than generating it and vim is still the fastest tool for that.",
+        "created_at": "2026-07-11T05:36:21Z",
+        "created_at_i": 1783748181,
+        "objectID": "48869085",
+        "parent_id": 48859439,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T05:38:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xprnio"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I switched to Emacs. Whatever AI did to TreeSitter caused it to constantly yell at me about errors because of markdown which I do not have the energy to figure out, while losing syntax highlighting and formatting support entirely whenever that happens.<p>Otherwise though - same as usual, although I do keep my AI agent and my editor separate since I still choose to review, verify, and even write a lot of the code myself (too poor to constantly throw money at an LLM)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_xprnio",
+          "story_48859439"
+        ],
+        "author": "xprnio",
+        "comment_text": "I switched to Emacs. Whatever AI did to TreeSitter caused it to constantly yell at me about errors because of markdown which I do not have the energy to figure out, while losing syntax highlighting and formatting support entirely whenever that happens.<p>Otherwise though - same as usual, although I do keep my AI agent and my editor separate since I still choose to review, verify, and even write a lot of the code myself (too poor to constantly throw money at an LLM)",
+        "created_at": "2026-07-11T05:07:25Z",
+        "created_at_i": 1783746445,
+        "objectID": "48868933",
+        "parent_id": 48859439,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T07:47:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pobonin"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I started using Neovim - AstroNvim specifically is pretty good - to keep my hands on the keyboard at all times, of course, but also to scroll through Claude Code's output in a terminal using vim motions, read the code it's outputting and the oftentimes overly verbose explanations it's giving.<p>Most of all, Neovim is helping me keep an eye on the code I develop at all times, and helping me keep writing code manually as well. It think it's especially important to be mindful about what we're doing these days because we're at risk of all becoming vibe coders as the AI assistants improve.<p>In essence, this is how: hjkl, G, gg, $, 0, w, b, e, i, y, p, &lt;leader&gt;e, &lt;leader&gt;o, &lt;leader&gt;ff, &lt;leader&gt;fw, /, dd, dw, grr, ]b, [b, :w, :q, :wq, etc... :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pobonin",
+          "story_48859439"
+        ],
+        "author": "pobonin",
+        "comment_text": "I started using Neovim - AstroNvim specifically is pretty good - to keep my hands on the keyboard at all times, of course, but also to scroll through Claude Code&#x27;s output in a terminal using vim motions, read the code it&#x27;s outputting and the oftentimes overly verbose explanations it&#x27;s giving.<p>Most of all, Neovim is helping me keep an eye on the code I develop at all times, and helping me keep writing code manually as well. It think it&#x27;s especially important to be mindful about what we&#x27;re doing these days because we&#x27;re at risk of all becoming vibe coders as the AI assistants improve.<p>In essence, this is how: hjkl, G, gg, $, 0, w, b, e, i, y, p, &lt;leader&gt;e, &lt;leader&gt;o, &lt;leader&gt;ff, &lt;leader&gt;fw, &#x2F;, dd, dw, grr, ]b, [b, :w, :q, :wq, etc... :)",
+        "created_at": "2026-07-11T00:59:25Z",
+        "created_at_i": 1783731565,
+        "objectID": "48867409",
+        "parent_id": 48859439,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T01:09:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mtklein"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah it makes me sad too.  It's a one-way veil, no going back once I experienced the new magic.<p>Sometimes I pop back into a terminal, mkdir, git init, crack my knuckles to do some all-natural hacking and the sadness sets in before the hour is up... &quot;why am I insisting on doing this the long way?  I know this project would be better with me in a different role now.&quot;<p>Coding for me has always been a balance of process and ends. Getting done what I wanted done mattered most, but I can't pretend that I didn't also enjoy being the moving parts of that process.  And I am most grateful for what I learned by throwing myself over and over against problems I didn't quite know how to solve.  There's a satisfaction to doing a thing well that I always love being a part of, still do, anything, even doing the dishes or laundry.<p>And just recently with Opus I found myself having some really joyously manic days and weeks, making calls, picking tech, designing APIs, insisting on quality, keeping agents spinning.  But Fable just kind of came in with &quot;oh, I can do that all for you too. You can relax,&quot; and that was both exactly what I wanted and what started making me realize this had all finally caught up to me.<p>I never wanted to be management, but I can't unsee that I am more effective now playing Fable's boss than I was the last few months as TLM of a squad of Opuses, and that was more effective than just coding myself the way I love."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mtklein",
+          "story_48859439"
+        ],
+        "author": "mtklein",
+        "comment_text": "Yeah it makes me sad too.  It&#x27;s a one-way veil, no going back once I experienced the new magic.<p>Sometimes I pop back into a terminal, mkdir, git init, crack my knuckles to do some all-natural hacking and the sadness sets in before the hour is up... &quot;why am I insisting on doing this the long way?  I know this project would be better with me in a different role now.&quot;<p>Coding for me has always been a balance of process and ends. Getting done what I wanted done mattered most, but I can&#x27;t pretend that I didn&#x27;t also enjoy being the moving parts of that process.  And I am most grateful for what I learned by throwing myself over and over against problems I didn&#x27;t quite know how to solve.  There&#x27;s a satisfaction to doing a thing well that I always love being a part of, still do, anything, even doing the dishes or laundry.<p>And just recently with Opus I found myself having some really joyously manic days and weeks, making calls, picking tech, designing APIs, insisting on quality, keeping agents spinning.  But Fable just kind of came in with &quot;oh, I can do that all for you too. You can relax,&quot; and that was both exactly what I wanted and what started making me realize this had all finally caught up to me.<p>I never wanted to be management, but I can&#x27;t unsee that I am more effective now playing Fable&#x27;s boss than I was the last few months as TLM of a squad of Opuses, and that was more effective than just coding myself the way I love.",
+        "created_at": "2026-07-10T23:39:01Z",
+        "created_at_i": 1783726741,
+        "objectID": "48866771",
+        "parent_id": 48860251,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-10T23:41:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throw2ih020"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I removed most of the the autocompletion plugins from my Vim setup. (I had YouCompleteMe set up for intelligent suggestions, I've rolled it back to a simpler LSP-driven setup).<p>Also, I no longer update plugins without first manually reading the source diff to see if they've been infected by malware."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throw2ih020",
+          "story_48859439"
+        ],
+        "author": "throw2ih020",
+        "comment_text": "I removed most of the the autocompletion plugins from my Vim setup. (I had YouCompleteMe set up for intelligent suggestions, I&#x27;ve rolled it back to a simpler LSP-driven setup).<p>Also, I no longer update plugins without first manually reading the source diff to see if they&#x27;ve been infected by malware.",
+        "created_at": "2026-07-10T23:07:33Z",
+        "created_at_i": 1783724853,
+        "objectID": "48866487",
+        "parent_id": 48862099,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-10T23:10:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throw2ih020"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mostly moved my panels around to emphasize navigating code and looking at diffs side by side. Less emphasis on terminals, task runners, debuggers, test suites, etc. - I can pop those out if I need them, but usually I have the agent run my CI suites as a pre-review step anyway."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throw2ih020",
+          "story_48859439"
+        ],
+        "author": "throw2ih020",
+        "comment_text": "Mostly moved my panels around to emphasize navigating code and looking at diffs side by side. Less emphasis on terminals, task runners, debuggers, test suites, etc. - I can pop those out if I need them, but usually I have the agent run my CI suites as a pre-review step anyway.",
+        "created_at": "2026-07-10T20:37:37Z",
+        "created_at_i": 1783715857,
+        "objectID": "48864912",
+        "parent_id": 48860286,
+        "story_id": 48859439,
+        "story_title": "How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-10T20:38:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stvltvs"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Any tips on how to switch from Tmux to pure neovim?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_stvltvs",
+          "story_48859439"
+        ],
+        "author": "stvltvs",
+        "children": [
+          48871627
+        ],
+        "comment_text": "Any tips on how to switch from Tmux to pure neovim?",
+        "created_at": "2026-07-10T19:52:23Z",
+        "created_at_i": 1783713143,
+        "objectID": "48864414",
+        "parent_id": 48860098,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T12:52:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "orev"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Which is fine. Burn your tokens (with all the carbon emissions they generate in data centers) doing more involved tasks like that. Don’t waste it on silly, easy things like simple macros, search/replace, etc. AI doesn’t need to be a hammer used for everything."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_orev",
+          "story_48859439"
+        ],
+        "author": "orev",
+        "comment_text": "Which is fine. Burn your tokens (with all the carbon emissions they generate in data centers) doing more involved tasks like that. Don’t waste it on silly, easy things like simple macros, search&#x2F;replace, etc. AI doesn’t need to be a hammer used for everything.",
+        "created_at": "2026-07-10T18:44:23Z",
+        "created_at_i": 1783709063,
+        "objectID": "48863637",
+        "parent_id": 48860522,
+        "story_id": 48859439,
+        "story_title": "How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-10T19:48:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Izkata"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cognitive dissonance from being confronted with evidence they're not actually speeding up, when us non-AI devs are only having issues with managers pushing it from above even though we're not actually falling behind?<p>I also use vim and don't use AI."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Izkata",
+          "story_48859439"
+        ],
+        "author": "Izkata",
+        "comment_text": "Cognitive dissonance from being confronted with evidence they&#x27;re not actually speeding up, when us non-AI devs are only having issues with managers pushing it from above even though we&#x27;re not actually falling behind?<p>I also use vim and don&#x27;t use AI.",
+        "created_at": "2026-07-10T16:46:29Z",
+        "created_at_i": 1783701989,
+        "objectID": "48862340",
+        "parent_id": 48861915,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-10T23:36:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yjftsjthsd-h"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's fair, but I wouldn't think those users would be using vim either (probably vscode)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you use Vim in the era of AI?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_yjftsjthsd-h",
+          "story_48859439"
+        ],
+        "author": "yjftsjthsd-h",
+        "comment_text": "That&#x27;s fair, but I wouldn&#x27;t think those users would be using vim either (probably vscode)",
+        "created_at": "2026-07-10T16:33:08Z",
+        "created_at_i": 1783701188,
+        "objectID": "48862183",
+        "parent_id": 48860431,
+        "story_id": 48859439,
+        "story_title": "Ask HN: How do you use Vim in the era of AI?",
+        "updated_at": "2026-07-11T09:14:05Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 85,
+    "nbPages": 5,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48859439&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

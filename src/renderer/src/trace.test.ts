@@ -257,7 +257,8 @@ test('buildTurnTrace marks bounded captures and indexes sources and artifacts', 
   ])
 })
 
-test('research tools contribute successful-tool evidence without advertising saved files', () => {
+test('research tool artifacts contribute to observed goal evidence', () => {
+  const artifactDir = '/home/dp/.config/codexdesktop/research/run-1'
   const items: ThreadItem[] = [
     {
       type: 'dynamicToolCall',
@@ -270,9 +271,10 @@ test('research tools contribute successful-tool evidence without advertising sav
         type: 'inputText',
         text: JSON.stringify({
           ok: true,
+          artifactDir,
           pages: [{
-            url: 'https://example.com/electron-migration',
-            title: 'Electron migration'
+            artifactPath: `${artifactDir}/page-01.txt`,
+            htmlPath: `${artifactDir}/page-01.html`
           }]
         })
       }],
@@ -314,8 +316,8 @@ test('research tools contribute successful-tool evidence without advertising sav
     }
   })
 
-  assert.equal(trace.artifactIndex?.items.length ?? 0, 0)
-  assert.equal(trace.goal?.observedCompletionEvidence.artifactCount, 0)
+  assert.equal(trace.artifactIndex?.items.length, 3)
+  assert.equal(trace.goal?.observedCompletionEvidence.artifactCount, 3)
   assert.equal(trace.goal?.observedCompletionEvidence.successfulResearchToolCount, 1)
 })
 

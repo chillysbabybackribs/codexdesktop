@@ -24,26 +24,6 @@ test('bypass permission mode includes the SDK safety acknowledgement', () => {
   assert.equal('model' in options, false);
 });
 
-test('Claude system prompt preserves native task judgment for browser work', () => {
-  const options = buildClaudeQueryOptions(
-    {
-      cwd: '/tmp/workspace',
-      model: claudeDefaultModelId,
-      effort: null,
-      fastMode: false,
-      claudeSessionId: null,
-    },
-    null,
-  );
-
-  assert.match(options.systemPrompt, /live browser is the authority/i);
-  assert.match(options.systemPrompt, /ordinary task judgment/i);
-  assert.match(options.systemPrompt, /Prefer mcp__browser__research_web for broad public discovery/i);
-  assert.doesNotMatch(options.systemPrompt, /three to six semantic query variations/i);
-  assert.match(options.systemPrompt, /WebSearch and WebFetch tools are disabled/i);
-  assert.deepEqual(options.disallowedTools, ['WebSearch', 'WebFetch']);
-});
-
 test('resume, explicit model, and browser MCP configuration are forwarded', () => {
   const browser = { type: 'sdk', name: 'browser' };
   const options = buildClaudeQueryOptions(

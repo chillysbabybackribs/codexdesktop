@@ -1,31 +1,26 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
-import { buildBrowserUseGuidance } from '../browser/browser-use-policy.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
   '- Reuse the active visible browser tab. Create a new tab only when the user explicitly requests one. Scripts using CODEX_BROWSER_SOCK must target an existing tab id from `GET /tabs` or a prior browser result.',
   '- For browser work, wait for the requested DOM state rather than network idle or a fixed sleep. Modern sites often keep background requests open after their useful content is ready.',
-  '- For simple browser reads, prefer one `browser_snapshot` call; state every requested field and list count in its objective. If a snapshot reports `completion.nextAction: "answer"`, answer from it directly. If it reports `targeted-gap-fill`, resolve only the named gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate, and reserve `browser_run` for bespoke JavaScript in one stable document.',
+  '- For simple browser reads, prefer one `browser_snapshot` call when it is available; state every requested field and list count in its objective. It can navigate, wait, and return task-focused items. If a snapshot reports `completion.nextAction: "answer"`, use that evidence directly and do not repeat a page read. If it reports `targeted-gap-fill`, resolve only its named coverage gaps with the least-specialized browser tool. Use `browser_flow` for common fill/click/submit interactions that may navigate: wait for the containing destination state, then use a one-shot find so expected absence returns as data. Use `browser_run` only for bespoke JavaScript that stays in one document; an action that triggers full or SPA navigation ends that batch. On an older resumed thread where newer tools are absent, use `browser_navigate` followed by one `browser_run` call against the settled destination.',
   '- When reviewing or editing Codex Desktop\'s own UI in a live dev session, use `app_screenshot` for the full Electron window (chat plus embedded browser). Use `browser_screenshot` for page content inside the browser tab only.',
   '- When calling `app_screenshot` or `browser_screenshot` from `functions.exec`, only pass the result to `image()` when it is a string beginning with `data:image/`. A failed capture returns error text; forwarding that text as an image creates an invalid `image_url` and poisons later turns.',
   '- For a simple visual confirmation of the current app UI, take one `app_screenshot`, let its artifact preview remain visible in chat, and answer directly. Do not load skills, prior-chat memory, source files, or an additional image viewer unless the user asks for analysis or a change.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
-  '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.',
-  '- While working, narrate sparingly: at most one short line per phase stating the user-visible goal. Never mention tool names, injected markers, internal mechanics, or repeat an unchanged status; the final answer carries the detail.'
+  '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
 ]
 
 export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
   const guidance = [...taskShapingGuidance]
 
-  guidance.push(buildBrowserUseGuidance(env))
-
   if (env.CODEX_DESKTOP_AUTOGIT_ACTIVE === '1') {
     const repoRoot = env.CODEX_DESKTOP_AUTOGIT_ROOT || 'the Codex Desktop source checkout'
-    const targetBranch = env.CODEX_DESKTOP_AUTOGIT_TARGET_BRANCH || 'master'
     const pushBehavior = env.CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED === '1'
-      ? ` and then pushes each autosnapshot to \`origin/${targetBranch}\``
+      ? ' and then pushes each autosnapshot to the current branch on `origin`'
       : '; automatic pushing is disabled'
 
     guidance.push(
@@ -168,31 +163,14 @@ export function shouldAttachPriorChatMemory(text: string): boolean {
   )
 }
 
-export function isLiveSiteCloneTask(text: string): boolean {
-  const normalized = text.trim().toLowerCase()
-  if (!normalized) return false
-
-  const cloneIntent = /\b(clone|recreate|replicate|mirror)\b/.test(normalized)
-  const liveSiteTarget = /https?:\/\//.test(normalized) ||
-    /\b(?:this|the|current|existing|live|target)\s+(?:site|website|webpage|web page|page|frontend|front-end)\b/.test(normalized)
-  const redesignIntent = /\b(like|better|redesign|improve|inspired by|in the style of)\b/.test(normalized)
-
-  return cloneIntent && liveSiteTarget && !redesignIntent
-}
-
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
   const normalized = text.trim().toLowerCase()
-  const liveSiteCloneTask = isLiveSiteCloneTask(text)
-  const liveSiteRedesignTask =
-    /\b(like|better|redesign|improve|inspired by|in the style of)\b/.test(normalized) &&
-    (/https?:\/\//.test(normalized) || /\b(?:this|the|current|existing|live|target)\s+(?:site|website|webpage|web page|page)\b/.test(normalized))
+  const webResearchTask = isWebResearchTask(text)
   const polishedUiTask =
     /\b(build|create|design|redesign|prototype|implement|improve|polish|match|make)\b/.test(normalized) &&
     /\b(ui|ux|frontend|front-end|landing page|dashboard|component|responsive|visual design|user interface|web app|website)\b/.test(normalized)
   const mediaLedUiTask = polishedUiTask &&
     /\b(landing page|website|marketing|brand|shop|store|restaurant|cafe|coffee|hotel|travel|fashion|beauty|food|product page|portfolio|editorial|event)\b/.test(normalized)
-  const editorialWaitlistTask = polishedUiTask &&
-    /\b(?:editorial[\s-]*(?:style[\s-]*)?waitlist|waitlist[\s-]*(?:landing[\s-]*page[\s-]*)?editorial)\b/.test(normalized)
 
   return skills.filter((skill) => {
     if (normalized.includes(`$${skill.name.toLowerCase()}`)) {
@@ -200,22 +178,14 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
     }
 
     if (skill.name === 'artifact-first-web-research') {
-      return false
+      return webResearchTask
     }
 
     if (skill.name === 'imagegen') {
       return mediaLedUiTask
     }
 
-    if (skill.name === 'superdesign-editorial-waitlist') {
-      return editorialWaitlistTask
-    }
-
-    if (skill.name === 'clone-live-site') {
-      return liveSiteCloneTask
-    }
-
-    return skill.name === 'build-polished-ui' && (polishedUiTask || liveSiteCloneTask || liveSiteRedesignTask)
+    return skill.name === 'build-polished-ui' && polishedUiTask
   })
 }
 
@@ -276,52 +246,6 @@ const browserFlowSchema = {
     maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
   },
   required: ['steps'],
-  additionalProperties: false
-}
-
-const browserNetworkSchema = {
-  type: 'object',
-  properties: {
-    url: { type: 'string', description: 'Optional navigation input that triggers the request. Provide exactly one of url or steps.' },
-    steps: {
-      ...browserFlowSchema.properties.steps,
-      description: 'Optional interaction flow that triggers the request. Provide exactly one of url or steps.'
-    },
-    match: {
-      type: 'object',
-      description: 'Response matcher. urlContains is required; optional fields narrow HTTP and SSE requests. WebSocket streams support urlContains plus status bounds.',
-      properties: {
-        urlContains: { type: 'string', description: 'Case-insensitive URL substring required on the matched response.' },
-        method: { type: 'string', description: 'Optional exact HTTP method.' },
-        resourceType: { type: 'string', description: 'Optional exact CDP resource type such as Fetch or XHR.' },
-        mimeType: { type: 'string', description: 'Optional response MIME-type substring.' },
-        statusMin: { type: 'number', description: 'Optional minimum HTTP status.' },
-        statusMax: { type: 'number', description: 'Optional maximum HTTP status.' }
-      },
-      required: ['urlContains'],
-      additionalProperties: false
-    },
-    captureBody: { type: 'boolean', description: 'Persist the matched completed response body as an artifact. Defaults to true when stream and download are omitted; cannot be true with either.' },
-    download: { type: 'boolean', description: 'Capture a true Chromium download handoff directly as an artifact, bypassing the manual save dialog for this exact call. Uses match.urlContains.' },
-    stream: {
-      type: 'object',
-      description: 'Capture a bounded live stream instead of waiting for a completed response body.',
-      properties: {
-        transport: { type: 'string', enum: ['sse', 'websocket'], description: 'Native CDP stream transport to capture.' },
-        maxMessages: { type: 'number', minimum: 1, maximum: 1000, description: 'Stop after this many messages. Defaults to 50.' },
-        idleMs: { type: 'number', minimum: 50, maximum: 10000, description: 'Stop after this much silence following a message. Defaults to 500 ms.' }
-      },
-      required: ['transport'],
-      additionalProperties: false
-    },
-    readySelector: { type: 'string', description: 'For url triggers, optional selector that marks navigation readiness.' },
-    quietMs: { type: 'number', description: 'For url triggers, optional DOM-quiet window after readiness.' },
-    maxSettleMs: { type: 'number', description: 'For url triggers, optional maximum DOM-settle time.' },
-    tab: { type: 'string', description: 'Optional existing visible tab id. Defaults to the active tab; `all` is not supported.' },
-    timeoutMs: { type: 'number', description: 'Total capture timeout from 250 to 60000 milliseconds.' },
-    maxResultChars: { type: 'number', description: 'Optional serialized result limit from 1000 to 100000 characters.' }
-  },
-  required: ['match'],
   additionalProperties: false
 }
 
@@ -453,9 +377,9 @@ const researchWebSchema = {
     queries: {
       type: 'array',
       minItems: 1,
-      maxItems: 6,
+      maxItems: 3,
       items: { type: 'string' },
-      description: 'One to six short search queries authored from the user request, each a single-angle phrase a person would actually type into a search engine. Never stuff one query with every keyword, product, site, and year. Variations run in bounded parallel hidden Chromium workers; a lone query receives a small compatibility expansion.'
+      description: 'One primary discovery query, optionally followed by up to two fallback source lanes. Fallbacks run only if the verified-page target is not met.'
     },
     urls: {
       type: 'array',
@@ -469,13 +393,13 @@ const researchWebSchema = {
       type: 'array',
       minItems: 1,
       maxItems: 6,
-      description: 'Optional passage-ranking needs. They guide compact passage selection and stopping but never discard a successfully extracted page. The tool returns exact passage windows plus any unresolved gaps.',
+      description: 'Optional evidence needs. The tool returns bounded exact passage windows and explicit coverage gaps for each item.',
       items: {
         type: 'object',
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
-          need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the verified sources.' },
-          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Optional distinct passage target. Defaults to 1. This affects passage coverage, not whether readable pages are returned.' }
+          need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
+          minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Distinct matching source target. Defaults to 1; use only the diversity needed for the claim. The model must still judge source independence.' }
         },
         required: ['id', 'need'],
         additionalProperties: false
@@ -483,56 +407,23 @@ const researchWebSchema = {
     },
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
     maxAttempts: { type: 'number', minimum: 1, maximum: 24, description: 'Optional candidate-attempt safety ceiling, from 1 to 24. Defaults from the model-authored evidence demand and stops immediately when that evidence is covered.' },
-    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Page extraction uses a separate internal bound.' }
+    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Saved text uses a separate larger artifact bound.' }
   },
   anyOf: [{ required: ['queries'] }, { required: ['urls'] }],
-  additionalProperties: false
-}
-
-const browserLiveSearchSchema = {
-  type: 'object',
-  properties: {
-    query: { type: 'string', description: 'A direct search query derived from the user request. Preserve the user\'s literal names and intent.' },
-    queries: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 6,
-      uniqueItems: true,
-      items: { type: 'string' },
-      description: 'One to six search queries derived from the user request. Preserve the user\'s literal names and intent; start with a direct query and add focused variants only when useful. Queries run in parallel hidden search workers.'
-    },
-    objective: { type: 'string', description: 'Specific facts or fields to find and verify on the selected destination page.' },
-    tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
-    background: { type: 'boolean', description: 'Also gather bounded evidence from independent public sources. Defaults to false.' },
-    focus: researchWebSchema.properties.focus,
-    maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Maximum SERP candidates per hidden query. Defaults to 5.' },
-    maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum structured items to return from the selected destination page. Defaults to 10.' },
-    maxAttempts: researchWebSchema.properties.maxAttempts,
-    snippetChars: researchWebSchema.properties.snippetChars,
-    timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' }
-  },
-  required: ['objective'],
-  anyOf: [{ required: ['query'] }, { required: ['queries'] }],
   additionalProperties: false
 }
 
 export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
-    name: 'browser_live_search',
-    description: 'Search one or more model-authored queries in hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Use only when changing the visible tab is acceptable; use research_web for background-only public discovery. Treat the destination as candidate evidence and reject it when it does not answer the objective. If the result carries `betterAlternate`, the merged ranking found a stronger source than the auto-navigated page. Search result pages are never shown. Never creates a tab.',
-    inputSchema: browserLiveSearchSchema
-  },
-  {
-    type: 'function',
     name: 'browser_snapshot',
-    description: 'Fast read-only browser path: optionally navigate one existing tab directly to a destination URL, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, readiness state, and a completion directive in one call. Search text and SERP URLs are rejected; use browser_live_search for hidden discovery. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use a container selector rather than a repeated row selector. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
+    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, readiness state, and a completion directive in one call. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use a container selector rather than a repeated row selector. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
     inputSchema: browserSnapshotSchema
   },
   {
     type: 'function',
     name: 'browser_navigate',
-    description: 'Navigate one existing visible browser tab directly to a destination URL and return as soon as the requested DOM state is usable. Search text and SERP URLs are rejected; use browser_live_search for hidden discovery. Use before browser_run when changing pages; provide readySelector for interactive or authenticated pages instead of waiting for network idle.',
+    description: 'Navigate one existing visible browser tab and return as soon as the requested DOM state is usable. Use before browser_run when changing pages; provide readySelector for interactive or authenticated pages instead of waiting for network idle.',
     inputSchema: browserNavigateSchema
   },
   {
@@ -561,12 +452,6 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   },
   {
     type: 'function',
-    name: 'browser_network',
-    description: 'Capture one exact network result in one model call: start a fresh journal, navigate directly to a destination URL or run an interaction flow, then persist a completed response body, bounded SSE/WebSocket stream, or true Chromium download handoff as an artifact. Search text and SERP URLs are rejected. Use for JSON, GraphQL, XHR/fetch, live model/event streams, and browser downloads.',
-    inputSchema: browserNetworkSchema
-  },
-  {
-    type: 'function',
     name: 'browser_run',
     description: 'Run bespoke JavaScript in a stable visible browser document. Top-level return and await are supported. For read-only extraction, explicitly `return` the structured value from the top-level program; an omitted result returns structured `noResult` data. Return expected missing states as data instead of throwing, and end the batch before an action that triggers full or SPA navigation. Use browser_flow for common navigation-aware interactions. Page-origin CORS rules apply within each frame.',
     inputSchema: browserRunSchema
@@ -586,7 +471,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Fetch direct public URLs or discover and rank public sources, returning every readable extracted page it attempts. Optional focus items rank compact exact passages and report gaps without invalidating pages. Uses an inert static-HTML lane before Chromium fallback and does not create or navigate a visible tab.',
+    description: 'Verify direct public URLs or adaptively discover, rank, and save the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
     inputSchema: researchWebSchema
   }
 ]
@@ -611,21 +496,6 @@ const spawnSubagentSchema = {
   additionalProperties: false
 }
 
-const spawnSubagentsParallelSchema = {
-  type: 'object',
-  properties: {
-    tasks: {
-      type: 'array',
-      minItems: 2,
-      maxItems: 3,
-      description: 'Two or three independent, self-contained tasks to run concurrently behind one gather barrier.',
-      items: spawnSubagentSchema
-    }
-  },
-  required: ['tasks'],
-  additionalProperties: false
-}
-
 // Subagent-spawn tools. Kept in a separate array from browserDynamicTools so
 // each surface's tool set reads by intent, but authored in this one file (the
 // single schema-authoring point every transport shares). Phase 1 exposes one
@@ -638,12 +508,6 @@ export const agentDynamicTools: DynamicToolSpec[] = [
     name: 'spawn_subagent',
     description: 'Delegate a self-contained subtask to a fresh subagent and wait for its result. The subagent runs its own full turn in the same workspace with access to the same tools, then returns its final answer to you as this tool\'s result. It does not see your conversation, so make `task` fully self-contained. Use for well-scoped work you want handled independently (research a question, review a diff, draft a file) or to get a second-model perspective. The call blocks until the subagent finishes, so spawn one focused subtask at a time.',
     inputSchema: spawnSubagentSchema
-  },
-  {
-    type: 'function',
-    name: 'spawn_subagents_parallel',
-    description: 'Run two or three independent subagents concurrently and wait for all results. Use in quality-max work for independent research lanes or a doer plus auditor. Each task must be fully self-contained. The app shows every worker in the Agent Dock and returns a bounded gathered result to the parent.',
-    inputSchema: spawnSubagentsParallelSchema
   }
 ]
 

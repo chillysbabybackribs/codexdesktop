@@ -5,7 +5,7 @@ import type { OmniboxAnchor, OmniboxRenderPayload, OmniboxSuggestion } from '../
 import { ipcChannels } from '../../shared/ipc.js'
 
 // Keep in sync with the row/card metrics in src/renderer/omnibox-popup.html.
-const ROW_HEIGHT = 40
+const ROW_HEIGHT = 34
 const CARD_CHROME = 14
 const SHADOW_SPACE = 14
 
@@ -23,22 +23,13 @@ export class OmniboxPopup {
   private visible = false
   private suggestions: OmniboxSuggestion[] = []
   private selectedIndex = -1
-  private anchor: OmniboxAnchor | null = null
   private readonly window: BrowserWindow
   private readonly onCommit: (url: string) => void
-  private readonly onDeleteHistory: (url: string) => boolean
 
-  constructor(window: BrowserWindow, onCommit: (url: string) => void, onDeleteHistory: (url: string) => boolean) {
+  constructor(window: BrowserWindow, onCommit: (url: string) => void) {
     this.window = window
     this.onCommit = onCommit
-    this.onDeleteHistory = onDeleteHistory
     ipcMain.on(ipcChannels.browserOmniboxCommit, this.handleCommit)
-    ipcMain.on(ipcChannels.browserOmniboxDeleteHistory, this.handleDeleteHistory)
-
-    // Load the hidden native document before the first user gesture. Creating
-    // and loading a WebContentsView from the input's first focus event can
-    // steal the remainder of that click before Chromium restores chrome focus.
-    this.ensureView()
   }
 
   show(anchor: OmniboxAnchor, suggestions: OmniboxSuggestion[]): void {
@@ -50,15 +41,19 @@ export class OmniboxPopup {
       return
     }
 
-    this.anchor = anchor
-    this.visible = true
     const view = this.ensureView()
-
-    // Never expose an unready native surface. If startup is unusually slow,
-    // did-finish-load presents the pending popup after the click has completed.
-    if (this.pageReady) {
-      this.present(view)
-    }
+    // Re-adding an existing child moves it to the top of the stack, so the
+    // dropdown stays above whichever tab view is active.
+    this.window.contentView.addChildView(view)
+    view.setBounds(this.computeBounds(anchor, suggestions.length))
+    view.setVisible(true)
+    // Raising a WebContentsView can transfer native keyboard focus to it even
+    // though the DOM focus is meant to stay in the main renderer's omnibox.
+    // Give focus back immediately so a single click leaves the URL selected
+    // and ready for typing while the suggestions remain visible above the page.
+    this.window.webContents.focus()
+    this.visible = true
+    this.sendRender()
   }
 
   setSelection(index: number): void {
@@ -76,7 +71,6 @@ export class OmniboxPopup {
     }
 
     this.visible = false
-    this.anchor = null
     this.view.setVisible(false)
     this.view.setBounds(hiddenBounds)
   }
@@ -87,7 +81,6 @@ export class OmniboxPopup {
 
   dispose(): void {
     ipcMain.off(ipcChannels.browserOmniboxCommit, this.handleCommit)
-    ipcMain.off(ipcChannels.browserOmniboxDeleteHistory, this.handleDeleteHistory)
 
     if (this.view) {
       try {
@@ -119,40 +112,6 @@ export class OmniboxPopup {
     this.onCommit(url)
   }
 
-  private readonly handleDeleteHistory = (event: IpcMainEvent, url: unknown): void => {
-    if (event.sender !== this.view?.webContents || typeof url !== 'string') {
-      return
-    }
-
-    // The popup is a sandboxed renderer, so authorize the mutation against the
-    // exact history rows main most recently rendered. Search/navigate rows and
-    // arbitrary URLs cannot be deleted through this channel.
-    const isDisplayedHistory = this.suggestions.some(
-      (suggestion) => suggestion.kind === 'history' && suggestion.url === url
-    )
-    if (!isDisplayedHistory || !this.onDeleteHistory(url)) {
-      return
-    }
-
-    this.suggestions = this.suggestions.filter(
-      (suggestion) => suggestion.kind !== 'history' || suggestion.url !== url
-    )
-    this.selectedIndex = -1
-
-    if (this.suggestions.length === 0) {
-      this.hide()
-      return
-    }
-
-    if (this.view && this.pageReady && this.anchor) {
-      this.view.setBounds(this.computeBounds(this.anchor, this.suggestions.length))
-      this.sendRender()
-      // Keep keyboard ownership in the address field after the native popup
-      // handled the destructive pointer action.
-      this.window.webContents.focus()
-    }
-  }
-
   private ensureView(): WebContentsView {
     if (this.view) {
       return this.view
@@ -174,11 +133,7 @@ export class OmniboxPopup {
 
     view.webContents.on('did-finish-load', () => {
       this.pageReady = true
-      if (this.visible) {
-        this.present(view)
-      } else {
-        this.sendRender()
-      }
+      this.sendRender()
     })
 
     if (process.env.ELECTRON_RENDERER_URL) {
@@ -189,22 +144,6 @@ export class OmniboxPopup {
 
     this.view = view
     return view
-  }
-
-  private present(view: WebContentsView): void {
-    if (!this.anchor || !this.visible) {
-      return
-    }
-
-    // Re-adding an existing child moves it to the top of the stack, so the
-    // dropdown stays above whichever tab view is active.
-    this.window.contentView.addChildView(view)
-    view.setBounds(this.computeBounds(this.anchor, this.suggestions.length))
-    view.setVisible(true)
-    this.sendRender()
-    // Raising a WebContentsView can transfer native keyboard focus to it even
-    // though the DOM focus belongs in the main renderer's omnibox.
-    this.window.webContents.focus()
   }
 
   private computeBounds(anchor: OmniboxAnchor, rowCount: number): Electron.Rectangle {

@@ -1,0 +1,20 @@
+Title: Automattic For Agencies Client
+URL: https://wordpress.org/plugins/automattic-for-agencies-client/
+Lane: incumbent
+Source-Class: directory
+Status: verified
+Observed: 2026-07-11
+Structured-Source: WordPress Plugin API
+
+Search niche: client portal
+Name: Automattic For Agencies Client
+Slug: automattic-for-agencies-client
+Version: 0.8.0
+Last updated: 2026-04-11 1:59am GMT
+Active installs: 20000
+Rating: 100
+Ratings: 2
+Support threads: 0
+Resolved support threads: 0
+Short description: Securely connect your clients’ sites to the Automattic for Agencies Sites Dashboard. Manage your sites from one place and see what needs attention.
+Description:  Automattic for Agencies is a new agency program that combines the best of Woo, WordPress.com, Jetpack, and Pressable under one roof. Learn more about Automattic for Agencies . This lightweight plugin securely connects your clients’ sites to the Automattic for Agencies Sites Dashboard, enabling you to manage them from one place and to be notified immediately if any site is experiencing security or performance issues. This plugin will also enhance the overall Automattic for Agencies portal experience: With plugin updates across the sites you manage in just a few clicks. Downtime monitoring so you’ll instantly know if a client’s site needs attention. And more to come. Like other Automattic products, this plugin connects to WordPress.com’s servers to provide the best end-user experience. We only sync what’s absolutely necessary to provide our program experience. When connecting your site to the Automattic for Agencies Sites Dashboard, you agree to our Terms of Service . 

@@ -1,0 +1,716 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "44525626",
+    "window": "prior-year-comparable-90d",
+    "tag": "ask_hn",
+    "score": 120
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DANmode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unless I'm misunderstanding, treating your email in this way sounds like a crime against yourself and possibly humanity."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DANmode",
+          "story_44525626"
+        ],
+        "author": "DANmode",
+        "comment_text": "Unless I&#x27;m misunderstanding, treating your email in this way sounds like a crime against yourself and possibly humanity.",
+        "created_at": "2025-07-14T05:48:12Z",
+        "created_at_i": 1752472092,
+        "objectID": "44556852",
+        "parent_id": 44537747,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-14T05:53:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wnissen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ooh, looks like they added that in late 2023. Man. In August 2023 I actually migrated all of my email to Proton and was ready to go when I realized they didn't support forwarding. Thanks for letting me know."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wnissen",
+          "story_44525626"
+        ],
+        "author": "wnissen",
+        "comment_text": "Ooh, looks like they added that in late 2023. Man. In August 2023 I actually migrated all of my email to Proton and was ready to go when I realized they didn&#x27;t support forwarding. Thanks for letting me know.",
+        "created_at": "2025-07-11T23:18:00Z",
+        "created_at_i": 1752275880,
+        "objectID": "44537786",
+        "parent_id": 44529522,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-12T07:51:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wnissen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Inbox. They claim that the inbox is special in IMAP and it's hard to have a lot of messages there. 150K messages in the whole mailbox, I think. 25 years of email."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wnissen",
+          "story_44525626"
+        ],
+        "author": "wnissen",
+        "children": [
+          44556852
+        ],
+        "comment_text": "Inbox. They claim that the inbox is special in IMAP and it&#x27;s hard to have a lot of messages there. 150K messages in the whole mailbox, I think. 25 years of email.",
+        "created_at": "2025-07-11T23:13:36Z",
+        "created_at_i": 1752275616,
+        "objectID": "44537747",
+        "parent_id": 44529311,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-08-11T17:12:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aristofun"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Choices are subjective. “Better” is objective"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aristofun",
+          "story_44525626"
+        ],
+        "author": "aristofun",
+        "comment_text": "Choices are subjective. “Better” is objective",
+        "created_at": "2025-07-11T17:11:45Z",
+        "created_at_i": 1752253905,
+        "objectID": "44534660",
+        "parent_id": 44527297,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T17:13:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "constantinum"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Protonmail — more of proton ecosystem of apps. \nIt is so refreshing to see how they are making these apps better and better every day. I was a really early user of Proton."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_constantinum",
+          "story_44525626"
+        ],
+        "author": "constantinum",
+        "comment_text": "Protonmail — more of proton ecosystem of apps. \nIt is so refreshing to see how they are making these apps better and better every day. I was a really early user of Proton.",
+        "created_at": "2025-07-11T17:00:32Z",
+        "created_at_i": 1752253232,
+        "objectID": "44534510",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-13T17:05:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rajeshpatel15"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Depends entirely on your use case. Mailchimp is solid for marketing automation and small-medium businesses, but 'best' varies significantly:<p>For developers/transactional: SendGrid or Postmark dominate with superior APIs and deliverability rates (99%+ inbox rates).<p>For enterprise: Salesforce Marketing Cloud or HubSpot, though expensive.<p>For price-conscious startups: ConvertKit or EmailOctopus offer 90% of Mailchimp's features at fraction of the cost."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rajeshpatel15",
+          "story_44525626"
+        ],
+        "author": "rajeshpatel15",
+        "comment_text": "Depends entirely on your use case. Mailchimp is solid for marketing automation and small-medium businesses, but &#x27;best&#x27; varies significantly:<p>For developers&#x2F;transactional: SendGrid or Postmark dominate with superior APIs and deliverability rates (99%+ inbox rates).<p>For enterprise: Salesforce Marketing Cloud or HubSpot, though expensive.<p>For price-conscious startups: ConvertKit or EmailOctopus offer 90% of Mailchimp&#x27;s features at fraction of the cost.",
+        "created_at": "2025-07-11T11:19:26Z",
+        "created_at_i": 1752232766,
+        "objectID": "44530869",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-12T16:52:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Msurrow"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, my mistake I was thinking Europe based (but having said that Swiss have stricter privacy laws than EUs GDPR and is a considered adequate for data transfer)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Msurrow",
+          "story_44525626"
+        ],
+        "author": "Msurrow",
+        "comment_text": "Yes, my mistake I was thinking Europe based (but having said that Swiss have stricter privacy laws than EUs GDPR and is a considered adequate for data transfer).",
+        "created_at": "2025-07-11T08:20:08Z",
+        "created_at_i": 1752222008,
+        "objectID": "44529584",
+        "parent_id": 44529488,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-08-14T22:13:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "isntThatSth"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; I probably would have gone Proton but they don't support forwarding.<p>They do on their paid plans. <a href=\"https://proton.me/support/email-forwarding\" rel=\"nofollow\">https://proton.me/support/email-forwarding</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_isntThatSth",
+          "story_44525626"
+        ],
+        "author": "isntThatSth",
+        "children": [
+          44537786
+        ],
+        "comment_text": "&gt; I probably would have gone Proton but they don&#x27;t support forwarding.<p>They do on their paid plans. <a href=\"https:&#x2F;&#x2F;proton.me&#x2F;support&#x2F;email-forwarding\" rel=\"nofollow\">https:&#x2F;&#x2F;proton.me&#x2F;support&#x2F;email-forwarding</a>",
+        "created_at": "2025-07-11T08:08:32Z",
+        "created_at_i": 1752221312,
+        "objectID": "44529522",
+        "parent_id": 44527239,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T23:18:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "isntThatSth"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The Proton ecosystem (email, calendar, drive, docs, password management, VPN, etc.) is great. <a href=\"https://proton.me\" rel=\"nofollow\">https://proton.me</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_isntThatSth",
+          "story_44525626"
+        ],
+        "author": "isntThatSth",
+        "comment_text": "The Proton ecosystem (email, calendar, drive, docs, password management, VPN, etc.) is great. <a href=\"https:&#x2F;&#x2F;proton.me\" rel=\"nofollow\">https:&#x2F;&#x2F;proton.me</a>",
+        "created_at": "2025-07-11T08:03:18Z",
+        "created_at_i": 1752220998,
+        "objectID": "44529499",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T10:57:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "_dnb8"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I second the support for Proton. Proton, however, is not EU-based (not that it matters in this context). It's Swiss. Switzerland, like Norway and the UK, is not part of the EU."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author__dnb8",
+          "story_44525626"
+        ],
+        "author": "_dnb8",
+        "children": [
+          44529584
+        ],
+        "comment_text": "I second the support for Proton. Proton, however, is not EU-based (not that it matters in this context). It&#x27;s Swiss. Switzerland, like Norway and the UK, is not part of the EU.",
+        "created_at": "2025-07-11T08:01:33Z",
+        "created_at_i": 1752220893,
+        "objectID": "44529488",
+        "parent_id": 44528865,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2026-01-11T19:06:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pestaa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Google Workspace. If you're willing to depend on Google, nothing comes even close to what you get per dollar."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pestaa",
+          "story_44525626"
+        ],
+        "author": "pestaa",
+        "comment_text": "Google Workspace. If you&#x27;re willing to depend on Google, nothing comes even close to what you get per dollar.",
+        "created_at": "2025-07-11T07:54:25Z",
+        "created_at_i": 1752220465,
+        "objectID": "44529442",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T23:55:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "commandersaki"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "True, but email is unencrypted anyway, so pretty much any provider can comply with a legal request and hand over email.<p>But agreed the TAA bill is pretty bad as that means the company receiving the notice cannot disclose the fact that they've been requested to assist.<p>As far as email goes, I wouldn't use it for any private conversation. There's better tools for that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_commandersaki",
+          "story_44525626"
+        ],
+        "author": "commandersaki",
+        "children": [
+          44533211
+        ],
+        "comment_text": "True, but email is unencrypted anyway, so pretty much any provider can comply with a legal request and hand over email.<p>But agreed the TAA bill is pretty bad as that means the company receiving the notice cannot disclose the fact that they&#x27;ve been requested to assist.<p>As far as email goes, I wouldn&#x27;t use it for any private conversation. There&#x27;s better tools for that.",
+        "created_at": "2025-07-11T07:51:03Z",
+        "created_at_i": 1752220263,
+        "objectID": "44529422",
+        "parent_id": 44528990,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T15:43:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DANmode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ChatGPT understands the query."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DANmode",
+          "story_44525626"
+        ],
+        "author": "DANmode",
+        "comment_text": "ChatGPT understands the query.",
+        "created_at": "2025-07-11T07:48:59Z",
+        "created_at_i": 1752220139,
+        "objectID": "44529404",
+        "parent_id": 44526271,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T09:50:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DANmode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So...yes?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DANmode",
+          "story_44525626"
+        ],
+        "author": "DANmode",
+        "comment_text": "So...yes?",
+        "created_at": "2025-07-11T07:37:24Z",
+        "created_at_i": 1752219444,
+        "objectID": "44529337",
+        "parent_id": 44527468,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T07:41:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DANmode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In your <i>Inbox</i>,<p>or whole mailbox?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DANmode",
+          "story_44525626"
+        ],
+        "author": "DANmode",
+        "children": [
+          44537747
+        ],
+        "comment_text": "In your <i>Inbox</i>,<p>or whole mailbox?",
+        "created_at": "2025-07-11T07:32:29Z",
+        "created_at_i": 1752219149,
+        "objectID": "44529311",
+        "parent_id": 44527239,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T23:14:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ost-ing"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "But it’s an Australian company that is subjected to draconian  encryption and surveillance laws, so if privacy is important maybe not the optimal choice. <a href=\"https://www.fastmail.com/blog/access-and-assistance-bill/\" rel=\"nofollow\">https://www.fastmail.com/blog/access-and-assistance-bill/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ost-ing",
+          "story_44525626"
+        ],
+        "author": "ost-ing",
+        "children": [
+          44529422,
+          44533434
+        ],
+        "comment_text": "But it’s an Australian company that is subjected to draconian  encryption and surveillance laws, so if privacy is important maybe not the optimal choice. <a href=\"https:&#x2F;&#x2F;www.fastmail.com&#x2F;blog&#x2F;access-and-assistance-bill&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.fastmail.com&#x2F;blog&#x2F;access-and-assistance-bill&#x2F;</a>",
+        "created_at": "2025-07-11T06:35:45Z",
+        "created_at_i": 1752215745,
+        "objectID": "44528990",
+        "parent_id": 44527998,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2026-01-06T18:52:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ls612"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Proton Mail + VPN (for my soon to be built NAS) + cloud storage + Pass for $10/month is very tempting via their whole suite subscription."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ls612",
+          "story_44525626"
+        ],
+        "author": "ls612",
+        "comment_text": "Proton Mail + VPN (for my soon to be built NAS) + cloud storage + Pass for $10&#x2F;month is very tempting via their whole suite subscription.",
+        "created_at": "2025-07-11T06:15:52Z",
+        "created_at_i": 1752214552,
+        "objectID": "44528885",
+        "parent_id": 44528865,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-12T16:51:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "goku12"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use Zoho, here in India. It was the most economical solution I could find. Outgoing international payments are also a bit of a hassle here. However, it has been nearly a year now and they've delivered a pleasant experience. I really like their UI (may be subjective). Their base packages offer almost the same features as Google Workspace (mail, contacts, calendar, storage, office suite, etc), but at a much lower price. I don't know much about their customer support since it has mostly been a fire and forget affair with no downtime (as far as I'm aware of) or any other technical issues.<p>It's ultimately subject to people's individual tastes. I don't have a strong opinion about it, except that I'm grateful for the existence of these smaller players. The two large comonopolies are so dreadful that the email ecosystem would be a dead place even for self hosters, if it weren't for these smaller players. Anything is better than the big two and well worth it, even if you have to shell out a reasonable monthly fee."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_goku12",
+          "story_44525626"
+        ],
+        "author": "goku12",
+        "comment_text": "I use Zoho, here in India. It was the most economical solution I could find. Outgoing international payments are also a bit of a hassle here. However, it has been nearly a year now and they&#x27;ve delivered a pleasant experience. I really like their UI (may be subjective). Their base packages offer almost the same features as Google Workspace (mail, contacts, calendar, storage, office suite, etc), but at a much lower price. I don&#x27;t know much about their customer support since it has mostly been a fire and forget affair with no downtime (as far as I&#x27;m aware of) or any other technical issues.<p>It&#x27;s ultimately subject to people&#x27;s individual tastes. I don&#x27;t have a strong opinion about it, except that I&#x27;m grateful for the existence of these smaller players. The two large comonopolies are so dreadful that the email ecosystem would be a dead place even for self hosters, if it weren&#x27;t for these smaller players. Anything is better than the big two and well worth it, even if you have to shell out a reasonable monthly fee.",
+        "created_at": "2025-07-11T06:13:55Z",
+        "created_at_i": 1752214435,
+        "objectID": "44528872",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-12T16:51:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Msurrow"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Proton for me. Privacy is a priority and it’s EU based plus zero knowledge.<p>Downsides are you need to use proton client or web UI.<p>The proton suite now also features other useful (and secure) apps like Drive, Password manager, etc. I’m not using those though."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Msurrow",
+          "story_44525626"
+        ],
+        "author": "Msurrow",
+        "children": [
+          44529488,
+          44528885
+        ],
+        "comment_text": "Proton for me. Privacy is a priority and it’s EU based plus zero knowledge.<p>Downsides are you need to use proton client or web UI.<p>The proton suite now also features other useful (and secure) apps like Drive, Password manager, etc. I’m not using those though.",
+        "created_at": "2025-07-11T06:11:55Z",
+        "created_at_i": 1752214315,
+        "objectID": "44528865",
+        "parent_id": 44525626,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-11T16:59:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Brajeshwar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I know that others deal with emails in different ways. Of all things in communication, email will remain. Zawinski’s Law rightly expressed that, “Every program attempts to expand until it can read mail. Those programs which cannot so expand are replaced by ones which can.”[1]<p>Anyways, take time, take it slow, but use Labels, Filters, and Rules. Set them up one at a time, and play around with them. For instance, I’ve set up to label all emails from `@amazon.*` under the label/filter `DELETE ’EM.` During my digital chore, I just go there and `Select All` and delete them. The emails may be relevant at the time, but they go stale after a few days. Another way is to set up, say, newsletters to Skip the Inbox, so you can read them later on the weekends or at the end of the day, etc.<p>I just updated my article to reflect this. I will continue to edit/update that article as life happens.<p><a href=\"https://brajeshwar.com/2024/email/#a-well-maintained-email-life\" rel=\"nofollow\">https://brajeshwar.com/2024/email/#a-well-maintained-email-l...</a><p>1. <a href=\"https://en.wikipedia.org/wiki/Jamie_Zawinski\" rel=\"nofollow\">https://en.wikipedia.org/wiki/Jamie_Zawinski</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Who Is the Best Paid Email Provider? Why?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Brajeshwar",
+          "story_44525626"
+        ],
+        "author": "Brajeshwar",
+        "comment_text": "I know that others deal with emails in different ways. Of all things in communication, email will remain. Zawinski’s Law rightly expressed that, “Every program attempts to expand until it can read mail. Those programs which cannot so expand are replaced by ones which can.”[1]<p>Anyways, take time, take it slow, but use Labels, Filters, and Rules. Set them up one at a time, and play around with them. For instance, I’ve set up to label all emails from `@amazon.*` under the label&#x2F;filter `DELETE ’EM.` During my digital chore, I just go there and `Select All` and delete them. The emails may be relevant at the time, but they go stale after a few days. Another way is to set up, say, newsletters to Skip the Inbox, so you can read them later on the weekends or at the end of the day, etc.<p>I just updated my article to reflect this. I will continue to edit&#x2F;update that article as life happens.<p><a href=\"https:&#x2F;&#x2F;brajeshwar.com&#x2F;2024&#x2F;email&#x2F;#a-well-maintained-email-life\" rel=\"nofollow\">https:&#x2F;&#x2F;brajeshwar.com&#x2F;2024&#x2F;email&#x2F;#a-well-maintained-email-l...</a><p>1. <a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Jamie_Zawinski\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Jamie_Zawinski</a>",
+        "created_at": "2025-07-11T05:26:48Z",
+        "created_at_i": 1752211608,
+        "objectID": "44528653",
+        "parent_id": 44527331,
+        "story_id": 44525626,
+        "story_title": "Ask HN: Who Is the Best Paid Email Provider? Why?",
+        "updated_at": "2025-07-12T16:53:16Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 48,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44525626&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 21
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

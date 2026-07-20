@@ -18,7 +18,7 @@ Use this only when the built-in research and browser tools cannot express an exa
 
 Write JSONL through Node serialization rather than shell quoting. Cap arrays and strings and return an explicit `verified` field so an empty shell, login wall, or challenge cannot be mistaken for evidence.
 
-For browser-backed scripts, use the inherited `CODEX_BROWSER_SOCK`. Call `GET /tabs` first and target an explicit existing tab id. Available routes are `GET /tabs`, `GET /targets`, `POST /snapshot`, `POST /flow`, `POST /eval`, `POST /cdp`, `POST /tool/<name>` (any declared browser tool by name), and `POST /tabs`. Prefer `POST /snapshot` for structured reads and `POST /flow` for fill/click/submit interactions over raw `POST /eval`; do not call `POST /tabs` unless the user explicitly requested a new tab.
+For browser-backed scripts, use the inherited `CODEX_BROWSER_SOCK`. Call `GET /tabs` first and target an explicit existing tab id. Available routes are `GET /tabs`, `POST /tabs`, `POST /eval`, and `POST /cdp`; do not call `POST /tabs` unless the user explicitly requested a new tab.
 
 ```js
 import http from 'node:http';

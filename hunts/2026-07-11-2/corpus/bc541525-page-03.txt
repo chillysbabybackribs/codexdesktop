@@ -1,0 +1,63 @@
+Home
+
+News
+
+Best Time Tracking Software for Freelancers
+
+Seven tools. One winner. We tested them all so you don’t have to.
+
+## Why freelancers need time tracking
+
+If you’ve ever looked back at the end of the month and thought "I must have worked more than that" — you’re not alone. Research consistently shows that freelancers underestimate the time they spend on work by 20–30%. Without a time tracker, you’re essentially billing on gut feel.
+
+The right time tracking tool does three things: it captures your hours accurately, makes billing clients painless, and gives you visibility into where your time actually goes. That last part is underrated — most freelancers are shocked when they see how much unbillable admin they do each week.
+
+But not every time tracker is built for freelancers. Many are designed for large enterprise teams, with pricing and complexity to match. In this guide we focus specifically on tools that work well for solo operators and small teams.
+
+## What to look for in a freelance time tracker
+
+Before diving in, here’s what actually matters when picking a time tracking tool as a freelancer:
+
+- Frictionless capture. If logging time feels like a chore, you won’t do it. The best tools get out of your way.
+
+- Built-in invoicing. Every hour you track should be one click away from a client invoice. If your time tracker and invoicing app are separate, you’re doing double work.
+
+- Solo-friendly pricing. Many tools charge per seat, which is fine for teams but adds up for solo freelancers. Look for flat-rate solo plans.
+
+- Project and client organisation. You need to see time by project, by client, and by date — not just a running total.
+
+- Reporting. Weekly summaries, billable vs. non-billable breakdowns, and project profitability reports help you make better decisions.
+
+With those criteria in mind, here are the 7 best time tracking tools for freelancers in 2026.
+
+## 1. HeyGopher — Best all-in-one for freelancers
+
+HeyGopher is an all-in-one business management tool built specifically for freelancers and small teams. It combines time tracking, invoicing, project management, expense tracking, and client management in a single app — which means you can track an hour of work and turn it into a client invoice without ever switching tabs.
+
+The standout feature is the voice assistant. You can say "log 2 hours for Acme Corp on the website redesign project" and HeyGopher will capture it immediately. It also handles invoicing by voice — "create an invoice for Acme for last week’s hours" — which is genuinely useful when you’re finishing a project and want to bill without breaking your flow.
+
+The Solo plan at $6/month makes it one of the most affordable full-featured options on this list. Harvest charges double that for fewer features. The trade-off is that HeyGopher is a newer product, so it has fewer integrations with third-party apps than established tools like Harvest or Toggl.
+
+Best for: Freelancers who want one app to replace Harvest + FreshBooks + Toggl. Especially strong if you bill by the hour and want to minimise admin.
+
+## 2. Harvest — Best established option
+
+Harvest has been around since 2006 and is the tool most freelancers try first — often because their clients are already on it. It does time tracking and invoicing well, and the project budget tracking is genuinely useful for fixed-price contracts.
+
+The main complaint from freelancers is the price. At $12/seat/month, you’re paying $144/year for a tool that hasn’t added meaningful new features in several years. There’s no voice capture, no AI, and no expense tracking built in (you need Harvest’s separate Forecast app for capacity planning, which costs extra).
+
+If you’re already on Harvest and your workflow works, there’s no urgent reason to switch. But if you’re starting fresh, it’s worth asking whether you want to pay $12/month for a tool that hasn’t evolved much, when alternatives now offer more for less.
+
+Best for: Freelancers with existing clients on Harvest, or those who prioritise integration breadth over price.
+
+## 3. Toggl Track — Best for pure time tracking
+
+Toggl Track is the gold standard for pure time tracking. The free tier is genuinely generous — unlimited time entries, unlimited projects, unlimited clients — and the interface is clean and fast. The browser extension and desktop app make it easy to capture time without switching apps.
+
+The catch is that Toggl Track is only a time tracker. You can’t send invoices from it. You’ll need to export time data and import it into FreshBooks, Wave, or another invoicing tool. That’s fine if you already have a billing workflow, but if you’re starting from scratch it means managing two separate subscriptions and manually reconciling data between them.
+
+Best for: Freelancers who already have invoicing sorted and just need a great time tracker. Also good as a free option if you’re very early stage and not yet billing clients.
+
+## 4. Clockify — Best free option for teams
+
+Clockify is appealing

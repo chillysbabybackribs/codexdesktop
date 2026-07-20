@@ -1,9 +1,7 @@
 import type { BrowserAgentController } from '../browser/browser-agent.js'
-import type { ResearchRunner, SearchDiscoveryResult } from '../browser/research-runner.js'
-import type { RankedSerpCandidate } from '../browser/research-utils.js'
+import type { ResearchRunner } from '../browser/research-runner.js'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { runUiReview } from '../codex/ui-review.js'
-import { describeNavigationInput } from '../browser/url-utils.js'
 
 // The provider-neutral browser tool dispatch (Claude-prep step 6): one
 // implementation consumed by three transports — the Codex dynamic-tool
@@ -36,15 +34,6 @@ export type BrowserToolOutcome = {
   imageUrls: string[]
 }
 
-// Mutable holder for the early-navigation race: object properties keep their
-// declared types across closure assignment, unlike captured `let` bindings.
-type EarlyNavigationLane = {
-  navigated: RankedSerpCandidate | null
-  page: ReturnType<BrowserAgentController['snapshot']> | null
-  background: ReturnType<ResearchRunner['run']> | null
-  firstUrlMs: number | null
-}
-
 export async function runBrowserTool(
   invocation: BrowserToolInvocation,
   deps: BrowserToolDeps
@@ -64,141 +53,11 @@ export async function runBrowserTool(
     const runBrowserOperation = <T>(execute: (signal: AbortSignal) => Promise<T>): Promise<T> =>
       owner ? deps.browserAgent.runForTurn(owner, execute) : execute(new AbortController().signal)
 
-    let result: BrowserToolOutcome['result']
+    // biome-ignore lint/suspicious/noImplicitAnyLet: heterogeneous per-tool accumulator, cast to BrowserToolOutcome['result'] at the return boundary
+    let result
     let imageUrls: string[] = []
 
-    if (tool === 'browser_live_search') {
-      const queries = readSearchQueries(args)
-      const objective = readString(args.objective)
-      const includeBackground = args.background === true
-      if (queries.length === 0 || !objective) {
-        result = { ok: false, error: `${tool} requires "objective" and at least one search query` }
-      } else if (!deps.researchRunner) {
-        result = { ok: false, error: 'browser_live_search hidden discovery is not available on this transport' }
-      } else {
-        const startedAt = Date.now()
-        result = await runBrowserOperation(async (signal) => {
-          // Navigate the visible tab as soon as the earliest hidden search lane
-          // yields a usable destination; remaining lanes keep filling alternates
-          // in the background instead of gating the first page load.
-          const lane: EarlyNavigationLane = { navigated: null, page: null, background: null, firstUrlMs: null }
-          const focus = readResearchFocus(args.focus)
-          const startWork = (candidates: RankedSerpCandidate[]): void => {
-            const candidate = candidates[0]
-            if (!candidate || lane.page) return
-            lane.navigated = candidate
-            lane.firstUrlMs = Date.now() - startedAt
-            notifyNavigationStart(deps, candidate)
-            lane.page = deps.browserAgent.snapshot({
-              objective,
-              url: candidate.url,
-              tabId: resolveAgentTab(readString(args.tab)),
-              mode: 'task',
-              maxItems: readNumber(args.maxItems) ?? 10,
-              timeoutMs: readNumber(args.timeoutMs),
-              signal
-            })
-            if (includeBackground) {
-              const urls = selectBackgroundUrls(candidates, candidate.url, focus)
-              lane.background = deps.researchRunner!.run({
-                queries,
-                ...(urls.length > 0 ? { urls } : {}),
-                focus,
-                maxResults: readNumber(args.maxResults),
-                maxAttempts: readNumber(args.maxAttempts),
-                snippetChars: readNumber(args.snippetChars)
-              }, {
-                runId: `${callId}:background`,
-                threadId: owner?.threadId ?? 'external',
-                turnId: owner?.turnId ?? callId,
-                onProgress: deps.onResearchProgress
-              })
-            }
-          }
-          const discovery = await deps.researchRunner!.discover({
-            queries,
-            maxResults: readNumber(args.maxResults),
-            maxCandidates: 10
-          }, {
-            signal,
-            onProgress: deps.onResearchProgress,
-            // Generous tail: the destination page snapshot runs concurrently
-            // and usually takes longer than the remaining lanes, so letting
-            // them finish costs no wall time — a 750ms cutoff was starving
-            // the merged ranking that alternates and betterAlternate need.
-            tailMsAfterFirstCandidates: 3500,
-            onFirstCandidates: (candidates) => {
-              startWork(candidates)
-            }
-          })
-          if (!lane.page) {
-            if (!discovery.ok || !discovery.candidates[0]) return discovery
-            startWork(discovery.candidates)
-          }
-          const [firstPage, background] = await Promise.all([
-            lane.page!,
-            lane.background ?? Promise.resolve(null)
-          ])
-          let page = firstPage
-          let destination = lane.navigated!
-          // Early navigation commits to the FIRST lane's best candidate for
-          // latency; the merged ranking across all lanes lands afterwards.
-          // A failed early page retries once on the merged best; a successful
-          // one that the merged ranking clearly beat is flagged instead of
-          // silently presented as the final word (live-caught: navigated to a
-          // score-71 brand page while a score-126 source sat in alternates).
-          const mergedTop = discovery.candidates[0]
-          if (!page.ok && mergedTop && mergedTop.url !== destination.url) {
-            notifyNavigationStart(deps, mergedTop)
-            page = await deps.browserAgent.snapshot({
-              objective,
-              url: mergedTop.url,
-              tabId: resolveAgentTab(readString(args.tab)),
-              mode: 'task',
-              maxItems: readNumber(args.maxItems) ?? 10,
-              timeoutMs: readNumber(args.timeoutMs),
-              signal
-            })
-            destination = mergedTop
-          }
-          const betterAlternate =
-            page.ok && mergedTop && mergedTop.url !== destination.url &&
-            mergedTop.score >= destination.score + 15
-              ? mergedTop
-              : null
-          // Background corroboration is additive. A readable visible result
-          // must not be turned into a failed search because the optional
-          // research lane exhausted its candidates or retained coverage gaps.
-          const ok = page.ok || background?.ok === true
-          return {
-            ok,
-            mode: includeBackground
-              ? 'hidden-discovery-direct-navigation-plus-research'
-              : 'hidden-discovery-direct-navigation',
-            destination: compactDestination(destination),
-            ...(betterAlternate
-              ? {
-                  betterAlternate: {
-                    ...compactDestination(betterAlternate),
-                    note: 'The merged ranking across all search lanes scored this source higher than the auto-navigated destination. Navigate to it directly if it serves the objective better.'
-                  }
-                }
-              : {}),
-            alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
-            discovery: compactDiscovery(discovery),
-            page,
-            ...(background ? { background } : {}),
-            timings: {
-              firstUrlMs: lane.firstUrlMs,
-              totalMs: Date.now() - startedAt
-            },
-            ...(ok
-              ? {}
-              : { error: includeBackground ? 'one or more search lanes failed' : 'Hidden discovery succeeded, but the destination page snapshot failed' }),
-          }
-        })
-      }
-    } else if (tool === 'browser_screenshot') {
+    if (tool === 'browser_screenshot') {
       const tabId = resolveAgentTab(readString(args.tab))
       result = await runBrowserOperation((signal) => deps.browserAgent.captureScreenshot({ tabId, signal }))
       const screenshot = asRecord(asRecord(result.result).screenshot)
@@ -231,13 +90,10 @@ export async function runBrowserTool(
       imageUrls = review.imageUrls
     } else if (tool === 'browser_snapshot') {
       const objective = readString(args.objective)
-      const url = readString(args.url)
-      result = url && !isDirectAgentNavigation(url)
-        ? directNavigationRequired(tool)
-        : objective
+      result = objective
         ? await runBrowserOperation((signal) => deps.browserAgent.snapshot({
             objective,
-            url,
+            url: readString(args.url),
             tabId: resolveAgentTab(readString(args.tab)),
             frame: readString(args.frame),
             mode: readSnapshotMode(args.mode),
@@ -261,26 +117,6 @@ export async function runBrowserTool(
             signal
           }))
         : { ok: false, error: 'browser_flow requires a non-empty "steps" array' }
-    } else if (tool === 'browser_network') {
-      const url = readString(args.url)
-      result = url && !isDirectAgentNavigation(url)
-        ? directNavigationRequired(tool)
-        : await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
-            url,
-            steps: args.steps,
-            match: readNetworkMatch(args.match),
-            captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
-            download: args.download === true,
-            stream: readNetworkStream(args.stream),
-            readySelector: readString(args.readySelector),
-            quietMs: readNumber(args.quietMs),
-            maxSettleMs: readNumber(args.maxSettleMs)
-          }, {
-            tabId: resolveAgentTab(readString(args.tab)),
-            timeoutMs: readNumber(args.timeoutMs),
-            maxResultChars: readNumber(args.maxResultChars),
-            signal
-          }))
     } else if (tool === 'browser_run') {
       const code = readString(args.code)
       result = code
@@ -294,9 +130,7 @@ export async function runBrowserTool(
         : { ok: false, error: 'browser_run requires a string "code" argument' }
     } else if (tool === 'browser_navigate') {
       const url = readString(args.url)
-      result = url && !isDirectAgentNavigation(url)
-        ? directNavigationRequired(tool)
-        : url
+      result = url
         ? await runBrowserOperation((signal) => deps.browserAgent.navigate(url, {
             tabId: resolveAgentTab(readString(args.tab)),
             readySelector: readString(args.readySelector),
@@ -427,83 +261,6 @@ function readStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
 }
 
-function readSearchQueries(args: Record<string, unknown>): string[] {
-  const primary = readString(args.query)
-  const variants = readStringArray(args.queries)
-  return [...new Set([...(primary ? [primary] : []), ...variants].map((query) => query.trim()).filter(Boolean))]
-}
-
-function notifyNavigationStart(deps: BrowserToolDeps, candidate: RankedSerpCandidate): void {
-  try {
-    deps.onResearchProgress?.({
-      stage: 'discovering',
-      message: `Opening ${candidate.domain} while remaining search lanes finish…`
-    })
-  } catch {
-    // Progress is observational and must never fail the navigation.
-  }
-}
-
-function compactDestination(candidate: RankedSerpCandidate): Record<string, unknown> {
-  return {
-    url: candidate.url,
-    title: candidate.title,
-    domain: candidate.domain,
-    sourceTier: candidate.sourceTier,
-    score: candidate.score
-  }
-}
-
-function compactDiscovery(discovery: SearchDiscoveryResult): Record<string, unknown> {
-  return {
-    queries: discovery.queries,
-    discoveredCount: discovery.discoveredCount,
-    metrics: discovery.metrics,
-    ...(discovery.errors ? { errors: discovery.errors } : {})
-  }
-}
-
-function selectBackgroundUrls(
-  candidates: RankedSerpCandidate[],
-  visibleUrl: string,
-  focus: Array<{ id: string; need: string; minSources?: number }>
-): string[] {
-  // An unfocused background lane needs one independent source. Focused work
-  // receives enough early candidates to cover its explicit source demand; the
-  // research runner can still use `queries` as fallback when those pages fail.
-  const target = focus.length > 0
-    ? Math.min(6, focus.reduce((sum, item) => sum + Math.max(1, item.minSources ?? 1), 0))
-    : 1
-  return candidates
-    .filter((candidate) => candidate.url !== visibleUrl)
-    .slice(0, target)
-    .map((candidate) => candidate.url)
-}
-
-function isDirectAgentNavigation(input: string): boolean {
-  const interpretation = describeNavigationInput(input)
-  if (interpretation.kind !== 'navigate') return false
-  try {
-    const url = new URL(interpretation.url)
-    const host = url.hostname.toLowerCase()
-    const path = url.pathname.toLowerCase()
-    if (/(^|\.)google\./.test(host) && path === '/search') return false
-    if (/(^|\.)bing\.com$/.test(host) && path === '/search') return false
-    if (/(^|\.)duckduckgo\.com$/.test(host) && (path === '/' || path === '/html/')) return !url.searchParams.has('q')
-    if (host === 'search.yahoo.com') return false
-    return true
-  } catch {
-    return false
-  }
-}
-
-function directNavigationRequired(tool: string): BrowserToolOutcome['result'] {
-  return {
-    ok: false,
-    error: `${tool} accepts only a direct destination URL; use browser_live_search for hidden search discovery`
-  }
-}
-
 function readResearchFocus(value: unknown): Array<{ id: string; need: string; minSources?: number }> {
   if (!Array.isArray(value)) return []
   return value.flatMap((item) => {
@@ -514,40 +271,6 @@ function readResearchFocus(value: unknown): Array<{ id: string; need: string; mi
     const minSources = readNumber(record.minSources)
     return [{ id, need, ...(minSources === undefined ? {} : { minSources }) }]
   })
-}
-
-function readNetworkMatch(value: unknown): {
-  urlContains?: string
-  method?: string
-  resourceType?: string
-  mimeType?: string
-  statusMin?: number
-  statusMax?: number
-} {
-  const match = asRecord(value)
-  return {
-    urlContains: readString(match.urlContains),
-    method: readString(match.method),
-    resourceType: readString(match.resourceType),
-    mimeType: readString(match.mimeType),
-    statusMin: readNumber(match.statusMin),
-    statusMax: readNumber(match.statusMax)
-  }
-}
-
-function readNetworkStream(value: unknown): {
-  transport?: 'sse' | 'websocket'
-  maxMessages?: number
-  idleMs?: number
-} | null {
-  const stream = asRecord(value)
-  const transport = stream.transport === 'sse' || stream.transport === 'websocket' ? stream.transport : undefined
-  if (!transport && Object.keys(stream).length === 0) return null
-  return {
-    transport,
-    maxMessages: readNumber(stream.maxMessages),
-    idleMs: readNumber(stream.idleMs)
-  }
 }
 
 function readStringRecord(value: unknown): Record<string, string> {

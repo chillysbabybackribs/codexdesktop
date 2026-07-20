@@ -1,0 +1,705 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48477135",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 1967
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dilipdasilva"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I just finished the book. It took a while, but was well worth it. Thanks for writing it.<p>I founded a company that grew from 1 person 26 years ago to 850 people and is now 270. I think about the topics in the book quite a bit.  And a while back I reached the same conclusion that companies need a different governance structure to not succumb to financial gravity.<p>I feel your book overlaps with Reinventing Organizations by Frederic Laloux. His book explores how organizations can move beyond traditional command-and-control management toward self-managed, purpose-driven, and more human-centered ways of operating. It gives a number of examples of companies operating in this way. But it does not focus on governance structure. In fact, one of the companies died because of a change of ownership.<p>Your book also provides many examples of which I was not aware. It is always inspirational to hear of other companies trying to do things differently, even if it is not directly applicable to your business.<p>I like your use of gravity as a metaphor and particularly that you can harness it to your advantage. I also believe strongly that we should not accept the way things are and we can change them.<p>You mention in the book that companies in the s&amp;p 500 live about 18 years, when in the past they would live 60 years and one of the reasons for this is financial gravity and in particular the change that happened in the 1980s where companies started solely serving investor interests.  In thinking about companies, I use the metaphor of waves and surfing.  I feel 100 years ago the waves were very infrequent. What has happened in the last several decades is that the time between waves has shortened. Companies have had to deal with changes like the internet, smart phones and social media, and now AI.<p>Alvin Toffler in Future Shock (written in 1984) argues that the accelerating pace of technological, social, and economic change can overwhelm people's ability to adapt. Toffler calls this condition &quot;future shock&quot;—a state of stress, confusion, and disorientation caused by too much change in too little time. He predicted exactly what we are experiencing now. I think companies are also going through this kind of shock and likely the average life span of companies will continue decreasing.<p>Going back to the waves and surfing. A company is a bunch of people on a surf board and the waves are coming faster and faster. Waves can be opportunities or they could kill the company. And so we need to think about how to structure a company so that it is agile and can catch waves or get out of the way of waves. I feel companies need to be much more fluildly structured so they can adapt to fast moving changes in the environment.  Most companies are structured too rigidly.<p>Another metaphor for thinking about companies is as a multicellular organisms, where individual cells are people. As with multicellular organisms, companies will need to evolve into more advanced organizations.  The way this happens with organisms is through death and mutation and can take millions of years. The same thing happens with companies, they die, and people leave to join or start another company, taking some of the lessons with them. This rate of evolution is very slow, so we need to think about how we can change the dna of an existing company. I feel structure and environment within the company can play a role here.<p>Also, I feel gravity applies to individual self-interest of which financial is a subset. With any organizational group, you are trying to take individuals with their own self-interest and are trying to align them to achieve something that is greater. If you can pull it off, each individual can realize much more of their potential and the group can achieve far more. But the force of self-interest is always pulling to break things apart, and for this you need to put in structures that maintain integrity.<p>Again, thanks for writing the book. I enjoyed it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dilipdasilva",
+          "story_48477135"
+        ],
+        "author": "dilipdasilva",
+        "comment_text": "I just finished the book. It took a while, but was well worth it. Thanks for writing it.<p>I founded a company that grew from 1 person 26 years ago to 850 people and is now 270. I think about the topics in the book quite a bit.  And a while back I reached the same conclusion that companies need a different governance structure to not succumb to financial gravity.<p>I feel your book overlaps with Reinventing Organizations by Frederic Laloux. His book explores how organizations can move beyond traditional command-and-control management toward self-managed, purpose-driven, and more human-centered ways of operating. It gives a number of examples of companies operating in this way. But it does not focus on governance structure. In fact, one of the companies died because of a change of ownership.<p>Your book also provides many examples of which I was not aware. It is always inspirational to hear of other companies trying to do things differently, even if it is not directly applicable to your business.<p>I like your use of gravity as a metaphor and particularly that you can harness it to your advantage. I also believe strongly that we should not accept the way things are and we can change them.<p>You mention in the book that companies in the s&amp;p 500 live about 18 years, when in the past they would live 60 years and one of the reasons for this is financial gravity and in particular the change that happened in the 1980s where companies started solely serving investor interests.  In thinking about companies, I use the metaphor of waves and surfing.  I feel 100 years ago the waves were very infrequent. What has happened in the last several decades is that the time between waves has shortened. Companies have had to deal with changes like the internet, smart phones and social media, and now AI.<p>Alvin Toffler in Future Shock (written in 1984) argues that the accelerating pace of technological, social, and economic change can overwhelm people&#x27;s ability to adapt. Toffler calls this condition &quot;future shock&quot;—a state of stress, confusion, and disorientation caused by too much change in too little time. He predicted exactly what we are experiencing now. I think companies are also going through this kind of shock and likely the average life span of companies will continue decreasing.<p>Going back to the waves and surfing. A company is a bunch of people on a surf board and the waves are coming faster and faster. Waves can be opportunities or they could kill the company. And so we need to think about how to structure a company so that it is agile and can catch waves or get out of the way of waves. I feel companies need to be much more fluildly structured so they can adapt to fast moving changes in the environment.  Most companies are structured too rigidly.<p>Another metaphor for thinking about companies is as a multicellular organisms, where individual cells are people. As with multicellular organisms, companies will need to evolve into more advanced organizations.  The way this happens with organisms is through death and mutation and can take millions of years. The same thing happens with companies, they die, and people leave to join or start another company, taking some of the lessons with them. This rate of evolution is very slow, so we need to think about how we can change the dna of an existing company. I feel structure and environment within the company can play a role here.<p>Also, I feel gravity applies to individual self-interest of which financial is a subset. With any organizational group, you are trying to take individuals with their own self-interest and are trying to align them to achieve something that is greater. If you can pull it off, each individual can realize much more of their potential and the group can achieve far more. But the force of self-interest is always pulling to break things apart, and for this you need to put in structures that maintain integrity.<p>Again, thanks for writing the book. I enjoyed it.",
+        "created_at": "2026-06-22T04:39:49Z",
+        "created_at_i": 1782103189,
+        "objectID": "48625742",
+        "parent_id": 48477135,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-22T04:41:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "billbrown"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I didn't see that anyone had done it (and I think the commentary has died down entirely) but here's an Artifact that extracts Ries' responses plus the original question into a table:<p><a href=\"https://claude.ai/public/artifacts/0f204165-e363-4553-a4ce-4d2059b42460\" rel=\"nofollow\">https://claude.ai/public/artifacts/0f204165-e363-4553-a4ce-4...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_billbrown",
+          "story_48477135"
+        ],
+        "author": "billbrown",
+        "comment_text": "I didn&#x27;t see that anyone had done it (and I think the commentary has died down entirely) but here&#x27;s an Artifact that extracts Ries&#x27; responses plus the original question into a table:<p><a href=\"https:&#x2F;&#x2F;claude.ai&#x2F;public&#x2F;artifacts&#x2F;0f204165-e363-4553-a4ce-4d2059b42460\" rel=\"nofollow\">https:&#x2F;&#x2F;claude.ai&#x2F;public&#x2F;artifacts&#x2F;0f204165-e363-4553-a4ce-4...</a>",
+        "created_at": "2026-06-21T23:16:37Z",
+        "created_at_i": 1782083797,
+        "objectID": "48623607",
+        "parent_id": 48477135,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-21T23:21:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kva"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Big big fan of LTSE; The core tension I point out is simply that the epistemic crux of TLS -- short term validation -- is a poor proxy for the core risks in frontier companies. The cultural result of that is most people refuse to start long term companies since there is no short term way to validate the demand, which may in turn reduce demand for the LTSE itself :)<p>Looking forward to reading Incorruptible."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kva",
+          "story_48477135"
+        ],
+        "author": "kva",
+        "comment_text": "Big big fan of LTSE; The core tension I point out is simply that the epistemic crux of TLS -- short term validation -- is a poor proxy for the core risks in frontier companies. The cultural result of that is most people refuse to start long term companies since there is no short term way to validate the demand, which may in turn reduce demand for the LTSE itself :)<p>Looking forward to reading Incorruptible.",
+        "created_at": "2026-06-16T17:55:37Z",
+        "created_at_i": 1781632537,
+        "objectID": "48559210",
+        "parent_id": 48481688,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-16T17:57:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "inthepond"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I read The Lean Startup when I first started working a decade ago. It's great! The methodology and philosophy guide my agentic workflow construction."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_inthepond",
+          "story_48477135"
+        ],
+        "author": "inthepond",
+        "comment_text": "I read The Lean Startup when I first started working a decade ago. It&#x27;s great! The methodology and philosophy guide my agentic workflow construction.",
+        "created_at": "2026-06-15T03:02:03Z",
+        "created_at_i": 1781492523,
+        "objectID": "48536080",
+        "parent_id": 48477135,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-15T03:03:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zoogeny"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Unless you break the hypothetical by adding some alternative option C<p>That is kind of the point, isn't it? That my hypothetical scenario isn't realistic.<p>Let's imagine two worlds. A world where individuals refuse the false dichotomy and search for option C. And the world where someone accepts the false dichotomy and justifies evil.<p>I would argue that anyone that advocates for the justification of evil is actually using motivated reasoning. It breaks my original premise &quot;Company A founds itself on doing 0 harm to Area X&quot;. Clearly they didn't and their embracing of evil shows that their principles mean nothing.<p>As a moral test, ask yourself: If I said &quot;you must kill 99 people otherwise I will kill 100&quot;, would you feel morally justified to kill those 99 people? If your answer is &quot;yes&quot;, then you are manipulable by those who want you to commit evil on their behalf. They don't have to commit any murders, just convince you that you have no other choice."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zoogeny",
+          "story_48477135"
+        ],
+        "author": "zoogeny",
+        "comment_text": "&gt; Unless you break the hypothetical by adding some alternative option C<p>That is kind of the point, isn&#x27;t it? That my hypothetical scenario isn&#x27;t realistic.<p>Let&#x27;s imagine two worlds. A world where individuals refuse the false dichotomy and search for option C. And the world where someone accepts the false dichotomy and justifies evil.<p>I would argue that anyone that advocates for the justification of evil is actually using motivated reasoning. It breaks my original premise &quot;Company A founds itself on doing 0 harm to Area X&quot;. Clearly they didn&#x27;t and their embracing of evil shows that their principles mean nothing.<p>As a moral test, ask yourself: If I said &quot;you must kill 99 people otherwise I will kill 100&quot;, would you feel morally justified to kill those 99 people? If your answer is &quot;yes&quot;, then you are manipulable by those who want you to commit evil on their behalf. They don&#x27;t have to commit any murders, just convince you that you have no other choice.",
+        "created_at": "2026-06-15T00:46:28Z",
+        "created_at_i": 1781484388,
+        "objectID": "48535047",
+        "parent_id": 48508941,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-15T01:00:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wrsh07"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you think founders should feel about advertising then? Eg Ben Thompson always argues that consumer products where you want to maximize audience (eg to distribute fixed costs, benefit from scale, power a multi-sided flywheel) should prefer advertising, but obviously this forces a specific trajectory to the business.<p>If you run into a product with this type of dynamic is your advice just to run? Or is there strategy innovation we can do here to monetize businesses shaped like this to get a flywheel without ads?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wrsh07",
+          "story_48477135"
+        ],
+        "author": "wrsh07",
+        "comment_text": "How do you think founders should feel about advertising then? Eg Ben Thompson always argues that consumer products where you want to maximize audience (eg to distribute fixed costs, benefit from scale, power a multi-sided flywheel) should prefer advertising, but obviously this forces a specific trajectory to the business.<p>If you run into a product with this type of dynamic is your advice just to run? Or is there strategy innovation we can do here to monetize businesses shaped like this to get a flywheel without ads?",
+        "created_at": "2026-06-14T23:31:51Z",
+        "created_at_i": 1781479911,
+        "objectID": "48534246",
+        "parent_id": 48493176,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-14T23:33:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takinola"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My main issue with your logic is less whether it makes sense or not and more that, in practice, it tends to be self-serving. Somehow, people tend to only apply it when doing the “minor” harm benefits them. Humans, myself included, are remarkable good at rationalizing their behavior."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takinola",
+          "story_48477135"
+        ],
+        "author": "takinola",
+        "comment_text": "My main issue with your logic is less whether it makes sense or not and more that, in practice, it tends to be self-serving. Somehow, people tend to only apply it when doing the “minor” harm benefits them. Humans, myself included, are remarkable good at rationalizing their behavior.",
+        "created_at": "2026-06-14T18:49:11Z",
+        "created_at_i": 1781462951,
+        "objectID": "48531098",
+        "parent_id": 48482044,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-14T18:50:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "televibad"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Should a company has all its founder(s) need to get PMF and persistent user base, but still cannot convince the environment (all infrastructure of a region or nation) that eventually killing a prosperous and an economically helpful nexus point?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_televibad",
+          "story_48477135"
+        ],
+        "author": "televibad",
+        "comment_text": "Should a company has all its founder(s) need to get PMF and persistent user base, but still cannot convince the environment (all infrastructure of a region or nation) that eventually killing a prosperous and an economically helpful nexus point?",
+        "created_at": "2026-06-14T05:08:04Z",
+        "created_at_i": 1781413684,
+        "objectID": "48524367",
+        "parent_id": 48477135,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-14T05:11:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jv22222"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I do not want to game the system, I hate the idea of gaming the system. I just want to be nice, and I think that is precisely the reason why I'm not very rich."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jv22222",
+          "story_48477135"
+        ],
+        "author": "jv22222",
+        "comment_text": "I do not want to game the system, I hate the idea of gaming the system. I just want to be nice, and I think that is precisely the reason why I&#x27;m not very rich.",
+        "created_at": "2026-06-14T04:00:45Z",
+        "created_at_i": 1781409645,
+        "objectID": "48524058",
+        "parent_id": 48482977,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-14T04:03:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nunez"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for doing that!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nunez",
+          "story_48477135"
+        ],
+        "author": "nunez",
+        "comment_text": "Thanks for doing that!",
+        "created_at": "2026-06-13T22:00:01Z",
+        "created_at_i": 1781388001,
+        "objectID": "48521912",
+        "parent_id": 48480002,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-13T22:01:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eej71"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Maybe you read this, maybe you don't.<p>You got a seat at the RegNMS table, but its serving food you don't actually want to eat. LTSE has been at this for 5+ years and its still at the bottom of the heap in terms of volume. Both MEMX and LTSE started within weeks of each other (Sep 2020), yet MEMX has like 40x(?) the volume. More recently 24X arrived in Nov 2025 and they are already doing more volume than LTSE.<p><a href=\"https://www.cboe.com/us/equities/market_share/\" rel=\"nofollow\">https://www.cboe.com/us/equities/market_share/</a><p>You're selling a vibe that by trading through LTSE you're buying into &quot;long term investing&quot; or &quot;long-term companies&quot; with like minded investors, but the RegNMS seat is mostly orthogonal to the rest of the business. Note how little your three dually listed companies actually trade on LTSE. From what I can see those three had nearly zero action for 2025 Q4 AND 2026 Q1. Six months of nearly nothing. Why? Because the service that LTSE offers is the same as the other 16 lit venues. It doesn't matter where securities trade.<p>It's like a bunch of companies trying to sell water from a common fountain and pretending the dixie cup they serve it in really matters. You drink the water and throw away the cup. Slapping a sticker on it that says &quot;Think LongTerm!&quot; is mostly what I see. But I think people who love your messaging think something more is happening. It's why I made the analogy to ESG. It's just a vibe being pawned off on true believers.<p>At best I could say that the fees LTSE collects is a profit stream that feeds your promotion of better governance structures. But given the anemic flow in the venue, I have to assume its really not that much.<p>Take note of the revenues from at least the UTP for LTSE.  <a href=\"https://www.utpplan.com/DOC/UTP_Revenue_Disclosure_Q12025.pdf\" rel=\"nofollow\">https://www.utpplan.com/DOC/UTP_Revenue_Disclosure_Q12025.pd...</a><p>I think all of this comes down to an inherent contradiction in your mission. At best you might describe it as a tension. The RegNMS seat wants volume. You eat what you kill. But the other side of the business is trying to promote long term thinking and good corporate governance structures which has very little to do with trading - in fact - some of the attitudes from that side of the business probably frown on the trading. No short term trading! Only long term! But reality is - trading is trading. You either love it or you don't.<p>You can see that tension in your leadership team. LTSE is a small company but has two CEOs. I bet one is in NYC and the other in San Francisco. Two different cultures. Two different mindsets. Two teams pulling different ropes that aren't really related. You want them to be related. I get that. But they aren't.<p>My harping on the LTSE low volume might seem irrelevant but take note of the fact that there is a good chance that the SEC yanks Rule 611. I would expect that to pull your volume down even lower. If the SEC really makes that change, its going to be the hunger games for the little players and you'll go from having a seat at the table to being on the table.<p>But that might be for the best as you can focus on your real passion - designing better governance structures and encouraging companies to adopt them. The RegNMS seat is kind of a distraction for that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_eej71",
+          "story_48477135"
+        ],
+        "author": "eej71",
+        "comment_text": "Maybe you read this, maybe you don&#x27;t.<p>You got a seat at the RegNMS table, but its serving food you don&#x27;t actually want to eat. LTSE has been at this for 5+ years and its still at the bottom of the heap in terms of volume. Both MEMX and LTSE started within weeks of each other (Sep 2020), yet MEMX has like 40x(?) the volume. More recently 24X arrived in Nov 2025 and they are already doing more volume than LTSE.<p><a href=\"https:&#x2F;&#x2F;www.cboe.com&#x2F;us&#x2F;equities&#x2F;market_share&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.cboe.com&#x2F;us&#x2F;equities&#x2F;market_share&#x2F;</a><p>You&#x27;re selling a vibe that by trading through LTSE you&#x27;re buying into &quot;long term investing&quot; or &quot;long-term companies&quot; with like minded investors, but the RegNMS seat is mostly orthogonal to the rest of the business. Note how little your three dually listed companies actually trade on LTSE. From what I can see those three had nearly zero action for 2025 Q4 AND 2026 Q1. Six months of nearly nothing. Why? Because the service that LTSE offers is the same as the other 16 lit venues. It doesn&#x27;t matter where securities trade.<p>It&#x27;s like a bunch of companies trying to sell water from a common fountain and pretending the dixie cup they serve it in really matters. You drink the water and throw away the cup. Slapping a sticker on it that says &quot;Think LongTerm!&quot; is mostly what I see. But I think people who love your messaging think something more is happening. It&#x27;s why I made the analogy to ESG. It&#x27;s just a vibe being pawned off on true believers.<p>At best I could say that the fees LTSE collects is a profit stream that feeds your promotion of better governance structures. But given the anemic flow in the venue, I have to assume its really not that much.<p>Take note of the revenues from at least the UTP for LTSE.  <a href=\"https:&#x2F;&#x2F;www.utpplan.com&#x2F;DOC&#x2F;UTP_Revenue_Disclosure_Q12025.pdf\" rel=\"nofollow\">https:&#x2F;&#x2F;www.utpplan.com&#x2F;DOC&#x2F;UTP_Revenue_Disclosure_Q12025.pd...</a><p>I think all of this comes down to an inherent contradiction in your mission. At best you might describe it as a tension. The RegNMS seat wants volume. You eat what you kill. But the other side of the business is trying to promote long term thinking and good corporate governance structures which has very little to do with trading - in fact - some of the attitudes from that side of the business probably frown on the trading. No short term trading! Only long term! But reality is - trading is trading. You either love it or you don&#x27;t.<p>You can see that tension in your leadership team. LTSE is a small company but has two CEOs. I bet one is in NYC and the other in San Francisco. Two different cultures. Two different mindsets. Two teams pulling different ropes that aren&#x27;t really related. You want them to be related. I get that. But they aren&#x27;t.<p>My harping on the LTSE low volume might seem irrelevant but take note of the fact that there is a good chance that the SEC yanks Rule 611. I would expect that to pull your volume down even lower. If the SEC really makes that change, its going to be the hunger games for the little players and you&#x27;ll go from having a seat at the table to being on the table.<p>But that might be for the best as you can focus on your real passion - designing better governance structures and encouraging companies to adopt them. The RegNMS seat is kind of a distraction for that.",
+        "created_at": "2026-06-13T20:45:56Z",
+        "created_at_i": 1781383556,
+        "objectID": "48521265",
+        "parent_id": 48493338,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-15T02:06:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tudelo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is tangential and offtopic but kirkland beef hotdogs are 10/10 for value."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tudelo",
+          "story_48477135"
+        ],
+        "author": "tudelo",
+        "comment_text": "This is tangential and offtopic but kirkland beef hotdogs are 10&#x2F;10 for value.",
+        "created_at": "2026-06-13T03:23:32Z",
+        "created_at_i": 1781321012,
+        "objectID": "48512587",
+        "parent_id": 48488566,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-13T03:24:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "1vuio0pswjnm7"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "*Nordisk"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_1vuio0pswjnm7",
+          "story_48477135"
+        ],
+        "author": "1vuio0pswjnm7",
+        "comment_text": "*Nordisk",
+        "created_at": "2026-06-12T23:54:32Z",
+        "created_at_i": 1781308472,
+        "objectID": "48510781",
+        "parent_id": 48480999,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-12T23:59:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "csallen"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; <i>then Company C shows up and starts finding success doing 100 harm to Area X, so Company A changes it's moral stance to &quot;unless we do 99 harm to Area X ...&quot;</i><p>I mean yes this is technically possible. But I think in many cases, especially &quot;winner-take-all&quot; markets like online search engines, social networks, etc., you don't get this large number of repeated threats. Fending off a competitor or two might be enough. And just as it's possible for there to be some advantage that opens from doing 99 harm to Area X, it's also possible that it never happens.<p>But also, let's pretend the hypothetical you say _did_ happen?<p>What should occur? Should the company just NOT do 99 harm to Area X and instead allow 100? If so, why? Unless you break the hypothetical by adding some alternative option C, as much as we don't like the preventative-99 option, it's still better than the allowing-100 option."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_csallen",
+          "story_48477135"
+        ],
+        "author": "csallen",
+        "children": [
+          48535047
+        ],
+        "comment_text": "&gt; <i>then Company C shows up and starts finding success doing 100 harm to Area X, so Company A changes it&#x27;s moral stance to &quot;unless we do 99 harm to Area X ...&quot;</i><p>I mean yes this is technically possible. But I think in many cases, especially &quot;winner-take-all&quot; markets like online search engines, social networks, etc., you don&#x27;t get this large number of repeated threats. Fending off a competitor or two might be enough. And just as it&#x27;s possible for there to be some advantage that opens from doing 99 harm to Area X, it&#x27;s also possible that it never happens.<p>But also, let&#x27;s pretend the hypothetical you say _did_ happen?<p>What should occur? Should the company just NOT do 99 harm to Area X and instead allow 100? If so, why? Unless you break the hypothetical by adding some alternative option C, as much as we don&#x27;t like the preventative-99 option, it&#x27;s still better than the allowing-100 option.",
+        "created_at": "2026-06-12T20:13:34Z",
+        "created_at_i": 1781295214,
+        "objectID": "48508941",
+        "parent_id": 48482475,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-15T00:47:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nicksbg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Aye, but fixing this also fixes operational cost and other long-term costs. There is no power without knowledge+experience especially in high level roles.<p>In the end, HR should extract the most value for the company, trying to combine interest of both employees/company into calculation. Sometime, the interest of an individual manager is not what is in the best interest of the company."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nicksbg",
+          "story_48477135"
+        ],
+        "author": "nicksbg",
+        "comment_text": "Aye, but fixing this also fixes operational cost and other long-term costs. There is no power without knowledge+experience especially in high level roles.<p>In the end, HR should extract the most value for the company, trying to combine interest of both employees&#x2F;company into calculation. Sometime, the interest of an individual manager is not what is in the best interest of the company.",
+        "created_at": "2026-06-12T18:46:11Z",
+        "created_at_i": 1781289971,
+        "objectID": "48507921",
+        "parent_id": 48490658,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-12T18:49:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nicksbg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for reply Eric! I agree, and the problem is in the same way as with countries. Sure, you may have good leader and stability while the founder is alive - but once he goes, everything is ready to go up in flames.<p>The various gravitational forces within company eventually pull the company apart.<p>As you said, third way governance is really the key. At the end of the day founders in some cases should become chairman, to ensure that everything is functioning as set by constitution. Going into retirement and enjoying pension/stock options should be more common."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nicksbg",
+          "story_48477135"
+        ],
+        "author": "nicksbg",
+        "comment_text": "Thanks for reply Eric! I agree, and the problem is in the same way as with countries. Sure, you may have good leader and stability while the founder is alive - but once he goes, everything is ready to go up in flames.<p>The various gravitational forces within company eventually pull the company apart.<p>As you said, third way governance is really the key. At the end of the day founders in some cases should become chairman, to ensure that everything is functioning as set by constitution. Going into retirement and enjoying pension&#x2F;stock options should be more common.",
+        "created_at": "2026-06-12T18:40:44Z",
+        "created_at_i": 1781289644,
+        "objectID": "48507834",
+        "parent_id": 48493123,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-12T18:44:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tonymet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i should have said “crime, safety and blight” rather than “things”.  I meant the broader experience living in NYC vs the corruption"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tonymet",
+          "story_48477135"
+        ],
+        "author": "tonymet",
+        "comment_text": "i should have said “crime, safety and blight” rather than “things”.  I meant the broader experience living in NYC vs the corruption",
+        "created_at": "2026-06-12T18:38:29Z",
+        "created_at_i": 1781289509,
+        "objectID": "48507798",
+        "parent_id": 48499642,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-12T18:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tonymet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thanks that’s insightful."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tonymet",
+          "story_48477135"
+        ],
+        "author": "tonymet",
+        "comment_text": "thanks that’s insightful.",
+        "created_at": "2026-06-12T18:37:40Z",
+        "created_at_i": 1781289460,
+        "objectID": "48507786",
+        "parent_id": 48499642,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-12T18:39:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "supern0va"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oof, this comment is too real.<p>There's a dark future timeline where snark becomes the new &quot;don't use any em-dashes&quot; that people inject even more of to intentionally look human, since empathy and patience read as..robotic."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_supern0va",
+          "story_48477135"
+        ],
+        "author": "supern0va",
+        "comment_text": "Oof, this comment is too real.<p>There&#x27;s a dark future timeline where snark becomes the new &quot;don&#x27;t use any em-dashes&quot; that people inject even more of to intentionally look human, since empathy and patience read as..robotic.",
+        "created_at": "2026-06-12T18:29:34Z",
+        "created_at_i": 1781288974,
+        "objectID": "48507691",
+        "parent_id": 48492054,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-24T18:59:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eries"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yup. The hot dog story is in the book, and although it is a leadership story, that leadership is protected by a unique structure. Without which, I think it's very clear that it would be insufficient. You'll have to read the book to get al the details :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_eries",
+          "story_48477135"
+        ],
+        "author": "eries",
+        "comment_text": "Yup. The hot dog story is in the book, and although it is a leadership story, that leadership is protected by a unique structure. Without which, I think it&#x27;s very clear that it would be insufficient. You&#x27;ll have to read the book to get al the details :)",
+        "created_at": "2026-06-12T18:28:55Z",
+        "created_at_i": 1781288935,
+        "objectID": "48507684",
+        "parent_id": 48501704,
+        "story_id": 48477135,
+        "story_title": "I'm Eric Ries, author of \"The Lean Startup\" and new book \"Incorruptible\" – AMA",
+        "updated_at": "2026-06-17T17:45:09Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 579,
+    "nbPages": 29,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48477135&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 14
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        },
+        "merge": {
+          "total": 1
+        },
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

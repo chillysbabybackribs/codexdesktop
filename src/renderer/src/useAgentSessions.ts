@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { ServerNotification } from '../../shared/session-protocol';
 import type { TurnError } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
-import type { AgentRunSnapshot } from '../../shared/ipc';
 import {
   createReviewerSession,
   createWorkerSession,
-  dockRoleFlags,
   findAgentSessionByThread,
   reviewerTitle,
   serializeAgentDock,
@@ -36,7 +34,6 @@ export function useAgentSessions(
   // explicit user choice). Returns null when only one provider is configured
   // — a null agent model follows the main chat's model.
   deriveReviewerModel: () => string | null,
-  workspaceForMainChatTab: (key: string | null) => string | null,
 ): {
   agentSessions: AgentSession[];
   openAgentKeys: string[];
@@ -64,10 +61,10 @@ export function useAgentSessions(
     title: string;
     model: string | null;
   }) => void;
-  handleAgentRun: (run: AgentRunSnapshot, mainChatTabKey: string | null, parentAgentKey: string | null) => void;
   handleOpenAgent: (key: string) => void;
   handleMinimizeAgent: (key: string) => void;
-  handleSetAgentRole: (key: string, role: 'reviewer' | 'helper') => void;
+  handleToggleWatchAgent: (key: string) => void;
+  handleToggleAuditAgent: (key: string) => void;
   handleToggleReportAgent: (key: string) => void;
   handleDecideSendPolicy: (key: string, policy: 'always' | 'keep') => void;
   handleSetAgentModel: (key: string, model: string, effort?: ReasoningEffort | null) => void;
@@ -293,13 +290,7 @@ export function useAgentSessions(
     agentCounterRef.current++;
     updateAgentSessions((sessions) => [
       ...sessions,
-      createReviewerSession(
-        key,
-        title,
-        mainChatTabKey,
-        deriveReviewerModel(),
-        workspaceForMainChatTab(mainChatTabKey),
-      ),
+      createReviewerSession(key, title, mainChatTabKey, deriveReviewerModel()),
     ]);
     sessionStore.set(key, emptySessionState({ title }));
     setOpenAgentKeys((current) => [...current, key]);
@@ -326,58 +317,14 @@ export function useAgentSessions(
         spawn.agentKey,
         spawn.title,
         spawn.mainChatTabKey,
-        spawn.parentAgentKey,
+        spawn.parentAgentKey ?? spawn.agentKey,
         null,
         spawn.model,
-        agentSessionsRef.current.find((session) => session.key === spawn.parentAgentKey)?.workspace ??
-          workspaceForMainChatTab(spawn.mainChatTabKey),
       ),
     ]);
     sessionStore.set(spawn.agentKey, emptySessionState({ title: spawn.title }));
     // Open it so the worker's stream is visible in the dock as it runs.
     setOpenAgentKeys((current) => (current.includes(spawn.agentKey) ? current : [...current, spawn.agentKey]));
-  }
-
-  function handleAgentRun(
-    run: AgentRunSnapshot,
-    mainChatTabKey: string | null,
-    parentAgentKey: string | null,
-  ): void {
-    const patch = (session: AgentSession): AgentSession => ({
-      ...session,
-      title: session.title || run.title,
-      status: run.status === 'queued' || run.status === 'working' || run.status === 'waiting' ? 'working' : 'done',
-      sourceProvider: run.provider,
-      executionLane: run.lane,
-      nativeRunId: run.nativeId,
-      runParentThreadId: run.parentThreadId,
-      runStatus: run.status,
-      runTask: run.task,
-      runProgress: run.progress,
-      runResultSummary: run.resultSummary,
-      runOutputPath: run.outputPath,
-      wakeStatus: run.wakeStatus,
-      parentAgentKey: session.parentAgentKey ?? parentAgentKey,
-    });
-    const existing = agentSessionsRef.current.find((session) => session.key === run.id);
-    if (existing) {
-      patchAgentSession(run.id, patch);
-      return;
-    }
-
-    const session = patch(createWorkerSession(
-      run.id,
-      run.title,
-      mainChatTabKey,
-      parentAgentKey,
-      run.parentTurnId,
-      null,
-      agentSessionsRef.current.find((candidate) => candidate.key === parentAgentKey)?.workspace ??
-        workspaceForMainChatTab(mainChatTabKey),
-    ));
-    updateAgentSessions((sessions) => [...sessions, session]);
-    sessionStore.set(run.id, emptySessionState({ title: run.title }));
-    setOpenAgentKeys((current) => current.includes(run.id) ? current : [...current, run.id]);
   }
 
   function handleOpenAgent(key: string): void {
@@ -388,23 +335,23 @@ export function useAgentSessions(
     setOpenAgentKeys((current) => current.filter((candidate) => candidate !== key));
   }
 
-  // The card's Role radio: role is the intent, the flags are the mechanism,
-  // and one atomic patch keeps them agreeing. Dispatched even when the shown
-  // role is re-picked — re-arming the flags heals legacy snapshots that
-  // restored with neither (or both) flags set.
-  function handleSetAgentRole(key: string, role: 'reviewer' | 'helper'): void {
+  function handleToggleWatchAgent(key: string): void {
+    patchAgentSession(key, (session) => ({ ...session, watchesMain: !session.watchesMain }));
+  }
+
+  function handleToggleAuditAgent(key: string): void {
     patchAgentSession(key, (session) => ({
       ...session,
-      ...dockRoleFlags(role),
-      // Feedback requires an audit to exist: leaving Reviewer drops auto-send.
-      reportsToMain: role === 'reviewer' ? session.reportsToMain : false,
+      auditsMain: !session.auditsMain,
+      // Feedback requires an audit to exist: disabling audit disables it.
+      reportsToMain: session.auditsMain ? false : session.reportsToMain,
       lastAuditNote: null,
-      // The headline pairing: becoming a reviewer on a session that has not
-      // chosen a runtime yet derives a model from a different family than the
-      // main chat's current model — cross-provider review whichever direction
-      // the pairing runs. Explicit choices are never overridden.
+      // The headline pairing: arming audit on a session that has not chosen a
+      // runtime yet derives a model from a different family than the main
+      // chat's current model — cross-provider review whichever direction the
+      // pairing runs. Explicit choices are never overridden.
       model:
-        role === 'reviewer' && !session.threadId && !session.model
+        !session.auditsMain && !session.threadId && !session.model
           ? deriveReviewerModel()
           : session.model,
     }));
@@ -499,10 +446,10 @@ export function useAgentSessions(
     handleAgentNotification,
     handleNewAgent,
     handleSpawnedAgent,
-    handleAgentRun,
     handleOpenAgent,
     handleMinimizeAgent,
-    handleSetAgentRole,
+    handleToggleWatchAgent,
+    handleToggleAuditAgent,
     handleToggleReportAgent,
     handleDecideSendPolicy,
     handleSetAgentModel,

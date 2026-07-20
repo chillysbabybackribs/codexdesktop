@@ -1,0 +1,99 @@
+Monthly transactions
+
+150/mo
+
+Bank + credit-card lines in a typical month. Guess from one statement if unsure.
+
+201,200+
+
+Months behind
+
+6 mo
+
+How far back the books are untouched or unreconciled.
+
+136
+
+Bank + credit-card accounts
+
+Each account is its own reconciliation per month.
+
+115
+
+Data-quality flags (check what applies)
+
+Lots of uncategorized transactionsBig "Uncategorized" / Ask-My-Accountant pile to sort.
+
+Opening Balance Equity has a balanceOBE isn't zero — usually means setup errors to trace. What is OBE?
+
+Duplicates / missing payees suspectedDouble-entered deposits, blank vendor names, etc.
+
+Your effective cleanup rate
+
+$75/hr
+
+What your cleanup time is worth. Adjust to your market.
+
+$30$200
+
+Estimated cleanup work
+
+hours
+
+range 39–53 hrs
+
+Suggested quote
+
+$3,100–$4,300
+
+a flat-fee project range
+
+This is above the usual $750–$3,500 band for an under-12-month cleanup — fine for a heavy file, but double-check the scope before you send it.
+
+What's driving it
+
+- Transactions to process900
+
+- Reconciliations12
+
+- Complexitynone flagged
+
+Scoping a cleanup before you quote? CleanupLedger runs a free preview from a QBO export — books-health score, severity and the top issues. The estimated hours, quote range and client approval packet unlock per file when you're ready to quote.
+
+Run free preview →
+
+Free preview, no card.
+
+## How this estimate is built
+
+There's no universal price for a QuickBooks cleanup, but there is a sane way to estimate one. This calculator follows the same logic experienced bookkeepers use when they scope a messy file: start from the volume of work, layer on reconciliation time, then add a premium for the stuff that turns a catch-up into a repair job.
+
+- Transaction volume × months behind is the engine. The single biggest predictor of cleanup effort is how many transactions you have to review, recategorize, and tie out — and that scales with both monthly volume and how far back you're going.
+
+- Reconciliation time per account. Every bank and credit-card account is its own monthly reconciliation. Five accounts behind ten months is fifty reconciliations, not ten.
+
+- Complexity flags. Uncategorized piles, duplicates, and a non-zero Opening Balance Equity each add real time because they require investigation, not just data entry. Complexity — not just backlog length — is what you're actually pricing.
+
+The hour estimate is then converted to a flat-fee quote using your effective rate, with a sensible spread on either side so you have room to come in under and look good.
+
+## What the numbers are anchored to
+
+The output is sanity-checked against real-world benchmarks so it doesn't drift into fantasy. Industry guides put a typical small-business cleanup with under 12 months of backlog in the $750–$3,500 range, with larger backlogs running well past that. A widely used rule of thumb is that a month of cleanup costs two to four times a month of ongoing bookkeeping for the same client, and ongoing monthly bookkeeping commonly runs from a few hundred up to $1,500+ per month depending on complexity. Use this estimator's number as a starting point, not gospel — your judgment on the actual file wins.
+
+## Hourly or flat fee?
+
+Estimate the hours first, then quote a flat project fee. Hourly billing punishes you for being fast and makes the client nervous about an open-ended meter. Treat the hour figure here as your internal floor and the quote range as the number you put on the proposal. If the file turns out worse than scoped, that's a change-order conversation — bake a discovery step into your engagement so you're not eating surprises.
+
+## Before you send the quote, look at the file
+
+The fastest way to firm up an estimate is to actually see what you're walking into. A quick books-health pass tells you whether that "uncategorized" box should really be checked, whether Opening Balance Equity is hiding a problem, and how many duplicates are lurking — so your number is grounded in the real file instead of the client's optimistic summary.
+
+That's exactly what CleanupLedger does: upload a QuickBooks Online export and get a free preview of the books-health score and top issues. The estimated cleanup hours, quote range and client approval packet unlock per file ($29 full diagnostic / $49 client packet) when you're ready to quote. Run a free preview (no card).
+
+## Related reading
+
+- How to price a QuickBooks cleanup before you quote it
+
+- Opening Balance Equity in QuickBooks: what it is and how to clear it
+
+This estimator is a planning aid, not a quote. Always scope the actual file before committing to a price. CleanupLedger is not affiliated with Intuit Inc.; QuickBooks is a trademark of Intuit Inc.

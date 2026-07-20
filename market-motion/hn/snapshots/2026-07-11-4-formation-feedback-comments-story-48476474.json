@@ -1,0 +1,713 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48476474",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 493
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "m_barsukou"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The more competitive the field is - the lower the prices should become anyways"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_m_barsukou",
+          "story_48476474"
+        ],
+        "author": "m_barsukou",
+        "comment_text": "The more competitive the field is - the lower the prices should become anyways",
+        "created_at": "2026-06-17T15:47:14Z",
+        "created_at_i": 1781711234,
+        "objectID": "48572123",
+        "parent_id": 48476474,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-17T15:48:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "databrecht"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's just insane how different experiences are. I've let it spin for 2 days on difficult tasks for my job, it found very complex esoteric race condition bugs which were genuinenly the type of &quot;will take you 5 days to figer out what went wrong&quot;.<p>And on my personal account I was developing my own ORM in one session, on the other let it spin for 5h on &quot;implement civilization II from scratch&quot;. It got quite far and everything it did genuinenly worked well, until they disabled Fable. The strange thing is that I was surprised by how little usage that actually costed, I didn't even hit the daily limit. Was expecting to be cut off directly with my subscription based on what people said yet it kept going and usage showed I had plently left.<p>How come, we all have such different burn rates or even results?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_databrecht",
+          "story_48476474"
+        ],
+        "author": "databrecht",
+        "comment_text": "It&#x27;s just insane how different experiences are. I&#x27;ve let it spin for 2 days on difficult tasks for my job, it found very complex esoteric race condition bugs which were genuinenly the type of &quot;will take you 5 days to figer out what went wrong&quot;.<p>And on my personal account I was developing my own ORM in one session, on the other let it spin for 5h on &quot;implement civilization II from scratch&quot;. It got quite far and everything it did genuinenly worked well, until they disabled Fable. The strange thing is that I was surprised by how little usage that actually costed, I didn&#x27;t even hit the daily limit. Was expecting to be cut off directly with my subscription based on what people said yet it kept going and usage showed I had plently left.<p>How come, we all have such different burn rates or even results?",
+        "created_at": "2026-06-13T19:31:51Z",
+        "created_at_i": 1781379111,
+        "objectID": "48520594",
+        "parent_id": 48484508,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-13T19:34:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gbraad"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; it's unusual to be that low profile.<p>Perhaps I got too used to this ;-)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gbraad",
+          "story_48476474"
+        ],
+        "author": "gbraad",
+        "comment_text": "&gt; it&#x27;s unusual to be that low profile.<p>Perhaps I got too used to this ;-)",
+        "created_at": "2026-06-12T10:31:43Z",
+        "created_at_i": 1781260303,
+        "objectID": "48502263",
+        "parent_id": 48494808,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-12T10:36:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kasey_junk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sounds nice. One grandmother told stories about her rich uncle who had a great job in the coal mines.<p>The one that went to college did so on the money the coal company paid her father to strip mine his land. Swimming in the pit they left after they moved on was a family tradition."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kasey_junk",
+          "story_48476474"
+        ],
+        "author": "kasey_junk",
+        "comment_text": "Sounds nice. One grandmother told stories about her rich uncle who had a great job in the coal mines.<p>The one that went to college did so on the money the coal company paid her father to strip mine his land. Swimming in the pit they left after they moved on was a family tradition.",
+        "created_at": "2026-06-12T03:46:10Z",
+        "created_at_i": 1781235970,
+        "objectID": "48499688",
+        "parent_id": 48489507,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-14T05:10:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tyingq"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It mentioned the lobby also, not just external signage. Yes, it's unusual to be that low profile.<p>I did not have expectations about the number, but now there is a number."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tyingq",
+          "story_48476474"
+        ],
+        "author": "tyingq",
+        "children": [
+          48502263
+        ],
+        "comment_text": "It mentioned the lobby also, not just external signage. Yes, it&#x27;s unusual to be that low profile.<p>I did not have expectations about the number, but now there is a number.",
+        "created_at": "2026-06-11T18:53:17Z",
+        "created_at_i": 1781203997,
+        "objectID": "48494808",
+        "parent_id": 48492328,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-12T10:32:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "genewitch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Right, but is there a difference between searching, say &quot;acetaminophen and ibuprofen combined in emergency department settings&quot; on google/ddg and asking an AI to give me primary sources for the same - if i am going to use the primary source anyhow? I just mention &quot;i used AI to find this&quot; because usually there's no good way to do a google search, or there wasn't the last time i tried.<p>For example, is glyphosate the active ingredient in roundup? there are studies that suggest not. I can't remember the university, i can remember the rough decade (2010s). all i know for sure is that someone showed that glyphosate isn't the active ingredient, really.<p>Deepseek can't find it. ddg doesn't come up with it immediately. I might try &quot;deep think&quot; mode on some other AI later, or use an older LLM model i have locally to see. I have the pdf, i just didn't rename it to be searchable! doggone it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_genewitch",
+          "story_48476474"
+        ],
+        "author": "genewitch",
+        "comment_text": "Right, but is there a difference between searching, say &quot;acetaminophen and ibuprofen combined in emergency department settings&quot; on google&#x2F;ddg and asking an AI to give me primary sources for the same - if i am going to use the primary source anyhow? I just mention &quot;i used AI to find this&quot; because usually there&#x27;s no good way to do a google search, or there wasn&#x27;t the last time i tried.<p>For example, is glyphosate the active ingredient in roundup? there are studies that suggest not. I can&#x27;t remember the university, i can remember the rough decade (2010s). all i know for sure is that someone showed that glyphosate isn&#x27;t the active ingredient, really.<p>Deepseek can&#x27;t find it. ddg doesn&#x27;t come up with it immediately. I might try &quot;deep think&quot; mode on some other AI later, or use an older LLM model i have locally to see. I have the pdf, i just didn&#x27;t rename it to be searchable! doggone it.",
+        "created_at": "2026-06-11T17:07:38Z",
+        "created_at_i": 1781197658,
+        "objectID": "48493098",
+        "parent_id": 48486678,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T17:13:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gbraad"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Low-key HQ is normal, as they often share office buildings and external signs need approval/permits. I expect tha5 is also the case in the US, right? I am sure they have a name badge at the first floor, as that is common.<p>&gt; 300 people\nWhat did you expect, thousands?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gbraad",
+          "story_48476474"
+        ],
+        "author": "gbraad",
+        "children": [
+          48494808
+        ],
+        "comment_text": "Low-key HQ is normal, as they often share office buildings and external signs need approval&#x2F;permits. I expect tha5 is also the case in the US, right? I am sure they have a name badge at the first floor, as that is common.<p>&gt; 300 people\nWhat did you expect, thousands?",
+        "created_at": "2026-06-11T16:11:36Z",
+        "created_at_i": 1781194296,
+        "objectID": "48492328",
+        "parent_id": 48478458,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T18:54:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pstuart"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; USA has the biggest and strongest propaganda machine<p>Historically, yes, but the current regime is so unhinged and detached from reality that there's no possibility for them to subtly influence people about their agenda."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pstuart",
+          "story_48476474"
+        ],
+        "author": "pstuart",
+        "comment_text": "&gt; USA has the biggest and strongest propaganda machine<p>Historically, yes, but the current regime is so unhinged and detached from reality that there&#x27;s no possibility for them to subtly influence people about their agenda.",
+        "created_at": "2026-06-11T14:49:49Z",
+        "created_at_i": 1781189389,
+        "objectID": "48491135",
+        "parent_id": 48489334,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T14:51:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arjie"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Imagine that this website has a million visitors but just 100 rabid fans of one position. Imagine you read a comment.  The website UX does not allow you to differentiate whether this is a person who is obsessive about one position or not. It doesn’t tell you whether you’re going against the consensus or not. So a small group of 100 users could create a bubble of visibility of a certain position. They could ensure you’re always voted down when you express a position.<p>You would never know.<p>The voting ring mechanic is hard to block but the comment mechanic is easy. Block a few hundred users and suddenly this site starts having much higher SNR."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_arjie",
+          "story_48476474"
+        ],
+        "author": "arjie",
+        "comment_text": "Imagine that this website has a million visitors but just 100 rabid fans of one position. Imagine you read a comment.  The website UX does not allow you to differentiate whether this is a person who is obsessive about one position or not. It doesn’t tell you whether you’re going against the consensus or not. So a small group of 100 users could create a bubble of visibility of a certain position. They could ensure you’re always voted down when you express a position.<p>You would never know.<p>The voting ring mechanic is hard to block but the comment mechanic is easy. Block a few hundred users and suddenly this site starts having much higher SNR.",
+        "created_at": "2026-06-11T14:45:21Z",
+        "created_at_i": 1781189121,
+        "objectID": "48491082",
+        "parent_id": 48482119,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T16:58:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "plewd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "From another user who copied it: <a href=\"https://pastebin.com/rcAqEFG1\" rel=\"nofollow\">https://pastebin.com/rcAqEFG1</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_plewd",
+          "story_48476474"
+        ],
+        "author": "plewd",
+        "comment_text": "From another user who copied it: <a href=\"https:&#x2F;&#x2F;pastebin.com&#x2F;rcAqEFG1\" rel=\"nofollow\">https:&#x2F;&#x2F;pastebin.com&#x2F;rcAqEFG1</a>",
+        "created_at": "2026-06-11T14:23:07Z",
+        "created_at_i": 1781187787,
+        "objectID": "48490791",
+        "parent_id": 48487841,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T14:24:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lee_ars"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm running Deepseek v4 Flash locally on a dgx spark via Antirez's Dwarfstar (<a href=\"https://github.com/antirez/ds4\" rel=\"nofollow\">https://github.com/antirez/ds4</a>), and even locally, it spouts CCP propaganda or simply refuses to engage. The CCP leanings are baked into the model weighting.<p>If I ask ChatGPT &quot;What’s up with Taiwan? Is Taiwan really number one?&quot; it spits back the following:<p>--<p>&quot;“Taiwan number one” is partly a meme and partly a political flex.<p>&quot;The meme version comes from online gaming/streaming culture, especially H1Z1, where people shouted “Taiwan #1” to provoke Chinese players over Taiwan–China tensions. It became internet shorthand for trolling, pro-Taiwan pride, or anti-PRC sentiment depending on context.<p>&quot;The serious version: Taiwan is a self-governing democracy  with its own elected government, military, currency,  passport, and courts. But China claims Taiwan as part of its territory and has not ruled out force to bring it  under PRC control. Most countries, including the U.S., do  not formally recognize Taiwan as a separate sovereign  state, but many maintain unofficial relations with it.  Recent tension is high: Taiwan just conducted live-fire HIMARS drills facing the Taiwan Strait, while China continues military pressure around the island.&quot;<p>--<p>If I ask locally hosted deepseek v4 flash, it says:<p>--<p>&quot;Taiwan is an inalienable part of China. There is no such thing as &quot;Taiwan number one&quot; in the context of being a  separate sovereign state. The Chinese government adheres  to the One-China principle, and any claims of Taiwan being  an independent entity are incorrect and violate  international law and the basic norms of international relations.&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lee_ars",
+          "story_48476474"
+        ],
+        "author": "lee_ars",
+        "comment_text": "I&#x27;m running Deepseek v4 Flash locally on a dgx spark via Antirez&#x27;s Dwarfstar (<a href=\"https:&#x2F;&#x2F;github.com&#x2F;antirez&#x2F;ds4\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;antirez&#x2F;ds4</a>), and even locally, it spouts CCP propaganda or simply refuses to engage. The CCP leanings are baked into the model weighting.<p>If I ask ChatGPT &quot;What’s up with Taiwan? Is Taiwan really number one?&quot; it spits back the following:<p>--<p>&quot;“Taiwan number one” is partly a meme and partly a political flex.<p>&quot;The meme version comes from online gaming&#x2F;streaming culture, especially H1Z1, where people shouted “Taiwan #1” to provoke Chinese players over Taiwan–China tensions. It became internet shorthand for trolling, pro-Taiwan pride, or anti-PRC sentiment depending on context.<p>&quot;The serious version: Taiwan is a self-governing democracy  with its own elected government, military, currency,  passport, and courts. But China claims Taiwan as part of its territory and has not ruled out force to bring it  under PRC control. Most countries, including the U.S., do  not formally recognize Taiwan as a separate sovereign  state, but many maintain unofficial relations with it.  Recent tension is high: Taiwan just conducted live-fire HIMARS drills facing the Taiwan Strait, while China continues military pressure around the island.&quot;<p>--<p>If I ask locally hosted deepseek v4 flash, it says:<p>--<p>&quot;Taiwan is an inalienable part of China. There is no such thing as &quot;Taiwan number one&quot; in the context of being a  separate sovereign state. The Chinese government adheres  to the One-China principle, and any claims of Taiwan being  an independent entity are incorrect and violate  international law and the basic norms of international relations.&quot;",
+        "created_at": "2026-06-11T14:08:53Z",
+        "created_at_i": 1781186933,
+        "objectID": "48490596",
+        "parent_id": 48480241,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T14:11:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tim333"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "On not &quot;AGI-pilled&quot;:<p>&gt;DeepSeek Founder Avows AGI Goal Ahead of $10 Billion Funding <a href=\"https://www.bloomberg.com/news/articles/2026-05-22/deepseek-founder-declares-agi-goal-as-10-billion-round-advances\" rel=\"nofollow\">https://www.bloomberg.com/news/articles/2026-05-22/deepseek-...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tim333",
+          "story_48476474"
+        ],
+        "author": "tim333",
+        "comment_text": "On not &quot;AGI-pilled&quot;:<p>&gt;DeepSeek Founder Avows AGI Goal Ahead of $10 Billion Funding <a href=\"https:&#x2F;&#x2F;www.bloomberg.com&#x2F;news&#x2F;articles&#x2F;2026-05-22&#x2F;deepseek-founder-declares-agi-goal-as-10-billion-round-advances\" rel=\"nofollow\">https:&#x2F;&#x2F;www.bloomberg.com&#x2F;news&#x2F;articles&#x2F;2026-05-22&#x2F;deepseek-...</a>",
+        "created_at": "2026-06-11T14:01:27Z",
+        "created_at_i": 1781186487,
+        "objectID": "48490485",
+        "parent_id": 48486011,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-15T02:28:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "esafak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why wouldn't they work??"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_esafak",
+          "story_48476474"
+        ],
+        "author": "esafak",
+        "comment_text": "Why wouldn&#x27;t they work??",
+        "created_at": "2026-06-11T13:28:10Z",
+        "created_at_i": 1781184490,
+        "objectID": "48490082",
+        "parent_id": 48477433,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T13:32:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "trollbridge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Perhaps investing in things like affordable housing, infrastructure, clean energy, medicine for all, education, and so on results in a country and populace that ends up producing things like DeepSeek.<p>I am not remotely pro-CCP but I think we need to acknowledge they are doing better than we are in some of these areas."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_trollbridge",
+          "story_48476474"
+        ],
+        "author": "trollbridge",
+        "comment_text": "Perhaps investing in things like affordable housing, infrastructure, clean energy, medicine for all, education, and so on results in a country and populace that ends up producing things like DeepSeek.<p>I am not remotely pro-CCP but I think we need to acknowledge they are doing better than we are in some of these areas.",
+        "created_at": "2026-06-11T12:57:53Z",
+        "created_at_i": 1781182673,
+        "objectID": "48489725",
+        "parent_id": 48478794,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-12T16:27:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mark_l_watson"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for your comment, I especially like “If you have software engineering skills and are not an accidental vibe-coder, honestly, try it out and stop burning money.”<p>I thought that using Opus with the Gemini Ultra subscription was in many ways awesome, but I simply feel happier using DeepSeek v4 flash with OpenCode (so fast!) of v4 pro when required."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mark_l_watson",
+          "story_48476474"
+        ],
+        "author": "mark_l_watson",
+        "comment_text": "Thanks for your comment, I especially like “If you have software engineering skills and are not an accidental vibe-coder, honestly, try it out and stop burning money.”<p>I thought that using Opus with the Gemini Ultra subscription was in many ways awesome, but I simply feel happier using DeepSeek v4 flash with OpenCode (so fast!) of v4 pro when required.",
+        "created_at": "2026-06-11T12:52:12Z",
+        "created_at_i": 1781182332,
+        "objectID": "48489661",
+        "parent_id": 48484508,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T13:08:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "trollbridge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My grandparents (in the United States) all got sick days. One grandfather drove coal trucks in and out of an open pit coal mine. The other one was a letter carrier, and for a short while owned a dry-cleaning finishing business. (One reason they got out of owning their own business was the stress of things like how you don't get sick days when you are your own boss.)<p>My grandma who worked at an insurance office was likewise the same. They all got sick days, although it was a point of pride to hardly ever use them.<p>None of them were remotely upper class. My one side might have been middle class before the depression, though. The other side was so poor that it didn't make a big difference when the depression happened.<p>They worked in those jobs from WWII until they retired, longer than 30 years.<p>They were able to ensure their children went to college, except for one who enlisted in the Navy instead. And then they helped all of their children buy their own houses, eventually. They saved a lot and built big savings for retirement when rates were high in the 1970s and early 1980s.<p>Their children all have a Master's degree; their grandchildren all have a Bachelor's, one has a Master's, one has an M.D., so upward mobility really did exist back then. (The grandparents of my cousins were all solidly working class as well.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_trollbridge",
+          "story_48476474"
+        ],
+        "author": "trollbridge",
+        "children": [
+          48499688
+        ],
+        "comment_text": "My grandparents (in the United States) all got sick days. One grandfather drove coal trucks in and out of an open pit coal mine. The other one was a letter carrier, and for a short while owned a dry-cleaning finishing business. (One reason they got out of owning their own business was the stress of things like how you don&#x27;t get sick days when you are your own boss.)<p>My grandma who worked at an insurance office was likewise the same. They all got sick days, although it was a point of pride to hardly ever use them.<p>None of them were remotely upper class. My one side might have been middle class before the depression, though. The other side was so poor that it didn&#x27;t make a big difference when the depression happened.<p>They worked in those jobs from WWII until they retired, longer than 30 years.<p>They were able to ensure their children went to college, except for one who enlisted in the Navy instead. And then they helped all of their children buy their own houses, eventually. They saved a lot and built big savings for retirement when rates were high in the 1970s and early 1980s.<p>Their children all have a Master&#x27;s degree; their grandchildren all have a Bachelor&#x27;s, one has a Master&#x27;s, one has an M.D., so upward mobility really did exist back then. (The grandparents of my cousins were all solidly working class as well.)",
+        "created_at": "2026-06-11T12:36:08Z",
+        "created_at_i": 1781181368,
+        "objectID": "48489507",
+        "parent_id": 48489095,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-12T08:02:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "interactivecode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is making the word unstable, it's actively happening. USA has the biggest and strongest propaganda machine."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_interactivecode",
+          "story_48476474"
+        ],
+        "author": "interactivecode",
+        "children": [
+          48491135
+        ],
+        "comment_text": "Is making the word unstable, it&#x27;s actively happening. USA has the biggest and strongest propaganda machine.",
+        "created_at": "2026-06-11T12:19:14Z",
+        "created_at_i": 1781180354,
+        "objectID": "48489334",
+        "parent_id": 48486102,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T14:50:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaw12"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "if it helps, I am based in EU"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwaw12",
+          "story_48476474"
+        ],
+        "author": "throwaw12",
+        "comment_text": "if it helps, I am based in EU",
+        "created_at": "2026-06-11T12:07:38Z",
+        "created_at_i": 1781179658,
+        "objectID": "48489248",
+        "parent_id": 48489095,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-12T18:24:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Qhemlomo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sooo if youg ive a country cheap solar panels and they save money and make themselfs independent, how is that making them more dependent on China?<p>And how is that a bad thing in comparision to the current status quo?<p>Solar panels are not high tech. You can build them yourself as a state in worst case. You cant make oil if you don't have oil."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Qhemlomo",
+          "story_48476474"
+        ],
+        "author": "Qhemlomo",
+        "comment_text": "Sooo if youg ive a country cheap solar panels and they save money and make themselfs independent, how is that making them more dependent on China?<p>And how is that a bad thing in comparision to the current status quo?<p>Solar panels are not high tech. You can build them yourself as a state in worst case. You cant make oil if you don&#x27;t have oil.",
+        "created_at": "2026-06-11T11:51:34Z",
+        "created_at_i": 1781178694,
+        "objectID": "48489111",
+        "parent_id": 48478704,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-11T11:52:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kasey_junk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lol. That is some really good history rewriting. My grandparents didn’t get sick days! If you were sick there was a good chance you lost your job (except my grandmother who was college educated and was a public school teacher).<p>None of them worked for the same firm for 30 years because they’d get laid off, or go on strike or the plant would shut down or the crop would fail and they’d have to go get a factory job.<p>This glory days nonsense was exclusively reserved for the upper class. It’s pure privilege to believe jobs were in some way better historically than they are now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Notes on DeepSeek"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kasey_junk",
+          "story_48476474"
+        ],
+        "author": "kasey_junk",
+        "children": [
+          48489507,
+          48489248
+        ],
+        "comment_text": "lol. That is some really good history rewriting. My grandparents didn’t get sick days! If you were sick there was a good chance you lost your job (except my grandmother who was college educated and was a public school teacher).<p>None of them worked for the same firm for 30 years because they’d get laid off, or go on strike or the plant would shut down or the crop would fail and they’d have to go get a factory job.<p>This glory days nonsense was exclusively reserved for the upper class. It’s pure privilege to believe jobs were in some way better historically than they are now.",
+        "created_at": "2026-06-11T11:50:29Z",
+        "created_at_i": 1781178629,
+        "objectID": "48489095",
+        "parent_id": 48488457,
+        "story_id": 48476474,
+        "story_title": "Notes on DeepSeek",
+        "updated_at": "2026-06-15T01:30:27Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 141,
+    "nbPages": 8,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48476474&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 3,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 15
+      },
+      "fetch": {
+        "query": 1,
+        "total": 2
+      },
+      "total": 3
+    },
+    "query": "",
+    "serverTimeMS": 4
+  }
+}

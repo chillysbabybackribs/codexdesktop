@@ -1,0 +1,1400 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48834961",
+    "window": "recent-90d",
+    "tag": "ask_hn",
+    "score": 199
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ranger_danger"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was in there for years but never got invited... all I got was banned for having an opinion that was different than theirs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ranger_danger",
+          "story_48834961"
+        ],
+        "author": "ranger_danger",
+        "comment_text": "I was in there for years but never got invited... all I got was banned for having an opinion that was different than theirs.",
+        "created_at": "2026-07-09T21:36:57Z",
+        "created_at_i": 1783633017,
+        "objectID": "48852686",
+        "parent_id": 48838911,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T21:37:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "orbital-decay"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://hcker.news/?ai=exclude\" rel=\"nofollow\">https://hcker.news/?ai=exclude</a><p>There's the &quot;small web&quot; filter too, if you want this."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_orbital-decay",
+          "story_48834961"
+        ],
+        "author": "orbital-decay",
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;hcker.news&#x2F;?ai=exclude\" rel=\"nofollow\">https:&#x2F;&#x2F;hcker.news&#x2F;?ai=exclude</a><p>There&#x27;s the &quot;small web&quot; filter too, if you want this.",
+        "created_at": "2026-07-09T14:00:13Z",
+        "created_at_i": 1783605613,
+        "objectID": "48845998",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T14:03:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PaiDxng"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The useful AI writing is usually about changed workflows, not “look what this agent did in 2 minutes”; I’d read more pieces that start from the user’s friction."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PaiDxng",
+          "story_48834961"
+        ],
+        "author": "PaiDxng",
+        "comment_text": "The useful AI writing is usually about changed workflows, not “look what this agent did in 2 minutes”; I’d read more pieces that start from the user’s friction.",
+        "created_at": "2026-07-09T02:58:49Z",
+        "created_at_i": 1783565929,
+        "objectID": "48840443",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T03:02:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "syngrog66"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "YC and related VC are all-in on AI. they're simply talking up their book. VC cash is fueling all of this bubble, directly or indirectly.<p>The pop and deflation may have already started..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_syngrog66",
+          "story_48834961"
+        ],
+        "author": "syngrog66",
+        "comment_text": "YC and related VC are all-in on AI. they&#x27;re simply talking up their book. VC cash is fueling all of this bubble, directly or indirectly.<p>The pop and deflation may have already started...",
+        "created_at": "2026-07-09T02:12:38Z",
+        "created_at_i": 1783563158,
+        "objectID": "48840108",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T02:15:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rpdillon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The hype is a function of people trying things because no one knows quite where we're going to land. But this is two orders of magnitude more impactful then NFTs and crypto. There will always be grifters, but it's patently obvious AI is going to quietly (or maybe not-so-quietly) infiltrate everything.<p>One year? Not a chance."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rpdillon",
+          "story_48834961"
+        ],
+        "author": "rpdillon",
+        "comment_text": "The hype is a function of people trying things because no one knows quite where we&#x27;re going to land. But this is two orders of magnitude more impactful then NFTs and crypto. There will always be grifters, but it&#x27;s patently obvious AI is going to quietly (or maybe not-so-quietly) infiltrate everything.<p>One year? Not a chance.",
+        "created_at": "2026-07-09T00:50:36Z",
+        "created_at_i": 1783558236,
+        "objectID": "48839523",
+        "parent_id": 48835425,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T00:51:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arvid-lind"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; <a href=\"https://engineeringblogs.xyz/\" rel=\"nofollow\">https://engineeringblogs.xyz/</a><p>This looks great! thanks for sharing, been looking for something like this for a while."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_arvid-lind",
+          "story_48834961"
+        ],
+        "author": "arvid-lind",
+        "comment_text": "&gt; <a href=\"https:&#x2F;&#x2F;engineeringblogs.xyz&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;engineeringblogs.xyz&#x2F;</a><p>This looks great! thanks for sharing, been looking for something like this for a while.",
+        "created_at": "2026-07-08T23:57:23Z",
+        "created_at_i": 1783555043,
+        "objectID": "48839069",
+        "parent_id": 48835858,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T23:59:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xqb64"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can try hanging out on the Libera IRC network in their channel."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_xqb64",
+          "story_48834961"
+        ],
+        "author": "xqb64",
+        "children": [
+          48852686
+        ],
+        "comment_text": "You can try hanging out on the Libera IRC network in their channel.",
+        "created_at": "2026-07-08T23:41:31Z",
+        "created_at_i": 1783554091,
+        "objectID": "48838911",
+        "parent_id": 48835890,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T21:37:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cider9986"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I find it's very similar to regular frontpage."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Cider9986",
+          "story_48834961"
+        ],
+        "author": "Cider9986",
+        "comment_text": "I find it&#x27;s very similar to regular frontpage.",
+        "created_at": "2026-07-08T20:06:26Z",
+        "created_at_i": 1783541186,
+        "objectID": "48836786",
+        "parent_id": 48836742,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T20:08:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "csa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Try HN “classic” mode:<p><a href=\"https://news.ycombinator.com/classic\">https://news.ycombinator.com/classic</a><p>Not completely free of AI, but it’s probably more of what you are looking for."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_csa",
+          "story_48834961"
+        ],
+        "author": "csa",
+        "children": [
+          48836786
+        ],
+        "comment_text": "Try HN “classic” mode:<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;classic\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;classic</a><p>Not completely free of AI, but it’s probably more of what you are looking for.",
+        "created_at": "2026-07-08T20:02:34Z",
+        "created_at_i": 1783540954,
+        "objectID": "48836742",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T11:18:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "schmookeeg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've noticed myself and several colleagues have all taken to making little SaaS's for sport -- I'm not sure WHY we've all done that, but it's totally a thing.<p>Maybe if there was a monthly &quot;Show us your (project/vibe/slop)&quot; thread, it would provide a centralized spot for it all, then you could ignore it, once, at leisure, instead of the filters working overtime. :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_schmookeeg",
+          "story_48834961"
+        ],
+        "author": "schmookeeg",
+        "comment_text": "I&#x27;ve noticed myself and several colleagues have all taken to making little SaaS&#x27;s for sport -- I&#x27;m not sure WHY we&#x27;ve all done that, but it&#x27;s totally a thing.<p>Maybe if there was a monthly &quot;Show us your (project&#x2F;vibe&#x2F;slop)&quot; thread, it would provide a centralized spot for it all, then you could ignore it, once, at leisure, instead of the filters working overtime. :)",
+        "created_at": "2026-07-08T19:54:42Z",
+        "created_at_i": 1783540482,
+        "objectID": "48836655",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:58:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KenographerPrim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I can see I've made the easy people angry ^_^ Go ahead and take those points off, it will not change my life the slightest."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_KenographerPrim",
+          "story_48834961"
+        ],
+        "author": "KenographerPrim",
+        "comment_text": "I can see I&#x27;ve made the easy people angry ^_^ Go ahead and take those points off, it will not change my life the slightest.",
+        "created_at": "2026-07-08T19:08:44Z",
+        "created_at_i": 1783537724,
+        "objectID": "48836097",
+        "parent_id": 48835297,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T01:46:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PaulHoule"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "People have been saying this for the longest time,  like I wrote this essay<p><a href=\"https://ontology2.com/essays/HackerNewsForHackers/\" rel=\"nofollow\">https://ontology2.com/essays/HackerNewsForHackers/</a><p>funny thing is I don't even agree with it anymore,  like most of the trends I didn't like have mainly blown over,  and funny enough when I wrote the sequel<p><a href=\"https://ontology2.com/essays/ClassifyingHackerNewsArticles/\" rel=\"nofollow\">https://ontology2.com/essays/ClassifyingHackerNewsArticles/</a><p>articles I liked were &quot;mostly about AI!&quot;<p>Myself I find the AI thing exhausting because I was involved in three efforts to make a breakthrough in natural language understanding in the 2010s and even gave this talk which went from &quot;trendy&quot; to &quot;cringe&quot; to &quot;prophetic&quot; over the course of the last 10 years<p><a href=\"https://www.slideshare.net/slideshow/chatbots-in-2017-ithaca-talk-dec-6/69926712\" rel=\"nofollow\">https://www.slideshare.net/slideshow/chatbots-in-2017-ithaca...</a><p>So when I see all these people standing on their tip toes and screaming &quot;LOOK AT ME!  I'M AN EARLY ADOPTER&quot; I can't help think they're a bunch of laggards at best,  NPCs at worst,  as much as I know that's an unconstructive attitude.  I'm looking for the &quot;last mover advantage&quot; as I use a good model now,  and will use a better model in six months,  but I don't rot my brain doomscrolling X to see what Andrej Karpathy wrote at 2:37am last night.<p>For years I've felt like HN is home because it embraces both technology and business,  compare that to Progitt which is a bunch of communists [1] who will pounce on you if you admit that you are in it for the money,  even just a little bit.  Compared to something hardcore,  HN is vulnerable to takeover from (for lack of a better term) posers.<p>It's what it is,  I skip past it.  If I really want to feel out-of-touch with current trends I go to LinkedIn which flooded by AI slop articles about &quot;what AI all means&quot; from people who don't know what they are talking about in the least.  To their credit,  if you smash &quot;I'm not interested&quot; consistently their recommender does eventually learn from that and you see less of it.<p>[1] ... y'all know I'm one of the leftists of HN!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PaulHoule",
+          "story_48834961"
+        ],
+        "author": "PaulHoule",
+        "comment_text": "People have been saying this for the longest time,  like I wrote this essay<p><a href=\"https:&#x2F;&#x2F;ontology2.com&#x2F;essays&#x2F;HackerNewsForHackers&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;ontology2.com&#x2F;essays&#x2F;HackerNewsForHackers&#x2F;</a><p>funny thing is I don&#x27;t even agree with it anymore,  like most of the trends I didn&#x27;t like have mainly blown over,  and funny enough when I wrote the sequel<p><a href=\"https:&#x2F;&#x2F;ontology2.com&#x2F;essays&#x2F;ClassifyingHackerNewsArticles&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;ontology2.com&#x2F;essays&#x2F;ClassifyingHackerNewsArticles&#x2F;</a><p>articles I liked were &quot;mostly about AI!&quot;<p>Myself I find the AI thing exhausting because I was involved in three efforts to make a breakthrough in natural language understanding in the 2010s and even gave this talk which went from &quot;trendy&quot; to &quot;cringe&quot; to &quot;prophetic&quot; over the course of the last 10 years<p><a href=\"https:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;chatbots-in-2017-ithaca-talk-dec-6&#x2F;69926712\" rel=\"nofollow\">https:&#x2F;&#x2F;www.slideshare.net&#x2F;slideshow&#x2F;chatbots-in-2017-ithaca...</a><p>So when I see all these people standing on their tip toes and screaming &quot;LOOK AT ME!  I&#x27;M AN EARLY ADOPTER&quot; I can&#x27;t help think they&#x27;re a bunch of laggards at best,  NPCs at worst,  as much as I know that&#x27;s an unconstructive attitude.  I&#x27;m looking for the &quot;last mover advantage&quot; as I use a good model now,  and will use a better model in six months,  but I don&#x27;t rot my brain doomscrolling X to see what Andrej Karpathy wrote at 2:37am last night.<p>For years I&#x27;ve felt like HN is home because it embraces both technology and business,  compare that to Progitt which is a bunch of communists [1] who will pounce on you if you admit that you are in it for the money,  even just a little bit.  Compared to something hardcore,  HN is vulnerable to takeover from (for lack of a better term) posers.<p>It&#x27;s what it is,  I skip past it.  If I really want to feel out-of-touch with current trends I go to LinkedIn which flooded by AI slop articles about &quot;what AI all means&quot; from people who don&#x27;t know what they are talking about in the least.  To their credit,  if you smash &quot;I&#x27;m not interested&quot; consistently their recommender does eventually learn from that and you see less of it.<p>[1] ... y&#x27;all know I&#x27;m one of the leftists of HN!",
+        "created_at": "2026-07-08T19:03:33Z",
+        "created_at_i": 1783537413,
+        "objectID": "48836033",
+        "parent_id": 48835574,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:06:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "summarybot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You could always... vibecode your own :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_summarybot",
+          "story_48834961"
+        ],
+        "author": "summarybot",
+        "comment_text": "You could always... vibecode your own :)",
+        "created_at": "2026-07-08T18:56:08Z",
+        "created_at_i": 1783536968,
+        "objectID": "48835947",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T02:00:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "inigyou"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you get invited?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_inigyou",
+          "story_48834961"
+        ],
+        "author": "inigyou",
+        "children": [
+          48838911
+        ],
+        "comment_text": "How do you get invited?",
+        "created_at": "2026-07-08T18:53:05Z",
+        "created_at_i": 1783536785,
+        "objectID": "48835890",
+        "parent_id": 48835217,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T23:42:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tyingq"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Might come off like a flippant joke, but it might give you what you're after.<p><a href=\"https://web.archive.org/web/20210201005447/https://news.ycombinator.com/\" rel=\"nofollow\">https://web.archive.org/web/20210201005447/https://news.ycom...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tyingq",
+          "story_48834961"
+        ],
+        "author": "tyingq",
+        "comment_text": "Might come off like a flippant joke, but it might give you what you&#x27;re after.<p><a href=\"https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20210201005447&#x2F;https:&#x2F;&#x2F;news.ycombinator.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20210201005447&#x2F;https:&#x2F;&#x2F;news.ycom...</a>",
+        "created_at": "2026-07-08T18:52:35Z",
+        "created_at_i": 1783536755,
+        "objectID": "48835882",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:55:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "runjake"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This doesn't really answer your questions, especially as AI is permeating the field, but:<p><a href=\"https://engineeringblogs.xyz/\" rel=\"nofollow\">https://engineeringblogs.xyz/</a><p><a href=\"https://lobste.rs/\" rel=\"nofollow\">https://lobste.rs/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_runjake",
+          "story_48834961"
+        ],
+        "author": "runjake",
+        "children": [
+          48839069
+        ],
+        "comment_text": "This doesn&#x27;t really answer your questions, especially as AI is permeating the field, but:<p><a href=\"https:&#x2F;&#x2F;engineeringblogs.xyz&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;engineeringblogs.xyz&#x2F;</a><p><a href=\"https:&#x2F;&#x2F;lobste.rs&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;lobste.rs&#x2F;</a>",
+        "created_at": "2026-07-08T18:51:17Z",
+        "created_at_i": 1783536677,
+        "objectID": "48835858",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T23:58:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "miloignis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Lobste.rs is very much still active, more than ever I think. They have a `vibecoding` tag that you can remove from your page, if you'd like."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_miloignis",
+          "story_48834961"
+        ],
+        "author": "miloignis",
+        "comment_text": "Lobste.rs is very much still active, more than ever I think. They have a `vibecoding` tag that you can remove from your page, if you&#x27;d like.",
+        "created_at": "2026-07-08T18:51:10Z",
+        "created_at_i": 1783536670,
+        "objectID": "48835856",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T21:54:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CoastalCoder"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't do web stuff, but I wonder if one could easily create a browser extension that hides AI-centric submissions?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CoastalCoder",
+          "story_48834961"
+        ],
+        "author": "CoastalCoder",
+        "children": [
+          48836289
+        ],
+        "comment_text": "I don&#x27;t do web stuff, but I wonder if one could easily create a browser extension that hides AI-centric submissions?",
+        "created_at": "2026-07-08T18:50:53Z",
+        "created_at_i": 1783536653,
+        "objectID": "48835854",
+        "parent_id": 48835755,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:24:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "inigyou"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "maybe chaos.social mastodon server? You can follow it through relay.fedi.buzx if you can't actually join it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_inigyou",
+          "story_48834961"
+        ],
+        "author": "inigyou",
+        "comment_text": "maybe chaos.social mastodon server? You can follow it through relay.fedi.buzx if you can&#x27;t actually join it.",
+        "created_at": "2026-07-08T18:49:56Z",
+        "created_at_i": 1783536596,
+        "objectID": "48835836",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:52:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "weird_trousers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oh, thanks! I completely missed the &quot;optional&quot;.<p>It seems to work great actually... Thanks!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_weird_trousers",
+          "story_48834961"
+        ],
+        "author": "weird_trousers",
+        "comment_text": "Oh, thanks! I completely missed the &quot;optional&quot;.<p>It seems to work great actually... Thanks!",
+        "created_at": "2026-07-08T18:47:12Z",
+        "created_at_i": 1783536432,
+        "objectID": "48835803",
+        "parent_id": 48835659,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:20:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "uproarchat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "email me, i got you :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_uproarchat",
+          "story_48834961"
+        ],
+        "author": "uproarchat",
+        "comment_text": "email me, i got you :)",
+        "created_at": "2026-07-08T18:47:06Z",
+        "created_at_i": 1783536426,
+        "objectID": "48835802",
+        "parent_id": 48835700,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T20:25:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ChrisArchitect"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Related (with some suggestions within):<p><i>We need tech news sources which exclude AI</i><p><a href=\"https://news.ycombinator.com/item?id=48713041\">https://news.ycombinator.com/item?id=48713041</a><p><i>Hacker News but for independent blogs</i><p><a href=\"https://news.ycombinator.com/item?id=48567155\">https://news.ycombinator.com/item?id=48567155</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ChrisArchitect",
+          "story_48834961"
+        ],
+        "author": "ChrisArchitect",
+        "comment_text": "Related (with some suggestions within):<p><i>We need tech news sources which exclude AI</i><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48713041\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48713041</a><p><i>Hacker News but for independent blogs</i><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48567155\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48567155</a>",
+        "created_at": "2026-07-08T18:46:42Z",
+        "created_at_i": 1783536402,
+        "objectID": "48835795",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T21:54:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PaulHoule"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "'pends.  You gotta be antimimetic without saying you are antimimetic.<p>One answer is to move on from the party when it isn't fun anymore and start a new party.  Like the way you are at the bar at last call and get an invitation to a party where they're drinking at someone's house.<p>More than one statue of limitations ago I was in an activist group that helped take down a public corporation (<i>they</i> deny our responsibility) and it was not hypothetical,  we were being infiltrated by the FBI,  and pretty regularly we made a new mailing list with names that we trusted and moved our planning there."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PaulHoule",
+          "story_48834961"
+        ],
+        "author": "PaulHoule",
+        "comment_text": "&#x27;pends.  You gotta be antimimetic without saying you are antimimetic.<p>One answer is to move on from the party when it isn&#x27;t fun anymore and start a new party.  Like the way you are at the bar at last call and get an invitation to a party where they&#x27;re drinking at someone&#x27;s house.<p>More than one statue of limitations ago I was in an activist group that helped take down a public corporation (<i>they</i> deny our responsibility) and it was not hypothetical,  we were being infiltrated by the FBI,  and pretty regularly we made a new mailing list with names that we trusted and moved our planning there.",
+        "created_at": "2026-07-08T18:45:16Z",
+        "created_at_i": 1783536316,
+        "objectID": "48835778",
+        "parent_id": 48835530,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:50:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "smokel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There are very few sites such as Hacker News around.  Looking for one that is similar in quality, but with a slightly different focus is going to be disappointing.<p>Perhaps it helps to consider why you'd exactly want this?  You may be better off <i>not</i> visiting any such site, and instead focus on real human-in-the-loop activities with a group of local hackers."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_smokel",
+          "story_48834961"
+        ],
+        "author": "smokel",
+        "children": [
+          48835854
+        ],
+        "comment_text": "There are very few sites such as Hacker News around.  Looking for one that is similar in quality, but with a slightly different focus is going to be disappointing.<p>Perhaps it helps to consider why you&#x27;d exactly want this?  You may be better off <i>not</i> visiting any such site, and instead focus on real human-in-the-loop activities with a group of local hackers.",
+        "created_at": "2026-07-08T18:43:37Z",
+        "created_at_i": 1783536217,
+        "objectID": "48835755",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T11:18:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rdmuser"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I like a lot of things about bubbles but it seems to surface a lot of negative posts that are mainly just rants. A good chunk of articles in the daily/weekly briefings kind of feel like an indie blogging spin on the negative posts/articles you'd see a lot on microblogging sites.<p>It regularly surfaces some good stuff so it's working but it's also kind of depressing in ways that made me leave microblogging sites. There regularly is a lot of anti ai rants, USpol rants, the web is dead, defeatist/nihilistic posts etc in the weekly/daily digests. The entire culture section are these types of posts currently.<p>Makes me wonder if the use of microblogging accounts to log in is partially biasing the userbase towards that kind of writing? I don't have a solution for this though and limiting to fediverse accounts probably has some upsides too.<p>Ultimately bubbles still gets a big thumbs up from me but I'd love to see these kinds of posts deprioritized a bit. Outside maybe a few deeper more constructive ones that link out well I don't think they represent the best of indie blogging. Anyways if you made it this deep into my ramble I hope you have a nice week."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rdmuser",
+          "story_48834961"
+        ],
+        "author": "rdmuser",
+        "comment_text": "I like a lot of things about bubbles but it seems to surface a lot of negative posts that are mainly just rants. A good chunk of articles in the daily&#x2F;weekly briefings kind of feel like an indie blogging spin on the negative posts&#x2F;articles you&#x27;d see a lot on microblogging sites.<p>It regularly surfaces some good stuff so it&#x27;s working but it&#x27;s also kind of depressing in ways that made me leave microblogging sites. There regularly is a lot of anti ai rants, USpol rants, the web is dead, defeatist&#x2F;nihilistic posts etc in the weekly&#x2F;daily digests. The entire culture section are these types of posts currently.<p>Makes me wonder if the use of microblogging accounts to log in is partially biasing the userbase towards that kind of writing? I don&#x27;t have a solution for this though and limiting to fediverse accounts probably has some upsides too.<p>Ultimately bubbles still gets a big thumbs up from me but I&#x27;d love to see these kinds of posts deprioritized a bit. Outside maybe a few deeper more constructive ones that link out well I don&#x27;t think they represent the best of indie blogging. Anyways if you made it this deep into my ramble I hope you have a nice week.",
+        "created_at": "2026-07-08T18:42:28Z",
+        "created_at_i": 1783536148,
+        "objectID": "48835738",
+        "parent_id": 48835301,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:50:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sublinear"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You might want to refine your question. The real problem is the author not having something interesting to say in their own voice. The lack of perspective and insight to share is disrespectful to the reader.<p>With this broader definition, you'll find there's a ton of other slop we've long since needed to clean up. It's one thing to at least share something mildly interesting, but there's still a lot of points farming and ragebait that has brought down the enjoyability of reading HN."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sublinear",
+          "story_48834961"
+        ],
+        "author": "sublinear",
+        "comment_text": "You might want to refine your question. The real problem is the author not having something interesting to say in their own voice. The lack of perspective and insight to share is disrespectful to the reader.<p>With this broader definition, you&#x27;ll find there&#x27;s a ton of other slop we&#x27;ve long since needed to clean up. It&#x27;s one thing to at least share something mildly interesting, but there&#x27;s still a lot of points farming and ragebait that has brought down the enjoyability of reading HN.",
+        "created_at": "2026-07-08T18:41:28Z",
+        "created_at_i": 1783536088,
+        "objectID": "48835725",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T20:56:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cartucho1"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sorry for the shameless plug, but I just did something similar for displaying only substacks: <a href=\"https://hnsubstacks.com/\" rel=\"nofollow\">https://hnsubstacks.com/</a>. I'm pretty sure something like this can be adapted to filtering out AI news, repo here: <a href=\"https://github.com/ariroffe/hnsubstacks/\" rel=\"nofollow\">https://github.com/ariroffe/hnsubstacks/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cartucho1",
+          "story_48834961"
+        ],
+        "author": "cartucho1",
+        "comment_text": "Sorry for the shameless plug, but I just did something similar for displaying only substacks: <a href=\"https:&#x2F;&#x2F;hnsubstacks.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;hnsubstacks.com&#x2F;</a>. I&#x27;m pretty sure something like this can be adapted to filtering out AI news, repo here: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ariroffe&#x2F;hnsubstacks&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ariroffe&#x2F;hnsubstacks&#x2F;</a>",
+        "created_at": "2026-07-08T18:41:16Z",
+        "created_at_i": 1783536076,
+        "objectID": "48835721",
+        "parent_id": 48835183,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:19:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jfim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's also kind of hard to know if you already know someone who could give you an invite, since I don't really know the online handles of people I know in meatspace. I've resigned myself to maybe someday getting something posted that gets picked up there and asking for an invite at that time.<p>The RSS feeds though are pretty neat, it's what I use to fetch articles for archiving so that I can get a curated set of things to read on the go."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jfim",
+          "story_48834961"
+        ],
+        "author": "jfim",
+        "children": [
+          48835802
+        ],
+        "comment_text": "It&#x27;s also kind of hard to know if you already know someone who could give you an invite, since I don&#x27;t really know the online handles of people I know in meatspace. I&#x27;ve resigned myself to maybe someday getting something posted that gets picked up there and asking for an invite at that time.<p>The RSS feeds though are pretty neat, it&#x27;s what I use to fetch articles for archiving so that I can get a curated set of things to read on the go.",
+        "created_at": "2026-07-08T18:39:42Z",
+        "created_at_i": 1783535982,
+        "objectID": "48835700",
+        "parent_id": 48835494,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T23:11:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OnionBlender"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Did you enable to filter? Here is a link with AI excluded.<p><a href=\"https://hcker.news/?ai=exclude\" rel=\"nofollow\">https://hcker.news/?ai=exclude</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_OnionBlender",
+          "story_48834961"
+        ],
+        "author": "OnionBlender",
+        "children": [
+          48835803
+        ],
+        "comment_text": "Did you enable to filter? Here is a link with AI excluded.<p><a href=\"https:&#x2F;&#x2F;hcker.news&#x2F;?ai=exclude\" rel=\"nofollow\">https:&#x2F;&#x2F;hcker.news&#x2F;?ai=exclude</a>",
+        "created_at": "2026-07-08T18:36:23Z",
+        "created_at_i": 1783535783,
+        "objectID": "48835659",
+        "parent_id": 48835478,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:47:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KenographerPrim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm not into any of those butt stuff, but I'll definitely enjoy that butt idea. Wait, what were we talking about?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_KenographerPrim",
+          "story_48834961"
+        ],
+        "author": "KenographerPrim",
+        "comment_text": "I&#x27;m not into any of those butt stuff, but I&#x27;ll definitely enjoy that butt idea. Wait, what were we talking about?",
+        "created_at": "2026-07-08T18:33:08Z",
+        "created_at_i": 1783535588,
+        "objectID": "48835606",
+        "parent_id": 48835569,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T20:56:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "weird_trousers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "www.nobuttnews.net, reserved :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_weird_trousers",
+          "story_48834961"
+        ],
+        "author": "weird_trousers",
+        "children": [
+          48853352
+        ],
+        "comment_text": "www.nobuttnews.net, reserved :)",
+        "created_at": "2026-07-08T18:32:10Z",
+        "created_at_i": 1783535530,
+        "objectID": "48835589",
+        "parent_id": 48835569,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T22:41:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EA-3167"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree with the hype argument, but the time-frame seems optimistic. We had to endure many years of crypto hype (nice way of saying lies and delusion really), and even now you have the shattered remnants pretending that everyone swoons they talk about &quot;replacing fiat&quot;.<p>There will also be a next hype cycle, and they seem to be coming faster and faster, with similar people behind them. &quot;Oh look, NVIDIA found a new way to turn the US economy into a paperclip factory, I can't wait to see what the brain trust thinks about this. Oh they dream of getting money as a result so they're all-in for the next half-decade... fabulous.&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_EA-3167",
+          "story_48834961"
+        ],
+        "author": "EA-3167",
+        "comment_text": "I agree with the hype argument, but the time-frame seems optimistic. We had to endure many years of crypto hype (nice way of saying lies and delusion really), and even now you have the shattered remnants pretending that everyone swoons they talk about &quot;replacing fiat&quot;.<p>There will also be a next hype cycle, and they seem to be coming faster and faster, with similar people behind them. &quot;Oh look, NVIDIA found a new way to turn the US economy into a paperclip factory, I can&#x27;t wait to see what the brain trust thinks about this. Oh they dream of getting money as a result so they&#x27;re all-in for the next half-decade... fabulous.&quot;",
+        "created_at": "2026-07-08T18:30:51Z",
+        "created_at_i": 1783535451,
+        "objectID": "48835575",
+        "parent_id": 48835425,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T21:53:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "weird_trousers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thankfully we (as humans) don't have the same brain and the same interests :)<p>Some people are excited about all that stuff, and I can understand.\nBut, personally, I am just getting bored of having an anthropic news per day, two from openai, and another one that claims &quot;eeeh, developers are dead!&quot;.<p>Actually, Hackernews feels more anxious for me now, that's why I wanted to take a look elsewhere...<p>I remember the time when I did read &quot;Ray-Tracing in One week-end&quot;, or discover some new cool websites and blogs like The Old New Thing, some interesting discussions about Android hacking and vulnerabilities, or hacking old idTech stuff from Fabien Sanglard.<p>I really miss that time when I was reading and learning at the same time.<p>Now, most of the articles published here do not have any fresh news to provide, and I don't learn anything. Except people think I will be obsolete in a few months. (Nice. /s)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_weird_trousers",
+          "story_48834961"
+        ],
+        "author": "weird_trousers",
+        "children": [
+          48836033
+        ],
+        "comment_text": "Thankfully we (as humans) don&#x27;t have the same brain and the same interests :)<p>Some people are excited about all that stuff, and I can understand.\nBut, personally, I am just getting bored of having an anthropic news per day, two from openai, and another one that claims &quot;eeeh, developers are dead!&quot;.<p>Actually, Hackernews feels more anxious for me now, that&#x27;s why I wanted to take a look elsewhere...<p>I remember the time when I did read &quot;Ray-Tracing in One week-end&quot;, or discover some new cool websites and blogs like The Old New Thing, some interesting discussions about Android hacking and vulnerabilities, or hacking old idTech stuff from Fabien Sanglard.<p>I really miss that time when I was reading and learning at the same time.<p>Now, most of the articles published here do not have any fresh news to provide, and I don&#x27;t learn anything. Except people think I will be obsolete in a few months. (Nice. &#x2F;s)",
+        "created_at": "2026-07-08T18:30:40Z",
+        "created_at_i": 1783535440,
+        "objectID": "48835574",
+        "parent_id": 48835390,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T21:53:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "psvv"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You could try a browser extension that just filters all terms like LLM, AI, agent, agentic and removes those posts.<p>Or better yet, call back to a certain classic and replace those words with &quot;butt&quot; and keep them in.<p>Then your front page will simply be filled with things like:<p>&quot;Show HN: Look what I did with my butt.&quot;<p>&quot;This new butt harness will revolutionize butt coding.&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_psvv",
+          "story_48834961"
+        ],
+        "author": "psvv",
+        "children": [
+          48835606,
+          48835589
+        ],
+        "comment_text": "You could try a browser extension that just filters all terms like LLM, AI, agent, agentic and removes those posts.<p>Or better yet, call back to a certain classic and replace those words with &quot;butt&quot; and keep them in.<p>Then your front page will simply be filled with things like:<p>&quot;Show HN: Look what I did with my butt.&quot;<p>&quot;This new butt harness will revolutionize butt coding.&quot;",
+        "created_at": "2026-07-08T18:30:21Z",
+        "created_at_i": 1783535421,
+        "objectID": "48835569",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-09T23:41:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "uproarchat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'll send you an invite, send me an email to the address in my bio."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_uproarchat",
+          "story_48834961"
+        ],
+        "author": "uproarchat",
+        "comment_text": "I&#x27;ll send you an invite, send me an email to the address in my bio.",
+        "created_at": "2026-07-08T18:30:15Z",
+        "created_at_i": 1783535415,
+        "objectID": "48835567",
+        "parent_id": 48835494,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:41:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KenographerPrim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You'd have to make LLM access harder, or make all platform harder to access, or both. And both will also penalize the not easy people. Like it always does."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_KenographerPrim",
+          "story_48834961"
+        ],
+        "author": "KenographerPrim",
+        "children": [
+          48835778
+        ],
+        "comment_text": "You&#x27;d have to make LLM access harder, or make all platform harder to access, or both. And both will also penalize the not easy people. Like it always does.",
+        "created_at": "2026-07-08T18:28:16Z",
+        "created_at_i": 1783535296,
+        "objectID": "48835530",
+        "parent_id": 48835398,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:46:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "robotswantdata"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "comp.lang.c"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_robotswantdata",
+          "story_48834961"
+        ],
+        "author": "robotswantdata",
+        "comment_text": "comp.lang.c",
+        "created_at": "2026-07-08T18:26:06Z",
+        "created_at_i": 1783535166,
+        "objectID": "48835500",
+        "parent_id": 48834961,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T18:41:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "weird_trousers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hum, indeed! Thanks!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_weird_trousers",
+          "story_48834961"
+        ],
+        "author": "weird_trousers",
+        "comment_text": "Hum, indeed! Thanks!",
+        "created_at": "2026-07-08T18:25:35Z",
+        "created_at_i": 1783535135,
+        "objectID": "48835495",
+        "parent_id": 48835301,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T21:01:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cyberdog"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I like Lobsters' design and would love to switch over, but it's still invite-only… I guess it works for them but it feels elitist to an anti-social nerd like me."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Cyberdog",
+          "story_48834961"
+        ],
+        "author": "Cyberdog",
+        "children": [
+          48835700,
+          48835567
+        ],
+        "comment_text": "I like Lobsters&#x27; design and would love to switch over, but it&#x27;s still invite-only… I guess it works for them but it feels elitist to an anti-social nerd like me.",
+        "created_at": "2026-07-08T18:25:33Z",
+        "created_at_i": 1783535133,
+        "objectID": "48835494",
+        "parent_id": 48835217,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T23:11:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "weird_trousers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oh nice, I didn't know this one. Thanks!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_weird_trousers",
+          "story_48834961"
+        ],
+        "author": "weird_trousers",
+        "comment_text": "Oh nice, I didn&#x27;t know this one. Thanks!",
+        "created_at": "2026-07-08T18:25:22Z",
+        "created_at_i": 1783535122,
+        "objectID": "48835492",
+        "parent_id": 48835348,
+        "story_id": 48834961,
+        "story_title": "Ask HN: Another \"Hacker News\" with less AI and more human-focused hacking news?",
+        "updated_at": "2026-07-08T19:19:28Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 54,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48834961&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 17
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

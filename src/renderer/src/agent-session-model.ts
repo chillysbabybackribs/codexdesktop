@@ -2,7 +2,6 @@ import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { Model } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
-import type { AgentRunLane, AgentRunProvider, AgentRunStatus, AgentWakeStatus } from '../../shared/ipc'
 import type { AuditRequestSummary } from './audit-trigger'
 
 export type AgentLiteMessage = {
@@ -27,9 +26,6 @@ export type AgentSession = {
   // Main-chat tab that created and owns this agent window. Agent sessions are
   // long-lived, but their mini-window is intentionally scoped to this tab.
   mainChatTabKey: string | null
-  // Snapshot of the owning main chat's working directory. Agents keep this
-  // even when the user focuses another tab while they are running.
-  workspace: string | null
   // Spawn-tree linkage. `parentAgentKey` keys on the app `key` (not threadId)
   // because a child's threadId is null until its first turn starts, so the
   // parent link must survive the pre-thread window. null = top-level (a lead
@@ -61,22 +57,10 @@ export type AgentSession = {
   reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
   isCompacting: boolean
-  sourceProvider?: AgentRunProvider | null
-  executionLane?: AgentRunLane | null
-  nativeRunId?: string | null
-  runParentThreadId?: string | null
-  runStatus?: AgentRunStatus | null
-  runTask?: string | null
-  runProgress?: string | null
-  runResultSummary?: string | null
-  runOutputPath?: string | null
-  wakeStatus?: AgentWakeStatus
 }
 
 export type PersistedAgentSession = {
-  key?: string
   mainChatTabKey?: string | null
-  workspace?: string | null
   threadId?: string | null
   title?: string
   watchesMain?: boolean
@@ -87,18 +71,6 @@ export type PersistedAgentSession = {
   reasoningEffort?: ReasoningEffort | null
   open?: boolean
   selected?: boolean
-  role?: AgentRole
-  parentAgentKey?: string | null
-  sourceProvider?: AgentRunProvider | null
-  executionLane?: AgentRunLane | null
-  nativeRunId?: string | null
-  runParentThreadId?: string | null
-  runStatus?: AgentRunStatus | null
-  runTask?: string | null
-  runProgress?: string | null
-  runResultSummary?: string | null
-  runOutputPath?: string | null
-  wakeStatus?: AgentWakeStatus
 }
 
 export type PersistedAgentDock = {
@@ -108,16 +80,10 @@ export type PersistedAgentDock = {
 
 export type AgentDeltaBuffer = ReadonlyMap<string, ReadonlyMap<string, string>>
 
-export function createAgentSession(
-  key: string,
-  title: string,
-  mainChatTabKey: string | null = null,
-  workspace: string | null = null,
-): AgentSession {
+export function createAgentSession(key: string, title: string, mainChatTabKey: string | null = null): AgentSession {
   return {
     key,
     mainChatTabKey,
-    workspace,
     role: 'reviewer',
     parentAgentKey: null,
     spawnedByTurnId: null,
@@ -134,17 +100,7 @@ export function createAgentSession(
     model: null,
     reasoningEffort: null,
     contextUsage: null,
-    isCompacting: false,
-    sourceProvider: null,
-    executionLane: null,
-    nativeRunId: null,
-    runParentThreadId: null,
-    runStatus: null,
-    runTask: null,
-    runProgress: null,
-    runResultSummary: null,
-    runOutputPath: null,
-    wakeStatus: 'none'
+    isCompacting: false
   }
 }
 
@@ -156,10 +112,9 @@ export function createReviewerSession(
   key: string,
   title: string,
   mainChatTabKey: string | null,
-  model: string | null,
-  workspace: string | null = null,
+  model: string | null
 ): AgentSession {
-  return { ...createAgentSession(key, title, mainChatTabKey, workspace), auditsMain: true, model }
+  return { ...createAgentSession(key, title, mainChatTabKey), auditsMain: true, model }
 }
 
 // A worker spawned by a lead's spawn_subagent tool call. It inherits the
@@ -171,13 +126,12 @@ export function createWorkerSession(
   key: string,
   title: string,
   mainChatTabKey: string | null,
-  parentAgentKey: string | null,
+  parentAgentKey: string,
   spawnedByTurnId: string | null,
-  model: string | null,
-  workspace: string | null = null,
+  model: string | null
 ): AgentSession {
   return {
-    ...createAgentSession(key, title, mainChatTabKey, workspace),
+    ...createAgentSession(key, title, mainChatTabKey),
     role: 'worker',
     parentAgentKey,
     spawnedByTurnId,
@@ -217,32 +171,6 @@ export function defaultReviewerModel(mainModel: string | null, models: Model[]):
     candidates.find((model) => model.isDefault) ??
     candidates[0]
   ).id
-}
-
-// The card's user-facing role. `role` stays the spawn-tree truth and the
-// behavior flags stay the mechanism; this is the one derived value the menu
-// radio shows and the one intent a role choice expresses. 'worker' is
-// read-only — spawned children keep their role; the radio offers the other
-// two.
-export type DockRole = 'worker' | 'reviewer' | 'helper'
-
-// Derive the radio's selected value from session state. A top-level agent
-// with neither flag (legacy restore) reads as 'reviewer' — the born-a-reviewer
-// default; re-picking Reviewer arms the flags via dockRoleFlags, so stale
-// snapshots heal on first touch.
-export function dockRoleOf(session: AgentSession): DockRole {
-  if (session.role === 'worker') return 'worker'
-  if (session.watchesMain && !session.auditsMain) return 'helper'
-  return 'reviewer'
-}
-
-// The flag patch a role choice implies. Reviewer and Helper are mutually
-// exclusive behaviors (audit briefings vs context-prepended manual sends), so
-// each arms its flag and clears the other.
-export function dockRoleFlags(role: 'reviewer' | 'helper'): Pick<AgentSession, 'auditsMain' | 'watchesMain'> {
-  return role === 'reviewer'
-    ? { auditsMain: true, watchesMain: false }
-    : { auditsMain: false, watchesMain: true }
 }
 
 // Adjacent identical assistant messages are stream-restate artifacts (the
@@ -329,7 +257,7 @@ export function rollupStatus(
   let done = false
   let attention = false
   const visit = (current: AgentRosterNode): void => {
-    if (attentionKeys?.has(current.session.key) || current.session.runStatus === 'failed') attention = true
+    if (attentionKeys?.has(current.session.key)) attention = true
     if (current.session.status === 'working') working = true
     else if (current.session.status === 'done') done = true
     for (const child of current.children) visit(child)
@@ -442,7 +370,6 @@ export function serializeAgentDock(
     counter,
     sessions: sessions.map((session) => ({
       mainChatTabKey: session.mainChatTabKey,
-      ...(session.workspace ? { workspace: session.workspace } : {}),
       threadId: session.threadId,
       title: session.title,
       watchesMain: session.watchesMain,
@@ -452,22 +379,7 @@ export function serializeAgentDock(
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
-      selected: session.key === selectedKey,
-      ...(session.sourceProvider ? {
-        key: session.key,
-        role: session.role,
-        parentAgentKey: session.parentAgentKey,
-        sourceProvider: session.sourceProvider,
-        executionLane: session.executionLane ?? null,
-        nativeRunId: session.nativeRunId ?? null,
-        runParentThreadId: session.runParentThreadId ?? null,
-        runStatus: session.runStatus ?? null,
-        runTask: session.runTask ?? null,
-        runProgress: session.runProgress ?? null,
-        runResultSummary: session.runResultSummary ?? null,
-        runOutputPath: session.runOutputPath ?? null,
-        wakeStatus: session.wakeStatus ?? 'none'
-      } : {})
+      selected: session.key === selectedKey
     }))
   })
 }

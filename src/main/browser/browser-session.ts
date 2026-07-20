@@ -2,13 +2,9 @@ import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
 import { browserUserAgentFallback } from './browser-identity.js'
-import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import { safeDownloadName } from './download-policy.js'
 
 export const browserPartition = 'persist:codex-browser'
-// Background public-web workers must not inherit the visible browser's login
-// cookies or local storage. Authenticated/account work stays in the live lane.
-export const researchPartition = 'persist:codex-research'
 
 /**
  * Must run before Chromium creates any browser session or WebContents. Keeping
@@ -33,47 +29,43 @@ export type BrowserSessionOptions = {
 const allowedGuestPermissions = new Set(['fullscreen', 'pointerLock'])
 
 export function configureBrowserSession(options: BrowserSessionOptions): void {
-  for (const partition of [browserPartition, researchPartition]) {
-    const browserSession = session.fromPartition(partition)
-    browserSession.setSpellCheckerLanguages(['en-US'])
-    browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
-      callback(allowedGuestPermissions.has(permission))
-    })
-    browserSession.setPermissionCheckHandler((_webContents, permission) =>
-      allowedGuestPermissions.has(permission)
-    )
-    browserSession.on('will-download', (event, item, webContents) => {
-      if (partition === researchPartition || !options.isUserVisibleWebContents(webContents)) {
-        event.preventDefault()
-        console.warn('Blocked a download initiated by a hidden browser surface', item.getURL())
-        return
-      }
+  const browserSession = session.fromPartition(browserPartition)
+  browserSession.setSpellCheckerLanguages(['en-US'])
+  browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
+    callback(allowedGuestPermissions.has(permission))
+  })
+  browserSession.setPermissionCheckHandler((_webContents, permission) =>
+    allowedGuestPermissions.has(permission)
+  )
+  browserSession.on('will-download', (event, item, webContents) => {
+    if (!options.isUserVisibleWebContents(webContents)) {
+      event.preventDefault()
+      console.warn('Blocked a download initiated by a hidden browser surface', item.getURL())
+      return
+    }
 
-      if (browserDownloadCaptureBroker.handleWillDownload(item, webContents)) return
+    const window = options.getWindow()
+    if (!window) {
+      event.preventDefault()
+      return
+    }
 
-      const window = options.getWindow()
-      if (!window) {
-        event.preventDefault()
-        return
-      }
-
-      item.pause()
-      const filename = safeDownloadName(item.getFilename())
-      void dialog.showSaveDialog(window, {
-        title: 'Save download',
-        defaultPath: join(app.getPath('downloads'), filename)
-      }).then((result) => {
-        if (result.canceled || !result.filePath) {
-          item.cancel()
-          return
-        }
-
-        item.setSavePath(result.filePath)
-        item.resume()
-      }).catch((error) => {
-        console.error('Failed to choose a download destination', error)
+    item.pause()
+    const filename = safeDownloadName(item.getFilename())
+    void dialog.showSaveDialog(window, {
+      title: 'Save download',
+      defaultPath: join(app.getPath('downloads'), filename)
+    }).then((result) => {
+      if (result.canceled || !result.filePath) {
         item.cancel()
-      })
+        return
+      }
+
+      item.setSavePath(result.filePath)
+      item.resume()
+    }).catch((error) => {
+      console.error('Failed to choose a download destination', error)
+      item.cancel()
     })
-  }
+  })
 }

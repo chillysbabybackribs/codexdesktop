@@ -1,56 +1,65 @@
 ---
 name: artifact-first-web-research
-description: Opt-in artifact-first workflow for web research when the user explicitly invokes it or asks to save and inspect source artifacts. It does not govern ordinary web lookups or replace native task reasoning.
+description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Gather bounded verified evidence with the built-in research and browser tools, inspect targeted artifact passages, and use a task-local script only when the available primitives cannot express the extraction.
 ---
 
 # Artifact-First Web Research
 
-Use this skill as an evidence-handling aid, not a fixed reasoning recipe. Preserve the user's literal wording and choose queries, tools, and source breadth according to the task. Ordinary web lookups should not activate this skill unless the user explicitly requests it.
-
-Treat discovery, extraction, and judgment as separate steps. Keep every readable extracted page available to the model; use focus needs to rank passages and expose gaps, never to invalidate a successfully extracted source.
-
-## Freshness
-
-For current-information tasks, include a recency-oriented query and prefer newer primary or firsthand sources when they are relevant. Dates, versions, and source types help the model weigh evidence; they are not page-acceptance filters. Older or undated sources may still be useful—label their age instead of discarding them.
+Treat research as a claim-coverage problem. Define the evidence needed for the requested conclusions, gather a bounded set of verified sources, and stop when every material claim has adequate support.
 
 ## Fast Path
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
-2. Start with a direct search query that preserves the user's literal product names and intent. Add focused variants only when they are useful for source coverage or resolving a gap. Include a recency signal when freshness matters, but do not add speculative symptoms, platforms, or causes the user did not ask about.
-3. Pass `focus` only when compact passage ranking will help. Phrase each need narrowly and use `minSources` only when the user actually needs independent corroboration. Focus gaps are diagnostic; returned readable pages remain usable evidence for model judgment.
-4. For broad public discovery, prefer `research_web` so the visible tab is preserved. Use `browser_live_search` when the user wants visible verification or changing the visible tab materially helps; remember that it navigates as soon as it finds a viable destination.
-5. Answer from the live page, returned passages, and readable source pages. If something material is still missing or conflicting, search for that missing thing directly.
+2. If exact official source URLs are already known, pass them through `urls`; otherwise use one focused primary `queries` entry with up to two genuine fallback lanes.
+3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
+4. Make one `research_web` call. Give it concrete `focus` needs (and `minSources` only where independent corroboration matters); the model-authored evidence contract determines how many sources are gathered and stops early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
+5. Answer from the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
+6. Make at most one focused gap-fill call. Preserve unresolved uncertainty rather than searching for a higher source count.
 
-Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds.
+Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
 
 ## Choose The Cheapest Reliable Lane
 
-- Broad public research or discovery: `research_web` preserves the visible tab and gathers bounded independent evidence.
-- Known official documentation, release notes, or public records: direct `urls` with focused evidence needs through `research_web`, or `browser_navigate` plus `browser_extract_page` when the user should see the page.
-- Background-only public discovery: use `research_web` with the direct literal query first and add variants only when useful. Discovery stays hidden and the combined URL pool is ranked before page verification.
-- Quick visible lookup where independent corroboration adds nothing: `browser_live_search`. It runs parallel SERP extraction in hidden workers, then navigates the existing visible tab directly to the strongest destination page. Never expose a search-results page in the user's tab.
+- Known official documentation, release notes, or public records: direct `urls` with focused evidence needs.
+- Broad public discovery: `research_web` with one primary query and adaptive fallback lanes.
 - One already-visible public content page: `browser_extract_page`.
 - Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.
 - Interaction or mutation: batch actions that remain in the current page. Treat any action that may trigger full-document or SPA-route navigation as a phase boundary. Prefer `browser_flow` to perform common fill/click/submit actions, wait for the destination's containing state, and then run a one-shot find; otherwise perform the action and inspect the destination in a fresh browser operation. If navigation is required first, use `browser_navigate` with a page-specific `readySelector` before a stable-document `browser_run` program.
 - Low-level lifecycle, network, storage, screenshot, or trace work: `browser_cdp`.
 
-Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
+If `browser_snapshot` is not present on an older resumed thread, use one `browser_run` call for an already-visible read or `browser_navigate` followed by one `browser_run` call when the page must change. Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
 
-Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception.
+Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception; then use the best direct-source fallback or the single permitted gap-fill when justified.
 
 ## Evidence Contract
 
-Use only the source fields the answer needs: usually title, URL, exact passage, date/version when visible, and a short caveat when applicability is uncertain. Do not force every source through a large normalized schema.
+Use only the fields needed for the answer. A normalized source may include:
 
-Treat page verification as a readability check, not a relevance verdict. The model judges whether a passage supports the claim, whether a report is firsthand, whether sources are independent, and whether version/platform applicability is current.
+```json
+{
+  "source": "",
+  "title": "",
+  "url": "",
+  "sourceType": "primary|firsthand|secondary|aggregate",
+  "observedAt": "",
+  "reportedVersion": "",
+  "targetVersionApplicability": "confirmed|likely|unknown|not-applicable",
+  "platform": "",
+  "claim": "",
+  "evidenceStrength": "high|medium|low",
+  "caveat": ""
+}
+```
 
-Do not turn an old open issue into a current-version claim, assume a closed pull request was merged, or infer platform/version from unrelated text. Search snippets, challenge pages, login walls, empty shells, and failed fetches are discovery failures rather than evidence.
+Treat content verification as meaning only that the page is real and substantial. The model must still judge whether a passage supports the claim, whether a report is firsthand, whether sources are independent, and whether version/platform applicability is current.
+
+Never turn an old open issue into a current-version claim. A closed pull request is not necessarily merged. Do not infer platform or version from unrelated page text. Search snippets, challenge pages, login walls, empty shells, and failed fetches are discovery failures rather than evidence.
 
 ## Stopping And Output
 
-Stop when the available evidence is sufficient to answer the user's actual question. Search again when a material comparison side, conflict, or current-version fact is still missing.
+Stop when every requested field has adequate evidence and the strongest claims have primary or firsthand support. Make one gap-fill only when sources conflict, current-version applicability remains material, a high-stakes claim lacks primary evidence, or a comparison is missing one side.
 
-Lead the final answer with the decision. Put clickable links next to supported claims, distinguish official guidance from user/developer reports when that matters, and mention material freshness limitations without burying the answer in qualifications.
+Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state limitations precisely. Do not expose internal artifact paths unless asked.
 
 ## Reliability
 

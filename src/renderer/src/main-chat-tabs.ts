@@ -8,10 +8,6 @@ export type MainChatTab = {
   key: string
   threadId: string | null
   title: string
-  // Working directory is conversation-scoped. A tab owns the selection until
-  // it starts a thread; a resumed thread refreshes this from the runtime's
-  // canonical cwd. Never resolve work against a window-global folder.
-  workspace: string | null
   // Composer choices belong to the conversation, not the window. Keeping
   // these on the tab lets several main chats run with different models.
   model: string | null
@@ -39,7 +35,6 @@ type PersistedMainChatTab = {
   key?: unknown
   threadId?: unknown
   title?: unknown
-  workspace?: unknown
   model?: unknown
   reasoningEffort?: unknown
   browserMiddleSide?: unknown
@@ -57,19 +52,17 @@ export function createMainChatTab(
   model: string | null = null,
   reasoningEffort: string | null = null,
   browserMiddleSide: BrowserMiddleSide | null = null,
-  workspace: string | null = null,
 ): MainChatTab {
-  return { key, threadId, title, workspace, model, reasoningEffort, browserMiddleSide, status: 'idle', turnId: null }
+  return { key, threadId, title, model, reasoningEffort, browserMiddleSide, status: 'idle', turnId: null }
 }
 
 export function parseMainChatTabState(
   raw: string | null,
   legacyThreadId: string | null,
   createKey: () => string,
-  legacySelection: { model: string | null; reasoningEffort: string | null; workspace?: string | null } = {
+  legacySelection: { model: string | null; reasoningEffort: string | null } = {
     model: null,
-    reasoningEffort: null,
-    workspace: null
+    reasoningEffort: null
   }
 ): MainChatTabState {
   let parsed: PersistedMainChatTabState | null = null
@@ -94,9 +87,6 @@ export function parseMainChatTabState(
         const title = typeof candidate.title === 'string' && candidate.title.trim()
           ? candidate.title.trim()
           : 'New Chat'
-        const workspace = typeof candidate.workspace === 'string' && candidate.workspace
-          ? candidate.workspace
-          : legacySelection.workspace ?? null
         const model = typeof candidate.model === 'string' && candidate.model
           ? candidate.model
           : legacySelection.model
@@ -107,7 +97,7 @@ export function parseMainChatTabState(
           candidate.browserMiddleSide === 'left' || candidate.browserMiddleSide === 'right'
             ? candidate.browserMiddleSide
             : null
-        return [createMainChatTab(key, threadId, title, model, reasoningEffort, browserMiddleSide, workspace)]
+        return [createMainChatTab(key, threadId, title, model, reasoningEffort, browserMiddleSide)]
       }).slice(0, maxMainChatTabs)
     : []
 
@@ -117,9 +107,7 @@ export function parseMainChatTabState(
       legacyThreadId,
       'New Chat',
       legacySelection.model,
-      legacySelection.reasoningEffort,
-      null,
-      legacySelection.workspace ?? null,
+      legacySelection.reasoningEffort
     ))
   } else if (legacyThreadId && !seenThreads.has(legacyThreadId)) {
     // Preserve the pre-tabs last-thread preference during the migration.
@@ -128,9 +116,7 @@ export function parseMainChatTabState(
       legacyThreadId,
       tabs[0].title,
       tabs[0].model,
-      tabs[0].reasoningEffort,
-      tabs[0].browserMiddleSide,
-      tabs[0].workspace,
+      tabs[0].reasoningEffort
     )
   }
 
@@ -145,11 +131,10 @@ export function parseMainChatTabState(
 export function serializeMainChatTabState(state: MainChatTabState): string {
   return JSON.stringify({
     activeKey: state.activeKey,
-    tabs: state.tabs.map(({ key, threadId, title, workspace, model, reasoningEffort, browserMiddleSide }) => ({
+    tabs: state.tabs.map(({ key, threadId, title, model, reasoningEffort, browserMiddleSide }) => ({
       key,
       threadId,
       title,
-      workspace,
       model,
       reasoningEffort,
       browserMiddleSide
@@ -174,7 +159,6 @@ export function closeMainChatTab(
       previous.model,
       previous.reasoningEffort,
       previous.browserMiddleSide,
-      previous.workspace,
     )
     return { tabs: [replacement], activeKey: replacement.key }
   }

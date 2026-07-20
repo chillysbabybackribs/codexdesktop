@@ -1,0 +1,1377 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47715339",
+    "window": "prior-90d",
+    "tag": "show_hn",
+    "score": 130
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "guyle"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Interesting approach for embedded use cases. Curious how you see this compared to the OIDC trend in CI/CD where the goal is eliminating stored secrets entirely — different problem space but related threat model."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_guyle",
+          "story_47715339"
+        ],
+        "author": "guyle",
+        "comment_text": "Interesting approach for embedded use cases. Curious how you see this compared to the OIDC trend in CI&#x2F;CD where the goal is eliminating stored secrets entirely — different problem space but related threat model.",
+        "created_at": "2026-04-12T14:28:36Z",
+        "created_at_i": 1776004116,
+        "objectID": "47740115",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-12T14:31:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ComputerGuru"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SecureStore is an open spec/protocol for managing secrets in a secure and portable manner, while it defines the decryption key formats (currently: key-based, password-based, or a mix of both interchangeably) it doesn't get into the mechanics of key management, which are &quot;trivial and left as an exercise for the reader.&quot;<p>More seriously though, you're supposed to use separate vaults (with the same keys, where &quot;keys&quot; is the name of the secrets, not the decryption keys) for testing/staging/production, e.g. perhaps secrets.{testing,production,staging}.json and the same secrets.{testing,production,staging}.key for the decryption keys, and store both the username and password in them (after all, it's just an encrypted, glorified KV store) so that you don't have to hard-code any usernames and conditionally load them based on the environment in your code (so db:username is one &quot;secret&quot; and db:password is another (actual) secret).<p>The secrets vaults (the secrets.json files) are non-sensitive and can be versioned and pushed to your server the same way you push the binaries. Now how you move the secrets to the server is up to you. You could do it the old-fashioned way and just have it as an environment variable, in which case even when your env vars leak at least you haven't leaked your api keys, only the key to decrypt them (which you'd then rotate), but that's not a recommended option. Ideally you'd instead use whatever secure channel you use to init/stage the servers to begin with to transfer the secure key files - the key files are generally immutable, even as the secrets change, so you only have to do this once (ideally via a high-friction, high-auth mechanism, for most people not at FAANG scale, probably manually).<p>You can also use whatever additional layer of abstraction on top of the symmetric SecureStore decryption key you like. For example, you could asymmetrically encrypt the keyfiles and then each host would decrypt it with its own private key, or have a secrets side channel that's just used to obtain the static decryption key over the local network, or use your operating system's encryption facilities to transmit it, whatever works for you at whatever point on the complexity/security curve you desire.<p>(These are all just options, none are official recommendations.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ComputerGuru",
+          "story_47715339"
+        ],
+        "author": "ComputerGuru",
+        "comment_text": "SecureStore is an open spec&#x2F;protocol for managing secrets in a secure and portable manner, while it defines the decryption key formats (currently: key-based, password-based, or a mix of both interchangeably) it doesn&#x27;t get into the mechanics of key management, which are &quot;trivial and left as an exercise for the reader.&quot;<p>More seriously though, you&#x27;re supposed to use separate vaults (with the same keys, where &quot;keys&quot; is the name of the secrets, not the decryption keys) for testing&#x2F;staging&#x2F;production, e.g. perhaps secrets.{testing,production,staging}.json and the same secrets.{testing,production,staging}.key for the decryption keys, and store both the username and password in them (after all, it&#x27;s just an encrypted, glorified KV store) so that you don&#x27;t have to hard-code any usernames and conditionally load them based on the environment in your code (so db:username is one &quot;secret&quot; and db:password is another (actual) secret).<p>The secrets vaults (the secrets.json files) are non-sensitive and can be versioned and pushed to your server the same way you push the binaries. Now how you move the secrets to the server is up to you. You could do it the old-fashioned way and just have it as an environment variable, in which case even when your env vars leak at least you haven&#x27;t leaked your api keys, only the key to decrypt them (which you&#x27;d then rotate), but that&#x27;s not a recommended option. Ideally you&#x27;d instead use whatever secure channel you use to init&#x2F;stage the servers to begin with to transfer the secure key files - the key files are generally immutable, even as the secrets change, so you only have to do this once (ideally via a high-friction, high-auth mechanism, for most people not at FAANG scale, probably manually).<p>You can also use whatever additional layer of abstraction on top of the symmetric SecureStore decryption key you like. For example, you could asymmetrically encrypt the keyfiles and then each host would decrypt it with its own private key, or have a secrets side channel that&#x27;s just used to obtain the static decryption key over the local network, or use your operating system&#x27;s encryption facilities to transmit it, whatever works for you at whatever point on the complexity&#x2F;security curve you desire.<p>(These are all just options, none are official recommendations.)",
+        "created_at": "2026-04-10T20:04:32Z",
+        "created_at_i": 1775851472,
+        "objectID": "47722994",
+        "parent_id": 47719875,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T20:11:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Retr0id"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I know I'm responding to an LLM but in the interest of not polluting the dataset further I'll point out that all the primitives used here are already post-quantum secure."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Retr0id",
+          "story_47715339"
+        ],
+        "author": "Retr0id",
+        "comment_text": "I know I&#x27;m responding to an LLM but in the interest of not polluting the dataset further I&#x27;ll point out that all the primitives used here are already post-quantum secure.",
+        "created_at": "2026-04-10T19:04:35Z",
+        "created_at_i": 1775847875,
+        "objectID": "47722274",
+        "parent_id": 47720876,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-11T00:37:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "emanuele-em"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yes I totally agree, my message was a compliment :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_emanuele-em",
+          "story_47715339"
+        ],
+        "author": "emanuele-em",
+        "comment_text": "yes I totally agree, my message was a compliment :)",
+        "created_at": "2026-04-10T17:36:28Z",
+        "created_at_i": 1775842588,
+        "objectID": "47721309",
+        "parent_id": 47716781,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T17:47:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cifer_security"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A few thoughts on the WAL approach: WAL for crash-safe rotation is tricky — if the write isn't atomic, you can end up in a corrupt state on crash. An append-only log might be safer. For &quot;paranoid env&quot; use cases, have you looked at post-quantum KEMs? ML-KEM is now NIST standardized and has better forward secrecy properties against quantum adversaries. What's your threat model for the WAL feature?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cifer_security",
+          "story_47715339"
+        ],
+        "author": "cifer_security",
+        "children": [
+          47722274
+        ],
+        "comment_text": "A few thoughts on the WAL approach: WAL for crash-safe rotation is tricky — if the write isn&#x27;t atomic, you can end up in a corrupt state on crash. An append-only log might be safer. For &quot;paranoid env&quot; use cases, have you looked at post-quantum KEMs? ML-KEM is now NIST standardized and has better forward secrecy properties against quantum adversaries. What&#x27;s your threat model for the WAL feature?",
+        "created_at": "2026-04-10T16:57:16Z",
+        "created_at_i": 1775840236,
+        "objectID": "47720876",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-11T00:37:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "JoeBOFH"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Came to say the same thing lol. Especially since Keeper Security deal with credential management."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_JoeBOFH",
+          "story_47715339"
+        ],
+        "author": "JoeBOFH",
+        "comment_text": "Came to say the same thing lol. Especially since Keeper Security deal with credential management.",
+        "created_at": "2026-04-10T16:24:03Z",
+        "created_at_i": 1775838243,
+        "objectID": "47720437",
+        "parent_id": 47716369,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T16:26:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blastslot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That’s actually a pretty interesting tradeoff — especially going with “boring crypto” that’s widely supported vs pulling in heavier deps.<p>The JSON vault + cross-language portability is nice too, especially if you’re embedding secrets across services without tying yourself to one runtime. Curious how you handle key management at scale though — that’s usually where these systems get tricky more than the crypto itself."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_blastslot",
+          "story_47715339"
+        ],
+        "author": "blastslot",
+        "children": [
+          47722994
+        ],
+        "comment_text": "That’s actually a pretty interesting tradeoff — especially going with “boring crypto” that’s widely supported vs pulling in heavier deps.<p>The JSON vault + cross-language portability is nice too, especially if you’re embedding secrets across services without tying yourself to one runtime. Curious how you handle key management at scale though — that’s usually where these systems get tricky more than the crypto itself.",
+        "created_at": "2026-04-10T15:46:53Z",
+        "created_at_i": 1775836013,
+        "objectID": "47719875",
+        "parent_id": 47718833,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T20:05:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ComputerGuru"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We actually just ported SecureStore to go, it’s sort of like this but with cross platform clis and intended to also allow sharing secrets across services and languages, in a secure and embedded fashion! It’s available in rust, php, .net, JS/TS, Python, and golang and easy to port to others.<p>I didn’t get a chance to do a write up but the golang port is here: <a href=\"https://github.com/neosmart/securestore-go\" rel=\"nofollow\">https://github.com/neosmart/securestore-go</a><p>The approach to crypto is very different, we went with what’s very well understood and very well supported on all platforms with little or no dependencies (eg we can use web crypto in JS frontend or backend with no external libs or crypto JS library nonsense).<p>The original .NET and Rust code is from over a decade ago and carefully architected (well before vibecoding was a thing), the secrets are stored in a human readable (json) vault that can be embedded in your binaries or distributed alongside them and be decrypted with either password-based or key-based decryption (or both).<p>The rust repo has the most info: <a href=\"https://github.com/neosmart/securestore-rs\" rel=\"nofollow\">https://github.com/neosmart/securestore-rs</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ComputerGuru",
+          "story_47715339"
+        ],
+        "author": "ComputerGuru",
+        "children": [
+          47719875
+        ],
+        "comment_text": "We actually just ported SecureStore to go, it’s sort of like this but with cross platform clis and intended to also allow sharing secrets across services and languages, in a secure and embedded fashion! It’s available in rust, php, .net, JS&#x2F;TS, Python, and golang and easy to port to others.<p>I didn’t get a chance to do a write up but the golang port is here: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;neosmart&#x2F;securestore-go\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;neosmart&#x2F;securestore-go</a><p>The approach to crypto is very different, we went with what’s very well understood and very well supported on all platforms with little or no dependencies (eg we can use web crypto in JS frontend or backend with no external libs or crypto JS library nonsense).<p>The original .NET and Rust code is from over a decade ago and carefully architected (well before vibecoding was a thing), the secrets are stored in a human readable (json) vault that can be embedded in your binaries or distributed alongside them and be decrypted with either password-based or key-based decryption (or both).<p>The rust repo has the most info: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;neosmart&#x2F;securestore-rs\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;neosmart&#x2F;securestore-rs</a>",
+        "created_at": "2026-04-10T14:37:50Z",
+        "created_at_i": 1775831870,
+        "objectID": "47718833",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T15:47:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Both, honestly. Fun and production intent. But `production` here is very specific, embedded in a single Go binary, a single *.db not a CLI tool (the cli you see there is just for inspection) for developer or CI.<p>The problem fnox solves is great, unified access to secrets across dev, CI, prod with cloud backends. That's a different layer of the stack.<p>Keeper solves a lower-level problem: you have a Go process (a load balancer, a control plane, a daemon) that needs to store secrets inside its own database not in a separate file, not in a cloud vault, not in env vars. Secrets that need per bucket isolation, audit trails, and crash-safe rotation.<p>Here is my thinking :<p>- fnox = how your CLI and deploy scripts get secrets<p>- Keeper = how your running binary stores secrets at rest<p>Different problems, Could I build Keeper on top of fnox? Probably. But then I'd have a file on disk with secrets that fnox manages which is exactly the problem I wanted to eliminate."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Both, honestly. Fun and production intent. But `production` here is very specific, embedded in a single Go binary, a single *.db not a CLI tool (the cli you see there is just for inspection) for developer or CI.<p>The problem fnox solves is great, unified access to secrets across dev, CI, prod with cloud backends. That&#x27;s a different layer of the stack.<p>Keeper solves a lower-level problem: you have a Go process (a load balancer, a control plane, a daemon) that needs to store secrets inside its own database not in a separate file, not in a cloud vault, not in env vars. Secrets that need per bucket isolation, audit trails, and crash-safe rotation.<p>Here is my thinking :<p>- fnox = how your CLI and deploy scripts get secrets<p>- Keeper = how your running binary stores secrets at rest<p>Different problems, Could I build Keeper on top of fnox? Probably. But then I&#x27;d have a file on disk with secrets that fnox manages which is exactly the problem I wanted to eliminate.",
+        "created_at": "2026-04-10T13:44:44Z",
+        "created_at_i": 1775828684,
+        "objectID": "47718073",
+        "parent_id": 47717919,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:49:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CharlesW"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "From a project perspective, is this for fun or is it meant to be a production solution? If the latter, what problem(s) are you trying to solve that established solutions like fnox don't? <a href=\"https://github.com/jdx/fnox\" rel=\"nofollow\">https://github.com/jdx/fnox</a> (I'm an fnox user who's unfamiliar with this space, and am curious what your critiques would be.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CharlesW",
+          "story_47715339"
+        ],
+        "author": "CharlesW",
+        "children": [
+          47718073
+        ],
+        "comment_text": "From a project perspective, is this for fun or is it meant to be a production solution? If the latter, what problem(s) are you trying to solve that established solutions like fnox don&#x27;t? <a href=\"https:&#x2F;&#x2F;github.com&#x2F;jdx&#x2F;fnox\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;jdx&#x2F;fnox</a> (I&#x27;m an fnox user who&#x27;s unfamiliar with this space, and am curious what your critiques would be.)",
+        "created_at": "2026-04-10T13:34:24Z",
+        "created_at_i": 1775828064,
+        "objectID": "47717919",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:52:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "n0n"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "True, but AFAIK an audit system is worthless if it resides on the same potentially compromised machine, no?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_n0n",
+          "story_47715339"
+        ],
+        "author": "n0n",
+        "comment_text": "True, but AFAIK an audit system is worthless if it resides on the same potentially compromised machine, no?",
+        "created_at": "2026-04-10T13:22:51Z",
+        "created_at_i": 1775827371,
+        "objectID": "47717767",
+        "parent_id": 47716802,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:28:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The first bug has been confirmed however The second `vulnerability` would only be exploitable if an attacker could also break SHA-256 preimage resistance to forge valid checksums ??? correct me if am wrong"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "The first bug has been confirmed however The second `vulnerability` would only be exploitable if an attacker could also break SHA-256 preimage resistance to forge valid checksums ??? correct me if am wrong",
+        "created_at": "2026-04-10T12:59:54Z",
+        "created_at_i": 1775825994,
+        "objectID": "47717475",
+        "parent_id": 47716616,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:01:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for sharing this. secret looks really well thought out, the three-layer key hierarchy is impressive. And using `age` is a solid choice. once considered it.<p>Different trade-offs though, Keeper is library first embedded. secret does per version keys with symlink switching - nice, Keeper does per-bucket DEK isolation + audit chains. Both solve &quot;encrypted local storage&quot; but for different workflows.<p>I'll definitely be looking through your code for ideas"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Thanks for sharing this. secret looks really well thought out, the three-layer key hierarchy is impressive. And using `age` is a solid choice. once considered it.<p>Different trade-offs though, Keeper is library first embedded. secret does per version keys with symlink switching - nice, Keeper does per-bucket DEK isolation + audit chains. Both solve &quot;encrypted local storage&quot; but for different workflows.<p>I&#x27;ll definitely be looking through your code for ideas",
+        "created_at": "2026-04-10T12:33:52Z",
+        "created_at_i": 1775824432,
+        "objectID": "47717153",
+        "parent_id": 47717080,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:35:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sneak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://git.eeqj.de/sneak/secret\" rel=\"nofollow\">https://git.eeqj.de/sneak/secret</a><p>This is an age+filesystem secrets manager that I made that is basically what you wrote, but with more organization."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sneak",
+          "story_47715339"
+        ],
+        "author": "sneak",
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;git.eeqj.de&#x2F;sneak&#x2F;secret\" rel=\"nofollow\">https:&#x2F;&#x2F;git.eeqj.de&#x2F;sneak&#x2F;secret</a><p>This is an age+filesystem secrets manager that I made that is basically what you wrote, but with more organization.",
+        "created_at": "2026-04-10T12:30:46Z",
+        "created_at_i": 1775824246,
+        "objectID": "47717116",
+        "parent_id": 47716354,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:35:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sneak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have a similar one called “secret”, also in Go, that is more CLI-focused and uses the filesystem as database.<p><a href=\"https://git.eeqj.de/sneak/secret\" rel=\"nofollow\">https://git.eeqj.de/sneak/secret</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sneak",
+          "story_47715339"
+        ],
+        "author": "sneak",
+        "children": [
+          47717153
+        ],
+        "comment_text": "I have a similar one called “secret”, also in Go, that is more CLI-focused and uses the filesystem as database.<p><a href=\"https:&#x2F;&#x2F;git.eeqj.de&#x2F;sneak&#x2F;secret\" rel=\"nofollow\">https:&#x2F;&#x2F;git.eeqj.de&#x2F;sneak&#x2F;secret</a>",
+        "created_at": "2026-04-10T12:27:41Z",
+        "created_at_i": 1775824061,
+        "objectID": "47717080",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:35:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for the look. On the verification hash, you're right, SHA256 would work there. Argon2id was overkill, I agree 100%.<p>The crash-safe WAL is the part I'm most nervous about too. That's exactly why I posted this. I want eyes on the rotation logic specifically.<p>And yeah, single bbolt db is a limitation. I could have used pebble or any other, but trade-off for simplicity (a single *.db). A true WAL will need external file.  The storage is pluggable though also open to improvement.<p>Still very young."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Thanks for the look. On the verification hash, you&#x27;re right, SHA256 would work there. Argon2id was overkill, I agree 100%.<p>The crash-safe WAL is the part I&#x27;m most nervous about too. That&#x27;s exactly why I posted this. I want eyes on the rotation logic specifically.<p>And yeah, single bbolt db is a limitation. I could have used pebble or any other, but trade-off for simplicity (a single *.db). A true WAL will need external file.  The storage is pluggable though also open to improvement.<p>Still very young.",
+        "created_at": "2026-04-10T12:19:31Z",
+        "created_at_i": 1775823571,
+        "objectID": "47716982",
+        "parent_id": 47716597,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-11T02:59:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So have been told. Will definitely look for a better name"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "So have been told. Will definitely look for a better name",
+        "created_at": "2026-04-10T12:09:20Z",
+        "created_at_i": 1775822960,
+        "objectID": "47716871",
+        "parent_id": 47716369,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:14:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thanks for the update ... will definitely look for a better name"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "thanks for the update ... will definitely look for a better name",
+        "created_at": "2026-04-10T12:08:51Z",
+        "created_at_i": 1775822931,
+        "objectID": "47716867",
+        "parent_id": 47716389,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:09:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Honestly… the initial use case is to hide certs from the file system and secrets from the environment. However, this can be extended.<p>The primary issue has been not being able to manage an encrypted storage system… the main goal is to have something that can be audited, not just secured.<p>yes 100% ... embeded"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Honestly… the initial use case is to hide certs from the file system and secrets from the environment. However, this can be extended.<p>The primary issue has been not being able to manage an encrypted storage system… the main goal is to have something that can be audited, not just secured.<p>yes 100% ... embeded",
+        "created_at": "2026-04-10T12:08:07Z",
+        "created_at_i": 1775822887,
+        "objectID": "47716858",
+        "parent_id": 47716117,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:09:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Definitely … agents cannot access your password unless you save it to the environment too. However it's better to use resolvers ... depending on your use case"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Definitely … agents cannot access your password unless you save it to the environment too. However it&#x27;s better to use resolvers ... depending on your use case",
+        "created_at": "2026-04-10T12:05:26Z",
+        "created_at_i": 1775822726,
+        "objectID": "47716831",
+        "parent_id": 47716571,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:09:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "not when you need an audit system"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "children": [
+          47717767
+        ],
+        "comment_text": "not when you need an audit system",
+        "created_at": "2026-04-10T12:03:04Z",
+        "created_at_i": 1775822584,
+        "objectID": "47716802",
+        "parent_id": 47716354,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:23:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was thinking its better to be boring-correct :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "children": [
+          47721309
+        ],
+        "comment_text": "I was thinking its better to be boring-correct :)",
+        "created_at": "2026-04-10T12:01:08Z",
+        "created_at_i": 1775822468,
+        "objectID": "47716781",
+        "parent_id": 47716586,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T17:37:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "babawere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Even when you have a proper function and use AI for auto documentation, it silently changes it (insane) … I will defiantly fix this."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_babawere",
+          "story_47715339"
+        ],
+        "author": "babawere",
+        "comment_text": "Even when you have a proper function and use AI for auto documentation, it silently changes it (insane) … I will defiantly fix this.",
+        "created_at": "2026-04-10T12:00:01Z",
+        "created_at_i": 1775822401,
+        "objectID": "47716772",
+        "parent_id": 47716650,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T12:04:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "RALaBarge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not sure, I've seen common things like this pop up a lot too, the same errors being tripped over.  I'm not sure if it is a context thing or just a limitation of how the models work presently?  For stuff that I'm using myself, I will run these through like the top 10 reasoning models on OR and just see where everything pans out.<p>Edit: here is an example of the process and output with something I put together the other day: <a href=\"https://github.com/RALaBarge/garlicpress/blob/master/portfolio/COMPLETE_RESULTS.md\" rel=\"nofollow\">https://github.com/RALaBarge/garlicpress/blob/master/portfol...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_RALaBarge",
+          "story_47715339"
+        ],
+        "author": "RALaBarge",
+        "comment_text": "Not sure, I&#x27;ve seen common things like this pop up a lot too, the same errors being tripped over.  I&#x27;m not sure if it is a context thing or just a limitation of how the models work presently?  For stuff that I&#x27;m using myself, I will run these through like the top 10 reasoning models on OR and just see where everything pans out.<p>Edit: here is an example of the process and output with something I put together the other day: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;RALaBarge&#x2F;garlicpress&#x2F;blob&#x2F;master&#x2F;portfolio&#x2F;COMPLETE_RESULTS.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;RALaBarge&#x2F;garlicpress&#x2F;blob&#x2F;master&#x2F;portfol...</a>",
+        "created_at": "2026-04-10T11:47:04Z",
+        "created_at_i": 1775821624,
+        "objectID": "47716662",
+        "parent_id": 47716650,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T11:49:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Retr0id"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; The VerifyHMAC() function unconditionally returns true when the HMAC field is empty<p>This kind of thing is <i>super</i> common in vibecoded crypto, I wonder why it keeps happening."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Retr0id",
+          "story_47715339"
+        ],
+        "author": "Retr0id",
+        "children": [
+          47716662,
+          47716772
+        ],
+        "comment_text": "&gt; The VerifyHMAC() function unconditionally returns true when the HMAC field is empty<p>This kind of thing is <i>super</i> common in vibecoded crypto, I wonder why it keeps happening.",
+        "created_at": "2026-04-10T11:45:22Z",
+        "created_at_i": 1775821522,
+        "objectID": "47716650",
+        "parent_id": 47716616,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:03:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "RALaBarge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey I ran this request through my AI harness (beigeboxoss.com), first with a smaller local model and then validated with Trinity Large via OR.  <a href=\"https://github.com/agberohq/keeper/issues/2\" rel=\"nofollow\">https://github.com/agberohq/keeper/issues/2</a>  -- YMMV but wanted something to do with my coffee, thanks!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_RALaBarge",
+          "story_47715339"
+        ],
+        "author": "RALaBarge",
+        "children": [
+          47717475,
+          47716650
+        ],
+        "comment_text": "Hey I ran this request through my AI harness (beigeboxoss.com), first with a smaller local model and then validated with Trinity Large via OR.  <a href=\"https:&#x2F;&#x2F;github.com&#x2F;agberohq&#x2F;keeper&#x2F;issues&#x2F;2\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;agberohq&#x2F;keeper&#x2F;issues&#x2F;2</a>  -- YMMV but wanted something to do with my coffee, thanks!",
+        "created_at": "2026-04-10T11:41:29Z",
+        "created_at_i": 1775821289,
+        "objectID": "47716616",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:32:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Retr0id"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mmmm vibecrypto, my favourite. I don't see anything <i>obviously</i> broken (at a glance) but as a perf improvement, there's little reason to use Argon2id for the &quot;verification hash&quot; step, might as well use sha256 there. There is also no need to use ConstantTimeCompare because the value being compared against is not secret, although it doesn't hurt.<p>The &quot;Crash-safe rotation WAL&quot; feature sounds sketchy and it's what I'd audit closely, if I was auditing closely."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Retr0id",
+          "story_47715339"
+        ],
+        "author": "Retr0id",
+        "children": [
+          47716982
+        ],
+        "comment_text": "Mmmm vibecrypto, my favourite. I don&#x27;t see anything <i>obviously</i> broken (at a glance) but as a perf improvement, there&#x27;s little reason to use Argon2id for the &quot;verification hash&quot; step, might as well use sha256 there. There is also no need to use ConstantTimeCompare because the value being compared against is not secret, although it doesn&#x27;t hurt.<p>The &quot;Crash-safe rotation WAL&quot; feature sounds sketchy and it&#x27;s what I&#x27;d audit closely, if I was auditing closely.",
+        "created_at": "2026-04-10T11:39:43Z",
+        "created_at_i": 1775821183,
+        "objectID": "47716597",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-11T10:15:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "emanuele-em"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Per-bucket DEKs with HKDF, hashed policy keys to kill enumeration, HMAC audit chain. This is the kind of boring-correct crypto design I rarely see in Go libraries. memguard for the master key is a nice touch too."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_emanuele-em",
+          "story_47715339"
+        ],
+        "author": "emanuele-em",
+        "children": [
+          47716781
+        ],
+        "comment_text": "Per-bucket DEKs with HKDF, hashed policy keys to kill enumeration, HMAC audit chain. This is the kind of boring-correct crypto design I rarely see in Go libraries. memguard for the master key is a nice touch too.",
+        "created_at": "2026-04-10T11:38:50Z",
+        "created_at_i": 1775821130,
+        "objectID": "47716586",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-22T01:03:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tietjens"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Could I use this to store secrets to hide env vars from agents?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tietjens",
+          "story_47715339"
+        ],
+        "author": "tietjens",
+        "children": [
+          47716831
+        ],
+        "comment_text": "Could I use this to store secrets to hide env vars from agents?",
+        "created_at": "2026-04-10T11:36:53Z",
+        "created_at_i": 1775821013,
+        "objectID": "47716571",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T13:28:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nonameiguess"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Keeper is already the name of a popular enterprise secrets store: <a href=\"https://docs.keeper.io/en/user-guides/web-vault\" rel=\"nofollow\">https://docs.keeper.io/en/user-guides/web-vault</a><p>I haven't used it, don't advocate for it, and have no opinion on either its viability or your product's viability for any specific use case. Mostly I just think it's a bit confusing to have two separate products in a very similar space with the same name."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nonameiguess",
+          "story_47715339"
+        ],
+        "author": "nonameiguess",
+        "children": [
+          47716867
+        ],
+        "comment_text": "Keeper is already the name of a popular enterprise secrets store: <a href=\"https:&#x2F;&#x2F;docs.keeper.io&#x2F;en&#x2F;user-guides&#x2F;web-vault\" rel=\"nofollow\">https:&#x2F;&#x2F;docs.keeper.io&#x2F;en&#x2F;user-guides&#x2F;web-vault</a><p>I haven&#x27;t used it, don&#x27;t advocate for it, and have no opinion on either its viability or your product&#x27;s viability for any specific use case. Mostly I just think it&#x27;s a bit confusing to have two separate products in a very similar space with the same name.",
+        "created_at": "2026-04-10T11:18:57Z",
+        "created_at_i": 1775819937,
+        "objectID": "47716389",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T17:26:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "modelorona"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Name could conflict with Keeper Security"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_modelorona",
+          "story_47715339"
+        ],
+        "author": "modelorona",
+        "children": [
+          47720437,
+          47716871
+        ],
+        "comment_text": "Name could conflict with Keeper Security",
+        "created_at": "2026-04-10T11:16:47Z",
+        "created_at_i": 1775819807,
+        "objectID": "47716369",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-11T10:15:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "n0n"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Genuine question: what's your thread model?<p>Vault gives time limited Tokens with Network Boundary.\nInstead of Keeper, i would just use age:<p># write<p>echo &quot;my secret&quot; | age -r &lt;recipient-pubkey&gt; &gt; secret.age<p># read<p>age -d -i key.txt secret.age"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_n0n",
+          "story_47715339"
+        ],
+        "author": "n0n",
+        "children": [
+          47717116,
+          47716802
+        ],
+        "comment_text": "Genuine question: what&#x27;s your thread model?<p>Vault gives time limited Tokens with Network Boundary.\nInstead of Keeper, i would just use age:<p># write<p>echo &quot;my secret&quot; | age -r &lt;recipient-pubkey&gt; &gt; secret.age<p># read<p>age -d -i key.txt secret.age",
+        "created_at": "2026-04-10T11:15:39Z",
+        "created_at_i": 1775819739,
+        "objectID": "47716354",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-12T12:32:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "elthor89"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have been looking for something like this. I know openbao, hashicorp vault.<p>But they require to be placed on a separate server, and come with their own infra management.<p>Is the idea of this project to embed this into you app, instead of relying on .env or an external vault?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Keeper – embedded secret store for Go (help me break it)"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agberohq/keeper"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_elthor89",
+          "story_47715339"
+        ],
+        "author": "elthor89",
+        "children": [
+          47716858
+        ],
+        "comment_text": "I have been looking for something like this. I know openbao, hashicorp vault.<p>But they require to be placed on a separate server, and come with their own infra management.<p>Is the idea of this project to embed this into you app, instead of relying on .env or an external vault?",
+        "created_at": "2026-04-10T10:48:25Z",
+        "created_at_i": 1775818105,
+        "objectID": "47716117",
+        "parent_id": 47715339,
+        "story_id": 47715339,
+        "story_title": "Show HN: Keeper – embedded secret store for Go (help me break it)",
+        "story_url": "https://github.com/agberohq/keeper",
+        "updated_at": "2026-04-10T14:07:06Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 33,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47715339&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 19
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

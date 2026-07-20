@@ -1,0 +1,3267 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "window": "prior-30d",
+  "start": 1778587200,
+  "end": 1781179200,
+  "tag": "show_hn",
+  "page": 1,
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "_qnt"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As autonomous systems evolve (we see what AI agents are doing now), we open-sourced TKeeper, which allows you to build guardrails around their actions using typed intents, policy checks, and cryptographic proofs.<p>It allows you to restrict and audit AI agent workflows, blockchain operations, certificate issuance, and any actions that can be expressed as a structured intent.<p>In simple terms, the proposed interaction looks like this:<p>1. Machine sends an intent to TKeeper.\n2. TKeeper understands the request, executes the policies, and if everything is OK, signs the action (in the case of blockchain operations, this is a transaction signature).\n3. The signed intent is sent by the machine to the backend.\n4. Backend verifies signature and does its job.<p>This mechanism makes all &quot;permissions&quot; for actions intent-bound, so we believe it is very effective against LLM06: Excessive Agency, if its primary use case is guardrailing AI.<p>We also believe that concentrated risks are greatly underestimated, so TKeeper is based on multi-party computation based threshold schemes.<p>This means that with a quorum setup, it can withstand up to t-1 compromises, allowing risk sharing between or within organizations. For the fastest time to market, you can deploy 1-of-1 setup and then promote it to t-of-n.<p>Additionally, the following features are built-in:\n1. Audit logging &amp; Asset inventory\n2. Four-eye control for keys that require human verification.\n3. The entire key lifecycle follows the canons: rotation, destruction, and resharing.<p>Feedback is greatly appreciated :')"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: TKeeper – policy-governed, signed intents for autonomous systems"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/tkeeper-org/tkeeper"
+          }
+        },
+        "_tags": [
+          "story",
+          "author__qnt",
+          "story_48478778",
+          "show_hn"
+        ],
+        "author": "_qnt",
+        "created_at": "2026-06-10T16:29:30Z",
+        "created_at_i": 1781108970,
+        "num_comments": 0,
+        "objectID": "48478778",
+        "points": 2,
+        "story_id": 48478778,
+        "story_text": "As autonomous systems evolve (we see what AI agents are doing now), we open-sourced TKeeper, which allows you to build guardrails around their actions using typed intents, policy checks, and cryptographic proofs.<p>It allows you to restrict and audit AI agent workflows, blockchain operations, certificate issuance, and any actions that can be expressed as a structured intent.<p>In simple terms, the proposed interaction looks like this:<p>1. Machine sends an intent to TKeeper.\n2. TKeeper understands the request, executes the policies, and if everything is OK, signs the action (in the case of blockchain operations, this is a transaction signature).\n3. The signed intent is sent by the machine to the backend.\n4. Backend verifies signature and does its job.<p>This mechanism makes all &quot;permissions&quot; for actions intent-bound, so we believe it is very effective against LLM06: Excessive Agency, if its primary use case is guardrailing AI.<p>We also believe that concentrated risks are greatly underestimated, so TKeeper is based on multi-party computation based threshold schemes.<p>This means that with a quorum setup, it can withstand up to t-1 compromises, allowing risk sharing between or within organizations. For the fastest time to market, you can deploy 1-of-1 setup and then promote it to t-of-n.<p>Additionally, the following features are built-in:\n1. Audit logging &amp; Asset inventory\n2. Four-eye control for keys that require human verification.\n3. The entire key lifecycle follows the canons: rotation, destruction, and resharing.<p>Feedback is greatly appreciated :&#x27;)",
+        "title": "Show HN: TKeeper – policy-governed, signed intents for autonomous systems",
+        "updated_at": "2026-06-10T16:35:55Z",
+        "url": "https://github.com/tkeeper-org/tkeeper"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "justacoolname"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A 150M model that extracts verbatim evidence spans for RAG, no LLM call"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_justacoolname",
+          "story_48478775",
+          "show_hn"
+        ],
+        "author": "justacoolname",
+        "children": [
+          48478805
+        ],
+        "created_at": "2026-06-10T16:29:07Z",
+        "created_at_i": 1781108947,
+        "num_comments": 0,
+        "objectID": "48478775",
+        "points": 6,
+        "story_id": 48478775,
+        "title": "Show HN: A 150M model that extracts verbatim evidence spans for RAG, no LLM call",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://huggingface.co/KRLabsOrg/verbatim-rag-modern-bert-v2"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ejcho623"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Automated Outbound in Your Terminal"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://posthorn.sh/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ejcho623",
+          "story_48478756",
+          "show_hn"
+        ],
+        "author": "ejcho623",
+        "created_at": "2026-06-10T16:28:02Z",
+        "created_at_i": 1781108882,
+        "num_comments": 0,
+        "objectID": "48478756",
+        "points": 2,
+        "story_id": 48478756,
+        "title": "Show HN: Automated Outbound in Your Terminal",
+        "updated_at": "2026-06-10T16:35:55Z",
+        "url": "https://posthorn.sh/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "neemsio"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AgentCarousel – behavioral tests for AI agents, with signed evidence"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/agentcarousel/agentcarousel"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_neemsio",
+          "story_48478508",
+          "show_hn"
+        ],
+        "author": "neemsio",
+        "children": [
+          48478517
+        ],
+        "created_at": "2026-06-10T16:12:07Z",
+        "created_at_i": 1781107927,
+        "num_comments": 0,
+        "objectID": "48478508",
+        "points": 2,
+        "story_id": 48478508,
+        "title": "Show HN: AgentCarousel – behavioral tests for AI agents, with signed evidence",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/agentcarousel/agentcarousel"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kbyatnal"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We're open-sourcing 14 components &amp; examples today for PDF, DOCX, and XLSX viewers, plus bounding box citations, file upload, e-signature, and more. It's MIT licensed and fully customizable.<p>Demo video here: <a href=\"https://share.extend.ai/kRmSGKRF\">https://share.extend.ai/kRmSGKRF</a><p>When we started, we tried every file viewer and document component library we could find. Unfortunately, none of them had all the functionality (and polish) that we wanted, so we ended up building our own for <a href=\"https://extend.ai/\">https://extend.ai/</a>. It was only ever meant to be internal, but enough customers kept asking for it that we decided to open source it.<p>It's useful for building document processing agents, real-time user facing document intake flows, or all kinds of internal tooling.<p>We naively thought this would be a solved problem. Turns out, making PDF/XLSX/DOCX viewers that work at scale is not trivial...we use and maintain it for Extend ourselves, so we've fixed a lot of edge cases that came up while running millions of pages / day through our own system. Our hope is that with our resources + community support, it'll keep getting better over time."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kbyatnal",
+          "story_48478469",
+          "show_hn"
+        ],
+        "author": "kbyatnal",
+        "children": [
+          48488175,
+          48484807,
+          48482164,
+          48481375,
+          48487079,
+          48481910,
+          48487397,
+          48488352,
+          48484236,
+          48480673,
+          48486350,
+          48485286,
+          48480768,
+          48482035,
+          48508994,
+          48486772,
+          48490188,
+          48484856,
+          48484104,
+          48485295,
+          48493757,
+          48484055,
+          48483249,
+          48488678,
+          48481542,
+          48530583,
+          48489246,
+          48490840,
+          48488005,
+          48514287,
+          48484228,
+          48486108,
+          48484637,
+          48489152
+        ],
+        "created_at": "2026-06-10T16:09:26Z",
+        "created_at_i": 1781107766,
+        "num_comments": 81,
+        "objectID": "48478469",
+        "points": 252,
+        "story_id": 48478469,
+        "story_text": "We&#x27;re open-sourcing 14 components &amp; examples today for PDF, DOCX, and XLSX viewers, plus bounding box citations, file upload, e-signature, and more. It&#x27;s MIT licensed and fully customizable.<p>Demo video here: <a href=\"https:&#x2F;&#x2F;share.extend.ai&#x2F;kRmSGKRF\">https:&#x2F;&#x2F;share.extend.ai&#x2F;kRmSGKRF</a><p>When we started, we tried every file viewer and document component library we could find. Unfortunately, none of them had all the functionality (and polish) that we wanted, so we ended up building our own for <a href=\"https:&#x2F;&#x2F;extend.ai&#x2F;\">https:&#x2F;&#x2F;extend.ai&#x2F;</a>. It was only ever meant to be internal, but enough customers kept asking for it that we decided to open source it.<p>It&#x27;s useful for building document processing agents, real-time user facing document intake flows, or all kinds of internal tooling.<p>We naively thought this would be a solved problem. Turns out, making PDF&#x2F;XLSX&#x2F;DOCX viewers that work at scale is not trivial...we use and maintain it for Extend ourselves, so we&#x27;ve fixed a lot of edge cases that came up while running millions of pages &#x2F; day through our own system. Our hope is that with our resources + community support, it&#x27;ll keep getting better over time.",
+        "title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "updated_at": "2026-07-10T20:01:16Z",
+        "url": "https://www.extend.ai/ui"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "christoph123"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN!<p>I wanted a time tracker accurate enough to be useful and easy enough to not require a new habit while protecting your privacy.<p>Most trackers (RescueTime etc) only use activity logs and that isn't enough to be very useful. DoneThat uses LLMs to parse your screenshots, which makes it much more accurate but also requires much higher privacy standards, so let's start with those:<p>- Source-available desktop app (<a href=\"https://github.com/donethatai/donethat-electron\" rel=\"nofollow\">https://github.com/donethatai/donethat-electron</a>) screenshots every few min.<p>- App exclusions (password managers, personal comms, etc.) are blanked before the screenshot leaves your machine.<p>- The rest goes to an LLM (BYO possible) for a short text description, and the raw screenshot is discarded immediately.<p>- That data then gets further processed on GCP (EU) for analyses, sharing, or agentic stuff.<p>- Sharing is opt-in and only possible at an aggregation level that balances privacy and usefulness. You can also limit to relative data.<p>- Data flow visualization &amp; more privacy features: <a href=\"https://donethat.ai/data\" rel=\"nofollow\">https://donethat.ai/data</a>.<p>- Not fully local. If that's a hard requirement, look at Dayflow or Screenpipe (just changed their licensing). I made a list of tools in this space here: <a href=\"https://donethat.ai/compare\" rel=\"nofollow\">https://donethat.ai/compare</a>.<p>Currently working on a proactive Clippy-like coach because it's the highest-requested feature (mostly from self-identifying ADHD folk). Surprisingly hard to make this actually useful and not just gimmicky or annoying.<p>Give it a try: <a href=\"https://donethat.ai\" rel=\"nofollow\">https://donethat.ai</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AI watched my screen for a year. Weather beat sleep"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://donethat.ai/blog/dogfooding-donethat"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_christoph123",
+          "story_48478454",
+          "show_hn"
+        ],
+        "author": "christoph123",
+        "children": [
+          48478814
+        ],
+        "created_at": "2026-06-10T16:08:09Z",
+        "created_at_i": 1781107689,
+        "num_comments": 2,
+        "objectID": "48478454",
+        "points": 4,
+        "story_id": 48478454,
+        "story_text": "Hey HN!<p>I wanted a time tracker accurate enough to be useful and easy enough to not require a new habit while protecting your privacy.<p>Most trackers (RescueTime etc) only use activity logs and that isn&#x27;t enough to be very useful. DoneThat uses LLMs to parse your screenshots, which makes it much more accurate but also requires much higher privacy standards, so let&#x27;s start with those:<p>- Source-available desktop app (<a href=\"https:&#x2F;&#x2F;github.com&#x2F;donethatai&#x2F;donethat-electron\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;donethatai&#x2F;donethat-electron</a>) screenshots every few min.<p>- App exclusions (password managers, personal comms, etc.) are blanked before the screenshot leaves your machine.<p>- The rest goes to an LLM (BYO possible) for a short text description, and the raw screenshot is discarded immediately.<p>- That data then gets further processed on GCP (EU) for analyses, sharing, or agentic stuff.<p>- Sharing is opt-in and only possible at an aggregation level that balances privacy and usefulness. You can also limit to relative data.<p>- Data flow visualization &amp; more privacy features: <a href=\"https:&#x2F;&#x2F;donethat.ai&#x2F;data\" rel=\"nofollow\">https:&#x2F;&#x2F;donethat.ai&#x2F;data</a>.<p>- Not fully local. If that&#x27;s a hard requirement, look at Dayflow or Screenpipe (just changed their licensing). I made a list of tools in this space here: <a href=\"https:&#x2F;&#x2F;donethat.ai&#x2F;compare\" rel=\"nofollow\">https:&#x2F;&#x2F;donethat.ai&#x2F;compare</a>.<p>Currently working on a proactive Clippy-like coach because it&#x27;s the highest-requested feature (mostly from self-identifying ADHD folk). Surprisingly hard to make this actually useful and not just gimmicky or annoying.<p>Give it a try: <a href=\"https:&#x2F;&#x2F;donethat.ai\" rel=\"nofollow\">https:&#x2F;&#x2F;donethat.ai</a>",
+        "title": "Show HN: AI watched my screen for a year. Weather beat sleep",
+        "updated_at": "2026-06-10T19:32:25Z",
+        "url": "https://donethat.ai/blog/dogfooding-donethat"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pstrange"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built strangeClaw because I wanted to understand agent systems like OpenClaw more fundamentally, so I started from scratch and built my own. Yes, I know, another agent is probably not what the world needs right now.<p>My main motivation was sandboxing. Agents are extremely powerful, but they need a framework they can work well within (at least that is my point of view). For production-like use, I think that means real isolation, so I wanted to try putting the agent inside a Firecracker microVM. My goal was to build something I would actually feel comfortable running on my main PC.<p>In Fire mode, the agent has no host filesystem access and no API or LLM credentials. Authenticated HTTP calls go through a host-side broker that enforces policy, injects credentials, redacts responses, and only allows configured endpoints/methods. LLM calls are proxied host-side too.<p>The agent itself is intentionally small and now that the foundation is in place, I'll try to start expanding it with more tools and skills. If this sounds interesting, feel free to try it, take it apart, or build on it. Looking forward to all the feedback :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: strangeClaw – a self-hosted agent running inside a Firecracker microVM"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/itsthestranger/strangeClaw"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pstrange",
+          "story_48478320",
+          "show_hn"
+        ],
+        "author": "pstrange",
+        "created_at": "2026-06-10T15:59:15Z",
+        "created_at_i": 1781107155,
+        "num_comments": 0,
+        "objectID": "48478320",
+        "points": 1,
+        "story_id": 48478320,
+        "story_text": "I built strangeClaw because I wanted to understand agent systems like OpenClaw more fundamentally, so I started from scratch and built my own. Yes, I know, another agent is probably not what the world needs right now.<p>My main motivation was sandboxing. Agents are extremely powerful, but they need a framework they can work well within (at least that is my point of view). For production-like use, I think that means real isolation, so I wanted to try putting the agent inside a Firecracker microVM. My goal was to build something I would actually feel comfortable running on my main PC.<p>In Fire mode, the agent has no host filesystem access and no API or LLM credentials. Authenticated HTTP calls go through a host-side broker that enforces policy, injects credentials, redacts responses, and only allows configured endpoints&#x2F;methods. LLM calls are proxied host-side too.<p>The agent itself is intentionally small and now that the foundation is in place, I&#x27;ll try to start expanding it with more tools and skills. If this sounds interesting, feel free to try it, take it apart, or build on it. Looking forward to all the feedback :)",
+        "title": "Show HN: strangeClaw – a self-hosted agent running inside a Firecracker microVM",
+        "updated_at": "2026-06-10T16:02:54Z",
+        "url": "https://github.com/itsthestranger/strangeClaw"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kelu124"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Building a Resume ontology and tooling for LLMs CV management"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/kelu124/Resume_RDF_update/tree/main"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kelu124",
+          "story_48478278",
+          "show_hn"
+        ],
+        "author": "kelu124",
+        "created_at": "2026-06-10T15:56:32Z",
+        "created_at_i": 1781106992,
+        "num_comments": 0,
+        "objectID": "48478278",
+        "points": 1,
+        "story_id": 48478278,
+        "title": "Show HN: Building a Resume ontology and tooling for LLMs CV management",
+        "updated_at": "2026-06-10T15:57:11Z",
+        "url": "https://github.com/kelu124/Resume_RDF_update/tree/main"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LoadingALIAS"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Rscrypto 0.4 treats constant-time as a release gate"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/loadingalias/rscrypto/releases/tag/v0.4.0"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_LoadingALIAS",
+          "story_48478270",
+          "show_hn"
+        ],
+        "author": "LoadingALIAS",
+        "children": [
+          48478343
+        ],
+        "created_at": "2026-06-10T15:56:10Z",
+        "created_at_i": 1781106970,
+        "num_comments": 0,
+        "objectID": "48478270",
+        "points": 1,
+        "story_id": 48478270,
+        "title": "Show HN: Rscrypto 0.4 treats constant-time as a release gate",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/loadingalias/rscrypto/releases/tag/v0.4.0"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kenblum"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Author here. Remember Chip's Challenge? The 1992 Windows one from the Microsoft Entertainment Pack. I wanted to play it again so I ported it to the browser. Well, Claude did. I was too lazy to write the code, so I made a rule that I wouldn't write any and just bossed it around.<p>Between us we've solved 80 of the 149 levels. It didn't come free: plenty I had to hand-hold or play through myself, and for the nasty ones I had Claude build a solver that watches YouTube speedruns and rebuilds the moves frame by frame (oddly satisfying to watch: <a href=\"https://www.youtube.com/watch?v=6wndAf4EXNc\" rel=\"nofollow\">https://www.youtube.com/watch?v=6wndAf4EXNc</a>).<p>It also built a full level editor (<a href=\"https://claudes-challenge.vercel.app/?level=1#editor\" rel=\"nofollow\">https://claudes-challenge.vercel.app/?level=1#editor</a>) and a replay viewer to watch the solved levels back (<a href=\"https://claudes-challenge.vercel.app/replay.html\" rel=\"nofollow\">https://claudes-challenge.vercel.app/replay.html</a>).<p>Code: <a href=\"https://github.com/blumk/claudes-challenge\" rel=\"nofollow\">https://github.com/blumk/claudes-challenge</a><p>Obligatory IP note: this is someone else's game. I'm assuming it's effectively abandonware but I honestly don't know, so the site might have to come down at some point. The repo is stripped of all the original art and assets, code only."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Chip's Challenge (1992), rebuilt for the web"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://claudes-challenge.vercel.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kenblum",
+          "story_48478230",
+          "show_hn"
+        ],
+        "author": "kenblum",
+        "children": [
+          48478484
+        ],
+        "created_at": "2026-06-10T15:53:24Z",
+        "created_at_i": 1781106804,
+        "num_comments": 3,
+        "objectID": "48478230",
+        "points": 2,
+        "story_id": 48478230,
+        "story_text": "Author here. Remember Chip&#x27;s Challenge? The 1992 Windows one from the Microsoft Entertainment Pack. I wanted to play it again so I ported it to the browser. Well, Claude did. I was too lazy to write the code, so I made a rule that I wouldn&#x27;t write any and just bossed it around.<p>Between us we&#x27;ve solved 80 of the 149 levels. It didn&#x27;t come free: plenty I had to hand-hold or play through myself, and for the nasty ones I had Claude build a solver that watches YouTube speedruns and rebuilds the moves frame by frame (oddly satisfying to watch: <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=6wndAf4EXNc\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=6wndAf4EXNc</a>).<p>It also built a full level editor (<a href=\"https:&#x2F;&#x2F;claudes-challenge.vercel.app&#x2F;?level=1#editor\" rel=\"nofollow\">https:&#x2F;&#x2F;claudes-challenge.vercel.app&#x2F;?level=1#editor</a>) and a replay viewer to watch the solved levels back (<a href=\"https:&#x2F;&#x2F;claudes-challenge.vercel.app&#x2F;replay.html\" rel=\"nofollow\">https:&#x2F;&#x2F;claudes-challenge.vercel.app&#x2F;replay.html</a>).<p>Code: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;blumk&#x2F;claudes-challenge\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;blumk&#x2F;claudes-challenge</a><p>Obligatory IP note: this is someone else&#x27;s game. I&#x27;m assuming it&#x27;s effectively abandonware but I honestly don&#x27;t know, so the site might have to come down at some point. The repo is stripped of all the original art and assets, code only.",
+        "title": "Show HN: Chip's Challenge (1992), rebuilt for the web",
+        "updated_at": "2026-06-10T16:41:55Z",
+        "url": "https://claudes-challenge.vercel.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GeorgeCurtis"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN, it’s been just over a year since we launched HelixDB (<a href=\"https://news.ycombinator.com/item?id=43975423\">https://news.ycombinator.com/item?id=43975423</a>), a project a friend and I started in college. It’s an OLTP graph database built on object-storage, with native vector search and full-text search (FTS).<p>Why graph, vector and FTS? Graph databases provide a natural cognitive model for data, vectors allow for a semantic understanding of the entities and relationships in the graph, and FTS provides more specific filtering. Many AI-driven applications attempt to combine all of these functionalities by stitching together multiple disconnected systems, but even then there’s no native way to perform joins or queries that span all systems. You still need to handle this logic at the application level.<p>Helix started as a graph DB, but we moved to a hybrid graph/vector approach after attempting to build an AI memory system, which led us down the GraphRAG and HybridRAG rabbit hole, where we would need separate graph and vector databases.<p>We knew scalability would be a challenge at each stage of our product's development, however our initial focus this past year was to prove out the product through local deployments and was only meant to be run on a single node. Scaling graph DBs remained a difficult and expensive problem we’d have to solve later.\nSome common ways other graph DBs solve scaling is by duplicating entire datasets across distributed machines (extremely expensive per node), or by sharding the data.<p>Sharding databases is effective and affordable, however, graph data doesn’t have explicit partitions like relational databases do. For example, sharding a relational DB involves splitting up tables. When it comes to graph DBs, the edges can span across any of the partitions, and hopping across multiple machines when traversing nodes is ineffective and computationally expensive.<p>Replicating graph DBs for high availability and better throughput drastically increases the operational cost of the db and still has a limit of how big you can vertically scale. The workload that we’re used for requires storing a huge amount of data for agents, where only a subset of that data is ever needed at any one time. So rather than having the whole thing in memory, we can store it all in object-storage and get the bits we need when they’re needed.<p>Agents benefit from better context, which is achieved from more and better data (more relationships etc). By using S3 as the persistence/data layer there is <i>no limit</i> to how big the graph can be or how many relationships you can have, and we can scale to serve throughput and requests by horizontally spinning up nodes and caching relevant subsets of the graph on each node. This way, you get extremely low latency for “hot” data and a p99 of ~100ms for writes and ~50ms for reads from cold storage (S3). Plus you get the benefit of dirt cheap storage.<p>Workloads that HelixDB is currently supporting:\n- Huge amounts of data (TBs) from which the agents need to search and traverse over\n- Offering affordable graph storage for companies where cost of graph data is a bottleneck\n- Consolidating multiple databases, enabling AI agents to have autonomy over companies, helping them become more autonomous.\n- AI memory\n- Company brains<p>We’re currently working on our own generalised AI memory layer which will use HelixDB under the hood and be completely open-source. Also, we’re finishing up on pre-filtering for vector search which will allow you to pre-filter based on relationships in the graph, metadata, and sub-graphs. And lastly, GA cloud will be available in the coming weeks.<p>If you want to run Helix locally (either on-disk or in-memory), you can find more info on our github (<a href=\"https://github.com/HelixDB/helix-db\" rel=\"nofollow\">https://github.com/HelixDB/helix-db</a>) or via our docs (<a href=\"https://docs.helix-db.com/database/local-development\">https://docs.helix-db.com/database/local-development</a>). If you’re interested in getting started with our distributed cloud, please email us founders@helix-db.com.<p>Many thanks! Comments and feedback welcome!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: HelixDB – A graph database built on object storage"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/HelixDB/helix-db/tree/main"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_GeorgeCurtis",
+          "story_48478148",
+          "show_hn"
+        ],
+        "author": "GeorgeCurtis",
+        "children": [
+          48482985,
+          48478411,
+          48485416,
+          48483348,
+          48480822,
+          48481629,
+          48487964,
+          48481696,
+          48494231,
+          48478581,
+          48478409,
+          48480891,
+          48480409,
+          48478985,
+          48511053,
+          48481015,
+          48481259,
+          48501681,
+          48494211,
+          48482830
+        ],
+        "created_at": "2026-06-10T15:47:31Z",
+        "created_at_i": 1781106451,
+        "num_comments": 46,
+        "objectID": "48478148",
+        "points": 159,
+        "story_id": 48478148,
+        "story_text": "Hey HN, it’s been just over a year since we launched HelixDB (<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=43975423\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=43975423</a>), a project a friend and I started in college. It’s an OLTP graph database built on object-storage, with native vector search and full-text search (FTS).<p>Why graph, vector and FTS? Graph databases provide a natural cognitive model for data, vectors allow for a semantic understanding of the entities and relationships in the graph, and FTS provides more specific filtering. Many AI-driven applications attempt to combine all of these functionalities by stitching together multiple disconnected systems, but even then there’s no native way to perform joins or queries that span all systems. You still need to handle this logic at the application level.<p>Helix started as a graph DB, but we moved to a hybrid graph&#x2F;vector approach after attempting to build an AI memory system, which led us down the GraphRAG and HybridRAG rabbit hole, where we would need separate graph and vector databases.<p>We knew scalability would be a challenge at each stage of our product&#x27;s development, however our initial focus this past year was to prove out the product through local deployments and was only meant to be run on a single node. Scaling graph DBs remained a difficult and expensive problem we’d have to solve later.\nSome common ways other graph DBs solve scaling is by duplicating entire datasets across distributed machines (extremely expensive per node), or by sharding the data.<p>Sharding databases is effective and affordable, however, graph data doesn’t have explicit partitions like relational databases do. For example, sharding a relational DB involves splitting up tables. When it comes to graph DBs, the edges can span across any of the partitions, and hopping across multiple machines when traversing nodes is ineffective and computationally expensive.<p>Replicating graph DBs for high availability and better throughput drastically increases the operational cost of the db and still has a limit of how big you can vertically scale. The workload that we’re used for requires storing a huge amount of data for agents, where only a subset of that data is ever needed at any one time. So rather than having the whole thing in memory, we can store it all in object-storage and get the bits we need when they’re needed.<p>Agents benefit from better context, which is achieved from more and better data (more relationships etc). By using S3 as the persistence&#x2F;data layer there is <i>no limit</i> to how big the graph can be or how many relationships you can have, and we can scale to serve throughput and requests by horizontally spinning up nodes and caching relevant subsets of the graph on each node. This way, you get extremely low latency for “hot” data and a p99 of ~100ms for writes and ~50ms for reads from cold storage (S3). Plus you get the benefit of dirt cheap storage.<p>Workloads that HelixDB is currently supporting:\n- Huge amounts of data (TBs) from which the agents need to search and traverse over\n- Offering affordable graph storage for companies where cost of graph data is a bottleneck\n- Consolidating multiple databases, enabling AI agents to have autonomy over companies, helping them become more autonomous.\n- AI memory\n- Company brains<p>We’re currently working on our own generalised AI memory layer which will use HelixDB under the hood and be completely open-source. Also, we’re finishing up on pre-filtering for vector search which will allow you to pre-filter based on relationships in the graph, metadata, and sub-graphs. And lastly, GA cloud will be available in the coming weeks.<p>If you want to run Helix locally (either on-disk or in-memory), you can find more info on our github (<a href=\"https:&#x2F;&#x2F;github.com&#x2F;HelixDB&#x2F;helix-db\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;HelixDB&#x2F;helix-db</a>) or via our docs (<a href=\"https:&#x2F;&#x2F;docs.helix-db.com&#x2F;database&#x2F;local-development\">https:&#x2F;&#x2F;docs.helix-db.com&#x2F;database&#x2F;local-development</a>). If you’re interested in getting started with our distributed cloud, please email us founders@helix-db.com.<p>Many thanks! Comments and feedback welcome!",
+        "title": "Show HN: HelixDB – A graph database built on object storage",
+        "updated_at": "2026-07-02T20:06:05Z",
+        "url": "https://github.com/HelixDB/helix-db/tree/main"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tomtom1977"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: See what your AIs know about you that the others don't"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.memkeeper.eu/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tomtom1977",
+          "story_48478102",
+          "show_hn"
+        ],
+        "author": "tomtom1977",
+        "children": [
+          48478195,
+          48478575
+        ],
+        "created_at": "2026-06-10T15:44:18Z",
+        "created_at_i": 1781106258,
+        "num_comments": 1,
+        "objectID": "48478102",
+        "points": 2,
+        "story_id": 48478102,
+        "title": "Show HN: See what your AIs know about you that the others don't",
+        "updated_at": "2026-06-12T13:11:33Z",
+        "url": "https://www.memkeeper.eu/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alainbrown"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Knobkit – fast ai webapps; fully in-browser or on a stateless server"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://knobkit.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alainbrown",
+          "story_48478000",
+          "show_hn"
+        ],
+        "author": "alainbrown",
+        "children": [
+          48478024
+        ],
+        "created_at": "2026-06-10T15:37:31Z",
+        "created_at_i": 1781105851,
+        "num_comments": 0,
+        "objectID": "48478000",
+        "points": 2,
+        "story_id": 48478000,
+        "title": "Show HN: Knobkit – fast ai webapps; fully in-browser or on a stateless server",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://knobkit.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danielgh7"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: outpaint.com fit any video to any screen"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://outpaint.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_danielgh7",
+          "story_48477864",
+          "show_hn"
+        ],
+        "author": "danielgh7",
+        "created_at": "2026-06-10T15:30:24Z",
+        "created_at_i": 1781105424,
+        "num_comments": 0,
+        "objectID": "48477864",
+        "points": 2,
+        "story_id": 48477864,
+        "title": "Show HN: outpaint.com fit any video to any screen",
+        "updated_at": "2026-06-23T15:55:17Z",
+        "url": "https://outpaint.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vetchzero"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Proximity BLE Chat – connectionless chat using BLE advertisements"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://vetch.pages.dev/blog/pblec/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vetchzero",
+          "story_48477860",
+          "show_hn"
+        ],
+        "author": "vetchzero",
+        "created_at": "2026-06-10T15:30:10Z",
+        "created_at_i": 1781105410,
+        "num_comments": 0,
+        "objectID": "48477860",
+        "points": 1,
+        "story_id": 48477860,
+        "title": "Show HN: Proximity BLE Chat – connectionless chat using BLE advertisements",
+        "updated_at": "2026-06-10T15:31:10Z",
+        "url": "https://vetch.pages.dev/blog/pblec/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ninglz"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Inkfox – One workspace for AI image gen, editing, and photo-to-video"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://inkfox.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ninglz",
+          "story_48477759",
+          "show_hn"
+        ],
+        "author": "ninglz",
+        "children": [
+          48477769
+        ],
+        "created_at": "2026-06-10T15:24:34Z",
+        "created_at_i": 1781105074,
+        "num_comments": 0,
+        "objectID": "48477759",
+        "points": 1,
+        "story_id": 48477759,
+        "title": "Show HN: Inkfox – One workspace for AI image gen, editing, and photo-to-video",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://inkfox.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "davidpapermill"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you’ve generated PDFs from HTML, you’ll know the pain: headless Chrome in Docker, CSS hacks, content that flows over pages or table boundaries and other quality issues.<p>The fundamental problem is that HTML was designed for screens, not print.<p>We built Press, a markup-based document language where pages, content flows, and assets are first-class concepts. Content can flow across frames, columns, and pages without manual pagination. Pages are created dynamically based on the available content.<p>Press templates separate layout from content. You can send markdown, Press markup, or a mixture of both to the API. Data can be sent in JSON, CSV, XML.<p>Because Press is XML-based it can easily be generated by agents - some of our users are generating complete documents in a single shot, although the language is designed for repeatable automation.<p>You can also use our MCP server, which enables models to design templates.<p>A simple API call sends a markdown payload, which is injected into a &lt;flows&gt;&lt;body&gt;…&lt;/body&gt;&lt;/flows&gt; element in Press:<p><pre><code>  curl -X POST https://api.papermill.io/v2/pdf?template_id=papermill-modern-report \\\n    -H &quot;Authorization: Bearer $PAPERMILL_API_KEY&quot; \\\n    -H &quot;Content-Type: text/markdown&quot; \\\n    --data-binary @- \\\n    -o report.pdf &lt;&lt;'EOF'\n  # Q3 Revenue Summary\n  \n  Quarterly performance across our core product lines.\n  \n  | Product  | Revenue  | Growth |\n  |----------|----------|--------|\n  | Platform | £482,000 | +18%   |\n  | Add-ons  | £124,000 | +42%   |\n  | Services | £67,000  | -3%    |\n  \n  Strong quarter overall, driven by add-on adoption.\n  EOF\n</code></pre>\nPDF output: <a href=\"https://mill.pm/hn\" rel=\"nofollow\">https://mill.pm/hn</a><p>Pages and frames in Press can declare dependencies on a content flow like the &lt;body&gt; above. By default, if there’s no content in the flow then the frame or page won’t be generated. You can run flows between frames and pages, and combine multiple flows on a page - for example, a sidebar can run across pages until no content is left, then make room for body content. This makes it possible to implement complex layouts.<p>You can mix markdown and Press:<p><pre><code>  # Visualisation\n\n  Sometimes it's *useful* to mix both markdown and Press:\n\n  &lt;visualization&gt;...&lt;/visualization&gt;\n</code></pre>\nThe typesetter adapts to dynamic content (e.g. LLM output). For example, tables and columns can be automatically sized and Papermill will even auto-rotate a table and its page to fit if needed.<p>Templates support components, repeating over data, document logic, and conditional styling. We mostly use an inline-styling approach, and provide the concept of a style “alias”, which is a bag of styling properties you can reuse and compose.<p>Here’s an example template written in Press, our document language. It uses the first page layout until the sidebar flow is exhausted, then switches to the second:<p><pre><code>  &lt;press&gt;\n    &lt;document format=&quot;A4&quot; page-margin=&quot;2cm&quot;&gt;\n      &lt;repeat flow=&quot;sidebar&quot;&gt;\n        &lt;page&gt;\n          &lt;frame direction=&quot;row&quot;&gt;\n            &lt;frame padding-left=&quot;1cm&quot; padding-right=&quot;1cm&quot;&gt;&lt;flow name=&quot;body&quot; /&gt;&lt;/frame&gt;\n            &lt;frame width=&quot;20%&quot; background-color=&quot;#f5f5f5&quot; padding=&quot;0.5cm&quot; font-size=&quot;9pt&quot;&gt;&lt;flow name=&quot;sidebar&quot; /&gt;&lt;/frame&gt;\n          &lt;/frame&gt;\n        &lt;/page&gt;\n      &lt;/repeat&gt;\n      &lt;repeat flow=&quot;body&quot;&gt;\n        &lt;page&gt;&lt;flow name=&quot;body&quot; width=&quot;fill&quot; /&gt;&lt;/page&gt;\n      &lt;/repeat&gt;\n    &lt;/document&gt;\n    &lt;flows&gt;\n      &lt;body type=&quot;markdown&quot;&gt;&lt;lipsum paragraphs=&quot;10&quot; /&gt;&lt;/body&gt;\n      &lt;sidebar type=&quot;markdown&quot;&gt;&lt;lipsum paragraphs=&quot;3&quot; /&gt;&lt;/sidebar&gt;\n    &lt;/flows&gt;\n  &lt;/press&gt;\n</code></pre>\nPapermill is a paid API with a free tier. Press is the document language.<p>Try it for free: <a href=\"https://app.papermill.io/signup\" rel=\"nofollow\">https://app.papermill.io/signup</a> (no credit card needed)<p>Docs including MCP setup: <a href=\"https://docs.papermill.io\" rel=\"nofollow\">https://docs.papermill.io</a><p>Data-only sandbox:  <a href=\"https://app.papermill.io/demo.html\" rel=\"nofollow\">https://app.papermill.io/demo.html</a> (no email needed)<p>We're a small team based in Manchester, UK. Tom (CTO) and I are happy to answer questions about the language design, the rendering engine, or anything else!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Papermill Press – An AI-friendly markup language for PDF generation"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_davidpapermill",
+          "story_48477708",
+          "show_hn"
+        ],
+        "author": "davidpapermill",
+        "children": [
+          48477819,
+          48478384,
+          48539135,
+          48477761,
+          48477827,
+          48480176,
+          48478350,
+          48478705,
+          48478587,
+          48477799,
+          48547845,
+          48486943,
+          48531038
+        ],
+        "created_at": "2026-06-10T15:21:33Z",
+        "created_at_i": 1781104893,
+        "num_comments": 22,
+        "objectID": "48477708",
+        "points": 18,
+        "story_id": 48477708,
+        "story_text": "If you’ve generated PDFs from HTML, you’ll know the pain: headless Chrome in Docker, CSS hacks, content that flows over pages or table boundaries and other quality issues.<p>The fundamental problem is that HTML was designed for screens, not print.<p>We built Press, a markup-based document language where pages, content flows, and assets are first-class concepts. Content can flow across frames, columns, and pages without manual pagination. Pages are created dynamically based on the available content.<p>Press templates separate layout from content. You can send markdown, Press markup, or a mixture of both to the API. Data can be sent in JSON, CSV, XML.<p>Because Press is XML-based it can easily be generated by agents - some of our users are generating complete documents in a single shot, although the language is designed for repeatable automation.<p>You can also use our MCP server, which enables models to design templates.<p>A simple API call sends a markdown payload, which is injected into a &lt;flows&gt;&lt;body&gt;…&lt;&#x2F;body&gt;&lt;&#x2F;flows&gt; element in Press:<p><pre><code>  curl -X POST https:&#x2F;&#x2F;api.papermill.io&#x2F;v2&#x2F;pdf?template_id=papermill-modern-report \\\n    -H &quot;Authorization: Bearer $PAPERMILL_API_KEY&quot; \\\n    -H &quot;Content-Type: text&#x2F;markdown&quot; \\\n    --data-binary @- \\\n    -o report.pdf &lt;&lt;&#x27;EOF&#x27;\n  # Q3 Revenue Summary\n  \n  Quarterly performance across our core product lines.\n  \n  | Product  | Revenue  | Growth |\n  |----------|----------|--------|\n  | Platform | £482,000 | +18%   |\n  | Add-ons  | £124,000 | +42%   |\n  | Services | £67,000  | -3%    |\n  \n  Strong quarter overall, driven by add-on adoption.\n  EOF\n</code></pre>\nPDF output: <a href=\"https:&#x2F;&#x2F;mill.pm&#x2F;hn\" rel=\"nofollow\">https:&#x2F;&#x2F;mill.pm&#x2F;hn</a><p>Pages and frames in Press can declare dependencies on a content flow like the &lt;body&gt; above. By default, if there’s no content in the flow then the frame or page won’t be generated. You can run flows between frames and pages, and combine multiple flows on a page - for example, a sidebar can run across pages until no content is left, then make room for body content. This makes it possible to implement complex layouts.<p>You can mix markdown and Press:<p><pre><code>  # Visualisation\n\n  Sometimes it&#x27;s *useful* to mix both markdown and Press:\n\n  &lt;visualization&gt;...&lt;&#x2F;visualization&gt;\n</code></pre>\nThe typesetter adapts to dynamic content (e.g. LLM output). For example, tables and columns can be automatically sized and Papermill will even auto-rotate a table and its page to fit if needed.<p>Templates support components, repeating over data, document logic, and conditional styling. We mostly use an inline-styling approach, and provide the concept of a style “alias”, which is a bag of styling properties you can reuse and compose.<p>Here’s an example template written in Press, our document language. It uses the first page layout until the sidebar flow is exhausted, then switches to the second:<p><pre><code>  &lt;press&gt;\n    &lt;document format=&quot;A4&quot; page-margin=&quot;2cm&quot;&gt;\n      &lt;repeat flow=&quot;sidebar&quot;&gt;\n        &lt;page&gt;\n          &lt;frame direction=&quot;row&quot;&gt;\n            &lt;frame padding-left=&quot;1cm&quot; padding-right=&quot;1cm&quot;&gt;&lt;flow name=&quot;body&quot; &#x2F;&gt;&lt;&#x2F;frame&gt;\n            &lt;frame width=&quot;20%&quot; background-color=&quot;#f5f5f5&quot; padding=&quot;0.5cm&quot; font-size=&quot;9pt&quot;&gt;&lt;flow name=&quot;sidebar&quot; &#x2F;&gt;&lt;&#x2F;frame&gt;\n          &lt;&#x2F;frame&gt;\n        &lt;&#x2F;page&gt;\n      &lt;&#x2F;repeat&gt;\n      &lt;repeat flow=&quot;body&quot;&gt;\n        &lt;page&gt;&lt;flow name=&quot;body&quot; width=&quot;fill&quot; &#x2F;&gt;&lt;&#x2F;page&gt;\n      &lt;&#x2F;repeat&gt;\n    &lt;&#x2F;document&gt;\n    &lt;flows&gt;\n      &lt;body type=&quot;markdown&quot;&gt;&lt;lipsum paragraphs=&quot;10&quot; &#x2F;&gt;&lt;&#x2F;body&gt;\n      &lt;sidebar type=&quot;markdown&quot;&gt;&lt;lipsum paragraphs=&quot;3&quot; &#x2F;&gt;&lt;&#x2F;sidebar&gt;\n    &lt;&#x2F;flows&gt;\n  &lt;&#x2F;press&gt;\n</code></pre>\nPapermill is a paid API with a free tier. Press is the document language.<p>Try it for free: <a href=\"https:&#x2F;&#x2F;app.papermill.io&#x2F;signup\" rel=\"nofollow\">https:&#x2F;&#x2F;app.papermill.io&#x2F;signup</a> (no credit card needed)<p>Docs including MCP setup: <a href=\"https:&#x2F;&#x2F;docs.papermill.io\" rel=\"nofollow\">https:&#x2F;&#x2F;docs.papermill.io</a><p>Data-only sandbox:  <a href=\"https:&#x2F;&#x2F;app.papermill.io&#x2F;demo.html\" rel=\"nofollow\">https:&#x2F;&#x2F;app.papermill.io&#x2F;demo.html</a> (no email needed)<p>We&#x27;re a small team based in Manchester, UK. Tom (CTO) and I are happy to answer questions about the language design, the rendering engine, or anything else!",
+        "title": "Show HN: Papermill Press – An AI-friendly markup language for PDF generation",
+        "updated_at": "2026-07-10T20:01:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AdityaPatwa07"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN!<p>I'm Aditya, and today I'm excited to share Razix.<p>Razix lets you configure custom domains for multi-tenant platforms. It also provides an API so you can integrate it and let your B2B users add their custom domains.<p>It's special to me because this is my first SaaS whose core feature is written in Rust.<p>While building Razix, I:<p>- Created my first reverse proxy server\n- Learned to issue Let's Encrypt certificates using instant-acme\n- Learned how TLS and SSL work\n- And much more<p>All with minimal use of AI."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: The layer between your SaaS platform and your customers' domains"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.razix.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_AdityaPatwa07",
+          "story_48477671",
+          "show_hn"
+        ],
+        "author": "AdityaPatwa07",
+        "created_at": "2026-06-10T15:18:52Z",
+        "created_at_i": 1781104732,
+        "num_comments": 0,
+        "objectID": "48477671",
+        "points": 1,
+        "story_id": 48477671,
+        "story_text": "Hey HN!<p>I&#x27;m Aditya, and today I&#x27;m excited to share Razix.<p>Razix lets you configure custom domains for multi-tenant platforms. It also provides an API so you can integrate it and let your B2B users add their custom domains.<p>It&#x27;s special to me because this is my first SaaS whose core feature is written in Rust.<p>While building Razix, I:<p>- Created my first reverse proxy server\n- Learned to issue Let&#x27;s Encrypt certificates using instant-acme\n- Learned how TLS and SSL work\n- And much more<p>All with minimal use of AI.",
+        "title": "Show HN: The layer between your SaaS platform and your customers' domains",
+        "updated_at": "2026-06-10T15:20:25Z",
+        "url": "https://www.razix.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gilbarbara"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ColorMeUp Lab – an OKLCH color scale generator for design systems"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://lab.colormeup.co/p"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_gilbarbara",
+          "story_48477576",
+          "show_hn"
+        ],
+        "author": "gilbarbara",
+        "children": [
+          48477600
+        ],
+        "created_at": "2026-06-10T15:12:26Z",
+        "created_at_i": 1781104346,
+        "num_comments": 0,
+        "objectID": "48477576",
+        "points": 2,
+        "story_id": 48477576,
+        "title": "Show HN: ColorMeUp Lab – an OKLCH color scale generator for design systems",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://lab.colormeup.co/p"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mrkn1"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A CLI that fact-checks text using a 500MB local model and web search"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/kouhxp/fftext"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mrkn1",
+          "story_48477524",
+          "show_hn"
+        ],
+        "author": "mrkn1",
+        "created_at": "2026-06-10T15:09:06Z",
+        "created_at_i": 1781104146,
+        "num_comments": 0,
+        "objectID": "48477524",
+        "points": 1,
+        "story_id": 48477524,
+        "title": "Show HN: A CLI that fact-checks text using a 500MB local model and web search",
+        "updated_at": "2026-06-10T15:10:10Z",
+        "url": "https://github.com/kouhxp/fftext"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Chirpper"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Chirpper is invite-only. When you vouch someone in, they join your TrustChain. Their behavior affects your TrustRank, and that propagates up the lineage. No moderators. The accountability is architectural, not policy-based. You can be pseudonymous, but you can't be unaccountable. Happy to get into the mechanics in comments."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Social network where inviting someone makes you accountable for them"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://chirpper.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Chirpper",
+          "story_48477523",
+          "show_hn"
+        ],
+        "author": "Chirpper",
+        "children": [
+          48482452,
+          48490031,
+          48496035,
+          48480411,
+          48478729,
+          48478142,
+          48477904,
+          48477698,
+          48478830
+        ],
+        "created_at": "2026-06-10T15:09:05Z",
+        "created_at_i": 1781104145,
+        "num_comments": 21,
+        "objectID": "48477523",
+        "points": 12,
+        "story_id": 48477523,
+        "story_text": "Chirpper is invite-only. When you vouch someone in, they join your TrustChain. Their behavior affects your TrustRank, and that propagates up the lineage. No moderators. The accountability is architectural, not policy-based. You can be pseudonymous, but you can&#x27;t be unaccountable. Happy to get into the mechanics in comments.",
+        "title": "Show HN: Social network where inviting someone makes you accountable for them",
+        "updated_at": "2026-06-18T16:49:11Z",
+        "url": "https://chirpper.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "abakh"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: NBSDgames – 21 new, improved, original text games for Unix, DOS, Plan9"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/abakh/nbsdgames"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_abakh",
+          "story_48477514",
+          "show_hn"
+        ],
+        "author": "abakh",
+        "children": [
+          48477608
+        ],
+        "created_at": "2026-06-10T15:08:12Z",
+        "created_at_i": 1781104092,
+        "num_comments": 1,
+        "objectID": "48477514",
+        "points": 13,
+        "story_id": 48477514,
+        "title": "Show HN: NBSDgames – 21 new, improved, original text games for Unix, DOS, Plan9",
+        "updated_at": "2026-06-13T21:45:53Z",
+        "url": "https://github.com/abakh/nbsdgames"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Franco-m"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: DeepCleanCSV – Clean messy CSV files for ML without writing code"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.deepcleancsv.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Franco-m",
+          "story_48477334",
+          "show_hn"
+        ],
+        "author": "Franco-m",
+        "children": [
+          48477362
+        ],
+        "created_at": "2026-06-10T14:57:37Z",
+        "created_at_i": 1781103457,
+        "num_comments": 0,
+        "objectID": "48477334",
+        "points": 1,
+        "story_id": 48477334,
+        "title": "Show HN: DeepCleanCSV – Clean messy CSV files for ML without writing code",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://www.deepcleancsv.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "riccardoio"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello HN,<p>My name is Riccardo and I created AuthAI for indie hackers.<p>The idea is quite simple: let the end users connect their chatgpt/grok/copilot account and route the AI requests through their AI subscriptions.<p>This enable a lot of new cool ideas where the business model/unit economics don't always make sense.<p>The flow is straightforward:<p>They click on &quot;login with AI&quot;, choose their provider, and authorise the device on the provider's website.<p>Tokens get encrypted using a per-user AES-256-GCM encryption key, which isn't stored anywhere server-side and only exists within the user's JWT session. The whole security model can be found on the website/github.<p>Here is a demo:<p><a href=\"https://demo.authai.io\" rel=\"nofollow\">https://demo.authai.io</a><p>From a developer's perspective, the objective is to stay as close to the OpenAI SDK as possible:<p>```ts\nconst openai = new OpenAI({\n  apiKey: jwt,\n  baseURL: &quot;<a href=\"https://relay.authai.io/v1\" rel=\"nofollow\">https://relay.authai.io/v1</a>&quot;,\n  defaultHeaders: {\n    &quot;x-authai-secret&quot;: process.env.AUTH_AI_SECRET,\n  },\n});\n```<p>Also, there is a React SDK for handling the connection flow.<p>* It's MIT licensed and completely open-source, there's a hosted relay available, however, the entire stack is self-hostable.<p>GitHub repo:<p><a href=\"https://github.com/authai-io/authai\" rel=\"nofollow\">https://github.com/authai-io/authai</a><p>Would you use something like this for your generated applications and side projects? What else could I add?"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AuthAI, an open-source relay for user-authorized AI sessions"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/authai-io/authai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_riccardoio",
+          "story_48477326",
+          "show_hn"
+        ],
+        "author": "riccardoio",
+        "children": [
+          48488146
+        ],
+        "created_at": "2026-06-10T14:56:54Z",
+        "created_at_i": 1781103414,
+        "num_comments": 1,
+        "objectID": "48477326",
+        "points": 1,
+        "story_id": 48477326,
+        "story_text": "Hello HN,<p>My name is Riccardo and I created AuthAI for indie hackers.<p>The idea is quite simple: let the end users connect their chatgpt&#x2F;grok&#x2F;copilot account and route the AI requests through their AI subscriptions.<p>This enable a lot of new cool ideas where the business model&#x2F;unit economics don&#x27;t always make sense.<p>The flow is straightforward:<p>They click on &quot;login with AI&quot;, choose their provider, and authorise the device on the provider&#x27;s website.<p>Tokens get encrypted using a per-user AES-256-GCM encryption key, which isn&#x27;t stored anywhere server-side and only exists within the user&#x27;s JWT session. The whole security model can be found on the website&#x2F;github.<p>Here is a demo:<p><a href=\"https:&#x2F;&#x2F;demo.authai.io\" rel=\"nofollow\">https:&#x2F;&#x2F;demo.authai.io</a><p>From a developer&#x27;s perspective, the objective is to stay as close to the OpenAI SDK as possible:<p>```ts\nconst openai = new OpenAI({\n  apiKey: jwt,\n  baseURL: &quot;<a href=\"https:&#x2F;&#x2F;relay.authai.io&#x2F;v1\" rel=\"nofollow\">https:&#x2F;&#x2F;relay.authai.io&#x2F;v1</a>&quot;,\n  defaultHeaders: {\n    &quot;x-authai-secret&quot;: process.env.AUTH_AI_SECRET,\n  },\n});\n```<p>Also, there is a React SDK for handling the connection flow.<p>* It&#x27;s MIT licensed and completely open-source, there&#x27;s a hosted relay available, however, the entire stack is self-hostable.<p>GitHub repo:<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;authai-io&#x2F;authai\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;authai-io&#x2F;authai</a><p>Would you use something like this for your generated applications and side projects? What else could I add?",
+        "title": "Show HN: AuthAI, an open-source relay for user-authorized AI sessions",
+        "updated_at": "2026-06-11T09:30:27Z",
+        "url": "https://github.com/authai-io/authai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tshepom"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Coding agents can write frontend code but can't easily see what they built. Layout QA is a small local runner that closes that loop:<p>1. The agent wires deterministic API/auth fixtures into your app behind a local env flag (the README includes a setup prompt for this), so runs don't depend on live services.\n2. The agent declares flows in a small JSON manifest — clicks, fills, text checks, and layout assertions like &quot;no horizontal overflow&quot; or &quot;this button is in the viewport&quot; — and runs them via the CLI at desktop/tablet/mobile viewports.\n3. Each run captures screenshots and writes a local HTML report the agent can read to verify and fix its own work. Exit code 0/1, so the same command works in CI.<p>It's a thin layer on Playwright: the goal isn't to replace it, but to make the see-act-verify loop simple and deterministic enough that an agent can set it up and iterate on it unattended. No account, no hosted service, no Storybook. Example output in the README."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Layout QA – Visual QA for coding agents"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Layout-App/layout-qa"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tshepom",
+          "story_48477155",
+          "show_hn"
+        ],
+        "author": "tshepom",
+        "created_at": "2026-06-10T14:48:43Z",
+        "created_at_i": 1781102923,
+        "num_comments": 0,
+        "objectID": "48477155",
+        "points": 1,
+        "story_id": 48477155,
+        "story_text": "Coding agents can write frontend code but can&#x27;t easily see what they built. Layout QA is a small local runner that closes that loop:<p>1. The agent wires deterministic API&#x2F;auth fixtures into your app behind a local env flag (the README includes a setup prompt for this), so runs don&#x27;t depend on live services.\n2. The agent declares flows in a small JSON manifest — clicks, fills, text checks, and layout assertions like &quot;no horizontal overflow&quot; or &quot;this button is in the viewport&quot; — and runs them via the CLI at desktop&#x2F;tablet&#x2F;mobile viewports.\n3. Each run captures screenshots and writes a local HTML report the agent can read to verify and fix its own work. Exit code 0&#x2F;1, so the same command works in CI.<p>It&#x27;s a thin layer on Playwright: the goal isn&#x27;t to replace it, but to make the see-act-verify loop simple and deterministic enough that an agent can set it up and iterate on it unattended. No account, no hosted service, no Storybook. Example output in the README.",
+        "title": "Show HN: Layout QA – Visual QA for coding agents",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/Layout-App/layout-qa"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "subairui"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN! I made this after collecting hundreds of &quot;name → tree&quot; submissions at ITP.<p>Live: <a href=\"https://landscape.bairui.dev/\" rel=\"nofollow\">https://landscape.bairui.dev/</a>\nSource: <a href=\"https://github.com/pearmini/infinite-landscape\" rel=\"nofollow\">https://github.com/pearmini/infinite-landscape</a>\nPlant a tree: <a href=\"https://tree.bairui.dev/\" rel=\"nofollow\">https://tree.bairui.dev/</a><p>Pan and zoom an infinite procedural landscape. Each name is converted to ASCII codes, which grow into a unique tree (breadth-first branching; repeated digits become mathematical roses). Mountains use midpoint displacement + Perlin noise, with SVG radial gradients in the blue/green/gold palette from Wang Ximeng's &quot;A Thousand Li of Rivers and Mountains.&quot;<p>Inspired by Lingdong Huang's {Shan, Shui}* (<a href=\"https://github.com/LingDong-/shan-shui-inf\" rel=\"nofollow\">https://github.com/LingDong-/shan-shui-inf</a>). Every tree is someone's name, signed with an APack stamp (<a href=\"https://apack.bairui.dev/\" rel=\"nofollow\">https://apack.bairui.dev/</a>).<p>Try planting your name, then pan along the ridgeline to find it. &quot;My trees&quot; lets you jump back to ones you planted.<p>Happy to answer questions about the terrain algo, name→tree encoding, or the Riso print we tiled at ITP Winter Show!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Turn your name into a tree in an infinite procedural shanshui landscape"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://landscape.bairui.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_subairui",
+          "story_48477001",
+          "show_hn"
+        ],
+        "author": "subairui",
+        "children": [
+          48510751,
+          48513838,
+          48531992,
+          48512264,
+          48514407,
+          48477378,
+          48512807,
+          48511037,
+          48512870,
+          48513600,
+          48513380,
+          48477022
+        ],
+        "created_at": "2026-06-10T14:39:57Z",
+        "created_at_i": 1781102397,
+        "num_comments": 21,
+        "objectID": "48477001",
+        "points": 41,
+        "story_id": 48477001,
+        "story_text": "Hi HN! I made this after collecting hundreds of &quot;name → tree&quot; submissions at ITP.<p>Live: <a href=\"https:&#x2F;&#x2F;landscape.bairui.dev&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;landscape.bairui.dev&#x2F;</a>\nSource: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;pearmini&#x2F;infinite-landscape\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;pearmini&#x2F;infinite-landscape</a>\nPlant a tree: <a href=\"https:&#x2F;&#x2F;tree.bairui.dev&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;tree.bairui.dev&#x2F;</a><p>Pan and zoom an infinite procedural landscape. Each name is converted to ASCII codes, which grow into a unique tree (breadth-first branching; repeated digits become mathematical roses). Mountains use midpoint displacement + Perlin noise, with SVG radial gradients in the blue&#x2F;green&#x2F;gold palette from Wang Ximeng&#x27;s &quot;A Thousand Li of Rivers and Mountains.&quot;<p>Inspired by Lingdong Huang&#x27;s {Shan, Shui}* (<a href=\"https:&#x2F;&#x2F;github.com&#x2F;LingDong-&#x2F;shan-shui-inf\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;LingDong-&#x2F;shan-shui-inf</a>). Every tree is someone&#x27;s name, signed with an APack stamp (<a href=\"https:&#x2F;&#x2F;apack.bairui.dev&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;apack.bairui.dev&#x2F;</a>).<p>Try planting your name, then pan along the ridgeline to find it. &quot;My trees&quot; lets you jump back to ones you planted.<p>Happy to answer questions about the terrain algo, name→tree encoding, or the Riso print we tiled at ITP Winter Show!",
+        "title": "Show HN: Turn your name into a tree in an infinite procedural shanshui landscape",
+        "updated_at": "2026-06-18T22:24:27Z",
+        "url": "https://landscape.bairui.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xpain"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Junk Atelier – pixel 3D scene editor in the browser"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://xavpain.github.io/junk-atelier/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xpain",
+          "story_48476988",
+          "show_hn"
+        ],
+        "author": "xpain",
+        "created_at": "2026-06-10T14:39:17Z",
+        "created_at_i": 1781102357,
+        "num_comments": 0,
+        "objectID": "48476988",
+        "points": 2,
+        "story_id": 48476988,
+        "title": "Show HN: Junk Atelier – pixel 3D scene editor in the browser",
+        "updated_at": "2026-06-10T15:42:39Z",
+        "url": "https://xavpain.github.io/junk-atelier/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "carlkcarlk"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A 2D and 3D robot arm simulator built in Excel"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/CarlKCarlK/excel-3d-robot-arm"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_carlkcarlk",
+          "story_48476907",
+          "show_hn"
+        ],
+        "author": "carlkcarlk",
+        "children": [
+          48477066,
+          48476912
+        ],
+        "created_at": "2026-06-10T14:34:10Z",
+        "created_at_i": 1781102050,
+        "num_comments": 2,
+        "objectID": "48476907",
+        "points": 1,
+        "story_id": 48476907,
+        "title": "Show HN: A 2D and 3D robot arm simulator built in Excel",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/CarlKCarlK/excel-3d-robot-arm"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "peti_poua"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "petiglyph is a TUI/CLI tool to easily turn images and videos into custom font glyphs, static or animated, to be added to your TUIs!<p>for example, if you wanted a specific icon to be available inside your Terminal UI without using Kitty graphics protocol, you could use petiglyph to generate a .ttf file that include a monochrome version of this icon as a glyph to be used like any other Nerd font glyph.<p>you can generate standard size glyphs or compose a grid of glyphs to display a bigger visual over several lines.<p>petiglyph also supports generating frames of glyphs (standard or grid) based on videos for you to render an animation inside the terminal, the TUI allows you to copy to clipboard the &quot;glyph frames&quot; to be able to easily paste them in your own code.<p>be aware that this tool relies on installing custom fonts on your system so once the fonts are installed you need to reboot the apps (or even your whole computer sometimes) for the fonts to be correctly loaded.<p>available on github, npm, pypi, AUR"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Petiglyph – TUI/CLI to turn images and videos into custom font glyphs"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/petipoua/petiglyph"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_peti_poua",
+          "story_48476626",
+          "show_hn"
+        ],
+        "author": "peti_poua",
+        "created_at": "2026-06-10T14:14:35Z",
+        "created_at_i": 1781100875,
+        "num_comments": 0,
+        "objectID": "48476626",
+        "points": 1,
+        "story_id": 48476626,
+        "story_text": "petiglyph is a TUI&#x2F;CLI tool to easily turn images and videos into custom font glyphs, static or animated, to be added to your TUIs!<p>for example, if you wanted a specific icon to be available inside your Terminal UI without using Kitty graphics protocol, you could use petiglyph to generate a .ttf file that include a monochrome version of this icon as a glyph to be used like any other Nerd font glyph.<p>you can generate standard size glyphs or compose a grid of glyphs to display a bigger visual over several lines.<p>petiglyph also supports generating frames of glyphs (standard or grid) based on videos for you to render an animation inside the terminal, the TUI allows you to copy to clipboard the &quot;glyph frames&quot; to be able to easily paste them in your own code.<p>be aware that this tool relies on installing custom fonts on your system so once the fonts are installed you need to reboot the apps (or even your whole computer sometimes) for the fonts to be correctly loaded.<p>available on github, npm, pypi, AUR",
+        "title": "Show HN: Petiglyph – TUI/CLI to turn images and videos into custom font glyphs",
+        "updated_at": "2026-06-10T14:17:25Z",
+        "url": "https://github.com/petipoua/petiglyph"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hstrex"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: DESi Sees It"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://hstre.github.io/DESi/index.html"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hstrex",
+          "story_48476598",
+          "show_hn"
+        ],
+        "author": "hstrex",
+        "created_at": "2026-06-10T14:12:35Z",
+        "created_at_i": 1781100755,
+        "num_comments": 0,
+        "objectID": "48476598",
+        "points": 1,
+        "story_id": 48476598,
+        "title": "Show HN: DESi Sees It",
+        "updated_at": "2026-06-10T14:17:25Z",
+        "url": "https://hstre.github.io/DESi/index.html"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pplonski86"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A curated collection of simple datasets for machine learning"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/pplonski/datasets-for-start"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pplonski86",
+          "story_48476571",
+          "show_hn"
+        ],
+        "author": "pplonski86",
+        "children": [
+          48476723
+        ],
+        "created_at": "2026-06-10T14:10:41Z",
+        "created_at_i": 1781100641,
+        "num_comments": 1,
+        "objectID": "48476571",
+        "points": 4,
+        "story_id": 48476571,
+        "title": "Show HN: A curated collection of simple datasets for machine learning",
+        "updated_at": "2026-06-10T16:47:57Z",
+        "url": "https://github.com/pplonski/datasets-for-start"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rentruewang"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Create SQL by over fitting decision tree on data<p>Then I simplify the boolean representation.<p>The demo is hosted in streamlit (<a href=\"https://inversql.streamlit.app\" rel=\"nofollow\">https://inversql.streamlit.app</a>).<p>Sorry if this is a repost, my previous post had the wrong tag."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Construct SQL from table records by breaking down decision tree"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/rentruewang/inversql"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rentruewang",
+          "story_48476492",
+          "show_hn"
+        ],
+        "author": "rentruewang",
+        "children": [
+          48478006
+        ],
+        "created_at": "2026-06-10T14:04:43Z",
+        "created_at_i": 1781100283,
+        "num_comments": 1,
+        "objectID": "48476492",
+        "points": 3,
+        "story_id": 48476492,
+        "story_text": "Create SQL by over fitting decision tree on data<p>Then I simplify the boolean representation.<p>The demo is hosted in streamlit (<a href=\"https:&#x2F;&#x2F;inversql.streamlit.app\" rel=\"nofollow\">https:&#x2F;&#x2F;inversql.streamlit.app</a>).<p>Sorry if this is a repost, my previous post had the wrong tag.",
+        "title": "Show HN: Construct SQL from table records by breaking down decision tree",
+        "updated_at": "2026-06-10T15:38:55Z",
+        "url": "https://github.com/rentruewang/inversql"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xa_dahiya"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Pressbook – On-device photo albums, no server in the path (iOS)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/pressbook-albums-collages/id6761680350"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xa_dahiya",
+          "story_48476467",
+          "show_hn"
+        ],
+        "author": "xa_dahiya",
+        "children": [
+          48476567,
+          48476494
+        ],
+        "created_at": "2026-06-10T14:03:01Z",
+        "created_at_i": 1781100181,
+        "num_comments": 1,
+        "objectID": "48476467",
+        "points": 1,
+        "story_id": 48476467,
+        "title": "Show HN: Pressbook – On-device photo albums, no server in the path (iOS)",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://apps.apple.com/us/app/pressbook-albums-collages/id6761680350"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tjhdev"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Camel Mono – a monospace font that makes camelCase easier to read"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/TJHdev/camel-mono"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tjhdev",
+          "story_48476456",
+          "show_hn"
+        ],
+        "author": "tjhdev",
+        "children": [
+          48476457,
+          48499854
+        ],
+        "created_at": "2026-06-10T14:02:21Z",
+        "created_at_i": 1781100141,
+        "num_comments": 0,
+        "objectID": "48476456",
+        "points": 10,
+        "story_id": 48476456,
+        "title": "Show HN: Camel Mono – a monospace font that makes camelCase easier to read",
+        "updated_at": "2026-06-15T10:46:43Z",
+        "url": "https://github.com/TJHdev/camel-mono"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hiphop22"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Track top AI companies and get daily AI news"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://chromewebstore.google.com/detail/bigtech-ai-news/aehmpingbppjnlppejppiifmijdjjiej"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_hiphop22",
+          "story_48476350",
+          "show_hn"
+        ],
+        "author": "hiphop22",
+        "children": [
+          48476351
+        ],
+        "created_at": "2026-06-10T13:55:55Z",
+        "created_at_i": 1781099755,
+        "num_comments": 0,
+        "objectID": "48476350",
+        "points": 1,
+        "story_id": 48476350,
+        "title": "Show HN: Track top AI companies and get daily AI news",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://chromewebstore.google.com/detail/bigtech-ai-news/aehmpingbppjnlppejppiifmijdjjiej"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ent1c3d"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Setting up Kafka or such enterprise oriented software with their clusters or dedicated servers is heavy and bothering enough that most small \nteams or indie hackers skip it entirely and making compromise to use in-memory queues.<p>I wanted something in between: a persistent queue that is simple to run (one binary, which makes one sqlite db), gets real fault isolation and crash recovery due to Elixir, easy to inspect (open ezra.db in any SQLite browser and see every \ntask), and requires no new client library - it speaks the Redis Streams wire protocol, \nso any Redis client in any language just works out of the box.<p>Very short demo video: [<a href=\"https://www.youtube.com/watch?v=MLYyD3DVWmE\" rel=\"nofollow\">https://www.youtube.com/watch?v=MLYyD3DVWmE</a>]"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Lightweight Task queue on Erlang/OTP, SQLite-backed, no overengineering"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/entGriff/ezra"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ent1c3d",
+          "story_48476202",
+          "show_hn"
+        ],
+        "author": "ent1c3d",
+        "children": [
+          48517964,
+          48515630,
+          48513850,
+          48525132,
+          48513984,
+          48540500,
+          48513923,
+          48516649,
+          48487178,
+          48527178,
+          48516907,
+          48513944
+        ],
+        "created_at": "2026-06-10T13:45:26Z",
+        "created_at_i": 1781099126,
+        "num_comments": 18,
+        "objectID": "48476202",
+        "points": 75,
+        "story_id": 48476202,
+        "story_text": "Setting up Kafka or such enterprise oriented software with their clusters or dedicated servers is heavy and bothering enough that most small \nteams or indie hackers skip it entirely and making compromise to use in-memory queues.<p>I wanted something in between: a persistent queue that is simple to run (one binary, which makes one sqlite db), gets real fault isolation and crash recovery due to Elixir, easy to inspect (open ezra.db in any SQLite browser and see every \ntask), and requires no new client library - it speaks the Redis Streams wire protocol, \nso any Redis client in any language just works out of the box.<p>Very short demo video: [<a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=MLYyD3DVWmE\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=MLYyD3DVWmE</a>]",
+        "title": "Show HN: Lightweight Task queue on Erlang/OTP, SQLite-backed, no overengineering",
+        "updated_at": "2026-06-30T10:50:10Z",
+        "url": "https://github.com/entGriff/ezra"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rafalgawlik"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FamilyJar – privacy-first budgeting app for couple"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://familyjar.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rafalgawlik",
+          "story_48476166",
+          "show_hn"
+        ],
+        "author": "rafalgawlik",
+        "children": [
+          48476175
+        ],
+        "created_at": "2026-06-10T13:42:15Z",
+        "created_at_i": 1781098935,
+        "num_comments": 0,
+        "objectID": "48476166",
+        "points": 2,
+        "story_id": 48476166,
+        "title": "Show HN: FamilyJar – privacy-first budgeting app for couple",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://familyjar.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pgj11"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: One-command zsh environment setup"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/PeterGabaldon/LinuxEnv"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pgj11",
+          "story_48476113",
+          "show_hn"
+        ],
+        "author": "pgj11",
+        "created_at": "2026-06-10T13:37:16Z",
+        "created_at_i": 1781098636,
+        "num_comments": 0,
+        "objectID": "48476113",
+        "points": 2,
+        "story_id": 48476113,
+        "title": "Show HN: One-command zsh environment setup",
+        "updated_at": "2026-06-10T14:41:42Z",
+        "url": "https://github.com/PeterGabaldon/LinuxEnv"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "robeym"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I generated 235 system documentation pages for a startup in about 8 hours using GPT-5.5 in Codex.<p>We've been putting off the chore of writing technical docs since our team could handle all customer questions directly. However, since releasing an AI tool in the system, users have started asking it system questions as opposed to just data questions like it was designed for. It couldn't answer how-to questions, so, users got confused.<p>We didn't have a direct way to teach the Ai about our system since our internal docs were thin and the codebase large.<p>We ended up defining some good documentation practices in best-doc-practices.md, passed it to GPT-5.5, and asked it to write system docs for every module in the system (hundreds), handling 5-10 at a time for context limits.<p>To our surprise, it worked very well. The tool had read-access to all relevant server/client/database files, so the output was accurate and aligned to what we defined in the best-doc-practices.md."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I generated 235 system docs in a day using GPT-5.5"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.paxerp.com/docs"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_robeym",
+          "story_48475992",
+          "show_hn"
+        ],
+        "author": "robeym",
+        "children": [
+          48477288,
+          48477272
+        ],
+        "created_at": "2026-06-10T13:26:38Z",
+        "created_at_i": 1781097998,
+        "num_comments": 0,
+        "objectID": "48475992",
+        "points": 4,
+        "story_id": 48475992,
+        "story_text": "I generated 235 system documentation pages for a startup in about 8 hours using GPT-5.5 in Codex.<p>We&#x27;ve been putting off the chore of writing technical docs since our team could handle all customer questions directly. However, since releasing an AI tool in the system, users have started asking it system questions as opposed to just data questions like it was designed for. It couldn&#x27;t answer how-to questions, so, users got confused.<p>We didn&#x27;t have a direct way to teach the Ai about our system since our internal docs were thin and the codebase large.<p>We ended up defining some good documentation practices in best-doc-practices.md, passed it to GPT-5.5, and asked it to write system docs for every module in the system (hundreds), handling 5-10 at a time for context limits.<p>To our surprise, it worked very well. The tool had read-access to all relevant server&#x2F;client&#x2F;database files, so the output was accurate and aligned to what we defined in the best-doc-practices.md.",
+        "title": "Show HN: I generated 235 system docs in a day using GPT-5.5",
+        "updated_at": "2026-06-12T13:12:03Z",
+        "url": "https://www.paxerp.com/docs"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "locaible"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Locaible – local AI agents for Cursor with pre-tuned marketplace/commu"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://locaible.com/cursor"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_locaible",
+          "story_48475954",
+          "show_hn"
+        ],
+        "author": "locaible",
+        "created_at": "2026-06-10T13:24:09Z",
+        "created_at_i": 1781097849,
+        "num_comments": 0,
+        "objectID": "48475954",
+        "points": 2,
+        "story_id": 48475954,
+        "title": "Show HN: Locaible – local AI agents for Cursor with pre-tuned marketplace/commu",
+        "updated_at": "2026-06-10T14:43:54Z",
+        "url": "https://locaible.com/cursor"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zeph_wheeler"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: GripeFind – find product pain points without Reddit API"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://gripefind.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_zeph_wheeler",
+          "story_48475895",
+          "show_hn"
+        ],
+        "author": "zeph_wheeler",
+        "children": [
+          48475906
+        ],
+        "created_at": "2026-06-10T13:20:06Z",
+        "created_at_i": 1781097606,
+        "num_comments": 0,
+        "objectID": "48475895",
+        "points": 2,
+        "story_id": 48475895,
+        "title": "Show HN: GripeFind – find product pain points without Reddit API",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://gripefind.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "edimaudo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built an app using Ontario's labor standards that can analyze a word or pdf contract or clause in the contract.  You can also ask questions about employment/labour law in Ontario, Canada."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Employment contract analysis for Ontario's Workforce"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://basalaw.vercel.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_edimaudo",
+          "story_48475807",
+          "show_hn"
+        ],
+        "author": "edimaudo",
+        "created_at": "2026-06-10T13:13:33Z",
+        "created_at_i": 1781097213,
+        "num_comments": 0,
+        "objectID": "48475807",
+        "points": 3,
+        "story_id": 48475807,
+        "story_text": "Built an app using Ontario&#x27;s labor standards that can analyze a word or pdf contract or clause in the contract.  You can also ask questions about employment&#x2F;labour law in Ontario, Canada.",
+        "title": "Show HN: Employment contract analysis for Ontario's Workforce",
+        "updated_at": "2026-06-10T14:44:55Z",
+        "url": "https://basalaw.vercel.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oyster143"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Orange Crumbs - Wikipedia articles filtered by Hacker News"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.orangecrumbs.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_oyster143",
+          "story_48475805",
+          "show_hn"
+        ],
+        "author": "oyster143",
+        "created_at": "2026-06-10T13:13:28Z",
+        "created_at_i": 1781097208,
+        "num_comments": 0,
+        "objectID": "48475805",
+        "points": 2,
+        "story_id": 48475805,
+        "title": "Show HN: Orange Crumbs - Wikipedia articles filtered by Hacker News",
+        "updated_at": "2026-06-10T14:44:55Z",
+        "url": "https://www.orangecrumbs.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lyl_003"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN, I built Scribix, a web app to transcribe audio and video. You can\nupload a file, record in the browser, then edit and\nexport the transcript (TXT/SRT/VTT)."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Scribix – Transcribe audio and video in the browser"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://scribix.io"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lyl_003",
+          "story_48475696",
+          "show_hn"
+        ],
+        "author": "lyl_003",
+        "created_at": "2026-06-10T13:03:22Z",
+        "created_at_i": 1781096602,
+        "num_comments": 0,
+        "objectID": "48475696",
+        "points": 2,
+        "story_id": 48475696,
+        "story_text": "Hi HN, I built Scribix, a web app to transcribe audio and video. You can\nupload a file, record in the browser, then edit and\nexport the transcript (TXT&#x2F;SRT&#x2F;VTT).",
+        "title": "Show HN: Scribix – Transcribe audio and video in the browser",
+        "updated_at": "2026-06-10T21:29:11Z",
+        "url": "https://scribix.io"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aussiealex27"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AgentMeter – Know what your AI coding agents cost"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/aussiealex/agentmeter"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_aussiealex27",
+          "story_48475587",
+          "show_hn"
+        ],
+        "author": "aussiealex27",
+        "created_at": "2026-06-10T12:54:42Z",
+        "created_at_i": 1781096082,
+        "num_comments": 0,
+        "objectID": "48475587",
+        "points": 3,
+        "story_id": 48475587,
+        "title": "Show HN: AgentMeter – Know what your AI coding agents cost",
+        "updated_at": "2026-06-10T21:29:11Z",
+        "url": "https://github.com/aussiealex/agentmeter"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vinnymac"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’ve been working on this for some time after learning about PICO-8 and its constraints to fit into the p8 cartridge limits and was looking for a challenge.<p>So I made Picosky, a Bluesky client for the PICO-8 console to see what would be possible combining GPIO with  sockets. Initially I just aimed to like a post on my feed, and then it grew from there.<p>Which also inspired a sibling game, <a href=\"https://npicomx.vinnymac.dev\" rel=\"nofollow\">https://npicomx.vinnymac.dev</a> based on my experience contributing to the npmx.dev project in early 2026.<p>Both games require more play testing for bugs, so share feedback and let me know what you would have done differently.<p>Thanks"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A Bluesky client for PICO-8"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://picosky.vinnymac.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_vinnymac",
+          "story_48475534",
+          "show_hn"
+        ],
+        "author": "vinnymac",
+        "created_at": "2026-06-10T12:50:20Z",
+        "created_at_i": 1781095820,
+        "num_comments": 0,
+        "objectID": "48475534",
+        "points": 4,
+        "story_id": 48475534,
+        "story_text": "I’ve been working on this for some time after learning about PICO-8 and its constraints to fit into the p8 cartridge limits and was looking for a challenge.<p>So I made Picosky, a Bluesky client for the PICO-8 console to see what would be possible combining GPIO with  sockets. Initially I just aimed to like a post on my feed, and then it grew from there.<p>Which also inspired a sibling game, <a href=\"https:&#x2F;&#x2F;npicomx.vinnymac.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;npicomx.vinnymac.dev</a> based on my experience contributing to the npmx.dev project in early 2026.<p>Both games require more play testing for bugs, so share feedback and let me know what you would have done differently.<p>Thanks",
+        "title": "Show HN: A Bluesky client for PICO-8",
+        "updated_at": "2026-06-10T21:29:11Z",
+        "url": "https://picosky.vinnymac.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "introvertmac"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Time Progress Bar in macOS menu bar"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://timegauge.minilabs.cc/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_introvertmac",
+          "story_48475518",
+          "show_hn"
+        ],
+        "author": "introvertmac",
+        "created_at": "2026-06-10T12:48:47Z",
+        "created_at_i": 1781095727,
+        "num_comments": 0,
+        "objectID": "48475518",
+        "points": 2,
+        "story_id": 48475518,
+        "title": "Show HN: Time Progress Bar in macOS menu bar",
+        "updated_at": "2026-06-10T21:29:11Z",
+        "url": "https://timegauge.minilabs.cc/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rogulia"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A Chrome extension that redirects only the YouTube homepage"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/rogulia/block-youtube-home-chrome-extension"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rogulia",
+          "story_48475481",
+          "show_hn"
+        ],
+        "author": "rogulia",
+        "children": [
+          48475485
+        ],
+        "created_at": "2026-06-10T12:45:30Z",
+        "created_at_i": 1781095530,
+        "num_comments": 1,
+        "objectID": "48475481",
+        "points": 2,
+        "story_id": 48475481,
+        "title": "Show HN: A Chrome extension that redirects only the YouTube homepage",
+        "updated_at": "2026-06-10T21:29:11Z",
+        "url": "https://github.com/rogulia/block-youtube-home-chrome-extension"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alassanediop"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A personality test with no questions – an AI watches your picks instead"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://app.olima.ai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alassanediop",
+          "story_48475480",
+          "show_hn"
+        ],
+        "author": "alassanediop",
+        "children": [
+          48475482
+        ],
+        "created_at": "2026-06-10T12:45:28Z",
+        "created_at_i": 1781095528,
+        "num_comments": 0,
+        "objectID": "48475480",
+        "points": 2,
+        "story_id": 48475480,
+        "title": "Show HN: A personality test with no questions – an AI watches your picks instead",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://app.olima.ai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "flixf"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: SNItch – fuzz the TLS SNI field to discover hidden virtual hosts"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/cirosec/SNItch"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_flixf",
+          "story_48475468",
+          "show_hn"
+        ],
+        "author": "flixf",
+        "created_at": "2026-06-10T12:44:21Z",
+        "created_at_i": 1781095461,
+        "num_comments": 0,
+        "objectID": "48475468",
+        "points": 2,
+        "story_id": 48475468,
+        "title": "Show HN: SNItch – fuzz the TLS SNI field to discover hidden virtual hosts",
+        "updated_at": "2026-06-10T21:29:40Z",
+        "url": "https://github.com/cirosec/SNItch"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nikkorn"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tempis, a canvas-based timeline component for large datasets"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tempis.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nikkorn",
+          "story_48475417",
+          "show_hn"
+        ],
+        "author": "nikkorn",
+        "created_at": "2026-06-10T12:39:58Z",
+        "created_at_i": 1781095198,
+        "num_comments": 0,
+        "objectID": "48475417",
+        "points": 2,
+        "story_id": 48475417,
+        "title": "Show HN: Tempis, a canvas-based timeline component for large datasets",
+        "updated_at": "2026-06-10T21:29:40Z",
+        "url": "https://tempis.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fitz2882"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: LoopGain – Cut agent API spend by measuring when loops stop improving"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/loopgain-ai/loopgain"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fitz2882",
+          "story_48475392",
+          "show_hn"
+        ],
+        "author": "fitz2882",
+        "children": [
+          48475406
+        ],
+        "created_at": "2026-06-10T12:38:07Z",
+        "created_at_i": 1781095087,
+        "num_comments": 1,
+        "objectID": "48475392",
+        "points": 2,
+        "story_id": 48475392,
+        "title": "Show HN: LoopGain – Cut agent API spend by measuring when loops stop improving",
+        "updated_at": "2026-06-10T21:29:40Z",
+        "url": "https://github.com/loopgain-ai/loopgain"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "prashar32"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: RiskKernel, kill -9 an AI agent and resume it without paying twice"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://riskkernel.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_prashar32",
+          "story_48475381",
+          "show_hn"
+        ],
+        "author": "prashar32",
+        "children": [
+          48475685,
+          48476114,
+          48475926,
+          48478097,
+          48475631,
+          48475548
+        ],
+        "created_at": "2026-06-10T12:37:02Z",
+        "created_at_i": 1781095022,
+        "num_comments": 6,
+        "objectID": "48475381",
+        "points": 5,
+        "story_id": 48475381,
+        "title": "Show HN: RiskKernel, kill -9 an AI agent and resume it without paying twice",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://riskkernel.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mikekuharuk"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I brought you my new open source project for Unity and Claude Code to work in pair. Long story short: Claude usually has a hard time navigating Unity projects - complex scenes, nested prefabs, and even GameObjects with dozens of components attached, each with dozens of properties.<p>Straightforward grep-and-guess is very weak in terms of efficiency, and — most importantly — in terms of reliability. Claude misses the relations between entities in your game, that's the bitter truth. If you're interested in an actual comparison, concrete example: I asked the agent &quot;which prefabs and scenes break if I change EnemyAI?&quot; Stock Claude Code read ~200k tokens of YAML, found 1 prefab, missed 3 variants, and suggested a change that breaks inheritance. With Hades it returned the correct map — 4 prefabs, 3 scenes — in 7 tool calls, 27% cheaper. Full side-by-side with repro:\n<a href=\"https://github.com/TheArcForge/Hades/blob/main/Documentation/comparison.md\" rel=\"nofollow\">https://github.com/TheArcForge/Hades/blob/main/Documentation...</a><p>Since I work with Unity and Claude daily as part of my job, I came up with a solution. Hades builds a graph out of your project's entities, and Claude can query it via MCP tools.<p>That's the simple version — if you want the details, I wrote up the full story on Medium:\n<a href=\"https://medium.com/@mike.kuharuk/unity-context-graph-for-claude-code-2607ec815968\" rel=\"nofollow\">https://medium.com/@mike.kuharuk/unity-context-graph-for-cla...</a><p>So far I've only proof-tested it on macOS and Unity 6; that scope will grow step by step. Also v1 is mainly built around Claude Code, so Cursor and all other AI agents supports will be added post launch.<p>I'd appreciate technical feedback and suggestions."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Hades – Unity context graph for Claude Code"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/TheArcForge/Hades"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mikekuharuk",
+          "story_48475362",
+          "show_hn"
+        ],
+        "author": "mikekuharuk",
+        "created_at": "2026-06-10T12:34:01Z",
+        "created_at_i": 1781094841,
+        "num_comments": 0,
+        "objectID": "48475362",
+        "points": 2,
+        "story_id": 48475362,
+        "story_text": "I brought you my new open source project for Unity and Claude Code to work in pair. Long story short: Claude usually has a hard time navigating Unity projects - complex scenes, nested prefabs, and even GameObjects with dozens of components attached, each with dozens of properties.<p>Straightforward grep-and-guess is very weak in terms of efficiency, and — most importantly — in terms of reliability. Claude misses the relations between entities in your game, that&#x27;s the bitter truth. If you&#x27;re interested in an actual comparison, concrete example: I asked the agent &quot;which prefabs and scenes break if I change EnemyAI?&quot; Stock Claude Code read ~200k tokens of YAML, found 1 prefab, missed 3 variants, and suggested a change that breaks inheritance. With Hades it returned the correct map — 4 prefabs, 3 scenes — in 7 tool calls, 27% cheaper. Full side-by-side with repro:\n<a href=\"https:&#x2F;&#x2F;github.com&#x2F;TheArcForge&#x2F;Hades&#x2F;blob&#x2F;main&#x2F;Documentation&#x2F;comparison.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;TheArcForge&#x2F;Hades&#x2F;blob&#x2F;main&#x2F;Documentation...</a><p>Since I work with Unity and Claude daily as part of my job, I came up with a solution. Hades builds a graph out of your project&#x27;s entities, and Claude can query it via MCP tools.<p>That&#x27;s the simple version — if you want the details, I wrote up the full story on Medium:\n<a href=\"https:&#x2F;&#x2F;medium.com&#x2F;@mike.kuharuk&#x2F;unity-context-graph-for-claude-code-2607ec815968\" rel=\"nofollow\">https:&#x2F;&#x2F;medium.com&#x2F;@mike.kuharuk&#x2F;unity-context-graph-for-cla...</a><p>So far I&#x27;ve only proof-tested it on macOS and Unity 6; that scope will grow step by step. Also v1 is mainly built around Claude Code, so Cursor and all other AI agents supports will be added post launch.<p>I&#x27;d appreciate technical feedback and suggestions.",
+        "title": "Show HN: Hades – Unity context graph for Claude Code",
+        "updated_at": "2026-06-10T21:30:11Z",
+        "url": "https://github.com/TheArcForge/Hades"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "s-xyz"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Lanes now runs Claude Fable 5 across parallel agent sessions"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://lanes.sh/blog/claude-fable-5"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_s-xyz",
+          "story_48475266",
+          "show_hn"
+        ],
+        "author": "s-xyz",
+        "created_at": "2026-06-10T12:25:56Z",
+        "created_at_i": 1781094356,
+        "num_comments": 0,
+        "objectID": "48475266",
+        "points": 4,
+        "story_id": 48475266,
+        "title": "Show HN: Lanes now runs Claude Fable 5 across parallel agent sessions",
+        "updated_at": "2026-06-10T21:30:11Z",
+        "url": "https://lanes.sh/blog/claude-fable-5"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ArneCode"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Marser, a grammar-first parser combinator library for Rust"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/ArneCode/marser"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ArneCode",
+          "story_48475144",
+          "show_hn"
+        ],
+        "author": "ArneCode",
+        "children": [
+          48476374
+        ],
+        "created_at": "2026-06-10T12:14:49Z",
+        "created_at_i": 1781093689,
+        "num_comments": 1,
+        "objectID": "48475144",
+        "points": 2,
+        "story_id": 48475144,
+        "title": "Show HN: Marser, a grammar-first parser combinator library for Rust",
+        "updated_at": "2026-06-10T13:58:26Z",
+        "url": "https://github.com/ArneCode/marser"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "itsDersty"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Django Neural Feed – Hybrid personalized feeds in a single SQL query"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/itsDersty/django-neural-feed"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_itsDersty",
+          "story_48475128",
+          "show_hn"
+        ],
+        "author": "itsDersty",
+        "children": [
+          48475136
+        ],
+        "created_at": "2026-06-10T12:13:32Z",
+        "created_at_i": 1781093612,
+        "num_comments": 0,
+        "objectID": "48475128",
+        "points": 1,
+        "story_id": 48475128,
+        "title": "Show HN: Django Neural Feed – Hybrid personalized feeds in a single SQL query",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/itsDersty/django-neural-feed"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amrkilany"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Butterfly CSS framework forget class soup"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://butterflycss.amrzlabs.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_amrkilany",
+          "story_48475093",
+          "show_hn"
+        ],
+        "author": "amrkilany",
+        "children": [
+          48475182
+        ],
+        "created_at": "2026-06-10T12:09:52Z",
+        "created_at_i": 1781093392,
+        "num_comments": 1,
+        "objectID": "48475093",
+        "points": 4,
+        "story_id": 48475093,
+        "title": "Show HN: Butterfly CSS framework forget class soup",
+        "updated_at": "2026-06-10T21:31:41Z",
+        "url": "https://butterflycss.amrzlabs.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ls1911"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: SoulOS open-source replacing system prompts with stable state machines"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/mziqudhd92/soul-os"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ls1911",
+          "story_48475092",
+          "show_hn"
+        ],
+        "author": "ls1911",
+        "children": [
+          48475279
+        ],
+        "created_at": "2026-06-10T12:09:45Z",
+        "created_at_i": 1781093385,
+        "num_comments": 1,
+        "objectID": "48475092",
+        "points": 3,
+        "story_id": 48475092,
+        "title": "Show HN: SoulOS open-source replacing system prompts with stable state machines",
+        "updated_at": "2026-06-10T21:31:41Z",
+        "url": "https://github.com/mziqudhd92/soul-os"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aayush4vedi"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Drift – an embedding-model upgrade should be a rotation, not a reindex"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/aayush4vedi/drift-spark"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_aayush4vedi",
+          "story_48475082",
+          "show_hn"
+        ],
+        "author": "aayush4vedi",
+        "children": [
+          48479302,
+          48476032,
+          48475088
+        ],
+        "created_at": "2026-06-10T12:08:34Z",
+        "created_at_i": 1781093314,
+        "num_comments": 3,
+        "objectID": "48475082",
+        "points": 6,
+        "story_id": 48475082,
+        "title": "Show HN: Drift – an embedding-model upgrade should be a rotation, not a reindex",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/aayush4vedi/drift-spark"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TonyAlicea10"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've been a technical educator for a long time, but this is the first agent skill I'm sharing publicly.<p>Run it and it takes the code you're about to push (or point it at a commit), prioritizes what to review, then probes your reasoning, assumptions, understanding of consequences, etc.<p>At the end it generates a small report you can paste into a PR description for your reviewer or keep as a personal record.<p>The goal is to push code only once you can be accountable for it. Useful to maintain your own understanding or have your junior engineers use.<p>I've enjoyed using it personally."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Do-I-understand – Check you understand AI-written code before you merge"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/AnthonyPAlicea/skills/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_TonyAlicea10",
+          "story_48475024",
+          "show_hn"
+        ],
+        "author": "TonyAlicea10",
+        "created_at": "2026-06-10T12:01:38Z",
+        "created_at_i": 1781092898,
+        "num_comments": 0,
+        "objectID": "48475024",
+        "points": 1,
+        "story_id": 48475024,
+        "story_text": "I&#x27;ve been a technical educator for a long time, but this is the first agent skill I&#x27;m sharing publicly.<p>Run it and it takes the code you&#x27;re about to push (or point it at a commit), prioritizes what to review, then probes your reasoning, assumptions, understanding of consequences, etc.<p>At the end it generates a small report you can paste into a PR description for your reviewer or keep as a personal record.<p>The goal is to push code only once you can be accountable for it. Useful to maintain your own understanding or have your junior engineers use.<p>I&#x27;ve enjoyed using it personally.",
+        "title": "Show HN: Do-I-understand – Check you understand AI-written code before you merge",
+        "updated_at": "2026-06-10T12:06:55Z",
+        "url": "https://github.com/AnthonyPAlicea/skills/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "claudiacsf"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Codacy is a code quality and security platform that helps eng teams enforce coding standards against their AI generated code.<p>They just launched agent skills and a cloud CLI, which allows Claude etc. to handle everyday tasks without using the UI<p>E.g. prompt: &quot;PR 42 is failing the gate, fix what's real, add the tests, ignore the false positives with a reason, re-run.&quot;<p>The analysis runs server-side and burns no agent tokens."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Codacy Skills for Claude, Codex, Copilot, etc."
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/codacy/codacy-cloud-cli"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_claudiacsf",
+          "story_48474980",
+          "show_hn"
+        ],
+        "author": "claudiacsf",
+        "children": [
+          48542444
+        ],
+        "created_at": "2026-06-10T11:57:04Z",
+        "created_at_i": 1781092624,
+        "num_comments": 0,
+        "objectID": "48474980",
+        "points": 1,
+        "story_id": 48474980,
+        "story_text": "Codacy is a code quality and security platform that helps eng teams enforce coding standards against their AI generated code.<p>They just launched agent skills and a cloud CLI, which allows Claude etc. to handle everyday tasks without using the UI<p>E.g. prompt: &quot;PR 42 is failing the gate, fix what&#x27;s real, add the tests, ignore the false positives with a reason, re-run.&quot;<p>The analysis runs server-side and burns no agent tokens.",
+        "title": "Show HN: Codacy Skills for Claude, Codex, Copilot, etc.",
+        "updated_at": "2026-06-16T06:48:53Z",
+        "url": "https://github.com/codacy/codacy-cloud-cli"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jflynt76"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tenure – Traceable AI memory with configurable memory modes"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tenureai.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jflynt76",
+          "story_48474823",
+          "show_hn"
+        ],
+        "author": "jflynt76",
+        "created_at": "2026-06-10T11:40:37Z",
+        "created_at_i": 1781091637,
+        "num_comments": 0,
+        "objectID": "48474823",
+        "points": 3,
+        "story_id": 48474823,
+        "title": "Show HN: Tenure – Traceable AI memory with configurable memory modes",
+        "updated_at": "2026-06-10T11:52:54Z",
+        "url": "https://tenureai.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dools"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Skillzmouse: Distributed skills and scripts for agentic coding"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://bitbucket.org/workingsoftware/skillzmouse/src/main/README.md"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_dools",
+          "story_48474723",
+          "show_hn"
+        ],
+        "author": "dools",
+        "created_at": "2026-06-10T11:28:09Z",
+        "created_at_i": 1781090889,
+        "num_comments": 0,
+        "objectID": "48474723",
+        "points": 1,
+        "story_id": 48474723,
+        "title": "Show HN: Skillzmouse: Distributed skills and scripts for agentic coding",
+        "updated_at": "2026-06-10T11:30:24Z",
+        "url": "https://bitbucket.org/workingsoftware/skillzmouse/src/main/README.md"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "neochoon"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AgentHUD – Live TUI and daily digest for parallel Claude Code sessions"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/neochoon/agenthud"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_neochoon",
+          "story_48474693",
+          "show_hn"
+        ],
+        "author": "neochoon",
+        "children": [
+          48474706
+        ],
+        "created_at": "2026-06-10T11:25:25Z",
+        "created_at_i": 1781090725,
+        "num_comments": 0,
+        "objectID": "48474693",
+        "points": 1,
+        "story_id": 48474693,
+        "title": "Show HN: AgentHUD – Live TUI and daily digest for parallel Claude Code sessions",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://github.com/neochoon/agenthud"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wuqiaocauc"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Apodex-1.0-H – Beats Claude-Opus-4.7 on deep research (90.3 BrowseComp)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.apodex.ai/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_wuqiaocauc",
+          "story_48474661",
+          "show_hn"
+        ],
+        "author": "wuqiaocauc",
+        "children": [
+          48474765,
+          48485387
+        ],
+        "created_at": "2026-06-10T11:22:52Z",
+        "created_at_i": 1781090572,
+        "num_comments": 2,
+        "objectID": "48474661",
+        "points": 1,
+        "story_id": 48474661,
+        "title": "Show HN: Apodex-1.0-H – Beats Claude-Opus-4.7 on deep research (90.3 BrowseComp)",
+        "updated_at": "2026-06-12T00:47:50Z",
+        "url": "https://www.apodex.ai/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sbulaev"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Publora – One API/MCP for AI agents to post across 10 social networks"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://publora.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sbulaev",
+          "story_48474574",
+          "show_hn"
+        ],
+        "author": "sbulaev",
+        "children": [
+          48474890,
+          48474899
+        ],
+        "created_at": "2026-06-10T11:14:23Z",
+        "created_at_i": 1781090063,
+        "num_comments": 1,
+        "objectID": "48474574",
+        "points": 2,
+        "story_id": 48474574,
+        "title": "Show HN: Publora – One API/MCP for AI agents to post across 10 social networks",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://publora.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ycomrsys"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: CLI for self-hosted Invoice Ninja"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/DrDBanner/inmanage"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ycomrsys",
+          "story_48474529",
+          "show_hn"
+        ],
+        "author": "ycomrsys",
+        "children": [
+          48474530
+        ],
+        "created_at": "2026-06-10T11:08:22Z",
+        "created_at_i": 1781089702,
+        "num_comments": 1,
+        "objectID": "48474529",
+        "points": 2,
+        "story_id": 48474529,
+        "title": "Show HN: CLI for self-hosted Invoice Ninja",
+        "updated_at": "2026-06-10T11:24:24Z",
+        "url": "https://github.com/DrDBanner/inmanage"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "krm01"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Frhog"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.frhog.com/?hn"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_krm01",
+          "story_48474390",
+          "show_hn"
+        ],
+        "author": "krm01",
+        "created_at": "2026-06-10T10:51:41Z",
+        "created_at_i": 1781088701,
+        "num_comments": 0,
+        "objectID": "48474390",
+        "points": 1,
+        "story_id": 48474390,
+        "title": "Show HN: Frhog",
+        "updated_at": "2026-06-10T10:53:39Z",
+        "url": "https://www.frhog.com/?hn"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pplonski86"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Impress your boss with interactive Decision Tree Visualization"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/mljar/supertree"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_pplonski86",
+          "story_48474249",
+          "show_hn"
+        ],
+        "author": "pplonski86",
+        "created_at": "2026-06-10T10:34:44Z",
+        "created_at_i": 1781087684,
+        "num_comments": 0,
+        "objectID": "48474249",
+        "points": 5,
+        "story_id": 48474249,
+        "title": "Show HN: Impress your boss with interactive Decision Tree Visualization",
+        "updated_at": "2026-06-11T08:36:42Z",
+        "url": "https://github.com/mljar/supertree"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jlrueda"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi<p>I'm a developer and 2nd level support engineer for many years for a Linux based appliance (the name of the product is not relevant for this post).<p>When I started in this position, I couldn't believe how customer technical support was handled (an eternal send me the output of this command, email-cycle) so I built a script to collect diagnostic data and an interface to exploit the data and share it with the team.<p>Back then I didn't know about sosreport command (now sos) but it was very much alike.<p>For those who don't know what the sos command is, sos is a very active open-source project from RedHat that collects diagnostics, configurations and logs from Linux systems. It is used by companies like RedHat, Canonical, Oracle, Intel an many others to provide support services to their customers. The tool is highly customizable and can be used not only to get the health of the server but contains enough information to provide a security assessment of the system, hardware and software inventories, performance measurement, and configuration for third party software products like Apache web servers, Grafana, OpenStack components, Mysql, and many many more.<p>Based on this experience, I decided to build sos-vault. A secure vault to store sosreports, manage them and more importantly, analyze them with your team.<p>The tool provides some basic analysis tools and dashboards.<p>In its current state the solution does not provide any AI analysis capabilities. However it will. As this is a low hanging fruit to add to the current set of analytical tools already provided.<p>I been working on this project for a while now and decided to provide it as a SaaS which has turned out to be not the best approach.<p>I'm currently working on a self-hosted open-source version based on the SaaS version.<p>Just login with you Google account and you will find a shared sosreport for you to look at and interact with.<p>If you have any question I'm more than happy to answer to the best of my ability. Any feedback is welcome.<p>Thank you all."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A tool to analyze and manage sosreports"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://sos-vault.com/login"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jlrueda",
+          "story_48474188",
+          "show_hn"
+        ],
+        "author": "jlrueda",
+        "children": [
+          48476943
+        ],
+        "created_at": "2026-06-10T10:27:32Z",
+        "created_at_i": 1781087252,
+        "num_comments": 0,
+        "objectID": "48474188",
+        "points": 1,
+        "story_id": 48474188,
+        "story_text": "Hi<p>I&#x27;m a developer and 2nd level support engineer for many years for a Linux based appliance (the name of the product is not relevant for this post).<p>When I started in this position, I couldn&#x27;t believe how customer technical support was handled (an eternal send me the output of this command, email-cycle) so I built a script to collect diagnostic data and an interface to exploit the data and share it with the team.<p>Back then I didn&#x27;t know about sosreport command (now sos) but it was very much alike.<p>For those who don&#x27;t know what the sos command is, sos is a very active open-source project from RedHat that collects diagnostics, configurations and logs from Linux systems. It is used by companies like RedHat, Canonical, Oracle, Intel an many others to provide support services to their customers. The tool is highly customizable and can be used not only to get the health of the server but contains enough information to provide a security assessment of the system, hardware and software inventories, performance measurement, and configuration for third party software products like Apache web servers, Grafana, OpenStack components, Mysql, and many many more.<p>Based on this experience, I decided to build sos-vault. A secure vault to store sosreports, manage them and more importantly, analyze them with your team.<p>The tool provides some basic analysis tools and dashboards.<p>In its current state the solution does not provide any AI analysis capabilities. However it will. As this is a low hanging fruit to add to the current set of analytical tools already provided.<p>I been working on this project for a while now and decided to provide it as a SaaS which has turned out to be not the best approach.<p>I&#x27;m currently working on a self-hosted open-source version based on the SaaS version.<p>Just login with you Google account and you will find a shared sosreport for you to look at and interact with.<p>If you have any question I&#x27;m more than happy to answer to the best of my ability. Any feedback is welcome.<p>Thank you all.",
+        "title": "Show HN: A tool to analyze and manage sosreports",
+        "updated_at": "2026-06-12T00:48:19Z",
+        "url": "https://sos-vault.com/login"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Daniel-Pan"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://seaticket.ai/github-issues-resolving/\" rel=\"nofollow\">https://seaticket.ai/github-issues-resolving/</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: SeaTicket – Resolve GitHub Issues Using AI Agent"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Daniel-Pan",
+          "story_48473925",
+          "show_hn"
+        ],
+        "author": "Daniel-Pan",
+        "created_at": "2026-06-10T09:54:59Z",
+        "created_at_i": 1781085299,
+        "num_comments": 0,
+        "objectID": "48473925",
+        "points": 2,
+        "story_id": 48473925,
+        "story_text": "<a href=\"https:&#x2F;&#x2F;seaticket.ai&#x2F;github-issues-resolving&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;seaticket.ai&#x2F;github-issues-resolving&#x2F;</a>",
+        "title": "Show HN: SeaTicket – Resolve GitHub Issues Using AI Agent",
+        "updated_at": "2026-06-10T09:56:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "grzracz"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: macOS menu bar gauges for your Claude Code quota"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/grzegorz-raczek-unit8/claude-quota"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_grzracz",
+          "story_48473845",
+          "show_hn"
+        ],
+        "author": "grzracz",
+        "children": [
+          48475132,
+          48476228,
+          48476023,
+          48476211,
+          48476299,
+          48478237,
+          48477383,
+          48475666,
+          48477047,
+          48480061,
+          48474495,
+          48475977,
+          48477399,
+          48486864,
+          48486706,
+          48477183,
+          48477591,
+          48487313,
+          48476267
+        ],
+        "created_at": "2026-06-10T09:43:16Z",
+        "created_at_i": 1781084596,
+        "num_comments": 40,
+        "objectID": "48473845",
+        "points": 69,
+        "story_id": 48473845,
+        "title": "Show HN: macOS menu bar gauges for your Claude Code quota",
+        "updated_at": "2026-06-22T06:06:23Z",
+        "url": "https://github.com/grzegorz-raczek-unit8/claude-quota"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "coderai"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Talk to any AI model inside Slack just by mentioning it like: @ai summarize this channel. The most innovative (among other Slack apps) is the business model: no per-seat (per user) settlements, but a global budget for your team."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Plug and AI – Slack bot for the whole team, not per-seat"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://plugand.ai/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_coderai",
+          "story_48473739",
+          "show_hn"
+        ],
+        "author": "coderai",
+        "created_at": "2026-06-10T09:29:29Z",
+        "created_at_i": 1781083769,
+        "num_comments": 0,
+        "objectID": "48473739",
+        "points": 1,
+        "story_id": 48473739,
+        "story_text": "Talk to any AI model inside Slack just by mentioning it like: @ai summarize this channel. The most innovative (among other Slack apps) is the business model: no per-seat (per user) settlements, but a global budget for your team.",
+        "title": "Show HN: Plug and AI – Slack bot for the whole team, not per-seat",
+        "updated_at": "2026-06-10T09:34:53Z",
+        "url": "https://plugand.ai/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "duchanjo"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'd love feedback from anyone who's fought the simulator-access problem, or has opinions on the private-API touch approach or the MSE → WebCodecs/WASM latency path."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tapflow – self-hosted iOS/Android simulator streaming for mobile QA"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/jo-duchan/tapflow"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_duchanjo",
+          "story_48473696",
+          "show_hn"
+        ],
+        "author": "duchanjo",
+        "created_at": "2026-06-10T09:24:06Z",
+        "created_at_i": 1781083446,
+        "num_comments": 0,
+        "objectID": "48473696",
+        "points": 4,
+        "story_id": 48473696,
+        "story_text": "I&#x27;d love feedback from anyone who&#x27;s fought the simulator-access problem, or has opinions on the private-API touch approach or the MSE → WebCodecs&#x2F;WASM latency path.",
+        "title": "Show HN: Tapflow – self-hosted iOS/Android simulator streaming for mobile QA",
+        "updated_at": "2026-06-10T14:43:54Z",
+        "url": "https://github.com/jo-duchan/tapflow"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "meelford"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi community! I‘m a big fan of Are.na but prefer keyboard navigation over scrolling. So I decided to try what it would feel like to use a social/bookmarking network as a file manager. The experience is great: it reduces doom-scrolling and encourages more intentional use. \nYou can get your API token at are.na/developers. The app stores the key locally, no data is collected."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Are.na Commander – a file-like Are.na browser"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://arena-commander.netlify.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_meelford",
+          "story_48473643",
+          "show_hn"
+        ],
+        "author": "meelford",
+        "created_at": "2026-06-10T09:17:56Z",
+        "created_at_i": 1781083076,
+        "num_comments": 0,
+        "objectID": "48473643",
+        "points": 1,
+        "story_id": 48473643,
+        "story_text": "Hi community! I‘m a big fan of Are.na but prefer keyboard navigation over scrolling. So I decided to try what it would feel like to use a social&#x2F;bookmarking network as a file manager. The experience is great: it reduces doom-scrolling and encourages more intentional use. \nYou can get your API token at are.na&#x2F;developers. The app stores the key locally, no data is collected.",
+        "title": "Show HN: Are.na Commander – a file-like Are.na browser",
+        "updated_at": "2026-06-10T09:19:09Z",
+        "url": "https://arena-commander.netlify.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ridruejo"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: HolaClaw, an OpenClaw Distro for macOS"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://holaclaw.ai/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ridruejo",
+          "story_48473479",
+          "show_hn"
+        ],
+        "author": "ridruejo",
+        "children": [
+          48473495
+        ],
+        "created_at": "2026-06-10T08:58:04Z",
+        "created_at_i": 1781081884,
+        "num_comments": 1,
+        "objectID": "48473479",
+        "points": 2,
+        "story_id": 48473479,
+        "title": "Show HN: HolaClaw, an OpenClaw Distro for macOS",
+        "updated_at": "2026-06-10T09:33:53Z",
+        "url": "https://holaclaw.ai/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "captainbenises"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: 4DGS Recording"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://splatcam.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_captainbenises",
+          "story_48473298",
+          "show_hn"
+        ],
+        "author": "captainbenises",
+        "created_at": "2026-06-10T08:38:13Z",
+        "created_at_i": 1781080693,
+        "num_comments": 0,
+        "objectID": "48473298",
+        "points": 1,
+        "story_id": 48473298,
+        "title": "Show HN: 4DGS Recording",
+        "updated_at": "2026-06-10T08:42:24Z",
+        "url": "https://splatcam.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "photonberne001"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OpenClaw Hermes AI Agent Social Network.Built on Google 3D Maps and A2A protocol, connects OpenClaw and Hermes agents worldwide in a 3D environment.<p>They can \nMake friends and even date other Agents.\nEarn money and make a living.\nCreate their own organizations or form alliances.\nExplore the world and discover treasures.\nFind place interesting.\nCompete or collaborate with others."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: OpenClaw and Hermes Agent call each other via XMPP"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/ai-sns/openclaw-hermes-agent-network"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_photonberne001",
+          "story_48473221",
+          "show_hn"
+        ],
+        "author": "photonberne001",
+        "children": [
+          48473963,
+          48473235
+        ],
+        "created_at": "2026-06-10T08:30:11Z",
+        "created_at_i": 1781080211,
+        "num_comments": 2,
+        "objectID": "48473221",
+        "points": 5,
+        "story_id": 48473221,
+        "story_text": "OpenClaw Hermes AI Agent Social Network.Built on Google 3D Maps and A2A protocol, connects OpenClaw and Hermes agents worldwide in a 3D environment.<p>They can \nMake friends and even date other Agents.\nEarn money and make a living.\nCreate their own organizations or form alliances.\nExplore the world and discover treasures.\nFind place interesting.\nCompete or collaborate with others.",
+        "title": "Show HN: OpenClaw and Hermes Agent call each other via XMPP",
+        "updated_at": "2026-06-10T10:08:23Z",
+        "url": "https://github.com/ai-sns/openclaw-hermes-agent-network"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "keepamovin"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: WebCLI – what if the browser was just another Unix command?"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://webcli.sh"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_keepamovin",
+          "story_48473198",
+          "show_hn"
+        ],
+        "author": "keepamovin",
+        "created_at": "2026-06-10T08:27:01Z",
+        "created_at_i": 1781080021,
+        "num_comments": 0,
+        "objectID": "48473198",
+        "points": 4,
+        "story_id": 48473198,
+        "title": "Show HN: WebCLI – what if the browser was just another Unix command?",
+        "updated_at": "2026-06-11T16:51:14Z",
+        "url": "https://webcli.sh"
+      }
+    ],
+    "hitsPerPage": 80,
+    "nbHits": 2744,
+    "nbPages": 13,
+    "page": 1,
+    "params": "tags=show_hn&numericFilters=created_at_i%3E1778587200%2Ccreated_at_i%3C1781179200&hitsPerPage=80&page=1&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 3,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 2
+        },
+        "merge": {
+          "mergeLoop": {
+            "prepareNextHit": 1,
+            "total": 1
+          },
+          "total": 1
+        },
+        "total": 1
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 3
+    },
+    "query": "",
+    "serverTimeMS": 6
+  }
+}

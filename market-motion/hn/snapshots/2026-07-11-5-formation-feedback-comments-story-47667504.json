@@ -1,0 +1,1382 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47667504",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 371
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "james-exec"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built conversion infrastructure for 100+ businesses.<p>The problem isn't marketing - it's the pipe. Most solo founders have:\n- Product\n- Traffic (maybe)\n- Pipeline (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch, just diagnosis.<p>Reach out: james.exec@proton.me<p>aibizlaunchpad.pro"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_james-exec",
+          "story_47667504"
+        ],
+        "author": "james-exec",
+        "comment_text": "Built conversion infrastructure for 100+ businesses.<p>The problem isn&#x27;t marketing - it&#x27;s the pipe. Most solo founders have:\n- Product\n- Traffic (maybe)\n- Pipeline (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch, just diagnosis.<p>Reach out: james.exec@proton.me<p>aibizlaunchpad.pro",
+        "created_at": "2026-04-24T00:36:15Z",
+        "created_at_i": 1776990975,
+        "objectID": "47884094",
+        "parent_id": 47758520,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-24T00:38:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "james-exec"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built conversion infrastructure for 100+ businesses.<p>The problem isn't marketing - it's the pipe. Most solo founders have:\n- Product \n- Traffic (maybe)   \n- Pipeline  (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch, just diagnosis.<p>Reach out: james.exec@gmail.com<p>aibizlaunchpad.pro"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_james-exec",
+          "story_47667504"
+        ],
+        "author": "james-exec",
+        "comment_text": "Built conversion infrastructure for 100+ businesses.<p>The problem isn&#x27;t marketing - it&#x27;s the pipe. Most solo founders have:\n- Product \n- Traffic (maybe)   \n- Pipeline  (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch, just diagnosis.<p>Reach out: james.exec@gmail.com<p>aibizlaunchpad.pro",
+        "created_at": "2026-04-23T02:22:13Z",
+        "created_at_i": 1776910933,
+        "objectID": "47871651",
+        "parent_id": 47758520,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-23T02:27:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "james-exec"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Built conversion infrastructure for 100+ businesses.<p>The problem isn't marketing - it's the pipe. Most solo founders have:\n- Product \n- Traffic (maybe)   \n- Pipeline  (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch.<p>If useful: aibizlaunchpad.pro"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_james-exec",
+          "story_47667504"
+        ],
+        "author": "james-exec",
+        "comment_text": "Built conversion infrastructure for 100+ businesses.<p>The problem isn&#x27;t marketing - it&#x27;s the pipe. Most solo founders have:\n- Product \n- Traffic (maybe)   \n- Pipeline  (leads leak, no follow-up, no booking)<p>Happy to diagnose where yours is leaking - no pitch.<p>If useful: aibizlaunchpad.pro",
+        "created_at": "2026-04-23T02:21:32Z",
+        "created_at_i": 1776910892,
+        "objectID": "47871647",
+        "parent_id": 47758520,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-23T02:22:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ListeningPie"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm thinking of doing the same, but am hesitant to &quot;advertise&quot; as being advertise to, is not why users are on reddit and x. How do you see it?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ListeningPie",
+          "story_47667504"
+        ],
+        "author": "ListeningPie",
+        "comment_text": "I&#x27;m thinking of doing the same, but am hesitant to &quot;advertise&quot; as being advertise to, is not why users are on reddit and x. How do you see it?",
+        "created_at": "2026-04-14T10:43:38Z",
+        "created_at_i": 1776163418,
+        "objectID": "47763850",
+        "parent_id": 47688454,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-14T10:45:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Alacart"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think at that point founder taste comes in. “Strong opinions loosely held” comes to mind, in that you should already have some pretty strong ideas about where you want your product to go. Otherwise why build it? or maybe, why you specifically?<p>Being open to being wrong and course correcting when enough people tell you so is the loosely held part."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Alacart",
+          "story_47667504"
+        ],
+        "author": "Alacart",
+        "children": [
+          47884094,
+          47871651,
+          47871647
+        ],
+        "comment_text": "I think at that point founder taste comes in. “Strong opinions loosely held” comes to mind, in that you should already have some pretty strong ideas about where you want your product to go. Otherwise why build it? or maybe, why you specifically?<p>Being open to being wrong and course correcting when enough people tell you so is the loosely held part.",
+        "created_at": "2026-04-13T22:08:28Z",
+        "created_at_i": 1776118108,
+        "objectID": "47758520",
+        "parent_id": 47676164,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-24T00:37:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "BrunoBernardino"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This. I'd say it can only be deferred to after building _if_ you're building for yourself first in a space you're deeply experienced as the customer."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_BrunoBernardino",
+          "story_47667504"
+        ],
+        "author": "BrunoBernardino",
+        "comment_text": "This. I&#x27;d say it can only be deferred to after building _if_ you&#x27;re building for yourself first in a space you&#x27;re deeply experienced as the customer.",
+        "created_at": "2026-04-12T15:42:50Z",
+        "created_at_i": 1776008570,
+        "objectID": "47741043",
+        "parent_id": 47668158,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-12T15:44:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mvsingh"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A lot of cold outreach on platforms where your ICP lies. Creating content to get organic traffic, leveraging free directories, launch pads. these work if you are early and need traction. If you have money you can do collabs, and paid marketing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mvsingh",
+          "story_47667504"
+        ],
+        "author": "mvsingh",
+        "comment_text": "A lot of cold outreach on platforms where your ICP lies. Creating content to get organic traffic, leveraging free directories, launch pads. these work if you are early and need traction. If you have money you can do collabs, and paid marketing.",
+        "created_at": "2026-04-12T01:24:34Z",
+        "created_at_i": 1775957074,
+        "objectID": "47735406",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-12T17:53:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dhruvkar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "build distribution first. treat this like a product.<p>simplest - email list.<p>if there is an area you are interested in, start writing weekly.<p>post it in 5-10 relevant subreddits. post it in 7-15 relevant facebook groups.<p>daily.<p>give yourself 6 months to get to 1000 subscribers.<p>now when you launch something, you have a warm audience.<p>protip: to grow email faster, niche down. and try to talk individually to each subscriber like you would a friend."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dhruvkar",
+          "story_47667504"
+        ],
+        "author": "dhruvkar",
+        "comment_text": "build distribution first. treat this like a product.<p>simplest - email list.<p>if there is an area you are interested in, start writing weekly.<p>post it in 5-10 relevant subreddits. post it in 7-15 relevant facebook groups.<p>daily.<p>give yourself 6 months to get to 1000 subscribers.<p>now when you launch something, you have a warm audience.<p>protip: to grow email faster, niche down. and try to talk individually to each subscriber like you would a friend.",
+        "created_at": "2026-04-10T21:46:50Z",
+        "created_at_i": 1775857610,
+        "objectID": "47724047",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T21:57:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kevinfarrugia"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "From my experience building a product that is so good that it sells itself is highly unlikely and you will need to spend a good deal of time on marketing.<p>If you are building a B2B product you could go through direct sales channels and speak to the prospective customers yourself. Get out of your comfort zone and reach out to them directly. In the worst case they will ignore you or tell you that they are not interested. If you are building B2C I think it is significantly harder.<p>As others mentioned, first you need to find your customer and then build your product. This way you have some guaranteed revenue and (more importantly) feedback."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kevinfarrugia",
+          "story_47667504"
+        ],
+        "author": "kevinfarrugia",
+        "comment_text": "From my experience building a product that is so good that it sells itself is highly unlikely and you will need to spend a good deal of time on marketing.<p>If you are building a B2B product you could go through direct sales channels and speak to the prospective customers yourself. Get out of your comfort zone and reach out to them directly. In the worst case they will ignore you or tell you that they are not interested. If you are building B2C I think it is significantly harder.<p>As others mentioned, first you need to find your customer and then build your product. This way you have some guaranteed revenue and (more importantly) feedback.",
+        "created_at": "2026-04-10T21:38:57Z",
+        "created_at_i": 1775857137,
+        "objectID": "47723971",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T22:40:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Areena_28"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'll speak on the co-founder question, try out the the trial period approach. Give someone a 60-day paid project with a clear deliverable before any equity conversation. You learn more about how they think and execute in 60 days than in 10 interviews."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Areena_28",
+          "story_47667504"
+        ],
+        "author": "Areena_28",
+        "comment_text": "I&#x27;ll speak on the co-founder question, try out the the trial period approach. Give someone a 60-day paid project with a clear deliverable before any equity conversation. You learn more about how they think and execute in 60 days than in 10 interviews.",
+        "created_at": "2026-04-10T11:49:15Z",
+        "created_at_i": 1775821755,
+        "objectID": "47716683",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T11:53:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "drbojingle"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have you asked chatgpt?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_drbojingle",
+          "story_47667504"
+        ],
+        "author": "drbojingle",
+        "comment_text": "Have you asked chatgpt?",
+        "created_at": "2026-04-10T11:29:36Z",
+        "created_at_i": 1775820576,
+        "objectID": "47716498",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T11:32:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "faangguyindia"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I launched a few weeks back, got already 2000 active users, here's my project:\n<a href=\"https://play.google.com/store/apps/details?id=com.macrocodex.app\">https://play.google.com/store/apps/details?id=com.macrocodex...</a><p>I've a community in bodybuilding space, where I share my work. People have to believe in your work, you can make best product in the world but people won't take any interest in it unless they believe in your abilities, or they hear about your product from someone else who have successfully used it.<p>This is why don't just spend building best product but get a few users and see if they succeed<p>Many competiting product couldn't even get their 100 downloads let alone active users who use your product everyday."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_faangguyindia",
+          "story_47667504"
+        ],
+        "author": "faangguyindia",
+        "comment_text": "I launched a few weeks back, got already 2000 active users, here&#x27;s my project:\n<a href=\"https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.macrocodex.app\">https:&#x2F;&#x2F;play.google.com&#x2F;store&#x2F;apps&#x2F;details?id=com.macrocodex...</a><p>I&#x27;ve a community in bodybuilding space, where I share my work. People have to believe in your work, you can make best product in the world but people won&#x27;t take any interest in it unless they believe in your abilities, or they hear about your product from someone else who have successfully used it.<p>This is why don&#x27;t just spend building best product but get a few users and see if they succeed<p>Many competiting product couldn&#x27;t even get their 100 downloads let alone active users who use your product everyday.",
+        "created_at": "2026-04-10T08:11:19Z",
+        "created_at_i": 1775808679,
+        "objectID": "47715069",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-11T17:51:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ensocode"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "insane story!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ensocode",
+          "story_47667504"
+        ],
+        "author": "ensocode",
+        "comment_text": "insane story!",
+        "created_at": "2026-04-10T07:49:33Z",
+        "created_at_i": 1775807373,
+        "objectID": "47714908",
+        "parent_id": 47668798,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T07:52:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PocketBot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's as rough as it gets. You really have to know who your customer is. Not as a thesis, but as a proven. If you can find your exact customer base, you will get customers over and over again. There is one subreddit where I can post any time of the day and will have 50-100 new testers by the morning (and if it does extremely well then 10x those numbers). It's way more niche and specific for most products than people think, spamming X won't help build brand identity unless you are following and talking to your literal customer. Then persistance, persistance and more persistance. P.S I am an absolute amateur at this as well but just my experience."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PocketBot",
+          "story_47667504"
+        ],
+        "author": "PocketBot",
+        "comment_text": "It&#x27;s as rough as it gets. You really have to know who your customer is. Not as a thesis, but as a proven. If you can find your exact customer base, you will get customers over and over again. There is one subreddit where I can post any time of the day and will have 50-100 new testers by the morning (and if it does extremely well then 10x those numbers). It&#x27;s way more niche and specific for most products than people think, spamming X won&#x27;t help build brand identity unless you are following and talking to your literal customer. Then persistance, persistance and more persistance. P.S I am an absolute amateur at this as well but just my experience.",
+        "created_at": "2026-04-09T18:36:34Z",
+        "created_at_i": 1775759794,
+        "objectID": "47707738",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T19:47:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "late_night_fix"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don't have to go Tiktok or Instagram. Even email, niche forums or tiny add test can tell you a lot.You want someone who's small and iterating."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_late_night_fix",
+          "story_47667504"
+        ],
+        "author": "late_night_fix",
+        "comment_text": "You don&#x27;t have to go Tiktok or Instagram. Even email, niche forums or tiny add test can tell you a lot.You want someone who&#x27;s small and iterating.",
+        "created_at": "2026-04-09T17:18:36Z",
+        "created_at_i": 1775755116,
+        "objectID": "47706413",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-09T20:41:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sarimkx"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "All I want to add here is, if you are shy or scared of being &quot;cringe&quot;, this path is NOT for you.<p>Someone actually recommended to be absolutely &quot;shameless&quot; when it comes to speaking about what you are doing i.e. marketing your product/service."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sarimkx",
+          "story_47667504"
+        ],
+        "author": "sarimkx",
+        "comment_text": "All I want to add here is, if you are shy or scared of being &quot;cringe&quot;, this path is NOT for you.<p>Someone actually recommended to be absolutely &quot;shameless&quot; when it comes to speaking about what you are doing i.e. marketing your product&#x2F;service.",
+        "created_at": "2026-04-09T12:17:44Z",
+        "created_at_i": 1775737064,
+        "objectID": "47702709",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-05-08T11:49:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sminchev"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unfortunately, being a developer, at least in my case, they don't teach us sales and marketing. Many people believe that if the product is good it will sale good, and get disappointed.<p>What I can add as an additional advice is that asking AI what to do does not help either. It can give good suggestions, and ideas on how to promote it, but the actual execution is a total disaster. For example, it says, show it in hacker news, but does not tell you how to do it, and because you don't know what to ask the AI, posting here just like that is a big fail. Same as Reddit, ProductHunt, BetaList, and all other other platforms.<p>Sometimes the AI can give really bad suggestions as well, like, pretend that you are not promoting it, but somewhere in the middle, try to add your things, so that it looks honest. PURE EVIL!<p>Marketing and promotion is totally different topic and the experience really matters! :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sminchev",
+          "story_47667504"
+        ],
+        "author": "sminchev",
+        "comment_text": "Unfortunately, being a developer, at least in my case, they don&#x27;t teach us sales and marketing. Many people believe that if the product is good it will sale good, and get disappointed.<p>What I can add as an additional advice is that asking AI what to do does not help either. It can give good suggestions, and ideas on how to promote it, but the actual execution is a total disaster. For example, it says, show it in hacker news, but does not tell you how to do it, and because you don&#x27;t know what to ask the AI, posting here just like that is a big fail. Same as Reddit, ProductHunt, BetaList, and all other other platforms.<p>Sometimes the AI can give really bad suggestions as well, like, pretend that you are not promoting it, but somewhere in the middle, try to add your things, so that it looks honest. PURE EVIL!<p>Marketing and promotion is totally different topic and the experience really matters! :)",
+        "created_at": "2026-04-09T09:27:43Z",
+        "created_at_i": 1775726863,
+        "objectID": "47701252",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-09T09:29:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nick_jonas"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agree. But I'd like to add one more thing.<p>Just like you, I developed a product and posted about it on Reddit, and received a ton of upvotes and comments in just over ten minutes. So I knew I was in the right place.<p>But then, moderators deleted my post cause they don't like promotion here.<p>I've tried X, youtube and other social medias. But it's like shouting in a crowded train station—no one can hear me.<p>So I think it's hard to harness the leverage of online marketing right from the start. Perhaps we should reach out to each customer one by one during the first phase."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nick_jonas",
+          "story_47667504"
+        ],
+        "author": "nick_jonas",
+        "comment_text": "Agree. But I&#x27;d like to add one more thing.<p>Just like you, I developed a product and posted about it on Reddit, and received a ton of upvotes and comments in just over ten minutes. So I knew I was in the right place.<p>But then, moderators deleted my post cause they don&#x27;t like promotion here.<p>I&#x27;ve tried X, youtube and other social medias. But it&#x27;s like shouting in a crowded train station—no one can hear me.<p>So I think it&#x27;s hard to harness the leverage of online marketing right from the start. Perhaps we should reach out to each customer one by one during the first phase.",
+        "created_at": "2026-04-09T02:48:41Z",
+        "created_at_i": 1775702921,
+        "objectID": "47698776",
+        "parent_id": 47669239,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-09T02:50:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lazarkap"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for the words of encouragement, as you said to me, DON'T stop, and good luck.<p>If I can help somehow, hit me up on linkedin, Il be glad. <a href=\"https://www.linkedin.com/in/lazarbogosavljevic/\" rel=\"nofollow\">https://www.linkedin.com/in/lazarbogosavljevic/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lazarkap",
+          "story_47667504"
+        ],
+        "author": "lazarkap",
+        "comment_text": "Thanks for the words of encouragement, as you said to me, DON&#x27;T stop, and good luck.<p>If I can help somehow, hit me up on linkedin, Il be glad. <a href=\"https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;lazarbogosavljevic&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;lazarbogosavljevic&#x2F;</a>",
+        "created_at": "2026-04-08T21:46:05Z",
+        "created_at_i": 1775684765,
+        "objectID": "47696682",
+        "parent_id": 47684597,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T21:51:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alexpotato"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; There was a great article on here a while back about VHS and Betamax. While Betamax was better by nearly every metric, it lost.<p>There is some nuance here.<p>Manufacturers didn't know if people preferred shorter, higher quality (Beta) or longer, less quality (VHS). That's partly why there were two formats.<p>Most people like to say VHS &quot;won&quot; but what it really won was the consumer market. Beta won the professional TV news market because it turns out news stations had a high demand for short, high quality video storage.<p>I point this out only to say that winning isn't a one dimensional/binary outcome. You can &quot;lose&quot; in one market but still be very profitable in another market."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alexpotato",
+          "story_47667504"
+        ],
+        "author": "alexpotato",
+        "comment_text": "&gt; There was a great article on here a while back about VHS and Betamax. While Betamax was better by nearly every metric, it lost.<p>There is some nuance here.<p>Manufacturers didn&#x27;t know if people preferred shorter, higher quality (Beta) or longer, less quality (VHS). That&#x27;s partly why there were two formats.<p>Most people like to say VHS &quot;won&quot; but what it really won was the consumer market. Beta won the professional TV news market because it turns out news stations had a high demand for short, high quality video storage.<p>I point this out only to say that winning isn&#x27;t a one dimensional&#x2F;binary outcome. You can &quot;lose&quot; in one market but still be very profitable in another market.",
+        "created_at": "2026-04-08T11:40:07Z",
+        "created_at_i": 1775648407,
+        "objectID": "47688807",
+        "parent_id": 47673244,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-14T13:42:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hernanhumana"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "what about generate the social media posts first. like 30 between text, media pictures videos even more first.<p>later automate the daily upload? but human in the loop doing egamement is a must."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hernanhumana",
+          "story_47667504"
+        ],
+        "author": "hernanhumana",
+        "comment_text": "what about generate the social media posts first. like 30 between text, media pictures videos even more first.<p>later automate the daily upload? but human in the loop doing egamement is a must.",
+        "created_at": "2026-04-08T11:12:36Z",
+        "created_at_i": 1775646756,
+        "objectID": "47688593",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T21:54:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "omertt27"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am using channels like indiehackers, reddit, x.These can be helpful for you.But i need to say that its hard bro, not easy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_omertt27",
+          "story_47667504"
+        ],
+        "author": "omertt27",
+        "children": [
+          47763850
+        ],
+        "comment_text": "I am using channels like indiehackers, reddit, x.These can be helpful for you.But i need to say that its hard bro, not easy.",
+        "created_at": "2026-04-08T10:58:42Z",
+        "created_at_i": 1775645922,
+        "objectID": "47688454",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-14T10:44:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shivang2607"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Its really tough as a techincal guy. Coding  and building product is the easiest part actually, Hard is to distribute and market. Many people here are suggesting talking to people if they really need what you built. This is really true, but even when you build something which people might wanna use, I still find it hard to distribute and market. \nI mostly get traction from the reddit but that's it. I am not even allow to post here on HN. I know what I've built is useful, but I do not even know how to pitch it correctly, or where to market it apart from reddit."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_shivang2607",
+          "story_47667504"
+        ],
+        "author": "shivang2607",
+        "comment_text": "Its really tough as a techincal guy. Coding  and building product is the easiest part actually, Hard is to distribute and market. Many people here are suggesting talking to people if they really need what you built. This is really true, but even when you build something which people might wanna use, I still find it hard to distribute and market. \nI mostly get traction from the reddit but that&#x27;s it. I am not even allow to post here on HN. I know what I&#x27;ve built is useful, but I do not even know how to pitch it correctly, or where to market it apart from reddit.",
+        "created_at": "2026-04-08T10:10:24Z",
+        "created_at_i": 1775643024,
+        "objectID": "47688007",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-09T03:13:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EITB_2026"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_EITB_2026",
+          "story_47667504"
+        ],
+        "author": "EITB_2026",
+        "comment_text": "Yes",
+        "created_at": "2026-04-08T04:58:30Z",
+        "created_at_i": 1775624310,
+        "objectID": "47685476",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T04:59:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manojpathak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Let us know how it went. Good  Luck"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manojpathak",
+          "story_47667504"
+        ],
+        "author": "manojpathak",
+        "comment_text": "Let us know how it went. Good  Luck",
+        "created_at": "2026-04-08T03:21:30Z",
+        "created_at_i": 1775618490,
+        "objectID": "47684670",
+        "parent_id": 47670342,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T03:25:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ipaddr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What mattered was every other company got together and agreed on a format. The size of their market caused hollywood to release more movies in that format which made more people buy.  The super long mode became more important later."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ipaddr",
+          "story_47667504"
+        ],
+        "author": "ipaddr",
+        "comment_text": "What mattered was every other company got together and agreed on a format. The size of their market caused hollywood to release more movies in that format which made more people buy.  The super long mode became more important later.",
+        "created_at": "2026-04-08T03:19:30Z",
+        "created_at_i": 1775618370,
+        "objectID": "47684645",
+        "parent_id": 47678947,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T03:20:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "manojpathak"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I must say you have very strong skills. I also build something but planning to kill it. Now not planning to build anything as almost all the spaces are saturated. Do not stop, good luck"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_manojpathak",
+          "story_47667504"
+        ],
+        "author": "manojpathak",
+        "children": [
+          47696682
+        ],
+        "comment_text": "I must say you have very strong skills. I also build something but planning to kill it. Now not planning to build anything as almost all the spaces are saturated. Do not stop, good luck",
+        "created_at": "2026-04-08T03:12:56Z",
+        "created_at_i": 1775617976,
+        "objectID": "47684597",
+        "parent_id": 47672027,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T21:46:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "PaulHoule"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A lot of people who are successful in it can take advantage of connections they have in the industry to make the first few sales.<p>For instance when David Duffield got kicked out of Peoplesoft he went out and started Workday to make a competitive product and of course his name was well known in the industry so the skids were greased for him.<p>See also this legendary story: <a href=\"https://www.marketingmonk.so/p/salesforce-grit-to-giant-marketing-strategy\" rel=\"nofollow\">https://www.marketingmonk.so/p/salesforce-grit-to-giant-mark...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_PaulHoule",
+          "story_47667504"
+        ],
+        "author": "PaulHoule",
+        "comment_text": "A lot of people who are successful in it can take advantage of connections they have in the industry to make the first few sales.<p>For instance when David Duffield got kicked out of Peoplesoft he went out and started Workday to make a competitive product and of course his name was well known in the industry so the skids were greased for him.<p>See also this legendary story: <a href=\"https:&#x2F;&#x2F;www.marketingmonk.so&#x2F;p&#x2F;salesforce-grit-to-giant-marketing-strategy\" rel=\"nofollow\">https:&#x2F;&#x2F;www.marketingmonk.so&#x2F;p&#x2F;salesforce-grit-to-giant-mark...</a>",
+        "created_at": "2026-04-07T23:31:14Z",
+        "created_at_i": 1775604674,
+        "objectID": "47682676",
+        "parent_id": 47679231,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-08T07:03:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jason_zig"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I used the shopify app store to get the first customers - i think an app store is  still the way to go since they handle a lot of the customer outreach for you. that said, there are a lot of other ways to niche down - discord communities, subreddits, private boards, etc... come to mind as good places to start"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jason_zig",
+          "story_47667504"
+        ],
+        "author": "jason_zig",
+        "comment_text": "I used the shopify app store to get the first customers - i think an app store is  still the way to go since they handle a lot of the customer outreach for you. that said, there are a lot of other ways to niche down - discord communities, subreddits, private boards, etc... come to mind as good places to start",
+        "created_at": "2026-04-07T23:21:39Z",
+        "created_at_i": 1775604099,
+        "objectID": "47682602",
+        "parent_id": 47669905,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T23:24:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jason_zig"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree there needs to be a way to fit it into the overall product direction. Solving these on a case-by-case basis is important and part of the job.<p>When I first started, getting customer reviews was my north star, so i would add any feature and hide them under &quot;advanced&quot; if they were ridiculously long-tail. Still worth it for the review and positive experience even if you hide the feature..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jason_zig",
+          "story_47667504"
+        ],
+        "author": "jason_zig",
+        "comment_text": "I agree there needs to be a way to fit it into the overall product direction. Solving these on a case-by-case basis is important and part of the job.<p>When I first started, getting customer reviews was my north star, so i would add any feature and hide them under &quot;advanced&quot; if they were ridiculously long-tail. Still worth it for the review and positive experience even if you hide the feature...",
+        "created_at": "2026-04-07T23:19:44Z",
+        "created_at_i": 1775603984,
+        "objectID": "47682581",
+        "parent_id": 47670964,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T23:24:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "prewett"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Wow, that's the rare kind of thing where I might consider quitting on the spot."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_prewett",
+          "story_47667504"
+        ],
+        "author": "prewett",
+        "comment_text": "Wow, that&#x27;s the rare kind of thing where I might consider quitting on the spot.",
+        "created_at": "2026-04-07T19:52:32Z",
+        "created_at_i": 1775591552,
+        "objectID": "47680507",
+        "parent_id": 47668798,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T19:54:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "didgetmaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That is great advice if you set out to build a profitable business on day one.<p>But it seems to me that there are many projects out there like mine. You start building something because it scratches an itch you have. You think it would be fun to build. You keep adding features and fine tuning the code because you want to see something work better and/or faster than anything else.<p>Then one day you look at it and say: &quot;I wonder if other people will think this thing is as useful as I do (and be willing to pay something for it)?&quot;<p>It might still be a work in progress, but it does a number of very useful things, so you now have to put on your marketing hat or team up with someone who is good at that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_didgetmaster",
+          "story_47667504"
+        ],
+        "author": "didgetmaster",
+        "comment_text": "That is great advice if you set out to build a profitable business on day one.<p>But it seems to me that there are many projects out there like mine. You start building something because it scratches an itch you have. You think it would be fun to build. You keep adding features and fine tuning the code because you want to see something work better and&#x2F;or faster than anything else.<p>Then one day you look at it and say: &quot;I wonder if other people will think this thing is as useful as I do (and be willing to pay something for it)?&quot;<p>It might still be a work in progress, but it does a number of very useful things, so you now have to put on your marketing hat or team up with someone who is good at that.",
+        "created_at": "2026-04-07T19:07:10Z",
+        "created_at_i": 1775588830,
+        "objectID": "47679907",
+        "parent_id": 47668158,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T19:22:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lazarkap"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No, that was one of the products I slowly did let die, and kinda modified the product to be open-sourced, cli first tool.<p>Thanks for the words of support. I will definitely try to be more active on youtube and leverage that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lazarkap",
+          "story_47667504"
+        ],
+        "author": "lazarkap",
+        "comment_text": "No, that was one of the products I slowly did let die, and kinda modified the product to be open-sourced, cli first tool.<p>Thanks for the words of support. I will definitely try to be more active on youtube and leverage that.",
+        "created_at": "2026-04-07T18:46:57Z",
+        "created_at_i": 1775587617,
+        "objectID": "47679645",
+        "parent_id": 47677327,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T18:51:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lyfeninja"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In a similar situation and I understand where you're coming from. Although I have not taken on a Marketing co-founder, I have had a number of important and revealing conversations that I've learned a lot from.<p>1. Make sure the market for your product exists before you make it. This is counterintuitive to builders like myself and probably you. building is what I'm good at, and I know what I'm making adds value, but that doesn't mean others will see that value.<p>2. Kinda goes with #1, but talk to as many people as possible in the market you are considering a product for and learn what their problems and pain points are so you can solve them. If you can relieve someone's pain, the marketing will do itself. It's hard to even get the conversations, but each one is helpful, even if it's telling you something you don't want to hear.<p>3. Focus on gaining external interest, not necessarily revenue. Again, hard, but a pilot or partnership with another startup or small business can go along way and showing value to future investors or customers.<p>4. Talk to and learn from other founders. Your already doing this, but there are nuggets of information that can help even if it's just a slight change of perspective.<p>5. Keep your head up. It's a slog and it's brutal, but it's a marathon.<p>I'm still working on all these things myself, so you're not alone. The realization that a good product without a market is nothing, was a big revelation for me (and in hindsight makes me feel like an idiot). I honestly thought if you solve a hard enough problem or built a good enough product that the rest would fall in line, but that was not the case, but I'm not ready to give up yet."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lyfeninja",
+          "story_47667504"
+        ],
+        "author": "lyfeninja",
+        "comment_text": "In a similar situation and I understand where you&#x27;re coming from. Although I have not taken on a Marketing co-founder, I have had a number of important and revealing conversations that I&#x27;ve learned a lot from.<p>1. Make sure the market for your product exists before you make it. This is counterintuitive to builders like myself and probably you. building is what I&#x27;m good at, and I know what I&#x27;m making adds value, but that doesn&#x27;t mean others will see that value.<p>2. Kinda goes with #1, but talk to as many people as possible in the market you are considering a product for and learn what their problems and pain points are so you can solve them. If you can relieve someone&#x27;s pain, the marketing will do itself. It&#x27;s hard to even get the conversations, but each one is helpful, even if it&#x27;s telling you something you don&#x27;t want to hear.<p>3. Focus on gaining external interest, not necessarily revenue. Again, hard, but a pilot or partnership with another startup or small business can go along way and showing value to future investors or customers.<p>4. Talk to and learn from other founders. Your already doing this, but there are nuggets of information that can help even if it&#x27;s just a slight change of perspective.<p>5. Keep your head up. It&#x27;s a slog and it&#x27;s brutal, but it&#x27;s a marathon.<p>I&#x27;m still working on all these things myself, so you&#x27;re not alone. The realization that a good product without a market is nothing, was a big revelation for me (and in hindsight makes me feel like an idiot). I honestly thought if you solve a hard enough problem or built a good enough product that the rest would fall in line, but that was not the case, but I&#x27;m not ready to give up yet.",
+        "created_at": "2026-04-07T18:30:14Z",
+        "created_at_i": 1775586614,
+        "objectID": "47679414",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T18:42:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Imustaskforhelp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wish to ask you one thing but how do you start within B2B as in how do you get your first few customers, I feel like having the next becomes significantly easier somehow but I feel like its a very large mountain to cover for the first few customers, I would really like it if you can give me some guiding points on this for future and thanks for replying to me, I really appreciate it!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Imustaskforhelp",
+          "story_47667504"
+        ],
+        "author": "Imustaskforhelp",
+        "children": [
+          47682676
+        ],
+        "comment_text": "I wish to ask you one thing but how do you start within B2B as in how do you get your first few customers, I feel like having the next becomes significantly easier somehow but I feel like its a very large mountain to cover for the first few customers, I would really like it if you can give me some guiding points on this for future and thanks for replying to me, I really appreciate it!",
+        "created_at": "2026-04-07T18:17:03Z",
+        "created_at_i": 1775585823,
+        "objectID": "47679231",
+        "parent_id": 47669168,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T23:53:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gagarin1917"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;There was a great article on here a while back about VHS and Betamax. While Betamax was better by nearly every metric, it lost.<p>Not every measure. It could hold like half the recording as a VHS.<p>The “killer app” for video tapes was being able to record live TV when you weren’t home with timers on the players. VHS could record more without any intervention.<p>It also meant most movies could be watched all the way through without interruption.<p>People didn’t care about the ever so slightly better quality of Betamax. They cared about getting their moneys worth and not being interrupted.<p>That’s why VHS won."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Gagarin1917",
+          "story_47667504"
+        ],
+        "author": "Gagarin1917",
+        "children": [
+          47684645
+        ],
+        "comment_text": "&gt;There was a great article on here a while back about VHS and Betamax. While Betamax was better by nearly every metric, it lost.<p>Not every measure. It could hold like half the recording as a VHS.<p>The “killer app” for video tapes was being able to record live TV when you weren’t home with timers on the players. VHS could record more without any intervention.<p>It also meant most movies could be watched all the way through without interruption.<p>People didn’t care about the ever so slightly better quality of Betamax. They cared about getting their moneys worth and not being interrupted.<p>That’s why VHS won.",
+        "created_at": "2026-04-07T17:56:55Z",
+        "created_at_i": 1775584615,
+        "objectID": "47678947",
+        "parent_id": 47673244,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-14T13:42:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "skyberrys"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't really know the answer you are looking for. I think it's different from one product to the next. I haven't managed to gain massive traction from the things I've built so far, but one thing I'm doing differently this time is treating marketing like the gym. I mean, don't expect overnight results, but make a consistent plan and continue to implement it over months and years not weeks and days.<p>ETA: based on your profile you started March 20 but in 2025 and your domain name expired. Did you build a product that has a fixed cost to remain live? I found your video, your YT seems popular. You can make a free website with GitHub pages and point your URL at that at least. Keep persisting, you can do it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_skyberrys",
+          "story_47667504"
+        ],
+        "author": "skyberrys",
+        "children": [
+          47679645
+        ],
+        "comment_text": "I don&#x27;t really know the answer you are looking for. I think it&#x27;s different from one product to the next. I haven&#x27;t managed to gain massive traction from the things I&#x27;ve built so far, but one thing I&#x27;m doing differently this time is treating marketing like the gym. I mean, don&#x27;t expect overnight results, but make a consistent plan and continue to implement it over months and years not weeks and days.<p>ETA: based on your profile you started March 20 but in 2025 and your domain name expired. Did you build a product that has a fixed cost to remain live? I found your video, your YT seems popular. You can make a free website with GitHub pages and point your URL at that at least. Keep persisting, you can do it.",
+        "created_at": "2026-04-07T15:59:06Z",
+        "created_at_i": 1775577546,
+        "objectID": "47677327",
+        "parent_id": 47667504,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T18:47:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chistev"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "How do you know what feature request to add, then? The ones suggested by multiple users independently?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chistev",
+          "story_47667504"
+        ],
+        "author": "chistev",
+        "children": [
+          47758520
+        ],
+        "comment_text": "How do you know what feature request to add, then? The ones suggested by multiple users independently?",
+        "created_at": "2026-04-07T14:40:34Z",
+        "created_at_i": 1775572834,
+        "objectID": "47676164",
+        "parent_id": 47670964,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-13T22:09:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "clapthewind"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No magic pill: you can't work backwards. Pivot away from current idea if it's not getting word of mouth or any other traction, and for the next idea start with finding problems for people in your network that they will pay for."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_clapthewind",
+          "story_47667504"
+        ],
+        "author": "clapthewind",
+        "comment_text": "No magic pill: you can&#x27;t work backwards. Pivot away from current idea if it&#x27;s not getting word of mouth or any other traction, and for the next idea start with finding problems for people in your network that they will pay for.",
+        "created_at": "2026-04-07T14:40:09Z",
+        "created_at_i": 1775572809,
+        "objectID": "47676154",
+        "parent_id": 47670960,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-10T22:42:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ericd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks very much :-)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do you handle marketing as a solo technical founder?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ericd",
+          "story_47667504"
+        ],
+        "author": "ericd",
+        "comment_text": "Thanks very much :-)",
+        "created_at": "2026-04-07T12:32:00Z",
+        "created_at_i": 1775565120,
+        "objectID": "47674290",
+        "parent_id": 47671291,
+        "story_id": 47667504,
+        "story_title": "Ask HN: How do you handle marketing as a solo technical founder?",
+        "updated_at": "2026-04-07T12:34:54Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 112,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47667504&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 15
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

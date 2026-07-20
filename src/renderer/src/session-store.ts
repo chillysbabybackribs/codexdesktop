@@ -82,13 +82,6 @@ function cloneGoal(goal: ThreadGoal | null): ThreadGoal | null {
   return goal ? { ...goal } : null
 }
 
-// Persisted/resumed turns enumerate their items as item-0, item-1, … while
-// live streams use stable provider ids. The two families never coexist for a
-// healthy turn; spotting the transient family is how merges stay one-source.
-export function isResumeEnumeratedId(id: string): boolean {
-  return /^item-\d+$/.test(id)
-}
-
 // Port of App.tsx reduceBackgroundTurnSnapshot: fold a full Turn payload
 // (turn/started or turn/completed) into the session.
 export function reduceSessionTurn(
@@ -173,23 +166,8 @@ export function reduceSessionNotification(
     const incomingItems = notification.method === 'item/started' || notification.method === 'item/completed'
       ? [notification.params.item]
       : []
-    // The app-server names the same items differently live vs persisted:
-    // streams carry stable ids (rs_*/msg_*/exec-*/uuid) while resumed turns
-    // re-enumerate as item-N. A turn seeded from resume that then streams live
-    // (reload mid-turn) would keep both copies, doubling every row — so the
-    // first live item for a turn evicts that turn's resume-shaped rows.
-    const incomingId = incomingItems[0]?.id
-    const baseItems = incomingId !== undefined && !isResumeEnumeratedId(incomingId)
-      ? state.items.filter(
-          (item) =>
-            !(
-              isResumeEnumeratedId(item.id) &&
-              state.itemMeta[item.id]?.turnId === notification.params.turnId
-            )
-        )
-      : state.items
     const nextItems = reduceItemNotificationItems(
-      stripOptimisticUserMessage(baseItems, optimisticId, incomingItems),
+      stripOptimisticUserMessage(state.items, optimisticId, incomingItems),
       notification
     )
     const nextItemMeta = reduceItemNotificationMeta(state.itemMeta, notification, { compactionBeforeTokens })

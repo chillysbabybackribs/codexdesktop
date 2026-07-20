@@ -1,0 +1,35 @@
+# Coaching software pricing, compared
+
+the quick answer
+
+Online coaching software starts around USD 9 to 39 per month for a few clients and scales by client count or flat tier; mid tiers for 20 to 50 clients run roughly USD 59 to 99. Below is every major platform's real, vendor-sourced pricing in one table - entry price, mid tier, free plans, and whether a branded app is included. Coachway pricing is EUR 69 per month for up to 5 clients, then EUR 9 per additional client.
+
+Every figure comes from the vendor's own pricing page, fetched June 2026 (source linked in each row). Currencies are shown as each vendor lists them and are not converted. Where a vendor hides pricing behind a demo, that is stated, not guessed. Always confirm the current rate on the vendor page before deciding.
+
+Platform | Entry price | Mid / popular tier | Model | Free | Branded app | Source
+
+Coachwayus | EUR 69/mo (up to 5 clients), then +EUR 9 per additional client | not listed | per-client | 14-day trial | included (in-app branding) | 2026-06-29
+
+CoachAccountable | USD 20/mo (Starter, up to 2 clients) | not listed (long per-active-client ladder runs USD 20 to USD 4,000/mo; ~USD 4 per added client at higher volumes; no 'most popular' flagged) | per-client-count tiers | no (30-day free trial, no caps) | no (branded add-to-home-screen web app / PWA with coach's logo; no native app-store app, no white-label tier) | 2026-06-22
+
+Everfit | USD 19/mo (Pro, up to 5 clients); USD 16/mo billed annually | not listed (Pro and Studio priced by client-count slider; no 'most popular' tier flagged) | per-client-count tiers | yes (Starter Forever Free, up to 5 clients) | paid add-on / higher tier (custom branding on Pro and Studio; full white-label is Enterprise-only) | 2026-06-22
+
+Exercise.com | Quote-based, no public monthly price (third-party indicative USD 239/mo, not vendor-confirmed and 2023-rooted) | not listed | quote-based / custom (set by number of users and features; not one of the standard tier models) | not listed | included (custom-branded iOS+Android apps, flagship feature) | 2026-06-22
+
+FitBudd | USD 15/mo (Starter, up to 2 clients, +USD 4 per additional client) | USD 79/mo (Pro, up to 20 clients, +USD 2 per additional client); most popular | per-client-count tiers | no (30-day free trial, no credit card) | paid add-on / higher tier (branded in-app theming from Pro; fully white-label standalone own-listing app on Super Pro USD 149/mo + USD 75 one-time setup) | 2026-06-22
+
+FitSW | USD 19/mo (For Trainers, up to 5 clients, monthly billing); USD 16.66/mo billed annually | not cleanly listed (about USD 29/mo at 15 clients reported; higher client tiers via an interactive client-count selector). For Gyms tier USD 49.99/mo | per-client-count tiers | yes (genuinely free plan) | paid add-on (one-time custom app: Android USD 299, iOS USD 599, web USD 199, plus Apple USD 99/yr; requires a paid plan) | 2026-06-22
+
+Hevy Coach | USD 25/mo (1-10 clients) | USD 90/mo (26-50 clients); no 'most popular' flagged. Full ladder published up to USD 700/mo for 501-1,000 clients | per-client-count tiers | no (30-day free trial, no credit card; monthly only, no annual pricing) | no (no branded or white-label client app; clients use the standard consumer Hevy app) | 2026-06-22
+
+HubFit | USD 39/mo (Standard, up to 50 clients) | USD 69/mo (Premium, up to 100 clients); most popular | per-client-count tiers | no (14-day free trial) | paid add-on / higher tier (Custom Branding unlocks from Premium USD 69/mo; no standalone white-label app) | 2026-06-22
+
+Kahunas | USD 35/mo (Essentials, up to 25 clients) | USD 69/mo (Growth, up to 50 clients); no 'most popular' flagged | flat tiers | no (14-day free trial) | paid add-on / higher tier (branded iOS+Android app exclusive to Ultimate tier USD 99/mo, bundled, no separate fee) | 2026-06-22
+
+My PT Hub | EUR 25/mo (Starter, up to 3 clients, 50 workouts, 50 nutrition plans) | EUR 59/mo (Premium, unlimited clients/workouts/nutrition); no 'most popular' flagged | flat tiers | no (30-day free trial, no card required) | paid add-on (custom branded app EUR 95 one-time; full white-label app EUR 145/mo) | 2026-06-22
+
+Paperbell | USD 57/mo (single all-inclusive plan, unlimited clients, priced per coach) | not applicable (single all-inclusive plan; USD 570/yr billed annually, ~USD 47.50/mo) | flat tiers (single per-coach plan, not per-client) | yes, but disputed (a free entry exists; live mechanism framed as a free 7-day trial / free account, older sources describe a permanent 1-client free plan) | no (web-based client portal, not a branded native training app) | 2026-06-22
+
+Practice Better | USD 35/mo (Starter, up to 10 clients); USD 25/mo billed annually | USD 99/mo (Plus, unlimited clients + 3 admin licenses); labeled 'Recommended' | flat tiers | yes (Sprout Free, 3 clients, for students/new grads) | no (branded client portal on higher tiers; no standalone white-label native training app) | 2026-06-22
+
+PT Distinction | USD 19.90/mo

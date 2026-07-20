@@ -1,0 +1,20 @@
+Title: Sliced Invoices &#8211; WordPress Invoice Plugin
+URL: https://wordpress.org/plugins/sliced-invoices/
+Lane: incumbent
+Source-Class: directory
+Status: verified
+Observed: 2026-07-11
+Structured-Source: WordPress Plugin API
+
+Search niche: invoice reminder
+Name: Sliced Invoices &#8211; WordPress Invoice Plugin
+Slug: sliced-invoices
+Version: 3.10.0
+Last updated: 2025-12-12 6:37am GMT
+Active installs: 5000
+Rating: 92
+Ratings: 117
+Support threads: 1
+Resolved support threads: 1
+Short description: A WordPress invoicing plugin for creating invoices and quotes. Online payments, manage clients, reports, exports, taxes &amp; more.
+Description:  A flexible, well-supported, and easy-to-use WordPress invoicing plugin to create professional quotes and invoices that clients can pay for online. Sliced Invoices is an invoicing system that is easy to use but at the same time comes packed with features to help make your quoting and invoicing a breeze. Sliced Invoices &#8211; General Features Send Quotes and Invoices and get paid online Many customization options Lots of filters, actions and template tags Pre-defined line items Auto increment of Invoice &amp; Quote numbers Set custom Invoice &amp; Quote prefixes and/or suffixes Flexible tax settings (global, per Invoice/Quote or per line item) Customizable email templates including subject and content Custom email from name and email address Bcc yourself into all client emails Send clients emails at the click of a button Send clients automatic payment reminder emails Clone existing Quotes &amp; Invoices 3 customizable Invoice &amp; Quote templates Customize templates using CSS Add your logo and business details to Invoices &amp; Quotes Bulk CSV import of Quotes &amp; Invoices Support for WordPress Multisite (network activated) Invoices &#8211; Key Features Online Invoice payments with PayPal Express Checkout (or paid Stripe extension) Offline payment methods (Bank, check, money order or anything else) Name Invoices whatever you like (such as Bills, Tax Invoice or anything else) Set default due date (x number of days from Invoice date) Set custom Terms &amp; Conditions for Invoices Invoice reporting Export Invoices to CSV Invoice in any currency Quotes &#8211; Key Features Commenting system for Quotes Clients can accept or decline Quotes Convert Quotes to Invoices with one click Name Quotes whatever you like (such as Estimate or anything else) Set custom Terms &amp; Conditions for Quotes Quote reporting Export Quotes to CSV Quote in any currency Sliced Invoices is a feature-packed and flexible invoicing system for WordPress, check out how easy it is to add an invoice in this very quick 45 second video . Sliced Invoices &#8211; Free &amp; Paid Extensions PDF quotes &amp; PDF invoices extension Client Area extension Contact Form 7 extension (free) Formidable Forms extension (free) Gravity Forms extension (free) Authorize.Net Gateway Braintree Gateway Stripe Gateway Additional Tax extension (free) Better URL&#8217;s extension (free) Deposit Invoices extension Partial Payments extension Recurring Invoices extension Plus many more available here Our support is fantastic (check out the reviews ) and if you need a feature that you can&#8217;t see, just ask and we will see if we can add it for a future release. Visit our website to find out more Features | Getting Started | Extensions | Bundles | FAQ 

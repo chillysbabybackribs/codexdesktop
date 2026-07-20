@@ -32,20 +32,6 @@ For any path, distinguish the requested product depth before implementation. A v
 
 Ask at most three concise questions only when missing audience, product purpose, required content, or technical constraints would materially alter the result. Otherwise make reasonable assumptions and state them briefly.
 
-## Ambiguity triage and live reconnaissance
-
-Before committing to a visual direction, identify the decisions that the brief does and does not support. The material unknowns are: audience and their immediate need, category conventions, brand position, primary conversion action, real content/assets, and technical constraints.
-
-**Ask the user** about intent, taste, and business choices that cannot be learned elsewhere. Ask one to three high-leverage questions only when the answer would change the product story, information architecture, interaction model, or visual direction. Do not ask questions merely to defer progress, and do not ask the user for public facts that can be researched.
-
-**Research live examples** when the uncertainty is external: current category conventions, the language used by a real audience, credible interaction patterns, available assets, or contemporary references. Use the artifact-first web research and browser tools to inspect two to four relevant live sources. Inspect rendered pages rather than search snippets and extract only observable decisions: hierarchy, conversion strategy, media treatment, density, responsive behavior, and accessibility-relevant patterns.
-
-When a question is needed, start a provisional research pass from the facts already supplied while awaiting the answer. As soon as the user responds, actively refine the queries from their words, re-rank the examples, and discard anything that no longer fits. Search terms should combine the user's product, audience, desired or avoided qualities, conversion context, geography or price position when relevant, and intended medium. Do not lock a direction around examples gathered before an answer that materially changes the brief.
-
-Treat live research as evidence, not a moodboard. It must answer named design decisions, such as: how the category establishes trust or scarcity; which language users encounter; which conventions are useful or tired; and what real content constraints affect the surface. Never copy a source's distinctive brand, copy, layout, asset, or geometry. Do not browse undirected galleries or collect examples without a decision they are meant to inform.
-
-Before implementation, maintain a compact internal decision record: user-provided answers, live findings, remaining assumptions, and how each one affects the design. Share only the useful conclusion with the user unless they ask for the research notes.
-
 ## Phase 1: Understand the product
 
 Before designing, write a compact internal brief containing:
@@ -60,11 +46,9 @@ Before designing, write a compact internal brief containing:
 
 Inspect the existing project before changing it. Preserve its package manager, architecture, design tokens, routing, and unrelated user work. Identify the smallest set of files needed.
 
-Do not browse for undirected generic inspiration. For an ambiguous brief, use bounded live research to resolve real category, audience, content, and convention decisions before selecting a direction. Use external retrieval for factual assets, real products, real people, documented APIs, and this decision-oriented reconnaissance.
+Do not browse for generic inspiration. Use external retrieval only for factual assets, real products, real people, documented APIs, or when the user requests research.
 
 ### Calibrate to examples and taste
-
-Use the user's answers and live reconnaissance to choose the examples. A source is relevant only when it matches at least two of product category, audience, conversion context, editorial/media strategy, or stated desired/avoided qualities. Prefer live, currently rendered examples for category and interaction evidence; use the local example manifest as a bounded visual-calibration library.
 
 Before establishing directions, retrieve at most two relevant good examples and one paired counterexample from `examples/manifest.json`. Prefer product, audience, composition, and media-strategy matches over palette matches. Run `node scripts/select-examples.mjs "<product and desired visual direction>"` from this skill directory when the relevant examples are not obvious.
 

@@ -79,8 +79,6 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       workspace: valueOrFallback(params.meta?.workspace, params.workspace),
       modelReroutes: params.meta?.modelReroutes ?? []
     },
-    ...(params.meta?.browserDecision ? { browser: params.meta.browserDecision } : {}),
-    ...(params.meta?.agentRuns?.length ? { agents: { runs: params.meta.agentRuns } } : {}),
     usage: {
       turn: params.meta?.tokens?.turn ?? null,
       latestModelCall: params.meta?.tokens?.latestCall ?? null,
@@ -226,9 +224,7 @@ function goalTrace(
         (item.type === 'dynamicToolCall' ? item.success === false : item.error !== null)
       ).length,
       successfulResearchToolCount: structuredItems.filter((item) =>
-        item.type === 'dynamicToolCall' &&
-        (item.tool === 'research_web' || item.tool === 'browser_live_search') &&
-        isStructuredSuccess(item)
+        item.type === 'dynamicToolCall' && item.tool === 'research_web' && isStructuredSuccess(item)
       ).length,
       fileChangeCount
     }

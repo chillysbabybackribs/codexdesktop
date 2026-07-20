@@ -1,0 +1,1429 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44506835",
+    "window": "prior-year-comparable-90d",
+    "tag": "ask_hn",
+    "score": 202
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jrlee"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone who had a co-founder exit 3 years into our 8-year journey, here's my take: keeping your full 10% might actually hurt everyone involved, including you.<p>Think about it from the new investors' perspective. They see a former founder holding 10% who left because they didn't believe in the new direction. That's a red flag. They'll either demand you reduce it significantly or they might just pass on the deal entirely. I've seen this kill funding rounds.<p>More importantly, it can destroy motivation for the team staying behind. They're busting their ass on the pivot while someone who checked out still owns 10%? That breeds resentment fast.<p>My suggestion: voluntarily reduce your equity to something like 2-3%. Shows good faith, removes the investor concern, and keeps the team motivated. In exchange, ask for a reasonable cash package - especially if you've been working unpaid or below market for months. That's just settling up what's owed, not &quot;taking money from the company.&quot;<p>When my co-founder left, he went from 26% to 3%. Seemed harsh at the time, but it let us move forward clean. We raised our next round 3 months later partly because investors saw we handled the transition professionally.<p>The cash part really depends on your financial sacrifice. If you've been unpaid for 6 months while getting the company to this point, then yeah, getting compensated for that makes sense. It's not about &quot;exit package&quot; - it's about getting paid for work already done."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jrlee",
+          "story_44506835"
+        ],
+        "author": "jrlee",
+        "comment_text": "As someone who had a co-founder exit 3 years into our 8-year journey, here&#x27;s my take: keeping your full 10% might actually hurt everyone involved, including you.<p>Think about it from the new investors&#x27; perspective. They see a former founder holding 10% who left because they didn&#x27;t believe in the new direction. That&#x27;s a red flag. They&#x27;ll either demand you reduce it significantly or they might just pass on the deal entirely. I&#x27;ve seen this kill funding rounds.<p>More importantly, it can destroy motivation for the team staying behind. They&#x27;re busting their ass on the pivot while someone who checked out still owns 10%? That breeds resentment fast.<p>My suggestion: voluntarily reduce your equity to something like 2-3%. Shows good faith, removes the investor concern, and keeps the team motivated. In exchange, ask for a reasonable cash package - especially if you&#x27;ve been working unpaid or below market for months. That&#x27;s just settling up what&#x27;s owed, not &quot;taking money from the company.&quot;<p>When my co-founder left, he went from 26% to 3%. Seemed harsh at the time, but it let us move forward clean. We raised our next round 3 months later partly because investors saw we handled the transition professionally.<p>The cash part really depends on your financial sacrifice. If you&#x27;ve been unpaid for 6 months while getting the company to this point, then yeah, getting compensated for that makes sense. It&#x27;s not about &quot;exit package&quot; - it&#x27;s about getting paid for work already done.",
+        "created_at": "2025-07-13T17:22:53Z",
+        "created_at_i": 1752427373,
+        "objectID": "44551945",
+        "parent_id": 44506835,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2026-06-12T22:36:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vessenes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Actually they do it all the time - asking to ‘top up’ employee stock option pools before a round is closed, keeping exec salaries low, or cutting them when the company is running low on money - these are all forms of founder capital contribution that are not compensated. I’m not saying they’re not market, or even that they’re a bad idea. But, consider an exec who could make $300k base plus ISOs at a public company going from $170k to $100k for lean times — what would raising that 70k cost the company in stock? A fully level capital stock playing field would see the 70k investment from the founder independently priced in a fair round and deliver preferred stock. I’m unaware of this ever happening in my last 25 years of startup and venture experience."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vessenes",
+          "story_44506835"
+        ],
+        "author": "vessenes",
+        "comment_text": "Actually they do it all the time - asking to ‘top up’ employee stock option pools before a round is closed, keeping exec salaries low, or cutting them when the company is running low on money - these are all forms of founder capital contribution that are not compensated. I’m not saying they’re not market, or even that they’re a bad idea. But, consider an exec who could make $300k base plus ISOs at a public company going from $170k to $100k for lean times — what would raising that 70k cost the company in stock? A fully level capital stock playing field would see the 70k investment from the founder independently priced in a fair round and deliver preferred stock. I’m unaware of this ever happening in my last 25 years of startup and venture experience.",
+        "created_at": "2025-07-13T12:32:59Z",
+        "created_at_i": 1752409979,
+        "objectID": "44549944",
+        "parent_id": 44532775,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-13T12:34:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zanone"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not sure they need to do anything. Maybe in the interest of smooth sailing, and closing things off, then the board might be motivated to reach a mutually acceptable conclusion. Whether this be a little buyout, an advisor tie-in, etc, completely depends. Situations like this is why founders create equity agreements."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zanone",
+          "story_44506835"
+        ],
+        "author": "zanone",
+        "comment_text": "Not sure they need to do anything. Maybe in the interest of smooth sailing, and closing things off, then the board might be motivated to reach a mutually acceptable conclusion. Whether this be a little buyout, an advisor tie-in, etc, completely depends. Situations like this is why founders create equity agreements.",
+        "created_at": "2025-07-12T20:19:41Z",
+        "created_at_i": 1752351581,
+        "objectID": "44544814",
+        "parent_id": 44537785,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T20:24:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have no idea who you are and there's nothing personal about any of this, but I am concerned that people are going to read this and come away with the idea that departing founders with board seats generally sell them, and when they try that, everybody is going to look at them like they're both naive and irrational --- exactly what the original poster said they were trying to avoid."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "comment_text": "I have no idea who you are and there&#x27;s nothing personal about any of this, but I am concerned that people are going to read this and come away with the idea that departing founders with board seats generally sell them, and when they try that, everybody is going to look at them like they&#x27;re both naive and irrational --- exactly what the original poster said they were trying to avoid.",
+        "created_at": "2025-07-12T19:37:03Z",
+        "created_at_i": 1752349023,
+        "objectID": "44544506",
+        "parent_id": 44537694,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T23:35:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaway-xx"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "is it tho? like i agree if i just took the equity. but if i own a ton of equity and the board wants to clean up the cap table, don't they still need to deal with me by offering me a fair number instead of &quot;just moving own&quot;?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwaway-xx",
+          "story_44506835"
+        ],
+        "author": "throwaway-xx",
+        "children": [
+          44544814
+        ],
+        "comment_text": "is it tho? like i agree if i just took the equity. but if i own a ton of equity and the board wants to clean up the cap table, don&#x27;t they still need to deal with me by offering me a fair number instead of &quot;just moving own&quot;?",
+        "created_at": "2025-07-11T23:17:54Z",
+        "created_at_i": 1752275874,
+        "objectID": "44537785",
+        "parent_id": 44537149,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T20:20:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwpoaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're simply wrong, I have done deals like this. You are clearly quite upset about something, and are not providing a clear argument -- relying instead on personal attacks and &quot;no true Scotsman&quot; goal post shifting.<p>Good luck to you, all the best!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwpoaster",
+          "story_44506835"
+        ],
+        "author": "throwpoaster",
+        "children": [
+          44544506
+        ],
+        "comment_text": "You&#x27;re simply wrong, I have done deals like this. You are clearly quite upset about something, and are not providing a clear argument -- relying instead on personal attacks and &quot;no true Scotsman&quot; goal post shifting.<p>Good luck to you, all the best!",
+        "created_at": "2025-07-11T23:05:02Z",
+        "created_at_i": 1752275102,
+        "objectID": "44537694",
+        "parent_id": 44532764,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T19:37:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zanone"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Have been in that situation. If you leave, you're done. It's up to the other co-founders if they want to throw you a bone to keep a relationship in place. The leaver is dead to the board and the investors. It's your business now, move on."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zanone",
+          "story_44506835"
+        ],
+        "author": "zanone",
+        "children": [
+          44537785
+        ],
+        "comment_text": "Have been in that situation. If you leave, you&#x27;re done. It&#x27;s up to the other co-founders if they want to throw you a bone to keep a relationship in place. The leaver is dead to the board and the investors. It&#x27;s your business now, move on.",
+        "created_at": "2025-07-11T21:54:58Z",
+        "created_at_i": 1752270898,
+        "objectID": "44537149",
+        "parent_id": 44506835,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2026-06-12T22:39:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Isn’t the 409a valuation FMV? I thought that the whole point of the 409a valuation  was to find FMV? Do you mean par value?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "comment_text": "Isn’t the 409a valuation FMV? I thought that the whole point of the 409a valuation  was to find FMV? Do you mean par value?",
+        "created_at": "2025-07-11T19:08:17Z",
+        "created_at_i": 1752260897,
+        "objectID": "44535848",
+        "parent_id": 44525720,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T19:18:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "agcat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, so i had another cofounder join in, with the previous cofounder exit, so first we sold the shares to the new cofounder at FMV and the company returned the sweat equity to him at FMV. Honestly, the best thing is to get a lawyer who has done these transactions before and once you have amicably communicated let the lawyer take this up, it will drain your energy otherwise."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_agcat",
+          "story_44506835"
+        ],
+        "author": "agcat",
+        "comment_text": "Yes, so i had another cofounder join in, with the previous cofounder exit, so first we sold the shares to the new cofounder at FMV and the company returned the sweat equity to him at FMV. Honestly, the best thing is to get a lawyer who has done these transactions before and once you have amicably communicated let the lawyer take this up, it will drain your energy otherwise.",
+        "created_at": "2025-07-11T18:57:26Z",
+        "created_at_i": 1752260246,
+        "objectID": "44535745",
+        "parent_id": 44525720,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T18:58:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We're talking about arrangements between founders, not arrangements between operators and investors. Investors don't ask you to put up cash; that is literally the opposite of what they do."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44549944
+        ],
+        "comment_text": "We&#x27;re talking about arrangements between founders, not arrangements between operators and investors. Investors don&#x27;t ask you to put up cash; that is literally the opposite of what they do.",
+        "created_at": "2025-07-11T14:49:38Z",
+        "created_at_i": 1752245378,
+        "objectID": "44532775",
+        "parent_id": 44532160,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-13T12:34:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A startup that <i>has</i> a board is a company you can't sell a board seat at. This is past silly. Despite what you wrote earlier, &quot;holding on to and selling&quot; board seats is not a thing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44537694
+        ],
+        "comment_text": "A startup that <i>has</i> a board is a company you can&#x27;t sell a board seat at. This is past silly. Despite what you wrote earlier, &quot;holding on to and selling&quot; board seats is not a thing.",
+        "created_at": "2025-07-11T14:48:43Z",
+        "created_at_i": 1752245323,
+        "objectID": "44532764",
+        "parent_id": 44529298,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T23:05:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vessenes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm 100% the opposite. It's wrong for one group to expect preferred stock for their capital contributions, while they ask the usually less experienced CEO to make a tacit capital contribution (lower than market salary) and then on top to ask them to put cash in that won't be given the same terms -- nah.<p>Now, if the founder capital went in pre-round, and a round was raised, I'm with you -- that's fine - and between the founders at that point; they got paid in equity valuation. But otherwise; nope."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vessenes",
+          "story_44506835"
+        ],
+        "author": "vessenes",
+        "children": [
+          44532775
+        ],
+        "comment_text": "I&#x27;m 100% the opposite. It&#x27;s wrong for one group to expect preferred stock for their capital contributions, while they ask the usually less experienced CEO to make a tacit capital contribution (lower than market salary) and then on top to ask them to put cash in that won&#x27;t be given the same terms -- nah.<p>Now, if the founder capital went in pre-round, and a round was raised, I&#x27;m with you -- that&#x27;s fine - and between the founders at that point; they got paid in equity valuation. But otherwise; nope.",
+        "created_at": "2025-07-11T13:52:41Z",
+        "created_at_i": 1752241961,
+        "objectID": "44532160",
+        "parent_id": 44527467,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-15T14:32:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwpoaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;  'Selling your board seat' really means engineering a complex deal that requires a bunch of other people to sign off.<p>The company is at (pre-)seed, so the next round is this exactly: they're probably rewriting the shareholder agreement, for example.<p>I wouldn't call it more &quot;complex&quot; any other round."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwpoaster",
+          "story_44506835"
+        ],
+        "author": "throwpoaster",
+        "children": [
+          44532764
+        ],
+        "comment_text": "&gt;  &#x27;Selling your board seat&#x27; really means engineering a complex deal that requires a bunch of other people to sign off.<p>The company is at (pre-)seed, so the next round is this exactly: they&#x27;re probably rewriting the shareholder agreement, for example.<p>I wouldn&#x27;t call it more &quot;complex&quot; any other round.",
+        "created_at": "2025-07-11T07:30:12Z",
+        "created_at_i": 1752219012,
+        "objectID": "44529298",
+        "parent_id": 44527899,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T14:49:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "apparent"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Suing would only make sense if the dollar value is very high."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_apparent",
+          "story_44506835"
+        ],
+        "author": "apparent",
+        "comment_text": "Suing would only make sense if the dollar value is very high.",
+        "created_at": "2025-07-11T05:49:19Z",
+        "created_at_i": 1752212959,
+        "objectID": "44528751",
+        "parent_id": 44527443,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-13T23:26:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "By all means pay $1300 to hear &quot;walk away with your vested shares&quot;."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "comment_text": "By all means pay $1300 to hear &quot;walk away with your vested shares&quot;.",
+        "created_at": "2025-07-11T03:19:40Z",
+        "created_at_i": 1752203980,
+        "objectID": "44528117",
+        "parent_id": 44528087,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T04:39:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "moomoo11"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "talk to your lawyer, imo."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_moomoo11",
+          "story_44506835"
+        ],
+        "author": "moomoo11",
+        "children": [
+          44528117
+        ],
+        "comment_text": "talk to your lawyer, imo.",
+        "created_at": "2025-07-11T03:11:40Z",
+        "created_at_i": 1752203500,
+        "objectID": "44528087",
+        "parent_id": 44506835,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T03:20:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ldjkfkdsjnv"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It happens all the time, I have seen it in NYC. Usually its an early stage thing, cofounder leaves after 1 year etc. Much harder to do with a complicated cap table. Investors I could name even suggest it"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ldjkfkdsjnv",
+          "story_44506835"
+        ],
+        "author": "ldjkfkdsjnv",
+        "comment_text": "It happens all the time, I have seen it in NYC. Usually its an early stage thing, cofounder leaves after 1 year etc. Much harder to do with a complicated cap table. Investors I could name even suggest it",
+        "created_at": "2025-07-11T03:05:37Z",
+        "created_at_i": 1752203137,
+        "objectID": "44528058",
+        "parent_id": 44527443,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T10:14:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "None of this has anything to do with anything. In the immortal words of William Munny, &quot;deserve's got nothing to do with it&quot;. Any properly papered company has a legal structure based on 20+ years of SFBA lawyers predicting that founders are going to leave their companies, which will need to remain going concerns for any startup ever to be investable.<p>If you're an exiting founder in an LLC without an operating agreement, you can kill the company. Otherwise: you leave with whatever you vested. That's really all there is to the discussion, for now!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "comment_text": "None of this has anything to do with anything. In the immortal words of William Munny, &quot;deserve&#x27;s got nothing to do with it&quot;. Any properly papered company has a legal structure based on 20+ years of SFBA lawyers predicting that founders are going to leave their companies, which will need to remain going concerns for any startup ever to be investable.<p>If you&#x27;re an exiting founder in an LLC without an operating agreement, you can kill the company. Otherwise: you leave with whatever you vested. That&#x27;s really all there is to the discussion, for now!",
+        "created_at": "2025-07-11T02:51:14Z",
+        "created_at_i": 1752202274,
+        "objectID": "44527999",
+        "parent_id": 44527429,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:53:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The problem we have in all these threads is that sometimes people just say stuff, because it sounds interesting or it's fun to fantasize about, and it's hard to tell that stuff apart from actual advice.<p>This person probably doesn't even <i>have</i> a board seat, but either way: you're not selling a board seat."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "comment_text": "The problem we have in all these threads is that sometimes people just say stuff, because it sounds interesting or it&#x27;s fun to fantasize about, and it&#x27;s hard to tell that stuff apart from actual advice.<p>This person probably doesn&#x27;t even <i>have</i> a board seat, but either way: you&#x27;re not selling a board seat.",
+        "created_at": "2025-07-11T02:42:41Z",
+        "created_at_i": 1752201761,
+        "objectID": "44527959",
+        "parent_id": 44527899,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:35:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FreakLegion"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As a hypothetical, kind of? But not really. The board is written into the company's bylaws, as a rule, and requires a board vote to change. 'Selling your board seat' really means engineering a complex deal that requires a bunch of other people to sign off.<p>The same is true of selling your equity, by the way. As a founder you have common shares, but early-stage investors want preferred shares with QSBS treatment. Even if you're allowed to sell your shares, which most startups don't let you do, it's not in your power to convert them to preferred or give the buyer QSBS treatment."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_FreakLegion",
+          "story_44506835"
+        ],
+        "author": "FreakLegion",
+        "children": [
+          44527959,
+          44529298
+        ],
+        "comment_text": "As a hypothetical, kind of? But not really. The board is written into the company&#x27;s bylaws, as a rule, and requires a board vote to change. &#x27;Selling your board seat&#x27; really means engineering a complex deal that requires a bunch of other people to sign off.<p>The same is true of selling your equity, by the way. As a founder you have common shares, but early-stage investors want preferred shares with QSBS treatment. Even if you&#x27;re allowed to sell your shares, which most startups don&#x27;t let you do, it&#x27;s not in your power to convert them to preferred or give the buyer QSBS treatment.",
+        "created_at": "2025-07-11T02:30:01Z",
+        "created_at_i": 1752201001,
+        "objectID": "44527899",
+        "parent_id": 44527658,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-17T11:08:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don't have recourse to force a sale, buyout, or wind-down of the company."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "comment_text": "You don&#x27;t have recourse to force a sale, buyout, or wind-down of the company.",
+        "created_at": "2025-07-11T02:29:50Z",
+        "created_at_i": 1752200990,
+        "objectID": "44527897",
+        "parent_id": 44527848,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:34:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don’t keep the shares?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "children": [
+          44527897
+        ],
+        "comment_text": "You don’t keep the shares?",
+        "created_at": "2025-07-11T02:19:33Z",
+        "created_at_i": 1752200373,
+        "objectID": "44527848",
+        "parent_id": 44527786,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:30:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No, you don't."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527848
+        ],
+        "comment_text": "No, you don&#x27;t.",
+        "created_at": "2025-07-11T02:08:16Z",
+        "created_at_i": 1752199696,
+        "objectID": "44527786",
+        "parent_id": 44527675,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:34:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FreakLegion"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The exact details are unclear from the original post, but he definitely isn't giving up 40%. If they've only raised the pre-seed (a reasonable inference given the low valuation), then 10% ownership after 18 months points to two co-founders and a combined investor and option pool dilution of 20%. Anything is possible, of course, but unless the deal terms were very non-standard, this scenario makes the most sense.<p>You're right that 10% isn't necessarily a huge deal for investors, though. Early-round investor models target a specific ownership stake, and the company has to issue the same number of shares for that no matter what the composition of existing shareholders is.<p>The challenge with founders leaving is more psychological, like an early engineer who's vested a quarter of their 1% grant realizing that they still have to work hard for three years just to get a tenth of what the guy leaving already has. That's an easy way to suffocate the remaining team's motivation. Potential investors will (and should) look into it, but most of the time it's fine."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_FreakLegion",
+          "story_44506835"
+        ],
+        "author": "FreakLegion",
+        "comment_text": "The exact details are unclear from the original post, but he definitely isn&#x27;t giving up 40%. If they&#x27;ve only raised the pre-seed (a reasonable inference given the low valuation), then 10% ownership after 18 months points to two co-founders and a combined investor and option pool dilution of 20%. Anything is possible, of course, but unless the deal terms were very non-standard, this scenario makes the most sense.<p>You&#x27;re right that 10% isn&#x27;t necessarily a huge deal for investors, though. Early-round investor models target a specific ownership stake, and the company has to issue the same number of shares for that no matter what the composition of existing shareholders is.<p>The challenge with founders leaving is more psychological, like an early engineer who&#x27;s vested a quarter of their 1% grant realizing that they still have to work hard for three years just to get a tenth of what the guy leaving already has. That&#x27;s an easy way to suffocate the remaining team&#x27;s motivation. Potential investors will (and should) look into it, but most of the time it&#x27;s fine.",
+        "created_at": "2025-07-11T01:56:16Z",
+        "created_at_i": 1752198976,
+        "objectID": "44527709",
+        "parent_id": 44527407,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:01:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sorry, you’re right. There should be a third option<p>3) You keep the shares and hope for the best outcome. (If they don’t want you to then go back to 1 or 2)z"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "children": [
+          44527786
+        ],
+        "comment_text": "Sorry, you’re right. There should be a third option<p>3) You keep the shares and hope for the best outcome. (If they don’t want you to then go back to 1 or 2)z",
+        "created_at": "2025-07-11T01:49:07Z",
+        "created_at_i": 1752198547,
+        "objectID": "44527675",
+        "parent_id": 44527641,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:08:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwpoaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Depends on why you have the board seat."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwpoaster",
+          "story_44506835"
+        ],
+        "author": "throwpoaster",
+        "children": [
+          44527899
+        ],
+        "comment_text": "Depends on why you have the board seat.",
+        "created_at": "2025-07-11T01:45:47Z",
+        "created_at_i": 1752198347,
+        "objectID": "44527658",
+        "parent_id": 44527555,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T00:05:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kfajdsl"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Attracting investors is hard, but it's still the easiest part of building a company. If the company pivots, then it's pretty likely that the vast majority of the previous work no longer has any (monetary) value."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kfajdsl",
+          "story_44506835"
+        ],
+        "author": "kfajdsl",
+        "comment_text": "Attracting investors is hard, but it&#x27;s still the easiest part of building a company. If the company pivots, then it&#x27;s pretty likely that the vast majority of the previous work no longer has any (monetary) value.",
+        "created_at": "2025-07-11T01:43:51Z",
+        "created_at_i": 1752198231,
+        "objectID": "44527645",
+        "parent_id": 44527429,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T01:45:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What? No. A departing founder doesn't necessitate either a buyout or an immediate sale. This happens <i>all the time</i>."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527675
+        ],
+        "comment_text": "What? No. A departing founder doesn&#x27;t necessitate either a buyout or an immediate sale. This happens <i>all the time</i>.",
+        "created_at": "2025-07-11T01:43:00Z",
+        "created_at_i": 1752198180,
+        "objectID": "44527641",
+        "parent_id": 44527606,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:37:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ahhh yes same thing"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "comment_text": "Ahhh yes same thing",
+        "created_at": "2025-07-11T01:38:09Z",
+        "created_at_i": 1752197889,
+        "objectID": "44527617",
+        "parent_id": 44527594,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T01:40:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My two cents…<p>1) They buyout the shares. If they don’t want to do that then…<p>2) Sell the company.<p>If either of these can’t happen the company is dead and everyone parts ways. It’s as simple as that. No free rides here."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "children": [
+          44527641
+        ],
+        "comment_text": "My two cents…<p>1) They buyout the shares. If they don’t want to do that then…<p>2) Sell the company.<p>If either of these can’t happen the company is dead and everyone parts ways. It’s as simple as that. No free rides here.",
+        "created_at": "2025-07-11T01:36:07Z",
+        "created_at_i": 1752197767,
+        "objectID": "44527606",
+        "parent_id": 44506835,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:00:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think we're saying the same thing --- that none of this matters, just walk away with the vested shares and be a friend to the company. Diluting his founder shares in subsequent rounds is going to be a nonevent, and diluting him to zero in an acquisition --- unless it's a seller's market or a bidding war --- may be as well. It's just not worth worrying about; I think the only real question here might be &quot;do I take a buyout if offered&quot;, and this person is nowhere near that yet."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527617
+        ],
+        "comment_text": "I think we&#x27;re saying the same thing --- that none of this matters, just walk away with the vested shares and be a friend to the company. Diluting his founder shares in subsequent rounds is going to be a nonevent, and diluting him to zero in an acquisition --- unless it&#x27;s a seller&#x27;s market or a bidding war --- may be as well. It&#x27;s just not worth worrying about; I think the only real question here might be &quot;do I take a buyout if offered&quot;, and this person is nowhere near that yet.",
+        "created_at": "2025-07-11T01:34:52Z",
+        "created_at_i": 1752197692,
+        "objectID": "44527594",
+        "parent_id": 44527579,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:36:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a joke right? Seed investors will get 10-30% of a company for under a million dollars which will be blown through in less than a year. That’s means they’re a drag on the cap table right?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "comment_text": "This is a joke right? Seed investors will get 10-30% of a company for under a million dollars which will be blown through in less than a year. That’s means they’re a drag on the cap table right?",
+        "created_at": "2025-07-11T01:33:40Z",
+        "created_at_i": 1752197620,
+        "objectID": "44527588",
+        "parent_id": 44527177,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:24:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "takklz"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The juice has to be worth the squeeze. No sense in fighting against fiduciary duty, minority shareholder oppression, etc., etc. unless there is some sort of value there. This usually means a successful exit before taking action."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_takklz",
+          "story_44506835"
+        ],
+        "author": "takklz",
+        "children": [
+          44527594
+        ],
+        "comment_text": "The juice has to be worth the squeeze. No sense in fighting against fiduciary duty, minority shareholder oppression, etc., etc. unless there is some sort of value there. This usually means a successful exit before taking action.",
+        "created_at": "2025-07-11T01:31:28Z",
+        "created_at_i": 1752197488,
+        "objectID": "44527579",
+        "parent_id": 44527475,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T14:12:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "etothepii"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you have PMF, everyone staying behind is taking full market salaries and your valuation is based on a priced round then you should likely keep all your vested equity undiluted.<p>However, I assume that, as a pivot implies, you are pre-product market fit. In which case here are some questions to consider.<p>What is the value of the company after the pivot? How much of what was done pre-pivot has any relevance to the post-pivot company?<p>Is the startup valued at $20m or do you have SAFEs with a $20m cap? If the company is _worth_ $20m that means you've probably had a priced round and someone would likely pay $2m for your vested equity. Is that correct? Sell to them with a substantial, say ~50%, liquidity preference that goes to the Company (likely the Board's approval is required for a share transfer).<p>In large part the purpose of the SAFE is to avoid valuing the company. What valuation did you put on your 409A? Are you equating your &quot;given a win-state valuation&quot; (the cap) with your actual valuation (409A).<p>There is a Michael Seibel video where he talks about founder equity. In it he suggests that you should give back a lot of equity if pre product market fit as this will actually maximize your total return.<p>Remember if you raised $2m at $20m cap but have spent $1m your remaining co-founder is essentially taking $1m at $5m cap if compared to starting again (since they still have to hand over 10% to the investors and now they have to hand over 10% to you too but you spent $1m so they are giving up 20% for $1m).<p>Would it be more sensible for your co-founders to start a new company and offer the investors a substantial chunk or all of their remaining money back or to come with? Did they invest in them, you or both of you? In a liquidation how much would you get?<p>I would suggest that you should look to offer at least 90% of your vested equity to not have the remaining equity diluted. A good rule of thumb here would be what could you sell the company for today with no one staying (more than the a few months for minimal hand over) and divide the amount you raised by this number and this is the dilution you should be looking for."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_etothepii",
+          "story_44506835"
+        ],
+        "author": "etothepii",
+        "comment_text": "If you have PMF, everyone staying behind is taking full market salaries and your valuation is based on a priced round then you should likely keep all your vested equity undiluted.<p>However, I assume that, as a pivot implies, you are pre-product market fit. In which case here are some questions to consider.<p>What is the value of the company after the pivot? How much of what was done pre-pivot has any relevance to the post-pivot company?<p>Is the startup valued at $20m or do you have SAFEs with a $20m cap? If the company is _worth_ $20m that means you&#x27;ve probably had a priced round and someone would likely pay $2m for your vested equity. Is that correct? Sell to them with a substantial, say ~50%, liquidity preference that goes to the Company (likely the Board&#x27;s approval is required for a share transfer).<p>In large part the purpose of the SAFE is to avoid valuing the company. What valuation did you put on your 409A? Are you equating your &quot;given a win-state valuation&quot; (the cap) with your actual valuation (409A).<p>There is a Michael Seibel video where he talks about founder equity. In it he suggests that you should give back a lot of equity if pre product market fit as this will actually maximize your total return.<p>Remember if you raised $2m at $20m cap but have spent $1m your remaining co-founder is essentially taking $1m at $5m cap if compared to starting again (since they still have to hand over 10% to the investors and now they have to hand over 10% to you too but you spent $1m so they are giving up 20% for $1m).<p>Would it be more sensible for your co-founders to start a new company and offer the investors a substantial chunk or all of their remaining money back or to come with? Did they invest in them, you or both of you? In a liquidation how much would you get?<p>I would suggest that you should look to offer at least 90% of your vested equity to not have the remaining equity diluted. A good rule of thumb here would be what could you sell the company for today with no one staying (more than the a few months for minimal hand over) and divide the amount you raised by this number and this is the dilution you should be looking for.",
+        "created_at": "2025-07-11T01:28:33Z",
+        "created_at_i": 1752197313,
+        "objectID": "44527561",
+        "parent_id": 44506835,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T02:02:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This person isn't an investor, but even an investor can't sell their board seat. This is getting silly. &quot;Hold on to your founder board seat and sell it later&quot; is not real advice."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527658
+        ],
+        "comment_text": "This person isn&#x27;t an investor, but even an investor can&#x27;t sell their board seat. This is getting silly. &quot;Hold on to your founder board seat and sell it later&quot; is not real advice.",
+        "created_at": "2025-07-11T01:27:15Z",
+        "created_at_i": 1752197235,
+        "objectID": "44527555",
+        "parent_id": 44527545,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:35:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwpoaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;Yes, I'll put another hundred grand into the company, but I want a pref issue with an attached board seat.&quot;"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwpoaster",
+          "story_44506835"
+        ],
+        "author": "throwpoaster",
+        "children": [
+          44527555
+        ],
+        "comment_text": "&quot;Yes, I&#x27;ll put another hundred grand into the company, but I want a pref issue with an attached board seat.&quot;",
+        "created_at": "2025-07-11T01:25:35Z",
+        "created_at_i": 1752197135,
+        "objectID": "44527545",
+        "parent_id": 44527531,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:38:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No it doesn't. It's very difficult to imagine a plausible circumstance where you have a company that took significant investment where you could hold a board seat that the board could not eject you from after you left the company. You can't sell a board seat."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527545
+        ],
+        "comment_text": "No it doesn&#x27;t. It&#x27;s very difficult to imagine a plausible circumstance where you have a company that took significant investment where you could hold a board seat that the board could not eject you from after you left the company. You can&#x27;t sell a board seat.",
+        "created_at": "2025-07-11T01:23:17Z",
+        "created_at_i": 1752196997,
+        "objectID": "44527531",
+        "parent_id": 44527507,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:35:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwpoaster"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Depends on why you have the board seat."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwpoaster",
+          "story_44506835"
+        ],
+        "author": "throwpoaster",
+        "children": [
+          44527531
+        ],
+        "comment_text": "Depends on why you have the board seat.",
+        "created_at": "2025-07-11T01:18:56Z",
+        "created_at_i": 1752196736,
+        "objectID": "44527507",
+        "parent_id": 44527487,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-12T00:05:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're not going to sell a board seat. Not how it works. You probably can't even sell the shares!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527507
+        ],
+        "comment_text": "You&#x27;re not going to sell a board seat. Not how it works. You probably can&#x27;t even sell the shares!",
+        "created_at": "2025-07-11T01:15:13Z",
+        "created_at_i": 1752196513,
+        "objectID": "44527487",
+        "parent_id": 44527350,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:35:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tptacek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "At a normally-papered startup? Yes. No."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Co-founder exiting after pivot – what's a fair exit package?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tptacek",
+          "story_44506835"
+        ],
+        "author": "tptacek",
+        "children": [
+          44527579
+        ],
+        "comment_text": "At a normally-papered startup? Yes. No.",
+        "created_at": "2025-07-11T01:13:12Z",
+        "created_at_i": 1752196392,
+        "objectID": "44527475",
+        "parent_id": 44527443,
+        "story_id": 44506835,
+        "story_title": "Co-founder exiting after pivot – what's a fair exit package?",
+        "updated_at": "2025-07-11T13:35:55Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 79,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44506835&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

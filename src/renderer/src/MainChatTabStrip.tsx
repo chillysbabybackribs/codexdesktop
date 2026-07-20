@@ -1,5 +1,4 @@
 import { type PointerEvent, useEffect, useRef, useState } from 'react';
-import { MessageSquare, Plus, X } from 'lucide-react';
 import type { Thread } from '../../shared/session-protocol';
 import {
   findMainChatTabDropTarget,
@@ -8,7 +7,6 @@ import {
 } from './main-chat-tabs';
 import { splitDropZoneAt, type SplitDropZone } from './chat-split';
 import { ThreadMenu } from './ThreadMenu';
-import { IconButton } from './UiPrimitives';
 
 export function MainChatTabStrip({
   idPrefix,
@@ -28,8 +26,6 @@ export function MainChatTabStrip({
   isBrowserMiddle,
   onToggleBrowserMiddle,
   onOpenSettings,
-  canOpenTrace,
-  onOpenTrace,
   title,
   threads,
   activeThreadId,
@@ -56,8 +52,6 @@ export function MainChatTabStrip({
   isBrowserMiddle: boolean;
   onToggleBrowserMiddle: () => void;
   onOpenSettings: () => void;
-  canOpenTrace: boolean;
-  onOpenTrace: () => void;
   title: string;
   threads: Thread[];
   activeThreadId: string | null;
@@ -317,22 +311,22 @@ export function MainChatTabStrip({
                   <span className="main-chat-tab-attention" aria-label="Awaiting your attention" />
                 ) : null}
               </button>
-              <IconButton
+              <button
+                type="button"
                 className="main-chat-tab-close"
-                label={
+                aria-label={
                   tab.status === 'working' ? `${tab.title} is running` : `Close ${tab.title}`
                 }
-                tooltip={
+                title={
                   tab.status === 'working'
                     ? 'Stop this chat before closing it'
-                    : 'Close chat'
+                    : 'Close chat (Ctrl+W)'
                 }
-                shortcut={tab.status === 'working' ? undefined : 'Ctrl+W'}
                 disabled={disabled || tab.status === 'working'}
                 onClick={() => void onClose(tab.key)}
               >
-                <X aria-hidden="true" />
-              </IconButton>
+                <span aria-hidden="true">×</span>
+              </button>
             </div>
           );
         })}
@@ -353,21 +347,20 @@ export function MainChatTabStrip({
           <span className="main-chat-tab-drag-preview-close">×</span>
         </div>
       ) : null}
-      <IconButton
+      <button
+        type="button"
         className="main-chat-tab-action main-chat-tab-new"
-        label={tabs.length >= maxMainChatTabs ? 'Chat tab limit reached' : 'New chat tab'}
-        tooltip={
+        aria-label={tabs.length >= maxMainChatTabs ? 'Chat tab limit reached' : 'New chat tab'}
+        title={
           tabs.length >= maxMainChatTabs
             ? `Up to ${maxMainChatTabs} chats can stay open`
-            : 'New chat tab'
+            : 'New chat tab (Ctrl+T)'
         }
-        shortcut={tabs.length >= maxMainChatTabs ? undefined : 'Ctrl+T'}
-        side="bottom"
         disabled={disabled || tabs.length >= maxMainChatTabs}
         onClick={onNew}
       >
-        <Plus aria-hidden="true" />
-      </IconButton>
+        <span aria-hidden="true">+</span>
+      </button>
       <div className="main-chat-tabbar-spacer" />
       <ThreadMenu
         placement="tabbar"
@@ -380,11 +373,9 @@ export function MainChatTabStrip({
         disabled={disabled}
         isBrowserMiddle={isBrowserMiddle}
         canSplitActivePane={canSplitActivePane}
-        canOpenTrace={canOpenTrace}
         showGlobalActions={showGlobalActions}
         onToggleBrowserMiddle={onToggleBrowserMiddle}
         onSplitActivePane={onSplitActivePane}
-        onOpenTrace={onOpenTrace}
         onOpenSettings={onOpenSettings}
         onResumeThread={onResumeThread}
         onLoadMoreThreads={onLoadMoreThreads}
@@ -394,5 +385,9 @@ export function MainChatTabStrip({
 }
 
 function MainChatGlyph(): React.JSX.Element {
-  return <MessageSquare className="main-chat-tab-glyph" strokeWidth={1.6} aria-hidden="true" />;
+  return (
+    <svg className="main-chat-tab-glyph" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4 4.75A1.75 1.75 0 0 1 5.75 3h4.5A1.75 1.75 0 0 1 12 4.75v3.5A1.75 1.75 0 0 1 10.25 10H7l-2.4 2v-2.15A1.75 1.75 0 0 1 4 8.5V4.75Z" />
+    </svg>
+  );
 }

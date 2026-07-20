@@ -1,0 +1,588 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "44528693",
+    "window": "prior-year-comparable-90d",
+    "tag": "ask_hn",
+    "score": 36
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "an_aparallel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Revit houses in medium sized firms are difficult nut to crack. Im sure tier ones have in housr swe's working on making revit less cumbersome."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_an_aparallel",
+          "story_44528693"
+        ],
+        "author": "an_aparallel",
+        "comment_text": "Revit houses in medium sized firms are difficult nut to crack. Im sure tier ones have in housr swe&#x27;s working on making revit less cumbersome.",
+        "created_at": "2025-07-14T00:20:57Z",
+        "created_at_i": 1752452457,
+        "objectID": "44555089",
+        "parent_id": 44551841,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-14T15:12:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "v5v3"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you want to care about what a company does, consider a charity/non profit that you align with.<p>Also consider a single founder owned mature company, as the culture of a company that was created by a person who is still there is very different to startup, capitalistic investors or public one. As it is their life's work and legacy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_v5v3",
+          "story_44528693"
+        ],
+        "author": "v5v3",
+        "comment_text": "If you want to care about what a company does, consider a charity&#x2F;non profit that you align with.<p>Also consider a single founder owned mature company, as the culture of a company that was created by a person who is still there is very different to startup, capitalistic investors or public one. As it is their life&#x27;s work and legacy.",
+        "created_at": "2025-07-13T21:59:48Z",
+        "created_at_i": 1752443988,
+        "objectID": "44554147",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-09-01T00:33:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Duanemclemore"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oh man ten years ago I would have had just a few firms to tell you about, but at this point you can probably just look at the top x architecture, engineering, and construction firms in your chosen geography and they'll have someone building fairly sophisticated software tools. I'd say the thing to do is look at who / what subsectors need people with your qualifications. For example, Building Information Modeling is built on databases, jobsite automation is built on controls and increasingly on streaming data, and environmental simulation on a wild grab bag making different platforms and interfaces talk to each other.<p>Good luck!!!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Duanemclemore",
+          "story_44528693"
+        ],
+        "author": "Duanemclemore",
+        "comment_text": "Oh man ten years ago I would have had just a few firms to tell you about, but at this point you can probably just look at the top x architecture, engineering, and construction firms in your chosen geography and they&#x27;ll have someone building fairly sophisticated software tools. I&#x27;d say the thing to do is look at who &#x2F; what subsectors need people with your qualifications. For example, Building Information Modeling is built on databases, jobsite automation is built on controls and increasingly on streaming data, and environmental simulation on a wild grab bag making different platforms and interfaces talk to each other.<p>Good luck!!!",
+        "created_at": "2025-07-13T17:28:30Z",
+        "created_at_i": 1752427710,
+        "objectID": "44551975",
+        "parent_id": 44547624,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T17:33:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Duanemclemore"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Take this with a grain of salt as I'm in academia now, outside everyday software implementation in AEC, but I think that's changed / changing. My background is in the profession, and I'm a self-taught computational designer. Before going academic I built a lot of tools for small architecture firms, implemented BIM workflows for them, etc. So I talked to but didn't work with the tech tooling people at large AE or C firms. That said any time I look at the kind of software and tools being built at those companies, it seems like they've become increasingly comfortable with needing relatively full stack development.<p>Just one of many examples is how EHDD's EPIC [0]was successful enough to spin out [1]. There are a lot of others.<p>[0] <a href=\"https://ehdd.com/philosophy/epic/\" rel=\"nofollow\">https://ehdd.com/philosophy/epic/</a><p>[1] <a href=\"https://epic.ehdd.com/\" rel=\"nofollow\">https://epic.ehdd.com/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Duanemclemore",
+          "story_44528693"
+        ],
+        "author": "Duanemclemore",
+        "children": [
+          44555089
+        ],
+        "comment_text": "Take this with a grain of salt as I&#x27;m in academia now, outside everyday software implementation in AEC, but I think that&#x27;s changed &#x2F; changing. My background is in the profession, and I&#x27;m a self-taught computational designer. Before going academic I built a lot of tools for small architecture firms, implemented BIM workflows for them, etc. So I talked to but didn&#x27;t work with the tech tooling people at large AE or C firms. That said any time I look at the kind of software and tools being built at those companies, it seems like they&#x27;ve become increasingly comfortable with needing relatively full stack development.<p>Just one of many examples is how EHDD&#x27;s EPIC [0]was successful enough to spin out [1]. There are a lot of others.<p>[0] <a href=\"https:&#x2F;&#x2F;ehdd.com&#x2F;philosophy&#x2F;epic&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;ehdd.com&#x2F;philosophy&#x2F;epic&#x2F;</a><p>[1] <a href=\"https:&#x2F;&#x2F;epic.ehdd.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;epic.ehdd.com&#x2F;</a>",
+        "created_at": "2025-07-13T17:08:14Z",
+        "created_at_i": 1752426494,
+        "objectID": "44551841",
+        "parent_id": 44547295,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-14T00:21:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fdlaks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Any recommendations for companies?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fdlaks",
+          "story_44528693"
+        ],
+        "author": "fdlaks",
+        "children": [
+          44551975
+        ],
+        "comment_text": "Any recommendations for companies?",
+        "created_at": "2025-07-13T04:52:32Z",
+        "created_at_i": 1752382352,
+        "objectID": "44547624",
+        "parent_id": 44529069,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T17:29:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "an_aparallel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agreed. Im in Aec and the amount of stuff i see ripe for swe to dig into is plenty. Youll need to convince directors youre worth it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_an_aparallel",
+          "story_44528693"
+        ],
+        "author": "an_aparallel",
+        "children": [
+          44551841
+        ],
+        "comment_text": "Agreed. Im in Aec and the amount of stuff i see ripe for swe to dig into is plenty. Youll need to convince directors youre worth it.",
+        "created_at": "2025-07-13T03:41:19Z",
+        "created_at_i": 1752378079,
+        "objectID": "44547295",
+        "parent_id": 44529069,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T17:09:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "roland35"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ha good luck with that! I found that there is even more politics at non tech companies. Different clowns, same circus as they say :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_roland35",
+          "story_44528693"
+        ],
+        "author": "roland35",
+        "comment_text": "Ha good luck with that! I found that there is even more politics at non tech companies. Different clowns, same circus as they say :)",
+        "created_at": "2025-07-13T03:17:34Z",
+        "created_at_i": 1752376654,
+        "objectID": "44547202",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T03:19:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "giantg2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "These places tend to have a big disconnect in the care vs pretend to care dimension the OP was concerned about, in my experience."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_giantg2",
+          "story_44528693"
+        ],
+        "author": "giantg2",
+        "comment_text": "These places tend to have a big disconnect in the care vs pretend to care dimension the OP was concerned about, in my experience.",
+        "created_at": "2025-07-12T03:40:05Z",
+        "created_at_i": 1752291605,
+        "objectID": "44539090",
+        "parent_id": 44535365,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-12T03:42:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "giantg2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Good luck finding anywhere that's hiring. It's an absolute shitshow right now. Also, based on your comment about how much you have to pretend you care, you probably want to steer clear of the larger companies. They tend to be very disconnected from the end customer's wellbeing in my experience."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_giantg2",
+          "story_44528693"
+        ],
+        "author": "giantg2",
+        "comment_text": "Good luck finding anywhere that&#x27;s hiring. It&#x27;s an absolute shitshow right now. Also, based on your comment about how much you have to pretend you care, you probably want to steer clear of the larger companies. They tend to be very disconnected from the end customer&#x27;s wellbeing in my experience.",
+        "created_at": "2025-07-12T03:37:08Z",
+        "created_at_i": 1752291428,
+        "objectID": "44539079",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-12T03:42:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "scarface_74"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "And make about the same as “senior” engineer or less than a new grad getting an offer from BigTech."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_scarface_74",
+          "story_44528693"
+        ],
+        "author": "scarface_74",
+        "comment_text": "And make about the same as “senior” engineer or less than a new grad getting an offer from BigTech.",
+        "created_at": "2025-07-12T01:50:55Z",
+        "created_at_i": 1752285055,
+        "objectID": "44538628",
+        "parent_id": 44535365,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-12T17:43:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "scarface_74"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Most of the 2.8 million developers in the US work for non tech companies - biting old enterprise companies, government etc.<p>Are you okay with enterprise dev salaries in second tier cities?<p>Unless you are working for a non profit, why would you care about what the company does? Now there are companies I wouldn’t work for because I’m opposed to what it does.  But that’s different"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_scarface_74",
+          "story_44528693"
+        ],
+        "author": "scarface_74",
+        "comment_text": "Most of the 2.8 million developers in the US work for non tech companies - biting old enterprise companies, government etc.<p>Are you okay with enterprise dev salaries in second tier cities?<p>Unless you are working for a non profit, why would you care about what the company does? Now there are companies I wouldn’t work for because I’m opposed to what it does.  But that’s different",
+        "created_at": "2025-07-12T01:49:27Z",
+        "created_at_i": 1752284967,
+        "objectID": "44538620",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T21:59:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HenryBemis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Any (mega-big) bank, insurance, logistics, food, is good to work in my book/imho.<p>They know what they want. They don't jump from tech-fad to tech-fad every year. What works, works, and we/they keep it until it stops working."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_HenryBemis",
+          "story_44528693"
+        ],
+        "author": "HenryBemis",
+        "children": [
+          44539090,
+          44538628
+        ],
+        "comment_text": "Any (mega-big) bank, insurance, logistics, food, is good to work in my book&#x2F;imho.<p>They know what they want. They don&#x27;t jump from tech-fad to tech-fad every year. What works, works, and we&#x2F;they keep it until it stops working.",
+        "created_at": "2025-07-11T18:16:08Z",
+        "created_at_i": 1752257768,
+        "objectID": "44535365",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-12T03:40:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aprdm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ilm, lucasfilm, wall disney animation studios, pixar..<p>can be a bad time due to industry shanigans"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aprdm",
+          "story_44528693"
+        ],
+        "author": "aprdm",
+        "comment_text": "ilm, lucasfilm, wall disney animation studios, pixar..<p>can be a bad time due to industry shanigans",
+        "created_at": "2025-07-11T17:53:59Z",
+        "created_at_i": 1752256439,
+        "objectID": "44535149",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-11T17:55:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "codingdave"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gotta be honest, <i>every</i> non-tech company I've worked for was better than &quot;tech&quot; companies. Non-tech companies have a defined business and it is clear whether or not the tech is helping further their goals. Unlike tech companies, where the tech is the goal, so it can get really fuzzy as to whether or not your work is helping or is just noise.<p>So I can give you a generalized &quot;yes&quot; answer to whether or not we have good experiences in non-tech. We do. Yeah, go for it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_codingdave",
+          "story_44528693"
+        ],
+        "author": "codingdave",
+        "comment_text": "Gotta be honest, <i>every</i> non-tech company I&#x27;ve worked for was better than &quot;tech&quot; companies. Non-tech companies have a defined business and it is clear whether or not the tech is helping further their goals. Unlike tech companies, where the tech is the goal, so it can get really fuzzy as to whether or not your work is helping or is just noise.<p>So I can give you a generalized &quot;yes&quot; answer to whether or not we have good experiences in non-tech. We do. Yeah, go for it.",
+        "created_at": "2025-07-11T11:49:44Z",
+        "created_at_i": 1752234584,
+        "objectID": "44531063",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-12T16:56:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Duanemclemore"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Look at companies in the AEC sector. Pay is lower than straight tech, but a lot of exciting real world and applied problems to dig in to. All the fun stuff these days is computation and advanced fabrication based. Even something closer in application to the jobsite like building information modeling still has room to grow in terms of tech implementation.<p>Your skill set would be lucrative to a big construction or engineering firm and they pay well. Architecture firms solve the funnest problems, which is what you get in return for the lower pay."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Duanemclemore",
+          "story_44528693"
+        ],
+        "author": "Duanemclemore",
+        "children": [
+          44547295,
+          44547624
+        ],
+        "comment_text": "Look at companies in the AEC sector. Pay is lower than straight tech, but a lot of exciting real world and applied problems to dig in to. All the fun stuff these days is computation and advanced fabrication based. Even something closer in application to the jobsite like building information modeling still has room to grow in terms of tech implementation.<p>Your skill set would be lucrative to a big construction or engineering firm and they pay well. Architecture firms solve the funnest problems, which is what you get in return for the lower pay.",
+        "created_at": "2025-07-11T06:51:15Z",
+        "created_at_i": 1752216675,
+        "objectID": "44529069",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-13T05:52:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "k310"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Bad timing, but universities are engaging places to work. I did sysadmin for one, and it was a great experience, meeting scientists and some Nobel Prize winners. Some of the labs hire SWE's full time for projects that exceed the grad student workforce. Some universities run national labs, whose status right now is uncertain, but postings will say yes or no."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Good non tech companies to work at"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_k310",
+          "story_44528693"
+        ],
+        "author": "k310",
+        "comment_text": "Bad timing, but universities are engaging places to work. I did sysadmin for one, and it was a great experience, meeting scientists and some Nobel Prize winners. Some of the labs hire SWE&#x27;s full time for projects that exceed the grad student workforce. Some universities run national labs, whose status right now is uncertain, but postings will say yes or no.",
+        "created_at": "2025-07-11T05:51:20Z",
+        "created_at_i": 1752213080,
+        "objectID": "44528764",
+        "parent_id": 44528693,
+        "story_id": 44528693,
+        "story_title": "Ask HN: Good non tech companies to work at",
+        "updated_at": "2025-07-11T07:39:55Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 16,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44528693&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 19
+      },
+      "afterFetch": {
+        "merge": {
+          "mergeLoop": {
+            "prepareNextHit": 1,
+            "total": 1
+          },
+          "total": 1
+        },
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

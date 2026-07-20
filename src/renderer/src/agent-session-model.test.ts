@@ -11,8 +11,6 @@ import {
   createReviewerSession,
   createWorkerSession,
   defaultReviewerModel,
-  dockRoleFlags,
-  dockRoleOf,
   latestAuditReport,
   parseAgentDock,
   resetAgentSession,
@@ -327,30 +325,4 @@ test('rollupStatus is idle for a lone idle node', () => {
   const lead = { ...createAgentSession('lead', 'Lead', 'tab'), role: 'lead' as const }
   const [node] = buildAgentRoster([lead])
   assert.equal(node.rollup, 'idle')
-})
-
-test('dockRoleOf derives the card radio from session state', () => {
-  assert.equal(dockRoleOf(createReviewerSession('r', 'Reviewer', 'tab', null)), 'reviewer')
-  assert.equal(
-    dockRoleOf({ ...createAgentSession('h', 'Helper', 'tab'), watchesMain: true }),
-    'helper'
-  )
-  assert.equal(dockRoleOf(createWorkerSession('w', 'task', 'tab', 'lead', 'turn', null)), 'worker')
-  // Legacy restore states: neither flag reads as the born-a-reviewer default;
-  // both flags read as reviewer (audit wins). Re-picking the shown role
-  // re-arms the flags, so both states heal on first touch.
-  assert.equal(dockRoleOf(createAgentSession('n', 'Agent', 'tab')), 'reviewer')
-  assert.equal(
-    dockRoleOf({ ...createAgentSession('b', 'Agent', 'tab'), watchesMain: true, auditsMain: true }),
-    'reviewer'
-  )
-})
-
-test('dockRoleFlags arms exactly one flag and round-trips through dockRoleOf', () => {
-  assert.deepEqual(dockRoleFlags('reviewer'), { auditsMain: true, watchesMain: false })
-  assert.deepEqual(dockRoleFlags('helper'), { auditsMain: false, watchesMain: true })
-  for (const role of ['reviewer', 'helper'] as const) {
-    const session = { ...createAgentSession('x', 'Agent', 'tab'), ...dockRoleFlags(role) }
-    assert.equal(dockRoleOf(session), role)
-  }
 })

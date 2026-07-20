@@ -1,0 +1,93 @@
+Technology
+
+February 4, 2026
+
+# Top Digital Product Passport Providers for Fashion in 2026 (Updated Guide)
+
+Martina Sattanino
+
+Content Writer
+
+If you’re comparing Digital Product Passport providers, you’ll notice the same promises everywhere: traceability, transparency, QR codes, consumer experiences.
+
+But in 2026, the real difference is practical: who can help you turn unstructured product information into structured, compliant data, without adding more manual work.
+
+That’s where DPP is heading across the EU. And it’s why choosing the right DPP provider in 2026 is a strategic decision: it determines how quickly you can move from fragmented data to a working passport system.
+
+In this updated guide, we share what has changed since last year and which DPP providers are still leading the market for fashion and textiles.
+
+## What changed since 2025: clearer direction, higher expectations
+
+Over the past year, DPP discussions moved from general “readiness” to real implementation planning.
+
+Two key updates matter for fashion brands:
+
+### - The EU set clearer priorities for the first wave of DPP rollout
+
+The European Commission adopted the 2025–2030 working plan under the Ecodesign for Sustainable Products Regulation (ESPR). It signals how DPP implementation will be phased, and confirms that textiles are part of the priority scope. ‍
+
+### - The Commission started defining how DPP data should be handled
+
+In April 2025, the Commission launched a consultation on the DPP system, including how passport data may be managed by service providers and whether certification should be required.
+
+That’s a strong signal for the market: DPP isn’t just a visual output. It’s a data system, and the ecosystem is moving toward more formal expectations around reliability and interoperability.
+
+## What stayed the same: DPP starts with product and supplier data
+
+Even with clearer policy direction, one reality hasn’t changed:
+
+DPPsonly work if your product data is structured and complete.
+
+For fashion brands, that data typically sits across multiple sources:
+
+- supplier documents and material declarations
+
+- certifications and audits
+
+- internal product data systems
+
+- spreadsheets and manual reporting files
+
+- e-commerce content
+
+The problem is not that brands don’t have information, it’s that the information often isn’t in a format that can be reused across compliance, operations, and customer-facing touchpoints.
+
+That’s why DPP provider selection in 2026 has become more strategic. The right platform helps you build a structured dataset that can support fashion transparency, traceability, and long-term scalability.
+
+## Standards are becoming more concrete (and easier to follow)
+
+Over the last year, DPP standardisation work also progressed. One example is the CEN-CENELEC Workshop Agreement CWA 18186:2025, which provides guidance for setting up Digital Product Passports and related system design options.
+
+At the same time, the EU-backed work behind CIRPASS has continued through CIRPASS-2, which is now running DPP pilots in real settings, including textiles.
+
+For brands, this is good news: it becomes easier to build DPPs in a structured way, and to evaluate providers based on concrete system requirements, not generic claims.
+
+## How to choose a DPP provider in 2026 (a practical checklist)
+
+Before diving into platforms, here’s what matters most if you want a DPP setup that holds up under real rollout conditions.
+
+### Can it work with your existing systems?
+
+DPP should connect into your product and supplier workflows, not sit on top as an extra layer of manual work. Look for integrations with tools like PLM, ERP, supplier databases, and CRM.
+
+### Can it handle supplier complexity without blocking progress?
+
+Fashion supply chains are rarely simple. A DPP provider should help you prioritise the right supplier data first, so you can build a realistic path toward compliance and business use, without collecting everything at once.
+
+### Does it support structured, verifiable product-level data?
+
+In 2026, the baseline is moving toward machine-readable, reusable product data. Your provider should support evidence-based datasets, versioning, and clear governance, not just a consumer page.
+
+### Can it scale across collections and categories?
+
+A DPP approach that only works for a capsule collection won’t hold up long-term. Look for a platform that can scale across product lines, suppliers, and operational teams.
+
+## Top Digital Product Passport providers for fashion in 2026
+
+Below is a curated list of DPP providers still considered leading options for fashion and textile transparency, updated to reflect the market’s real direction in 2026.
+
+### 1) Renoon: DPP infrastructure that connects data, compliance, and customer value
+
+Renoon is designed for brands that want DPP to work as a full operational system, not a one-off output.
+
+The platform helps teams connect existing product and supplier datasets, automate data ingestion through AI-supported

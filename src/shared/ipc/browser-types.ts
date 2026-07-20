@@ -50,8 +50,6 @@ export type OmniboxSuggestion = {
   text: string
   /** Secondary display text: display URL for history rows, engine label for search. */
   detail: string
-  /** Sanitized site identity captured by the browser tab, when available. */
-  favicon: string | null
 }
 
 /** Dropdown anchor in window content coordinates: the omnibox rect's bottom edge. */
@@ -86,12 +84,6 @@ export type BrowserMenuItem =
 
 /** Anchor in window content coordinates: the menu button rect's bottom-right corner. */
 export type BrowserMenuAnchor = {
-  x: number
-  y: number
-}
-
-/** Center anchor below the title-bar clock, in window content coordinates. */
-export type TitlebarCalendarAnchor = {
   x: number
   y: number
 }

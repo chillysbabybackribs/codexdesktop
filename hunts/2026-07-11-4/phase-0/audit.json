@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-07-11T16:00:06.331Z",
+  "phase0": "hunts/2026-07-11-4/phase-0",
+  "totals": {
+    "records": 750,
+    "retrievedVerified": 750,
+    "qualifiedFirsthand": 0,
+    "qualifiedRepeatedWorkflow": 0,
+    "currencyMentions": 103,
+    "qualifiedExactJobMoney": 0,
+    "completeJobSentences": 0,
+    "lowConfidenceHeuristic": 750
+  },
+  "byLane": {
+    "commercial-motion": {
+      "records": 102,
+      "retrievedVerified": 102,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
+      "currencyMentions": 17,
+      "qualifiedExactJobMoney": 0,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 0,
+      "missingArtifacts": 0
+    },
+    "formation-feedback": {
+      "records": 470,
+      "retrievedVerified": 470,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
+      "currencyMentions": 19,
+      "qualifiedExactJobMoney": 0,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 0,
+      "missingArtifacts": 0
+    },
+    "buyer-reality": {
+      "records": 178,
+      "retrievedVerified": 178,
+      "qualifiedFirsthand": 0,
+      "qualifiedRepeatedWorkflow": 0,
+      "currencyMentions": 67,
+      "qualifiedExactJobMoney": 0,
+      "completeJobSentences": 0,
+      "staleCurrentWindow": 79,
+      "missingArtifacts": 0
+    }
+  },
+  "scoreErrors": [],
+  "intersectionsMissingRequirementProvenance": [],
+  "qualificationFailures": [
+    "qualified buyer-reality coverage below 75",
+    "qualified repeated workflows below 25",
+    "qualified exact-job money below 25",
+    "unaudited low-confidence heuristic records remain"
+  ],
+  "verdict": "FAIL",
+  "findings": [
+    "79 records label old publications as current.",
+    "Collector money counts exceed qualified exact-job money.",
+    "Collector firsthand counts exceed conservative audited firsthand counts.",
+    "qualified buyer-reality coverage below 75",
+    "qualified repeated workflows below 25",
+    "qualified exact-job money below 25",
+    "unaudited low-confidence heuristic records remain"
+  ]
+}

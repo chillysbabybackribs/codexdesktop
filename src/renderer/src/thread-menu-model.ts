@@ -3,7 +3,6 @@ import type { Thread } from '../../shared/session-protocol';
 export type ThreadGroup = { label: string; threads: Thread[] };
 
 export type HeaderMenuCommandId =
-  | 'trace'
   | 'browser-layout'
   | 'split-right'
   | 'split-down'
@@ -20,17 +19,10 @@ export type HeaderMenuCommand = {
 export function headerMenuCommands(options: {
   isBrowserMiddle: boolean;
   canSplitActivePane: boolean;
-  canOpenTrace: boolean;
   disabled: boolean;
   showGlobalActions: boolean;
 }): HeaderMenuCommand[] {
   const commands: HeaderMenuCommand[] = [
-    {
-      id: 'trace',
-      label: 'Turn trace',
-      hint: 'Latest turn',
-      disabled: !options.canOpenTrace,
-    },
     {
       id: 'browser-layout',
       label: options.isBrowserMiddle ? 'Move browser right' : 'Center browser',

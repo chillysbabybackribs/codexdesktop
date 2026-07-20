@@ -1,0 +1,62 @@
+{
+  "observedAt": "2026-07-11T15:38:29.383Z",
+  "totalRecords": 178,
+  "retrievedVerified": 178,
+  "currencyMentions": 67,
+  "qualifiedExactJobMoney": 0,
+  "heuristicRepeatedWorkflowLeads": 132,
+  "heuristicFirsthandLeads": 172,
+  "qualifiedFirsthand": 0,
+  "uniqueIndependenceKeys": 176,
+  "uniqueSourceLabels": 18,
+  "uniqueHostDomains": 18,
+  "bySource": {
+    "stackexchange:workplace": 8,
+    "stackexchange:freelancing": 8,
+    "stackexchange:money": 8,
+    "stackexchange:academia": 8,
+    "stackexchange:travel": 8,
+    "stackexchange:diy": 5,
+    "stackexchange:webmasters": 8,
+    "stackexchange:salesforce": 8,
+    "stackexchange:magento": 8,
+    "stackexchange:wordpress": 8,
+    "stackexchange:craftcms": 8,
+    "stackexchange:law": 8,
+    "stackexchange:patents": 6,
+    "stackexchange:graphicdesign": 8,
+    "stackexchange:writers": 6,
+    "stackexchange:gardening": 8,
+    "stackexchange:homebrewing": 8,
+    "hn_algolia_ask": 49
+  },
+  "byWindow": {
+    "current": 178
+  },
+  "byActor": {
+    "unknown": 178
+  },
+  "byStatement": {
+    "own_workflow": 137,
+    "own_purchase": 41
+  },
+  "byVerification": {
+    "verified": 178
+  },
+  "missingFields": {
+    "buyer": 178,
+    "trigger": 0,
+    "input": 178,
+    "repeatedAction": 41,
+    "output": 0,
+    "destination": 0,
+    "frequency": 152,
+    "timeSpent": 154,
+    "priceOrWage": 111,
+    "currentTools": 141,
+    "remainingManualWork": 159
+  },
+  "queryCount": 27,
+  "failureCount": 1,
+  "suspectedDuplicates": 0
+}

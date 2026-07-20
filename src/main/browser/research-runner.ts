@@ -1,8 +1,11 @@
-import { session, WebContentsView } from 'electron'
+import { app, session, WebContentsView } from 'electron'
+import { mkdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
-import { researchPartition } from './browser-session.js'
+import { browserPartition } from './browser-session.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
+import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
 import {
   normalizeResearchFocus,
   selectResearchEvidence,
@@ -14,25 +17,17 @@ import {
 import {
   collectWithConcurrencyUntil,
   KeyedTaskScheduler,
-  ResearchMemoryCache
+  retainValuesReducingDeficit
 } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
-import { ResearchOriginRouter, type ResearchOriginRouteOutcome } from './research-origin-router.js'
 import { fetchStaticResearchPage } from './research-static-fetch.js'
 import {
   assessExtractedPage,
-  bingSearchFeedUrl,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
-  duckDuckGoLiteSearchUrl,
-  extractBingSearchFeedCandidates,
-  extractDuckDuckGoLiteCandidates,
-  extractSameHostNavLinks,
   googleSearchUrl,
-  isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
-  preferExtractableHost,
   rankSerpCandidates,
   type RankedSerpCandidate,
   type SerpCandidate
@@ -41,26 +36,22 @@ import {
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
 const DEFAULT_UNFOCUSED_SOURCE_TARGET = 1
-const MIN_CANDIDATE_ATTEMPTS = 2
-const CANDIDATE_ATTEMPTS_PER_SOURCE = 1
+const MIN_CANDIDATE_ATTEMPTS = 3
+const CANDIDATE_ATTEMPTS_PER_SOURCE = 2
 const MAX_CANDIDATE_ATTEMPTS = 24
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
 const PAGE_TIMEOUT_MS = 15_000
 const PAGE_WORKER_CONCURRENCY = 3
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
+const STATIC_PREFLIGHT_TIMEOUT_MS = 2_000
 const STATIC_PREFLIGHT_MAX_BYTES = 750_000
-const MAX_PAGE_TEXT_CHARS = 100_000
+const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
-const REDIRECT_HUB_LINK_LIMIT = 8
-const MAX_REDIRECT_FOLLOW_UPS = 16
-const MAX_DISCOVERY_QUERIES = 6
-const SEARCH_WORKER_CONCURRENCY = 4
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
-const SEARCH_DOCUMENT_MAX_BYTES = 300_000
-const SEARCH_PROVIDER_MAX_REDIRECTS = 3
 const PAGE_CACHE_TTL_MS = 5 * 60_000
 const MAX_PAGE_CACHE_ENTRIES = 12
+const RESEARCH_PRUNE_COOLDOWN_MS = 30 * 60_000
 
 export type ResearchRequest = {
   queries?: string[]
@@ -81,18 +72,19 @@ export type ResearchPage = {
   cacheHit: boolean
   charCount: number
   wordCount: number
+  artifactPath: string
+  htmlPath: string
   sourceQuery?: string
   sourceKind: 'direct' | 'search'
   sourceTier?: string
   score?: number
-  contentTruncated: boolean
-  mediaType?: string
-  extractionPath?: 'static-html' | 'network-response' | 'browser-dom'
+  artifactTruncated: boolean
   verified: true
 }
 
 export type ResearchMetrics = {
   queueMs: number
+  setupMs: number
   discoveryMs: number
   pageMs: number
   finalizationMs: number
@@ -106,8 +98,6 @@ export type ResearchMetrics = {
   pageCacheHits: number
   staticFetchAttempts: number
   staticFetchHits: number
-  staticFetchSkipped: number
-  staticFetchTimeouts: number
   staticFetchMs: number
   browserPageLoads: number
   targetMet: boolean
@@ -121,10 +111,12 @@ export type ResearchMetrics = {
 
 export type ResearchResult = {
   ok: boolean
+  researchId?: string
   queries?: string[]
   urls?: string[]
   focus?: ResearchFocus[]
   searchQueries?: string[]
+  artifactDir?: string
   pages?: ResearchPage[]
   passages?: ResearchPassage[]
   gaps?: ResearchGap[]
@@ -143,48 +135,6 @@ export type ResearchRunContext = {
   onProgress?: (progress: ResearchProgress) => void
 }
 
-export type SearchDiscoveryRequest = {
-  queries?: string[]
-  maxResults?: number | null
-  maxCandidates?: number | null
-}
-
-export type SearchDiscoveryContext = {
-  signal?: AbortSignal
-  onProgress?: (progress: ResearchProgress) => void
-  /**
-   * Optional grace window for live search. After the first viable candidate
-   * batch arrives, unfinished hidden lanes are cancelled when this window
-   * expires so a slow SERP cannot hold the model response open.
-   */
-  tailMsAfterFirstCandidates?: number
-  /**
-   * Fires at most once, as soon as the earliest search lane yields ranked
-   * candidates, so callers can begin visible navigation immediately instead of
-   * waiting behind the slowest lane. The final ranking may order candidates
-   * differently; callers that navigate early keep the full ranked list as
-   * alternates.
-   */
-  onFirstCandidates?: (candidates: RankedSerpCandidate[]) => void
-}
-
-export type SearchDiscoveryResult = {
-  ok: boolean
-  queries: string[]
-  candidates: RankedSerpCandidate[]
-  discoveredCount: number
-  metrics: {
-    durationMs: number
-    firstCandidatesMs?: number
-    tailCutoff?: boolean
-    searchesAttempted: number
-    cacheHits: number
-    navigation: NavigationMetrics
-  }
-  errors?: Array<{ error: string }>
-  error?: string
-}
-
 type ResearchPageDraft = {
   page: ResearchPage
   content: string
@@ -199,8 +149,6 @@ type ExtractedResearchPage = {
   truncated: boolean
   html: string
   observedAt: string
-  mediaType?: string
-  extractionPath?: 'static-html' | 'network-response' | 'browser-dom'
 }
 
 type ResearchCandidate = RankedSerpCandidate & { sourceKind: 'direct' | 'search' }
@@ -212,14 +160,6 @@ type ActiveResearchRun = {
 
 type NavigationMetrics = ResearchMetrics['navigation']
 
-type SearchLaneOutcome = {
-  query: string
-  candidates: SerpCandidate[]
-  cacheHit: boolean
-  navigation?: PageNavigationResult
-  error?: string
-}
-
 /**
  * A compact, adaptive research pipeline. Work is serialized per thread with a
  * small global concurrency bound. The model's evidence needs determine how
@@ -230,8 +170,8 @@ export class ResearchRunner {
   private readonly activeRuns = new Map<string, ActiveResearchRun>()
   private readonly searchCache = new Map<string, { expiresAt: number; candidates: Array<Omit<SerpCandidate, 'query'>> }>()
   private readonly pageCache = new ResearchMemoryCache<ExtractedResearchPage>(PAGE_CACHE_TTL_MS, MAX_PAGE_CACHE_ENTRIES)
-  private readonly originRouter = new ResearchOriginRouter()
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
+  private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
   run(request: ResearchRequest, context: ResearchRunContext = {}): Promise<ResearchResult> {
     const runId = context.runId ?? crypto.randomUUID()
@@ -262,78 +202,6 @@ export class ResearchRunner {
     }
   }
 
-  /**
-   * Discover and rank destination URLs without ever attaching a SERP to the
-   * visible browser window. Model-authored semantic variants are searched in
-   * bounded parallel hidden Chromium workers; a lone query receives a small
-   * compatibility expansion so older callers still get useful breadth.
-   */
-  async discover(
-    request: SearchDiscoveryRequest,
-    context: SearchDiscoveryContext = {}
-  ): Promise<SearchDiscoveryResult> {
-    const suppliedQueries = (request.queries ?? [])
-      .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
-      .map((query) => query.trim().slice(0, 500))
-      .slice(0, MAX_DISCOVERY_QUERIES)
-    const queries = buildResearchQueryVariants(suppliedQueries, MAX_DISCOVERY_QUERIES)
-    const navigation = createNavigationMetrics()
-
-    if (queries.length === 0) {
-      return {
-        ok: false,
-        queries: [],
-        candidates: [],
-        discoveredCount: 0,
-        metrics: { durationMs: 0, searchesAttempted: 0, cacheHits: 0, navigation },
-        error: 'hidden search discovery requires at least one non-empty query'
-      }
-    }
-
-    const signal = context.signal ?? new AbortController().signal
-    const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
-    const maxCandidates = clamp(request.maxCandidates, Math.max(6, maxResults), 1, MAX_CANDIDATE_ATTEMPTS)
-    const startedAt = Date.now()
-    let firstCandidatesFired = false
-    let firstCandidatesMs: number | undefined
-    const onLaneCandidates = context.onFirstCandidates
-      ? (laneCandidates: SerpCandidate[]): void => {
-          if (firstCandidatesFired || laneCandidates.length === 0) return
-          const ranked = rankSerpCandidates(laneCandidates, queries, maxCandidates)
-          if (ranked.length === 0) return
-          firstCandidatesFired = true
-          firstCandidatesMs = Date.now() - startedAt
-          context.onFirstCandidates!(ranked)
-        }
-      : undefined
-    const discovery = await this.searchHiddenInParallel(
-      queries,
-      maxResults,
-      signal,
-      context.onProgress,
-      onLaneCandidates,
-      clamp(context.tailMsAfterFirstCandidates, 0, 0, 5_000)
-    )
-    const candidates = rankSerpCandidates(discovery.candidates, queries, maxCandidates)
-
-    return {
-      ok: candidates.length > 0,
-      queries,
-      candidates,
-      discoveredCount: new Set(discovery.candidates.map(({ url }) => url)).size,
-      metrics: {
-        durationMs: discovery.durationMs,
-        ...(firstCandidatesMs === undefined ? {} : { firstCandidatesMs }),
-        ...(discovery.tailCutoff ? { tailCutoff: true } : {}),
-        searchesAttempted: discovery.searchesAttempted,
-        cacheHits: discovery.cacheHits,
-        navigation: discovery.navigation
-      },
-      ...(discovery.errors.length > 0 ? { errors: discovery.errors.map((error) => ({ error })) } : {}),
-      ...(candidates.length === 0 ? { error: 'No destination URLs found in hidden search results' } : {})
-    }
-  }
-
   dispose(): void {
     for (const active of this.activeRuns.values()) active.controller.abort()
     this.activeRuns.clear()
@@ -353,7 +221,7 @@ export class ResearchRunner {
     const queries = (request.queries ?? [])
       .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
       .map((query) => query.trim().slice(0, 500))
-      .slice(0, MAX_DISCOVERY_QUERIES)
+      .slice(0, 3)
     const urls = normalizeResearchUrls(request.urls ?? [])
     const focus = normalizeResearchFocus(request.focus)
 
@@ -375,24 +243,31 @@ export class ResearchRunner {
         : DEFAULT_UNFOCUSED_SOURCE_TARGET
     const defaultMaxAttempts = Math.min(
       MAX_CANDIDATE_ATTEMPTS,
-      Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages + CANDIDATE_ATTEMPTS_PER_SOURCE)
+      Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages * CANDIDATE_ATTEMPTS_PER_SOURCE)
     )
     const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, MIN_CANDIDATE_ATTEMPTS, MAX_CANDIDATE_ATTEMPTS)
     const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
+    const researchId = crypto.randomUUID()
+    const artifactRoot = join(app.getPath('userData'), 'research')
+    const artifactDir = join(artifactRoot, researchId)
     const navigation = createNavigationMetrics()
+    let setupMs = 0
     let discoveryMs = 0
     let pageMs = 0
 
     notifyProgress(onProgress, {
       stage: 'preparing',
-      message: queueMs >= 100 ? `Starting research after ${formatDuration(queueMs)} queued…` : 'Preparing research…',
+      message: queueMs >= 100 ? `Starting research after ${formatDuration(queueMs)} queued…` : 'Preparing research artifacts…',
       targetPages
     })
+    const setupStartedAt = Date.now()
+    await mkdir(artifactDir, { recursive: true })
+    void this.pruneGate.schedule(artifactRoot)?.catch((error) => {
+      console.warn('Failed to prune research artifacts', error)
+    })
+    setupMs = Date.now() - setupStartedAt
 
-    // Preserve every caller-authored lane. The helper's small default is only
-    // for single-query compatibility expansion; applying it here used to drop
-    // queries four through six before discovery even started.
-    const plannedQueries = buildResearchQueryVariants(queries, MAX_DISCOVERY_QUERIES)
+    const plannedQueries = buildResearchQueryVariants(queries)
     const searchQueries: string[] = []
     const discovered: SerpCandidate[] = []
     const discoveredUrls = new Set(urls)
@@ -404,8 +279,6 @@ export class ResearchRunner {
     let pageCacheHits = 0
     let staticFetchAttempts = 0
     let staticFetchHits = 0
-    let staticFetchSkipped = 0
-    let staticFetchTimeouts = 0
     let staticFetchMs = 0
     let browserPageLoads = 0
     let evidenceRevision = -1
@@ -442,29 +315,29 @@ export class ResearchRunner {
         0
       )
     }
-    // Direct URLs that redirect onto a different host frequently land on a
-    // navigation hub (docs sites migrating domains). Harvest the hub's own
-    // same-host links so they can be attempted one hop deep instead of the
-    // run ending with "the requested page had nothing."
-    const redirectFollowUps: SerpCandidate[] = []
-    const harvestRedirectHubLinks = (candidate: ResearchCandidate, extracted: { url: string; html: string }): void => {
-      if (candidate.sourceKind !== 'direct') return
-      if (redirectFollowUps.length >= MAX_REDIRECT_FOLLOW_UPS) return
-      const landedUrl = extracted.url || candidate.url
-      if (!isCrossHostLanding(candidate.url, landedUrl)) return
-      for (const link of extractSameHostNavLinks(extracted.html, landedUrl, REDIRECT_HUB_LINK_LIMIT)) {
-        if (redirectFollowUps.length >= MAX_REDIRECT_FOLLOW_UPS) break
-        if (attemptedUrls.has(link.url) || discoveredUrls.has(link.url)) continue
-        discoveredUrls.add(link.url)
-        redirectFollowUps.push({
-          url: link.url,
-          title: link.title,
-          snippet: '',
-          rank: redirectFollowUps.length + 1,
-          query: candidate.query
-        })
-      }
+    const coversUnresolvedFocus = (
+      candidate: ResearchCandidate,
+      sourceId: string,
+      extracted: ExtractedResearchPage
+    ): boolean => {
+      if (focus.length === 0) return true
+      const unresolved = new Set(evidence().gaps.map(({ focusId }) => focusId))
+      if (unresolved.size === 0) return true
+      const packet = selectResearchEvidence(
+        focus.filter(({ id }) => unresolved.has(id)),
+        [{
+          sourceId,
+          title: extracted.title || candidate.title,
+          url: extracted.url || candidate.url,
+          content: extracted.content,
+          observedAt: extracted.observedAt,
+          ...(candidate.sourceTier ? { sourceTier: candidate.sourceTier } : {})
+        }],
+        passageChars
+      )
+      return packet.passages.length > 0
     }
+
     const materializePage = async (
       candidate: ResearchCandidate,
       rank: number,
@@ -476,6 +349,14 @@ export class ResearchRunner {
       throwIfAborted(operationSignal)
       const title = extracted.title || candidate.title
       const url = extracted.url || candidate.url
+      const paths = await writeResearchPageArtifacts(
+        artifactDir,
+        sourceId,
+        extracted.content,
+        extracted.html,
+        operationSignal
+      )
+      throwIfAborted(operationSignal)
       return {
         page: {
           sourceId,
@@ -487,13 +368,12 @@ export class ResearchRunner {
           cacheHit,
           charCount: extracted.content.length,
           wordCount: extracted.wordCount,
+          ...paths,
           ...(candidate.sourceKind === 'search' ? { sourceQuery: candidate.query } : {}),
           sourceKind: candidate.sourceKind,
           sourceTier: candidate.sourceTier,
           score: candidate.score,
-          contentTruncated: extracted.truncated,
-          ...(extracted.mediaType ? { mediaType: extracted.mediaType } : {}),
-          extractionPath: extracted.extractionPath ?? 'browser-dom',
+          artifactTruncated: extracted.truncated,
           verified: true
         },
         content: extracted.content
@@ -550,6 +430,7 @@ export class ResearchRunner {
           if (cached) {
             try {
               if (stopSignal.aborted) return null
+              if (!coversUnresolvedFocus(candidate, sourceId, cached)) return null
               const draft = await materializePage(candidate, rank, sourceId, cached, true, stopSignal)
               pageCacheHits += 1
               return draft
@@ -560,66 +441,44 @@ export class ResearchRunner {
             }
           }
 
-          const fetchUrl = preferExtractableHost(candidate.url)
-          const route = this.originRouter.begin(fetchUrl)
           const staticTimeout = new AbortController()
           const staticStartedAt = Date.now()
-          const staticTimer = route.mode === 'static'
-            ? setTimeout(() => staticTimeout.abort(), route.timeoutMs)
-            : undefined
+          const staticTimer = setTimeout(() => staticTimeout.abort(), STATIC_PREFLIGHT_TIMEOUT_MS)
           const preflight = linkAbortSignals(signal, stopSignal, staticTimeout.signal)
           let staticResult: Awaited<ReturnType<typeof fetchStaticResearchPage>>
-          let routeOutcome: ResearchOriginRouteOutcome = { kind: 'cancelled' }
-          if (route.mode === 'browser') {
-            staticFetchSkipped += 1
-            staticResult = {
-              kind: 'fallback',
-              reason: `adaptive route selected Chromium: ${route.reason}`,
-              durationMs: 0,
-              bytes: 0,
-              redirects: 0,
-              finalUrl: fetchUrl
+          try {
+            staticFetchAttempts += 1
+            staticResult = await fetchStaticResearchPage(candidate.url, {
+              fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
+              validateUrl: assertPublicResearchUrl,
+              signal: preflight.signal,
+              maxBytes: STATIC_PREFLIGHT_MAX_BYTES
+            })
+          } catch (error) {
+            if (signal.aborted) {
+              preflight.dispose()
+              throw error
             }
-          } else {
-            try {
-              staticFetchAttempts += 1
-              staticResult = await fetchStaticResearchPage(fetchUrl, {
-                fetch: (url, init) => session.fromPartition(researchPartition).fetch(url, init),
-                validateUrl: assertPublicResearchUrl,
-                signal: preflight.signal,
-                maxBytes: STATIC_PREFLIGHT_MAX_BYTES
-              })
-              routeOutcome = { kind: staticResult.kind, durationMs: staticResult.durationMs }
-            } catch (error) {
-              if (signal.aborted) {
-                preflight.dispose()
-                throw error
-              }
-              if (stopSignal.aborted) {
-                preflight.dispose()
-                return null
-              }
-              if (staticTimeout.signal.aborted) {
-                staticFetchTimeouts += 1
-                const durationMs = Date.now() - staticStartedAt
-                routeOutcome = { kind: 'timeout', durationMs }
-                staticResult = {
-                  kind: 'fallback',
-                  reason: `static preflight timed out after ${route.timeoutMs}ms`,
-                  durationMs,
-                  bytes: 0,
-                  redirects: 0,
-                  finalUrl: fetchUrl
-                }
-              } else {
-                preflight.dispose()
-                recordResearchError(errors, { url: candidate.url, error: formatError(error) })
-                return null
-              }
-            } finally {
-              if (staticTimer !== undefined) clearTimeout(staticTimer)
-              route.finish(routeOutcome)
+            if (stopSignal.aborted) {
+              preflight.dispose()
+              return null
             }
+            if (staticTimeout.signal.aborted) {
+              staticResult = {
+                kind: 'fallback',
+                reason: `static preflight timed out after ${STATIC_PREFLIGHT_TIMEOUT_MS}ms`,
+                durationMs: Date.now() - staticStartedAt,
+                bytes: 0,
+                redirects: 0,
+                finalUrl: candidate.url
+              }
+            } else {
+              preflight.dispose()
+              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
+              return null
+            }
+          } finally {
+            clearTimeout(staticTimer)
           }
           staticFetchMs += staticResult.durationMs
           if (staticResult.kind === 'blocked') {
@@ -628,49 +487,30 @@ export class ResearchRunner {
             return null
           }
           if (staticResult.kind === 'accepted' && staticResult.page) {
-            const extracted: ExtractedResearchPage = {
-              ...staticResult.page,
-              observedAt: new Date().toISOString()
-            }
-            // The static lane must pass the same page assessment as the
-            // Chromium lane: without it a 404/challenge/login body with enough
-            // text is silently accepted as a verified source.
-            const staticAssessment = assessExtractedPage(extracted)
-            if (staticAssessment.verified) {
-              try {
-                const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
-                this.cachePage(candidate.url, extracted)
-                if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
-                staticFetchHits += 1
-                harvestRedirectHubLinks(candidate, extracted)
-                return draft
-              } catch (error) {
-                if (signal.aborted) throw error
-                if (stopSignal.aborted) return null
-                recordResearchError(errors, { url: candidate.url, error: formatError(error) })
-                return null
-              } finally {
-                preflight.dispose()
+            try {
+              const extracted: ExtractedResearchPage = {
+                ...staticResult.page,
+                observedAt: new Date().toISOString()
               }
-            }
-            harvestRedirectHubLinks(candidate, extracted)
-            if (staticAssessment.reason === 'http-error') {
-              // An HTTP error status is authoritative — do not spend a browser
-              // load rendering an error page into "no usable passages".
-              preflight.dispose()
-              recordResearchError(errors, {
-                url: candidate.url,
-                error: `page verification failed: http-error (status ${extracted.status}${extracted.url !== candidate.url ? ` at ${extracted.url}` : ''})`
-              })
+              if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
+              const draft = await materializePage(candidate, rank, sourceId, extracted, false, preflight.signal)
+              this.cachePage(candidate.url, extracted)
+              if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
+              staticFetchHits += 1
+              return draft
+            } catch (error) {
+              if (signal.aborted) throw error
+              if (stopSignal.aborted) return null
+              recordResearchError(errors, { url: candidate.url, error: formatError(error) })
               return null
+            } finally {
+              preflight.dispose()
             }
-            // Static body reads as a shell/thin/challenge page — fall through
-            // and let the Chromium lane render it before giving up.
           }
           preflight.dispose()
           if (stopSignal.aborted) return null
           browserPageLoads += 1
-          const browserUrl = staticResult.finalUrl ?? fetchUrl
+          const browserUrl = staticResult.finalUrl ?? candidate.url
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           const closeOnAbort = (): void => this.closeHiddenView(view)
@@ -682,7 +522,7 @@ export class ResearchRunner {
             throwIfAborted(linked.signal)
             let result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
               view.webContents,
-              buildPageExtractionProgram(MAX_PAGE_TEXT_CHARS, MAX_HTML_CHARS)
+              buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
             )
             const safeFinalUrl = normalizeResearchUrls([result.url], 1)[0]
             if (!safeFinalUrl) throw new Error('page verification failed: invalid or non-public final URL')
@@ -694,7 +534,7 @@ export class ResearchRunner {
               if (ready) {
                 result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
                   view.webContents,
-                  buildPageExtractionProgram(MAX_PAGE_TEXT_CHARS, MAX_HTML_CHARS)
+                  buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
                 )
                 const retryUrl = normalizeResearchUrls([result.url], 1)[0]
                 if (!retryUrl) throw new Error('page verification failed: invalid or non-public final URL')
@@ -703,17 +543,15 @@ export class ResearchRunner {
               }
             }
             if (!assessment.verified) {
-              harvestRedirectHubLinks(candidate, result)
-              const statusSuffix = result.status >= 400 ? ` (status ${result.status})` : ''
-              throw new Error(`page verification failed: ${assessment.reason}${statusSuffix}`)
+              throw new Error(`page verification failed: ${assessment.reason}`)
             }
             throwIfAborted(linked.signal)
 
             const extracted: ExtractedResearchPage = { ...result, observedAt: new Date().toISOString() }
+            if (!coversUnresolvedFocus(candidate, sourceId, extracted)) return null
             const draft = await materializePage(candidate, rank, sourceId, extracted, false, linked.signal)
             this.cachePage(candidate.url, extracted)
             if (extracted.url !== candidate.url) this.cachePage(extracted.url, extracted)
-            harvestRedirectHubLinks(candidate, extracted)
             return draft
           } catch (error) {
             if (signal.aborted) throw error
@@ -729,12 +567,12 @@ export class ResearchRunner {
       )
       pageAttempts += batch.attempted
       const rankedDrafts = batch.values.map(({ value }) => value)
-      // Focus guides passage selection and stopping; it is not a page
-      // qualification gate. Keep every successfully extracted page so the
-      // model can judge relevance even when the compact lexical matcher misses
-      // paraphrases, titles, alternatives, or user-authored broad criteria.
       const acceptedDrafts = focus.length > 0
-        ? rankedDrafts
+        ? retainValuesReducingDeficit(
+            rankedDrafts,
+            targetPages - pages.length,
+            (retained) => focusCoverageDeficit(retained)
+          )
         : rankedDrafts.slice(0, targetPages - pages.length)
       for (const draft of acceptedDrafts) {
         pages.push(draft.page)
@@ -744,7 +582,7 @@ export class ResearchRunner {
     }
 
     const drainCandidates = async (candidates: ResearchCandidate[]): Promise<void> => {
-      while (!goalMet() && pageAttempts < maxAttempts) {
+      while (!goalMet() && pageAttempts < maxAttempts && pages.length < targetPages) {
         const remaining = candidates.filter((candidate) => !attemptedUrls.has(candidate.url))
         if (remaining.length === 0) return
         const attemptsBefore = pageAttempts
@@ -775,36 +613,62 @@ export class ResearchRunner {
         urls.length
       ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
       await drainCandidates(directCandidates)
-
-      if (!goalMet() && redirectFollowUps.length > 0 && pageAttempts < maxAttempts) {
-        notifyProgress(onProgress, {
-          stage: 'verifying',
-          message: `Following ${redirectFollowUps.length} same-site ${redirectFollowUps.length === 1 ? 'link' : 'links'} found behind cross-host redirects…`,
-          pagesAttempted: pageAttempts,
-          pagesVerified: pages.length,
-          targetPages
-        })
-        const followUpCandidates = rankSerpCandidates(
-          redirectFollowUps,
-          rankingQueries.length > 0 ? rankingQueries : [directQuery],
-          redirectFollowUps.length
-        ).map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'direct' }))
-        await drainCandidates(followUpCandidates)
-      }
     }
 
-    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts) {
-      const discovery = await this.searchHiddenInParallel(plannedQueries, maxResults, signal, onProgress)
-      searchQueries.push(...plannedQueries)
-      discovered.push(...discovery.candidates)
-      discoveryMs += discovery.durationMs
-      mergeNavigation(navigation, discovery.navigation)
-      for (const candidate of discovery.candidates) discoveredUrls.add(candidate.url)
-      for (const error of discovery.errors) recordResearchError(errors, { error })
+    if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
+      const searchView = this.createHiddenView()
+      try {
+        for (const [queryIndex, query] of plannedQueries.entries()) {
+          if (goalMet() || pageAttempts >= maxAttempts || pages.length >= targetPages) break
+          throwIfAborted(signal)
+          searchQueries.push(query)
+          notifyProgress(onProgress, {
+            stage: 'discovering',
+            message: `Searching source lane ${queryIndex + 1}/${plannedQueries.length}…`,
+            queryIndex: queryIndex + 1,
+            queryCount: plannedQueries.length,
+            pagesAttempted: pageAttempts,
+            pagesVerified: pages.length,
+            targetPages
+          })
 
-      const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
-        .map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'search' }))
-      await drainCandidates(candidates)
+          const discoveryStartedAt = Date.now()
+          try {
+            const cacheKey = `${maxResults}:${query.toLowerCase()}`
+            const cached = this.searchCache.get(cacheKey)
+            let serp: Array<Omit<SerpCandidate, 'query'>>
+
+            if (cached && cached.expiresAt > Date.now()) {
+              serp = cached.candidates
+            } else {
+              const result = await loadSearchPage(searchView.webContents, googleSearchUrl(query, maxResults), signal)
+              recordNavigation(navigation, result)
+              serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
+                searchView.webContents,
+                buildSerpExtractionProgram(maxResults)
+              )
+              this.searchCache.set(cacheKey, {
+                expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+                candidates: serp
+              })
+            }
+            const queryResults = serp.map((result) => ({ ...result, query }))
+            discovered.push(...queryResults)
+            for (const result of queryResults) discoveredUrls.add(result.url)
+          } catch (error) {
+            if (signal.aborted) throw error
+            recordResearchError(errors, { error: `SERP query failed for "${query}": ${formatError(error)}` })
+          } finally {
+            discoveryMs += Date.now() - discoveryStartedAt
+          }
+
+          const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
+            .map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'search' }))
+          await drainCandidates(candidates)
+        }
+      } finally {
+        this.closeHiddenView(searchView)
+      }
     }
 
     notifyProgress(onProgress, {
@@ -820,6 +684,7 @@ export class ResearchRunner {
     const executionMs = Date.now() - executionStartedAt
     const metrics: ResearchMetrics = {
       queueMs,
+      setupMs,
       discoveryMs,
       pageMs,
       finalizationMs,
@@ -833,8 +698,6 @@ export class ResearchRunner {
       pageCacheHits,
       staticFetchAttempts,
       staticFetchHits,
-      staticFetchSkipped,
-      staticFetchTimeouts,
       staticFetchMs,
       browserPageLoads,
       targetMet: goalMet(),
@@ -851,10 +714,12 @@ export class ResearchRunner {
 
     return {
       ok: pages.length > 0,
+      researchId,
       queries,
       urls,
       ...(focus.length > 0 ? { focus } : {}),
       searchQueries,
+      artifactDir,
       discoveredUrls: [...discoveredUrls].slice(0, 10),
       discoveredCount: discoveredUrls.size,
       ...(discoveredUrls.size > 10 ? { discoveredTruncated: true } : {}),
@@ -862,7 +727,7 @@ export class ResearchRunner {
       ...(focus.length > 0 ? { passages: evidencePacket.passages, gaps: evidencePacket.gaps } : {}),
       metrics,
       ...(errors.length > 0 ? { errors } : {}),
-      ...(pages.length === 0 && errors.length === 0 ? { error: 'No readable pages found' } : {})
+      ...(pages.length === 0 && errors.length === 0 ? { error: 'No qualifying pages found' } : {})
     }
   }
 
@@ -872,164 +737,11 @@ export class ResearchRunner {
         contextIsolation: true,
         nodeIntegration: false,
         sandbox: true,
-        partition: researchPartition
+        partition: browserPartition
       }
     })
     this.searchViews.add(view)
     return view
-  }
-
-  private async searchHiddenInParallel(
-    queries: string[],
-    maxResults: number,
-    signal: AbortSignal,
-    onProgress?: (progress: ResearchProgress) => void,
-    onLaneCandidates?: (candidates: SerpCandidate[]) => void,
-    tailMsAfterFirstCandidates = 0
-  ): Promise<{
-    candidates: SerpCandidate[]
-    errors: string[]
-    durationMs: number
-    searchesAttempted: number
-    cacheHits: number
-    tailCutoff: boolean
-    navigation: NavigationMetrics
-  }> {
-    const startedAt = Date.now()
-    const outcomes: SearchLaneOutcome[] = new Array(queries.length)
-    let nextIndex = 0
-    let tailCutoff = false
-    let tailTimer: ReturnType<typeof setTimeout> | undefined
-    const tailController = new AbortController()
-    const linked = linkAbortSignals(signal, tailController.signal)
-    const searchSignal = linked.signal
-    const deliverLaneCandidates = (candidates: SerpCandidate[]): void => {
-      notifyLaneCandidates(onLaneCandidates, candidates)
-      if (!onLaneCandidates || candidates.length === 0 || tailMsAfterFirstCandidates <= 0 || tailTimer) return
-      tailTimer = setTimeout(() => {
-        tailCutoff = true
-        tailController.abort()
-      }, tailMsAfterFirstCandidates)
-    }
-
-    notifyProgress(onProgress, {
-      stage: 'discovering',
-      message: `Discovering source URLs in ${queries.length} hidden search ${queries.length === 1 ? 'lane' : 'lanes'}…`,
-      queryCount: queries.length
-    })
-
-    const worker = async (): Promise<void> => {
-      while (true) {
-        throwIfAborted(signal)
-        if (tailCutoff) return
-        const index = nextIndex
-        nextIndex += 1
-        if (index >= queries.length) return
-        const query = queries[index]
-        const cacheKey = `multi-provider-v1:${maxResults}:${query.toLowerCase()}`
-        const cached = this.searchCache.get(cacheKey)
-        if (cached && cached.expiresAt > Date.now()) {
-          outcomes[index] = {
-            query,
-            cacheHit: true,
-            candidates: cached.candidates.map((candidate) => ({ ...candidate, query }))
-          }
-          deliverLaneCandidates(outcomes[index].candidates)
-          continue
-        }
-
-        // The inert providers ignore search operators (site:, inurl:, …) and
-        // answer them with brand-navigational pages — live-caught: a
-        // site:reddit.com query "verified" claude.com/download. Operator
-        // queries go straight to the Chromium Google lane, which honors them.
-        const fastSearch = usesSearchOperators(query)
-          ? { candidates: [], errors: ['operator query routed past inert providers'] }
-          : await fetchFastSearchCandidates(query, maxResults, searchSignal)
-        if (fastSearch.candidates.length > 0) {
-          this.searchCache.set(cacheKey, {
-            expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
-            candidates: fastSearch.candidates
-          })
-          outcomes[index] = {
-            query,
-            cacheHit: false,
-            candidates: fastSearch.candidates.map((candidate) => ({ ...candidate, query }))
-          }
-          deliverLaneCandidates(outcomes[index].candidates)
-          continue
-        }
-
-        // Both inert, server-rendered providers failed. Keep the original
-        // Chromium-rendered Google lane as a last resort instead of turning a
-        // transient provider outage into a zero-result research call.
-        const view = this.createHiddenView()
-        try {
-          const navigation = await loadSearchPage(view.webContents, googleSearchUrl(query, maxResults), searchSignal)
-          const serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
-            view.webContents,
-            buildSerpExtractionProgram(maxResults)
-          )
-          if (serp.length > 0) {
-            this.searchCache.set(cacheKey, {
-              expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
-              candidates: serp
-            })
-          }
-          outcomes[index] = {
-            query,
-            cacheHit: false,
-            navigation,
-            candidates: serp.map((candidate) => ({ ...candidate, query })),
-            ...(serp.length > 0
-              ? {}
-              : { error: `Search providers returned no destinations for "${query}": ${fastSearch.errors.join('; ')}; Google rendered no result cards` })
-          }
-          deliverLaneCandidates(outcomes[index].candidates)
-        } catch (error) {
-          if (signal.aborted) throw error
-          if (tailCutoff) return
-          outcomes[index] = {
-            query,
-            cacheHit: false,
-            candidates: [],
-            error: `Hidden search lane failed for "${query}": ${formatError(error)}`
-          }
-        } finally {
-          this.closeHiddenView(view)
-        }
-      }
-    }
-
-    try {
-      await Promise.all(Array.from(
-        { length: Math.min(SEARCH_WORKER_CONCURRENCY, queries.length) },
-        () => worker()
-      ))
-    } finally {
-      if (tailTimer) clearTimeout(tailTimer)
-      linked.dispose()
-    }
-
-    const navigation = createNavigationMetrics()
-    for (const outcome of outcomes) {
-      if (outcome?.navigation) recordNavigation(navigation, outcome.navigation)
-    }
-    notifyProgress(onProgress, {
-      stage: 'discovering',
-      message: `Ranked destination URLs from ${queries.length} hidden search ${queries.length === 1 ? 'lane' : 'lanes'}…`,
-      queryIndex: queries.length,
-      queryCount: queries.length
-    })
-
-    return {
-      candidates: outcomes.flatMap((outcome) => outcome?.candidates ?? []),
-      errors: outcomes.flatMap((outcome) => outcome?.error ? [outcome.error] : []),
-      durationMs: Date.now() - startedAt,
-      searchesAttempted: outcomes.length,
-      cacheHits: outcomes.filter((outcome) => outcome?.cacheHit).length,
-      tailCutoff,
-      navigation
-    }
   }
 
   private readPageCache(url: string): ExtractedResearchPage | null {
@@ -1046,130 +758,13 @@ export class ResearchRunner {
   }
 }
 
-export function usesSearchOperators(query: string): boolean {
-  return /(^|\s)(site:|inurl:|intitle:|filetype:)\S/i.test(query)
-}
-
-async function fetchFastSearchCandidates(
-  query: string,
-  maxResults: number,
-  signal: AbortSignal
-): Promise<{ candidates: Array<Omit<SerpCandidate, 'query'>>; errors: string[] }> {
-  const providers = [
-    {
-      name: 'DuckDuckGo Lite',
-      url: duckDuckGoLiteSearchUrl(query),
-      extract: extractDuckDuckGoLiteCandidates
-    },
-    {
-      name: 'Bing RSS',
-      url: bingSearchFeedUrl(query, maxResults),
-      extract: extractBingSearchFeedCandidates
-    }
-  ]
-  const errors: string[] = []
-
-  for (const provider of providers) {
-    throwIfAborted(signal)
-    try {
-      const document = await fetchSearchDocument(provider.url, signal)
-      const candidates = provider.extract(document, maxResults)
-      if (candidates.length > 0) return { candidates, errors }
-      errors.push(`${provider.name} returned no result cards`)
-    } catch (error) {
-      if (signal.aborted) throw error
-      errors.push(`${provider.name} failed: ${formatError(error)}`)
-    }
-  }
-
-  return { candidates: [], errors }
-}
-
-async function fetchSearchDocument(initialUrl: string, signal: AbortSignal): Promise<string> {
-  const browserSession = session.fromPartition(researchPartition)
-  let currentUrl = initialUrl
-
-  for (let redirects = 0; redirects <= SEARCH_PROVIDER_MAX_REDIRECTS; redirects += 1) {
-    throwIfAborted(signal)
-    if (!isAllowedSearchProviderUrl(currentUrl)) throw new Error('search provider redirected outside its trusted host')
-    const response = await browserSession.fetch(currentUrl, {
-      method: 'GET',
-      redirect: 'manual',
-      credentials: 'omit',
-      signal,
-      bypassCustomProtocolHandlers: true,
-      headers: {
-        accept: 'text/html,application/xhtml+xml,application/rss+xml,application/xml;q=0.9,text/xml;q=0.9'
-      }
-    })
-
-    if (response.status >= 300 && response.status < 400) {
-      const location = response.headers.get('location')
-      if (!location) throw new Error(`HTTP ${response.status} redirect had no location`)
-      if (redirects >= SEARCH_PROVIDER_MAX_REDIRECTS) throw new Error('search provider redirect limit exceeded')
-      currentUrl = new URL(location, currentUrl).href
-      continue
-    }
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-
-    const declaredBytes = Number(response.headers.get('content-length') ?? '')
-    if (Number.isFinite(declaredBytes) && declaredBytes > SEARCH_DOCUMENT_MAX_BYTES) {
-      throw new Error('search response exceeded byte limit')
-    }
-    return readBoundedSearchResponse(response, signal)
-  }
-
-  throw new Error('search provider redirect limit exceeded')
-}
-
-async function readBoundedSearchResponse(response: Response, signal: AbortSignal): Promise<string> {
-  if (!response.body) throw new Error('search response had no body')
-  const reader = response.body.getReader()
-  const chunks: Uint8Array[] = []
-  let bytes = 0
-  try {
-    while (true) {
-      throwIfAborted(signal)
-      const next = await reader.read()
-      if (next.done) break
-      bytes += next.value.byteLength
-      if (bytes > SEARCH_DOCUMENT_MAX_BYTES) {
-        await reader.cancel('search response exceeded byte limit')
-        throw new Error('search response exceeded byte limit')
-      }
-      chunks.push(next.value)
-    }
-  } finally {
-    reader.releaseLock()
-  }
-
-  const body = new Uint8Array(bytes)
-  let offset = 0
-  for (const chunk of chunks) {
-    body.set(chunk, offset)
-    offset += chunk.byteLength
-  }
-  return new TextDecoder().decode(body)
-}
-
-function isAllowedSearchProviderUrl(value: string): boolean {
-  try {
-    const url = new URL(value)
-    if (url.protocol !== 'https:') return false
-    const host = url.hostname.replace(/^www\./i, '').toLowerCase()
-    return host === 'duckduckgo.com' || host.endsWith('.duckduckgo.com') || host === 'bing.com'
-  } catch {
-    return false
-  }
-}
-
 async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promise<string> {
   const normalized = normalizeResearchUrls([url], 1)[0]
   if (!normalized) throw new Error('page verification failed: invalid or non-public URL')
   const host = new URL(normalized).hostname.replace(/^\[|\]$/g, '')
   if (isPublicResearchAddress(host)) return normalized
 
-  const browserSession = session.fromPartition(researchPartition)
+  const browserSession = session.fromPartition(browserPartition)
   const resolutions = await Promise.allSettled([
     browserSession.resolveHost(host, { queryType: 'A' }),
     browserSession.resolveHost(host, { queryType: 'AAAA' })
@@ -1286,17 +881,6 @@ function throwIfAborted(signal: AbortSignal): void {
   if (signal.aborted) throw new Error('research run aborted')
 }
 
-function notifyLaneCandidates(
-  onLaneCandidates: ((candidates: SerpCandidate[]) => void) | undefined,
-  candidates: SerpCandidate[]
-): void {
-  try {
-    onLaneCandidates?.(candidates)
-  } catch {
-    // Early-candidate delivery is observational and must never fail a lane.
-  }
-}
-
 function notifyProgress(onProgress: ((progress: ResearchProgress) => void) | undefined, progress: ResearchProgress): void {
   try {
     onProgress?.(progress)
@@ -1330,15 +914,6 @@ function recordNavigation(metrics: NavigationMetrics, result: PageNavigationResu
   metrics.domReadyMs += result.domReadyMs
   metrics.settleMs += result.settleMs
   metrics.settleReasons[result.settleReason] = (metrics.settleReasons[result.settleReason] ?? 0) + 1
-}
-
-function mergeNavigation(metrics: NavigationMetrics, addition: NavigationMetrics): void {
-  metrics.count += addition.count
-  metrics.domReadyMs += addition.domReadyMs
-  metrics.settleMs += addition.settleMs
-  for (const [reason, count] of Object.entries(addition.settleReasons)) {
-    metrics.settleReasons[reason] = (metrics.settleReasons[reason] ?? 0) + count
-  }
 }
 
 function linkAbortSignals(...signals: AbortSignal[]): { signal: AbortSignal; dispose: () => void } {

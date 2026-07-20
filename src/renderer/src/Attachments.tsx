@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react'
-import { File, Paperclip, X } from 'lucide-react'
 import type { AttachmentSaveInput, ChatAttachment } from '../../shared/ipc'
 import type { UserInput } from '../../shared/session-protocol'
-import { IconButton } from './UiPrimitives'
 
 export function AttachmentButton({ disabled, onAdd, onError }: { disabled?: boolean; onAdd: (items: ChatAttachment[]) => void; onError?: (message: string) => void }): React.JSX.Element {
   const [busy, setBusy] = useState(false)
   return (
-    <IconButton
+    <button
+      type="button"
       className="attachment-button"
-      label="Add images or files"
-      tooltip="Attach images or files"
+      aria-label="Add images or files"
+      title="Add images or files"
       disabled={disabled || busy}
       onClick={() => {
         setBusy(true)
@@ -20,8 +19,8 @@ export function AttachmentButton({ disabled, onAdd, onError }: { disabled?: bool
           .finally(() => setBusy(false))
       }}
     >
-      <Paperclip strokeWidth={1.7} aria-hidden="true" />
-    </IconButton>
+      <PaperclipIcon />
+    </button>
   )
 }
 
@@ -80,18 +79,17 @@ function AttachmentItem({ attachment, removable, onRemove }: {
       ) : attachment.kind === 'image' ? (
         <span className="attachment-image-placeholder" aria-hidden="true" />
       ) : (
-        <span className="attachment-file-icon" aria-hidden="true"><File strokeWidth={1.5} /></span>
+        <span className="attachment-file-icon" aria-hidden="true"><FileIcon /></span>
       )}
       <figcaption>{attachment.name}</figcaption>
       {removable ? (
-        <IconButton
+        <button
+          type="button"
           className="attachment-remove"
-          label={`Remove ${attachment.name}`}
-          tooltip="Remove attachment"
+          aria-label={`Remove ${attachment.name}`}
+          title="Remove"
           onClick={() => onRemove?.(attachment.id)}
-        >
-          <X aria-hidden="true" />
-        </IconButton>
+        >×</button>
       ) : null}
     </figure>
   )
@@ -123,4 +121,12 @@ export function attachmentsFromUserInput(content: UserInput[]): ChatAttachment[]
 function displayNameFromPath(path: string): string {
   const base = path.split(/[\\/]/).pop() ?? 'attachment'
   return base.replace(/^[0-9a-f-]{36}--/i, '')
+}
+
+function PaperclipIcon(): React.JSX.Element {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.5 12.5 6.25-6.25a3 3 0 0 1 4.25 4.25l-8.1 8.1a5 5 0 0 1-7.08-7.07l8.1-8.1" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+}
+
+function FileIcon(): React.JSX.Element {
+  return <svg viewBox="0 0 24 24"><path d="M6.5 3.5h7l4 4v13h-11zM13.5 3.5v4h4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /></svg>
 }

@@ -1,0 +1,709 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48486225",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 57
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lordkrandel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For build environment, doesn't `tcc` suffice?<p>&quot;More conventional&quot; is often an opinion, it just means it's not popular enough."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lordkrandel",
+          "story_48486225"
+        ],
+        "author": "lordkrandel",
+        "comment_text": "For build environment, doesn&#x27;t `tcc` suffice?<p>&quot;More conventional&quot; is often an opinion, it just means it&#x27;s not popular enough.",
+        "created_at": "2026-06-13T20:35:10Z",
+        "created_at_i": 1781382910,
+        "objectID": "48521172",
+        "parent_id": 48487824,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-13T20:37:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Adam-Hincu"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Oh, I didn’t have this problem, it seemed pretty polished to me, although i stopped using it recently"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Adam-Hincu",
+          "story_48486225"
+        ],
+        "author": "Adam-Hincu",
+        "comment_text": "Oh, I didn’t have this problem, it seemed pretty polished to me, although i stopped using it recently",
+        "created_at": "2026-06-12T08:24:18Z",
+        "created_at_i": 1781252658,
+        "objectID": "48501392",
+        "parent_id": 48494904,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-12T08:25:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sama004"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tailscale"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sama004",
+          "story_48486225"
+        ],
+        "author": "sama004",
+        "comment_text": "tailscale",
+        "created_at": "2026-06-11T23:05:18Z",
+        "created_at_i": 1781219118,
+        "objectID": "48497641",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-12T10:38:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mikewarot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Windows 2000 Server, Service pack 4<p>Everything just worked as expected, and it was pretty stable.<p>Also Microsoft Office 2000 Professional with all the service packs and the 2007 file format extensions.<p>Sure, it was a hot mess internally, but have you ever used the outline mode of Word, or the relational table builder of Access? They're almost magical."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mikewarot",
+          "story_48486225"
+        ],
+        "author": "mikewarot",
+        "comment_text": "Windows 2000 Server, Service pack 4<p>Everything just worked as expected, and it was pretty stable.<p>Also Microsoft Office 2000 Professional with all the service packs and the 2007 file format extensions.<p>Sure, it was a hot mess internally, but have you ever used the outline mode of Word, or the relational table builder of Access? They&#x27;re almost magical.",
+        "created_at": "2026-06-11T21:59:03Z",
+        "created_at_i": 1781215143,
+        "objectID": "48496987",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-12T01:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mac3n"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "been using this since System 7.<p>Still doesn't suck."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mac3n",
+          "story_48486225"
+        ],
+        "author": "mac3n",
+        "comment_text": "been using this since System 7.<p>Still doesn&#x27;t suck.",
+        "created_at": "2026-06-11T21:15:20Z",
+        "created_at_i": 1781212520,
+        "objectID": "48496521",
+        "parent_id": 48486235,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T21:19:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "indemnity"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "1Password?<p>The last year with it has been so bad I canceled our $80 Family subscription and switched to the native Apple one despite its feature gap, because 1Password just couldn’t do its basic job reliably (fill passwords without requiring 20 taps, constant unlocking disregarding lock timer settings or some other arcane dance like force killing Safari to reload the plugin)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_indemnity",
+          "story_48486225"
+        ],
+        "author": "indemnity",
+        "comment_text": "1Password?<p>The last year with it has been so bad I canceled our $80 Family subscription and switched to the native Apple one despite its feature gap, because 1Password just couldn’t do its basic job reliably (fill passwords without requiring 20 taps, constant unlocking disregarding lock timer settings or some other arcane dance like force killing Safari to reload the plugin).",
+        "created_at": "2026-06-11T20:12:33Z",
+        "created_at_i": 1781208753,
+        "objectID": "48495795",
+        "parent_id": 48488908,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-28T09:24:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "KomoD"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't really agree. I tried using it, but I just can't because the keyboard shortcuts don't work with my non-US keyboard layout, and I couldn't change them...<p>I have seen other people complain about the same thing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_KomoD",
+          "story_48486225"
+        ],
+        "author": "KomoD",
+        "children": [
+          48501392
+        ],
+        "comment_text": "I don&#x27;t really agree. I tried using it, but I just can&#x27;t because the keyboard shortcuts don&#x27;t work with my non-US keyboard layout, and I couldn&#x27;t change them...<p>I have seen other people complain about the same thing.",
+        "created_at": "2026-06-11T19:01:36Z",
+        "created_at_i": 1781204496,
+        "objectID": "48494904",
+        "parent_id": 48486255,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-12T08:25:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cosmicgadget"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The Persona game series."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cosmicgadget",
+          "story_48486225"
+        ],
+        "author": "cosmicgadget",
+        "comment_text": "The Persona game series.",
+        "created_at": "2026-06-11T18:37:00Z",
+        "created_at_i": 1781203020,
+        "objectID": "48494586",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-12T00:29:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throwaw12"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "1password not anymore"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throwaw12",
+          "story_48486225"
+        ],
+        "author": "throwaw12",
+        "comment_text": "1password not anymore",
+        "created_at": "2026-06-11T12:09:53Z",
+        "created_at_i": 1781179793,
+        "objectID": "48489264",
+        "parent_id": 48488908,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T20:09:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bohdanstefaniuk"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "- Thing 3\n- 180db player\n- 1Password"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bohdanstefaniuk",
+          "story_48486225"
+        ],
+        "author": "bohdanstefaniuk",
+        "children": [
+          48495795,
+          48489264
+        ],
+        "comment_text": "- Thing 3\n- 180db player\n- 1Password",
+        "created_at": "2026-06-11T11:27:10Z",
+        "created_at_i": 1781177230,
+        "objectID": "48488908",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T20:13:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dlcarrier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The CAS software on HP calculators is amazingly useful, especially considering the limitations of the hardware it's running on."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dlcarrier",
+          "story_48486225"
+        ],
+        "author": "dlcarrier",
+        "comment_text": "The CAS software on HP calculators is amazingly useful, especially considering the limitations of the hardware it&#x27;s running on.",
+        "created_at": "2026-06-11T08:41:23Z",
+        "created_at_i": 1781167283,
+        "objectID": "48487851",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T08:43:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dlcarrier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It is a well simplified wrapper around the hot mess that is needed to convince YouTube that you're actually using using a web browser."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dlcarrier",
+          "story_48486225"
+        ],
+        "author": "dlcarrier",
+        "comment_text": "It is a well simplified wrapper around the hot mess that is needed to convince YouTube that you&#x27;re actually using using a web browser.",
+        "created_at": "2026-06-11T08:39:10Z",
+        "created_at_i": 1781167150,
+        "objectID": "48487836",
+        "parent_id": 48486259,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T08:43:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dlcarrier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've used the Surf browser with dmenu integration quite a bit, and the software is written well, but default the key bindings are all over the place.  I have to look it up, whenver I'm trying to do something as simple as copy and paste.<p>Considering that a build environment is needed to customize it, I feel like they'd get more users sticking around if it defaulted to more conventional controls."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dlcarrier",
+          "story_48486225"
+        ],
+        "author": "dlcarrier",
+        "children": [
+          48521172
+        ],
+        "comment_text": "I&#x27;ve used the Surf browser with dmenu integration quite a bit, and the software is written well, but default the key bindings are all over the place.  I have to look it up, whenver I&#x27;m trying to do something as simple as copy and paste.<p>Considering that a build environment is needed to customize it, I feel like they&#x27;d get more users sticking around if it defaulted to more conventional controls.",
+        "created_at": "2026-06-11T08:37:23Z",
+        "created_at_i": 1781167043,
+        "objectID": "48487824",
+        "parent_id": 48487587,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-13T20:36:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lordkrandel"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Dwm and dmenu. Top notch polish, true minimalism"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lordkrandel",
+          "story_48486225"
+        ],
+        "author": "lordkrandel",
+        "children": [
+          48487824
+        ],
+        "comment_text": "Dwm and dmenu. Top notch polish, true minimalism",
+        "created_at": "2026-06-11T07:57:05Z",
+        "created_at_i": 1781164625,
+        "objectID": "48487587",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T09:42:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jsxyzb9"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don’t think there is any particularly perfect software"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jsxyzb9",
+          "story_48486225"
+        ],
+        "author": "jsxyzb9",
+        "comment_text": "I don’t think there is any particularly perfect software",
+        "created_at": "2026-06-11T07:30:38Z",
+        "created_at_i": 1781163038,
+        "objectID": "48487407",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T07:35:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pants2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Robinhood is probably the best software I regularly use. It's extremely smooth and intuitive for how powerful it is now. The way they present and explain options and allow you to enter complex multi-leg option trades on mobile is super impressive. On top of that it just works really well (these days)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pants2",
+          "story_48486225"
+        ],
+        "author": "pants2",
+        "comment_text": "Robinhood is probably the best software I regularly use. It&#x27;s extremely smooth and intuitive for how powerful it is now. The way they present and explain options and allow you to enter complex multi-leg option trades on mobile is super impressive. On top of that it just works really well (these days).",
+        "created_at": "2026-06-11T06:52:54Z",
+        "created_at_i": 1781160774,
+        "objectID": "48487127",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T06:53:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "smt88"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I find 1Password to be very smooth and intuitive to use (ignoring its sometimes unfortunate iOS integration, which is Apple’s fault)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_smt88",
+          "story_48486225"
+        ],
+        "author": "smt88",
+        "comment_text": "I find 1Password to be very smooth and intuitive to use (ignoring its sometimes unfortunate iOS integration, which is Apple’s fault).",
+        "created_at": "2026-06-11T04:59:00Z",
+        "created_at_i": 1781153940,
+        "objectID": "48486394",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T20:13:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "variety8675"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ghostty is exceptionally good at what it was made for"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_variety8675",
+          "story_48486225"
+        ],
+        "author": "variety8675",
+        "comment_text": "Ghostty is exceptionally good at what it was made for",
+        "created_at": "2026-06-11T04:43:42Z",
+        "created_at_i": 1781153022,
+        "objectID": "48486307",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T20:13:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "paytonjjones"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Monarch Money is incredibly smooth and functional considering the complexity. Maybe it benefits from the comparison with the mess that was Mint though, haha."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_paytonjjones",
+          "story_48486225"
+        ],
+        "author": "paytonjjones",
+        "comment_text": "Monarch Money is incredibly smooth and functional considering the complexity. Maybe it benefits from the comparison with the mess that was Mint though, haha.",
+        "created_at": "2026-06-11T04:35:47Z",
+        "created_at_i": 1781152547,
+        "objectID": "48486266",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T04:38:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nan60"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't know if its polished in the traditional sense, but yt-dlp feels so perfect for what it was designed to do."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What software feels exceptionally polished?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nan60",
+          "story_48486225"
+        ],
+        "author": "nan60",
+        "children": [
+          48487836
+        ],
+        "comment_text": "I don&#x27;t know if its polished in the traditional sense, but yt-dlp feels so perfect for what it was designed to do.",
+        "created_at": "2026-06-11T04:35:20Z",
+        "created_at_i": 1781152520,
+        "objectID": "48486259",
+        "parent_id": 48486225,
+        "story_id": 48486225,
+        "story_title": "Ask HN: What software feels exceptionally polished?",
+        "updated_at": "2026-06-11T21:33:48Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 23,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48486225&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 21
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

@@ -1,0 +1,1642 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "44518898",
+    "window": "prior-year-comparable-90d",
+    "tag": "show_hn",
+    "score": 380
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TheNewsIsHere"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Their specific complaint was that because the forms often become part of a medical record, it just didn’t look right. Reading between the lines, they had comments from patients saying “a Google Form? Seems sketch.”<p>I don’t necessarily think that a Google Form is unprofessional either. It was accepting data into an environment that complied with their regulatory needs, which was a chief driver of the project.<p>I absolutely agree with you about TypeForm. Actually, if I was going to call a form service unprofessional “looking”, TypeForm takes the top slot. That’s not a criticism exactly. I just don’t think I’d use it for something that is public facing. It has a different kind of UX than I’d want to place in front of users."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TheNewsIsHere",
+          "story_44518898"
+        ],
+        "author": "TheNewsIsHere",
+        "comment_text": "Their specific complaint was that because the forms often become part of a medical record, it just didn’t look right. Reading between the lines, they had comments from patients saying “a Google Form? Seems sketch.”<p>I don’t necessarily think that a Google Form is unprofessional either. It was accepting data into an environment that complied with their regulatory needs, which was a chief driver of the project.<p>I absolutely agree with you about TypeForm. Actually, if I was going to call a form service unprofessional “looking”, TypeForm takes the top slot. That’s not a criticism exactly. I just don’t think I’d use it for something that is public facing. It has a different kind of UX than I’d want to place in front of users.",
+        "created_at": "2025-07-23T01:14:31Z",
+        "created_at_i": 1753233271,
+        "objectID": "44654787",
+        "parent_id": 44522891,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-23T01:17:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "conductr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I recall using open source form builders over a decade before they came on the scene"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_conductr",
+          "story_44518898"
+        ],
+        "author": "conductr",
+        "comment_text": "I recall using open source form builders over a decade before they came on the scene",
+        "created_at": "2025-07-19T03:57:41Z",
+        "created_at_i": 1752897461,
+        "objectID": "44612468",
+        "parent_id": 44520001,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-08-14T11:15:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "diggan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; When does a marketing tactic become “traditional”?<p>The original message was:<p>&gt; And expect to do tons of marketing.<p>Which putting a &quot;Powered by&quot; button isn't, it's basically a software, UX and design task instead. I guess by &quot;traditional&quot; marketing I meant the type of activities that require active effort to do, compared to something like that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_diggan",
+          "story_44518898"
+        ],
+        "author": "diggan",
+        "comment_text": "&gt; When does a marketing tactic become “traditional”?<p>The original message was:<p>&gt; And expect to do tons of marketing.<p>Which putting a &quot;Powered by&quot; button isn&#x27;t, it&#x27;s basically a software, UX and design task instead. I guess by &quot;traditional&quot; marketing I meant the type of activities that require active effort to do, compared to something like that.",
+        "created_at": "2025-07-11T17:39:33Z",
+        "created_at_i": 1752255573,
+        "objectID": "44534983",
+        "parent_id": 44524482,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T17:44:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "librasteve"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for the link … great read and yes very tricky.<p>I have started hacking a bit on a Contact::Name text parser in raku Grammars if anyone would like to check it out - contributions are very welcome! <a href=\"https://raku.land/zef:librasteve/Contact\" rel=\"nofollow\">https://raku.land/zef:librasteve/Contact</a><p>Why Raku?<p><pre><code>  - the easy built in Grammar syntax means that coders can work quickly to build structured parse trees that can deal with all the textual nuance (unicode, language, rtl, pluggable sub-grammars…)\n\n  - the consistent ecosystem provides for class / roles as first class packages in their own right, so we can have a shared standardized tree of real word objects we want to parse out of text such as LLM responses</code></pre>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_librasteve",
+          "story_44518898"
+        ],
+        "author": "librasteve",
+        "comment_text": "Thanks for the link … great read and yes very tricky.<p>I have started hacking a bit on a Contact::Name text parser in raku Grammars if anyone would like to check it out - contributions are very welcome! <a href=\"https:&#x2F;&#x2F;raku.land&#x2F;zef:librasteve&#x2F;Contact\" rel=\"nofollow\">https:&#x2F;&#x2F;raku.land&#x2F;zef:librasteve&#x2F;Contact</a><p>Why Raku?<p><pre><code>  - the easy built in Grammar syntax means that coders can work quickly to build structured parse trees that can deal with all the textual nuance (unicode, language, rtl, pluggable sub-grammars…)\n\n  - the consistent ecosystem provides for class &#x2F; roles as first class packages in their own right, so we can have a shared standardized tree of real word objects we want to parse out of text such as LLM responses</code></pre>",
+        "created_at": "2025-07-11T11:56:36Z",
+        "created_at_i": 1752234996,
+        "objectID": "44531124",
+        "parent_id": 44523789,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-13T11:24:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Dylan16807"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unless there's a sea change, a minor tactic can continue to exist but not be &quot;traditional&quot; indefinitely."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Dylan16807",
+          "story_44518898"
+        ],
+        "author": "Dylan16807",
+        "comment_text": "Unless there&#x27;s a sea change, a minor tactic can continue to exist but not be &quot;traditional&quot; indefinitely.",
+        "created_at": "2025-07-11T05:09:34Z",
+        "created_at_i": 1752210574,
+        "objectID": "44528587",
+        "parent_id": 44524482,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T05:15:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "preetsuthar17"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fixed it"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_preetsuthar17",
+          "story_44518898"
+        ],
+        "author": "preetsuthar17",
+        "comment_text": "fixed it",
+        "created_at": "2025-07-11T04:48:37Z",
+        "created_at_i": 1752209317,
+        "objectID": "44528498",
+        "parent_id": 44526011,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T04:54:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "paulryanrogers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Is it a traditional marketing tactic to rely largely on something as subtle as powered-by links? (Genuine question, I haven't studied marketing beyond a few documentaries.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_paulryanrogers",
+          "story_44518898"
+        ],
+        "author": "paulryanrogers",
+        "comment_text": "Is it a traditional marketing tactic to rely largely on something as subtle as powered-by links? (Genuine question, I haven&#x27;t studied marketing beyond a few documentaries.)",
+        "created_at": "2025-07-11T03:18:40Z",
+        "created_at_i": 1752203920,
+        "objectID": "44528115",
+        "parent_id": 44524482,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T03:20:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nikolayasdf123"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "+1. users don't ask such things. they can't formulate them in writing (unless they are designers, artists, visual editors, UX experts themselves) and don't have time for that"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nikolayasdf123",
+          "story_44518898"
+        ],
+        "author": "nikolayasdf123",
+        "comment_text": "+1. users don&#x27;t ask such things. they can&#x27;t formulate them in writing (unless they are designers, artists, visual editors, UX experts themselves) and don&#x27;t have time for that",
+        "created_at": "2025-07-11T02:50:15Z",
+        "created_at_i": 1752202215,
+        "objectID": "44527994",
+        "parent_id": 44522765,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-12T04:11:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nikolayasdf123"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "do your follow any design guideline? what's your design principles?<p>I recommend picking some (e.g. Apple: <a href=\"https://developer.apple.com/design/human-interface-guidelines\" rel=\"nofollow\">https://developer.apple.com/design/human-interface-guideline...</a>), and try to match that. there has been lots of though put into it, good to reuse before you came up with your own."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nikolayasdf123",
+          "story_44518898"
+        ],
+        "author": "nikolayasdf123",
+        "comment_text": "do your follow any design guideline? what&#x27;s your design principles?<p>I recommend picking some (e.g. Apple: <a href=\"https:&#x2F;&#x2F;developer.apple.com&#x2F;design&#x2F;human-interface-guidelines\" rel=\"nofollow\">https:&#x2F;&#x2F;developer.apple.com&#x2F;design&#x2F;human-interface-guideline...</a>), and try to match that. there has been lots of though put into it, good to reuse before you came up with your own.",
+        "created_at": "2025-07-11T02:48:38Z",
+        "created_at_i": 1752202118,
+        "objectID": "44527986",
+        "parent_id": 44519748,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-12T04:11:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sokoloff"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My view is that where Google workspace apps have won, it’s on price (for enterprise) or because it’s free (for easy online sharing, etc.)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sokoloff",
+          "story_44518898"
+        ],
+        "author": "sokoloff",
+        "comment_text": "My view is that where Google workspace apps have won, it’s on price (for enterprise) or because it’s free (for easy online sharing, etc.)",
+        "created_at": "2025-07-11T02:04:06Z",
+        "created_at_i": 1752199446,
+        "objectID": "44527765",
+        "parent_id": 44525793,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T02:40:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tomcam"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<p><pre><code>    It is interesting how receiving the greatest benefit for the lowest cost is considered pathological, yet also the entire basis for our economic system.\n</code></pre>\nWhat I read from GP's comment was not that this was the tradeoff, it was that people who pay less than market value tend to be the most troublesome customers. I can tell you that holds true in any market I've ever consulted for or have used myself. B2B transactions tend to be much smoother than a visit to Popeye's on the average."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tomcam",
+          "story_44518898"
+        ],
+        "author": "tomcam",
+        "comment_text": "<p><pre><code>    It is interesting how receiving the greatest benefit for the lowest cost is considered pathological, yet also the entire basis for our economic system.\n</code></pre>\nWhat I read from GP&#x27;s comment was not that this was the tradeoff, it was that people who pay less than market value tend to be the most troublesome customers. I can tell you that holds true in any market I&#x27;ve ever consulted for or have used myself. B2B transactions tend to be much smoother than a visit to Popeye&#x27;s on the average.",
+        "created_at": "2025-07-11T01:01:32Z",
+        "created_at_i": 1752195692,
+        "objectID": "44527410",
+        "parent_id": 44525783,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-12T04:10:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tomcam"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Analysis: true, based on 20+ years of owning successful online businesses and another 15 in the software business before that. I always gave my tech support teams full authority to fire customers like that.<p>The part that fascinated me most was that just reminding them they had that option seemed to make them much more tolerant than I expected, and out of say 2 million customers I'd guess fewer than a dozen were ejected. I guess it was a mental pressure valve."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tomcam",
+          "story_44518898"
+        ],
+        "author": "tomcam",
+        "comment_text": "Analysis: true, based on 20+ years of owning successful online businesses and another 15 in the software business before that. I always gave my tech support teams full authority to fire customers like that.<p>The part that fascinated me most was that just reminding them they had that option seemed to make them much more tolerant than I expected, and out of say 2 million customers I&#x27;d guess fewer than a dozen were ejected. I guess it was a mental pressure valve.",
+        "created_at": "2025-07-11T00:59:09Z",
+        "created_at_i": 1752195549,
+        "objectID": "44527400",
+        "parent_id": 44521676,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-12T04:10:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "qingcharles"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Formshare looks like a great product. Never seen an AI form like that. A product like that is 90% marketing, though. Trying to get that in front of people's eyeballs is hard work."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_qingcharles",
+          "story_44518898"
+        ],
+        "author": "qingcharles",
+        "comment_text": "Formshare looks like a great product. Never seen an AI form like that. A product like that is 90% marketing, though. Trying to get that in front of people&#x27;s eyeballs is hard work.",
+        "created_at": "2025-07-10T23:59:05Z",
+        "created_at_i": 1752191945,
+        "objectID": "44527031",
+        "parent_id": 44519891,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T02:11:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tills13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "They hit their Vercel free-tier limit or spend limit."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tills13",
+          "story_44518898"
+        ],
+        "author": "tills13",
+        "children": [
+          44528498
+        ],
+        "comment_text": "They hit their Vercel free-tier limit or spend limit.",
+        "created_at": "2025-07-10T21:50:09Z",
+        "created_at_i": 1752184209,
+        "objectID": "44526011",
+        "parent_id": 44525951,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T04:49:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "throw03172019"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Did it crash?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_throw03172019",
+          "story_44518898"
+        ],
+        "author": "throw03172019",
+        "children": [
+          44526011
+        ],
+        "comment_text": "Did it crash?",
+        "created_at": "2025-07-10T21:44:00Z",
+        "created_at_i": 1752183840,
+        "objectID": "44525951",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T21:50:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "immibis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Didn't Google Docs win because it was online and (more) mobile-friendly, not because it was free? Almost everyone had Office on their PCs at the time, but not on their tablets."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_immibis",
+          "story_44518898"
+        ],
+        "author": "immibis",
+        "children": [
+          44527765
+        ],
+        "comment_text": "Didn&#x27;t Google Docs win because it was online and (more) mobile-friendly, not because it was free? Almost everyone had Office on their PCs at the time, but not on their tablets.",
+        "created_at": "2025-07-10T21:24:49Z",
+        "created_at_i": 1752182689,
+        "objectID": "44525793",
+        "parent_id": 44520430,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T02:12:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "immibis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It is interesting how receiving the greatest benefit for the lowest cost is considered pathological, yet also the entire basis for our economic system."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_immibis",
+          "story_44518898"
+        ],
+        "author": "immibis",
+        "children": [
+          44527410
+        ],
+        "comment_text": "It is interesting how receiving the greatest benefit for the lowest cost is considered pathological, yet also the entire basis for our economic system.",
+        "created_at": "2025-07-10T21:23:56Z",
+        "created_at_i": 1752182636,
+        "objectID": "44525783",
+        "parent_id": 44521676,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T01:02:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gully00"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Maybe the UX of a Typeform is OK but the Typeform app to build forms is virtually unusable for anyone that actually needs forms. \nThe most basic settings are hidden behind unrelated, unlabeled buttons. Because theres not enough white space already on the page obviously. \nThe way they've architected pages and components, totally inflexible and leads to very unnatural flows in a lot of cases. \nTo date I have never seen an integration UX worse than Typeform's. Using Airtable for example, a single alteration needed means resetting and reconfiguring the entire field mapping. You can have a borked integration config and have NO idea from within the app. Building with typeform takes easily 5x longer than any other form tool we've used.\nThe call to action &quot;Book a Free Strategy Call&quot; is 25 characters. Typeform's native popup embed has an arbitrary 24 character limit on the button's text. \n&quot;Book a Free Strategy Cal&quot; is the exact kind of garbage I expect from a site that uses Typeform. Yes, there's (undocumented) workarounds.<p>With a number of team members we paid Typeform $100+ each month for this experience.<p>I found Tally and immediately got agreement to migrate every (~50) Typeforms to it. Canceled Typeform sub and haven't looked back."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gully00",
+          "story_44518898"
+        ],
+        "author": "gully00",
+        "comment_text": "Maybe the UX of a Typeform is OK but the Typeform app to build forms is virtually unusable for anyone that actually needs forms. \nThe most basic settings are hidden behind unrelated, unlabeled buttons. Because theres not enough white space already on the page obviously. \nThe way they&#x27;ve architected pages and components, totally inflexible and leads to very unnatural flows in a lot of cases. \nTo date I have never seen an integration UX worse than Typeform&#x27;s. Using Airtable for example, a single alteration needed means resetting and reconfiguring the entire field mapping. You can have a borked integration config and have NO idea from within the app. Building with typeform takes easily 5x longer than any other form tool we&#x27;ve used.\nThe call to action &quot;Book a Free Strategy Call&quot; is 25 characters. Typeform&#x27;s native popup embed has an arbitrary 24 character limit on the button&#x27;s text. \n&quot;Book a Free Strategy Cal&quot; is the exact kind of garbage I expect from a site that uses Typeform. Yes, there&#x27;s (undocumented) workarounds.<p>With a number of team members we paid Typeform $100+ each month for this experience.<p>I found Tally and immediately got agreement to migrate every (~50) Typeforms to it. Canceled Typeform sub and haven&#x27;t looked back.",
+        "created_at": "2025-07-10T21:04:04Z",
+        "created_at_i": 1752181444,
+        "objectID": "44525595",
+        "parent_id": 44520371,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T02:44:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "solfox"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For what it’s worth, I searched for an alternative and ended up finding deftform.com on appsumo with an affordable lifetime subscription. I’m very pleased as it replaces a bunch of other apps I was using like Google Forms and hellosign."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_solfox",
+          "story_44518898"
+        ],
+        "author": "solfox",
+        "comment_text": "For what it’s worth, I searched for an alternative and ended up finding deftform.com on appsumo with an affordable lifetime subscription. I’m very pleased as it replaces a bunch of other apps I was using like Google Forms and hellosign.",
+        "created_at": "2025-07-10T20:20:26Z",
+        "created_at_i": 1752178826,
+        "objectID": "44525101",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T20:25:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "snowwrestler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When does a marketing tactic become “traditional”? Putting ‘Powered By’ tags on products goes back at least 20 years."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_snowwrestler",
+          "story_44518898"
+        ],
+        "author": "snowwrestler",
+        "children": [
+          44534983,
+          44528115,
+          44528587
+        ],
+        "comment_text": "When does a marketing tactic become “traditional”? Putting ‘Powered By’ tags on products goes back at least 20 years.",
+        "created_at": "2025-07-10T19:15:06Z",
+        "created_at_i": 1752174906,
+        "objectID": "44524482",
+        "parent_id": 44521873,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T17:40:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hoppp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Definitely. But OP is probably on free tier, thats why this happens<p>Vercel is fine for stage deployment but for production even a solar powered raspberry pi is better, if vercel willpause the instance if there is too much traffic."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hoppp",
+          "story_44518898"
+        ],
+        "author": "hoppp",
+        "comment_text": "Definitely. But OP is probably on free tier, thats why this happens<p>Vercel is fine for stage deployment but for production even a solar powered raspberry pi is better, if vercel willpause the instance if there is too much traffic.",
+        "created_at": "2025-07-10T19:09:53Z",
+        "created_at_i": 1752174593,
+        "objectID": "44524417",
+        "parent_id": 44524329,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T00:02:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "js4ever"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;This deployment is temporarily paused&quot; it seems you spent all your vercel quota.<p>You would &quot;scale&quot; better with a $5 vps"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_js4ever",
+          "story_44518898"
+        ],
+        "author": "js4ever",
+        "children": [
+          44524417
+        ],
+        "comment_text": "&quot;This deployment is temporarily paused&quot; it seems you spent all your vercel quota.<p>You would &quot;scale&quot; better with a $5 vps",
+        "created_at": "2025-07-10T19:01:22Z",
+        "created_at_i": 1752174082,
+        "objectID": "44524329",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T22:33:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lr0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Looks like it shows a Vercel error: &quot;This deployment is temporarily paused&quot; as for now. <a href=\"https://web.archive.org/web/20250710190011/https://www.ikiform.com/\" rel=\"nofollow\">https://web.archive.org/web/20250710190011/https://www.ikifo...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lr0",
+          "story_44518898"
+        ],
+        "author": "lr0",
+        "comment_text": "Looks like it shows a Vercel error: &quot;This deployment is temporarily paused&quot; as for now. <a href=\"https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20250710190011&#x2F;https:&#x2F;&#x2F;www.ikiform.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20250710190011&#x2F;https:&#x2F;&#x2F;www.ikifo...</a>",
+        "created_at": "2025-07-10T19:00:34Z",
+        "created_at_i": 1752174034,
+        "objectID": "44524327",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T19:05:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "breadwinner"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Aren't Typeform, Google Forms, Microsoft Forms all basically similar in that they are good for surveys etc. but not for much else? Airtable ( <a href=\"https://airtable.com\" rel=\"nofollow\">https://airtable.com</a> ) has more typical forms and so does Visual DB ( <a href=\"https://visualdb.com\" rel=\"nofollow\">https://visualdb.com</a> )."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_breadwinner",
+          "story_44518898"
+        ],
+        "author": "breadwinner",
+        "comment_text": "Aren&#x27;t Typeform, Google Forms, Microsoft Forms all basically similar in that they are good for surveys etc. but not for much else? Airtable ( <a href=\"https:&#x2F;&#x2F;airtable.com\" rel=\"nofollow\">https:&#x2F;&#x2F;airtable.com</a> ) has more typical forms and so does Visual DB ( <a href=\"https:&#x2F;&#x2F;visualdb.com\" rel=\"nofollow\">https:&#x2F;&#x2F;visualdb.com</a> ).",
+        "created_at": "2025-07-10T18:31:15Z",
+        "created_at_i": 1752172275,
+        "objectID": "44524056",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T18:48:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bornfreddy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mandatory reading for anyone implementing forms with names: Falsehoods Programmers Believe About Names [0].<p>[0] <a href=\"https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/\" rel=\"nofollow\">https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bornfreddy",
+          "story_44518898"
+        ],
+        "author": "bornfreddy",
+        "children": [
+          44531124
+        ],
+        "comment_text": "Mandatory reading for anyone implementing forms with names: Falsehoods Programmers Believe About Names [0].<p>[0] <a href=\"https:&#x2F;&#x2F;www.kalzumeus.com&#x2F;2010&#x2F;06&#x2F;17&#x2F;falsehoods-programmers-believe-about-names&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.kalzumeus.com&#x2F;2010&#x2F;06&#x2F;17&#x2F;falsehoods-programmers-...</a>",
+        "created_at": "2025-07-10T18:04:27Z",
+        "created_at_i": 1752170667,
+        "objectID": "44523789",
+        "parent_id": 44522711,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T11:57:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kccqzy"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm probably in the minority here but I don't find Google Forms unprofessional, much like I don't find Google Docs or Sheets unprofessional. That said, I hate TypeForm and its auto-scrolling behavior."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kccqzy",
+          "story_44518898"
+        ],
+        "author": "kccqzy",
+        "children": [
+          44654787
+        ],
+        "comment_text": "I&#x27;m probably in the minority here but I don&#x27;t find Google Forms unprofessional, much like I don&#x27;t find Google Docs or Sheets unprofessional. That said, I hate TypeForm and its auto-scrolling behavior.",
+        "created_at": "2025-07-10T16:42:03Z",
+        "created_at_i": 1752165723,
+        "objectID": "44522891",
+        "parent_id": 44520547,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-23T01:15:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MajimasEyepatch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "They're not explicitly asked for, but everywhere I've worked that's tested them has found that they improve conversion rates."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MajimasEyepatch",
+          "story_44518898"
+        ],
+        "author": "MajimasEyepatch",
+        "children": [
+          44527994
+        ],
+        "comment_text": "They&#x27;re not explicitly asked for, but everywhere I&#x27;ve worked that&#x27;s tested them has found that they improve conversion rates.",
+        "created_at": "2025-07-10T16:28:39Z",
+        "created_at_i": 1752164919,
+        "objectID": "44522765",
+        "parent_id": 44519748,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-12T04:11:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "davsti4"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Looks good - I was only able to use the demo partially. The page needed access to: client.crisp.chat , pbs.twimg.com ; assets.onedollarstats.com ; and googletagmanager.com .<p>I'm assuming I can remove these dependencies for my own use?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_davsti4",
+          "story_44518898"
+        ],
+        "author": "davsti4",
+        "comment_text": "Looks good - I was only able to use the demo partially. The page needed access to: client.crisp.chat , pbs.twimg.com ; assets.onedollarstats.com ; and googletagmanager.com .<p>I&#x27;m assuming I can remove these dependencies for my own use?",
+        "created_at": "2025-07-10T16:28:32Z",
+        "created_at_i": 1752164912,
+        "objectID": "44522763",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T16:29:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MajimasEyepatch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There's a few reasons. The biggest one, IMO, is that it lets non-technical users change things quickly without having to go through the engineering team. Obviously there are limits to that, but in many cases, a product or marketing team wants to modify a form or test a few variations without having to put it into a backlog, wait for engineers to size it, wait for an upcoming sprint, then wait another two weeks for it to get completed and deployed. (Even in more nimble organizations, cutting out the handoff to engineering saves time, eliminates communication issues, and frees up the engineering team to do more valuable work.)<p>On the technical side, these form builders can actually save a decent amount of development effort. Sure, it's easy to build a basic HTML form, but once you start factoring in things like validation, animations, transitions, conditional routing, error handling, localization, accessibility, and tricky UI like date pickers and fancy dropdowns, making a really polished form is actually a lot of work. You either have to cobble together a bunch of third-party libraries and try to make them play nicely together, or you end up building your own reusable, extensible, modular form library.<p>It's one of those projects that sounds simple, but scope creep is almost inevitable. Instead of spending your time building things that actually make money, you're spending time on your form library because suddenly you have to show different questions on the next screen based on previous responses. Or you have to handle right-to-left languages like Arabic, and it's not working in Safari on iOS. Or your predecessor failed to do any due diligence before deciding to use a datepicker widget that was maintained by some random guy at a web agency in the Midwest that went out of business five years ago, and now you have to fork it because there's a bug that's impacting your company's biggest client.<p>Or, instead of all that, you could just pay Typeform a fraction of the salary for one engineer and never have to think about those things ever again."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MajimasEyepatch",
+          "story_44518898"
+        ],
+        "author": "MajimasEyepatch",
+        "comment_text": "There&#x27;s a few reasons. The biggest one, IMO, is that it lets non-technical users change things quickly without having to go through the engineering team. Obviously there are limits to that, but in many cases, a product or marketing team wants to modify a form or test a few variations without having to put it into a backlog, wait for engineers to size it, wait for an upcoming sprint, then wait another two weeks for it to get completed and deployed. (Even in more nimble organizations, cutting out the handoff to engineering saves time, eliminates communication issues, and frees up the engineering team to do more valuable work.)<p>On the technical side, these form builders can actually save a decent amount of development effort. Sure, it&#x27;s easy to build a basic HTML form, but once you start factoring in things like validation, animations, transitions, conditional routing, error handling, localization, accessibility, and tricky UI like date pickers and fancy dropdowns, making a really polished form is actually a lot of work. You either have to cobble together a bunch of third-party libraries and try to make them play nicely together, or you end up building your own reusable, extensible, modular form library.<p>It&#x27;s one of those projects that sounds simple, but scope creep is almost inevitable. Instead of spending your time building things that actually make money, you&#x27;re spending time on your form library because suddenly you have to show different questions on the next screen based on previous responses. Or you have to handle right-to-left languages like Arabic, and it&#x27;s not working in Safari on iOS. Or your predecessor failed to do any due diligence before deciding to use a datepicker widget that was maintained by some random guy at a web agency in the Midwest that went out of business five years ago, and now you have to fork it because there&#x27;s a bug that&#x27;s impacting your company&#x27;s biggest client.<p>Or, instead of all that, you could just pay Typeform a fraction of the salary for one engineer and never have to think about those things ever again.",
+        "created_at": "2025-07-10T16:25:46Z",
+        "created_at_i": 1752164746,
+        "objectID": "44522732",
+        "parent_id": 44521865,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T21:26:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "RandomBacon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The name fields have a minimum length of two characters.  There are people with single character names."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_RandomBacon",
+          "story_44518898"
+        ],
+        "author": "RandomBacon",
+        "children": [
+          44523789
+        ],
+        "comment_text": "The name fields have a minimum length of two characters.  There are people with single character names.",
+        "created_at": "2025-07-10T16:24:11Z",
+        "created_at_i": 1752164651,
+        "objectID": "44522711",
+        "parent_id": 44519445,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-11T00:02:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Tsarp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I recently had to do a form and just asked claude to \n1. Write up the form with the questions styled with tailwind, shadcn, heroui.\n2. Wire it up and give me a cloudflare function to write to a KV store\n3. Instructions on how to setup above with cloudflare free tier.<p>It got it in the first shot, took me &lt;3-4mins to copy paste in cloudflare. Been working well so far, the page is also hosted on cloudflare pages and hasnt cost anything so far."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Tsarp",
+          "story_44518898"
+        ],
+        "author": "Tsarp",
+        "comment_text": "I recently had to do a form and just asked claude to \n1. Write up the form with the questions styled with tailwind, shadcn, heroui.\n2. Wire it up and give me a cloudflare function to write to a KV store\n3. Instructions on how to setup above with cloudflare free tier.<p>It got it in the first shot, took me &lt;3-4mins to copy paste in cloudflare. Been working well so far, the page is also hosted on cloudflare pages and hasnt cost anything so far.",
+        "created_at": "2025-07-10T16:23:23Z",
+        "created_at_i": 1752164603,
+        "objectID": "44522704",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T16:39:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jadedragon942"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I find it baffling that people are paying $300/month for what amounts to a simple set of HTML and a simple backend. That's insane."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jadedragon942",
+          "story_44518898"
+        ],
+        "author": "jadedragon942",
+        "comment_text": "I find it baffling that people are paying $300&#x2F;month for what amounts to a simple set of HTML and a simple backend. That&#x27;s insane.",
+        "created_at": "2025-07-10T16:17:35Z",
+        "created_at_i": 1752164255,
+        "objectID": "44522644",
+        "parent_id": 44521311,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T16:19:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gbalduzzi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "They are not libraries, they are form builders.<p>You create the form / survey without touching code and without provisioning or setup any infrastructure.<p>They are particular useful to companies wanting to do surveys without involving a development team"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gbalduzzi",
+          "story_44518898"
+        ],
+        "author": "gbalduzzi",
+        "comment_text": "They are not libraries, they are form builders.<p>You create the form &#x2F; survey without touching code and without provisioning or setup any infrastructure.<p>They are particular useful to companies wanting to do surveys without involving a development team",
+        "created_at": "2025-07-10T16:00:46Z",
+        "created_at_i": 1752163246,
+        "objectID": "44522470",
+        "parent_id": 44521865,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T19:21:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "scosman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "On iOS the pricing link doesn’t work and the browser back button also doesn’t work."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_scosman",
+          "story_44518898"
+        ],
+        "author": "scosman",
+        "comment_text": "On iOS the pricing link doesn’t work and the browser back button also doesn’t work.",
+        "created_at": "2025-07-10T15:55:24Z",
+        "created_at_i": 1752162924,
+        "objectID": "44522409",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T15:58:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sosborn"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As a heavy user of Formsite, these would be the features I would prioritize:<p>- Logic branching (if question 1 answer is 'A', then hide question 2. etc)\n- Confirmation emails to the submitter\n- Widgets to insert design elements (static text, images, etc)<p>IMO, these are bare minimum for B2B business if you are interested in pursuing that.<p>Having said that, this is a great start."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sosborn",
+          "story_44518898"
+        ],
+        "author": "sosborn",
+        "comment_text": "As a heavy user of Formsite, these would be the features I would prioritize:<p>- Logic branching (if question 1 answer is &#x27;A&#x27;, then hide question 2. etc)\n- Confirmation emails to the submitter\n- Widgets to insert design elements (static text, images, etc)<p>IMO, these are bare minimum for B2B business if you are interested in pursuing that.<p>Having said that, this is a great start.",
+        "created_at": "2025-07-10T15:49:12Z",
+        "created_at_i": 1752162552,
+        "objectID": "44522330",
+        "parent_id": 44519601,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T15:52:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DonnyV"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I can't believe that Typeform is the standard in the industry. Is it me or does the whole product have a constant delay to the UI? Also the form building part seems really bad. Nothing is intuitive. Not a fan of one question per page. Also why is it so hard to add multiple questions per page. I had to Google how to do that just to find the option."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DonnyV",
+          "story_44518898"
+        ],
+        "author": "DonnyV",
+        "comment_text": "I can&#x27;t believe that Typeform is the standard in the industry. Is it me or does the whole product have a constant delay to the UI? Also the form building part seems really bad. Nothing is intuitive. Not a fan of one question per page. Also why is it so hard to add multiple questions per page. I had to Google how to do that just to find the option.",
+        "created_at": "2025-07-10T15:37:20Z",
+        "created_at_i": 1752161840,
+        "objectID": "44522203",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T16:54:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "diggan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; And expect to do tons of marketing.<p>Fun fact: Typeform basically did no &quot;traditional&quot; marketing in the beginning of its life, and most users came from the &quot;Powered by Typeform&quot; button in the bottom right, which was visible for every free form IIRC. Those users, also publishing their own forms, led to more users finding Typeform from that same button."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_diggan",
+          "story_44518898"
+        ],
+        "author": "diggan",
+        "children": [
+          44524482
+        ],
+        "comment_text": "&gt; And expect to do tons of marketing.<p>Fun fact: Typeform basically did no &quot;traditional&quot; marketing in the beginning of its life, and most users came from the &quot;Powered by Typeform&quot; button in the bottom right, which was visible for every free form IIRC. Those users, also publishing their own forms, led to more users finding Typeform from that same button.",
+        "created_at": "2025-07-10T15:02:07Z",
+        "created_at_i": 1752159727,
+        "objectID": "44521873",
+        "parent_id": 44521781,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T19:15:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dev-ns8"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What is the value proposition for these form libraries? Is it scale? Is it the custom builder? How complex are people's HTML forms these days from a UX perspective?<p>I was browsing the code, and noticed this forms library was using Supabase, presumably a paid service if this OSS library takes off. I just can't seem to grasp why a custom form building library needs a 3rd party, managed Database included. Scale maybe?<p>These are genuine questions as I'm woefully unaware of the state of HTML forms  / Frontend in 2025"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dev-ns8",
+          "story_44518898"
+        ],
+        "author": "dev-ns8",
+        "children": [
+          44522470,
+          44522732
+        ],
+        "comment_text": "What is the value proposition for these form libraries? Is it scale? Is it the custom builder? How complex are people&#x27;s HTML forms these days from a UX perspective?<p>I was browsing the code, and noticed this forms library was using Supabase, presumably a paid service if this OSS library takes off. I just can&#x27;t seem to grasp why a custom form building library needs a 3rd party, managed Database included. Scale maybe?<p>These are genuine questions as I&#x27;m woefully unaware of the state of HTML forms  &#x2F; Frontend in 2025",
+        "created_at": "2025-07-10T15:00:54Z",
+        "created_at_i": 1752159654,
+        "objectID": "44521865",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T19:21:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "snowwrestler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Form builders are a hard business to succeed with. Quite a lot of companies started off as a general “form builder” product and then found success by specializing into specific uses of forms. Examples include Qualtrics, Survey Monkey, Open Water, etc. Quite a lot of other companies stick with generic forms and get stuck and stagnate.<p>The reason is that forms are like dates, time, addresses, names, to-do lists, etc. They are things that many developers need to work with, but are way deeper and more complicated than they seem at first. See the wide variety of feedback and suggestions just in this HN thread.<p>So I would recommend specializing if you want to gain traction. And expect to do tons of marketing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_snowwrestler",
+          "story_44518898"
+        ],
+        "author": "snowwrestler",
+        "children": [
+          44521873
+        ],
+        "comment_text": "Form builders are a hard business to succeed with. Quite a lot of companies started off as a general “form builder” product and then found success by specializing into specific uses of forms. Examples include Qualtrics, Survey Monkey, Open Water, etc. Quite a lot of other companies stick with generic forms and get stuck and stagnate.<p>The reason is that forms are like dates, time, addresses, names, to-do lists, etc. They are things that many developers need to work with, but are way deeper and more complicated than they seem at first. See the wide variety of feedback and suggestions just in this HN thread.<p>So I would recommend specializing if you want to gain traction. And expect to do tons of marketing.",
+        "created_at": "2025-07-10T14:53:24Z",
+        "created_at_i": 1752159204,
+        "objectID": "44521781",
+        "parent_id": 44518898,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T21:26:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vidyesh"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There is a reason why almost all ERP apps end up being almost the same. When you build a product with a USP that makes you special, at some point your client will ask for all the basic things that are required for that product (provided by your competitors) and generally for businesses this becomes the reason to stay with you; your USP and you providing everything else that is expected from the product category.<p>The point is, you have defined your USP. Its cheaper Typeform alternative for SMBs, stick with it and build the product around it and meet all the basic requirements first. Do some research and find out which features a typical form builder wants or which Typeform features are most used. Have those ready and then work on the other fancy things.<p>And have a number in mind, after X number of clients increase your price. And seriously increase your price now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeform was too expensive so I built my own forms"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.ikiform.com/"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vidyesh",
+          "story_44518898"
+        ],
+        "author": "vidyesh",
+        "comment_text": "There is a reason why almost all ERP apps end up being almost the same. When you build a product with a USP that makes you special, at some point your client will ask for all the basic things that are required for that product (provided by your competitors) and generally for businesses this becomes the reason to stay with you; your USP and you providing everything else that is expected from the product category.<p>The point is, you have defined your USP. Its cheaper Typeform alternative for SMBs, stick with it and build the product around it and meet all the basic requirements first. Do some research and find out which features a typical form builder wants or which Typeform features are most used. Have those ready and then work on the other fancy things.<p>And have a number in mind, after X number of clients increase your price. And seriously increase your price now.",
+        "created_at": "2025-07-10T14:52:33Z",
+        "created_at_i": 1752159153,
+        "objectID": "44521771",
+        "parent_id": 44519601,
+        "story_id": 44518898,
+        "story_title": "Show HN: Typeform was too expensive so I built my own forms",
+        "story_url": "https://www.ikiform.com/",
+        "updated_at": "2025-07-10T15:20:53Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 95,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_44518898&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 1,
+        "roundTrip": 20
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 4
+  }
+}

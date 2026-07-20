@@ -1,0 +1,725 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48857085",
+    "window": "recent-90d",
+    "tag": "ask_hn",
+    "score": 122
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_w"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks to LLMs being good at writing CVs and cover letters, <i>all</i> job hunting right now is in the snipe-hunt danger-zone."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ben_w",
+          "story_48857085"
+        ],
+        "author": "ben_w",
+        "comment_text": "Thanks to LLMs being good at writing CVs and cover letters, <i>all</i> job hunting right now is in the snipe-hunt danger-zone.",
+        "created_at": "2026-07-11T08:47:25Z",
+        "created_at_i": 1783759645,
+        "objectID": "48870120",
+        "parent_id": 48864689,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T08:52:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_w"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; No, because that’s the point. It’s not intelligent because intelligence is a human characteristic.<p>A rose by any other name, etc.<p>Defining the meaning of the word you use to suit your preferences and then gluing to that other people's uses of the same word is not a well-reasoned argument, it's the human equivalent of a failure mode we saw in early AI, where a label saying &quot;taxi&quot; can fool a classifier into thinking a clock is a taxi: <a href=\"https://bliss-e-v.github.io/SCAM-project-page/\" rel=\"nofollow\">https://bliss-e-v.github.io/SCAM-project-page/</a><p>Will you choosing a tautologically-limiting definition that equals human, prevent AI from performing well enough to replace you at work? No, it will not: when the AI is good enough to do the work, it will do the work regardless of what you call it.<p>This has already happened in various other fields that have been automated, even though (a) the consensus is those AI are &quot;not intelligent&quot; and (b) workers before that automation insisted their work required intelligence and could not be automated.<p>(Plus the same example in the opposite direction: while creationists are busy denying that evolution can work and claiming there has to be an intelligent designer, simulated evolution is a standard approach in machine learning).<p>&gt; It’s not that they search interactively, it’s that the whole internet has been sucked into the training set.<p>Training.<p>As in, <i>it learned</i>. First by reading the internet, then by feedback as it tried to make stuff and was rated by the quality of output.<p>It would be coherent to argue instead that intelligence is the number of examples one needs before one has learned a thing; by this standard AI is as thick as pond scum (rate: evolution), and even the fact that silicon is faster than synapses by the ratio to which joggers are faster than continental drift only makes up for this where the examples exist.<p>Unfortunately, this topic is software, and the examples exist."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ben_w",
+          "story_48857085"
+        ],
+        "author": "ben_w",
+        "comment_text": "&gt; No, because that’s the point. It’s not intelligent because intelligence is a human characteristic.<p>A rose by any other name, etc.<p>Defining the meaning of the word you use to suit your preferences and then gluing to that other people&#x27;s uses of the same word is not a well-reasoned argument, it&#x27;s the human equivalent of a failure mode we saw in early AI, where a label saying &quot;taxi&quot; can fool a classifier into thinking a clock is a taxi: <a href=\"https:&#x2F;&#x2F;bliss-e-v.github.io&#x2F;SCAM-project-page&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;bliss-e-v.github.io&#x2F;SCAM-project-page&#x2F;</a><p>Will you choosing a tautologically-limiting definition that equals human, prevent AI from performing well enough to replace you at work? No, it will not: when the AI is good enough to do the work, it will do the work regardless of what you call it.<p>This has already happened in various other fields that have been automated, even though (a) the consensus is those AI are &quot;not intelligent&quot; and (b) workers before that automation insisted their work required intelligence and could not be automated.<p>(Plus the same example in the opposite direction: while creationists are busy denying that evolution can work and claiming there has to be an intelligent designer, simulated evolution is a standard approach in machine learning).<p>&gt; It’s not that they search interactively, it’s that the whole internet has been sucked into the training set.<p>Training.<p>As in, <i>it learned</i>. First by reading the internet, then by feedback as it tried to make stuff and was rated by the quality of output.<p>It would be coherent to argue instead that intelligence is the number of examples one needs before one has learned a thing; by this standard AI is as thick as pond scum (rate: evolution), and even the fact that silicon is faster than synapses by the ratio to which joggers are faster than continental drift only makes up for this where the examples exist.<p>Unfortunately, this topic is software, and the examples exist.",
+        "created_at": "2026-07-11T06:56:29Z",
+        "created_at_i": 1783752989,
+        "objectID": "48869474",
+        "parent_id": 48866389,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T07:49:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "spzb"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Can you define these in ways that aren't tautologically limited to humans?<p>No, because that’s the point. It’s not intelligent because intelligence is a human characteristic.<p>&gt; Both because local models exist, can be run offline<p>It’s not that they search interactively, it’s that the whole internet has been sucked into the training set."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_spzb",
+          "story_48857085"
+        ],
+        "author": "spzb",
+        "children": [
+          48869474
+        ],
+        "comment_text": "&gt; Can you define these in ways that aren&#x27;t tautologically limited to humans?<p>No, because that’s the point. It’s not intelligent because intelligence is a human characteristic.<p>&gt; Both because local models exist, can be run offline<p>It’s not that they search interactively, it’s that the whole internet has been sucked into the training set.",
+        "created_at": "2026-07-10T22:57:40Z",
+        "created_at_i": 1783724260,
+        "objectID": "48866389",
+        "parent_id": 48864059,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T06:57:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tanseydavid"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for stopping by to leave 4 separate, scathing, contempt-filled comments.<p>So I guess it is safe to assume that you would not be interested in a &quot;a support group for developers alienated by LLMs?&quot;<p>Yes, that is a rhetorical question."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tanseydavid",
+          "story_48857085"
+        ],
+        "author": "tanseydavid",
+        "comment_text": "Thanks for stopping by to leave 4 separate, scathing, contempt-filled comments.<p>So I guess it is safe to assume that you would not be interested in a &quot;a support group for developers alienated by LLMs?&quot;<p>Yes, that is a rhetorical question.",
+        "created_at": "2026-07-10T20:33:55Z",
+        "created_at_i": 1783715635,
+        "objectID": "48864865",
+        "parent_id": 48861626,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T09:25:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tanseydavid"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Can you find one?  Can you hire them?  It is basically a &quot;snipe-hunt&quot;."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tanseydavid",
+          "story_48857085"
+        ],
+        "author": "tanseydavid",
+        "children": [
+          48870120
+        ],
+        "comment_text": "Can you find one?  Can you hire them?  It is basically a &quot;snipe-hunt&quot;.",
+        "created_at": "2026-07-10T20:17:01Z",
+        "created_at_i": 1783714621,
+        "objectID": "48864689",
+        "parent_id": 48862294,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T08:48:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sdevonoes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My existence has as substrate: shelter, food and healthcare. Money provides these via jobs. Once that’s covered, sure, pleasure comes.<p>I don’t like it, but that’s how im playing the game of life"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sdevonoes",
+          "story_48857085"
+        ],
+        "author": "sdevonoes",
+        "comment_text": "My existence has as substrate: shelter, food and healthcare. Money provides these via jobs. Once that’s covered, sure, pleasure comes.<p>I don’t like it, but that’s how im playing the game of life",
+        "created_at": "2026-07-10T19:53:32Z",
+        "created_at_i": 1783713212,
+        "objectID": "48864422",
+        "parent_id": 48861582,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T21:29:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_w"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You may laugh/cry with the contents of: <a href=\"https://thedailywtf.com\" rel=\"nofollow\">https://thedailywtf.com</a><p>As with the sibling comment, I advise you to be skeptical of causation: lots of corporations have weird office politics and you'll need to rule that out before you can tell if it's AI or just your boss.<p>&gt; Idk, might switch to driving trains, if they don't automate that too...<p>I'm surprised they've not already been entirely automated away. A few lines were created fully automated and seem to have managed fine ever since. Much easier than self-driving cars."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ben_w",
+          "story_48857085"
+        ],
+        "author": "ben_w",
+        "comment_text": "You may laugh&#x2F;cry with the contents of: <a href=\"https:&#x2F;&#x2F;thedailywtf.com\" rel=\"nofollow\">https:&#x2F;&#x2F;thedailywtf.com</a><p>As with the sibling comment, I advise you to be skeptical of causation: lots of corporations have weird office politics and you&#x27;ll need to rule that out before you can tell if it&#x27;s AI or just your boss.<p>&gt; Idk, might switch to driving trains, if they don&#x27;t automate that too...<p>I&#x27;m surprised they&#x27;ve not already been entirely automated away. A few lines were created fully automated and seem to have managed fine ever since. Much easier than self-driving cars.",
+        "created_at": "2026-07-10T19:29:18Z",
+        "created_at_i": 1783711758,
+        "objectID": "48864143",
+        "parent_id": 48860289,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T19:30:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_w"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is mostly false.<p>&gt; It doesn't design architecture.<p>It can do that. Won't say it's amazing, but it can do it.<p>&gt; It doesn't think. It doesn't reason.<p>Can you define these in ways that aren't tautologically limited to humans? I have yet to encounter anyone who has managed this while making such an objection to any form of AI.<p>&gt; All it does is search for and copy-paste code from elsewhere on the internet.<p>They provably don't work like that. Both because local models exist, can be run offline, still spit out code to solve problems; and because some world records have been set by them, for some CS-related maths problems the best known method was invented by an AI which used an LLM as a component.<p><a href=\"https://the-decoder.com/openais-ai-beats-every-human-at-atcoder-a-top-competitive-programming-contest/\" rel=\"nofollow\">https://the-decoder.com/openais-ai-beats-every-human-at-atco...</a><p><a href=\"https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/?utm_source=chatgpt.com\" rel=\"nofollow\">https://deepmind.google/blog/alphaevolve-a-gemini-powered-co...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ben_w",
+          "story_48857085"
+        ],
+        "author": "ben_w",
+        "children": [
+          48866389
+        ],
+        "comment_text": "This is mostly false.<p>&gt; It doesn&#x27;t design architecture.<p>It can do that. Won&#x27;t say it&#x27;s amazing, but it can do it.<p>&gt; It doesn&#x27;t think. It doesn&#x27;t reason.<p>Can you define these in ways that aren&#x27;t tautologically limited to humans? I have yet to encounter anyone who has managed this while making such an objection to any form of AI.<p>&gt; All it does is search for and copy-paste code from elsewhere on the internet.<p>They provably don&#x27;t work like that. Both because local models exist, can be run offline, still spit out code to solve problems; and because some world records have been set by them, for some CS-related maths problems the best known method was invented by an AI which used an LLM as a component.<p><a href=\"https:&#x2F;&#x2F;the-decoder.com&#x2F;openais-ai-beats-every-human-at-atcoder-a-top-competitive-programming-contest&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;the-decoder.com&#x2F;openais-ai-beats-every-human-at-atco...</a><p><a href=\"https:&#x2F;&#x2F;deepmind.google&#x2F;blog&#x2F;alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms&#x2F;?utm_source=chatgpt.com\" rel=\"nofollow\">https:&#x2F;&#x2F;deepmind.google&#x2F;blog&#x2F;alphaevolve-a-gemini-powered-co...</a>",
+        "created_at": "2026-07-10T19:21:34Z",
+        "created_at_i": 1783711294,
+        "objectID": "48864059",
+        "parent_id": 48863536,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T22:58:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ben_w"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There's things it can do, so long as you use it as your complement, i.e. all the stuff you know is important you just go &quot;ugh&quot; when faced with. For me, that means unit tests. I can write them, I know why I should write them, I have professional experience with them, I can judge which unit tests are useful and which are make-work and which have missed the point entirely, but I'd rather not be the one to actually write them.<p>LLMs can write them for me, and I can happily look through them to make sure what the LLM made was neither brittle, nor testing unimportant things while missing the important stuff.<p>They can also help with code review, but only to a limited degree; a second pair of eyes to avoid lazy people going &quot;LGTM&quot;, or the other way around time-wasting feedback from bike-shedders, but as with unit tests, right now you still need to be the kind of person who is happy to double-check its work — if you're the kind who was previously a little too quick to accept pull requests with a &quot;LGTM&quot;, you may well be too willing to listen to irrelevant bike-shedding from the LLM or not realise it is missing the point of the code or the ticket.<p>But if you use it to replace the stuff you're already good at, and not help with the stuff you're weak at, it'll probably slow you down while also making the code worse."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ben_w",
+          "story_48857085"
+        ],
+        "author": "ben_w",
+        "comment_text": "There&#x27;s things it can do, so long as you use it as your complement, i.e. all the stuff you know is important you just go &quot;ugh&quot; when faced with. For me, that means unit tests. I can write them, I know why I should write them, I have professional experience with them, I can judge which unit tests are useful and which are make-work and which have missed the point entirely, but I&#x27;d rather not be the one to actually write them.<p>LLMs can write them for me, and I can happily look through them to make sure what the LLM made was neither brittle, nor testing unimportant things while missing the important stuff.<p>They can also help with code review, but only to a limited degree; a second pair of eyes to avoid lazy people going &quot;LGTM&quot;, or the other way around time-wasting feedback from bike-shedders, but as with unit tests, right now you still need to be the kind of person who is happy to double-check its work — if you&#x27;re the kind who was previously a little too quick to accept pull requests with a &quot;LGTM&quot;, you may well be too willing to listen to irrelevant bike-shedding from the LLM or not realise it is missing the point of the code or the ticket.<p>But if you use it to replace the stuff you&#x27;re already good at, and not help with the stuff you&#x27;re weak at, it&#x27;ll probably slow you down while also making the code worse.",
+        "created_at": "2026-07-10T19:10:15Z",
+        "created_at_i": 1783710615,
+        "objectID": "48863917",
+        "parent_id": 48858751,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T19:14:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "spzb"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "And yet &quot;slapping the keyboard faster&quot; is all that AI does. It doesn't design architecture. It doesn't think. It doesn't reason. All it does is search for and copy-paste code from elsewhere on the internet. If you're lucky it might even be code that works and does what you want it to."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_spzb",
+          "story_48857085"
+        ],
+        "author": "spzb",
+        "children": [
+          48864059
+        ],
+        "comment_text": "And yet &quot;slapping the keyboard faster&quot; is all that AI does. It doesn&#x27;t design architecture. It doesn&#x27;t think. It doesn&#x27;t reason. All it does is search for and copy-paste code from elsewhere on the internet. If you&#x27;re lucky it might even be code that works and does what you want it to.",
+        "created_at": "2026-07-10T18:34:46Z",
+        "created_at_i": 1783708486,
+        "objectID": "48863536",
+        "parent_id": 48862264,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T19:22:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "boogieknite"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The feeling comes and goes.<p>I'm a hands-on learner. Peers show me their agentic workflows. I'll nod and ask questions and tell them it's cool. But inside I'm spinning out fearing my future will look like these workflows. However, then time passes and that workflow or prototype amounts to nothing but spent credits and time. Then I relax.<p>I'm still part of the problem. I use these tools as a &quot;better google&quot; and require reference links to all of it's assertions.<p>I keep finding myself considering going into nursing or some other in-demand, well-paying job and wonder if I wait long enough the shift will be subsidized somehow."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_boogieknite",
+          "story_48857085"
+        ],
+        "author": "boogieknite",
+        "comment_text": "The feeling comes and goes.<p>I&#x27;m a hands-on learner. Peers show me their agentic workflows. I&#x27;ll nod and ask questions and tell them it&#x27;s cool. But inside I&#x27;m spinning out fearing my future will look like these workflows. However, then time passes and that workflow or prototype amounts to nothing but spent credits and time. Then I relax.<p>I&#x27;m still part of the problem. I use these tools as a &quot;better google&quot; and require reference links to all of it&#x27;s assertions.<p>I keep finding myself considering going into nursing or some other in-demand, well-paying job and wonder if I wait long enough the shift will be subsidized somehow.",
+        "created_at": "2026-07-10T17:19:18Z",
+        "created_at_i": 1783703958,
+        "objectID": "48862679",
+        "parent_id": 48857085,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T18:17:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "adamtaylor_13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My point still stands, the author is confidently stating something that's clearly just wrong. The alternative is that everyone is creating tech debt 10x as fast (while being completely oblivious to it.)<p>It's pretty obvious that's not what's happening. To pretend otherwise would suggest that every software developer everywhere is completely unaware of what tech debt is AND that they don't care at all.<p>Again: it's <i>obviously</i> wrong if we think about it for longer than 5 seconds. This is just pure emotional cope."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_adamtaylor_13",
+          "story_48857085"
+        ],
+        "author": "adamtaylor_13",
+        "children": [
+          48864689
+        ],
+        "comment_text": "My point still stands, the author is confidently stating something that&#x27;s clearly just wrong. The alternative is that everyone is creating tech debt 10x as fast (while being completely oblivious to it.)<p>It&#x27;s pretty obvious that&#x27;s not what&#x27;s happening. To pretend otherwise would suggest that every software developer everywhere is completely unaware of what tech debt is AND that they don&#x27;t care at all.<p>Again: it&#x27;s <i>obviously</i> wrong if we think about it for longer than 5 seconds. This is just pure emotional cope.",
+        "created_at": "2026-07-10T16:41:37Z",
+        "created_at_i": 1783701697,
+        "objectID": "48862294",
+        "parent_id": 48859454,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T20:17:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "adamtaylor_13"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's a pedantic word game. The industry at-large doesn't track lines of code as a measure of velocity. So, yes, faster does mean more productive, since that's what any sane programmer means when they say &quot;I built it faster&quot;. They don't mean that they literally slapped the keyboard faster than someone else."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_adamtaylor_13",
+          "story_48857085"
+        ],
+        "author": "adamtaylor_13",
+        "children": [
+          48863536
+        ],
+        "comment_text": "That&#x27;s a pedantic word game. The industry at-large doesn&#x27;t track lines of code as a measure of velocity. So, yes, faster does mean more productive, since that&#x27;s what any sane programmer means when they say &quot;I built it faster&quot;. They don&#x27;t mean that they literally slapped the keyboard faster than someone else.",
+        "created_at": "2026-07-10T16:39:00Z",
+        "created_at_i": 1783701540,
+        "objectID": "48862264",
+        "parent_id": 48859465,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T20:18:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cliglot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; What if one’s entire existence doesn’t revolve around the role they play in capitalist systems.<p>Quit playing for a little bit. Quit working. See how quickly people derided and devalue you. If I don’t work, I don’t eat, I don’t get a place to sleep, etc. and “the role I play in the capitalist system” determines exactly how much of those things I can have.<p>I find it similar to “it’s not useful to compare yourself to others” adage. In society, you’re constantly evaluated or compared against others: when trying to find work, when trying to find a home, etc.<p>Sure maybe you can fuck off and try and live like Diogenes, but you’ll more likely to just collect a string of arrests or unwanted conflict with junkies.<p>You are entirely defined by your role in the capitalist system because you cannot exist outside of it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cliglot",
+          "story_48857085"
+        ],
+        "author": "cliglot",
+        "comment_text": "&gt; What if one’s entire existence doesn’t revolve around the role they play in capitalist systems.<p>Quit playing for a little bit. Quit working. See how quickly people derided and devalue you. If I don’t work, I don’t eat, I don’t get a place to sleep, etc. and “the role I play in the capitalist system” determines exactly how much of those things I can have.<p>I find it similar to “it’s not useful to compare yourself to others” adage. In society, you’re constantly evaluated or compared against others: when trying to find work, when trying to find a home, etc.<p>Sure maybe you can fuck off and try and live like Diogenes, but you’ll more likely to just collect a string of arrests or unwanted conflict with junkies.<p>You are entirely defined by your role in the capitalist system because you cannot exist outside of it.",
+        "created_at": "2026-07-10T15:54:04Z",
+        "created_at_i": 1783698844,
+        "objectID": "48861646",
+        "parent_id": 48861582,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-11T09:25:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UqWBcuFx6NV4r"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Take this vague, emotive, thought-terminating language to your journal or a pub rant or something. What does this even mean? Only one entity in this interaction has free will and it’s not the LLM. “Humanity reliant on another technology” is hardly news. You’re probably just getting a taste of your own medicine. Most people here have spent their careers at least ATTEMPTING to disrupt industries/areas of society in a way that makes people increasingly reliant on “technology”."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_UqWBcuFx6NV4r",
+          "story_48857085"
+        ],
+        "author": "UqWBcuFx6NV4r",
+        "children": [
+          48864865
+        ],
+        "comment_text": "Take this vague, emotive, thought-terminating language to your journal or a pub rant or something. What does this even mean? Only one entity in this interaction has free will and it’s not the LLM. “Humanity reliant on another technology” is hardly news. You’re probably just getting a taste of your own medicine. Most people here have spent their careers at least ATTEMPTING to disrupt industries&#x2F;areas of society in a way that makes people increasingly reliant on “technology”.",
+        "created_at": "2026-07-10T15:52:43Z",
+        "created_at_i": 1783698763,
+        "objectID": "48861626",
+        "parent_id": 48859590,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T20:34:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UqWBcuFx6NV4r"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What if one’s entire existence doesn’t revolve around the role they play in capitalist systems?\n Comments like this make it blindingly apparent that this is just a VC’s web forum."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_UqWBcuFx6NV4r",
+          "story_48857085"
+        ],
+        "author": "UqWBcuFx6NV4r",
+        "children": [
+          48864422,
+          48861646
+        ],
+        "comment_text": "What if one’s entire existence doesn’t revolve around the role they play in capitalist systems?\n Comments like this make it blindingly apparent that this is just a VC’s web forum.",
+        "created_at": "2026-07-10T15:49:47Z",
+        "created_at_i": 1783698587,
+        "objectID": "48861582",
+        "parent_id": 48860767,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T20:30:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UqWBcuFx6NV4r"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m glad you started your long comment the way that you did, because It made it so easy to discount.<p>I find AI-assisted development to be quite enjoyable. I’ve logged many, many years of full-time development prior to LLMs hitting the scene. By every indication i’ve been given, I am very good at my job. I do not do this job for the money. I wouldn’t be caught dead anywhere near SV, both physically or spiritually.<p>I am not a rare exception or anything. My whole team is like this. I work with many people that’re like this. There is no shortage of voices speaking to this online. You’re in denial.<p>Drop this “you probably just don’t love the craft if you aren’t on my side” BS. it was old six months ago. It’s inexcusably ignorant now.  If your view had such merit you wouldn’t need to be this intellectually dishonest. Accept that different people are different."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_UqWBcuFx6NV4r",
+          "story_48857085"
+        ],
+        "author": "UqWBcuFx6NV4r",
+        "comment_text": "I’m glad you started your long comment the way that you did, because It made it so easy to discount.<p>I find AI-assisted development to be quite enjoyable. I’ve logged many, many years of full-time development prior to LLMs hitting the scene. By every indication i’ve been given, I am very good at my job. I do not do this job for the money. I wouldn’t be caught dead anywhere near SV, both physically or spiritually.<p>I am not a rare exception or anything. My whole team is like this. I work with many people that’re like this. There is no shortage of voices speaking to this online. You’re in denial.<p>Drop this “you probably just don’t love the craft if you aren’t on my side” BS. it was old six months ago. It’s inexcusably ignorant now.  If your view had such merit you wouldn’t need to be this intellectually dishonest. Accept that different people are different.",
+        "created_at": "2026-07-10T15:48:25Z",
+        "created_at_i": 1783698505,
+        "objectID": "48861566",
+        "parent_id": 48858149,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T16:42:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "UqWBcuFx6NV4r"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You are too young to even remotely reliably assert cause. Things get less fun when you do them more often, and you’ll be facing the realities of ‘professional’ development, if you’ve even started doing that yet.<p>Be careful to not falsely attribute this to AI just because the chronically online kids are all up in arms about it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_UqWBcuFx6NV4r",
+          "story_48857085"
+        ],
+        "author": "UqWBcuFx6NV4r",
+        "comment_text": "You are too young to even remotely reliably assert cause. Things get less fun when you do them more often, and you’ll be facing the realities of ‘professional’ development, if you’ve even started doing that yet.<p>Be careful to not falsely attribute this to AI just because the chronically online kids are all up in arms about it.",
+        "created_at": "2026-07-10T15:41:21Z",
+        "created_at_i": 1783698081,
+        "objectID": "48861441",
+        "parent_id": 48860289,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T19:25:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DamnInteresting"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't like generative AI/LLMs. They strip the enjoyable parts out of the work and leave only the tedium, and they cannot be relied upon. Never mind that they're essentially large-scale open source license violators.<p>My employer has been encouraging us to use LLMs in our coding work, and I've been resisting, but their encouragement is rapidly converting into requirement. We have to start submitting reports from Claude showing how much we utilized it. I've been desperately wanting to return more of my time to writing, and this LLM push has been the last psychological shove I needed to start moving away from the industry[1].<p>I'm sure I'll still code for fun, and for my own projects, but I think I'm going to be done with day-job coding unless AI turns out to be a bubble and/or the upcoming unsubsidized price tags throw cold water on the whole enterprise. If I can't make a living with writing, I may have to open a Cajun food truck or something.<p>[1] <a href=\"https://news.ycombinator.com/item?id=48847511\">https://news.ycombinator.com/item?id=48847511</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DamnInteresting",
+          "story_48857085"
+        ],
+        "author": "DamnInteresting",
+        "comment_text": "I don&#x27;t like generative AI&#x2F;LLMs. They strip the enjoyable parts out of the work and leave only the tedium, and they cannot be relied upon. Never mind that they&#x27;re essentially large-scale open source license violators.<p>My employer has been encouraging us to use LLMs in our coding work, and I&#x27;ve been resisting, but their encouragement is rapidly converting into requirement. We have to start submitting reports from Claude showing how much we utilized it. I&#x27;ve been desperately wanting to return more of my time to writing, and this LLM push has been the last psychological shove I needed to start moving away from the industry[1].<p>I&#x27;m sure I&#x27;ll still code for fun, and for my own projects, but I think I&#x27;m going to be done with day-job coding unless AI turns out to be a bubble and&#x2F;or the upcoming unsubsidized price tags throw cold water on the whole enterprise. If I can&#x27;t make a living with writing, I may have to open a Cajun food truck or something.<p>[1] <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48847511\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48847511</a>",
+        "created_at": "2026-07-10T15:33:35Z",
+        "created_at_i": 1783697615,
+        "objectID": "48861367",
+        "parent_id": 48857085,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T18:28:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byronturncoat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This reflects many of the same things that I've been feeling. It's almost a feeling of grief at the lost of a career I really loved. Software engineering is starting to be unrecognizable to me.<p>Even if you're a solid software engineer and do your best to keep up in an AI world, you have to deal with all the indirect impacts that AI has had on collaboration, code quality, management decisions, product decisions, etc.<p>I don't have a solution and I'm really struggling to figure out what I want to do next. I've been unable to identify something that could provide me with income that hasn't been equally harmed by AI. I'm open to suggestions.<p>All that being said, I'd join such a support group"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Do we need a support group for developers alienated by LLMs?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_byronturncoat",
+          "story_48857085"
+        ],
+        "author": "byronturncoat",
+        "comment_text": "This reflects many of the same things that I&#x27;ve been feeling. It&#x27;s almost a feeling of grief at the lost of a career I really loved. Software engineering is starting to be unrecognizable to me.<p>Even if you&#x27;re a solid software engineer and do your best to keep up in an AI world, you have to deal with all the indirect impacts that AI has had on collaboration, code quality, management decisions, product decisions, etc.<p>I don&#x27;t have a solution and I&#x27;m really struggling to figure out what I want to do next. I&#x27;ve been unable to identify something that could provide me with income that hasn&#x27;t been equally harmed by AI. I&#x27;m open to suggestions.<p>All that being said, I&#x27;d join such a support group",
+        "created_at": "2026-07-10T15:23:07Z",
+        "created_at_i": 1783696987,
+        "objectID": "48861208",
+        "parent_id": 48857085,
+        "story_id": 48857085,
+        "story_title": "Ask HN: Do we need a support group for developers alienated by LLMs?",
+        "updated_at": "2026-07-10T19:02:34Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 46,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48857085&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 1,
+        "roundTrip": 21
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

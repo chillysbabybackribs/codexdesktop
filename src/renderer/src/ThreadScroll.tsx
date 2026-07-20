@@ -1,174 +1,20 @@
 import {
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
-import { createContext } from 'react';
-import { resolveMessageScrollerSnapshot } from './message-scroller-visibility';
-import {
-  anchorSpacerHeight,
-  completionScrollMode,
-  keyScrollIntent,
-  shouldRepinOnScroll,
-  wheelIntent,
-  type ReaderScrollIntent,
-} from './thread-scroll-state';
-
-export type MessageScrollerAnchor = {
-  id: string;
-  label: string;
-};
-
-type MessageScrollerVisibility = {
-  currentAnchorId: string | null;
-  visibleMessageIds: string[];
-  jumpToMessage: (id: string) => void;
-};
-
-const MessageScrollerVisibilityContext = createContext<MessageScrollerVisibility>({
-  currentAnchorId: null,
-  visibleMessageIds: [],
-  jumpToMessage: () => undefined,
-});
-
-export function useMessageScrollerVisibility(): MessageScrollerVisibility {
-  return useContext(MessageScrollerVisibilityContext);
-}
-
-function ReaderPositionMenu({
-  anchors,
-}: {
-  anchors: MessageScrollerAnchor[];
-}): React.JSX.Element | null {
-  const { currentAnchorId, visibleMessageIds, jumpToMessage } = useMessageScrollerVisibility();
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const visible = useMemo(() => new Set(visibleMessageIds), [visibleMessageIds]);
-  const currentIndex = Math.max(
-    0,
-    anchors.findIndex((anchor) => anchor.id === currentAnchorId),
-  );
-  const current = anchors[currentIndex];
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handlePointerDown = (event: PointerEvent): void => {
-      if (!menuRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key !== 'Escape') return;
-      setOpen(false);
-      triggerRef.current?.focus();
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
-
-  if (anchors.length < 2 || !current) return null;
-
-  return (
-    <div ref={menuRef} className={`reader-position ${open ? 'is-open' : ''}`}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className="reader-position-trigger"
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-label={`Conversation position: turn ${currentIndex + 1} of ${anchors.length}. Open jump menu.`}
-        title={current.label}
-        onClick={() => setOpen((value) => !value)}
-      >
-        <span className="reader-position-rail" aria-hidden="true">
-          <span
-            className="reader-position-rail-fill"
-            style={
-              {
-                '--reader-progress': `${(currentIndex / (anchors.length - 1)) * 100}%`,
-              } as React.CSSProperties
-            }
-          />
-        </span>
-        <span className="reader-position-count">
-          {currentIndex + 1}
-          <span aria-hidden="true"> / </span>
-          {anchors.length}
-        </span>
-        <svg className="reader-position-chevron" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="m4.75 6.25 3.25 3 3.25-3" />
-        </svg>
-      </button>
-
-      {open ? (
-        <div
-          className="reader-position-menu"
-          role="dialog"
-          aria-label="Jump to a conversation turn"
-        >
-          <div className="reader-position-menu-head">
-            <div>
-              <span className="reader-position-eyebrow">Conversation</span>
-              <strong>Jump to a turn</strong>
-            </div>
-            <span className="reader-position-menu-count">{anchors.length} turns</span>
-          </div>
-          <div className="reader-position-menu-list">
-            {anchors.map((anchor, index) => {
-              const isCurrent = anchor.id === currentAnchorId;
-              const isVisible = visible.has(anchor.id);
-              return (
-                <button
-                  key={anchor.id}
-                  type="button"
-                  className={`reader-position-item ${isCurrent ? 'is-current' : ''} ${isVisible ? 'is-visible' : ''}`}
-                  aria-current={isCurrent ? 'true' : undefined}
-                  onClick={() => {
-                    jumpToMessage(anchor.id);
-                    setOpen(false);
-                    triggerRef.current?.focus();
-                  }}
-                >
-                  <span className="reader-position-item-index">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span className="reader-position-item-label">{anchor.label}</span>
-                  <span className="reader-position-item-dot" aria-hidden="true" />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
 
 // Keeps the transcript pinned to the bottom as content streams in, but yields to
 // the user the moment they scroll up to read back — re-pinning only when they
 // return to the bottom themselves.
-//
-// Mode releases are driven by real input events (wheel, keys, touch, selection
-// drag), never by bare scroll events: those also fire for browser clamps and
-// for our own scrollTop writes racing streamed content growth, and treating
-// them as reader intent used to silently kill auto-follow mid-stream. A bare
-// scroll event may only re-pin at the live edge.
 export function ThreadScroll({
   children,
   dependencies,
   scrollKey,
   resetKey,
   activeTurnId,
-  messageAnchors,
   id,
   labelledBy,
   onReachStart,
@@ -178,7 +24,6 @@ export function ThreadScroll({
   scrollKey: string;
   resetKey: string | null;
   activeTurnId: string | null;
-  messageAnchors: MessageScrollerAnchor[];
   id: string;
   labelledBy: string;
   onReachStart?: () => void;
@@ -202,52 +47,13 @@ export function ThreadScroll({
   // A fresh/restored thread may arrive with activeTurnId already set for an
   // in-progress turn; that must NOT yank it to the top — only a live send does.
   const justResetRef = useRef(false);
-  // Latched while the reader's last intent was upward (wheel up, PageUp,
-  // dragging a selection toward the top). While held, reaching the bottom does
-  // NOT re-pin — only a downward intent clears it, so one wheel tick up from
-  // the live edge is not instantly re-captured.
-  const upHoldRef = useRef(false);
-  // True while a primary-button drag is in flight (text selection). Scroll
-  // events during a drag are edge-autoscroll — real reader intent, the one
-  // scroll source that produces no wheel/key/touch event.
-  const selectingRef = useRef(false);
-  const dragOriginRef = useRef<{ x: number; y: number } | null>(null);
-  const lastScrollTopRef = useRef(0);
+  // Programmatic scrollTop writes fire onScroll; without this guard the first
+  // anchor write would immediately release the anchor (bottom-pin doesn't need
+  // it because it re-pins to the same value).
+  const suppressScrollRef = useRef(false);
   const scrollKeyRef = useRef(scrollKey);
   const scrollPositionsRef = useRef(new Map<string, { top: number; pinned: boolean }>());
   const [spacerOn, setSpacerOn] = useState(false);
-  const [visibility, setVisibility] = useState<
-    Pick<MessageScrollerVisibility, 'currentAnchorId' | 'visibleMessageIds'>
-  >({
-    currentAnchorId: null,
-    visibleMessageIds: [],
-  });
-
-  const syncVisibility = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    const viewport = el.getBoundingClientRect();
-    const readRects = (selector: string, attribute: string) =>
-      Array.from(el.querySelectorAll<HTMLElement>(selector)).flatMap((node) => {
-        const id = node.dataset[attribute];
-        if (!id) return [];
-        const rect = node.getBoundingClientRect();
-        return [{ id, top: rect.top, bottom: rect.bottom }];
-      });
-    const next = resolveMessageScrollerSnapshot({
-      anchors: readRects('[data-message-anchor-id]', 'messageAnchorId'),
-      messages: readRects('[data-message-id]', 'messageId'),
-      viewportTop: viewport.top,
-      viewportBottom: viewport.bottom,
-    });
-    setVisibility((current) =>
-      current.currentAnchorId === next.currentAnchorId &&
-      current.visibleMessageIds.length === next.visibleMessageIds.length &&
-      current.visibleMessageIds.every((id, index) => id === next.visibleMessageIds[index])
-        ? current
-        : next,
-    );
-  }, []);
 
   const rememberScrollPosition = useCallback(() => {
     const el = ref.current;
@@ -290,7 +96,7 @@ export function ThreadScroll({
     // rather than flush against (or clipped above) the edge.
     const topGap = 12;
 
-    // Size the trailing spacer to the shortfall of room below the user
+    // Size the trailing spacer to the exact shortfall of room below the user
     // message, so it can reach the top without leaving more than one viewport
     // of slack. Measured from the DOM, immune to offsetParent/padding quirks.
     const spacer = spacerRef.current;
@@ -300,7 +106,8 @@ export function ThreadScroll({
       const nodeRect = node.getBoundingClientRect();
       const nodeTopWithin = nodeRect.top - elRect.top + el.scrollTop;
       const contentBelow = el.scrollHeight - priorSpacer - nodeTopWithin;
-      const nextHeight = `${anchorSpacerHeight(el.clientHeight, contentBelow, topGap)}px`;
+      const needed = Math.max(0, el.clientHeight - contentBelow - topGap);
+      const nextHeight = `${needed}px`;
       if (spacer.style.height !== nextHeight) spacer.style.height = nextHeight;
     }
 
@@ -308,8 +115,8 @@ export function ThreadScroll({
     // (minus the gap), rather than computing an absolute offsetTop target.
     const delta = node.getBoundingClientRect().top - el.getBoundingClientRect().top - topGap;
     if (Math.abs(delta) > 1) {
+      suppressScrollRef.current = true;
       el.scrollTop += delta;
-      lastScrollTopRef.current = el.scrollTop;
       rememberScrollPosition();
     }
   }, [rememberScrollPosition]);
@@ -328,20 +135,14 @@ export function ThreadScroll({
       frameRef.current = null;
       const el = ref.current;
 
-      if (!el || !pinnedRef.current || anchorTurnRef.current !== null) {
+      if (!el || !pinnedRef.current) {
         return;
       }
 
-      // Once bottom-follow owns the view again, any leftover anchor runway is
-      // dead space that would hold the real tail a spacer-height above the
-      // composer — reclaim it before measuring the target.
-      const spacer = spacerRef.current;
-      if (spacer && spacer.offsetHeight > 0) spacer.style.height = '0px';
-
       const target = Math.max(0, el.scrollHeight - el.clientHeight);
       if (Math.abs(el.scrollTop - target) > 1) {
+        suppressScrollRef.current = true;
         el.scrollTop = target;
-        lastScrollTopRef.current = el.scrollTop;
       }
       rememberScrollPosition();
 
@@ -352,11 +153,11 @@ export function ThreadScroll({
         settleFrameRef.current = window.requestAnimationFrame(() => {
           settleFrameRef.current = null;
           const settled = ref.current;
-          if (settled && pinnedRef.current && anchorTurnRef.current === null) {
+          if (settled && pinnedRef.current) {
             const settledTarget = Math.max(0, settled.scrollHeight - settled.clientHeight);
             if (Math.abs(settled.scrollTop - settledTarget) > 1) {
+              suppressScrollRef.current = true;
               settled.scrollTop = settledTarget;
-              lastScrollTopRef.current = settled.scrollTop;
             }
             rememberScrollPosition();
           }
@@ -365,151 +166,35 @@ export function ThreadScroll({
     });
   }, [anchorTop, rememberScrollPosition]);
 
-  // A real reader gesture takes over the viewport. Every input path (wheel,
-  // keys, touch, selection drag) funnels through here so they all release the
-  // same way. The spacer stays mounted at its frozen height — unmounting it
-  // here used to clamp-yank the view; bottom-follow reclaims it instead.
-  const releaseToReader = useCallback(
-    (intent: ReaderScrollIntent) => {
-      anchorTurnRef.current = null;
-      if (intent === 'up') {
-        upHoldRef.current = true;
-        pinnedRef.current = false;
-        // A queued frame from a prior delta must never pull a reader back down
-        // after they have deliberately scrolled away from the live edge.
-        cancelScheduledFollow();
-      } else {
-        upHoldRef.current = false;
-      }
-    },
-    [cancelScheduledFollow],
-  );
-
   const handleScroll = useCallback(() => {
+    // Ignore the scroll events our own programmatic writes produce.
+    if (suppressScrollRef.current) {
+      suppressScrollRef.current = false;
+      return;
+    }
+
     const el = ref.current;
     if (!el) {
       return;
     }
-    const previousTop = lastScrollTopRef.current;
-    lastScrollTopRef.current = el.scrollTop;
-
-    // Edge-autoscroll while selecting text is reader-driven even though no
-    // wheel/key/touch event accompanies it.
-    if (selectingRef.current && el.scrollTop !== previousTop) {
-      releaseToReader(el.scrollTop < previousTop ? 'up' : 'down');
-    }
-
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    if (shouldRepinOnScroll(upHoldRef.current, anchorTurnRef.current !== null, distanceFromBottom)) {
-      pinnedRef.current = true;
-    }
+    pinnedRef.current = distanceFromBottom <= 48;
     rememberScrollPosition();
-    // Only an upward move can reach for older history; programmatic writes
-    // sync lastScrollTopRef at write time, so they never register here.
-    if (el.scrollTop <= 96 && el.scrollTop < previousTop) onReachStart?.();
-    syncVisibility();
-  }, [onReachStart, releaseToReader, rememberScrollPosition, syncVisibility]);
 
-  // Reader-intent listeners. These are the ONLY sources that release the
-  // top-anchor or bottom-follow; bare scroll events can't (they also fire for
-  // browser clamps and our own writes racing streamed content growth).
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onWheel = (event: WheelEvent): void => {
-      const intent = wheelIntent(event.deltaY);
-      if (intent) releaseToReader(intent);
-    };
-    const onKeyDown = (event: KeyboardEvent): void => {
-      const target = event.target as HTMLElement | null;
-      // Keys aimed at interactive controls (buttons, links, inputs) are not
-      // scroll intent — Space on a focused button is a click.
-      if (target && target !== el && target.closest('button, a, input, textarea, select, [contenteditable]')) {
-        return;
-      }
-      const intent = keyScrollIntent(event.key, event.shiftKey);
-      if (intent) releaseToReader(intent);
-    };
-    let lastTouchY: number | null = null;
-    const onTouchStart = (event: TouchEvent): void => {
-      lastTouchY = event.touches[0]?.clientY ?? null;
-    };
-    const onTouchMove = (event: TouchEvent): void => {
-      const y = event.touches[0]?.clientY;
-      if (y === undefined || lastTouchY === null) return;
-      // Finger moving down drags the view up.
-      if (y !== lastTouchY) releaseToReader(y > lastTouchY ? 'up' : 'down');
-      lastTouchY = y;
-    };
-    const onPointerDown = (event: PointerEvent): void => {
-      if (event.button === 0 && event.pointerType === 'mouse') {
-        dragOriginRef.current = { x: event.clientX, y: event.clientY };
-      }
-    };
-    const onPointerMove = (event: PointerEvent): void => {
-      const origin = dragOriginRef.current;
-      if (!origin || (event.buttons & 1) === 0) return;
-      // Only a held-button move beyond a click threshold counts as a drag —
-      // a plain click must not turn a later layout clamp into "selecting".
-      if (Math.abs(event.clientX - origin.x) > 4 || Math.abs(event.clientY - origin.y) > 4) {
-        selectingRef.current = true;
-      }
-    };
-    const endDrag = (): void => {
-      dragOriginRef.current = null;
-      selectingRef.current = false;
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: true });
-    el.addEventListener('keydown', onKeyDown);
-    el.addEventListener('touchstart', onTouchStart, { passive: true });
-    el.addEventListener('touchmove', onTouchMove, { passive: true });
-    el.addEventListener('pointerdown', onPointerDown);
-    el.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', endDrag);
-    window.addEventListener('pointercancel', endDrag);
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-      el.removeEventListener('keydown', onKeyDown);
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchmove', onTouchMove);
-      el.removeEventListener('pointerdown', onPointerDown);
-      el.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', endDrag);
-      window.removeEventListener('pointercancel', endDrag);
-    };
-  }, [releaseToReader]);
-
-  const jumpToMessage = useCallback(
-    (messageId: string) => {
-      const el = ref.current;
-      if (!el) return;
-      const node = el.querySelector<HTMLElement>(
-        `[data-message-anchor-id="${CSS.escape(messageId)}"]`,
-      );
-      if (!node) return;
-
+    // A deliberate scroll releases the top-anchor, exactly like it releases
+    // bottom-follow — the reader is now driving.
+    if (anchorTurnRef.current !== null) {
       anchorTurnRef.current = null;
-      pinnedRef.current = false;
-      // The reader chose a place to read; landing near the bottom via the
-      // smooth scroll must not re-pin them. A wheel-down clears the hold.
-      upHoldRef.current = true;
-      cancelScheduledFollow();
-      if (messageId !== activeTurnId) setSpacerOn(false);
-      const delta = node.getBoundingClientRect().top - el.getBoundingClientRect().top - 12;
-      el.scrollBy({
-        top: delta,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      });
-    },
-    [activeTurnId, cancelScheduledFollow],
-  );
+      setSpacerOn(false);
+    }
 
-  const visibilityValue = useMemo<MessageScrollerVisibility>(
-    () => ({ ...visibility, jumpToMessage }),
-    [jumpToMessage, visibility],
-  );
+    // A queued frame from a prior delta must never pull a reader back down
+    // after they have deliberately scrolled away from the live edge.
+    if (!pinnedRef.current) {
+      cancelScheduledFollow();
+    }
+    if (el.scrollTop <= 96) onReachStart?.();
+  }, [cancelScheduledFollow, onReachStart, rememberScrollPosition]);
 
   useLayoutEffect(() => {
     // A tab has its own reading context. Restore its last known position when
@@ -518,7 +203,6 @@ export function ThreadScroll({
     anchorTurnRef.current = null;
     prevTurnRef.current = null;
     justResetRef.current = true;
-    upHoldRef.current = false;
     setSpacerOn(false);
     scrollKeyRef.current = scrollKey;
     const saved = scrollPositionsRef.current.get(scrollKey);
@@ -531,8 +215,8 @@ export function ThreadScroll({
       const el = ref.current;
       if (!el || scrollKeyRef.current !== scrollKey) return;
       const maximum = Math.max(0, el.scrollHeight - el.clientHeight);
+      suppressScrollRef.current = true;
       el.scrollTop = Math.min(saved.top, maximum);
-      lastScrollTopRef.current = el.scrollTop;
       rememberScrollPosition();
     };
     const frame = window.requestAnimationFrame(restore);
@@ -541,7 +225,6 @@ export function ThreadScroll({
 
   useLayoutEffect(() => {
     followTail();
-    syncVisibility();
     // The caller supplies render-driving state rather than a single scalar.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
@@ -553,8 +236,6 @@ export function ThreadScroll({
     if (activeTurnId !== null && activeTurnId !== prevTurnRef.current && !justResetRef.current) {
       anchorTurnRef.current = activeTurnId;
       pinnedRef.current = false;
-      // A live send is app-owned again; any prior reading hold is over.
-      upHoldRef.current = false;
       cancelScheduledFollow();
       setSpacerOn(true);
       // The new user row + spacer land next commit; anchor once they exist.
@@ -563,32 +244,35 @@ export function ThreadScroll({
         anchorFrameRef.current = null;
         anchorTop();
       });
-    } else if (activeTurnId === null && prevTurnRef.current !== null) {
-      const wasTopAnchored = anchorTurnRef.current !== null;
-      const mode = completionScrollMode(wasTopAnchored, pinnedRef.current);
+    } else if (activeTurnId === null && anchorTurnRef.current !== null) {
+      // The turn finished. Stop actively re-anchoring, but FREEZE the current
+      // scroll position so the message/answer don't snap back down. Removing the
+      // spacer entirely would shrink scrollHeight below the current scrollTop and
+      // the browser would clamp it (the snap). Instead, size the spacer to the
+      // exact minimum that preserves scrollTop — 0 if the answer already fills
+      // the viewport, otherwise just enough to hold position (no excess).
       anchorTurnRef.current = null;
-
-      if (mode === 'follow-tail') {
-        // Completion can add controls below the transcript in the same commit
-        // (notably the file-review bar), shrinking clientHeight after the last
-        // streamed token. Remove the response runway and re-pin through the
-        // existing two-frame + ResizeObserver settling path so the complete
-        // answer always clears the composer stack.
-        cancelScheduledFollow();
-        if (spacerRef.current) spacerRef.current.style.height = '0px';
-        setSpacerOn(false);
-        pinnedRef.current = true;
-        upHoldRef.current = false;
-        followTail();
+      const el = ref.current;
+      const spacer = spacerRef.current;
+      if (el && spacer) {
+        const priorSpacer = spacer.offsetHeight;
+        const contentWithoutSpacer = el.scrollHeight - priorSpacer;
+        const needed = Math.max(0, el.scrollTop + el.clientHeight - contentWithoutSpacer);
+        if (needed <= 0) {
+          setSpacerOn(false);
+        } else {
+          spacer.style.height = `${needed}px`;
+        }
       } else {
-        // Manual scrolling releases both top-anchor and tail-follow before the
-        // turn completes. Never pull that reader away from the place they chose.
         setSpacerOn(false);
       }
+      // The reader is no longer following the live edge; leave bottom-follow off
+      // until they scroll back down themselves.
+      pinnedRef.current = false;
     }
     prevTurnRef.current = activeTurnId;
     justResetRef.current = false;
-  }, [activeTurnId, anchorTop, cancelScheduledFollow, followTail]);
+  }, [activeTurnId, anchorTop, cancelScheduledFollow]);
 
   useEffect(() => {
     const el = ref.current;
@@ -606,49 +290,39 @@ export function ThreadScroll({
     // subtree characterData MutationObserver would fire on every streamed
     // character for no gain over these two, so it is intentionally omitted.
     const resizeObserver = new ResizeObserver(followTail);
-    const visibilityObserver = new ResizeObserver(syncVisibility);
     resizeObserver.observe(el);
     resizeObserver.observe(content);
-    visibilityObserver.observe(el);
-    visibilityObserver.observe(content);
 
     // Web fonts can reflow existing markdown after the initial commit without
     // producing a React update. Catch that one late layout pass when supported.
     void document.fonts?.ready.then(() => {
       if (active) {
         followTail();
-        syncVisibility();
       }
     });
 
     return () => {
       active = false;
       resizeObserver.disconnect();
-      visibilityObserver.disconnect();
       cancelScheduledFollow();
     };
-  }, [cancelScheduledFollow, followTail, syncVisibility]);
+  }, [cancelScheduledFollow, followTail]);
 
   return (
-    <MessageScrollerVisibilityContext.Provider value={visibilityValue}>
-      <div className="thread-scroll-shell">
-        <div
-          ref={ref}
-          id={id}
-          role="tabpanel"
-          aria-labelledby={labelledBy}
-          className="thread-scroll"
-          onScroll={handleScroll}
-        >
-          <div ref={contentRef} className="thread-scroll-content">
-            {children}
-            {spacerOn ? (
-              <div ref={spacerRef} className="thread-scroll-anchor-spacer" aria-hidden="true" />
-            ) : null}
-          </div>
-        </div>
-        <ReaderPositionMenu anchors={messageAnchors} />
+    <div
+      ref={ref}
+      id={id}
+      role="tabpanel"
+      aria-labelledby={labelledBy}
+      className="thread-scroll"
+      onScroll={handleScroll}
+    >
+      <div ref={contentRef} className="thread-scroll-content">
+        {children}
+        {spacerOn ? (
+          <div ref={spacerRef} className="thread-scroll-anchor-spacer" aria-hidden="true" />
+        ) : null}
       </div>
-    </MessageScrollerVisibilityContext.Provider>
+    </div>
   );
 }

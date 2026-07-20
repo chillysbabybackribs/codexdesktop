@@ -27,9 +27,8 @@ const defaultTabUrl = 'https://www.google.com'
 type BrowserStateListener = (state: BrowserState) => void
 
 export type BrowserVisitListener = {
-  recordVisit(url: string, title: string, favicon: string | null): void
+  recordVisit(url: string, title: string): void
   updateTitle(url: string, title: string): void
-  updateFavicon(url: string, favicon: string | null): void
 }
 
 export type NavigateAndWaitOptions = {
@@ -514,9 +513,8 @@ export class TabManager {
       onReload: () => this.reload(tab.id),
       onMainFrameNavigation: () => this.bumpTargetEpoch(tab.id),
       onStateChanged: () => this.pushState(),
-      onRecordVisit: (url, title, favicon) => this.visitListener?.recordVisit(url, title, favicon),
+      onRecordVisit: (url, title) => this.visitListener?.recordVisit(url, title),
       onUpdateVisitTitle: (url, title) => this.visitListener?.updateTitle(url, title),
-      onUpdateVisitFavicon: (url, favicon) => this.visitListener?.updateFavicon(url, favicon),
       onDestroyed: () => this.handleDestroyedTab(tab)
     })
   }

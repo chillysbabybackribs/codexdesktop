@@ -1,0 +1,846 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48489163",
+    "window": "prior-30d",
+    "tag": "show_hn",
+    "score": 230
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nutifafa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "it has the guide at <a href=\"https://github.com/getdebug-ai/cli\" rel=\"nofollow\">https://github.com/getdebug-ai/cli</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nutifafa",
+          "story_48489163"
+        ],
+        "author": "nutifafa",
+        "comment_text": "it has the guide at <a href=\"https:&#x2F;&#x2F;github.com&#x2F;getdebug-ai&#x2F;cli\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;getdebug-ai&#x2F;cli</a>",
+        "created_at": "2026-06-17T10:08:25Z",
+        "created_at_i": 1781690905,
+        "objectID": "48568139",
+        "parent_id": 48568117,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-17T10:12:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nutifafa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "at this point building is not the challenge fighting bugs and vulnerabilities is the challenge. try getdebug.dev it has a free cli tools to find, fix and enable you ship your code without someone taking advantage of it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nutifafa",
+          "story_48489163"
+        ],
+        "author": "nutifafa",
+        "children": [
+          48568139
+        ],
+        "comment_text": "at this point building is not the challenge fighting bugs and vulnerabilities is the challenge. try getdebug.dev it has a free cli tools to find, fix and enable you ship your code without someone taking advantage of it.",
+        "created_at": "2026-06-17T10:04:49Z",
+        "created_at_i": 1781690689,
+        "objectID": "48568117",
+        "parent_id": 48489163,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-17T10:09:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "djoume"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is true. A first version of the app was launched 2 years ago.(Android only, manually created courses, webdev only)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_djoume",
+          "story_48489163"
+        ],
+        "author": "djoume",
+        "comment_text": "This is true. A first version of the app was launched 2 years ago.(Android only, manually created courses, webdev only).",
+        "created_at": "2026-06-16T11:47:43Z",
+        "created_at_i": 1781610463,
+        "objectID": "48553737",
+        "parent_id": 48548446,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T11:50:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "watwut"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Doing leetcode absolutely makes your system design better<p>Only up to the pretty low point. After that, it becomes completely absolutely useless. And people collectively spent astonishing amounts of time training that for job interviews long after the &quot;absolutely useless&quot; bar was passed."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_watwut",
+          "story_48489163"
+        ],
+        "author": "watwut",
+        "comment_text": "&gt; Doing leetcode absolutely makes your system design better<p>Only up to the pretty low point. After that, it becomes completely absolutely useless. And people collectively spent astonishing amounts of time training that for job interviews long after the &quot;absolutely useless&quot; bar was passed.",
+        "created_at": "2026-06-16T09:47:05Z",
+        "created_at_i": 1781603225,
+        "objectID": "48552850",
+        "parent_id": 48550527,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T17:39:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AmblingAvocado"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The big initial hump I recall was syntax for writing main and what to #include, then header guards. That, and getting clang up and running in a docker on windows so I could use new C++ features and flags that were blowing up with whatever compiler I got started on. Once I was able to iterate things started coming back quickly."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_AmblingAvocado",
+          "story_48489163"
+        ],
+        "author": "AmblingAvocado",
+        "comment_text": "The big initial hump I recall was syntax for writing main and what to #include, then header guards. That, and getting clang up and running in a docker on windows so I could use new C++ features and flags that were blowing up with whatever compiler I got started on. Once I was able to iterate things started coming back quickly.",
+        "created_at": "2026-06-16T04:59:55Z",
+        "created_at_i": 1781585995,
+        "objectID": "48550787",
+        "parent_id": 48550358,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T05:13:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "knollimar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Doing leetcode absolutely makes your system design better and you don't deploy algorithms you don't know.<p>Invert a binary tree is kind of a strawman for the absolutist claim that you don't improve the cleverness by practice, but it's an example that not all the practice is useful"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_knollimar",
+          "story_48489163"
+        ],
+        "author": "knollimar",
+        "children": [
+          48552850
+        ],
+        "comment_text": "Doing leetcode absolutely makes your system design better and you don&#x27;t deploy algorithms you don&#x27;t know.<p>Invert a binary tree is kind of a strawman for the absolutist claim that you don&#x27;t improve the cleverness by practice, but it&#x27;s an example that not all the practice is useful",
+        "created_at": "2026-06-16T04:18:56Z",
+        "created_at_i": 1781583536,
+        "objectID": "48550527",
+        "parent_id": 48547244,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-18T00:16:54Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akoboldfrying"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This differs from my own experience with C++. I went from language-lawyer level knowledge (in some parts) while using it heavily (at work, at play and answering Stack Overflow questions on it) to forgetting quite basic stuff after a few years of no use at all. This was all before LLMs were on the scene. With that said, relearning is much faster than learning the first time, as the basic &quot;shape&quot; of things is still there in my mind.<p>In my defence, even Stroustrup acknowledges the language is too big and complicated, and it's continually getting bigger."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_akoboldfrying",
+          "story_48489163"
+        ],
+        "author": "akoboldfrying",
+        "children": [
+          48550787
+        ],
+        "comment_text": "This differs from my own experience with C++. I went from language-lawyer level knowledge (in some parts) while using it heavily (at work, at play and answering Stack Overflow questions on it) to forgetting quite basic stuff after a few years of no use at all. This was all before LLMs were on the scene. With that said, relearning is much faster than learning the first time, as the basic &quot;shape&quot; of things is still there in my mind.<p>In my defence, even Stroustrup acknowledges the language is too big and complicated, and it&#x27;s continually getting bigger.",
+        "created_at": "2026-06-16T03:49:08Z",
+        "created_at_i": 1781581748,
+        "objectID": "48550358",
+        "parent_id": 48545601,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T08:28:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hsuduebc2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sadly the &quot;ritualistic interview hazing&quot; is just reality how you can get ordinary job today. Usually it have nothing to do with the job itself, it almost always could be solved by just ordinary dialog but for some reason. I don't know if it was someone from HR or some proactive manager thought it would be a wise idea to do this type of tests.<p>I just started to perceive it as an contest full of stupid useless semi relevant bullshit questions when you win the job. I'm kinda invested in the hate, because I'm currently attending interviews."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hsuduebc2",
+          "story_48489163"
+        ],
+        "author": "hsuduebc2",
+        "comment_text": "Sadly the &quot;ritualistic interview hazing&quot; is just reality how you can get ordinary job today. Usually it have nothing to do with the job itself, it almost always could be solved by just ordinary dialog but for some reason. I don&#x27;t know if it was someone from HR or some proactive manager thought it would be a wise idea to do this type of tests.<p>I just started to perceive it as an contest full of stupid useless semi relevant bullshit questions when you win the job. I&#x27;m kinda invested in the hate, because I&#x27;m currently attending interviews.",
+        "created_at": "2026-06-16T03:25:18Z",
+        "created_at_i": 1781580318,
+        "objectID": "48550184",
+        "parent_id": 48545846,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-18T17:08:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Atotalnoob"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can change the output style of your AI agents, have them use a more learning and “tutor” style to improve your skills.<p>The coach could look at transcripts of old sessions and come up with real lessons for you to improve. Ask for book or article recommendations."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Atotalnoob",
+          "story_48489163"
+        ],
+        "author": "Atotalnoob",
+        "comment_text": "You can change the output style of your AI agents, have them use a more learning and “tutor” style to improve your skills.<p>The coach could look at transcripts of old sessions and come up with real lessons for you to improve. Ask for book or article recommendations.",
+        "created_at": "2026-06-16T02:20:54Z",
+        "created_at_i": 1781576454,
+        "objectID": "48549761",
+        "parent_id": 48545624,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T03:45:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AmblingAvocado"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For context, I was working in C++ when C++0x was considered exotic and a bunch of actually useful stuff was in boost, basically making boost mandatory - and the headache of setting up a project and tooling to do that was enough to push me to other languages for small projects.<p>When I picked C++ back up, I had a greenfield project I wanted to work on and I landed on this as a reference: <a href=\"https://github.com/AnthonyCalandra/modern-cpp-features\" rel=\"nofollow\">https://github.com/AnthonyCalandra/modern-cpp-features</a>. I just started working on my project and every time I ran into something where I knew other languages or libraries covered a gap, I would look through that guide and use it as a reference to bring it into my code. Smart pointers, auto types being two big ones. That, and threads, concurrency primitives - I remember hitting those and being like wow, you don't need a bunch of #IFDEF's to be cross platform anymore!<p>I also found there were header only libraries that were easy to vendor for things like json parsing, image processing, and thread pools. That saved me a lot of headaches, and created new ones! ha."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_AmblingAvocado",
+          "story_48489163"
+        ],
+        "author": "AmblingAvocado",
+        "comment_text": "For context, I was working in C++ when C++0x was considered exotic and a bunch of actually useful stuff was in boost, basically making boost mandatory - and the headache of setting up a project and tooling to do that was enough to push me to other languages for small projects.<p>When I picked C++ back up, I had a greenfield project I wanted to work on and I landed on this as a reference: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;AnthonyCalandra&#x2F;modern-cpp-features\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;AnthonyCalandra&#x2F;modern-cpp-features</a>. I just started working on my project and every time I ran into something where I knew other languages or libraries covered a gap, I would look through that guide and use it as a reference to bring it into my code. Smart pointers, auto types being two big ones. That, and threads, concurrency primitives - I remember hitting those and being like wow, you don&#x27;t need a bunch of #IFDEF&#x27;s to be cross platform anymore!<p>I also found there were header only libraries that were easy to vendor for things like json parsing, image processing, and thread pools. That saved me a lot of headaches, and created new ones! ha.",
+        "created_at": "2026-06-16T00:15:30Z",
+        "created_at_i": 1781568930,
+        "objectID": "48548894",
+        "parent_id": 48548512,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T16:28:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stbtrax"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "do you have any tips or strategies on picking up c++ after a long break?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_stbtrax",
+          "story_48489163"
+        ],
+        "author": "stbtrax",
+        "children": [
+          48548894
+        ],
+        "comment_text": "do you have any tips or strategies on picking up c++ after a long break?",
+        "created_at": "2026-06-15T23:28:34Z",
+        "created_at_i": 1781566114,
+        "objectID": "48548512",
+        "parent_id": 48545601,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T05:00:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "anythingworks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; 10000+ developers on this<p>this seems false given this just launched?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_anythingworks",
+          "story_48489163"
+        ],
+        "author": "anythingworks",
+        "children": [
+          48553737
+        ],
+        "comment_text": "&gt; 10000+ developers on this<p>this seems false given this just launched?",
+        "created_at": "2026-06-15T23:23:05Z",
+        "created_at_i": 1781565785,
+        "objectID": "48548446",
+        "parent_id": 48489163,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T11:48:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "apsurd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, the main issue I had was regarding how anyone can get good without first being bad. Your comment highlighted a very particular worst engineer persona, as if there was an obvious way they could have avoided it preemptively.<p>Since we’re talking about learning in particular, my callout is it’s in no way helpful to shame people that aren’t good at something. It’s counterproductive."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_apsurd",
+          "story_48489163"
+        ],
+        "author": "apsurd",
+        "comment_text": "Yes, the main issue I had was regarding how anyone can get good without first being bad. Your comment highlighted a very particular worst engineer persona, as if there was an obvious way they could have avoided it preemptively.<p>Since we’re talking about learning in particular, my callout is it’s in no way helpful to shame people that aren’t good at something. It’s counterproductive.",
+        "created_at": "2026-06-15T22:46:48Z",
+        "created_at_i": 1781563608,
+        "objectID": "48548074",
+        "parent_id": 48547943,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-15T22:51:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danielmarkbruce"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No one said anything about learning everything before doing anything, and nobody suggested they were told to do it or how they did it.<p>And, bad engineers can become good ones. All the good ones were terrible at some point...."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danielmarkbruce",
+          "story_48489163"
+        ],
+        "author": "danielmarkbruce",
+        "children": [
+          48548074
+        ],
+        "comment_text": "No one said anything about learning everything before doing anything, and nobody suggested they were told to do it or how they did it.<p>And, bad engineers can become good ones. All the good ones were terrible at some point....",
+        "created_at": "2026-06-15T22:34:30Z",
+        "created_at_i": 1781562870,
+        "objectID": "48547943",
+        "parent_id": 48547776,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T08:25:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "postalrat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Still building my new &quot;approve&quot; button skill."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_postalrat",
+          "story_48489163"
+        ],
+        "author": "postalrat",
+        "comment_text": "Still building my new &quot;approve&quot; button skill.",
+        "created_at": "2026-06-15T22:26:17Z",
+        "created_at_i": 1781562377,
+        "objectID": "48547858",
+        "parent_id": 48489163,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-15T22:27:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "apsurd"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "“Master all prior art before naively trying to do anything on your own” - also, very much does way more harm than good in a learning context. (it narrows the top of the funnel for no good reason)<p>The gripe seems to be the negative effect on the team, business/project outcome etc, sure work doesn’t pay you to write your own compiler.<p>But again, its such a disservice to learning to dictate a shape, largely academic, largely top down (vs bottoms up failing &amp; flailing)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_apsurd",
+          "story_48489163"
+        ],
+        "author": "apsurd",
+        "children": [
+          48547943
+        ],
+        "comment_text": "“Master all prior art before naively trying to do anything on your own” - also, very much does way more harm than good in a learning context. (it narrows the top of the funnel for no good reason)<p>The gripe seems to be the negative effect on the team, business&#x2F;project outcome etc, sure work doesn’t pay you to write your own compiler.<p>But again, its such a disservice to learning to dictate a shape, largely academic, largely top down (vs bottoms up failing &amp; flailing).",
+        "created_at": "2026-06-15T22:17:48Z",
+        "created_at_i": 1781561868,
+        "objectID": "48547776",
+        "parent_id": 48547356,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-15T22:35:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jwpapi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don’t think HN is the right place to post this and also I don’t think the title/slogin as fitting. This might be helpful to beginners, but nobody who’s scared of skill rot, will use this on a mobile app.<p>Honestly I think there is no benefit in any mobile coding app at all. It makes coding seem way more tedious than it is. I would rather recommend a book, laptop or youtube video than to do coding tasks on a phone keyboard."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jwpapi",
+          "story_48489163"
+        ],
+        "author": "jwpapi",
+        "comment_text": "I don’t think HN is the right place to post this and also I don’t think the title&#x2F;slogin as fitting. This might be helpful to beginners, but nobody who’s scared of skill rot, will use this on a mobile app.<p>Honestly I think there is no benefit in any mobile coding app at all. It makes coding seem way more tedious than it is. I would rather recommend a book, laptop or youtube video than to do coding tasks on a phone keyboard.",
+        "created_at": "2026-06-15T22:03:22Z",
+        "created_at_i": 1781561002,
+        "objectID": "48547633",
+        "parent_id": 48546655,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T00:01:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danielmarkbruce"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; It's necessary but in no way sufficient.<p>Sure, agreed."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danielmarkbruce",
+          "story_48489163"
+        ],
+        "author": "danielmarkbruce",
+        "comment_text": "&gt; It&#x27;s necessary but in no way sufficient.<p>Sure, agreed.",
+        "created_at": "2026-06-15T21:41:37Z",
+        "created_at_i": 1781559697,
+        "objectID": "48547380",
+        "parent_id": 48547241,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-15T21:45:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danielmarkbruce"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Having memory of how to do things and techniques and tools and patterns is absolutely important for solving problems. The very reason experienced engineers are just better at many classes of problems.<p>At least in my experience, the best engineers have a vast catalog of problems and solutions, algorithms, architecture patters, data structures etc and almost nothing comes from scratch. The worst engineers do everything from scratch without much/any understanding that the problem they are facing (or a variation of it) has been solved before in 6 different ways with varying tradeoffs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_danielmarkbruce",
+          "story_48489163"
+        ],
+        "author": "danielmarkbruce",
+        "children": [
+          48547776
+        ],
+        "comment_text": "&gt; Having memory of how to do things and techniques and tools and patterns is absolutely important for solving problems. The very reason experienced engineers are just better at many classes of problems.<p>At least in my experience, the best engineers have a vast catalog of problems and solutions, algorithms, architecture patters, data structures etc and almost nothing comes from scratch. The worst engineers do everything from scratch without much&#x2F;any understanding that the problem they are facing (or a variation of it) has been solved before in 6 different ways with varying tradeoffs.",
+        "created_at": "2026-06-15T21:39:23Z",
+        "created_at_i": 1781559563,
+        "objectID": "48547356",
+        "parent_id": 48547094,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T10:18:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dvt"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; I argue &quot;cleverness&quot; is a learned and honed skill by exposure and exercise.<p>Even if I were to concede this point, it's certainly not honed by the kind of exercise that OP is advertising. We are deep in Max Howell's &quot;invert a binary tree&quot; territory here."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://fata.dev"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dvt",
+          "story_48489163"
+        ],
+        "author": "dvt",
+        "children": [
+          48550527
+        ],
+        "comment_text": "&gt; I argue &quot;cleverness&quot; is a learned and honed skill by exposure and exercise.<p>Even if I were to concede this point, it&#x27;s certainly not honed by the kind of exercise that OP is advertising. We are deep in Max Howell&#x27;s &quot;invert a binary tree&quot; territory here.",
+        "created_at": "2026-06-15T21:28:12Z",
+        "created_at_i": 1781558892,
+        "objectID": "48547244",
+        "parent_id": 48547094,
+        "story_id": 48489163,
+        "story_title": "Show HN: Fata – Spaced repetition to fight skill rot from AI coding",
+        "story_url": "https://fata.dev",
+        "updated_at": "2026-06-16T11:09:17Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 53,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48489163&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 40,
+        "roundTrip": 15
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 43
+  }
+}

@@ -1,0 +1,20 @@
+Title: VikRentCar Car Rental Management System
+URL: https://wordpress.org/plugins/vikrentcar/
+Lane: incumbent
+Source-Class: directory
+Status: verified
+Observed: 2026-07-11
+Structured-Source: WordPress Plugin API
+
+Search niche: rental management
+Name: VikRentCar Car Rental Management System
+Slug: vikrentcar
+Version: 1.4.6
+Last updated: 2026-05-28 10:27am GMT
+Active installs: 4000
+Rating: 96
+Ratings: 30
+Support threads: 3
+Resolved support threads: 3
+Short description: Robust Car Rental Management System for any kind of vechicles. The most reliable booking solution for managing vehicles rentals through your website.
+Description:  Vik Rent Car for WordPress The popular car rental management system is now available also for WordPress as a Native Plugin! If you are looking for a reliable reservation system for renting cars, scooter, motorbikes, boats or any other vehicles, then you have found the right plugin. In fact, Vik Rent Car is a famous piece of software used by thousands of car rental companies worldwide every day. Vik Rent Car was born in 2008 for a different web-software (CMS) than WordPress, and that&#8217;s how it became popular. The same powerful framework is now at the service of all webmasters, designers and web-agencies that work with WordPress. It&#8217;s definitely the car rental plugin that you, or your client, were looking for. This is the free version of the plugin, but you can upgrade to the Pro version at any time from your wp-admin section. Experience the power of a robust vehicles rental management system! Works with any car rental theme for WordPress, or any other kind of theme. Visit VikWP.com for more details. Some of the unique features The most flexible pricing system that follows the OpenTravel Standards for any pricing model Custom Rate Plans (Refundable, Flexible, Non Refundable rates, Insurances, Damage Waiver etc.) Neat vehicles management functions with distinctive features for the sub-units Availability Overview with monthly calendars Pricing Calendar Overview Rental orders management functions for pros Feature-rich back-end section Front-end customizable booking process 8 different Views for the front-end (7 types of Shortcode for your pages) Multi-language support with built-in translation functions Some of Pro version features Seasonal Pricing and Rates Calendar with 1-click modification Restrictions to define the min/max number of days of rent, weekdays allowed for pick up and drop off Custom fields to request specific billing information to the customers Options and Extra Services to be added to the rental order Fees for out of hours times and for certain combination of locations Customers management window Graphs and Statistics for the various rental orders Custom Payment Methods with real bank gateways to accept credit cards Coupon codes to apply discounts to the orders Interested in, curious about the Pro version? You should take a look with your own eyes at the demo website to see what you can do with Vik Rent Car. Do not stop at the front-end though, make sure to visit the wp-admin section too. Front-end Demo Website Admin Demo Website 

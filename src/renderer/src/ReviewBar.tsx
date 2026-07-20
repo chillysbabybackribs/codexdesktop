@@ -25,7 +25,6 @@ export function ReviewBar({
   onSetAlwaysKeepAll,
   onUndoAll,
   onUndoFile,
-  onRestoreCheckpoint,
 }: {
   changes: ReviewChange[];
   workspace: string | null;
@@ -35,20 +34,21 @@ export function ReviewBar({
   onSetAlwaysKeepAll: (enabled: boolean) => void;
   onUndoAll: () => void;
   onUndoFile: (path: string) => void;
-  onRestoreCheckpoint?: () => void;
 }): React.JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const [confirmingUndoAll, setConfirmingUndoAll] = useState(false);
-  const [confirmingRestore, setConfirmingRestore] = useState(false);
   const [actionsOpen, setActionsOpen] = useState(false);
   const actionsRef = useRef<HTMLDivElement | null>(null);
   const actionsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const actionsMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (!alwaysKeepAll) setActionsOpen(false);
+  }, [alwaysKeepAll]);
+
+  useEffect(() => {
     if (!actionsOpen) {
       setConfirmingUndoAll(false);
-      setConfirmingRestore(false);
       return;
     }
 
@@ -132,7 +132,79 @@ export function ReviewBar({
             {totalDels > 0 ? <span className="diff-count-del">−{totalDels}</span> : null}
           </span>
         </button>
-        {!alwaysKeepAll ? (
+        {alwaysKeepAll ? (
+          <div className="review-compact-actions" ref={actionsRef}>
+            <button
+              ref={actionsTriggerRef}
+              type="button"
+              className={`review-actions-trigger ${actionsOpen ? 'is-open' : ''}`}
+              aria-label="Review actions"
+              title="Review actions"
+              aria-haspopup="menu"
+              aria-expanded={actionsOpen}
+              onClick={() => setActionsOpen((open) => !open)}
+            >
+              <ReviewMenuDots />
+            </button>
+            {actionsOpen ? (
+              <div
+                ref={actionsMenuRef}
+                className="review-action-menu"
+                role="menu"
+                aria-label="Review actions"
+                onKeyDown={handleActionsKeyDown}
+              >
+                <button
+                  type="button"
+                  className="review-action-menu-item"
+                  role="menuitem"
+                  onClick={() => {
+                    setActionsOpen(false);
+                    onKeepAll();
+                  }}
+                >
+                  <MenuCheckIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">Keep all</span>
+                </button>
+                <button
+                  type="button"
+                  className={`review-action-menu-item is-danger ${confirmingUndoAll ? 'is-confirming' : ''}`}
+                  role="menuitem"
+                  title="Restore every workspace file to how it was before this turn. The current state is checkpointed first."
+                  onClick={() => {
+                    if (confirmingUndoAll) {
+                      setActionsOpen(false);
+                      onUndoAll();
+                    } else {
+                      setConfirmingUndoAll(true);
+                    }
+                  }}
+                >
+                  <MenuUndoIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">
+                    {confirmingUndoAll ? 'Confirm undo all?' : 'Undo all'}
+                  </span>
+                </button>
+                <div className="review-action-menu-divider" role="separator" />
+                <button
+                  type="button"
+                  className="review-action-menu-item"
+                  role="menuitemcheckbox"
+                  aria-checked={true}
+                  title="Future edits are kept automatically. Click to turn off."
+                  onClick={() => {
+                    setActionsOpen(false);
+                    onSetAlwaysKeepAll(false);
+                  }}
+                >
+                  <MenuRepeatIcon className="review-action-menu-icon" />
+                  <span className="review-action-menu-label">Always keep all</span>
+                  <MenuCheckIcon className="review-action-menu-state" />
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : (
           <div className="review-bar-actions">
             <button
               type="button"
@@ -166,104 +238,7 @@ export function ReviewBar({
               Keep all
             </button>
           </div>
-        ) : null}
-        <div className="review-compact-actions" ref={actionsRef}>
-          <button
-            ref={actionsTriggerRef}
-            type="button"
-            className={`review-actions-trigger ${actionsOpen ? 'is-open' : ''}`}
-            aria-label="Change actions"
-            title="Change actions"
-            aria-haspopup="menu"
-            aria-expanded={actionsOpen}
-            onClick={() => setActionsOpen((open) => !open)}
-          >
-            <ReviewMenuDots />
-          </button>
-          {actionsOpen ? (
-            <div
-              ref={actionsMenuRef}
-              className="review-action-menu"
-              role="menu"
-              aria-label="Change actions"
-              onKeyDown={handleActionsKeyDown}
-            >
-              {onRestoreCheckpoint ? (
-                <button
-                  type="button"
-                  className={`review-action-menu-item ${confirmingRestore ? 'is-confirming' : ''}`}
-                  role="menuitem"
-                  title="Restore the workspace files to how they were before this turn. The current state is checkpointed first."
-                  onClick={() => {
-                    if (confirmingRestore) {
-                      setActionsOpen(false);
-                      onRestoreCheckpoint();
-                    } else {
-                      setConfirmingRestore(true);
-                    }
-                  }}
-                >
-                  <MenuBookmarkIcon className="review-action-menu-icon" />
-                  <span className="review-action-menu-label">
-                    {confirmingRestore ? 'Confirm restore?' : 'Restore checkpoint'}
-                  </span>
-                </button>
-              ) : null}
-              {alwaysKeepAll ? (
-                <>
-                  <div className="review-action-menu-divider" role="separator" />
-                  <button
-                    type="button"
-                    className="review-action-menu-item"
-                    role="menuitem"
-                    onClick={() => {
-                      setActionsOpen(false);
-                      onKeepAll();
-                    }}
-                  >
-                    <MenuCheckIcon className="review-action-menu-icon" />
-                    <span className="review-action-menu-label">Keep all</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`review-action-menu-item is-danger ${confirmingUndoAll ? 'is-confirming' : ''}`}
-                    role="menuitem"
-                    title="Restore every workspace file to how it was before this turn. The current state is checkpointed first."
-                    onClick={() => {
-                      if (confirmingUndoAll) {
-                        setActionsOpen(false);
-                        onUndoAll();
-                      } else {
-                        setConfirmingUndoAll(true);
-                      }
-                    }}
-                  >
-                    <MenuUndoIcon className="review-action-menu-icon" />
-                    <span className="review-action-menu-label">
-                      {confirmingUndoAll ? 'Confirm undo all?' : 'Undo all'}
-                    </span>
-                  </button>
-                  <div className="review-action-menu-divider" role="separator" />
-                  <button
-                    type="button"
-                    className="review-action-menu-item"
-                    role="menuitemcheckbox"
-                    aria-checked={true}
-                    title="Future edits are kept automatically. Click to turn off."
-                    onClick={() => {
-                      setActionsOpen(false);
-                      onSetAlwaysKeepAll(false);
-                    }}
-                  >
-                    <MenuRepeatIcon className="review-action-menu-icon" />
-                    <span className="review-action-menu-label">Always keep all</span>
-                    <MenuCheckIcon className="review-action-menu-state" />
-                  </button>
-                </>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+        )}
       </div>
       {expanded ? (
         <div className="review-files">
@@ -393,25 +368,6 @@ function MenuUndoIcon({ className }: { className?: string }): React.JSX.Element 
     >
       <path d="M9 14 4 9l5-5" />
       <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
-    </svg>
-  );
-}
-
-function MenuBookmarkIcon({ className }: { className?: string }): React.JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   );
 }

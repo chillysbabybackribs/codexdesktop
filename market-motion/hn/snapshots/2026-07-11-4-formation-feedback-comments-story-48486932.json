@@ -1,0 +1,653 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48486932",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 75
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ronald-data"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm building on an open source composable data stack with contract-first, swappable modules. I've come to an MVP situation with 1 profile (setup) and would like to see someone trying it in their own environment. The source code is at: <a href=\"https://github.com/RonaldHensbergen/composable-data-stack\" rel=\"nofollow\">https://github.com/RonaldHensbergen/composable-data-stack</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ronald-data",
+          "story_48486932"
+        ],
+        "author": "ronald-data",
+        "comment_text": "I&#x27;m building on an open source composable data stack with contract-first, swappable modules. I&#x27;ve come to an MVP situation with 1 profile (setup) and would like to see someone trying it in their own environment. The source code is at: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;RonaldHensbergen&#x2F;composable-data-stack\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;RonaldHensbergen&#x2F;composable-data-stack</a>",
+        "created_at": "2026-06-15T19:09:55Z",
+        "created_at_i": 1781550595,
+        "objectID": "48545685",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-15T19:13:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "theturtletalks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes our platform supports webhooks for events like these. Message me on LinkedIn and we can hop on a call if you have more questions."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_theturtletalks",
+          "story_48486932"
+        ],
+        "author": "theturtletalks",
+        "comment_text": "Yes our platform supports webhooks for events like these. Message me on LinkedIn and we can hop on a call if you have more questions.",
+        "created_at": "2026-06-15T15:09:21Z",
+        "created_at_i": 1781536161,
+        "objectID": "48542427",
+        "parent_id": 48528008,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-15T15:12:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vira28"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Certainly interested."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vira28",
+          "story_48486932"
+        ],
+        "author": "vira28",
+        "comment_text": "Certainly interested.",
+        "created_at": "2026-06-14T20:02:12Z",
+        "created_at_i": 1781467332,
+        "objectID": "48532012",
+        "parent_id": 48503350,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-14T20:03:28Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sysguru2046"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm very interested in your open-source Shopify project for e-commerce.<p>Do you consider Event-Source Commerce as part of this project?<p>Examples of Commerce events:<p>Catalog events - Product created, price changed<p>Inventory events - Quantith change<p>Order events - order created, cancelled<p>Routing events - order received, routing decision made<p>Shipment events - shipment created, tracking assigned<p>Customer events - Customer registered, address changed<p>Supplier events - Feed arrived<p>Taxonomy Events - Category created"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sysguru2046",
+          "story_48486932"
+        ],
+        "author": "sysguru2046",
+        "children": [
+          48542427
+        ],
+        "comment_text": "I&#x27;m very interested in your open-source Shopify project for e-commerce.<p>Do you consider Event-Source Commerce as part of this project?<p>Examples of Commerce events:<p>Catalog events - Product created, price changed<p>Inventory events - Quantith change<p>Order events - order created, cancelled<p>Routing events - order received, routing decision made<p>Shipment events - shipment created, tracking assigned<p>Customer events - Customer registered, address changed<p>Supplier events - Feed arrived<p>Taxonomy Events - Category created",
+        "created_at": "2026-06-14T15:12:42Z",
+        "created_at_i": 1781449962,
+        "objectID": "48528008",
+        "parent_id": 48494875,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-15T15:10:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "austin-cheney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you are a TypeScript/Node.js developer you can take a look at:<p><a href=\"http://github.com/prettydiff/aphorio\" rel=\"nofollow\">http://github.com/prettydiff/aphorio</a><p>It is a dashboard for docker, web servers, os data, and more.  It exposes most of Node's APIs to a browser front-end in a very low level (low as in as low as you can get with Node).  It's internal components should allow you to tinker with almost any non-graphical idea without excess dependencies.<p>My current effort is to make the application self-documenting and self-descriptive by starting with expose the TypeScript definitions for the app's internal services to the UI as documentation.  I am thinking about the best way to go about this."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_austin-cheney",
+          "story_48486932"
+        ],
+        "author": "austin-cheney",
+        "comment_text": "If you are a TypeScript&#x2F;Node.js developer you can take a look at:<p><a href=\"http:&#x2F;&#x2F;github.com&#x2F;prettydiff&#x2F;aphorio\" rel=\"nofollow\">http:&#x2F;&#x2F;github.com&#x2F;prettydiff&#x2F;aphorio</a><p>It is a dashboard for docker, web servers, os data, and more.  It exposes most of Node&#x27;s APIs to a browser front-end in a very low level (low as in as low as you can get with Node).  It&#x27;s internal components should allow you to tinker with almost any non-graphical idea without excess dependencies.<p>My current effort is to make the application self-documenting and self-descriptive by starting with expose the TypeScript definitions for the app&#x27;s internal services to the UI as documentation.  I am thinking about the best way to go about this.",
+        "created_at": "2026-06-12T19:52:37Z",
+        "created_at_i": 1781293957,
+        "objectID": "48508709",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T19:58:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "websku"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "absolutely. Maybe you like something from here?\n<a href=\"https://onemillionlines.com/links\" rel=\"nofollow\">https://onemillionlines.com/links</a><p>made all opensource today, 25 projects."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_websku",
+          "story_48486932"
+        ],
+        "author": "websku",
+        "comment_text": "absolutely. Maybe you like something from here?\n<a href=\"https:&#x2F;&#x2F;onemillionlines.com&#x2F;links\" rel=\"nofollow\">https:&#x2F;&#x2F;onemillionlines.com&#x2F;links</a><p>made all opensource today, 25 projects.",
+        "created_at": "2026-06-12T16:09:38Z",
+        "created_at_i": 1781280578,
+        "objectID": "48505917",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T16:12:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "elosvadel84"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i have similar issue, working by yourself need some times adverse ideas, opposition, feedback. even the LLM tend to be complacent. i found myself (soudn crazy or not) making JIRA projects jsut to keep tracking of progress or ideas."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_elosvadel84",
+          "story_48486932"
+        ],
+        "author": "elosvadel84",
+        "comment_text": "i have similar issue, working by yourself need some times adverse ideas, opposition, feedback. even the LLM tend to be complacent. i found myself (soudn crazy or not) making JIRA projects jsut to keep tracking of progress or ideas.",
+        "created_at": "2026-06-12T15:24:30Z",
+        "created_at_i": 1781277870,
+        "objectID": "48505349",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T15:25:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lanycrost"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have one project built using kubebuilder and for cloud native ai and data pipelines with CRD's as first class citizens and pluggable parts. If you interested I can share the link :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lanycrost",
+          "story_48486932"
+        ],
+        "author": "lanycrost",
+        "children": [
+          48532012
+        ],
+        "comment_text": "I have one project built using kubebuilder and for cloud native ai and data pipelines with CRD&#x27;s as first class citizens and pluggable parts. If you interested I can share the link :)",
+        "created_at": "2026-06-12T12:36:41Z",
+        "created_at_i": 1781267801,
+        "objectID": "48503350",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-14T20:03:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "marshalhq"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Six weeks in building a behavioral supply chain scanner for Maven dependencies. Shipped v0.1.0 yesterday. The hardest part is not the code, it is finding time to talk to potential users.\n<a href=\"https://dev.to/usman18/i-scanned-real-maven-central-packages-for-supply-chain-anomalies-heres-what-i-found-and-where-i-2lmp\" rel=\"nofollow\">https://dev.to/usman18/i-scanned-real-maven-central-packages...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_marshalhq",
+          "story_48486932"
+        ],
+        "author": "marshalhq",
+        "comment_text": "Six weeks in building a behavioral supply chain scanner for Maven dependencies. Shipped v0.1.0 yesterday. The hardest part is not the code, it is finding time to talk to potential users.\n<a href=\"https:&#x2F;&#x2F;dev.to&#x2F;usman18&#x2F;i-scanned-real-maven-central-packages-for-supply-chain-anomalies-heres-what-i-found-and-where-i-2lmp\" rel=\"nofollow\">https:&#x2F;&#x2F;dev.to&#x2F;usman18&#x2F;i-scanned-real-maven-central-packages...</a>",
+        "created_at": "2026-06-12T07:17:38Z",
+        "created_at_i": 1781248658,
+        "objectID": "48500882",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T07:22:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "toyg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can probably concoct your own accountability engine with a bit of AI these days."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_toyg",
+          "story_48486932"
+        ],
+        "author": "toyg",
+        "children": [
+          48511274
+        ],
+        "comment_text": "You can probably concoct your own accountability engine with a bit of AI these days.",
+        "created_at": "2026-06-12T06:02:35Z",
+        "created_at_i": 1781244155,
+        "objectID": "48500468",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-13T01:14:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "theturtletalks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Medusa is what our schema is based on but we have diverted a bit since then. The main difference is that Openfront is a Next.js application with the graphQL API, storefront, and dashboard built-in. Because of this, it’s one click deploy on Railway and Vercel whereas Medusa uses express and requires running multiple applications.<p>Because it’s all bundled in 1 Next app, it’s very easy for businesses to pick up and adapt to their business. In fact, this is how we are building the different openfronts. Like when we added payment providers like Stripe and PayPal to e-commerce, we told AI to look at how we did that and add it to restaurants, etc. Down the line, we want to allow users to create custom Openfronts by remixing existing ones. Like if you’re a restaurant and want to sell merch, you can bring in those features from e-commerce to the restaurant software."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_theturtletalks",
+          "story_48486932"
+        ],
+        "author": "theturtletalks",
+        "comment_text": "Medusa is what our schema is based on but we have diverted a bit since then. The main difference is that Openfront is a Next.js application with the graphQL API, storefront, and dashboard built-in. Because of this, it’s one click deploy on Railway and Vercel whereas Medusa uses express and requires running multiple applications.<p>Because it’s all bundled in 1 Next app, it’s very easy for businesses to pick up and adapt to their business. In fact, this is how we are building the different openfronts. Like when we added payment providers like Stripe and PayPal to e-commerce, we told AI to look at how we did that and add it to restaurants, etc. Down the line, we want to allow users to create custom Openfronts by remixing existing ones. Like if you’re a restaurant and want to sell merch, you can bring in those features from e-commerce to the restaurant software.",
+        "created_at": "2026-06-12T00:28:57Z",
+        "created_at_i": 1781224137,
+        "objectID": "48498315",
+        "parent_id": 48497518,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-13T07:52:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "culopatin"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Would help to know what fields you’re interested in or what problems you want to solve. No one is going to have much consistency or accountability working on things they don’t care about"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_culopatin",
+          "story_48486932"
+        ],
+        "author": "culopatin",
+        "comment_text": "Would help to know what fields you’re interested in or what problems you want to solve. No one is going to have much consistency or accountability working on things they don’t care about",
+        "created_at": "2026-06-12T00:10:25Z",
+        "created_at_i": 1781223025,
+        "objectID": "48498176",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T13:30:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "handoflixue"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What sort of development? What time zone? Friend or foe of GenAI? Looking for a partner, or an assistant? (i.e. do you want help implementing your ideas, or are you looking for inspiration and feedback too?)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_handoflixue",
+          "story_48486932"
+        ],
+        "author": "handoflixue",
+        "comment_text": "What sort of development? What time zone? Friend or foe of GenAI? Looking for a partner, or an assistant? (i.e. do you want help implementing your ideas, or are you looking for inspiration and feedback too?)",
+        "created_at": "2026-06-12T00:03:33Z",
+        "created_at_i": 1781222613,
+        "objectID": "48498115",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T11:09:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sama004"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "did you try medusa? what were the shortcomings that made you build this"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sama004",
+          "story_48486932"
+        ],
+        "author": "sama004",
+        "children": [
+          48498315
+        ],
+        "comment_text": "did you try medusa? what were the shortcomings that made you build this",
+        "created_at": "2026-06-11T22:53:56Z",
+        "created_at_i": 1781218436,
+        "objectID": "48497518",
+        "parent_id": 48494875,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T00:29:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "theturtletalks"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m building an open-source Shopify for every vertical. I’ve built one for e-commerce and restaurants (gym and grocery is in the works). If you want, you can help me build one of them?<p><a href=\"https://github.com/openshiporg/openship\" rel=\"nofollow\">https://github.com/openshiporg/openship</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_theturtletalks",
+          "story_48486932"
+        ],
+        "author": "theturtletalks",
+        "children": [
+          48528008,
+          48497518
+        ],
+        "comment_text": "I’m building an open-source Shopify for every vertical. I’ve built one for e-commerce and restaurants (gym and grocery is in the works). If you want, you can help me build one of them?<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;openshiporg&#x2F;openship\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;openshiporg&#x2F;openship</a>",
+        "created_at": "2026-06-11T18:58:45Z",
+        "created_at_i": 1781204325,
+        "objectID": "48494875",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-14T15:13:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "malux85"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Accountability has to come internally, which will come through discipline. An external accountability force will only be short lived because once the novelty wears off, then you'll start making excuses and it will fail at that point.<p>I would suggest you do some internal reflection and very honest introspection to find the root cause of your dissatisfaction - are you not doing your projects because some other vice is getting in the way? Or maybe the answer is you just need rest and theres only so many hours in the day."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_malux85",
+          "story_48486932"
+        ],
+        "author": "malux85",
+        "comment_text": "Accountability has to come internally, which will come through discipline. An external accountability force will only be short lived because once the novelty wears off, then you&#x27;ll start making excuses and it will fail at that point.<p>I would suggest you do some internal reflection and very honest introspection to find the root cause of your dissatisfaction - are you not doing your projects because some other vice is getting in the way? Or maybe the answer is you just need rest and theres only so many hours in the day.",
+        "created_at": "2026-06-11T18:24:24Z",
+        "created_at_i": 1781202264,
+        "objectID": "48494408",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-18T21:28:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vira28"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agree. Appreciate the reminder."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vira28",
+          "story_48486932"
+        ],
+        "author": "vira28",
+        "comment_text": "Agree. Appreciate the reminder.",
+        "created_at": "2026-06-11T07:04:18Z",
+        "created_at_i": 1781161458,
+        "objectID": "48487211",
+        "parent_id": 48487104,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T03:54:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HerbManic"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The best thing you can do is try to start this by your self. Yes it is hard but once you have even a vague demonstration of an idea that can be the launch pad to getting others in the fold.<p>Linux started Linux by himself, then others came along if they are inspired.<p>I know it is hard to do at first but that hard first step is what is usually needed."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Want to build something open source on nights and weekends together?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_HerbManic",
+          "story_48486932"
+        ],
+        "author": "HerbManic",
+        "children": [
+          48487211
+        ],
+        "comment_text": "The best thing you can do is try to start this by your self. Yes it is hard but once you have even a vague demonstration of an idea that can be the launch pad to getting others in the fold.<p>Linux started Linux by himself, then others came along if they are inspired.<p>I know it is hard to do at first but that hard first step is what is usually needed.",
+        "created_at": "2026-06-11T06:50:41Z",
+        "created_at_i": 1781160641,
+        "objectID": "48487104",
+        "parent_id": 48486932,
+        "story_id": 48486932,
+        "story_title": "Ask HN: Want to build something open source on nights and weekends together?",
+        "updated_at": "2026-06-12T06:29:04Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 18,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48486932&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 4,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 14
+      },
+      "getIdx": {
+        "load": {
+          "gens": 2,
+          "total": 3
+        },
+        "total": 3
+      },
+      "total": 4
+    },
+    "query": "",
+    "serverTimeMS": 5
+  }
+}

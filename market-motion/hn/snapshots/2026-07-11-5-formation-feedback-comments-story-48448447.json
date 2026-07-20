@@ -1,0 +1,1438 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48448447",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 133
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mirmor23"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "my apologies for being needlessly abrasive. wishing you the best."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mirmor23",
+          "story_48448447"
+        ],
+        "author": "mirmor23",
+        "comment_text": "my apologies for being needlessly abrasive. wishing you the best.",
+        "created_at": "2026-06-09T19:23:33Z",
+        "created_at_i": 1781033013,
+        "objectID": "48466315",
+        "parent_id": 48455148,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T19:25:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byoung2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah I remember the &quot;X for Y&quot; format being encouraged [1]. But X was always an example of a successful startup that was a leader in one category/audience, and you were saying you would be the X for a different category or audience.<p>PG's examples here were AirBnB as the &quot;Ebay for space&quot; or Viaweb as &quot;the Microsoft Word of Ecommerce&quot;.<p>I'm not rewriting history when I say that the X has changed from a representative example of a successful company to a lazy broad technology like &quot;AI agent for insurance&quot; or &quot;AI native recruiting&quot;. Here is a current YC batch startup: Manicule - AI Native Developer Relations. I have no Idea what that is. Does it talk to devs using my product like in a chatbot? Does it help them write code using AI? If they said &quot;HubSpot for developer content&quot; or &quot;Vercel for developer relations&quot; I would get it right away. But better than the X for Y formula would be just to describe the startup: we provide an AI-native developer relations team that owns documentation and technical content end-to-end so you don't have to hire someone for $300k.<p><pre><code>  1. https://news.ycombinator.com/item?id=6866822</code></pre>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_byoung2",
+          "story_48448447"
+        ],
+        "author": "byoung2",
+        "comment_text": "Yeah I remember the &quot;X for Y&quot; format being encouraged [1]. But X was always an example of a successful startup that was a leader in one category&#x2F;audience, and you were saying you would be the X for a different category or audience.<p>PG&#x27;s examples here were AirBnB as the &quot;Ebay for space&quot; or Viaweb as &quot;the Microsoft Word of Ecommerce&quot;.<p>I&#x27;m not rewriting history when I say that the X has changed from a representative example of a successful company to a lazy broad technology like &quot;AI agent for insurance&quot; or &quot;AI native recruiting&quot;. Here is a current YC batch startup: Manicule - AI Native Developer Relations. I have no Idea what that is. Does it talk to devs using my product like in a chatbot? Does it help them write code using AI? If they said &quot;HubSpot for developer content&quot; or &quot;Vercel for developer relations&quot; I would get it right away. But better than the X for Y formula would be just to describe the startup: we provide an AI-native developer relations team that owns documentation and technical content end-to-end so you don&#x27;t have to hire someone for $300k.<p><pre><code>  1. https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=6866822</code></pre>",
+        "created_at": "2026-06-09T18:15:51Z",
+        "created_at_i": 1781028951,
+        "objectID": "48465176",
+        "parent_id": 48462956,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T18:20:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I appreciate the gardening metaphor - it's one of my favorites too!<p><a href=\"https://hn.algolia.com/?dateRange=all&amp;page=0&amp;prefix=true&amp;query=by%3Adang%20-variety%20-radio%20-orwell%20-walled%20-water%20garden&amp;sort=byDate&amp;type=comment\" rel=\"nofollow\">https://hn.algolia.com/?dateRange=all&amp;page=0&amp;prefix=true&amp;que...</a><p><a href=\"https://news.ycombinator.com/item?id=12960048\">https://news.ycombinator.com/item?id=12960048</a><p><a href=\"https://news.ycombinator.com/item?id=20250918\">https://news.ycombinator.com/item?id=20250918</a><p><a href=\"https://news.ycombinator.com/item?id=32771735\">https://news.ycombinator.com/item?id=32771735</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "comment_text": "I appreciate the gardening metaphor - it&#x27;s one of my favorites too!<p><a href=\"https:&#x2F;&#x2F;hn.algolia.com&#x2F;?dateRange=all&amp;page=0&amp;prefix=true&amp;query=by%3Adang%20-variety%20-radio%20-orwell%20-walled%20-water%20garden&amp;sort=byDate&amp;type=comment\" rel=\"nofollow\">https:&#x2F;&#x2F;hn.algolia.com&#x2F;?dateRange=all&amp;page=0&amp;prefix=true&amp;que...</a><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=12960048\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=12960048</a><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=20250918\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=20250918</a><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32771735\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32771735</a>",
+        "created_at": "2026-06-09T16:52:11Z",
+        "created_at_i": 1781023931,
+        "objectID": "48463699",
+        "parent_id": 48452932,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:56:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's the &quot;we don't have to outrun the bear&quot; theory of HN, which is my favorite theory of HN."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "comment_text": "That&#x27;s the &quot;we don&#x27;t have to outrun the bear&quot; theory of HN, which is my favorite theory of HN.",
+        "created_at": "2026-06-09T16:49:17Z",
+        "created_at_i": 1781023757,
+        "objectID": "48463633",
+        "parent_id": 48456782,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:53:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "david927"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I have to defer, you're a lot closer to these things than I am, but I remember since the 90's the &quot;this-for-that&quot; analogies were around and became hot at some point, so that you were even encouraged by some to put it into that form for a while.<p>Where I see a difference is that it used to be about creating unique combinations and now it's more about deployment. &quot;What about the known tool for this market?&quot;  It's banal.  I can honestly say, it's not that I don't remember -- I do -- it's that I'm waiting and hoping to get excited about a startup again."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_david927",
+          "story_48448447"
+        ],
+        "author": "david927",
+        "children": [
+          48465176
+        ],
+        "comment_text": "I have to defer, you&#x27;re a lot closer to these things than I am, but I remember since the 90&#x27;s the &quot;this-for-that&quot; analogies were around and became hot at some point, so that you were even encouraged by some to put it into that form for a while.<p>Where I see a difference is that it used to be about creating unique combinations and now it&#x27;s more about deployment. &quot;What about the known tool for this market?&quot;  It&#x27;s banal.  I can honestly say, it&#x27;s not that I don&#x27;t remember -- I do -- it&#x27;s that I&#x27;m waiting and hoping to get excited about a startup again.",
+        "created_at": "2026-06-09T16:08:40Z",
+        "created_at_i": 1781021320,
+        "objectID": "48462956",
+        "parent_id": 48455338,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T18:16:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byoung2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Correct $Foo for $Bar was common back then but I made the subtle distinction between &quot;TikTok for Math Tutors&quot; ([solution] for [audience served]) where naming a startup in a different vertical is a shortcut for the solution, and what we see now which is &quot;AI agents for Banking&quot; ([technology] for [industry]) where naming the technology doesn't make it clear what the problem or solution is, and the industry doesn't necessarily say who has the problem or needs the solution."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_byoung2",
+          "story_48448447"
+        ],
+        "author": "byoung2",
+        "comment_text": "Correct $Foo for $Bar was common back then but I made the subtle distinction between &quot;TikTok for Math Tutors&quot; ([solution] for [audience served]) where naming a startup in a different vertical is a shortcut for the solution, and what we see now which is &quot;AI agents for Banking&quot; ([technology] for [industry]) where naming the technology doesn&#x27;t make it clear what the problem or solution is, and the industry doesn&#x27;t necessarily say who has the problem or needs the solution.",
+        "created_at": "2026-06-09T15:52:06Z",
+        "created_at_i": 1781020326,
+        "objectID": "48462720",
+        "parent_id": 48455338,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:09:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Bender"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Adding to this some of those proxied connections will be HTTP/1.1 and not HTTP/2.0 like normal clients.  Sometimes the MSS of their TCP SYN packets will be just a little lower than 1460.  Some of them are also missing the client header for sec-fetch-mode.  Blocking HTTP/1.1 to the non API port/url should slow down some of the nonsense.  Many API clients still use HTTP/1.1.<p>In NGinx as an example <i>in the Location for the non-API url</i>:<p><pre><code>    if ($server_protocol != HTTP/2.0) { return 403 'Browser Error.'; }\n\n    if ($http_sec_fetch_mode !~ (cors|no-cors|navigate) ) { return 403 'Error: Flux Capacitor Under-Current.'; }</code></pre>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Bender",
+          "story_48448447"
+        ],
+        "author": "Bender",
+        "comment_text": "Adding to this some of those proxied connections will be HTTP&#x2F;1.1 and not HTTP&#x2F;2.0 like normal clients.  Sometimes the MSS of their TCP SYN packets will be just a little lower than 1460.  Some of them are also missing the client header for sec-fetch-mode.  Blocking HTTP&#x2F;1.1 to the non API port&#x2F;url should slow down some of the nonsense.  Many API clients still use HTTP&#x2F;1.1.<p>In NGinx as an example <i>in the Location for the non-API url</i>:<p><pre><code>    if ($server_protocol != HTTP&#x2F;2.0) { return 403 &#x27;Browser Error.&#x27;; }\n\n    if ($http_sec_fetch_mode !~ (cors|no-cors|navigate) ) { return 403 &#x27;Error: Flux Capacitor Under-Current.&#x27;; }</code></pre>",
+        "created_at": "2026-06-09T14:01:18Z",
+        "created_at_i": 1781013678,
+        "objectID": "48461271",
+        "parent_id": 48459579,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:57:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arbol"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; coming from normal-user IP addresses<p>This is the standard now for astroturfing online. Build up a profile over time with varied interactions, sometimes over years, and then sell it for a few hundred dollars via blackhatworld. I've not seen hn listed but reddit definitely follows this pattern.<p>If you think the IPs are normal, you can check if people are proxying by looking at DNS connecting IP (they may not have proxied UDP), SIMD score (server CPUs cluster differently to consumer), residential proxy lists (there are a bunch of these), invalid webgpu setups, etc. Maybe this kind of detection is against HN way of doing things but I've definitely seen recaptcha on the login before and it employs a bunch of these checks. Happy to help!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_arbol",
+          "story_48448447"
+        ],
+        "author": "arbol",
+        "children": [
+          48461271
+        ],
+        "comment_text": "&gt; coming from normal-user IP addresses<p>This is the standard now for astroturfing online. Build up a profile over time with varied interactions, sometimes over years, and then sell it for a few hundred dollars via blackhatworld. I&#x27;ve not seen hn listed but reddit definitely follows this pattern.<p>If you think the IPs are normal, you can check if people are proxying by looking at DNS connecting IP (they may not have proxied UDP), SIMD score (server CPUs cluster differently to consumer), residential proxy lists (there are a bunch of these), invalid webgpu setups, etc. Maybe this kind of detection is against HN way of doing things but I&#x27;ve definitely seen recaptcha on the login before and it employs a bunch of these checks. Happy to help!",
+        "created_at": "2026-06-09T11:19:55Z",
+        "created_at_i": 1781003995,
+        "objectID": "48459579",
+        "parent_id": 48455343,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:57:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "unconed"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In 2011 the iPhone was ~4 years old and iPads were ascendant as the only tablet game in town. Google was still playing catch up with Android as a knock-off, having just debuted Android Honeycomb.<p>The actual topics are:<p>- the Apple campus that is still unique today<p>- a rectification of an urban legend about Jobs and Knuth<p>- a clip showing Jobs was prescient in the late 90s about personalized cloud tech<p>Dismissing the focus on Jobs as a cult of personality is a mistake, he was simply very influential, and so was Apple at this time.<p>Meanwhile LLMs are the antithesis of the Jobsian style: just cramming pirated data into a model and reselling it as fake intelligence without real source attribution."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_unconed",
+          "story_48448447"
+        ],
+        "author": "unconed",
+        "comment_text": "In 2011 the iPhone was ~4 years old and iPads were ascendant as the only tablet game in town. Google was still playing catch up with Android as a knock-off, having just debuted Android Honeycomb.<p>The actual topics are:<p>- the Apple campus that is still unique today<p>- a rectification of an urban legend about Jobs and Knuth<p>- a clip showing Jobs was prescient in the late 90s about personalized cloud tech<p>Dismissing the focus on Jobs as a cult of personality is a mistake, he was simply very influential, and so was Apple at this time.<p>Meanwhile LLMs are the antithesis of the Jobsian style: just cramming pirated data into a model and reselling it as fake intelligence without real source attribution.",
+        "created_at": "2026-06-09T10:45:04Z",
+        "created_at_i": 1781001904,
+        "objectID": "48459282",
+        "parent_id": 48454875,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T10:46:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "d--b"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm not one to fetishicize the past, but to be honest there has been quite a bad turn lately.<p>COVID, Trump's second election, Musk turning into the Bond villain he was cut out to be, Altman's good guy mask melting down slowly, the AI bubble sucking up all the money and making developers anxious about their future.<p>One shouldn't wonder why the mood is gloomier.<p>At least we have Mark Rober still out there working for the greater good, but I think it starts to transpire that things are starting to weigh on him too."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_d--b",
+          "story_48448447"
+        ],
+        "author": "d--b",
+        "comment_text": "I&#x27;m not one to fetishicize the past, but to be honest there has been quite a bad turn lately.<p>COVID, Trump&#x27;s second election, Musk turning into the Bond villain he was cut out to be, Altman&#x27;s good guy mask melting down slowly, the AI bubble sucking up all the money and making developers anxious about their future.<p>One shouldn&#x27;t wonder why the mood is gloomier.<p>At least we have Mark Rober still out there working for the greater good, but I think it starts to transpire that things are starting to weigh on him too.",
+        "created_at": "2026-06-09T08:54:58Z",
+        "created_at_i": 1780995298,
+        "objectID": "48458473",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-10T06:32:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mradek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've only been here a few years. I remember when it was a lot of crypto and no-code. Then it shifted to AI.<p>I think it is just the ebb and flow of the zeitgeist reflected here.<p>Not sure what the future holds, but I'm looking forward to the next wave after AI."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mradek",
+          "story_48448447"
+        ],
+        "author": "mradek",
+        "comment_text": "I&#x27;ve only been here a few years. I remember when it was a lot of crypto and no-code. Then it shifted to AI.<p>I think it is just the ebb and flow of the zeitgeist reflected here.<p>Not sure what the future holds, but I&#x27;m looking forward to the next wave after AI.",
+        "created_at": "2026-06-09T06:30:57Z",
+        "created_at_i": 1780986657,
+        "objectID": "48457320",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T09:41:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mradek"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; It seems inevitable that some solo founder will soon be able to build a unicorn with no investment and no employees.<p>I know I'm no ivy grad or some hot shot, but this is my goal. Although I have a small team that I want to build up (they're fresh) because they're passionate about the problem space."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mradek",
+          "story_48448447"
+        ],
+        "author": "mradek",
+        "comment_text": "&gt; It seems inevitable that some solo founder will soon be able to build a unicorn with no investment and no employees.<p>I know I&#x27;m no ivy grad or some hot shot, but this is my goal. Although I have a small team that I want to build up (they&#x27;re fresh) because they&#x27;re passionate about the problem space.",
+        "created_at": "2026-06-09T06:28:26Z",
+        "created_at_i": 1780986506,
+        "objectID": "48457299",
+        "parent_id": 48448765,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T06:29:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akkartik"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN has always had sucky bits, just like human nature. Everyone who thinks it's going downhill is just one of today's 10,000 [1] to discover some sucky corner of human nature.<p>I'd say the world has gone downhill much faster and is making HN look good in comparison.<p>[1] <a href=\"https://xkcd.com/1053\" rel=\"nofollow\">https://xkcd.com/1053</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_akkartik",
+          "story_48448447"
+        ],
+        "author": "akkartik",
+        "children": [
+          48463633
+        ],
+        "comment_text": "HN has always had sucky bits, just like human nature. Everyone who thinks it&#x27;s going downhill is just one of today&#x27;s 10,000 [1] to discover some sucky corner of human nature.<p>I&#x27;d say the world has gone downhill much faster and is making HN look good in comparison.<p>[1] <a href=\"https:&#x2F;&#x2F;xkcd.com&#x2F;1053\" rel=\"nofollow\">https:&#x2F;&#x2F;xkcd.com&#x2F;1053</a>",
+        "created_at": "2026-06-09T05:18:33Z",
+        "created_at_i": 1780982313,
+        "objectID": "48456782",
+        "parent_id": 48456564,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:50:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "2008 is good! Now I want to know what was the first comment saying HN was going downhill.<p>A few years ago I did a thorough search for &quot;HN is turning into Reddit&quot; posts so I could link them at the bottom of <a href=\"https://news.ycombinator.com/newsguidelines.html\">https://news.ycombinator.com/newsguidelines.html</a>. These 4 predate your July 2008 link (the first one by only 6 days):<p><a href=\"https://news.ycombinator.com/item?id=253657\">https://news.ycombinator.com/item?id=253657</a> (July 2008)<p><a href=\"https://news.ycombinator.com/item?id=66057\">https://news.ycombinator.com/item?id=66057</a> (Oct 2007)<p><a href=\"https://news.ycombinator.com/item?id=60767\">https://news.ycombinator.com/item?id=60767</a> (Sept 2007)<p><a href=\"https://news.ycombinator.com/item?id=13852\">https://news.ycombinator.com/item?id=13852</a> (April 2007)<p>Here are some more I found:<p><a href=\"https://news.ycombinator.com/item?id=1361148\">https://news.ycombinator.com/item?id=1361148</a> (May 2010)<p><a href=\"https://news.ycombinator.com/item?id=259276\">https://news.ycombinator.com/item?id=259276</a> (July 2008)<p><i>Ask YC: HN submissions feels like submissions on reddit post sale, do you guys feel the same way?</i> - <a href=\"https://news.ycombinator.com/item?id=225134\">https://news.ycombinator.com/item?id=225134</a> - June 2008 (10 comments) (&lt;-- wow, we allowed titles that long?)<p>How do you separate (1) HN is going downhill, from (2) the <i>world</i> is going downhill, from (3) people always think things are going downhill? It seems hopelessly undecideable. (And yet, being human, I do think that HN is going somewhat downhill. Relative to the world though? not sure)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48456782
+        ],
+        "comment_text": "2008 is good! Now I want to know what was the first comment saying HN was going downhill.<p>A few years ago I did a thorough search for &quot;HN is turning into Reddit&quot; posts so I could link them at the bottom of <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html</a>. These 4 predate your July 2008 link (the first one by only 6 days):<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=253657\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=253657</a> (July 2008)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=66057\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=66057</a> (Oct 2007)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=60767\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=60767</a> (Sept 2007)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=13852\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=13852</a> (April 2007)<p>Here are some more I found:<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=1361148\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=1361148</a> (May 2010)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=259276\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=259276</a> (July 2008)<p><i>Ask YC: HN submissions feels like submissions on reddit post sale, do you guys feel the same way?</i> - <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=225134\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=225134</a> - June 2008 (10 comments) (&lt;-- wow, we allowed titles that long?)<p>How do you separate (1) HN is going downhill, from (2) the <i>world</i> is going downhill, from (3) people always think things are going downhill? It seems hopelessly undecideable. (And yet, being human, I do think that HN is going somewhat downhill. Relative to the world though? not sure)",
+        "created_at": "2026-06-09T04:49:00Z",
+        "created_at_i": 1780980540,
+        "objectID": "48456564",
+        "parent_id": 48455643,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:49:55Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "akkartik"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Found an older one, from 2011 :D<p><a href=\"https://web.archive.org/web/20110225020957/http://al3x.net/2011/02/22/solving-the-hacker-news-problem.html\" rel=\"nofollow\">https://web.archive.org/web/20110225020957/http://al3x.net/2...</a><p><a href=\"https://news.ycombinator.com/item?id=2252152\">https://news.ycombinator.com/item?id=2252152</a><p>---<p>Oh, oh, oh, 2009: <a href=\"https://news.ycombinator.com/item?id=480831\">https://news.ycombinator.com/item?id=480831</a><p>---<p>2008: <a href=\"https://news.ycombinator.com/item?id=259276\">https://news.ycombinator.com/item?id=259276</a><p>The birth of HN is lost in the mists of time, but our best guess is it happened about 3 months before it started going downhill."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_akkartik",
+          "story_48448447"
+        ],
+        "author": "akkartik",
+        "children": [
+          48456564
+        ],
+        "comment_text": "Found an older one, from 2011 :D<p><a href=\"https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20110225020957&#x2F;http:&#x2F;&#x2F;al3x.net&#x2F;2011&#x2F;02&#x2F;22&#x2F;solving-the-hacker-news-problem.html\" rel=\"nofollow\">https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20110225020957&#x2F;http:&#x2F;&#x2F;al3x.net&#x2F;2...</a><p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=2252152\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=2252152</a><p>---<p>Oh, oh, oh, 2009: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=480831\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=480831</a><p>---<p>2008: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=259276\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=259276</a><p>The birth of HN is lost in the mists of time, but our best guess is it happened about 3 months before it started going downhill.",
+        "created_at": "2026-06-09T02:47:30Z",
+        "created_at_i": 1780973250,
+        "objectID": "48455643",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T15:34:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The LLM posts that I'm looking at are definitely coming from normal-user IP addresses. There are exceptions, but the rate of those doesn't seem higher than usual. Outright bot/agent posting, as far as we can tell (and we may be wrong!) seems to have down-ticked since the flurry earlier this year (openclaw and so on).<p>My gut feeling is that this issue isn't much affected by voting rings, which is too bad, because we have a lot of experience with those. If all that was needed here was another round of work on the ring detector, I would be less worried.<p>It's a moving and blurry picture, but judging by the users that tomhow and I interact with—which is a lot of users! though still only a small sample—the overwhelming majority of these posts are coming from real people with good intentions, who have no idea of the mismatch between what they're posting and the culture of the community."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48459579
+        ],
+        "comment_text": "The LLM posts that I&#x27;m looking at are definitely coming from normal-user IP addresses. There are exceptions, but the rate of those doesn&#x27;t seem higher than usual. Outright bot&#x2F;agent posting, as far as we can tell (and we may be wrong!) seems to have down-ticked since the flurry earlier this year (openclaw and so on).<p>My gut feeling is that this issue isn&#x27;t much affected by voting rings, which is too bad, because we have a lot of experience with those. If all that was needed here was another round of work on the ring detector, I would be less worried.<p>It&#x27;s a moving and blurry picture, but judging by the users that tomhow and I interact with—which is a lot of users! though still only a small sample—the overwhelming majority of these posts are coming from real people with good intentions, who have no idea of the mismatch between what they&#x27;re posting and the culture of the community.",
+        "created_at": "2026-06-09T02:09:49Z",
+        "created_at_i": 1780970989,
+        "objectID": "48455343",
+        "parent_id": 48451068,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T11:20:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&quot;$Foo for $Bar&quot; has always been a common formula for startups that are just getting going, including in YC. I think you guys are rewriting the past a bit here."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48462956,
+          48462720
+        ],
+        "comment_text": "&quot;$Foo for $Bar&quot; has always been a common formula for startups that are just getting going, including in YC. I think you guys are rewriting the past a bit here.",
+        "created_at": "2026-06-09T02:09:03Z",
+        "created_at_i": 1780970943,
+        "objectID": "48455338",
+        "parent_id": 48451523,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T18:00:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If people would read the site guidelines (<a href=\"https://news.ycombinator.com/newsguidelines.html\">https://news.ycombinator.com/newsguidelines.html</a>) and not post generated text with their Show HNs, they'd do a lot better. The community is clear about not wanting to read that."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "comment_text": "If people would read the site guidelines (<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;newsguidelines.html</a>) and not post generated text with their Show HNs, they&#x27;d do a lot better. The community is clear about not wanting to read that.",
+        "created_at": "2026-06-09T02:06:50Z",
+        "created_at_i": 1780970810,
+        "objectID": "48455315",
+        "parent_id": 48453840,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T09:40:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "morpheos137"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nobody owes me anything. Absolutely agree. I more read than contribute. Making an observation is not asserting an entitlement. I am only asseying it seems in the past the forum was more dynamic."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_morpheos137",
+          "story_48448447"
+        ],
+        "author": "morpheos137",
+        "children": [
+          48466315
+        ],
+        "comment_text": "Nobody owes me anything. Absolutely agree. I more read than contribute. Making an observation is not asserting an entitlement. I am only asseying it seems in the past the forum was more dynamic.",
+        "created_at": "2026-06-09T01:45:55Z",
+        "created_at_i": 1780969555,
+        "objectID": "48455148",
+        "parent_id": 48451408,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T19:24:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "brudgers"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I used the HN |Past| feature to go back 15 years.<p><a href=\"https://news.ycombinator.com/front?day=2011-06-08\">https://news.ycombinator.com/front?day=2011-06-08</a><p>There are three articles about Steve Jobs. To me LLM's are a more intellectually interesting cargo-cult than that cult of personality cargo-cult, but YMMV."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_brudgers",
+          "story_48448447"
+        ],
+        "author": "brudgers",
+        "children": [
+          48459282
+        ],
+        "comment_text": "I used the HN |Past| feature to go back 15 years.<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;front?day=2011-06-08\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;front?day=2011-06-08</a><p>There are three articles about Steve Jobs. To me LLM&#x27;s are a more intellectually interesting cargo-cult than that cult of personality cargo-cult, but YMMV.",
+        "created_at": "2026-06-09T01:14:44Z",
+        "created_at_i": 1780967684,
+        "objectID": "48454875",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T10:45:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LearnYouALisp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That seemed to be the idea and the case (cf. DIT)<p>(e.g. <a href=\"https://www.jpost.com/business-and-innovation/all-news/article-898622\" rel=\"nofollow\">https://www.jpost.com/business-and-innovation/all-news/artic...</a>)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_LearnYouALisp",
+          "story_48448447"
+        ],
+        "author": "LearnYouALisp",
+        "comment_text": "That seemed to be the idea and the case (cf. DIT)<p>(e.g. <a href=\"https:&#x2F;&#x2F;www.jpost.com&#x2F;business-and-innovation&#x2F;all-news&#x2F;article-898622\" rel=\"nofollow\">https:&#x2F;&#x2F;www.jpost.com&#x2F;business-and-innovation&#x2F;all-news&#x2F;artic...</a>)",
+        "created_at": "2026-06-09T01:05:17Z",
+        "created_at_i": 1780967117,
+        "objectID": "48454799",
+        "parent_id": 48452979,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T01:09:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bicepjai"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "“Thinks have always been getting worse” remind me of entropy and arrow of time :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bicepjai",
+          "story_48448447"
+        ],
+        "author": "bicepjai",
+        "comment_text": "“Thinks have always been getting worse” remind me of entropy and arrow of time :)",
+        "created_at": "2026-06-09T00:57:43Z",
+        "created_at_i": 1780966663,
+        "objectID": "48454747",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T02:06:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bellowsgulch"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wouldn't say it's dead, but the commenters are noticeably of lower quality compared to a 15+ years ago.<p>I think that's natural given HN's age and popularity, but I don't recall so many confidently incorrect posters frustrating SMEs and Dan and whomever is left moderating can't police it all."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bellowsgulch",
+          "story_48448447"
+        ],
+        "author": "bellowsgulch",
+        "comment_text": "I wouldn&#x27;t say it&#x27;s dead, but the commenters are noticeably of lower quality compared to a 15+ years ago.<p>I think that&#x27;s natural given HN&#x27;s age and popularity, but I don&#x27;t recall so many confidently incorrect posters frustrating SMEs and Dan and whomever is left moderating can&#x27;t police it all.",
+        "created_at": "2026-06-09T00:08:06Z",
+        "created_at_i": 1780963686,
+        "objectID": "48454288",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T13:36:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "GistNoesis"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When we look when logged-in at <a href=\"https://news.ycombinator.com/shownew\">https://news.ycombinator.com/shownew</a> (the input pipeline for all ShowHN) at any given time now more than half the page is either dead or flagged (I did the experiment now and it was 18/30 flagged or dead), then the rest of the page (100%) were AI related or claude generated.<p>Show HN, being used by people to share the cool things they create was an important part of creating of a community, aka always having people which would find interest in what you share.<p>It was a channel to push novel unpolished ideas to the world. It was one differentiating thing from other places where self-promoting is usually forbidden. Here it was welcoming people to take a more active role and create things.<p>Now it's just screaming into the void, the only feedback you get are email spam from LLM companies trying to push their solution to help you promote your content.<p>Sharing projects is also just feeding your competitors and killing the potential of your ideas, now that a clone is less than a prompt away.<p>I don't know who still look at this page, but then if you want to get past it you now probably need to turn to the dark side with some form of cheating, which is also conveniently easier than before to have bots spam about your product everywhere on the internet.<p>Show HN are now becoming the reverse, instead of feeling heard, it's even more isolating than before because when you put some effort and if even in the niche market where it's suppose to gather attention it doesn't, so you think you are not welcomed here, don't come back and look elsewhere."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_GistNoesis",
+          "story_48448447"
+        ],
+        "author": "GistNoesis",
+        "children": [
+          48455315
+        ],
+        "comment_text": "When we look when logged-in at <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;shownew\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;shownew</a> (the input pipeline for all ShowHN) at any given time now more than half the page is either dead or flagged (I did the experiment now and it was 18&#x2F;30 flagged or dead), then the rest of the page (100%) were AI related or claude generated.<p>Show HN, being used by people to share the cool things they create was an important part of creating of a community, aka always having people which would find interest in what you share.<p>It was a channel to push novel unpolished ideas to the world. It was one differentiating thing from other places where self-promoting is usually forbidden. Here it was welcoming people to take a more active role and create things.<p>Now it&#x27;s just screaming into the void, the only feedback you get are email spam from LLM companies trying to push their solution to help you promote your content.<p>Sharing projects is also just feeding your competitors and killing the potential of your ideas, now that a clone is less than a prompt away.<p>I don&#x27;t know who still look at this page, but then if you want to get past it you now probably need to turn to the dark side with some form of cheating, which is also conveniently easier than before to have bots spam about your product everywhere on the internet.<p>Show HN are now becoming the reverse, instead of feeling heard, it&#x27;s even more isolating than before because when you put some effort and if even in the niche market where it&#x27;s suppose to gather attention it doesn&#x27;t, so you think you are not welcomed here, don&#x27;t come back and look elsewhere.",
+        "created_at": "2026-06-08T23:21:17Z",
+        "created_at_i": 1780960877,
+        "objectID": "48453840",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-21T14:12:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mattbrewsbytes"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You do a great job not curating content. If people are complaining about the plethora of JS frameworks years ago or &quot;everything is AI&quot; these days, its a reflection of what people are discussing online.<p>Now I'm waiting for these ideas to collide and once the hoopla about AI hits a lull, everyone's going to go re-invent parsing the DOM, again and we'll see lots of new AI generated JS frameworks."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mattbrewsbytes",
+          "story_48448447"
+        ],
+        "author": "mattbrewsbytes",
+        "comment_text": "You do a great job not curating content. If people are complaining about the plethora of JS frameworks years ago or &quot;everything is AI&quot; these days, its a reflection of what people are discussing online.<p>Now I&#x27;m waiting for these ideas to collide and once the hoopla about AI hits a lull, everyone&#x27;s going to go re-invent parsing the DOM, again and we&#x27;ll see lots of new AI generated JS frameworks.",
+        "created_at": "2026-06-08T22:32:40Z",
+        "created_at_i": 1780957960,
+        "objectID": "48453276",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T14:48:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ancalagon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My account is nearly 10 years old (wow). I dont think its more dead afaict. It is more full of AI posts than ever, and AI-built slop show and tells."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Ancalagon",
+          "story_48448447"
+        ],
+        "author": "Ancalagon",
+        "children": [
+          48454799
+        ],
+        "comment_text": "My account is nearly 10 years old (wow). I dont think its more dead afaict. It is more full of AI posts than ever, and AI-built slop show and tells.",
+        "created_at": "2026-06-08T22:08:26Z",
+        "created_at_i": 1780956506,
+        "objectID": "48452979",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T09:26:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "big_toast"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pg had his 'pending comments'[0] a long time ago.<p>I think you work so hard for everyone here. Maybe it's a kind of cultural gardening.<p>[0]:<a href=\"https://news.ycombinator.com/item?id=7445761\">https://news.ycombinator.com/item?id=7445761</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_big_toast",
+          "story_48448447"
+        ],
+        "author": "big_toast",
+        "children": [
+          48463699
+        ],
+        "comment_text": "pg had his &#x27;pending comments&#x27;[0] a long time ago.<p>I think you work so hard for everyone here. Maybe it&#x27;s a kind of cultural gardening.<p>[0]:<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=7445761\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=7445761</a>",
+        "created_at": "2026-06-08T22:04:59Z",
+        "created_at_i": 1780956299,
+        "objectID": "48452932",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T16:56:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "opan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The LLM stuff is tiresome, but how is retro stuff even comparable? Maybe I'm not seeing what you're seeing, but I generally think people tinkering with old Mac OS stuff is cool. Though I'd rather OS X than Classic, as the unix-y bits are part of the cool factor for me. I do like the fonts and visuals of Classic, though.<p>LLM posts are like when a new meme template comes out and gets run into the ground everywhere you look, but someone tinkering with old computers just seems like normal human hacker interests. Perhaps you could argue that too much nostalgia is a bad thing. I have been hearing &quot;frutiger aero&quot; a disturbing amount the last year or so."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_opan",
+          "story_48448447"
+        ],
+        "author": "opan",
+        "comment_text": "The LLM stuff is tiresome, but how is retro stuff even comparable? Maybe I&#x27;m not seeing what you&#x27;re seeing, but I generally think people tinkering with old Mac OS stuff is cool. Though I&#x27;d rather OS X than Classic, as the unix-y bits are part of the cool factor for me. I do like the fonts and visuals of Classic, though.<p>LLM posts are like when a new meme template comes out and gets run into the ground everywhere you look, but someone tinkering with old computers just seems like normal human hacker interests. Perhaps you could argue that too much nostalgia is a bad thing. I have been hearing &quot;frutiger aero&quot; a disturbing amount the last year or so.",
+        "created_at": "2026-06-08T21:55:39Z",
+        "created_at_i": 1780955739,
+        "objectID": "48452792",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-08T22:03:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byoung2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Exactly, and the formula in the past was less &quot;[hot new tech] for [some industry]&quot; back in the day, and more &quot;[problem solved] for [target audience]&quot;. Maybe it is just the wording that I object to, and not the substance of the startup's solution to the problem?<p>I guess I don't care about today's &quot;AI agent for the agricultural industry&quot; as much as I cared about yesterday's &quot;Tool to help farmers plan crop rotation&quot;."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_byoung2",
+          "story_48448447"
+        ],
+        "author": "byoung2",
+        "comment_text": "Exactly, and the formula in the past was less &quot;[hot new tech] for [some industry]&quot; back in the day, and more &quot;[problem solved] for [target audience]&quot;. Maybe it is just the wording that I object to, and not the substance of the startup&#x27;s solution to the problem?<p>I guess I don&#x27;t care about today&#x27;s &quot;AI agent for the agricultural industry&quot; as much as I cared about yesterday&#x27;s &quot;Tool to help farmers plan crop rotation&quot;.",
+        "created_at": "2026-06-08T21:13:17Z",
+        "created_at_i": 1780953197,
+        "objectID": "48452167",
+        "parent_id": 48451523,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T14:40:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dh2022"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I read <i>so many</i> amazing books because they were recommended here on HN. This since 2022 when I joined."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dh2022",
+          "story_48448447"
+        ],
+        "author": "dh2022",
+        "comment_text": "I read <i>so many</i> amazing books because they were recommended here on HN. This since 2022 when I joined.",
+        "created_at": "2026-06-08T20:51:22Z",
+        "created_at_i": 1780951882,
+        "objectID": "48451822",
+        "parent_id": 48451021,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T04:08:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nostrademons"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "All living things are constantly dying.<p>One way to think about it is that <i>for a new idea/site/community/business/government/etc to gain adoption, it must be significantly better than what came before</i>.  It comes in far above the mean, because every new idea etc that <i>doesn't</i> come in way above the mean dies out and never gains adoption.  The rest of its life is just long, slow regression to the mean.  For the most part, it continually gets worse, simply because statistically, when you are much better than average the only way to go is down.  Eventually, it drops below the mean and some other better replacement takes over from it.<p>So people can absolutely be right when they say that everything is always getting worse!  The fact of existence in the first place means that they started off much better than average - after all, the vast majority of potential configurations of atoms/molecules/cells/DNA/ideas/firms/people do not exist, and we happen to have the particular arrangement that was selected for.  And then constituent parts move around in random motion, entropy takes its toll, and we read this as things decaying.  Somewhat literally, this is what it means to decay.<p>The way to avoid this is to be constantly swapping out subsystems that aren't working for you with subsystems that are."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nostrademons",
+          "story_48448447"
+        ],
+        "author": "nostrademons",
+        "comment_text": "All living things are constantly dying.<p>One way to think about it is that <i>for a new idea&#x2F;site&#x2F;community&#x2F;business&#x2F;government&#x2F;etc to gain adoption, it must be significantly better than what came before</i>.  It comes in far above the mean, because every new idea etc that <i>doesn&#x27;t</i> come in way above the mean dies out and never gains adoption.  The rest of its life is just long, slow regression to the mean.  For the most part, it continually gets worse, simply because statistically, when you are much better than average the only way to go is down.  Eventually, it drops below the mean and some other better replacement takes over from it.<p>So people can absolutely be right when they say that everything is always getting worse!  The fact of existence in the first place means that they started off much better than average - after all, the vast majority of potential configurations of atoms&#x2F;molecules&#x2F;cells&#x2F;DNA&#x2F;ideas&#x2F;firms&#x2F;people do not exist, and we happen to have the particular arrangement that was selected for.  And then constituent parts move around in random motion, entropy takes its toll, and we read this as things decaying.  Somewhat literally, this is what it means to decay.<p>The way to avoid this is to be constantly swapping out subsystems that aren&#x27;t working for you with subsystems that are.",
+        "created_at": "2026-06-08T20:45:00Z",
+        "created_at_i": 1780951500,
+        "objectID": "48451721",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-08T22:09:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AnimalMuppet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sure, but how many of those were YC-worthy?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_AnimalMuppet",
+          "story_48448447"
+        ],
+        "author": "AnimalMuppet",
+        "children": [
+          48452167,
+          48455338
+        ],
+        "comment_text": "Sure, but how many of those were YC-worthy?",
+        "created_at": "2026-06-08T20:33:12Z",
+        "created_at_i": 1780950792,
+        "objectID": "48451523",
+        "parent_id": 48450615,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T03:47:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mirmor23"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "recently, you were rambling on-and-on about how netbsd was not a good desktop setup, even though netbsd primary usecase is embedded systems. nobody owes you anything; so just read threads that are interesting and ignore the rest; if that is not acceptable, why don't you be the change you wish to see in the world?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mirmor23",
+          "story_48448447"
+        ],
+        "author": "mirmor23",
+        "children": [
+          48455148
+        ],
+        "comment_text": "recently, you were rambling on-and-on about how netbsd was not a good desktop setup, even though netbsd primary usecase is embedded systems. nobody owes you anything; so just read threads that are interesting and ignore the rest; if that is not acceptable, why don&#x27;t you be the change you wish to see in the world?",
+        "created_at": "2026-06-08T20:26:09Z",
+        "created_at_i": 1780950369,
+        "objectID": "48451408",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T07:49:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thegrim33"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "And the &quot;people in the past said things were worse, so therefore it's impossible for things to ever actually be worse&quot; line is just as old."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_thegrim33",
+          "story_48448447"
+        ],
+        "author": "thegrim33",
+        "comment_text": "And the &quot;people in the past said things were worse, so therefore it&#x27;s impossible for things to ever actually be worse&quot; line is just as old.",
+        "created_at": "2026-06-08T20:19:44Z",
+        "created_at_i": 1780949984,
+        "objectID": "48451292",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-17T18:16:09Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Bender"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I see others also mentioned the voting ring detector.  I think they're correct that something needs adjustment, but I don't know how it works exactly so it's hard to suggest thresholds.  The patterns I am observing is that the LLM generated clones will get instantly upvoted multiple times <i>I assume by other warmed up LLM accounts</i>.  Back in the days of running phpBB I would mitigate some of that with ranks and I assume there must be some parallels to that with account age and comments.  Perhaps some math to lower the weight of upvotes by newer accounts, or the newer account being the upvote target so they can still gain some traction but slower.  Perhaps one of the factors could be if the submission is for one of the public git repo sites AND it's a newer account it could have a divisor in the voting formula if it is not already.<p>The risk I see is that if the goal is growth but the low quality submissions are drowning out other submissions that could negate growth as some of the newer accounts that legit try to be part of a community would just drift away as they are in the poisoned well.  I too struggle to think of a way to separate them out of the noise without creating a system that would just be gamed by the LLM's.  On one hand if the system requires the regulars to <i>&quot;vouch&quot;</i> so to speak it will create little elitist bubbles whereas too much tweaking to algorithms will just be detected and gamed by LLM's.<p>Out of curiosity, are the LLM posts coming from residential and mobile addresses or from AI data-centers themselves?  If it's not already that could be yet another weighting factor.  <i>And/or AI user-agents as a weight.</i>  There are many bot signals that could be weighting or division factors.  Bots are easy to spot <i>from the server.</i>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Bender",
+          "story_48448447"
+        ],
+        "author": "Bender",
+        "children": [
+          48455343
+        ],
+        "comment_text": "I see others also mentioned the voting ring detector.  I think they&#x27;re correct that something needs adjustment, but I don&#x27;t know how it works exactly so it&#x27;s hard to suggest thresholds.  The patterns I am observing is that the LLM generated clones will get instantly upvoted multiple times <i>I assume by other warmed up LLM accounts</i>.  Back in the days of running phpBB I would mitigate some of that with ranks and I assume there must be some parallels to that with account age and comments.  Perhaps some math to lower the weight of upvotes by newer accounts, or the newer account being the upvote target so they can still gain some traction but slower.  Perhaps one of the factors could be if the submission is for one of the public git repo sites AND it&#x27;s a newer account it could have a divisor in the voting formula if it is not already.<p>The risk I see is that if the goal is growth but the low quality submissions are drowning out other submissions that could negate growth as some of the newer accounts that legit try to be part of a community would just drift away as they are in the poisoned well.  I too struggle to think of a way to separate them out of the noise without creating a system that would just be gamed by the LLM&#x27;s.  On one hand if the system requires the regulars to <i>&quot;vouch&quot;</i> so to speak it will create little elitist bubbles whereas too much tweaking to algorithms will just be detected and gamed by LLM&#x27;s.<p>Out of curiosity, are the LLM posts coming from residential and mobile addresses or from AI data-centers themselves?  If it&#x27;s not already that could be yet another weighting factor.  <i>And&#x2F;or AI user-agents as a weight.</i>  There are many bot signals that could be weighting or division factors.  Bots are easy to spot <i>from the server.</i>",
+        "created_at": "2026-06-08T20:05:29Z",
+        "created_at_i": 1780949129,
+        "objectID": "48451068",
+        "parent_id": 48450354,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T09:04:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lellow"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As someone who has been coming here for the past 8 years, I can't comment on &quot;10-15 years&quot; ago, but my experience hasn't changed a bit. This is and has been the only place where I visit almost daily (new account if you are looking at my profile) - and this is during vacation, during work, during weekends, etc. There is ALWAYS, literally, always an interesting discussion happening on topics that I would never be part of, if it wasn't for someone starting the discussion here. Yeh, today there is a bunch of AI, bla, bla, bla... so what will be next?! Not sure, but I know it will be here."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lellow",
+          "story_48448447"
+        ],
+        "author": "lellow",
+        "children": [
+          48451822
+        ],
+        "comment_text": "As someone who has been coming here for the past 8 years, I can&#x27;t comment on &quot;10-15 years&quot; ago, but my experience hasn&#x27;t changed a bit. This is and has been the only place where I visit almost daily (new account if you are looking at my profile) - and this is during vacation, during work, during weekends, etc. There is ALWAYS, literally, always an interesting discussion happening on topics that I would never be part of, if it wasn&#x27;t for someone starting the discussion here. Yeh, today there is a bunch of AI, bla, bla, bla... so what will be next?! Not sure, but I know it will be here.",
+        "created_at": "2026-06-08T20:02:23Z",
+        "created_at_i": 1780948943,
+        "objectID": "48451021",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-08T22:07:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Isn't that how every major tech wave works? &quot;Thing, but for $X&quot; is what everyone was doing when $X was personal computing, the web, mobile."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48461846,
+          48451523,
+          48461870
+        ],
+        "comment_text": "Isn&#x27;t that how every major tech wave works? &quot;Thing, but for $X&quot; is what everyone was doing when $X was personal computing, the web, mobile.",
+        "created_at": "2026-06-08T19:40:41Z",
+        "created_at_i": 1780947641,
+        "objectID": "48450615",
+        "parent_id": 48448824,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-09T14:48:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "byoung2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree about the bias to believe the past was better than it actually was. I think it's called rosy retrospection, like when people are nostalgic for their high school days even though they were bullied and had no friends. Maybe HN isn't getting worse, it's just that the negative parts are more recent and noticeable."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_byoung2",
+          "story_48448447"
+        ],
+        "author": "byoung2",
+        "comment_text": "I agree about the bias to believe the past was better than it actually was. I think it&#x27;s called rosy retrospection, like when people are nostalgic for their high school days even though they were bullied and had no friends. Maybe HN isn&#x27;t getting worse, it&#x27;s just that the negative parts are more recent and noticeable.",
+        "created_at": "2026-06-08T19:31:07Z",
+        "created_at_i": 1780947067,
+        "objectID": "48450418",
+        "parent_id": 48450264,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-08T22:35:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's a transitional situation and will be that way for quite a while. We're doing what we can. For example, the measures described here have stemmed the runaway growth in low-quality Show HNs:<p><a href=\"https://news.ycombinator.com/item?id=47346516\">https://news.ycombinator.com/item?id=47346516</a> (March 2026)<p><a href=\"https://news.ycombinator.com/item?id=47300772\">https://news.ycombinator.com/item?id=47300772</a> (March 2026)<p>There's still a quality problem, but (a) that's always the case, (b) at least we aren't drowning, and (c) the community needs growth, just not runaway growth.<p>Major new tools like LLMs are inevitably going to get widely used, as they should. Figuring out what the best uses are will take time. Figuring out how to share what one is doing with them is an unsolved problem."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48451068,
+          48450561
+        ],
+        "comment_text": "It&#x27;s a transitional situation and will be that way for quite a while. We&#x27;re doing what we can. For example, the measures described here have stemmed the runaway growth in low-quality Show HNs:<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47346516\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47346516</a> (March 2026)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47300772\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47300772</a> (March 2026)<p>There&#x27;s still a quality problem, but (a) that&#x27;s always the case, (b) at least we aren&#x27;t drowning, and (c) the community needs growth, just not runaway growth.<p>Major new tools like LLMs are inevitably going to get widely used, as they should. Figuring out what the best uses are will take time. Figuring out how to share what one is doing with them is an unsolved problem.",
+        "created_at": "2026-06-08T19:28:04Z",
+        "created_at_i": 1780946884,
+        "objectID": "48450354",
+        "parent_id": 48449689,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-08T22:04:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This perception has been around for almost as long as HN itself:<p><a href=\"https://news.ycombinator.com/item?id=12213869\">https://news.ycombinator.com/item?id=12213869</a> (Aug 2016)<p>Examples are legion. Here are a couple others:<p><a href=\"https://news.ycombinator.com/item?id=32229249\">https://news.ycombinator.com/item?id=32229249</a> (July 2022)<p><a href=\"https://news.ycombinator.com/item?id=23920281\">https://news.ycombinator.com/item?id=23920281</a> (July 2020)<p>I don't know of any way to objectively measure this. I do know that there's a strong bias to believe that things were better in the past, which is why &quot;things have always been getting worse&quot; is such a great line. How people perceive these things is strongly conditioned by how they're feeling about the things in general."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "HN seems dead compared to say 10-15 years ago"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dang",
+          "story_48448447"
+        ],
+        "author": "dang",
+        "children": [
+          48455643,
+          48451292,
+          48451721,
+          48453276,
+          48450418,
+          48452932,
+          48454747,
+          48453840,
+          48458473
+        ],
+        "comment_text": "This perception has been around for almost as long as HN itself:<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=12213869\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=12213869</a> (Aug 2016)<p>Examples are legion. Here are a couple others:<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32229249\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32229249</a> (July 2022)<p><a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=23920281\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=23920281</a> (July 2020)<p>I don&#x27;t know of any way to objectively measure this. I do know that there&#x27;s a strong bias to believe that things were better in the past, which is why &quot;things have always been getting worse&quot; is such a great line. How people perceive these things is strongly conditioned by how they&#x27;re feeling about the things in general.",
+        "created_at": "2026-06-08T19:21:49Z",
+        "created_at_i": 1780946509,
+        "objectID": "48450264",
+        "parent_id": 48448447,
+        "story_id": 48448447,
+        "story_title": "HN seems dead compared to say 10-15 years ago",
+        "updated_at": "2026-06-11T16:41:30Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 45,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48448447&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 2,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 23,
+        "roundTrip": 22
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        },
+        "merge": {
+          "mergeLoop": {
+            "prepareNextHit": 1,
+            "total": 1
+          },
+          "total": 1
+        },
+        "total": 1
+      },
+      "total": 2
+    },
+    "query": "",
+    "serverTimeMS": 27
+  }
+}

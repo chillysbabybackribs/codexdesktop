@@ -1,0 +1,3202 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "window": "recent-90d",
+  "start": 1775995200,
+  "end": 1783771200,
+  "tag": "show_hn",
+  "page": 1,
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tapeline_io"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tapeline – a stock scanner that publishes its formula and its losses"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tapeline.io"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tapeline_io",
+          "story_48861129",
+          "show_hn"
+        ],
+        "author": "tapeline_io",
+        "children": [
+          48861160
+        ],
+        "created_at": "2026-07-10T15:17:49Z",
+        "created_at_i": 1783696669,
+        "num_comments": 0,
+        "objectID": "48861129",
+        "points": 2,
+        "story_id": 48861129,
+        "title": "Show HN: Tapeline – a stock scanner that publishes its formula and its losses",
+        "updated_at": "2026-07-10T15:21:37Z",
+        "url": "https://tapeline.io"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yrotsih"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ChessFlex – iPhone chess with no server, no accounts (P2P via QR)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://apps.apple.com/us/app/chessflex/id6761064938"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_yrotsih",
+          "story_48861020",
+          "show_hn"
+        ],
+        "author": "yrotsih",
+        "children": [
+          48861085
+        ],
+        "created_at": "2026-07-10T15:08:21Z",
+        "created_at_i": 1783696101,
+        "num_comments": 0,
+        "objectID": "48861020",
+        "points": 4,
+        "story_id": 48861020,
+        "title": "Show HN: ChessFlex – iPhone chess with no server, no accounts (P2P via QR)",
+        "updated_at": "2026-07-10T20:12:49Z",
+        "url": "https://apps.apple.com/us/app/chessflex/id6761064938"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Present_Flow"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Detent – replace agent token transport with deterministic hooks"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Clear-Sights/Lever"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Present_Flow",
+          "story_48860984",
+          "show_hn"
+        ],
+        "author": "Present_Flow",
+        "children": [
+          48860987
+        ],
+        "created_at": "2026-07-10T15:05:53Z",
+        "created_at_i": 1783695953,
+        "num_comments": 0,
+        "objectID": "48860984",
+        "points": 1,
+        "story_id": 48860984,
+        "title": "Show HN: Detent – replace agent token transport with deterministic hooks",
+        "updated_at": "2026-07-10T16:23:39Z",
+        "url": "https://github.com/Clear-Sights/Lever"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cykrot"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ever tired of YouTube recommendations? can't think of something to watch? try phreak.watch.<p>everyone watches the same video together. users can vote on what plays next, or leave it up to fate and let the site choose something random, or vote to skip the current video if it’s not their cup of tea.<p>there’s also a shared chatroom, reactions, and statuses. there are no private rooms and no separate queues. everyone is stuck watching the same thing.<p>i just finished the first version, so there are probably bugs. feedback, criticism, and reports of anything broken are welcome.<p><a href=\"https://phreak.watch\" rel=\"nofollow\">https://phreak.watch</a>\nemail: admin@phreak.watch"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Phreak.watch – a 24/7 YouTube watch party"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://phreak.watch/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_cykrot",
+          "story_48860919",
+          "show_hn"
+        ],
+        "author": "cykrot",
+        "created_at": "2026-07-10T15:00:21Z",
+        "created_at_i": 1783695621,
+        "num_comments": 0,
+        "objectID": "48860919",
+        "points": 1,
+        "story_id": 48860919,
+        "story_text": "ever tired of YouTube recommendations? can&#x27;t think of something to watch? try phreak.watch.<p>everyone watches the same video together. users can vote on what plays next, or leave it up to fate and let the site choose something random, or vote to skip the current video if it’s not their cup of tea.<p>there’s also a shared chatroom, reactions, and statuses. there are no private rooms and no separate queues. everyone is stuck watching the same thing.<p>i just finished the first version, so there are probably bugs. feedback, criticism, and reports of anything broken are welcome.<p><a href=\"https:&#x2F;&#x2F;phreak.watch\" rel=\"nofollow\">https:&#x2F;&#x2F;phreak.watch</a>\nemail: admin@phreak.watch",
+        "title": "Show HN: Phreak.watch – a 24/7 YouTube watch party",
+        "updated_at": "2026-07-10T15:03:18Z",
+        "url": "https://phreak.watch/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "danielszlaski"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: iOS widgets that read your solar inverter over local Modbus TCP"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://danielszlaski.com/glance-for-solis.html"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_danielszlaski",
+          "story_48860904",
+          "show_hn"
+        ],
+        "author": "danielszlaski",
+        "children": [
+          48860977
+        ],
+        "created_at": "2026-07-10T14:59:20Z",
+        "created_at_i": 1783695560,
+        "num_comments": 1,
+        "objectID": "48860904",
+        "points": 3,
+        "story_id": 48860904,
+        "title": "Show HN: iOS widgets that read your solar inverter over local Modbus TCP",
+        "updated_at": "2026-07-10T15:32:49Z",
+        "url": "https://danielszlaski.com/glance-for-solis.html"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thiagomendescwb"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Systory – Architecture diagrams with animated request flows"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://systory.tmdevlab.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_thiagomendescwb",
+          "story_48860862",
+          "show_hn"
+        ],
+        "author": "thiagomendescwb",
+        "children": [
+          48860965
+        ],
+        "created_at": "2026-07-10T14:55:40Z",
+        "created_at_i": 1783695340,
+        "num_comments": 0,
+        "objectID": "48860862",
+        "points": 1,
+        "story_id": 48860862,
+        "title": "Show HN: Systory – Architecture diagrams with animated request flows",
+        "updated_at": "2026-07-10T15:06:21Z",
+        "url": "https://systory.tmdevlab.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nabertronic"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hi, i'm a journalist and i made PastPage because i often need to check for archived versions of urls. this browser extension helps me a lot. it autmates the process of checking lots of different web archives. also, it helps with 404 etc.<p>i made it free and open source, and it have great privacy practices, e.g. i don't see which url you are searching. i'd like feedback and i don't want to make money."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: PastPage – Find archived versions of dead links"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/nabertronic/pastpage"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_nabertronic",
+          "story_48860697",
+          "show_hn"
+        ],
+        "author": "nabertronic",
+        "children": [
+          48860720
+        ],
+        "created_at": "2026-07-10T14:43:25Z",
+        "created_at_i": 1783694605,
+        "num_comments": 0,
+        "objectID": "48860697",
+        "points": 3,
+        "story_id": 48860697,
+        "story_text": "hi, i&#x27;m a journalist and i made PastPage because i often need to check for archived versions of urls. this browser extension helps me a lot. it autmates the process of checking lots of different web archives. also, it helps with 404 etc.<p>i made it free and open source, and it have great privacy practices, e.g. i don&#x27;t see which url you are searching. i&#x27;d like feedback and i don&#x27;t want to make money.",
+        "title": "Show HN: PastPage – Find archived versions of dead links",
+        "updated_at": "2026-07-10T16:26:25Z",
+        "url": "https://github.com/nabertronic/pastpage"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ivanbelenky"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Theta, Harness Agnostic Configuration"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/tamarillo-ai/theta"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ivanbelenky",
+          "story_48860655",
+          "show_hn"
+        ],
+        "author": "ivanbelenky",
+        "created_at": "2026-07-10T14:40:03Z",
+        "created_at_i": 1783694403,
+        "num_comments": 0,
+        "objectID": "48860655",
+        "points": 1,
+        "story_id": 48860655,
+        "title": "Show HN: Theta, Harness Agnostic Configuration",
+        "updated_at": "2026-07-10T14:42:20Z",
+        "url": "https://github.com/tamarillo-ai/theta"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "revolt2tech"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Challenge a Friend to Real-Time Multiplayer AI Court Battle – Wram.chat"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://wram.chat"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_revolt2tech",
+          "story_48860652",
+          "show_hn"
+        ],
+        "author": "revolt2tech",
+        "created_at": "2026-07-10T14:39:38Z",
+        "created_at_i": 1783694378,
+        "num_comments": 0,
+        "objectID": "48860652",
+        "points": 3,
+        "story_id": 48860652,
+        "title": "Show HN: Challenge a Friend to Real-Time Multiplayer AI Court Battle – Wram.chat",
+        "updated_at": "2026-07-10T14:44:48Z",
+        "url": "https://wram.chat"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "devdoc83"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Termaxa – A cooperative gate for the shell commands AI agents run"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/termaxa/termaxa"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_devdoc83",
+          "story_48860593",
+          "show_hn"
+        ],
+        "author": "devdoc83",
+        "children": [
+          48860633,
+          48860686
+        ],
+        "created_at": "2026-07-10T14:35:59Z",
+        "created_at_i": 1783694159,
+        "num_comments": 0,
+        "objectID": "48860593",
+        "points": 1,
+        "story_id": 48860593,
+        "title": "Show HN: Termaxa – A cooperative gate for the shell commands AI agents run",
+        "updated_at": "2026-07-10T14:50:36Z",
+        "url": "https://github.com/termaxa/termaxa"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "skyphusion"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello everyone! I wanted to introduce you to a new project of mine, postern, which is an email system for both humans and agents. You can give your agents their own email addresses, the ability to respond to emails if you want, and all emails are presented in one nice unified mailbox. The email stack runs on Cloudflare Workers (email sending does require a subscription to the $5/mo Cloudflare Workers Plan), messages can be ingested into Vectorize (this is optional) to allow your agents to easily retrieve information and answer your questions about your email, attachments are stored in R2, and message state/contents are stored in D1. There’s also a RFC compliant SMTP relay server that runs on your server to translate anything that speaks the 1982 SMTP RFC spec into API calls so you can send emails from your server through the postern stack. There’s a python based IMAP proxy which allows you to use any client (tested extensively with iOS Mail, Apple Mail, Thunderbird, and Evolution) as well as a webmail client, so there’s multiple ways for you to interface with your email. The postern MCP allows your agents to send, retrieve, and search the email boxes and easily answer any questions you might have.<p>Postern differs from other agent email integrations because it allows you to give your agents their own email address. They don’t have to send email as you, they can send it as themselves, within the limits you define of course. As always, the licenses I set ensure that the code is free for use by anyone, the actual API core and server side components are AGPL-3.0, the clients for postern are MIT, free forever, made with love. I hope that you all will enjoy this as much as I enjoyed working on it.<p>A demo of the web interface is available at <a href=\"https://demo.posternonline.com\" rel=\"nofollow\">https://demo.posternonline.com</a>, the demo is read only as I won’t allow people to spam from my systems, but you can email any address at @posternonline.com and you should see it working. If you want to try your agents out on it, here’s the configuration you will use for the MCP (and when you go to the webmail site, the token is the same one you use to login):<p>POSTERN_API_URL=<a href=\"https://demo.posternonline.com\" rel=\"nofollow\">https://demo.posternonline.com</a>\nPOSTERN_API_TOKEN=a5fb2da1a13ab468adc1d147272126a4a977f3db44ace5c961ce87d26e0055d8<p>The GitHub is here: <a href=\"https://github.com/skyphusion-labs/postern\" rel=\"nofollow\">https://github.com/skyphusion-labs/postern</a>. Deploying the entire postern stack should take you about 10 minutes if you follow the directions in DEPLOY.md; I've tried to make the installation process as simple and frictionless as possible.<p>Also - please note, the privacy on this is very strict, feel free to review all of the code. There is no phone home built into this, none of your data passes through us, it is strictly your data, your privacy, protected and enshrined within the code.<p>I look forward to people trying this out, please give me feedback, I would greatly appreciate it!<p>Skyphusion (Conrad Rockenhaus)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Postern, an email system for both humans and agents"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/skyphusion-labs/postern"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_skyphusion",
+          "story_48860580",
+          "show_hn"
+        ],
+        "author": "skyphusion",
+        "created_at": "2026-07-10T14:34:44Z",
+        "created_at_i": 1783694084,
+        "num_comments": 0,
+        "objectID": "48860580",
+        "points": 1,
+        "story_id": 48860580,
+        "story_text": "Hello everyone! I wanted to introduce you to a new project of mine, postern, which is an email system for both humans and agents. You can give your agents their own email addresses, the ability to respond to emails if you want, and all emails are presented in one nice unified mailbox. The email stack runs on Cloudflare Workers (email sending does require a subscription to the $5&#x2F;mo Cloudflare Workers Plan), messages can be ingested into Vectorize (this is optional) to allow your agents to easily retrieve information and answer your questions about your email, attachments are stored in R2, and message state&#x2F;contents are stored in D1. There’s also a RFC compliant SMTP relay server that runs on your server to translate anything that speaks the 1982 SMTP RFC spec into API calls so you can send emails from your server through the postern stack. There’s a python based IMAP proxy which allows you to use any client (tested extensively with iOS Mail, Apple Mail, Thunderbird, and Evolution) as well as a webmail client, so there’s multiple ways for you to interface with your email. The postern MCP allows your agents to send, retrieve, and search the email boxes and easily answer any questions you might have.<p>Postern differs from other agent email integrations because it allows you to give your agents their own email address. They don’t have to send email as you, they can send it as themselves, within the limits you define of course. As always, the licenses I set ensure that the code is free for use by anyone, the actual API core and server side components are AGPL-3.0, the clients for postern are MIT, free forever, made with love. I hope that you all will enjoy this as much as I enjoyed working on it.<p>A demo of the web interface is available at <a href=\"https:&#x2F;&#x2F;demo.posternonline.com\" rel=\"nofollow\">https:&#x2F;&#x2F;demo.posternonline.com</a>, the demo is read only as I won’t allow people to spam from my systems, but you can email any address at @posternonline.com and you should see it working. If you want to try your agents out on it, here’s the configuration you will use for the MCP (and when you go to the webmail site, the token is the same one you use to login):<p>POSTERN_API_URL=<a href=\"https:&#x2F;&#x2F;demo.posternonline.com\" rel=\"nofollow\">https:&#x2F;&#x2F;demo.posternonline.com</a>\nPOSTERN_API_TOKEN=a5fb2da1a13ab468adc1d147272126a4a977f3db44ace5c961ce87d26e0055d8<p>The GitHub is here: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;skyphusion-labs&#x2F;postern\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;skyphusion-labs&#x2F;postern</a>. Deploying the entire postern stack should take you about 10 minutes if you follow the directions in DEPLOY.md; I&#x27;ve tried to make the installation process as simple and frictionless as possible.<p>Also - please note, the privacy on this is very strict, feel free to review all of the code. There is no phone home built into this, none of your data passes through us, it is strictly your data, your privacy, protected and enshrined within the code.<p>I look forward to people trying this out, please give me feedback, I would greatly appreciate it!<p>Skyphusion (Conrad Rockenhaus)",
+        "title": "Show HN: Postern, an email system for both humans and agents",
+        "updated_at": "2026-07-10T14:37:05Z",
+        "url": "https://github.com/skyphusion-labs/postern"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bagoldbe"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Created a tool that ingests form 4 for a universe of stocks you define.  pulls it all into a database, cleans the data e.g. planned trade vs. discretionary trade and allows you to test different trading hypothesis based on insider activities.  You can backtest the different trading ideas.<p>Some illustrative trading ideas are cluster buys for insiders, large purchases relative to historical buys, exercise and holding rather than immediately selling, etc...<p>I've also designed it in a way that it can automatically trade via Alpaca API.  I'm currently testing some of my own ideas via their paper trading accounts.  Some promising ideas so far, buts it's only been ~4 months of trading in a relative bull market.<p>It's all open source.  I used Railway to host it which has some minimal costs but can also host locally.<p>Welcome any feedback or thoughts."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: OSS tool for testing out new trading thesis based on insider activity"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/bagoldbe/form4lab"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bagoldbe",
+          "story_48860562",
+          "show_hn"
+        ],
+        "author": "bagoldbe",
+        "children": [
+          48861076
+        ],
+        "created_at": "2026-07-10T14:34:00Z",
+        "created_at_i": 1783694040,
+        "num_comments": 0,
+        "objectID": "48860562",
+        "points": 1,
+        "story_id": 48860562,
+        "story_text": "Created a tool that ingests form 4 for a universe of stocks you define.  pulls it all into a database, cleans the data e.g. planned trade vs. discretionary trade and allows you to test different trading hypothesis based on insider activities.  You can backtest the different trading ideas.<p>Some illustrative trading ideas are cluster buys for insiders, large purchases relative to historical buys, exercise and holding rather than immediately selling, etc...<p>I&#x27;ve also designed it in a way that it can automatically trade via Alpaca API.  I&#x27;m currently testing some of my own ideas via their paper trading accounts.  Some promising ideas so far, buts it&#x27;s only been ~4 months of trading in a relative bull market.<p>It&#x27;s all open source.  I used Railway to host it which has some minimal costs but can also host locally.<p>Welcome any feedback or thoughts.",
+        "title": "Show HN: OSS tool for testing out new trading thesis based on insider activity",
+        "updated_at": "2026-07-10T15:14:03Z",
+        "url": "https://github.com/bagoldbe/form4lab"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alimpolat2026"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bank statement PDF to Excel, checked against its own balances"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://bankstatementsheet.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alimpolat2026",
+          "story_48860322",
+          "show_hn"
+        ],
+        "author": "alimpolat2026",
+        "children": [
+          48860342
+        ],
+        "created_at": "2026-07-10T14:19:40Z",
+        "created_at_i": 1783693180,
+        "num_comments": 0,
+        "objectID": "48860322",
+        "points": 1,
+        "story_id": 48860322,
+        "title": "Show HN: Bank statement PDF to Excel, checked against its own balances",
+        "updated_at": "2026-07-10T14:21:33Z",
+        "url": "https://bankstatementsheet.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lumli"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tiny ONNX Runtime Web Worker Starter"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/makan0713/onnx-web-worker-starter"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lumli",
+          "story_48860259",
+          "show_hn"
+        ],
+        "author": "lumli",
+        "children": [
+          48860270
+        ],
+        "created_at": "2026-07-10T14:14:18Z",
+        "created_at_i": 1783692858,
+        "num_comments": 0,
+        "objectID": "48860259",
+        "points": 1,
+        "story_id": 48860259,
+        "title": "Show HN: Tiny ONNX Runtime Web Worker Starter",
+        "updated_at": "2026-07-10T14:16:06Z",
+        "url": "https://github.com/makan0713/onnx-web-worker-starter"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "grenzfrei"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: CiteReady – Can AI search (ChatGPT, Perplexity) cite your site?"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://citeready.sprytools.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_grenzfrei",
+          "story_48860155",
+          "show_hn"
+        ],
+        "author": "grenzfrei",
+        "children": [
+          48860186
+        ],
+        "created_at": "2026-07-10T14:07:24Z",
+        "created_at_i": 1783692444,
+        "num_comments": 0,
+        "objectID": "48860155",
+        "points": 1,
+        "story_id": 48860155,
+        "title": "Show HN: CiteReady – Can AI search (ChatGPT, Perplexity) cite your site?",
+        "updated_at": "2026-07-10T14:10:50Z",
+        "url": "https://citeready.sprytools.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "0xshug0"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Run 25 Audio Models (TTS/STT/STS/Muisc) Locally in C++/GGML. No Python"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/0xShug0/audio.cpp"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_0xshug0",
+          "story_48860134",
+          "show_hn"
+        ],
+        "author": "0xshug0",
+        "children": [
+          48862034
+        ],
+        "created_at": "2026-07-10T14:05:55Z",
+        "created_at_i": 1783692355,
+        "num_comments": 1,
+        "objectID": "48860134",
+        "points": 2,
+        "story_id": 48860134,
+        "title": "Show HN: Run 25 Audio Models (TTS/STT/STS/Muisc) Locally in C++/GGML. No Python",
+        "updated_at": "2026-07-10T23:04:05Z",
+        "url": "https://github.com/0xShug0/audio.cpp"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "moisish"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ParkMyAws – stop paying for dev/staging AWS instances at night"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://parkmyaws.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_moisish",
+          "story_48860123",
+          "show_hn"
+        ],
+        "author": "moisish",
+        "children": [
+          48860124
+        ],
+        "created_at": "2026-07-10T14:05:05Z",
+        "created_at_i": 1783692305,
+        "num_comments": 0,
+        "objectID": "48860123",
+        "points": 1,
+        "story_id": 48860123,
+        "title": "Show HN: ParkMyAws – stop paying for dev/staging AWS instances at night",
+        "updated_at": "2026-07-10T14:10:50Z",
+        "url": "https://parkmyaws.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CaioFer"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Announcing the new release of the WTX project.<p>After ~2 years of development, the TLS feature is finally in an usable state where clients can connect to popular sites and servers can negotiate basic handshakes.<p>On its own the RFC-8446 specification is huge, complex and prone to errors, not to mention other associated features like ECH or DTLS. That is why features like PSK, HRR and 0-RTT are still not supported but they will probably be added in the future."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: New TLS 1.3 (RFC-8446) implementation written in Rust"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/c410-f3r/wtx"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_CaioFer",
+          "story_48860103",
+          "show_hn"
+        ],
+        "author": "CaioFer",
+        "created_at": "2026-07-10T14:03:58Z",
+        "created_at_i": 1783692238,
+        "num_comments": 0,
+        "objectID": "48860103",
+        "points": 1,
+        "story_id": 48860103,
+        "story_text": "Announcing the new release of the WTX project.<p>After ~2 years of development, the TLS feature is finally in an usable state where clients can connect to popular sites and servers can negotiate basic handshakes.<p>On its own the RFC-8446 specification is huge, complex and prone to errors, not to mention other associated features like ECH or DTLS. That is why features like PSK, HRR and 0-RTT are still not supported but they will probably be added in the future.",
+        "title": "Show HN: New TLS 1.3 (RFC-8446) implementation written in Rust",
+        "updated_at": "2026-07-10T14:05:36Z",
+        "url": "https://github.com/c410-f3r/wtx"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AbjMV"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: WindowBunny – Window Switcher built for trackpad users"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.windowbunny.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_AbjMV",
+          "story_48859902",
+          "show_hn"
+        ],
+        "author": "AbjMV",
+        "created_at": "2026-07-10T13:49:39Z",
+        "created_at_i": 1783691379,
+        "num_comments": 0,
+        "objectID": "48859902",
+        "points": 1,
+        "story_id": 48859902,
+        "title": "Show HN: WindowBunny – Window Switcher built for trackpad users",
+        "updated_at": "2026-07-10T13:55:05Z",
+        "url": "https://www.windowbunny.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fristovic"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Snitch – Deterministic prose claim verifier for coding agents. (OSS)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/fristovic/snitch"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fristovic",
+          "story_48859824",
+          "show_hn"
+        ],
+        "author": "fristovic",
+        "children": [
+          48859848
+        ],
+        "created_at": "2026-07-10T13:44:08Z",
+        "created_at_i": 1783691048,
+        "num_comments": 0,
+        "objectID": "48859824",
+        "points": 3,
+        "story_id": 48859824,
+        "title": "Show HN: Snitch – Deterministic prose claim verifier for coding agents. (OSS)",
+        "updated_at": "2026-07-10T14:12:33Z",
+        "url": "https://github.com/fristovic/snitch"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "13639366668"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Pay-per-call MCP server with 47 AI endpoints, micropayments via x402"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://goldbean-api.xyz"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_13639366668",
+          "story_48859732",
+          "show_hn"
+        ],
+        "author": "13639366668",
+        "created_at": "2026-07-10T13:35:54Z",
+        "created_at_i": 1783690554,
+        "num_comments": 0,
+        "objectID": "48859732",
+        "points": 2,
+        "story_id": 48859732,
+        "title": "Show HN: Pay-per-call MCP server with 47 AI endpoints, micropayments via x402",
+        "updated_at": "2026-07-10T13:46:51Z",
+        "url": "https://goldbean-api.xyz"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xxbondsxx"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN, I loved Pieter Mae's HN book map from 2024 (<a href=\"https://hnbooks.pieterma.es/\" rel=\"nofollow\">https://hnbooks.pieterma.es/</a>) and immediately wanted to dive into a lot of the nonfiction books. I didn't have a ton of time to read all of them though, so I made this project to generate study guides for any arbitrary book. Think of it like free sparknotes powered by Gemini. Hope you all can learn as much as I did!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Hacker News book recs as study guides"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://biteread.ai/collection/hacker-news-top-nonfiction"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_xxbondsxx",
+          "story_48859731",
+          "show_hn"
+        ],
+        "author": "xxbondsxx",
+        "children": [
+          48861728
+        ],
+        "created_at": "2026-07-10T13:35:49Z",
+        "created_at_i": 1783690549,
+        "num_comments": 2,
+        "objectID": "48859731",
+        "points": 3,
+        "story_id": 48859731,
+        "story_text": "Hey HN, I loved Pieter Mae&#x27;s HN book map from 2024 (<a href=\"https:&#x2F;&#x2F;hnbooks.pieterma.es&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;hnbooks.pieterma.es&#x2F;</a>) and immediately wanted to dive into a lot of the nonfiction books. I didn&#x27;t have a ton of time to read all of them though, so I made this project to generate study guides for any arbitrary book. Think of it like free sparknotes powered by Gemini. Hope you all can learn as much as I did!",
+        "title": "Show HN: Hacker News book recs as study guides",
+        "updated_at": "2026-07-10T17:58:48Z",
+        "url": "https://biteread.ai/collection/hacker-news-top-nonfiction"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alvaro_l_torres"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: LifetimeR–A memento mori wallpaper generator (life,year,goal calendars)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://lifetimer.vercel.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_alvaro_l_torres",
+          "story_48859690",
+          "show_hn"
+        ],
+        "author": "alvaro_l_torres",
+        "children": [
+          48859699
+        ],
+        "created_at": "2026-07-10T13:32:16Z",
+        "created_at_i": 1783690336,
+        "num_comments": 0,
+        "objectID": "48859690",
+        "points": 2,
+        "story_id": 48859690,
+        "title": "Show HN: LifetimeR–A memento mori wallpaper generator (life,year,goal calendars)",
+        "updated_at": "2026-07-10T13:46:51Z",
+        "url": "https://lifetimer.vercel.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bboydart"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Opula – portfolio and net-worth analysis as a hosted MCP connector"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://opula.io"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_bboydart",
+          "story_48859573",
+          "show_hn"
+        ],
+        "author": "bboydart",
+        "children": [
+          48859576
+        ],
+        "created_at": "2026-07-10T13:22:09Z",
+        "created_at_i": 1783689729,
+        "num_comments": 0,
+        "objectID": "48859573",
+        "points": 3,
+        "story_id": 48859573,
+        "title": "Show HN: Opula – portfolio and net-worth analysis as a hosted MCP connector",
+        "updated_at": "2026-07-11T00:14:50Z",
+        "url": "https://opula.io"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Uptrenda"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Runloom – Go-style coroutines for Python free-threaded"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/robertsdotpm/runloom"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Uptrenda",
+          "story_48859387",
+          "show_hn"
+        ],
+        "author": "Uptrenda",
+        "children": [
+          48861211,
+          48860264,
+          48862464,
+          48866747,
+          48869503,
+          48861077,
+          48860930,
+          48867704
+        ],
+        "created_at": "2026-07-10T13:07:38Z",
+        "created_at_i": 1783688858,
+        "num_comments": 29,
+        "objectID": "48859387",
+        "points": 47,
+        "story_id": 48859387,
+        "title": "Show HN: Runloom – Go-style coroutines for Python free-threaded",
+        "updated_at": "2026-07-11T16:24:07Z",
+        "url": "https://github.com/robertsdotpm/runloom"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "emrecodes"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: LanceDB VS Code Extension"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/eozsahin1993/lancedb-explorer"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_emrecodes",
+          "story_48859354",
+          "show_hn"
+        ],
+        "author": "emrecodes",
+        "children": [
+          48859509
+        ],
+        "created_at": "2026-07-10T13:04:49Z",
+        "created_at_i": 1783688689,
+        "num_comments": 2,
+        "objectID": "48859354",
+        "points": 2,
+        "story_id": 48859354,
+        "title": "Show HN: LanceDB VS Code Extension",
+        "updated_at": "2026-07-10T19:31:50Z",
+        "url": "https://github.com/eozsahin1993/lancedb-explorer"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "elwingo1"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Eveagents.dev"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.eveagents.dev/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_elwingo1",
+          "story_48859238",
+          "show_hn"
+        ],
+        "author": "elwingo1",
+        "created_at": "2026-07-10T12:54:19Z",
+        "created_at_i": 1783688059,
+        "num_comments": 0,
+        "objectID": "48859238",
+        "points": 3,
+        "story_id": 48859238,
+        "title": "Show HN: Eveagents.dev",
+        "updated_at": "2026-07-10T13:07:18Z",
+        "url": "https://www.eveagents.dev/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "coder_xyz"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Hallint – lint AI-generated code for security issues"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Asyncinnovator/hallint"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_coder_xyz",
+          "story_48859105",
+          "show_hn"
+        ],
+        "author": "coder_xyz",
+        "children": [
+          48859158
+        ],
+        "created_at": "2026-07-10T12:43:06Z",
+        "created_at_i": 1783687386,
+        "num_comments": 1,
+        "objectID": "48859105",
+        "points": 2,
+        "story_id": 48859105,
+        "title": "Show HN: Hallint – lint AI-generated code for security issues",
+        "updated_at": "2026-07-10T14:13:22Z",
+        "url": "https://github.com/Asyncinnovator/hallint"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpsimons"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We all need a swiss army knife for images. A tool for really getting in there and dealing with the pixels precisely. You might be combining images into a sprite sheet, you might be matting images to squares, cutting out solid backgrounds, re-tinting graphical elements. For a website, a video game, for an app.<p>There's a million photo editors, there's a million design tools, and Mojave Paint can do those things in varying degrees but &quot;graphical asset production&quot; is its first and primary mission.<p>It's cheap! $9.99 (one-time, sad I even have to say that) for the &quot;Pro&quot; version. It's Mac-only, and Apple Silicon Mac at that. Does it look a little like Photoshop 5.5 from the year 1999? Maybe a little but also it's got plenty of its own original ideas. (Blog post on that is forthcoming…)<p>I've always been passionate about image editing tools for the technically-minded so I'm throwing my hat in the ring in that space. And sure GIMP is for the technically-minded but boy is it ugly on the Mac!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Mojave Paint for macOS, edit images like it's 1999"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://mojavepaint.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jpsimons",
+          "story_48858972",
+          "show_hn"
+        ],
+        "author": "jpsimons",
+        "children": [
+          48859231
+        ],
+        "created_at": "2026-07-10T12:29:07Z",
+        "created_at_i": 1783686547,
+        "num_comments": 5,
+        "objectID": "48858972",
+        "points": 3,
+        "story_id": 48858972,
+        "story_text": "We all need a swiss army knife for images. A tool for really getting in there and dealing with the pixels precisely. You might be combining images into a sprite sheet, you might be matting images to squares, cutting out solid backgrounds, re-tinting graphical elements. For a website, a video game, for an app.<p>There&#x27;s a million photo editors, there&#x27;s a million design tools, and Mojave Paint can do those things in varying degrees but &quot;graphical asset production&quot; is its first and primary mission.<p>It&#x27;s cheap! $9.99 (one-time, sad I even have to say that) for the &quot;Pro&quot; version. It&#x27;s Mac-only, and Apple Silicon Mac at that. Does it look a little like Photoshop 5.5 from the year 1999? Maybe a little but also it&#x27;s got plenty of its own original ideas. (Blog post on that is forthcoming…)<p>I&#x27;ve always been passionate about image editing tools for the technically-minded so I&#x27;m throwing my hat in the ring in that space. And sure GIMP is for the technically-minded but boy is it ugly on the Mac!",
+        "title": "Show HN: Mojave Paint for macOS, edit images like it's 1999",
+        "updated_at": "2026-07-10T19:06:50Z",
+        "url": "https://mojavepaint.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jamesharding"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN! I'm an A350 pilot, some of you might remember my flying stats page from last year.<p>Most people assume modern airliners navigate purely by GPS. In reality we still lean on a whole stack of ground-based radio navaids (VOR, DME, NDB, ILS) the oldest of which trace their lineage back to the 1920s.<p>With the amount of GPS jamming around the world at the moment, there are regular stretches of a flight where the jet falls back to these older systems to work out where it is.<p>I first learned all this from a textbook full of static diagrams, and always thought it deserved better. So I built interactive, draggable animations for each one — VOR, ILS, DME, TCAS, SELCAL, phased arrays and more.<p>Happy to answer any questions about the tech or the flying! :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Airline pilot's interactive guide to aviation radio"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://jameshard.ing/posts/aviation-radio/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jamesharding",
+          "story_48858782",
+          "show_hn"
+        ],
+        "author": "jamesharding",
+        "children": [
+          48858801,
+          48862056
+        ],
+        "created_at": "2026-07-10T12:05:57Z",
+        "created_at_i": 1783685157,
+        "num_comments": 8,
+        "objectID": "48858782",
+        "points": 3,
+        "story_id": 48858782,
+        "story_text": "Hey HN! I&#x27;m an A350 pilot, some of you might remember my flying stats page from last year.<p>Most people assume modern airliners navigate purely by GPS. In reality we still lean on a whole stack of ground-based radio navaids (VOR, DME, NDB, ILS) the oldest of which trace their lineage back to the 1920s.<p>With the amount of GPS jamming around the world at the moment, there are regular stretches of a flight where the jet falls back to these older systems to work out where it is.<p>I first learned all this from a textbook full of static diagrams, and always thought it deserved better. So I built interactive, draggable animations for each one — VOR, ILS, DME, TCAS, SELCAL, phased arrays and more.<p>Happy to answer any questions about the tech or the flying! :)",
+        "title": "Show HN: Airline pilot's interactive guide to aviation radio",
+        "updated_at": "2026-07-11T01:30:37Z",
+        "url": "https://jameshard.ing/posts/aviation-radio/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mhmt_dmr"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We built MCP Gateway to make existing APIs and databases usable by AI agents through MCP, without writing a custom MCP server for each system.\nIt can analyze OpenAPI specs and SQL sources, generate tool definitions, route agent calls, and log usage. We also built a web chat module so users can interact with connected systems through a simple chat interface."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MCP Gateway – Turn existing APIs and databases into MCP servers"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://swaggertomcp.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_mhmt_dmr",
+          "story_48858721",
+          "show_hn"
+        ],
+        "author": "mhmt_dmr",
+        "children": [
+          48864208
+        ],
+        "created_at": "2026-07-10T11:58:34Z",
+        "created_at_i": 1783684714,
+        "num_comments": 0,
+        "objectID": "48858721",
+        "points": 1,
+        "story_id": 48858721,
+        "story_text": "We built MCP Gateway to make existing APIs and databases usable by AI agents through MCP, without writing a custom MCP server for each system.\nIt can analyze OpenAPI specs and SQL sources, generate tool definitions, route agent calls, and log usage. We also built a web chat module so users can interact with connected systems through a simple chat interface.",
+        "title": "Show HN: MCP Gateway – Turn existing APIs and databases into MCP servers",
+        "updated_at": "2026-07-10T19:35:10Z",
+        "url": "https://swaggertomcp.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wudwerd01"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Intel Desk, a geopolitical desk that scores sources and tracks Hormuz"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.inteldesk.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_wudwerd01",
+          "story_48858681",
+          "show_hn"
+        ],
+        "author": "wudwerd01",
+        "children": [
+          48858686
+        ],
+        "created_at": "2026-07-10T11:53:26Z",
+        "created_at_i": 1783684406,
+        "num_comments": 0,
+        "objectID": "48858681",
+        "points": 2,
+        "story_id": 48858681,
+        "title": "Show HN: Intel Desk, a geopolitical desk that scores sources and tracks Hormuz",
+        "updated_at": "2026-07-10T12:24:04Z",
+        "url": "https://www.inteldesk.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "teaearlgraycold"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not actually a fractal, just a 2D map showing chaotic vs. non-chaotic regions. Adjust the settings, zoom in, look around!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: An interactive double pendulum \"fractal\""
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.doublethe.fun"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_teaearlgraycold",
+          "story_48858536",
+          "show_hn"
+        ],
+        "author": "teaearlgraycold",
+        "created_at": "2026-07-10T11:36:17Z",
+        "created_at_i": 1783683377,
+        "num_comments": 0,
+        "objectID": "48858536",
+        "points": 1,
+        "story_id": 48858536,
+        "story_text": "Not actually a fractal, just a 2D map showing chaotic vs. non-chaotic regions. Adjust the settings, zoom in, look around!",
+        "title": "Show HN: An interactive double pendulum \"fractal\"",
+        "updated_at": "2026-07-10T11:38:49Z",
+        "url": "https://www.doublethe.fun"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ifer47"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi HN — I'm the author. I built MarkerOn because screen annotation tools I tried were either too heavy (Electron), too mouse-driven, or locked to a specific meeting app.<p>MarkerOn sits in the system tray. Press Ctrl+Shift+D to draw over any app, then X for click-through mode while marks stay visible. Number keys switch tools; shortcuts cover undo, colors, whiteboard, copy — no menus needed.<p>Stack: Tauri v2 + Rust, Vue 3, Canvas. ~1.5 MB installer, no account/telemetry/cloud. MIT, Win/macOS/Linux + Microsoft Store.<p>GitHub: <a href=\"https://github.com/ifer47/markeron\" rel=\"nofollow\">https://github.com/ifer47/markeron</a><p>Happy to answer questions on overlay implementation, cross-platform quirks, or keyboard-first UX."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: MarkerOn – Keyboard-first screen annotation tool (~1.5 MB, Tauri v2)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://markeron.cn/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ifer47",
+          "story_48858367",
+          "show_hn"
+        ],
+        "author": "ifer47",
+        "created_at": "2026-07-10T11:11:59Z",
+        "created_at_i": 1783681919,
+        "num_comments": 0,
+        "objectID": "48858367",
+        "points": 1,
+        "story_id": 48858367,
+        "story_text": "Hi HN — I&#x27;m the author. I built MarkerOn because screen annotation tools I tried were either too heavy (Electron), too mouse-driven, or locked to a specific meeting app.<p>MarkerOn sits in the system tray. Press Ctrl+Shift+D to draw over any app, then X for click-through mode while marks stay visible. Number keys switch tools; shortcuts cover undo, colors, whiteboard, copy — no menus needed.<p>Stack: Tauri v2 + Rust, Vue 3, Canvas. ~1.5 MB installer, no account&#x2F;telemetry&#x2F;cloud. MIT, Win&#x2F;macOS&#x2F;Linux + Microsoft Store.<p>GitHub: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ifer47&#x2F;markeron\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ifer47&#x2F;markeron</a><p>Happy to answer questions on overlay implementation, cross-platform quirks, or keyboard-first UX.",
+        "title": "Show HN: MarkerOn – Keyboard-first screen annotation tool (~1.5 MB, Tauri v2)",
+        "updated_at": "2026-07-10T21:56:04Z",
+        "url": "https://markeron.cn/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "autobe"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: TTSC, TypeScript v7 ToolChain, plugin and codegraph reducing 90% tokens"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/samchon/ttsc"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_autobe",
+          "story_48858343",
+          "show_hn"
+        ],
+        "author": "autobe",
+        "created_at": "2026-07-10T11:08:30Z",
+        "created_at_i": 1783681710,
+        "num_comments": 0,
+        "objectID": "48858343",
+        "points": 1,
+        "story_id": 48858343,
+        "title": "Show HN: TTSC, TypeScript v7 ToolChain, plugin and codegraph reducing 90% tokens",
+        "updated_at": "2026-07-10T11:12:33Z",
+        "url": "https://github.com/samchon/ttsc"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zweiler1"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I am happy to finally announce the language I have been working on for the last 2 years, [Flint](<a href=\"https://flint-lang.github.io\" rel=\"nofollow\">https://flint-lang.github.io</a>)!<p>Flint is a high-level, statically and strongly typed, compiled language which centers around transparency as its core pillar. The compiler is entirely written in C++. It originated from one simple idea and core concept:<p>&gt; What happens when you center the whole language on an ECS-inspired composition-based paradigm?<p>And so the journey began. The core idea is simple: data and functionality are separated and then composed deterministically into larger entities. This idea is not new at all, ECS exists since a long time. But a composition-based workflow can only be &quot;emulated&quot; in Object-Oriented languages and I find it often painful or unergonomic.<p>In Flint, composition is the core paradigm. I have put great effort into making it ergonomic and &quot;just work&quot;. The result is a system which can be described as a cool mix of OOP and ECS. I gave the &quot;new&quot; paradigm a name, since nothing quite like it exists yet, even though the ideas it is based on are well known, the *Declarative Composable Modules Paradigm (DCMP)*.<p>The combination of a high level + transparency as a core pillar is a bit unusual. I have put great effort into finding a good balance. I found out that these two things are not mutually exclusive, there is a middle way in which a design can be both high level and transparent. Flint might be best described as &quot;middle-level&quot; as a result: You write high level code but you can see the low level runtime and execution beneath too if you want, as this focus on transparency directly results in shallow abstractions.<p>Most developers are more used to OOP workflows rather than compositional workflows, it's just more mainstream. So, if you cannot live without it, Flint might not be for you and that's okay. Also, I am also sure that Flint won't be for everyone because of it's split focus on being high level <i>and</i> transparent. It will feel too high level for some or too low level for others. But if the core idea and mentality excites you, please give it a fair chance.<p>The time has come where I am confident enough in Flint to search for people to try it out and give feedback on it. Many features are still missing but the general vibe and direction of the language can already be seen. The `0.4.0` version is the 20th release so far, the first initial version was released a year ago. I am now moving into the `0.5.0` release cycle which will bring generics, type constraints, compile time code execution, the standard library and more. You can look at the entire roadmap [here](<a href=\"https://github.com/orgs/flint-lang/projects/6/views/1\" rel=\"nofollow\">https://github.com/orgs/flint-lang/projects/6/views/1</a>)<p>The [Wiki](<a href=\"https://flint-lang.github.io/wiki\" rel=\"nofollow\">https://flint-lang.github.io/wiki</a>) is in a very good state, it is kept updated with every release made. Every example in the Wiki works and I did My at explaining it all. The language's core value is transparency, so there is nothing to hide about it.<p>I intended to add a small example here, but the character limit tripped Me over a bit here. There are plenty of examples elsewhere, so if you are interested you will surely find enough examples :)<p>The project is in late beta. All implemented features work reliably, as all wiki examples compile and run as intended. There are still missing error messages and unexpected edge cases (as expected from a single developer).<p>If you're interested, try it out, give feedback, open issues, and feel free to join the Discord. Let's discuss Flint!<p>(Also, I may not be aware of some industry-standard names for some systems. If you encounter anything I gave a weird name where you think &quot;wait something like that already exists&quot; please let me know. I try to use industry-standard terminology as much as I am able to. I hate it when new names are made up for something which already exists.)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: The Flint Programming Language"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/flint-lang/flintc"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_zweiler1",
+          "story_48858287",
+          "show_hn"
+        ],
+        "author": "zweiler1",
+        "children": [
+          48869372,
+          48861920
+        ],
+        "created_at": "2026-07-10T10:59:53Z",
+        "created_at_i": 1783681193,
+        "num_comments": 3,
+        "objectID": "48858287",
+        "points": 4,
+        "story_id": 48858287,
+        "story_text": "I am happy to finally announce the language I have been working on for the last 2 years, [Flint](<a href=\"https:&#x2F;&#x2F;flint-lang.github.io\" rel=\"nofollow\">https:&#x2F;&#x2F;flint-lang.github.io</a>)!<p>Flint is a high-level, statically and strongly typed, compiled language which centers around transparency as its core pillar. The compiler is entirely written in C++. It originated from one simple idea and core concept:<p>&gt; What happens when you center the whole language on an ECS-inspired composition-based paradigm?<p>And so the journey began. The core idea is simple: data and functionality are separated and then composed deterministically into larger entities. This idea is not new at all, ECS exists since a long time. But a composition-based workflow can only be &quot;emulated&quot; in Object-Oriented languages and I find it often painful or unergonomic.<p>In Flint, composition is the core paradigm. I have put great effort into making it ergonomic and &quot;just work&quot;. The result is a system which can be described as a cool mix of OOP and ECS. I gave the &quot;new&quot; paradigm a name, since nothing quite like it exists yet, even though the ideas it is based on are well known, the *Declarative Composable Modules Paradigm (DCMP)*.<p>The combination of a high level + transparency as a core pillar is a bit unusual. I have put great effort into finding a good balance. I found out that these two things are not mutually exclusive, there is a middle way in which a design can be both high level and transparent. Flint might be best described as &quot;middle-level&quot; as a result: You write high level code but you can see the low level runtime and execution beneath too if you want, as this focus on transparency directly results in shallow abstractions.<p>Most developers are more used to OOP workflows rather than compositional workflows, it&#x27;s just more mainstream. So, if you cannot live without it, Flint might not be for you and that&#x27;s okay. Also, I am also sure that Flint won&#x27;t be for everyone because of it&#x27;s split focus on being high level <i>and</i> transparent. It will feel too high level for some or too low level for others. But if the core idea and mentality excites you, please give it a fair chance.<p>The time has come where I am confident enough in Flint to search for people to try it out and give feedback on it. Many features are still missing but the general vibe and direction of the language can already be seen. The `0.4.0` version is the 20th release so far, the first initial version was released a year ago. I am now moving into the `0.5.0` release cycle which will bring generics, type constraints, compile time code execution, the standard library and more. You can look at the entire roadmap [here](<a href=\"https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;flint-lang&#x2F;projects&#x2F;6&#x2F;views&#x2F;1\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;orgs&#x2F;flint-lang&#x2F;projects&#x2F;6&#x2F;views&#x2F;1</a>)<p>The [Wiki](<a href=\"https:&#x2F;&#x2F;flint-lang.github.io&#x2F;wiki\" rel=\"nofollow\">https:&#x2F;&#x2F;flint-lang.github.io&#x2F;wiki</a>) is in a very good state, it is kept updated with every release made. Every example in the Wiki works and I did My at explaining it all. The language&#x27;s core value is transparency, so there is nothing to hide about it.<p>I intended to add a small example here, but the character limit tripped Me over a bit here. There are plenty of examples elsewhere, so if you are interested you will surely find enough examples :)<p>The project is in late beta. All implemented features work reliably, as all wiki examples compile and run as intended. There are still missing error messages and unexpected edge cases (as expected from a single developer).<p>If you&#x27;re interested, try it out, give feedback, open issues, and feel free to join the Discord. Let&#x27;s discuss Flint!<p>(Also, I may not be aware of some industry-standard names for some systems. If you encounter anything I gave a weird name where you think &quot;wait something like that already exists&quot; please let me know. I try to use industry-standard terminology as much as I am able to. I hate it when new names are made up for something which already exists.)",
+        "title": "Show HN: The Flint Programming Language",
+        "updated_at": "2026-07-11T06:35:20Z",
+        "url": "https://github.com/flint-lang/flintc"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "james_ross"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Concepticon – manage your team's domain language like source code"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://thinkingtools.software/concepticon/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_james_ross",
+          "story_48858254",
+          "show_hn"
+        ],
+        "author": "james_ross",
+        "children": [
+          48858267
+        ],
+        "created_at": "2026-07-10T10:53:04Z",
+        "created_at_i": 1783680784,
+        "num_comments": 1,
+        "objectID": "48858254",
+        "points": 1,
+        "story_id": 48858254,
+        "title": "Show HN: Concepticon – manage your team's domain language like source code",
+        "updated_at": "2026-07-10T10:56:48Z",
+        "url": "https://thinkingtools.software/concepticon/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "noah1995"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I know it sounds strange, and the readme says this is a research tool. But I find it really feels like Codex.<p>So I ran it through some routine tasks, and it performed well in my use cases, coding, deep writing, and so on. It also supports Windows, Codex, and Linux, with downloadable release packages that ran just fine on my Debian system."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: A possible open-source desktop alternative to OpenAI Codex"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/ai4s-research/open-science"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_noah1995",
+          "story_48858107",
+          "show_hn"
+        ],
+        "author": "noah1995",
+        "created_at": "2026-07-10T10:30:48Z",
+        "created_at_i": 1783679448,
+        "num_comments": 0,
+        "objectID": "48858107",
+        "points": 3,
+        "story_id": 48858107,
+        "story_text": "I know it sounds strange, and the readme says this is a research tool. But I find it really feels like Codex.<p>So I ran it through some routine tasks, and it performed well in my use cases, coding, deep writing, and so on. It also supports Windows, Codex, and Linux, with downloadable release packages that ran just fine on my Debian system.",
+        "title": "Show HN: A possible open-source desktop alternative to OpenAI Codex",
+        "updated_at": "2026-07-10T13:45:08Z",
+        "url": "https://github.com/ai4s-research/open-science"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jmkni"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a little app I built for myself, as I travel and fly a lot<p>It uses your phones GPS, accelerometer and barometer to show you what's going on during your flight, the main metrics shown are:<p>* Lat/Long + location on a map (also shows your flight path so far)<p>* Ground speed / Altitude<p>* Track/VS/Mach<p>* G load<p>* Turbulece<p>* Bank Estimate<p>This isn't for professional pilots, more for something to do while you fly<p>You can also take a photo and have the main stats overlaid onto it, as well as included in the EXIF data<p>No sign up, no ads, no tracking, works entirely in flight mode<p>Let me know if you find it cool, cheers :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: SkyPocket, see what's going on during your flight"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://skypocket.cloud/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jmkni",
+          "story_48857997",
+          "show_hn"
+        ],
+        "author": "jmkni",
+        "children": [
+          48858899
+        ],
+        "created_at": "2026-07-10T10:15:53Z",
+        "created_at_i": 1783678553,
+        "num_comments": 2,
+        "objectID": "48857997",
+        "points": 1,
+        "story_id": 48857997,
+        "story_text": "This is a little app I built for myself, as I travel and fly a lot<p>It uses your phones GPS, accelerometer and barometer to show you what&#x27;s going on during your flight, the main metrics shown are:<p>* Lat&#x2F;Long + location on a map (also shows your flight path so far)<p>* Ground speed &#x2F; Altitude<p>* Track&#x2F;VS&#x2F;Mach<p>* G load<p>* Turbulece<p>* Bank Estimate<p>This isn&#x27;t for professional pilots, more for something to do while you fly<p>You can also take a photo and have the main stats overlaid onto it, as well as included in the EXIF data<p>No sign up, no ads, no tracking, works entirely in flight mode<p>Let me know if you find it cool, cheers :)",
+        "title": "Show HN: SkyPocket, see what's going on during your flight",
+        "updated_at": "2026-07-10T12:55:19Z",
+        "url": "https://skypocket.cloud/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "code-less"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello,<p>I created this new word game inspired by my 9-year-old kid, who came up with the idea while playing with his brother at home.<p>I hope you'll give it an upvote.<p>Have a nice day, folks!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Cluexy, new Wordle created by mine 9 years old kid"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.cluexy.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_code-less",
+          "story_48857938",
+          "show_hn"
+        ],
+        "author": "code-less",
+        "children": [
+          48872242,
+          48859723,
+          48860367
+        ],
+        "created_at": "2026-07-10T10:04:14Z",
+        "created_at_i": 1783677854,
+        "num_comments": 3,
+        "objectID": "48857938",
+        "points": 1,
+        "story_id": 48857938,
+        "story_text": "Hello,<p>I created this new word game inspired by my 9-year-old kid, who came up with the idea while playing with his brother at home.<p>I hope you&#x27;ll give it an upvote.<p>Have a nice day, folks!",
+        "title": "Show HN: Cluexy, new Wordle created by mine 9 years old kid",
+        "updated_at": "2026-07-11T14:11:22Z",
+        "url": "https://www.cluexy.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sachithrrra"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Free, offline utilities for PDF, image and video"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://no-server-utils.sach.cc/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sachithrrra",
+          "story_48857831",
+          "show_hn"
+        ],
+        "author": "sachithrrra",
+        "created_at": "2026-07-10T09:44:10Z",
+        "created_at_i": 1783676650,
+        "num_comments": 0,
+        "objectID": "48857831",
+        "points": 1,
+        "story_id": 48857831,
+        "title": "Show HN: Free, offline utilities for PDF, image and video",
+        "updated_at": "2026-07-10T09:48:33Z",
+        "url": "https://no-server-utils.sach.cc/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "flabberghasted"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "OpenVole 4.5.0 is out. Run a skill's bundled scripts, sandboxed to its own dir. VoleHub: multi-file installs, verified by per-file SHA-256. Dashboard: per-paw permission editor. New spaces seed a workspace/ dir"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: OpenVole 4.5 Is Out"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/openvole/openvole"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_flabberghasted",
+          "story_48857675",
+          "show_hn"
+        ],
+        "author": "flabberghasted",
+        "created_at": "2026-07-10T09:21:54Z",
+        "created_at_i": 1783675314,
+        "num_comments": 0,
+        "objectID": "48857675",
+        "points": 2,
+        "story_id": 48857675,
+        "story_text": "OpenVole 4.5.0 is out. Run a skill&#x27;s bundled scripts, sandboxed to its own dir. VoleHub: multi-file installs, verified by per-file SHA-256. Dashboard: per-paw permission editor. New spaces seed a workspace&#x2F; dir",
+        "title": "Show HN: OpenVole 4.5 Is Out",
+        "updated_at": "2026-07-10T09:27:33Z",
+        "url": "https://github.com/openvole/openvole"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "drzivil"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Drag boxes around and watch a layout engine infer the Flexbox (no AI)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://wpconverters.com/playground/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_drzivil",
+          "story_48857637",
+          "show_hn"
+        ],
+        "author": "drzivil",
+        "children": [
+          48857644,
+          48857780
+        ],
+        "created_at": "2026-07-10T09:17:34Z",
+        "created_at_i": 1783675054,
+        "num_comments": 0,
+        "objectID": "48857637",
+        "points": 5,
+        "story_id": 48857637,
+        "title": "Show HN: Drag boxes around and watch a layout engine infer the Flexbox (no AI)",
+        "updated_at": "2026-07-10T15:20:19Z",
+        "url": "https://wpconverters.com/playground/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lawnmaster18"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hi, I'm Reuben  Over the past few months I've been building a platform where all the information is sourced from spoken conversations, and I wanted to make this content searchable, savable, and shareable. Presented in a well-designed format, similar to Yahoo but with higher IQ content.<p>Like most, I listen to a lot of podcasts, but I wanted to connect the dots on different topics and read the parts which are interesting more deeply. Sharing bits and pieces with friends was also a motivating factor, as well as alerts which feed into my other pipelines.<p>That said, I'm not sure which parts of the platform will resonate with users or not, so it's an experiment in progress.<p>Technicals: I love my craft (both design, and code), so I took ample time to think about UX and design it in Figma. It's cookiecut from ample projects I have in Django and HTMX, and scaffolded my way through. Hosted on Digitalocean, and AI agnostic from an LLM perspective. I can go deeper into these, but they probably deserve their own posts. Hope you like!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Vuci – make the spoken word searchable"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://vuci.ai/feed/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lawnmaster18",
+          "story_48857577",
+          "show_hn"
+        ],
+        "author": "lawnmaster18",
+        "created_at": "2026-07-10T09:10:11Z",
+        "created_at_i": 1783674611,
+        "num_comments": 0,
+        "objectID": "48857577",
+        "points": 2,
+        "story_id": 48857577,
+        "story_text": "hi, I&#x27;m Reuben  Over the past few months I&#x27;ve been building a platform where all the information is sourced from spoken conversations, and I wanted to make this content searchable, savable, and shareable. Presented in a well-designed format, similar to Yahoo but with higher IQ content.<p>Like most, I listen to a lot of podcasts, but I wanted to connect the dots on different topics and read the parts which are interesting more deeply. Sharing bits and pieces with friends was also a motivating factor, as well as alerts which feed into my other pipelines.<p>That said, I&#x27;m not sure which parts of the platform will resonate with users or not, so it&#x27;s an experiment in progress.<p>Technicals: I love my craft (both design, and code), so I took ample time to think about UX and design it in Figma. It&#x27;s cookiecut from ample projects I have in Django and HTMX, and scaffolded my way through. Hosted on Digitalocean, and AI agnostic from an LLM perspective. I can go deeper into these, but they probably deserve their own posts. Hope you like!",
+        "title": "Show HN: Vuci – make the spoken word searchable",
+        "updated_at": "2026-07-10T10:37:33Z",
+        "url": "https://vuci.ai/feed/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tunafighter"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hello,\nI wanted to share a little project I've been building : it turns tennis rallies into posters : <a href=\"https://matchpoint.jeremygautrais.fr\" rel=\"nofollow\">https://matchpoint.jeremygautrais.fr</a>.<p>Each rally is written as a short code that describes the point shot by shot.<p>The notation comes from the Match Charting Project, a project that records pro matches by hand. If you're curious, here's their beginner's guide : <a href=\"https://www.tennisabstract.com/blog/2015/09/23/the-match-charting-project-quick-start-guide/\" rel=\"nofollow\">https://www.tennisabstract.com/blog/2015/09/23/the-match-cha...</a>.<p>In that system a rally looks like &quot;5f2f3b3b1w#&quot;, where each character is one shot : where it landed, forehand or backhand, and how the point finally ended.<p>For this project I picked the match-winning rallies they've recorded so far (the open dataset is here : <a href=\"https://github.com/JeffSackmann/tennis_MatchChartingProject\" rel=\"nofollow\">https://github.com/JeffSackmann/tennis_MatchChartingProject</a>), so every poster is the very last point of a match.<p>You can also type in any sequence you like and make your own custom poster.<p>You can then tweak the look. The shape of the curves, the court, the surface, and the colors, either by type of shot or by player.<p>Happy to hear your feedback on it. Have fun with it!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Tennis Rallies Poster Generator"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://matchpoint.jeremygautrais.fr/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tunafighter",
+          "story_48857420",
+          "show_hn"
+        ],
+        "author": "tunafighter",
+        "created_at": "2026-07-10T08:48:13Z",
+        "created_at_i": 1783673293,
+        "num_comments": 0,
+        "objectID": "48857420",
+        "points": 2,
+        "story_id": 48857420,
+        "story_text": "Hello,\nI wanted to share a little project I&#x27;ve been building : it turns tennis rallies into posters : <a href=\"https:&#x2F;&#x2F;matchpoint.jeremygautrais.fr\" rel=\"nofollow\">https:&#x2F;&#x2F;matchpoint.jeremygautrais.fr</a>.<p>Each rally is written as a short code that describes the point shot by shot.<p>The notation comes from the Match Charting Project, a project that records pro matches by hand. If you&#x27;re curious, here&#x27;s their beginner&#x27;s guide : <a href=\"https:&#x2F;&#x2F;www.tennisabstract.com&#x2F;blog&#x2F;2015&#x2F;09&#x2F;23&#x2F;the-match-charting-project-quick-start-guide&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.tennisabstract.com&#x2F;blog&#x2F;2015&#x2F;09&#x2F;23&#x2F;the-match-cha...</a>.<p>In that system a rally looks like &quot;5f2f3b3b1w#&quot;, where each character is one shot : where it landed, forehand or backhand, and how the point finally ended.<p>For this project I picked the match-winning rallies they&#x27;ve recorded so far (the open dataset is here : <a href=\"https:&#x2F;&#x2F;github.com&#x2F;JeffSackmann&#x2F;tennis_MatchChartingProject\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;JeffSackmann&#x2F;tennis_MatchChartingProject</a>), so every poster is the very last point of a match.<p>You can also type in any sequence you like and make your own custom poster.<p>You can then tweak the look. The shape of the curves, the court, the surface, and the colors, either by type of shot or by player.<p>Happy to hear your feedback on it. Have fun with it!",
+        "title": "Show HN: Tennis Rallies Poster Generator",
+        "updated_at": "2026-07-10T13:45:08Z",
+        "url": "https://matchpoint.jeremygautrais.fr/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "shanewei"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: ePub Fixer – repair a narrow set of EPUBCheck errors"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://epub-fixer.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_shanewei",
+          "story_48856997",
+          "show_hn"
+        ],
+        "author": "shanewei",
+        "created_at": "2026-07-10T07:50:03Z",
+        "created_at_i": 1783669803,
+        "num_comments": 0,
+        "objectID": "48856997",
+        "points": 1,
+        "story_id": 48856997,
+        "title": "Show HN: ePub Fixer – repair a narrow set of EPUBCheck errors",
+        "updated_at": "2026-07-10T07:53:02Z",
+        "url": "https://epub-fixer.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "brownpoints"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Qualify – open-source agent for sales"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/chaitanyya/sales"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_brownpoints",
+          "story_48856965",
+          "show_hn"
+        ],
+        "author": "brownpoints",
+        "created_at": "2026-07-10T07:46:22Z",
+        "created_at_i": 1783669582,
+        "num_comments": 0,
+        "objectID": "48856965",
+        "points": 2,
+        "story_id": 48856965,
+        "title": "Show HN: Qualify – open-source agent for sales",
+        "updated_at": "2026-07-10T08:01:13Z",
+        "url": "https://github.com/chaitanyya/sales"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "klauscam"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "For many years I have honed a little homelab which I accessed it via standard Wireguard VPN connection. \nSome months ago, I had this idea that my homelab should have zero listening ports on the public internet, for the fact that my router was not being kept up to date with all latest patches. I navigated through headscale/tailscale, cloudflare, etc, however I wanted something incredibly lightweight, that could run on my OpenWrt router.<p>So I built a CLI tool that reverses the connection direction of the hosting server, primarily to create an outbound connection, requiring no listening ports on my homelab gateway. These connection (the server and all clients) needed a rendezvous point where their outbound connections would be tied. I also wanted to avoid issues like complex TLS termination, authentication and possible DDoS attacks on the relay, so it was decided to use WebSockets rather than UDP connections. This provided the possibility to host the relay on the web behind reverse proxies, offloading all other complexities to the battle hardened nginx, while keeping my codebase tiny. Hence BastionRoute was born.<p>BastionRoute tries to solve one thing and one thing only. To provide a means for a UDP server to initiated outbound connections towards a Websocket relay. In doing so, BastionRoute remains payload agnostic, as long as UDP traffic is flowing, it does not care if its Wireguard traffic or any other software. BastionRoute does not require Wireguard keys to operate, in fact for a Wireguard perspective, only the connection configuration changes, nothing else. Wireguard encryption remains end-to-end. In doing so the relay becomes a blind transport broker.<p>I loved working on this project and I wanted to share it with the community. Any feedback is much appreciated."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: BastionRoute – An outbound-initiated WebSocket relay fabric for UDP"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/klauscam/BastionRoute"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_klauscam",
+          "story_48856771",
+          "show_hn"
+        ],
+        "author": "klauscam",
+        "created_at": "2026-07-10T07:19:24Z",
+        "created_at_i": 1783667964,
+        "num_comments": 0,
+        "objectID": "48856771",
+        "points": 2,
+        "story_id": 48856771,
+        "story_text": "For many years I have honed a little homelab which I accessed it via standard Wireguard VPN connection. \nSome months ago, I had this idea that my homelab should have zero listening ports on the public internet, for the fact that my router was not being kept up to date with all latest patches. I navigated through headscale&#x2F;tailscale, cloudflare, etc, however I wanted something incredibly lightweight, that could run on my OpenWrt router.<p>So I built a CLI tool that reverses the connection direction of the hosting server, primarily to create an outbound connection, requiring no listening ports on my homelab gateway. These connection (the server and all clients) needed a rendezvous point where their outbound connections would be tied. I also wanted to avoid issues like complex TLS termination, authentication and possible DDoS attacks on the relay, so it was decided to use WebSockets rather than UDP connections. This provided the possibility to host the relay on the web behind reverse proxies, offloading all other complexities to the battle hardened nginx, while keeping my codebase tiny. Hence BastionRoute was born.<p>BastionRoute tries to solve one thing and one thing only. To provide a means for a UDP server to initiated outbound connections towards a Websocket relay. In doing so, BastionRoute remains payload agnostic, as long as UDP traffic is flowing, it does not care if its Wireguard traffic or any other software. BastionRoute does not require Wireguard keys to operate, in fact for a Wireguard perspective, only the connection configuration changes, nothing else. Wireguard encryption remains end-to-end. In doing so the relay becomes a blind transport broker.<p>I loved working on this project and I wanted to share it with the community. Any feedback is much appreciated.",
+        "title": "Show HN: BastionRoute – An outbound-initiated WebSocket relay fabric for UDP",
+        "updated_at": "2026-07-10T10:23:03Z",
+        "url": "https://github.com/klauscam/BastionRoute"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sebjones"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Musing Image"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://musingimage.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_sebjones",
+          "story_48856600",
+          "show_hn"
+        ],
+        "author": "sebjones",
+        "created_at": "2026-07-10T06:54:57Z",
+        "created_at_i": 1783666497,
+        "num_comments": 0,
+        "objectID": "48856600",
+        "points": 1,
+        "story_id": 48856600,
+        "title": "Show HN: Musing Image",
+        "updated_at": "2026-07-10T06:55:32Z",
+        "url": "https://musingimage.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CzaxTanmay"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built Proton because I wanted to write native desktop utilities in Go without the massive memory overhead of webviews (like Wails) and without the absolute nightmare of cross-compiling graphics bindings with CGO enabled. It uses an immediate-mode API layout built on top of Gio. Would love to get some feedback on the API layout"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Proton – A pure Go GUI library with zero CGO dependencies"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_CzaxTanmay",
+          "story_48856586",
+          "show_hn"
+        ],
+        "author": "CzaxTanmay",
+        "children": [
+          48856591,
+          48856615,
+          48856594,
+          48857033
+        ],
+        "created_at": "2026-07-10T06:52:19Z",
+        "created_at_i": 1783666339,
+        "num_comments": 3,
+        "objectID": "48856586",
+        "points": 2,
+        "story_id": 48856586,
+        "story_text": "I built Proton because I wanted to write native desktop utilities in Go without the massive memory overhead of webviews (like Wails) and without the absolute nightmare of cross-compiling graphics bindings with CGO enabled. It uses an immediate-mode API layout built on top of Gio. Would love to get some feedback on the API layout",
+        "title": "Show HN: Proton – A pure Go GUI library with zero CGO dependencies",
+        "updated_at": "2026-07-11T12:51:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "oliviamy"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AI Humanizer – Rewrite AI text into natural copy"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://ai-humanizer.space/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_oliviamy",
+          "story_48856516",
+          "show_hn"
+        ],
+        "author": "oliviamy",
+        "children": [
+          48857057
+        ],
+        "created_at": "2026-07-10T06:40:24Z",
+        "created_at_i": 1783665624,
+        "num_comments": 2,
+        "objectID": "48856516",
+        "points": 1,
+        "story_id": 48856516,
+        "title": "Show HN: AI Humanizer – Rewrite AI text into natural copy",
+        "updated_at": "2026-07-10T08:12:17Z",
+        "url": "https://ai-humanizer.space/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Present_Flow"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Makoto the Claude Code plugin that keeps the AI honest"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/Clear-Sights/Makoto"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Present_Flow",
+          "story_48856473",
+          "show_hn"
+        ],
+        "author": "Present_Flow",
+        "children": [
+          48856651
+        ],
+        "created_at": "2026-07-10T06:31:37Z",
+        "created_at_i": 1783665097,
+        "num_comments": 0,
+        "objectID": "48856473",
+        "points": 1,
+        "story_id": 48856473,
+        "title": "Show HN: Makoto the Claude Code plugin that keeps the AI honest",
+        "updated_at": "2026-07-10T07:03:18Z",
+        "url": "https://github.com/Clear-Sights/Makoto"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arrozconcosas"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "As a kid, I loved to play the DOS Gorillas game where you would throw bananas at your opponent, smashing cities as you go.<p>I wanted to play it, so I rebuilt the classic QBasic/DOS &quot;Gorillas&quot; game from scratch as a mobile web app. It is playable in the browser and installable to your iPhone home screen.<p>It's all vanilla HTML/Canvas/JavaScript. No frameworks, no build step, no\ndependencies, no tracking. A single static page served from GitHub Pages.<p>A few bits that were fun to build:\n- Destructible terrain: buildings are painted to an offscreen canvas and explosions erase pixels\n- Ballistic physics with wind, sub-stepped so a fast banana can't tunnel through a thin building between frames.\n- Native share sheet (Web Share API) so you can text a friend your result with a &quot;beat my score&quot; challenge link<p>It's hot-seat two-player (pass the phone, or share a keyboard: arrows to aim, space to throw).<p>No original Microsoft code or assets — the code and pixel art are all my own (with some help from Claude :) ).<p>Feedback welcome!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Banana Battle – DOS Gorillas rebuilt as a web game"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://michael480th.github.io/Banana-Battle/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_arrozconcosas",
+          "story_48856350",
+          "show_hn"
+        ],
+        "author": "arrozconcosas",
+        "children": [
+          48856732,
+          48857804,
+          48856393
+        ],
+        "created_at": "2026-07-10T06:14:48Z",
+        "created_at_i": 1783664088,
+        "num_comments": 3,
+        "objectID": "48856350",
+        "points": 2,
+        "story_id": 48856350,
+        "story_text": "As a kid, I loved to play the DOS Gorillas game where you would throw bananas at your opponent, smashing cities as you go.<p>I wanted to play it, so I rebuilt the classic QBasic&#x2F;DOS &quot;Gorillas&quot; game from scratch as a mobile web app. It is playable in the browser and installable to your iPhone home screen.<p>It&#x27;s all vanilla HTML&#x2F;Canvas&#x2F;JavaScript. No frameworks, no build step, no\ndependencies, no tracking. A single static page served from GitHub Pages.<p>A few bits that were fun to build:\n- Destructible terrain: buildings are painted to an offscreen canvas and explosions erase pixels\n- Ballistic physics with wind, sub-stepped so a fast banana can&#x27;t tunnel through a thin building between frames.\n- Native share sheet (Web Share API) so you can text a friend your result with a &quot;beat my score&quot; challenge link<p>It&#x27;s hot-seat two-player (pass the phone, or share a keyboard: arrows to aim, space to throw).<p>No original Microsoft code or assets — the code and pixel art are all my own (with some help from Claude :) ).<p>Feedback welcome!",
+        "title": "Show HN: Banana Battle – DOS Gorillas rebuilt as a web game",
+        "updated_at": "2026-07-11T10:54:21Z",
+        "url": "https://michael480th.github.io/Banana-Battle/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kaushikbokka"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Zero2Robot – free, open source interactive textbook for robot learning"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://zero2robot.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_kaushikbokka",
+          "story_48855965",
+          "show_hn"
+        ],
+        "author": "kaushikbokka",
+        "children": [
+          48856242
+        ],
+        "created_at": "2026-07-10T05:13:14Z",
+        "created_at_i": 1783660394,
+        "num_comments": 0,
+        "objectID": "48855965",
+        "points": 1,
+        "story_id": 48855965,
+        "title": "Show HN: Zero2Robot – free, open source interactive textbook for robot learning",
+        "updated_at": "2026-07-10T05:55:47Z",
+        "url": "https://zero2robot.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FifthRocket"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Short SciFi/Fantasy Index"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://quasar.fyi/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_FifthRocket",
+          "story_48855954",
+          "show_hn"
+        ],
+        "author": "FifthRocket",
+        "children": [
+          48855955,
+          48856738
+        ],
+        "created_at": "2026-07-10T05:10:15Z",
+        "created_at_i": 1783660215,
+        "num_comments": 3,
+        "objectID": "48855954",
+        "points": 1,
+        "story_id": 48855954,
+        "title": "Show HN: Short SciFi/Fantasy Index",
+        "updated_at": "2026-07-10T07:57:48Z",
+        "url": "https://quasar.fyi/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "plun9"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: World Clock with Twilight/Night Overlayed on Map"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "http://nixon-development.com/worldclock/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_plun9",
+          "story_48855934",
+          "show_hn"
+        ],
+        "author": "plun9",
+        "created_at": "2026-07-10T05:05:36Z",
+        "created_at_i": 1783659936,
+        "num_comments": 0,
+        "objectID": "48855934",
+        "points": 1,
+        "story_id": 48855934,
+        "title": "Show HN: World Clock with Twilight/Night Overlayed on Map",
+        "updated_at": "2026-07-10T05:10:47Z",
+        "url": "http://nixon-development.com/worldclock/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rickye26"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built r3 to scratch my own itch when reviewing long design doc and planning doc from AI. The chat interface is inherently bad at tracking multiple pieces of feedback across different parts of a document, so I created a lightweight local web UI to organize the review process.<p>I have been using it on my own projects for one week, and it has made giving structured feedback to AI much easier. I thought others working with AI coding agents might find it useful too.<p>I'd love to hear what you think and any feedback you have!"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: R3 – A Local Code Review Tool for You and Your AI Agent"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/hyperlogue/r3"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_rickye26",
+          "story_48855670",
+          "show_hn"
+        ],
+        "author": "rickye26",
+        "children": [
+          48857530,
+          48855917
+        ],
+        "created_at": "2026-07-10T04:13:39Z",
+        "created_at_i": 1783656819,
+        "num_comments": 1,
+        "objectID": "48855670",
+        "points": 4,
+        "story_id": 48855670,
+        "story_text": "I built r3 to scratch my own itch when reviewing long design doc and planning doc from AI. The chat interface is inherently bad at tracking multiple pieces of feedback across different parts of a document, so I created a lightweight local web UI to organize the review process.<p>I have been using it on my own projects for one week, and it has made giving structured feedback to AI much easier. I thought others working with AI coding agents might find it useful too.<p>I&#x27;d love to hear what you think and any feedback you have!",
+        "title": "Show HN: R3 – A Local Code Review Tool for You and Your AI Agent",
+        "updated_at": "2026-07-11T01:50:51Z",
+        "url": "https://github.com/hyperlogue/r3"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fenggit"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A free collection of Apple wallpapers for iPhone, iPad, Mac, iOS and macOS. 4K/HD downloads, no watermarks, with fast preview."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: AppleWalls – free 4K wallpapers for Apple devices"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.applewalls.com/en"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_fenggit",
+          "story_48855576",
+          "show_hn"
+        ],
+        "author": "fenggit",
+        "created_at": "2026-07-10T03:55:14Z",
+        "created_at_i": 1783655714,
+        "num_comments": 0,
+        "objectID": "48855576",
+        "points": 1,
+        "story_id": 48855576,
+        "story_text": "A free collection of Apple wallpapers for iPhone, iPad, Mac, iOS and macOS. 4K&#x2F;HD downloads, no watermarks, with fast preview.",
+        "title": "Show HN: AppleWalls – free 4K wallpapers for Apple devices",
+        "updated_at": "2026-07-10T03:57:17Z",
+        "url": "https://www.applewalls.com/en"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "johnnyapple"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "In 2024 Google Labs released GenDino: a version of the Chrome Dinosaur Game that let users turn prompts into skins. GenDino is dead. The Dino Game happens to be OS, so I forked it and created Vibedino to let your prompts change the actual game. Make the dino front-flip every time it jumps. Add a hard mode after 1000m. Break my backend by implementing the full PageRank algorithm. Give it the dumbest feature idea you can think of and then approve it yourself to deploy to the main site! (no sign up)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I made the Chrome Dino Game editable by your AI prompts"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://vibedino.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_johnnyapple",
+          "story_48855524",
+          "show_hn"
+        ],
+        "author": "johnnyapple",
+        "created_at": "2026-07-10T03:46:07Z",
+        "created_at_i": 1783655167,
+        "num_comments": 0,
+        "objectID": "48855524",
+        "points": 1,
+        "story_id": 48855524,
+        "story_text": "In 2024 Google Labs released GenDino: a version of the Chrome Dinosaur Game that let users turn prompts into skins. GenDino is dead. The Dino Game happens to be OS, so I forked it and created Vibedino to let your prompts change the actual game. Make the dino front-flip every time it jumps. Add a hard mode after 1000m. Break my backend by implementing the full PageRank algorithm. Give it the dumbest feature idea you can think of and then approve it yourself to deploy to the main site! (no sign up)",
+        "title": "Show HN: I made the Chrome Dino Game editable by your AI prompts",
+        "updated_at": "2026-07-10T03:46:47Z",
+        "url": "https://vibedino.com"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Daniel-Pan"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Bring All Your Context Together"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_Daniel-Pan",
+          "story_48855296",
+          "show_hn"
+        ],
+        "author": "Daniel-Pan",
+        "children": [
+          48855489,
+          48855300
+        ],
+        "created_at": "2026-07-10T03:07:11Z",
+        "created_at_i": 1783652831,
+        "num_comments": 1,
+        "objectID": "48855296",
+        "points": 3,
+        "story_id": 48855296,
+        "title": "Show HN: Bring All Your Context Together",
+        "updated_at": "2026-07-10T03:39:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "meridiona"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Unturned is an open-world zombie survival sandbox game. As one of the few not yet turned, you must fight to remain among the living. Playable offline solo, in LAN co-op teaming up with friends and family, or online in intense multiplayer."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Free open-world zombie survival sandbox game"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://smartlydressedgames.com/unturned/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_meridiona",
+          "story_48855205",
+          "show_hn"
+        ],
+        "author": "meridiona",
+        "created_at": "2026-07-10T02:51:49Z",
+        "created_at_i": 1783651909,
+        "num_comments": 0,
+        "objectID": "48855205",
+        "points": 2,
+        "story_id": 48855205,
+        "story_text": "Unturned is an open-world zombie survival sandbox game. As one of the few not yet turned, you must fight to remain among the living. Playable offline solo, in LAN co-op teaming up with friends and family, or online in intense multiplayer.",
+        "title": "Show HN: Free open-world zombie survival sandbox game",
+        "updated_at": "2026-07-10T02:54:18Z",
+        "url": "https://smartlydressedgames.com/unturned/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zhongkaifu"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A native .NET LLM inference engine for GGUF models — with a command-line tool, a browser chat server, and Ollama- &amp; OpenAI-compatible APIs for programmatic access."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: TensorSharp: Open-Source Local LLM Inference Engine"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tensorsharp.ai/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_zhongkaifu",
+          "story_48855138",
+          "show_hn"
+        ],
+        "author": "zhongkaifu",
+        "created_at": "2026-07-10T02:42:07Z",
+        "created_at_i": 1783651327,
+        "num_comments": 0,
+        "objectID": "48855138",
+        "points": 2,
+        "story_id": 48855138,
+        "story_text": "A native .NET LLM inference engine for GGUF models — with a command-line tool, a browser chat server, and Ollama- &amp; OpenAI-compatible APIs for programmatic access.",
+        "title": "Show HN: TensorSharp: Open-Source Local LLM Inference Engine",
+        "updated_at": "2026-07-10T02:47:17Z",
+        "url": "https://tensorsharp.ai/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "evenkeelhq"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Even Keel – free, no-signup freelance pricing calculators"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://evenkeelhq.com/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_evenkeelhq",
+          "story_48855128",
+          "show_hn"
+        ],
+        "author": "evenkeelhq",
+        "children": [
+          48855132
+        ],
+        "created_at": "2026-07-10T02:40:51Z",
+        "created_at_i": 1783651251,
+        "num_comments": 0,
+        "objectID": "48855128",
+        "points": 1,
+        "story_id": 48855128,
+        "title": "Show HN: Even Keel – free, no-signup freelance pricing calculators",
+        "updated_at": "2026-07-10T02:43:48Z",
+        "url": "https://evenkeelhq.com/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "keepamovin"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: BrowserBox over SSH – The KRNL Browser"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://win9-5.com/krnl"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_keepamovin",
+          "story_48855035",
+          "show_hn"
+        ],
+        "author": "keepamovin",
+        "children": [
+          48855102
+        ],
+        "created_at": "2026-07-10T02:25:32Z",
+        "created_at_i": 1783650332,
+        "num_comments": 1,
+        "objectID": "48855035",
+        "points": 2,
+        "story_id": 48855035,
+        "title": "Show HN: BrowserBox over SSH – The KRNL Browser",
+        "updated_at": "2026-07-10T03:17:48Z",
+        "url": "https://win9-5.com/krnl"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "will2092347"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Resultant Engineering Student Tools Website"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://resultant.tools/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_will2092347",
+          "story_48854998",
+          "show_hn"
+        ],
+        "author": "will2092347",
+        "created_at": "2026-07-10T02:19:10Z",
+        "created_at_i": 1783649950,
+        "num_comments": 0,
+        "objectID": "48854998",
+        "points": 1,
+        "story_id": 48854998,
+        "title": "Show HN: Resultant Engineering Student Tools Website",
+        "updated_at": "2026-07-10T02:22:46Z",
+        "url": "https://resultant.tools/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arthiccc"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Free AI transcription with faster-whisper on Colab T4 GPU"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/arthiccc/gcolab-whisper"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_arthiccc",
+          "story_48854950",
+          "show_hn"
+        ],
+        "author": "arthiccc",
+        "children": [
+          48855109
+        ],
+        "created_at": "2026-07-10T02:11:57Z",
+        "created_at_i": 1783649517,
+        "num_comments": 1,
+        "objectID": "48854950",
+        "points": 1,
+        "story_id": 48854950,
+        "title": "Show HN: Free AI transcription with faster-whisper on Colab T4 GPU",
+        "updated_at": "2026-07-10T02:39:32Z",
+        "url": "https://github.com/arthiccc/gcolab-whisper"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ed_mercer"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Debloat Slack – Get rid of Slackbot, AI upsells and other annoyances"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/benri-ai/slack-debloat"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ed_mercer",
+          "story_48854923",
+          "show_hn"
+        ],
+        "author": "ed_mercer",
+        "created_at": "2026-07-10T02:08:12Z",
+        "created_at_i": 1783649292,
+        "num_comments": 0,
+        "objectID": "48854923",
+        "points": 2,
+        "story_id": 48854923,
+        "title": "Show HN: Debloat Slack – Get rid of Slackbot, AI upsells and other annoyances",
+        "updated_at": "2026-07-10T02:16:32Z",
+        "url": "https://github.com/benri-ai/slack-debloat"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "abtonmoy"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: We beat Gemini Embedding 2 by training only 16M params (open weights)"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://huggingface.co/EximiusLabs/fusion-embedding-1-2b-preview"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_abtonmoy",
+          "story_48854893",
+          "show_hn"
+        ],
+        "author": "abtonmoy",
+        "created_at": "2026-07-10T02:05:07Z",
+        "created_at_i": 1783649107,
+        "num_comments": 0,
+        "objectID": "48854893",
+        "points": 7,
+        "story_id": 48854893,
+        "title": "Show HN: We beat Gemini Embedding 2 by training only 16M params (open weights)",
+        "updated_at": "2026-07-10T02:49:46Z",
+        "url": "https://huggingface.co/EximiusLabs/fusion-embedding-1-2b-preview"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "JadAmmar"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "FOMO is a Chrome extension that silently reads what you're browsing and, if you're on a team, uses AI to surface real connections between what different teammates are looking into separately, without revealing who found what. No setup beyond installing it, no documents to connect, nothing to configure. Would love feedback, especially from anyone doing research-heavy work on a small team."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: FOMO – Turn a team's browsing into shared research insight"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://usefomo.co"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_JadAmmar",
+          "story_48854862",
+          "show_hn"
+        ],
+        "author": "JadAmmar",
+        "children": [
+          48856770
+        ],
+        "created_at": "2026-07-10T01:58:21Z",
+        "created_at_i": 1783648701,
+        "num_comments": 1,
+        "objectID": "48854862",
+        "points": 1,
+        "story_id": 48854862,
+        "story_text": "FOMO is a Chrome extension that silently reads what you&#x27;re browsing and, if you&#x27;re on a team, uses AI to surface real connections between what different teammates are looking into separately, without revealing who found what. No setup beyond installing it, no documents to connect, nothing to configure. Would love feedback, especially from anyone doing research-heavy work on a small team.",
+        "title": "Show HN: FOMO – Turn a team's browsing into shared research insight",
+        "updated_at": "2026-07-10T07:20:02Z",
+        "url": "https://usefomo.co"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "masondelan"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Selvedge – long-term memory for AI-coded codebases"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://selvedge.sh/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_masondelan",
+          "story_48854574",
+          "show_hn"
+        ],
+        "author": "masondelan",
+        "children": [
+          48854598
+        ],
+        "created_at": "2026-07-10T01:10:57Z",
+        "created_at_i": 1783645857,
+        "num_comments": 0,
+        "objectID": "48854574",
+        "points": 4,
+        "story_id": 48854574,
+        "title": "Show HN: Selvedge – long-term memory for AI-coded codebases",
+        "updated_at": "2026-07-10T03:47:16Z",
+        "url": "https://selvedge.sh/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "armanluthra_"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i personally believe that the internet is the best thing we've ever built, and arguably, nothing we made before comes close. now agents can use it too, but the web treats them as second-class. every agent works for a person, so whatever it keeps from agents it keeps from us. we believe that if we let them in, each of us gets the whole of what we built, a thousand times over.<p>and to add to that, democratization of tools that allow this is essential, despite the fact that there will always be bad actors.<p>so, we built fortress, which is an open-source stealth chromium engine. it is a recompiled fork that corrects the browser fingerprint from inside the engine: the surfaces bot detectors read, canvas, webgl, audio, fonts, navigator, and about thirty more, are patched in chromium's c++, with no javascript layer sitting on top for a page to catch.<p>it beats the hardest bot detectors on the planet, works fully locally and is open source for y'all to see the patches we've made. and it comes with an mcp, so you can use it with your agents without having to do any major setup or code changes. do give it a try here!<p><a href=\"https://github.com/tiliondev/fortress\" rel=\"nofollow\">https://github.com/tiliondev/fortress</a>"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fortress – Give your agents unlimited access to the web"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_armanluthra_",
+          "story_48854467",
+          "show_hn"
+        ],
+        "author": "armanluthra_",
+        "children": [
+          48854691,
+          48854596,
+          48856803
+        ],
+        "created_at": "2026-07-10T00:57:15Z",
+        "created_at_i": 1783645035,
+        "num_comments": 4,
+        "objectID": "48854467",
+        "points": 9,
+        "story_id": 48854467,
+        "story_text": "i personally believe that the internet is the best thing we&#x27;ve ever built, and arguably, nothing we made before comes close. now agents can use it too, but the web treats them as second-class. every agent works for a person, so whatever it keeps from agents it keeps from us. we believe that if we let them in, each of us gets the whole of what we built, a thousand times over.<p>and to add to that, democratization of tools that allow this is essential, despite the fact that there will always be bad actors.<p>so, we built fortress, which is an open-source stealth chromium engine. it is a recompiled fork that corrects the browser fingerprint from inside the engine: the surfaces bot detectors read, canvas, webgl, audio, fonts, navigator, and about thirty more, are patched in chromium&#x27;s c++, with no javascript layer sitting on top for a page to catch.<p>it beats the hardest bot detectors on the planet, works fully locally and is open source for y&#x27;all to see the patches we&#x27;ve made. and it comes with an mcp, so you can use it with your agents without having to do any major setup or code changes. do give it a try here!<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;tiliondev&#x2F;fortress\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;tiliondev&#x2F;fortress</a>",
+        "title": "Show HN: Fortress – Give your agents unlimited access to the web",
+        "updated_at": "2026-07-11T01:15:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "eli_yumnik"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I built this because I see that grocery savings are achievable in NYC. People usually just go to the store they're used to going to, and it's rarely worth the effort of combing through card cashback, weekly coupons, CPG rebates.<p>Most people leave real money on the table by not stacking them, and even more don't even know that these deals are out there.... so I built a way to automate it.<p>You can use it for free, no login, currently NYC-only with ~690 stores.<p>I built it so that you just search whatever you want (use commas if you want to search multiple items). Or - use the AI tool to help shop for you. If you're curious, it's powered by a trained LLama model.<p>Honest limitations are coverage and freshness. Id love some feedback on where the data looks wrong or is stale.<p>Question for the room - what to prioritize if you're working with messy, multi-source retail/pricing data? Is freshness or coverage the top priority if you cant get a uniform response from every source? curious on what to prioritize here."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: I built a free app for New Yorkers to save money on groceries"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://sbnyc.app/"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_eli_yumnik",
+          "story_48854224",
+          "show_hn"
+        ],
+        "author": "eli_yumnik",
+        "children": [
+          48854702,
+          48854594,
+          48854725,
+          48854688,
+          48857265,
+          48854471,
+          48866835,
+          48854544
+        ],
+        "created_at": "2026-07-10T00:17:36Z",
+        "created_at_i": 1783642656,
+        "num_comments": 10,
+        "objectID": "48854224",
+        "points": 12,
+        "story_id": 48854224,
+        "story_text": "I built this because I see that grocery savings are achievable in NYC. People usually just go to the store they&#x27;re used to going to, and it&#x27;s rarely worth the effort of combing through card cashback, weekly coupons, CPG rebates.<p>Most people leave real money on the table by not stacking them, and even more don&#x27;t even know that these deals are out there.... so I built a way to automate it.<p>You can use it for free, no login, currently NYC-only with ~690 stores.<p>I built it so that you just search whatever you want (use commas if you want to search multiple items). Or - use the AI tool to help shop for you. If you&#x27;re curious, it&#x27;s powered by a trained LLama model.<p>Honest limitations are coverage and freshness. Id love some feedback on where the data looks wrong or is stale.<p>Question for the room - what to prioritize if you&#x27;re working with messy, multi-source retail&#x2F;pricing data? Is freshness or coverage the top priority if you cant get a uniform response from every source? curious on what to prioritize here.",
+        "title": "Show HN: I built a free app for New Yorkers to save money on groceries",
+        "updated_at": "2026-07-11T00:12:35Z",
+        "url": "https://sbnyc.app/"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "arhamislam5766"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Fortress – stealth Chromium + MCP so agents don't get blocked"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://tilion.dev"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_arhamislam5766",
+          "story_48854082",
+          "show_hn"
+        ],
+        "author": "arhamislam5766",
+        "children": [
+          48854268,
+          48854275,
+          48854385
+        ],
+        "created_at": "2026-07-09T23:55:30Z",
+        "created_at_i": 1783641330,
+        "num_comments": 0,
+        "objectID": "48854082",
+        "points": 7,
+        "story_id": 48854082,
+        "title": "Show HN: Fortress – stealth Chromium + MCP so agents don't get blocked",
+        "updated_at": "2026-07-10T01:41:31Z",
+        "url": "https://tilion.dev"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "orelnuts"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DayReplay is a Mac + Windows time-tracking app that captures your work locally — no screenshots, no keylogging, no cloud sync. I built it because every existing option wanted to either surveil my screen or force me to start/stop timers I always forget.\nEvery ~5 seconds it reads the foreground app + window title, and (on Chromium/Firefox/Safari) the active tab's URL via the OS accessibility APIs (macOS AXUIElement, Windows UI Automation). Sessions get grouped into a per-app-per-URL timeline you can export to CSV."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: DayReplay – automatic time tracking that never leaves your machine"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://dayreplay.app"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_orelnuts",
+          "story_48853713",
+          "show_hn"
+        ],
+        "author": "orelnuts",
+        "created_at": "2026-07-09T23:18:47Z",
+        "created_at_i": 1783639127,
+        "num_comments": 0,
+        "objectID": "48853713",
+        "points": 1,
+        "story_id": 48853713,
+        "story_text": "DayReplay is a Mac + Windows time-tracking app that captures your work locally — no screenshots, no keylogging, no cloud sync. I built it because every existing option wanted to either surveil my screen or force me to start&#x2F;stop timers I always forget.\nEvery ~5 seconds it reads the foreground app + window title, and (on Chromium&#x2F;Firefox&#x2F;Safari) the active tab&#x27;s URL via the OS accessibility APIs (macOS AXUIElement, Windows UI Automation). Sessions get grouped into a per-app-per-URL timeline you can export to CSV.",
+        "title": "Show HN: DayReplay – automatic time tracking that never leaves your machine",
+        "updated_at": "2026-07-10T22:12:05Z",
+        "url": "https://dayreplay.app"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lemma1729"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hi! I am Raj, a graduate math student at Bonn, and I was at YC Summer School in Bangalore recently, and heard from many people that HN is an awesome place to let people demo your product.<p>Please write to me any (ANY!!) feedback you have!! :p"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Context-aware AI social workspace to learn math"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.prooftree.ai"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_lemma1729",
+          "story_48853632",
+          "show_hn"
+        ],
+        "author": "lemma1729",
+        "created_at": "2026-07-09T23:11:08Z",
+        "created_at_i": 1783638668,
+        "num_comments": 0,
+        "objectID": "48853632",
+        "points": 1,
+        "story_id": 48853632,
+        "story_text": "Hi! I am Raj, a graduate math student at Bonn, and I was at YC Summer School in Bangalore recently, and heard from many people that HN is an awesome place to let people demo your product.<p>Please write to me any (ANY!!) feedback you have!! :p",
+        "title": "Show HN: Context-aware AI social workspace to learn math",
+        "updated_at": "2026-07-09T23:13:47Z",
+        "url": "https://www.prooftree.ai"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tuta88"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: BastionRoute – A zero trust network access with zero inbound ports"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/klauscam/BastionRoute"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_tuta88",
+          "story_48853503",
+          "show_hn"
+        ],
+        "author": "tuta88",
+        "children": [
+          48853635,
+          48853563
+        ],
+        "created_at": "2026-07-09T22:56:10Z",
+        "created_at_i": 1783637770,
+        "num_comments": 1,
+        "objectID": "48853503",
+        "points": 1,
+        "story_id": 48853503,
+        "title": "Show HN: BastionRoute – A zero trust network access with zero inbound ports",
+        "updated_at": "2026-07-09T23:12:47Z",
+        "url": "https://github.com/klauscam/BastionRoute"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ramoz"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Use Any Agent as an Orchestrator"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://github.com/backnotprop/orchestrator"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_ramoz",
+          "story_48853202",
+          "show_hn"
+        ],
+        "author": "ramoz",
+        "created_at": "2026-07-09T22:26:46Z",
+        "created_at_i": 1783636006,
+        "num_comments": 0,
+        "objectID": "48853202",
+        "points": 10,
+        "story_id": 48853202,
+        "title": "Show HN: Use Any Agent as an Orchestrator",
+        "updated_at": "2026-07-10T04:47:47Z",
+        "url": "https://github.com/backnotprop/orchestrator"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "killer32"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What it is:\nA lightweight OpenStack-compatible environment for testing, learning, CI/CD, and edge labs.<p>What it is not:\nNot a production OpenStack replacement today.\nNot a full existing-cluster migration or upgrade tool.<p>Why we built it:\nOpenStack is powerful, but too heavy to quickly start, test, learn, or use in small automation scenarios."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: O3k – a lightweight OpenStack-compatible API for labs and tests"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://o3k.io"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_killer32",
+          "story_48853029",
+          "show_hn"
+        ],
+        "author": "killer32",
+        "created_at": "2026-07-09T22:10:06Z",
+        "created_at_i": 1783635006,
+        "num_comments": 0,
+        "objectID": "48853029",
+        "points": 2,
+        "story_id": 48853029,
+        "story_text": "What it is:\nA lightweight OpenStack-compatible environment for testing, learning, CI&#x2F;CD, and edge labs.<p>What it is not:\nNot a production OpenStack replacement today.\nNot a full existing-cluster migration or upgrade tool.<p>Why we built it:\nOpenStack is powerful, but too heavy to quickly start, test, learn, or use in small automation scenarios.",
+        "title": "Show HN: O3k – a lightweight OpenStack-compatible API for labs and tests",
+        "updated_at": "2026-07-09T22:18:01Z",
+        "url": "https://o3k.io"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "janpmz"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey HN!<p>I have turned Ilya’s 30 papers into AI audio overviews (and videos). Each paper gets explained chapter by chapter.<p>I think this is a good starting point to get an overview before reading the full original PDFs.<p>I recently added the multi-speaker podcast style explanations like in NotebookLM. If anybody has a good suggestion for a new format, let me know :)"
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Ilya's 30 papers, explained in audio"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://listendock.com/30-papers"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_janpmz",
+          "story_48853028",
+          "show_hn"
+        ],
+        "author": "janpmz",
+        "children": [
+          48856973
+        ],
+        "created_at": "2026-07-09T22:10:03Z",
+        "created_at_i": 1783635003,
+        "num_comments": 2,
+        "objectID": "48853028",
+        "points": 4,
+        "story_id": 48853028,
+        "story_text": "Hey HN!<p>I have turned Ilya’s 30 papers into AI audio overviews (and videos). Each paper gets explained chapter by chapter.<p>I think this is a good starting point to get an overview before reading the full original PDFs.<p>I recently added the multi-speaker podcast style explanations like in NotebookLM. If anybody has a good suggestion for a new format, let me know :)",
+        "title": "Show HN: Ilya's 30 papers, explained in audio",
+        "updated_at": "2026-07-10T09:41:49Z",
+        "url": "https://listendock.com/30-papers"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jjcm"
+          },
+          "story_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've always wondered if fonts in a Country's design system actually represented the look/feel of a country. IE does Public Sans actually LOOK like America?<p>Threw this together. Includes global stats at the end."
+          },
+          "title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Typeflag. Can you guess which Country's design system a font belongs to"
+          },
+          "url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://typeflag.com"
+          }
+        },
+        "_tags": [
+          "story",
+          "author_jjcm",
+          "story_48852983",
+          "show_hn"
+        ],
+        "author": "jjcm",
+        "created_at": "2026-07-09T22:05:28Z",
+        "created_at_i": 1783634728,
+        "num_comments": 0,
+        "objectID": "48852983",
+        "points": 3,
+        "story_id": 48852983,
+        "story_text": "I&#x27;ve always wondered if fonts in a Country&#x27;s design system actually represented the look&#x2F;feel of a country. IE does Public Sans actually LOOK like America?<p>Threw this together. Includes global stats at the end.",
+        "title": "Show HN: Typeflag. Can you guess which Country's design system a font belongs to",
+        "updated_at": "2026-07-10T23:25:35Z",
+        "url": "https://typeflag.com"
+      }
+    ],
+    "hitsPerPage": 80,
+    "nbHits": 9586,
+    "nbPages": 13,
+    "page": 1,
+    "params": "tags=show_hn&numericFilters=created_at_i%3E1775995200%2Ccreated_at_i%3C1783771200&hitsPerPage=80&page=1&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 3,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 1,
+        "roundTrip": 25
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 2,
+          "total": 2
+        }
+      },
+      "fetch": {
+        "total": 1
+      },
+      "total": 3
+    },
+    "query": "",
+    "serverTimeMS": 7
+  }
+}

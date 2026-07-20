@@ -1,0 +1,663 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48485429",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 51
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree many online forums nowadays are filled with the unhinged, or even worse.<p>It’s still somewhat bone chilling to see on HN, and to see upvotes on that kind of verbal diarrhea.<p>Since it has a negative rub on effect on Y Combinator, so presumably they actually expend some effort to shut down the most deranged accounts.<p>If this is what we see… users looking like semi-random parrots… I shudder to think of those that were so deranged they in fact got mod attention."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "comment_text": "I agree many online forums nowadays are filled with the unhinged, or even worse.<p>It’s still somewhat bone chilling to see on HN, and to see upvotes on that kind of verbal diarrhea.<p>Since it has a negative rub on effect on Y Combinator, so presumably they actually expend some effort to shut down the most deranged accounts.<p>If this is what we see… users looking like semi-random parrots… I shudder to think of those that were so deranged they in fact got mod attention.",
+        "created_at": "2026-06-11T15:33:22Z",
+        "created_at_i": 1781192002,
+        "objectID": "48491763",
+        "parent_id": 48487932,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T15:41:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dlcarrier"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "1,000 isn't that high for Hacker News.  It could be someone commenting a few times a week for a year or two.<p>Unhinged is basically the default state for comments on any forum, and it's worse on many platforms like YouTube.<p>No one reads the article, they just see a topic, or maybe even infer one, and talk about whatever they want to talk about.  There's no social clues in an online post, so it builds up from there."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dlcarrier",
+          "story_48485429"
+        ],
+        "author": "dlcarrier",
+        "children": [
+          48491763
+        ],
+        "comment_text": "1,000 isn&#x27;t that high for Hacker News.  It could be someone commenting a few times a week for a year or two.<p>Unhinged is basically the default state for comments on any forum, and it&#x27;s worse on many platforms like YouTube.<p>No one reads the article, they just see a topic, or maybe even infer one, and talk about whatever they want to talk about.  There&#x27;s no social clues in an online post, so it builds up from there.",
+        "created_at": "2026-06-11T08:53:53Z",
+        "created_at_i": 1781168033,
+        "objectID": "48487932",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-12T03:12:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This might actually be \nless scary… than the prospect of genuinely mentally deranged people going around HN  with 10,000+ karma accounts and messing with decent people.<p>Which would be profoundly disturbing…"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "comment_text": "This might actually be \nless scary… than the prospect of genuinely mentally deranged people going around HN  with 10,000+ karma accounts and messing with decent people.<p>Which would be profoundly disturbing…",
+        "created_at": "2026-06-11T05:43:45Z",
+        "created_at_i": 1781156625,
+        "objectID": "48486619",
+        "parent_id": 48485630,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T09:57:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah… I guess I have to agree as I didn’t expect one to literally show up under this post.<p>It’s actually kind of scary, this “krapp” user could be mentally unhinged, or it could be something else. There’s no real way to tell through a screen."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "comment_text": "Yeah… I guess I have to agree as I didn’t expect one to literally show up under this post.<p>It’s actually kind of scary, this “krapp” user could be mentally unhinged, or it could be something else. There’s no real way to tell through a screen.",
+        "created_at": "2026-06-11T05:34:03Z",
+        "created_at_i": 1781156043,
+        "objectID": "48486570",
+        "parent_id": 48485658,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T17:58:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Are you unhinged?<p>This makes no sense at all… how does choosing the only example I remember within the past month…lead to a “conspiracy theory” in your mind?<p>That frankly says a lot more about what’s going on in your mind than anyone else’s.<p>If you are suffering some kind of mental health crisis, I recommend getting off the computer and seeking professional help."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "comment_text": "Are you unhinged?<p>This makes no sense at all… how does choosing the only example I remember within the past month…lead to a “conspiracy theory” in your mind?<p>That frankly says a lot more about what’s going on in your mind than anyone else’s.<p>If you are suffering some kind of mental health crisis, I recommend getting off the computer and seeking professional help.",
+        "created_at": "2026-06-11T05:21:31Z",
+        "created_at_i": 1781155291,
+        "objectID": "48486509",
+        "parent_id": 48485996,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-15T21:10:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "krapp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;I obviously could not be triggered 12 days after the fact…<p>That isn't obvious, given that you came back 12 days later with what seems to be a full blown conspiracy theory about a single interaction with a single poster.<p>&gt;And it’s just one example I chose because it was recently in my memory?<p>So you <i>are</i> still triggered by it.<p>&gt;I don’t think I implied this was the most representative possible example.<p>I can only reply to the comment you actually wrote, and the comment you actually wrote, which you <i>did intend</i> to be a representative example, doesn't do a good job of supporting your case. Feel free to post your evidence, then, I suspect it will just be more of the same.<p>I stand by my comment and I'm leaving the thread. Good night."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_krapp",
+          "story_48485429"
+        ],
+        "author": "krapp",
+        "children": [
+          48486509
+        ],
+        "comment_text": "&gt;I obviously could not be triggered 12 days after the fact…<p>That isn&#x27;t obvious, given that you came back 12 days later with what seems to be a full blown conspiracy theory about a single interaction with a single poster.<p>&gt;And it’s just one example I chose because it was recently in my memory?<p>So you <i>are</i> still triggered by it.<p>&gt;I don’t think I implied this was the most representative possible example.<p>I can only reply to the comment you actually wrote, and the comment you actually wrote, which you <i>did intend</i> to be a representative example, doesn&#x27;t do a good job of supporting your case. Feel free to post your evidence, then, I suspect it will just be more of the same.<p>I stand by my comment and I&#x27;m leaving the thread. Good night.",
+        "created_at": "2026-06-11T03:50:11Z",
+        "created_at_i": 1781149811,
+        "objectID": "48485996",
+        "parent_id": 48485776,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T05:22:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Karrot_Kream"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This site has gotten a lot more popular and so it's a lot easier to rise up in karma these days. It's really easy to get lots of upvotes and downvotes in pretty much any of the controversial/political threads on the site because they get a lot of attention, a lot more than the more technical or sedate posts. My guess is the mods don't have the time to look at as many of the comments anymore just because there are so many."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Karrot_Kream",
+          "story_48485429"
+        ],
+        "author": "Karrot_Kream",
+        "comment_text": "This site has gotten a lot more popular and so it&#x27;s a lot easier to rise up in karma these days. It&#x27;s really easy to get lots of upvotes and downvotes in pretty much any of the controversial&#x2F;political threads on the site because they get a lot of attention, a lot more than the more technical or sedate posts. My guess is the mods don&#x27;t have the time to look at as many of the comments anymore just because there are so many.",
+        "created_at": "2026-06-11T03:14:53Z",
+        "created_at_i": 1781147693,
+        "objectID": "48485823",
+        "parent_id": 48485727,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T03:18:41Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Are you perhaps confused?<p>The timestamp clearly says “12 days ago”?<p>Which matches my recollection of how many days ago it was.<p>I obviously could not be triggered 12 days after the fact…<p>And it’s just one example I chose because it was recently in my memory?<p>I don’t think I implied this was the most representative possible example."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "children": [
+          48485996
+        ],
+        "comment_text": "Are you perhaps confused?<p>The timestamp clearly says “12 days ago”?<p>Which matches my recollection of how many days ago it was.<p>I obviously could not be triggered 12 days after the fact…<p>And it’s just one example I chose because it was recently in my memory?<p>I don’t think I implied this was the most representative possible example.",
+        "created_at": "2026-06-11T03:05:24Z",
+        "created_at_i": 1781147124,
+        "objectID": "48485776",
+        "parent_id": 48485654,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-15T21:10:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hmmm… This would imply the value of karma is much less and my threshold should be much higher?<p>To keep the bar at roughly the same relative difficulty.<p>Say 10,000+ karma?<p>If so, my example would no longer apply."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "children": [
+          48485823
+        ],
+        "comment_text": "Hmmm… This would imply the value of karma is much less and my threshold should be much higher?<p>To keep the bar at roughly the same relative difficulty.<p>Say 10,000+ karma?<p>If so, my example would no longer apply.",
+        "created_at": "2026-06-11T02:56:12Z",
+        "created_at_i": 1781146572,
+        "objectID": "48485727",
+        "parent_id": 48485694,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T17:55:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "k310"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I got to 1737 the hard way. Lots of 1 point posts (which don't seem to count) but mainly, I collect karma points so I can afford to fend off downvoting trolls.<p>All done with good intention."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_k310",
+          "story_48485429"
+        ],
+        "author": "k310",
+        "comment_text": "I got to 1737 the hard way. Lots of 1 point posts (which don&#x27;t seem to count) but mainly, I collect karma points so I can afford to fend off downvoting trolls.<p>All done with good intention.",
+        "created_at": "2026-06-11T02:53:03Z",
+        "created_at_i": 1781146383,
+        "objectID": "48485704",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T13:35:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "WatchDog"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Building up karma only requires that on balance one's contributions are popular.<p>Many accounts will contribute constructively on topics that are technical or objective, but then become more antagonistic on controversial or political topics.<p>So long as they don't severely break site rules, it's unlikely that they will be subject to major moderator action."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_WatchDog",
+          "story_48485429"
+        ],
+        "author": "WatchDog",
+        "children": [
+          48485727
+        ],
+        "comment_text": "Building up karma only requires that on balance one&#x27;s contributions are popular.<p>Many accounts will contribute constructively on topics that are technical or objective, but then become more antagonistic on controversial or political topics.<p>So long as they don&#x27;t severely break site rules, it&#x27;s unlikely that they will be subject to major moderator action.",
+        "created_at": "2026-06-11T02:51:09Z",
+        "created_at_i": 1781146269,
+        "objectID": "48485694",
+        "parent_id": 48485648,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T02:56:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AnimalMuppet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I've seen it too, though I haven't often checked the karma of those posters.  But yes, there are posts that just make no sense.<p>There are more posters, though, whose <i>approach</i> makes no sense.  They post strong opinions, but they can't or won't defend them, instead attacking anyone who disagrees (or else just stridently repeating the claim).  Those I at least can understand.  They are zealots, or they are shills.<p>But the posts that just don't make sense... are they bots?  Are they mentally not all there?  They sure aren't thinking like I do, and not just because they have different opinions."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_AnimalMuppet",
+          "story_48485429"
+        ],
+        "author": "AnimalMuppet",
+        "children": [
+          48486570
+        ],
+        "comment_text": "I&#x27;ve seen it too, though I haven&#x27;t often checked the karma of those posters.  But yes, there are posts that just make no sense.<p>There are more posters, though, whose <i>approach</i> makes no sense.  They post strong opinions, but they can&#x27;t or won&#x27;t defend them, instead attacking anyone who disagrees (or else just stridently repeating the claim).  Those I at least can understand.  They are zealots, or they are shills.<p>But the posts that just don&#x27;t make sense... are they bots?  Are they mentally not all there?  They sure aren&#x27;t thinking like I do, and not just because they have different opinions.",
+        "created_at": "2026-06-11T02:42:27Z",
+        "created_at_i": 1781145747,
+        "objectID": "48485658",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T05:34:57Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "krapp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you're talking about this (now flagged) thread[0] I don't see anything in the replies to your comments that I would consider &quot;deranged.&quot; I just see the typical HN back and forth, and honestly neither side is backing up their arguments. HN certainly does have deranged comments but this isn't it. This is tepid as arguments go, and typical.<p>I agree your comments shouldn't have been flagged but unfortunately that sort of thing happens all the time around here. When people disagree with you and downvotes aren't enough they'll just start flagging. I don't think that's a &quot;high karma&quot; thing, people will start to do that as soon as they're able, which doesn't take much karma.<p>And, I mean, only one of the people who replied to you even has more karma than you do. So really you're just complaining about one person and conflating that into some vast systemic issue with &quot;high karma users.&quot;<p>Get over it and move on. I'll get absolutely shat on by people here sometimes and have forgotten about it entirely after an hour. Nothing that happens here is worth getting triggered for over a week.<p>[0]<a href=\"https://news.ycombinator.com/item?id=48329843\">https://news.ycombinator.com/item?id=48329843</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_krapp",
+          "story_48485429"
+        ],
+        "author": "krapp",
+        "children": [
+          48485776
+        ],
+        "comment_text": "If you&#x27;re talking about this (now flagged) thread[0] I don&#x27;t see anything in the replies to your comments that I would consider &quot;deranged.&quot; I just see the typical HN back and forth, and honestly neither side is backing up their arguments. HN certainly does have deranged comments but this isn&#x27;t it. This is tepid as arguments go, and typical.<p>I agree your comments shouldn&#x27;t have been flagged but unfortunately that sort of thing happens all the time around here. When people disagree with you and downvotes aren&#x27;t enough they&#x27;ll just start flagging. I don&#x27;t think that&#x27;s a &quot;high karma&quot; thing, people will start to do that as soon as they&#x27;re able, which doesn&#x27;t take much karma.<p>And, I mean, only one of the people who replied to you even has more karma than you do. So really you&#x27;re just complaining about one person and conflating that into some vast systemic issue with &quot;high karma users.&quot;<p>Get over it and move on. I&#x27;ll get absolutely shat on by people here sometimes and have forgotten about it entirely after an hour. Nothing that happens here is worth getting triggered for over a week.<p>[0]<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48329843\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48329843</a>",
+        "created_at": "2026-06-11T02:42:02Z",
+        "created_at_i": 1781145722,
+        "objectID": "48485654",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T04:08:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "True… there’s always been some of that.<p>But the most egregious cases, such as posting short replies that literally self contradict and self negate their own credibility within the span of a few sentences… was very rare before.<p>At least from high karma accounts."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "children": [
+          48485694
+        ],
+        "comment_text": "True… there’s always been some of that.<p>But the most egregious cases, such as posting short replies that literally self contradict and self negate their own credibility within the span of a few sentences… was very rare before.<p>At least from high karma accounts.",
+        "created_at": "2026-06-11T02:41:08Z",
+        "created_at_i": 1781145668,
+        "objectID": "48485648",
+        "parent_id": 48485596,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T02:56:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "filup"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The karma street credit system was not designed with LLM's in mind.<p>It's going to be harder and harder to determine the legitimacy of a post or reply.<p>There will be no good way to determine if your speaking to a human because it will become completly indistinguishable.<p>The good news for HN is it's <i>slightly</i> easier to navigate and use judgement with post history.<p>What can you do with a lot of high karma accounts? Alot. Planting seeds in this community can go a very long way."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_filup",
+          "story_48485429"
+        ],
+        "author": "filup",
+        "children": [
+          48486619
+        ],
+        "comment_text": "The karma street credit system was not designed with LLM&#x27;s in mind.<p>It&#x27;s going to be harder and harder to determine the legitimacy of a post or reply.<p>There will be no good way to determine if your speaking to a human because it will become completly indistinguishable.<p>The good news for HN is it&#x27;s <i>slightly</i> easier to navigate and use judgement with post history.<p>What can you do with a lot of high karma accounts? Alot. Planting seeds in this community can go a very long way.",
+        "created_at": "2026-06-11T02:39:23Z",
+        "created_at_i": 1781145563,
+        "objectID": "48485630",
+        "parent_id": 48485513,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T05:44:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "WatchDog"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Those that spend all day posting on HN aren't always the most hinged."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_WatchDog",
+          "story_48485429"
+        ],
+        "author": "WatchDog",
+        "children": [
+          48485648
+        ],
+        "comment_text": "Those that spend all day posting on HN aren&#x27;t always the most hinged.",
+        "created_at": "2026-06-11T02:34:37Z",
+        "created_at_i": 1781145277,
+        "objectID": "48485596",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-12T03:11:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "MichaelZuo"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I hadn’t thought advanced karma farming was possible… since those would be significant enough to attract moderator attention.<p>The simple karma farming I can understand since there are too many attempts. So they just let automated filters deal with it and a few might slip through.<p>Edit: Unless the mods dont bother removing all the falsely accumulated karma after catching the advanced farming rings. Then I could see that being constantly done."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_MichaelZuo",
+          "story_48485429"
+        ],
+        "author": "MichaelZuo",
+        "children": [
+          48485630
+        ],
+        "comment_text": "I hadn’t thought advanced karma farming was possible… since those would be significant enough to attract moderator attention.<p>The simple karma farming I can understand since there are too many attempts. So they just let automated filters deal with it and a few might slip through.<p>Edit: Unless the mods dont bother removing all the falsely accumulated karma after catching the advanced farming rings. Then I could see that being constantly done.",
+        "created_at": "2026-06-11T02:20:08Z",
+        "created_at_i": 1781144408,
+        "objectID": "48485513",
+        "parent_id": 48485472,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T14:01:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "filup"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Advanced karma farming maybe. It's  with in the realm of possibilities today with a much lower bar.<p>Heck, it's possible your not even speaking to anyone at all."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Why are there an increasing number of outright unhinged high karma users on HN?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_filup",
+          "story_48485429"
+        ],
+        "author": "filup",
+        "children": [
+          48485513
+        ],
+        "comment_text": "Advanced karma farming maybe. It&#x27;s  with in the realm of possibilities today with a much lower bar.<p>Heck, it&#x27;s possible your not even speaking to anyone at all.",
+        "created_at": "2026-06-11T02:13:41Z",
+        "created_at_i": 1781144021,
+        "objectID": "48485472",
+        "parent_id": 48485429,
+        "story_id": 48485429,
+        "story_title": "Why are there an increasing number of outright unhinged high karma users on HN?",
+        "updated_at": "2026-06-11T13:34:43Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 18,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48485429&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 20
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

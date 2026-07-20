@@ -1,0 +1,20 @@
+Title: VikRentItems Flexible Rental Management System
+URL: https://wordpress.org/plugins/vikrentitems/
+Lane: incumbent
+Source-Class: directory
+Status: verified
+Observed: 2026-07-11
+Structured-Source: WordPress Plugin API
+
+Search niche: rental management
+Name: VikRentItems Flexible Rental Management System
+Slug: vikrentitems
+Version: 1.2.1
+Last updated: 2025-12-08 5:41pm GMT
+Active installs: 600
+Rating: 80
+Ratings: 8
+Support threads: 1
+Resolved support threads: 1
+Short description: Multi-purpose Items Rental Management System for any kind of objects. The most efficient booking solution for managing item rentals through your site.
+Description:  Vik Rent Items for WordPress The flexible yet powerful rental management system is now available also for WordPress as a native plugin! This is the perfect plugin if you need to set up a reservation system for renting items of any kind, from bikes to large items, equipments, sport tools, storage rooms, storage box or anything else that requires an availability calendar for rentals. Vik Rent Items was born in 2012 for a different web-software (CMS) than WordPress. The same powerful and experienced framework is now at the service of all webmasters, designers and web-agencies that work with WordPress. The main differences with its brother plugin &#8220;Vik Rent Car&#8221; is that Vik Rent Items allows to book multiple items with the same order, also with multiple quantities if the items allow the choice of the units to book. No matter if you want to rent small or large items, in single or multiple quantities, for short or long terms (hourly, daily, weekly, monthly or yearly), Vik Rent Items will fulfill all your needs. This is the free version of the plugin, but you can upgrade to the Pro version at any time from your wp-admin section. Experience the power of a robust items rental management system! Works with any theme for WordPress. Visit VikWP.com for more details. Some of the unique features Rent multiple items in single or multiple quantities, for short or long terms (hourly, daily, weekly, monthly or yearly) Flexible and powerful pricing system that follows the OpenTravel Standards to support any pricing model Custom Rate Plans (Refundable, Flexible, Non Refundable rates, Insurances, Damage Waiver etc.) Fixed Time Slots to allow the selection of the duration of the rental Detailed items management functions Delivery service and fee based on distance from the company base address Availability Overview with monthly calendars Pricing Calendar Overview to quickly adjust your fares Rental orders management made right Feature-rich back-end section Front-end customizable booking process 7 different Views for the front-end (7 types of Shortcode for your pages) Multi-language support with built-in translation functions Some of Pro version features Seasonal Pricing, Promotions and Rates Calendar with 1-click modification Restrictions to define the min/max number of days of rent, weekdays allowed for pick up and drop off Custom fields to request specific billing information to the customers Options and Extra Services to be added to the rental order Custom Cron Jobs to set up automated email reminders Custom Payment Methods with real bank gateways to accept credit cards Coupon codes to apply discounts to the orders Interested in, curious about the Pro version? You should take a look with your own eyes at the demo website to see what you can do with Vik Rent Items. Do not stop at the front-end though, make sure to visit the wp-admin section too. Front-end Demo Website Admin Demo Website 

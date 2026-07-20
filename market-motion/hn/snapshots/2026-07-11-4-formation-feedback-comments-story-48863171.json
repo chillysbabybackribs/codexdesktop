@@ -1,0 +1,718 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48863171",
+    "window": "recent-90d",
+    "tag": "ask_hn",
+    "score": 75
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "talloaktrees"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I found the blog post: <a href=\"https://1379.tech/i-built-a-ps1-static-recompiler-with-no-prior-experience-and-claude-code/\" rel=\"nofollow\">https://1379.tech/i-built-a-ps1-static-recompiler-with-no-pr...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_talloaktrees",
+          "story_48863171"
+        ],
+        "author": "talloaktrees",
+        "comment_text": "I found the blog post: <a href=\"https:&#x2F;&#x2F;1379.tech&#x2F;i-built-a-ps1-static-recompiler-with-no-prior-experience-and-claude-code&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;1379.tech&#x2F;i-built-a-ps1-static-recompiler-with-no-pr...</a>",
+        "created_at": "2026-07-11T01:05:02Z",
+        "created_at_i": 1783731902,
+        "objectID": "48867453",
+        "parent_id": 48867412,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T01:05:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "yassineklear"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't agree with the people who say that frontier models are &quot;overkill&quot;; sure, they may be expensive (API usage especially), but the subscription plans are fair for the insane value they provide. I have a session where, if I had to pay for API usage, I would have paid close to $300.<p>=\nI had a lower‑tier model that I couldn't trust to make things happen for me; I somehow got the intuitive feel of what it could and couldn't do, so I use the &quot;frontier&quot; models for those tasks—things that include complex AI integration, weird responsiveness edge cases, or just when I find myself begging the lower‑tier models to just fix something again and again."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_yassineklear",
+          "story_48863171"
+        ],
+        "author": "yassineklear",
+        "comment_text": "I don&#x27;t agree with the people who say that frontier models are &quot;overkill&quot;; sure, they may be expensive (API usage especially), but the subscription plans are fair for the insane value they provide. I have a session where, if I had to pay for API usage, I would have paid close to $300.<p>=\nI had a lower‑tier model that I couldn&#x27;t trust to make things happen for me; I somehow got the intuitive feel of what it could and couldn&#x27;t do, so I use the &quot;frontier&quot; models for those tasks—things that include complex AI integration, weird responsiveness edge cases, or just when I find myself begging the lower‑tier models to just fix something again and again.",
+        "created_at": "2026-07-11T01:00:45Z",
+        "created_at_i": 1783731645,
+        "objectID": "48867422",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T01:05:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "talloaktrees"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Would be curious to learn more from you if you have any other guidance or details."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_talloaktrees",
+          "story_48863171"
+        ],
+        "author": "talloaktrees",
+        "children": [
+          48867453
+        ],
+        "comment_text": "Would be curious to learn more from you if you have any other guidance or details.",
+        "created_at": "2026-07-11T00:59:43Z",
+        "created_at_i": 1783731583,
+        "objectID": "48867412",
+        "parent_id": 48865965,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T01:05:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "talloaktrees"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hundreds.<p>likely my approach is often not optimal as I'm not experienced in this field"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_talloaktrees",
+          "story_48863171"
+        ],
+        "author": "talloaktrees",
+        "children": [
+          48872145
+        ],
+        "comment_text": "hundreds.<p>likely my approach is often not optimal as I&#x27;m not experienced in this field",
+        "created_at": "2026-07-11T00:58:43Z",
+        "created_at_i": 1783731523,
+        "objectID": "48867403",
+        "parent_id": 48863340,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T14:00:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "marak830"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you did a write up of that I would be very interested. I assume a lot of others would be as well."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_marak830",
+          "story_48863171"
+        ],
+        "author": "marak830",
+        "comment_text": "If you did a write up of that I would be very interested. I assume a lot of others would be as well.",
+        "created_at": "2026-07-10T23:21:07Z",
+        "created_at_i": 1783725667,
+        "objectID": "48866618",
+        "parent_id": 48865965,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T23:26:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Gamemaster1379"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You have to reach set hard principles for disassembly. I've been experimenting with this for about 6 months now, starting with 4.6 in February where it would do a hacky half ass buggy job of an NES game.<p>I got a shitty PSX recompiler together in March. Been refining it since. This week along I stood up 5 different psx games and added widescreen to 4 of them and added an in memory injection English translation to another to avoid having to fight the assembly."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Gamemaster1379",
+          "story_48863171"
+        ],
+        "author": "Gamemaster1379",
+        "children": [
+          48867412,
+          48866618
+        ],
+        "comment_text": "You have to reach set hard principles for disassembly. I&#x27;ve been experimenting with this for about 6 months now, starting with 4.6 in February where it would do a hacky half ass buggy job of an NES game.<p>I got a shitty PSX recompiler together in March. Been refining it since. This week along I stood up 5 different psx games and added widescreen to 4 of them and added an in memory injection English translation to another to avoid having to fight the assembly.",
+        "created_at": "2026-07-10T22:11:11Z",
+        "created_at_i": 1783721471,
+        "objectID": "48865965",
+        "parent_id": 48863261,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T01:00:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AaronAPU"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "it seems we should be storing chains of prompts instead of code, and then replay them when a new model is released."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_AaronAPU",
+          "story_48863171"
+        ],
+        "author": "AaronAPU",
+        "comment_text": "it seems we should be storing chains of prompts instead of code, and then replay them when a new model is released.",
+        "created_at": "2026-07-10T21:12:13Z",
+        "created_at_i": 1783717933,
+        "objectID": "48865344",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T09:54:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "garethsprice"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This latest crop of frontier models (Fable, Sol) are very good at broad exploratory directions like &quot;audit for bugs&quot; or &quot;find places in this codebase that I custom-implemented functionality that has since become available in the libraries I am using&quot; in ways that prior generations would fail or not return as high quality results.<p>I did a recent head-to-head comparison between Qwen 3.6 35B running locally and Fable on the above and while Qwen did an admirable job finding a good handful of things, Fable returned many more, and more serious, issues. This included many more issues that crossed system boundaries in a multi-service repo.<p>In terms of one-shot &quot;follow these detailed instructions&quot; I think we are at a point where frontier models are overkill, especially at the price. For broad fan-out explorations, I think we are just getting started."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_garethsprice",
+          "story_48863171"
+        ],
+        "author": "garethsprice",
+        "comment_text": "This latest crop of frontier models (Fable, Sol) are very good at broad exploratory directions like &quot;audit for bugs&quot; or &quot;find places in this codebase that I custom-implemented functionality that has since become available in the libraries I am using&quot; in ways that prior generations would fail or not return as high quality results.<p>I did a recent head-to-head comparison between Qwen 3.6 35B running locally and Fable on the above and while Qwen did an admirable job finding a good handful of things, Fable returned many more, and more serious, issues. This included many more issues that crossed system boundaries in a multi-service repo.<p>In terms of one-shot &quot;follow these detailed instructions&quot; I think we are at a point where frontier models are overkill, especially at the price. For broad fan-out explorations, I think we are just getting started.",
+        "created_at": "2026-07-10T19:59:24Z",
+        "created_at_i": 1783713564,
+        "objectID": "48864489",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T03:10:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "endofreach"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Fellow finanzamtpostempfaenger here. I've experienced the moment of shock reading their amounts and almost fainting more than i'd like to admit."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_endofreach",
+          "story_48863171"
+        ],
+        "author": "endofreach",
+        "comment_text": "Fellow finanzamtpostempfaenger here. I&#x27;ve experienced the moment of shock reading their amounts and almost fainting more than i&#x27;d like to admit.",
+        "created_at": "2026-07-10T19:53:50Z",
+        "created_at_i": 1783713230,
+        "objectID": "48864426",
+        "parent_id": 48863495,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T21:19:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "grebc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Definitely a yes to all those. It’s largely just middle aged dudes posting meme’s to each other."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_grebc",
+          "story_48863171"
+        ],
+        "author": "grebc",
+        "comment_text": "Definitely a yes to all those. It’s largely just middle aged dudes posting meme’s to each other.",
+        "created_at": "2026-07-10T19:41:46Z",
+        "created_at_i": 1783712506,
+        "objectID": "48864291",
+        "parent_id": 48863745,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T02:09:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "franze"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "My Fable today shipped a stable and app store compatible linux as an mac app.<p>Opus 4.8 started that project but even with rounds and rounds of feedback and gpt 5.5 quality assurance subagents it stayed buggy / unstable as hell.<p>the version now seems pretty stable. an ai within that app is humming along quite fine for hours without any crashes."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_franze",
+          "story_48863171"
+        ],
+        "author": "franze",
+        "comment_text": "My Fable today shipped a stable and app store compatible linux as an mac app.<p>Opus 4.8 started that project but even with rounds and rounds of feedback and gpt 5.5 quality assurance subagents it stayed buggy &#x2F; unstable as hell.<p>the version now seems pretty stable. an ai within that app is humming along quite fine for hours without any crashes.",
+        "created_at": "2026-07-10T19:31:16Z",
+        "created_at_i": 1783711876,
+        "objectID": "48864166",
+        "parent_id": 48864029,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T02:08:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "titularcomment"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "do you truly think that every LOC on those services were generated by AI, lest not reviewed?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_titularcomment",
+          "story_48863171"
+        ],
+        "author": "titularcomment",
+        "comment_text": "do you truly think that every LOC on those services were generated by AI, lest not reviewed?",
+        "created_at": "2026-07-10T19:29:38Z",
+        "created_at_i": 1783711778,
+        "objectID": "48864148",
+        "parent_id": 48863745,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T23:04:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "orangecat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wanted to see how Fable could do at getting Linux running natively on my M4 Mac mini. Turns out pretty well: it patched the Asahi installer and m1n1 bootloader to support M4, and created a workflow where it could build, push, and debug kernels with no interaction on my part after the initial setup. It's now happily running headless with ssh access, and hopefully will have video soon after a USB DisplayLink adapter arrives. (No HDMI/Thunderbolt yet).<p>I don't know for a fact that earlier models wouldn't be able to do that, but I figure if they could we would have heard about it by now."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_orangecat",
+          "story_48863171"
+        ],
+        "author": "orangecat",
+        "children": [
+          48864166
+        ],
+        "comment_text": "I wanted to see how Fable could do at getting Linux running natively on my M4 Mac mini. Turns out pretty well: it patched the Asahi installer and m1n1 bootloader to support M4, and created a workflow where it could build, push, and debug kernels with no interaction on my part after the initial setup. It&#x27;s now happily running headless with ssh access, and hopefully will have video soon after a USB DisplayLink adapter arrives. (No HDMI&#x2F;Thunderbolt yet).<p>I don&#x27;t know for a fact that earlier models wouldn&#x27;t be able to do that, but I figure if they could we would have heard about it by now.",
+        "created_at": "2026-07-10T19:19:24Z",
+        "created_at_i": 1783711164,
+        "objectID": "48864029",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T19:32:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bdlowery"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "how is this slop? It's pretty good. Or do you classify ANYTHING made with ai &quot;slop&quot;. So reddit is slop, x is slop, slack is slop, discord is slop, etc."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bdlowery",
+          "story_48863171"
+        ],
+        "author": "bdlowery",
+        "children": [
+          48864291,
+          48864148
+        ],
+        "comment_text": "how is this slop? It&#x27;s pretty good. Or do you classify ANYTHING made with ai &quot;slop&quot;. So reddit is slop, x is slop, slack is slop, discord is slop, etc.",
+        "created_at": "2026-07-10T18:52:32Z",
+        "created_at_i": 1783709552,
+        "objectID": "48863745",
+        "parent_id": 48863554,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-11T02:08:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sjducb"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Coming up with good French grammar quizzes. GPT5.6 is noticeably better.<p>Older models usually pitch the difficulty too hard/easy and rely on me remembering the gender of words.<p>I’ve not noticed a big programming improvement with the newer models."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sjducb",
+          "story_48863171"
+        ],
+        "author": "sjducb",
+        "comment_text": "Coming up with good French grammar quizzes. GPT5.6 is noticeably better.<p>Older models usually pitch the difficulty too hard&#x2F;easy and rely on me remembering the gender of words.<p>I’ve not noticed a big programming improvement with the newer models.",
+        "created_at": "2026-07-10T18:44:56Z",
+        "created_at_i": 1783709096,
+        "objectID": "48863644",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T19:23:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "franze"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "slide game yes, different goal and mechanics though, and as stated developed / directed via frontier models"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_franze",
+          "story_48863171"
+        ],
+        "author": "franze",
+        "comment_text": "slide game yes, different goal and mechanics though, and as stated developed &#x2F; directed via frontier models",
+        "created_at": "2026-07-10T18:40:05Z",
+        "created_at_i": 1783708805,
+        "objectID": "48863586",
+        "parent_id": 48863554,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T18:43:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "guessmyname"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Pudding Monsters (2012) [1][2], vibe-slop version, yes?<p>[1] <a href=\"https://en.wikipedia.org/wiki/Pudding_Monsters\" rel=\"nofollow\">https://en.wikipedia.org/wiki/Pudding_Monsters</a><p>[2] <a href=\"https://www.nintendo.com/store/products/pudding-monsters-switch/\" rel=\"nofollow\">https://www.nintendo.com/store/products/pudding-monsters-swi...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_guessmyname",
+          "story_48863171"
+        ],
+        "author": "guessmyname",
+        "children": [
+          48863586,
+          48863745
+        ],
+        "comment_text": "Pudding Monsters (2012) [1][2], vibe-slop version, yes?<p>[1] <a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Pudding_Monsters\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Pudding_Monsters</a><p>[2] <a href=\"https:&#x2F;&#x2F;www.nintendo.com&#x2F;store&#x2F;products&#x2F;pudding-monsters-switch&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.nintendo.com&#x2F;store&#x2F;products&#x2F;pudding-monsters-swi...</a>",
+        "created_at": "2026-07-10T18:36:41Z",
+        "created_at_i": 1783708601,
+        "objectID": "48863554",
+        "parent_id": 48863399,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T23:03:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "pseudosavant"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I haven't seriously used GLM/Qwen/etc for agentic work. I will say, that the GPT and Claude models from 6 months ago were very usable within their respective agentic harnesses (this matters a lot). But there is no way you could convince me to go back to GPT-5.0 from GPT-5.6 for a serious amount of agentic work.<p>I could probably accomplish most of the same tasks with GPT-5.0, but it would take a lot more involvement from me, more troubleshooting, and significantly more time."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_pseudosavant",
+          "story_48863171"
+        ],
+        "author": "pseudosavant",
+        "comment_text": "I haven&#x27;t seriously used GLM&#x2F;Qwen&#x2F;etc for agentic work. I will say, that the GPT and Claude models from 6 months ago were very usable within their respective agentic harnesses (this matters a lot). But there is no way you could convince me to go back to GPT-5.0 from GPT-5.6 for a serious amount of agentic work.<p>I could probably accomplish most of the same tasks with GPT-5.0, but it would take a lot more involvement from me, more troubleshooting, and significantly more time.",
+        "created_at": "2026-07-10T18:31:25Z",
+        "created_at_i": 1783708285,
+        "objectID": "48863513",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T18:32:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jiggawatts"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't bother to use open-weight models, but for all of the &quot;security&quot; or &quot;security adjacent&quot; work I have tried recently, GPT 5.5 x-high has been the first model that produced useful output.<p>Even very old models could spot the most glaring issues, but it's a different story if you scan a source repository where humans can't find security vulnerabilities even after hours of reading through the code. Feed something like that to, say, Gemini Pro 3.1 and you'll get a bunch of false positives back, nit-picking, or variants of &quot;this could be insecure if the code around it changes in unreasonable ways in the future&quot;.<p>Feed the same thing into GPT 5.5 x-high and then tens of minutes later it'll find half a dozen unauthenticated remote code execution vulnerabilities, arbitrary file read/write vulnerabilities, or similar.<p>Until it got nerfed, Mythos was similarly a huge step up for a lot of people working on code security."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jiggawatts",
+          "story_48863171"
+        ],
+        "author": "jiggawatts",
+        "comment_text": "I don&#x27;t bother to use open-weight models, but for all of the &quot;security&quot; or &quot;security adjacent&quot; work I have tried recently, GPT 5.5 x-high has been the first model that produced useful output.<p>Even very old models could spot the most glaring issues, but it&#x27;s a different story if you scan a source repository where humans can&#x27;t find security vulnerabilities even after hours of reading through the code. Feed something like that to, say, Gemini Pro 3.1 and you&#x27;ll get a bunch of false positives back, nit-picking, or variants of &quot;this could be insecure if the code around it changes in unreasonable ways in the future&quot;.<p>Feed the same thing into GPT 5.5 x-high and then tens of minutes later it&#x27;ll find half a dozen unauthenticated remote code execution vulnerabilities, arbitrary file read&#x2F;write vulnerabilities, or similar.<p>Until it got nerfed, Mythos was similarly a huge step up for a lot of people working on code security.",
+        "created_at": "2026-07-10T18:29:41Z",
+        "created_at_i": 1783708181,
+        "objectID": "48863496",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T20:06:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "adityashankar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was worried about some messup with taxes (my tax advisor messed up here), I managed to get it sorted on time - this was super naive but in -germany when they send you the taxes they mention the &quot;cents&quot; place as well in a very weird way, I assumed that was the entire number and assumed the tax issue I had was 10x larger than the amount it really was (10x and not 100x as my brain is in a place of pressure due to other circumstances and I wasn't thinking clearly)<p>GPT 5.6 incorrectly stated that I had nothing to do, Fable got the issue correctly and I was able to see that that was indeed the cents place and that I was more worried than I realized, and I managed to get a temporary solution setup (that I verified and I am sure is correct).<p>Which is to say it managed to relieve me of quite a bit of stress haha"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What was the last task where only a frontier model could do it?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_adityashankar",
+          "story_48863171"
+        ],
+        "author": "adityashankar",
+        "children": [
+          48864426
+        ],
+        "comment_text": "I was worried about some messup with taxes (my tax advisor messed up here), I managed to get it sorted on time - this was super naive but in -germany when they send you the taxes they mention the &quot;cents&quot; place as well in a very weird way, I assumed that was the entire number and assumed the tax issue I had was 10x larger than the amount it really was (10x and not 100x as my brain is in a place of pressure due to other circumstances and I wasn&#x27;t thinking clearly)<p>GPT 5.6 incorrectly stated that I had nothing to do, Fable got the issue correctly and I was able to see that that was indeed the cents place and that I was more worried than I realized, and I managed to get a temporary solution setup (that I verified and I am sure is correct).<p>Which is to say it managed to relieve me of quite a bit of stress haha",
+        "created_at": "2026-07-10T18:29:39Z",
+        "created_at_i": 1783708179,
+        "objectID": "48863495",
+        "parent_id": 48863171,
+        "story_id": 48863171,
+        "story_title": "Ask HN: What was the last task where only a frontier model could do it?",
+        "updated_at": "2026-07-10T21:39:34Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 26,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48863171&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 23,
+        "roundTrip": 16
+      },
+      "total": 0
+    },
+    "query": "",
+    "serverTimeMS": 24
+  }
+}

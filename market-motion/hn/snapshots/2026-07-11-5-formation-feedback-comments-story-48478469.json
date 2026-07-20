@@ -1,0 +1,1646 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48478469",
+    "window": "prior-30d",
+    "tag": "show_hn",
+    "score": 414
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "grahamstanes17"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nice"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_grahamstanes17",
+          "story_48478469"
+        ],
+        "author": "grahamstanes17",
+        "comment_text": "Nice",
+        "created_at": "2026-06-14T18:09:01Z",
+        "created_at_i": 1781460541,
+        "objectID": "48530583",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-18T02:17:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kalms"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Seeing a lot of criticism in here, some valid, some not. Just wanted to say that, to me, this is really well put together - and seems like a lot of thought went into this. Appreciate you releasing this publicly!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kalms",
+          "story_48478469"
+        ],
+        "author": "kalms",
+        "comment_text": "Seeing a lot of criticism in here, some valid, some not. Just wanted to say that, to me, this is really well put together - and seems like a lot of thought went into this. Appreciate you releasing this publicly!",
+        "created_at": "2026-06-12T20:18:36Z",
+        "created_at_i": 1781295516,
+        "objectID": "48508994",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T20:24:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "qreoct"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Appreciate the pointer here, this is what I need! Hope this project keeps growing :)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_qreoct",
+          "story_48478469"
+        ],
+        "author": "qreoct",
+        "comment_text": "Appreciate the pointer here, this is what I need! Hope this project keeps growing :)",
+        "created_at": "2026-06-11T19:47:43Z",
+        "created_at_i": 1781207263,
+        "objectID": "48495489",
+        "parent_id": 48494495,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T21:26:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "digitaltrees"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I agree, but your comment should be directed at the same poster mine was not me"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_digitaltrees",
+          "story_48478469"
+        ],
+        "author": "digitaltrees",
+        "comment_text": "I agree, but your comment should be directed at the same poster mine was not me",
+        "created_at": "2026-06-11T19:21:11Z",
+        "created_at_i": 1781205671,
+        "objectID": "48495162",
+        "parent_id": 48485254,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T16:46:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rolls-reus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thanks"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rolls-reus",
+          "story_48478469"
+        ],
+        "author": "rolls-reus",
+        "comment_text": "thanks",
+        "created_at": "2026-06-11T18:52:57Z",
+        "created_at_i": 1781203977,
+        "objectID": "48494803",
+        "parent_id": 48489807,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:57:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "just added an example implementation in the xlsx viewer for search, but the code is yours to modify and customize. react-xlsx should expose the necessary functions to implement a custom search (by workbook/sheet etc...)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "children": [
+          48495489
+        ],
+        "comment_text": "just added an example implementation in the xlsx viewer for search, but the code is yours to modify and customize. react-xlsx should expose the necessary functions to implement a custom search (by workbook&#x2F;sheet etc...)",
+        "created_at": "2026-06-11T18:30:56Z",
+        "created_at_i": 1781202656,
+        "objectID": "48494495",
+        "parent_id": 48484236,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T19:48:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "added some basic filtering/sort/search support, lmk what you think!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "added some basic filtering&#x2F;sort&#x2F;search support, lmk what you think!",
+        "created_at": "2026-06-11T18:02:43Z",
+        "created_at_i": 1781200963,
+        "objectID": "48494072",
+        "parent_id": 48491474,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:50:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Lord_Zero"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Document Splits drag and drop looks weird, like it doesn't drag from where I clicked."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Lord_Zero",
+          "story_48478469"
+        ],
+        "author": "Lord_Zero",
+        "comment_text": "Document Splits drag and drop looks weird, like it doesn&#x27;t drag from where I clicked.",
+        "created_at": "2026-06-11T17:46:14Z",
+        "created_at_i": 1781199974,
+        "objectID": "48493757",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T17:49:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kbyatnal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "agreed! dogfooding is the best — we'll integrate this into our core product, which will force us to improve it very quickly"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kbyatnal",
+          "story_48478469"
+        ],
+        "author": "kbyatnal",
+        "comment_text": "agreed! dogfooding is the best — we&#x27;ll integrate this into our core product, which will force us to improve it very quickly",
+        "created_at": "2026-06-11T17:04:01Z",
+        "created_at_i": 1781197441,
+        "objectID": "48493047",
+        "parent_id": 48491474,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T20:13:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "carlosjobim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you're on Windows, you can check out ChromaFiler, which takes Miller columns to the next level:<p><a href=\"https://chroma.zone/chromafiler/\" rel=\"nofollow\">https://chroma.zone/chromafiler/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_carlosjobim",
+          "story_48478469"
+        ],
+        "author": "carlosjobim",
+        "comment_text": "If you&#x27;re on Windows, you can check out ChromaFiler, which takes Miller columns to the next level:<p><a href=\"https:&#x2F;&#x2F;chroma.zone&#x2F;chromafiler&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;chroma.zone&#x2F;chromafiler&#x2F;</a>",
+        "created_at": "2026-06-11T15:40:40Z",
+        "created_at_i": 1781192440,
+        "objectID": "48491884",
+        "parent_id": 48485695,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T16:15:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lionkor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nice! That explains it to a degree. I would suggest taking someone who is really annoying about details, from your team, and having them just use the components as they are. Just click around and mess with them for a while -- in my experience this is how you get that final 20% of polish."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lionkor",
+          "story_48478469"
+        ],
+        "author": "lionkor",
+        "children": [
+          48493047,
+          48494072
+        ],
+        "comment_text": "Nice! That explains it to a degree. I would suggest taking someone who is really annoying about details, from your team, and having them just use the components as they are. Just click around and mess with them for a while -- in my experience this is how you get that final 20% of polish.",
+        "created_at": "2026-06-11T15:13:21Z",
+        "created_at_i": 1781190801,
+        "objectID": "48491474",
+        "parent_id": 48489905,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T20:20:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sails"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "primary use is Document processing automation, or Intelligent Document Processing (IDP)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sails",
+          "story_48478469"
+        ],
+        "author": "sails",
+        "comment_text": "primary use is Document processing automation, or Intelligent Document Processing (IDP)",
+        "created_at": "2026-06-11T15:04:14Z",
+        "created_at_i": 1781190254,
+        "objectID": "48491341",
+        "parent_id": 48486350,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T15:07:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "greenleafone7"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Another AI built project. Which OK, but then at least have a look at it to fix/optimize things."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_greenleafone7",
+          "story_48478469"
+        ],
+        "author": "greenleafone7",
+        "comment_text": "Another AI built project. Which OK, but then at least have a look at it to fix&#x2F;optimize things.",
+        "created_at": "2026-06-11T14:28:23Z",
+        "created_at_i": 1781188103,
+        "objectID": "48490840",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T14:30:15Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "codingconstable"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "its nice, people are harsh, you did something useful, thank you."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_codingconstable",
+          "story_48478469"
+        ],
+        "author": "codingconstable",
+        "comment_text": "its nice, people are harsh, you did something useful, thank you.",
+        "created_at": "2026-06-11T13:38:09Z",
+        "created_at_i": 1781185089,
+        "objectID": "48490188",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:50:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kbyatnal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Your issues are mostly with the file picker, which is a brand new component that was just added yesterday in response to a feature request after launch: <a href=\"https://x.com/andrewlu0/status/2064726998186971400?s=46\" rel=\"nofollow\">https://x.com/andrewlu0/status/2064726998186971400?s=46</a><p>It has some rough edges as a result, but your suggestions are very valid. We’ll make those improvements (we’re also taking PRs!)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kbyatnal",
+          "story_48478469"
+        ],
+        "author": "kbyatnal",
+        "children": [
+          48491474
+        ],
+        "comment_text": "Your issues are mostly with the file picker, which is a brand new component that was just added yesterday in response to a feature request after launch: <a href=\"https:&#x2F;&#x2F;x.com&#x2F;andrewlu0&#x2F;status&#x2F;2064726998186971400?s=46\" rel=\"nofollow\">https:&#x2F;&#x2F;x.com&#x2F;andrewlu0&#x2F;status&#x2F;2064726998186971400?s=46</a><p>It has some rough edges as a result, but your suggestions are very valid. We’ll make those improvements (we’re also taking PRs!).",
+        "created_at": "2026-06-11T13:12:55Z",
+        "created_at_i": 1781183575,
+        "objectID": "48489905",
+        "parent_id": 48488175,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T07:17:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey! Very valid feedback - working on improving the file system component and overall site performance today"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Hey! Very valid feedback - working on improving the file system component and overall site performance today",
+        "created_at": "2026-06-11T13:09:06Z",
+        "created_at_i": 1781183346,
+        "objectID": "48489867",
+        "parent_id": 48488175,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T15:22:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Responded above but the components like the file viewers should not depend on next. Please lmk if it gets pulled when installing via CLI"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Responded above but the components like the file viewers should not depend on next. Please lmk if it gets pulled when installing via CLI",
+        "created_at": "2026-06-11T13:07:35Z",
+        "created_at_i": 1781183255,
+        "objectID": "48489850",
+        "parent_id": 48488684,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:23:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mkl"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Github icon in the header on the right."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mkl",
+          "story_48478469"
+        ],
+        "author": "mkl",
+        "comment_text": "Github icon in the header on the right.",
+        "created_at": "2026-06-11T13:05:04Z",
+        "created_at_i": 1781183104,
+        "objectID": "48489820",
+        "parent_id": 48486772,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:06:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://github.com/extend-hq/ui\" rel=\"nofollow\">https://github.com/extend-hq/ui</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "children": [
+          48494803
+        ],
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui</a>",
+        "created_at": "2026-06-11T13:04:12Z",
+        "created_at_i": 1781183052,
+        "objectID": "48489807",
+        "parent_id": 48486772,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:53:29Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you! Working on optimizing"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Thank you! Working on optimizing",
+        "created_at": "2026-06-11T13:03:41Z",
+        "created_at_i": 1781183021,
+        "objectID": "48489798",
+        "parent_id": 48488352,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:06:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Someone requested web components earlier so let me know if you make that happen!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Someone requested web components earlier so let me know if you make that happen!",
+        "created_at": "2026-06-11T13:01:09Z",
+        "created_at_i": 1781182869,
+        "objectID": "48489772",
+        "parent_id": 48487079,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T14:59:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Heard the performance feedback will work on it today!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Heard the performance feedback will work on it today!",
+        "created_at": "2026-06-11T13:00:19Z",
+        "created_at_i": 1781182819,
+        "objectID": "48489757",
+        "parent_id": 48487397,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:14:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "andrewlu0"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey! Those components are used for the demo site, and shouldn’t ship or get installed when you install the components in the registry.<p>None of the ones in the registry should have next as a dependency, please lmk if otherwise"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_andrewlu0",
+          "story_48478469"
+        ],
+        "author": "andrewlu0",
+        "comment_text": "Hey! Those components are used for the demo site, and shouldn’t ship or get installed when you install the components in the registry.<p>None of the ones in the registry should have next as a dependency, please lmk if otherwise",
+        "created_at": "2026-06-11T12:53:22Z",
+        "created_at_i": 1781182402,
+        "objectID": "48489672",
+        "parent_id": 48487008,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:15:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gobdovan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes! First, you need to get the DOM-level behaviour right (dragging, resizing, cursor focus). That could mean you may use or build primitives like with interact.js, CodeMirror/Monaco (realistically just use, not build), Fancytree. I really like Muuri for layouts. Usually there's also subtle interaction physics going on when building such libs in unexpected places (such as resizing and drag N drop speed curves), which you should tweak to your taste.<p>For framework, React wants to own and mediate the DOM via virtual tree, which is a major bottleneck when you need direct control over focus/selection/keyboard routing or hardware accelerated canvases. Instead, look at Svelte or Solid.js, as they integrate nicely with imperative DOM-oriented JS libraries and don't require heavy wrappers or indirect references for the 'unfriendlier' DOM nodes like canvases, scroll containers and so on.<p>If you're building an OS-like UI, you should also care about state and be sure you have direct control over where your data lives. For example, I usually build with Solid.js and a mix of custom object and lifetime code plus Solid stores for reactive surface state.<p>I usually end up managing object lifetimes because I end up needing to handle messy edge cases around reference vs value semantics and state merging (e.g. keep cursor position sane after a file sync or track focus across multiple windows, especially after refresh)<p>For text editing, if you use Monaco, it has so many internal lifecycle hooks you want to be aware of and interact with directly, that you'll see that most of implementation will end up outside classic frontend lib fast and I'd rather build the thing instead of bridges and wrappers to talk with a high-level framework.<p>All in all, you probably want to own a lot of state and behaviour yourself, and add a cooperating framework on top instead of an all-encompassing one."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gobdovan",
+          "story_48478469"
+        ],
+        "author": "gobdovan",
+        "comment_text": "Yes! First, you need to get the DOM-level behaviour right (dragging, resizing, cursor focus). That could mean you may use or build primitives like with interact.js, CodeMirror&#x2F;Monaco (realistically just use, not build), Fancytree. I really like Muuri for layouts. Usually there&#x27;s also subtle interaction physics going on when building such libs in unexpected places (such as resizing and drag N drop speed curves), which you should tweak to your taste.<p>For framework, React wants to own and mediate the DOM via virtual tree, which is a major bottleneck when you need direct control over focus&#x2F;selection&#x2F;keyboard routing or hardware accelerated canvases. Instead, look at Svelte or Solid.js, as they integrate nicely with imperative DOM-oriented JS libraries and don&#x27;t require heavy wrappers or indirect references for the &#x27;unfriendlier&#x27; DOM nodes like canvases, scroll containers and so on.<p>If you&#x27;re building an OS-like UI, you should also care about state and be sure you have direct control over where your data lives. For example, I usually build with Solid.js and a mix of custom object and lifetime code plus Solid stores for reactive surface state.<p>I usually end up managing object lifetimes because I end up needing to handle messy edge cases around reference vs value semantics and state merging (e.g. keep cursor position sane after a file sync or track focus across multiple windows, especially after refresh)<p>For text editing, if you use Monaco, it has so many internal lifecycle hooks you want to be aware of and interact with directly, that you&#x27;ll see that most of implementation will end up outside classic frontend lib fast and I&#x27;d rather build the thing instead of bridges and wrappers to talk with a high-level framework.<p>All in all, you probably want to own a lot of state and behaviour yourself, and add a cooperating framework on top instead of an all-encompassing one.",
+        "created_at": "2026-06-11T12:33:09Z",
+        "created_at_i": 1781181189,
+        "objectID": "48489467",
+        "parent_id": 48488431,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T23:07:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dzonga"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "so slow like molasses"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dzonga",
+          "story_48478469"
+        ],
+        "author": "dzonga",
+        "comment_text": "so slow like molasses",
+        "created_at": "2026-06-11T12:07:07Z",
+        "created_at_i": 1781179627,
+        "objectID": "48489246",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T12:08:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "peteforde"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was excited by the headline but then when I got to the page<p>1. I saw it was React<p>2. Nothing loading, just a page full of spinners<p>I truly wish React could be launched into the sun."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_peteforde",
+          "story_48478469"
+        ],
+        "author": "peteforde",
+        "comment_text": "I was excited by the headline but then when I got to the page<p>1. I saw it was React<p>2. Nothing loading, just a page full of spinners<p>I truly wish React could be launched into the sun.",
+        "created_at": "2026-06-11T11:56:19Z",
+        "created_at_i": 1781178979,
+        "objectID": "48489152",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T12:27:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chrisweekly"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "React (vs web components) might be questionable, but Next.js as a hard dependency, for a component library, is just weird."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chrisweekly",
+          "story_48478469"
+        ],
+        "author": "chrisweekly",
+        "children": [
+          48489850
+        ],
+        "comment_text": "React (vs web components) might be questionable, but Next.js as a hard dependency, for a component library, is just weird.",
+        "created_at": "2026-06-11T10:56:08Z",
+        "created_at_i": 1781175368,
+        "objectID": "48488684",
+        "parent_id": 48487008,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T16:38:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "deafpolygon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "“React components”.. I stopped there."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_deafpolygon",
+          "story_48478469"
+        ],
+        "author": "deafpolygon",
+        "comment_text": "“React components”.. I stopped there.",
+        "created_at": "2026-06-11T10:55:31Z",
+        "created_at_i": 1781175331,
+        "objectID": "48488678",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:19:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rrr_oh_man"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; From experience, you'll have a hard time choosing a worse technology for low-level, interaction-heavy UI.<p>Can you elaborate on that? What else would you recommend?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rrr_oh_man",
+          "story_48478469"
+        ],
+        "author": "rrr_oh_man",
+        "children": [
+          48489467
+        ],
+        "comment_text": "&gt; From experience, you&#x27;ll have a hard time choosing a worse technology for low-level, interaction-heavy UI.<p>Can you elaborate on that? What else would you recommend?",
+        "created_at": "2026-06-11T10:18:51Z",
+        "created_at_i": 1781173131,
+        "objectID": "48488431",
+        "parent_id": 48488273,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T12:34:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "whitephoenix"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It looks really great! But, from what I can see, it’ll need some work on optimisation. Good luck with this project, guys!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_whitephoenix",
+          "story_48478469"
+        ],
+        "author": "whitephoenix",
+        "children": [
+          48489798
+        ],
+        "comment_text": "It looks really great! But, from what I can see, it’ll need some work on optimisation. Good luck with this project, guys!",
+        "created_at": "2026-06-11T10:03:14Z",
+        "created_at_i": 1781172194,
+        "objectID": "48488352",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:15:13Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gobdovan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yeah, it also seems it's made in React &amp;  Next. From experience, you'll have a hard time choosing a worse technology for low-level, interaction-heavy UI. You need direct control over focus, keyboard handling, scrolling and so on. You also need to leverage hardware accelerated rendering too, which is clunky with 3rd party React libraries.<p>What's more, even if state management should technically be easier with the amount of state libraries, you'll realise sooner or later that the established ones are cleverly immutable where you really just want them to be performant.<p>I am not saying that it's React at fault for the symptoms you see here, but I would expect any such library made in it to hit exactly these kind of edge cases."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gobdovan",
+          "story_48478469"
+        ],
+        "author": "gobdovan",
+        "children": [
+          48488431
+        ],
+        "comment_text": "Yeah, it also seems it&#x27;s made in React &amp;  Next. From experience, you&#x27;ll have a hard time choosing a worse technology for low-level, interaction-heavy UI. You need direct control over focus, keyboard handling, scrolling and so on. You also need to leverage hardware accelerated rendering too, which is clunky with 3rd party React libraries.<p>What&#x27;s more, even if state management should technically be easier with the amount of state libraries, you&#x27;ll realise sooner or later that the established ones are cleverly immutable where you really just want them to be performant.<p>I am not saying that it&#x27;s React at fault for the symptoms you see here, but I would expect any such library made in it to hit exactly these kind of edge cases.",
+        "created_at": "2026-06-11T09:51:03Z",
+        "created_at_i": 1781171463,
+        "objectID": "48488273",
+        "parent_id": 48488175,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T14:39:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "e12e"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Since there was a recent thread on react compiler[r] - I wonder if adding/pushing the code through react compiler would help? (Assuming it's not already being used)<p>[r] Thread was about rewrite in rust, but it made me have a look at the purpose/claims made by the project - and fine-grained, automated memoization for speed seems central."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_e12e",
+          "story_48478469"
+        ],
+        "author": "e12e",
+        "comment_text": "Since there was a recent thread on react compiler[r] - I wonder if adding&#x2F;pushing the code through react compiler would help? (Assuming it&#x27;s not already being used)<p>[r] Thread was about rewrite in rust, but it made me have a look at the purpose&#x2F;claims made by the project - and fine-grained, automated memoization for speed seems central.",
+        "created_at": "2026-06-11T09:48:06Z",
+        "created_at_i": 1781171286,
+        "objectID": "48488255",
+        "parent_id": 48488175,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T09:52:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lionkor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The performance is quite bad. There are some basics missing or broken.<p>- no caching for file previews<p>- no sorting by date in the file picker<p>- no sorting by size in the file picker<p>- no sorting by file type in the file picker<p>- no search in the file picker<p>- cant enter a folder in the detail view (only expand) in the file picker<p>- cant go to page (by page number) in the document viewer<p>- after clicking a button in the document viewer, focus is lost on the document and arrow keys, space, pgup/pgdown dont work until the document is clicked again<p>- cant select text in the document viewer, unless I search first, in which case it then works<p>This is after looking at the file picker and document viewer less than 3 minutes(!!!). I gave up after that. Getting 80% of a file picker is easy, getting the last 20% done, so that it's on par with existing software, is not.<p>Very very odd to have things look this polished, yet be this terrible functionality- and performance-wise. These are not random quirky new ideas I'm having, these have been basics that work in every single file picker and document viewer since the early days of UI, before the web."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lionkor",
+          "story_48478469"
+        ],
+        "author": "lionkor",
+        "children": [
+          48488273,
+          48489905,
+          48488255,
+          48489867
+        ],
+        "comment_text": "The performance is quite bad. There are some basics missing or broken.<p>- no caching for file previews<p>- no sorting by date in the file picker<p>- no sorting by size in the file picker<p>- no sorting by file type in the file picker<p>- no search in the file picker<p>- cant enter a folder in the detail view (only expand) in the file picker<p>- cant go to page (by page number) in the document viewer<p>- after clicking a button in the document viewer, focus is lost on the document and arrow keys, space, pgup&#x2F;pgdown dont work until the document is clicked again<p>- cant select text in the document viewer, unless I search first, in which case it then works<p>This is after looking at the file picker and document viewer less than 3 minutes(!!!). I gave up after that. Getting 80% of a file picker is easy, getting the last 20% done, so that it&#x27;s on par with existing software, is not.<p>Very very odd to have things look this polished, yet be this terrible functionality- and performance-wise. These are not random quirky new ideas I&#x27;m having, these have been basics that work in every single file picker and document viewer since the early days of UI, before the web.",
+        "created_at": "2026-06-11T09:34:24Z",
+        "created_at_i": 1781170464,
+        "objectID": "48488175",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-12T14:39:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "wu1064442747"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "good"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_wu1064442747",
+          "story_48478469"
+        ],
+        "author": "wu1064442747",
+        "comment_text": "good",
+        "created_at": "2026-06-11T09:07:07Z",
+        "created_at_i": 1781168827,
+        "objectID": "48488005",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:16:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iamsaitam"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The performance on the site is truly terrible, the top animation was probably going at 5fps when scrolling."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iamsaitam",
+          "story_48478469"
+        ],
+        "author": "iamsaitam",
+        "children": [
+          48489757
+        ],
+        "comment_text": "The performance on the site is truly terrible, the top animation was probably going at 5fps when scrolling.",
+        "created_at": "2026-06-11T07:29:05Z",
+        "created_at_i": 1781162945,
+        "objectID": "48487397",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:01:14Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sails"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Experienced the same nightmare a few times over with citations.<p>React/next is limiting, we have rebuilt this for  angular and now redid it again using lit for better compatibility. Our old one is very similar to this.<p>Loading citations for each field across 1000s of pages, colliding citations for all the messy formats, zoom, rotate etc. what a mess!<p>Great that you took the time to MIT this as it would have saved us many hours, though I think today Fable + Codex makes it pretty quick<p>I could recreate these in lit as a fork, would be very useful to have the full set"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sails",
+          "story_48478469"
+        ],
+        "author": "sails",
+        "children": [
+          48489772
+        ],
+        "comment_text": "Experienced the same nightmare a few times over with citations.<p>React&#x2F;next is limiting, we have rebuilt this for  angular and now redid it again using lit for better compatibility. Our old one is very similar to this.<p>Loading citations for each field across 1000s of pages, colliding citations for all the messy formats, zoom, rotate etc. what a mess!<p>Great that you took the time to MIT this as it would have saved us many hours, though I think today Fable + Codex makes it pretty quick<p>I could recreate these in lit as a fork, would be very useful to have the full set",
+        "created_at": "2026-06-11T06:48:32Z",
+        "created_at_i": 1781160512,
+        "objectID": "48487079",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:26:44Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "resurge"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Not just React, but it apparently also depends on Next.js<p>Dependency in package.json:<p>- <a href=\"https://github.com/extend-hq/ui/blob/main/apps/v4/package.json\" rel=\"nofollow\">https://github.com/extend-hq/ui/blob/main/apps/v4/package.js...</a><p>Dependencies in some components:<p>- <a href=\"https://github.com/extend-hq/ui/blob/main/apps/v4/components/command-menu.tsx\" rel=\"nofollow\">https://github.com/extend-hq/ui/blob/main/apps/v4/components...</a><p>- <a href=\"https://github.com/extend-hq/ui/blob/main/apps/v4/components/docs-sidebar.tsx\" rel=\"nofollow\">https://github.com/extend-hq/ui/blob/main/apps/v4/components...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_resurge",
+          "story_48478469"
+        ],
+        "author": "resurge",
+        "children": [
+          48489672,
+          48488684
+        ],
+        "comment_text": "Not just React, but it apparently also depends on Next.js<p>Dependency in package.json:<p>- <a href=\"https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;package.json\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;package.js...</a><p>Dependencies in some components:<p>- <a href=\"https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;components&#x2F;command-menu.tsx\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;components...</a><p>- <a href=\"https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;components&#x2F;docs-sidebar.tsx\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;extend-hq&#x2F;ui&#x2F;blob&#x2F;main&#x2F;apps&#x2F;v4&#x2F;components...</a>",
+        "created_at": "2026-06-11T06:40:01Z",
+        "created_at_i": 1781160001,
+        "objectID": "48487008",
+        "parent_id": 48481910,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:27:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rolls-reus"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mind sharing a link to the source code? i couldn’t find it on the website."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rolls-reus",
+          "story_48478469"
+        ],
+        "author": "rolls-reus",
+        "children": [
+          48489807,
+          48489820
+        ],
+        "comment_text": "Mind sharing a link to the source code? i couldn’t find it on the website.",
+        "created_at": "2026-06-11T06:07:45Z",
+        "created_at_i": 1781158065,
+        "objectID": "48486772",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T18:50:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mklifelife"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Looks great.<p>I'm curious whether the primary users are AI-native document products or more traditional SaaS applications.<p>The document-app niche feels increasingly important with the rise of AI workflows."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mklifelife",
+          "story_48478469"
+        ],
+        "author": "mklifelife",
+        "children": [
+          48491341
+        ],
+        "comment_text": "Looks great.<p>I&#x27;m curious whether the primary users are AI-native document products or more traditional SaaS applications.<p>The document-app niche feels increasingly important with the rise of AI workflows.",
+        "created_at": "2026-06-11T04:50:17Z",
+        "created_at_i": 1781153417,
+        "objectID": "48486350",
+        "parent_id": 48478469,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T15:04:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nhatcher"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "First of all thanks for the great library. It is so much more thay an UI kit!<p>We wrote (should say are writing) our own xlsx parser in Rust on IronCalc:<p><a href=\"https://github.com/ironcalc/IronCalc/tree/main/xlsx\" rel=\"nofollow\">https://github.com/ironcalc/IronCalc/tree/main/xlsx</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Show HN: Extend UI – open-source UI kit for modern document apps"
+          },
+          "story_url": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "https://www.extend.ai/ui"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nhatcher",
+          "story_48478469"
+        ],
+        "author": "nhatcher",
+        "comment_text": "First of all thanks for the great library. It is so much more thay an UI kit!<p>We wrote (should say are writing) our own xlsx parser in Rust on IronCalc:<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;ironcalc&#x2F;IronCalc&#x2F;tree&#x2F;main&#x2F;xlsx\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ironcalc&#x2F;IronCalc&#x2F;tree&#x2F;main&#x2F;xlsx</a>",
+        "created_at": "2026-06-11T04:03:20Z",
+        "created_at_i": 1781150600,
+        "objectID": "48486060",
+        "parent_id": 48482295,
+        "story_id": 48478469,
+        "story_title": "Show HN: Extend UI – open-source UI kit for modern document apps",
+        "story_url": "https://www.extend.ai/ui",
+        "updated_at": "2026-06-11T13:14:43Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 81,
+    "nbPages": 3,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48478469&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 17
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

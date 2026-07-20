@@ -1,0 +1,1381 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "47659807",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 168
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "iCloche"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "So are you saying that anyone with native fluency in English but who is not from the US can't tell the difference between human writing and unpolished AI copy-paste? \nI don't agree. \nGiven that US-based LLM models tend to default their output to American English, its arguably much easier for &quot;the rest of us&quot; to spot the &quot;US&quot; language patterns..."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_iCloche",
+          "story_47659807"
+        ],
+        "author": "iCloche",
+        "comment_text": "So are you saying that anyone with native fluency in English but who is not from the US can&#x27;t tell the difference between human writing and unpolished AI copy-paste? \nI don&#x27;t agree. \nGiven that US-based LLM models tend to default their output to American English, its arguably much easier for &quot;the rest of us&quot; to spot the &quot;US&quot; language patterns...",
+        "created_at": "2026-04-11T11:18:19Z",
+        "created_at_i": 1775906299,
+        "objectID": "47729590",
+        "parent_id": 47660374,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-11T11:19:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cadamsdotcom"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is a handy resource - for humans and for bots: <a href=\"https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing\" rel=\"nofollow\">https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cadamsdotcom",
+          "story_47659807"
+        ],
+        "author": "cadamsdotcom",
+        "comment_text": "This is a handy resource - for humans and for bots: <a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Wikipedia:Signs_of_AI_writing\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Wikipedia:Signs_of_AI_writing</a>",
+        "created_at": "2026-04-08T19:45:42Z",
+        "created_at_i": 1775677542,
+        "objectID": "47695324",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-08T20:07:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "peter-m80"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I do use bullets and emojis"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_peter-m80",
+          "story_47659807"
+        ],
+        "author": "peter-m80",
+        "comment_text": "I do use bullets and emojis",
+        "created_at": "2026-04-06T18:03:02Z",
+        "created_at_i": 1775498582,
+        "objectID": "47664526",
+        "parent_id": 47660374,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T18:08:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "raw_anon_1111"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I bet you a paycheck that of anyone read one of the  “97 things” books, they would think the essays are AI generated even though they came out way before LLMs.<p><a href=\"https://github.com/97-things/97-things-every-programmer-should-know/blob/master/en/SUMMARY.md\" rel=\"nofollow\">https://github.com/97-things/97-things-every-programmer-shou...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_raw_anon_1111",
+          "story_47659807"
+        ],
+        "author": "raw_anon_1111",
+        "comment_text": "I bet you a paycheck that of anyone read one of the  “97 things” books, they would think the essays are AI generated even though they came out way before LLMs.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;97-things&#x2F;97-things-every-programmer-should-know&#x2F;blob&#x2F;master&#x2F;en&#x2F;SUMMARY.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;97-things&#x2F;97-things-every-programmer-shou...</a>",
+        "created_at": "2026-04-06T17:40:10Z",
+        "created_at_i": 1775497210,
+        "objectID": "47664241",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T17:42:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lelanthran"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sure, but, look, we have seen these claims so many times, that if it were true by now someone would have linked at least one archived blog post to show that it is, indeed, how humans used to write.<p>The lack of a <i>single</i> example is very telling."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lelanthran",
+          "story_47659807"
+        ],
+        "author": "lelanthran",
+        "comment_text": "Sure, but, look, we have seen these claims so many times, that if it were true by now someone would have linked at least one archived blog post to show that it is, indeed, how humans used to write.<p>The lack of a <i>single</i> example is very telling.",
+        "created_at": "2026-04-06T17:37:03Z",
+        "created_at_i": 1775497023,
+        "objectID": "47664178",
+        "parent_id": 47662719,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T18:06:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "SyntaxErrorist"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Instead of trying to detect AI in the final string of text the industry seems to be moving towards proof of process. version history, drafts protocol or even UI level logging of keystrokes. If i can not prove i spent three hours in a doc via a series of incremental diffs, the humanness of my prose becomes irrelevant in a high stakes environment. Detection is a lagging indicator the only leading indicator is the audit trail of the labor itself."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_SyntaxErrorist",
+          "story_47659807"
+        ],
+        "author": "SyntaxErrorist",
+        "comment_text": "Instead of trying to detect AI in the final string of text the industry seems to be moving towards proof of process. version history, drafts protocol or even UI level logging of keystrokes. If i can not prove i spent three hours in a doc via a series of incremental diffs, the humanness of my prose becomes irrelevant in a high stakes environment. Detection is a lagging indicator the only leading indicator is the audit trail of the labor itself.",
+        "created_at": "2026-04-06T17:16:34Z",
+        "created_at_i": 1775495794,
+        "objectID": "47663851",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T17:21:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "joquarky"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nobody owes you evidence for your witch hunts."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_joquarky",
+          "story_47659807"
+        ],
+        "author": "joquarky",
+        "children": [
+          47664178
+        ],
+        "comment_text": "Nobody owes you evidence for your witch hunts.",
+        "created_at": "2026-04-06T16:04:05Z",
+        "created_at_i": 1775491445,
+        "objectID": "47662719",
+        "parent_id": 47660755,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T03:42:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "DavideNL"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I was wondering the same today, when i got this search result from Kagi: <a href=\"https://linuxvox.com/blog/conntrack-linux/\" rel=\"nofollow\">https://linuxvox.com/blog/conntrack-linux/</a><p>Note that on Kagi, you can click &quot;Report this page as AI-generated&quot; [1]. Unfortunately though, my last report from January is still &quot;under review&quot; :/<p>[1] <a href=\"https://help.kagi.com/kagi/features/slopstop.html\" rel=\"nofollow\">https://help.kagi.com/kagi/features/slopstop.html</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_DavideNL",
+          "story_47659807"
+        ],
+        "author": "DavideNL",
+        "comment_text": "I was wondering the same today, when i got this search result from Kagi: <a href=\"https:&#x2F;&#x2F;linuxvox.com&#x2F;blog&#x2F;conntrack-linux&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;linuxvox.com&#x2F;blog&#x2F;conntrack-linux&#x2F;</a><p>Note that on Kagi, you can click &quot;Report this page as AI-generated&quot; [1]. Unfortunately though, my last report from January is still &quot;under review&quot; :&#x2F;<p>[1] <a href=\"https:&#x2F;&#x2F;help.kagi.com&#x2F;kagi&#x2F;features&#x2F;slopstop.html\" rel=\"nofollow\">https:&#x2F;&#x2F;help.kagi.com&#x2F;kagi&#x2F;features&#x2F;slopstop.html</a>",
+        "created_at": "2026-04-06T15:27:53Z",
+        "created_at_i": 1775489273,
+        "objectID": "47662182",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T15:31:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Filligree"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No, of course not. It’s all corporate internal documentation.<p>I suppose my high school essays were not. Apologies, but those are lost."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Filligree",
+          "story_47659807"
+        ],
+        "author": "Filligree",
+        "comment_text": "No, of course not. It’s all corporate internal documentation.<p>I suppose my high school essays were not. Apologies, but those are lost.",
+        "created_at": "2026-04-06T14:48:15Z",
+        "created_at_i": 1775486895,
+        "objectID": "47661654",
+        "parent_id": 47660755,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T03:42:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "order-matters"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "i think another part of the problem is that some people are using AI so much that they are starting to mimic its cadence in their own writing.  they may have had a prior coincidental predisposition for writing somewhat similar to AI with worse grammar, and now are inching towards alignment as they either intentionally or accidentally use AI output as a model to improve their writing"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_order-matters",
+          "story_47659807"
+        ],
+        "author": "order-matters",
+        "comment_text": "i think another part of the problem is that some people are using AI so much that they are starting to mimic its cadence in their own writing.  they may have had a prior coincidental predisposition for writing somewhat similar to AI with worse grammar, and now are inching towards alignment as they either intentionally or accidentally use AI output as a model to improve their writing",
+        "created_at": "2026-04-06T14:24:28Z",
+        "created_at_i": 1775485468,
+        "objectID": "47661330",
+        "parent_id": 47660726,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T14:28:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vednig"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://detect.ai/\" rel=\"nofollow\">https://detect.ai/</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vednig",
+          "story_47659807"
+        ],
+        "author": "vednig",
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;detect.ai&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;detect.ai&#x2F;</a>",
+        "created_at": "2026-04-06T14:17:37Z",
+        "created_at_i": 1775485057,
+        "objectID": "47661244",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T14:23:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fwip"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can smell it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fwip",
+          "story_47659807"
+        ],
+        "author": "fwip",
+        "comment_text": "You can smell it.",
+        "created_at": "2026-04-06T13:51:47Z",
+        "created_at_i": 1775483507,
+        "objectID": "47660941",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:57:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sigotirandolas"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't look at whether the text is written by an LLM but at whether it has substance and whether the writer understands what they are doing and is respecting my time.<p>If the text is full of punchy three word phrases or nonsense GenAI images then that's an obvious sign. But so is if the other person has some revolutionary project with great results but they can't really explain why their solution works where presumably many failed in the past (or it's a word salad, or some lengthy writing that doesn't show any signs of getting you to an &quot;aha, that's some great insight&quot; moment).<p>A good sign is also if the author had something interesting going before 2022, and they didn't fall into the earliest low quality LLM waves. Unfortunately some genuinely talented people have started using LLMs to turbocharge their output while leaving some quality on the table nowadays, so I don't really know. I'm becoming a lot more sceptical of the Internet, to be honest."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sigotirandolas",
+          "story_47659807"
+        ],
+        "author": "sigotirandolas",
+        "comment_text": "I don&#x27;t look at whether the text is written by an LLM but at whether it has substance and whether the writer understands what they are doing and is respecting my time.<p>If the text is full of punchy three word phrases or nonsense GenAI images then that&#x27;s an obvious sign. But so is if the other person has some revolutionary project with great results but they can&#x27;t really explain why their solution works where presumably many failed in the past (or it&#x27;s a word salad, or some lengthy writing that doesn&#x27;t show any signs of getting you to an &quot;aha, that&#x27;s some great insight&quot; moment).<p>A good sign is also if the author had something interesting going before 2022, and they didn&#x27;t fall into the earliest low quality LLM waves. Unfortunately some genuinely talented people have started using LLMs to turbocharge their output while leaving some quality on the table nowadays, so I don&#x27;t really know. I&#x27;m becoming a lot more sceptical of the Internet, to be honest.",
+        "created_at": "2026-04-06T13:47:37Z",
+        "created_at_i": 1775483257,
+        "objectID": "47660895",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:51:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fwip"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sure, and an LLM-written article will use that pattern eight times in two pages."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fwip",
+          "story_47659807"
+        ],
+        "author": "fwip",
+        "comment_text": "Sure, and an LLM-written article will use that pattern eight times in two pages.",
+        "created_at": "2026-04-06T13:47:35Z",
+        "created_at_i": 1775483255,
+        "objectID": "47660894",
+        "parent_id": 47660709,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T14:55:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "noufalibrahim"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It's a lot easier to detect when you mostly interact with non English speakers.<p>I asked an LLM to rewrite this to make it nicer and got the following. I'd flag the first because I don't usually hear &quot;majority of your interactions&quot; in conversation but I might miss it. The second will probably get by me. As for the third,  I never say &quot;considerably easier&quot; unless I'm trying to sound artificially posh.<p>1. It becomes much more noticeable when the majority of your interactions are with non-native English speakers.<p>2.It tends to stand out more when most of the people you interact with speak English as a second language.<p>3. It's considerably easier to identify when most of your interactions involve people whose primary language isn't English."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_noufalibrahim",
+          "story_47659807"
+        ],
+        "author": "noufalibrahim",
+        "comment_text": "It&#x27;s a lot easier to detect when you mostly interact with non English speakers.<p>I asked an LLM to rewrite this to make it nicer and got the following. I&#x27;d flag the first because I don&#x27;t usually hear &quot;majority of your interactions&quot; in conversation but I might miss it. The second will probably get by me. As for the third,  I never say &quot;considerably easier&quot; unless I&#x27;m trying to sound artificially posh.<p>1. It becomes much more noticeable when the majority of your interactions are with non-native English speakers.<p>2.It tends to stand out more when most of the people you interact with speak English as a second language.<p>3. It&#x27;s considerably easier to identify when most of your interactions involve people whose primary language isn&#x27;t English.",
+        "created_at": "2026-04-06T13:46:39Z",
+        "created_at_i": 1775483199,
+        "objectID": "47660882",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:51:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Havoc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You don't really.<p>There are a couple of tells like em dashes and similar patterns but you should be able to suppress that with even a simple prompt."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Havoc",
+          "story_47659807"
+        ],
+        "author": "Havoc",
+        "comment_text": "You don&#x27;t really.<p>There are a couple of tells like em dashes and similar patterns but you should be able to suppress that with even a simple prompt.",
+        "created_at": "2026-04-06T13:45:54Z",
+        "created_at_i": 1775483154,
+        "objectID": "47660872",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:51:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "LoganDark"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're absolutely right. They are absolutely right"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_LoganDark",
+          "story_47659807"
+        ],
+        "author": "LoganDark",
+        "comment_text": "You&#x27;re absolutely right. They are absolutely right",
+        "created_at": "2026-04-06T13:44:19Z",
+        "created_at_i": 1775483059,
+        "objectID": "47660855",
+        "parent_id": 47660644,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T23:06:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gwbas1c"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't think you can 100% detect AI content, because at some point someone will just prompt the AI to not sound like AI.<p>I think the better question to ask is: What are your goals? Is it to prevent AI SPAM, or to discourage people copy-pasting AI? Those are two very different problems: in the case of AI SPAM you look for patterns of usage, (IE, unusually high interaction from a single IP, timing patterns around when things are read and the response comes in,) and in the other case it all comes down to cultural norms."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gwbas1c",
+          "story_47659807"
+        ],
+        "author": "gwbas1c",
+        "comment_text": "I don&#x27;t think you can 100% detect AI content, because at some point someone will just prompt the AI to not sound like AI.<p>I think the better question to ask is: What are your goals? Is it to prevent AI SPAM, or to discourage people copy-pasting AI? Those are two very different problems: in the case of AI SPAM you look for patterns of usage, (IE, unusually high interaction from a single IP, timing patterns around when things are read and the response comes in,) and in the other case it all comes down to cultural norms.",
+        "created_at": "2026-04-06T13:38:28Z",
+        "created_at_i": 1775482708,
+        "objectID": "47660773",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:50:20Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "fleebee"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think the trope in this comment[0] from another thread is the most obvious tell, perhaps even more than &quot;not x, but y&quot;.<p>&gt; It’s the fake drama. Punchy sentences. Contrast. And then? A banal payoff.<p>It's great because it's a double-decker of annoying marketing copy style and nonsensical content.<p>[0]: <a href=\"https://news.ycombinator.com/item?id=47615075\">https://news.ycombinator.com/item?id=47615075</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_fleebee",
+          "story_47659807"
+        ],
+        "author": "fleebee",
+        "comment_text": "I think the trope in this comment[0] from another thread is the most obvious tell, perhaps even more than &quot;not x, but y&quot;.<p>&gt; It’s the fake drama. Punchy sentences. Contrast. And then? A banal payoff.<p>It&#x27;s great because it&#x27;s a double-decker of annoying marketing copy style and nonsensical content.<p>[0]: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47615075\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=47615075</a>",
+        "created_at": "2026-04-06T13:37:32Z",
+        "created_at_i": 1775482652,
+        "objectID": "47660764",
+        "parent_id": 47660374,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:54:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lelanthran"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm going to ask the qustion I ask everyone who makes the claim that they wrote like that for years: Can you show us a link from prior 2022 that you wrote like that?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lelanthran",
+          "story_47659807"
+        ],
+        "author": "lelanthran",
+        "children": [
+          47661654,
+          47662719
+        ],
+        "comment_text": "I&#x27;m going to ask the qustion I ask everyone who makes the claim that they wrote like that for years: Can you show us a link from prior 2022 that you wrote like that?",
+        "created_at": "2026-04-06T13:36:53Z",
+        "created_at_i": 1775482613,
+        "objectID": "47660755",
+        "parent_id": 47660709,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T17:29:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jcims"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;Even the “it’s not X, it’s Y” structure<p>I wonder where some of this comes from.  Another one is 'real unlock', it's not a common phrasing that I really recall.<p><a href=\"https://trends.google.com/explore?q=real%2520unlock&amp;date=all&amp;geo=US\" rel=\"nofollow\">https://trends.google.com/explore?q=real%2520unlock&amp;date=all...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jcims",
+          "story_47659807"
+        ],
+        "author": "jcims",
+        "comment_text": "&gt;Even the “it’s not X, it’s Y” structure<p>I wonder where some of this comes from.  Another one is &#x27;real unlock&#x27;, it&#x27;s not a common phrasing that I really recall.<p><a href=\"https:&#x2F;&#x2F;trends.google.com&#x2F;explore?q=real%2520unlock&amp;date=all&amp;geo=US\" rel=\"nofollow\">https:&#x2F;&#x2F;trends.google.com&#x2F;explore?q=real%2520unlock&amp;date=all...</a>",
+        "created_at": "2026-04-06T13:36:50Z",
+        "created_at_i": 1775482610,
+        "objectID": "47660753",
+        "parent_id": 47660374,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T14:07:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lelanthran"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;  Ironically LLM accusations are now a sign of the high quality written word.<p>Citation needed. The LLM accusations come from the specific cadence they use. You can remove all em-dashes from a piece of text and it still becomes clear when something is LLM written.<p>Can they be prompted to be less obvious? Sure, but hardly anyone does that.<p>It's more &quot;The Core Insight&quot;, &quot;The Key Takeaway&quot;, etc. than it is about emdashes.<p>Incidentally, the only people annoyed about &quot;witch-hunts&quot; tend to be those who are unable to recognise cadence in the written word."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lelanthran",
+          "story_47659807"
+        ],
+        "author": "lelanthran",
+        "children": [
+          47661330
+        ],
+        "comment_text": "&gt;  Ironically LLM accusations are now a sign of the high quality written word.<p>Citation needed. The LLM accusations come from the specific cadence they use. You can remove all em-dashes from a piece of text and it still becomes clear when something is LLM written.<p>Can they be prompted to be less obvious? Sure, but hardly anyone does that.<p>It&#x27;s more &quot;The Core Insight&quot;, &quot;The Key Takeaway&quot;, etc. than it is about emdashes.<p>Incidentally, the only people annoyed about &quot;witch-hunts&quot; tend to be those who are unable to recognise cadence in the written word.",
+        "created_at": "2026-04-06T13:35:29Z",
+        "created_at_i": 1775482529,
+        "objectID": "47660726",
+        "parent_id": 47660189,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T15:37:05Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "leumon"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You can try to use an ai detector, here is a leaderboard of the best ones according to this benchmark: <a href=\"https://raid-bench.xyz/leaderboard\" rel=\"nofollow\">https://raid-bench.xyz/leaderboard</a>\nResults should of course always be taken with a grain of salt, but in most cases detectors are quite good in my opinion."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_leumon",
+          "story_47659807"
+        ],
+        "author": "leumon",
+        "comment_text": "You can try to use an ai detector, here is a leaderboard of the best ones according to this benchmark: <a href=\"https:&#x2F;&#x2F;raid-bench.xyz&#x2F;leaderboard\" rel=\"nofollow\">https:&#x2F;&#x2F;raid-bench.xyz&#x2F;leaderboard</a>\nResults should of course always be taken with a grain of salt, but in most cases detectors are quite good in my opinion.",
+        "created_at": "2026-04-06T13:35:18Z",
+        "created_at_i": 1775482518,
+        "objectID": "47660723",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T14:08:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Filligree"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’ve used titles like that for thirty years."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Filligree",
+          "story_47659807"
+        ],
+        "author": "Filligree",
+        "children": [
+          47660755,
+          47660894
+        ],
+        "comment_text": "I’ve used titles like that for thirty years.",
+        "created_at": "2026-04-06T13:34:37Z",
+        "created_at_i": 1775482477,
+        "objectID": "47660709",
+        "parent_id": 47660657,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T03:42:22Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mghackerlady"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Especially where the emoji serves practically no purpose other than to get your attention. If it is especially abstract what the emoji is there to represent, I start looking for other signs"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mghackerlady",
+          "story_47659807"
+        ],
+        "author": "mghackerlady",
+        "comment_text": "Especially where the emoji serves practically no purpose other than to get your attention. If it is especially abstract what the emoji is there to represent, I start looking for other signs",
+        "created_at": "2026-04-06T13:34:30Z",
+        "created_at_i": 1775482470,
+        "objectID": "47660707",
+        "parent_id": 47660637,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:36:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rwc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Contrastive negation continues to be a dead giveaway."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rwc",
+          "story_47659807"
+        ],
+        "author": "rwc",
+        "comment_text": "Contrastive negation continues to be a dead giveaway.",
+        "created_at": "2026-04-06T13:32:23Z",
+        "created_at_i": 1775482343,
+        "objectID": "47660681",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:36:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mghackerlady"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Overuse of &quot;it's not X, it's Y&quot; kind of writing, strange shifts in writing or thinking patterns, and excessive formatting (or, when I'm on wikipedia especially, ineffective formatting (such as using MD where it isn't supported))"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mghackerlady",
+          "story_47659807"
+        ],
+        "author": "mghackerlady",
+        "comment_text": "Overuse of &quot;it&#x27;s not X, it&#x27;s Y&quot; kind of writing, strange shifts in writing or thinking patterns, and excessive formatting (or, when I&#x27;m on wikipedia especially, ineffective formatting (such as using MD where it isn&#x27;t supported))",
+        "created_at": "2026-04-06T13:32:11Z",
+        "created_at_i": 1775482331,
+        "objectID": "47660677",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:58:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "EagnaIonat"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt;  0 people use emoji to create a bulleted list.<p>I haven't seen this yet, but I guess the only reason I haven't done it is because it never crossed my mind.<p>What I have found an easy detection is non-breaking spaces. They tend to get littered through the passages of text without reason."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_EagnaIonat",
+          "story_47659807"
+        ],
+        "author": "EagnaIonat",
+        "comment_text": "&gt;  0 people use emoji to create a bulleted list.<p>I haven&#x27;t seen this yet, but I guess the only reason I haven&#x27;t done it is because it never crossed my mind.<p>What I have found an easy detection is non-breaking spaces. They tend to get littered through the passages of text without reason.",
+        "created_at": "2026-04-06T13:31:42Z",
+        "created_at_i": 1775482302,
+        "objectID": "47660674",
+        "parent_id": 47660374,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:47:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alex43578"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "One of my subtle favorites is the\n“H2 Heading with: Colorful Description”<p>Eg - The Strait of Hormuz: Chokepoint or Opportunity?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alex43578",
+          "story_47659807"
+        ],
+        "author": "alex43578",
+        "children": [
+          47660709
+        ],
+        "comment_text": "One of my subtle favorites is the\n“H2 Heading with: Colorful Description”<p>Eg - The Strait of Hormuz: Chokepoint or Opportunity?",
+        "created_at": "2026-04-06T13:30:20Z",
+        "created_at_i": 1775482220,
+        "objectID": "47660657",
+        "parent_id": 47660488,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:47:06Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "blanched"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I don't think there's any reliable way to tell.<p>To me, it often feels like the text version of the uncanny valley.<p>But again, that's just &quot;feels&quot;, I don't have proof or anything."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_blanched",
+          "story_47659807"
+        ],
+        "author": "blanched",
+        "comment_text": "I don&#x27;t think there&#x27;s any reliable way to tell.<p>To me, it often feels like the text version of the uncanny valley.<p>But again, that&#x27;s just &quot;feels&quot;, I don&#x27;t have proof or anything.",
+        "created_at": "2026-04-06T13:29:55Z",
+        "created_at_i": 1775482195,
+        "objectID": "47660655",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:42:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "singpolyma3"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're absolutely right. That is an em dash"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_singpolyma3",
+          "story_47659807"
+        ],
+        "author": "singpolyma3",
+        "children": [
+          47660855
+        ],
+        "comment_text": "You&#x27;re absolutely right. That is an em dash",
+        "created_at": "2026-04-06T13:28:51Z",
+        "created_at_i": 1775482131,
+        "objectID": "47660644",
+        "parent_id": 47660487,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T23:06:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "block_dagger"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Em dashes, “it’s x, not y”, excessive emojis and arrows."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_block_dagger",
+          "story_47659807"
+        ],
+        "author": "block_dagger",
+        "children": [
+          47660707
+        ],
+        "comment_text": "Em dashes, “it’s x, not y”, excessive emojis and arrows.",
+        "created_at": "2026-04-06T13:28:09Z",
+        "created_at_i": 1775482089,
+        "objectID": "47660637",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:35:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alex43578"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think that’s a RLHF issue - if you ask people “which looks better”, they too-frequently picked the emoji list. Same with the overuse of bolding. I think it’s also why the more consumer-facing models are so fawning: people like to be praised."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alex43578",
+          "story_47659807"
+        ],
+        "author": "alex43578",
+        "comment_text": "I think that’s a RLHF issue - if you ask people “which looks better”, they too-frequently picked the emoji list. Same with the overuse of bolding. I think it’s also why the more consumer-facing models are so fawning: people like to be praised.",
+        "created_at": "2026-04-06T13:27:58Z",
+        "created_at_i": 1775482078,
+        "objectID": "47660633",
+        "parent_id": 47660518,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T14:31:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sumeno"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You're absolutely right! I unintentionally used an en-dash instead of an em-dash. Here is the em-dash you requested: –"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sumeno",
+          "story_47659807"
+        ],
+        "author": "sumeno",
+        "comment_text": "You&#x27;re absolutely right! I unintentionally used an en-dash instead of an em-dash. Here is the em-dash you requested: –",
+        "created_at": "2026-04-06T13:27:34Z",
+        "created_at_i": 1775482054,
+        "objectID": "47660629",
+        "parent_id": 47660354,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T02:06:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "elC0mpa"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks a lot for the detailed answer, will take a look at the examples"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_elC0mpa",
+          "story_47659807"
+        ],
+        "author": "elC0mpa",
+        "comment_text": "Thanks a lot for the detailed answer, will take a look at the examples",
+        "created_at": "2026-04-06T13:26:57Z",
+        "created_at_i": 1775482017,
+        "objectID": "47660619",
+        "parent_id": 47660424,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:30:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rcxdude"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There are some systems which can use the LLMs themselves to detect writing (basically, if the text matches what the LLM would predict too well, it's probably LLM generated), but they are far from infallible (with both false positives and false negatives). There's also certain tropes and quirks which LLMs tend to over-use which can be fairly obvious tells but they can be suppressed and they do represent how some people actually write."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rcxdude",
+          "story_47659807"
+        ],
+        "author": "rcxdude",
+        "comment_text": "There are some systems which can use the LLMs themselves to detect writing (basically, if the text matches what the LLM would predict too well, it&#x27;s probably LLM generated), but they are far from infallible (with both false positives and false negatives). There&#x27;s also certain tropes and quirks which LLMs tend to over-use which can be fairly obvious tells but they can be suppressed and they do represent how some people actually write.",
+        "created_at": "2026-04-06T13:26:27Z",
+        "created_at_i": 1775481987,
+        "objectID": "47660612",
+        "parent_id": 47659807,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:30:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "spindump8930"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Only for poor quality systems. Unfortunately there are many systems that tried to make easy hype, but are the equivalent of an ML 101 classifier class project.<p>If one measures for perplexity (how likely text is under a certain language model), common text in a training set will be very likely. But you can easily create better models."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_spindump8930",
+          "story_47659807"
+        ],
+        "author": "spindump8930",
+        "comment_text": "Only for poor quality systems. Unfortunately there are many systems that tried to make easy hype, but are the equivalent of an ML 101 classifier class project.<p>If one measures for perplexity (how likely text is under a certain language model), common text in a training set will be very likely. But you can easily create better models.",
+        "created_at": "2026-04-06T13:24:37Z",
+        "created_at_i": 1775481877,
+        "objectID": "47660603",
+        "parent_id": 47660459,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:58:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "roncesvalles"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Exactly, it's the monotony of the style that gives it away."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_roncesvalles",
+          "story_47659807"
+        ],
+        "author": "roncesvalles",
+        "comment_text": "Exactly, it&#x27;s the monotony of the style that gives it away.",
+        "created_at": "2026-04-06T13:24:11Z",
+        "created_at_i": 1775481851,
+        "objectID": "47660597",
+        "parent_id": 47660488,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:34:50Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Joel_Mckay"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Indeed, isomorphic plagiarism by its nature forms strong vector search paths that were made from stealing both global websites, real peoples work, and LLM user-base input/markdown.<p>However, reasoning models adding a random typo to seem less automated, still do not hide the fairly repeatable quantized artifacts from the training process. For LLM, it is rather trivial to find where people originally scraped the data from if they still have annotated training metadata.<p>Finally, reading LLM output is usually clear once one abandons the trap of thinking &quot;I think the author meant [this/that]&quot;, and recognizing a works tone reads like a fake author had a stroke [0]. =3<p>[0] <a href=\"https://en.wikipedia.org/wiki/Stroke\" rel=\"nofollow\">https://en.wikipedia.org/wiki/Stroke</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Joel_Mckay",
+          "story_47659807"
+        ],
+        "author": "Joel_Mckay",
+        "comment_text": "Indeed, isomorphic plagiarism by its nature forms strong vector search paths that were made from stealing both global websites, real peoples work, and LLM user-base input&#x2F;markdown.<p>However, reasoning models adding a random typo to seem less automated, still do not hide the fairly repeatable quantized artifacts from the training process. For LLM, it is rather trivial to find where people originally scraped the data from if they still have annotated training metadata.<p>Finally, reading LLM output is usually clear once one abandons the trap of thinking &quot;I think the author meant [this&#x2F;that]&quot;, and recognizing a works tone reads like a fake author had a stroke [0]. =3<p>[0] <a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Stroke\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Stroke</a>",
+        "created_at": "2026-04-06T13:22:26Z",
+        "created_at_i": 1775481746,
+        "objectID": "47660582",
+        "parent_id": 47660189,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-06T13:58:19Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mulr00ney"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; Unfortunately many believe they can, and it is impossible to disprove. So now real people need to write avoiding certain styles, because a lot of other people have decided those are &quot;LLM clues.&quot; Bullets, EM Dash, certain common English phases or words (e.g. Delve, Vibrant, Additionally, etc)[0].<p>I think people will be able to detect the lowest-user-effort version of LLM text pretty reliably after a while (ie what you describe; many people have a good sense of LLM clues). But there's probably a *ton* of LLM text out there where some of the instructions given were &quot;throw a few errors in&quot;, &quot;don't use bullet points or em dashes&quot;, &quot;don't do the `it's not this, it's that` thing&quot; going undetected.<p>And then those changes will get built into ChatGPT's main instructions, and in a few months people will start to pick up on other indicators, and then slightly smarter/more motivated users will give new instructions to hide their LLM usage... (or everyone stops caring, which is an outcome I find hard to wrap my head around)"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: How do systems (or people) detect when a text is written by an LLM"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mulr00ney",
+          "story_47659807"
+        ],
+        "author": "mulr00ney",
+        "comment_text": "&gt; Unfortunately many believe they can, and it is impossible to disprove. So now real people need to write avoiding certain styles, because a lot of other people have decided those are &quot;LLM clues.&quot; Bullets, EM Dash, certain common English phases or words (e.g. Delve, Vibrant, Additionally, etc)[0].<p>I think people will be able to detect the lowest-user-effort version of LLM text pretty reliably after a while (ie what you describe; many people have a good sense of LLM clues). But there&#x27;s probably a *ton* of LLM text out there where some of the instructions given were &quot;throw a few errors in&quot;, &quot;don&#x27;t use bullet points or em dashes&quot;, &quot;don&#x27;t do the `it&#x27;s not this, it&#x27;s that` thing&quot; going undetected.<p>And then those changes will get built into ChatGPT&#x27;s main instructions, and in a few months people will start to pick up on other indicators, and then slightly smarter&#x2F;more motivated users will give new instructions to hide their LLM usage... (or everyone stops caring, which is an outcome I find hard to wrap my head around)",
+        "created_at": "2026-04-06T13:22:01Z",
+        "created_at_i": 1775481721,
+        "objectID": "47660575",
+        "parent_id": 47660189,
+        "story_id": 47659807,
+        "story_title": "Ask HN: How do systems (or people) detect when a text is written by an LLM",
+        "updated_at": "2026-04-07T02:06:07Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 62,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47659807&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 17
+      },
+      "afterFetch": {
+        "format": {
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

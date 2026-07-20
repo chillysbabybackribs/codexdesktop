@@ -1,57 +1,50 @@
-import type { ThreadTokenUsage } from '../../shared/session-protocol';
-import type { LiveTurnGlance } from './audit-trigger';
-import { ContextTooltip } from './ContextTooltip';
+import type { ThreadTokenUsage } from '../../shared/session-protocol'
+import type { LiveTurnGlance } from './audit-trigger'
 
 export function AgentContextPill({
   usage,
   disabled,
   compacting,
-  onCompact,
+  onCompact
 }: {
-  usage: ThreadTokenUsage | null;
-  disabled: boolean;
-  compacting: boolean;
-  onCompact: () => Promise<void>;
+  usage: ThreadTokenUsage | null
+  disabled: boolean
+  compacting: boolean
+  onCompact: () => Promise<void>
 }): React.JSX.Element | null {
-  const window = usage?.modelContextWindow;
-  const contextTokens = usage?.last.totalTokens ?? 0;
-  if (!usage || !window || contextTokens <= 0) return null;
+  const window = usage?.modelContextWindow
+  const contextTokens = usage?.last.totalTokens ?? 0
+  if (!usage || !window || contextTokens <= 0) return null
 
-  const percent = Math.min(100, Math.round((contextTokens / window) * 100));
-  const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : '';
+  const percent = Math.min(100, Math.round((contextTokens / window) * 100))
+  const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : ''
 
   return (
-    <ContextTooltip available compacting={compacting} disabledTrigger={disabled} percent={percent}>
-      <button
-        type="button"
-        className={`context-pill agent-context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
-        disabled={disabled}
-        aria-label={compacting ? 'Compacting context' : `Context ${percent}% used. Compact now.`}
-        onClick={() => void onCompact()}
-      >
-        <span className="context-pill-track" aria-hidden="true">
-          <span className="context-pill-fill" style={{ width: `${percent}%` }} />
-        </span>
-        <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
-      </button>
-    </ContextTooltip>
-  );
+    <button
+      type="button"
+      className={`context-pill agent-context-pill ${level} ${compacting ? 'is-compacting' : ''}`}
+      disabled={disabled}
+      title={compacting
+        ? 'Compacting this agent conversation…'
+        : `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact this agent conversation.`}
+      onClick={() => void onCompact()}
+    >
+      <span className="context-pill-track" aria-hidden="true">
+        <span className="context-pill-fill" style={{ width: `${percent}%` }} />
+      </span>
+      <span className="context-pill-label">{compacting ? '…' : `${percent}%`}</span>
+    </button>
+  )
 }
 
 // The glance caption is prose ("Checking git status") except when narration
 // fell back to the raw command line — keep that in code so it reads as one.
-export function GlanceActionLine({
-  text,
-  className,
-}: {
-  text: string;
-  className: string;
-}): React.JSX.Element {
+export function GlanceActionLine({ text, className }: { text: string; className: string }): React.JSX.Element {
   return text.startsWith('$ ') ? (
     <code className={className}>{text}</code>
   ) : (
     <span className={className}>{text}</span>
-  );
+  )
 }
 
 // Centered standby for an armed auditor with no conversation yet: waiting for
@@ -59,10 +52,10 @@ export function GlanceActionLine({
 // `note` explains the last turn that completed without triggering an audit.
 export function AuditStandby({
   live,
-  note,
+  note
 }: {
-  live: LiveTurnGlance | null;
-  note: string | null;
+  live: LiveTurnGlance | null
+  note: string | null
 }): React.JSX.Element {
   return (
     <div className="agent-audit-standby" role="status">
@@ -82,11 +75,9 @@ export function AuditStandby({
       ) : (
         <>
           <span className="agent-standby-title">Waiting for the main chat</span>
-          <span className="agent-standby-meta">
-            {note ?? 'Reviews every completed turn — brief when trivial'}
-          </span>
+          <span className="agent-standby-meta">{note ?? 'Reviews every completed turn — brief when trivial'}</span>
         </>
       )}
     </div>
-  );
+  )
 }

@@ -48,21 +48,8 @@ export function itemNotificationId(notification: ItemNotification): string {
 
 export function isImmediateItemNotification(notification: ItemNotification): boolean {
   return notification.method === 'item/started' ||
-    notification.method === 'item/completed'
-}
-
-// Apply one display frame's worth of streaming notifications in transport
-// order. Keeping this as one reducer pass means text, reasoning, terminal
-// output, and growing diff snapshots produce one transcript store update.
-export function reduceItemNotificationBatch(
-  items: ChatItem[],
-  notifications: readonly ItemNotification[]
-): ChatItem[] {
-  let next = items
-  for (const notification of notifications) {
-    next = reduceItemNotificationItems(next, notification)
-  }
-  return next
+    notification.method === 'item/completed' ||
+    notification.method === 'item/fileChange/patchUpdated'
 }
 
 export function reduceItemNotificationItems(items: ChatItem[], notification: ItemNotification): ChatItem[] {
@@ -96,19 +83,6 @@ export function reduceItemNotificationMeta(
 ): Record<string, ItemMeta> {
   const itemId = itemNotificationId(notification)
   const existing = current[itemId]
-
-  // Streaming deltas normally do not change lifecycle metadata. Returning the
-  // existing map avoids waking every transcript subscriber once per transport
-  // chunk before the frame-batched content update has anything new to draw.
-  if (
-    existing?.turnId === notification.params.turnId &&
-    notification.method !== 'item/started' &&
-    notification.method !== 'item/completed' &&
-    notification.method !== 'item/mcpToolCall/progress'
-  ) {
-    return current
-  }
-
   const next: ItemMeta = { ...existing, turnId: notification.params.turnId }
 
   switch (notification.method) {

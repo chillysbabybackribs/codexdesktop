@@ -273,8 +273,7 @@ test('feedback sends only on flag, idle, same thread, within the bounce cap', ()
     reportsToMain: true,
     mainIdle: true,
     sameThread: true,
-    auditedTurnWasFeedback: false,
-    loopMayContinue: false
+    auditedTurnWasFeedback: false
   }
   assert.equal(shouldSendAuditFeedback(base), true)
   assert.equal(shouldSendAuditFeedback({ ...base, verdict: 'pass' }), false, 'pass converges the loop')
@@ -282,12 +281,7 @@ test('feedback sends only on flag, idle, same thread, within the bounce cap', ()
   assert.equal(shouldSendAuditFeedback({ ...base, reportsToMain: false }), false)
   assert.equal(shouldSendAuditFeedback({ ...base, mainIdle: false }), false, 'never interrupts a working doer')
   assert.equal(shouldSendAuditFeedback({ ...base, sameThread: false }), false, 'never crosses threads')
-  assert.equal(shouldSendAuditFeedback({ ...base, auditedTurnWasFeedback: true }), false, 'capped without controller approval')
-  assert.equal(
-    shouldSendAuditFeedback({ ...base, auditedTurnWasFeedback: true, loopMayContinue: true }),
-    true,
-    'controller-approved fix rounds pass the cap'
-  )
+  assert.equal(shouldSendAuditFeedback({ ...base, auditedTurnWasFeedback: true }), false, 'one bounce per user turn')
 })
 
 test('parseAuditFeedback recovers title and body for the main-chat card', () => {

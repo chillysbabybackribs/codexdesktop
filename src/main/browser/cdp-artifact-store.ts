@@ -1,10 +1,9 @@
 import { appendFile, mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
-import { basename, extname, join, relative, resolve } from 'node:path'
+import { extname, join, relative, resolve } from 'node:path'
 
 const maxScreenshotBytes = 20 * 1024 * 1024
 const maxPdfBytes = 25 * 1024 * 1024
 const maxTraceBytes = 100 * 1024 * 1024
-const maxDownloadBytes = 100 * 1024 * 1024
 const maxSnapshotBytes = 100 * 1024 * 1024
 const maxResponseBodyBytes = 25 * 1024 * 1024
 const maxBrowserResultBytes = 25 * 1024 * 1024
@@ -27,7 +26,7 @@ export type CdpFileArtifact = {
   artifactPath: string
   fileName: string
   mediaType: string
-  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body' | 'network-stream' | 'download' | 'browser-result'
+  kind: 'pdf' | 'trace' | 'snapshot' | 'response-body' | 'browser-result'
   bytes: number
   createdAt: string
 }
@@ -36,12 +35,6 @@ export type CdpStreamChunk = {
   data: string
   base64Encoded?: boolean
   eof: boolean
-}
-
-export type CdpDownloadReservation = {
-  savePathFor: (suggestedFilename: string) => string
-  complete: (mimeType?: string | null) => Promise<CdpFileArtifact>
-  cancel: () => Promise<void>
 }
 
 export class CdpArtifactStore {
@@ -128,51 +121,6 @@ export class CdpArtifactStore {
     const normalizedMimeType = normalizeMimeType(mimeType)
     const extension = responseBodyExtension(normalizedMimeType, url)
     return this.persistBufferArtifact(buffer, 'response-body', extension, normalizedMimeType, 'response-body')
-  }
-
-  async persistNetworkStream(serialized: string): Promise<CdpFileArtifact> {
-    const buffer = Buffer.from(serialized, 'utf8')
-    if (buffer.length === 0) throw new Error('Network stream capture returned no data')
-    if (buffer.length > maxResponseBodyBytes) throw new Error('Network stream capture exceeds the 25 MB artifact limit')
-    return this.persistBufferArtifact(buffer, 'network-stream', 'ndjson', 'application/x-ndjson', 'network-stream')
-  }
-
-  async prepareDownloadCapture(): Promise<CdpDownloadReservation> {
-    const root = this.root()
-    await pruneArtifacts(root)
-    await mkdir(root, { recursive: true })
-    const createdAt = new Date().toISOString()
-    const prefix = `download-${createdAt.replace(/[:.]/g, '-')}-${crypto.randomUUID().slice(0, 8)}`
-    let artifactPath: string | null = null
-
-    return {
-      savePathFor: (suggestedFilename: string) => {
-        if (artifactPath) return artifactPath
-        const extension = safeDownloadExtension(suggestedFilename)
-        artifactPath = join(root, `${prefix}.${extension}`)
-        return artifactPath
-      },
-      complete: async (mimeType?: string | null) => {
-        if (!artifactPath) throw new Error('Download capture completed before a save path was assigned')
-        const details = await stat(artifactPath)
-        if (!details.isFile() || details.size === 0) throw new Error('Browser download produced an empty artifact')
-        if (details.size > maxDownloadBytes) {
-          await rm(artifactPath, { force: true })
-          throw new Error('Browser download exceeds the 100 MB artifact limit')
-        }
-        return {
-          artifactPath,
-          fileName: basename(artifactPath),
-          mediaType: normalizeMimeType(mimeType),
-          kind: 'download',
-          bytes: details.size,
-          createdAt
-        }
-      },
-      cancel: async () => {
-        if (artifactPath) await rm(artifactPath, { force: true })
-      }
-    }
   }
 
   async persistBrowserResult(serialized: string): Promise<CdpFileArtifact> {
@@ -331,11 +279,6 @@ function responseBodyExtension(mimeType: string, url?: string | null): string {
     // A missing or non-standard URL simply falls back to binary.
   }
   return 'bin'
-}
-
-function safeDownloadExtension(filename: string): string {
-  const extension = extname(filename).slice(1).toLowerCase()
-  return /^[a-z0-9]{1,12}$/.test(extension) ? extension : 'bin'
 }
 
 async function pruneArtifacts(root: string): Promise<void> {

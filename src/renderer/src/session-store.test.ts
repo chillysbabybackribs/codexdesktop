@@ -92,55 +92,6 @@ test('agent message deltas accumulate text through the item reducers', () => {
   assert.equal(state.itemMeta['m-1']?.turnId, 'turn-1')
 })
 
-test('a live item evicts the same turn\'s resume-enumerated copies', () => {
-  // A thread resumed mid-turn seeds items with the server's persisted item-N
-  // ids; the live stream then re-delivers the same rows under stable provider
-  // ids. Both copies rendering at once was the restored-thread duplication bug.
-  let state = emptySessionState({ threadId: 'th-1' })
-  state = reduceSessionNotification(
-    state,
-    notify('turn/started', {
-      threadId: 'th-1',
-      turn: makeTurn({
-        id: 'turn-live',
-        items: [
-          { type: 'userMessage', id: 'item-0', content: [{ type: 'text', text: 'hi' }] },
-          agentMessage('item-1', 'partial answer'),
-        ] as unknown as ThreadItem[],
-      }),
-    }),
-    context
-  )
-  state = reduceSessionNotification(
-    state,
-    notify('item/started', {
-      threadId: 'th-1',
-      turnId: 'turn-live',
-      startedAtMs: 1_000_100,
-      item: { type: 'userMessage', id: 'um_live1', content: [{ type: 'text', text: 'hi' }] },
-    }),
-    context
-  )
-  assert.deepEqual(
-    state.items.map((item) => item.id),
-    ['um_live1'],
-    'resume-enumerated rows of the turn are replaced by the live stream'
-  )
-
-  // A resume-shaped completion (item-N id) must NOT evict its own family.
-  state = reduceSessionNotification(
-    state,
-    notify('item/completed', {
-      threadId: 'th-1',
-      turnId: 'turn-other',
-      completedAtMs: 1_000_200,
-      item: agentMessage('item-3', 'restored row'),
-    }),
-    context
-  )
-  assert.deepEqual(state.items.map((item) => item.id), ['um_live1', 'item-3'])
-})
-
 test('an authoritative user message strips the optimistic placeholder', () => {
   const optimistic = {
     type: 'userMessage',

@@ -1,0 +1,61 @@
+{
+  "observedAt": "2026-07-11T16:30:14.084795+00:00",
+  "totalRecords": 102,
+  "bySource": {
+    "freelancer:accounting": 6,
+    "freelancer:data-entry": 7,
+    "freelancer:intuit-quickbooks": 6,
+    "freelancer:virtual-assistant": 8,
+    "freelancer:excel": 2,
+    "freelancer:payroll": 8,
+    "freelancer:tax": 5,
+    "freelancer:legal": 8,
+    "freelancer:project-management": 8,
+    "freelancer:web-scraping": 8,
+    "peopleperhour:business": 36
+  },
+  "byWindow": {
+    "current": 102
+  },
+  "byActor": {
+    "buyer_operator": 102
+  },
+  "byStatement": {
+    "own_purchase": 102
+  },
+  "byVerification": {
+    "verified": 102
+  },
+  "byClassificationConfidence": {
+    "high": 102
+  },
+  "byMoneyType": {
+    "exact_job_budget": 70,
+    "none": 32
+  },
+  "exactJobMoney": 70,
+  "firsthand": 102,
+  "uniqueIndependenceKeys": 102,
+  "uniqueHostDomains": 2,
+  "missingFields": {
+    "buyer": 0,
+    "trigger": 0,
+    "input": 102,
+    "repeatedAction": 0,
+    "output": 0,
+    "destination": 0,
+    "frequency": 102,
+    "timeSpent": 102,
+    "priceOrWage": 32,
+    "currentTools": 36,
+    "remainingManualWork": 0
+  },
+  "queryCount": 13,
+  "failureCount": 1,
+  "suspectedDuplicates": 0,
+  "adaptiveStopping": {
+    "batchDefinition": "each independent marketplace category/page",
+    "consecutiveSaturatedBatches": 0,
+    "stoppedBecause": "assigned lane time ceiling after source rotation; additional categories remained productive"
+  }
+}

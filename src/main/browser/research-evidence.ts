@@ -169,16 +169,10 @@ function bestDocumentPassage(
   maxChars: number
 ): PassageCandidate | null {
   const { document, lines } = indexed
-  const passageFocusTokens = focusTokens
-  const titleMatches = focusTokens.filter((token) => indexed.titleTokens.has(token))
-  // A strongly matching title is meaningful discovery evidence, especially
-  // for issues, forum threads, reviews, and release notes. It should lower the
-  // bar for locating a useful body window, not remove those terms and make the
-  // body satisfy an unrelated remainder of the request.
-  const requiredMatches = titleMatches.length >= 2
-    ? 1
-    : Math.min(3, Math.max(1, Math.ceil(passageFocusTokens.length * 0.6)))
+  const passageFocusTokens = focusTokens.filter((token) => !indexed.titleTokens.has(token))
+  const requiredMatches = Math.min(3, Math.max(1, Math.ceil(passageFocusTokens.length * 0.6)))
   const passageClauses = focusClauses
+    .map((clause) => clause.filter((token) => !indexed.titleTokens.has(token)))
     .filter((clause) => clause.length > 0)
   let best: {
     lineStart: number
@@ -201,6 +195,7 @@ function bestDocumentPassage(
     if (!clausesCovered(windowTokens, passageClauses)) continue
     const requiredExactTerms = passageFocusTokens.filter((token) => /\d/.test(token))
     if (requiredExactTerms.some((token) => !windowTokens.has(token))) continue
+
     const normalizedLine = indexed.windowText[lineIndex] ?? ''
     const normalizedNeed = normalizeText(focusTokens.join(' '))
     const exactPhrase = normalizedNeed.length > 0 && normalizedLine.includes(normalizedNeed)
@@ -358,10 +353,7 @@ function tokenizeFocus(value: string): string[] {
 
 function tokenizeFocusClauses(value: string): string[][] {
   return value
-    // Keep explicit multi-part questions together for passage-window coverage,
-    // but do not turn ordinary alternative lists ("CPU, crashes, or slow")
-    // into mandatory clauses that every source must contain.
-    .split(/(?:[;?]|\b(?:and|or)\s+(?=(?:how|what|which|where|when|whether|why)\b))/i)
+    .split(/(?:[;?]|,\s*(?:and|or)\s+|\b(?:and|or)\s+(?=(?:how|what|which|where|when|whether|why)\b))/i)
     .map(tokenizeFocus)
     .filter((tokens) => tokens.length > 0)
 }

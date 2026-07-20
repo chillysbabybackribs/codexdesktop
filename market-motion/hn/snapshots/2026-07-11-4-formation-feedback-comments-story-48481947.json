@@ -1,0 +1,724 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48481947",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 89
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "karakoram"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "No. The flag is enough and given the change in the user demographics of HN, a proposed &quot;slop&quot; button or anything similar will just be abused in a very tribal manner to push down anything AI related."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_karakoram",
+          "story_48481947"
+        ],
+        "author": "karakoram",
+        "comment_text": "No. The flag is enough and given the change in the user demographics of HN, a proposed &quot;slop&quot; button or anything similar will just be abused in a very tribal manner to push down anything AI related.",
+        "created_at": "2026-06-20T00:06:56Z",
+        "created_at_i": 1781914016,
+        "objectID": "48604816",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-20T00:11:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; 11.9k Channels Blocked<p>I’m of the opinion that the underlying business of YouTube should suffer if they are unwilling to tackle this issue themselves. Shifting the onus to the user to play a cat and mouse game with extensions makes the overall experience worse, while still rewarding YouTube with views.<p>Maybe I’m too idealistic and my views are a drop in the bucket, but I think I will vote with my wallet/attention and spend it elsewhere.<p>95% of my viewing time is on the AppleTV as well, so extensions don’t help too much. I tried installed Untrap YouTube into Orion on my phone and using that as a makeshift YouTube app, but it didn’t really make my experience better in a way that made me actually want to use it over the vanilla experience."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_48481947"
+        ],
+        "author": "al_borland",
+        "comment_text": "&gt; 11.9k Channels Blocked<p>I’m of the opinion that the underlying business of YouTube should suffer if they are unwilling to tackle this issue themselves. Shifting the onus to the user to play a cat and mouse game with extensions makes the overall experience worse, while still rewarding YouTube with views.<p>Maybe I’m too idealistic and my views are a drop in the bucket, but I think I will vote with my wallet&#x2F;attention and spend it elsewhere.<p>95% of my viewing time is on the AppleTV as well, so extensions don’t help too much. I tried installed Untrap YouTube into Orion on my phone and using that as a makeshift YouTube app, but it didn’t really make my experience better in a way that made me actually want to use it over the vanilla experience.",
+        "created_at": "2026-06-12T17:48:23Z",
+        "created_at_i": 1781286503,
+        "objectID": "48507237",
+        "parent_id": 48501625,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T17:52:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "leephillips"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Joking or not, in fact neural networks as classifiers are obviously useful: detecting cancer in medical images, for example. And that approach would, I’m sure, work better here than my crude regex. But this use of AI is distinct from its use as a giant plagiariser and slop generator. What I and others are tired of seeing are endless stories about vibe coded games and whatnot."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_leephillips",
+          "story_48481947"
+        ],
+        "author": "leephillips",
+        "comment_text": "Joking or not, in fact neural networks as classifiers are obviously useful: detecting cancer in medical images, for example. And that approach would, I’m sure, work better here than my crude regex. But this use of AI is distinct from its use as a giant plagiariser and slop generator. What I and others are tired of seeing are endless stories about vibe coded games and whatnot.",
+        "created_at": "2026-06-12T15:25:31Z",
+        "created_at_i": 1781277931,
+        "objectID": "48505358",
+        "parent_id": 48503699,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T15:30:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "smithoc"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The problem is on a thread where there is 1 AI post, people will identify 10 posts as being AI.<p>People latch onto the word &quot;delve&quot; or an em-dash or the idiom of &quot;it's not X it's Y&quot; as being proof that something was written by AI, without ever considering that AI is largely just writing in the style of how internet commenters write since that's a lot of the training data.<p>Now we've got students re-writing their homework to avoid looking like AI and commenters self-censoring against words and phrases that trigger AI suspicion.<p>I'm deeply skeptical that people can correctly identify human-written vs latest AI model written HN comments with sufficient accuracy."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_smithoc",
+          "story_48481947"
+        ],
+        "author": "smithoc",
+        "comment_text": "The problem is on a thread where there is 1 AI post, people will identify 10 posts as being AI.<p>People latch onto the word &quot;delve&quot; or an em-dash or the idiom of &quot;it&#x27;s not X it&#x27;s Y&quot; as being proof that something was written by AI, without ever considering that AI is largely just writing in the style of how internet commenters write since that&#x27;s a lot of the training data.<p>Now we&#x27;ve got students re-writing their homework to avoid looking like AI and commenters self-censoring against words and phrases that trigger AI suspicion.<p>I&#x27;m deeply skeptical that people can correctly identify human-written vs latest AI model written HN comments with sufficient accuracy.",
+        "created_at": "2026-06-12T13:37:52Z",
+        "created_at_i": 1781271472,
+        "objectID": "48503918",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-16T14:01:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cinntaile"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You should use an LLM."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cinntaile",
+          "story_48481947"
+        ],
+        "author": "cinntaile",
+        "children": [
+          48505358
+        ],
+        "comment_text": "You should use an LLM.",
+        "created_at": "2026-06-12T13:11:44Z",
+        "created_at_i": 1781269904,
+        "objectID": "48503699",
+        "parent_id": 48500196,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-13T02:01:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nubinetwork"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Down voting submissions would be a better feature, so much slop gets posted here as gospel until someone realizes its slop generated."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nubinetwork",
+          "story_48481947"
+        ],
+        "author": "nubinetwork",
+        "comment_text": "Down voting submissions would be a better feature, so much slop gets posted here as gospel until someone realizes its slop generated.",
+        "created_at": "2026-06-12T12:04:30Z",
+        "created_at_i": 1781265870,
+        "objectID": "48503065",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-20T00:08:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "noir_lord"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "<a href=\"https://unhook.app/\" rel=\"nofollow\">https://unhook.app/</a> lets you disable features on YT (granular though the default is good).<p><a href=\"https://aisloplist.com/\" rel=\"nofollow\">https://aisloplist.com/</a> works as well but considering the torrent of AI shite posted on YT it only gets <i>some</i> of it but better than nothing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_noir_lord",
+          "story_48481947"
+        ],
+        "author": "noir_lord",
+        "children": [
+          48507237
+        ],
+        "comment_text": "<a href=\"https:&#x2F;&#x2F;unhook.app&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;unhook.app&#x2F;</a> lets you disable features on YT (granular though the default is good).<p><a href=\"https:&#x2F;&#x2F;aisloplist.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;aisloplist.com&#x2F;</a> works as well but considering the torrent of AI shite posted on YT it only gets <i>some</i> of it but better than nothing.",
+        "created_at": "2026-06-12T08:56:52Z",
+        "created_at_i": 1781254612,
+        "objectID": "48501625",
+        "parent_id": 48499762,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T17:49:18Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "leephillips"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, there are still plenty of AI stories getting past my filter. It’s just a regex on the titles."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_leephillips",
+          "story_48481947"
+        ],
+        "author": "leephillips",
+        "children": [
+          48503699
+        ],
+        "comment_text": "Yes, there are still plenty of AI stories getting past my filter. It’s just a regex on the titles.",
+        "created_at": "2026-06-12T05:16:18Z",
+        "created_at_i": 1781241378,
+        "objectID": "48500196",
+        "parent_id": 48499674,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T13:12:48Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I read they are supposed to be labeling AI stuff, but I assume this is with their tool for looking for the fingerprinting they add to AI generated content. I don’t expect this to help with actual people reading an AI generated script.<p>I don’t know that they care, as I still see a lot of engagement on these videos, where only one person will call a video out as AI and not even get many upvotes for it. It takes a lot of scrolling to find it. I expect YouTube might say what is AI, but not have a global filter to remove it… but I hope they prove me wrong."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_48481947"
+        ],
+        "author": "al_borland",
+        "comment_text": "I read they are supposed to be labeling AI stuff, but I assume this is with their tool for looking for the fingerprinting they add to AI generated content. I don’t expect this to help with actual people reading an AI generated script.<p>I don’t know that they care, as I still see a lot of engagement on these videos, where only one person will call a video out as AI and not even get many upvotes for it. It takes a lot of scrolling to find it. I expect YouTube might say what is AI, but not have a global filter to remove it… but I hope they prove me wrong.",
+        "created_at": "2026-06-12T05:06:46Z",
+        "created_at_i": 1781240806,
+        "objectID": "48500134",
+        "parent_id": 48500099,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T05:11:17Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jesterson"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Just one slop would be sufficient.<p>If we wanna know ai opinion we all can get it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jesterson",
+          "story_48481947"
+        ],
+        "author": "jesterson",
+        "comment_text": "Just one slop would be sufficient.<p>If we wanna know ai opinion we all can get it.",
+        "created_at": "2026-06-12T04:59:17Z",
+        "created_at_i": 1781240357,
+        "objectID": "48500103",
+        "parent_id": 48495119,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T12:01:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jesterson"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I wish there would be a mark on YouTube AI slop or a way to mark AI generated garbage.<p>Its is likely coming, but needed yesterday."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jesterson",
+          "story_48481947"
+        ],
+        "author": "jesterson",
+        "children": [
+          48500134
+        ],
+        "comment_text": "I wish there would be a mark on YouTube AI slop or a way to mark AI generated garbage.<p>Its is likely coming, but needed yesterday.",
+        "created_at": "2026-06-12T04:58:38Z",
+        "created_at_i": 1781240318,
+        "objectID": "48500099",
+        "parent_id": 48499762,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T18:17:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "al_borland"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’ve been looking at taking a step back from the internet as a whole, including HN, because I’m so tired of the AI slop.<p>HN and YouTube are basically the only sites I still use. I disabled my watch history on YouTube to kill the recommendations page to get away from a lot of the trash and just focus on my subscriptions. I’ll be unsubscribing to those writing scripts with AI as well, as I notice them.<p>I’d like to be able to flag things as AI slop on YouTube, so the person gets that feedback and can hopefully get back on the right track. On here, I’m not so sure if that type of reinforcement will matter, or if will be more obvious to the person why a post was flagged."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_al_borland",
+          "story_48481947"
+        ],
+        "author": "al_borland",
+        "children": [
+          48501625,
+          48500099
+        ],
+        "comment_text": "I’ve been looking at taking a step back from the internet as a whole, including HN, because I’m so tired of the AI slop.<p>HN and YouTube are basically the only sites I still use. I disabled my watch history on YouTube to kill the recommendations page to get away from a lot of the trash and just focus on my subscriptions. I’ll be unsubscribing to those writing scripts with AI as well, as I notice them.<p>I’d like to be able to flag things as AI slop on YouTube, so the person gets that feedback and can hopefully get back on the right track. On here, I’m not so sure if that type of reinforcement will matter, or if will be more obvious to the person why a post was flagged.",
+        "created_at": "2026-06-12T03:59:51Z",
+        "created_at_i": 1781236791,
+        "objectID": "48499762",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T08:57:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "satvikpendem"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It doesn't seem to work all that well, I still see posts about AI. Maybe it should read the text content then use a classifier to see whether it's AI related or not, basic LLMs work pretty well at that and you honestly could just use a classical AI classifier like Naive Bayes filter too."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_satvikpendem",
+          "story_48481947"
+        ],
+        "author": "satvikpendem",
+        "children": [
+          48500196
+        ],
+        "comment_text": "It doesn&#x27;t seem to work all that well, I still see posts about AI. Maybe it should read the text content then use a classifier to see whether it&#x27;s AI related or not, basic LLMs work pretty well at that and you honestly could just use a classical AI classifier like Naive Bayes filter too.",
+        "created_at": "2026-06-12T03:42:35Z",
+        "created_at_i": 1781235755,
+        "objectID": "48499674",
+        "parent_id": 48495282,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T05:16:46Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "leephillips"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Of course it does. If it’s slop it should be flagged (I say this after reading the edited submission).<p>In the meantime you can avoid at least some of the slop by using <a href=\"https://hn-ai.org/\" rel=\"nofollow\">https://hn-ai.org/</a> or one of the other anti-slop extensions or alternative sites."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_leephillips",
+          "story_48481947"
+        ],
+        "author": "leephillips",
+        "children": [
+          48499674
+        ],
+        "comment_text": "Of course it does. If it’s slop it should be flagged (I say this after reading the edited submission).<p>In the meantime you can avoid at least some of the slop by using <a href=\"https:&#x2F;&#x2F;hn-ai.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;hn-ai.org&#x2F;</a> or one of the other anti-slop extensions or alternative sites.",
+        "created_at": "2026-06-11T19:29:54Z",
+        "created_at_i": 1781206194,
+        "objectID": "48495282",
+        "parent_id": 48481984,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T18:16:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kylehotchkiss"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Too Many Slops and you can't post for a week. Yes."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kylehotchkiss",
+          "story_48481947"
+        ],
+        "author": "kylehotchkiss",
+        "children": [
+          48500103
+        ],
+        "comment_text": "Too Many Slops and you can&#x27;t post for a week. Yes.",
+        "created_at": "2026-06-11T19:17:40Z",
+        "created_at_i": 1781205460,
+        "objectID": "48495119",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T05:00:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "krapp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "We already have a problem with people refusing to engage with the content and only commenting on comments or the title. The last thing we need is to discourage people from reading the article even more than they already don't."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_krapp",
+          "story_48481947"
+        ],
+        "author": "krapp",
+        "comment_text": "We already have a problem with people refusing to engage with the content and only commenting on comments or the title. The last thing we need is to discourage people from reading the article even more than they already don&#x27;t.",
+        "created_at": "2026-06-11T19:09:00Z",
+        "created_at_i": 1781204940,
+        "objectID": "48495000",
+        "parent_id": 48493389,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-20T00:08:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CM30"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What if the submission said the most common reason an article was flagged next to the title?<p>That way if it's AI slop it'll say [AI slop], if it's spam it'll say [Spam], if it's dubiously legal/illegal content it'll say that, etc?<p>You could use that to decide if you want to give the submission a chance or not."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_CM30",
+          "story_48481947"
+        ],
+        "author": "CM30",
+        "comment_text": "What if the submission said the most common reason an article was flagged next to the title?<p>That way if it&#x27;s AI slop it&#x27;ll say [AI slop], if it&#x27;s spam it&#x27;ll say [Spam], if it&#x27;s dubiously legal&#x2F;illegal content it&#x27;ll say that, etc?<p>You could use that to decide if you want to give the submission a chance or not.",
+        "created_at": "2026-06-11T17:38:35Z",
+        "created_at_i": 1781199515,
+        "objectID": "48493631",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T10:37:31Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hyperhello"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you really know it’s dubious post a comment."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hyperhello",
+          "story_48481947"
+        ],
+        "author": "hyperhello",
+        "comment_text": "If you really know it’s dubious post a comment.",
+        "created_at": "2026-06-11T17:26:36Z",
+        "created_at_i": 1781198796,
+        "objectID": "48493419",
+        "parent_id": 48485633,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-11T17:28:45Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "hyperhello"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This is only an idea, but how about a Summarize button that does use AI to write a very concise blurb of the comment. Then if it looks stupid enough at first glance, just read the summary and move on."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_hyperhello",
+          "story_48481947"
+        ],
+        "author": "hyperhello",
+        "children": [
+          48495000
+        ],
+        "comment_text": "This is only an idea, but how about a Summarize button that does use AI to write a very concise blurb of the comment. Then if it looks stupid enough at first glance, just read the summary and move on.",
+        "created_at": "2026-06-11T17:24:48Z",
+        "created_at_i": 1781198688,
+        "objectID": "48493389",
+        "parent_id": 48481947,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-11T20:53:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bell-cot"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Yes, but low information <i>quality</i> is even worse than low information density.  If I happen to know the subject well, and the article contains glaring errors, obvious omissions, or miserable fudges - I'd like a quick way to tag it as dubious."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Would it be useful to have a slop button in addition to flag?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bell-cot",
+          "story_48481947"
+        ],
+        "author": "bell-cot",
+        "children": [
+          48493419
+        ],
+        "comment_text": "Yes, but low information <i>quality</i> is even worse than low information density.  If I happen to know the subject well, and the article contains glaring errors, obvious omissions, or miserable fudges - I&#x27;d like a quick way to tag it as dubious.",
+        "created_at": "2026-06-11T02:39:34Z",
+        "created_at_i": 1781145574,
+        "objectID": "48485633",
+        "parent_id": 48483566,
+        "story_id": 48481947,
+        "story_title": "Ask HN: Would it be useful to have a slop button in addition to flag?",
+        "updated_at": "2026-06-12T03:44:00Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 24,
+    "nbPages": 2,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48481947&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 18
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

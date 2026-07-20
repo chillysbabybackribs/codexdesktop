@@ -1,7 +1,4 @@
-import { execFileSync, spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
-import { readFileSync, unlinkSync } from 'node:fs'
-import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { createInterface } from 'node:readline'
 import type { CodexConnectionStatus } from '../../shared/ipc.js'
 import type { JsonRpcMessage } from './app-server-rpc.js'
@@ -13,44 +10,7 @@ type AppServerProcessOptions = {
   spawnProcess?: () => ChildProcessWithoutNullStreams
 }
 
-let codexBaseVersion: string | null | undefined
-
-function detectCodexBaseVersion(): string | null {
-  if (codexBaseVersion === undefined) {
-    try {
-      const output = execFileSync('codex', ['--version'], { encoding: 'utf8', timeout: 10_000 })
-      codexBaseVersion = output.match(/\d+\.\d+\.\d+/)?.[0] ?? null
-    } catch {
-      codexBaseVersion = null
-    }
-  }
-  return codexBaseVersion
-}
-
-// Other codex installs (e.g. the Cursor ChatGPT extension's alpha builds) share
-// ~/.codex/models_cache.json but serialize a different schema, so our app-server
-// fails the cache read with a "missing field" ERROR before its own client_version
-// check can discard it. codex refetches a version-mismatched cache regardless, so
-// dropping a foreign-version cache before spawning loses nothing.
-function dropForeignModelsCache(): void {
-  const version = detectCodexBaseVersion()
-  if (!version) return
-  const cachePath = join(process.env.CODEX_HOME ?? join(homedir(), '.codex'), 'models_cache.json')
-  try {
-    const cache = JSON.parse(readFileSync(cachePath, 'utf8')) as { client_version?: string }
-    if (cache.client_version === version) return
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return
-  }
-  try {
-    unlinkSync(cachePath)
-  } catch {
-    // another process may have replaced or removed it; codex handles either
-  }
-}
-
 function spawnAppServer(): ChildProcessWithoutNullStreams {
-  dropForeignModelsCache()
   return spawn('codex', ['app-server', '--stdio'], {
     stdio: ['pipe', 'pipe', 'pipe'],
     env: process.env

@@ -1,0 +1,45 @@
+{
+  "runId": "2026-07-11-5",
+  "totalRecords": 2123,
+  "laneRecords": {
+    "commercial-motion": 201,
+    "formation-feedback": 1820,
+    "buyer-reality": 102
+  },
+  "retrievedVerifiedRecords": 2123,
+  "uniqueIndependenceKeys": 2001,
+  "sourceDomains": 374,
+  "exactMoneyObservations": 80,
+  "completeJobSentences": 0,
+  "qualifiedFirsthandRecords": 528,
+  "qualifiedRepeatedWorkflowRecords": 528,
+  "qualifiedExactJobMoneyRecords": 80,
+  "trustMrrCoverage": {
+    "captured": 201,
+    "available": 8272,
+    "percent": 2.43,
+    "rankOrderedTopHeavy": true,
+    "baseline": "same-day-only"
+  },
+  "sourceConcentration": {
+    "formationFeedbackPrimary": "news.ycombinator.com / HN Algolia snapshots",
+    "buyerRealityPrimary": [
+      "freelancer.com",
+      "peopleperhour.com"
+    ],
+    "commercialPrimary": "trustmrr.com"
+  },
+  "limitations": [
+    "The commercial lane improved to 250 TrustMRR rows, but it is still a same-day comparison and cannot support 7/30/90/180-day acceleration claims.",
+    "Formation/feedback coverage is materially larger than run 4 but still HN-centric, which makes supply and founder echo a continuing risk.",
+    "Buyer reality now contains many exact-budget marketplace briefs, but most are heterogeneous service requests rather than one normalized repeated workflow.",
+    "Marketplace briefs verify purchase intent, not completed payment or recurring software adoption.",
+    "Most buyer records still leave `input` null, so complete job-sentence coverage remains well below the hard gate.",
+    "Reddit occupational expansion hit blocking 403 responses, so forum diversity remains incomplete."
+  ],
+  "adaptiveStopping": {
+    "satisfied": false,
+    "reason": "A stronger buyer lane emerged, but no independent batch resolved the commercial-motion join or complete-job-sentence gap."
+  },
+  "gate": "INSUFFICIENT COVERAGE; zero GO intersections"
+}

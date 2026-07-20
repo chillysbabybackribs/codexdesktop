@@ -2,12 +2,9 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { Model } from '../../shared/session-protocol'
 import {
-  defaultThreadTitle,
   hasObservedTerminalTurn,
-  provisionalThreadTitle,
   providerDisplayName,
   resolveModelProvider,
-  resolveThreadTitle,
   steerComposerPlaceholder,
 } from './app-helpers.ts'
 
@@ -50,30 +47,4 @@ test('a terminal notification remains authoritative over a later turn-start resp
   assert.equal(hasObservedTerminalTurn({ 'turn-1': { status: 'completed' } }, 'turn-1'), true)
   assert.equal(hasObservedTerminalTurn({ 'turn-1': { status: 'failed' } }, 'turn-1'), true)
   assert.equal(hasObservedTerminalTurn({ 'turn-1': { status: 'interrupted' } }, 'turn-1'), true)
-})
-
-test('creates a compact provisional title from the first prompt', () => {
-  assert.equal(
-    provisionalThreadTitle('  Update the split-chat close button\nso it uses an X  '),
-    'Update the split-chat close button so it uses an X',
-  )
-  assert.equal(
-    provisionalThreadTitle('$artifact-first-web-research Compare recent reports'),
-    'Compare recent reports',
-  )
-  assert.equal(
-    provisionalThreadTitle('A deliberately long prompt that should stay readable in a compact chat tab without spilling into the rest of the header'),
-    'A deliberately long prompt that should stay readable in a compact…',
-  )
-})
-
-test('keeps a provisional title until the server supplies a real name', () => {
-  assert.equal(
-    resolveThreadTitle(defaultThreadTitle, 'Update split chat close button'),
-    'Update split chat close button',
-  )
-  assert.equal(
-    resolveThreadTitle('Split pane close controls', 'Update split chat close button'),
-    'Split pane close controls',
-  )
 })

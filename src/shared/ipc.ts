@@ -13,8 +13,7 @@ export type {
   BrowserMenuCommand,
   BrowserMenuItem,
   BrowserMenuAnchor,
-  BrowserMenuRenderPayload,
-  TitlebarCalendarAnchor
+  BrowserMenuRenderPayload
 } from './ipc/browser-types.js'
 export type {
   CodexConnectionStatus,
@@ -24,14 +23,6 @@ export type {
   ResearchProgress,
   CodexResearchProgressEvent,
   AgentSpawnedEvent,
-  AgentRunProvider,
-  AgentRunLane,
-  AgentRunStatus,
-  AgentWakeStatus,
-  AgentRunSnapshot,
-  AgentRunEvent,
-  BrowserDecisionEvent,
-  AgentRunCancelParams,
   SessionEvent,
   CodexEvent,
   CodexSendMessageParams,

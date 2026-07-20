@@ -30,7 +30,7 @@ export function createAgentLifecycle(options: {
   recoveryPrompt: string
   isRecoverable: (error: TurnError | null) => boolean
   isTurnTerminal: (key: string, turnId: string) => boolean
-  getWorkspace: (session: AgentSession) => string | null
+  getWorkspace: () => string | null
   getSelectedModel: () => string | null
   getActiveThreadId: () => string | null
   pickFallbackModel: (model: string | null) => string | null
@@ -100,7 +100,7 @@ export function createAgentLifecycle(options: {
       const response = await window.api.session.sendMessage({
         threadId: session.threadId,
         text: options.recoveryPrompt,
-        cwd: options.getWorkspace(session),
+        cwd: options.getWorkspace(),
         model: model ?? session.model ?? options.getSelectedModel(),
         effort: session.reasoningEffort
       })
@@ -140,20 +140,6 @@ export function createAgentLifecycle(options: {
 
   function handleCloseAgentSession(key: string): void {
     const session = removeSession(key)
-    if (
-      (session?.sourceProvider === 'claude' || session?.sourceProvider === 'codex') &&
-      session.status === 'working' &&
-      session.runParentThreadId &&
-      session.nativeRunId
-    ) {
-      void window.api.session.cancelAgentRun({
-        provider: session.sourceProvider,
-        parentThreadId: session.runParentThreadId,
-        nativeId: session.nativeRunId
-      }).catch((error) =>
-        console.warn(`Failed to stop native ${session.sourceProvider} task ${session.nativeRunId}`, error)
-      )
-    }
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
         void window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })

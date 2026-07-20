@@ -1,23 +1,30 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type { Model, PluginSummary } from '../../shared/session-protocol';
 import { resolveModelProvider } from './app-helpers';
 import { Composer } from './Composer';
-import { CloseIcon, ContextPill } from './ChatControls';
-import { ChatItemView, TaskActivity, visibleUserMessageText } from './ChatTranscript';
-import { ThreadScroll, type MessageScrollerAnchor } from './ThreadScroll';
+import { ContextPill, UnsplitIcon } from './ChatControls';
+import { ChatItemView, TaskActivityCard } from './ChatTranscript';
+import { ThreadScroll } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
 import {
   FileReviewContext,
   TurnTail,
   type FileReviewActions,
-  type TurnMeta,
+  type ItemMeta,
   type WorkItem,
 } from './TaskActivity';
 import { ReviewBar, type ReviewChange } from './ReviewBar';
 import { buildRows } from './transcript-model';
-import { type SessionStore, emptySessionState } from './session-store';
+import { SessionStore, emptySessionState } from './session-store';
 import type { MainChatTab } from './main-chat-tabs';
 import type { SplitDropZone } from './chat-split';
 
@@ -73,8 +80,6 @@ export function ChatPaneView({
   onSelectPane,
   onCloseSplitPane,
   onLoadOlderHistory,
-  openTraceRequestSerial,
-  onTraceAvailabilityChange,
   dockExtras,
 }: {
   tabKey: string;
@@ -110,8 +115,6 @@ export function ChatPaneView({
   onSelectPane: (key: string) => Promise<boolean>;
   onCloseSplitPane: (tabKey: string) => void;
   onLoadOlderHistory: (tabKey: string, threadId: string) => void;
-  openTraceRequestSerial: number;
-  onTraceAvailabilityChange: (tabKey: string, canOpenTrace: boolean) => void;
   dockExtras: {
     agentColumn: React.ReactNode;
     composerHeaderContext: React.ReactNode;
@@ -139,34 +142,11 @@ export function ChatPaneView({
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null);
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null);
   const traceLoadGenerationRef = useRef(0);
-  const handledTraceRequestRef = useRef(0);
 
   const { rows, turnWork } = useMemo(
     () => buildRows(items, itemMeta, paneTurnId),
     [items, itemMeta, paneTurnId],
   );
-
-  const messageAnchors = useMemo((): MessageScrollerAnchor[] => {
-    const anchors: MessageScrollerAnchor[] = [];
-    const seen = new Set<string>();
-    for (const row of rows) {
-      if (
-        row.kind !== 'chat' ||
-        row.item.type !== 'userMessage' ||
-        !row.turnId ||
-        seen.has(row.turnId)
-      ) {
-        continue;
-      }
-      seen.add(row.turnId);
-      const text = visibleUserMessageText(row.item).replace(/\s+/g, ' ').trim();
-      anchors.push({
-        id: row.turnId,
-        label: text ? (text.length > 72 ? `${text.slice(0, 71).trimEnd()}…` : text) : 'Attachment',
-      });
-    }
-    return anchors;
-  }, [rows]);
 
   // Interactions in a background pane focus it first — the action handlers
   // all target the active tab. The pointer-down capture in ChatPane already
@@ -250,15 +230,6 @@ export function ChatPaneView({
   );
   const trace = storedTrace?.turn.id === traceTurnId ? storedTrace : currentTrace;
 
-  const latestTraceTurnId = useMemo((): string | null => {
-    if (paneTurnId) return paneTurnId;
-    for (let i = rows.length - 1; i >= 0; i -= 1) {
-      const row = rows[i];
-      if (row.kind === 'tail') return row.turnId;
-    }
-    return null;
-  }, [paneTurnId, rows]);
-
   function openTrace(turnId: string): void {
     const generation = ++traceLoadGenerationRef.current;
     setTraceTurnId(turnId);
@@ -288,23 +259,6 @@ export function ChatPaneView({
     setTraceTurnId(null);
     setStoredTrace(null);
   }, [paneThreadId]);
-
-  useEffect(() => {
-    onTraceAvailabilityChange(tabKey, Boolean(latestTraceTurnId));
-    return () => onTraceAvailabilityChange(tabKey, false);
-  }, [latestTraceTurnId, onTraceAvailabilityChange, tabKey]);
-
-  useEffect(() => {
-    if (
-      !openTraceRequestSerial ||
-      handledTraceRequestRef.current === openTraceRequestSerial ||
-      !latestTraceTurnId
-    ) {
-      return;
-    }
-    handledTraceRequestRef.current = openTraceRequestSerial;
-    openTrace(latestTraceTurnId);
-  }, [openTraceRequestSerial, latestTraceTurnId]);
 
   // True while the live turn's newest item is an assistant message still
   // receiving deltas — drives the "Writing" tail label and message caret.
@@ -353,16 +307,12 @@ export function ChatPaneView({
           <span className="chat-pane-view-header-spacer" />
           <button
             type="button"
-            className="chat-pane-view-close"
-            data-split-pane-close
-            aria-label={`Close ${paneTitle} split pane`}
-            title="Close this split pane"
-            onClick={(event) => {
-              event.stopPropagation();
-              onCloseSplitPane(tabKey);
-            }}
+            className="chat-pane-view-unsplit"
+            aria-label={`Close split for ${paneTitle}`}
+            title="Close split — the chat stays open as a tab"
+            onClick={() => onCloseSplitPane(tabKey)}
           >
-            <CloseIcon />
+            <UnsplitIcon />
           </button>
         </header>
       ) : null}
@@ -373,7 +323,6 @@ export function ChatPaneView({
           scrollKey={tabKey}
           resetKey={paneThreadId}
           activeTurnId={paneTurnId}
-          messageAnchors={messageAnchors}
           dependencies={[items, itemMeta, paneTurnId]}
           onReachStart={
             isActive && paneThreadId ? () => onLoadOlderHistory(tabKey, paneThreadId) : undefined
@@ -387,14 +336,15 @@ export function ChatPaneView({
           {rows.map((row) => {
             if (row.kind === 'activity') {
               return (
-                <TaskActivity
+                <TaskActivityCard
                   key={row.id}
                   items={row.items}
                   itemMeta={itemMeta}
                   live={Boolean(paneTurnId) && row.turnId === paneTurnId}
                   workspace={workspace}
-                  streamingMessage={Boolean(streamingMessageId) && row.turnId === paneTurnId}
-                  turnId={row.turnId}
+                  streamingMessage={
+                    Boolean(streamingMessageId) && row.turnId === paneTurnId
+                  }
                 />
               );
             }
@@ -407,12 +357,12 @@ export function ChatPaneView({
                   itemMeta={itemMeta}
                   meta={turnMeta[row.turnId]}
                   streamingMessage={Boolean(streamingMessageId) && row.turnId === paneTurnId}
+                  onOpenTrace={() => openTrace(row.turnId)}
                   onRevert={
                     turnCheckpoints[row.turnId]
                       ? () => void runFocused(() => onRevertTurn(row.turnId))
                       : undefined
                   }
-                  embeddedInReviewBar={reviewTarget?.turnId === row.turnId}
                 />
               );
             }
@@ -443,9 +393,8 @@ export function ChatPaneView({
             onKeepAll={() => void runFocused(() => onKeepTurn(reviewTarget.turnId))}
             onSetAlwaysKeepAll={onSetAlwaysKeepAll}
             onUndoAll={() => void runFocused(() => onUndoTurnAll(reviewTarget.turnId))}
-            onUndoFile={(path) => void runFocused(() => onUndoFile(reviewTarget.turnId, path))}
-            onRestoreCheckpoint={() =>
-              void runFocused(() => onRevertTurn(reviewTarget.turnId))
+            onUndoFile={(path) =>
+              void runFocused(() => onUndoFile(reviewTarget.turnId, path))
             }
           />
         ) : null}
@@ -496,7 +445,9 @@ export function ChatPaneView({
           }}
           onNewThread={() => void runFocused(onNewThread)}
           onNewAgent={
-            dockExtras?.onNewAgent ? () => void runFocused(dockExtras.onNewAgent) : undefined
+            dockExtras?.onNewAgent
+              ? () => void runFocused(dockExtras.onNewAgent)
+              : undefined
           }
           providerId={providerId}
           footerContext={dockExtras?.composerFooterContext}

@@ -8,12 +8,13 @@ export function isRemotePlugin(plugin: PluginSummary): boolean {
 }
 
 export function flattenPlugins(marketplaces: PluginMarketplaceEntry[]): PluginSummary[] {
-  const pluginsByName = new Map<string, PluginSummary>()
-  for (const plugin of marketplaces.flatMap((marketplace) => marketplace.plugins)) {
-    const existing = pluginsByName.get(plugin.name)
-    if (!existing || plugin.installed || !existing.installed) pluginsByName.set(plugin.name, plugin)
-  }
-  return [...pluginsByName.values()]
+  return [
+    ...new Map(
+      marketplaces
+        .flatMap((marketplace) => marketplace.plugins)
+        .map((plugin) => [plugin.id, plugin])
+    ).values()
+  ]
 }
 
 export function pluginInstallParams(

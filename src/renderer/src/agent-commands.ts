@@ -18,7 +18,7 @@ type AgentCommandStore = {
 
 export function createAgentCommands(options: {
   store: AgentCommandStore
-  getWorkspace: (session: AgentSession) => string | null
+  getWorkspace: () => string | null
   getSelectedModel: () => string | null
   getSelectedEffort: () => ReasoningEffort | null
   getFastMode: () => boolean
@@ -83,7 +83,7 @@ export function createAgentCommands(options: {
         threadId,
         text: outgoingText,
         attachments,
-        cwd: options.getWorkspace(session),
+        cwd: options.getWorkspace(),
         model: agentModel,
         effort: session.reasoningEffort ?? options.getSelectedEffort(),
         fastMode: options.getFastMode()
@@ -112,27 +112,6 @@ export function createAgentCommands(options: {
 
   async function handleAgentStop(key: string): Promise<void> {
     const session = store.sessionsRef.current.find((candidate) => candidate.key === key)
-    if (
-      (session?.sourceProvider === 'claude' || session?.sourceProvider === 'codex') &&
-      session.runParentThreadId &&
-      session.nativeRunId &&
-      session.status === 'working'
-    ) {
-      try {
-        await window.api.session.cancelAgentRun({
-          provider: session.sourceProvider,
-          parentThreadId: session.runParentThreadId,
-          nativeId: session.nativeRunId
-        })
-      } catch (error) {
-        store.appendMessage(key, {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          text: `⚠ Could not stop the native ${session.sourceProvider === 'codex' ? 'Codex' : 'Claude'} task: ${(error as Error).message}`
-        })
-      }
-      return
-    }
     if (!session?.threadId || !session.turnId) return
     try {
       await window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })

@@ -138,9 +138,7 @@ export function TraceModal({ trace, onClose }: { trace: TurnTrace; onClose: () =
             ) : null}
             <p className="trace-usage-note">
               Turn total is accumulated consumption across model calls; latest call is one request;
-              thread total is the cumulative counter snapshot at completion. Cache-write tokens are not
-              exposed by the current Codex app-server usage protocol, so GPT-5.6 cache-write cost is
-              not included here.
+              thread total is the cumulative counter snapshot at completion.
             </p>
           </section>
 

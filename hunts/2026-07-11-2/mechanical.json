@@ -1,0 +1,1578 @@
+{
+  "files": 63,
+  "totals": {
+    "coaching": 7,
+    "hr_ops": 19,
+    "chargebacks": 5,
+    "brand_monitoring": 6,
+    "client_portals": 14,
+    "reporting": 28,
+    "dpp": 8,
+    "eudr": 4,
+    "amazon_agents": 13,
+    "ecommerce_tax": 2
+  },
+  "rows": [
+    {
+      "file": "0d8d90ca-page-02.txt",
+      "words": 791,
+      "money": [
+        "€0.10",
+        "€0.15",
+        "€0.25",
+        "€0.30.",
+        "€0.40",
+        "€12",
+        "€1,800",
+        "€50",
+        "€600",
+        "€120",
+        "€3,000",
+        "€3"
+      ],
+      "dates": [
+        "2026",
+        "2024"
+      ],
+      "counts": [
+        "30 days",
+        "48 hours"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 16,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "0d8d90ca-page-03.txt",
+      "words": 746,
+      "money": [
+        "€12,000",
+        "€29",
+        "€79"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 3,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 17,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "0d8d90ca-page-05.txt",
+      "words": 759,
+      "money": [],
+      "dates": [
+        "2025",
+        "2026",
+        "April 20",
+        "2024",
+        "July 20",
+        "2009",
+        "2027"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 24,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "0d8d90ca-page-06.txt",
+      "words": 766,
+      "money": [
+        "€10"
+      ],
+      "dates": [
+        "March 31, 2026",
+        "December 31, 2020",
+        "June 30, 2027",
+        "December 30, 2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 26,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "0d8d90ca-page-07.txt",
+      "words": 766,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 15,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "0d8d90ca-page-08.txt",
+      "words": 744,
+      "money": [
+        "€3,000",
+        "€15,000",
+        "€0.20",
+        "€0.50"
+      ],
+      "dates": [
+        "2026",
+        "May 20",
+        "July 20",
+        "2027",
+        "2024",
+        "2021",
+        "2022",
+        "2023",
+        "2025"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 15,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "3748816d-page-01.txt",
+      "words": 835,
+      "money": [],
+      "dates": [
+        "June 20",
+        "2026",
+        "2023"
+      ],
+      "counts": [
+        "50 clients",
+        "5 clients",
+        "2 clients",
+        "20 clients",
+        "15 clients",
+        "10 clients",
+        "1,000 clients",
+        "100 clients",
+        "25 clients",
+        "3 clients"
+      ],
+      "hits": {
+        "coaching": 9,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 2,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "3748816d-page-02.txt",
+      "words": 664,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 28,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "3748816d-page-04.txt",
+      "words": 751,
+      "money": [],
+      "dates": [
+        "April 20"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 11,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "3748816d-page-06.txt",
+      "words": 747,
+      "money": [
+        "$19",
+        "$69",
+        "$109"
+      ],
+      "dates": [
+        "2026",
+        "May 3, 2024",
+        "July 10, 2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 15,
+        "hr_ops": 32,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 1,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "4dbc9974-page-01.txt",
+      "words": 816,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 7,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "4dbc9974-page-07.txt",
+      "words": 760,
+      "money": [
+        "$36",
+        "$19",
+        "$54",
+        "$81",
+        "$29"
+      ],
+      "dates": [
+        "2025",
+        "February 20",
+        "maybe 30"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 23,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "4dbc9974-page-08.txt",
+      "words": 800,
+      "money": [],
+      "dates": [
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 13,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "581a5753-page-01.txt",
+      "words": 804,
+      "money": [
+        "$5,000",
+        "$10,000",
+        "$47.99",
+        "$3.84",
+        "$51.83"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "counts": [
+        "20+ hours"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 2,
+        "reporting": 11,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 1
+      }
+    },
+    {
+      "file": "581a5753-page-02.txt",
+      "words": 624,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "581a5753-page-03.txt",
+      "words": 736,
+      "money": [],
+      "dates": [
+        "2026",
+        "July 10, 2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "581a5753-page-04.txt",
+      "words": 688,
+      "money": [],
+      "dates": [
+        "March 20"
+      ],
+      "counts": [
+        "90 days",
+        "24 hours"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 26,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "581a5753-page-05.txt",
+      "words": 657,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 15,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "581a5753-page-06.txt",
+      "words": 822,
+      "money": [
+        "$100,000.",
+        "$500,000."
+      ],
+      "dates": [
+        "2026",
+        "June 25, 2026",
+        "2018"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 38
+      }
+    },
+    {
+      "file": "581a5753-page-08.txt",
+      "words": 814,
+      "money": [
+        "$8.77",
+        "$37.43"
+      ],
+      "dates": [
+        "2026",
+        "2034"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 1,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-01.txt",
+      "words": 780,
+      "money": [],
+      "dates": [
+        "2026",
+        "January 11, 2026",
+        "2027"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 22,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-02.txt",
+      "words": 503,
+      "money": [
+        "€12,000",
+        "€49",
+        "€99",
+        "€89",
+        "€198",
+        "€44,50",
+        "€119",
+        "€297",
+        "€39,67"
+      ],
+      "dates": [
+        "June 30, 2026",
+        "June 30, 2027"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 1,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 4,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-03.txt",
+      "words": 746,
+      "money": [
+        "€12,000",
+        "€29",
+        "€79"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 3,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 17,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-04.txt",
+      "words": 687,
+      "money": [],
+      "dates": [
+        "November 14, 2024",
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 25,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-05.txt",
+      "words": 760,
+      "money": [],
+      "dates": [
+        "February 4, 2026",
+        "2026",
+        "2025",
+        "2030",
+        "April 20"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 27,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "6e4cb8b5-page-06.txt",
+      "words": 788,
+      "money": [],
+      "dates": [
+        "2026",
+        "2027"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 2,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 20,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "893b141e-page-01.txt",
+      "words": 339,
+      "money": [
+        "$53.61",
+        "$71.49",
+        "$88.62",
+        "$52.81"
+      ],
+      "dates": [
+        "July 26",
+        "Apr 20, 2026"
+      ],
+      "counts": [
+        "9 sales"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 1,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "893b141e-page-04.txt",
+      "words": 567,
+      "money": [
+        "$8.67",
+        "$11.56",
+        "$9.63",
+        "$4.82",
+        "$21.19"
+      ],
+      "dates": [
+        "Jul 12, 2024",
+        "Jun 10, 2024",
+        "Dec 4, 2023",
+        "Sep 8, 2023",
+        "Apr 23, 2026"
+      ],
+      "counts": [
+        "7 reviews"
+      ],
+      "hits": {
+        "coaching": 9,
+        "hr_ops": 1,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 7,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "893b141e-page-05.txt",
+      "words": 765,
+      "money": [
+        "$5.00",
+        "$59",
+        "$79 USD",
+        "$16.91 USD",
+        "$7",
+        "$0",
+        "27 USD",
+        "$19.22",
+        "$25",
+        "16.85 USD",
+        "$27.00",
+        "$48.00"
+      ],
+      "dates": [
+        "2025",
+        "Jun 20, 2025",
+        "2023"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 3,
+        "hr_ops": 2,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 45,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "893b141e-page-06.txt",
+      "words": 739,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 2,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 12,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "893b141e-page-07.txt",
+      "words": 355,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 18,
+        "hr_ops": 7,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-01.txt",
+      "words": 242,
+      "money": [],
+      "dates": [
+        "Oct 19"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-02.txt",
+      "words": 852,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 2,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-03.txt",
+      "words": 819,
+      "money": [],
+      "dates": [
+        "2023"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 2,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-04.txt",
+      "words": 846,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-05.txt",
+      "words": 832,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-06.txt",
+      "words": 775,
+      "money": [],
+      "dates": [
+        "Oct 19"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 13,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-07.txt",
+      "words": 809,
+      "money": [],
+      "dates": [
+        "2023"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 2,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "90e70cb6-page-08.txt",
+      "words": 783,
+      "money": [],
+      "dates": [
+        "Oct 19"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 6,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "972b49b2-page-02.txt",
+      "words": 698,
+      "money": [
+        "$10.00",
+        "$49.00"
+      ],
+      "dates": [
+        "2026",
+        "March 13, 2026"
+      ],
+      "counts": [
+        "10\n\nReviews",
+        "2 reviews"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 28,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 3,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "972b49b2-page-03.txt",
+      "words": 759,
+      "money": [
+        "$10",
+        "$19",
+        "$200",
+        "$600",
+        "$10,000",
+        "$2,500"
+      ],
+      "dates": [
+        "June 20",
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 10,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "972b49b2-page-04.txt",
+      "words": 740,
+      "money": [],
+      "dates": [
+        "2025"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 1,
+        "hr_ops": 8,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "972b49b2-page-05.txt",
+      "words": 827,
+      "money": [
+        "$15 USD",
+        "$1",
+        "$15",
+        "$15.",
+        "$25",
+        "€15 EUR",
+        "£15 GBP",
+        "$85",
+        "$200",
+        "$20"
+      ],
+      "dates": [
+        "January 28, 2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 31,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-01.txt",
+      "words": 698,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 4,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-02.txt",
+      "words": 791,
+      "money": [
+        "$15"
+      ],
+      "dates": [
+        "2026",
+        "March 10, 2026"
+      ],
+      "counts": [
+        "120 days",
+        "5 days",
+        "20 days",
+        "45 days",
+        "30 days"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 34,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-03.txt",
+      "words": 840,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 17,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-04.txt",
+      "words": 664,
+      "money": [],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 28,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-05.txt",
+      "words": 729,
+      "money": [],
+      "dates": [
+        "2026",
+        "Jun 20"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 21,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 3,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-06.txt",
+      "words": 701,
+      "money": [],
+      "dates": [
+        "2025"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 5,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 3,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-07.txt",
+      "words": 751,
+      "money": [
+        "$1"
+      ],
+      "dates": [
+        "May 28, 2026",
+        "June 6, 2026",
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 8,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 5,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "b95f0f73-page-08.txt",
+      "words": 827,
+      "money": [
+        "$15 USD",
+        "$1",
+        "$15",
+        "$15.",
+        "$25",
+        "€15 EUR",
+        "£15 GBP",
+        "$85",
+        "$200",
+        "$20"
+      ],
+      "dates": [
+        "January 28, 2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 31,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 1,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-02.txt",
+      "words": 764,
+      "money": [
+        "$19"
+      ],
+      "dates": [
+        "February 20"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 1,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 26,
+        "reporting": 5,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-03.txt",
+      "words": 831,
+      "money": [
+        "$6",
+        "$12",
+        "$144"
+      ],
+      "dates": [
+        "2026",
+        "2006"
+      ],
+      "counts": [
+        "2 hours"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 15,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-04.txt",
+      "words": 791,
+      "money": [
+        "$75,",
+        "$5,000"
+      ],
+      "dates": [],
+      "counts": [
+        "20 clients"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 3,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-05.txt",
+      "words": 802,
+      "money": [
+        "$5.80",
+        "$10",
+        "$12",
+        "$13.99",
+        "$35",
+        "$9",
+        "$4.99"
+      ],
+      "dates": [
+        "2026",
+        "July 1, 2026"
+      ],
+      "counts": [
+        "24 hours",
+        "10 hours"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 16,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-06.txt",
+      "words": 780,
+      "money": [
+        "$25",
+        "$52",
+        "$39.",
+        "$52.",
+        "$19",
+        "$0"
+      ],
+      "dates": [
+        "2026"
+      ],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 24,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-07.txt",
+      "words": 844,
+      "money": [
+        "$9",
+        "$10.80",
+        "$22",
+        "$25",
+        "$4.99",
+        "$6.50",
+        "$8.50",
+        "$8",
+        "$17.10"
+      ],
+      "dates": [
+        "2026",
+        "May 2, 2026",
+        "May 20",
+        "2025"
+      ],
+      "counts": [
+        "5 clients"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 7,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "bc541525-page-08.txt",
+      "words": 710,
+      "money": [
+        "$19",
+        "$29",
+        "$39",
+        "$79"
+      ],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 2,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 31,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "d1f6a7de-page-01.txt",
+      "words": 669,
+      "money": [
+        "$50",
+        "$30"
+      ],
+      "dates": [
+        "July 20"
+      ],
+      "counts": [
+        "7 days"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 3,
+        "reporting": 0,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "d1f6a7de-page-02.txt",
+      "words": 758,
+      "money": [
+        "$50",
+        "$100"
+      ],
+      "dates": [
+        "December 20"
+      ],
+      "counts": [
+        "30 days",
+        "2 days",
+        "3 days",
+        "5 days"
+      ],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 0,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "e2bc5e34-page-01.txt",
+      "words": 314,
+      "money": [
+        "$39"
+      ],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 9,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 1,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "e2bc5e34-page-04.txt",
+      "words": 295,
+      "money": [
+        "$39"
+      ],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 9,
+        "hr_ops": 2,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 0,
+        "reporting": 2,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    },
+    {
+      "file": "e2bc5e34-page-07.txt",
+      "words": 533,
+      "money": [
+        "$16.50"
+      ],
+      "dates": [],
+      "counts": [],
+      "hits": {
+        "coaching": 0,
+        "hr_ops": 1,
+        "chargebacks": 0,
+        "brand_monitoring": 0,
+        "client_portals": 1,
+        "reporting": 6,
+        "dpp": 0,
+        "eudr": 0,
+        "amazon_agents": 0,
+        "ecommerce_tax": 0
+      }
+    }
+  ]
+}

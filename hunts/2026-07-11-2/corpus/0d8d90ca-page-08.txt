@@ -1,0 +1,57 @@
+# Digital Product Passport (DPP): A Practical Guide for Fashion Brands in 2026
+
+### João Oliveira
+
+João is a Portuguese writer specialist in the textile and fashion sector.
+
+published on 28 May 2026
+
+The Digital Product Passport will become mandatory for all textile products sold in the European Union. The ESPR regulation entered into force in July 2024, and the first textile-specific requirements are expected between 2026 and 2027 (European Commission, ESPR, 2024). Brands that don't prepare now will face significantly higher compliance costs down the road, plus market access risks once enforcement begins.
+
+In our sourcing pipeline since 2021, we've watched brand attitudes toward DPP evolve from "let's wait and see" in 2022, to "we need to start mapping" in 2024, to "we're behind already" in 2026. The brands that started early are now in pilot phase with smooth supplier data flows. The brands that waited are scrambling to collect basic composition data from non-EU suppliers under tight timelines. The cost difference between the two paths is roughly 3-5x. The risk difference is even bigger because non-compliant products will be subject to market withdrawal once enforcement kicks in.
+
+This guide explains what the DPP is, what it must contain, when it applies, and the concrete steps to get your brand ready. It covers real implementation costs, sample data records, the penalty regime, integration with existing systems (PLM, ERP, e-commerce), and category-specific requirements. If you're already following the ESPR regulation for textiles, this article complements that reading with a practical implementation roadmap.
+
+Heads up: We're Portugal Clothing Factory, a group of 80+ vetted Portuguese clothing manufacturers in Porto and Guimarães. Since 2021, we've placed dozens of brands with these factories, so the practical observations in this article are based on first-hand sourcing experience.
+
+Key Takeaways
+
+- The DPP is mandatory for all brands selling in the EU, including non-European brands
+
+- The fashion industry generates 92 million tonnes of textile waste per year (UNEP, 2023)
+
+- Each product will need a QR code or RFID linked to composition, origin, and recyclability data
+
+- SMEs will have extended deadlines, but should start mapping suppliers now
+
+- Brands manufacturing in Portugal have an advantage: shorter supply chains simplify traceability
+
+- Realistic implementation cost: €3,000-€15,000 setup + €0.20-€0.50 per piece ongoing
+
+- Penalties under ESPR include market withdrawal and fines determined by Member State
+
+Try it free: Pressure-test your production cost with our garment cost calculator. 60 seconds, no email required.
+
+The DPP turns each garment into a traceable, scannable record of its lifecycle.
+
+## What Is the Digital Product Passport and Why Does It Exist?
+
+The Digital Product Passport is a standardised digital record that follows each product throughout its entire lifecycle. According to UNEP, the fashion industry accounts for 10% of global carbon emissions (UNEP, 2023). The DPP exists to force transparency about this impact and accelerate the circular economy.
+
+It forms part of the ESPR (Ecodesign for Sustainable Products Regulation), approved by the EU in 2024, which aims to reduce the environmental impact of industrial products on the European market (European Parliament, 2024). Textiles are one of the priority sectors under this legislation, alongside batteries, electronics and furniture.
+
+In practice, the DPP works as a "digital technical sheet" for the product. It contains structured information about composition, origin, repairability, and end-of-life. Consumers, regulators, and recyclers access that information with a simple QR code scan.
+
+Without the DPP, it's impossible to verify whether a claim like "made with 80% recycled cotton" actually holds up. Traceability stops being optional and becomes verifiable. How many sustainability claims on the market today are impossible to confirm? The Green Claims Directive (also approved 2024) explicitly prohibits unsubstantiated environmental claims from 2026. The DPP is the infrastructure that makes substantiation operational.
+
+Citation Capsule: The Digital Product Passport is a standardised digital record required by the EU's ESPR regulation since July 2024, obliging brands to document the composition, origin, and recyclability of textile products. UNEP estimates the sector generates 92 million tonnes of waste annually (UNEP, 2023).
+
+## What Should a Textile Product's DPP Contain?
+
+The full requirements are being defined through delegated acts, but the minimum dataset is already known. According to 2024-2025 public consultation documents, fibre composition and country of manufacture are Phase 1 requirements (European Commission, ESPR Delegated Acts Consultation, 2025). Carbon footprint data will be phased in gradually.
+
+### Phase 1 Mandatory Data (2026-2027)
+
+- Fibre composition, percentage of each material (e.g., 60% cotton, 40% polyester)
+
+-

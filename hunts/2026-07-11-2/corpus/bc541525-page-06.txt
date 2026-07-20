@@ -1,0 +1,43 @@
+Bonsai made its name as the all-in-one platform for freelancers: agreements, proposals, project management, time tracking, accounting, and invoicing in one place. If you use all of that every day, the consolidation can genuinely pay off. The trouble is most freelancers do not. Plenty of people who are now hunting for Bonsai alternatives signed up because they needed invoicing software, stuck around because the agreement templates were handy, and now pay $25 to $52 a month for a suite where they regularly touch two or three features out of twelve.
+
+That is not a knock on Bonsai's quality. It is a fit challenge. If your core job is sending invoices, collecting payments, and following up on late clients, a focused billing tool will do that better and cheaper than a platform splitting its attention across agreements, proposals, project boards, and tax filing. If you have been eyeing the exit or just feel like you are overpaying, here is an honest look at the options.
+
+### Why Freelancers Look for Bonsai Alternatives
+
+Bonsai's "everything platform" positioning is both its strength and its main source of friction. The usual reasons people start looking elsewhere:
+
+Price for what you actually use. The Starter plan is $25 a month. Professional, which adds custom branding, workflow automations, and subcontracting, is $39. Business is $52. If you are mostly there for invoicing and the occasional agreement, that is a lot of monthly spend on features sitting idle.
+
+Invoicing feels secondary. Bonsai's invoicing works, but it is one module inside a bigger platform. The invoice editor, the payment flow, and the client-facing experience are not as refined as tools built entirely around billing. Recurring setup, reminders, and portal polish all feel like they got about 80% of the attention they would get in a dedicated invoicing tool.
+
+Complexity creep. Every new feature Bonsai ships, tax filing, bookkeeping, banking, adds another item to the navigation. Freelancers who came for simplicity end up staring at a dashboard with a dozen sidebar links they never click.
+
+Agreement lock-in. Bonsai's agreements are genuinely useful, which is exactly why they create switching costs. Moving your templates and signed-document history elsewhere takes effort, so people keep paying for a suite they have outgrown in other areas.
+
+Functional but unremarkable client experience. The client-facing invoice and payment flow works, but it does not project the polish of a tool designed around the billing experience. For service businesses where the invoice is a brand touchpoint, that gap matters.
+
+### What a Good Bonsai Alternative Needs
+
+The right answer depends on which Bonsai features you actually use. For most people evaluating alternatives, the core workflow is this.
+
+Professional invoicing: branded invoices with clear line items, terms, and due dates that look like they came from a serious business.
+
+Online payment collection: ACH and card paid straight from the invoice, no separate links or friction.
+
+Payment reminders: automatic follow-up when invoices go past due. This is the feature that saves the most time and recovers the most money, since most freelancers deal with late payments and automated reminders reliably cut overdue rates.
+
+Estimates and proposals: send a quoted scope, get approval, and convert it to an invoice without retyping everything.
+
+A client portal: a place clients review invoices, pay, and check their billing history without emailing you.
+
+If you also need legally vetted agreement templates, either find an alternative that includes them or pair your invoicing tool with a standalone agreement solution like DocuSign or PandaDoc. For most freelancers, that combination ends up cheaper and better than an all-in-one suite.
+
+### Best Bonsai Alternatives for Freelancers in 2026
+
+### WaffleInvoice - Best for Focused Service Business Billing
+
+WaffleInvoice does one thing well: the service-business billing workflow. Estimates, invoices, payments, reminders, and a client portal, without the agreements, proposals, project management, and accounting modules that make Bonsai feel oversized for anyone who mainly needs to get paid.
+
+The free plan covers unlimited invoices and estimates, client portal access, PDF downloads, customer tags, saved services, and manual payment tracking, with no trial, no client cap, and no card required. The Pro plan at $19 a month adds recurring invoices, automated reminders, ACH and card via Stripe, email delivery, a status board, auto estimate follow-ups, and Google review requests.
+
+The core difference from Bonsai is scope. WaffleInvoice is built around the billing lifecycle, not the entire freelance operation. If invoicing and payment collection are the part you need to fix, it handles that with less friction and lower cost, $0 to $19 a month against Bonsai's $25 to $52. Recent additions speak to daily billing specifically: the Status Board (a kanban view of all estimates and invoices by status), Auto

@@ -1,4 +1,4 @@
-import { type PointerEvent, useCallback, useMemo, useState } from 'react';
+import { type PointerEvent, useMemo, useState } from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type {
   Model,
@@ -98,7 +98,8 @@ export function ChatPane({
   onSelectAgent,
   onOpenAgent,
   onMinimizeAgent,
-  onSetAgentRole,
+  onToggleWatchAgent,
+  onToggleAuditAgent,
   onToggleReportAgent,
   onSendAuditFeedback,
   onDecideAgentSendPolicy,
@@ -188,7 +189,8 @@ export function ChatPane({
   onSelectAgent: (key: string) => void;
   onOpenAgent: (key: string) => void;
   onMinimizeAgent: (key: string) => void;
-  onSetAgentRole: (key: string, role: 'reviewer' | 'helper') => void;
+  onToggleWatchAgent: (key: string) => void;
+  onToggleAuditAgent: (key: string) => void;
   onToggleReportAgent: (key: string) => void;
   onSendAuditFeedback: (key: string) => void;
   onDecideAgentSendPolicy: (key: string, policy: 'always' | 'keep') => void;
@@ -215,8 +217,6 @@ export function ChatPane({
     tabKey: string;
     zone: SplitDropZone;
   } | null>(null);
-  const [traceAvailability, setTraceAvailability] = useState<Record<string, boolean>>({});
-  const [traceRequest, setTraceRequest] = useState<{ tabKey: string; serial: number } | null>(null);
   const headerIdPrefix = browserMiddleSide === 'right' ? 'right-chat' : 'main-chat';
   // History and settings are app-wide surfaces. The right header keeps the
   // workspace controls that matter in place (tabs, new, splits, layout) while
@@ -321,9 +321,6 @@ export function ChatPane({
   // means this pane.
   const focusPaneFromEvent = (target: EventTarget | null): void => {
     if (!(target instanceof HTMLElement)) return;
-    // Closing a background split pane should leave the active chat alone.
-    // Otherwise this capture handler makes the pane active before its X runs.
-    if (target.closest('[data-split-pane-close]')) return;
     const key = target.closest<HTMLElement>('[data-split-pane-key]')?.dataset.splitPaneKey;
     if (key && key !== activeMainChatTabKey) void onSelectMainChatTab(key);
   };
@@ -356,21 +353,6 @@ export function ChatPane({
   };
 
   const multiPane = countSplitPanes(splitLayout) > 1;
-  const canOpenHeaderTrace = Boolean(traceAvailability[headerActiveMainChatTabKey]);
-
-  const requestHeaderTrace = (): void => {
-    setTraceRequest((current) => ({
-      tabKey: headerActiveMainChatTabKey,
-      serial: (current?.serial ?? 0) + 1,
-    }));
-  };
-
-  const updateTraceAvailability = useCallback((tabKey: string, canOpenTrace: boolean): void => {
-    setTraceAvailability((current) => {
-      if (current[tabKey] === canOpenTrace) return current;
-      return { ...current, [tabKey]: canOpenTrace };
-    });
-  }, []);
 
   // The agent column belongs to the focused workspace. Model selection does
   // not: each visible chat owns a model and reasoning choice, so its composer
@@ -393,7 +375,8 @@ export function ChatPane({
       onCloseSession={onCloseAgentSession}
       onResetSession={onResetAgentSession}
       onPromote={onPromoteAgent}
-      onSetRole={onSetAgentRole}
+      onToggleWatch={onToggleWatchAgent}
+      onToggleAudit={onToggleAuditAgent}
       onToggleReport={onToggleReportAgent}
       onSendFeedback={onSendAuditFeedback}
       onDecideSendPolicy={onDecideAgentSendPolicy}
@@ -506,10 +489,6 @@ export function ChatPane({
           onSelectPane={onSelectMainChatTab}
           onCloseSplitPane={onCloseSplitPane}
           onLoadOlderHistory={onLoadOlderHistory}
-          openTraceRequestSerial={
-            traceRequest?.tabKey === node.tabKey ? traceRequest.serial : 0
-          }
-          onTraceAvailabilityChange={updateTraceAvailability}
           dockExtras={{
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
             composerHeaderContext: paneComposerModelContext(node.tabKey, tab),
@@ -590,8 +569,6 @@ export function ChatPane({
             isBrowserMiddle={isBrowserMiddle}
             onToggleBrowserMiddle={onToggleBrowserMiddle}
             onOpenSettings={() => setIsSettingsOpen(true)}
-            canOpenTrace={canOpenHeaderTrace}
-            onOpenTrace={requestHeaderTrace}
             title={title}
             threads={threads}
             activeThreadId={activeThreadId}

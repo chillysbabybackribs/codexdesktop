@@ -1,18 +1,10 @@
 import { memo, useMemo, useState } from 'react';
 import type { ItemMeta, WorkItem } from './TaskActivity';
-import {
-  isActiveReasoningPlaceholder,
-  isHiddenDuringLiveStep,
-  LiveActivityFeed,
-  WorkGroup,
-} from './TaskActivity';
+import { AutoFollow, isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from './TaskActivity';
 import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
-import { stripIntakeInjections } from './main-chat-intake';
 import { parseAuditFeedback } from './audit-trigger';
-import { parseAgentContinuation } from './agent-continuation';
-import { stripLegacyBrowserRoutingNote } from './browser-routing-note';
 import { formatTokens } from './TraceModal';
 import { isWorkItem, type ActivityItem, type ChatItem } from './transcript-model';
 
@@ -23,20 +15,18 @@ function isEssentialWorkItem(item: WorkItem): boolean {
   return item.type === 'fileChange' || item.type === 'turnPlan';
 }
 
-export function TaskActivity({
+export function TaskActivityCard({
   items,
   itemMeta,
   live,
   workspace,
   streamingMessage = false,
-  turnId,
 }: {
   items: ActivityItem[];
   itemMeta: Record<string, ItemMeta>;
   live: boolean;
   workspace: string | null;
   streamingMessage?: boolean;
-  turnId?: string | null;
 }): React.JSX.Element {
   // null = default by liveness: live turns show everything, settled turns
   // collapse their step rows to a "N steps" toggle.
@@ -61,11 +51,7 @@ export function TaskActivity({
   const flushWork = (): void => {
     let visible = showSteps ? workRun : workRun.filter(isEssentialWorkItem);
     if (live) {
-      visible = visible.filter(
-        (item) =>
-          !isHiddenDuringLiveStep(item, live) &&
-          !isActiveReasoningPlaceholder(item, newestWorkItemId, itemMeta[item.id]),
-      );
+      visible = visible.filter((item) => !isHiddenDuringLiveStep(item, live));
     }
     workRun = [];
     if (!visible.length) {
@@ -110,8 +96,7 @@ export function TaskActivity({
 
   return (
     <section
-      className={`task-activity ${live ? 'is-live' : ''}`}
-      data-message-id={turnId ?? undefined}
+      className={`task-activity-card ${live ? 'is-live' : ''}`}
       aria-label="In-task activity"
       aria-live={live ? 'polite' : 'off'}
     >
@@ -131,10 +116,11 @@ export function TaskActivity({
           items={workItems}
           itemMeta={itemMeta}
           streamingMessage={streamingMessage}
-          showCurrent={false}
         />
       ) : null}
-      <div className="task-activity-content">{content}</div>
+      <AutoFollow className="task-activity-card-scroll">
+        <div className="task-activity-card-content">{content}</div>
+      </AutoFollow>
     </section>
   );
 }
@@ -169,36 +155,18 @@ export function stripInjectedMemory(text: string): string {
   );
 }
 
-export function visibleUserMessageText(item: Extract<ChatItem, { type: 'userMessage' }>): string {
-  const text = item.content
-    .filter((content) => content.type === 'text')
-    .map((content) =>
-      stripIntakeInjections(
-        stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))),
-      ),
-    )
-    .join('\n');
-  return stripLegacyBrowserRoutingNote(text);
-}
-
-// Injected model-facing text in the main transcript renders as a quiet
-// retractable card — header row with an icon + title, expandable to the full
-// content. The model still receives the raw injected block; this is display
-// only. Used for auditor feedback and automatic background-agent
-// continuations.
-function RetractableNoteCard({
-  icon,
-  title,
-  previewText,
-  body,
+// Auditor feedback in the main transcript: a quiet retractable card — header
+// row with the flag + agent name, expandable to the full report. The doer
+// model still receives the raw [audit-feedback] block; this is display only.
+function AuditFeedbackCard({
+  agentTitle,
+  report,
 }: {
-  icon: string;
-  title: string;
-  previewText: string;
-  body: string;
+  agentTitle: string;
+  report: string;
 }): React.JSX.Element {
   const [open, setOpen] = useState(false);
-  const firstLine = previewText.split('\n')[0] ?? '';
+  const firstLine = report.split('\n')[0] ?? '';
   const preview = firstLine.length > 90 ? `${firstLine.slice(0, 90).trimEnd()}…` : firstLine;
   return (
     <div className={`audit-feedback-card ${open ? 'is-open' : ''}`}>
@@ -209,9 +177,9 @@ function RetractableNoteCard({
         onClick={() => setOpen((current) => !current)}
       >
         <span className="audit-feedback-flag" aria-hidden="true">
-          {icon}
+          ⚑
         </span>
-        <span className="audit-feedback-title">{title}</span>
+        <span className="audit-feedback-title">Audit feedback · {agentTitle}</span>
         {!open && preview ? <span className="audit-feedback-preview">{preview}</span> : null}
         <span className="audit-feedback-chevron" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -227,27 +195,10 @@ function RetractableNoteCard({
       </button>
       {open ? (
         <div className="audit-feedback-body">
-          <MarkdownContent text={body} />
+          <MarkdownContent text={report} />
         </div>
       ) : null}
     </div>
-  );
-}
-
-function AuditFeedbackCard({
-  agentTitle,
-  report,
-}: {
-  agentTitle: string;
-  report: string;
-}): React.JSX.Element {
-  return (
-    <RetractableNoteCard
-      icon="⚑"
-      title={`Audit feedback · ${agentTitle}`}
-      previewText={report}
-      body={report}
-    />
   );
 }
 
@@ -271,51 +222,24 @@ export const ChatItemView = memo(function ChatItemView({
   }
 
   if (item.type === 'userMessage') {
-    const text = visibleUserMessageText(item);
+    const text = item.content
+      .filter((content) => content.type === 'text')
+      .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+      .join('\n');
     const attachments = attachmentsFromUserInput(item.content);
     // Auditor feedback renders as a compact retractable card, not the raw
     // block the doer model receives.
     const feedback = parseAuditFeedback(text);
     if (feedback) {
       return (
-        <article
-          className="message message-audit-feedback"
-          data-turn-id={turnId ?? undefined}
-          data-message-id={turnId ?? undefined}
-          data-message-anchor-id={turnId ?? undefined}
-        >
+        <article className="message message-audit-feedback" data-turn-id={turnId ?? undefined}>
           <AuditFeedbackCard agentTitle={feedback.agentTitle} report={feedback.report} />
-        </article>
-      );
-    }
-    // Automatic background-agent continuations are model plumbing, not user
-    // prose: show a compact retractable card instead of the raw injected block.
-    const continuation = parseAgentContinuation(text);
-    if (continuation) {
-      return (
-        <article
-          className="message message-audit-feedback"
-          data-turn-id={turnId ?? undefined}
-          data-message-id={turnId ?? undefined}
-          data-message-anchor-id={turnId ?? undefined}
-        >
-          <RetractableNoteCard
-            icon="⟳"
-            title="Background agents · results applied"
-            previewText={continuation.headline}
-            body={continuation.report}
-          />
         </article>
       );
     }
 
     return (
-      <article
-        className="message message-user"
-        data-turn-id={turnId ?? undefined}
-        data-message-id={turnId ?? undefined}
-        data-message-anchor-id={turnId ?? undefined}
-      >
+      <article className="message message-user" data-turn-id={turnId ?? undefined}>
         {text ? <p>{text}</p> : null}
         <AttachmentStrip attachments={attachments} />
       </article>
@@ -330,7 +254,6 @@ export const ChatItemView = memo(function ChatItemView({
         text={item.text}
         streaming={streaming}
         commentary={item.phase === 'commentary'}
-        turnId={turnId}
       />
     );
   }
@@ -356,7 +279,7 @@ export const ChatItemView = memo(function ChatItemView({
     // ones can show the real shrink.
     const shrank = before !== null && after !== null && after < before;
     return (
-      <article className="message message-compaction" data-message-id={turnId ?? undefined}>
+      <article className="message message-compaction">
         {shrank
           ? `Context compacted — ${formatTokens(before)} → ${formatTokens(after)} tokens (${Math.round((1 - after / before) * 100)}% smaller)`
           : 'Context compacted'}
@@ -374,7 +297,7 @@ export const ChatItemView = memo(function ChatItemView({
 
   // Anything else (hookPrompt and future item types) stays quiet but visible.
   return (
-    <article className="message message-tool" data-message-id={turnId ?? undefined}>
+    <article className="message message-tool">
       <strong>{item.type}</strong>
     </article>
   );
@@ -384,19 +307,16 @@ const AssistantMessage = memo(function AssistantMessage({
   text,
   streaming,
   commentary,
-  turnId,
 }: {
   text: string;
   streaming: boolean;
   commentary: boolean;
-  turnId?: string | null;
 }): React.JSX.Element {
   return (
     <article
       className={`message message-assistant ${commentary ? 'message-commentary' : ''} ${
         streaming ? 'is-streaming' : ''
       }`}
-      data-message-id={turnId ?? undefined}
     >
       {streaming ? (
         <StreamingMarkdownContent text={text || ' '} />

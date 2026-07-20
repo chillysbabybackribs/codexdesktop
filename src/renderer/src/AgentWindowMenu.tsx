@@ -1,29 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
-import { dockRoleOf, type AgentSession } from './agent-session-model'
+import type { AgentSession } from './agent-session-model'
 import { ChevronDownIcon } from './agent-row-render'
 
-// The window title button and its dropdown: the Role radio (Reviewer/Helper,
-// with a read-only Worker line for spawned children), the reviewer-only
-// auto-send toggle, promote to main chat, and the chat-zoom controls. Open
-// state and the outside-click/Escape closing live here; zoom state stays with
-// AgentWindow (the transcript content scales by it too) and arrives as props.
+// The window title button and its dropdown: watch/audit/report toggles,
+// promote to main chat, and the chat-zoom controls. Open state and the
+// outside-click/Escape closing live here; zoom state stays with AgentWindow
+// (the transcript content scales by it too) and arrives as props.
 export function AgentWindowMenu({
   session,
   zoomPercent,
   adjustZoom,
-  onSetRole,
+  onToggleWatch,
+  onToggleAudit,
   onToggleReport,
   onPromote
 }: {
   session: AgentSession
   zoomPercent: number
   adjustZoom: (direction: 'in' | 'out' | 'reset') => void
-  onSetRole: (key: string, role: 'reviewer' | 'helper') => void
+  onToggleWatch: (key: string) => void
+  onToggleAudit: (key: string) => void
   onToggleReport: (key: string) => void
   onPromote: (key: string) => void
 }): React.JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const dockRole = dockRoleOf(session)
   const menuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -58,84 +58,72 @@ export function AgentWindowMenu({
           </button>
           {isMenuOpen ? (
             <div className="agent-overlay-menu" role="menu" aria-label={`${session.title} controls`}>
-              <div className="agent-menu-label">Role</div>
-              {dockRole === 'worker' ? (
-                <div className="agent-menu-item is-static" role="menuitem" aria-disabled="true">
-                  <BranchIcon />
-                  <span className="agent-menu-item-copy">
-                    <strong>Worker — delegated task</strong>
-                    <small>Spawned by its lead · runs the task it was given</small>
-                  </span>
-                </div>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="agent-menu-item"
-                    role="menuitemradio"
-                    aria-checked={dockRole === 'reviewer'}
-                    onClick={() => {
-                      // Dispatch even when shown selected: re-arming the flags
-                      // heals legacy neither/both-flag snapshots.
-                      onSetRole(session.key, 'reviewer')
-                      setIsMenuOpen(false)
-                    }}
-                  >
-                    <EyeIcon />
-                    <span className="agent-menu-item-copy">
-                      <strong>Reviewer</strong>
-                      <small>Audits every completed main-chat turn · second provider</small>
-                    </span>
-                    <span className={`agent-menu-status ${dockRole === 'reviewer' ? 'is-active' : ''}`}>
-                      {dockRole === 'reviewer' ? '●' : '○'}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="agent-menu-item"
-                    role="menuitemradio"
-                    aria-checked={dockRole === 'helper'}
-                    onClick={() => {
-                      onSetRole(session.key, 'helper')
-                      setIsMenuOpen(false)
-                    }}
-                  >
-                    <ChatBubbleIcon />
-                    <span className="agent-menu-item-copy">
-                      <strong>Helper</strong>
-                      <small>Independent chat · gets main-chat context with your messages</small>
-                    </span>
-                    <span className={`agent-menu-status ${dockRole === 'helper' ? 'is-active' : ''}`}>
-                      {dockRole === 'helper' ? '●' : '○'}
-                    </span>
-                  </button>
-                </>
-              )}
-              {dockRole === 'reviewer' ? (
-                <button
-                  type="button"
-                  className="agent-menu-item"
-                  role="menuitemcheckbox"
-                  aria-checked={session.reportsToMain}
-                  onClick={() => {
-                    onToggleReport(session.key)
-                    setIsMenuOpen(false)
-                  }}
-                >
-                  <EyeIcon />
-                  <span className="agent-menu-item-copy">
-                    <strong>{session.reportsToMain ? 'Sending findings to main chat' : 'Send findings to main chat'}</strong>
-                    <small>
-                      {session.reportsToMain
-                        ? 'Flagged audits go to the doer automatically'
-                        : 'Flagged audits auto-send · one round per turn'}
-                    </small>
-                  </span>
-                  <span className={`agent-menu-status ${session.reportsToMain ? 'is-active' : ''}`}>
-                    {session.reportsToMain ? 'On' : 'Off'}
-                  </span>
-                </button>
-              ) : null}
+              <div className="agent-menu-label">Agent controls</div>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.watchesMain}
+                onClick={() => {
+                  onToggleWatch(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.watchesMain ? 'Sharing main-chat context' : 'Share main-chat context'}</strong>
+                  <small>{session.watchesMain ? 'Helper mode is on' : 'Keep this agent independent'}</small>
+                </span>
+                <span className={`agent-menu-status ${session.watchesMain ? 'is-active' : ''}`}>
+                  {session.watchesMain ? 'On' : 'Off'}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.auditsMain}
+                onClick={() => {
+                  onToggleAudit(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.auditsMain ? 'Auditing main-chat turns' : 'Audit main-chat turns'}</strong>
+                  <small>
+                    {session.auditsMain
+                      ? 'Reviews every completed main-chat turn'
+                      : 'Second viewpoint on every turn · picks a second provider'}
+                  </small>
+                </span>
+                <span className={`agent-menu-status ${session.auditsMain ? 'is-active' : ''}`}>
+                  {session.auditsMain ? 'On' : 'Off'}
+                </span>
+              </button>
+              <button
+                type="button"
+                className="agent-menu-item"
+                role="menuitemcheckbox"
+                aria-checked={session.reportsToMain}
+                onClick={() => {
+                  onToggleReport(session.key)
+                  setIsMenuOpen(false)
+                }}
+              >
+                <EyeIcon />
+                <span className="agent-menu-item-copy">
+                  <strong>{session.reportsToMain ? 'Sending findings to main chat' : 'Send findings to main chat'}</strong>
+                  <small>
+                    {session.reportsToMain
+                      ? 'Flagged audits go to the doer automatically'
+                      : 'Flagged audits auto-send · one round per turn'}
+                  </small>
+                </span>
+                <span className={`agent-menu-status ${session.reportsToMain ? 'is-active' : ''}`}>
+                  {session.reportsToMain ? 'On' : 'Off'}
+                </span>
+              </button>
               <button
                 type="button"
                 className="agent-menu-item"
@@ -203,30 +191,6 @@ function EyeIcon(): React.JSX.Element {
         strokeLinejoin="round"
       />
       <circle cx="12" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  )
-}
-
-function ChatBubbleIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H9.5l-4 3.3c-.6.5-1.5.1-1.5-.7V6.5Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function BranchIcon(): React.JSX.Element {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="6" cy="6" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="6" cy="18" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="18" cy="12" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M8.3 6.9 15.7 11M8.3 17.1 15.7 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   )
 }

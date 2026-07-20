@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "purpose": "structural-and-provenance-check",
+  "auditedAt": "2026-07-11T17:31:51.419Z",
+  "discoveryRoot": "hunts/2026-07-11-5/phase-0",
+  "totals": {
+    "records": 2123,
+    "retrievedVerified": 2123,
+    "usableSignals": 2123,
+    "lowOrUnspecifiedConfidence": 556,
+    "brokenArtifactReferences": 0
+  },
+  "byLane": {
+    "buyer-reality": {
+      "records": 102,
+      "retrievedVerified": 102,
+      "usableSignals": 102,
+      "lowOrUnspecifiedConfidence": 0,
+      "brokenArtifactReferences": 0
+    },
+    "commercial-motion": {
+      "records": 201,
+      "retrievedVerified": 201,
+      "usableSignals": 201,
+      "lowOrUnspecifiedConfidence": 0,
+      "brokenArtifactReferences": 0
+    },
+    "formation-feedback": {
+      "records": 1820,
+      "retrievedVerified": 1820,
+      "usableSignals": 1820,
+      "lowOrUnspecifiedConfidence": 556,
+      "brokenArtifactReferences": 0
+    }
+  },
+  "duplicateRecordIds": [],
+  "errors": [],
+  "warnings": [
+    "556 records are low-confidence or unclassified; they may inspire candidates but should not be presented as strong evidence."
+  ],
+  "verdict": "PASS"
+}

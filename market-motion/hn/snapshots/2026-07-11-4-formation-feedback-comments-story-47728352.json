@@ -1,0 +1,338 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "47728352",
+    "window": "prior-90d",
+    "tag": "ask_hn",
+    "score": 36
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "xqb64"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There is &quot;Building a Debugger&quot;[0].<p>[0]: <a href=\"https://nostarch.com/building-a-debugger\" rel=\"nofollow\">https://nostarch.com/building-a-debugger</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_xqb64",
+          "story_47728352"
+        ],
+        "author": "xqb64",
+        "comment_text": "There is &quot;Building a Debugger&quot;[0].<p>[0]: <a href=\"https:&#x2F;&#x2F;nostarch.com&#x2F;building-a-debugger\" rel=\"nofollow\">https:&#x2F;&#x2F;nostarch.com&#x2F;building-a-debugger</a>",
+        "created_at": "2026-04-13T18:24:08Z",
+        "created_at_i": 1776104648,
+        "objectID": "47755997",
+        "parent_id": 47733302,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-19T23:33:27Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ezzato"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "thank you very much<p>that is all i needed"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ezzato",
+          "story_47728352"
+        ],
+        "author": "ezzato",
+        "comment_text": "thank you very much<p>that is all i needed",
+        "created_at": "2026-04-12T12:09:26Z",
+        "created_at_i": 1775995766,
+        "objectID": "47738739",
+        "parent_id": 47729765,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-12T13:01:59Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "zerr"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "When it comes to PL implementations, there are lesser materials about creating relevant tools besides compilers: linkers and especially debuggers. Are there any coursers/books that go into implementing these tools?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_zerr",
+          "story_47728352"
+        ],
+        "author": "zerr",
+        "children": [
+          47755997
+        ],
+        "comment_text": "When it comes to PL implementations, there are lesser materials about creating relevant tools besides compilers: linkers and especially debuggers. Are there any coursers&#x2F;books that go into implementing these tools?",
+        "created_at": "2026-04-11T19:29:18Z",
+        "created_at_i": 1775935758,
+        "objectID": "47733302",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-13T18:24:49Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vladimir-vg"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What I can assure you about, is that you DO NOT NEED to learn how to create runtimes, compilers or translators.<p>The challenge isn't really in building a decent implementation or adopting useful features. There are plenty of languages with decent implementations and features that are on display in Github graveyard.<p>The challenge is to deeply understand what THE PROBLEM is. Books won't help you with that at all. Long walks, drinking fresh water, meditation, prayer. It may take years.<p>And once you understood the problem, the path is clear: research and studying prototypes of other people helps greatly.<p>What is the problem that you're trying to solve? You listed the features, not the issue you're aiming at."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vladimir-vg",
+          "story_47728352"
+        ],
+        "author": "vladimir-vg",
+        "comment_text": "What I can assure you about, is that you DO NOT NEED to learn how to create runtimes, compilers or translators.<p>The challenge isn&#x27;t really in building a decent implementation or adopting useful features. There are plenty of languages with decent implementations and features that are on display in Github graveyard.<p>The challenge is to deeply understand what THE PROBLEM is. Books won&#x27;t help you with that at all. Long walks, drinking fresh water, meditation, prayer. It may take years.<p>And once you understood the problem, the path is clear: research and studying prototypes of other people helps greatly.<p>What is the problem that you&#x27;re trying to solve? You listed the features, not the issue you&#x27;re aiming at.",
+        "created_at": "2026-04-11T18:43:56Z",
+        "created_at_i": 1775933036,
+        "objectID": "47732979",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-13T15:00:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gabrielsroka"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Related? An AI lang from the creator of Kotlin<p><a href=\"https://codespeak.dev\" rel=\"nofollow\">https://codespeak.dev</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gabrielsroka",
+          "story_47728352"
+        ],
+        "author": "gabrielsroka",
+        "comment_text": "Related? An AI lang from the creator of Kotlin<p><a href=\"https:&#x2F;&#x2F;codespeak.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;codespeak.dev</a>",
+        "created_at": "2026-04-11T17:41:49Z",
+        "created_at_i": 1775929309,
+        "objectID": "47732471",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-11T17:42:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "skydhash"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "&gt; separate effect full code from pure logic<p>That’s a feature of the abstract machine. TM and Von Neuman is very reliant on a global (and locals) state. Lambda calculus does not and instead requires evaluation (or reduction in symbolic terms).<p>Best bet for this is some book on computation theory, but as the name says, they’re full of theory, but it’s kinda the foundation of everything.<p>&gt; separate state and code<p>Not really possible. The name “code” cames from the fact that you’re encoding logic and data to represent a process. It’s a closed system and the above books explain how and why it works.<p>&gt; ai native debugger<p>What does that mean? A debugger is mostly the capability to stop a process and inspect the current state. How does AI helps?<p>&gt; native deterministic simulation testing<p>What does that means?<p>&gt; coding proofs<p>Again, the books on computation theory will helps. Most of them will only explain the context free grammars (tightly coupled to TM). There’s a bunch of abstraction on top of that that leads to C, JavaScript and Python. There’s also the various other systems like Horn clauses, lambda calculus, and relational algebra. All have mathematical models that are the basics of such proofs.<p>&gt; explicit type system<p>The main book I can recommend is Types and Programming Languages by Pierce. It also requires a good knowledge of basic computation theory. Quick note: Computation does data transformation, types helps with proving that.<p>&gt; repl<p>While not impossible, it clashes with the above. Explicit typing is cumbersome to write while REPL is all about quick iteration. Some simple software like ed and ksh can help there.<p>&gt; wasm target<p>Going from assembly to C is about design abstractions, compiling C to assembly is building those abstractions. Targeting wasm is about design what would take you to go from wasm to you abstract machine that is capable of executing your language and then starting to build it."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_skydhash",
+          "story_47728352"
+        ],
+        "author": "skydhash",
+        "comment_text": "&gt; separate effect full code from pure logic<p>That’s a feature of the abstract machine. TM and Von Neuman is very reliant on a global (and locals) state. Lambda calculus does not and instead requires evaluation (or reduction in symbolic terms).<p>Best bet for this is some book on computation theory, but as the name says, they’re full of theory, but it’s kinda the foundation of everything.<p>&gt; separate state and code<p>Not really possible. The name “code” cames from the fact that you’re encoding logic and data to represent a process. It’s a closed system and the above books explain how and why it works.<p>&gt; ai native debugger<p>What does that mean? A debugger is mostly the capability to stop a process and inspect the current state. How does AI helps?<p>&gt; native deterministic simulation testing<p>What does that means?<p>&gt; coding proofs<p>Again, the books on computation theory will helps. Most of them will only explain the context free grammars (tightly coupled to TM). There’s a bunch of abstraction on top of that that leads to C, JavaScript and Python. There’s also the various other systems like Horn clauses, lambda calculus, and relational algebra. All have mathematical models that are the basics of such proofs.<p>&gt; explicit type system<p>The main book I can recommend is Types and Programming Languages by Pierce. It also requires a good knowledge of basic computation theory. Quick note: Computation does data transformation, types helps with proving that.<p>&gt; repl<p>While not impossible, it clashes with the above. Explicit typing is cumbersome to write while REPL is all about quick iteration. Some simple software like ed and ksh can help there.<p>&gt; wasm target<p>Going from assembly to C is about design abstractions, compiling C to assembly is building those abstractions. Targeting wasm is about design what would take you to go from wasm to you abstract machine that is capable of executing your language and then starting to build it.",
+        "created_at": "2026-04-11T16:37:11Z",
+        "created_at_i": 1775925431,
+        "objectID": "47731941",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-11T16:39:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "stevekemp"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Crafting Interpreters is a good recommendation, and in the same spirit &quot;Writing an Interpreter in Go&quot; (and it's followup about writing a virtual machine) is a good addition.<p>A lot of the complexity and front-work of these kinda things is the parsing step though, so you can follow MAL (or any other make a lisp tutorial) though that won't necessarily help with other languages it frees you to jump to the interesting parts.<p>FORTH, mentioned in another comment, has that same appeal.  I wrote a quick tutorial here, back in the day:<p><a href=\"https://github.com/skx/foth\" rel=\"nofollow\">https://github.com/skx/foth</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_stevekemp",
+          "story_47728352"
+        ],
+        "author": "stevekemp",
+        "comment_text": "Crafting Interpreters is a good recommendation, and in the same spirit &quot;Writing an Interpreter in Go&quot; (and it&#x27;s followup about writing a virtual machine) is a good addition.<p>A lot of the complexity and front-work of these kinda things is the parsing step though, so you can follow MAL (or any other make a lisp tutorial) though that won&#x27;t necessarily help with other languages it frees you to jump to the interesting parts.<p>FORTH, mentioned in another comment, has that same appeal.  I wrote a quick tutorial here, back in the day:<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;skx&#x2F;foth\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;skx&#x2F;foth</a>",
+        "created_at": "2026-04-11T14:24:11Z",
+        "created_at_i": 1775917451,
+        "objectID": "47730897",
+        "parent_id": 47729765,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-11T21:08:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "markus_zhang"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Crafting interpreters. Very well written and free of cost, but ofc I’d recommend purchasing a copy.<p>If you find it a bit hard to chew, there is a simpler book using Python: <a href=\"https://www.amazon.ca/Anthony-J-Dos-Reis/e/B001KE4SU8/ref=dp_byline_cont_book_1\" rel=\"nofollow\">https://www.amazon.ca/Anthony-J-Dos-Reis/e/B001KE4SU8/ref=dp...</a><p>Another book: Game Scripting Mastery."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_markus_zhang",
+          "story_47728352"
+        ],
+        "author": "markus_zhang",
+        "children": [
+          47730897,
+          47738739
+        ],
+        "comment_text": "Crafting interpreters. Very well written and free of cost, but ofc I’d recommend purchasing a copy.<p>If you find it a bit hard to chew, there is a simpler book using Python: <a href=\"https:&#x2F;&#x2F;www.amazon.ca&#x2F;Anthony-J-Dos-Reis&#x2F;e&#x2F;B001KE4SU8&#x2F;ref=dp_byline_cont_book_1\" rel=\"nofollow\">https:&#x2F;&#x2F;www.amazon.ca&#x2F;Anthony-J-Dos-Reis&#x2F;e&#x2F;B001KE4SU8&#x2F;ref=dp...</a><p>Another book: Game Scripting Mastery.",
+        "created_at": "2026-04-11T11:48:56Z",
+        "created_at_i": 1775908136,
+        "objectID": "47729765",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-12T13:18:58Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "tnelsond4"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I tried reading the dragon book in my teens, never really understood it, it was too much theory for me.<p>I'd recommend starting with implementing a forth since it's the easiest language to write an interpreter/compiler for. From there you'll have enough experience to go for something bigger.<p>Making your own bytecode is really fun.<p>Ultimately you'll probably want your compiler to target llvm bytecode so that it works on every target automatically."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Best books on building a programming language"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_tnelsond4",
+          "story_47728352"
+        ],
+        "author": "tnelsond4",
+        "comment_text": "I tried reading the dragon book in my teens, never really understood it, it was too much theory for me.<p>I&#x27;d recommend starting with implementing a forth since it&#x27;s the easiest language to write an interpreter&#x2F;compiler for. From there you&#x27;ll have enough experience to go for something bigger.<p>Making your own bytecode is really fun.<p>Ultimately you&#x27;ll probably want your compiler to target llvm bytecode so that it works on every target automatically.",
+        "created_at": "2026-04-11T07:57:30Z",
+        "created_at_i": 1775894250,
+        "objectID": "47728482",
+        "parent_id": 47728352,
+        "story_id": 47728352,
+        "story_title": "Ask HN: Best books on building a programming language",
+        "updated_at": "2026-04-11T14:24:54Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 9,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_47728352&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "queue": 1,
+        "roundTrip": 20
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

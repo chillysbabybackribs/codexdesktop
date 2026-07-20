@@ -11,7 +11,11 @@ import {
 } from 'react';
 import { discardComposerDraft } from './Composer';
 import { ChatPane } from './ChatPane';
-import type { BrowserBounds, BrowserState, MemoryPersistParams } from '../../shared/ipc';
+import type {
+  BrowserBounds,
+  BrowserState,
+  MemoryPersistParams,
+} from '../../shared/ipc';
 import type { ServerNotification } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import type { CodexErrorInfo } from '../../shared/session-protocol';
@@ -24,23 +28,25 @@ import type { ThreadItem } from '../../shared/session-protocol';
 import type { Turn } from '../../shared/session-protocol';
 import { summarizeTurnDiff } from './diff';
 import { buildTurnTrace } from './trace';
-import { modelCallAttributionForItem, reduceTurnTelemetry } from './turn-telemetry';
+import {
+  modelCallAttributionForItem,
+  reduceTurnTelemetry,
+} from './turn-telemetry';
 import { type ItemMeta, type TurnMeta, type TurnPlanItem } from './TaskActivity';
-import { visibleUserMessageText } from './ChatTranscript';
+import { stripMentionContext } from './mention-model';
+import { stripAutomaticSkillMarker, stripInjectedMemory } from './ChatTranscript';
 import { completedMemoryTurns } from './memory-turns';
 import type { ChatAttachment } from '../../shared/ipc';
 import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transcript-model';
 import {
   isImmediateItemNotification,
   isItemNotification,
-  reduceItemNotificationBatch,
   reduceItemNotificationItems,
   reduceItemNotificationMeta,
   type ItemNotification,
 } from './item-notifications';
 import { reduceResearchProgressMeta } from './activity-model';
 import { BrowserPane } from './BrowserPane';
-import { TitlebarCalendar } from './TitlebarCalendar';
 import {
   SessionStore,
   emptySessionState,
@@ -65,51 +71,15 @@ import {
 import { createAgentCommands } from './agent-commands';
 import { createAgentLifecycle } from './agent-lifecycle';
 import {
-  defaultThreadTitle,
   cloneGoal,
   hasObservedTerminalTurn,
   isRecoverableTurnError,
   isTerminalTurnStatus,
   modelAcceptsImages,
-  provisionalThreadTitle,
   relativeThreadTime,
-  resolveThreadTitle,
   threadTitle,
 } from './app-helpers';
 import { useAgentSessions } from './useAgentSessions';
-import { shouldHandleChatSplitShortcut } from './keyboard-shortcuts';
-import {
-  buildDeclinedInjection,
-  buildExecutionInjection,
-  buildPlanBriefing,
-  buildRestateInjection,
-  isNoPlan,
-  lastAgentMessageText,
-  latestAssistantText,
-  noPlanReason,
-  pickIntakeReviewer,
-  reviewerDisplayLabel,
-  type IntakeState,
-} from './main-chat-intake';
-import {
-  buildSteerMessage,
-  buildWatchdogBriefing,
-  newWatchdogTurnState,
-  nextWatchdogDelayMs,
-  parseWatchdogVerdict,
-  watchdogCheckDue,
-  type WatchdogTurnState,
-} from './main-chat-watchdog';
-import {
-  continueLoop,
-  decideLoopContinuation,
-  loopConvergedMessage,
-  loopRoundMessage,
-  loopStopMessage,
-  startLoop,
-  type LoopDecision,
-  type LoopState,
-} from './audit-loop-controller';
 import { defaultReviewerModel, latestAuditReport } from './agent-session-model';
 import {
   buildOptimisticUserMessage,
@@ -156,7 +126,6 @@ import {
   parseBrowserMiddleColumnWidths,
   parseWorkspaceLayoutMode,
   serializeBrowserMiddleColumnWidths,
-  showChatAtFullHeight,
   type BrowserMiddleActiveTabKeys,
   type BrowserMiddleTabKeys,
   type BrowserMiddleColumnWidths,
@@ -177,6 +146,22 @@ const agentDockStorageKey = 'codexdesktop.agentDock.v1';
 const modelStorageKey = 'codexdesktop.model';
 const reasoningEffortStorageKey = 'codexdesktop.reasoningEffort';
 const fastModeStorageKey = 'codexdesktop.fastMode';
+
+const titlebarTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+});
+
+const titlebarDateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+});
+
+const titlebarAccessibleFormatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'full',
+  timeStyle: 'short',
+});
 
 // Turn failures the app can recover from by retrying/continuing on the same
 // thread: capacity problems on the provider side, not problems with the
@@ -199,8 +184,12 @@ type PendingThreadStartOwner = { kind: 'main'; key: string } | { kind: 'agent'; 
 
 function browserMiddleTabKeys(tabs: readonly MainChatTab[]): BrowserMiddleTabKeys {
   return {
-    left: tabs.filter((tab) => tab.browserMiddleSide === 'left').map((tab) => tab.key),
-    right: tabs.filter((tab) => tab.browserMiddleSide === 'right').map((tab) => tab.key),
+    left: tabs
+      .filter((tab) => tab.browserMiddleSide === 'left')
+      .map((tab) => tab.key),
+    right: tabs
+      .filter((tab) => tab.browserMiddleSide === 'right')
+      .map((tab) => tab.key),
   };
 }
 
@@ -225,8 +214,8 @@ function reconcileBrowserMiddleActiveTabKeys(
 ): BrowserMiddleActiveTabKeys {
   const bySide = browserMiddleTabKeys(tabs);
   const next: BrowserMiddleActiveTabKeys = {
-    left: bySide.left.includes(current.left ?? '') ? current.left : (bySide.left[0] ?? null),
-    right: bySide.right.includes(current.right ?? '') ? current.right : (bySide.right[0] ?? null),
+    left: bySide.left.includes(current.left ?? '') ? current.left : bySide.left[0] ?? null,
+    right: bySide.right.includes(current.right ?? '') ? current.right : bySide.right[0] ?? null,
   };
   const active = tabs.find((tab) => tab.key === activeKey);
   if (active?.browserMiddleSide) next[active.browserMiddleSide] = active.key;
@@ -246,7 +235,6 @@ function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTab
         template?.model ?? null,
         template?.reasoningEffort ?? null,
         side,
-        template?.workspace ?? null,
       ),
     ];
   };
@@ -260,9 +248,7 @@ function ensureBrowserMiddleTabAssignments(state: MainChatTabState): MainChatTab
   const pickUnassigned = (preferActive: boolean): MainChatTab | null =>
     (preferActive
       ? tabs.find((tab) => tab.key === state.activeKey && tab.browserMiddleSide === null)
-      : null) ??
-    tabs.find((tab) => tab.browserMiddleSide === null) ??
-    null;
+      : null) ?? tabs.find((tab) => tab.browserMiddleSide === null) ?? null;
 
   if (!tabs.some((tab) => tab.browserMiddleSide === 'left')) {
     const target = pickUnassigned(true);
@@ -307,10 +293,9 @@ export default function App(): React.JSX.Element {
       () => crypto.randomUUID(),
       {
         // One-time migration source for tab state saved before model choices
-        // and workspace selection were isolated per chat.
+        // were isolated per chat.
         model: window.localStorage.getItem(modelStorageKey),
         reasoningEffort: window.localStorage.getItem(reasoningEffortStorageKey),
-        workspace: window.localStorage.getItem('codexdesktop.workspace'),
       },
     );
     return initialWorkspaceLayoutMode === 'browser-middle'
@@ -332,8 +317,8 @@ export default function App(): React.JSX.Element {
     ),
   );
   const chatSplitLayoutRef = useRef(chatSplitLayout);
-  const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(
-    () => initialWorkspaceLayoutMode,
+  const [workspaceLayoutMode, setWorkspaceLayoutMode] = useState<WorkspaceLayoutMode>(() =>
+    initialWorkspaceLayoutMode,
   );
   const [browserMiddleActiveTabKeys, setBrowserMiddleActiveTabKeys] =
     useState<BrowserMiddleActiveTabKeys>(() =>
@@ -363,7 +348,9 @@ export default function App(): React.JSX.Element {
   const [threadsNextCursor, setThreadsNextCursor] = useState<string | null>(null);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const [threadsError, setThreadsError] = useState<string | null>(null);
-  const workspace = initialMainChatTab.workspace;
+  const [workspace, setWorkspace] = useState<string | null>(() =>
+    window.localStorage.getItem('codexdesktop.workspace'),
+  );
   const [models, setModels] = useState<Model[]>([]);
   // The active tab projects its saved model choice into the composer. `null`
   // means no explicit override, so turns use the CLI-configured default.
@@ -374,14 +361,10 @@ export default function App(): React.JSX.Element {
   const [fastMode, setFastMode] = useState(
     () => window.localStorage.getItem(fastModeStorageKey) === '1',
   );
-  const [alwaysKeepAll, setAlwaysKeepAll] = useState(() =>
-    isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
+  const [alwaysKeepAll, setAlwaysKeepAll] = useState(
+    () => isAlwaysKeepAllStored(window.localStorage.getItem(alwaysKeepAllStorageKey)),
   );
-  const [browserState, setBrowserState] = useState<BrowserState>({
-    tabs: [],
-    activeTabId: null,
-    vpn: { state: 'off', bootstrapProgress: 0, detail: null },
-  });
+  const [browserState, setBrowserState] = useState<BrowserState>({ tabs: [], activeTabId: null, vpn: { state: 'off', bootstrapProgress: 0, detail: null } });
   const [viewBounds, setViewBounds] = useState<BrowserBounds | null>(null);
   // Browser-fullscreen hides the chat pane and divider so the browser fills
   // the workspace. Renderer-only: the native view follows via the normal
@@ -414,10 +397,10 @@ export default function App(): React.JSX.Element {
     handleAgentNotification,
     handleNewAgent,
     handleSpawnedAgent,
-    handleAgentRun,
     handleOpenAgent,
     handleMinimizeAgent,
-    handleSetAgentRole,
+    handleToggleWatchAgent,
+    handleToggleAuditAgent,
     handleToggleReportAgent,
     handleDecideSendPolicy,
     handleSetAgentModel,
@@ -432,10 +415,6 @@ export default function App(): React.JSX.Element {
     // at the moment an agent is born or armed. Null (single provider) makes
     // the agent follow the main chat's model — the correct fallback.
     () => defaultReviewerModel(selectedModelRef.current, modelsRef.current),
-    (tabKey) =>
-      tabKey
-        ? (mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null)
-        : null,
   );
   const appRef = useRef<HTMLDivElement | null>(null);
   const viewHostRef = useRef<HTMLDivElement | null>(null);
@@ -449,21 +428,13 @@ export default function App(): React.JSX.Element {
   // (same-thread + bounce gates), and the in-flight marker consumed by
   // handleSend to tag the feedback turn it starts.
   const auditFeedbackTurnIdsRef = useRef<Set<string>>(new Set());
-  const auditContextByAuditorRef = useRef<
-    Map<
-      string,
-      { threadId: string | null; auditedTurnWasFeedback: boolean; changedFileCount: number | null }
-    >
-  >(new Map());
-  // Loop-to-done ledger per auditor: rounds dispatched + the last flag's
-  // signature (audit-loop-controller.ts). Transient by design — a reload
-  // mid-loop stops the loop rather than resuming blind.
-  const auditLoopRef = useRef<Map<string, LoopState>>(new Map());
+  const auditContextByAuditorRef = useRef<Map<string, { threadId: string | null; auditedTurnWasFeedback: boolean }>>(new Map());
   const pendingAuditFeedbackRef = useRef(false);
   const userRequestedTurnIdRef = useRef<string | null>(null);
   const optimisticUserMessageIdRef = useRef<string | null>(null);
   const selectedReasoningEffortRef = useRef<ReasoningEffort | null>(selectedReasoningEffort);
   const fastModeRef = useRef(fastMode);
+  const workspaceRef = useRef<string | null>(workspace);
   // Pending overload recovery for the watched thread; single slot because the
   // notification handler only reacts to one relevant thread at a time.
   const autoRecoveryRef = useRef<AutoRecoveryState | null>(null);
@@ -475,7 +446,7 @@ export default function App(): React.JSX.Element {
   // changes) accumulate here and apply in a single batched setItems per frame.
   // Batching every delta kind — not just agent text — is what keeps a long
   // turn's reasoning/command streams from re-rendering the transcript per token.
-  const pendingItemNotificationsRef = useRef<ItemNotification[]>([]);
+  const pendingItemMutationsRef = useRef<Array<(items: ChatItem[]) => ChatItem[]>>([]);
   const itemMutationFrameRef = useRef<number | null>(null);
   const threadsNextCursorRef = useRef<string | null>(null);
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map());
@@ -634,26 +605,6 @@ export default function App(): React.JSX.Element {
     activeThreadTitleRef.current = activeThreadTitle;
   }, [activeThreadTitle]);
 
-  // Covers a thread that began before this renderer loaded (for example after
-  // a hot reload or resume). A submitted chat should never wait for the
-  // server's eventual title-generation pass just to stop reading "New Chat".
-  useEffect(() => {
-    const tabKey = activeMainChatTabKeyRef.current;
-    const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
-    if (!tab?.threadId || tab.title !== defaultThreadTitle) return;
-
-    const firstUserMessage = items.find(
-      (item): item is Extract<ThreadItem, { type: 'userMessage' }> => item.type === 'userMessage',
-    );
-    const prompt = firstUserMessage ? visibleUserMessageText(firstUserMessage).trim() : '';
-    const title = provisionalThreadTitle(prompt);
-    if (title === defaultThreadTitle) return;
-
-    patchMainChatTab(tabKey, (current) => ({ ...current, title }));
-    activeThreadTitleRef.current = title;
-    setActiveThreadTitle(title);
-  }, [activeMainChatTabKey, activeThreadId, activeThreadTitle, items]);
-
   useEffect(() => {
     activeTurnIdRef.current = activeTurnId;
   }, [activeTurnId]);
@@ -678,13 +629,6 @@ export default function App(): React.JSX.Element {
       serializeMainChatTabState(mainChatTabState),
     );
   }, [mainChatTabState]);
-
-  // Tab state now owns the workspace. The old window-global key is read once
-  // during initial migration above, then discarded so it cannot become a
-  // competing source of truth on a later launch.
-  useEffect(() => {
-    window.localStorage.removeItem('codexdesktop.workspace');
-  }, []);
 
   useEffect(() => {
     chatSplitLayoutRef.current = chatSplitLayout;
@@ -737,6 +681,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     modelsRef.current = models;
   }, [models]);
+
+  useEffect(() => {
+    workspaceRef.current = workspace;
+  }, [workspace]);
 
   useEffect(() => {
     splitRef.current = split;
@@ -806,14 +754,6 @@ export default function App(): React.JSX.Element {
       ...state,
       tabs: state.tabs.map((tab) => (tab.key === key ? update(tab) : tab)),
     }));
-  }
-
-  function workspaceForMainChatTab(tabKey: string): string | null {
-    return mainChatTabStateRef.current.tabs.find((tab) => tab.key === tabKey)?.workspace ?? null;
-  }
-
-  function workspaceForThread(threadId: string): string | null {
-    return mainChatTabForThread(threadId)?.workspace ?? null;
   }
 
   function handleReorderMainChatTabs(
@@ -905,7 +845,10 @@ export default function App(): React.JSX.Element {
 
   // Split the focused pane and open a fresh chat in the new half — the
   // no-drag path to a 2x2 grid: Split right, then Split down on each column.
-  function handleSplitActivePane(targetKey: string, direction: 'right' | 'down'): boolean {
+  function handleSplitActivePane(
+    targetKey: string,
+    direction: 'right' | 'down',
+  ): boolean {
     if (isMainChatTransitionLocked()) return false;
     if (mainChatTabStateRef.current.tabs.length >= maxMainChatTabs) return false;
     const focusedKey = targetKey;
@@ -920,7 +863,6 @@ export default function App(): React.JSX.Element {
       selectedReasoningEffortRef.current,
       mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === focusedKey)
         ?.browserMiddleSide ?? null,
-      workspaceForMainChatTab(focusedKey),
     );
     // The pane is placed before its tab exists (raw layout op, no validation);
     // the tab update right after adds the tab and focuses it, so its
@@ -979,6 +921,14 @@ export default function App(): React.JSX.Element {
     }
     setIsGoalUpdating(false);
   }
+
+  useEffect(() => {
+    if (workspace) {
+      window.localStorage.setItem('codexdesktop.workspace', workspace);
+    } else {
+      window.localStorage.removeItem('codexdesktop.workspace');
+    }
+  }, [workspace]);
 
   useEffect(() => {
     if (!hasAutoRestoredRef.current) {
@@ -1168,47 +1118,6 @@ export default function App(): React.JSX.Element {
         return;
       }
 
-      if (event.type === 'agentRun') {
-        const parentThreadId = event.run.parentThreadId;
-        const parentDockSession = parentThreadId ? backgroundSessionForThread(parentThreadId) : null;
-        const owningTabKey =
-          (parentThreadId ? mainChatTabForThread(parentThreadId)?.key : null) ??
-          parentDockSession?.mainChatTabKey ??
-          activeMainChatTabKeyRef.current;
-        handleAgentRun(event.run, owningTabKey, event.run.parentAgentKey ?? parentDockSession?.key ?? null);
-        if (event.run.parentTurnId) {
-          const previous = turnMetaRef.current[event.run.parentTurnId]?.agentRuns ?? [];
-          noteTurn(event.run.parentTurnId, {
-            agentRuns: [
-              ...previous.filter((run) => run.id !== event.run.id),
-              {
-                id: event.run.id,
-                provider: event.run.provider,
-                status: event.run.status,
-                wakeStatus: event.run.wakeStatus,
-                durationMs: event.run.completedAtMs === null
-                  ? null
-                  : Math.max(0, event.run.completedAtMs - event.run.startedAtMs),
-              },
-            ],
-          });
-        }
-        return;
-      }
-
-      if (event.type === 'browserDecision') {
-        noteTurn(event.turnId, {
-          browserDecision: {
-            provider: event.provider,
-            preset: event.preset,
-            mode: event.mode,
-            required: event.required,
-            reason: event.reason,
-          },
-        });
-        return;
-      }
-
       // A tagged child notification carries the spawning worker's agentKey. The
       // worker session was created with a null threadId (the orchestrator
       // announced it before its turn started), so bind the real child threadId
@@ -1220,10 +1129,7 @@ export default function App(): React.JSX.Element {
         if (childThreadId) {
           const worker = agentSessionsRef.current.find((session) => session.key === event.agentKey);
           if (worker && worker.threadId !== childThreadId) {
-            patchAgentSession(event.agentKey, (session) => ({
-              ...session,
-              threadId: childThreadId,
-            }));
+            patchAgentSession(event.agentKey, (session) => ({ ...session, threadId: childThreadId }));
           }
         }
       }
@@ -1421,7 +1327,9 @@ export default function App(): React.JSX.Element {
 
     const handleMove = (moveEvent: globalThis.PointerEvent): void => {
       const rawWidth =
-        side === 'left' ? moveEvent.clientX - appRect.left : appRect.right - moveEvent.clientX;
+        side === 'left'
+          ? moveEvent.clientX - appRect.left
+          : appRect.right - moveEvent.clientX;
       const clamped = Math.min(
         Math.max(rawWidth, minBrowserMiddleChatWidth),
         Math.max(minBrowserMiddleChatWidth, maxSideWidth),
@@ -1479,26 +1387,6 @@ export default function App(): React.JSX.Element {
     setIsSending(true);
     userTurnRequestPendingRef.current = true;
     watchThreadIdRef.current = activeThreadId;
-    const threadId = activeThreadIdRef.current;
-    const existingTab = mainChatTabStateRef.current.tabs.find((tab) => tab.key === targetTabKey);
-    // Capture the target tab's folder before any awaited reviewer work. The
-    // user may switch panes while it is preparing, but that must not redirect
-    // this turn (or the thread it creates) into the newly focused folder.
-    const targetWorkspace = existingTab?.workspace ?? null;
-    const priorTitle = existingTab?.title ?? defaultThreadTitle;
-    const provisionalTitle = threadId
-      ? null
-      : provisionalThreadTitle(trimmed || attachments[0]?.name || '');
-    const appliedProvisionalTitle = Boolean(
-      provisionalTitle &&
-        provisionalTitle !== defaultThreadTitle &&
-        priorTitle === defaultThreadTitle,
-    );
-    if (appliedProvisionalTitle && provisionalTitle) {
-      patchMainChatTab(targetTabKey, (tab) => ({ ...tab, title: provisionalTitle }));
-      activeThreadTitleRef.current = provisionalTitle;
-      setActiveThreadTitle(provisionalTitle);
-    }
     const optimisticId = `optimistic-user-${crypto.randomUUID()}`;
     optimisticUserMessageIdRef.current = optimisticId;
     setItems((current) => [
@@ -1506,62 +1394,8 @@ export default function App(): React.JSX.Element {
       buildOptimisticUserMessage(optimisticId, trimmed, attachments),
     ]);
 
-    // Conversational intake (docs/prompt-intake-2026-07-19.md): with a
-    // Reviewer docked, a fresh thread's first send becomes a restatement turn;
-    // the user's natural-language confirmation then fetches the reviewer's
-    // plan before the doer starts. The transcript shows only the user's words.
-    let outgoingText = trimmed;
-    let startedIntakeRestatement = false;
-    const intakeState = mainChatIntakeRef.current.get(targetTabKey);
-    const intakeReviewer = pickIntakeReviewer(agentSessionsRef.current, targetTabKey);
-    if (intakeState && intakeState.threadId !== threadId) {
-      // The pending protocol belongs to a different conversation (thread
-      // switched around the bind) — drop it and send normally.
-      mainChatIntakeRef.current.delete(targetTabKey);
-    } else if (!intakeState && !threadId && intakeReviewer) {
-      outgoingText = `${trimmed}${buildRestateInjection(reviewerDisplayLabel(intakeReviewer, models))}`;
-      mainChatIntakeRef.current.set(targetTabKey, {
-        phase: 'awaitingConfirmation',
-        threadId: null,
-        original: trimmed,
-      });
-      startedIntakeRestatement = true;
-    } else if (intakeState?.phase === 'awaitingConfirmation') {
-      intakeState.phase = 'planning';
-      let plan: string | null = null;
-      if (intakeReviewer) {
-        const briefing = buildPlanBriefing({
-          original: intakeState.original,
-          restatement: lastAgentMessageText(itemsRef.current) ?? '(restatement unavailable)',
-          reply: trimmed,
-          doerLabel:
-            models.find((model) => model.id === selectedModel)?.displayName ??
-            selectedModel ??
-            'the main-chat model',
-        });
-        try {
-          const baselineMessageCount = intakeReviewer.messages.length;
-          if (await handleAgentSend(intakeReviewer.key, briefing, [])) {
-            plan = await awaitReviewerPlan(intakeReviewer.key, baselineMessageCount);
-          }
-        } catch {
-          plan = null;
-        }
-      }
-      if (plan && isNoPlan(plan)) {
-        // Not a go: stay in the protocol and let the doer answer normally.
-        intakeState.phase = 'awaitingConfirmation';
-        outgoingText = `${trimmed}${buildDeclinedInjection(noPlanReason(plan))}`;
-      } else {
-        mainChatIntakeRef.current.delete(targetTabKey);
-        if (!plan) {
-          addSystemItem('Reviewer plan unavailable — starting without it.', 'warning');
-        }
-        outgoingText = `${trimmed}${buildExecutionInjection(plan, reviewerDisplayLabel(intakeReviewer, models))}`;
-      }
-    }
-
     try {
+      const threadId = activeThreadIdRef.current;
       if (!threadId) {
         mainThreadStartsInFlightRef.current.add(targetTabKey);
         pendingThreadStartOwnersRef.current.push({ kind: 'main', key: targetTabKey });
@@ -1569,9 +1403,9 @@ export default function App(): React.JSX.Element {
 
       const response = await window.api.session.sendMessage({
         threadId,
-        text: outgoingText,
+        text: trimmed,
         attachments,
-        cwd: targetWorkspace,
+        cwd: workspace,
         model: selectedModel,
         effort: selectedReasoningEffort,
         fastMode,
@@ -1595,19 +1429,12 @@ export default function App(): React.JSX.Element {
       patchMainChatTab(targetTabKey, (tab) => ({
         ...tab,
         threadId: response.threadId,
-        workspace: tab.workspace ?? targetWorkspace,
         // The completion handler already chose idle vs attention based on
         // whether this tab was focused when it finished. Preserve that exact
         // settled presentation if the invoke response arrives afterward.
         status: terminalAlreadyObserved ? tab.status : 'working',
         turnId: terminalAlreadyObserved ? null : response.turn.id,
       }));
-      if (startedIntakeRestatement) {
-        // Bind the protocol to the thread the restatement turn created so a
-        // later thread switch invalidates it cleanly.
-        const intake = mainChatIntakeRef.current.get(targetTabKey);
-        if (intake) intake.threadId = response.threadId;
-      }
       if (!targetIsActive) {
         const snapshot = responseSnapshot;
         if (snapshot) {
@@ -1640,7 +1467,7 @@ export default function App(): React.JSX.Element {
         requestedModel: selectedModel,
         model: response.model,
         reasoningEffort: response.reasoningEffort,
-        workspace: targetWorkspace,
+        workspace,
         goalAtStart: goalSnapshot,
         goalAtEnd: goalSnapshot,
         goalContinuation: false,
@@ -1655,19 +1482,6 @@ export default function App(): React.JSX.Element {
         optimisticUserMessageIdRef.current = null;
         setItems((current) => current.filter((item) => item.id !== optimisticId));
       }
-      if (appliedProvisionalTitle && provisionalTitle) {
-        const tab = mainChatTabStateRef.current.tabs.find(
-          (candidate) => candidate.key === targetTabKey,
-        );
-        if (tab?.threadId === null && tab.title === provisionalTitle) {
-          patchMainChatTab(targetTabKey, (current) => ({ ...current, title: priorTitle }));
-          if (activeMainChatTabKeyRef.current === targetTabKey) {
-            activeThreadTitleRef.current = priorTitle;
-            setActiveThreadTitle(priorTitle);
-          }
-        }
-      }
-      if (startedIntakeRestatement) mainChatIntakeRef.current.delete(targetTabKey);
       addSystemItem(`Codex turn failed to start: ${(error as Error).message}`, 'error');
       return false;
     } finally {
@@ -1836,15 +1650,7 @@ export default function App(): React.JSX.Element {
     resumeFailuresByTabRef.current.delete(tabKey);
     discardComposerDraft(tabKey);
     patchMainChatTab(tabKey, (tab) => ({
-      ...createMainChatTab(
-        tab.key,
-        null,
-        'New Chat',
-        tab.model,
-        tab.reasoningEffort,
-        null,
-        tab.workspace,
-      ),
+      ...createMainChatTab(tab.key, null, 'New Chat', tab.model, tab.reasoningEffort),
       key: tab.key,
     }));
 
@@ -1869,7 +1675,7 @@ export default function App(): React.JSX.Element {
     );
     const browserMiddleSide =
       workspaceLayoutMode === 'browser-middle'
-        ? (requestedSide ?? active?.browserMiddleSide ?? 'left')
+        ? requestedSide ?? active?.browserMiddleSide ?? 'left'
         : null;
     const tab = createMainChatTab(
       crypto.randomUUID(),
@@ -1878,12 +1684,7 @@ export default function App(): React.JSX.Element {
       selectedModelRef.current,
       selectedReasoningEffortRef.current,
       browserMiddleSide,
-      active?.workspace ?? null,
     );
-    // New-tab creation is intentionally not a split command. The fresh chat
-    // owns the full chat height; users can drag tabs onto pane edges when they
-    // want a horizontal or vertical split.
-    updateChatSplitLayout((layout) => showChatAtFullHeight(layout, tab.key, browserMiddleSide));
     updateMainChatTabs((state) => ({ tabs: [...state.tabs, tab], activeKey: tab.key }));
     focusMainChatTab(tab);
     persistLastThreadId(null);
@@ -1978,7 +1779,6 @@ export default function App(): React.JSX.Element {
         closing.model,
         closing.reasoningEffort,
         closing.browserMiddleSide,
-        closing.workspace,
       );
       sessionStoreRef.current.remove(key);
       resumeFailuresByTabRef.current.delete(key);
@@ -2054,7 +1854,7 @@ export default function App(): React.JSX.Element {
     const previousState = mainChatTabStateRef.current;
     const current = previousState.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current);
     const browserMiddleSide =
-      workspaceLayoutMode === 'browser-middle' ? (current?.browserMiddleSide ?? 'left') : null;
+      workspaceLayoutMode === 'browser-middle' ? current?.browserMiddleSide ?? 'left' : null;
     const reuseCurrent = Boolean(current && !current.threadId && itemsRef.current.length === 0);
     if (!reuseCurrent && previousState.tabs.length >= maxMainChatTabs) return false;
     const target = reuseCurrent
@@ -2070,7 +1870,6 @@ export default function App(): React.JSX.Element {
           selectedModelRef.current,
           selectedReasoningEffortRef.current,
           browserMiddleSide,
-          current?.workspace ?? null,
         );
 
     flushActiveMainChatSession();
@@ -2213,12 +2012,7 @@ export default function App(): React.JSX.Element {
       const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
       const model = resumed.model ?? tab?.model ?? null;
       const reasoningEffort = resumed.reasoningEffort ?? tab?.reasoningEffort ?? null;
-      patchMainChatTab(tabKey, (current) => ({
-        ...current,
-        model,
-        reasoningEffort,
-        workspace: resumed.cwd ?? current.workspace,
-      }));
+      patchMainChatTab(tabKey, (current) => ({ ...current, model, reasoningEffort }));
       selectedModelRef.current = model;
       selectedReasoningEffortRef.current = reasoningEffort;
       setSelectedModel(model);
@@ -2274,20 +2068,11 @@ export default function App(): React.JSX.Element {
   }
 
   const handlePickWorkspace = async (): Promise<void> => {
-    const tabKey = activeMainChatTabKeyRef.current;
-    const tab = mainChatTabStateRef.current.tabs.find((candidate) => candidate.key === tabKey);
-    if (tab?.threadId) {
-      addSystemItem(
-        'This chat is already bound to its working directory. Start a new chat to work in a different folder.',
-        'warning',
-      );
-      return;
-    }
     try {
       const picked = await window.api.workspace.pick();
 
       if (picked) {
-        patchMainChatTab(tabKey, (current) => ({ ...current, workspace: picked }));
+        setWorkspace(picked);
       }
     } catch (error) {
       addSystemItem(`Workspace selection failed: ${(error as Error).message}`, 'error');
@@ -2299,7 +2084,7 @@ export default function App(): React.JSX.Element {
     if (existingThreadId) return existingThreadId;
 
     const started = await window.api.session.startThread({
-      cwd: workspaceForMainChatTab(activeMainChatTabKeyRef.current),
+      cwd: workspaceRef.current,
       model: selectedModelRef.current,
     });
     const threadId = started.thread.id;
@@ -2315,7 +2100,6 @@ export default function App(): React.JSX.Element {
       ...tab,
       threadId,
       title,
-      workspace: started.thread.cwd ?? tab.workspace,
     }));
     persistLastThreadId(threadId);
     return threadId;
@@ -2411,10 +2195,9 @@ export default function App(): React.JSX.Element {
         return;
       }
 
-      // Ctrl+\ splits the focused pane to the right; Ctrl+Shift+\ splits it
-      // downward. Require the physical key and ignore editor-owned events so
-      // a composer submit can never be misread as a workspace split command.
-      if (shouldHandleChatSplitShortcut(event)) {
+      // Ctrl+\ splits the focused pane to the right; Ctrl+Shift+\ (which
+      // reports as '|' on most layouts) splits it downward.
+      if (event.key === '\\' || event.key === '|') {
         event.preventDefault();
         handleSplitActivePane(
           activeMainChatTabKeyRef.current,
@@ -2514,7 +2297,7 @@ export default function App(): React.JSX.Element {
       patchSession: patchAgentSession,
       appendMessage: appendAgentMessage,
     },
-    getWorkspace: (session) => session.workspace,
+    getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
     getSelectedEffort: () => selectedReasoningEffortRef.current,
     getFastMode: () => fastModeRef.current,
@@ -2551,7 +2334,7 @@ export default function App(): React.JSX.Element {
     isRecoverable: (error) => Boolean(error && isRecoverableTurnError(error.codexErrorInfo)),
     isTurnTerminal: (key, turnId) =>
       hasObservedTerminalTurn(sessionStoreRef.current.peek(key)?.turnMeta ?? {}, turnId),
-    getWorkspace: (session) => session.workspace,
+    getWorkspace: () => workspaceRef.current,
     getSelectedModel: () => selectedModelRef.current,
     getActiveThreadId: () => activeThreadIdRef.current,
     pickFallbackModel,
@@ -2676,7 +2459,7 @@ export default function App(): React.JSX.Element {
       await window.api.session.sendMessage({
         threadId,
         text: autoRecoveryPrompt,
-        cwd: workspaceForThread(threadId),
+        cwd: workspaceRef.current,
         model,
       });
     } catch (error) {
@@ -2734,7 +2517,7 @@ export default function App(): React.JSX.Element {
         ),
       );
     } else if (notification.method !== 'item/mcpToolCall/progress') {
-      enqueueItemNotification(notification);
+      enqueueItemMutation((current) => reduceItemNotificationItems(current, notification));
     }
 
     if (
@@ -2757,7 +2540,7 @@ export default function App(): React.JSX.Element {
     const meta = snapshot.turnMeta[turnId];
     if (!meta) return;
     const model = meta.model ?? tab.model;
-    const workspace = meta.workspace ?? tab.workspace;
+    const workspace = meta.workspace ?? workspaceRef.current;
     const trace = buildTurnTrace({
       threadId,
       threadTitle: snapshot.title || tab.title,
@@ -2817,7 +2600,7 @@ export default function App(): React.JSX.Element {
       const next = reduceSessionNotification(seeded, notification, {
         atMs: Date.now(),
         fallbackModel: tab.model,
-        workspace: tab.workspace,
+        workspace: workspaceRef.current,
       });
       // A freshly seeded session is stored only when the notification actually
       // touched it — untouched seeds would also read as "cached".
@@ -2936,13 +2719,7 @@ export default function App(): React.JSX.Element {
         const pendingOwner = pendingThreadStartOwnersRef.current.shift();
         if (pendingOwner?.kind === 'main') {
           mainThreadStartsInFlightRef.current.delete(pendingOwner.key);
-          const existingTitle =
-            mainChatTabStateRef.current.tabs.find((tab) => tab.key === pendingOwner.key)?.title ??
-            defaultThreadTitle;
-          const startedTitle = resolveThreadTitle(
-            threadTitle(notification.params.thread),
-            existingTitle,
-          );
+          const startedTitle = threadTitle(notification.params.thread);
           patchMainChatTab(pendingOwner.key, (tab) => ({
             ...tab,
             threadId: startedThreadId,
@@ -2966,20 +2743,12 @@ export default function App(): React.JSX.Element {
         persistLastThreadId(notification.params.thread.id);
         activeThreadIdRef.current = notification.params.thread.id;
         setActiveThreadId(notification.params.thread.id);
-        const existingTitle =
-          mainChatTabStateRef.current.tabs.find(
-            (tab) => tab.key === activeMainChatTabKeyRef.current,
-          )?.title ?? defaultThreadTitle;
-        const startedTitle = resolveThreadTitle(
-          threadTitle(notification.params.thread),
-          existingTitle,
-        );
-        activeThreadTitleRef.current = startedTitle;
+        activeThreadTitleRef.current = threadTitle(notification.params.thread);
         setActiveThreadTitle(activeThreadTitleRef.current);
         patchMainChatTab(activeMainChatTabKeyRef.current, (tab) => ({
           ...tab,
           threadId: notification.params.thread.id,
-          title: startedTitle,
+          title: threadTitle(notification.params.thread),
         }));
         return;
       }
@@ -3043,7 +2812,7 @@ export default function App(): React.JSX.Element {
             requestedModel: selectedModelRef.current,
             model: selectedModelRef.current,
             reasoningEffort: activeReasoningEffortRef.current,
-            workspace: workspaceForThread(notification.params.threadId),
+            workspace: workspaceRef.current,
             goalAtStart: goalSnapshot,
             goalAtEnd: goalSnapshot,
             goalContinuation,
@@ -3295,7 +3064,7 @@ export default function App(): React.JSX.Element {
         // Ref, not state: refreshThreads is invoked from the mount-only codex
         // event handler (e.g. agent turn/completed), whose closure captured the
         // launch-time `workspace`. Using the ref refetches the current workspace.
-        cwd: workspace,
+        cwd: workspaceRef.current,
         cursor,
       });
 
@@ -3343,7 +3112,7 @@ export default function App(): React.JSX.Element {
             const inProgress = turns.find((turn) => turn.status === 'inProgress') ?? null;
             patchMainChatTab(tab.key, (current) => ({
               ...current,
-              title: resolveThreadTitle(threadTitle(resumed.thread), current.title),
+              title: threadTitle(resumed.thread),
               model: resumed.model ?? current.model,
               reasoningEffort: resumed.reasoningEffort ?? current.reasoningEffort,
               status: inProgress ? 'working' : 'idle',
@@ -3380,10 +3149,7 @@ export default function App(): React.JSX.Element {
     setIsCompacting(false);
     activeCompactionRef.current = null;
 
-    const currentTitle =
-      mainChatTabStateRef.current.tabs.find((tab) => tab.key === activeMainChatTabKeyRef.current)
-        ?.title ?? defaultThreadTitle;
-    const nextTitle = resolveThreadTitle(threadTitle(thread), currentTitle);
+    const nextTitle = threadTitle(thread);
     watchThreadIdRef.current = thread.id;
     activeThreadIdRef.current = thread.id;
     setActiveThreadId(thread.id);
@@ -3397,22 +3163,6 @@ export default function App(): React.JSX.Element {
     const nextItemMeta: Record<string, ItemMeta> = {};
     const nextTurnMeta: Record<string, TurnMeta> = {};
 
-    // One source of items per turn. The server re-enumerates persisted items
-    // as item-N while the disk cache holds the live-streamed ids for the same
-    // rows, so merging both copies of a turn duplicates every message. For a
-    // turn the cache holds in a terminal state, the cached version is also
-    // richer (plan boards, phases, full outputs) — keep it and skip the
-    // server's re-enumerated copy. Every other turn takes the server items,
-    // and stale cached rows of those turns are dropped below.
-    const cachedItemTurnIds = new Set(
-      cachedSession
-        ? cachedSession.items
-            .map((item) => cachedSession.itemMeta[item.id]?.turnId)
-            .filter((id): id is string => Boolean(id))
-        : [],
-    );
-    const serverItemTurnIds = new Set<string>();
-
     for (const turn of turns) {
       nextTurnMeta[turn.id] = {
         status: turn.status,
@@ -3425,11 +3175,6 @@ export default function App(): React.JSX.Element {
         durationMs: turn.durationMs ?? undefined,
         errorMessage: turn.error?.message,
       };
-      const cachedStatus = cachedSession?.turnMeta[turn.id]?.status;
-      const keepCachedTurn =
-        cachedItemTurnIds.has(turn.id) && cachedStatus !== undefined && cachedStatus !== 'inProgress';
-      if (keepCachedTurn) continue;
-      serverItemTurnIds.add(turn.id);
       for (const item of turn.items) {
         if (turn.status === 'inProgress') rememberModelCallInput(turn.id, item);
         nextItemMeta[item.id] = { turnId: turn.id };
@@ -3437,16 +3182,10 @@ export default function App(): React.JSX.Element {
       }
     }
 
-    // Drop cached rows for turns the server now owns (client-synthesized rows
-    // like the plan board and system notices have no server copy — keep them).
-    const prunedCachedItems = cachedSession
-      ? cachedSession.items.filter((item) => {
-          if (item.type === 'system' || item.type === 'turnPlan') return true;
-          const turnId = cachedSession.itemMeta[item.id]?.turnId;
-          return !turnId || !serverItemTurnIds.has(turnId);
-        })
-      : [];
-    const reconciledItems = cachedSession ? upsertMany(prunedCachedItems, nextItems) : nextItems;
+    // A fast disk restore may already have older rows on screen. The resumed
+    // server tail is authoritative for duplicate ids, while cached-only rows
+    // remain visible until their normal lazy server page arrives.
+    const reconciledItems = cachedSession ? upsertMany(cachedSession.items, nextItems) : nextItems;
     const reconciledItemMeta = cachedSession
       ? { ...cachedSession.itemMeta, ...nextItemMeta }
       : nextItemMeta;
@@ -3463,7 +3202,6 @@ export default function App(): React.JSX.Element {
       ...tab,
       threadId: thread.id,
       title: nextTitle,
-      workspace: environment?.workspace ?? thread.cwd ?? tab.workspace,
       status: inProgressTurnId ? 'working' : 'idle',
       turnId: inProgressTurnId,
     }));
@@ -3494,7 +3232,7 @@ export default function App(): React.JSX.Element {
           origin: 'restored',
           model: tab?.model ?? selectedModelRef.current,
           reasoningEffort: tab?.reasoningEffort ?? selectedReasoningEffortRef.current,
-          workspace: tab?.workspace ?? null,
+          workspace: workspaceRef.current,
           startedAtMs: turn.startedAt ? turn.startedAt * 1000 : undefined,
           completedAtMs: turn.completedAt ? turn.completedAt * 1000 : undefined,
           durationMs: turn.durationMs ?? undefined,
@@ -3528,8 +3266,8 @@ export default function App(): React.JSX.Element {
   // collapses into one setItems (one buildRows + one render) per display frame
   // instead of one per token. This keeps final-answer motion at the screen's
   // native cadence while still coalescing bursts from the transport.
-  function enqueueItemNotification(notification: ItemNotification): void {
-    pendingItemNotificationsRef.current.push(notification);
+  function enqueueItemMutation(mutate: (items: ChatItem[]) => ChatItem[]): void {
+    pendingItemMutationsRef.current.push(mutate);
 
     if (itemMutationFrameRef.current !== null) {
       return;
@@ -3545,7 +3283,7 @@ export default function App(): React.JSX.Element {
   // preserved (mutations run in enqueue order), so this is safe to call ahead of
   // a full-item upsert to keep pending deltas from landing after their item.
   function flushPendingItemMutations(): void {
-    const pending = pendingItemNotificationsRef.current;
+    const pending = pendingItemMutationsRef.current;
 
     if (!pending.length) {
       return;
@@ -3556,8 +3294,11 @@ export default function App(): React.JSX.Element {
       itemMutationFrameRef.current = null;
     }
 
-    pendingItemNotificationsRef.current = [];
-    const next = reduceItemNotificationBatch(itemsRef.current, pending);
+    pendingItemMutationsRef.current = [];
+    let next = itemsRef.current;
+    for (const mutate of pending) {
+      next = mutate(next);
+    }
     itemsRef.current = next;
     setItems(next);
   }
@@ -3583,135 +3324,6 @@ export default function App(): React.JSX.Element {
     setItems((current) => [...current, { type: 'system', id: crypto.randomUUID(), level, text }]);
   }
 
-  // Conversational intake state per main-chat tab (protocol in
-  // main-chat-intake.ts). Transient by design: a reload mid-protocol simply
-  // sends the next message normally.
-  const mainChatIntakeRef = useRef(new Map<string, IntakeState>());
-
-  // A thread switch or reset invalidates a pending intake for the active tab —
-  // the confirmation would target a conversation no longer on screen.
-  useEffect(() => {
-    const state = mainChatIntakeRef.current.get(activeMainChatTabKey);
-    if (state && state.threadId !== null && state.threadId !== activeThreadId) {
-      mainChatIntakeRef.current.delete(activeMainChatTabKey);
-    }
-  }, [activeThreadId, activeMainChatTabKey]);
-
-  // Wait for the paired reviewer to answer the briefing just sent. Polls the
-  // sessions ref (bounded, 500ms) instead of adding subscription plumbing;
-  // resolves null on timeout or reset so the main chat can never be bricked
-  // by its reviewer. `afterMessageCount` is the reviewer's message count from
-  // BEFORE the briefing was sent — acceptance requires growth past it, so a
-  // previously completed exchange (status still 'done', old reply on top) can
-  // never be mistaken for the new answer.
-  async function awaitReviewerPlan(
-    reviewerKey: string,
-    afterMessageCount: number,
-    timeoutMs = 120_000,
-  ): Promise<string | null> {
-    const deadline = Date.now() + timeoutMs;
-    let sawWorking = false;
-    while (Date.now() < deadline) {
-      await new Promise((resolve) => window.setTimeout(resolve, 500));
-      const reviewer = agentSessionsRef.current.find((session) => session.key === reviewerKey);
-      if (!reviewer) return null;
-      if (reviewer.status === 'working') {
-        sawWorking = true;
-        continue;
-      }
-      if (reviewer.messages.length > afterMessageCount && reviewer.status === 'done') {
-        const text = latestAssistantText(reviewer.messages);
-        if (text !== null) return text;
-        continue; // completion raced ahead of the message reduce — keep polling
-      }
-      if (sawWorking && reviewer.status === 'idle') return null; // reset out from under us
-    }
-    return null;
-  }
-
-  // The user's request for a turn, display-stripped — shared by the completion
-  // audit briefing and the mid-turn watchdog briefing.
-  function turnUserRequestText(turnId: string): string {
-    const userItem = itemsRef.current.find(
-      (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
-    );
-    if (!userItem || userItem.type !== 'userMessage') return '(request text unavailable)';
-    return visibleUserMessageText(userItem).trim() || '(request text unavailable)';
-  }
-
-  // Mid-turn watchdog (main-chat-watchdog.ts): sparse trajectory checks on the
-  // paired reviewer while a long main-chat turn runs. Silence-by-default — an
-  // ON-TRACK reply is dropped; a STEER reply lands in the running turn through
-  // the steer channel. Short turns never qualify, so quick tasks pay nothing.
-  const watchdogRef = useRef(new Map<string, WatchdogTurnState>());
-  const watchdogTickRef = useRef<() => void>(() => {});
-  watchdogTickRef.current = () => void maybeRunWatchdogCheck();
-  useEffect(() => {
-    const timer = window.setInterval(() => watchdogTickRef.current(), 15_000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  async function maybeRunWatchdogCheck(): Promise<void> {
-    const tabKey = activeMainChatTabKeyRef.current;
-    const turnId = activeTurnIdRef.current;
-    const states = watchdogRef.current;
-    if (!turnId) {
-      states.delete(tabKey);
-      return;
-    }
-    // Intake protocol turns are conversation, not work.
-    if (mainChatIntakeRef.current.has(tabKey)) return;
-    let state = states.get(tabKey);
-    if (!state || state.turnId !== turnId) {
-      const startedAtMs = turnMetaRef.current[turnId]?.startedAtMs ?? Date.now();
-      state = newWatchdogTurnState(turnId, startedAtMs);
-      states.set(tabKey, state);
-    }
-    const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId);
-    if (!watchdogCheckDue(state, Date.now(), steps.length)) return;
-    const reviewer = pickIntakeReviewer(agentSessionsRef.current, tabKey);
-    // No paired reviewer, or busy on something else → try again next tick.
-    if (!reviewer || reviewer.status === 'working') return;
-
-    state.inFlight = true;
-    state.checksSent += 1;
-    state.nextCheckAtMs = Date.now() + nextWatchdogDelayMs(state.checksSent);
-    try {
-      const startedAtMs = turnMetaRef.current[turnId]?.startedAtMs ?? Date.now();
-      const briefing = buildWatchdogBriefing({
-        userText: turnUserRequestText(turnId),
-        steps,
-        elapsedMinutes: Math.max(1, Math.round((Date.now() - startedAtMs) / 60_000)),
-        checkNumber: state.checksSent,
-        doerLabel:
-          models.find((model) => model.id === selectedModel)?.displayName ??
-          selectedModel ??
-          'the main-chat model',
-      });
-      const baselineMessageCount = reviewer.messages.length;
-      if (!(await handleAgentSend(reviewer.key, briefing, []))) return;
-      const reply = await awaitReviewerPlan(reviewer.key, baselineMessageCount, 90_000);
-      // The turn may have finished while the check ran — never steer a dead
-      // turn (the completion audit is about to cover it anyway).
-      if (!reply || activeTurnIdRef.current !== turnId) return;
-      const verdict = parseWatchdogVerdict(reply);
-      if (verdict.verdict === 'steer') {
-        const threadId = activeThreadIdRef.current;
-        if (threadId) {
-          await window.api.session
-            .steerTurn({
-              threadId,
-              turnId,
-              text: buildSteerMessage(reviewer.title, verdict.guidance),
-            })
-            .catch(() => {});
-        }
-      }
-    } finally {
-      state.inFlight = false;
-    }
-  }
-
   // Codex-doer / Claude-auditor pairing: when the focused main chat completes
   // a turn, idle dock agents in audit mode receive a compact briefing. Turns
   // that changed files get the workspace-grounded diff audit (the auditor
@@ -3725,22 +3337,6 @@ export default function App(): React.JSX.Element {
       (session) => session.mainChatTabKey === activeTabKey && session.auditsMain,
     );
     if (!auditors.length) return;
-    // Intake protocol turns (restatement / declined-start replies) are not
-    // work — the reviewer plans instead of auditing until the task starts.
-    if (mainChatIntakeRef.current.has(activeTabKey)) return;
-    // A watchdog check may be mid-flight on the reviewer as the turn ends;
-    // busy auditors are normally skipped, but skipping HERE would trade the
-    // end audit (the loop's verdict) for a trajectory check. Wait it out,
-    // bounded.
-    {
-      const watchdog = watchdogRef.current.get(activeTabKey);
-      if (watchdog?.inFlight) {
-        const deadline = Date.now() + 90_000;
-        while (watchdog.inFlight && Date.now() < deadline) {
-          await new Promise((resolve) => window.setTimeout(resolve, 500));
-        }
-      }
-    }
     const threadId = activeThreadIdRef.current;
     // fileChange items only cover editor-tool edits; the checkpoint diff is
     // ground truth and also catches shell-command writes (the doer's most
@@ -3764,7 +3360,17 @@ export default function App(): React.JSX.Element {
     ) {
       return;
     }
-    const userText = turnUserRequestText(turnId);
+    const userItem = itemsRef.current.find(
+      (item) => item.type === 'userMessage' && itemMetaRef.current[item.id]?.turnId === turnId,
+    );
+    const userText =
+      userItem && userItem.type === 'userMessage'
+        ? userItem.content
+            .filter((content) => content.type === 'text')
+            .map((content) => stripMentionContext(stripAutomaticSkillMarker(stripInjectedMemory(content.text))))
+            .join('\n')
+            .trim() || '(request text unavailable)'
+        : '(request text unavailable)';
     const steps = turnStepLines(itemsRef.current, itemMetaRef.current, turnId);
     const answerText = turnAnswerText(itemsRef.current, itemMetaRef.current, turnId);
     if (!changed.length && !answerText && !steps.length) {
@@ -3778,13 +3384,7 @@ export default function App(): React.JSX.Element {
       }
       return;
     }
-    const prompt = buildAuditPrompt({
-      userText,
-      files: changed,
-      steps,
-      answerText,
-      detectionUnavailable,
-    });
+    const prompt = buildAuditPrompt({ userText, files: changed, steps, answerText, detectionUnavailable });
     // Structured summary rides along on the displayed message so the card can
     // render a compact collapsible card; the model still receives `prompt`.
     const auditSummary = { userText, files: changed, steps, answerText };
@@ -3803,16 +3403,6 @@ export default function App(): React.JSX.Element {
       auditContextByAuditorRef.current.set(auditor.key, {
         threadId,
         auditedTurnWasFeedback: auditFeedbackTurnIdsRef.current.has(turnId),
-        // Ground truth for the controller's progress check. null = signal not
-        // applicable: either detection was unavailable (non-git workspace) or
-        // the turn was chat-style work (an answer with no file changes —
-        // research/review tasks), where "changed no files" is normal, not
-        // stagnation. The ceiling and repeated-flag checks still bound those
-        // loops.
-        changedFileCount:
-          detectionUnavailable || (changed.length === 0 && Boolean(answerText))
-            ? null
-            : changed.length,
       });
       void handleAgentSend(auditor.key, prompt, [], { audit: auditSummary });
     }
@@ -3820,11 +3410,10 @@ export default function App(): React.JSX.Element {
 
   // Audit feedback: when an auditor with "send findings to main chat" enabled
   // finishes an audit with VERDICT: flag, the report flows into the main chat
-  // as a visible turn for the doer to act on. Gated (pure, tested): flag-only,
-  // main idle, same thread — and fix-turn audits bounce again only under the
-  // loop-to-done controller's policy (round ceiling, real progress, no
-  // repeated flag). A pass on a fix turn converges the loop; every stop is
-  // announced in the transcript.
+  // as a visible turn for the doer to act on. Gated (pure, tested): flag-only
+  // (pass verdicts converge the loop), main idle, same thread, and one bounce
+  // per user-initiated turn — feedback-started turns are re-audited and
+  // display their verdict, but never auto-send again.
   async function maybeSendAuditFeedback(sessionKey: string): Promise<void> {
     const session = agentSessionsRef.current.find((candidate) => candidate.key === sessionKey);
     if (!session?.reportsToMain) return;
@@ -3835,16 +3424,7 @@ export default function App(): React.JSX.Element {
     if (!report) return;
     // One auto-send attempt per audit, whatever the outcome.
     auditContextByAuditorRef.current.delete(sessionKey);
-    const verdict = parseAuditVerdict(report);
-    if (verdict !== 'flag') {
-      const loop = auditLoopRef.current.get(sessionKey);
-      if (loop && verdict === 'pass' && context?.auditedTurnWasFeedback) {
-        // The reviewer approved a fix round: the loop is done — say so.
-        addSystemItem(loopConvergedMessage(loop.rounds), 'info');
-      }
-      auditLoopRef.current.delete(sessionKey);
-      return;
-    }
+    if (parseAuditVerdict(report) !== 'flag') return;
     // A flagged report that does NOT flow explains itself — a silently
     // suppressed sendback reads as broken (and the flag badge stays clickable
     // for manual escalation).
@@ -3855,23 +3435,6 @@ export default function App(): React.JSX.Element {
       explainSkip('Flagged — not auto-sent (audit predates this session); click the flag to send');
       return;
     }
-    // Loop-to-done controller: decide whether this fix-turn flag earns another
-    // round before consulting the send gate.
-    let loopDecision: LoopDecision | null = null;
-    if (context.auditedTurnWasFeedback) {
-      loopDecision = decideLoopContinuation({
-        state: auditLoopRef.current.get(sessionKey) ?? null,
-        fixTurnChangedFiles: context.changedFileCount,
-        report,
-      });
-      if (loopDecision.kind === 'stop') {
-        const rounds = auditLoopRef.current.get(sessionKey)?.rounds ?? 0;
-        auditLoopRef.current.delete(sessionKey);
-        addSystemItem(loopStopMessage(loopDecision.reason, rounds), 'warning');
-        explainSkip(`Flagged — loop stopped (${loopDecision.reason}); click the flag to send`);
-        return;
-      }
-    }
     if (
       !shouldSendAuditFeedback({
         verdict: 'flag',
@@ -3879,13 +3442,14 @@ export default function App(): React.JSX.Element {
         mainIdle: !activeTurnIdRef.current,
         sameThread: context.threadId !== null && context.threadId === activeThreadIdRef.current,
         auditedTurnWasFeedback: context.auditedTurnWasFeedback,
-        loopMayContinue: loopDecision?.kind === 'continue',
       })
     ) {
       explainSkip(
-        activeTurnIdRef.current
-          ? 'Flagged — main chat was busy; click the flag to send'
-          : 'Flagged — main chat moved on; click the flag to send',
+        context.auditedTurnWasFeedback
+          ? 'Flagged — auto-send capped at one round per turn; click the flag to send'
+          : activeTurnIdRef.current
+            ? 'Flagged — main chat was busy; click the flag to send'
+            : 'Flagged — main chat moved on; click the flag to send',
       );
       return;
     }
@@ -3893,14 +3457,6 @@ export default function App(): React.JSX.Element {
     const sent = await handleSend(buildAuditFeedbackMessage({ agentTitle: session.title, report }));
     pendingAuditFeedbackRef.current = false;
     if (sent) {
-      // Advance the ledger only on a dispatched round, and announce it.
-      const previous = auditLoopRef.current.get(sessionKey);
-      const next =
-        context.auditedTurnWasFeedback && previous
-          ? continueLoop(previous, report)
-          : startLoop(report);
-      auditLoopRef.current.set(sessionKey, next);
-      addSystemItem(loopRoundMessage(next.rounds), 'info');
       patchAgentSession(sessionKey, (current) => ({ ...current, lastAuditNote: null }));
     } else {
       explainSkip('Flagged — main chat became busy; click the flag to send');
@@ -3929,7 +3485,8 @@ export default function App(): React.JSX.Element {
   // checkpoint view as the focused chat rather than a focus-dependent subset.
   const [turnCheckpoints, setTurnCheckpoints] = useState<Record<string, string>>({});
   const checkpointThreadIds = useMemo(
-    () => [...new Set(mainChatTabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])))].sort(),
+    () =>
+      [...new Set(mainChatTabs.flatMap((tab) => (tab.threadId ? [tab.threadId] : [])))].sort(),
     [mainChatTabs],
   );
   useEffect(() => {
@@ -3941,15 +3498,15 @@ export default function App(): React.JSX.Element {
     void Promise.all(
       checkpointThreadIds.map((threadId) => window.api.checkpoints.list(threadId).catch(() => [])),
     ).then((recordsByThread) => {
-      if (stale) return;
-      const byTurn: Record<string, string> = {};
-      for (const records of recordsByThread) {
-        for (const record of records) {
-          if (record.turnId) byTurn[record.turnId] = record.id;
+        if (stale) return;
+        const byTurn: Record<string, string> = {};
+        for (const records of recordsByThread) {
+          for (const record of records) {
+            if (record.turnId) byTurn[record.turnId] = record.id;
+          }
         }
-      }
-      setTurnCheckpoints(byTurn);
-    });
+        setTurnCheckpoints(byTurn);
+      });
     return () => {
       stale = true;
     };
@@ -4035,111 +3592,110 @@ export default function App(): React.JSX.Element {
       ? mainChatTabs.filter((tab) => tab.browserMiddleSide === options.side)
       : mainChatTabs;
     const headerActiveMainChatTabKey = options.side
-      ? (browserMiddleActiveTabKeys[options.side] ?? paneTabs[0]?.key ?? activeMainChatTabKey)
+      ? browserMiddleActiveTabKeys[options.side] ?? paneTabs[0]?.key ?? activeMainChatTabKey
       : activeMainChatTabKey;
 
     return (
       <ChatPane
-        turnCheckpoints={turnCheckpoints}
-        onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
-        turnReviews={turnReviews}
-        undoneFiles={undoneFiles}
-        alwaysKeepAll={alwaysKeepAll}
-        onKeepTurn={handleKeepTurn}
-        onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
-        onUndoTurnAll={handleUndoTurnAll}
-        onUndoFile={handleUndoFile}
-        agentSessionStore={sessionStoreRef.current}
-        mainChatTabs={paneTabs}
-        activeMainChatTabKey={activeMainChatTabKey}
-        headerActiveMainChatTabKey={headerActiveMainChatTabKey}
-        mainChatTabsDisabled={
-          isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
-        }
-        onSelectMainChatTab={handleSelectMainChatTab}
-        onReorderMainChatTabs={handleReorderMainChatTabs}
-        onCloseMainChatTab={handleCloseMainChatTab}
-        onNewMainChatTab={handleNewMainChatTab}
-        paneId={options.id}
-        showTabBar={options.showTabBar}
-        browserMiddleSide={options.side}
-        isBrowserMiddle={workspaceLayoutMode === 'browser-middle'}
-        onToggleBrowserMiddle={toggleBrowserMiddleLayout}
-        splitLayout={layout}
-        onDropTabOnPane={handleDropTabOnSplitPane}
-        onCloseSplitPane={handleCloseSplitPane}
-        onSetSplitRatio={(path, ratio) =>
-          handleSetSplitRatio(`${options.pathPrefix}${path}`, ratio)
-        }
-        canSplitForDrop={(targetKey, sourceKey) =>
-          canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
-        }
-        onSplitActivePane={handleSplitActivePane}
-        canSplitActivePane={
-          canSplitPaneAt(chatSplitLayout, headerActiveMainChatTabKey) &&
-          mainChatTabs.length < maxMainChatTabs
-        }
-        items={items}
-        itemMeta={itemMeta}
-        title={activeThreadTitle}
-        status={codexStatus}
-        isRestoring={isRestoring}
-        threads={threads}
-        activeThreadId={activeThreadId}
-        activeTurnId={activeTurnId}
-        activeGoal={activeGoal}
-        isGoalUpdating={isGoalUpdating}
-        threadsNextCursor={threadsNextCursor}
-        threadsLoading={threadsLoading}
-        threadsError={threadsError}
-        hasThreadContent={hasThreadContent}
-        isBusy={
-          isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
-        }
-        workspace={workspace}
-        models={models}
-        selectedModel={selectedModel}
-        selectedReasoningEffort={selectedReasoningEffort}
-        fastMode={fastMode}
-        onSelectModel={handleSelectModel}
-        onSelectModelEffort={handleSelectModelEffort}
-        onSetFastMode={handleSetFastMode}
-        onSend={handleSend}
-        onSteer={handleSteer}
-        onStop={handleStop}
-        onNewThread={handleNewThread}
-        onResumeThread={async (threadId) => {
-          await handleResumeThread(threadId);
-        }}
-        onLoadMoreThreads={loadMoreThreads}
-        onPickWorkspace={handlePickWorkspace}
-        onSaveGoal={handleSaveGoal}
-        onSetGoalStatus={handleSetGoalStatus}
-        onClearGoal={handleClearGoal}
-        onCompactThread={handleCompactThread}
-        agentSessions={agentSessions}
-        openAgentKeys={openAgentKeys}
-        selectedAgentKey={selectedAgentKey}
-        onSelectAgent={setSelectedAgentKey}
-        onOpenAgent={handleOpenAgent}
-        onMinimizeAgent={handleMinimizeAgent}
-        onSetAgentRole={handleSetAgentRole}
-        onToggleReportAgent={handleToggleReportAgent}
-        onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
-        onDecideAgentSendPolicy={handleDecideSendPolicy}
-        onSetAgentModel={handleSelectAgentModel}
-        onSetAgentModelEffort={handleSelectAgentModelEffort}
-        onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
-        onPromoteAgent={(key) => void handlePromoteAgent(key)}
-        onCloseAgentSession={handleCloseAgentSession}
-        onResetAgentSession={handleResetAgentSession}
-        onAgentSend={handleAgentSend}
-        onAgentSteer={handleAgentSteer}
-        onAgentStop={handleAgentStop}
-        onAgentCompact={handleAgentCompact}
-        onLoadOlderHistory={(tabKey, threadId) => {
-          void loadOlderThreadHistory(threadId, tabKey);
-        }}
+      turnCheckpoints={turnCheckpoints}
+      onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+      turnReviews={turnReviews}
+      undoneFiles={undoneFiles}
+      alwaysKeepAll={alwaysKeepAll}
+      onKeepTurn={handleKeepTurn}
+      onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
+      onUndoTurnAll={handleUndoTurnAll}
+      onUndoFile={handleUndoFile}
+      agentSessionStore={sessionStoreRef.current}
+      mainChatTabs={paneTabs}
+      activeMainChatTabKey={activeMainChatTabKey}
+      headerActiveMainChatTabKey={headerActiveMainChatTabKey}
+      mainChatTabsDisabled={
+        isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
+      }
+      onSelectMainChatTab={handleSelectMainChatTab}
+      onReorderMainChatTabs={handleReorderMainChatTabs}
+      onCloseMainChatTab={handleCloseMainChatTab}
+      onNewMainChatTab={handleNewMainChatTab}
+      paneId={options.id}
+      showTabBar={options.showTabBar}
+      browserMiddleSide={options.side}
+      isBrowserMiddle={workspaceLayoutMode === 'browser-middle'}
+      onToggleBrowserMiddle={toggleBrowserMiddleLayout}
+      splitLayout={layout}
+      onDropTabOnPane={handleDropTabOnSplitPane}
+      onCloseSplitPane={handleCloseSplitPane}
+      onSetSplitRatio={(path, ratio) => handleSetSplitRatio(`${options.pathPrefix}${path}`, ratio)}
+      canSplitForDrop={(targetKey, sourceKey) =>
+        canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+      }
+      onSplitActivePane={handleSplitActivePane}
+      canSplitActivePane={
+        canSplitPaneAt(chatSplitLayout, headerActiveMainChatTabKey) &&
+        mainChatTabs.length < maxMainChatTabs
+      }
+      items={items}
+      itemMeta={itemMeta}
+      title={activeThreadTitle}
+      status={codexStatus}
+      isRestoring={isRestoring}
+      threads={threads}
+      activeThreadId={activeThreadId}
+      activeTurnId={activeTurnId}
+      activeGoal={activeGoal}
+      isGoalUpdating={isGoalUpdating}
+      threadsNextCursor={threadsNextCursor}
+      threadsLoading={threadsLoading}
+      threadsError={threadsError}
+      hasThreadContent={hasThreadContent}
+      isBusy={
+        isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
+      }
+      workspace={workspace}
+      models={models}
+      selectedModel={selectedModel}
+      selectedReasoningEffort={selectedReasoningEffort}
+      fastMode={fastMode}
+      onSelectModel={handleSelectModel}
+      onSelectModelEffort={handleSelectModelEffort}
+      onSetFastMode={handleSetFastMode}
+      onSend={handleSend}
+      onSteer={handleSteer}
+      onStop={handleStop}
+      onNewThread={handleNewThread}
+      onResumeThread={async (threadId) => {
+        await handleResumeThread(threadId);
+      }}
+      onLoadMoreThreads={loadMoreThreads}
+      onPickWorkspace={handlePickWorkspace}
+      onSaveGoal={handleSaveGoal}
+      onSetGoalStatus={handleSetGoalStatus}
+      onClearGoal={handleClearGoal}
+      onCompactThread={handleCompactThread}
+      agentSessions={agentSessions}
+      openAgentKeys={openAgentKeys}
+      selectedAgentKey={selectedAgentKey}
+      onSelectAgent={setSelectedAgentKey}
+      onOpenAgent={handleOpenAgent}
+      onMinimizeAgent={handleMinimizeAgent}
+      onToggleWatchAgent={handleToggleWatchAgent}
+      onToggleAuditAgent={handleToggleAuditAgent}
+      onToggleReportAgent={handleToggleReportAgent}
+      onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+      onDecideAgentSendPolicy={handleDecideSendPolicy}
+      onSetAgentModel={handleSelectAgentModel}
+      onSetAgentModelEffort={handleSelectAgentModelEffort}
+      onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
+      onPromoteAgent={(key) => void handlePromoteAgent(key)}
+      onCloseAgentSession={handleCloseAgentSession}
+      onResetAgentSession={handleResetAgentSession}
+      onAgentSend={handleAgentSend}
+      onAgentSteer={handleAgentSteer}
+      onAgentStop={handleAgentStop}
+      onAgentCompact={handleAgentCompact}
+      onLoadOlderHistory={(tabKey, threadId) => {
+        void loadOlderThreadHistory(threadId, tabKey);
+      }}
       />
     );
   };
@@ -4161,114 +3717,112 @@ export default function App(): React.JSX.Element {
       >
         {!browserMiddleColumns ? (
           <>
-            <ChatPane
-              turnCheckpoints={turnCheckpoints}
-              onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
-              turnReviews={turnReviews}
-              undoneFiles={undoneFiles}
-              alwaysKeepAll={alwaysKeepAll}
-              onKeepTurn={handleKeepTurn}
-              onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
-              onUndoTurnAll={handleUndoTurnAll}
-              onUndoFile={handleUndoFile}
-              agentSessionStore={sessionStoreRef.current}
-              mainChatTabs={mainChatTabs}
-              activeMainChatTabKey={activeMainChatTabKey}
-              mainChatTabsDisabled={
-                isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
-              }
-              onSelectMainChatTab={handleSelectMainChatTab}
-              onReorderMainChatTabs={handleReorderMainChatTabs}
-              onCloseMainChatTab={handleCloseMainChatTab}
-              onNewMainChatTab={handleNewMainChatTab}
-              isBrowserMiddle={false}
-              onToggleBrowserMiddle={toggleBrowserMiddleLayout}
-              splitLayout={chatSplitLayout}
-              onDropTabOnPane={handleDropTabOnSplitPane}
-              onCloseSplitPane={handleCloseSplitPane}
-              onSetSplitRatio={handleSetSplitRatio}
-              canSplitForDrop={(targetKey, sourceKey) =>
-                canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
-              }
-              onSplitActivePane={handleSplitActivePane}
-              canSplitActivePane={
-                canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
-                mainChatTabs.length < maxMainChatTabs
-              }
-              items={items}
-              itemMeta={itemMeta}
-              title={activeThreadTitle}
-              status={codexStatus}
-              isRestoring={isRestoring}
-              threads={threads}
-              activeThreadId={activeThreadId}
-              activeTurnId={activeTurnId}
-              activeGoal={activeGoal}
-              isGoalUpdating={isGoalUpdating}
-              threadsNextCursor={threadsNextCursor}
-              threadsLoading={threadsLoading}
-              threadsError={threadsError}
-              hasThreadContent={hasThreadContent}
-              isBusy={
-                isRestoring ||
-                isSending ||
-                Boolean(activeTurnId) ||
-                Boolean(reconcilingMainChatTabKey)
-              }
-              workspace={workspace}
-              models={models}
-              selectedModel={selectedModel}
-              selectedReasoningEffort={selectedReasoningEffort}
-              fastMode={fastMode}
-              onSelectModel={handleSelectModel}
-              onSelectModelEffort={handleSelectModelEffort}
-              onSetFastMode={handleSetFastMode}
-              onSend={handleSend}
-              onSteer={handleSteer}
-              onStop={handleStop}
-              onNewThread={handleNewThread}
-              onResumeThread={async (threadId) => {
-                await handleResumeThread(threadId);
-              }}
-              onLoadMoreThreads={loadMoreThreads}
-              onPickWorkspace={handlePickWorkspace}
-              onSaveGoal={handleSaveGoal}
-              onSetGoalStatus={handleSetGoalStatus}
-              onClearGoal={handleClearGoal}
-              onCompactThread={handleCompactThread}
-              agentSessions={agentSessions}
-              openAgentKeys={openAgentKeys}
-              selectedAgentKey={selectedAgentKey}
-              onSelectAgent={setSelectedAgentKey}
-              onOpenAgent={handleOpenAgent}
-              onMinimizeAgent={handleMinimizeAgent}
-              onSetAgentRole={handleSetAgentRole}
-              onToggleReportAgent={handleToggleReportAgent}
-              onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
-              onDecideAgentSendPolicy={handleDecideSendPolicy}
-              onSetAgentModel={handleSelectAgentModel}
-              onSetAgentModelEffort={handleSelectAgentModelEffort}
-              onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
-              onPromoteAgent={(key) => void handlePromoteAgent(key)}
-              onCloseAgentSession={handleCloseAgentSession}
-              onResetAgentSession={handleResetAgentSession}
-              onAgentSend={handleAgentSend}
-              onAgentSteer={handleAgentSteer}
-              onAgentStop={handleAgentStop}
-              onAgentCompact={handleAgentCompact}
-              onLoadOlderHistory={(tabKey, threadId) => {
-                void loadOlderThreadHistory(threadId, tabKey);
-              }}
-            />
-            <div className="split-divider" onPointerDown={handleDividerPointerDown} />
-            <BrowserPane
-              state={browserState}
-              activeTab={activeTab}
-              viewHostRef={viewHostRef}
-              viewBounds={viewBounds}
-              isFullscreen={isBrowserFullscreen}
-              onToggleFullscreen={toggleBrowserFullscreen}
-            />
+        <ChatPane
+          turnCheckpoints={turnCheckpoints}
+          onRevertTurn={(turnId) => void handleRevertTurn(turnId)}
+          turnReviews={turnReviews}
+          undoneFiles={undoneFiles}
+          alwaysKeepAll={alwaysKeepAll}
+          onKeepTurn={handleKeepTurn}
+          onSetAlwaysKeepAll={handleSetAlwaysKeepAll}
+          onUndoTurnAll={handleUndoTurnAll}
+          onUndoFile={handleUndoFile}
+          agentSessionStore={sessionStoreRef.current}
+          mainChatTabs={mainChatTabs}
+          activeMainChatTabKey={activeMainChatTabKey}
+          mainChatTabsDisabled={
+            isSending || isGoalUpdating || isRestoring || Boolean(reconcilingMainChatTabKey)
+          }
+          onSelectMainChatTab={handleSelectMainChatTab}
+          onReorderMainChatTabs={handleReorderMainChatTabs}
+          onCloseMainChatTab={handleCloseMainChatTab}
+          onNewMainChatTab={handleNewMainChatTab}
+          isBrowserMiddle={false}
+          onToggleBrowserMiddle={toggleBrowserMiddleLayout}
+          splitLayout={chatSplitLayout}
+          onDropTabOnPane={handleDropTabOnSplitPane}
+          onCloseSplitPane={handleCloseSplitPane}
+          onSetSplitRatio={handleSetSplitRatio}
+          canSplitForDrop={(targetKey, sourceKey) =>
+            canSplitPaneForDrop(chatSplitLayoutRef.current, targetKey, sourceKey)
+          }
+          onSplitActivePane={handleSplitActivePane}
+          canSplitActivePane={
+            canSplitPaneAt(chatSplitLayout, activeMainChatTabKey) &&
+            mainChatTabs.length < maxMainChatTabs
+          }
+          items={items}
+          itemMeta={itemMeta}
+          title={activeThreadTitle}
+          status={codexStatus}
+          isRestoring={isRestoring}
+          threads={threads}
+          activeThreadId={activeThreadId}
+          activeTurnId={activeTurnId}
+          activeGoal={activeGoal}
+          isGoalUpdating={isGoalUpdating}
+          threadsNextCursor={threadsNextCursor}
+          threadsLoading={threadsLoading}
+          threadsError={threadsError}
+          hasThreadContent={hasThreadContent}
+          isBusy={
+            isRestoring || isSending || Boolean(activeTurnId) || Boolean(reconcilingMainChatTabKey)
+          }
+          workspace={workspace}
+          models={models}
+          selectedModel={selectedModel}
+          selectedReasoningEffort={selectedReasoningEffort}
+          fastMode={fastMode}
+          onSelectModel={handleSelectModel}
+          onSelectModelEffort={handleSelectModelEffort}
+          onSetFastMode={handleSetFastMode}
+          onSend={handleSend}
+          onSteer={handleSteer}
+          onStop={handleStop}
+          onNewThread={handleNewThread}
+          onResumeThread={async (threadId) => {
+            await handleResumeThread(threadId);
+          }}
+          onLoadMoreThreads={loadMoreThreads}
+          onPickWorkspace={handlePickWorkspace}
+          onSaveGoal={handleSaveGoal}
+          onSetGoalStatus={handleSetGoalStatus}
+          onClearGoal={handleClearGoal}
+          onCompactThread={handleCompactThread}
+          agentSessions={agentSessions}
+          openAgentKeys={openAgentKeys}
+          selectedAgentKey={selectedAgentKey}
+          onSelectAgent={setSelectedAgentKey}
+          onOpenAgent={handleOpenAgent}
+          onMinimizeAgent={handleMinimizeAgent}
+          onToggleWatchAgent={handleToggleWatchAgent}
+          onToggleAuditAgent={handleToggleAuditAgent}
+          onToggleReportAgent={handleToggleReportAgent}
+          onSendAuditFeedback={(key) => void handleSendAuditFeedbackNow(key)}
+          onDecideAgentSendPolicy={handleDecideSendPolicy}
+          onSetAgentModel={handleSelectAgentModel}
+          onSetAgentModelEffort={handleSelectAgentModelEffort}
+          onNewAgent={(mainChatTabKey) => handleNewAgent(mainChatTabKey)}
+          onPromoteAgent={(key) => void handlePromoteAgent(key)}
+          onCloseAgentSession={handleCloseAgentSession}
+          onResetAgentSession={handleResetAgentSession}
+          onAgentSend={handleAgentSend}
+          onAgentSteer={handleAgentSteer}
+          onAgentStop={handleAgentStop}
+          onAgentCompact={handleAgentCompact}
+          onLoadOlderHistory={(tabKey, threadId) => {
+            void loadOlderThreadHistory(threadId, tabKey);
+          }}
+        />
+        <div className="split-divider" onPointerDown={handleDividerPointerDown} />
+        <BrowserPane
+          state={browserState}
+          activeTab={activeTab}
+          viewHostRef={viewHostRef}
+          viewBounds={viewBounds}
+          isFullscreen={isBrowserFullscreen}
+          onToggleFullscreen={toggleBrowserFullscreen}
+        />
           </>
         ) : (
           <>
@@ -4309,10 +3863,39 @@ export default function App(): React.JSX.Element {
 
 function TitleBar(): React.JSX.Element {
   const isVerificationInstance = window.api.runtime.instanceRole === 'verification';
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    let timeoutId: number;
+
+    const refreshClock = () => {
+      const next = new Date();
+      setNow(next);
+      timeoutId = window.setTimeout(
+        refreshClock,
+        60_000 - (next.getSeconds() * 1_000 + next.getMilliseconds()) + 20,
+      );
+    };
+
+    const current = new Date();
+    timeoutId = window.setTimeout(
+      refreshClock,
+      60_000 - (current.getSeconds() * 1_000 + current.getMilliseconds()) + 20,
+    );
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   return (
     <header className={`titlebar ${isVerificationInstance ? 'is-verification' : ''}`}>
-      <TitlebarCalendar />
+      <time
+        className="titlebar-clock"
+        dateTime={now.toISOString()}
+        aria-label={titlebarAccessibleFormatter.format(now)}
+      >
+        <span className="titlebar-clock-time">{titlebarTimeFormatter.format(now)}</span>
+        <span className="titlebar-clock-date">{titlebarDateFormatter.format(now)}</span>
+      </time>
       <div className="window-controls">
         <button
           type="button"
@@ -4335,6 +3918,7 @@ function TitleBar(): React.JSX.Element {
     </header>
   );
 }
+
 
 function persistLastThreadId(threadId: string | null): void {
   if (threadId) {

@@ -16,9 +16,8 @@ export type BrowserTabViewHandlers = {
   onReload(): void
   onMainFrameNavigation(): void
   onStateChanged(): void
-  onRecordVisit(url: string, title: string, favicon: string | null): void
+  onRecordVisit(url: string, title: string): void
   onUpdateVisitTitle(url: string, title: string): void
-  onUpdateVisitFavicon(url: string, favicon: string | null): void
   onDestroyed(): void
 }
 
@@ -118,7 +117,6 @@ export function attachBrowserTabViewEvents(
 
   webContents.on('page-favicon-updated', (_event, favicons) => {
     tab.favicon = pickFavicon(favicons)
-    handlers.onUpdateVisitFavicon(webContents.getURL(), tab.favicon)
     handlers.onStateChanged()
   })
 
@@ -141,14 +139,13 @@ export function attachBrowserTabViewEvents(
     tab.isLoading = false
     tab.url = webContents.getURL()
     tab.title = webContents.getTitle() || tab.url || 'New Tab'
-    handlers.onUpdateVisitFavicon(tab.url, tab.favicon)
     handlers.onStateChanged()
   })
 
   webContents.on('did-navigate', (_event, url) => {
     tab.url = url
     if (!tab.suppressVisits) {
-      handlers.onRecordVisit(url, webContents.getTitle(), tab.favicon)
+      handlers.onRecordVisit(url, webContents.getTitle())
     }
     handlers.onStateChanged()
   })
@@ -158,7 +155,7 @@ export function attachBrowserTabViewEvents(
       handlers.onMainFrameNavigation()
       tab.url = url
       if (!tab.suppressVisits) {
-        handlers.onRecordVisit(url, webContents.getTitle(), tab.favicon)
+        handlers.onRecordVisit(url, webContents.getTitle())
       }
       handlers.onStateChanged()
     }

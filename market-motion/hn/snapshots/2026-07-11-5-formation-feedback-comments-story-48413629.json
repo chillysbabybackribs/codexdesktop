@@ -1,0 +1,1384 @@
+{
+  "observedAt": "2026-07-11T16:29:26.640Z",
+  "target": {
+    "id": "48413629",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 443
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rexposadas"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I work as an AI Engineer for a firm. My role involves:<p>1. Helping develop strategies for incorporating AI into the company’s day-to-day operations.\n2. Helping employees, including non-engineers, get up to speed with AI so they can be more productive.<p>My personal AI tech stack is:<p>1. Claude Code in the terminal (on a Mac) with Zed as my editor (Any editor would do).\n2. Claude Desktop for Projects and CoWork.\n3. ChatGPT Desktop.<p>It’s a simple and effective setup.<p>I don’t run a formal bootcamp, but I do help others in the company become AI-enabled. The biggest return on investment I’ve found is helping people develop a clear understanding of how to use the features in Claude Desktop effectively, particularly Projects vs. CoWork and when to use each. Building that foundational knowledge allows people to become productive almost immediately."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rexposadas",
+          "story_48413629"
+        ],
+        "author": "rexposadas",
+        "comment_text": "I work as an AI Engineer for a firm. My role involves:<p>1. Helping develop strategies for incorporating AI into the company’s day-to-day operations.\n2. Helping employees, including non-engineers, get up to speed with AI so they can be more productive.<p>My personal AI tech stack is:<p>1. Claude Code in the terminal (on a Mac) with Zed as my editor (Any editor would do).\n2. Claude Desktop for Projects and CoWork.\n3. ChatGPT Desktop.<p>It’s a simple and effective setup.<p>I don’t run a formal bootcamp, but I do help others in the company become AI-enabled. The biggest return on investment I’ve found is helping people develop a clear understanding of how to use the features in Claude Desktop effectively, particularly Projects vs. CoWork and when to use each. Building that foundational knowledge allows people to become productive almost immediately.",
+        "created_at": "2026-06-17T17:04:19Z",
+        "created_at_i": 1781715859,
+        "objectID": "48573279",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-17T17:07:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "nimblist"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Claude Code running on a dedicated debian lxc with tmux so I can pick sessions up from any machine.<p>The key thing for me is to ensure that claude is constantly maintaining its own project documentation so that it's not reliant on any one session context. I've also set up custom commands to set up a clearly defined plan md file and to incrementally step through it updating completion as it goes.<p>From my perspective it's important to treat it as another potentially fallible team member. I have extensive unit tests, automation tests and SonarQube carries out analysis on all code merged to main.<p>Finally github actions to provide a proper ALMS with a non production environment for e2e testing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_nimblist",
+          "story_48413629"
+        ],
+        "author": "nimblist",
+        "comment_text": "Claude Code running on a dedicated debian lxc with tmux so I can pick sessions up from any machine.<p>The key thing for me is to ensure that claude is constantly maintaining its own project documentation so that it&#x27;s not reliant on any one session context. I&#x27;ve also set up custom commands to set up a clearly defined plan md file and to incrementally step through it updating completion as it goes.<p>From my perspective it&#x27;s important to treat it as another potentially fallible team member. I have extensive unit tests, automation tests and SonarQube carries out analysis on all code merged to main.<p>Finally github actions to provide a proper ALMS with a non production environment for e2e testing.",
+        "created_at": "2026-06-10T14:43:33Z",
+        "created_at_i": 1781102613,
+        "objectID": "48477063",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-10T14:49:00Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mattsadowsky"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "CaveMan Mode plugin for Cluade\nOpenRouter to use whatever LLM I want."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mattsadowsky",
+          "story_48413629"
+        ],
+        "author": "mattsadowsky",
+        "comment_text": "CaveMan Mode plugin for Cluade\nOpenRouter to use whatever LLM I want.",
+        "created_at": "2026-06-09T09:05:07Z",
+        "created_at_i": 1780995907,
+        "objectID": "48458548",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-09T09:06:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "gavinh"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Even when I write a detailed specification and review the resulting diff line-by-line, I am unsatisfied with my comprehension and recall of the changes. I don't understand my systems as well as I used to (I don't think this is surprising; see the &quot;generation effect&quot;). I have been experimenting with extending code review with some new exercises intended to improve comprehension, at the cost of a little friction."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_gavinh",
+          "story_48413629"
+        ],
+        "author": "gavinh",
+        "comment_text": "Even when I write a detailed specification and review the resulting diff line-by-line, I am unsatisfied with my comprehension and recall of the changes. I don&#x27;t understand my systems as well as I used to (I don&#x27;t think this is surprising; see the &quot;generation effect&quot;). I have been experimenting with extending code review with some new exercises intended to improve comprehension, at the cost of a little friction.",
+        "created_at": "2026-06-08T20:39:28Z",
+        "created_at_i": 1780951168,
+        "objectID": "48451635",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-08T20:41:35Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "anioko1"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There are many good answers here. I created microcodegen that can help scaffold the entire architecture for you to get started. Here is it <a href=\"https://github.com/Anioko/spec-driven-development\" rel=\"nofollow\">https://github.com/Anioko/spec-driven-development</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_anioko1",
+          "story_48413629"
+        ],
+        "author": "anioko1",
+        "comment_text": "There are many good answers here. I created microcodegen that can help scaffold the entire architecture for you to get started. Here is it <a href=\"https:&#x2F;&#x2F;github.com&#x2F;Anioko&#x2F;spec-driven-development\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;Anioko&#x2F;spec-driven-development</a>",
+        "created_at": "2026-06-08T19:03:12Z",
+        "created_at_i": 1780945392,
+        "objectID": "48449933",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-08T19:07:34Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dansult"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Will try this out, I'm just running claude in terminal panes stacked on the right hand side. Cheers!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dansult",
+          "story_48413629"
+        ],
+        "author": "dansult",
+        "comment_text": "Will try this out, I&#x27;m just running claude in terminal panes stacked on the right hand side. Cheers!",
+        "created_at": "2026-06-08T09:25:17Z",
+        "created_at_i": 1780910717,
+        "objectID": "48443064",
+        "parent_id": 48415422,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-08T09:30:30Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dostick"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think any add-on SDD is diluting the context and should be using as much as possible anything that is built-in and not external skill. \nWhen Claude (or any other lm) begins to ignore the rules, ask it and it will tell you that having too much in context will make it go bad faster."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dostick",
+          "story_48413629"
+        ],
+        "author": "dostick",
+        "comment_text": "I think any add-on SDD is diluting the context and should be using as much as possible anything that is built-in and not external skill. \nWhen Claude (or any other lm) begins to ignore the rules, ask it and it will tell you that having too much in context will make it go bad faster.",
+        "created_at": "2026-06-07T07:33:28Z",
+        "created_at_i": 1780817608,
+        "objectID": "48432714",
+        "parent_id": 48421309,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-07T07:36:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "lordluca"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mostly im using VSCode with claude code, i tried claude code directly before but when convo is too long i need to open new session. i tried codex also, its nice to have when im outside as its connected my mac mini, i also get codex to review claude code most of the time"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_lordluca",
+          "story_48413629"
+        ],
+        "author": "lordluca",
+        "comment_text": "Mostly im using VSCode with claude code, i tried claude code directly before but when convo is too long i need to open new session. i tried codex also, its nice to have when im outside as its connected my mac mini, i also get codex to review claude code most of the time",
+        "created_at": "2026-06-07T05:46:33Z",
+        "created_at_i": 1780811193,
+        "objectID": "48432194",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-07T05:51:26Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpeeler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The kitty developer is philosophically against multiplexers, but he also has concern about performance (which I share somewhat as well). Herde is not quite as fully featured as zellij/tmux, so that partially is biasing me. I think that a native app could be potentially nicer to avoid all those concerns, along with my setup (only in Linux really) of a tiling manager handling the windowing instead of that being part of the solution. A big part of the value add of Herde is actually the monitoring of the Claude session and not so much the multiplexing reimplementation. One of my patches allows jumping to the next blocked/finished session so I can quickly give feedback or observe different agents. I can envision a GUI solution for that workflow being something better than what a terminal easily allows."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jpeeler",
+          "story_48413629"
+        ],
+        "author": "jpeeler",
+        "comment_text": "The kitty developer is philosophically against multiplexers, but he also has concern about performance (which I share somewhat as well). Herde is not quite as fully featured as zellij&#x2F;tmux, so that partially is biasing me. I think that a native app could be potentially nicer to avoid all those concerns, along with my setup (only in Linux really) of a tiling manager handling the windowing instead of that being part of the solution. A big part of the value add of Herde is actually the monitoring of the Claude session and not so much the multiplexing reimplementation. One of my patches allows jumping to the next blocked&#x2F;finished session so I can quickly give feedback or observe different agents. I can envision a GUI solution for that workflow being something better than what a terminal easily allows.",
+        "created_at": "2026-06-07T02:57:45Z",
+        "created_at_i": 1780801065,
+        "objectID": "48431349",
+        "parent_id": 48426506,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-07T02:58:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "cadamsdotcom"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The right set of techniques is highly situational and HN is full of people just dipping their toes into agentic coding.<p>I’ve been using Claude Code for over a year and built a 300k+ saas codebase with it.<p>I use zero skills, zero MCPs, zero adornments to the base model.<p>I have built something very different from what others have: my “stack” is a collection of Claude Code hooks that force the model to do test driven development, also known as TDD or “red/green/refactor”. It’s a process for building software that’s decades old, but was always a PITA to do solo. It’s kind of like the scene in karate kid - wax on, wax off…<p>- Write failing tests.\n- Watch them fail (if they pass, whoops! Your tests are wrong!)\n- Write code that makes the tests pass\n- Witness them pass\n- Optionally refactor (since you have tests that you saw fail and made pass - you can refactor with impunity)\n- Repeat from start..<p>The agent is forced through this loop. The automation is deterministic and uses a state machine. Automation forces the model write end to end tests and unit/integration/component tests before it’s permitted to write code. Witnessing tests fail first proves that they test something, and depending on e2e tests means that in a year of building I’ve never had to hand my model a browser. Instead it will write Playwright code to validate its work, and that becomes forever part of the codebase, preventing regressions forever.<p>Even despite this, I test everything manually and review every line I merge.<p>It takes 10x as long to get a change into shape for merging as the model spent building it. Even though it emerged in a working state from the model no lint errors.<p>Working at this level of complexity for 40-50 hours a week, you end up glad for the weekend - or glad to do prototypes. When you can do stuff that’s one-shottable you absolutely should.<p>When I want something as simple as you’re describing, I write prompts and test by hand. I rarely if ever read the code.<p>In other words, it’s highly situational.<p>If you want to see my process, the codebase is at <a href=\"https://codeleash.dev\" rel=\"nofollow\">https://codeleash.dev</a>.<p>Thanks for reading!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_cadamsdotcom",
+          "story_48413629"
+        ],
+        "author": "cadamsdotcom",
+        "comment_text": "The right set of techniques is highly situational and HN is full of people just dipping their toes into agentic coding.<p>I’ve been using Claude Code for over a year and built a 300k+ saas codebase with it.<p>I use zero skills, zero MCPs, zero adornments to the base model.<p>I have built something very different from what others have: my “stack” is a collection of Claude Code hooks that force the model to do test driven development, also known as TDD or “red&#x2F;green&#x2F;refactor”. It’s a process for building software that’s decades old, but was always a PITA to do solo. It’s kind of like the scene in karate kid - wax on, wax off…<p>- Write failing tests.\n- Watch them fail (if they pass, whoops! Your tests are wrong!)\n- Write code that makes the tests pass\n- Witness them pass\n- Optionally refactor (since you have tests that you saw fail and made pass - you can refactor with impunity)\n- Repeat from start..<p>The agent is forced through this loop. The automation is deterministic and uses a state machine. Automation forces the model write end to end tests and unit&#x2F;integration&#x2F;component tests before it’s permitted to write code. Witnessing tests fail first proves that they test something, and depending on e2e tests means that in a year of building I’ve never had to hand my model a browser. Instead it will write Playwright code to validate its work, and that becomes forever part of the codebase, preventing regressions forever.<p>Even despite this, I test everything manually and review every line I merge.<p>It takes 10x as long to get a change into shape for merging as the model spent building it. Even though it emerged in a working state from the model no lint errors.<p>Working at this level of complexity for 40-50 hours a week, you end up glad for the weekend - or glad to do prototypes. When you can do stuff that’s one-shottable you absolutely should.<p>When I want something as simple as you’re describing, I write prompts and test by hand. I rarely if ever read the code.<p>In other words, it’s highly situational.<p>If you want to see my process, the codebase is at <a href=\"https:&#x2F;&#x2F;codeleash.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;codeleash.dev</a>.<p>Thanks for reading!",
+        "created_at": "2026-06-07T00:06:40Z",
+        "created_at_i": 1780790800,
+        "objectID": "48430429",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-07T00:16:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "abelkhadir"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I use linux + claude code as the main driver.<p>Before i start a project, i first write scripts manually to give claude code an idea of what im trying to do<p>I then use Claude design to design the full frontend in one shot. then use it manually to see bugs/stuff i dont like and re-prompt it to modify. i also give it description of the scripts i wrote so it has a better idea of what i want<p>Then i use claude code for the backend. depends on task, i mostly use python, golang or typescript.<p>No IDE. Terminal only. git + editor + agent is enough.<p>i used this to code my entire project kyroai.dev. it turned out impressive, in under a week<p>I also belive you should be the number one user of your app to actually make it bug free<p>Before this i had to type code similar to you, and i say ai code is way faster, for example kyro would have taken me a month for the mvp. but with ai i just prompt. while its working, i browse the app, find newer bugs/changes re prompt again, in under a week the project is done.<p>All of this with a 20$ claude sub. not even a 100$ plan"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_abelkhadir",
+          "story_48413629"
+        ],
+        "author": "abelkhadir",
+        "comment_text": "I use linux + claude code as the main driver.<p>Before i start a project, i first write scripts manually to give claude code an idea of what im trying to do<p>I then use Claude design to design the full frontend in one shot. then use it manually to see bugs&#x2F;stuff i dont like and re-prompt it to modify. i also give it description of the scripts i wrote so it has a better idea of what i want<p>Then i use claude code for the backend. depends on task, i mostly use python, golang or typescript.<p>No IDE. Terminal only. git + editor + agent is enough.<p>i used this to code my entire project kyroai.dev. it turned out impressive, in under a week<p>I also belive you should be the number one user of your app to actually make it bug free<p>Before this i had to type code similar to you, and i say ai code is way faster, for example kyro would have taken me a month for the mvp. but with ai i just prompt. while its working, i browse the app, find newer bugs&#x2F;changes re prompt again, in under a week the project is done.<p>All of this with a 20$ claude sub. not even a 100$ plan",
+        "created_at": "2026-06-06T19:12:10Z",
+        "created_at_i": 1780773130,
+        "objectID": "48427977",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T19:17:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "amdolan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for sharing. I recently started using my homemade “competitor” to herde, so it’s nice to compare against prior art.<p>What do you think could be nicer with a native app? More mouse or visual interactions? Modern design and gui?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_amdolan",
+          "story_48413629"
+        ],
+        "author": "amdolan",
+        "children": [
+          48431349
+        ],
+        "comment_text": "Thanks for sharing. I recently started using my homemade “competitor” to herde, so it’s nice to compare against prior art.<p>What do you think could be nicer with a native app? More mouse or visual interactions? Modern design and gui?",
+        "created_at": "2026-06-06T16:27:25Z",
+        "created_at_i": 1780763245,
+        "objectID": "48426506",
+        "parent_id": 48424303,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-07T02:58:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "moltar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Please share your opinions. Thank you."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_moltar",
+          "story_48413629"
+        ],
+        "author": "moltar",
+        "comment_text": "Please share your opinions. Thank you.",
+        "created_at": "2026-06-06T15:58:27Z",
+        "created_at_i": 1780761507,
+        "objectID": "48426230",
+        "parent_id": 48414159,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T16:03:10Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sermakarevich"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TDD and specs help"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sermakarevich",
+          "story_48413629"
+        ],
+        "author": "sermakarevich",
+        "comment_text": "TDD and specs help",
+        "created_at": "2026-06-06T12:38:42Z",
+        "created_at_i": 1780749522,
+        "objectID": "48424481",
+        "parent_id": 48421821,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T12:43:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jpeeler"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I'm currently using herde[1] to handle/supervise multiple agents (with some patches I need to try to upstream) along with Nono[2] for sandboxing. This sandboxing approach avoids use of a microVM, which lets me use tooling I already have installed inside the sandbox. The downside is getting all the policies correct as it seems every project needs some new type of access, though Nono does try to make policy writing easy.<p>I've been considering switching my approach to using a microVM through microsandbox[3]. The pro of this approach is you can essentially skip the policies and rely on the security of the VM boundary. The negative is that now you've lost all your installed tools, so you need to either provision at runtime or build something (like an image) beforehand to match your dev environment.<p>I still don't know which is less maintenance. And while I think herde is pretty well thought out, I do think about something that works outside the terminal may be nicer.<p>[1] <a href=\"https://github.com/ogulcancelik/herdr\" rel=\"nofollow\">https://github.com/ogulcancelik/herdr</a><p>[2] <a href=\"https://github.com/always-further/nono\" rel=\"nofollow\">https://github.com/always-further/nono</a><p>[3] <a href=\"https://github.com/superradcompany/microsandbox\" rel=\"nofollow\">https://github.com/superradcompany/microsandbox</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jpeeler",
+          "story_48413629"
+        ],
+        "author": "jpeeler",
+        "children": [
+          48426506
+        ],
+        "comment_text": "I&#x27;m currently using herde[1] to handle&#x2F;supervise multiple agents (with some patches I need to try to upstream) along with Nono[2] for sandboxing. This sandboxing approach avoids use of a microVM, which lets me use tooling I already have installed inside the sandbox. The downside is getting all the policies correct as it seems every project needs some new type of access, though Nono does try to make policy writing easy.<p>I&#x27;ve been considering switching my approach to using a microVM through microsandbox[3]. The pro of this approach is you can essentially skip the policies and rely on the security of the VM boundary. The negative is that now you&#x27;ve lost all your installed tools, so you need to either provision at runtime or build something (like an image) beforehand to match your dev environment.<p>I still don&#x27;t know which is less maintenance. And while I think herde is pretty well thought out, I do think about something that works outside the terminal may be nicer.<p>[1] <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ogulcancelik&#x2F;herdr\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ogulcancelik&#x2F;herdr</a><p>[2] <a href=\"https:&#x2F;&#x2F;github.com&#x2F;always-further&#x2F;nono\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;always-further&#x2F;nono</a><p>[3] <a href=\"https:&#x2F;&#x2F;github.com&#x2F;superradcompany&#x2F;microsandbox\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;superradcompany&#x2F;microsandbox</a>",
+        "created_at": "2026-06-06T12:20:42Z",
+        "created_at_i": 1780748442,
+        "objectID": "48424303",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T16:28:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "madarco"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I do the same, and faced the issue that claude/codex loose context when doing subtasks (and subagent don't have plan mode).<p>So I've built Agentbox to be able to launch from claude/codex multiple VMs with claude/codex (can also mix).\nThe parent agent watch for prompts and questions, enforce /review, /simplify, that the sub agents file a PR and wait for bugbot comments etc.<p>This way the parent agent running in a /goal don't loose context, enforce a good workflow, manage the backlog and parallelize/merge back the work on the main repo<p><a href=\"https://github.com/madarco/agentbox\" rel=\"nofollow\">https://github.com/madarco/agentbox</a>\nMIT license"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_madarco",
+          "story_48413629"
+        ],
+        "author": "madarco",
+        "comment_text": "I do the same, and faced the issue that claude&#x2F;codex loose context when doing subtasks (and subagent don&#x27;t have plan mode).<p>So I&#x27;ve built Agentbox to be able to launch from claude&#x2F;codex multiple VMs with claude&#x2F;codex (can also mix).\nThe parent agent watch for prompts and questions, enforce &#x2F;review, &#x2F;simplify, that the sub agents file a PR and wait for bugbot comments etc.<p>This way the parent agent running in a &#x2F;goal don&#x27;t loose context, enforce a good workflow, manage the backlog and parallelize&#x2F;merge back the work on the main repo<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;madarco&#x2F;agentbox\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;madarco&#x2F;agentbox</a>\nMIT license",
+        "created_at": "2026-06-06T10:46:45Z",
+        "created_at_i": 1780742805,
+        "objectID": "48423575",
+        "parent_id": 48414501,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T10:48:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rurban"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "It changes every 2 weeks.<p>right it now it is oh-my-pi cli with all models (mostly switching between sonnet—4.6 and Deepseek V4 Pro).<p>Before it was codewhale with Deepseek V4 Pro/Flash<p>Before it was kimi-k2.6<p>Before it was opencode<p>Before it was Claude<p>Before it was codex<p>Before it was trivial github copilot auto completion in emacs.<p>Before it was web searches and ChatGPT web UI.<p>Mostly for C, but also C++, perl and python. Python success being the worst by far."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rurban",
+          "story_48413629"
+        ],
+        "author": "rurban",
+        "comment_text": "It changes every 2 weeks.<p>right it now it is oh-my-pi cli with all models (mostly switching between sonnet—4.6 and Deepseek V4 Pro).<p>Before it was codewhale with Deepseek V4 Pro&#x2F;Flash<p>Before it was kimi-k2.6<p>Before it was opencode<p>Before it was Claude<p>Before it was codex<p>Before it was trivial github copilot auto completion in emacs.<p>Before it was web searches and ChatGPT web UI.<p>Mostly for C, but also C++, perl and python. Python success being the worst by far.",
+        "created_at": "2026-06-06T10:41:28Z",
+        "created_at_i": 1780742488,
+        "objectID": "48423534",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T10:42:53Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "jmorenoamor"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A browser tab with Claude to ask questions while I code."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_jmorenoamor",
+          "story_48413629"
+        ],
+        "author": "jmorenoamor",
+        "comment_text": "A browser tab with Claude to ask questions while I code.",
+        "created_at": "2026-06-06T09:06:55Z",
+        "created_at_i": 1780736815,
+        "objectID": "48422944",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T09:50:23Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sermakarevich"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I looked at most of those, including kiro and tessl. Was early user of GSD when it was suitable for mid+ size projects. Over time GSD grown into beast which is suitable for huge + size projects only producing gigantic specs and burning too many tokens for most of the tasks. So I decided to created my own, with set of steps I need and specs I want.<p>After few presentations of sddw to different companies, most important conclusion was that the ssd plugin should be customizable. It should fit the typical size of tasks/features you are working on, specs should fit your requirements, set of steps can be different.<p>So I created claude code workflow (ccw) which allows to compile custom version of workflow on top of sdd approach:  <a href=\"https://github.com/sermakarevich/ccw\" rel=\"nofollow\">https://github.com/sermakarevich/ccw</a><p>After making few presentations of sddw to different companies,"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sermakarevich",
+          "story_48413629"
+        ],
+        "author": "sermakarevich",
+        "comment_text": "I looked at most of those, including kiro and tessl. Was early user of GSD when it was suitable for mid+ size projects. Over time GSD grown into beast which is suitable for huge + size projects only producing gigantic specs and burning too many tokens for most of the tasks. So I decided to created my own, with set of steps I need and specs I want.<p>After few presentations of sddw to different companies, most important conclusion was that the ssd plugin should be customizable. It should fit the typical size of tasks&#x2F;features you are working on, specs should fit your requirements, set of steps can be different.<p>So I created claude code workflow (ccw) which allows to compile custom version of workflow on top of sdd approach:  <a href=\"https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;ccw\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;ccw</a><p>After making few presentations of sddw to different companies,",
+        "created_at": "2026-06-06T08:04:32Z",
+        "created_at_i": 1780733072,
+        "objectID": "48422565",
+        "parent_id": 48421309,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-08T13:21:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sajithdilshan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "You’re welcome"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sajithdilshan",
+          "story_48413629"
+        ],
+        "author": "sajithdilshan",
+        "comment_text": "You’re welcome",
+        "created_at": "2026-06-06T07:27:08Z",
+        "created_at_i": 1780730828,
+        "objectID": "48422358",
+        "parent_id": 48416181,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T07:28:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "sermakarevich"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Here are some - I used sddw to create: \n- chunker - app to get smart slices from text and organize them in hierarchical LLM/Obsidian wiki. There were two features implemented using sddw and 15 subtags:<p>-- <a href=\"https://github.com/sermakarevich/chunker/blob/master/.sddw/chunker/requirements.md\" rel=\"nofollow\">https://github.com/sermakarevich/chunker/blob/master/.sddw/c...</a><p>-- <a href=\"https://github.com/sermakarevich/chunker/blob/master/.sddw/mdstructure/requirements.md\" rel=\"nofollow\">https://github.com/sermakarevich/chunker/blob/master/.sddw/m...</a><p>- ccw (claude code workflow - plugin to compile generic claude code workflows based on sdd approach) - <a href=\"https://github.com/sermakarevich/ccw/blob/main/.sddw/claude_code_workflow/requirements.md\" rel=\"nofollow\">https://github.com/sermakarevich/ccw/blob/main/.sddw/claude_...</a><p>Btw you can use ccw to create your own custom version of sddw quite fast - with specs format and sequence of steps that suit you best."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_sermakarevich",
+          "story_48413629"
+        ],
+        "author": "sermakarevich",
+        "comment_text": "Here are some - I used sddw to create: \n- chunker - app to get smart slices from text and organize them in hierarchical LLM&#x2F;Obsidian wiki. There were two features implemented using sddw and 15 subtags:<p>-- <a href=\"https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;chunker&#x2F;blob&#x2F;master&#x2F;.sddw&#x2F;chunker&#x2F;requirements.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;chunker&#x2F;blob&#x2F;master&#x2F;.sddw&#x2F;c...</a><p>-- <a href=\"https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;chunker&#x2F;blob&#x2F;master&#x2F;.sddw&#x2F;mdstructure&#x2F;requirements.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;chunker&#x2F;blob&#x2F;master&#x2F;.sddw&#x2F;m...</a><p>- ccw (claude code workflow - plugin to compile generic claude code workflows based on sdd approach) - <a href=\"https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;ccw&#x2F;blob&#x2F;main&#x2F;.sddw&#x2F;claude_code_workflow&#x2F;requirements.md\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;sermakarevich&#x2F;ccw&#x2F;blob&#x2F;main&#x2F;.sddw&#x2F;claude_...</a><p>Btw you can use ccw to create your own custom version of sddw quite fast - with specs format and sequence of steps that suit you best.",
+        "created_at": "2026-06-06T07:13:18Z",
+        "created_at_i": 1780729998,
+        "objectID": "48422268",
+        "parent_id": 48421186,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T17:38:39Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "madduci"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "What about quality? How do you assure that everything works without misshapen?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_madduci",
+          "story_48413629"
+        ],
+        "author": "madduci",
+        "children": [
+          48424481
+        ],
+        "comment_text": "What about quality? How do you assure that everything works without misshapen?",
+        "created_at": "2026-06-06T05:55:16Z",
+        "created_at_i": 1780725316,
+        "objectID": "48421821",
+        "parent_id": 48415435,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T12:39:24Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aabdi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "myself? senior engineer role is basically figuring out the business problem and getting funding.<p>IDK i've always been able to get senior managers/managers to give me lots of leeway to do wtv i want and figure out problems. \nAt least in most places i've worked at.<p>i work on platform stuff mostly, so there's always a large need for stuff. \nthe backlog alone b4 all the agentic stuff was roughly 20-30x the capacity of any team (per year). 80% of requests were usually SVP goals and we'd just outright drop them due to lack of capacity or request HC transfer/away teams.<p>i.e. internal improvements alone were always massive (not gonna talk about prod code/cross team organization).<p>1. we need better test coverage for x,y,z<p>2. we need to be able to eval the long term costs (XX growth YOY, how to reduce)<p>3. the internal system streaming is inefficient, need to eval the alternative systems<p>4. we need better ops handling/management automation for issues and sev3s/sev2s. i.e. scaling, anomaly analysis, bugs introduced, improved metrics, dashboards.<p>5. DX stuff needs better handling, people keep confusing themselves on how to onboard. better docs on how to onboard, automation,<p>6. teams x,y,z are fighting with each other bcz they don't have a good grasp on systems, improve internal docs on arch and interop<p>7. we need automation to be able to more easily test our systems in an adhoc fashion<p>8. there's no linters for API platform, leading to bad results and inconsistency.<p>9. we're seeing bugs in the code, but aren't appropriately manualy testing after deployments. spawn 100 agents to do it, compile the results. do it every X days, feed the bugs back into the system.<p>i could go on and on. and this is one service, usually you own quite a few, and each one has their unique set of challenges."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aabdi",
+          "story_48413629"
+        ],
+        "author": "aabdi",
+        "comment_text": "myself? senior engineer role is basically figuring out the business problem and getting funding.<p>IDK i&#x27;ve always been able to get senior managers&#x2F;managers to give me lots of leeway to do wtv i want and figure out problems. \nAt least in most places i&#x27;ve worked at.<p>i work on platform stuff mostly, so there&#x27;s always a large need for stuff. \nthe backlog alone b4 all the agentic stuff was roughly 20-30x the capacity of any team (per year). 80% of requests were usually SVP goals and we&#x27;d just outright drop them due to lack of capacity or request HC transfer&#x2F;away teams.<p>i.e. internal improvements alone were always massive (not gonna talk about prod code&#x2F;cross team organization).<p>1. we need better test coverage for x,y,z<p>2. we need to be able to eval the long term costs (XX growth YOY, how to reduce)<p>3. the internal system streaming is inefficient, need to eval the alternative systems<p>4. we need better ops handling&#x2F;management automation for issues and sev3s&#x2F;sev2s. i.e. scaling, anomaly analysis, bugs introduced, improved metrics, dashboards.<p>5. DX stuff needs better handling, people keep confusing themselves on how to onboard. better docs on how to onboard, automation,<p>6. teams x,y,z are fighting with each other bcz they don&#x27;t have a good grasp on systems, improve internal docs on arch and interop<p>7. we need automation to be able to more easily test our systems in an adhoc fashion<p>8. there&#x27;s no linters for API platform, leading to bad results and inconsistency.<p>9. we&#x27;re seeing bugs in the code, but aren&#x27;t appropriately manualy testing after deployments. spawn 100 agents to do it, compile the results. do it every X days, feed the bugs back into the system.<p>i could go on and on. and this is one service, usually you own quite a few, and each one has their unique set of challenges.",
+        "created_at": "2026-06-06T05:54:21Z",
+        "created_at_i": 1780725261,
+        "objectID": "48421816",
+        "parent_id": 48414610,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-07-08T09:00:42Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "aabdi"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "well work wise its usually for adjacent tooling. It unblocks other things, but like actual prod code, i'm always a little skeptical.<p>For example we had this problem where we had to take in customer inputs for requests and calculate out the projected downstream TPS. This is fairly complex since we run a query parser/orchestrator.<p>This is expensive to write myself or to have engi's do it, but the scaling algorithms are all there and we have excel sheets for spreading out overall costs.<p>so then all was needed was basically write out a big spec of the reqs - give it the docs/parser code/excel sheets, then just have it span out the pieces as a sequential checklist. \n1. CI/OPS\n2. docs\n3. test infra\n4. incremental build out in phases to chain it all together."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_aabdi",
+          "story_48413629"
+        ],
+        "author": "aabdi",
+        "comment_text": "well work wise its usually for adjacent tooling. It unblocks other things, but like actual prod code, i&#x27;m always a little skeptical.<p>For example we had this problem where we had to take in customer inputs for requests and calculate out the projected downstream TPS. This is fairly complex since we run a query parser&#x2F;orchestrator.<p>This is expensive to write myself or to have engi&#x27;s do it, but the scaling algorithms are all there and we have excel sheets for spreading out overall costs.<p>so then all was needed was basically write out a big spec of the reqs - give it the docs&#x2F;parser code&#x2F;excel sheets, then just have it span out the pieces as a sequential checklist. \n1. CI&#x2F;OPS\n2. docs\n3. test infra\n4. incremental build out in phases to chain it all together.",
+        "created_at": "2026-06-06T05:43:33Z",
+        "created_at_i": 1780724613,
+        "objectID": "48421775",
+        "parent_id": 48414593,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T05:49:08Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "kaycey2022"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I just ask whatever model I'm using, mostly GPT these days, to do the thing. First I discuss a plan of action and then go back and forth with it to settle on one. This is usually a long process and for complex features may even take a day or two. And then once I am satisfied, I ask it to implement. I skim over the code, it often generates too much code for my liking. I sometimes ask it to change things that I dont like. This is almost always to do with bad tests or not using existing code paths. I just work on one thing at a time."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_kaycey2022",
+          "story_48413629"
+        ],
+        "author": "kaycey2022",
+        "comment_text": "I just ask whatever model I&#x27;m using, mostly GPT these days, to do the thing. First I discuss a plan of action and then go back and forth with it to settle on one. This is usually a long process and for complex features may even take a day or two. And then once I am satisfied, I ask it to implement. I skim over the code, it often generates too much code for my liking. I sometimes ask it to change things that I dont like. This is almost always to do with bad tests or not using existing code paths. I just work on one thing at a time.",
+        "created_at": "2026-06-06T04:17:36Z",
+        "created_at_i": 1780719456,
+        "objectID": "48421333",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T04:19:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "vladgur"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Imm overwhelmed with a variety of SDD tools out there.<p>Github spec kit, spec-kitty, symphony, GSD, this.<p>How do people decide on the framework other than try them all.<p>p.s. found this mind-boggling list of them all\n<a href=\"https://github.com/cameronsjo/spec-compare\" rel=\"nofollow\">https://github.com/cameronsjo/spec-compare</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_vladgur",
+          "story_48413629"
+        ],
+        "author": "vladgur",
+        "children": [
+          48422565,
+          48432714
+        ],
+        "comment_text": "Imm overwhelmed with a variety of SDD tools out there.<p>Github spec kit, spec-kitty, symphony, GSD, this.<p>How do people decide on the framework other than try them all.<p>p.s. found this mind-boggling list of them all\n<a href=\"https:&#x2F;&#x2F;github.com&#x2F;cameronsjo&#x2F;spec-compare\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;cameronsjo&#x2F;spec-compare</a>",
+        "created_at": "2026-06-06T04:11:54Z",
+        "created_at_i": 1780719114,
+        "objectID": "48421309",
+        "parent_id": 48414501,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-07-08T08:44:25Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alok-g"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Sahil’s ME skill pack seems to be this:  <a href=\"https://github.com/slavingia/skills\" rel=\"nofollow\">https://github.com/slavingia/skills</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alok-g",
+          "story_48413629"
+        ],
+        "author": "alok-g",
+        "comment_text": "Sahil’s ME skill pack seems to be this:  <a href=\"https:&#x2F;&#x2F;github.com&#x2F;slavingia&#x2F;skills\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;slavingia&#x2F;skills</a>",
+        "created_at": "2026-06-06T03:48:04Z",
+        "created_at_i": 1780717684,
+        "objectID": "48421200",
+        "parent_id": 48420002,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T04:53:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "alok-g"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I would love to see examples for various types of specs written, as in actual texts of the specs for various types of it.<p>It would also help to understand how are changes to specs handled?  Is the agent given both old and new versions to figure out the updates needed?<p>Thanks."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_alok-g",
+          "story_48413629"
+        ],
+        "author": "alok-g",
+        "children": [
+          48422268
+        ],
+        "comment_text": "I would love to see examples for various types of specs written, as in actual texts of the specs for various types of it.<p>It would also help to understand how are changes to specs handled?  Is the agent given both old and new versions to figure out the updates needed?<p>Thanks.",
+        "created_at": "2026-06-06T03:44:32Z",
+        "created_at_i": 1780717472,
+        "objectID": "48421186",
+        "parent_id": 48414501,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T14:29:56Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "altuzar"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Cmux is rather fancy if you still like a UI. Used to love iTerm but Cmux was perfect for tons of ClaudeCode/Codex instances."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_altuzar",
+          "story_48413629"
+        ],
+        "author": "altuzar",
+        "comment_text": "Cmux is rather fancy if you still like a UI. Used to love iTerm but Cmux was perfect for tons of ClaudeCode&#x2F;Codex instances.",
+        "created_at": "2026-06-06T03:21:33Z",
+        "created_at_i": 1780716093,
+        "objectID": "48421067",
+        "parent_id": 48415056,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T20:06:40Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "chrismorgan"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The thread has gone from the front page now, so I’ll share my summary of my personal reasons: <a href=\"https://chrismorgan.info/ai\" rel=\"nofollow\">https://chrismorgan.info/ai</a>. As regards learning, I haven’t written anything down, and doing it justice would take longer than I am willing to spend now. It’s not exactly the same area, but &lt;<a href=\"https://www.youtube.com/watch?v=Fd-_VDYit3U\" rel=\"nofollow\">https://www.youtube.com/watch?v=Fd-_VDYit3U</a>&gt; is five minutes of expert testimony to the U.S. Senate Commerce, Science, and Transportation Committee on 2026-01-15 about the resoundingly negative consequences of tech in education. There’s plenty of other well-established research in adjacent areas, things like just how valuable handwriting is for memory retention. It has been established for a long time that struggle is intrinsically valuable for human accomplishment, in areas physical and mental. It’s barely even an <i>extrapolation</i> to say that relying on LLMs will hinder your deep learning (irony indeed). I have no doubt that some will be able to learn better or faster with them, if they use them in disciplined fashion, but even that will be difficult, for they are designed to be addictive, just as social media is. You’ll get going a lot more quickly, but the struggle is not the only thing you’ll lose.<p>Humanly speaking, it truly is alarming what we’re doing to ourselves."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_chrismorgan",
+          "story_48413629"
+        ],
+        "author": "chrismorgan",
+        "comment_text": "The thread has gone from the front page now, so I’ll share my summary of my personal reasons: <a href=\"https:&#x2F;&#x2F;chrismorgan.info&#x2F;ai\" rel=\"nofollow\">https:&#x2F;&#x2F;chrismorgan.info&#x2F;ai</a>. As regards learning, I haven’t written anything down, and doing it justice would take longer than I am willing to spend now. It’s not exactly the same area, but &lt;<a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=Fd-_VDYit3U\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=Fd-_VDYit3U</a>&gt; is five minutes of expert testimony to the U.S. Senate Commerce, Science, and Transportation Committee on 2026-01-15 about the resoundingly negative consequences of tech in education. There’s plenty of other well-established research in adjacent areas, things like just how valuable handwriting is for memory retention. It has been established for a long time that struggle is intrinsically valuable for human accomplishment, in areas physical and mental. It’s barely even an <i>extrapolation</i> to say that relying on LLMs will hinder your deep learning (irony indeed). I have no doubt that some will be able to learn better or faster with them, if they use them in disciplined fashion, but even that will be difficult, for they are designed to be addictive, just as social media is. You’ll get going a lot more quickly, but the struggle is not the only thing you’ll lose.<p>Humanly speaking, it truly is alarming what we’re doing to ourselves.",
+        "created_at": "2026-06-06T02:23:15Z",
+        "created_at_i": 1780712595,
+        "objectID": "48420800",
+        "parent_id": 48419016,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T02:24:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "browningstreet"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I’m a solopreneur working on a fairly large number of independent projects.<p>I use Claude Code to initiate a project using Sahil’s ME skill pack and write a high-level spec to a Linear ticket. If/when I’m ready to work on that idea, I convert it to a project, decompose the top ticket into more issues. I also have Claude code add to each issue with deepseek, sonnet or opus tags based on which is most appropriate for the issue.<p>Then I fire up opencode and go through each ticket. Plan, then build. Every N issues I switch to opus and have it review the work done.<p>Enhancements and bug reports get filed in the project. Repeat as necessary. I work pretty sequentially. I’m quite happy with the operational success of my projects. They’re all being used.<p>I’ve expanded this process a few times but this baseline is where things shrink to. Sometimes I use open chamber but opencode cli works for me."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_browningstreet",
+          "story_48413629"
+        ],
+        "author": "browningstreet",
+        "children": [
+          48421200
+        ],
+        "comment_text": "I’m a solopreneur working on a fairly large number of independent projects.<p>I use Claude Code to initiate a project using Sahil’s ME skill pack and write a high-level spec to a Linear ticket. If&#x2F;when I’m ready to work on that idea, I convert it to a project, decompose the top ticket into more issues. I also have Claude code add to each issue with deepseek, sonnet or opus tags based on which is most appropriate for the issue.<p>Then I fire up opencode and go through each ticket. Plan, then build. Every N issues I switch to opus and have it review the work done.<p>Enhancements and bug reports get filed in the project. Repeat as necessary. I work pretty sequentially. I’m quite happy with the operational success of my projects. They’re all being used.<p>I’ve expanded this process a few times but this baseline is where things shrink to. Sometimes I use open chamber but opencode cli works for me.",
+        "created_at": "2026-06-06T00:10:33Z",
+        "created_at_i": 1780704633,
+        "objectID": "48420002",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-10T17:55:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dv35z"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thanks for the great discussion. I went through all the comments, and identified common tools (counting the references in the comments). If you are interested in seeing the summary of this thread, check it out here:<p><a href=\"https://codeberg.org/jro/Knowledge/src/branch/main/2026-06-05_ai-development-workflow-tools.md\" rel=\"nofollow\">https://codeberg.org/jro/Knowledge/src/branch/main/2026-06-0...</a><p>Contributions &amp; improvements are invited and welcome - thank you!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dv35z",
+          "story_48413629"
+        ],
+        "author": "dv35z",
+        "comment_text": "Thanks for the great discussion. I went through all the comments, and identified common tools (counting the references in the comments). If you are interested in seeing the summary of this thread, check it out here:<p><a href=\"https:&#x2F;&#x2F;codeberg.org&#x2F;jro&#x2F;Knowledge&#x2F;src&#x2F;branch&#x2F;main&#x2F;2026-06-05_ai-development-workflow-tools.md\" rel=\"nofollow\">https:&#x2F;&#x2F;codeberg.org&#x2F;jro&#x2F;Knowledge&#x2F;src&#x2F;branch&#x2F;main&#x2F;2026-06-0...</a><p>Contributions &amp; improvements are invited and welcome - thank you!",
+        "created_at": "2026-06-05T23:12:53Z",
+        "created_at_i": 1780701173,
+        "objectID": "48419567",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T08:03:07Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "heldrida"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Opencode+Fireworks+Kimi2.5 and git worktrees mainly"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_heldrida",
+          "story_48413629"
+        ],
+        "author": "heldrida",
+        "comment_text": "Opencode+Fireworks+Kimi2.5 and git worktrees mainly",
+        "created_at": "2026-06-05T22:44:39Z",
+        "created_at_i": 1780699479,
+        "objectID": "48419303",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T22:49:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "johntash"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "If you already use jira, maybe try putting the specs directly in the jira ticket?   And/or in a confluence page?<p>I'm not sold on SDD yet, but part of that is because we already have decently detailed tickets and designs."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_johntash",
+          "story_48413629"
+        ],
+        "author": "johntash",
+        "comment_text": "If you already use jira, maybe try putting the specs directly in the jira ticket?   And&#x2F;or in a confluence page?<p>I&#x27;m not sold on SDD yet, but part of that is because we already have decently detailed tickets and designs.",
+        "created_at": "2026-06-05T22:32:50Z",
+        "created_at_i": 1780698770,
+        "objectID": "48419201",
+        "parent_id": 48417051,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T22:33:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dv35z"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I find the best way to learn something is teach it. My philosophy with workshops &amp; teaching is that we are all learners/students, on different parts of the paths (versus the idea that one person / the leader is the absolute authority). So the idea is to to create a learning environment (a time, place, and people), and help each other out.<p>A lot of us are doing this stuff solo anyway, and doing it socially is more fun and usually more effective (easily get unblocked)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dv35z",
+          "story_48413629"
+        ],
+        "author": "dv35z",
+        "comment_text": "I find the best way to learn something is teach it. My philosophy with workshops &amp; teaching is that we are all learners&#x2F;students, on different parts of the paths (versus the idea that one person &#x2F; the leader is the absolute authority). So the idea is to to create a learning environment (a time, place, and people), and help each other out.<p>A lot of us are doing this stuff solo anyway, and doing it socially is more fun and usually more effective (easily get unblocked).",
+        "created_at": "2026-06-05T22:23:20Z",
+        "created_at_i": 1780698200,
+        "objectID": "48419118",
+        "parent_id": 48414938,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T23:32:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dippatel1994"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Thank you so much @mellosouls, means a lot!"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dippatel1994",
+          "story_48413629"
+        ],
+        "author": "dippatel1994",
+        "comment_text": "Thank you so much @mellosouls, means a lot!",
+        "created_at": "2026-06-05T22:16:24Z",
+        "created_at_i": 1780697784,
+        "objectID": "48419054",
+        "parent_id": 48417839,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T06:56:37Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "dv35z"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Would you be open to share your &quot;why's&quot;? I would appreciate hearing diverse perspectives on this, and it sounds like you have experience and learnings which would be beneficial for us (at least me) to hear out. Thank you."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_dv35z",
+          "story_48413629"
+        ],
+        "author": "dv35z",
+        "children": [
+          48420800
+        ],
+        "comment_text": "Would you be open to share your &quot;why&#x27;s&quot;? I would appreciate hearing diverse perspectives on this, and it sounds like you have experience and learnings which would be beneficial for us (at least me) to hear out. Thank you.",
+        "created_at": "2026-06-05T22:12:17Z",
+        "created_at_i": 1780697537,
+        "objectID": "48419016",
+        "parent_id": 48414099,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-06T02:23:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "phildenhoff"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Hey -- we've loved using Conductor here at Digits. I've been using it since February and only recently swapped to using Orca for Remote SSH and perf improvements. Looking forward to your general release of Conductor Cloud!<p>I've been wondering, since you're building desktop software, how do you get AI to test your changes? Boot the whole app? Run the frontend/UI with a mock backend?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_phildenhoff",
+          "story_48413629"
+        ],
+        "author": "phildenhoff",
+        "comment_text": "Hey -- we&#x27;ve loved using Conductor here at Digits. I&#x27;ve been using it since February and only recently swapped to using Orca for Remote SSH and perf improvements. Looking forward to your general release of Conductor Cloud!<p>I&#x27;ve been wondering, since you&#x27;re building desktop software, how do you get AI to test your changes? Boot the whole app? Run the frontend&#x2F;UI with a mock backend?",
+        "created_at": "2026-06-05T21:49:42Z",
+        "created_at_i": 1780696182,
+        "objectID": "48418811",
+        "parent_id": 48416150,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T21:51:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Freedumbs"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Use whatever terminal you want.<p>Use claude or codex cli as architect.<p>Use !architect-model as actor.<p>Use local model for scout, extraction, etc.<p>Read recent AI research in arxiv.<p>Build a system that suits your workflow based on these principles:\nexecutable verification is king, independence is mandatory, a zero-failure report is a claim to be audited, not a result to be celebrated.<p>Now AI Just Works™"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Freedumbs",
+          "story_48413629"
+        ],
+        "author": "Freedumbs",
+        "comment_text": "Use whatever terminal you want.<p>Use claude or codex cli as architect.<p>Use !architect-model as actor.<p>Use local model for scout, extraction, etc.<p>Read recent AI research in arxiv.<p>Build a system that suits your workflow based on these principles:\nexecutable verification is king, independence is mandatory, a zero-failure report is a claim to be audited, not a result to be celebrated.<p>Now AI Just Works™",
+        "created_at": "2026-06-05T21:27:18Z",
+        "created_at_i": 1780694838,
+        "objectID": "48418571",
+        "parent_id": 48413629,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T21:30:52Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "mellosouls"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I actually think they look an interesting/nice product that others might be interested in - best to be straight when pushing them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: What is your (AI) dev tech stack / workflow?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_mellosouls",
+          "story_48413629"
+        ],
+        "author": "mellosouls",
+        "children": [
+          48419054
+        ],
+        "comment_text": "I actually think they look an interesting&#x2F;nice product that others might be interested in - best to be straight when pushing them.",
+        "created_at": "2026-06-05T20:34:10Z",
+        "created_at_i": 1780691650,
+        "objectID": "48417839",
+        "parent_id": 48416822,
+        "story_id": 48413629,
+        "story_title": "Ask HN: What is your (AI) dev tech stack / workflow?",
+        "updated_at": "2026-06-05T22:52:52Z"
+      }
+    ],
+    "hitsPerPage": 40,
+    "nbHits": 136,
+    "nbPages": 4,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48413629&hitsPerPage=40&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 25
+      },
+      "afterFetch": {
+        "format": {
+          "highlighting": 1,
+          "total": 1
+        }
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 3
+  }
+}

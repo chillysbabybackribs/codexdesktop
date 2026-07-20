@@ -14,7 +14,7 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
       }
       continue
     }
-    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_network' || item.tool === 'browser_screenshot' || item.tool === 'app_screenshot' || item.tool === 'browser_flow' || item.tool === 'browser_run')) {
+    if (item.type === 'dynamicToolCall' && (item.tool === 'browser_cdp' || item.tool === 'browser_screenshot' || item.tool === 'app_screenshot' || item.tool === 'browser_flow' || item.tool === 'browser_run')) {
       for (const content of item.contentItems ?? []) {
         if (content.type !== 'inputText') continue
         try {
@@ -26,15 +26,11 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
             snapshot?: { artifactPath?: unknown }
             responseBody?: { artifactPath?: unknown }
             artifact?: { artifactPath?: unknown }
-            network?: {
-              responseBody?: { artifactPath?: unknown }
-              stream?: { artifact?: { artifactPath?: unknown } }
-            }
           }
           const result = parsed.result && typeof parsed.result === 'object'
             ? parsed.result as typeof parsed
             : parsed
-          for (const artifact of [result.screenshot, result.pdf, result.trace, result.snapshot, result.responseBody, result.network?.responseBody, result.network?.stream?.artifact, parsed.artifact]) {
+          for (const artifact of [result.screenshot, result.pdf, result.trace, result.snapshot, result.responseBody, parsed.artifact]) {
             if (typeof artifact?.artifactPath !== 'string') continue
             addTraceArtifact(artifacts, {
               path: artifact.artifactPath,
@@ -45,6 +41,39 @@ export function traceArtifacts(items: TraceInputItem[]): TraceArtifact[] {
           }
         } catch {
           // A failed or non-JSON CDP result is not an artifact.
+        }
+      }
+      continue
+    }
+    if (item.type === 'dynamicToolCall' && item.tool === 'research_web') {
+      for (const content of item.contentItems ?? []) {
+        if (content.type !== 'inputText') continue
+        try {
+          const result = JSON.parse(content.text) as {
+            artifactDir?: unknown
+            pages?: Array<{ artifactPath?: unknown; htmlPath?: unknown }>
+          }
+          if (typeof result.artifactDir === 'string') {
+            addTraceArtifact(artifacts, {
+              path: result.artifactDir,
+              kind: 'researchCapsule',
+              originEventId: item.id,
+              availability: 'pathOnly'
+            })
+          }
+          for (const page of Array.isArray(result.pages) ? result.pages : []) {
+            for (const path of [page.artifactPath, page.htmlPath]) {
+              if (typeof path !== 'string') continue
+              addTraceArtifact(artifacts, {
+                path,
+                kind: 'generatedFile',
+                originEventId: item.id,
+                availability: 'pathOnly'
+              })
+            }
+          }
+        } catch {
+          // A failed or partial tool result is not promoted into the artifact index.
         }
       }
       continue

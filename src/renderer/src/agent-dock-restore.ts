@@ -1,7 +1,6 @@
 import { attachmentsFromUserInput } from './Attachments.js'
 import { collapseAdjacentAssistantDuplicates, parseAgentDock, stripMainChatContext, type AgentLiteMessage, type AgentSession } from './agent-session-model.js'
 import { isAuditPrompt, parseAuditPrompt } from './audit-trigger.js'
-import { stripLegacyBrowserRoutingNote } from './browser-routing-note.js'
 import type { ChatItem } from './transcript-model.js'
 import { emptySessionState, type SessionRenderState } from './session-store.js'
 
@@ -26,12 +25,11 @@ export function liteMessagesFromItems(source: ChatItem[]): AgentLiteMessage[] {
         .filter((content) => content.type === 'text')
         .map((content) => content.text)
         .join('\n')
-      const visibleText = stripLegacyBrowserRoutingNote(text)
       const attachments = attachmentsFromUserInput(item.content)
-      if (isAuditPrompt(visibleText)) {
-        messages.push({ id: item.id, role: 'user', text: visibleText, attachments, audit: parseAuditPrompt(visibleText) })
-      } else if (visibleText || attachments.length) {
-        messages.push({ id: item.id, role: 'user', text: stripMainChatContext(visibleText), attachments })
+      if (isAuditPrompt(text)) {
+        messages.push({ id: item.id, role: 'user', text, attachments, audit: parseAuditPrompt(text) })
+      } else if (text || attachments.length) {
+        messages.push({ id: item.id, role: 'user', text: stripMainChatContext(text), attachments })
       }
     } else if (item.type === 'agentMessage' && item.text) {
       messages.push({ id: item.id, role: 'assistant', text: item.text })
@@ -64,29 +62,26 @@ export async function restoreAgentDock(options: {
     if (!entries.length) return
 
     const restored: AgentSession[] = entries.map((entry) => ({
-      key: typeof entry.key === 'string' && entry.key ? entry.key : crypto.randomUUID(),
+      key: crypto.randomUUID(),
       // Pre-ownership dock records are legacy global agents. Keep them
       // reachable in the chat that was active during restore; newer records
       // retain their exact owning tab.
       mainChatTabKey: typeof entry.mainChatTabKey === 'string' && entry.mainChatTabKey
         ? entry.mainChatTabKey
         : activeMainChatTabKey,
-      workspace: typeof entry.workspace === 'string' && entry.workspace ? entry.workspace : null,
       // Phase 1 does not persist the spawn tree, so a restored session is
       // always a top-level agent (reviewer or a promoted lead), never a
       // spawned worker — the parent link and spawning turn are intentionally
       // dropped on reload.
-      role: entry.role ?? 'reviewer',
-      parentAgentKey: entry.parentAgentKey ?? null,
+      role: 'reviewer',
+      parentAgentKey: null,
       spawnedByTurnId: null,
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
       status: 'idle',
       turnId: null,
       messages: [],
-      // Radio model: Reviewer and Helper are exclusive — audit wins when a
-      // legacy snapshot carried both flags.
-      watchesMain: Boolean(entry.watchesMain) && !entry.auditsMain,
+      watchesMain: Boolean(entry.watchesMain),
       auditsMain: Boolean(entry.auditsMain),
       reportsToMain: Boolean(entry.reportsToMain),
       // Legacy records predate the first-flag prompt: auto-send on was an
@@ -96,17 +91,7 @@ export async function restoreAgentDock(options: {
       model: entry.model ?? null,
       reasoningEffort: entry.reasoningEffort ?? null,
       contextUsage: null,
-      isCompacting: false,
-      sourceProvider: entry.sourceProvider ?? null,
-      executionLane: entry.executionLane ?? null,
-      nativeRunId: entry.nativeRunId ?? null,
-      runParentThreadId: entry.runParentThreadId ?? null,
-      runStatus: entry.runStatus ?? null,
-      runTask: entry.runTask ?? null,
-      runProgress: entry.runProgress ?? null,
-      runResultSummary: entry.runResultSummary ?? null,
-      runOutputPath: entry.runOutputPath ?? null,
-      wakeStatus: entry.wakeStatus ?? 'none'
+      isCompacting: false
     }))
 
     // Register before resuming so incoming events route to the dock.

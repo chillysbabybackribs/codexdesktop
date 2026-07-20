@@ -1,12 +1,19 @@
 import { type FormEvent, useEffect, useState } from 'react';
-import type { ThreadGoal, ThreadGoalStatus, ThreadTokenUsage } from '../../shared/session-protocol';
-import { ContextTooltip } from './ContextTooltip';
-import { UiTooltip } from './UiPrimitives';
+import type {
+  ThreadGoal,
+  ThreadGoalStatus,
+  ThreadTokenUsage,
+} from '../../shared/session-protocol';
 
-export function CloseIcon(): React.JSX.Element {
+export function UnsplitIcon(): React.JSX.Element {
   return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" strokeLinecap="round" />
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="11" height="9" rx="1.5" stroke="currentColor" />
+      <path
+        d="M6.2 6.2l3.6 3.6M9.8 6.2l-3.6 3.6"
+        stroke="currentColor"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -124,25 +131,25 @@ export function WorkspacePill({
   onPickWorkspace: () => Promise<void>;
 }): React.JSX.Element {
   return (
-    <UiTooltip content="Change workspace">
-      <button
-        type="button"
-        className="workspace-pill"
-        aria-label="Change workspace"
-        onClick={() => void onPickWorkspace()}
-      >
-        <FolderIcon />
-        <span className="workspace-pill-name">
-          {workspace ? workspaceName(workspace) : 'Choose workspace'}
-        </span>
-        <span className="workspace-pill-caret">⌄</span>
-      </button>
-    </UiTooltip>
+    <button
+      type="button"
+      className="workspace-pill"
+      title={workspace ?? 'No workspace selected — new chats start in your home folder'}
+      onClick={() => void onPickWorkspace()}
+    >
+      <FolderIcon />
+      <span className="workspace-pill-name">
+        {workspace ? workspaceName(workspace) : 'Choose workspace'}
+      </span>
+      <span className="workspace-pill-caret">⌄</span>
+    </button>
   );
 }
 
-// Composer meter showing how full the thread's model context is. Clicking it
-// asks the app-server to compact the thread; auto-compaction remains unchanged.
+// Composer pill showing how full the thread's model context is (the last
+// model call's tokens against the model window). Clicking it asks the
+// app-server to compact the thread; auto-compaction also runs at 80% from the
+// main process, so this is the "clean up now" affordance.
 export function ContextPill({
   usage,
   disabled,
@@ -160,42 +167,35 @@ export function ContextPill({
   const percent =
     hasUsage && window ? Math.min(100, Math.round((contextTokens / window) * 100)) : 0;
   const level = percent >= 80 ? 'is-high' : percent >= 60 ? 'is-warm' : '';
-  const isDisabled = disabled || !hasUsage;
-  const accessibleLabel = compacting
-    ? 'Compacting context'
-    : hasUsage
-      ? `Context ${percent}% used. Compact now.`
-      : 'Context available after the first reply';
+  const title = compacting
+    ? 'Compacting the conversation…'
+    : hasUsage && window
+      ? `Context ${percent}% full (${contextTokens.toLocaleString()} of ${window.toLocaleString()} tokens). Click to compact the conversation.`
+      : 'Context usage will appear after the first model response.';
 
   return (
-    <ContextTooltip
-      available={hasUsage}
-      compacting={compacting}
-      disabledTrigger={isDisabled}
-      percent={percent}
+    <button
+      type="button"
+      className={`context-pill ${level} ${hasUsage ? '' : 'is-empty'} ${compacting ? 'is-compacting' : ''}`}
+      disabled={disabled || !hasUsage}
+      aria-label={title}
+      title={title}
+      onClick={() => void onCompact()}
     >
-      <button
-        type="button"
-        className={`context-pill ${level} ${hasUsage ? '' : 'is-empty'} ${compacting ? 'is-compacting' : ''}`}
-        disabled={isDisabled}
-        aria-label={accessibleLabel}
-        onClick={() => void onCompact()}
-      >
-        <span className="context-pill-ring" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle className="context-pill-ring-track" cx="12" cy="12" r="8" />
-            <circle
-              className="context-pill-ring-fill"
-              cx="12"
-              cy="12"
-              r="8"
-              pathLength="100"
-              style={{ strokeDasharray: `${percent} 100` }}
-            />
-          </svg>
-        </span>
-      </button>
-    </ContextTooltip>
+      <span className="context-pill-ring" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle className="context-pill-ring-track" cx="12" cy="12" r="8" />
+          <circle
+            className="context-pill-ring-fill"
+            cx="12"
+            cy="12"
+            r="8"
+            pathLength="100"
+            style={{ strokeDasharray: `${percent} 100` }}
+          />
+        </svg>
+      </span>
+    </button>
   );
 }
 

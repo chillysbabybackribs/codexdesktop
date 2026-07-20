@@ -1,0 +1,601 @@
+# Connect Business App and ChatGPT (OpenAI) to power AI-driven automation
+
+- No-code AI automation
+
+- Full audit trails and controls
+
+- SOC 2 and GDPR compliant
+
+- Easy visual workflow builder
+
+- 9,000+ apps, 450+ AI tools
+
+- Free tier available
+
+Choose a Trigger
+
+Choose an Action
+
+Get started free
+
+Integrate for free
+
+Start with Google for free
+
+### Top companies trust Zapier to automate work that solves their unique business problems—no coding required.
+
+## How Zapier works
+
+Zapier makes it easy to integrate Business App with ChatGPT (OpenAI) - no code necessary. See how you can get setup in minutes.
+
+100%Help
+
+Business AppBusiness App
+
+1. Choose trigger event
+
+ChatGPT (OpenAI)ChatGPT (OpenAI)
+
+2. Choose action
+
+1. Select the event
+
+Setup
+
+Test
+
+App
+
+Business App
+
+Trigger event
+
+Choose a trigger event
+
+### Choose a trigger
+
+A trigger is the event that starts your Zap—like a "Setup Business App as Trigger" from Business App.
+
+### Add your action
+
+An action happens after the trigger—such as "Analyze Images" in ChatGPT (OpenAI).
+
+### You’re connected!
+
+Zapier seamlessly connects Business App and ChatGPT (OpenAI), automating your workflow.
+
+## Supported triggers and actions
+
+Zapier helps you create workflows that connect your apps to automate repetitive tasks. A trigger is an event that starts a workflow, and an action is an event a Zap performs.
+
+triggers, actions, or triggers and actions
+
+- - Note for Business App as Trigger
+
+Trigger
+
+Polling
+
+Try It
+
+- - Automation ID
+
+Required
+
+Action
+
+Write
+
+- - Create or update note
+
+- External ID
+
+- Email
+
+- Phone Number
+
+- First Name
+
+- Last Name
+
+- Job Title
+
+- Additional Fields
+
+- Search note
+
+- Additional Search Fields
+
+- upsert_note
+
+- Overwrite Existing Data
+
+- Associate a Company
+
+- Company ID for Association (Optional)
+
+- Return note
+
+- Return Fields
+
+Action
+
+Write
+
+- - Message
+
+- Image
+
+Required
+
+- Max Tokens
+
+Action
+
+Write
+
+- - Text to Be Analyzed
+
+Required
+
+- Info_1
+
+- Max Tokens
+
+- Model
+
+Required
+
+- Temperature
+
+Action
+
+Write
+
+- - Copy
+
+- Moderation Model
+
+Required
+
+- Text to be classified
+
+- Images to Moderate
+
+Action
+
+Write
+
+- - Model
+
+Required
+
+- User Message
+
+Required
+
+- Instructions
+
+- Info_2
+
+- Use Prompt Template
+
+- Images
+
+- File_clarification
+
+- Files
+
+- Max Tokens
+
+- Tool Choice
+
+- Parallel Tool Calls
+
+- Max Tool Calls
+
+- Tools
+
+- Response Format
+
+- Advanced_warning
+
+- Memory Key
+
+- Prompt Cache Key
+
+- Safety Identifier
+
+- Metadata
+
+Action
+
+Write
+
+- - Image
+
+Required
+
+- Mask
+
+- Prompt
+
+Required
+
+- Model
+
+- End user ID
+
+Action
+
+Write
+
+- - Prompt
+
+Required
+
+- Model
+
+- Duration (seconds)
+
+- Resolution
+
+Action
+
+Write
+
+- - Unstructured Text
+
+Required
+
+- Model
+
+Required
+
+- Description
+
+Required
+
+- Values to Extract
+
+Required
+
+Action
+
+Write
+
+- - Info_1
+
+- Info_2
+
+- Model
+
+Required
+
+- Prompt
+
+Required
+
+- Temperature
+
+- Maximum Length
+
+- Stop Sequences
+
+- Top P
+
+- Frequency Penalty
+
+- Presence Penalty
+
+Action
+
+Write
+
+- - Info_1
+
+- Info_2
+
+- Model
+
+Required
+
+- Text
+
+Required
+
+- Voice
+
+Required
+
+- Response_format
+
+- Speed
+
+Action
+
+Write
+
+- - Recipient Name
+
+Required
+
+- Recipient Email
+
+Required
+
+- From Name
+
+Required
+
+- Email Prompt
+
+Required
+
+- Tone
+
+Required
+
+- Body Type
+
+Required
+
+- Info_3
+
+- Model
+
+Required
+
+- Max Tokens
+
+- Temperature
+
+- Top P
+
+Action
+
+Write
+
+- - Conversation ID
+
+Required
+
+Action
+
+Search
+
+- - Response ID
+
+Required
+
+Action
+
+Search
+
+- - Query
+
+Required
+
+- Documents
+
+Required
+
+Action
+
+Search
+
+- - Company or Contact IDs
+
+Required
+
+- Choose activity type
+
+Required
+
+- Check for existing activity based on an external identifier
+
+- Add team members
+
+- Add tags
+
+Action
+
+Write
+
+- - Create or update note
+
+- External ID
+
+- Platform account group ID
+
+- Company name
+
+- Street address line 1
+
+- Street address line 2
+
+- City/locality
+
+- State/province/region
+
+- Country
+
+- Zip/postal code
+
+- Additional Fields
+
+- Search note
+
+- Additional Search Fields
+
+- upsert_note
+
+- Overwrite Existing Data
+
+- Associate a Contact
+
+- Contact IDs for Association (Optional)
+
+- Return note
+
+- Return Fields
+
+Action
+
+Write
+
+- - Message
+
+- Images
+
+Required
+
+- Max Tokens
+
+Action
+
+Write
+
+- - Text to Be Analyzed
+
+Required
+
+- Model
+
+Required
+
+- Analysis Type
+
+Required
+
+- Info_1
+
+Action
+
+Write
+
+- - User Message
+
+Required
+
+- Model
+
+Required
+
+- Use Latest Stable Version
+
+- Memory Key
+
+- User Name
+
+- Assistant Name
+
+- Assistant Instructions
+
+- Max Tokens
+
+- Temperature
+
+- Top P
+
+- Info_2
+
+Action
+
+Write
+
+- - Text to Be Classified
+
+Required
+
+- Categories
+
+Required
+
+- Model
+
+Required
+
+- Max Tokens
+
+- Temperature
+
+- Top P
+
+Action
+
+Write
+
+- - Text to embed
+
+Required
+
+- Model
+
+- Dimensions
+
+- Encoding format
+
+Action
+
+Write
+
+- - File
+
+Required
+
+- Prompt
+
+- Response Format
+
+- Timestamp Granularity
+
+- Language of the Audio
+
+- Temperature
+
+Action
+
+Write
+
+- - Unstructured Text
+
+Required
+
+- Model
+
+Required
+
+- Description
+
+Required
+
+- Values to Extract
+
+Required
+
+Action
+
+Write
+
+- - Prompt
+
+Required
+
+- Model
+
+- User
+
+Action
+
+Write
+
+- - Text to Be Summarized
+
+Required
+
+- Model
+
+Required
+
+- Max

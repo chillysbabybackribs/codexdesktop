@@ -63,7 +63,7 @@ test('static research never falls back after a security-blocked redirect', async
   assert.match(result.reason ?? '', /redirect blocked/)
 })
 
-test('static research falls back for shells, tiny structured responses, and oversized bodies', async () => {
+test('static research falls back for shells, non-html, and oversized bodies', async () => {
   const shell = await fetchStaticResearchPage('https://example.com/app', options(async () =>
     new Response('<html><body><div id="root">Loading...</div></body></html>', {
       status: 200,
@@ -77,7 +77,7 @@ test('static research falls back for shells, tiny structured responses, and over
     new Response('{"ok":true}', { status: 200, headers: { 'content-type': 'application/json' } })
   ))
   assert.equal(json.kind, 'fallback')
-  assert.match(json.reason ?? '', /structured response confidence/)
+  assert.match(json.reason ?? '', /content type/)
 
   const oversized = await fetchStaticResearchPage('https://example.com/large', {
     ...options(async () => new Response(`<main>${'x'.repeat(110_000)}</main>`, {
@@ -88,32 +88,4 @@ test('static research falls back for shells, tiny structured responses, and over
   })
   assert.equal(oversized.kind, 'fallback')
   assert.match(oversized.reason ?? '', /byte limit/)
-})
-
-test('network lane accepts substantial JSON, GraphQL JSON, and NDJSON without Chromium', async () => {
-  const records = Array.from({ length: 24 }, (_, index) => ({
-    id: index + 1,
-    title: `Network capability record ${index + 1}`,
-    detail: 'Concrete response data extracted directly from the transport layer for fast artifact-backed research.'
-  }))
-
-  for (const mediaType of ['application/json', 'application/graphql-response+json']) {
-    const result = await fetchStaticResearchPage('https://api.example.com/graphql', options(async () =>
-      new Response(JSON.stringify({ data: { records } }), { status: 200, headers: { 'content-type': mediaType } })
-    ))
-    assert.equal(result.kind, 'accepted')
-    assert.equal(result.page?.extractionPath, 'network-response')
-    assert.equal(result.page?.mediaType, mediaType)
-    assert.match(result.page?.content ?? '', /Network capability record 24/)
-  }
-
-  const ndjson = await fetchStaticResearchPage('https://api.example.com/events', options(async () =>
-    new Response(records.map((record) => JSON.stringify(record)).join('\n'), {
-      status: 200,
-      headers: { 'content-type': 'application/x-ndjson' }
-    })
-  ))
-  assert.equal(ndjson.kind, 'accepted')
-  assert.equal(ndjson.page?.extractionPath, 'network-response')
-  assert.match(ndjson.page?.content ?? '', /Network capability record 24/)
 })

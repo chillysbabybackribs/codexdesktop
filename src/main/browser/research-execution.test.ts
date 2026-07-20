@@ -3,23 +3,8 @@ import test from 'node:test'
 import {
   collectWithConcurrencyUntil,
   KeyedTaskScheduler,
-  ResearchMemoryCache,
   retainValuesReducingDeficit
 } from './research-execution.ts'
-
-test('research memory cache expires entries and evicts the least recently used value', () => {
-  let now = 0
-  const cache = new ResearchMemoryCache<string>(100, 2, () => now)
-  cache.set('a', 'first')
-  cache.set('b', 'second')
-  assert.equal(cache.get('a'), 'first')
-  cache.set('c', 'third')
-  assert.equal(cache.get('b'), null)
-  assert.equal(cache.get('a'), 'first')
-  now = 100
-  assert.equal(cache.get('a'), null)
-  assert.equal(cache.get('c'), null)
-})
 
 test('candidate collection stops queued and in-flight work at the success target', async () => {
   const started: number[] = []

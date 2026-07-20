@@ -172,36 +172,31 @@ test('header menu consolidates layout, split, history, and settings commands', (
   const commands = headerMenuCommands({
     isBrowserMiddle: false,
     canSplitActivePane: true,
-    canOpenTrace: true,
     disabled: false,
     showGlobalActions: true
   })
 
   assert.deepEqual(
     commands.map((command) => command.id),
-    ['trace', 'browser-layout', 'split-right', 'split-down', 'history', 'settings']
+    ['browser-layout', 'split-right', 'split-down', 'history', 'settings']
   )
-  assert.equal(commands[0]?.label, 'Turn trace')
-  assert.equal(commands[1]?.label, 'Center browser')
-  assert.equal(commands[2]?.hint, 'Ctrl+\\')
+  assert.equal(commands[0]?.label, 'Center browser')
+  assert.equal(commands[1]?.hint, 'Ctrl+\\')
 })
 
 test('secondary browser-middle header keeps only pane layout commands', () => {
   const commands = headerMenuCommands({
     isBrowserMiddle: true,
     canSplitActivePane: false,
-    canOpenTrace: false,
     disabled: false,
     showGlobalActions: false
   })
 
   assert.deepEqual(commands.map((command) => command.id), [
-    'trace',
     'browser-layout',
     'split-right',
     'split-down'
   ])
-  assert.equal(commands[0]?.disabled, true)
-  assert.equal(commands[1]?.label, 'Move browser right')
-  assert.equal(commands[2]?.disabled, true)
+  assert.equal(commands[0]?.label, 'Move browser right')
+  assert.equal(commands[1]?.disabled, true)
 })

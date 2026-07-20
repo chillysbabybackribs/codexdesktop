@@ -1,0 +1,643 @@
+{
+  "observedAt": "2026-07-11T15:37:50.822Z",
+  "target": {
+    "id": "48486763",
+    "window": "prior-30d",
+    "tag": "ask_hn",
+    "score": 55
+  },
+  "response": {
+    "exhaustive": {
+      "nbHits": true,
+      "typo": true
+    },
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "hits": [
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "karakoram"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "While shorting can work for some people, I believe people who actually understand the underlying technology and are actually smart can make way more money riding the wave.<p>I don't mean just with stocks or in the market.<p>If truly know what's going on behind the scenes both technically and professionally, you'll know how to fully milk this super-trend.<p>The fact its a bubble or the spend is circular is besides the point, if you really know what you're doing, are in the right location, have access to the right people, making millions or billions is difficult but very much possible."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_karakoram",
+          "story_48486763"
+        ],
+        "author": "karakoram",
+        "comment_text": "While shorting can work for some people, I believe people who actually understand the underlying technology and are actually smart can make way more money riding the wave.<p>I don&#x27;t mean just with stocks or in the market.<p>If truly know what&#x27;s going on behind the scenes both technically and professionally, you&#x27;ll know how to fully milk this super-trend.<p>The fact its a bubble or the spend is circular is besides the point, if you really know what you&#x27;re doing, are in the right location, have access to the right people, making millions or billions is difficult but very much possible.",
+        "created_at": "2026-06-17T17:03:22Z",
+        "created_at_i": 1781715802,
+        "objectID": "48573269",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-28T11:51:33Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "giantg2"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Instead od shorting NVIDIA, why not invest in stocks that would benefit from AI failures? Or diversify by investing in AI competitors, such as Alphabet (vertical integration with TPUs)."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_giantg2",
+          "story_48486763"
+        ],
+        "author": "giantg2",
+        "comment_text": "Instead od shorting NVIDIA, why not invest in stocks that would benefit from AI failures? Or diversify by investing in AI competitors, such as Alphabet (vertical integration with TPUs).",
+        "created_at": "2026-06-17T14:24:14Z",
+        "created_at_i": 1781706254,
+        "objectID": "48570989",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-17T14:29:38Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Mistletoe"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "There is no need to short.  Just simply being in cash or assets uncorrelated to the stock market will be plenty.  Study what outperformed after the dot com bubble burst.  Things like gold, small cap value, and long term treasuries did well.  And the great thing is you don’t have to time it, those assets historically provide great returns rain or shine.<p><a href=\"https://portfoliocharts.com/2021/12/16/three-secret-ingredients-of-the-most-efficient-portfolios/\" rel=\"nofollow\">https://portfoliocharts.com/2021/12/16/three-secret-ingredie...</a>"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Mistletoe",
+          "story_48486763"
+        ],
+        "author": "Mistletoe",
+        "comment_text": "There is no need to short.  Just simply being in cash or assets uncorrelated to the stock market will be plenty.  Study what outperformed after the dot com bubble burst.  Things like gold, small cap value, and long term treasuries did well.  And the great thing is you don’t have to time it, those assets historically provide great returns rain or shine.<p><a href=\"https:&#x2F;&#x2F;portfoliocharts.com&#x2F;2021&#x2F;12&#x2F;16&#x2F;three-secret-ingredients-of-the-most-efficient-portfolios&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;portfoliocharts.com&#x2F;2021&#x2F;12&#x2F;16&#x2F;three-secret-ingredie...</a>",
+        "created_at": "2026-06-16T09:29:33Z",
+        "created_at_i": 1781602173,
+        "objectID": "48552710",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-16T09:33:47Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bnova"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Are you trying to do LEAP puts?"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bnova",
+          "story_48486763"
+        ],
+        "author": "bnova",
+        "comment_text": "Are you trying to do LEAP puts?",
+        "created_at": "2026-06-14T13:25:57Z",
+        "created_at_i": 1781443557,
+        "objectID": "48527003",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-14T13:30:11Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Schiendelman"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "This doesn't make sense. It completely misses that there are tons of other companies that will happily take the Nvidia capacity at the same price if their biggest customers reduce spend."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Schiendelman",
+          "story_48486763"
+        ],
+        "author": "Schiendelman",
+        "comment_text": "This doesn&#x27;t make sense. It completely misses that there are tons of other companies that will happily take the Nvidia capacity at the same price if their biggest customers reduce spend.",
+        "created_at": "2026-06-13T01:19:35Z",
+        "created_at_i": 1781313575,
+        "objectID": "48511344",
+        "parent_id": 48486838,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-13T01:23:21Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "atleastoptimal"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Betting against deep learning has been a losing game over the past 5 years.<p>As long as the models keep getting better, you will keep losing betting against them."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_atleastoptimal",
+          "story_48486763"
+        ],
+        "author": "atleastoptimal",
+        "comment_text": "Betting against deep learning has been a losing game over the past 5 years.<p>As long as the models keep getting better, you will keep losing betting against them.",
+        "created_at": "2026-06-12T22:15:22Z",
+        "created_at_i": 1781302522,
+        "objectID": "48510057",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-13T01:16:51Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bigyabai"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Nvidia's <i>profits</i> are built on demand and margins. Their valuation is constrained by their supply, Nvidia sells-out of almost all their datacenter hardware before it hits shelves. Even if the memory shortage never clears up, Nvidia is the best-poised company to buy memory at-cost and sell it for ludicrous prices.<p>For their margins to go down, that demand would have to be satisfied. And those customers by-and-large do not see any commodified CUDA alternatives on the market, they <i>only</i> want Nvidia hardware. Hence my question - who will rise to the challenge? If the answer is nobody, then you've just found out why people don't short Nvidia."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bigyabai",
+          "story_48486763"
+        ],
+        "author": "bigyabai",
+        "comment_text": "Nvidia&#x27;s <i>profits</i> are built on demand and margins. Their valuation is constrained by their supply, Nvidia sells-out of almost all their datacenter hardware before it hits shelves. Even if the memory shortage never clears up, Nvidia is the best-poised company to buy memory at-cost and sell it for ludicrous prices.<p>For their margins to go down, that demand would have to be satisfied. And those customers by-and-large do not see any commodified CUDA alternatives on the market, they <i>only</i> want Nvidia hardware. Hence my question - who will rise to the challenge? If the answer is nobody, then you&#x27;ve just found out why people don&#x27;t short Nvidia.",
+        "created_at": "2026-06-11T16:12:45Z",
+        "created_at_i": 1781194365,
+        "objectID": "48492336",
+        "parent_id": 48487945,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-28T01:21:32Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TimByte"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Agreed. Shorting requires timing the market perfectly, but buying assets after a crash just requires having liquidity and patience. Historically, that's often been the safer play<p>After the dot-com bust, infrastructure assets turned out to be one of the most undervalued asset classes. Maybe in a few years people will look back on GPU clusters the same way they looked at dark fiber back then"
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TimByte",
+          "story_48486763"
+        ],
+        "author": "TimByte",
+        "comment_text": "Agreed. Shorting requires timing the market perfectly, but buying assets after a crash just requires having liquidity and patience. Historically, that&#x27;s often been the safer play<p>After the dot-com bust, infrastructure assets turned out to be one of the most undervalued asset classes. Maybe in a few years people will look back on GPU clusters the same way they looked at dark fiber back then",
+        "created_at": "2026-06-11T10:22:52Z",
+        "created_at_i": 1781173372,
+        "objectID": "48488455",
+        "parent_id": 48488361,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-12T16:39:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "TimByte"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I think a lot of people are mixing two different ideas: AI is overhyped and AI company stocks are about to crash. The first might well be true, but the second might not be. The dot-com bubble burst too, but the internet didn't go away. The question is more about who will be left standing once the era of endless capex growth ends."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_TimByte",
+          "story_48486763"
+        ],
+        "author": "TimByte",
+        "comment_text": "I think a lot of people are mixing two different ideas: AI is overhyped and AI company stocks are about to crash. The first might well be true, but the second might not be. The dot-com bubble burst too, but the internet didn&#x27;t go away. The question is more about who will be left standing once the era of endless capex growth ends.",
+        "created_at": "2026-06-11T10:19:49Z",
+        "created_at_i": 1781173189,
+        "objectID": "48488438",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-13T01:20:04Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "roryirvine"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "A related question might be whether anyone is seriously preparing for whatever opportunities present themselves after the bubble bursts.<p>For example, after the dot com bust, there was plenty of money to be made in aggregating bankrupt or underutilised telecoms assets - endless duct shares, dark fibre, and networking kit which could turn a profit if bought cheaply enough in a fire sale.<p>Is anyone preparing to bid pennies on the dollar for bankrupt AI datacentres? I can see how it might potentially make sense to do so in places like the EU or UK where increasing data sovereignty concerns might make locally-based small/mid-scale private inference an attractive proposition if the capital costs are low enough."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_roryirvine",
+          "story_48486763"
+        ],
+        "author": "roryirvine",
+        "children": [
+          48488455
+        ],
+        "comment_text": "A related question might be whether anyone is seriously preparing for whatever opportunities present themselves after the bubble bursts.<p>For example, after the dot com bust, there was plenty of money to be made in aggregating bankrupt or underutilised telecoms assets - endless duct shares, dark fibre, and networking kit which could turn a profit if bought cheaply enough in a fire sale.<p>Is anyone preparing to bid pennies on the dollar for bankrupt AI datacentres? I can see how it might potentially make sense to do so in places like the EU or UK where increasing data sovereignty concerns might make locally-based small&#x2F;mid-scale private inference an attractive proposition if the capital costs are low enough.",
+        "created_at": "2026-06-11T10:05:16Z",
+        "created_at_i": 1781172316,
+        "objectID": "48488361",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-16T09:27:02Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "da-x"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "AFAIK Michael Burry is shorting it via PUT options ­­— can look into what he is doing."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_da-x",
+          "story_48486763"
+        ],
+        "author": "da-x",
+        "comment_text": "AFAIK Michael Burry is shorting it via PUT options ­­— can look into what he is doing.",
+        "created_at": "2026-06-11T09:03:02Z",
+        "created_at_i": 1781168582,
+        "objectID": "48487981",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-12T16:39:03Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ekaros"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "With Nvidia no one needs to replace them. Their valuation is build on large demand and huge margins. Demand just going lower or margins dropping following that should lead to lower valuation without anyone replacing them.<p>I could very well see current market being in state of overinvestment. Meaning future demand is lower which could lead to less units sold thus lower profits thus lower valuation."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_Ekaros",
+          "story_48486763"
+        ],
+        "author": "Ekaros",
+        "children": [
+          48492336
+        ],
+        "comment_text": "With Nvidia no one needs to replace them. Their valuation is build on large demand and huge margins. Demand just going lower or margins dropping following that should lead to lower valuation without anyone replacing them.<p>I could very well see current market being in state of overinvestment. Meaning future demand is lower which could lead to less units sold thus lower profits thus lower valuation.",
+        "created_at": "2026-06-11T08:56:17Z",
+        "created_at_i": 1781168177,
+        "objectID": "48487945",
+        "parent_id": 48487048,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-28T01:21:01Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ggm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "I absolutely do NOT want to do this. I am asking if any of the people with real money and fintech are doing this. Not because I want to, because I want to UNDERSTAND."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ggm",
+          "story_48486763"
+        ],
+        "author": "ggm",
+        "comment_text": "I absolutely do NOT want to do this. I am asking if any of the people with real money and fintech are doing this. Not because I want to, because I want to UNDERSTAND.",
+        "created_at": "2026-06-11T08:46:00Z",
+        "created_at_i": 1781167560,
+        "objectID": "48487885",
+        "parent_id": 48487853,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-11T10:33:12Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "NoahZuniga"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "The market can stay irrational longer than you can stay solvent."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_NoahZuniga",
+          "story_48486763"
+        ],
+        "author": "NoahZuniga",
+        "children": [
+          48487885
+        ],
+        "comment_text": "The market can stay irrational longer than you can stay solvent.",
+        "created_at": "2026-06-11T08:41:47Z",
+        "created_at_i": 1781167307,
+        "objectID": "48487853",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-17T10:14:36Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "rowbin"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Many have theorized this. But i wouldn't bet money on it, the timing is just too unpredictable IMO."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_rowbin",
+          "story_48486763"
+        ],
+        "author": "rowbin",
+        "comment_text": "Many have theorized this. But i wouldn&#x27;t bet money on it, the timing is just too unpredictable IMO.",
+        "created_at": "2026-06-11T07:23:23Z",
+        "created_at_i": 1781162603,
+        "objectID": "48487358",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-11T13:49:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "ggm"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "That's a substantive point,  the GPUs are reprogrammable to do other tasks so the people who pay for massive CFD computation in Mil and Oil will have competitive offers, but I'm unsure the spectacular future value is there, if the perpetual &quot;buy more&quot; dries up. They could wind up alive, but with a smaller horizon.<p>I know I harbour resentment because of the knock on effects on ram and SSD pricing, but I'm serious that I think the amount of capital being sunk in hyperscalers does not look to me to be recoverable inside the investors ROI. If my example is poorly chosen, perhaps the people currently buying the kit are the ones destined to have a fall."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_ggm",
+          "story_48486763"
+        ],
+        "author": "ggm",
+        "comment_text": "That&#x27;s a substantive point,  the GPUs are reprogrammable to do other tasks so the people who pay for massive CFD computation in Mil and Oil will have competitive offers, but I&#x27;m unsure the spectacular future value is there, if the perpetual &quot;buy more&quot; dries up. They could wind up alive, but with a smaller horizon.<p>I know I harbour resentment because of the knock on effects on ram and SSD pricing, but I&#x27;m serious that I think the amount of capital being sunk in hyperscalers does not look to me to be recoverable inside the investors ROI. If my example is poorly chosen, perhaps the people currently buying the kit are the ones destined to have a fall.",
+        "created_at": "2026-06-11T07:11:09Z",
+        "created_at_i": 1781161869,
+        "objectID": "48487262",
+        "parent_id": 48487048,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-11T07:14:43Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "bigyabai"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Who replaces Nvidia? That's the 5 trillion dollar question, and nobody has stepped forward to answer it.<p>The closest the industry came to replacing CUDA was with Khronos and OpenCL, but that ship has sailed. CDNA, Apple Silicon, Intel Inside, none of them are trying to take Nvidia's crown. The niche for HPC will exist, and Nvidia continues to serve the niche while others turn up their nose.<p>For my money, shorting Nvidia is like betting on Glass Joe to beat Mike Tyson. There's going to be incredible cloud spend on unglamorous stuff like defense and automated computer vision, and that will keep Nvidia's demand afloat even at a wild valuation."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_bigyabai",
+          "story_48486763"
+        ],
+        "author": "bigyabai",
+        "children": [
+          48487945,
+          48487262
+        ],
+        "comment_text": "Who replaces Nvidia? That&#x27;s the 5 trillion dollar question, and nobody has stepped forward to answer it.<p>The closest the industry came to replacing CUDA was with Khronos and OpenCL, but that ship has sailed. CDNA, Apple Silicon, Intel Inside, none of them are trying to take Nvidia&#x27;s crown. The niche for HPC will exist, and Nvidia continues to serve the niche while others turn up their nose.<p>For my money, shorting Nvidia is like betting on Glass Joe to beat Mike Tyson. There&#x27;s going to be incredible cloud spend on unglamorous stuff like defense and automated computer vision, and that will keep Nvidia&#x27;s demand afloat even at a wild valuation.",
+        "created_at": "2026-06-11T06:44:01Z",
+        "created_at_i": 1781160241,
+        "objectID": "48487048",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-16T01:13:16Z"
+      },
+      {
+        "_highlightResult": {
+          "author": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "freakynit"
+          },
+          "comment_text": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Did this research last week on the same thing:<p>NVIDIA (NVDA) — The Short / Underperformance Thesis - <a href=\"https://nvidia-stock-analysis.pagey.site/\" rel=\"nofollow\">https://nvidia-stock-analysis.pagey.site/</a><p>This is pump and dump on the largest scale we have ever seen. It's effectively privatize the profits and socialize the losses."
+          },
+          "story_title": {
+            "matchLevel": "none",
+            "matchedWords": [],
+            "value": "Ask HN: Is anyone shorting the overspend in AI yet?"
+          }
+        },
+        "_tags": [
+          "comment",
+          "author_freakynit",
+          "story_48486763"
+        ],
+        "author": "freakynit",
+        "children": [
+          48511344
+        ],
+        "comment_text": "Did this research last week on the same thing:<p>NVIDIA (NVDA) — The Short &#x2F; Underperformance Thesis - <a href=\"https:&#x2F;&#x2F;nvidia-stock-analysis.pagey.site&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;nvidia-stock-analysis.pagey.site&#x2F;</a><p>This is pump and dump on the largest scale we have ever seen. It&#x27;s effectively privatize the profits and socialize the losses.",
+        "created_at": "2026-06-11T06:17:37Z",
+        "created_at_i": 1781158657,
+        "objectID": "48486838",
+        "parent_id": 48486763,
+        "story_id": 48486763,
+        "story_title": "Ask HN: Is anyone shorting the overspend in AI yet?",
+        "updated_at": "2026-06-16T09:27:32Z"
+      }
+    ],
+    "hitsPerPage": 20,
+    "nbHits": 18,
+    "nbPages": 1,
+    "page": 0,
+    "params": "tags=comment%2Cstory_48486763&hitsPerPage=20&page=0&advancedSyntax=true&analyticsTags=backend",
+    "processingTimeMS": 1,
+    "processingTimingsMS": {
+      "_request": {
+        "roundTrip": 22
+      },
+      "total": 1
+    },
+    "query": "",
+    "serverTimeMS": 2
+  }
+}

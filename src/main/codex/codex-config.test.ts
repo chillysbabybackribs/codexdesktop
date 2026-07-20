@@ -8,7 +8,6 @@ import {
   isFastPathTask,
   isInteractiveBrowserTask,
   isLightweightVisualCheck,
-  isLiveSiteCloneTask,
   isReadOnlyBrowserMicrotask,
   isWebResearchTask,
   resolveTurnPolicy,
@@ -49,26 +48,10 @@ const imagegenSkill: SkillMetadata = {
   enabled: true
 }
 
-const editorialWaitlistSkill: SkillMetadata = {
-  name: 'superdesign-editorial-waitlist',
-  description: 'Build editorial waitlist landing pages with the Superdesign reference contract',
-  path: '/app/skills/superdesign-editorial-waitlist/SKILL.md',
-  scope: 'user',
-  enabled: true
-}
-
-const cloneLiveSiteSkill: SkillMetadata = {
-  name: 'clone-live-site',
-  description: 'Faithfully clone a permitted live site as a local frontend',
-  path: '/app/skills/clone-live-site/SKILL.md',
-  scope: 'user',
-  enabled: true
-}
-
-test('ordinary web research does not force-attach the opt-in extraction skill', () => {
+test('web research turns attach the extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Research the latest Electron navigation guidance', [webResearchSkill]),
-    []
+    [webResearchSkill]
   )
 })
 
@@ -129,54 +112,6 @@ test('media-led website turns attach both polished UI and image generation guida
 test('product dashboards do not attach image generation guidance by default', () => {
   assert.deepEqual(
     selectTurnSkills('Design a responsive operations dashboard UI', [polishedUiSkill, imagegenSkill]),
-    [polishedUiSkill]
-  )
-})
-
-test('editorial waitlist requests attach the reference skill with polished UI guidance', () => {
-  assert.deepEqual(
-    selectTurnSkills(
-      'Build an editorial waitlist landing page for an invite-only architecture studio',
-      [polishedUiSkill, editorialWaitlistSkill]
-    ),
-    [polishedUiSkill, editorialWaitlistSkill]
-  )
-})
-
-test('ordinary waitlist requests do not force the editorial reference skill', () => {
-  assert.deepEqual(
-    selectTurnSkills('Build a simple waitlist landing page for a new app', [editorialWaitlistSkill]),
-    []
-  )
-})
-
-test('exact live-site clone requests attach clone and polished UI guidance', () => {
-  const prompt = 'Clone https://example.com as an interactive local website'
-
-  assert.equal(isLiveSiteCloneTask(prompt), true)
-  assert.deepEqual(
-    selectTurnSkills(prompt, [cloneLiveSiteSkill, polishedUiSkill]),
-    [cloneLiveSiteSkill, polishedUiSkill]
-  )
-})
-
-test('site redesign and inspiration requests do not attach the clone workflow', () => {
-  for (const prompt of [
-    'Build a better website like https://example.com',
-    'Redesign https://example.com as a premium responsive website',
-    'Improve the current website UI',
-    'Create a site inspired by https://example.com'
-  ]) {
-    assert.equal(isLiveSiteCloneTask(prompt), false, prompt)
-    assert.deepEqual(selectTurnSkills(prompt, [cloneLiveSiteSkill]), [], prompt)
-  }
-
-  assert.deepEqual(
-    selectTurnSkills('Create a site inspired by https://example.com', [cloneLiveSiteSkill, polishedUiSkill]),
-    [polishedUiSkill]
-  )
-  assert.deepEqual(
-    selectTurnSkills('Make the current site better', [cloneLiveSiteSkill, polishedUiSkill]),
     [polishedUiSkill]
   )
 })
@@ -244,31 +179,26 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
-  assert.doesNotMatch(guidance, /start by organizing|formal plan|multi-part answers/i)
-  assert.match(guidance, /ordinary task judgment/i)
-  assert.match(guidance, /preserve the user's literal product names and intent/i)
-  assert.doesNotMatch(guidance, /should normally use browser_live_search/i)
+  assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|multi-part answers/i)
 })
 
-test('browser guidance avoids obsolete compatibility fallbacks', () => {
+test('browser guidance preserves a one-call fallback for older resumed threads', () => {
   const guidance = buildGuidance({})
-  assert.match(guidance, /prefer one `browser_snapshot` call/)
-  assert.match(guidance, /reserve `browser_run` for bespoke JavaScript/i)
-  assert.doesNotMatch(guidance, /older resumed thread where newer tools are absent/)
-  assert.doesNotMatch(guidance, /newer tools are absent/)
+  assert.match(guidance, /browser_snapshot` call when it is available/)
+  assert.match(guidance, /older resumed thread where newer tools are absent/)
+  assert.match(guidance, /one `browser_run` call/)
 })
 
 test('active autosnapshot guidance describes concurrent commit and push behavior', () => {
   const guidance = buildGuidance({
     CODEX_DESKTOP_AUTOGIT_ACTIVE: '1',
     CODEX_DESKTOP_AUTOGIT_PUSH_ENABLED: '1',
-    CODEX_DESKTOP_AUTOGIT_TARGET_BRANCH: 'master',
     CODEX_DESKTOP_AUTOGIT_ROOT: '/workspace/codexdesktop'
   })
 
   assert.match(guidance, /automatic git snapshotting is active/i)
   assert.match(guidance, /monitors `\/workspace\/codexdesktop`/)
-  assert.match(guidance, /commits settled safe changes.*pushes each autosnapshot.*`origin\/master`/i)
+  assert.match(guidance, /commits settled safe changes.*pushes each autosnapshot.*`origin`/i)
   assert.match(guidance, /re-read `git status`, `HEAD`, and the current branch/i)
   assert.match(guidance, /let the watcher own routine staging, commits, and pushes/i)
 })
@@ -354,7 +284,7 @@ test('simple current-UI checks use one low-effort visual pass', () => {
 test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(
     browserDynamicTools.map((tool) => tool.name),
-    ['browser_live_search', 'browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_network', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
+    ['browser_snapshot', 'browser_navigate', 'browser_screenshot', 'app_screenshot', 'ui_review', 'browser_flow', 'browser_run', 'browser_extract_page', 'browser_cdp', 'research_web']
   )
   const browserSnapshot = browserDynamicTools.find(({ name }) => name === 'browser_snapshot')
   assert.equal(browserSnapshot?.type, 'function')
@@ -407,57 +337,6 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.deepEqual(flowSchema.properties.steps?.items?.properties?.type?.enum, ['fill', 'click', 'submit', 'wait', 'find'])
   assert.deepEqual(flowSchema.properties.steps?.items?.properties?.onMissing?.enum, ['stop', 'error'])
   assert.match(browserFlow.description, /missing find is successful/i)
-  const browserNetwork = browserDynamicTools.find(({ name }) => name === 'browser_network')
-  assert.equal(browserNetwork?.type, 'function')
-  if (browserNetwork?.type !== 'function') assert.fail('browser_network function tool is missing')
-  const networkSchema = browserNetwork.inputSchema as {
-    required?: string[]
-    properties: {
-      match?: { required?: string[] }
-      steps?: { minItems?: number; maxItems?: number }
-      captureBody?: { type?: string }
-      download?: { type?: string }
-      stream?: {
-        required?: string[]
-        properties?: {
-          transport?: { enum?: string[] }
-          maxMessages?: { maximum?: number }
-          idleMs?: { minimum?: number }
-        }
-      }
-    }
-  }
-  assert.deepEqual(networkSchema.required, ['match'])
-  assert.deepEqual(networkSchema.properties.match?.required, ['urlContains'])
-  assert.equal(networkSchema.properties.steps?.minItems, 1)
-  assert.equal(networkSchema.properties.steps?.maxItems, 24)
-  assert.equal(networkSchema.properties.captureBody?.type, 'boolean')
-  assert.equal(networkSchema.properties.download?.type, 'boolean')
-  assert.deepEqual(networkSchema.properties.stream?.required, ['transport'])
-  assert.deepEqual(networkSchema.properties.stream?.properties?.transport?.enum, ['sse', 'websocket'])
-  assert.equal(networkSchema.properties.stream?.properties?.maxMessages?.maximum, 1000)
-  assert.equal(networkSchema.properties.stream?.properties?.idleMs?.minimum, 50)
-  assert.match(browserNetwork.description, /one model call/i)
-  assert.match(browserNetwork.description, /SSE\/WebSocket stream/i)
-  assert.match(browserNetwork.description, /Chromium download handoff as an artifact/i)
-  const browserLiveSearch = browserDynamicTools.find(({ name }) => name === 'browser_live_search')
-  assert.equal(browserLiveSearch?.type, 'function')
-  if (!browserLiveSearch || browserLiveSearch.type !== 'function') assert.fail('browser_live_search function tool is missing')
-  const liveSearchSchema = browserLiveSearch.inputSchema as {
-    required?: string[]
-    anyOf?: Array<{ required?: string[] }>
-    properties: Record<string, { minItems?: number; maxItems?: number }>
-  }
-  assert.deepEqual(liveSearchSchema.required, ['objective'])
-  assert.deepEqual(liveSearchSchema.anyOf, [{ required: ['query'] }, { required: ['queries'] }])
-  assert.equal(liveSearchSchema.properties.queries?.minItems, 1)
-  assert.equal(liveSearchSchema.properties.queries?.maxItems, 6)
-  assert.equal((liveSearchSchema.properties.background as { type?: string } | undefined)?.type, 'boolean')
-  assert.match(browserLiveSearch.description, /hidden Chromium workers/i)
-  assert.match(browserLiveSearch.description, /changing the visible tab is acceptable/i)
-  assert.match(browserLiveSearch.description, /research_web for background-only public discovery/i)
-  assert.match(browserLiveSearch.description, /Search result pages are never shown/i)
-  assert.equal(browserDynamicTools.some(({ name }) => name === 'browser_research_dual'), false)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
   assert.equal(browserRun?.type, 'function')
   if (!browserRun || browserRun.type !== 'function') assert.fail('browser_run function tool is missing')
@@ -485,17 +364,15 @@ test('the dynamic tool surface includes verified research primitives', () => {
   ])
   assert.deepEqual(researchSchema.anyOf, [{ required: ['queries'] }, { required: ['urls'] }])
   assert.equal(researchProperties.urls?.maxItems, 8)
-  assert.equal(researchProperties.queries?.maxItems, 6)
   assert.equal(researchProperties.focus?.maxItems, 6)
   assert.deepEqual(researchProperties.focus?.items?.required, ['id', 'need'])
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.minimum, 1)
   assert.equal(researchProperties.focus?.items?.properties?.minSources?.maximum, 6)
   assert.equal(researchProperties.maxAttempts?.maximum, 24)
-  assert.match(researchProperties.queries?.description ?? '', /single-angle phrase a person would actually type/i)
-  assert.match(researchProperties.queries?.description ?? '', /parallel hidden Chromium workers/i)
+  assert.match(researchProperties.queries?.description ?? '', /primary discovery query/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
-  assert.match(researchWeb.description, /without invalidating pages/i)
+  assert.match(researchWeb.description, /model-authored evidence needs/i)
 })
 
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {

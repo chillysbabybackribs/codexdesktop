@@ -2,35 +2,14 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   assessExtractedPage,
-  bingSearchFeedUrl,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
-  duckDuckGoLiteSearchUrl,
-  extractBingSearchFeedCandidates,
-  extractDuckDuckGoLiteCandidates,
-  extractSameHostNavLinks,
   googleSearchUrl,
-  isCrossHostLanding,
   isPublicResearchAddress,
   normalizeResearchUrls,
-  preferExtractableHost,
   rankSerpCandidates,
   type SerpCandidate
 } from './research-utils.ts'
-
-test('reddit fetches are rewritten to the server-rendered old.reddit.com mirror', () => {
-  assert.equal(
-    preferExtractableHost('https://www.reddit.com/r/ClaudeAI/comments/abc/some_thread/'),
-    'https://old.reddit.com/r/ClaudeAI/comments/abc/some_thread/'
-  )
-  assert.equal(
-    preferExtractableHost('https://reddit.com/r/codex/comments/xyz/'),
-    'https://old.reddit.com/r/codex/comments/xyz/'
-  )
-  assert.equal(preferExtractableHost('https://old.reddit.com/r/codex/'), 'https://old.reddit.com/r/codex/')
-  assert.equal(preferExtractableHost('https://example.com/reddit.com'), 'https://example.com/reddit.com')
-  assert.equal(preferExtractableHost('not a url'), 'not a url')
-})
 
 test('direct research URLs are canonicalized, bounded, and restricted to public web schemes', () => {
   assert.deepEqual(normalizeResearchUrls([
@@ -57,55 +36,6 @@ test('research search URLs are deterministic and encoded', () => {
     googleSearchUrl('DeepSeek V4 Pro review', 5),
     'https://www.google.com/search?num=10&q=DeepSeek%20V4%20Pro%20review'
   )
-  assert.equal(
-    duckDuckGoLiteSearchUrl('DeepSeek V4 Pro review'),
-    'https://lite.duckduckgo.com/lite/?q=DeepSeek%20V4%20Pro%20review'
-  )
-  assert.equal(
-    bingSearchFeedUrl('DeepSeek V4 Pro review', 5),
-    'https://www.bing.com/search?format=rss&count=10&q=DeepSeek%20V4%20Pro%20review'
-  )
-})
-
-test('DuckDuckGo Lite results decode destinations and keep adjacent snippets', () => {
-  const html = `<!doctype html><html><body><table>
-    <tr><td>1.</td><td><a class="result-link" href="//duckduckgo.com/l/?uddg=https%3A%2F%2Fgithub.com%2Fopenai%2Fcodex%2Fissues%2F10432%3Futm_source%3Dsearch&amp;rut=ignored">High GPU usage in Codex Desktop</a></td></tr>
-    <tr><td></td><td class="result-snippet">Users report 70–90% GPU usage on macOS.</td></tr>
-    <tr><td></td><td><span class="link-text">github.com/openai/codex/issues/10432</span></td></tr>
-    <tr><td>2.</td><td><a class="result-link" href="https://example.com/report">Independent report</a></td></tr>
-    <tr><td></td><td class="result-snippet">A second source.</td></tr>
-  </table></body></html>`
-
-  assert.deepEqual(extractDuckDuckGoLiteCandidates(html, 2), [
-    {
-      url: 'https://github.com/openai/codex/issues/10432',
-      title: 'High GPU usage in Codex Desktop',
-      snippet: 'Users report 70–90% GPU usage on macOS.',
-      rank: 1
-    },
-    {
-      url: 'https://example.com/report',
-      title: 'Independent report',
-      snippet: 'A second source.',
-      rank: 2
-    }
-  ])
-})
-
-test('Bing RSS fallback extracts bounded destination records', () => {
-  const xml = `<?xml version="1.0"?><rss><channel>
-    <item><title>Official release notes</title><link>https://example.com/releases?utm_medium=rss</link><description>Current product changes &amp; fixes.</description></item>
-    <item><title>Issue report</title><link>https://github.com/example/app/issues/42</link><description>A reproducible desktop failure.</description></item>
-  </channel></rss>`
-
-  assert.deepEqual(extractBingSearchFeedCandidates(xml, 1), [
-    {
-      url: 'https://example.com/releases',
-      title: 'Official release notes',
-      snippet: 'Current product changes & fixes.',
-      rank: 1
-    }
-  ])
 })
 
 test('SERP extraction program is bounded and syntactically valid', () => {
@@ -132,21 +62,6 @@ test('firsthand research expands into developer-report source lanes', () => {
       'Electron WebContentsView firsthand Linux reports',
       'Electron WebContentsView firsthand Linux reports GitHub issues discussions',
       'Electron WebContentsView firsthand Linux reports developer forum report'
-    ]
-  )
-})
-
-test('multiple model-authored semantic variants are preserved without deterministic additions', () => {
-  assert.deepEqual(
-    buildResearchQueryVariants([
-      'Electron WebContentsView official migration guide',
-      'Electron WebContentsView Linux rendering regressions',
-      'Electron WebContentsView developer migration experience'
-    ], 6),
-    [
-      'Electron WebContentsView official migration guide',
-      'Electron WebContentsView Linux rendering regressions',
-      'Electron WebContentsView developer migration experience'
     ]
   )
 })
@@ -183,18 +98,6 @@ test('candidate ranking boosts primary sources and lowers video results', () => 
   assert.equal(ranked[0].domain, 'docs.deepseek.com')
   assert.ok(video)
   assert.ok(video.score < ranked[0].score)
-})
-
-test('generic docs subdomains are not mislabeled as the product official source', () => {
-  const [candidate] = rankSerpCandidates([{
-    url: 'https://docs.unrelated-example.com/blog/claude-desktop-performance',
-    title: 'Claude Desktop performance report',
-    snippet: 'A third-party troubleshooting article.',
-    rank: 1,
-    query: 'Claude Desktop performance'
-  }], ['Claude Desktop performance'], 1)
-
-  assert.equal(candidate?.sourceTier, 'primary')
 })
 
 test('firsthand queries prioritize issue and discussion reports', () => {
@@ -296,40 +199,4 @@ test('page assessment accepts substantial content and rejects extraction failure
     }),
     { verified: false, reason: 'insufficient-content' }
   )
-})
-
-test('cross-host landings are detected without treating www as a host change', () => {
-  assert.equal(isCrossHostLanding('https://developers.openai.com/codex', 'https://learn.chatgpt.com/docs'), true)
-  assert.equal(isCrossHostLanding('https://docs.roocode.com/', 'https://roocodeinc.github.io/Roo-Code/'), true)
-  assert.equal(isCrossHostLanding('https://example.com/docs', 'https://www.example.com/docs/latest'), false)
-  assert.equal(isCrossHostLanding('https://example.com/docs', 'https://example.com/other'), false)
-  assert.equal(isCrossHostLanding('not a url', 'https://example.com/'), false)
-  assert.equal(isCrossHostLanding('https://example.com/', ''), false)
-})
-
-test('redirect-hub link harvesting keeps bounded, deduplicated same-host navigation links', () => {
-  const html = `
-    <nav>
-      <a href="/codex/app">Desktop <b>app</b></a>
-      <a href="/codex/app#features">App features anchor</a>
-      <a href='/codex/cli'>CLI</a>
-      <a href="https://learn.chatgpt.com/codex/cloud">Cloud</a>
-      <a href="https://www.learn.chatgpt.com/codex/ide">IDE</a>
-      <a href="https://other-host.example/away">External</a>
-      <a href="mailto:docs@example.com">Mail</a>
-      <a href="javascript:void(0)">Noop</a>
-      <a href="#top">Top</a>
-      <a href="/docs">Self</a>
-      <a href="/codex/changelog">Changelog</a>
-    </nav>`
-  const links = extractSameHostNavLinks(html, 'https://learn.chatgpt.com/docs', 4)
-
-  assert.deepEqual(links, [
-    { url: 'https://learn.chatgpt.com/codex/app', title: 'Desktop app' },
-    { url: 'https://learn.chatgpt.com/codex/cli', title: 'CLI' },
-    { url: 'https://learn.chatgpt.com/codex/cloud', title: 'Cloud' },
-    { url: 'https://www.learn.chatgpt.com/codex/ide', title: 'IDE' }
-  ])
-  assert.deepEqual(extractSameHostNavLinks('<p>no links</p>', 'https://learn.chatgpt.com/docs', 4), [])
-  assert.deepEqual(extractSameHostNavLinks(html, 'not a url', 4), [])
 })

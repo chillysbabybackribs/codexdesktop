@@ -7,7 +7,6 @@ import {
   parseBrowserMiddleColumnWidths,
   parseWorkspaceLayoutMode,
   serializeBrowserMiddleColumnWidths,
-  showChatAtFullHeight,
 } from './workspace-layout.ts';
 
 test('browser-middle creates a chat on both sides from a one-pane layout', () => {
@@ -26,7 +25,7 @@ test('browser-middle creates a chat on both sides from a one-pane layout', () =>
   });
 });
 
-test('browser-middle preserves explicit split columns as vertical stacks', () => {
+test('browser-middle preserves columns and normalizes each side to a vertical stack', () => {
   const layout: SplitNode = {
     kind: 'split',
     direction: 'row',
@@ -34,7 +33,6 @@ test('browser-middle preserves explicit split columns as vertical stacks', () =>
     first: {
       kind: 'split',
       direction: 'row',
-      explicit: true,
       ratio: 0.5,
       first: splitLeaf('left-top'),
       second: splitLeaf('left-bottom'),
@@ -42,7 +40,6 @@ test('browser-middle preserves explicit split columns as vertical stacks', () =>
     second: {
       kind: 'split',
       direction: 'column',
-      explicit: true,
       ratio: 0.5,
       first: splitLeaf('right-top'),
       second: splitLeaf('right-bottom'),
@@ -65,7 +62,6 @@ test('browser-middle preserves explicit split columns as vertical stacks', () =>
     first: {
       kind: 'split',
       direction: 'column',
-      explicit: true,
       ratio: 0.5,
       first: splitLeaf('left-top'),
       second: splitLeaf('left-bottom'),
@@ -73,7 +69,6 @@ test('browser-middle preserves explicit split columns as vertical stacks', () =>
     second: {
       kind: 'split',
       direction: 'column',
-      explicit: true,
       ratio: 0.5,
       first: splitLeaf('right-top'),
       second: splitLeaf('right-bottom'),
@@ -81,7 +76,7 @@ test('browser-middle preserves explicit split columns as vertical stacks', () =>
   });
 });
 
-test('browser-middle opens a newly selected tab at full height in its own column', () => {
+test('browser-middle keeps a newly selected tab in its own column', () => {
   const result = browserMiddleChatLayout(
     {
       kind: 'split',
@@ -101,106 +96,15 @@ test('browser-middle opens a newly selected tab at full height in its own column
     kind: 'split',
     direction: 'row',
     ratio: 0.5,
-    first: splitLeaf('left-two'),
-    second: splitLeaf('right-one'),
-  });
-});
-
-test('browser-middle preserves a user-created stack when selecting another tab', () => {
-  const result = browserMiddleChatLayout(
-    {
-      kind: 'split',
-      direction: 'row',
-      ratio: 0.5,
-      first: {
-        kind: 'split',
-        direction: 'column',
-        explicit: true,
-        ratio: 0.5,
-        first: splitLeaf('left-primary'),
-        second: splitLeaf('left-secondary'),
-      },
-      second: splitLeaf('right-one'),
-    },
-    {
-      left: ['left-primary', 'left-secondary', 'left-next'],
-      right: ['right-one'],
-    },
-    { left: 'left-next', right: 'right-one' },
-  );
-
-  assert.deepEqual(result, {
-    kind: 'split',
-    direction: 'row',
-    ratio: 0.5,
     first: {
       kind: 'split',
       direction: 'column',
-      explicit: true,
-      ratio: 0.5,
-      first: splitLeaf('left-primary'),
-      second: splitLeaf('left-next'),
-    },
-    second: splitLeaf('right-one'),
-  });
-});
-
-test('browser-middle migrates a legacy automatic stack to one full-height chat', () => {
-  const result = browserMiddleChatLayout(
-    {
-      kind: 'split',
-      direction: 'row',
       ratio: 0.5,
       first: splitLeaf('left-one'),
-      second: {
-        kind: 'split',
-        direction: 'column',
-        ratio: 0.5,
-        first: splitLeaf('right-old'),
-        second: splitLeaf('right-active'),
-      },
+      second: splitLeaf('left-two'),
     },
-    { left: ['left-one'], right: ['right-old', 'right-active'] },
-    { left: 'left-one', right: 'right-active' },
-  );
-
-  assert.deepEqual(result, {
-    kind: 'split',
-    direction: 'row',
-    ratio: 0.5,
-    first: splitLeaf('left-one'),
-    second: splitLeaf('right-active'),
+    second: splitLeaf('right-one'),
   });
-});
-
-test('a new chat collapses only its browser-middle column to full height', () => {
-  const rightColumn: SplitNode = {
-    kind: 'split',
-    direction: 'column',
-    ratio: 0.5,
-    first: splitLeaf('right-top'),
-    second: splitLeaf('right-bottom'),
-  };
-  const layout: SplitNode = {
-    kind: 'split',
-    direction: 'row',
-    ratio: 0.5,
-    first: {
-      kind: 'split',
-      direction: 'column',
-      ratio: 0.5,
-      first: splitLeaf('left-top'),
-      second: splitLeaf('left-bottom'),
-    },
-    second: rightColumn,
-  };
-
-  assert.deepEqual(showChatAtFullHeight(layout, 'left-new', 'left'), {
-    ...layout,
-    first: splitLeaf('left-new'),
-    second: rightColumn,
-  });
-  assert.deepEqual(showChatAtFullHeight(layout, 'standalone-new', null), splitLeaf('standalone-new'));
 });
 
 test('workspace-layout persistence rejects malformed values', () => {

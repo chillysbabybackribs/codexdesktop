@@ -13,7 +13,7 @@ Target one idea: the slug given after `$studio-validate`, else the highest-score
 
 ## Protocol
 
-Run four checks. Use `browser_live_search` with `background: true` for public evidence (live verification plus artifact-first background evidence; cite artifact paths) and `browser_snapshot`/`browser_flow` on logged-in tabs for anything gated (communities, marketplaces, competitor apps you can trial), with `browser_run` only for bespoke extraction. Bounded: one research pass per check at most, one final gap-fill overall.
+Run four checks. Use `research_web` for public evidence (artifact-first; cite artifact paths) and `browser_run` on logged-in tabs for anything gated (communities, marketplaces, competitor apps you can trial). Bounded: one research pass per check at most, one final gap-fill overall.
 
 1. **Competitors.** Who solves this today? For the top 3: pricing, last shipped update, and the loudest user complaint about each. A crowded market with paying users and hated incumbents is a *good* sign; an empty market is a red flag, not an opportunity.
 2. **Demand.** Is the pain recurring and current? Fresh complaints (90 days), search-suggest phrases, community thread frequency. Distinguish "annoying" from "worth money": look for people already paying (tools, humans, hours).

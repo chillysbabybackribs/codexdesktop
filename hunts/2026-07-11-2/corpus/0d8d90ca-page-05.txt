@@ -1,0 +1,75 @@
+# Digital Product Passport: Complete Guide for Manufacturers 2025–2026
+
+< Back to the list of articles
+
+This is some text inside of a div block.
+
+## Table of contents
+
+Article 01 / DPP
+
+# Digital Product Passport (DPP): A Complete Guide for Manufacturers in 2025-2026
+
+The Digital Product Passport is becoming one of the most important EU regulatory obligations of the coming decade. This guide explains what the DPP is, who it applies to, what data it must contain, and how to prepare it in line with the Ecodesign for Sustainable Products Regulation (ESPR), step by step.
+
+Based on a certified ISO 14067 methodology, TÜV Nord, and GS1 standards.
+
+April 2025Reading time: approx. 12 minEU regulationsLCAEcodesign
+
+## Introduction
+
+Imagine that every product on a store shelf has a built-in “digital identity card”: a set of verifiable data showing what the product is made of, what environmental footprint it has, how long it will last, and how it should be recycled. That is the core idea behind the Digital Product Passport (DPP).
+
+This regulation, introduced under the Ecodesign for Sustainable Products Regulation (ESPR), is one of the foundations of the European Green Deal. For manufacturers and importers, it means more than a new compliance obligation. It is also a major opportunity: companies that prepare early can gain a competitive advantage, easier access to the EU market, and greater credibility with increasingly demanding B2B and B2C buyers.
+
+In this guide, we explain everything you need to know about DPP: the legal basis, implementation timeline, required data, its connection with LCA and ISO 14067, and the practical process of creating a product passport.
+
+## 1. What is a Digital Product Passport?
+
+A Digital Product Passport (DPP) is a structured, digitally accessible set of data assigned to a specific product or product group. It contains environmental, material, and technical information that must remain available to consumers, regulators, recyclers, and supply chain participants throughout the product life cycle, from production to disposal.
+
+A DPP is not just an eco-label or a PDF document. It is a dynamic digital record linked to a unique identifier, most commonly a QR code, RFID tag, or decentralized identifier (DID), and connected to the central European Union registry. The data can be updated throughout the product life cycle, for example when the material composition or production processes change.
+
+Regulatory definition
+
+Under Regulation (EU) 2024/1781, the Digital Product Passport is a set of product data compiled in accordance with the relevant delegated act and made available digitally through a data carrier. Each passport must have a unique product identifier linked to the EUDPP registry maintained by the European Commission.
+
+Key features that distinguish the DPP from previous information requirements:
+
+- Digital and machine-readable: data must be accessible through an API, not only readable by humans.
+
+- Dynamic: updated throughout the product life cycle.
+
+- Based on verified data: it requires an LCA methodology or a product carbon footprint compliant with ISO 14067.
+
+- Connected to the EU registry: each DPP is linked to the European EUDPP system.
+
+- Available to multiple stakeholders: different access levels for consumers, authorities, B2B partners, and recyclers.
+
+## 2. Legal basis: the ESPR Regulation
+
+The Digital Product Passport stems from Regulation (EU) 2024/1781 on ecodesign requirements for sustainable products, known as the Ecodesign for Sustainable Products Regulation (ESPR). It entered into force in July 2024 and replaced the previous Ecodesign Directive 2009/125/EC.
+
+The ESPR has a much broader scope than the former directive. It covers virtually all categories of physical products placed on the EU market, not only selected energy-related product groups. Its main pillars are:
+
+- Ecodesign requirements: durability, repairability, recyclability, and recycled material content.
+
+- A ban on destroying unsold goods: especially clothing and electronics.
+
+- The Digital Product Passport (DPP): mandatory for all covered product categories.
+
+- Requirements for substances of very high concern (SVHC): mandatory disclosure of chemical composition.
+
+Important
+
+The ESPR is a regulation, not a directive. This means it applies directly in all EU Member States without requiring transposition into national law. Detailed requirements for individual product categories are set out in delegated acts adopted separately by the European Commission.
+
+## 3. Implementation timeline by product category
+
+DPP obligations will enter into force gradually, separately for each product category, after the relevant delegated act has been adopted. The table below shows the currently known implementation timeline:
+
+Product category | DPP date | Status | Key DPP requirements
+
+Batteries and accumulators | From 2027 | Coming soon | Carbon footprint, recycled content, performance, durability
+
+Textiles and apparel | From 2027
