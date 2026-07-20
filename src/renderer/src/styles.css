@@ -29,7 +29,8 @@
      semantics can carry color; the material itself should never read blue. */
   --code-canvas: #111112;
   --code-surface: #161617;
-  --code-surface-raised: #1b1b1c;
+  --code-surface-raised: #181819;
+  --code-header: #141415;
   --code-border: rgb(255 255 255 / 9%);
   --code-border-strong: rgb(255 255 255 / 13%);
   --code-text: #d1d1d2;
@@ -2090,7 +2091,7 @@ samp {
   justify-content: space-between;
   padding: 5px 10px 5px 15px;
   border-bottom: 1px solid var(--code-border);
-  background: var(--code-surface);
+  background: var(--code-header);
 }
 
 .code-block-lang {
@@ -3142,7 +3143,7 @@ samp {
   gap: 8px;
   min-height: 36px;
   padding: 7px 12px;
-  background: var(--code-surface-raised);
+  background: var(--code-header);
 }
 
 .diff-file-icon {
