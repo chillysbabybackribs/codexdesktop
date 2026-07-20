@@ -1,0 +1,11 @@
+{
+  "$schema": "https://ai-elements.dev/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "aliasPrefix": "@",
+  "baseColor": "slate",
+  "cssVariables": true,
+  "components": "src/components",
+  "componentLibrary": "base-ui"
+}
