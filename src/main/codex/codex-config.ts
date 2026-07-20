@@ -546,13 +546,13 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_snapshot',
-    description: 'Fast read-only browser path: optionally navigate one existing tab, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, readiness state, and a completion directive in one call. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use a container selector rather than a repeated row selector. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
+    description: 'Fast read-only browser path: optionally navigate one existing tab directly to a destination URL, wait for a requested DOM state, and return objective-ranked items, structured UI state, exact page evidence, coverage gaps, timings, readiness state, and a completion directive in one call. Search text and SERP URLs are rejected; use browser_live_search for hidden discovery. When `completion.nextAction` is `answer`, format this result directly; when it is `targeted-gap-fill`, retrieve only the named missing evidence. Use a container selector rather than a repeated row selector. Use for lists, inboxes, account state, page fields, and most inspect-only tasks.',
     inputSchema: browserSnapshotSchema
   },
   {
     type: 'function',
     name: 'browser_navigate',
-    description: 'Navigate one existing visible browser tab and return as soon as the requested DOM state is usable. Use before browser_run when changing pages; provide readySelector for interactive or authenticated pages instead of waiting for network idle.',
+    description: 'Navigate one existing visible browser tab directly to a destination URL and return as soon as the requested DOM state is usable. Search text and SERP URLs are rejected; use browser_live_search for hidden discovery. Use before browser_run when changing pages; provide readySelector for interactive or authenticated pages instead of waiting for network idle.',
     inputSchema: browserNavigateSchema
   },
   {
@@ -582,7 +582,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_network',
-    description: 'Capture one exact network result in one model call: start a fresh journal, navigate or run an interaction flow, then persist a completed response body, bounded SSE/WebSocket stream, or true Chromium download handoff as an artifact. Use for JSON, GraphQL, XHR/fetch, live model/event streams, and browser downloads.',
+    description: 'Capture one exact network result in one model call: start a fresh journal, navigate directly to a destination URL or run an interaction flow, then persist a completed response body, bounded SSE/WebSocket stream, or true Chromium download handoff as an artifact. Search text and SERP URLs are rejected. Use for JSON, GraphQL, XHR/fetch, live model/event streams, and browser downloads.',
     inputSchema: browserNetworkSchema
   },
   {

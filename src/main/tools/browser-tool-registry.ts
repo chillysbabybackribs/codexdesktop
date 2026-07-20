@@ -3,6 +3,7 @@ import type { ResearchRunner, SearchDiscoveryResult } from '../browser/research-
 import type { RankedSerpCandidate } from '../browser/research-utils.js'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { runUiReview } from '../codex/ui-review.js'
+import { describeNavigationInput } from '../browser/url-utils.js'
 
 // The provider-neutral browser tool dispatch (Claude-prep step 6): one
 // implementation consumed by three transports — the Codex dynamic-tool
@@ -185,10 +186,13 @@ export async function runBrowserTool(
       imageUrls = review.imageUrls
     } else if (tool === 'browser_snapshot') {
       const objective = readString(args.objective)
-      result = objective
+      const url = readString(args.url)
+      result = url && !isDirectAgentNavigation(url)
+        ? directNavigationRequired(tool)
+        : objective
         ? await runBrowserOperation((signal) => deps.browserAgent.snapshot({
             objective,
-            url: readString(args.url),
+            url,
             tabId: resolveAgentTab(readString(args.tab)),
             frame: readString(args.frame),
             mode: readSnapshotMode(args.mode),
@@ -213,8 +217,11 @@ export async function runBrowserTool(
           }))
         : { ok: false, error: 'browser_flow requires a non-empty "steps" array' }
     } else if (tool === 'browser_network') {
-      result = await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
-        url: readString(args.url),
+      const url = readString(args.url)
+      result = url && !isDirectAgentNavigation(url)
+        ? directNavigationRequired(tool)
+        : await runBrowserOperation((signal) => deps.browserAgent.captureNetwork({
+        url,
         steps: args.steps,
         match: readNetworkMatch(args.match),
         captureBody: typeof args.captureBody === 'boolean' ? args.captureBody : null,
@@ -242,7 +249,9 @@ export async function runBrowserTool(
         : { ok: false, error: 'browser_run requires a string "code" argument' }
     } else if (tool === 'browser_navigate') {
       const url = readString(args.url)
-      result = url
+      result = url && !isDirectAgentNavigation(url)
+        ? directNavigationRequired(tool)
+        : url
         ? await runBrowserOperation((signal) => deps.browserAgent.navigate(url, {
             tabId: resolveAgentTab(readString(args.tab)),
             readySelector: readString(args.readySelector),
@@ -395,6 +404,30 @@ function compactDiscovery(discovery: SearchDiscoveryResult): Record<string, unkn
     discoveredCount: discovery.discoveredCount,
     metrics: discovery.metrics,
     ...(discovery.errors ? { errors: discovery.errors } : {})
+  }
+}
+
+function isDirectAgentNavigation(input: string): boolean {
+  const interpretation = describeNavigationInput(input)
+  if (interpretation.kind !== 'navigate') return false
+  try {
+    const url = new URL(interpretation.url)
+    const host = url.hostname.toLowerCase()
+    const path = url.pathname.toLowerCase()
+    if (/(^|\.)google\./.test(host) && path === '/search') return false
+    if (/(^|\.)bing\.com$/.test(host) && path === '/search') return false
+    if (/(^|\.)duckduckgo\.com$/.test(host) && (path === '/' || path === '/html/')) return !url.searchParams.has('q')
+    if (host === 'search.yahoo.com') return false
+    return true
+  } catch {
+    return false
+  }
+}
+
+function directNavigationRequired(tool: string): BrowserToolOutcome['result'] {
+  return {
+    ok: false,
+    error: `${tool} accepts only a direct destination URL; use browser_live_search for hidden search discovery`
   }
 }
 
