@@ -10,6 +10,7 @@ const QUERY_STOP_WORDS = new Set([
 const VIDEO_HOSTS = new Set(['youtube.com', 'youtu.be', 'vimeo.com', 'dailymotion.com', 'twitch.tv', 'tiktok.com'])
 const COMMUNITY_HOSTS = new Set(['reddit.com', 'quora.com', 'facebook.com', 'x.com', 'twitter.com', 'linkedin.com'])
 const MAX_RESEARCH_URL_CHARS = 2_048
+const MAX_RESEARCH_RESULTS = 10
 
 export type SerpCandidate = {
   url: string
@@ -465,6 +466,23 @@ function canonicalizeUrl(value: string): string {
   } catch {
     return ''
   }
+}
+
+function duckDuckGoDestination(value: string): string {
+  try {
+    const link = new URL(value, 'https://lite.duckduckgo.com/')
+    const host = link.hostname.replace(/^www\./i, '').toLowerCase()
+    const destination = host === 'duckduckgo.com' && link.pathname === '/l/'
+      ? link.searchParams.get('uddg') ?? ''
+      : link.href
+    return canonicalizeUrl(destination)
+  } catch {
+    return ''
+  }
+}
+
+function compactText(value: string | null | undefined, maxChars: number): string {
+  return (value ?? '').replace(/\s+/g, ' ').trim().slice(0, maxChars)
 }
 
 function isObviousPrivateHost(value: string): boolean {
