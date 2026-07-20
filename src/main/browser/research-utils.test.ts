@@ -185,6 +185,18 @@ test('candidate ranking boosts primary sources and lowers video results', () => 
   assert.ok(video.score < ranked[0].score)
 })
 
+test('generic docs subdomains are not mislabeled as the product official source', () => {
+  const [candidate] = rankSerpCandidates([{
+    url: 'https://docs.unrelated-example.com/blog/claude-desktop-performance',
+    title: 'Claude Desktop performance report',
+    snippet: 'A third-party troubleshooting article.',
+    rank: 1,
+    query: 'Claude Desktop performance'
+  }], ['Claude Desktop performance'], 1)
+
+  assert.equal(candidate?.sourceTier, 'primary')
+})
+
 test('firsthand queries prioritize issue and discussion reports', () => {
   const query = 'Electron WebContentsView Linux firsthand migration reports'
   const candidates: SerpCandidate[] = [

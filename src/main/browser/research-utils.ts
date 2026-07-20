@@ -422,7 +422,10 @@ function classifySource(
     [...COMMUNITY_HOSTS].some((host) => domain === host || domain.endsWith(`.${host}`)) ||
     (domain === 'github.com' && /\/(issues|discussions|pull)(\/|$)/i.test(pathname))
   ) return 'community'
-  if (/\.(gov|mil|edu)$/i.test(domain) || /(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) return 'official'
+  if (/\.(gov|mil|edu)$/i.test(domain)) return 'official'
+  if (/(^|\.)((docs?|developer|support|learn|help|api)\.)/i.test(domain)) {
+    return distinctiveDomainMatch(domain, queryTokens) >= 8 ? 'official' : 'primary'
+  }
   if (/\/(docs?|developer|reference|api|spec|standards?)\b/i.test(pathname) || /\bofficial\b/i.test(title)) return 'primary'
   if (distinctiveDomainMatch(domain, queryTokens) >= 8) return 'primary'
   return 'general'
