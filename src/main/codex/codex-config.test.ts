@@ -248,11 +248,12 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /should normally use browser_research_dual/i)
 })
 
-test('browser guidance preserves a one-call fallback for older resumed threads', () => {
+test('browser guidance avoids obsolete compatibility fallbacks', () => {
   const guidance = buildGuidance({})
   assert.match(guidance, /browser_snapshot` call when it is available/)
-  assert.match(guidance, /older resumed thread where newer tools are absent/)
-  assert.match(guidance, /one `browser_run` call/)
+  assert.match(guidance, /reserve `browser_run` for bespoke JavaScript/i)
+  assert.doesNotMatch(guidance, /older resumed thread where newer tools are absent/)
+  assert.doesNotMatch(guidance, /newer tools are absent/)
 })
 
 test('active autosnapshot guidance describes concurrent commit and push behavior', () => {

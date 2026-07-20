@@ -44,7 +44,7 @@ Use `research_web` alone only when the user explicitly asks for background-only 
 - Interaction or mutation: batch actions that remain in the current page. Treat any action that may trigger full-document or SPA-route navigation as a phase boundary. Prefer `browser_flow` to perform common fill/click/submit actions, wait for the destination's containing state, and then run a one-shot find; otherwise perform the action and inspect the destination in a fresh browser operation. If navigation is required first, use `browser_navigate` with a page-specific `readySelector` before a stable-document `browser_run` program.
 - Low-level lifecycle, network, storage, screenshot, or trace work: `browser_cdp`.
 
-If `browser_snapshot` is not present on an older resumed thread, use one `browser_run` call for an already-visible read or `browser_navigate` followed by one `browser_run` call when the page must change. Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
+Reuse the visible authenticated profile. Do not create a tab unless the user explicitly requests one. Serialize interactive navigation rather than creating request or tab bursts.
 
 Wait for the containing state, such as a results list or empty-state marker, rather than polling for the desired item. Once that state is ready, inspect it once. Treat an absent item as structured `not-found` or coverage-gap data with the inspected scope, not as an exception; then use the best direct-source fallback or the single permitted gap-fill when justified.
 
