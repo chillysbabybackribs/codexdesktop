@@ -62,7 +62,7 @@ export async function restoreAgentDock(options: {
     if (!entries.length) return
 
     const restored: AgentSession[] = entries.map((entry) => ({
-      key: crypto.randomUUID(),
+      key: typeof entry.key === 'string' && entry.key ? entry.key : crypto.randomUUID(),
       // Pre-ownership dock records are legacy global agents. Keep them
       // reachable in the chat that was active during restore; newer records
       // retain their exact owning tab.
@@ -74,8 +74,8 @@ export async function restoreAgentDock(options: {
       // always a top-level agent (reviewer or a promoted lead), never a
       // spawned worker — the parent link and spawning turn are intentionally
       // dropped on reload.
-      role: 'reviewer',
-      parentAgentKey: null,
+      role: entry.role ?? 'reviewer',
+      parentAgentKey: entry.parentAgentKey ?? null,
       spawnedByTurnId: null,
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
@@ -94,7 +94,16 @@ export async function restoreAgentDock(options: {
       model: entry.model ?? null,
       reasoningEffort: entry.reasoningEffort ?? null,
       contextUsage: null,
-      isCompacting: false
+      isCompacting: false,
+      sourceProvider: entry.sourceProvider ?? null,
+      executionLane: entry.executionLane ?? null,
+      nativeRunId: entry.nativeRunId ?? null,
+      runStatus: entry.runStatus ?? null,
+      runTask: entry.runTask ?? null,
+      runProgress: entry.runProgress ?? null,
+      runResultSummary: entry.runResultSummary ?? null,
+      runOutputPath: entry.runOutputPath ?? null,
+      wakeStatus: entry.wakeStatus ?? 'none'
     }))
 
     // Register before resuming so incoming events route to the dock.

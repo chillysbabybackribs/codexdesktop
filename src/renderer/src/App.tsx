@@ -416,6 +416,7 @@ export default function App(): React.JSX.Element {
     handleAgentNotification,
     handleNewAgent,
     handleSpawnedAgent,
+    handleAgentRun,
     handleOpenAgent,
     handleMinimizeAgent,
     handleSetAgentRole,
@@ -1175,6 +1176,24 @@ export default function App(): React.JSX.Element {
           title: event.title,
           model: event.model,
         });
+        return;
+      }
+
+      if (event.type === 'agentRun') {
+        const parentThreadId = event.run.parentThreadId;
+        const parentDockSession = parentThreadId ? backgroundSessionForThread(parentThreadId) : null;
+        const owningTabKey =
+          (parentThreadId ? mainChatTabForThread(parentThreadId)?.key : null) ??
+          parentDockSession?.mainChatTabKey ??
+          activeMainChatTabKeyRef.current;
+        handleAgentRun(event.run, owningTabKey, event.run.parentAgentKey ?? parentDockSession?.key ?? null);
+        return;
+      }
+
+      if (event.type === 'browserDecision') {
+        // The decision is persisted with turn traces by the renderer telemetry
+        // path in a follow-up reducer pass; it is intentionally not rendered
+        // as transcript chrome.
         return;
       }
 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ServerNotification } from '../../shared/session-protocol';
 import type { TurnError } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
+import type { AgentRunSnapshot } from '../../shared/ipc';
 import {
   createReviewerSession,
   createWorkerSession,
@@ -63,6 +64,7 @@ export function useAgentSessions(
     title: string;
     model: string | null;
   }) => void;
+  handleAgentRun: (run: AgentRunSnapshot, mainChatTabKey: string | null, parentAgentKey: string | null) => void;
   handleOpenAgent: (key: string) => void;
   handleMinimizeAgent: (key: string) => void;
   handleSetAgentRole: (key: string, role: 'reviewer' | 'helper') => void;
@@ -324,7 +326,7 @@ export function useAgentSessions(
         spawn.agentKey,
         spawn.title,
         spawn.mainChatTabKey,
-        spawn.parentAgentKey ?? spawn.agentKey,
+        spawn.parentAgentKey,
         null,
         spawn.model,
         agentSessionsRef.current.find((session) => session.key === spawn.parentAgentKey)?.workspace ??
@@ -334,6 +336,47 @@ export function useAgentSessions(
     sessionStore.set(spawn.agentKey, emptySessionState({ title: spawn.title }));
     // Open it so the worker's stream is visible in the dock as it runs.
     setOpenAgentKeys((current) => (current.includes(spawn.agentKey) ? current : [...current, spawn.agentKey]));
+  }
+
+  function handleAgentRun(
+    run: AgentRunSnapshot,
+    mainChatTabKey: string | null,
+    parentAgentKey: string | null,
+  ): void {
+    const patch = (session: AgentSession): AgentSession => ({
+      ...session,
+      title: session.title || run.title,
+      status: run.status === 'queued' || run.status === 'working' || run.status === 'waiting' ? 'working' : 'done',
+      sourceProvider: run.provider,
+      executionLane: run.lane,
+      nativeRunId: run.nativeId,
+      runStatus: run.status,
+      runTask: run.task,
+      runProgress: run.progress,
+      runResultSummary: run.resultSummary,
+      runOutputPath: run.outputPath,
+      wakeStatus: run.wakeStatus,
+      parentAgentKey: session.parentAgentKey ?? parentAgentKey,
+    });
+    const existing = agentSessionsRef.current.find((session) => session.key === run.id);
+    if (existing) {
+      patchAgentSession(run.id, patch);
+      return;
+    }
+
+    const session = patch(createWorkerSession(
+      run.id,
+      run.title,
+      mainChatTabKey,
+      parentAgentKey,
+      run.parentTurnId,
+      null,
+      agentSessionsRef.current.find((candidate) => candidate.key === parentAgentKey)?.workspace ??
+        workspaceForMainChatTab(mainChatTabKey),
+    ));
+    updateAgentSessions((sessions) => [...sessions, session]);
+    sessionStore.set(run.id, emptySessionState({ title: run.title }));
+    setOpenAgentKeys((current) => current.includes(run.id) ? current : [...current, run.id]);
   }
 
   function handleOpenAgent(key: string): void {
@@ -455,6 +498,7 @@ export function useAgentSessions(
     handleAgentNotification,
     handleNewAgent,
     handleSpawnedAgent,
+    handleAgentRun,
     handleOpenAgent,
     handleMinimizeAgent,
     handleSetAgentRole,

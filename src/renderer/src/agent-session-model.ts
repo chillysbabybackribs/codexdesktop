@@ -2,6 +2,7 @@ import type { ThreadTokenUsage } from '../../shared/session-protocol'
 import type { ReasoningEffort } from '../../shared/session-protocol'
 import type { Model } from '../../shared/session-protocol'
 import type { ChatAttachment } from '../../shared/ipc'
+import type { AgentRunLane, AgentRunProvider, AgentRunStatus, AgentWakeStatus } from '../../shared/ipc'
 import type { AuditRequestSummary } from './audit-trigger'
 
 export type AgentLiteMessage = {
@@ -60,9 +61,19 @@ export type AgentSession = {
   reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
   isCompacting: boolean
+  sourceProvider: AgentRunProvider | null
+  executionLane: AgentRunLane | null
+  nativeRunId: string | null
+  runStatus: AgentRunStatus | null
+  runTask: string | null
+  runProgress: string | null
+  runResultSummary: string | null
+  runOutputPath: string | null
+  wakeStatus: AgentWakeStatus
 }
 
 export type PersistedAgentSession = {
+  key?: string
   mainChatTabKey?: string | null
   workspace?: string | null
   threadId?: string | null
@@ -75,6 +86,17 @@ export type PersistedAgentSession = {
   reasoningEffort?: ReasoningEffort | null
   open?: boolean
   selected?: boolean
+  role?: AgentRole
+  parentAgentKey?: string | null
+  sourceProvider?: AgentRunProvider | null
+  executionLane?: AgentRunLane | null
+  nativeRunId?: string | null
+  runStatus?: AgentRunStatus | null
+  runTask?: string | null
+  runProgress?: string | null
+  runResultSummary?: string | null
+  runOutputPath?: string | null
+  wakeStatus?: AgentWakeStatus
 }
 
 export type PersistedAgentDock = {
@@ -111,6 +133,15 @@ export function createAgentSession(
     reasoningEffort: null,
     contextUsage: null,
     isCompacting: false
+    ,sourceProvider: null
+    ,executionLane: null
+    ,nativeRunId: null
+    ,runStatus: null
+    ,runTask: null
+    ,runProgress: null
+    ,runResultSummary: null
+    ,runOutputPath: null
+    ,wakeStatus: 'none'
   }
 }
 
@@ -137,7 +168,7 @@ export function createWorkerSession(
   key: string,
   title: string,
   mainChatTabKey: string | null,
-  parentAgentKey: string,
+  parentAgentKey: string | null,
   spawnedByTurnId: string | null,
   model: string | null,
   workspace: string | null = null,
@@ -295,7 +326,7 @@ export function rollupStatus(
   let done = false
   let attention = false
   const visit = (current: AgentRosterNode): void => {
-    if (attentionKeys?.has(current.session.key)) attention = true
+    if (attentionKeys?.has(current.session.key) || current.session.runStatus === 'failed') attention = true
     if (current.session.status === 'working') working = true
     else if (current.session.status === 'done') done = true
     for (const child of current.children) visit(child)
@@ -407,6 +438,7 @@ export function serializeAgentDock(
   return JSON.stringify({
     counter,
     sessions: sessions.map((session) => ({
+      key: session.key,
       mainChatTabKey: session.mainChatTabKey,
       ...(session.workspace ? { workspace: session.workspace } : {}),
       threadId: session.threadId,
@@ -419,6 +451,17 @@ export function serializeAgentDock(
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
       selected: session.key === selectedKey
+      ,role: session.role
+      ,parentAgentKey: session.parentAgentKey
+      ,sourceProvider: session.sourceProvider
+      ,executionLane: session.executionLane
+      ,nativeRunId: session.nativeRunId
+      ,runStatus: session.runStatus
+      ,runTask: session.runTask
+      ,runProgress: session.runProgress
+      ,runResultSummary: session.runResultSummary
+      ,runOutputPath: session.runOutputPath
+      ,wakeStatus: session.wakeStatus
     }))
   })
 }
