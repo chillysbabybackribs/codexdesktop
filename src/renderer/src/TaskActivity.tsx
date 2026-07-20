@@ -1344,11 +1344,35 @@ export function TurnTail({
           }}
           onBlur={() => setConfirmingRevert(false)}
         >
-          {confirmingRevert ? 'Revert workspace?' : 'Revert'}
+          <CheckpointBookmarkIcon />
+          <span className="turn-revert-label">
+            {confirmingRevert ? 'Restore workspace?' : 'Restore checkpoint'}
+          </span>
         </button>
       ) : null}
       {onOpenTrace ? <button type="button" className="turn-trace-button" onClick={onOpenTrace}>Trace</button> : null}
       <span className="tail-rule" aria-hidden="true" />
     </div>
+  )
+}
+
+// Bookmark glyph for the per-turn checkpoint marker (mirrors the "Restore
+// checkpoint" affordance from ai-elements: an icon + label on the tail rule).
+function CheckpointBookmarkIcon(): React.JSX.Element {
+  return (
+    <svg
+      className="turn-revert-icon"
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
   )
 }
