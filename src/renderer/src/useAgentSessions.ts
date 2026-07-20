@@ -350,6 +350,7 @@ export function useAgentSessions(
       sourceProvider: run.provider,
       executionLane: run.lane,
       nativeRunId: run.nativeId,
+      runParentThreadId: run.parentThreadId,
       runStatus: run.status,
       runTask: run.task,
       runProgress: run.progress,

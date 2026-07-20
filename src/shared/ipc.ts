@@ -31,6 +31,7 @@ export type {
   AgentRunSnapshot,
   AgentRunEvent,
   BrowserDecisionEvent,
+  AgentRunCancelParams,
   SessionEvent,
   CodexEvent,
   CodexSendMessageParams,

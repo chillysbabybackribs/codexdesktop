@@ -4,6 +4,7 @@ import type {
   SessionEvent,
   CodexListThreadTurnsParams,
   CodexInterruptTurnParams,
+  AgentRunCancelParams,
   CodexListThreadsParams,
   CodexPluginAppStatusParams,
   CodexPluginInstallParams,
@@ -175,6 +176,12 @@ export function registerSessionIpc(
     // never leaves orphan children running.
     orchestrator.interruptChildrenOf(params.threadId, params.turnId);
     return byThread(params.threadId).interruptTurn(params.threadId, params.turnId);
+  });
+  ipcMain.handle(ipcChannels.sessionCancelAgentRun, (_event, params: AgentRunCancelParams) => {
+    if (params.provider !== 'claude') {
+      throw new Error('Codex native-agent cancellation is not exposed by this app-server protocol');
+    }
+    return claude.stopBackgroundTask(params.parentThreadId, params.nativeId);
   });
   ipcMain.handle(ipcChannels.sessionCompactThread, (_event, threadId: string) =>
     byThread(threadId).compactThread(threadId),

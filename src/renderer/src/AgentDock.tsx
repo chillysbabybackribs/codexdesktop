@@ -653,7 +653,7 @@ const AgentWindow = memo(function AgentWindow({
       {nativeRun ? (
         <div className="agent-native-footer">
           <span>{working ? 'Managed by the parent turn' : wakeLabel(session.wakeStatus)}</span>
-          {working ? (
+          {working && session.sourceProvider === 'claude' ? (
             <button type="button" onClick={() => onStop(session.key)}>Stop</button>
           ) : null}
         </div>

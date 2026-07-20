@@ -18,6 +18,7 @@ import type {
   BrowserVpnStatus,
   SessionEvent,
   CodexInterruptTurnParams,
+  AgentRunCancelParams,
   CodexListThreadTurnsParams,
   CodexListThreadsParams,
   CodexPluginAppStatusParams,
@@ -182,6 +183,8 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.sessionSteerTurn, params),
     interruptTurn: (params: CodexInterruptTurnParams) =>
       ipcRenderer.invoke(ipcChannels.sessionInterruptTurn, params),
+    cancelAgentRun: (params: AgentRunCancelParams) =>
+      ipcRenderer.invoke(ipcChannels.sessionCancelAgentRun, params),
     compactThread: (threadId: string): Promise<{ started: boolean }> =>
       ipcRenderer.invoke(ipcChannels.sessionCompactThread, threadId),
     unsubscribeThread: (threadId: string) =>

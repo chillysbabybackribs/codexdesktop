@@ -54,6 +54,7 @@ export const ipcChannels = {
   sessionSendMessage: 'session:sendMessage',
   sessionSteerTurn: 'session:steerTurn',
   sessionInterruptTurn: 'session:interruptTurn',
+  sessionCancelAgentRun: 'session:cancelAgentRun',
   sessionCompactThread: 'session:compactThread',
   sessionUnsubscribeThread: 'session:unsubscribeThread',
   sessionListInstalledPlugins: 'session:listInstalledPlugins',

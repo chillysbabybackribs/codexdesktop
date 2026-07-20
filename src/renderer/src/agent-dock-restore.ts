@@ -98,6 +98,7 @@ export async function restoreAgentDock(options: {
       sourceProvider: entry.sourceProvider ?? null,
       executionLane: entry.executionLane ?? null,
       nativeRunId: entry.nativeRunId ?? null,
+      runParentThreadId: entry.runParentThreadId ?? null,
       runStatus: entry.runStatus ?? null,
       runTask: entry.runTask ?? null,
       runProgress: entry.runProgress ?? null,

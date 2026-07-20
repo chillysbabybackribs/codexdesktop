@@ -91,6 +91,7 @@ type LiveRuntime = {
   interrupt: () => Promise<void>;
   setModel: (model: string | null) => Promise<void>;
   applySettings: (settings: { effort: ClaudeEffort | null; fastMode: boolean }) => Promise<void>;
+  stopTask: (taskId: string) => Promise<void>;
   model: string | null;
   effort: ClaudeEffort | null;
   fastMode: boolean;
@@ -474,6 +475,12 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     return {};
   }
 
+  async stopBackgroundTask(threadId: string, taskId: string): Promise<void> {
+    const session = this.sessions.get(threadId);
+    if (!session?.runtime) throw new Error('Claude background-task runtime is not active');
+    await session.runtime.stopTask(taskId);
+  }
+
   setSubagentSpawner(spawner: SubagentSpawner | null): void {
     this.subagentSpawner = spawner;
   }
@@ -716,6 +723,9 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
             fastMode: settings.fastMode,
             fastModePerSessionOptIn: true,
           } as never);
+        },
+        stopTask: async (taskId) => {
+          await handle.stopTask(taskId);
         },
         model: claudeRuntimeModel(session.model),
         effort: session.effort,

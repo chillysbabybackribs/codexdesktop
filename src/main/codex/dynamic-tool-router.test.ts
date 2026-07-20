@@ -67,9 +67,10 @@ test('first-class live search visibly navigates and snapshots one existing tab',
   }), { browserAgent, researchRunner: unusedResearch })
 
   assert.equal(response.success, true)
-  assert.equal(received?.url, 'https://www.google.com/search?q=current%20platform%20status')
-  assert.equal(received?.tabId, 'tab-1')
-  assert.equal(received?.objective, 'Return the official status result')
+  const captured = received as unknown as Record<string, unknown>
+  assert.equal(captured.url, 'https://www.google.com/search?q=current%20platform%20status')
+  assert.equal(captured.tabId, 'tab-1')
+  assert.equal(captured.objective, 'Return the official status result')
 })
 
 test('dual research runs visible and artifact-first lanes together', async () => {

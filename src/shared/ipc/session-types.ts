@@ -75,6 +75,12 @@ export type BrowserDecisionEvent = {
   reason: string
 }
 
+export type AgentRunCancelParams = {
+  provider: 'codex' | 'claude'
+  parentThreadId: string
+  nativeId: string
+}
+
 export type ResearchProgressStage = 'queued' | 'preparing' | 'discovering' | 'verifying' | 'finalizing' | 'complete'
 
 export type ResearchProgress = {

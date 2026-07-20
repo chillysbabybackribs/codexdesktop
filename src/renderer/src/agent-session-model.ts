@@ -64,6 +64,7 @@ export type AgentSession = {
   sourceProvider?: AgentRunProvider | null
   executionLane?: AgentRunLane | null
   nativeRunId?: string | null
+  runParentThreadId?: string | null
   runStatus?: AgentRunStatus | null
   runTask?: string | null
   runProgress?: string | null
@@ -91,6 +92,7 @@ export type PersistedAgentSession = {
   sourceProvider?: AgentRunProvider | null
   executionLane?: AgentRunLane | null
   nativeRunId?: string | null
+  runParentThreadId?: string | null
   runStatus?: AgentRunStatus | null
   runTask?: string | null
   runProgress?: string | null
@@ -136,6 +138,7 @@ export function createAgentSession(
     sourceProvider: null,
     executionLane: null,
     nativeRunId: null,
+    runParentThreadId: null,
     runStatus: null,
     runTask: null,
     runProgress: null,
@@ -457,6 +460,7 @@ export function serializeAgentDock(
         sourceProvider: session.sourceProvider,
         executionLane: session.executionLane ?? null,
         nativeRunId: session.nativeRunId ?? null,
+        runParentThreadId: session.runParentThreadId ?? null,
         runStatus: session.runStatus ?? null,
         runTask: session.runTask ?? null,
         runProgress: session.runProgress ?? null,
