@@ -2,6 +2,8 @@ export type BrowserQualityPreset = 'quality-max' | 'balanced' | 'manual'
 
 export type BrowserUseMode = 'none' | 'live' | 'background' | 'dual'
 
+export type BrowserGuidanceLane = 'codex' | 'claude'
+
 export type BrowserUseDecision = {
   preset: BrowserQualityPreset
   mode: BrowserUseMode
@@ -39,7 +41,24 @@ export function decideBrowserUse(
     return { preset, mode: 'live', required: true, reason: 'interactive or authenticated browser state' }
   }
   if (explicit || current || referencedWeb || broadResearch) {
-    const liveFirst = preset === 'quality-max' || explicit || current || referencedWeb
+    if (preset === 'quality-max') {
+      const searchShaped = explicit || current || broadResearch
+      return searchShaped
+        ? {
+            preset,
+            mode: 'dual',
+            required: true,
+            reason:
+              'search-shaped or freshness-sensitive: verify live in the visible tab while parallel background research corroborates',
+          }
+        : {
+            preset,
+            mode: 'live',
+            required: true,
+            reason: 'live browser should verify the referenced page directly',
+          }
+    }
+    const liveFirst = explicit || current || referencedWeb
     return {
       preset,
       mode: liveFirst ? 'live' : 'background',
@@ -53,19 +72,53 @@ export function decideBrowserUse(
   return { preset, mode: 'none', required: false, reason: 'request is locally answerable' }
 }
 
-export function buildBrowserUseGuidance(env: NodeJS.ProcessEnv = process.env): string {
+function toolName(name: string, lane: BrowserGuidanceLane): string {
+  return lane === 'claude' ? `mcp__browser__${name}` : name
+}
+
+export function buildBrowserUseGuidance(
+  env: NodeJS.ProcessEnv = process.env,
+  lane: BrowserGuidanceLane = 'codex',
+): string {
   const preset = browserQualityPreset(env)
+  const t = (name: string) => toolName(name, lane)
   return [
     `Codex Desktop browser-use preset: ${preset}.`,
+    ...(lane === 'claude'
+      ? [
+          `- Browse only with the mcp__browser__ tools. The built-in WebSearch and WebFetch tools are disabled; ${t('browser_research_dual')}, ${t('browser_live_search')}, ${t('research_web')}, and ${t('browser_extract_page')} replace them.`,
+        ]
+      : []),
     '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
-    '- Use browser_live_search or browser_snapshot for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request; browser_live_search runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.',
+    `- Use ${t('browser_live_search')} or ${t('browser_snapshot')} for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request; ${t('browser_live_search')} runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.`,
     '- The live browser is the authority for current, referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
-    '- Use the artifact-first background research lane only when source breadth, independent corroboration, or saved public evidence materially improves the answer. Background research is optional support; it is not a mandatory follow-up after adequate live-browser verification.',
+    `- Background research (${t('research_web')}) complements visible verification instead of replacing it: it gathers bounded independent public evidence in parallel while the visible tab verifies the strongest source live.`,
     ...(preset === 'quality-max'
-      ? ['- In quality-max mode, prefer the live browser first. Use browser_research_dual only for broad source-backed research, consequential comparisons, or conflicts where visible verification plus bounded background evidence should be gathered together.']
+      ? [
+          `- In quality-max mode, search-shaped, current-information, or post-knowledge-cutoff tasks should normally use ${t('browser_research_dual')}: one call that verifies live in the visible tab while parallel background research corroborates. Use the live browser alone (${t('browser_live_search')}, ${t('browser_snapshot')}) for referenced, authenticated, or interactive pages where source breadth adds nothing, and ${t('research_web')} alone only when the user explicitly asks for background-only research.`,
+        ]
       : preset === 'balanced'
-        ? ['- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background for broad public research, and dual only for consequential comparisons.']
+        ? [
+            `- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background for broad public research, and ${t('browser_research_dual')} only for consequential comparisons.`,
+          ]
         : ['- In manual mode, browse only when the user explicitly requests browsing or the task directly names a live browser surface.']),
     '- Do not claim a current external fact from memory when this policy requires browsing. If browsing fails, say what could not be verified.',
   ].join('\n')
+}
+
+const modeStartingTools: Record<Exclude<BrowserUseMode, 'none'>, string[]> = {
+  live: ['browser_live_search', 'browser_snapshot'],
+  background: ['research_web'],
+  dual: ['browser_research_dual'],
+}
+
+// One-line router verdict injected into the turn input so the model actually
+// sees the per-turn lane decision (previously it was UI telemetry only).
+export function formatBrowserDecisionNote(
+  decision: BrowserUseDecision,
+  lane: BrowserGuidanceLane = 'codex',
+): string | null {
+  if (!decision.required || decision.mode === 'none') return null
+  const tools = modeStartingTools[decision.mode].map((name) => toolName(name, lane)).join(' or ')
+  return `[browser routing] mode=${decision.mode} (${decision.preset}): ${decision.reason}. Start with ${tools} unless the request clearly needs no external evidence.`
 }
