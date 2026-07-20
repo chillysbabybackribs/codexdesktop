@@ -1,6 +1,11 @@
 import { memo, useMemo, useState } from 'react';
 import type { ItemMeta, WorkItem } from './TaskActivity';
-import { isHiddenDuringLiveStep, LiveActivityFeed, WorkGroup } from './TaskActivity';
+import {
+  isActiveReasoningPlaceholder,
+  isHiddenDuringLiveStep,
+  LiveActivityFeed,
+  WorkGroup,
+} from './TaskActivity';
 import { AttachmentStrip, attachmentsFromUserInput } from './Attachments';
 import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
@@ -56,7 +61,11 @@ export function TaskActivity({
   const flushWork = (): void => {
     let visible = showSteps ? workRun : workRun.filter(isEssentialWorkItem);
     if (live) {
-      visible = visible.filter((item) => !isHiddenDuringLiveStep(item, live));
+      visible = visible.filter(
+        (item) =>
+          !isHiddenDuringLiveStep(item, live) &&
+          !isActiveReasoningPlaceholder(item, newestWorkItemId, itemMeta[item.id]),
+      );
     }
     workRun = [];
     if (!visible.length) {
@@ -122,6 +131,7 @@ export function TaskActivity({
           items={workItems}
           itemMeta={itemMeta}
           streamingMessage={streamingMessage}
+          showCurrent={false}
         />
       ) : null}
       <div className="task-activity-content">{content}</div>

@@ -11,6 +11,7 @@ import {
   fmtTokens,
   formatBytes,
   groupAdjacentReasoning,
+  isActiveReasoningPlaceholder,
   itemDurationMs,
   previewJson,
   reasoningGroupDurationMs,
@@ -171,6 +172,19 @@ test('adjacent reasoning items consolidate without crossing work boundaries', ()
       ['item', 'file-1'],
     ],
   );
+});
+
+test('only the unsettled newest reasoning item is treated as a live status placeholder', () => {
+  assert.equal(isActiveReasoningPlaceholder(reasoningItem, 'thought-1', undefined), true);
+  assert.equal(
+    isActiveReasoningPlaceholder(reasoningItem, 'thought-1', {
+      turnId: 't1',
+      completedAtMs: 2_000,
+    }),
+    false,
+  );
+  assert.equal(isActiveReasoningPlaceholder(reasoningItem, 'another-item', undefined), false);
+  assert.equal(isActiveReasoningPlaceholder(commandItem(), 'cmd-1', undefined), false);
 });
 
 test('a consolidated reasoning duration spans the uninterrupted sequence', () => {

@@ -93,6 +93,17 @@ export function itemDurationMs(item: WorkItem, meta: ItemMeta | undefined): numb
   return null;
 }
 
+// The turn tail is the single live-status surface. Keep the active reasoning
+// item out of the activity transcript until it settles, at which point it
+// becomes the normal expandable "Thought" disclosure.
+export function isActiveReasoningPlaceholder(
+  item: WorkItem,
+  newestItemId: string | undefined,
+  meta: ItemMeta | undefined,
+): boolean {
+  return item.type === 'reasoning' && item.id === newestItemId && !meta?.completedAtMs;
+}
+
 type ReasoningWorkItem = Extract<WorkItem, { type: 'reasoning' }>;
 
 export type WorkDisplayGroup =

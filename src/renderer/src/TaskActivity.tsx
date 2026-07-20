@@ -30,6 +30,7 @@ import {
   fmtTokens,
   formatBytes,
   groupAdjacentReasoning,
+  isActiveReasoningPlaceholder,
   itemDurationMs,
   previewJson,
   reasoningGroupDurationMs,
@@ -53,7 +54,7 @@ import {
 export type { TurnMeta, TurnMetaStatus } from './turn-telemetry';
 export { workItemTypes } from './activity-model';
 export type { ItemMeta, TurnPlanItem, WorkItem } from './activity-model';
-export { fmtDuration, fmtTokens } from './activity-format';
+export { fmtDuration, fmtTokens, isActiveReasoningPlaceholder } from './activity-format';
 export { currentActionLabel, activityFeedLines } from './turn-summary';
 export type { ActivityFeedLine } from './turn-summary';
 export { cdpScreenshotArtifacts } from './cdp-artifacts';
@@ -1325,14 +1326,19 @@ export function LiveActivityFeed({
   items,
   itemMeta,
   streamingMessage,
+  showCurrent = true,
 }: {
   items: WorkItem[];
   itemMeta: Record<string, ItemMeta>;
   streamingMessage: boolean;
+  showCurrent?: boolean;
 }): React.JSX.Element | null {
   const lines = useMemo(
-    () => activityFeedLines(items, itemMeta, streamingMessage),
-    [items, itemMeta, streamingMessage],
+    () =>
+      activityFeedLines(items, itemMeta, streamingMessage).filter(
+        (line) => showCurrent || line.tone !== 'current',
+      ),
+    [items, itemMeta, showCurrent, streamingMessage],
   );
 
   if (!lines.length) {
