@@ -34,6 +34,7 @@ import { isWorkItem, upsertMany, type ChatItem, type SystemItem } from './transc
 import {
   isImmediateItemNotification,
   isItemNotification,
+  reduceItemNotificationBatch,
   reduceItemNotificationItems,
   reduceItemNotificationMeta,
   type ItemNotification,
@@ -475,7 +476,7 @@ export default function App(): React.JSX.Element {
   // changes) accumulate here and apply in a single batched setItems per frame.
   // Batching every delta kind — not just agent text — is what keeps a long
   // turn's reasoning/command streams from re-rendering the transcript per token.
-  const pendingItemMutationsRef = useRef<Array<(items: ChatItem[]) => ChatItem[]>>([]);
+  const pendingItemNotificationsRef = useRef<ItemNotification[]>([]);
   const itemMutationFrameRef = useRef<number | null>(null);
   const threadsNextCursorRef = useRef<string | null>(null);
   const persistedTraceFingerprintsRef = useRef<Map<string, string>>(new Map());
@@ -2702,7 +2703,7 @@ export default function App(): React.JSX.Element {
         ),
       );
     } else if (notification.method !== 'item/mcpToolCall/progress') {
-      enqueueItemMutation((current) => reduceItemNotificationItems(current, notification));
+      enqueueItemNotification(notification);
     }
 
     if (
@@ -3469,8 +3470,8 @@ export default function App(): React.JSX.Element {
   // collapses into one setItems (one buildRows + one render) per display frame
   // instead of one per token. This keeps final-answer motion at the screen's
   // native cadence while still coalescing bursts from the transport.
-  function enqueueItemMutation(mutate: (items: ChatItem[]) => ChatItem[]): void {
-    pendingItemMutationsRef.current.push(mutate);
+  function enqueueItemNotification(notification: ItemNotification): void {
+    pendingItemNotificationsRef.current.push(notification);
 
     if (itemMutationFrameRef.current !== null) {
       return;
@@ -3486,7 +3487,7 @@ export default function App(): React.JSX.Element {
   // preserved (mutations run in enqueue order), so this is safe to call ahead of
   // a full-item upsert to keep pending deltas from landing after their item.
   function flushPendingItemMutations(): void {
-    const pending = pendingItemMutationsRef.current;
+    const pending = pendingItemNotificationsRef.current;
 
     if (!pending.length) {
       return;
@@ -3497,11 +3498,8 @@ export default function App(): React.JSX.Element {
       itemMutationFrameRef.current = null;
     }
 
-    pendingItemMutationsRef.current = [];
-    let next = itemsRef.current;
-    for (const mutate of pending) {
-      next = mutate(next);
-    }
+    pendingItemNotificationsRef.current = [];
+    const next = reduceItemNotificationBatch(itemsRef.current, pending);
     itemsRef.current = next;
     setItems(next);
   }
