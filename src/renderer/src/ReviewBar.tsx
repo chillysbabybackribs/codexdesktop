@@ -21,7 +21,6 @@ export function ReviewBar({
   workspace,
   undonePaths,
   alwaysKeepAll,
-  elapsedLabel,
   onKeepAll,
   onSetAlwaysKeepAll,
   onUndoAll,
@@ -32,7 +31,6 @@ export function ReviewBar({
   workspace: string | null;
   undonePaths: ReadonlySet<string>;
   alwaysKeepAll: boolean;
-  elapsedLabel?: string | null;
   onKeepAll: () => void;
   onSetAlwaysKeepAll: (enabled: boolean) => void;
   onUndoAll: () => void;
@@ -134,7 +132,6 @@ export function ReviewBar({
             {totalDels > 0 ? <span className="diff-count-del">−{totalDels}</span> : null}
           </span>
         </button>
-        {elapsedLabel ? <span className="review-bar-elapsed">{elapsedLabel}</span> : null}
         {!alwaysKeepAll ? (
           <div className="review-bar-actions">
             <button

@@ -11,7 +11,6 @@ import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
 import {
   FileReviewContext,
   TurnTail,
-  fmtDuration,
   type FileReviewActions,
   type TurnMeta,
   type WorkItem,
@@ -441,7 +440,6 @@ export function ChatPaneView({
             workspace={workspace}
             undonePaths={new Set(undoneFiles[reviewTarget.turnId] ?? [])}
             alwaysKeepAll={alwaysKeepAll}
-            elapsedLabel={completedTurnElapsedLabel(turnMeta[reviewTarget.turnId])}
             onKeepAll={() => void runFocused(() => onKeepTurn(reviewTarget.turnId))}
             onSetAlwaysKeepAll={onSetAlwaysKeepAll}
             onUndoAll={() => void runFocused(() => onUndoTurnAll(reviewTarget.turnId))}
@@ -519,16 +517,4 @@ export function ChatPaneView({
       ) : null}
     </section>
   );
-}
-
-function completedTurnElapsedLabel(meta: TurnMeta | undefined): string | null {
-  const durationMs =
-    meta?.durationMs ??
-    (meta?.startedAtMs && meta?.completedAtMs
-      ? Math.max(0, meta.completedAtMs - meta.startedAtMs)
-      : null);
-  if (durationMs === null) return null;
-  if (meta?.status === 'failed') return `Failed after ${fmtDuration(durationMs)}`;
-  if (meta?.status === 'interrupted') return `Stopped after ${fmtDuration(durationMs)}`;
-  return `Worked for ${fmtDuration(durationMs)}`;
 }

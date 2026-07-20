@@ -1525,34 +1525,29 @@ export function TurnTail({
     return null;
   }
 
-  const durationMs =
-    meta?.durationMs ??
-    (meta?.startedAtMs && meta?.completedAtMs
-      ? Math.max(0, meta.completedAtMs - meta.startedAtMs)
-      : null);
   const parts = turnSummaryParts(items, meta);
 
-  let lead: string;
+  let lead: string | null = null;
   let tone = '';
   if (meta?.status === 'failed') {
-    lead = durationMs ? `Failed after ${fmtDuration(durationMs)}` : 'Failed';
+    lead = 'Failed';
     tone = 'is-failed';
   } else if (meta?.status === 'interrupted') {
-    lead = durationMs ? `Stopped after ${fmtDuration(durationMs)}` : 'Stopped';
+    lead = 'Stopped';
     tone = 'is-stopped';
-  } else {
-    lead = durationMs ? `Worked for ${fmtDuration(durationMs)}` : 'Worked';
+  }
+  const error =
+    meta?.status === 'failed' && meta.errorMessage ? truncate(meta.errorMessage, 160) : null;
+  const summary = [...(lead ? [lead] : []), ...parts, ...(error ? [error] : [])].join(' · ');
+
+  if (!summary && !onRevert) {
+    return null;
   }
 
   return (
     <div className={`turn-tail is-done ${tone}`}>
       <span className="tail-rule" aria-hidden="true" />
-      <span className="tail-summary">
-        {[lead, ...parts].join(' · ')}
-        {meta?.status === 'failed' && meta.errorMessage
-          ? ` · ${truncate(meta.errorMessage, 160)}`
-          : ''}
-      </span>
+      {summary ? <span className="tail-summary">{summary}</span> : null}
       {onRevert ? (
         <button
           type="button"
