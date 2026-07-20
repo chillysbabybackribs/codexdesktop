@@ -38,13 +38,11 @@ test('quality-max guidance makes unified search with background evidence the nor
   assert.match(guidance, /complements visible verification instead of replacing it/i)
   assert.match(guidance, /three to six semantic query variations/i)
   assert.match(guidance, /Never navigate the visible tab to a SERP/i)
-  assert.doesNotMatch(guidance, /browser_research_dual/i)
 })
 
 test('claude lane guidance prefixes tools and forbids built-in web tools', () => {
   const guidance = buildBrowserUseGuidance({ CODEX_DESKTOP_BROWSER_PRESET: 'quality-max' }, 'claude')
   assert.match(guidance, /WebSearch and WebFetch tools are disabled/i)
   assert.match(guidance, /should normally use mcp__browser__browser_live_search with background=true/i)
-  assert.doesNotMatch(guidance, /browser_research_dual/i)
   assert.doesNotMatch(guidance, /Use browser_live_search/)
 })

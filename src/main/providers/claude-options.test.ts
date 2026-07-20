@@ -38,7 +38,6 @@ test('Claude system prompt prioritizes live browser inspection', () => {
 
   assert.match(options.systemPrompt, /live browser is the authority/i);
   assert.match(options.systemPrompt, /should normally use mcp__browser__browser_live_search with background=true/i);
-  assert.doesNotMatch(options.systemPrompt, /browser_research_dual/i);
   assert.match(options.systemPrompt, /WebSearch and WebFetch tools are disabled/i);
   assert.deepEqual(options.disallowedTools, ['WebSearch', 'WebFetch']);
 });

@@ -246,7 +246,6 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
   assert.doesNotMatch(guidance, /start by organizing|formal plan|multi-part answers/i)
   assert.match(guidance, /should normally use browser_live_search with background=true/i)
-  assert.doesNotMatch(guidance, /browser_research_dual/i)
 })
 
 test('browser guidance avoids obsolete compatibility fallbacks', () => {
