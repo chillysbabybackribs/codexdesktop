@@ -573,7 +573,10 @@ export class ResearchRunner {
           if (cached) {
             try {
               if (stopSignal.aborted) return null
-              if (!coversUnresolvedFocus(candidate, sourceId, cached)) return null
+              if (!coversUnresolvedFocus(candidate, sourceId, cached)) {
+                recordFocusMismatch(errors, candidate.url)
+                return null
+              }
               const draft = await materializePage(candidate, rank, sourceId, cached, true, stopSignal)
               pageCacheHits += 1
               return draft
@@ -633,7 +636,7 @@ export class ResearchRunner {
                   durationMs,
                   bytes: 0,
                   redirects: 0,
-                  finalUrl: candidate.url
+                  finalUrl: fetchUrl
                 }
               } else {
                 preflight.dispose()
@@ -698,7 +701,7 @@ export class ResearchRunner {
           preflight.dispose()
           if (stopSignal.aborted) return null
           browserPageLoads += 1
-          const browserUrl = staticResult.finalUrl ?? candidate.url
+          const browserUrl = staticResult.finalUrl ?? fetchUrl
           const view = this.createHiddenView()
           const linked = linkAbortSignals(signal, stopSignal)
           const closeOnAbort = (): void => this.closeHiddenView(view)
