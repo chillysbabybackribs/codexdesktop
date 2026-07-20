@@ -31,7 +31,6 @@ import type { ProviderId } from '../../shared/session-protocol/provider.js';
 import { SubagentOrchestrator } from '../agents/subagent-orchestrator.js';
 import { AgentCompletionCoordinator, AgentRunBridge } from '../agents/agent-run-coordinator.js';
 import { decideBrowserUse } from '../browser/browser-use-policy.js';
-import { BrowserPolicyCoordinator } from '../browser/browser-policy-coordinator.js';
 
 export type RegisteredSessionProviders = {
   codexClient: CodexClient;
@@ -73,9 +72,6 @@ export function registerSessionIpc(
       await byThread(threadId).sendMessage(threadId, prompt);
     },
   });
-  const browserPolicyCoordinator = new BrowserPolicyCoordinator(async (threadId, prompt) => {
-    await byThread(threadId).sendMessage(threadId, prompt);
-  });
   const emitEvent = (event: SessionEvent): void => {
     sendEvent(event);
     if (event.type === 'agentRun') completionCoordinator.observeRun(event.run);
@@ -107,7 +103,6 @@ export function registerSessionIpc(
       const tagged = orchestrator.tagEvent(event);
       nativeAgentBridge.ingestCodex(tagged);
       completionCoordinator.observeSessionEvent(tagged);
-      browserPolicyCoordinator.observe(tagged);
       sendEvent(tagged);
     });
   }
@@ -164,7 +159,6 @@ export function registerSessionIpc(
       params.fastMode === true,
     );
     const browserDecision = decideBrowserUse(params.text);
-    browserPolicyCoordinator.register(response.threadId, response.turn.id, browserDecision);
     sendEvent({
       type: 'browserDecision',
       threadId: response.threadId,
@@ -226,7 +220,6 @@ export function registerSessionIpc(
   return {
     codexClient: client,
     dispose: () => {
-      browserPolicyCoordinator.dispose();
       completionCoordinator.dispose();
       claude.dispose();
       client.dispose();

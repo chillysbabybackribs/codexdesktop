@@ -528,7 +528,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_research_dual',
-    description: 'Quality-max research path: run a visible live search snapshot and the bounded artifact-first research_web lane concurrently, then return both evidence sets and coverage gaps. Use by default for current public facts, consequential comparisons, and broad research. Never creates a tab.',
+    description: 'Quality-max breadth path: run a visible live search snapshot and the bounded artifact-first research_web lane concurrently, then return both evidence sets and coverage gaps. Use when broad source-backed research, consequential comparisons, or conflicts need live verification plus independent public evidence. Never creates a tab.',
     inputSchema: browserResearchDualSchema
   },
   {
