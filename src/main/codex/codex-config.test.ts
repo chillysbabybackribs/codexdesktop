@@ -244,7 +244,8 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /targeted-gap-fill/i)
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
-  assert.doesNotMatch(guidance, /start by organizing|formal plan|research_web|multi-part answers/i)
+  assert.doesNotMatch(guidance, /start by organizing|formal plan|multi-part answers/i)
+  assert.match(guidance, /should normally use browser_research_dual/i)
 })
 
 test('browser guidance preserves a one-call fallback for older resumed threads', () => {
