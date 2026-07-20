@@ -3812,6 +3812,8 @@ button {
   align-items: center;
   gap: 4px;
   min-height: 28px;
+  padding-top: 7px;
+  border-top: 1px solid var(--hairline);
 }
 
 .composer-header-controls .composer-context {
