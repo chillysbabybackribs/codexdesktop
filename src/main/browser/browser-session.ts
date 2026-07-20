@@ -2,6 +2,7 @@ import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
 import { browserUserAgentFallback } from './browser-identity.js'
+import { installGoogleAuthClientHints } from './browser-auth-client-hints.js'
 import { browserDownloadCaptureBroker } from './browser-download-capture.js'
 import { safeDownloadName } from './download-policy.js'
 
@@ -36,6 +37,11 @@ export function configureBrowserSession(options: BrowserSessionOptions): void {
   for (const partition of [browserPartition, researchPartition]) {
     const browserSession = session.fromPartition(partition)
     browserSession.setSpellCheckerLanguages(['en-US'])
+    // Only the visible browser handles interactive Google sign-in. The research
+    // partition never logs a human in, so it keeps its native Client Hints.
+    if (partition === browserPartition) {
+      installGoogleAuthClientHints(browserSession, app.userAgentFallback)
+    }
     browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
       callback(allowedGuestPermissions.has(permission))
     })
