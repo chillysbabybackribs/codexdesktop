@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { ArrowUp, Plus } from 'lucide-react';
 import type { ChatAttachment } from '../../shared/ipc';
+import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata';
 import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
 import { steerComposerPlaceholder } from './app-helpers';
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments';
@@ -105,6 +106,7 @@ export function Composer({
   const [historyQuery, setHistoryQuery] = useState('');
   const [hasStash, setHasStash] = useState(() => hasStashedComposerDraft(draftKey));
   const [isDispatchingQueued, setIsDispatchingQueued] = useState(false);
+  const [installedSkills, setInstalledSkills] = useState<SkillMetadata[]>([]);
   const composerFormId = useId();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const createMenuRef = useRef<HTMLDivElement | null>(null);
@@ -177,6 +179,21 @@ export function Composer({
         title: 'Clear composer',
         detail: 'Remove text, attachments, and context',
       },
+      ...(providerId === 'codex'
+        ? installedSkills.map(
+            (skill): ComposerCommandOption => ({
+              id: `skill:${skill.name}`,
+              command: skill.name,
+              title: skill.interface?.displayName || skill.name,
+              detail:
+                skill.interface?.shortDescription ||
+                skill.shortDescription ||
+                skill.description ||
+                'Run this skill',
+              hint: 'Skill',
+            }),
+          )
+        : []),
     ];
     if (slashQuery === null) return [];
     return options.filter((option) => {
@@ -185,7 +202,7 @@ export function Composer({
         .toLowerCase()
         .includes(slashQuery);
     });
-  }, [isLoading, isTurnActive, onNewAgent, slashQuery]);
+  }, [installedSkills, isLoading, isTurnActive, onNewAgent, providerId, slashQuery]);
 
   const historyEntries = useMemo(
     () => listComposerPrompts(draftKey, historyQuery),
@@ -210,6 +227,24 @@ export function Composer({
   }, [canSteer, turnAction]);
 
   useEffect(() => setCommandSelectionIndex(0), [slashQuery]);
+
+  useEffect(() => {
+    if (slashQuery === null || providerId !== 'codex' || installedSkills.length) return;
+    const listSkills = window.api.session.listSkills;
+    // The host renderer can hot-reload ahead of a preload restart during local
+    // development. Built-in commands remain usable until the next app launch.
+    if (typeof listSkills !== 'function') return;
+    let cancelled = false;
+    void listSkills().then(
+      (skills) => {
+        if (!cancelled) setInstalledSkills(skills.filter((skill) => skill.enabled));
+      },
+      () => {},
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [installedSkills.length, providerId, slashQuery]);
 
   useEffect(() => {
     if (!isTurnActionMenuOpen) return;
@@ -441,6 +476,11 @@ export function Composer({
   const chooseCommand = (option: ComposerCommandOption): void => {
     if (option.disabled) return;
     setCommandMenuDismissed(true);
+    if (option.id.startsWith('skill:')) {
+      setValue(`$${option.id.slice('skill:'.length)} `);
+      requestAnimationFrame(() => textareaRef.current?.focus());
+      return;
+    }
     switch (option.id) {
       case 'context':
         setValue('@');
