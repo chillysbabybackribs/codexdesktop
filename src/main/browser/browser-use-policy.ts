@@ -58,7 +58,8 @@ export function buildBrowserUseGuidance(env: NodeJS.ProcessEnv = process.env): s
   return [
     `Codex Desktop browser-use preset: ${preset}.`,
     '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
-    '- Use browser_live_search or browser_snapshot for visible verification. The live browser is the authority for current, referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
+    '- Use browser_live_search or browser_snapshot for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request; browser_live_search runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.',
+    '- The live browser is the authority for current, referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
     '- Use the artifact-first background research lane only when source breadth, independent corroboration, or saved public evidence materially improves the answer. Background research is optional support; it is not a mandatory follow-up after adequate live-browser verification.',
     ...(preset === 'quality-max'
       ? ['- In quality-max mode, prefer the live browser first. Use browser_research_dual only for broad source-backed research, consequential comparisons, or conflicts where visible verification plus bounded background evidence should be gathered together.']

@@ -10,7 +10,7 @@ Treat research as a claim-coverage problem. Define the evidence needed for the r
 ## Fast Path
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
-2. If exact official source URLs are already known, pass them through `urls`; otherwise use one focused primary `queries` entry with up to two genuine fallback lanes.
+2. If exact official source URLs are already known, pass them through `urls`; otherwise author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
 3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
 4. Make one `research_web` call. Give it concrete `focus` needs (and `minSources` only where independent corroboration matters); the model-authored evidence contract determines how many sources are gathered and stops early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
 5. Answer from the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
@@ -21,7 +21,8 @@ Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs d
 ## Choose The Cheapest Reliable Lane
 
 - Known official documentation, release notes, or public records: direct `urls` with focused evidence needs.
-- Broad public discovery: `research_web` with one primary query and adaptive fallback lanes.
+- Broad public discovery: `research_web` with three to six model-authored semantic query variations. Discovery stays hidden and the combined URL pool is ranked before page verification.
+- Visible current-page verification after discovery: `browser_live_search`. It runs parallel SERP extraction in hidden workers, then navigates the existing visible tab directly to the strongest destination page. Never expose a search-results page in the user's tab.
 - One already-visible public content page: `browser_extract_page`.
 - Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.
 - Interaction or mutation: batch actions that remain in the current page. Treat any action that may trigger full-document or SPA-route navigation as a phase boundary. Prefer `browser_flow` to perform common fill/click/submit actions, wait for the destination's containing state, and then run a one-shot find; otherwise perform the action and inspect the destination in a fresh browser operation. If navigation is required first, use `browser_navigate` with a page-specific `readySelector` before a stable-document `browser_run` program.

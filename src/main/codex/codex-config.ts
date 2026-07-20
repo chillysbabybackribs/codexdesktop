@@ -453,9 +453,9 @@ const researchWebSchema = {
     queries: {
       type: 'array',
       minItems: 1,
-      maxItems: 3,
+      maxItems: 6,
       items: { type: 'string' },
-      description: 'One primary discovery query, optionally followed by up to two fallback source lanes. Fallbacks run only if the verified-page target is not met.'
+      description: 'One to six semantic discovery variations authored from the user request. Variations run in bounded parallel hidden Chromium workers; a lone query receives a small compatibility expansion.'
     },
     urls: {
       type: 'array',
@@ -492,21 +492,32 @@ const researchWebSchema = {
 const browserLiveSearchSchema = {
   type: 'object',
   properties: {
-    query: { type: 'string', description: 'Search query to run visibly in the existing browser tab.' },
-    objective: { type: 'string', description: 'Specific facts or result fields to extract from the visible search page.' },
+    query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
+    queries: {
+      type: 'array',
+      minItems: 2,
+      maxItems: 6,
+      uniqueItems: true,
+      items: { type: 'string' },
+      description: 'Three to six model-authored semantic variations derived from the user request. They run in parallel hidden search workers.'
+    },
+    objective: { type: 'string', description: 'Specific facts or fields to extract after the visible tab navigates directly to the highest-ranked destination page.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
-    maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum visible search results to return. Defaults to 10.' },
+    maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Maximum SERP candidates per hidden query. Defaults to 5.' },
+    maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum structured items to return from the selected destination page. Defaults to 10.' },
     timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' }
   },
-  required: ['query', 'objective'],
+  required: ['objective'],
+  anyOf: [{ required: ['query'] }, { required: ['queries'] }],
   additionalProperties: false
 }
 
 const browserResearchDualSchema = {
   type: 'object',
   properties: {
-    query: { type: 'string', description: 'Primary search query used by both the visible and background lanes.' },
-    objective: { type: 'string', description: 'Concrete facts and evidence the visible search snapshot should return.' },
+    query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
+    queries: browserLiveSearchSchema.properties.queries,
+    objective: { type: 'string', description: 'Concrete facts and evidence the directly opened destination page should return.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
     focus: researchWebSchema.properties.focus,
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Candidate/result target for each lane. Defaults to 6.' },
@@ -514,7 +525,8 @@ const browserResearchDualSchema = {
     snippetChars: researchWebSchema.properties.snippetChars,
     timeoutMs: { type: 'number', description: 'Optional visible-lane timeout from 250 to 60000 milliseconds.' }
   },
-  required: ['query', 'objective'],
+  required: ['objective'],
+  anyOf: [{ required: ['query'] }, { required: ['queries'] }],
   additionalProperties: false
 }
 
@@ -522,13 +534,13 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_live_search',
-    description: 'First-class live search: visibly navigate one existing browser tab to a web search and return an objective-ranked snapshot in the same call. Use when the user should see the search, when verifying a referenced/current result, or before interactive follow-up. Never creates a tab.',
+    description: 'Search-to-page navigation: search three to six model-authored semantic variations in parallel hidden Chromium workers, rank and deduplicate destination URLs, then navigate the existing visible tab directly to the best page and return its objective-ranked snapshot. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserLiveSearchSchema
   },
   {
     type: 'function',
     name: 'browser_research_dual',
-    description: 'Quality-max breadth path: run a visible live search snapshot and the bounded artifact-first research_web lane concurrently, then return both evidence sets and coverage gaps. Use when broad source-backed research, consequential comparisons, or conflicts need live verification plus independent public evidence. Never creates a tab.',
+    description: 'Quality-max breadth path: run hidden parallel URL discovery, navigate the visible tab directly to the strongest destination, and gather bounded artifact-first evidence. Use when broad source-backed research, consequential comparisons, or conflicts need live verification plus independent public evidence. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserResearchDualSchema
   },
   {
