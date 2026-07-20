@@ -1445,7 +1445,6 @@ export function TurnTail({
   itemMeta,
   meta,
   streamingMessage,
-  onOpenTrace,
   onRevert,
   embeddedInReviewBar = false,
 }: {
@@ -1454,7 +1453,6 @@ export function TurnTail({
   itemMeta: Record<string, ItemMeta>;
   meta: TurnMeta | undefined;
   streamingMessage: boolean;
-  onOpenTrace?: () => void;
   onRevert?: () => void;
   embeddedInReviewBar?: boolean;
 }): React.JSX.Element | null {
@@ -1496,11 +1494,6 @@ export function TurnTail({
           <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
             {fmtTokens(tokens)} tok
           </span>
-        ) : null}
-        {onOpenTrace ? (
-          <button type="button" className="turn-trace-button" onClick={onOpenTrace}>
-            Trace
-          </button>
         ) : null}
       </div>
     );
@@ -1561,11 +1554,6 @@ export function TurnTail({
           <span className="turn-revert-label">
             {confirmingRevert ? 'Restore workspace?' : 'Restore checkpoint'}
           </span>
-        </button>
-      ) : null}
-      {onOpenTrace ? (
-        <button type="button" className="turn-trace-button" onClick={onOpenTrace}>
-          Trace
         </button>
       ) : null}
       <span className="tail-rule" aria-hidden="true" />

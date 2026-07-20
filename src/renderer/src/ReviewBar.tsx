@@ -27,7 +27,6 @@ export function ReviewBar({
   onUndoAll,
   onUndoFile,
   onRestoreCheckpoint,
-  onOpenTrace,
 }: {
   changes: ReviewChange[];
   workspace: string | null;
@@ -39,7 +38,6 @@ export function ReviewBar({
   onUndoAll: () => void;
   onUndoFile: (path: string) => void;
   onRestoreCheckpoint?: () => void;
-  onOpenTrace?: () => void;
 }): React.JSX.Element {
   const [expanded, setExpanded] = useState(false);
   const [confirmingUndoAll, setConfirmingUndoAll] = useState(false);
@@ -212,20 +210,6 @@ export function ReviewBar({
                   <span className="review-action-menu-label">
                     {confirmingRestore ? 'Confirm restore?' : 'Restore checkpoint'}
                   </span>
-                </button>
-              ) : null}
-              {onOpenTrace ? (
-                <button
-                  type="button"
-                  className="review-action-menu-item"
-                  role="menuitem"
-                  onClick={() => {
-                    setActionsOpen(false);
-                    onOpenTrace();
-                  }}
-                >
-                  <MenuTraceIcon className="review-action-menu-icon" />
-                  <span className="review-action-menu-label">Trace</span>
                 </button>
               ) : null}
               {alwaysKeepAll ? (

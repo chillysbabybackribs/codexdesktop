@@ -74,6 +74,8 @@ export function ChatPaneView({
   onSelectPane,
   onCloseSplitPane,
   onLoadOlderHistory,
+  openTraceRequestSerial,
+  onTraceAvailabilityChange,
   dockExtras,
 }: {
   tabKey: string;
@@ -109,6 +111,8 @@ export function ChatPaneView({
   onSelectPane: (key: string) => Promise<boolean>;
   onCloseSplitPane: (tabKey: string) => void;
   onLoadOlderHistory: (tabKey: string, threadId: string) => void;
+  openTraceRequestSerial: number;
+  onTraceAvailabilityChange: (tabKey: string, canOpenTrace: boolean) => void;
   dockExtras: {
     agentColumn: React.ReactNode;
     composerHeaderContext: React.ReactNode;
@@ -136,6 +140,7 @@ export function ChatPaneView({
   const [traceTurnId, setTraceTurnId] = useState<string | null>(null);
   const [storedTrace, setStoredTrace] = useState<TurnTrace | null>(null);
   const traceLoadGenerationRef = useRef(0);
+  const handledTraceRequestRef = useRef(0);
 
   const { rows, turnWork } = useMemo(
     () => buildRows(items, itemMeta, paneTurnId),
@@ -246,6 +251,15 @@ export function ChatPaneView({
   );
   const trace = storedTrace?.turn.id === traceTurnId ? storedTrace : currentTrace;
 
+  const latestTraceTurnId = useMemo((): string | null => {
+    if (paneTurnId) return paneTurnId;
+    for (let i = rows.length - 1; i >= 0; i -= 1) {
+      const row = rows[i];
+      if (row.kind === 'tail') return row.turnId;
+    }
+    return null;
+  }, [paneTurnId, rows]);
+
   function openTrace(turnId: string): void {
     const generation = ++traceLoadGenerationRef.current;
     setTraceTurnId(turnId);
@@ -275,6 +289,23 @@ export function ChatPaneView({
     setTraceTurnId(null);
     setStoredTrace(null);
   }, [paneThreadId]);
+
+  useEffect(() => {
+    onTraceAvailabilityChange(tabKey, Boolean(latestTraceTurnId));
+    return () => onTraceAvailabilityChange(tabKey, false);
+  }, [latestTraceTurnId, onTraceAvailabilityChange, tabKey]);
+
+  useEffect(() => {
+    if (
+      !openTraceRequestSerial ||
+      handledTraceRequestRef.current === openTraceRequestSerial ||
+      !latestTraceTurnId
+    ) {
+      return;
+    }
+    handledTraceRequestRef.current = openTraceRequestSerial;
+    openTrace(latestTraceTurnId);
+  }, [openTraceRequestSerial, latestTraceTurnId]);
 
   // True while the live turn's newest item is an assistant message still
   // receiving deltas — drives the "Writing" tail label and message caret.
@@ -377,7 +408,6 @@ export function ChatPaneView({
                   itemMeta={itemMeta}
                   meta={turnMeta[row.turnId]}
                   streamingMessage={Boolean(streamingMessageId) && row.turnId === paneTurnId}
-                  onOpenTrace={() => openTrace(row.turnId)}
                   onRevert={
                     turnCheckpoints[row.turnId]
                       ? () => void runFocused(() => onRevertTurn(row.turnId))
@@ -419,7 +449,6 @@ export function ChatPaneView({
             onRestoreCheckpoint={() =>
               void runFocused(() => onRevertTurn(reviewTarget.turnId))
             }
-            onOpenTrace={() => openTrace(reviewTarget.turnId)}
           />
         ) : null}
         {dockExtras?.agentColumn}
