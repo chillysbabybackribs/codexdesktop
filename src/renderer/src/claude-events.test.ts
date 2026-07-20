@@ -319,10 +319,10 @@ test('WebSearch maps to a webSearch item; unknown tools stay mcpToolCall', () =>
       inputJsonDelta(0, '{"query": "cursor chat ui"}'),
       blockStop(0),
       toolResult('toolu_web', 'results…'),
-      blockStart(1, { type: 'tool_use', id: 'toolu_mcp', name: 'mcp__browser__app_screenshot' }),
+      blockStart(1, { type: 'tool_use', id: 'toolu_mcp', name: 'mcp__jira__create_ticket' }),
       inputJsonDelta(1, '{}'),
       blockStop(1),
-      toolResult('toolu_mcp', 'shot'),
+      toolResult('toolu_mcp', 'created'),
     ],
     'search the web',
   );
@@ -337,8 +337,90 @@ test('WebSearch maps to a webSearch item; unknown tools stay mcpToolCall', () =>
     tool: string;
     status: string;
   };
-  assert.equal(mcp.tool, 'mcp__browser__app_screenshot');
+  assert.equal(mcp.tool, 'mcp__jira__create_ticket');
   assert.equal(mcp.status, 'completed');
+});
+
+// The canonical browser/subagent tools ride the in-process `browser` MCP
+// server on Claude. They must land as the SAME dynamicToolCall items codex
+// turns emit — stripped tool name, JSON text + image contentItems — so the
+// renderer's screenshot previews, CDP artifacts, and trace counts apply.
+test('mcp__browser__ tools map to dynamicToolCall with text and image content', () => {
+  const resultJson = JSON.stringify({ ok: true, url: 'https://example.com' });
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-browser'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_nav', name: 'mcp__browser__browser_navigate' }),
+      inputJsonDelta(0, '{"url": "https://example.com"}'),
+      blockStop(0),
+      toolResult('toolu_nav', [
+        { type: 'text', text: resultJson },
+        { type: 'image', source: { type: 'base64', media_type: 'image/png', data: 'aGk=' } },
+      ]),
+    ],
+    'open example.com',
+  );
+
+  const tool = state.items.find((item) => item.type === 'dynamicToolCall') as {
+    tool: string;
+    namespace: string | null;
+    arguments: Record<string, unknown>;
+    status: string;
+    success: boolean | null;
+    contentItems: Array<{ type: string; text?: string; imageUrl?: string }>;
+    durationMs: number | null;
+  };
+  assert.equal(tool.tool, 'browser_navigate');
+  assert.equal(tool.namespace, null);
+  assert.deepEqual(tool.arguments, { url: 'https://example.com' });
+  assert.equal(tool.status, 'completed');
+  assert.equal(tool.success, true);
+  assert.deepEqual(tool.contentItems, [
+    { type: 'inputText', text: resultJson },
+    { type: 'inputImage', imageUrl: 'data:image/png;base64,aGk=' },
+  ]);
+  assert.equal(typeof tool.durationMs, 'number');
+  assert.equal(
+    state.items.some((item) => item.type === 'mcpToolCall'),
+    false,
+    'browser tools must not fall back to generic mcp rows',
+  );
+});
+
+test('a failed mcp__browser__ tool_result marks the dynamicToolCall failed', () => {
+  const { state } = replayTurn(
+    [
+      init,
+      messageStart('msg-browser-fail'),
+      blockStart(0, { type: 'tool_use', id: 'toolu_shot', name: 'mcp__browser__browser_screenshot' }),
+      inputJsonDelta(0, '{}'),
+      blockStop(0),
+      {
+        type: 'user',
+        message: {
+          content: [
+            {
+              type: 'tool_result',
+              tool_use_id: 'toolu_shot',
+              is_error: true,
+              content: JSON.stringify({ ok: false, error: 'no active tab' }),
+            },
+          ],
+        },
+      },
+    ],
+    'screenshot the page',
+  );
+
+  const tool = state.items.find((item) => item.type === 'dynamicToolCall') as {
+    tool: string;
+    status: string;
+    success: boolean | null;
+  };
+  assert.equal(tool.tool, 'browser_screenshot');
+  assert.equal(tool.status, 'failed');
+  assert.equal(tool.success, false);
 });
 
 test('TodoWrite emits turn/plan/updated and no transcript item', () => {
