@@ -2,7 +2,7 @@ import { app, session, WebContentsView } from 'electron'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
-import { browserPartition } from './browser-session.js'
+import { researchPartition } from './browser-session.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
 import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
@@ -502,7 +502,7 @@ export class ResearchRunner {
             try {
               staticFetchAttempts += 1
               staticResult = await fetchStaticResearchPage(candidate.url, {
-                fetch: (url, init) => session.fromPartition(browserPartition).fetch(url, init),
+                fetch: (url, init) => session.fromPartition(researchPartition).fetch(url, init),
                 validateUrl: assertPublicResearchUrl,
                 signal: preflight.signal,
                 maxBytes: STATIC_PREFLIGHT_MAX_BYTES
@@ -843,7 +843,7 @@ export class ResearchRunner {
         contextIsolation: true,
         nodeIntegration: false,
         sandbox: true,
-        partition: browserPartition
+        partition: researchPartition
       }
     })
     this.searchViews.add(view)
@@ -870,7 +870,7 @@ async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promis
   const host = new URL(normalized).hostname.replace(/^\[|\]$/g, '')
   if (isPublicResearchAddress(host)) return normalized
 
-  const browserSession = session.fromPartition(browserPartition)
+  const browserSession = session.fromPartition(researchPartition)
   const resolutions = await Promise.allSettled([
     browserSession.resolveHost(host, { queryType: 'A' }),
     browserSession.resolveHost(host, { queryType: 'AAAA' })
