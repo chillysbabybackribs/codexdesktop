@@ -75,7 +75,7 @@ function ReaderPositionMenu({
         ref={triggerRef}
         type="button"
         className="reader-position-trigger"
-        aria-haspopup="menu"
+        aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={`Conversation position: turn ${currentIndex + 1} of ${anchors.length}. Open jump menu.`}
         title={current.label}
@@ -102,7 +102,7 @@ function ReaderPositionMenu({
       </button>
 
       {open ? (
-        <div className="reader-position-menu" role="menu" aria-label="Jump to a conversation turn">
+        <div className="reader-position-menu" role="dialog" aria-label="Jump to a conversation turn">
           <div className="reader-position-menu-head">
             <div>
               <span className="reader-position-eyebrow">Conversation</span>
@@ -118,7 +118,6 @@ function ReaderPositionMenu({
                 <button
                   key={anchor.id}
                   type="button"
-                  role="menuitem"
                   className={`reader-position-item ${isCurrent ? 'is-current' : ''} ${isVisible ? 'is-visible' : ''}`}
                   aria-current={isCurrent ? 'true' : undefined}
                   onClick={() => {
@@ -340,6 +339,7 @@ export function ThreadScroll({
     // Ignore the scroll events our own programmatic writes produce.
     if (suppressScrollRef.current) {
       suppressScrollRef.current = false;
+      syncVisibility();
       return;
     }
 
