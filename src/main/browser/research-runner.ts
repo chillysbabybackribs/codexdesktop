@@ -1106,6 +1106,119 @@ export class ResearchRunner {
   }
 }
 
+async function fetchFastSearchCandidates(
+  query: string,
+  maxResults: number,
+  signal: AbortSignal
+): Promise<{ candidates: Array<Omit<SerpCandidate, 'query'>>; errors: string[] }> {
+  const providers = [
+    {
+      name: 'DuckDuckGo Lite',
+      url: duckDuckGoLiteSearchUrl(query),
+      extract: extractDuckDuckGoLiteCandidates
+    },
+    {
+      name: 'Bing RSS',
+      url: bingSearchFeedUrl(query, maxResults),
+      extract: extractBingSearchFeedCandidates
+    }
+  ]
+  const errors: string[] = []
+
+  for (const provider of providers) {
+    throwIfAborted(signal)
+    try {
+      const document = await fetchSearchDocument(provider.url, signal)
+      const candidates = provider.extract(document, maxResults)
+      if (candidates.length > 0) return { candidates, errors }
+      errors.push(`${provider.name} returned no result cards`)
+    } catch (error) {
+      if (signal.aborted) throw error
+      errors.push(`${provider.name} failed: ${formatError(error)}`)
+    }
+  }
+
+  return { candidates: [], errors }
+}
+
+async function fetchSearchDocument(initialUrl: string, signal: AbortSignal): Promise<string> {
+  const browserSession = session.fromPartition(researchPartition)
+  let currentUrl = initialUrl
+
+  for (let redirects = 0; redirects <= SEARCH_PROVIDER_MAX_REDIRECTS; redirects += 1) {
+    throwIfAborted(signal)
+    if (!isAllowedSearchProviderUrl(currentUrl)) throw new Error('search provider redirected outside its trusted host')
+    const response = await browserSession.fetch(currentUrl, {
+      method: 'GET',
+      redirect: 'manual',
+      credentials: 'omit',
+      signal,
+      bypassCustomProtocolHandlers: true,
+      headers: {
+        accept: 'text/html,application/xhtml+xml,application/rss+xml,application/xml;q=0.9,text/xml;q=0.9'
+      }
+    })
+
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('location')
+      if (!location) throw new Error(`HTTP ${response.status} redirect had no location`)
+      if (redirects >= SEARCH_PROVIDER_MAX_REDIRECTS) throw new Error('search provider redirect limit exceeded')
+      currentUrl = new URL(location, currentUrl).href
+      continue
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+    const declaredBytes = Number(response.headers.get('content-length') ?? '')
+    if (Number.isFinite(declaredBytes) && declaredBytes > SEARCH_DOCUMENT_MAX_BYTES) {
+      throw new Error('search response exceeded byte limit')
+    }
+    return readBoundedSearchResponse(response, signal)
+  }
+
+  throw new Error('search provider redirect limit exceeded')
+}
+
+async function readBoundedSearchResponse(response: Response, signal: AbortSignal): Promise<string> {
+  if (!response.body) throw new Error('search response had no body')
+  const reader = response.body.getReader()
+  const chunks: Uint8Array[] = []
+  let bytes = 0
+  try {
+    while (true) {
+      throwIfAborted(signal)
+      const next = await reader.read()
+      if (next.done) break
+      bytes += next.value.byteLength
+      if (bytes > SEARCH_DOCUMENT_MAX_BYTES) {
+        await reader.cancel('search response exceeded byte limit')
+        throw new Error('search response exceeded byte limit')
+      }
+      chunks.push(next.value)
+    }
+  } finally {
+    reader.releaseLock()
+  }
+
+  const body = new Uint8Array(bytes)
+  let offset = 0
+  for (const chunk of chunks) {
+    body.set(chunk, offset)
+    offset += chunk.byteLength
+  }
+  return new TextDecoder().decode(body)
+}
+
+function isAllowedSearchProviderUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'https:') return false
+    const host = url.hostname.replace(/^www\./i, '').toLowerCase()
+    return host === 'duckduckgo.com' || host.endsWith('.duckduckgo.com') || host === 'bing.com'
+  } catch {
+    return false
+  }
+}
+
 async function assertPublicResearchUrl(url: string, signal: AbortSignal): Promise<string> {
   const normalized = normalizeResearchUrls([url], 1)[0]
   if (!normalized) throw new Error('page verification failed: invalid or non-public URL')
