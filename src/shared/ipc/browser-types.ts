@@ -90,6 +90,12 @@ export type BrowserMenuAnchor = {
   y: number
 }
 
+/** Center anchor below the title-bar clock, in window content coordinates. */
+export type TitlebarCalendarAnchor = {
+  x: number
+  y: number
+}
+
 export type BrowserMenuRenderPayload = {
   items: BrowserMenuItem[]
 }
