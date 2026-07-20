@@ -177,7 +177,7 @@ function bestDocumentPassage(
   // body satisfy an unrelated remainder of the request.
   const requiredMatches = titleMatches.length >= 2
     ? 1
-    : Math.min(3, Math.max(1, Math.ceil(passageFocusTokens.length * 0.4)))
+    : Math.min(3, Math.max(1, Math.ceil(passageFocusTokens.length * 0.6)))
   const passageClauses = focusClauses
     .filter((clause) => clause.length > 0)
   let best: {

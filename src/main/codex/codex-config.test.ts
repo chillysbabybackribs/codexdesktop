@@ -492,7 +492,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
   assert.match(researchProperties.queries?.description ?? '', /parallel hidden Chromium workers/i)
   assert.match(researchProperties.snippetChars?.description ?? '', /returned evidence-passage budget/i)
   assert.match(researchWeb.description, /does not create or navigate a visible tab/i)
-  assert.match(researchWeb.description, /model-authored evidence needs/i)
+  assert.match(researchWeb.description, /without invalidating pages/i)
 })
 
 test('browser guidance defaults to the active tab and forbids implicit tab creation', () => {
