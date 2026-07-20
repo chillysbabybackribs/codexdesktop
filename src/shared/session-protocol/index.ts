@@ -34,6 +34,7 @@ export type { ModelRerouteReason } from '../codex-protocol/v2/ModelRerouteReason
 export type { PluginAuthPolicy } from '../codex-protocol/v2/PluginAuthPolicy'
 export type { PluginMarketplaceEntry } from '../codex-protocol/v2/PluginMarketplaceEntry'
 export type { PluginSummary } from '../codex-protocol/v2/PluginSummary'
+export type { SkillMetadata } from '../codex-protocol/v2/SkillMetadata'
 export type { Thread } from '../codex-protocol/v2/Thread'
 export type { ThreadGoal } from '../codex-protocol/v2/ThreadGoal'
 export type { ThreadGoalStatus } from '../codex-protocol/v2/ThreadGoalStatus'

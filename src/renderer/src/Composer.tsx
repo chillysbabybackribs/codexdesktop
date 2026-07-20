@@ -9,8 +9,7 @@ import {
 } from 'react';
 import { ArrowUp, Plus } from 'lucide-react';
 import type { ChatAttachment } from '../../shared/ipc';
-import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata';
-import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
+import type { PluginSummary, ProviderId, SkillMetadata } from '../../shared/session-protocol';
 import { steerComposerPlaceholder } from './app-helpers';
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments';
 import { composerDrafts } from './composer-draft';

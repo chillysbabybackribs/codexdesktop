@@ -1,5 +1,5 @@
 import type { ChatAttachment } from '../../shared/ipc';
-import { clearComposerInteractionState } from './composer-interactions';
+import { clearComposerInteractionState } from './composer-interactions.js';
 import type { FileMention } from './mention-model';
 
 export type ComposerDraft = {
