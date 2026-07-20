@@ -50,6 +50,16 @@ function addMonths(date: Date, amount: number): Date {
   return new Date(date.getFullYear(), date.getMonth() + amount, 1);
 }
 
+function shiftDateByMonth(date: Date, amount: number): Date {
+  const targetMonth = new Date(date.getFullYear(), date.getMonth() + amount, 1);
+  const lastDay = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0).getDate();
+  return new Date(
+    targetMonth.getFullYear(),
+    targetMonth.getMonth(),
+    Math.min(date.getDate(), lastDay),
+  );
+}
+
 function dateKey(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -75,6 +85,7 @@ export function TitlebarCalendar(): React.JSX.Element {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const days = useMemo(() => calendarDays(visibleMonth), [visibleMonth]);
+  const selectedIsVisible = days.some((day) => isSameDay(day, selectedDate));
   const years = useMemo(
     () => Array.from({ length: 17 }, (_, index) => visibleMonth.getFullYear() - 8 + index),
     [visibleMonth],
@@ -122,19 +133,26 @@ export function TitlebarCalendar(): React.JSX.Element {
     window.addEventListener('pointerdown', handlePointerDown, true);
     window.addEventListener('keydown', handleKeyDown);
 
-    const focusId = window.requestAnimationFrame(() => {
-      popoverRef.current
-        ?.querySelector<HTMLButtonElement>(`[data-calendar-date="${dateKey(selectedDate)}"]`)
-        ?.focus();
-    });
-
     return () => {
-      window.cancelAnimationFrame(focusId);
       window.removeEventListener('pointerdown', handlePointerDown, true);
       window.removeEventListener('keydown', handleKeyDown);
       void window.api.browser.setOverlayOpen(false);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const focusId = window.requestAnimationFrame(() => {
+      const selectedButton = popoverRef.current?.querySelector<HTMLButtonElement>(
+        `[data-calendar-date="${dateKey(selectedDate)}"]`,
+      );
+      const fallbackButton = popoverRef.current?.querySelector<HTMLButtonElement>(
+        '.titlebar-calendar-day[tabindex="0"]',
+      );
+      (selectedButton ?? fallbackButton)?.focus();
+    });
+    return () => window.cancelAnimationFrame(focusId);
+  }, [isOpen, selectedDate]);
 
   const focusDate = (date: Date): void => {
     setSelectedDate(date);
@@ -169,10 +187,10 @@ export function TitlebarCalendar(): React.JSX.Element {
         target = addDays(date, 6 - date.getDay());
         break;
       case 'PageUp':
-        target = new Date(date.getFullYear(), date.getMonth() - 1, date.getDate());
+        target = shiftDateByMonth(date, -1);
         break;
       case 'PageDown':
-        target = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
+        target = shiftDateByMonth(date, 1);
         break;
       default:
         return;
@@ -282,6 +300,8 @@ export function TitlebarCalendar(): React.JSX.Element {
               const isOutside = date.getMonth() !== visibleMonth.getMonth();
               const isToday = isSameDay(date, now);
               const isSelected = isSameDay(date, selectedDate);
+              const isKeyboardAnchor =
+                isSelected || (!selectedIsVisible && !isOutside && date.getDate() === 1);
 
               return (
                 <button
@@ -293,7 +313,7 @@ export function TitlebarCalendar(): React.JSX.Element {
                   aria-current={isToday ? 'date' : undefined}
                   aria-selected={isSelected}
                   data-calendar-date={dateKey(date)}
-                  tabIndex={isSelected ? 0 : -1}
+                  tabIndex={isKeyboardAnchor ? 0 : -1}
                   onClick={() => focusDate(date)}
                   onKeyDown={(event) => handleDayKeyDown(event, date)}
                 >
