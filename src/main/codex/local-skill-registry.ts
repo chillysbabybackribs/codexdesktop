@@ -5,6 +5,7 @@ import type { SkillsListResponse } from '../../shared/codex-protocol/v2/SkillsLi
 import type { UserInput } from '../../shared/codex-protocol/v2/UserInput.js';
 import type { ChatAttachment } from '../../shared/ipc.js';
 import { attachmentTurnInputs } from './attachment-input.js';
+import { decideBrowserUse, formatBrowserDecisionNote } from '../browser/browser-use-policy.js';
 import {
   formatSkillInvocationText,
   selectNewThreadSkills,
@@ -73,11 +74,17 @@ export class LocalSkillRegistry {
     const skillInputs = skills.map(
       (skill): UserInput => ({ type: 'skill', name: skill.name, path: skill.path }),
     );
+    // The per-turn browser router verdict rides along as turn input so the
+    // model sees the lane decision (the browserDecision event is UI-only).
+    const routingNote = formatBrowserDecisionNote(decideBrowserUse(text));
 
     return [
       ...skillInputs,
       ...(visibleText.trim()
         ? [{ type: 'text', text: visibleText, text_elements: [] } satisfies UserInput]
+        : []),
+      ...(routingNote
+        ? [{ type: 'text', text: routingNote, text_elements: [] } satisfies UserInput]
         : []),
       ...attachmentTurnInputs(attachments),
     ];

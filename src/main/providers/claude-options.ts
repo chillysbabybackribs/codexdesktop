@@ -39,7 +39,10 @@ export function buildClaudeQueryOptions(
     // Spike-verified isolation: the user's ~/.claude settings never bleed
     // into app sessions.
     settingSources: [],
-    systemPrompt: buildBrowserUseGuidance(),
+    systemPrompt: buildBrowserUseGuidance(process.env, 'claude'),
+    // The in-process mcp__browser__ lane replaces the SDK's headless web
+    // tools; leaving them enabled lets the model skip the live browser.
+    disallowedTools: ['WebSearch', 'WebFetch'],
     ...(mcpServerConfig ? { mcpServers: { browser: mcpServerConfig as never } } : {}),
   };
 }
