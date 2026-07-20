@@ -86,5 +86,5 @@ export function anchorSpacerHeight(
   topGap: number
 ): number {
   const shortfall = Math.ceil(clientHeight - contentBelow - topGap)
-  return shortfall > 0 ? shortfall + 2 : 0
+  return Math.max(0, shortfall + 2)
 }

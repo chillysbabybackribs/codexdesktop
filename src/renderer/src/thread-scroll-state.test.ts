@@ -69,7 +69,8 @@ test('navigation keys map to reader intent; other keys are ignored', () => {
 test('anchor spacer overshoots an exact fit so the anchored offset never sits at max scroll', () => {
   // Shortfall of 100px → 102px runway keeps scrollTop strictly inside range.
   assert.equal(anchorSpacerHeight(600, 488, 12), 102)
-  // Content already fills the viewport below the anchor → no runway at all.
+  // An exact fit still gets the 2px pad — that is the clamp-risk boundary.
+  assert.equal(anchorSpacerHeight(600, 588, 12), 2)
+  // Content already spills past the viewport below the anchor → no runway.
   assert.equal(anchorSpacerHeight(600, 700, 12), 0)
-  assert.equal(anchorSpacerHeight(600, 588, 12), 0)
 })
