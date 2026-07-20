@@ -489,7 +489,48 @@ const researchWebSchema = {
   additionalProperties: false
 }
 
+const browserLiveSearchSchema = {
+  type: 'object',
+  properties: {
+    query: { type: 'string', description: 'Search query to run visibly in the existing browser tab.' },
+    objective: { type: 'string', description: 'Specific facts or result fields to extract from the visible search page.' },
+    tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
+    maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum visible search results to return. Defaults to 10.' },
+    timeoutMs: { type: 'number', description: 'Optional total timeout from 250 to 60000 milliseconds.' }
+  },
+  required: ['query', 'objective'],
+  additionalProperties: false
+}
+
+const browserResearchDualSchema = {
+  type: 'object',
+  properties: {
+    query: { type: 'string', description: 'Primary search query used by both the visible and background lanes.' },
+    objective: { type: 'string', description: 'Concrete facts and evidence the visible search snapshot should return.' },
+    tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
+    focus: researchWebSchema.properties.focus,
+    maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Candidate/result target for each lane. Defaults to 6.' },
+    maxAttempts: researchWebSchema.properties.maxAttempts,
+    snippetChars: researchWebSchema.properties.snippetChars,
+    timeoutMs: { type: 'number', description: 'Optional visible-lane timeout from 250 to 60000 milliseconds.' }
+  },
+  required: ['query', 'objective'],
+  additionalProperties: false
+}
+
 export const browserDynamicTools: DynamicToolSpec[] = [
+  {
+    type: 'function',
+    name: 'browser_live_search',
+    description: 'First-class live search: visibly navigate one existing browser tab to a web search and return an objective-ranked snapshot in the same call. Use when the user should see the search, when verifying a referenced/current result, or before interactive follow-up. Never creates a tab.',
+    inputSchema: browserLiveSearchSchema
+  },
+  {
+    type: 'function',
+    name: 'browser_research_dual',
+    description: 'Quality-max research path: run a visible live search snapshot and the bounded artifact-first research_web lane concurrently, then return both evidence sets and coverage gaps. Use by default for current public facts, consequential comparisons, and broad research. Never creates a tab.',
+    inputSchema: browserResearchDualSchema
+  },
   {
     type: 'function',
     name: 'browser_snapshot',

@@ -230,54 +230,54 @@ export function ReviewBar({
               ) : null}
               {alwaysKeepAll ? (
                 <>
-                <div className="review-action-menu-divider" role="separator" />
-                <button
-                  type="button"
-                  className="review-action-menu-item"
-                  role="menuitem"
-                  onClick={() => {
-                    setActionsOpen(false);
-                    onKeepAll();
-                  }}
-                >
-                  <MenuCheckIcon className="review-action-menu-icon" />
-                  <span className="review-action-menu-label">Keep all</span>
-                </button>
-                <button
-                  type="button"
-                  className={`review-action-menu-item is-danger ${confirmingUndoAll ? 'is-confirming' : ''}`}
-                  role="menuitem"
-                  title="Restore every workspace file to how it was before this turn. The current state is checkpointed first."
-                  onClick={() => {
-                    if (confirmingUndoAll) {
+                  <div className="review-action-menu-divider" role="separator" />
+                  <button
+                    type="button"
+                    className="review-action-menu-item"
+                    role="menuitem"
+                    onClick={() => {
                       setActionsOpen(false);
-                      onUndoAll();
-                    } else {
-                      setConfirmingUndoAll(true);
-                    }
-                  }}
-                >
-                  <MenuUndoIcon className="review-action-menu-icon" />
-                  <span className="review-action-menu-label">
-                    {confirmingUndoAll ? 'Confirm undo all?' : 'Undo all'}
-                  </span>
-                </button>
-                <div className="review-action-menu-divider" role="separator" />
-                <button
-                  type="button"
-                  className="review-action-menu-item"
-                  role="menuitemcheckbox"
-                  aria-checked={true}
-                  title="Future edits are kept automatically. Click to turn off."
-                  onClick={() => {
-                    setActionsOpen(false);
-                    onSetAlwaysKeepAll(false);
-                  }}
-                >
-                  <MenuRepeatIcon className="review-action-menu-icon" />
-                  <span className="review-action-menu-label">Always keep all</span>
-                  <MenuCheckIcon className="review-action-menu-state" />
-                </button>
+                      onKeepAll();
+                    }}
+                  >
+                    <MenuCheckIcon className="review-action-menu-icon" />
+                    <span className="review-action-menu-label">Keep all</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`review-action-menu-item is-danger ${confirmingUndoAll ? 'is-confirming' : ''}`}
+                    role="menuitem"
+                    title="Restore every workspace file to how it was before this turn. The current state is checkpointed first."
+                    onClick={() => {
+                      if (confirmingUndoAll) {
+                        setActionsOpen(false);
+                        onUndoAll();
+                      } else {
+                        setConfirmingUndoAll(true);
+                      }
+                    }}
+                  >
+                    <MenuUndoIcon className="review-action-menu-icon" />
+                    <span className="review-action-menu-label">
+                      {confirmingUndoAll ? 'Confirm undo all?' : 'Undo all'}
+                    </span>
+                  </button>
+                  <div className="review-action-menu-divider" role="separator" />
+                  <button
+                    type="button"
+                    className="review-action-menu-item"
+                    role="menuitemcheckbox"
+                    aria-checked={true}
+                    title="Future edits are kept automatically. Click to turn off."
+                    onClick={() => {
+                      setActionsOpen(false);
+                      onSetAlwaysKeepAll(false);
+                    }}
+                  >
+                    <MenuRepeatIcon className="review-action-menu-icon" />
+                    <span className="review-action-menu-label">Always keep all</span>
+                    <MenuCheckIcon className="review-action-menu-state" />
+                  </button>
                 </>
               ) : null}
             </div>

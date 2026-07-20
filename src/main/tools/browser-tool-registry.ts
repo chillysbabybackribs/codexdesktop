@@ -2,6 +2,7 @@ import type { BrowserAgentController } from '../browser/browser-agent.js'
 import type { ResearchRunner } from '../browser/research-runner.js'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { runUiReview } from '../codex/ui-review.js'
+import { normalizeNavigationInput } from '../browser/url-utils.js'
 
 // The provider-neutral browser tool dispatch (Claude-prep step 6): one
 // implementation consumed by three transports — the Codex dynamic-tool
@@ -57,7 +58,60 @@ export async function runBrowserTool(
     let result
     let imageUrls: string[] = []
 
-    if (tool === 'browser_screenshot') {
+    if (tool === 'browser_live_search') {
+      const query = readString(args.query)
+      const objective = readString(args.objective)
+      result = query && objective
+        ? await runBrowserOperation((signal) => deps.browserAgent.snapshot({
+            objective,
+            url: normalizeNavigationInput(query),
+            tabId: resolveAgentTab(readString(args.tab)),
+            mode: 'task',
+            maxItems: readNumber(args.maxItems) ?? 10,
+            timeoutMs: readNumber(args.timeoutMs),
+            signal
+          }))
+        : { ok: false, error: 'browser_live_search requires string "query" and "objective" arguments' }
+    } else if (tool === 'browser_research_dual') {
+      const query = readString(args.query)
+      const objective = readString(args.objective)
+      if (!query || !objective) {
+        result = { ok: false, error: 'browser_research_dual requires string "query" and "objective" arguments' }
+      } else if (!deps.researchRunner) {
+        result = { ok: false, error: 'browser_research_dual background lane is not available on this transport' }
+      } else {
+        const [live, background] = await Promise.all([
+          runBrowserOperation((signal) => deps.browserAgent.snapshot({
+            objective,
+            url: normalizeNavigationInput(query),
+            tabId: resolveAgentTab(readString(args.tab)),
+            mode: 'task',
+            maxItems: readNumber(args.maxResults) ?? 6,
+            timeoutMs: readNumber(args.timeoutMs),
+            signal
+          })),
+          deps.researchRunner.run({
+            queries: [query],
+            focus: readResearchFocus(args.focus),
+            maxResults: readNumber(args.maxResults),
+            maxAttempts: readNumber(args.maxAttempts),
+            snippetChars: readNumber(args.snippetChars)
+          }, {
+            runId: `${callId}:background`,
+            threadId: owner?.threadId ?? 'external',
+            turnId: owner?.turnId ?? callId,
+            onProgress: deps.onResearchProgress
+          })
+        ])
+        result = {
+          ok: live.ok && background.ok,
+          mode: 'dual',
+          live,
+          background,
+          ...(live.ok && background.ok ? {} : { error: 'one or more dual research lanes failed' })
+        }
+      }
+    } else if (tool === 'browser_screenshot') {
       const tabId = resolveAgentTab(readString(args.tab))
       result = await runBrowserOperation((signal) => deps.browserAgent.captureScreenshot({ tabId, signal }))
       const screenshot = asRecord(asRecord(result.result).screenshot)
