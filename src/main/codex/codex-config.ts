@@ -182,7 +182,6 @@ export function isLiveSiteCloneTask(text: string): boolean {
 
 export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMetadata[] {
   const normalized = text.trim().toLowerCase()
-  const webResearchTask = isWebResearchTask(text)
   const liveSiteCloneTask = isLiveSiteCloneTask(text)
   const liveSiteRedesignTask =
     /\b(like|better|redesign|improve|inspired by|in the style of)\b/.test(normalized) &&
@@ -201,7 +200,7 @@ export function selectTurnSkills(text: string, skills: SkillMetadata[]): SkillMe
     }
 
     if (skill.name === 'artifact-first-web-research') {
-      return webResearchTask
+      return false
     }
 
     if (skill.name === 'imagegen') {
@@ -496,15 +495,15 @@ const browserLiveSearchSchema = {
     query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
     queries: {
       type: 'array',
-      minItems: 3,
+      minItems: 1,
       maxItems: 6,
       uniqueItems: true,
       items: { type: 'string' },
-      description: 'Three to six short search queries derived from the user request, each a single-angle phrase a person would actually type into a search engine (like "claude desktop high cpu" or "codex cli sandbox complaints reddit"). Never stuff one query with every keyword, product, site, and year. They run in parallel hidden search workers.'
+      description: 'One to six search queries derived from the user request. Preserve the user\'s literal names and intent; start with a direct query and add focused variants only when useful. Queries run in parallel hidden search workers.'
     },
-    objective: { type: 'string', description: 'Specific facts or fields to extract after the visible tab navigates directly to the highest-ranked destination page.' },
+    objective: { type: 'string', description: 'Specific facts or fields to find and verify on the selected destination page.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
-    background: { type: 'boolean', description: 'Also gather bounded evidence from independent public sources. Set true for quality-max current-information, comparison, conflict, or source-backed research; defaults to false for a quick visible lookup.' },
+    background: { type: 'boolean', description: 'Also gather bounded evidence from independent public sources. Defaults to false.' },
     focus: researchWebSchema.properties.focus,
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Maximum SERP candidates per hidden query. Defaults to 5.' },
     maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum structured items to return from the selected destination page. Defaults to 10.' },
@@ -521,7 +520,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_live_search',
-    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded independent evidence in parallel for quality-max research. If the result carries `betterAlternate`, the merged ranking found a stronger source than the auto-navigated page — navigate to it directly when it fits the objective. Search result pages are never shown. Never creates a tab.',
+    description: 'Search one or more model-authored queries in hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Use only when changing the visible tab is acceptable; use research_web for background-only public discovery. Treat the destination as candidate evidence and reject it when it does not answer the objective. If the result carries `betterAlternate`, the merged ranking found a stronger source than the auto-navigated page. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserLiveSearchSchema
   },
   {

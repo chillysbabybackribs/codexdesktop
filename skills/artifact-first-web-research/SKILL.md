@@ -1,9 +1,11 @@
 ---
 name: artifact-first-web-research
-description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Default to browser_live_search with background=true so the visible tab verifies live while bounded background evidence gathers in parallel; use a task-local script only when the available primitives cannot express the extraction.
+description: Opt-in artifact-first workflow for web research when the user explicitly invokes it or asks to save and inspect source artifacts. It does not govern ordinary web lookups or replace native task reasoning.
 ---
 
 # Artifact-First Web Research
+
+Use this skill as an evidence-handling aid, not a fixed reasoning recipe. Preserve the user's literal wording and choose queries, tools, and source breadth according to the task. Ordinary web lookups should not activate this skill unless the user explicitly requests it.
 
 Treat discovery, extraction, and judgment as separate steps. Keep every readable extracted page available to the model; use focus needs to rank passages and expose gaps, never to invalidate a successfully extracted source.
 
@@ -14,18 +16,18 @@ For current-information tasks, include a recency-oriented query and prefer newer
 ## Fast Path
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
-2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. Include recency signals for current-information tasks so discovery can find the latest trustworthy sources before falling back to older ones. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
+2. Start with a direct search query that preserves the user's literal product names and intent. Add focused variants only when they are useful for source coverage or resolving a gap. Include a recency signal when freshness matters, but do not add speculative symptoms, platforms, or causes the user did not ask about.
 3. Pass `focus` only when compact passage ranking will help. Phrase each need narrowly and use `minSources` only when the user actually needs independent corroboration. Focus gaps are diagnostic; returned readable pages remain usable evidence for model judgment.
-4. Make one `browser_live_search` call with `background: true` — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab as soon as the first destination is found while background workers gather public evidence in the same call.
+4. For broad public discovery, prefer `research_web` so the visible tab is preserved. Use `browser_live_search` when the user wants visible verification or changing the visible tab materially helps; remember that it navigates as soon as it finds a viable destination.
 5. Answer from the live page, returned passages, and readable source pages. If something material is still missing or conflicting, search for that missing thing directly.
 
-Use `research_web` alone when the user asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds.
+Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds.
 
 ## Choose The Cheapest Reliable Lane
 
-- Search-shaped, current-information, or post-cutoff questions: `browser_live_search` with `background: true` — live visible-tab verification and bounded background evidence in parallel from one call. This is the default lane in quality-max.
+- Broad public research or discovery: `research_web` preserves the visible tab and gathers bounded independent evidence.
 - Known official documentation, release notes, or public records: direct `urls` with focused evidence needs through `research_web`, or `browser_navigate` plus `browser_extract_page` when the user should see the page.
-- Background-only public discovery (user asked for no visible browsing, or the visible tab must stay put): `research_web` with three to six model-authored semantic query variations. Discovery stays hidden and the combined URL pool is ranked before page verification.
+- Background-only public discovery: use `research_web` with the direct literal query first and add variants only when useful. Discovery stays hidden and the combined URL pool is ranked before page verification.
 - Quick visible lookup where independent corroboration adds nothing: `browser_live_search`. It runs parallel SERP extraction in hidden workers, then navigates the existing visible tab directly to the strongest destination page. Never expose a search-results page in the user's tab.
 - One already-visible public content page: `browser_extract_page`.
 - Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.

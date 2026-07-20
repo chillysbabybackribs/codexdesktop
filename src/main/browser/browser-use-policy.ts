@@ -42,20 +42,18 @@ export function decideBrowserUse(
   }
   if (explicit || current || referencedWeb || broadResearch) {
     if (preset === 'quality-max') {
-      const searchShaped = explicit || current || broadResearch
-      return searchShaped
+      return referencedWeb
         ? {
-            preset,
-            mode: 'dual',
-            required: true,
-            reason:
-              'search-shaped or freshness-sensitive: verify live in the visible tab while parallel background research corroborates',
-          }
-        : {
             preset,
             mode: 'live',
             required: true,
             reason: 'live browser should verify the referenced page directly',
+          }
+        : {
+            preset,
+            mode: 'background',
+            required: true,
+            reason: 'public discovery should preserve the visible tab unless live verification is needed',
           }
     }
     const liveFirst = explicit || current || referencedWeb
@@ -89,17 +87,19 @@ export function buildBrowserUseGuidance(
           `- Browse only with the mcp__browser__ tools. The built-in WebSearch and WebFetch tools are disabled; ${t('browser_live_search')}, ${t('research_web')}, and ${t('browser_extract_page')} replace them.`,
         ]
       : []),
-    '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
-    `- Use ${t('browser_live_search')} or ${t('browser_snapshot')} for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request — each a short, single-angle phrase a person would actually type (like "claude desktop high cpu"), never one query stuffed with every keyword, site, and year at once; ${t('browser_live_search')} runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.`,
-    '- The live browser is the authority for current, referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
-    `- Background research (${t('research_web')}) complements visible verification instead of replacing it: it gathers bounded independent public evidence in parallel while the visible tab verifies the strongest source live.`,
+    '- Browse when the answer materially depends on current, changing, external, linked, or browser-visible information. Otherwise reason normally from the available context.',
+    `- Choose between ${t('research_web')}, ${t('browser_live_search')}, ${t('browser_snapshot')}, and the other browser tools using ordinary task judgment. Tool guidance is capability information, not a replacement for interpreting the user's request.`,
+    '- For search discovery, preserve the user\'s literal product names and intent. Start with a direct query based on their wording; add or vary queries only when doing so is useful for coverage. Do not inject unrequested hypotheses or keywords.',
+    `- Prefer ${t('research_web')} for broad public discovery when changing the visible tab is unnecessary. Use ${t('browser_live_search')} only when visible verification materially helps or the user asks for it; it navigates the existing visible tab. Never navigate the visible tab to a SERP.`,
+    '- Treat every discovered or automatically selected page as a candidate, not an answer. Reject irrelevant destinations even when they are readable or highly ranked, and resolve material evidence gaps before answering.',
+    '- The live browser is the authority for referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
     ...(preset === 'quality-max'
       ? [
-          `- In quality-max mode, search-shaped, current-information, or post-knowledge-cutoff tasks should normally use ${t('browser_live_search')} with background=true: one call opens the first viable destination in the visible tab while bounded background evidence corroborates. Omit background for referenced, authenticated, or interactive pages where source breadth adds nothing, and use ${t('research_web')} alone only when the user explicitly asks for background-only research.`,
+          '- In quality-max mode, corroborate consequential claims when independent evidence is useful. Choose the number of searches and whether verification is live or background-only from the task rather than following a fixed recipe.',
         ]
       : preset === 'balanced'
         ? [
-            `- In balanced mode, choose one lane by task shape: live for referenced/authenticated/interactive state, background-only for broad public research, and ${t('browser_live_search')} with background=true only for consequential comparisons.`,
+            '- In balanced mode, use the smallest amount of browsing that can answer reliably.',
           ]
         : ['- In manual mode, browse only when the user explicitly requests browsing or the task directly names a live browser surface.']),
     '- Do not claim a current external fact from memory when this policy requires browsing. If browsing fails, say what could not be verified.',

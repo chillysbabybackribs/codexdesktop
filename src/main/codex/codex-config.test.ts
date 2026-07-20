@@ -65,10 +65,10 @@ const cloneLiveSiteSkill: SkillMetadata = {
   enabled: true
 }
 
-test('web research turns attach the extraction skill', () => {
+test('ordinary web research does not force-attach the opt-in extraction skill', () => {
   assert.deepEqual(
     selectTurnSkills('Research the latest Electron navigation guidance', [webResearchSkill]),
-    [webResearchSkill]
+    []
   )
 })
 
@@ -245,7 +245,9 @@ test('global guidance stays limited to product-wide behavior', () => {
   assert.match(guidance, /tables or fenced `chart` JSON only when they materially clarify/i)
   assert.doesNotMatch(guidance, /automatic git snapshotting is active/i)
   assert.doesNotMatch(guidance, /start by organizing|formal plan|multi-part answers/i)
-  assert.match(guidance, /should normally use browser_live_search with background=true/i)
+  assert.match(guidance, /ordinary task judgment/i)
+  assert.match(guidance, /preserve the user's literal product names and intent/i)
+  assert.doesNotMatch(guidance, /should normally use browser_live_search/i)
 })
 
 test('browser guidance avoids obsolete compatibility fallbacks', () => {
@@ -448,11 +450,12 @@ test('the dynamic tool surface includes verified research primitives', () => {
   }
   assert.deepEqual(liveSearchSchema.required, ['objective'])
   assert.deepEqual(liveSearchSchema.anyOf, [{ required: ['query'] }, { required: ['queries'] }])
-  assert.equal(liveSearchSchema.properties.queries?.minItems, 3)
+  assert.equal(liveSearchSchema.properties.queries?.minItems, 1)
   assert.equal(liveSearchSchema.properties.queries?.maxItems, 6)
   assert.equal((liveSearchSchema.properties.background as { type?: string } | undefined)?.type, 'boolean')
-  assert.match(browserLiveSearch.description, /parallel hidden Chromium workers/i)
-  assert.match(browserLiveSearch.description, /background=true/i)
+  assert.match(browserLiveSearch.description, /hidden Chromium workers/i)
+  assert.match(browserLiveSearch.description, /changing the visible tab is acceptable/i)
+  assert.match(browserLiveSearch.description, /research_web for background-only public discovery/i)
   assert.match(browserLiveSearch.description, /Search result pages are never shown/i)
   assert.equal(browserDynamicTools.some(({ name }) => name === 'browser_research_dual'), false)
   const browserRun = browserDynamicTools.find(({ name }) => name === 'browser_run')
