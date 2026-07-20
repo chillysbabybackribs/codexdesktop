@@ -73,6 +73,10 @@ export type TurnTrace = {
     workspace: string | null
     modelReroutes: NonNullable<TurnMeta['modelReroutes']>
   }
+  browser?: NonNullable<TurnMeta['browserDecision']>
+  agents?: {
+    runs: NonNullable<TurnMeta['agentRuns']>
+  }
   usage: {
     turn: TokenUsageBreakdown | null
     latestModelCall: TokenUsageBreakdown | null

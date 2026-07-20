@@ -105,21 +105,22 @@ button {
   z-index: 200;
   display: flex;
   align-items: center;
-  gap: 8px;
-  max-width: min(280px, calc(100vw - 20px));
-  padding: 6px 8px;
-  border: 1px solid rgb(255 255 255 / 11%);
-  border-radius: 6px;
-  background: #29292a;
-  color: #e3e3e4;
+  gap: 7px;
+  max-width: min(240px, calc(100vw - 20px));
+  padding: 7px 9px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  background: #202021;
+  color: #dddddf;
   box-shadow:
-    0 8px 22px rgb(0 0 0 / 38%),
+    0 10px 28px rgb(0 0 0 / 42%),
     inset 0 1px 0 rgb(255 255 255 / 4%);
-  font-size: 11.5px;
-  font-weight: 520;
+  font-size: 11px;
+  font-weight: 540;
   line-height: 1.25;
   pointer-events: none;
   user-select: none;
+  white-space: nowrap;
   transform-origin: var(--radix-tooltip-content-transform-origin);
 }
 
@@ -140,7 +141,41 @@ button {
 }
 
 .ui-tooltip-arrow {
-  fill: #29292a;
+  fill: #202021;
+}
+
+.ui-tooltip-anchor {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.context-tooltip {
+  gap: 6px;
+  padding: 7px 8px;
+}
+
+.context-tooltip-label {
+  color: #8f8f93;
+  font-weight: 510;
+}
+
+.context-tooltip-value {
+  color: #efeff0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 620;
+}
+
+.context-tooltip-rule {
+  width: 1px;
+  height: 10px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.context-tooltip-action {
+  color: #c3c3c6;
+  font-weight: 570;
 }
 
 @keyframes ui-tooltip-in {
@@ -2634,8 +2669,8 @@ samp {
 }
 
 .work-chip.chip-fail {
-  border-color: #55302c;
-  background: rgb(248 81 73 / 8%);
+  border-color: transparent;
+  background: transparent;
   color: #f0a9a2;
 }
 
@@ -2923,10 +2958,6 @@ samp {
   background: #1b1b1b;
 }
 
-.term-card.status-failed {
-  border-color: #46302d;
-}
-
 .term-head {
   display: flex;
   align-items: flex-start;
@@ -3131,10 +3162,6 @@ samp {
   box-shadow:
     0 6px 18px rgb(0 0 0 / 15%),
     inset 0 1px 0 rgb(255 255 255 / 2.5%);
-}
-
-.diff-card.status-failed {
-  border-color: #46302d;
 }
 
 .diff-head {

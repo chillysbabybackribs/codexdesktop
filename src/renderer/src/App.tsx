@@ -1187,13 +1187,36 @@ export default function App(): React.JSX.Element {
           parentDockSession?.mainChatTabKey ??
           activeMainChatTabKeyRef.current;
         handleAgentRun(event.run, owningTabKey, event.run.parentAgentKey ?? parentDockSession?.key ?? null);
+        if (event.run.parentTurnId) {
+          const previous = turnMetaRef.current[event.run.parentTurnId]?.agentRuns ?? [];
+          noteTurn(event.run.parentTurnId, {
+            agentRuns: [
+              ...previous.filter((run) => run.id !== event.run.id),
+              {
+                id: event.run.id,
+                provider: event.run.provider,
+                status: event.run.status,
+                wakeStatus: event.run.wakeStatus,
+                durationMs: event.run.completedAtMs === null
+                  ? null
+                  : Math.max(0, event.run.completedAtMs - event.run.startedAtMs),
+              },
+            ],
+          });
+        }
         return;
       }
 
       if (event.type === 'browserDecision') {
-        // The decision is persisted with turn traces by the renderer telemetry
-        // path in a follow-up reducer pass; it is intentionally not rendered
-        // as transcript chrome.
+        noteTurn(event.turnId, {
+          browserDecision: {
+            provider: event.provider,
+            preset: event.preset,
+            mode: event.mode,
+            required: event.required,
+            reason: event.reason,
+          },
+        });
         return;
       }
 

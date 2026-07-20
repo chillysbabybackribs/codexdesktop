@@ -79,6 +79,8 @@ export function buildTurnTrace(params: BuildTurnTraceParams): TurnTrace {
       workspace: valueOrFallback(params.meta?.workspace, params.workspace),
       modelReroutes: params.meta?.modelReroutes ?? []
     },
+    ...(params.meta?.browserDecision ? { browser: params.meta.browserDecision } : {}),
+    ...(params.meta?.agentRuns?.length ? { agents: { runs: params.meta.agentRuns } } : {}),
     usage: {
       turn: params.meta?.tokens?.turn ?? null,
       latestModelCall: params.meta?.tokens?.latestCall ?? null,

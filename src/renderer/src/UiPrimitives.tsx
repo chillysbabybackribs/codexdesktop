@@ -1,9 +1,5 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import {
-  forwardRef,
-  type ButtonHTMLAttributes,
-  type ReactNode,
-} from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type ReactElement, type ReactNode } from 'react';
 
 export function UiProvider({ children }: { children: ReactNode }): React.JSX.Element {
   return (
@@ -20,6 +16,37 @@ type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label
   side?: 'top' | 'right' | 'bottom' | 'left';
 };
 
+export function UiTooltip({
+  children,
+  className = '',
+  content,
+  side = 'top',
+  sideOffset = 7,
+}: {
+  children: ReactElement;
+  className?: string;
+  content: ReactNode;
+  side?: 'top' | 'right' | 'bottom' | 'left';
+  sideOffset?: number;
+}): React.JSX.Element {
+  return (
+    <TooltipPrimitive.Root>
+      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Content
+          className={`ui-tooltip ${className}`.trim()}
+          side={side}
+          sideOffset={sideOffset}
+          collisionPadding={10}
+        >
+          {content}
+          <TooltipPrimitive.Arrow className="ui-tooltip-arrow" width={8} height={4} />
+        </TooltipPrimitive.Content>
+      </TooltipPrimitive.Portal>
+    </TooltipPrimitive.Root>
+  );
+}
+
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
   {
     children,
@@ -34,34 +61,26 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   },
   ref,
 ) {
-  const content = shortcut ? `${tooltip} (${shortcut})` : tooltip;
   return (
-    <TooltipPrimitive.Root>
-      <TooltipPrimitive.Trigger asChild>
-        <button
-          {...buttonProps}
-          ref={ref}
-          type={type}
-          className={`ui-icon-button ${className}`.trim()}
-          aria-label={label}
-          disabled={disabled}
-          title={disabled ? content : undefined}
-        >
-          {children}
-        </button>
-      </TooltipPrimitive.Trigger>
-      <TooltipPrimitive.Portal>
-        <TooltipPrimitive.Content
-          className="ui-tooltip"
-          side={side}
-          sideOffset={7}
-          collisionPadding={8}
-        >
+    <UiTooltip
+      content={
+        <>
           <span>{tooltip}</span>
           {shortcut ? <kbd>{shortcut}</kbd> : null}
-          <TooltipPrimitive.Arrow className="ui-tooltip-arrow" width={8} height={4} />
-        </TooltipPrimitive.Content>
-      </TooltipPrimitive.Portal>
-    </TooltipPrimitive.Root>
+        </>
+      }
+      side={side}
+    >
+      <button
+        {...buttonProps}
+        ref={ref}
+        type={type}
+        className={`ui-icon-button ${className}`.trim()}
+        aria-label={label}
+        disabled={disabled}
+      >
+        {children}
+      </button>
+    </UiTooltip>
   );
 });
