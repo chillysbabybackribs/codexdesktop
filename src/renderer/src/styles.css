@@ -5083,6 +5083,10 @@ samp {
   padding: 0 2px 6px;
 }
 
+.composer .mention-strip {
+  padding: 12px 14px 4px;
+}
+
 .mention-pill {
   display: inline-flex;
   align-items: center;
@@ -5648,31 +5652,34 @@ samp {
 .composer textarea {
   width: 100%;
   min-width: 0;
-  min-height: 54px;
+  min-height: 62px;
   max-height: 190px;
-  padding: 18px 64px 0 16px;
+  padding: 15px 16px 13px;
   resize: none;
   overflow-y: auto;
   border: 0;
   outline: 0;
   background: transparent;
-  color: #ececec;
-  font-size: 17px;
-  line-height: 1.5;
+  color: var(--composer-ink);
+  font-size: 16px;
+  line-height: 1.48;
 }
 
 .composer textarea::placeholder {
-  color: #8f8f8f;
+  color: var(--composer-muted);
 }
 
 .composer-control-bar {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
-  min-height: 28px;
-  padding: 0 14px;
+  min-height: 43px;
+  padding: 6px 8px 7px;
+  border-top: 1px solid var(--composer-line);
+  border-radius: 0 0 13px 13px;
+  background: var(--composer-rail);
 }
 
 .composer-status {
@@ -5680,7 +5687,7 @@ samp {
   min-width: 0;
   overflow: hidden;
   color: #797979;
-  font-size: 13px;
+  font-size: 11.5px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -5698,7 +5705,19 @@ samp {
 
 .composer-leading-actions {
   flex: 0 0 auto;
-  gap: 3px;
+  gap: 2px;
+}
+
+.composer-command-trigger {
+  color: #9b9b9f;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 520;
+}
+
+.composer-command-trigger:hover:not(:disabled) {
+  background: rgb(255 255 255 / 6%);
+  color: #ededee;
 }
 
 .composer-auto-mode {
@@ -5848,22 +5867,21 @@ samp {
 }
 
 .composer-primary-action {
-  position: absolute;
-  top: 50%;
-  right: 14px;
+  position: relative;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+  gap: 5px;
+  margin-left: auto;
   min-width: 0;
-  transform: translateY(-50%);
 }
 
 .composer-primary-action:empty {
   display: none;
 }
 
-.composer .composer-primary-action .stop-square-button {
+.composer-shell .composer-primary-action .stop-square-button {
   width: 34px;
   height: 34px;
   border-radius: 9px;
@@ -6087,7 +6105,7 @@ samp {
 
 /* Claude Code composer: the active send button is a light, near-white
    rounded square with a dark arrow — the one bright accent in the bar. */
-.composer .composer-primary-action .send-button {
+.composer-shell .composer-primary-action .send-button {
   width: 34px;
   height: 34px;
   border-radius: 9px;
@@ -6097,23 +6115,19 @@ samp {
   box-shadow: 0 1px 2px rgb(0 0 0 / 22%);
 }
 
-.composer .composer-primary-action .send-button:not(:disabled):hover {
+.composer-shell .composer-primary-action .send-button:not(:disabled):hover {
   border-color: #ffffff;
   background: #ffffff;
   color: #101010;
 }
 
-.composer .composer-primary-action .send-button:disabled {
+.composer-shell .composer-primary-action .send-button:disabled {
   border-color: #2c2c2c;
   background: #1c1c1c;
   color: #4a4d52;
   box-shadow: none;
 }
 
-.composer .send-button:not(:disabled):hover {
-  background: #202020;
-  border-color: #404040;
-}
 
 /* Keep an 8px drag target without drawing an 8px trench. The hairline marks
    the pane boundary; the short grip only appears when the seam is actionable. */
