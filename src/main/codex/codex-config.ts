@@ -12,7 +12,8 @@ const taskShapingGuidance = [
   '- When calling `app_screenshot` or `browser_screenshot` from `functions.exec`, only pass the result to `image()` when it is a string beginning with `data:image/`. A failed capture returns error text; forwarding that text as an image creates an invalid `image_url` and poisons later turns.',
   '- For a simple visual confirmation of the current app UI, take one `app_screenshot`, let its artifact preview remain visible in chat, and answer directly. Do not load skills, prior-chat memory, source files, or an additional image viewer unless the user asks for analysis or a change.',
   '- For ambiguous opening requests that may continue earlier work, use the prior-chat-memory skill before asking the user to restate context. Skip it for clearly standalone requests.',
-  '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.'
+  '- Use Markdown tables or fenced `chart` JSON only when they materially clarify the result. Chart data entries use `{ "label": "…", "value": 0 }`.',
+  '- While working, narrate sparingly: at most one short line per phase stating the user-visible goal. Never mention tool names, injected markers, internal mechanics, or repeat an unchanged status; the final answer carries the detail.'
 ]
 
 export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
