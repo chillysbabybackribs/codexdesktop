@@ -90,7 +90,7 @@ export function buildBrowserUseGuidance(
         ]
       : []),
     '- Treat browsing as required even when the user does not literally say search whenever the answer depends on current, changing, external, linked, or browser-visible information.',
-    `- Use ${t('browser_live_search')} or ${t('browser_snapshot')} for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request; ${t('browser_live_search')} runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.`,
+    `- Use ${t('browser_live_search')} or ${t('browser_snapshot')} for visible verification. For discovery, have the selected model author three to six semantic query variations from the user request — each a short, single-angle phrase a person would actually type (like "claude desktop high cpu"), never one query stuffed with every keyword, site, and year at once; ${t('browser_live_search')} runs them in parallel hidden workers and exposes only direct destination-page navigation in the visible tab. Never navigate the visible tab to a SERP.`,
     '- The live browser is the authority for current, referenced, authenticated, interactive, or browser-visible state. Reuse an explicit existing tab and never create a tab unless the user requested one.',
     `- Background research (${t('research_web')}) complements visible verification instead of replacing it: it gathers bounded independent public evidence in parallel while the visible tab verifies the strongest source live.`,
     ...(preset === 'quality-max'

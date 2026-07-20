@@ -455,7 +455,7 @@ const researchWebSchema = {
       minItems: 1,
       maxItems: 6,
       items: { type: 'string' },
-      description: 'One to six semantic discovery variations authored from the user request. Variations run in bounded parallel hidden Chromium workers; a lone query receives a small compatibility expansion.'
+      description: 'One to six short search queries authored from the user request, each a single-angle phrase a person would actually type into a search engine. Never stuff one query with every keyword, product, site, and year. Variations run in bounded parallel hidden Chromium workers; a lone query receives a small compatibility expansion.'
     },
     urls: {
       type: 'array',
@@ -499,7 +499,7 @@ const browserLiveSearchSchema = {
       maxItems: 6,
       uniqueItems: true,
       items: { type: 'string' },
-      description: 'Three to six model-authored semantic variations derived from the user request. They run in parallel hidden search workers.'
+      description: 'Three to six short search queries derived from the user request, each a single-angle phrase a person would actually type into a search engine (like "claude desktop high cpu" or "codex cli sandbox complaints reddit"). Never stuff one query with every keyword, product, site, and year. They run in parallel hidden search workers.'
     },
     objective: { type: 'string', description: 'Specific facts or fields to extract after the visible tab navigates directly to the highest-ranked destination page.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
