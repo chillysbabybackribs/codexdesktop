@@ -28,9 +28,11 @@ export function ThreadMenu({
   disabled = false,
   isBrowserMiddle = false,
   canSplitActivePane = false,
+  canOpenTrace = false,
   showGlobalActions = true,
   onToggleBrowserMiddle,
   onSplitActivePane,
+  onOpenTrace,
   onOpenSettings,
   onResumeThread,
   onLoadMoreThreads,
@@ -45,9 +47,11 @@ export function ThreadMenu({
   disabled?: boolean;
   isBrowserMiddle?: boolean;
   canSplitActivePane?: boolean;
+  canOpenTrace?: boolean;
   showGlobalActions?: boolean;
   onToggleBrowserMiddle?: () => void;
   onSplitActivePane?: (direction: 'right' | 'down') => boolean;
+  onOpenTrace?: () => void;
   onOpenSettings?: () => void;
   onResumeThread: (threadId: string) => Promise<void>;
   onLoadMoreThreads: () => Promise<void>;
@@ -66,10 +70,11 @@ export function ThreadMenu({
       headerMenuCommands({
         isBrowserMiddle,
         canSplitActivePane,
+        canOpenTrace,
         disabled,
         showGlobalActions,
       }),
-    [isBrowserMiddle, canSplitActivePane, disabled, showGlobalActions],
+    [isBrowserMiddle, canSplitActivePane, canOpenTrace, disabled, showGlobalActions],
   );
   const allCommandsDisabled = commands.every((command) => command.disabled);
 
@@ -120,7 +125,8 @@ export function ThreadMenu({
       return;
     }
     close();
-    if (id === 'browser-layout') onToggleBrowserMiddle?.();
+    if (id === 'trace') onOpenTrace?.();
+    else if (id === 'browser-layout') onToggleBrowserMiddle?.();
     else if (id === 'split-right') onSplitActivePane?.('right');
     else if (id === 'split-down') onSplitActivePane?.('down');
     else if (id === 'settings') onOpenSettings?.();
@@ -321,11 +327,29 @@ export function ThreadMenu({
 }
 
 function CommandIcon({ id }: { id: HeaderMenuCommandId }): React.JSX.Element {
+  if (id === 'trace') return <TraceIcon />;
   if (id === 'browser-layout') return <BrowserMiddleIcon />;
   if (id === 'split-right') return <SplitRightIcon />;
   if (id === 'split-down') return <SplitDownIcon />;
   if (id === 'history') return <ChatBubbleIcon />;
   return <SettingsIcon />;
+}
+
+function TraceIcon(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M4.5 2.5h5.75L13 5.25v8.25H4.5v-11Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 2.75V5.5h2.75M6.5 7.5h4M6.5 9.5h4M6.5 11.5h2"
+        stroke="currentColor"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
 function VerticalDotsIcon(): React.JSX.Element {

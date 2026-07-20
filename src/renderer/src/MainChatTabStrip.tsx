@@ -28,6 +28,8 @@ export function MainChatTabStrip({
   isBrowserMiddle,
   onToggleBrowserMiddle,
   onOpenSettings,
+  canOpenTrace,
+  onOpenTrace,
   title,
   threads,
   activeThreadId,
@@ -54,6 +56,8 @@ export function MainChatTabStrip({
   isBrowserMiddle: boolean;
   onToggleBrowserMiddle: () => void;
   onOpenSettings: () => void;
+  canOpenTrace: boolean;
+  onOpenTrace: () => void;
   title: string;
   threads: Thread[];
   activeThreadId: string | null;
@@ -376,9 +380,11 @@ export function MainChatTabStrip({
         disabled={disabled}
         isBrowserMiddle={isBrowserMiddle}
         canSplitActivePane={canSplitActivePane}
+        canOpenTrace={canOpenTrace}
         showGlobalActions={showGlobalActions}
         onToggleBrowserMiddle={onToggleBrowserMiddle}
         onSplitActivePane={onSplitActivePane}
+        onOpenTrace={onOpenTrace}
         onOpenSettings={onOpenSettings}
         onResumeThread={onResumeThread}
         onLoadMoreThreads={onLoadMoreThreads}
