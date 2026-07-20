@@ -7,10 +7,25 @@ description: Use for current web research, comparisons, source-backed answers, p
 
 Treat research as a claim-coverage problem. Define the evidence needed for the requested conclusions, gather a bounded set of verified sources, and stop when every material claim has adequate support.
 
+## Freshness Priority
+
+For current-information tasks, treat freshness as a first-class evidence requirement, behind only source authority and direct relevance. Prefer the newest trustworthy source that actually supports the claim: live official pages, APIs, changelogs, release notes, status pages, filings, package registries, GitHub issues/PRs, and dated firsthand reports. Do not use an older source merely because it ranks well if a newer equally reliable source is findable.
+
+Build recency into discovery. At least one query variation should include terms such as `latest`, `current`, `today`, the current year, a version name, `release notes`, `changelog`, `status`, or `GitHub issues` when those terms fit the domain. When a source has no visible publication/update date, version, or live state marker, treat its freshness as unknown even if it was observed today.
+
+Use this fallback ladder when fresh evidence is sparse:
+
+1. Prefer newest official or primary source with an explicit date, version, or live state.
+2. If that is missing, use recent firsthand or repository evidence with an explicit timestamp.
+3. If only older evidence is available, use it only after one focused gap-fill for newer evidence, mark it as older, and answer with a freshness caveat.
+4. If source age is unknown, say so rather than implying the claim is current.
+
+Never sacrifice source quality for recency alone. A fresh low-quality summary does not outrank a slightly older primary source unless it contains independently verifiable new facts.
+
 ## Fast Path
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
-2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
+2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. Include recency signals for current-information tasks so discovery can find the latest trustworthy sources before falling back to older ones. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
 3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
 4. Make one `browser_research_dual` call — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab directly to the strongest destination for live verification while parallel background workers gather bounded artifact-first evidence in the same call. Give it a concrete `objective` for the visible page plus `focus` needs (and `minSources` only where independent corroboration matters); the evidence contract stops gathering early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
 5. Answer from the live-verified page and the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
@@ -44,8 +59,10 @@ Use only the fields needed for the answer. A normalized source may include:
   "url": "",
   "sourceType": "primary|firsthand|secondary|aggregate",
   "observedAt": "",
+  "publishedOrUpdatedAt": "",
   "reportedVersion": "",
   "targetVersionApplicability": "confirmed|likely|unknown|not-applicable",
+  "freshness": "current|recent|older|unknown",
   "platform": "",
   "claim": "",
   "evidenceStrength": "high|medium|low",
@@ -61,7 +78,9 @@ Never turn an old open issue into a current-version claim. A closed pull request
 
 Stop when every requested field has adequate evidence and the strongest claims have primary or firsthand support. Make one gap-fill only when sources conflict, current-version applicability remains material, a high-stakes claim lacks primary evidence, or a comparison is missing one side.
 
-Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state limitations precisely. Do not expose internal artifact paths unless asked.
+For current-information tasks, do not stop with only older or unknown-age evidence unless a focused gap-fill failed to find newer trustworthy coverage. When falling back, state the newest source date or version found and say what could not be verified as current.
+
+Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state freshness limitations precisely. Do not expose internal artifact paths unless asked.
 
 ## Reliability
 
