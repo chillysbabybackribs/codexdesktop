@@ -11,7 +11,7 @@ test('research runner stays artifact-first without creating or activating visibl
   assert.match(source, /selectResearchEvidence/)
   assert.match(source, /focus\.reduce\(\(total, \{ minSources \}\) => total \+ minSources, 0\)/)
   assert.match(source, /DEFAULT_UNFOCUSED_SOURCE_TARGET = 1/)
-  assert.match(source, /CANDIDATE_ATTEMPTS_PER_SOURCE = 2/)
+  assert.match(source, /CANDIDATE_ATTEMPTS_PER_SOURCE = 1/)
   assert.match(source, /coversUnresolvedFocus/)
   assert.match(source, /focus\.length > 0 \? attemptsRemaining : remainingSuccessTarget\(\)/)
   assert.match(source, /shouldStop:[\s\S]*focusCoverageDeficit/)

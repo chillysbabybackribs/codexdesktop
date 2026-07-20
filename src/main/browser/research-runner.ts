@@ -40,8 +40,8 @@ import {
 const DEFAULT_MAX_RESULTS = 5
 const MAX_MAX_RESULTS = 10
 const DEFAULT_UNFOCUSED_SOURCE_TARGET = 1
-const MIN_CANDIDATE_ATTEMPTS = 3
-const CANDIDATE_ATTEMPTS_PER_SOURCE = 2
+const MIN_CANDIDATE_ATTEMPTS = 2
+const CANDIDATE_ATTEMPTS_PER_SOURCE = 1
 const MAX_CANDIDATE_ATTEMPTS = 24
 const DEFAULT_SNIPPET_CHARS = 3_500
 const MAX_SNIPPET_CHARS = 8_000
@@ -379,7 +379,7 @@ export class ResearchRunner {
         : DEFAULT_UNFOCUSED_SOURCE_TARGET
     const defaultMaxAttempts = Math.min(
       MAX_CANDIDATE_ATTEMPTS,
-      Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages * CANDIDATE_ATTEMPTS_PER_SOURCE)
+      Math.max(MIN_CANDIDATE_ATTEMPTS, targetPages + CANDIDATE_ATTEMPTS_PER_SOURCE)
     )
     const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, MIN_CANDIDATE_ATTEMPTS, MAX_CANDIDATE_ATTEMPTS)
     const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
