@@ -1943,7 +1943,7 @@ samp {
 
 /* --- Premium assistant markdown ----------------------------------------- */
 
-.markdown-body {
+.message-assistant:not(.message-commentary) > .markdown-body {
   --response-copy-size: 16px;
   --response-list-size: 15.5px;
   --response-list-label-size: 16.5px;
@@ -1951,9 +1951,12 @@ samp {
   --response-heading-2-size: 20px;
   --response-heading-3-size: 18px;
   --response-heading-4-size: 16.5px;
+}
+
+.markdown-body {
   max-width: 100%;
   color: #d9dde1;
-  font-size: var(--response-copy-size);
+  font-size: var(--response-copy-size, 16px);
   line-height: 1.62;
   overflow-wrap: anywhere;
 }
@@ -1981,7 +1984,7 @@ samp {
 
 .markdown-body h1 {
   margin: 4px 0 16px;
-  font-size: var(--response-heading-1-size);
+  font-size: var(--response-heading-1-size, 1.5em);
   font-weight: 720;
 }
 
@@ -1989,20 +1992,20 @@ samp {
   margin: 26px 0 10px;
   padding-top: 15px;
   border-top: 1px solid #2b2e32;
-  font-size: var(--response-heading-2-size);
+  font-size: var(--response-heading-2-size, 1.25em);
   font-weight: 700;
 }
 
 .markdown-body h3 {
   margin: 20px 0 8px;
-  font-size: var(--response-heading-3-size);
+  font-size: var(--response-heading-3-size, 1.125em);
   font-weight: 680;
 }
 
 .markdown-body h4 {
   margin: 17px 0 7px;
   color: #cdcdcd;
-  font-size: var(--response-heading-4-size);
+  font-size: var(--response-heading-4-size, 1.03em);
   font-weight: 680;
 }
 
@@ -2031,7 +2034,7 @@ samp {
 .markdown-body ol {
   margin: 4px 0 14px;
   padding-left: 23px;
-  font-size: var(--response-list-size);
+  font-size: var(--response-list-size, 1em);
 }
 
 .markdown-body li {
@@ -2041,7 +2044,7 @@ samp {
 
 .markdown-body li > strong:first-child,
 .markdown-body li > p:first-child > strong:first-child {
-  font-size: var(--response-list-label-size);
+  font-size: var(--response-list-label-size, 1em);
   letter-spacing: -0.006em;
 }
 
@@ -2195,7 +2198,7 @@ samp {
   width: 100%;
   min-width: 460px;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 0.875em;
   line-height: 1.5;
   text-align: left;
 }
@@ -3472,6 +3475,10 @@ samp {
 
 .message-commentary {
   color: #aeaeae;
+}
+
+.message-commentary > .markdown-body {
+  font-size: 15px;
 }
 
 .message-commentary p {
