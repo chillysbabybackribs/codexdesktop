@@ -70,13 +70,16 @@ export class LocalSkillRegistry {
       ...new Map([...newThreadSkills, ...turnSkills].map((skill) => [skill.name, skill])).values(),
     ];
     const visibleText = formatSkillInvocationText(text, turnSkills);
+    const skillInputs = skills.map(
+      (skill): UserInput => ({ type: 'skill', name: skill.name, path: skill.path }),
+    );
 
     return [
+      ...skillInputs,
       ...(visibleText.trim()
         ? [{ type: 'text', text: visibleText, text_elements: [] } satisfies UserInput]
         : []),
       ...attachmentTurnInputs(attachments),
-      ...skills.map((skill): UserInput => ({ type: 'skill', name: skill.name, path: skill.path })),
     ];
   }
 }
