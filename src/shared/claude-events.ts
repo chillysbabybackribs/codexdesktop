@@ -88,7 +88,14 @@ export function turnStartedNotification(
 // implies, so Claude turns hit the exact same UI components as Codex turns
 // (terminal cards, compact read/search rows, diff cards, web-search rows, the
 // plan board) instead of a flat generic tool row.
-type ClaudeToolKind = 'command' | 'fileChange' | 'webSearch' | 'plan' | 'mcp';
+type ClaudeToolKind = 'command' | 'fileChange' | 'webSearch' | 'plan' | 'dynamic' | 'mcp';
+
+// The in-process MCP server that carries the canonical browser/subagent tool
+// set is registered under this server name; the SDK namespaces its tool_use
+// names accordingly. Stripping the prefix recovers the canonical tool name,
+// letting these calls emit the same dynamicToolCall items codex turns produce
+// (screenshot previews, CDP artifacts, live-search rows, trace counts).
+const browserMcpToolPrefix = 'mcp__browser__';
 
 type ClaudeToolState = {
   name: string;
@@ -106,6 +113,7 @@ type ClaudeToolState = {
 };
 
 function classifyClaudeTool(name: string): ClaudeToolKind {
+  if (name.startsWith(browserMcpToolPrefix)) return 'dynamic';
   switch (name) {
     case 'Bash':
     case 'Read':
@@ -399,6 +407,7 @@ export class ClaudeTurnTranslator {
           state,
           block.is_error === true ? 'failed' : 'completed',
           extractToolResultText(block.content),
+          extractToolResultImages(block.content),
         ),
       );
     }
@@ -544,6 +553,7 @@ export class ClaudeTurnTranslator {
     state: ClaudeToolState,
     status: 'inProgress' | 'completed' | 'failed',
     output?: string,
+    images?: string[],
   ): ServerNotification {
     const nowMs = this.context.nowMs();
     const completed = method === 'item/completed';
@@ -574,6 +584,23 @@ export class ClaudeTurnTranslator {
         id,
         query: state.query,
         action: state.action,
+      } as unknown as ThreadItem;
+    } else if (state.kind === 'dynamic') {
+      item = {
+        type: 'dynamicToolCall',
+        id,
+        namespace: null,
+        tool: state.name.slice(browserMcpToolPrefix.length),
+        arguments: state.arguments ?? {},
+        status,
+        contentItems: completed
+          ? [
+              ...(output ? [{ type: 'inputText' as const, text: output }] : []),
+              ...(images ?? []).map((imageUrl) => ({ type: 'inputImage' as const, imageUrl })),
+            ]
+          : null,
+        success: completed ? status === 'completed' : null,
+        durationMs,
       } as unknown as ThreadItem;
     } else {
       item = {
