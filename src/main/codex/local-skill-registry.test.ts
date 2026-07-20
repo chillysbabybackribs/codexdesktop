@@ -52,14 +52,15 @@ test('local skill registry composes visible text, attachments, and one skill inp
 
   assert.deepEqual(
     input.map((item) => item.type),
-    ['skill', 'text', 'localImage'],
+    ['skill', 'text', 'text', 'localImage'],
   );
   assert.equal(input[0]?.type === 'skill' && input[0].name, researchSkill.name);
   assert.equal(
     input[1]?.type === 'text' && input[1].text,
     '$artifact-first-web-research Research this image',
   );
-  assert.equal(input[2]?.type === 'localImage' && input[2].detail, 'high');
+  assert.match((input[2]?.type === 'text' && input[2].text) || '', /^\[browser routing\] mode=dual/);
+  assert.equal(input[3]?.type === 'localImage' && input[3].detail, 'high');
 });
 
 test('ordinary turns do not force-attach the planning skill', () => {
@@ -82,11 +83,12 @@ test('editorial waitlist turns send the reference skill to the model', () => {
 
   assert.deepEqual(
     input.map((item) => item.type),
-    ['skill', 'text'],
+    ['skill', 'text', 'text'],
   );
   assert.equal(input[0]?.type === 'skill' && input[0].name, editorialWaitlistSkill.name);
   assert.equal(
     input[1]?.type === 'text' && input[1].text,
     '$superdesign-editorial-waitlist\nBuild an editorial waitlist landing page for a private design salon',
   );
+  assert.match((input[2]?.type === 'text' && input[2].text) || '', /^\[browser routing\]/);
 });
