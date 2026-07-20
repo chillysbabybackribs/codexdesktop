@@ -89,7 +89,7 @@ export function cdpFileArtifact(item: DynamicToolCallItem): CdpFileArtifact | nu
         artifactPath: artifact.artifactPath,
         fileName: artifact.fileName,
         mediaType: typeof artifact.mediaType === 'string' ? artifact.mediaType : '',
-        kind: artifact.kind,
+        kind: artifact.kind as CdpFileArtifact['kind'],
         bytes: artifact.bytes
       }
     } catch {

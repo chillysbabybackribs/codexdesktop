@@ -41,6 +41,8 @@ export type BrowserToolOutcome = {
 type EarlyNavigationLane = {
   navigated: RankedSerpCandidate | null
   page: ReturnType<BrowserAgentController['snapshot']> | null
+  background: ReturnType<ResearchRunner['run']> | null
+  firstUrlMs: number | null
 }
 
 export async function runBrowserTool(
@@ -65,21 +67,31 @@ export async function runBrowserTool(
     let result: BrowserToolOutcome['result']
     let imageUrls: string[] = []
 
-    if (tool === 'browser_live_search') {
+    if (tool === 'browser_live_search' || tool === 'browser_research_dual') {
       const queries = readSearchQueries(args)
       const objective = readString(args.objective)
+      // browser_research_dual remains as an unadvertised compatibility alias
+      // for resumed turns. New turns use one search tool and opt into the
+      // artifact-first lane without spending a model decision on two nearly
+      // identical tool names.
+      const includeBackground = tool === 'browser_research_dual' || args.background === true
       if (queries.length === 0 || !objective) {
-        result = { ok: false, error: 'browser_live_search requires "objective" and at least one search query' }
+        result = { ok: false, error: `${tool} requires "objective" and at least one search query` }
       } else if (!deps.researchRunner) {
         result = { ok: false, error: 'browser_live_search hidden discovery is not available on this transport' }
       } else {
+        const startedAt = Date.now()
         result = await runBrowserOperation(async (signal) => {
           // Navigate the visible tab as soon as the earliest hidden search lane
           // yields a usable destination; remaining lanes keep filling alternates
           // in the background instead of gating the first page load.
-          const lane: EarlyNavigationLane = { navigated: null, page: null }
-          const startNavigation = (candidate: RankedSerpCandidate): void => {
+          const lane: EarlyNavigationLane = { navigated: null, page: null, background: null, firstUrlMs: null }
+          const focus = readResearchFocus(args.focus)
+          const startWork = (candidates: RankedSerpCandidate[]): void => {
+            const candidate = candidates[0]
+            if (!candidate || lane.page) return
             lane.navigated = candidate
+            lane.firstUrlMs = Date.now() - startedAt
             notifyNavigationStart(deps, candidate)
             lane.page = deps.browserAgent.snapshot({
               objective,
@@ -90,6 +102,22 @@ export async function runBrowserTool(
               timeoutMs: readNumber(args.timeoutMs),
               signal
             })
+            if (includeBackground) {
+              const urls = selectBackgroundUrls(candidates, candidate.url, focus)
+              lane.background = deps.researchRunner!.run({
+                queries,
+                ...(urls.length > 0 ? { urls } : {}),
+                focus,
+                maxResults: readNumber(args.maxResults),
+                maxAttempts: readNumber(args.maxAttempts),
+                snippetChars: readNumber(args.snippetChars)
+              }, {
+                runId: `${callId}:background`,
+                threadId: owner?.threadId ?? 'external',
+                turnId: owner?.turnId ?? callId,
+                onProgress: deps.onResearchProgress
+              })
+            }
           }
           const discovery = await deps.researchRunner!.discover({
             queries,
@@ -99,96 +127,39 @@ export async function runBrowserTool(
             signal,
             onProgress: deps.onResearchProgress,
             onFirstCandidates: (candidates) => {
-              if (!lane.page && candidates[0]) startNavigation(candidates[0])
+              startWork(candidates)
             }
           })
           if (!lane.page) {
-            const destination = discovery.candidates[0]
-            if (!discovery.ok || !destination) return discovery
-            startNavigation(destination)
+            if (!discovery.ok || !discovery.candidates[0]) return discovery
+            startWork(discovery.candidates)
           }
-          const page = await lane.page!
+          const [page, background] = await Promise.all([
+            lane.page!,
+            lane.background ?? Promise.resolve(null)
+          ])
           const destination = lane.navigated!
+          const ok = page.ok && (!includeBackground || background?.ok === true)
           return {
-            ok: page.ok,
-            mode: 'hidden-discovery-direct-navigation',
+            ok,
+            mode: includeBackground
+              ? 'hidden-discovery-direct-navigation-plus-research'
+              : 'hidden-discovery-direct-navigation',
             destination: compactDestination(destination),
             alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
             discovery: compactDiscovery(discovery),
             page,
-            ...(page.ok ? {} : { error: 'Hidden discovery succeeded, but the destination page snapshot failed' })
+            ...(background ? { background } : {}),
+            timings: {
+              firstUrlMs: lane.firstUrlMs,
+              totalMs: Date.now() - startedAt
+            },
+            ...(ok
+              ? {}
+              : { error: includeBackground ? 'one or more search lanes failed' : 'Hidden discovery succeeded, but the destination page snapshot failed' }),
+            ...(tool === 'browser_research_dual' ? { live: page } : {})
           }
         })
-      }
-    } else if (tool === 'browser_research_dual') {
-      const queries = readSearchQueries(args)
-      const objective = readString(args.objective)
-      if (queries.length === 0 || !objective) {
-        result = { ok: false, error: 'browser_research_dual requires "objective" and at least one search query' }
-      } else if (!deps.researchRunner) {
-        result = { ok: false, error: 'browser_research_dual background lane is not available on this transport' }
-      } else {
-        // Same early-navigation contract as browser_live_search: the visible
-        // lane starts on the earliest lane's best candidate rather than after
-        // every hidden search lane has settled.
-        const lane: EarlyNavigationLane = { navigated: null, page: null }
-        const startNavigation = (candidate: RankedSerpCandidate): void => {
-          lane.navigated = candidate
-          notifyNavigationStart(deps, candidate)
-          lane.page = runBrowserOperation((signal) => deps.browserAgent.snapshot({
-            objective,
-            url: candidate.url,
-            tabId: resolveAgentTab(readString(args.tab)),
-            mode: 'task',
-            maxItems: readNumber(args.maxResults) ?? 6,
-            timeoutMs: readNumber(args.timeoutMs),
-            signal
-          }))
-        }
-        const discovery = await runBrowserOperation((signal) => deps.researchRunner!.discover({
-          queries,
-          maxResults: readNumber(args.maxResults),
-          maxCandidates: 10
-        }, {
-          signal,
-          onProgress: deps.onResearchProgress,
-          onFirstCandidates: (candidates) => {
-            if (!lane.page && candidates[0]) startNavigation(candidates[0])
-          }
-        }))
-        if (!lane.page && discovery.ok && discovery.candidates[0]) {
-          startNavigation(discovery.candidates[0])
-        }
-        if (!lane.page) {
-          result = discovery
-        } else {
-          const [live, background] = await Promise.all([
-            lane.page,
-            deps.researchRunner.run({
-              queries,
-              focus: readResearchFocus(args.focus),
-              maxResults: readNumber(args.maxResults),
-              maxAttempts: readNumber(args.maxAttempts),
-              snippetChars: readNumber(args.snippetChars)
-            }, {
-              runId: `${callId}:background`,
-              threadId: owner?.threadId ?? 'external',
-              turnId: owner?.turnId ?? callId,
-              onProgress: deps.onResearchProgress
-            })
-          ])
-          const destination = lane.navigated!
-          result = {
-            ok: live.ok && background.ok,
-            mode: 'hidden-discovery-direct-navigation-plus-research',
-            destination: compactDestination(destination),
-            alternates: discovery.candidates.filter((candidate) => candidate.url !== destination.url).map(compactDestination),
-            discovery: compactDiscovery(discovery),
-            live,
-            background,
-            ...(live.ok && background.ok ? {} : { error: 'one or more dual research lanes failed' })
-          }
-        }
       }
     } else if (tool === 'browser_screenshot') {
       const tabId = resolveAgentTab(readString(args.tab))
@@ -453,6 +424,23 @@ function compactDiscovery(discovery: SearchDiscoveryResult): Record<string, unkn
     metrics: discovery.metrics,
     ...(discovery.errors ? { errors: discovery.errors } : {})
   }
+}
+
+function selectBackgroundUrls(
+  candidates: RankedSerpCandidate[],
+  visibleUrl: string,
+  focus: Array<{ id: string; need: string; minSources?: number }>
+): string[] {
+  // An unfocused background lane needs one independent source. Focused work
+  // receives enough early candidates to cover its explicit source demand; the
+  // research runner can still use `queries` as fallback when those pages fail.
+  const target = focus.length > 0
+    ? Math.min(6, focus.reduce((sum, item) => sum + Math.max(1, item.minSources ?? 1), 0))
+    : 1
+  return candidates
+    .filter((candidate) => candidate.url !== visibleUrl)
+    .slice(0, target)
+    .map((candidate) => candidate.url)
 }
 
 function isDirectAgentNavigation(input: string): boolean {
