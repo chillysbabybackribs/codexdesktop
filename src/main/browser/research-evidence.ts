@@ -94,7 +94,7 @@ export function normalizeResearchFocus(
     normalized.push({
       id,
       need,
-      minSources: clampInteger(value.minSources, 1, 1, 3)
+      minSources: clampInteger(value.minSources, 1, 1, 1)
     })
     if (normalized.length >= MAX_FOCUS_ITEMS) break
   }
@@ -136,6 +136,31 @@ export function selectResearchEvidence(
       urls.add(candidate.canonicalUrl)
       selected.push(candidate)
       if (selected.length >= item.minSources) break
+    }
+
+    if (selected.length < item.minSources && indexedDocuments.length > 0) {
+      for (const indexed of indexedDocuments) {
+        if (selected.length >= item.minSources) break
+        if (fingerprints.has(indexed.fingerprint) || urls.has(indexed.document.url)) continue
+        const fallbackLineIndex = indexed.lines.findIndex((line) => line.trim().length > 0)
+        if (fallbackLineIndex < 0) continue
+        const rawLine = indexed.windowText[fallbackLineIndex] ?? ''
+        const text = rawLine.slice(0, perPassageChars)
+        selected.push({
+          score: 0,
+          documentFingerprint: indexed.fingerprint,
+          canonicalUrl: indexed.document.url,
+          lineStart: fallbackLineIndex + 1,
+          lineEnd: fallbackLineIndex + 1,
+          columnStart: 0,
+          columnEnd: text.length,
+          text,
+          truncated: text.length < rawLine.length,
+          matchedTerms: []
+        })
+        fingerprints.add(indexed.fingerprint)
+        urls.add(indexed.document.url)
+      }
     }
 
     passages.push(...selected.map(({
