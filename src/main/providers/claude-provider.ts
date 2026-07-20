@@ -243,7 +243,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private readonly checkpoints: TurnCheckpointStore | null;
   private readonly browserAgent: BrowserAgentController | null;
   private readonly researchRunner: ResearchRunner | null;
-  private mcpServerConfig: unknown | null = null;
   private modelCatalogPromise: Promise<Model[]> | null = null;
   private readonly modelsById = new Map<string, Model>();
   private disposed = false;
@@ -485,32 +484,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     this.subagentSpawner = spawner;
   }
 
-  // Parent context for a spawn_subagent call arriving over MCP. The tool call
-  // happens inside a live turn, so the spawning lead is the session currently
-  // working. Phase 1 is blocking-single (one active lead), so a single working
-  // session is unambiguous; if none is found we fall back to nulls and the
-  // orchestrator still runs the child, just un-nested.
-  private activeSpawnOrigin(): {
-    parentThreadId: string | null;
-    parentTurnId: string | null;
-    parentAgentKey: string | null;
-    cwd: string | null;
-  } {
-    let origin: ClaudeSession | null = null;
-    for (const session of this.sessions.values()) {
-      if (session.working && session.activeTurnId) {
-        origin = session;
-        break;
-      }
-    }
-    return {
-      parentThreadId: origin?.threadId ?? null,
-      parentTurnId: origin?.activeTurnId ?? null,
-      parentAgentKey: null,
-      cwd: origin?.cwd ?? null,
-    };
-  }
-
   async steerTurn(): Promise<unknown> {
     throw new Error('the claude provider does not support mid-turn steering');
   }
@@ -682,32 +655,40 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       const sdk = await import('@anthropic-ai/claude-agent-sdk');
       if (this.disposed) throw new Error('claude provider disposed');
       const { query } = sdk;
-      // In-process MCP browser tools (built once): Claude sessions drive the
-      // SAME embedded browser through the SAME neutral dispatch the codex
-      // dynamic tools use — ownerless, like the socket transport.
-      if (!this.mcpServerConfig && this.browserAgent) {
+      // Bind one in-process MCP server to THIS Claude session. Its tool calls
+      // therefore participate in the same per-turn visible-browser queue as
+      // Codex calls and retain exact parent attribution under parallel use.
+      const mcpServerConfig = this.browserAgent ? (() => {
         const browserAgent = this.browserAgent;
         const researchRunner = this.researchRunner ?? undefined;
-        this.mcpServerConfig = buildClaudeBrowserMcpServer(sdk as never, async (tool, args) => {
-          // Subagent tools route to the orchestrator, not the browser. Parent
-          // context comes from the session whose turn is currently running —
-          // Phase 1 is blocking-single, so the active working session IS the
-          // spawning lead.
+        return buildClaudeBrowserMcpServer(sdk as never, async (tool, args) => {
           if (isAgentTool(tool)) {
-            const origin = this.activeSpawnOrigin();
-            const result = await runAgentTool(tool, args, origin, this.subagentSpawner);
+            const result = await runAgentTool(tool, args, {
+              parentThreadId: session.threadId,
+              parentTurnId: session.activeTurnId,
+              parentAgentKey: null,
+              cwd: session.cwd,
+            }, this.subagentSpawner);
             return { result, imageUrls: [] };
           }
+          const callId = `claude-mcp-${randomUUID()}`;
           return runBrowserTool(
-            { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
+            {
+              tool,
+              args,
+              owner: session.activeTurnId
+                ? { threadId: session.threadId, turnId: session.activeTurnId, callId }
+                : null,
+              callId,
+            },
             { browserAgent, researchRunner },
           );
         });
-      }
+      })() : null;
       const input = createInputStream();
       const handle = query({
         prompt: input.stream() as AsyncIterable<never>,
-        options: buildClaudeQueryOptions(session, this.mcpServerConfig),
+        options: buildClaudeQueryOptions(session, mcpServerConfig),
       });
       const runtime: LiveRuntime = {
         input,
