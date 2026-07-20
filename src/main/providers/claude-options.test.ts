@@ -24,6 +24,23 @@ test('bypass permission mode includes the SDK safety acknowledgement', () => {
   assert.equal('model' in options, false);
 });
 
+test('Claude system prompt prioritizes live browser inspection', () => {
+  const options = buildClaudeQueryOptions(
+    {
+      cwd: '/tmp/workspace',
+      model: claudeDefaultModelId,
+      effort: null,
+      fastMode: false,
+      claudeSessionId: null,
+    },
+    null,
+  );
+
+  assert.match(options.systemPrompt, /live browser is the authority/i);
+  assert.match(options.systemPrompt, /prefer the live browser first/i);
+  assert.doesNotMatch(options.systemPrompt, /should normally use browser_research_dual/i);
+});
+
 test('resume, explicit model, and browser MCP configuration are forwarded', () => {
   const browser = { type: 'sdk', name: 'browser' };
   const options = buildClaudeQueryOptions(

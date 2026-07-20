@@ -2,10 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { buildBrowserUseGuidance, decideBrowserUse } from './browser-use-policy.ts'
 
-test('quality-max chooses dual for implicit current information', () => {
+test('quality-max chooses live browser for implicit current information', () => {
   const decision = decideBrowserUse('Who is the current CEO and what is the latest price?', 'quality-max')
   assert.equal(decision.required, true)
-  assert.equal(decision.mode, 'dual')
+  assert.equal(decision.mode, 'live')
+  assert.match(decision.reason, /live browser/i)
 })
 
 test('interactive browser state remains live-only', () => {
@@ -20,6 +21,11 @@ test('manual does not infer browsing', () => {
   assert.equal(decideBrowserUse('What is the latest release?', 'manual').mode, 'none')
 })
 
-test('guidance names the first-class dual tool', () => {
-  assert.match(buildBrowserUseGuidance({ CODEX_DESKTOP_BROWSER_PRESET: 'quality-max' }), /browser_research_dual/)
+test('quality-max guidance prioritizes the live browser without mandatory dual research', () => {
+  const guidance = buildBrowserUseGuidance({ CODEX_DESKTOP_BROWSER_PRESET: 'quality-max' })
+  assert.match(guidance, /live browser is the authority/i)
+  assert.match(guidance, /prefer the live browser first/i)
+  assert.match(guidance, /browser_research_dual only/i)
+  assert.doesNotMatch(guidance, /should normally use browser_research_dual/i)
+  assert.doesNotMatch(guidance, /mandatory follow-up/i)
 })
