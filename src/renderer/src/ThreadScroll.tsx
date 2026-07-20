@@ -102,7 +102,11 @@ function ReaderPositionMenu({
       </button>
 
       {open ? (
-        <div className="reader-position-menu" role="dialog" aria-label="Jump to a conversation turn">
+        <div
+          className="reader-position-menu"
+          role="dialog"
+          aria-label="Jump to a conversation turn"
+        >
           <div className="reader-position-menu-head">
             <div>
               <span className="reader-position-eyebrow">Conversation</span>

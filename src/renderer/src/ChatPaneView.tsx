@@ -8,16 +8,10 @@ import { ChatItemView, TaskActivityCard, visibleUserMessageText } from './ChatTr
 import { ThreadScroll, type MessageScrollerAnchor } from './ThreadScroll';
 import { TraceModal } from './TraceModal';
 import { buildTurnTrace, isTurnTrace, type TurnTrace } from './trace';
-import {
-  FileReviewContext,
-  TurnTail,
-  type FileReviewActions,
-  type ItemMeta,
-  type WorkItem,
-} from './TaskActivity';
+import { FileReviewContext, TurnTail, type FileReviewActions, type WorkItem } from './TaskActivity';
 import { ReviewBar, type ReviewChange } from './ReviewBar';
 import { buildRows } from './transcript-model';
-import { SessionStore, emptySessionState } from './session-store';
+import { type SessionStore, emptySessionState } from './session-store';
 import type { MainChatTab } from './main-chat-tabs';
 import type { SplitDropZone } from './chat-split';
 
