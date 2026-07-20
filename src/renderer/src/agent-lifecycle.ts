@@ -140,6 +140,20 @@ export function createAgentLifecycle(options: {
 
   function handleCloseAgentSession(key: string): void {
     const session = removeSession(key)
+    if (
+      session?.sourceProvider === 'claude' &&
+      session.status === 'working' &&
+      session.runParentThreadId &&
+      session.nativeRunId
+    ) {
+      void window.api.session.cancelAgentRun({
+        provider: 'claude',
+        parentThreadId: session.runParentThreadId,
+        nativeId: session.nativeRunId
+      }).catch((error) =>
+        console.warn(`Failed to stop native Claude task ${session.nativeRunId}`, error)
+      )
+    }
     if (session?.threadId && session.threadId !== options.getActiveThreadId()) {
       if (session.turnId) {
         void window.api.session.interruptTurn({ threadId: session.threadId, turnId: session.turnId })

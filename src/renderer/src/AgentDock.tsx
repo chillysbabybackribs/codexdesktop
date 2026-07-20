@@ -569,7 +569,13 @@ const AgentWindow = memo(function AgentWindow({
             type="button"
             className="icon-button"
             aria-label="Close agent"
-            title="Close agent (stops the turn and unsubscribes the thread)"
+            title={
+              nativeRun
+                ? session.sourceProvider === 'claude' && working
+                  ? 'Close agent and stop its native task'
+                  : 'Close agent status'
+                : 'Close agent (stops the turn and unsubscribes the thread)'
+            }
             onClick={() => onCloseSession(session.key)}
           >
             <CloseIcon />
