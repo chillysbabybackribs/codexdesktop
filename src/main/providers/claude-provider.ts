@@ -37,6 +37,7 @@ import { runBrowserTool } from '../tools/browser-tool-registry.js';
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js';
 import { isAgentTool, runAgentTool } from '../agents/agent-tool-router.js';
 import type { SubagentSpawner } from '../agents/subagent-orchestrator.js';
+import { AgentRunBridge } from '../agents/agent-run-coordinator.js';
 import {
   buildClaudeQueryOptions,
   synchronizeClaudeRuntimeSettings,
@@ -249,6 +250,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   // When set, spawn_subagent MCP tool calls route here; when unset, they return
   // a clean unavailable result.
   private subagentSpawner: SubagentSpawner | null = null;
+  private readonly agentRunBridge: AgentRunBridge;
 
   constructor(
     checkpoints: TurnCheckpointStore | null = null,
@@ -260,6 +262,7 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     this.browserAgent = browserAgent;
     this.researchRunner = researchRunner;
     this.statePath = join(app.getPath('userData'), 'claude-sessions.json');
+    this.agentRunBridge = new AgentRunBridge((event) => this.emit('event', event));
   }
 
   async warmUp(): Promise<void> {
@@ -735,6 +738,14 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       for await (const message of stream) {
         if (session.runtime !== runtime) break;
         session.lastActivityMs = Date.now();
+        // Native/background task messages can arrive after the foreground
+        // turn's result, when the turn translator has already been released.
+        // Normalize them independently so the Agent Dock and auto-wake path
+        // never depend on an active foreground translator.
+        this.agentRunBridge.ingestClaude(message, {
+          threadId: session.threadId,
+          turnId: session.activeTurnId,
+        });
         const translation = session.translator?.handle(message);
         if (!translation) continue;
         if (translation.sessionId && translation.sessionId !== session.claudeSessionId) {

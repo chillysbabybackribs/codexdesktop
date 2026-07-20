@@ -1,4 +1,5 @@
-import { ipcMain, type BrowserWindow } from 'electron';
+import { app, ipcMain, type BrowserWindow } from 'electron';
+import { join } from 'node:path';
 import type {
   SessionEvent,
   CodexListThreadTurnsParams,
@@ -27,6 +28,8 @@ import { ClaudeProvider } from '../providers/claude-provider.js';
 import { isClaudeModelId } from '../providers/claude-models.js';
 import type { ProviderId } from '../../shared/session-protocol/provider.js';
 import { SubagentOrchestrator } from '../agents/subagent-orchestrator.js';
+import { AgentCompletionCoordinator, AgentRunBridge } from '../agents/agent-run-coordinator.js';
+import { decideBrowserUse } from '../browser/browser-use-policy.js';
 
 export type RegisteredSessionProviders = {
   codexClient: CodexClient;
@@ -58,6 +61,22 @@ export function registerSessionIpc(
     isClaudeModelId(model) ? claude : client;
   void providers;
 
+  const sendEvent = (event: SessionEvent): void => {
+    getWindow()?.webContents.send(ipcChannels.sessionEvent, event);
+  };
+  const completionCoordinator = new AgentCompletionCoordinator({
+    emit: sendEvent,
+    statePath: join(app.getPath('userData'), 'agent-completion-outbox.json'),
+    resumeParent: async (threadId, prompt) => {
+      await byThread(threadId).sendMessage(threadId, prompt);
+    },
+  });
+  const emitEvent = (event: SessionEvent): void => {
+    sendEvent(event);
+    if (event.type === 'agentRun') completionCoordinator.observeRun(event.run);
+  };
+  const nativeAgentBridge = new AgentRunBridge(emitEvent);
+
   // The subagent spawn primitive. It selects the child's runtime the same way
   // a new user thread does (so a codex lead can spawn a claude worker and vice
   // versa) and emits child events + the agentSpawned announcement to the
@@ -66,7 +85,7 @@ export function registerSessionIpc(
   // need the orchestrator — is broken by these setters).
   const orchestrator = new SubagentOrchestrator(
     (model) => forNewThread(model),
-    (event) => getWindow()?.webContents.send(ipcChannels.sessionEvent, event),
+    emitEvent,
   );
   client.setSubagentSpawner(orchestrator);
   claude.setSubagentSpawner(orchestrator);
@@ -76,7 +95,14 @@ export function registerSessionIpc(
       // Tag child-thread events with parentage so the renderer roster can nest
       // them (a no-op for ordinary main/dock threads) and let the orchestrator
       // settle a pending spawn on the child's terminal event.
-      getWindow()?.webContents.send(ipcChannels.sessionEvent, orchestrator.tagEvent(event));
+      if (event.type === 'agentRun') {
+        emitEvent(event);
+        return;
+      }
+      const tagged = orchestrator.tagEvent(event);
+      nativeAgentBridge.ingestCodex(tagged);
+      completionCoordinator.observeSessionEvent(tagged);
+      sendEvent(tagged);
     });
   }
 
@@ -122,7 +148,7 @@ export function registerSessionIpc(
   ipcMain.handle(ipcChannels.sessionSendMessage, async (_event, params: CodexSendMessageParams) => {
     const attachments = await attachmentStore.verify(params.attachments ?? []);
     const provider = params.threadId ? byThread(params.threadId) : forNewThread(params.model);
-    return provider.sendMessage(
+    const response = await provider.sendMessage(
       params.threadId,
       params.text,
       params.cwd,
@@ -131,6 +157,15 @@ export function registerSessionIpc(
       params.effort,
       params.fastMode === true,
     );
+    const browserDecision = decideBrowserUse(params.text);
+    sendEvent({
+      type: 'browserDecision',
+      threadId: response.threadId,
+      turnId: response.turn.id,
+      provider: provider.id,
+      ...browserDecision,
+    });
+    return response;
   });
   ipcMain.handle(ipcChannels.sessionSteerTurn, (_event, params: CodexSteerTurnParams) =>
     byThread(params.threadId).steerTurn(params.threadId, params.turnId, params.text),
@@ -175,6 +210,7 @@ export function registerSessionIpc(
   return {
     codexClient: client,
     dispose: () => {
+      completionCoordinator.dispose();
       claude.dispose();
       client.dispose();
     },
