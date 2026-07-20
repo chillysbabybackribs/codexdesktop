@@ -153,6 +153,7 @@ type EventWaiter = {
 const sessions = new WeakMap<WebContents, CdpSession>()
 
 export class CdpSession {
+  private attached = false
   private disposed = false
   private readonly webContents: WebContents
   private capabilitiesPromise: Promise<CdpCapabilities> | null = null
@@ -166,10 +167,12 @@ export class CdpSession {
     this.recordEvent(method, params, sessionId)
   }
   private readonly onDetach = (): void => {
+    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP debugger detached while waiting for an event'))
   }
   private readonly onDestroyed = (): void => {
+    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP target was destroyed while waiting for an event'))
     this.releaseListeners()
@@ -302,8 +305,7 @@ export class CdpSession {
     try {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: installPerformanceObserverExpression(longTaskTimelineError !== null),
-        returnByValue: true,
-        allowUnsafeEvalBlockedByCSP: false
+        returnByValue: true
       }))
       const support = asRecord(evaluated.result).value
       this.performanceDiagnostics.setObserverSupport(support)
@@ -328,8 +330,7 @@ export class CdpSession {
     try {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: drainPerformanceObserverExpression,
-        returnByValue: true,
-        allowUnsafeEvalBlockedByCSP: false
+        returnByValue: true
       }))
       this.performanceDiagnostics.recordObservedData(asRecord(evaluated.result).value)
     } catch {
@@ -340,8 +341,7 @@ export class CdpSession {
       const evaluated = asRecord(await this.send('Runtime.evaluate', {
         expression: performanceNavigationExpression,
         returnByValue: true,
-        awaitPromise: false,
-        allowUnsafeEvalBlockedByCSP: false
+        awaitPromise: false
       }))
       const result = asRecord(evaluated.result)
       navigation = asNullableRecord(result.value)
@@ -368,11 +368,7 @@ export class CdpSession {
       // PerformanceTimeline is experimental and may not exist on this Chromium build.
     }
     try {
-      await this.send('Runtime.evaluate', {
-        expression: stopPerformanceObserverExpression,
-        returnByValue: true,
-        allowUnsafeEvalBlockedByCSP: false
-      })
+      await this.send('Runtime.evaluate', { expression: stopPerformanceObserverExpression, returnByValue: true })
     } catch {
       // The page may have navigated since the observer was installed.
     }
@@ -398,6 +394,7 @@ export class CdpSession {
         // Best-effort cleanup while a tab is closing.
       }
     }
+    this.attached = false
     this.capabilitiesPromise = null
     this.rejectWaiters(new Error('CDP debugger detached'))
   }
@@ -428,6 +425,7 @@ export class CdpSession {
       this.webContents.debugger.attach()
       this.capabilitiesPromise = null
     }
+    this.attached = true
   }
 
   private ensureCapabilities(): Promise<CdpCapabilities> {

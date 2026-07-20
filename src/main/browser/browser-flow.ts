@@ -1,5 +1,4 @@
 import type { WebContents } from 'electron'
-import { executePageJavaScript } from './page-execution.js'
 
 export type BrowserFlowNavigation = 'auto' | 'required' | 'none'
 
@@ -239,7 +238,7 @@ async function executeAction(
   step: Extract<BrowserFlowStep, { type: 'fill' | 'click' | 'submit' }>
 ): Promise<unknown> {
   const program = buildActionProgram(step)
-  const raw = await executePageJavaScript(webContents, program, true)
+  const raw = await webContents.executeJavaScript(program, true)
   const result = asRecord(raw)
   if (result.ok === true) return result.result
   const code = result.code === 'invalidSelector' ? 'invalidSelector'
@@ -346,7 +345,7 @@ async function probeCondition(
   step: Extract<BrowserFlowStep, { type: 'wait' }>
 ): Promise<{ url: string; count: number }> {
   if (!step.selector) return { url: safeUrl(webContents), count: 0 }
-  const raw = await executePageJavaScript(webContents, buildFindProgram(step.selector, 1, true))
+  const raw = await webContents.executeJavaScript(buildFindProgram(step.selector, 1, true), true)
   const result = asRecord(raw)
   if (result.code === 'invalidSelector') {
     throw new BrowserFlowError('invalidSelector', typeof result.error === 'string' ? result.error : `invalid selector: ${step.selector}`)
@@ -361,7 +360,7 @@ async function inspectOnce(webContents: WebContents, selector: string, limit: nu
   assertTargetOpen(webContents)
   let raw: unknown
   try {
-    raw = await executePageJavaScript(webContents, buildFindProgram(selector, limit, false))
+    raw = await webContents.executeJavaScript(buildFindProgram(selector, limit, false), true)
   } catch (error) {
     throw normalizeActionError(error, 'find')
   }

@@ -166,11 +166,6 @@ test('performance diagnostics collect compact metrics, lifecycle, and timeline e
     'Page.enable',
     'Page.setLifecycleEventsEnabled'
   ])
-  const evaluations = contents.debugger.commands.filter(({ method }) => method === 'Runtime.evaluate')
-  assert.ok(evaluations.length >= 4)
-  assert.equal(evaluations.every(({ params }) => (
-    params as { allowUnsafeEvalBlockedByCSP?: boolean }
-  )?.allowUnsafeEvalBlockedByCSP === false), true)
 })
 
 test('disposing a CDP session detaches the debugger, rejects waiters, and releases listeners', async () => {

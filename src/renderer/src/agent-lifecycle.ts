@@ -29,7 +29,6 @@ export function createAgentLifecycle(options: {
   recoveryDelayMs: number
   recoveryPrompt: string
   isRecoverable: (error: TurnError | null) => boolean
-  isTurnTerminal: (key: string, turnId: string) => boolean
   getWorkspace: () => string | null
   getSelectedModel: () => string | null
   getActiveThreadId: () => string | null
@@ -104,13 +103,11 @@ export function createAgentLifecycle(options: {
         model: model ?? session.model ?? options.getSelectedModel(),
         effort: session.reasoningEffort
       })
-      if (!options.isTurnTerminal(key, response.turn.id)) {
-        store.patchSession(key, (current) => ({
-          ...current,
-          status: 'working',
-          turnId: response.turn.id
-        }))
-      }
+      store.patchSession(key, (current) => ({
+        ...current,
+        status: 'working',
+        turnId: response.turn.id
+      }))
     } catch (error) {
       store.appendMessage(key, {
         id: crypto.randomUUID(),

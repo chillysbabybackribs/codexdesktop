@@ -47,7 +47,6 @@ function lifecycleHarness(
     recoveryDelayMs: 10_000,
     recoveryPrompt: 'Continue',
     isRecoverable: () => false,
-    isTurnTerminal: () => false,
     getWorkspace: () => '/workspace',
     getSelectedModel: () => 'main-model',
     getActiveThreadId: () => null,

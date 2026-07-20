@@ -45,10 +45,8 @@ import {
 } from './app-server-rpc.js'
 import { AppServerProcess } from './app-server-process.js'
 import { routeDynamicToolCall } from './dynamic-tool-router.js'
-import { isAgentTool, routeAgentToolCall } from '../agents/agent-tool-router.js'
-import type { SubagentSpawner } from '../agents/subagent-orchestrator.js'
 import {
-  allDynamicTools,
+  browserDynamicTools,
   buildGuidance,
   legacyResumeConfig,
   newThreadConfig,
@@ -74,10 +72,6 @@ export class CodexClient extends EventEmitter implements SessionProvider {
   private readonly modelReasoningEfforts = new Map<string, ReasoningEffort[]>()
   private readonly threadTokenUsage = new Map<string, ThreadTokenUsage>()
   private readonly compactionsInFlight = new Set<string>()
-  // Injected after construction (the orchestrator needs the providers first).
-  // When set, spawn_subagent tool calls route here; when unset, they return a
-  // clean unavailable result so the runtime never hangs.
-  private subagentSpawner: SubagentSpawner | null = null
   constructor(
     private readonly browserAgent: BrowserAgentController,
     private readonly researchRunner: ResearchRunner,
@@ -217,7 +211,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       sandbox: 'danger-full-access',
       historyMode: 'legacy',
       config: newThreadConfig,
-      dynamicTools: allDynamicTools,
+      dynamicTools: browserDynamicTools,
       developerInstructions: buildGuidance()
     })
     this.threadModels.set(response.thread.id, response.model)
@@ -545,31 +539,7 @@ export class CodexClient extends EventEmitter implements SessionProvider {
     }
   }
 
-  setSubagentSpawner(spawner: SubagentSpawner | null): void {
-    this.subagentSpawner = spawner
-  }
-
   private async handleDynamicToolCall(id: JsonRpcId, params: DynamicToolCallParams): Promise<void> {
-    if (params.namespace === null && isAgentTool(params.tool)) {
-      const { result } = await routeAgentToolCall(
-        params.tool,
-        asToolArgs(params.arguments),
-        {
-          parentThreadId: params.threadId,
-          parentTurnId: params.turnId,
-          // The roster key is renderer-side; the orchestrator nests children by
-          // parentThreadId, so a null key here is correct for a codex lead.
-          parentAgentKey: null,
-          cwd: this.threadCwds.get(params.threadId) ?? null,
-        },
-        this.subagentSpawner,
-      )
-      this.rpc.respond(id, {
-        success: result.ok,
-        contentItems: [{ type: 'inputText', text: JSON.stringify(result) }],
-      })
-      return
-    }
     const response = await routeDynamicToolCall(params, {
       browserAgent: this.browserAgent,
       researchRunner: this.researchRunner,
@@ -593,10 +563,4 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       message
     } satisfies SessionEvent)
   }
-}
-
-function asToolArgs(value: unknown): Record<string, unknown> {
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {}
 }

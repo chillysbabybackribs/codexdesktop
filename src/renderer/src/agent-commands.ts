@@ -25,7 +25,6 @@ export function createAgentCommands(options: {
   acceptsImages: (model: string | null) => boolean
   buildMainChatContext: () => string
   cancelRecovery: (key: string) => void
-  isTurnTerminal: (key: string, turnId: string) => boolean
   queueThreadStart: (key: string) => void
   settleThreadStart: (key: string) => void
 }): {
@@ -89,13 +88,11 @@ export function createAgentCommands(options: {
         fastMode: options.getFastMode()
       })
       if (startsNewThread) bindAgentThread(key, response.threadId)
-      if (!options.isTurnTerminal(key, response.turn.id)) {
-        store.patchSession(key, (current) => ({
-          ...current,
-          status: 'working',
-          turnId: response.turn.id
-        }))
-      }
+      store.patchSession(key, (current) => ({
+        ...current,
+        status: 'working',
+        turnId: response.turn.id
+      }))
       return true
     } catch (error) {
       store.appendMessage(key, {

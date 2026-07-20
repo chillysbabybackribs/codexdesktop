@@ -23,11 +23,11 @@ test('round trips open tabs without persisting transient status', () => {
     activeKey: 'tab-b',
     tabs: [
       {
-        ...createMainChatTab('tab-a', 'thread-a', 'First', 'gpt-5.4', 'high', 'left'),
+        ...createMainChatTab('tab-a', 'thread-a', 'First', 'gpt-5.4', 'high'),
         status: 'working' as const
       },
       {
-        ...createMainChatTab('tab-b', null, 'New Chat', 'gpt-5.3', 'medium', 'right'),
+        ...createMainChatTab('tab-b', null, 'New Chat', 'gpt-5.3', 'medium'),
         status: 'attention' as const
       }
     ]
@@ -39,7 +39,6 @@ test('round trips open tabs without persisting transient status', () => {
     ['gpt-5.4', 'high'],
     ['gpt-5.3', 'medium']
   ])
-  assert.deepEqual(restored.tabs.map((tab) => tab.browserMiddleSide), ['left', 'right'])
 })
 
 test('migrates the legacy model choice into every pre-model tab', () => {

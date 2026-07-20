@@ -69,13 +69,6 @@ export async function restoreAgentDock(options: {
       mainChatTabKey: typeof entry.mainChatTabKey === 'string' && entry.mainChatTabKey
         ? entry.mainChatTabKey
         : activeMainChatTabKey,
-      // Phase 1 does not persist the spawn tree, so a restored session is
-      // always a top-level agent (reviewer or a promoted lead), never a
-      // spawned worker — the parent link and spawning turn are intentionally
-      // dropped on reload.
-      role: 'reviewer',
-      parentAgentKey: null,
-      spawnedByTurnId: null,
       threadId: typeof entry.threadId === 'string' && entry.threadId ? entry.threadId : null,
       title: entry.title || `Agent ${store.counterRef.current++}`,
       status: 'idle',

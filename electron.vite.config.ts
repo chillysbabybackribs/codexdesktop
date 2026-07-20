@@ -27,7 +27,6 @@ export default defineConfig({
         input: {
           index: resolve('src/preload/index.ts'),
           'omnibox-popup': resolve('src/preload/omnibox-popup.ts'),
-          'browser-menu': resolve('src/preload/browser-menu.ts'),
           'browser-page': resolve('src/preload/browser-page.ts'),
         },
         output: {
@@ -46,7 +45,6 @@ export default defineConfig({
           index: resolve('src/renderer/index.html'),
           landing: resolve('src/renderer/landing.html'),
           'omnibox-popup': resolve('src/renderer/omnibox-popup.html'),
-          'browser-menu': resolve('src/renderer/browser-menu.html'),
         },
       },
     },

@@ -11,10 +11,7 @@ import type {
   BackgroundTurnNotificationParams,
   BrowserBounds,
   BrowserFindResult,
-  BrowserMenuAnchor,
-  BrowserMenuItem,
   BrowserState,
-  BrowserVpnStatus,
   SessionEvent,
   CodexInterruptTurnParams,
   CodexListThreadTurnsParams,
@@ -80,19 +77,11 @@ export const api = {
     zoom: (tabId: string, direction: 'in' | 'out' | 'reset') =>
       ipcRenderer.invoke(ipcChannels.browserZoom, tabId, direction),
     toggleMute: (tabId: string) => ipcRenderer.invoke(ipcChannels.browserToggleMute, tabId),
-    toggleVpn: (): Promise<BrowserVpnStatus> => ipcRenderer.invoke(ipcChannels.browserToggleVpn),
     onFindRequested: (listener: () => void) => {
       const wrapped = (): void => listener()
       ipcRenderer.on(ipcChannels.browserFindRequested, wrapped)
       return () => {
         ipcRenderer.off(ipcChannels.browserFindRequested, wrapped)
-      }
-    },
-    onFullscreenToggleRequested: (listener: () => void) => {
-      const wrapped = (): void => listener()
-      ipcRenderer.on(ipcChannels.browserFullscreenToggleRequested, wrapped)
-      return () => {
-        ipcRenderer.off(ipcChannels.browserFullscreenToggleRequested, wrapped)
       }
     },
     setBounds: (bounds: BrowserBounds) => ipcRenderer.invoke(ipcChannels.browserSetBounds, bounds),
@@ -103,17 +92,6 @@ export const api = {
       ipcRenderer.invoke(ipcChannels.browserOmniboxQuery, text, anchor),
     omniboxSelect: (index: number) => ipcRenderer.invoke(ipcChannels.browserOmniboxSelect, index),
     omniboxClose: () => ipcRenderer.invoke(ipcChannels.browserOmniboxClose),
-    menuOpen: (anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
-      ipcRenderer.invoke(ipcChannels.browserMenuOpen, anchor, items),
-    menuUpdate: (items: BrowserMenuItem[]) => ipcRenderer.invoke(ipcChannels.browserMenuUpdate, items),
-    menuClose: () => ipcRenderer.invoke(ipcChannels.browserMenuClose),
-    onMenuClosed: (listener: () => void) => {
-      const wrapped = (): void => listener()
-      ipcRenderer.on(ipcChannels.browserMenuClosed, wrapped)
-      return () => {
-        ipcRenderer.off(ipcChannels.browserMenuClosed, wrapped)
-      }
-    },
     onFocusOmnibox: (listener: () => void) => {
       const wrapped = (): void => listener()
       ipcRenderer.on(ipcChannels.browserFocusOmnibox, wrapped)

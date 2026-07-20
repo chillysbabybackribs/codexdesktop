@@ -4,7 +4,6 @@ import type { TurnError } from '../../shared/session-protocol';
 import type { ReasoningEffort } from '../../shared/session-protocol';
 import {
   createReviewerSession,
-  createWorkerSession,
   findAgentSessionByThread,
   reviewerTitle,
   serializeAgentDock,
@@ -54,13 +53,6 @@ export function useAgentSessions(
   backgroundSessionForThread: (threadId: string) => AgentSession | null;
   handleAgentNotification: (session: AgentSession, notification: ServerNotification) => void;
   handleNewAgent: (mainChatTabKey: string) => void;
-  handleSpawnedAgent: (spawn: {
-    agentKey: string;
-    parentAgentKey: string | null;
-    mainChatTabKey: string | null;
-    title: string;
-    model: string | null;
-  }) => void;
   handleOpenAgent: (key: string) => void;
   handleMinimizeAgent: (key: string) => void;
   handleToggleWatchAgent: (key: string) => void;
@@ -297,36 +289,6 @@ export function useAgentSessions(
     setSelectedAgentKey(key);
   }
 
-  // A subagent the model spawned via spawn_subagent. The orchestrator already
-  // minted the agentKey in main and announced it here BEFORE any of the child's
-  // turn events, so we create the session under that exact key — subsequent
-  // tagged notifications (which carry the same agentKey / child threadId) then
-  // route to it through the normal agent path. Idempotent: a duplicate
-  // announcement (e.g. a resent event) is ignored.
-  function handleSpawnedAgent(spawn: {
-    agentKey: string;
-    parentAgentKey: string | null;
-    mainChatTabKey: string | null;
-    title: string;
-    model: string | null;
-  }): void {
-    if (agentSessionsRef.current.some((session) => session.key === spawn.agentKey)) return;
-    updateAgentSessions((sessions) => [
-      ...sessions,
-      createWorkerSession(
-        spawn.agentKey,
-        spawn.title,
-        spawn.mainChatTabKey,
-        spawn.parentAgentKey ?? spawn.agentKey,
-        null,
-        spawn.model,
-      ),
-    ]);
-    sessionStore.set(spawn.agentKey, emptySessionState({ title: spawn.title }));
-    // Open it so the worker's stream is visible in the dock as it runs.
-    setOpenAgentKeys((current) => (current.includes(spawn.agentKey) ? current : [...current, spawn.agentKey]));
-  }
-
   function handleOpenAgent(key: string): void {
     setOpenAgentKeys((current) => (current.includes(key) ? current : [...current, key]));
   }
@@ -445,7 +407,6 @@ export function useAgentSessions(
     backgroundSessionForThread,
     handleAgentNotification,
     handleNewAgent,
-    handleSpawnedAgent,
     handleOpenAgent,
     handleMinimizeAgent,
     handleToggleWatchAgent,

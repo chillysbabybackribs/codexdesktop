@@ -35,8 +35,6 @@ import type { BrowserAgentController } from '../browser/browser-agent.js';
 import type { ResearchRunner } from '../browser/research-runner.js';
 import { runBrowserTool } from '../tools/browser-tool-registry.js';
 import { buildClaudeBrowserMcpServer } from './claude-mcp-tools.js';
-import { isAgentTool, runAgentTool } from '../agents/agent-tool-router.js';
-import type { SubagentSpawner } from '../agents/subagent-orchestrator.js';
 import {
   buildClaudeQueryOptions,
   synchronizeClaudeRuntimeSettings,
@@ -245,10 +243,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
   private modelCatalogPromise: Promise<Model[]> | null = null;
   private readonly modelsById = new Map<string, Model>();
   private disposed = false;
-  // Injected after construction (the orchestrator needs the providers first).
-  // When set, spawn_subagent MCP tool calls route here; when unset, they return
-  // a clean unavailable result.
-  private subagentSpawner: SubagentSpawner | null = null;
 
   constructor(
     checkpoints: TurnCheckpointStore | null = null,
@@ -471,36 +465,6 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
     return {};
   }
 
-  setSubagentSpawner(spawner: SubagentSpawner | null): void {
-    this.subagentSpawner = spawner;
-  }
-
-  // Parent context for a spawn_subagent call arriving over MCP. The tool call
-  // happens inside a live turn, so the spawning lead is the session currently
-  // working. Phase 1 is blocking-single (one active lead), so a single working
-  // session is unambiguous; if none is found we fall back to nulls and the
-  // orchestrator still runs the child, just un-nested.
-  private activeSpawnOrigin(): {
-    parentThreadId: string | null;
-    parentTurnId: string | null;
-    parentAgentKey: string | null;
-    cwd: string | null;
-  } {
-    let origin: ClaudeSession | null = null;
-    for (const session of this.sessions.values()) {
-      if (session.working && session.activeTurnId) {
-        origin = session;
-        break;
-      }
-    }
-    return {
-      parentThreadId: origin?.threadId ?? null,
-      parentTurnId: origin?.activeTurnId ?? null,
-      parentAgentKey: null,
-      cwd: origin?.cwd ?? null,
-    };
-  }
-
   async steerTurn(): Promise<unknown> {
     throw new Error('the claude provider does not support mid-turn steering');
   }
@@ -678,21 +642,12 @@ export class ClaudeProvider extends EventEmitter implements SessionProvider {
       if (!this.mcpServerConfig && this.browserAgent) {
         const browserAgent = this.browserAgent;
         const researchRunner = this.researchRunner ?? undefined;
-        this.mcpServerConfig = buildClaudeBrowserMcpServer(sdk as never, async (tool, args) => {
-          // Subagent tools route to the orchestrator, not the browser. Parent
-          // context comes from the session whose turn is currently running —
-          // Phase 1 is blocking-single, so the active working session IS the
-          // spawning lead.
-          if (isAgentTool(tool)) {
-            const origin = this.activeSpawnOrigin();
-            const result = await runAgentTool(tool, args, origin, this.subagentSpawner);
-            return { result, imageUrls: [] };
-          }
-          return runBrowserTool(
+        this.mcpServerConfig = buildClaudeBrowserMcpServer(sdk as never, (tool, args) =>
+          runBrowserTool(
             { tool, args, owner: null, callId: `claude-mcp-${randomUUID()}` },
             { browserAgent, researchRunner },
-          );
-        });
+          ),
+        );
       }
       const input = createInputStream();
       const handle = query({

@@ -7,16 +7,6 @@ export function isRemotePlugin(plugin: PluginSummary): boolean {
   return plugin.source.type === 'remote'
 }
 
-export function flattenPlugins(marketplaces: PluginMarketplaceEntry[]): PluginSummary[] {
-  return [
-    ...new Map(
-      marketplaces
-        .flatMap((marketplace) => marketplace.plugins)
-        .map((plugin) => [plugin.id, plugin])
-    ).values()
-  ]
-}
-
 export function pluginInstallParams(
   plugin: PluginSummary,
   marketplace?: PluginMarketplaceEntry

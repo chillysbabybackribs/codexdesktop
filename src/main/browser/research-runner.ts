@@ -2,8 +2,7 @@ import { app, session, WebContentsView } from 'electron'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { ResearchProgress } from '../../shared/ipc.js'
-import { browserPartition } from './browser-session.js'
-import { executePageJavaScript } from './page-execution.js'
+import { browserPartition, chromeLikeUserAgent } from './browser-session.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
 import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
 import {
@@ -740,6 +739,7 @@ export class ResearchRunner {
         partition: browserPartition
       }
     })
+    view.webContents.setUserAgent(chromeLikeUserAgent())
     this.searchViews.add(view)
     return view
   }
@@ -786,6 +786,7 @@ async function loadSearchPage(
 ): Promise<PageNavigationResult> {
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
+    userAgent: chromeLikeUserAgent(),
     signal,
     readySelector: 'a[href] h3',
     quietMs: 100,
@@ -800,13 +801,14 @@ async function loadPage(
 ): Promise<PageNavigationResult> {
   return loadPageAndSettle(webContents, url, {
     timeoutMs: PAGE_TIMEOUT_MS,
+    userAgent: chromeLikeUserAgent(),
     signal,
     allowRedirect: allowResearchRedirect
   })
 }
 
 async function evaluate<T>(webContents: Electron.WebContents, code: string): Promise<T> {
-  return executePageJavaScript(webContents, `(async () => { ${code}\n})()`) as Promise<T>
+  return webContents.executeJavaScript(`(async () => { ${code}\n})()`, true) as Promise<T>
 }
 
 function isLikelyLoadingContent(content: string): boolean {
@@ -814,7 +816,7 @@ function isLikelyLoadingContent(content: string): boolean {
 }
 
 async function waitForResearchContent(webContents: Electron.WebContents): Promise<boolean> {
-  return executePageJavaScript(webContents, `new Promise((resolve) => {
+  return webContents.executeJavaScript(`new Promise((resolve) => {
     const startedAt = performance.now();
     let observer;
     let timer;
@@ -840,7 +842,7 @@ async function waitForResearchContent(webContents: Electron.WebContents): Promis
     if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true });
     timer = setInterval(tick, 50);
     tick();
-  })`) as Promise<boolean>
+  })`, true) as Promise<boolean>
 }
 
 function clamp(value: number | null | undefined, fallback: number, minimum: number, maximum: number): number {

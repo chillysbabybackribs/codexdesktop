@@ -1,18 +1,13 @@
 import { app, dialog, session } from 'electron'
 import { join } from 'node:path'
 import type { BrowserWindow, WebContents } from 'electron'
-import { browserUserAgentFallback } from './browser-identity.js'
 import { safeDownloadName } from './download-policy.js'
 
 export const browserPartition = 'persist:codex-browser'
 
-/**
- * Must run before Chromium creates any browser session or WebContents. Keeping
- * this at the app fallback layer preserves Chromium's native UA Client Hints
- * and avoids attaching DevTools to tabs during ordinary manual browsing.
- */
-export function configureBrowserUserAgentFallback(): void {
-  app.userAgentFallback = browserUserAgentFallback(app.userAgentFallback, app.getName())
+// Google rejects user agents containing "Electron" — sign-in pages go blank.
+export function chromeLikeUserAgent(): string {
+  return app.userAgentFallback.replace(/\sElectron\/\S+/g, '').trim()
 }
 
 export type BrowserSessionOptions = {
@@ -30,6 +25,7 @@ const allowedGuestPermissions = new Set(['fullscreen', 'pointerLock'])
 
 export function configureBrowserSession(options: BrowserSessionOptions): void {
   const browserSession = session.fromPartition(browserPartition)
+  browserSession.setUserAgent(chromeLikeUserAgent())
   browserSession.setSpellCheckerLanguages(['en-US'])
   browserSession.setPermissionRequestHandler((_webContents, permission, callback) => {
     callback(allowedGuestPermissions.has(permission))

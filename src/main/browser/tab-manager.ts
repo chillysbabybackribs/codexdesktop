@@ -1,5 +1,5 @@
 import type { BrowserWindow, WebContents } from 'electron'
-import type { BrowserBounds, BrowserState, BrowserTabState, BrowserVpnStatus } from '../../shared/ipc.js'
+import type { BrowserBounds, BrowserState, BrowserTabState } from '../../shared/ipc.js'
 import type { SavedBrowserState, SavedBrowserTab } from './browser-state-types.js'
 import { MAX_SAVED_BROWSER_TABS } from './browser-state-types.js'
 import {
@@ -18,6 +18,7 @@ import {
 } from './browser-tab-session.js'
 import { createBrowserTabView, attachBrowserTabViewEvents } from './browser-tab-view.js'
 import { BrowserTargetRegistry, type BrowserTarget } from './browser-target-registry.js'
+import { chromeLikeUserAgent } from './browser-session.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
 import { normalizeNavigationInput } from './url-utils.js'
 import { disposeCdpSession } from './cdp-session.js'
@@ -54,13 +55,6 @@ export class TabManager {
   // overlay is open, the same trick used during a divider drag.
   private isOverlayOpen = false
   private stateListener: BrowserStateListener | null = null
-  // VPN status is session-wide, owned by TorVpnManager; injected here so the
-  // renderer receives one coherent BrowserState payload.
-  private vpnStatusSource: () => BrowserVpnStatus = () => ({
-    state: 'off',
-    bootstrapProgress: 0,
-    detail: null
-  })
   private persistListener: (() => void) | null = null
   private visitListener: BrowserVisitListener | null = null
   private disposed = false
@@ -79,15 +73,6 @@ export class TabManager {
 
   onPersist(listener: () => void): void {
     this.persistListener = listener
-  }
-
-  setVpnStatusSource(source: () => BrowserVpnStatus): void {
-    this.vpnStatusSource = source
-  }
-
-  /** Re-broadcast browser state after out-of-band changes (e.g. VPN status). */
-  refreshState(): void {
-    this.pushState()
   }
 
   onVisit(listener: BrowserVisitListener): void {
@@ -153,7 +138,7 @@ export class TabManager {
       this.activateTab(id)
     }
     if (options.load !== false) {
-      void this.startUserNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
+      void this.startNavigation(tab, normalizeNavigationInput(url)).catch(() => {})
     }
     this.pushState()
     return id
@@ -233,7 +218,7 @@ export class TabManager {
       return
     }
 
-    void this.startUserNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
+    void this.startNavigation(tab, normalizeNavigationInput(input)).catch(() => {})
   }
 
   async navigateAndWait(
@@ -440,7 +425,7 @@ export class TabManager {
   private async hydrateSavedTab(tab: ManagedBrowserTab, saved: SavedBrowserTab): Promise<void> {
     try {
       await hydrateSavedBrowserTab(tab, saved, defaultTabUrl, (url) =>
-        this.startUserNavigation(tab, url).then(() => {})
+        this.startNavigation(tab, url).then(() => {})
       )
     } finally {
       this.pushState()
@@ -462,8 +447,7 @@ export class TabManager {
   private async startNavigation(
     tab: ManagedBrowserTab,
     url: string,
-    options: NavigateAndWaitOptions = {},
-    settleDocument = true
+    options: NavigateAndWaitOptions = {}
   ): Promise<PageNavigationResult> {
     this.cancelNavigation(tab.id)
     this.bumpTargetEpoch(tab.id)
@@ -473,11 +457,10 @@ export class TabManager {
     options.signal?.addEventListener('abort', abortFromCaller, { once: true })
 
     try {
-      if (controller.signal.aborted) throw new Error('navigation aborted')
       return await loadPageAndSettle(tab.view.webContents, url, {
         timeoutMs: options.timeoutMs ?? 15_000,
+        userAgent: chromeLikeUserAgent(),
         signal: controller.signal,
-        settleDocument,
         ...(options.quietMs === undefined ? {} : { quietMs: options.quietMs }),
         ...(options.maxSettleMs === undefined ? {} : { maxSettleMs: options.maxSettleMs }),
         ...(options.readySelector?.trim() ? { readySelector: options.readySelector.trim() } : {})
@@ -488,13 +471,6 @@ export class TabManager {
         this.navigationControllers.delete(tab.id)
       }
     }
-  }
-
-  private startUserNavigation(tab: ManagedBrowserTab, url: string): Promise<PageNavigationResult> {
-    // Human address-bar navigation should be indistinguishable from ordinary
-    // Chromium navigation. Agent callers use navigateAndWait(), which opts into
-    // DOM readiness probing in an isolated world.
-    return this.startNavigation(tab, url, {}, false)
   }
 
   private cancelNavigation(tabId: string): void {
@@ -598,7 +574,6 @@ export class TabManager {
 
     this.stateListener?.({
       activeTabId: this.activeTabId,
-      vpn: this.vpnStatusSource(),
       tabs: Array.from(this.tabs.values()).map((tab): BrowserTabState => {
         const navigation = readTabNavigation(tab)
 

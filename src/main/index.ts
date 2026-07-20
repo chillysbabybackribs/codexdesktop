@@ -12,8 +12,6 @@ import type {
   ImageViewPreviewResult,
   BackgroundTurnNotificationParams,
   BrowserBounds,
-  BrowserMenuAnchor,
-  BrowserMenuItem,
   OmniboxAnchor,
   OmniboxQueryResult,
   TraceLoadParams,
@@ -33,16 +31,14 @@ import type {
 import { ipcChannels } from '../shared/ipc.js'
 import { BrowserHistoryStore } from './browser/browser-history-store.js'
 import { BrowserStateStore } from './browser/browser-state-store.js'
-import { BrowserMenuPopup } from './browser/browser-menu-popup.js'
 import { OmniboxPopup } from './browser/omnibox-popup.js'
 import { buildSuggestions, inlineCompletion } from './browser/omnibox-suggestions.js'
 import { describeNavigationInput } from './browser/url-utils.js'
 import { BrowserAgentController } from './browser/browser-agent.js'
 import { CdpArtifactStore } from './browser/cdp-artifact-store.js'
 import { ResearchRunner } from './browser/research-runner.js'
-import { configureBrowserSession, configureBrowserUserAgentFallback } from './browser/browser-session.js'
+import { configureBrowserSession } from './browser/browser-session.js'
 import { TabManager } from './browser/tab-manager.js'
-import { TorVpnManager } from './browser/vpn-manager.js'
 import { startBrowserControlServer, type BrowserControlServer } from './browser/browser-control-server.js'
 import { registerSessionIpc, type RegisteredSessionProviders } from './codex/codex-ipc.js'
 import { TurnTraceStore } from './turn-trace-store.js'
@@ -52,11 +48,6 @@ import { readImageViewDataUrl } from './image-view-preview.js'
 import { TranscriptCache } from './transcript-cache.js'
 import { TurnCheckpointStore } from './turn-checkpoint.js'
 import { MentionIndexService } from './mention-index.js'
-
-// Establish the guest browser identity before Chromium creates a session. A
-// later Session/WebContents override suppresses native UA Client Hints and the
-// CDP workaround for that would expose DevTools during manual browsing.
-configureBrowserUserAgentFallback()
 
 // Dev/testing hook: point userData somewhere else so a verification instance
 // can run alongside the real app (the single-instance lock is per userData).
@@ -98,7 +89,6 @@ if (!hasSingleInstanceLock) {
 let mainWindow: BrowserWindow | null = null
 let tabManager: TabManager | null = null
 let omniboxPopup: OmniboxPopup | null = null
-let browserMenuPopup: BrowserMenuPopup | null = null
 let sessionProviders: RegisteredSessionProviders | null = null
 let browserControl: BrowserControlServer | null = null
 let quitPreparationStarted = false
@@ -109,7 +99,6 @@ const browserAgent = new BrowserAgentController(() => tabManager, cdpArtifactSto
 const researchRunner = new ResearchRunner()
 const browserStateStore = new BrowserStateStore(() => join(app.getPath('userData'), 'browser-state.json'))
 const browserHistoryStore = new BrowserHistoryStore(() => join(app.getPath('userData'), 'browser-history.json'))
-const vpnManager = new TorVpnManager()
 let persistBrowserTimer: ReturnType<typeof setTimeout> | null = null
 let verificationBrowserControlReady = false
 let verificationBrowserRestored = false
@@ -220,7 +209,6 @@ function createWindow(): void {
   })
 
   tabManager = new TabManager(mainWindow)
-  tabManager.setVpnStatusSource(() => vpnManager.status())
   tabManager.onState((state) => {
     sendToMainRenderer(ipcChannels.browserState, state)
   })
@@ -240,34 +228,6 @@ function createWindow(): void {
     }
   })
 
-  browserMenuPopup = new BrowserMenuPopup(
-    mainWindow,
-    (command) => {
-      const activeTabId = tabManager?.getActiveTabId()
-
-      switch (command) {
-        case 'find':
-          sendToMainRenderer(ipcChannels.browserFindRequested, undefined)
-          break
-        case 'fullscreen':
-          sendToMainRenderer(ipcChannels.browserFullscreenToggleRequested, undefined)
-          break
-        case 'mute':
-          if (activeTabId) tabManager?.toggleMute(activeTabId)
-          break
-        case 'vpn':
-          void vpnManager.toggle()
-          break
-        case 'zoom-out':
-        case 'zoom-reset':
-        case 'zoom-in':
-          if (activeTabId) tabManager?.zoom(activeTabId, command === 'zoom-out' ? 'out' : command === 'zoom-in' ? 'in' : 'reset')
-          break
-      }
-    },
-    () => sendToMainRenderer(ipcChannels.browserMenuClosed, undefined)
-  )
-
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()
     void restoreBrowserTabs().finally(() => {
@@ -281,7 +241,6 @@ function createWindow(): void {
   // document.activeElement), so dismiss it here when the window loses focus.
   mainWindow.on('blur', () => {
     omniboxPopup?.hide()
-    browserMenuPopup?.hide()
   })
 
   // Capture while the native views still exist. On macOS a normal window
@@ -298,8 +257,6 @@ function createWindow(): void {
     tabManager?.dispose()
     omniboxPopup?.dispose()
     omniboxPopup = null
-    browserMenuPopup?.dispose()
-    browserMenuPopup = null
     mainWindow = null
     tabManager = null
   })
@@ -329,7 +286,6 @@ function bootstrap(): void {
     }
     quitPreparationStarted = true
 
-    vpnManager.dispose()
     researchRunner.dispose()
     sessionProviders?.dispose()
     sessionProviders = null
@@ -353,10 +309,6 @@ function bootstrap(): void {
         tabManager?.isUserVisibleWebContents(webContents) ?? false
     })
     await browserHistoryStore.load()
-    vpnManager.onChange(() => tabManager?.refreshState())
-    // Reconnect in the background when the user last left the VPN on; the
-    // toolbar shows bootstrap progress while tabs restore in parallel.
-    void vpnManager.restoreFromDisk()
     registerIpc()
     createWindow()
 
@@ -511,7 +463,6 @@ function registerIpc(): void {
   ipcMain.handle(ipcChannels.browserZoom, (_event, tabId: string, direction: 'in' | 'out' | 'reset') =>
     tabManager?.zoom(tabId, direction))
   ipcMain.handle(ipcChannels.browserToggleMute, (_event, tabId: string) => tabManager?.toggleMute(tabId))
-  ipcMain.handle(ipcChannels.browserToggleVpn, () => vpnManager.toggle())
   ipcMain.handle(ipcChannels.browserSetBounds, (_event, bounds: BrowserBounds) => tabManager?.setBounds(bounds))
   ipcMain.handle(ipcChannels.browserBeginDividerDrag, () => tabManager?.beginDividerDrag())
   ipcMain.handle(ipcChannels.browserEndDividerDrag, (_event, bounds: BrowserBounds) => tabManager?.endDividerDrag(bounds))
@@ -534,10 +485,6 @@ function registerIpc(): void {
   )
   ipcMain.handle(ipcChannels.browserOmniboxSelect, (_event, index: number) => omniboxPopup?.setSelection(index))
   ipcMain.handle(ipcChannels.browserOmniboxClose, () => omniboxPopup?.hide())
-  ipcMain.handle(ipcChannels.browserMenuOpen, (_event, anchor: BrowserMenuAnchor, items: BrowserMenuItem[]) =>
-    browserMenuPopup?.show(anchor, items))
-  ipcMain.handle(ipcChannels.browserMenuUpdate, (_event, items: BrowserMenuItem[]) => browserMenuPopup?.update(items))
-  ipcMain.handle(ipcChannels.browserMenuClose, () => browserMenuPopup?.hide())
 
   ipcMain.handle(
     ipcChannels.notificationBackgroundTurn,

@@ -1,6 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
-import { dirname } from 'node:path'
+import { dirname, join } from 'node:path'
 import { parseSavedBrowserState, sanitizeBrowserState } from './browser-state-sanitize.js'
 import type { SavedBrowserState } from './browser-state-types.js'
 
