@@ -1,6 +1,7 @@
 import type { DynamicToolSpec } from '../../shared/codex-protocol/v2/DynamicToolSpec.js'
 import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import type { ReasoningEffort } from '../../shared/codex-protocol/ReasoningEffort.js'
+import { buildBrowserUseGuidance } from '../browser/browser-use-policy.js'
 
 const taskShapingGuidance = [
   'Codex Desktop guidance:',
@@ -16,6 +17,8 @@ const taskShapingGuidance = [
 
 export function buildGuidance(env: NodeJS.ProcessEnv = process.env): string {
   const guidance = [...taskShapingGuidance]
+
+  guidance.push(buildBrowserUseGuidance(env))
 
   if (env.CODEX_DESKTOP_AUTOGIT_ACTIVE === '1') {
     const repoRoot = env.CODEX_DESKTOP_AUTOGIT_ROOT || 'the Codex Desktop source checkout'
