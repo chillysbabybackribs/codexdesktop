@@ -51,6 +51,61 @@ test('dynamic tool router validates required browser_run code', async () => {
   assert.match(textResult(response).error ?? '', /requires a string "code" argument/)
 })
 
+test('first-class live search visibly navigates and snapshots one existing tab', async () => {
+  let received: Record<string, unknown> | null = null
+  const browserAgent = withTurnRunner({
+    snapshot: async (options: Record<string, unknown>) => {
+      received = options
+      return { ok: true, result: { items: [] } }
+    }
+  }) as unknown as BrowserAgentController
+  const response = await routeDynamicToolCall(params('browser_live_search', {
+    query: 'current platform status',
+    objective: 'Return the official status result',
+    tab: 'tab-1',
+    maxItems: 5
+  }), { browserAgent, researchRunner: unusedResearch })
+
+  assert.equal(response.success, true)
+  assert.equal(received?.url, 'https://www.google.com/search?q=current%20platform%20status')
+  assert.equal(received?.tabId, 'tab-1')
+  assert.equal(received?.objective, 'Return the official status result')
+})
+
+test('dual research runs visible and artifact-first lanes together', async () => {
+  let liveStarted = false
+  let backgroundStarted = false
+  const browserAgent = withTurnRunner({
+    snapshot: async () => {
+      liveStarted = true
+      await Promise.resolve()
+      assert.equal(backgroundStarted, true)
+      return { ok: true, result: { items: ['visible'] } }
+    }
+  }) as unknown as BrowserAgentController
+  const researchRunner = {
+    run: async () => {
+      backgroundStarted = true
+      await Promise.resolve()
+      assert.equal(liveStarted, true)
+      return { ok: true, pages: [{ url: 'https://example.com' }] }
+    }
+  } as unknown as ResearchRunner
+  const response = await routeDynamicToolCall(params('browser_research_dual', {
+    query: 'latest runtime release',
+    objective: 'Find the official release and date'
+  }), { browserAgent, researchRunner })
+
+  assert.equal(response.success, true)
+  const item = response.contentItems[0]
+  assert.equal(item.type, 'inputText')
+  if (item.type !== 'inputText') assert.fail('expected text result')
+  const result = JSON.parse(item.text) as { mode: string; live: { ok: boolean }; background: { ok: boolean } }
+  assert.equal(result.mode, 'dual')
+  assert.equal(result.live.ok, true)
+  assert.equal(result.background.ok, true)
+})
+
 test('dynamic tool router validates and forwards navigation-aware browser flows', async () => {
   const rejected = await routeDynamicToolCall(params('browser_flow', {}), {
     browserAgent: unusedBrowser,
