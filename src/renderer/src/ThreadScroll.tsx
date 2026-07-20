@@ -518,6 +518,7 @@ export function ThreadScroll({
     anchorTurnRef.current = null;
     prevTurnRef.current = null;
     justResetRef.current = true;
+    upHoldRef.current = false;
     setSpacerOn(false);
     scrollKeyRef.current = scrollKey;
     const saved = scrollPositionsRef.current.get(scrollKey);
@@ -530,8 +531,8 @@ export function ThreadScroll({
       const el = ref.current;
       if (!el || scrollKeyRef.current !== scrollKey) return;
       const maximum = Math.max(0, el.scrollHeight - el.clientHeight);
-      suppressScrollRef.current = true;
       el.scrollTop = Math.min(saved.top, maximum);
+      lastScrollTopRef.current = el.scrollTop;
       rememberScrollPosition();
     };
     const frame = window.requestAnimationFrame(restore);
@@ -552,6 +553,8 @@ export function ThreadScroll({
     if (activeTurnId !== null && activeTurnId !== prevTurnRef.current && !justResetRef.current) {
       anchorTurnRef.current = activeTurnId;
       pinnedRef.current = false;
+      // A live send is app-owned again; any prior reading hold is over.
+      upHoldRef.current = false;
       cancelScheduledFollow();
       setSpacerOn(true);
       // The new user row + spacer land next commit; anchor once they exist.
@@ -575,6 +578,7 @@ export function ThreadScroll({
         if (spacerRef.current) spacerRef.current.style.height = '0px';
         setSpacerOn(false);
         pinnedRef.current = true;
+        upHoldRef.current = false;
         followTail();
       } else {
         // Manual scrolling releases both top-anchor and tail-follow before the
