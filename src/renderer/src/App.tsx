@@ -3397,6 +3397,22 @@ export default function App(): React.JSX.Element {
     const nextItemMeta: Record<string, ItemMeta> = {};
     const nextTurnMeta: Record<string, TurnMeta> = {};
 
+    // One source of items per turn. The server re-enumerates persisted items
+    // as item-N while the disk cache holds the live-streamed ids for the same
+    // rows, so merging both copies of a turn duplicates every message. For a
+    // turn the cache holds in a terminal state, the cached version is also
+    // richer (plan boards, phases, full outputs) — keep it and skip the
+    // server's re-enumerated copy. Every other turn takes the server items,
+    // and stale cached rows of those turns are dropped below.
+    const cachedItemTurnIds = new Set(
+      cachedSession
+        ? cachedSession.items
+            .map((item) => cachedSession.itemMeta[item.id]?.turnId)
+            .filter((id): id is string => Boolean(id))
+        : [],
+    );
+    const serverItemTurnIds = new Set<string>();
+
     for (const turn of turns) {
       nextTurnMeta[turn.id] = {
         status: turn.status,
@@ -3409,6 +3425,11 @@ export default function App(): React.JSX.Element {
         durationMs: turn.durationMs ?? undefined,
         errorMessage: turn.error?.message,
       };
+      const cachedStatus = cachedSession?.turnMeta[turn.id]?.status;
+      const keepCachedTurn =
+        cachedItemTurnIds.has(turn.id) && cachedStatus !== undefined && cachedStatus !== 'inProgress';
+      if (keepCachedTurn) continue;
+      serverItemTurnIds.add(turn.id);
       for (const item of turn.items) {
         if (turn.status === 'inProgress') rememberModelCallInput(turn.id, item);
         nextItemMeta[item.id] = { turnId: turn.id };
@@ -3416,10 +3437,16 @@ export default function App(): React.JSX.Element {
       }
     }
 
-    // A fast disk restore may already have older rows on screen. The resumed
-    // server tail is authoritative for duplicate ids, while cached-only rows
-    // remain visible until their normal lazy server page arrives.
-    const reconciledItems = cachedSession ? upsertMany(cachedSession.items, nextItems) : nextItems;
+    // Drop cached rows for turns the server now owns (client-synthesized rows
+    // like the plan board and system notices have no server copy — keep them).
+    const prunedCachedItems = cachedSession
+      ? cachedSession.items.filter((item) => {
+          if (item.type === 'system' || item.type === 'turnPlan') return true;
+          const turnId = cachedSession.itemMeta[item.id]?.turnId;
+          return !turnId || !serverItemTurnIds.has(turnId);
+        })
+      : [];
+    const reconciledItems = cachedSession ? upsertMany(prunedCachedItems, nextItems) : nextItems;
     const reconciledItemMeta = cachedSession
       ? { ...cachedSession.itemMeta, ...nextItemMeta }
       : nextItemMeta;
