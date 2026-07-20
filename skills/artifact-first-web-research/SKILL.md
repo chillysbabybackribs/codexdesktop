@@ -1,6 +1,6 @@
 ---
 name: artifact-first-web-research
-description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Gather bounded verified evidence with the built-in research and browser tools, inspect targeted artifact passages, and use a task-local script only when the available primitives cannot express the extraction.
+description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Default to browser_research_dual so the visible tab verifies live while bounded background evidence gathers in parallel; inspect targeted artifact passages, and use a task-local script only when the available primitives cannot express the extraction.
 ---
 
 # Artifact-First Web Research
@@ -10,19 +10,20 @@ Treat research as a claim-coverage problem. Define the evidence needed for the r
 ## Fast Path
 
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
-2. If exact official source URLs are already known, pass them through `urls`; otherwise author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
+2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
 3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
-4. Make one `research_web` call. Give it concrete `focus` needs (and `minSources` only where independent corroboration matters); the model-authored evidence contract determines how many sources are gathered and stops early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
-5. Answer from the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
+4. Make one `browser_research_dual` call — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab directly to the strongest destination for live verification while parallel background workers gather bounded artifact-first evidence in the same call. Give it a concrete `objective` for the visible page plus `focus` needs (and `minSources` only where independent corroboration matters); the evidence contract stops gathering early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
+5. Answer from the live-verified page and the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
 6. Make at most one focused gap-fill call. Preserve unresolved uncertainty rather than searching for a higher source count.
 
-Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
+Use `research_web` alone only when the user explicitly asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
 
 ## Choose The Cheapest Reliable Lane
 
-- Known official documentation, release notes, or public records: direct `urls` with focused evidence needs.
-- Broad public discovery: `research_web` with three to six model-authored semantic query variations. Discovery stays hidden and the combined URL pool is ranked before page verification.
-- Visible current-page verification after discovery: `browser_live_search`. It runs parallel SERP extraction in hidden workers, then navigates the existing visible tab directly to the strongest destination page. Never expose a search-results page in the user's tab.
+- Search-shaped, current-information, or post-cutoff questions: `browser_research_dual` — live visible-tab verification and bounded background evidence in parallel from one call. This is the default lane in quality-max.
+- Known official documentation, release notes, or public records: direct `urls` with focused evidence needs through `research_web`, or `browser_navigate` plus `browser_extract_page` when the user should see the page.
+- Background-only public discovery (user asked for no visible browsing, or the visible tab must stay put): `research_web` with three to six model-authored semantic query variations. Discovery stays hidden and the combined URL pool is ranked before page verification.
+- Quick visible lookup where independent corroboration adds nothing: `browser_live_search`. It runs parallel SERP extraction in hidden workers, then navigates the existing visible tab directly to the strongest destination page. Never expose a search-results page in the user's tab.
 - One already-visible public content page: `browser_extract_page`.
 - Read-only, authenticated, or client-rendered state: prefer one `browser_snapshot` call with a precise `objective`, `mode`, `maxItems`, and `order`. When the page must change, include `url` and a page-specific `readySelector` in that same call so navigation, readiness, extraction, state capture, and coverage reporting remain one queued operation.
 - Interaction or mutation: batch actions that remain in the current page. Treat any action that may trigger full-document or SPA-route navigation as a phase boundary. Prefer `browser_flow` to perform common fill/click/submit actions, wait for the destination's containing state, and then run a one-shot find; otherwise perform the action and inspect the destination in a fresh browser operation. If navigation is required first, use `browser_navigate` with a page-specific `readySelector` before a stable-document `browser_run` program.
