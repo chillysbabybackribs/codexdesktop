@@ -52,6 +52,8 @@ const MAX_ARTIFACT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const REDIRECT_HUB_LINK_LIMIT = 8
 const MAX_REDIRECT_FOLLOW_UPS = 16
+const MAX_DISCOVERY_QUERIES = 6
+const SEARCH_WORKER_CONCURRENCY = 4
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
 const PAGE_CACHE_TTL_MS = 5 * 60_000
 const MAX_PAGE_CACHE_ENTRIES = 12
@@ -143,6 +145,32 @@ export type ResearchRunContext = {
   onProgress?: (progress: ResearchProgress) => void
 }
 
+export type SearchDiscoveryRequest = {
+  queries?: string[]
+  maxResults?: number | null
+  maxCandidates?: number | null
+}
+
+export type SearchDiscoveryContext = {
+  signal?: AbortSignal
+  onProgress?: (progress: ResearchProgress) => void
+}
+
+export type SearchDiscoveryResult = {
+  ok: boolean
+  queries: string[]
+  candidates: RankedSerpCandidate[]
+  discoveredCount: number
+  metrics: {
+    durationMs: number
+    searchesAttempted: number
+    cacheHits: number
+    navigation: NavigationMetrics
+  }
+  errors?: Array<{ error: string }>
+  error?: string
+}
+
 type ResearchPageDraft = {
   page: ResearchPage
   content: string
@@ -169,6 +197,14 @@ type ActiveResearchRun = {
 }
 
 type NavigationMetrics = ResearchMetrics['navigation']
+
+type SearchLaneOutcome = {
+  query: string
+  candidates: SerpCandidate[]
+  cacheHit: boolean
+  navigation?: PageNavigationResult
+  error?: string
+}
 
 /**
  * A compact, adaptive research pipeline. Work is serialized per thread with a
@@ -210,6 +246,56 @@ export class ResearchRunner {
       if (runId === runIdOrTurnId || active.turnId === runIdOrTurnId) {
         active.controller.abort()
       }
+    }
+  }
+
+  /**
+   * Discover and rank destination URLs without ever attaching a SERP to the
+   * visible browser window. Model-authored semantic variants are searched in
+   * bounded parallel hidden Chromium workers; a lone query receives a small
+   * compatibility expansion so older callers still get useful breadth.
+   */
+  async discover(
+    request: SearchDiscoveryRequest,
+    context: SearchDiscoveryContext = {}
+  ): Promise<SearchDiscoveryResult> {
+    const suppliedQueries = (request.queries ?? [])
+      .filter((query): query is string => typeof query === 'string' && query.trim().length > 0)
+      .map((query) => query.trim().slice(0, 500))
+      .slice(0, MAX_DISCOVERY_QUERIES)
+    const queries = buildResearchQueryVariants(suppliedQueries, MAX_DISCOVERY_QUERIES)
+    const navigation = createNavigationMetrics()
+
+    if (queries.length === 0) {
+      return {
+        ok: false,
+        queries: [],
+        candidates: [],
+        discoveredCount: 0,
+        metrics: { durationMs: 0, searchesAttempted: 0, cacheHits: 0, navigation },
+        error: 'hidden search discovery requires at least one non-empty query'
+      }
+    }
+
+    const signal = context.signal ?? new AbortController().signal
+    const maxResults = clamp(request.maxResults, DEFAULT_MAX_RESULTS, 1, MAX_MAX_RESULTS)
+    const maxCandidates = clamp(request.maxCandidates, Math.max(6, maxResults), 1, MAX_CANDIDATE_ATTEMPTS)
+    const discovery = await this.searchHiddenInParallel(queries, maxResults, signal, context.onProgress)
+    const candidates = rankSerpCandidates(discovery.candidates, queries, maxCandidates)
+
+    return {
+      ok: candidates.length > 0,
+      queries,
+      candidates,
+      discoveredCount: new Set(discovery.candidates.map(({ url }) => url)).size,
+      metrics: {
+        durationMs: discovery.durationMs,
+        searchesAttempted: discovery.searchesAttempted,
+        cacheHits: discovery.cacheHits,
+        navigation: discovery.navigation
+      },
+      ...(discovery.errors.length > 0 ? { errors: discovery.errors.map((error) => ({ error })) } : {}),
+      ...(candidates.length === 0 ? { error: 'No destination URLs found in hidden search results' } : {})
     }
   }
 
@@ -720,59 +806,17 @@ export class ResearchRunner {
     }
 
     if (!goalMet() && plannedQueries.length > 0 && pageAttempts < maxAttempts && pages.length < targetPages) {
-      const searchView = this.createHiddenView()
-      try {
-        for (const [queryIndex, query] of plannedQueries.entries()) {
-          if (goalMet() || pageAttempts >= maxAttempts || pages.length >= targetPages) break
-          throwIfAborted(signal)
-          searchQueries.push(query)
-          notifyProgress(onProgress, {
-            stage: 'discovering',
-            message: `Searching source lane ${queryIndex + 1}/${plannedQueries.length}…`,
-            queryIndex: queryIndex + 1,
-            queryCount: plannedQueries.length,
-            pagesAttempted: pageAttempts,
-            pagesVerified: pages.length,
-            targetPages
-          })
+      const discovery = await this.searchHiddenInParallel(plannedQueries, maxResults, signal, onProgress)
+      searchQueries.push(...plannedQueries)
+      discovered.push(...discovery.candidates)
+      discoveryMs += discovery.durationMs
+      mergeNavigation(navigation, discovery.navigation)
+      for (const candidate of discovery.candidates) discoveredUrls.add(candidate.url)
+      for (const error of discovery.errors) recordResearchError(errors, { error })
 
-          const discoveryStartedAt = Date.now()
-          try {
-            const cacheKey = `${maxResults}:${query.toLowerCase()}`
-            const cached = this.searchCache.get(cacheKey)
-            let serp: Array<Omit<SerpCandidate, 'query'>>
-
-            if (cached && cached.expiresAt > Date.now()) {
-              serp = cached.candidates
-            } else {
-              const result = await loadSearchPage(searchView.webContents, googleSearchUrl(query, maxResults), signal)
-              recordNavigation(navigation, result)
-              serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
-                searchView.webContents,
-                buildSerpExtractionProgram(maxResults)
-              )
-              this.searchCache.set(cacheKey, {
-                expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
-                candidates: serp
-              })
-            }
-            const queryResults = serp.map((result) => ({ ...result, query }))
-            discovered.push(...queryResults)
-            for (const result of queryResults) discoveredUrls.add(result.url)
-          } catch (error) {
-            if (signal.aborted) throw error
-            recordResearchError(errors, { error: `SERP query failed for "${query}": ${formatError(error)}` })
-          } finally {
-            discoveryMs += Date.now() - discoveryStartedAt
-          }
-
-          const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
-            .map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'search' }))
-          await drainCandidates(candidates)
-        }
-      } finally {
-        this.closeHiddenView(searchView)
-      }
+      const candidates = rankSerpCandidates(discovered, searchQueries, maxAttempts)
+        .map((candidate): ResearchCandidate => ({ ...candidate, sourceKind: 'search' }))
+      await drainCandidates(candidates)
     }
 
     notifyProgress(onProgress, {
@@ -848,6 +892,104 @@ export class ResearchRunner {
     })
     this.searchViews.add(view)
     return view
+  }
+
+  private async searchHiddenInParallel(
+    queries: string[],
+    maxResults: number,
+    signal: AbortSignal,
+    onProgress?: (progress: ResearchProgress) => void
+  ): Promise<{
+    candidates: SerpCandidate[]
+    errors: string[]
+    durationMs: number
+    searchesAttempted: number
+    cacheHits: number
+    navigation: NavigationMetrics
+  }> {
+    const startedAt = Date.now()
+    const outcomes: SearchLaneOutcome[] = new Array(queries.length)
+    let nextIndex = 0
+
+    notifyProgress(onProgress, {
+      stage: 'discovering',
+      message: `Discovering source URLs in ${queries.length} hidden search ${queries.length === 1 ? 'lane' : 'lanes'}…`,
+      queryCount: queries.length
+    })
+
+    const worker = async (): Promise<void> => {
+      while (true) {
+        throwIfAborted(signal)
+        const index = nextIndex
+        nextIndex += 1
+        if (index >= queries.length) return
+        const query = queries[index]
+        const cacheKey = `${maxResults}:${query.toLowerCase()}`
+        const cached = this.searchCache.get(cacheKey)
+        if (cached && cached.expiresAt > Date.now()) {
+          outcomes[index] = {
+            query,
+            cacheHit: true,
+            candidates: cached.candidates.map((candidate) => ({ ...candidate, query }))
+          }
+          continue
+        }
+
+        const view = this.createHiddenView()
+        try {
+          const navigation = await loadSearchPage(view.webContents, googleSearchUrl(query, maxResults), signal)
+          const serp = await evaluate<Array<Omit<SerpCandidate, 'query'>>>(
+            view.webContents,
+            buildSerpExtractionProgram(maxResults)
+          )
+          this.searchCache.set(cacheKey, {
+            expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+            candidates: serp
+          })
+          outcomes[index] = {
+            query,
+            cacheHit: false,
+            navigation,
+            candidates: serp.map((candidate) => ({ ...candidate, query }))
+          }
+        } catch (error) {
+          if (signal.aborted) throw error
+          outcomes[index] = {
+            query,
+            cacheHit: false,
+            candidates: [],
+            error: `Hidden search lane failed for "${query}": ${formatError(error)}`
+          }
+        } finally {
+          this.closeHiddenView(view)
+        }
+      }
+    }
+
+    await Promise.all(Array.from(
+      { length: Math.min(SEARCH_WORKER_CONCURRENCY, queries.length) },
+      () => worker()
+    ))
+
+    const navigation = createNavigationMetrics()
+    for (const outcome of outcomes) {
+      if (outcome?.navigation) recordNavigation(navigation, outcome.navigation)
+    }
+    notifyProgress(onProgress, {
+      stage: 'discovering',
+      message: `Ranked destination URLs from ${queries.length} hidden search ${queries.length === 1 ? 'lane' : 'lanes'}…`,
+      queryIndex: queries.length,
+      queryCount: queries.length
+    })
+
+    return {
+      candidates: outcomes.flatMap((outcome) => outcome?.candidates ?? []),
+      errors: outcomes.flatMap((outcome) => outcome?.error ? [outcome.error] : []),
+      durationMs: Date.now() - startedAt,
+      searchesAttempted: outcomes.length,
+      cacheHits: outcomes.filter((outcome) => outcome?.cacheHit).length,
+      navigation
+    }
   }
 
   private readPageCache(url: string): ExtractedResearchPage | null {
