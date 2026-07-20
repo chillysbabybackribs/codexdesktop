@@ -446,7 +446,7 @@ test('the dynamic tool surface includes verified research primitives', () => {
   }
   assert.deepEqual(liveSearchSchema.required, ['objective'])
   assert.deepEqual(liveSearchSchema.anyOf, [{ required: ['query'] }, { required: ['queries'] }])
-  assert.equal(liveSearchSchema.properties.queries?.minItems, 2)
+  assert.equal(liveSearchSchema.properties.queries?.minItems, 3)
   assert.equal(liveSearchSchema.properties.queries?.maxItems, 6)
   assert.match(browserLiveSearch.description, /parallel hidden Chromium workers/i)
   assert.match(browserLiveSearch.description, /Search result pages are never shown/i)

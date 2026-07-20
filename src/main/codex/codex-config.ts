@@ -495,7 +495,7 @@ const browserLiveSearchSchema = {
     query: { type: 'string', description: 'Backward-compatible primary query. Prefer queries with three to six semantic variations.' },
     queries: {
       type: 'array',
-      minItems: 2,
+      minItems: 3,
       maxItems: 6,
       uniqueItems: true,
       items: { type: 'string' },
