@@ -2269,6 +2269,9 @@ samp {
 }
 
 .task-activity-card.is-live {
+  /* Live content is already on screen and changes frequently. Do not let
+     content-visibility substitute an estimated height near the viewport edge. */
+  content-visibility: visible;
   contain-intrinsic-size: auto 620px;
 }
 
@@ -2390,28 +2393,35 @@ samp {
 }
 
 .live-activity-line.is-current {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  color: #a6a6a6;
   font-weight: 550;
 }
 
-.live-activity-line.is-current.is-exiting {
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 180ms ease, transform 180ms ease;
+.live-activity-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.live-activity-line.is-current.is-entering {
-  animation: live-activity-enter 240ms ease-out;
+.live-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #bdbdbd;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 5%);
+  animation: live-status-breathe 1.8s ease-in-out infinite;
 }
 
-@keyframes live-activity-enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@keyframes live-status-breathe {
+  50% {
+    opacity: 0.5;
   }
 }
 
@@ -3347,7 +3357,7 @@ samp {
   font-size: 15px;
 }
 
-.message-assistant.is-streaming > *:last-child::after {
+.message-assistant.is-streaming .markdown-body > :last-child::after {
   content: "";
   display: inline-block;
   width: 7px;
@@ -3372,6 +3382,10 @@ samp {
   }
 
   .diff-skeleton {
+    animation: none;
+  }
+
+  .live-status-dot {
     animation: none;
   }
 }

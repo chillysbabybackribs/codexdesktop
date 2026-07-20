@@ -1104,27 +1104,10 @@ export function isHiddenDuringLiveStep(item: WorkItem, live: boolean): boolean {
 }
 
 function CurrentActivityLine({ text }: { text: string }): React.JSX.Element {
-  const [display, setDisplay] = useState(text)
-  const [phase, setPhase] = useState<'in' | 'out'>('in')
-
-  useEffect(() => {
-    if (text === display) {
-      return
-    }
-    setPhase('out')
-    const timer = window.setTimeout(() => {
-      setDisplay(text)
-      setPhase('in')
-    }, 180)
-    return () => window.clearTimeout(timer)
-  }, [text, display])
-
   return (
-    <div
-      className={`live-activity-line is-current shimmer-text ${phase === 'out' ? 'is-exiting' : 'is-entering'}`}
-      aria-live="polite"
-    >
-      {display}
+    <div className="live-activity-line is-current" aria-live="polite">
+      <span className="live-status-dot" aria-hidden="true" />
+      <span className="live-activity-text">{text}</span>
     </div>
   )
 }
@@ -1289,7 +1272,8 @@ export function TurnTail({
 
     return (
       <div className="turn-tail is-live">
-        <span className="shimmer-text tail-label">{label}·</span>
+        <span className="live-status-dot" aria-hidden="true" />
+        <span className="tail-label">{label}</span>
         {elapsed !== null && elapsed >= 1000 ? <span className="tail-meta">{fmtDuration(elapsed)}</span> : null}
         {tokens ? (
           <span className="tail-meta" title={tokenTooltip(meta?.tokens)}>
