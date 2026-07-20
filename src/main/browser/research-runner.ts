@@ -24,8 +24,12 @@ import { ResearchOriginRouter, type ResearchOriginRouteOutcome } from './researc
 import { fetchStaticResearchPage } from './research-static-fetch.js'
 import {
   assessExtractedPage,
+  bingSearchFeedUrl,
   buildResearchQueryVariants,
   buildSerpExtractionProgram,
+  duckDuckGoLiteSearchUrl,
+  extractBingSearchFeedCandidates,
+  extractDuckDuckGoLiteCandidates,
   extractSameHostNavLinks,
   googleSearchUrl,
   isCrossHostLanding,
@@ -56,6 +60,8 @@ const MAX_REDIRECT_FOLLOW_UPS = 16
 const MAX_DISCOVERY_QUERIES = 6
 const SEARCH_WORKER_CONCURRENCY = 4
 const SEARCH_CACHE_TTL_MS = 10 * 60_000
+const SEARCH_DOCUMENT_MAX_BYTES = 300_000
+const SEARCH_PROVIDER_MAX_REDIRECTS = 3
 const PAGE_CACHE_TTL_MS = 5 * 60_000
 const MAX_PAGE_CACHE_ENTRIES = 12
 const RESEARCH_PRUNE_COOLDOWN_MS = 30 * 60_000
@@ -986,7 +992,7 @@ export class ResearchRunner {
         nextIndex += 1
         if (index >= queries.length) return
         const query = queries[index]
-        const cacheKey = `${maxResults}:${query.toLowerCase()}`
+        const cacheKey = `multi-provider-v1:${maxResults}:${query.toLowerCase()}`
         const cached = this.searchCache.get(cacheKey)
         if (cached && cached.expiresAt > Date.now()) {
           outcomes[index] = {
@@ -998,6 +1004,24 @@ export class ResearchRunner {
           continue
         }
 
+        const fastSearch = await fetchFastSearchCandidates(query, maxResults, searchSignal)
+        if (fastSearch.candidates.length > 0) {
+          this.searchCache.set(cacheKey, {
+            expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+            candidates: fastSearch.candidates
+          })
+          outcomes[index] = {
+            query,
+            cacheHit: false,
+            candidates: fastSearch.candidates.map((candidate) => ({ ...candidate, query }))
+          }
+          deliverLaneCandidates(outcomes[index].candidates)
+          continue
+        }
+
+        // Both inert, server-rendered providers failed. Keep the original
+        // Chromium-rendered Google lane as a last resort instead of turning a
+        // transient provider outage into a zero-result research call.
         const view = this.createHiddenView()
         try {
           const navigation = await loadSearchPage(view.webContents, googleSearchUrl(query, maxResults), searchSignal)
@@ -1005,15 +1029,20 @@ export class ResearchRunner {
             view.webContents,
             buildSerpExtractionProgram(maxResults)
           )
-          this.searchCache.set(cacheKey, {
-            expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
-            candidates: serp
-          })
+          if (serp.length > 0) {
+            this.searchCache.set(cacheKey, {
+              expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+              candidates: serp
+            })
+          }
           outcomes[index] = {
             query,
             cacheHit: false,
             navigation,
-            candidates: serp.map((candidate) => ({ ...candidate, query }))
+            candidates: serp.map((candidate) => ({ ...candidate, query })),
+            ...(serp.length > 0
+              ? {}
+              : { error: `Search providers returned no destinations for "${query}": ${fastSearch.errors.join('; ')}; Google rendered no result cards` })
           }
           deliverLaneCandidates(outcomes[index].candidates)
         } catch (error) {
