@@ -59,6 +59,10 @@ export class LocalSkillRegistry {
     }
   }
 
+  list(): SkillMetadata[] {
+    return this.skills.map((skill) => ({ ...skill }));
+  }
+
   buildTurnInput(
     text: string,
     isNewThread: boolean,

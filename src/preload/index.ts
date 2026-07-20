@@ -51,6 +51,7 @@ import type { PluginInstalledResponse } from '../shared/codex-protocol/v2/Plugin
 import type { PluginListResponse } from '../shared/codex-protocol/v2/PluginListResponse.js'
 import type { PluginInstallResponse } from '../shared/codex-protocol/v2/PluginInstallResponse.js'
 import type { PluginReadResponse } from '../shared/codex-protocol/v2/PluginReadResponse.js'
+import type { SkillMetadata } from '../shared/codex-protocol/v2/SkillMetadata.js'
 import { ipcChannels } from '../shared/ipc.js'
 
 export const api = {
@@ -150,6 +151,7 @@ export const api = {
   },
   session: {
     getAuthStatus: () => ipcRenderer.invoke(ipcChannels.sessionGetAuthStatus),
+    listSkills: (): Promise<SkillMetadata[]> => ipcRenderer.invoke(ipcChannels.sessionListSkills),
     listModels: () => ipcRenderer.invoke(ipcChannels.sessionListModels),
     listThreads: (params?: CodexListThreadsParams) =>
       ipcRenderer.invoke(ipcChannels.sessionListThreads, params),

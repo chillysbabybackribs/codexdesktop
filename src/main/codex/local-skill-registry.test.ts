@@ -35,6 +35,7 @@ test('local skill path containment rejects siblings and traversal', () => {
 
 test('local skill registry composes visible text, attachments, and one skill input', () => {
   const registry = new LocalSkillRegistry('/app', '/app/skills', [researchSkill])
+  assert.deepEqual(registry.list().map((skill) => skill.name), [researchSkill.name])
   const input = registry.buildTurnInput(
     '$artifact-first-web-research Research this image',
     false,

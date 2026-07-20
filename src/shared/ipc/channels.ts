@@ -43,6 +43,7 @@ export const ipcChannels = {
   clipboardWrite: 'clipboard:write',
   sessionGetAuthStatus: 'session:getAuthStatus',
   sessionListModels: 'session:listModels',
+  sessionListSkills: 'session:listSkills',
   sessionListThreads: 'session:listThreads',
   sessionStartThread: 'session:startThread',
   sessionResumeThread: 'session:resumeThread',

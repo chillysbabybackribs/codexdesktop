@@ -632,7 +632,7 @@ function DiffCard({
         {kindBadge ? <span className="work-chip chip-muted">{kindBadge}</span> : null}
         {kind.type === 'update' && kind.move_path ? (
           <span className="diff-file-dir" title={kind.move_path}>
-          → {basename(kind.move_path)}
+            → {basename(kind.move_path)}
           </span>
         ) : null}
         <span className="diff-counts">

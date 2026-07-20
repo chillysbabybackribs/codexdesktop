@@ -81,6 +81,7 @@ export function registerSessionIpc(
   }
 
   ipcMain.handle(ipcChannels.sessionGetAuthStatus, () => client.getAuthStatus());
+  ipcMain.handle(ipcChannels.sessionListSkills, () => client.listSkills());
   ipcMain.handle(ipcChannels.sessionListModels, async () => {
     const [codexModels, claudeModels] = await Promise.allSettled([
       client.listModels(),

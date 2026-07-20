@@ -3510,6 +3510,11 @@ samp {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .diff-card,
+  .diff-expand {
+    transition: none;
+  }
+
   .shimmer-text {
     animation: none;
     background: none;

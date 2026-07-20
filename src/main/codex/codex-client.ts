@@ -17,6 +17,7 @@ import type { ServerNotification } from '../../shared/codex-protocol/ServerNotif
 import type { DynamicToolCallParams } from '../../shared/codex-protocol/v2/DynamicToolCallParams.js'
 import type { Model } from '../../shared/codex-protocol/v2/Model.js'
 import type { ModelListResponse } from '../../shared/codex-protocol/v2/ModelListResponse.js'
+import type { SkillMetadata } from '../../shared/codex-protocol/v2/SkillMetadata.js'
 import type { ThreadListResponse } from '../../shared/codex-protocol/v2/ThreadListResponse.js'
 import type { ThreadTurnsListResponse } from '../../shared/codex-protocol/v2/ThreadTurnsListResponse.js'
 import type { ThreadGoal } from '../../shared/codex-protocol/v2/ThreadGoal.js'
@@ -126,6 +127,11 @@ export class CodexClient extends EventEmitter implements SessionProvider {
       )
     }
     return visible
+  }
+
+  async listSkills(): Promise<SkillMetadata[]> {
+    await this.ensureStarted()
+    return this.localSkills.list()
   }
 
   async listThreads(options?: { cursor?: string | null; cwd?: string | null }): Promise<ThreadListResponse> {
