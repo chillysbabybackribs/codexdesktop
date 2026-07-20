@@ -6,6 +6,7 @@ import { MarkdownContent, StreamingMarkdownContent } from './MarkdownContent';
 import { stripMentionContext } from './mention-model';
 import { stripIntakeInjections } from './main-chat-intake';
 import { parseAuditFeedback } from './audit-trigger';
+import { parseAgentContinuation } from './agent-continuation';
 import { stripLegacyBrowserRoutingNote } from './browser-routing-note';
 import { formatTokens } from './TraceModal';
 import { isWorkItem, type ActivityItem, type ChatItem } from './transcript-model';
