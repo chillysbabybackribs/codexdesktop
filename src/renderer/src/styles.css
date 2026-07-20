@@ -8056,26 +8056,35 @@ code.agent-audit-live-step {
   contain-intrinsic-size: auto 120px;
 }
 
-/* Phase 4: per-turn workspace revert on the completed-turn tail. */
+/* Phase 4: per-turn workspace checkpoint restore on the completed-turn tail.
+   Presented as a quiet "Restore checkpoint" marker (bookmark icon + label)
+   rather than a boxed button, matching the ai-elements Checkpoint component. */
 .turn-revert-button {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  border: none;
   background: transparent;
-  color: #a1a1a1;
-  border-radius: 6px;
-  font-size: 11px;
-  padding: 2px 8px;
+  color: #7b7b7b;
+  font-size: 11.5px;
+  padding: 2px 2px;
   cursor: pointer;
   white-space: nowrap;
+  transition: color 0.12s ease;
+}
+
+.turn-revert-icon {
+  flex: 0 0 auto;
+  opacity: 0.85;
 }
 
 .turn-revert-button:hover {
   color: #d9dde1;
-  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .turn-revert-button.is-confirming {
   color: #ffb38a;
-  border-color: rgba(255, 179, 138, 0.55);
 }
 
 /* --- Review bar: Cursor-style Keep/Undo after a turn that edited files --- */
