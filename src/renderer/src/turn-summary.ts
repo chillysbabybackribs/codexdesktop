@@ -24,6 +24,11 @@ export function isBrowseAction(action: CommandAction): boolean {
   return action.type === 'read' || action.type === 'listFiles' || action.type === 'search'
 }
 
+function isBrowserResearchTool(tool: string): boolean {
+  const leaf = tool.split('__').at(-1) ?? tool
+  return leaf === 'research_web' || leaf === 'browser_live_search' || leaf === 'browser_research_dual'
+}
+
 // Human label for what Codex is doing right now, from the newest live item.
 export function currentActionLabel(
   items: WorkItem[],
@@ -69,6 +74,9 @@ export function currentActionLabel(
         return path ? `Editing ${basename(path)}` : 'Editing files'
       }
       case 'mcpToolCall':
+        if (isBrowserResearchTool(item.tool)) {
+          return latestItemProgress(itemMeta[item.id]) ?? 'Researching live sources'
+        }
         return `Calling ${item.server}.${item.tool}`
       case 'dynamicToolCall': {
         const progress = item.tool === 'research_web' || item.tool === 'browser_live_search' || item.tool === 'browser_research_dual'

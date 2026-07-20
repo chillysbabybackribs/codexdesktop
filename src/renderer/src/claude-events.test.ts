@@ -128,6 +128,43 @@ test('a full claude turn renders through the shared reducer', () => {
   assert.equal(state.turnMeta['claude-t1-turn1']?.tokens?.modelCallCount, 1);
 });
 
+test('text followed by a tool becomes commentary while the later answer stays final', () => {
+  const { state } = replayTurn(
+    [
+      messageStart('msg-narration'),
+      blockStart(0, { type: 'text' }),
+      textDelta(0, "I'll research current reports."),
+      blockStop(0),
+      messageStart('msg-tool'),
+      blockStart(0, {
+        type: 'tool_use',
+        id: 'toolu_research',
+        name: 'mcp__browser__research_web',
+      }),
+      inputJsonDelta(0, '{"query": "desktop complaints"}'),
+      blockStop(0),
+      toolResult('toolu_research', 'sources'),
+      messageStart('msg-answer'),
+      blockStart(0, { type: 'text' }),
+      textDelta(0, 'Here are the findings.'),
+      blockStop(0),
+    ],
+    'research complaints',
+  );
+
+  const messages = state.items.filter(
+    (item): item is Extract<(typeof state.items)[number], { type: 'agentMessage' }> =>
+      item.type === 'agentMessage',
+  );
+  assert.deepEqual(
+    messages.map(({ text, phase }) => ({ text, phase })),
+    [
+      { text: "I'll research current reports.", phase: 'commentary' },
+      { text: 'Here are the findings.', phase: null },
+    ],
+  );
+});
+
 test('thinking blocks render as reasoning; tool_use renders as a tool call that completes', () => {
   const { state } = replayTurn(
     [

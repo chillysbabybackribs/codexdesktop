@@ -135,6 +135,16 @@ test('currentActionLabel labels edits and tool calls by their target', () => {
   assert.equal(currentActionLabel([editing], {}, false), 'Editing app.ts')
   assert.equal(currentActionLabel([fileItem({ status: 'inProgress' })], {}, false), 'Editing files')
   assert.equal(currentActionLabel([mcpItem({ status: 'inProgress' })], {}, false), 'Calling browser.screenshot')
+  assert.equal(
+    currentActionLabel([
+      mcpItem({
+        status: 'inProgress',
+        server: 'claude',
+        tool: 'mcp__browser__research_web'
+      })
+    ], {}, false),
+    'Researching live sources'
+  )
 })
 
 test('currentActionLabel picks the newest running item, not settled ones', () => {
