@@ -125,3 +125,31 @@ test('cdpFileArtifact extracts pdf/trace payloads from browser_cdp only', () => 
     null
   )
 })
+
+test('cdpFileArtifact recognizes browser_network artifacts nested under network', () => {
+  const responseBody = {
+    artifactPath: '/tmp/artifacts/data.json',
+    fileName: 'data.json',
+    mediaType: 'application/json',
+    kind: 'response-body',
+    bytes: 4_096
+  }
+  const bodyItem = toolCall({
+    tool: 'browser_network',
+    contentItems: [{ type: 'inputText', text: JSON.stringify({ result: { network: { responseBody } } }) }]
+  })
+  assert.deepEqual(cdpFileArtifact(bodyItem), responseBody)
+
+  const streamArtifact = {
+    artifactPath: '/tmp/artifacts/stream.jsonl',
+    fileName: 'stream.jsonl',
+    mediaType: 'application/jsonl',
+    kind: 'network-stream',
+    bytes: 1_024
+  }
+  const streamItem = toolCall({
+    tool: 'browser_network',
+    contentItems: [{ type: 'inputText', text: JSON.stringify({ network: { stream: { artifact: streamArtifact } } }) }]
+  })
+  assert.deepEqual(cdpFileArtifact(streamItem), streamArtifact)
+})
