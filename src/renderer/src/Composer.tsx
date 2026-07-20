@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { ArrowUp, Plus } from 'lucide-react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
 import { steerComposerPlaceholder } from './app-helpers';
@@ -25,6 +26,7 @@ import {
 } from './mention-model';
 import { flattenPlugins } from './plugin-lifecycle';
 import { PluginMentionMenu } from './PluginMentionMenu';
+import { IconButton } from './UiPrimitives';
 
 export { discardComposerDraft } from './composer-draft';
 
@@ -422,42 +424,45 @@ export function Composer({
       />
       <div className="composer-primary-action">
         {isTurnActive ? (
-          <button
+          <IconButton
             type="button"
             className="stop-square-button"
-            aria-label="Stop turn"
-            title="Stop"
+            label="Stop turn"
+            tooltip="Stop response"
             onClick={() => void onStop()}
           >
             <span className="stop-square" aria-hidden="true" />
-          </button>
+          </IconButton>
         ) : hasDraft ? (
-          <button
+          <IconButton
             type="submit"
             className="send-button"
-            aria-label="Send message"
+            label="Send message"
+            tooltip="Send"
+            shortcut="Enter"
             disabled={isLoading}
           >
-            <SendArrowIcon />
-          </button>
+            <ArrowUp strokeWidth={2} aria-hidden="true" />
+          </IconButton>
         ) : null}
       </div>
       </form>
       <div className="composer-control-bar" aria-label="Composer controls">
         <div className="composer-leading-actions">
           <div className="composer-create-menu-wrap" ref={createMenuRef}>
-            <button
+            <IconButton
               ref={createMenuTriggerRef}
               type="button"
               className="composer-new-thread-button"
-              aria-label="Create"
-              title="Create new chat or agent"
+              label="Create"
+              tooltip="Create chat or agent"
+              side="top"
               aria-haspopup="menu"
               aria-expanded={isCreateMenuOpen}
               onClick={() => setIsCreateMenuOpen((open) => !open)}
             >
               <NewChatIcon />
-            </button>
+            </IconButton>
             {isCreateMenuOpen ? (
               <div className="composer-create-menu" role="menu" aria-label="Create">
                 <button
@@ -510,11 +515,7 @@ export function Composer({
 }
 
 function NewChatIcon(): React.JSX.Element {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
+  return <Plus strokeWidth={1.8} aria-hidden="true" />;
 }
 
 export function NewAgentIcon(): React.JSX.Element {
