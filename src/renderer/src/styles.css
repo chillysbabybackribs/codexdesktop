@@ -596,6 +596,7 @@ samp {
 .main-chat-tabbar {
   position: relative;
   z-index: 8;
+  container-type: inline-size;
   display: flex;
   align-items: stretch;
   min-width: 0;
@@ -1048,10 +1049,10 @@ samp {
 
 .thread-select-wrap.is-tabbar .thread-menu {
   top: calc(100% + 8px);
-  right: 0;
+  right: 8px;
   bottom: auto;
   left: auto;
-  width: min(620px, calc(100vw - 32px));
+  width: min(620px, calc(100cqw - 16px));
   max-height: min(60vh, 520px);
   transform: none;
   transform-origin: top right;
@@ -1062,7 +1063,7 @@ samp {
    first view stays compact and explicit; history expands in place only when
    requested, so the header no longer reads as a row of unexplained glyphs. */
 .thread-select-wrap.is-tabbar .thread-menu.header-options-menu {
-  width: 274px;
+  width: min(274px, calc(100cqw - 16px));
   max-height: none;
   padding: 6px;
   border-radius: 9px;
