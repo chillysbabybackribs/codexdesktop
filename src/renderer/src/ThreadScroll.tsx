@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createContext } from 'react';
 import { resolveMessageScrollerSnapshot } from './message-scroller-visibility';
+import { completionScrollMode } from './thread-scroll-state';
 
 export type MessageScrollerAnchor = {
   id: string;
@@ -447,35 +448,31 @@ export function ThreadScroll({
         anchorFrameRef.current = null;
         anchorTop();
       });
-    } else if (activeTurnId === null && anchorTurnRef.current !== null) {
-      // The turn finished. Stop actively re-anchoring, but FREEZE the current
-      // scroll position so the message/answer don't snap back down. Removing the
-      // spacer entirely would shrink scrollHeight below the current scrollTop and
-      // the browser would clamp it (the snap). Instead, size the spacer to the
-      // exact minimum that preserves scrollTop — 0 if the answer already fills
-      // the viewport, otherwise just enough to hold position (no excess).
+    } else if (activeTurnId === null && prevTurnRef.current !== null) {
+      const wasTopAnchored = anchorTurnRef.current !== null;
+      const mode = completionScrollMode(wasTopAnchored, pinnedRef.current);
       anchorTurnRef.current = null;
-      const el = ref.current;
-      const spacer = spacerRef.current;
-      if (el && spacer) {
-        const priorSpacer = spacer.offsetHeight;
-        const contentWithoutSpacer = el.scrollHeight - priorSpacer;
-        const needed = Math.max(0, el.scrollTop + el.clientHeight - contentWithoutSpacer);
-        if (needed <= 0) {
-          setSpacerOn(false);
-        } else {
-          spacer.style.height = `${needed}px`;
-        }
+
+      if (mode === 'follow-tail') {
+        // Completion can add controls below the transcript in the same commit
+        // (notably the file-review bar), shrinking clientHeight after the last
+        // streamed token. Remove the response runway and re-pin through the
+        // existing two-frame + ResizeObserver settling path so the complete
+        // answer always clears the composer stack.
+        cancelScheduledFollow();
+        if (spacerRef.current) spacerRef.current.style.height = '0px';
+        setSpacerOn(false);
+        pinnedRef.current = true;
+        followTail();
       } else {
+        // Manual scrolling releases both top-anchor and tail-follow before the
+        // turn completes. Never pull that reader away from the place they chose.
         setSpacerOn(false);
       }
-      // The reader is no longer following the live edge; leave bottom-follow off
-      // until they scroll back down themselves.
-      pinnedRef.current = false;
     }
     prevTurnRef.current = activeTurnId;
     justResetRef.current = false;
-  }, [activeTurnId, anchorTop, cancelScheduledFollow]);
+  }, [activeTurnId, anchorTop, cancelScheduledFollow, followTail]);
 
   useEffect(() => {
     const el = ref.current;

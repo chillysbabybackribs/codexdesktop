@@ -675,9 +675,10 @@ const AgentWindow = memo(function AgentWindow({
 }, areAgentWindowPropsEqual)
 
 function AgentRunReceipt({ session }: { session: AgentSession }): React.JSX.Element {
+  const status = session.runStatus ?? 'working'
   const terminal = session.runStatus === 'completed' || session.runStatus === 'failed' || session.runStatus === 'stopped'
   return (
-    <section className={`agent-run-receipt is-${session.runStatus}`} aria-label="Agent handoff status">
+    <section className={`agent-run-receipt is-${status}`} aria-label="Agent handoff status">
       <div className="agent-handoff-rail" aria-hidden="true">
         <span className="is-complete" />
         <i />
@@ -687,7 +688,7 @@ function AgentRunReceipt({ session }: { session: AgentSession }): React.JSX.Elem
       </div>
       <div className="agent-run-receipt-copy">
         <div className="agent-run-receipt-head">
-          <strong>{runStatusLabel(session.runStatus)}</strong>
+          <strong>{runStatusLabel(status)}</strong>
           <span>{wakeLabel(session.wakeStatus)}</span>
         </div>
         {session.runTask ? <p className="agent-run-task">{session.runTask}</p> : null}

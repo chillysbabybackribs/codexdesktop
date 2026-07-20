@@ -61,15 +61,15 @@ export type AgentSession = {
   reasoningEffort: ReasoningEffort | null
   contextUsage: ThreadTokenUsage | null
   isCompacting: boolean
-  sourceProvider: AgentRunProvider | null
-  executionLane: AgentRunLane | null
-  nativeRunId: string | null
-  runStatus: AgentRunStatus | null
-  runTask: string | null
-  runProgress: string | null
-  runResultSummary: string | null
-  runOutputPath: string | null
-  wakeStatus: AgentWakeStatus
+  sourceProvider?: AgentRunProvider | null
+  executionLane?: AgentRunLane | null
+  nativeRunId?: string | null
+  runStatus?: AgentRunStatus | null
+  runTask?: string | null
+  runProgress?: string | null
+  runResultSummary?: string | null
+  runOutputPath?: string | null
+  wakeStatus?: AgentWakeStatus
 }
 
 export type PersistedAgentSession = {
