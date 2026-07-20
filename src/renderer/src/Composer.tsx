@@ -10,7 +10,6 @@ import { ArrowUp, Plus } from 'lucide-react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type { PluginSummary, ProviderId } from '../../shared/session-protocol';
 import { steerComposerPlaceholder } from './app-helpers';
-import { SendArrowIcon } from './AgentDock';
 import {
   AttachmentButton,
   AttachmentStrip,
