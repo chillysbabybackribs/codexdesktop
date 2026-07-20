@@ -259,8 +259,18 @@ export class AgentCompletionCoordinator {
       this.emit({ type: 'agentRun', run: { ...run, wakeStatus: 'resumed' } })
       return
     }
+    const activeTurnId = this.activeTurns.get(run.parentThreadId)
+    // A child that finishes while its spawning turn is still active is
+    // already being observed by that model call (blocking collab/gather
+    // semantics). Starting another turn would duplicate the continuation.
+    if (activeTurnId && activeTurnId === run.parentTurnId) {
+      this.delivered.add(run.id)
+      this.emit({ type: 'agentRun', run: { ...run, wakeStatus: 'suppressed' } })
+      void this.persist()
+      return
+    }
     const threadRuns = this.queued.get(run.parentThreadId) ?? new Map<string, AgentRunSnapshot>()
-    threadRuns.set(run.id, { ...run, wakeStatus: this.activeTurns.has(run.parentThreadId) ? 'queued' : 'pending' })
+    threadRuns.set(run.id, { ...run, wakeStatus: activeTurnId ? 'queued' : 'pending' })
     this.queued.set(run.parentThreadId, threadRuns)
     this.emit({ type: 'agentRun', run: threadRuns.get(run.id)! })
     void this.persist()
