@@ -31,7 +31,11 @@ export function useMessageScrollerVisibility(): MessageScrollerVisibility {
   return useContext(MessageScrollerVisibilityContext);
 }
 
-function ReaderPositionMenu({ anchors }: { anchors: MessageScrollerAnchor[] }): React.JSX.Element | null {
+function ReaderPositionMenu({
+  anchors,
+}: {
+  anchors: MessageScrollerAnchor[];
+}): React.JSX.Element | null {
   const { currentAnchorId, visibleMessageIds, jumpToMessage } = useMessageScrollerVisibility();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -80,11 +84,17 @@ function ReaderPositionMenu({ anchors }: { anchors: MessageScrollerAnchor[] }): 
         <span className="reader-position-rail" aria-hidden="true">
           <span
             className="reader-position-rail-fill"
-            style={{ '--reader-progress': `${(currentIndex / (anchors.length - 1)) * 100}%` } as React.CSSProperties}
+            style={
+              {
+                '--reader-progress': `${(currentIndex / (anchors.length - 1)) * 100}%`,
+              } as React.CSSProperties
+            }
           />
         </span>
         <span className="reader-position-count">
-          {currentIndex + 1}<span aria-hidden="true"> / </span>{anchors.length}
+          {currentIndex + 1}
+          <span aria-hidden="true"> / </span>
+          {anchors.length}
         </span>
         <svg className="reader-position-chevron" viewBox="0 0 16 16" aria-hidden="true">
           <path d="m4.75 6.25 3.25 3 3.25-3" />
@@ -117,7 +127,9 @@ function ReaderPositionMenu({ anchors }: { anchors: MessageScrollerAnchor[] }): 
                     triggerRef.current?.focus();
                   }}
                 >
-                  <span className="reader-position-item-index">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="reader-position-item-index">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                   <span className="reader-position-item-label">{anchor.label}</span>
                   <span className="reader-position-item-dot" aria-hidden="true" />
                 </button>
@@ -180,7 +192,9 @@ export function ThreadScroll({
   const scrollKeyRef = useRef(scrollKey);
   const scrollPositionsRef = useRef(new Map<string, { top: number; pinned: boolean }>());
   const [spacerOn, setSpacerOn] = useState(false);
-  const [visibility, setVisibility] = useState<Pick<MessageScrollerVisibility, 'currentAnchorId' | 'visibleMessageIds'>>({
+  const [visibility, setVisibility] = useState<
+    Pick<MessageScrollerVisibility, 'currentAnchorId' | 'visibleMessageIds'>
+  >({
     currentAnchorId: null,
     visibleMessageIds: [],
   });

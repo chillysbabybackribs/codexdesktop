@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type { Model, PluginSummary } from '../../shared/session-protocol';
 import { resolveModelProvider } from './app-helpers';
@@ -152,7 +145,12 @@ export function ChatPaneView({
     const anchors: MessageScrollerAnchor[] = [];
     const seen = new Set<string>();
     for (const row of rows) {
-      if (row.kind !== 'chat' || row.item.type !== 'userMessage' || !row.turnId || seen.has(row.turnId)) {
+      if (
+        row.kind !== 'chat' ||
+        row.item.type !== 'userMessage' ||
+        !row.turnId ||
+        seen.has(row.turnId)
+      ) {
         continue;
       }
       seen.add(row.turnId);
@@ -364,9 +362,7 @@ export function ChatPaneView({
                   itemMeta={itemMeta}
                   live={Boolean(paneTurnId) && row.turnId === paneTurnId}
                   workspace={workspace}
-                  streamingMessage={
-                    Boolean(streamingMessageId) && row.turnId === paneTurnId
-                  }
+                  streamingMessage={Boolean(streamingMessageId) && row.turnId === paneTurnId}
                   turnId={row.turnId}
                 />
               );
@@ -416,9 +412,7 @@ export function ChatPaneView({
             onKeepAll={() => void runFocused(() => onKeepTurn(reviewTarget.turnId))}
             onSetAlwaysKeepAll={onSetAlwaysKeepAll}
             onUndoAll={() => void runFocused(() => onUndoTurnAll(reviewTarget.turnId))}
-            onUndoFile={(path) =>
-              void runFocused(() => onUndoFile(reviewTarget.turnId, path))
-            }
+            onUndoFile={(path) => void runFocused(() => onUndoFile(reviewTarget.turnId, path))}
           />
         ) : null}
         {dockExtras?.agentColumn}
@@ -468,9 +462,7 @@ export function ChatPaneView({
           }}
           onNewThread={() => void runFocused(onNewThread)}
           onNewAgent={
-            dockExtras?.onNewAgent
-              ? () => void runFocused(dockExtras.onNewAgent)
-              : undefined
+            dockExtras?.onNewAgent ? () => void runFocused(dockExtras.onNewAgent) : undefined
           }
           providerId={providerId}
           footerContext={dockExtras?.composerFooterContext}

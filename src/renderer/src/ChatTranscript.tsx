@@ -159,9 +159,7 @@ export function stripInjectedMemory(text: string): string {
   );
 }
 
-export function visibleUserMessageText(
-  item: Extract<ChatItem, { type: 'userMessage' }>,
-): string {
+export function visibleUserMessageText(item: Extract<ChatItem, { type: 'userMessage' }>): string {
   return item.content
     .filter((content) => content.type === 'text')
     .map((content) =>
