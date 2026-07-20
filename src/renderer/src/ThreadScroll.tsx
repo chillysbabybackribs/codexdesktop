@@ -328,14 +328,20 @@ export function ThreadScroll({
       frameRef.current = null;
       const el = ref.current;
 
-      if (!el || !pinnedRef.current) {
+      if (!el || !pinnedRef.current || anchorTurnRef.current !== null) {
         return;
       }
 
+      // Once bottom-follow owns the view again, any leftover anchor runway is
+      // dead space that would hold the real tail a spacer-height above the
+      // composer — reclaim it before measuring the target.
+      const spacer = spacerRef.current;
+      if (spacer && spacer.offsetHeight > 0) spacer.style.height = '0px';
+
       const target = Math.max(0, el.scrollHeight - el.clientHeight);
       if (Math.abs(el.scrollTop - target) > 1) {
-        suppressScrollRef.current = true;
         el.scrollTop = target;
+        lastScrollTopRef.current = el.scrollTop;
       }
       rememberScrollPosition();
 
@@ -346,11 +352,11 @@ export function ThreadScroll({
         settleFrameRef.current = window.requestAnimationFrame(() => {
           settleFrameRef.current = null;
           const settled = ref.current;
-          if (settled && pinnedRef.current) {
+          if (settled && pinnedRef.current && anchorTurnRef.current === null) {
             const settledTarget = Math.max(0, settled.scrollHeight - settled.clientHeight);
             if (Math.abs(settled.scrollTop - settledTarget) > 1) {
-              suppressScrollRef.current = true;
               settled.scrollTop = settledTarget;
+              lastScrollTopRef.current = settled.scrollTop;
             }
             rememberScrollPosition();
           }
