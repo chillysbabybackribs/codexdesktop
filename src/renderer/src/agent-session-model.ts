@@ -132,16 +132,16 @@ export function createAgentSession(
     model: null,
     reasoningEffort: null,
     contextUsage: null,
-    isCompacting: false
-    ,sourceProvider: null
-    ,executionLane: null
-    ,nativeRunId: null
-    ,runStatus: null
-    ,runTask: null
-    ,runProgress: null
-    ,runResultSummary: null
-    ,runOutputPath: null
-    ,wakeStatus: 'none'
+    isCompacting: false,
+    sourceProvider: null,
+    executionLane: null,
+    nativeRunId: null,
+    runStatus: null,
+    runTask: null,
+    runProgress: null,
+    runResultSummary: null,
+    runOutputPath: null,
+    wakeStatus: 'none'
   }
 }
 
@@ -450,18 +450,18 @@ export function serializeAgentDock(
       model: session.model,
       reasoningEffort: session.reasoningEffort,
       open: openKeys.includes(session.key),
-      selected: session.key === selectedKey
-      ,role: session.role
-      ,parentAgentKey: session.parentAgentKey
-      ,sourceProvider: session.sourceProvider
-      ,executionLane: session.executionLane
-      ,nativeRunId: session.nativeRunId
-      ,runStatus: session.runStatus
-      ,runTask: session.runTask
-      ,runProgress: session.runProgress
-      ,runResultSummary: session.runResultSummary
-      ,runOutputPath: session.runOutputPath
-      ,wakeStatus: session.wakeStatus
+      selected: session.key === selectedKey,
+      role: session.role,
+      parentAgentKey: session.parentAgentKey,
+      sourceProvider: session.sourceProvider,
+      executionLane: session.executionLane,
+      nativeRunId: session.nativeRunId,
+      runStatus: session.runStatus,
+      runTask: session.runTask,
+      runProgress: session.runProgress,
+      runResultSummary: session.runResultSummary,
+      runOutputPath: session.runOutputPath,
+      wakeStatus: session.wakeStatus
     }))
   })
 }
