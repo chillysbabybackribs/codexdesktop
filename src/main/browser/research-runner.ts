@@ -1,11 +1,8 @@
-import { app, session, WebContentsView } from 'electron'
-import { mkdir } from 'node:fs/promises'
-import { join } from 'node:path'
+import { session, WebContentsView } from 'electron'
 import type { ResearchProgress } from '../../shared/ipc.js'
 import { researchPartition } from './browser-session.js'
 import { executePageJavaScript } from './page-execution.js'
 import { buildPageExtractionProgram } from './browser-agent.js'
-import { ResearchMemoryCache, ResearchPruneGate, writeResearchPageArtifacts } from './research-artifacts.js'
 import {
   normalizeResearchFocus,
   selectResearchEvidence,
@@ -17,6 +14,7 @@ import {
 import {
   collectWithConcurrencyUntil,
   KeyedTaskScheduler,
+  ResearchMemoryCache,
   retainValuesReducingDeficit
 } from './research-execution.js'
 import { loadPageAndSettle, type PageNavigationResult } from './page-navigation.js'
@@ -53,7 +51,7 @@ const PAGE_TIMEOUT_MS = 15_000
 const PAGE_WORKER_CONCURRENCY = 3
 const MAX_CONCURRENT_RESEARCH_RUNS = 2
 const STATIC_PREFLIGHT_MAX_BYTES = 750_000
-const MAX_ARTIFACT_CHARS = 100_000
+const MAX_PAGE_TEXT_CHARS = 100_000
 const MAX_HTML_CHARS = 2_000_000
 const REDIRECT_HUB_LINK_LIMIT = 8
 const MAX_REDIRECT_FOLLOW_UPS = 16
@@ -64,7 +62,6 @@ const SEARCH_DOCUMENT_MAX_BYTES = 300_000
 const SEARCH_PROVIDER_MAX_REDIRECTS = 3
 const PAGE_CACHE_TTL_MS = 5 * 60_000
 const MAX_PAGE_CACHE_ENTRIES = 12
-const RESEARCH_PRUNE_COOLDOWN_MS = 30 * 60_000
 
 export type ResearchRequest = {
   queries?: string[]
@@ -85,13 +82,11 @@ export type ResearchPage = {
   cacheHit: boolean
   charCount: number
   wordCount: number
-  artifactPath: string
-  htmlPath: string
   sourceQuery?: string
   sourceKind: 'direct' | 'search'
   sourceTier?: string
   score?: number
-  artifactTruncated: boolean
+  contentTruncated: boolean
   mediaType?: string
   extractionPath?: 'static-html' | 'network-response' | 'browser-dom'
   verified: true
@@ -99,7 +94,6 @@ export type ResearchPage = {
 
 export type ResearchMetrics = {
   queueMs: number
-  setupMs: number
   discoveryMs: number
   pageMs: number
   finalizationMs: number
@@ -128,12 +122,10 @@ export type ResearchMetrics = {
 
 export type ResearchResult = {
   ok: boolean
-  researchId?: string
   queries?: string[]
   urls?: string[]
   focus?: ResearchFocus[]
   searchQueries?: string[]
-  artifactDir?: string
   pages?: ResearchPage[]
   passages?: ResearchPassage[]
   gaps?: ResearchGap[]
@@ -241,7 +233,6 @@ export class ResearchRunner {
   private readonly pageCache = new ResearchMemoryCache<ExtractedResearchPage>(PAGE_CACHE_TTL_MS, MAX_PAGE_CACHE_ENTRIES)
   private readonly originRouter = new ResearchOriginRouter()
   private readonly scheduler = new KeyedTaskScheduler(MAX_CONCURRENT_RESEARCH_RUNS)
-  private readonly pruneGate = new ResearchPruneGate(RESEARCH_PRUNE_COOLDOWN_MS)
 
   run(request: ResearchRequest, context: ResearchRunContext = {}): Promise<ResearchResult> {
     const runId = context.runId ?? crypto.randomUUID()
@@ -389,25 +380,15 @@ export class ResearchRunner {
     )
     const maxAttempts = clamp(request.maxAttempts, defaultMaxAttempts, MIN_CANDIDATE_ATTEMPTS, MAX_CANDIDATE_ATTEMPTS)
     const passageChars = clamp(request.snippetChars, DEFAULT_SNIPPET_CHARS, 1_000, MAX_SNIPPET_CHARS)
-    const researchId = crypto.randomUUID()
-    const artifactRoot = join(app.getPath('userData'), 'research')
-    const artifactDir = join(artifactRoot, researchId)
     const navigation = createNavigationMetrics()
-    let setupMs = 0
     let discoveryMs = 0
     let pageMs = 0
 
     notifyProgress(onProgress, {
       stage: 'preparing',
-      message: queueMs >= 100 ? `Starting research after ${formatDuration(queueMs)} queued…` : 'Preparing research artifacts…',
+      message: queueMs >= 100 ? `Starting research after ${formatDuration(queueMs)} queued…` : 'Preparing research…',
       targetPages
     })
-    const setupStartedAt = Date.now()
-    await mkdir(artifactDir, { recursive: true })
-    void this.pruneGate.schedule(artifactRoot)?.catch((error) => {
-      console.warn('Failed to prune research artifacts', error)
-    })
-    setupMs = Date.now() - setupStartedAt
 
     const plannedQueries = buildResearchQueryVariants(queries)
     const searchQueries: string[] = []
@@ -516,14 +497,6 @@ export class ResearchRunner {
       throwIfAborted(operationSignal)
       const title = extracted.title || candidate.title
       const url = extracted.url || candidate.url
-      const paths = await writeResearchPageArtifacts(
-        artifactDir,
-        sourceId,
-        extracted.content,
-        extracted.html,
-        operationSignal
-      )
-      throwIfAborted(operationSignal)
       return {
         page: {
           sourceId,
@@ -535,12 +508,11 @@ export class ResearchRunner {
           cacheHit,
           charCount: extracted.content.length,
           wordCount: extracted.wordCount,
-          ...paths,
           ...(candidate.sourceKind === 'search' ? { sourceQuery: candidate.query } : {}),
           sourceKind: candidate.sourceKind,
           sourceTier: candidate.sourceTier,
           score: candidate.score,
-          artifactTruncated: extracted.truncated,
+          contentTruncated: extracted.truncated,
           ...(extracted.mediaType ? { mediaType: extracted.mediaType } : {}),
           extractionPath: extracted.extractionPath ?? 'browser-dom',
           verified: true
@@ -740,7 +712,7 @@ export class ResearchRunner {
             throwIfAborted(linked.signal)
             let result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
               view.webContents,
-              buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
+              buildPageExtractionProgram(MAX_PAGE_TEXT_CHARS, MAX_HTML_CHARS)
             )
             const safeFinalUrl = normalizeResearchUrls([result.url], 1)[0]
             if (!safeFinalUrl) throw new Error('page verification failed: invalid or non-public final URL')
@@ -752,7 +724,7 @@ export class ResearchRunner {
               if (ready) {
                 result = await evaluate<Omit<ExtractedResearchPage, 'observedAt'>>(
                   view.webContents,
-                  buildPageExtractionProgram(MAX_ARTIFACT_CHARS, MAX_HTML_CHARS)
+                  buildPageExtractionProgram(MAX_PAGE_TEXT_CHARS, MAX_HTML_CHARS)
                 )
                 const retryUrl = normalizeResearchUrls([result.url], 1)[0]
                 if (!retryUrl) throw new Error('page verification failed: invalid or non-public final URL')
@@ -883,7 +855,6 @@ export class ResearchRunner {
     const executionMs = Date.now() - executionStartedAt
     const metrics: ResearchMetrics = {
       queueMs,
-      setupMs,
       discoveryMs,
       pageMs,
       finalizationMs,
@@ -915,12 +886,10 @@ export class ResearchRunner {
 
     return {
       ok: pages.length > 0,
-      researchId,
       queries,
       urls,
       ...(focus.length > 0 ? { focus } : {}),
       searchQueries,
-      artifactDir,
       discoveredUrls: [...discoveredUrls].slice(0, 10),
       discoveredCount: discoveredUrls.size,
       ...(discoveredUrls.size > 10 ? { discoveredTruncated: true } : {}),

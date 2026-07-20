@@ -5,6 +5,45 @@ export type CollectionProgress = {
   success?: boolean
 }
 
+export class ResearchMemoryCache<T> {
+  private readonly entries = new Map<string, { expiresAt: number; value: T }>()
+  private readonly ttlMs: number
+  private readonly maxEntries: number
+  private readonly now: () => number
+
+  constructor(ttlMs: number, maxEntries: number, now: () => number = Date.now) {
+    this.ttlMs = ttlMs
+    this.maxEntries = maxEntries
+    this.now = now
+  }
+
+  get(key: string): T | null {
+    const entry = this.entries.get(key)
+    if (!entry) return null
+    if (entry.expiresAt <= this.now()) {
+      this.entries.delete(key)
+      return null
+    }
+    this.entries.delete(key)
+    this.entries.set(key, entry)
+    return entry.value
+  }
+
+  set(key: string, value: T): void {
+    this.entries.delete(key)
+    this.entries.set(key, { expiresAt: this.now() + this.ttlMs, value })
+    while (this.entries.size > this.maxEntries) {
+      const oldest = this.entries.keys().next().value
+      if (typeof oldest !== 'string') break
+      this.entries.delete(oldest)
+    }
+  }
+
+  clear(): void {
+    this.entries.clear()
+  }
+}
+
 export type CollectedValue<T> = {
   index: number
   value: T
