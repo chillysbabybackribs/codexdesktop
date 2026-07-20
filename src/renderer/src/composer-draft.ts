@@ -1,4 +1,5 @@
 import type { ChatAttachment } from '../../shared/ipc';
+import { clearComposerInteractionState } from './composer-interactions';
 import type { FileMention } from './mention-model';
 
 export type ComposerDraft = {
@@ -11,4 +12,5 @@ export const composerDrafts = new Map<string, ComposerDraft>();
 
 export function discardComposerDraft(key: string): void {
   composerDrafts.delete(key);
+  clearComposerInteractionState(key);
 }

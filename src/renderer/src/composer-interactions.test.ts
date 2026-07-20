@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   clearComposerInteractionState,
+  defaultComposerAction,
+  effectiveComposerAction,
   getQueuedComposerMessage,
   hasStashedComposerDraft,
   listComposerPrompts,
@@ -10,6 +12,14 @@ import {
   stashComposerDraft,
   takeStashedComposerDraft,
 } from './composer-interactions.ts';
+
+test('active-turn actions respect provider steering and attachment constraints', () => {
+  assert.equal(defaultComposerAction('codex'), 'steer');
+  assert.equal(defaultComposerAction('claude'), 'queue');
+  assert.equal(effectiveComposerAction('steer', 0), 'steer');
+  assert.equal(effectiveComposerAction('steer', 1), 'queue');
+  assert.equal(effectiveComposerAction('stop-send', 1), 'stop-send');
+});
 
 test('composer prompt history is newest-first, deduplicated, and searchable', () => {
   const key = 'history';

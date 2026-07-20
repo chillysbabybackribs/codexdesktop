@@ -1,7 +1,19 @@
 import type { ChatAttachment } from '../../shared/ipc';
+import type { ProviderId } from '../../shared/session-protocol';
 import type { FileMention } from './mention-model';
 
 export type ComposerActionMode = 'steer' | 'queue' | 'stop-send';
+
+export function defaultComposerAction(providerId: ProviderId): ComposerActionMode {
+  return providerId === 'codex' ? 'steer' : 'queue';
+}
+
+export function effectiveComposerAction(
+  mode: ComposerActionMode,
+  attachmentCount: number,
+): ComposerActionMode {
+  return attachmentCount > 0 && mode === 'steer' ? 'queue' : mode;
+}
 
 export type QueuedComposerMessage = {
   text: string;

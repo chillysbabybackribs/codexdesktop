@@ -14,6 +14,8 @@ import { steerComposerPlaceholder } from './app-helpers';
 import { AttachmentButton, AttachmentStrip, saveBrowserFiles } from './Attachments';
 import { composerDrafts } from './composer-draft';
 import {
+  defaultComposerAction,
+  effectiveComposerAction,
   getQueuedComposerMessage,
   hasStashedComposerDraft,
   listComposerPrompts,
@@ -94,7 +96,7 @@ export function Composer({
     getQueuedComposerMessage(draftKey),
   );
   const [turnAction, setTurnAction] = useState<ComposerActionMode>(
-    providerId === 'claude' ? 'queue' : 'steer',
+    defaultComposerAction(providerId),
   );
   const [isTurnActionMenuOpen, setIsTurnActionMenuOpen] = useState(false);
   const [commandSelectionIndex, setCommandSelectionIndex] = useState(0);
@@ -122,8 +124,7 @@ export function Composer({
   const isQuietStatus = status === 'idle' || status === 'ready';
   const visibleStatus = attachmentError ?? (isTurnActive || isQuietStatus ? null : status);
   const canSteer = providerId === 'codex';
-  const effectiveTurnAction: ComposerActionMode =
-    attachments.length && turnAction === 'steer' ? 'queue' : turnAction;
+  const effectiveTurnAction = effectiveComposerAction(turnAction, attachments.length);
 
   const commandOptions = useMemo<ComposerCommandOption[]>(() => {
     const options: ComposerCommandOption[] = [
