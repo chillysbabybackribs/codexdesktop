@@ -170,18 +170,24 @@ export function visibleUserMessageText(item: Extract<ChatItem, { type: 'userMess
   return stripLegacyBrowserRoutingNote(text);
 }
 
-// Auditor feedback in the main transcript: a quiet retractable card — header
-// row with the flag + agent name, expandable to the full report. The doer
-// model still receives the raw [audit-feedback] block; this is display only.
-function AuditFeedbackCard({
-  agentTitle,
-  report,
+// Injected model-facing text in the main transcript renders as a quiet
+// retractable card — header row with an icon + title, expandable to the full
+// content. The model still receives the raw injected block; this is display
+// only. Used for auditor feedback and automatic background-agent
+// continuations.
+function RetractableNoteCard({
+  icon,
+  title,
+  previewText,
+  body,
 }: {
-  agentTitle: string;
-  report: string;
+  icon: string;
+  title: string;
+  previewText: string;
+  body: string;
 }): React.JSX.Element {
   const [open, setOpen] = useState(false);
-  const firstLine = report.split('\n')[0] ?? '';
+  const firstLine = previewText.split('\n')[0] ?? '';
   const preview = firstLine.length > 90 ? `${firstLine.slice(0, 90).trimEnd()}…` : firstLine;
   return (
     <div className={`audit-feedback-card ${open ? 'is-open' : ''}`}>
@@ -192,9 +198,9 @@ function AuditFeedbackCard({
         onClick={() => setOpen((current) => !current)}
       >
         <span className="audit-feedback-flag" aria-hidden="true">
-          ⚑
+          {icon}
         </span>
-        <span className="audit-feedback-title">Audit feedback · {agentTitle}</span>
+        <span className="audit-feedback-title">{title}</span>
         {!open && preview ? <span className="audit-feedback-preview">{preview}</span> : null}
         <span className="audit-feedback-chevron" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -210,10 +216,27 @@ function AuditFeedbackCard({
       </button>
       {open ? (
         <div className="audit-feedback-body">
-          <MarkdownContent text={report} />
+          <MarkdownContent text={body} />
         </div>
       ) : null}
     </div>
+  );
+}
+
+function AuditFeedbackCard({
+  agentTitle,
+  report,
+}: {
+  agentTitle: string;
+  report: string;
+}): React.JSX.Element {
+  return (
+    <RetractableNoteCard
+      icon="⚑"
+      title={`Audit feedback · ${agentTitle}`}
+      previewText={report}
+      body={report}
+    />
   );
 }
 
@@ -251,6 +274,26 @@ export const ChatItemView = memo(function ChatItemView({
           data-message-anchor-id={turnId ?? undefined}
         >
           <AuditFeedbackCard agentTitle={feedback.agentTitle} report={feedback.report} />
+        </article>
+      );
+    }
+    // Automatic background-agent continuations are model plumbing, not user
+    // prose: show a compact retractable card instead of the raw injected block.
+    const continuation = parseAgentContinuation(text);
+    if (continuation) {
+      return (
+        <article
+          className="message message-audit-feedback"
+          data-turn-id={turnId ?? undefined}
+          data-message-id={turnId ?? undefined}
+          data-message-anchor-id={turnId ?? undefined}
+        >
+          <RetractableNoteCard
+            icon="⟳"
+            title="Background agents · results applied"
+            previewText={continuation.headline}
+            body={continuation.report}
+          />
         </article>
       );
     }
