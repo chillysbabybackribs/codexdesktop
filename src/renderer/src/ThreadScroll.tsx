@@ -365,37 +365,121 @@ export function ThreadScroll({
     });
   }, [anchorTop, rememberScrollPosition]);
 
-  const handleScroll = useCallback(() => {
-    // Ignore the scroll events our own programmatic writes produce.
-    if (suppressScrollRef.current) {
-      suppressScrollRef.current = false;
-      syncVisibility();
-      return;
-    }
+  // A real reader gesture takes over the viewport. Every input path (wheel,
+  // keys, touch, selection drag) funnels through here so they all release the
+  // same way. The spacer stays mounted at its frozen height — unmounting it
+  // here used to clamp-yank the view; bottom-follow reclaims it instead.
+  const releaseToReader = useCallback(
+    (intent: ReaderScrollIntent) => {
+      anchorTurnRef.current = null;
+      if (intent === 'up') {
+        upHoldRef.current = true;
+        pinnedRef.current = false;
+        // A queued frame from a prior delta must never pull a reader back down
+        // after they have deliberately scrolled away from the live edge.
+        cancelScheduledFollow();
+      } else {
+        upHoldRef.current = false;
+      }
+    },
+    [cancelScheduledFollow],
+  );
 
+  const handleScroll = useCallback(() => {
     const el = ref.current;
     if (!el) {
       return;
     }
+    const previousTop = lastScrollTopRef.current;
+    lastScrollTopRef.current = el.scrollTop;
+
+    // Edge-autoscroll while selecting text is reader-driven even though no
+    // wheel/key/touch event accompanies it.
+    if (selectingRef.current && el.scrollTop !== previousTop) {
+      releaseToReader(el.scrollTop < previousTop ? 'up' : 'down');
+    }
+
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    pinnedRef.current = distanceFromBottom <= 48;
+    if (shouldRepinOnScroll(upHoldRef.current, anchorTurnRef.current !== null, distanceFromBottom)) {
+      pinnedRef.current = true;
+    }
     rememberScrollPosition();
-
-    // A deliberate scroll releases the top-anchor, exactly like it releases
-    // bottom-follow — the reader is now driving.
-    if (anchorTurnRef.current !== null) {
-      anchorTurnRef.current = null;
-      setSpacerOn(false);
-    }
-
-    // A queued frame from a prior delta must never pull a reader back down
-    // after they have deliberately scrolled away from the live edge.
-    if (!pinnedRef.current) {
-      cancelScheduledFollow();
-    }
-    if (el.scrollTop <= 96) onReachStart?.();
+    // Only an upward move can reach for older history; programmatic writes
+    // sync lastScrollTopRef at write time, so they never register here.
+    if (el.scrollTop <= 96 && el.scrollTop < previousTop) onReachStart?.();
     syncVisibility();
-  }, [cancelScheduledFollow, onReachStart, rememberScrollPosition, syncVisibility]);
+  }, [onReachStart, releaseToReader, rememberScrollPosition, syncVisibility]);
+
+  // Reader-intent listeners. These are the ONLY sources that release the
+  // top-anchor or bottom-follow; bare scroll events can't (they also fire for
+  // browser clamps and our own writes racing streamed content growth).
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onWheel = (event: WheelEvent): void => {
+      const intent = wheelIntent(event.deltaY);
+      if (intent) releaseToReader(intent);
+    };
+    const onKeyDown = (event: KeyboardEvent): void => {
+      const target = event.target as HTMLElement | null;
+      // Keys aimed at interactive controls (buttons, links, inputs) are not
+      // scroll intent — Space on a focused button is a click.
+      if (target && target !== el && target.closest('button, a, input, textarea, select, [contenteditable]')) {
+        return;
+      }
+      const intent = keyScrollIntent(event.key, event.shiftKey);
+      if (intent) releaseToReader(intent);
+    };
+    let lastTouchY: number | null = null;
+    const onTouchStart = (event: TouchEvent): void => {
+      lastTouchY = event.touches[0]?.clientY ?? null;
+    };
+    const onTouchMove = (event: TouchEvent): void => {
+      const y = event.touches[0]?.clientY;
+      if (y === undefined || lastTouchY === null) return;
+      // Finger moving down drags the view up.
+      if (y !== lastTouchY) releaseToReader(y > lastTouchY ? 'up' : 'down');
+      lastTouchY = y;
+    };
+    const onPointerDown = (event: PointerEvent): void => {
+      if (event.button === 0 && event.pointerType === 'mouse') {
+        dragOriginRef.current = { x: event.clientX, y: event.clientY };
+      }
+    };
+    const onPointerMove = (event: PointerEvent): void => {
+      const origin = dragOriginRef.current;
+      if (!origin || (event.buttons & 1) === 0) return;
+      // Only a held-button move beyond a click threshold counts as a drag —
+      // a plain click must not turn a later layout clamp into "selecting".
+      if (Math.abs(event.clientX - origin.x) > 4 || Math.abs(event.clientY - origin.y) > 4) {
+        selectingRef.current = true;
+      }
+    };
+    const endDrag = (): void => {
+      dragOriginRef.current = null;
+      selectingRef.current = false;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: true });
+    el.addEventListener('keydown', onKeyDown);
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: true });
+    el.addEventListener('pointerdown', onPointerDown);
+    el.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      el.removeEventListener('keydown', onKeyDown);
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('pointerdown', onPointerDown);
+      el.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', endDrag);
+      window.removeEventListener('pointercancel', endDrag);
+    };
+  }, [releaseToReader]);
 
   const jumpToMessage = useCallback(
     (messageId: string) => {
@@ -408,6 +492,9 @@ export function ThreadScroll({
 
       anchorTurnRef.current = null;
       pinnedRef.current = false;
+      // The reader chose a place to read; landing near the bottom via the
+      // smooth scroll must not re-pin them. A wheel-down clears the hold.
+      upHoldRef.current = true;
       cancelScheduledFollow();
       if (messageId !== activeTurnId) setSpacerOn(false);
       const delta = node.getBoundingClientRect().top - el.getBoundingClientRect().top - 12;
