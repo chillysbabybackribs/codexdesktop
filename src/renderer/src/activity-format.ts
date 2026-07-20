@@ -122,8 +122,12 @@ export function reasoningGroupDurationMs(
   items: ReasoningWorkItem[],
   itemMeta: Record<string, ItemMeta>,
 ): number | null {
-  const firstStartedAt = items.find((item) => itemMeta[item.id]?.startedAtMs)?.id;
-  const lastCompletedAt = [...items].reverse().find((item) => itemMeta[item.id]?.completedAtMs)?.id;
+  const firstStartedAt = items.find(
+    (item) => typeof itemMeta[item.id]?.startedAtMs === 'number',
+  )?.id;
+  const lastCompletedAt = [...items]
+    .reverse()
+    .find((item) => typeof itemMeta[item.id]?.completedAtMs === 'number')?.id;
   const startedAtMs = firstStartedAt ? itemMeta[firstStartedAt]?.startedAtMs : null;
   const completedAtMs = lastCompletedAt ? itemMeta[lastCompletedAt]?.completedAtMs : null;
 

@@ -410,7 +410,10 @@ function ThoughtBlock({
   const firstStartedAtMs = items
     .map((item) => itemMeta[item.id]?.startedAtMs)
     .find((value): value is number => typeof value === 'number');
-  const elapsedMs = streaming && firstStartedAtMs ? Math.max(0, now - firstStartedAtMs) : null;
+  const elapsedMs =
+    streaming && typeof firstStartedAtMs === 'number'
+      ? Math.max(0, now - firstStartedAtMs)
+      : null;
   const durationMs = streaming ? null : reasoningGroupDurationMs(items, itemMeta);
   const label = streaming
     ? elapsedMs !== null && elapsedMs >= 3000
