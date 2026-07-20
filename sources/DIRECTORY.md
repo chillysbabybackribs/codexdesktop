@@ -11,7 +11,6 @@ Curated sources with fetch recipes and yield history, consumed by `$studio-hunt`
 
 | Source | Lanes | Fetch recipe | Extractables | Yield |
 |---|---|---|---|---|
-| Brave Search API | discovery (all) | `GET api.search.brave.com/res/v1/web/search` hdr `X-Subscription-Token`, params `q,count,freshness`, `result_filter=discussions` for forums; ~1 req/s | URLs, snippets, forum threads (discovered-class) | |
 | HN Algolia | demand, spend | `hn.algolia.com/api/v1/search?query=<q>&tags=story` (or `comment`); mine recurring "Ask HN: what do you pay for" threads | verbatim pain, literal prices, dates, points | |
 | Reddit JSON | demand | `old.reddit.com/r/<sub>/search.json?q=<q>&restrict_sr=on&sort=new&t=year`; any thread URL + `.json` | quotes, dates, upvotes, sub size | |
 | Federal Register API | why-now | `federalregister.gov/api/v1/documents.json?conditions[term]=<q>&order=newest` | rule stages, effective dates, agencies | 2026-07-11-3: 10→0 |
