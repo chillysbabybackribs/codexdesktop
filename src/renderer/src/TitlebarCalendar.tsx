@@ -6,16 +6,6 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: true,
 });
 
-const shortDateFormatter = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-});
-
-const accessibleDateTimeFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'full',
-  timeStyle: 'short',
-});
-
 export function TitlebarCalendar(): React.JSX.Element {
   const [now, setNow] = useState(() => new Date());
   const [isOpen, setIsOpen] = useState(false);
@@ -68,14 +58,13 @@ export function TitlebarCalendar(): React.JSX.Element {
       ref={triggerRef}
       type="button"
       className="titlebar-clock"
-      aria-label={`${accessibleDateTimeFormatter.format(now)}. Open calendar`}
+      aria-label={`${timeFormatter.format(now)}. Open calendar`}
       aria-haspopup="dialog"
       aria-expanded={isOpen}
       onClick={toggleCalendar}
     >
       <time dateTime={now.toISOString()}>
         <span className="titlebar-clock-time">{timeFormatter.format(now)}</span>
-        <span className="titlebar-clock-date">{shortDateFormatter.format(now)}</span>
       </time>
       <svg className="titlebar-clock-chevron" viewBox="0 0 12 12" aria-hidden="true">
         <path d="m3 4.5 3 3 3-3" />

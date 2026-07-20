@@ -275,14 +275,6 @@ samp {
   color: #d0d0d0;
 }
 
-.titlebar-clock-date {
-  font-size: 10px;
-  font-weight: 620;
-  letter-spacing: 0.075em;
-  color: #858585;
-  text-transform: uppercase;
-}
-
 .titlebar-clock-chevron {
   width: 10px;
   height: 10px;
@@ -328,10 +320,6 @@ samp {
 
 .titlebar.is-verification .titlebar-clock-time {
   color: #e2d3a3;
-}
-
-.titlebar.is-verification .titlebar-clock-date {
-  color: #b9a978;
 }
 
 .window-controls {
