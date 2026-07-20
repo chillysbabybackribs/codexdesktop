@@ -1,4 +1,4 @@
-import { type PointerEvent, useMemo, useState } from 'react';
+import { type PointerEvent, useCallback, useMemo, useState } from 'react';
 import type { ChatAttachment } from '../../shared/ipc';
 import type {
   Model,
@@ -215,6 +215,8 @@ export function ChatPane({
     tabKey: string;
     zone: SplitDropZone;
   } | null>(null);
+  const [traceAvailability, setTraceAvailability] = useState<Record<string, boolean>>({});
+  const [traceRequest, setTraceRequest] = useState<{ tabKey: string; serial: number } | null>(null);
   const headerIdPrefix = browserMiddleSide === 'right' ? 'right-chat' : 'main-chat';
   // History and settings are app-wide surfaces. The right header keeps the
   // workspace controls that matter in place (tabs, new, splits, layout) while
@@ -354,6 +356,21 @@ export function ChatPane({
   };
 
   const multiPane = countSplitPanes(splitLayout) > 1;
+  const canOpenHeaderTrace = Boolean(traceAvailability[headerActiveMainChatTabKey]);
+
+  const requestHeaderTrace = (): void => {
+    setTraceRequest((current) => ({
+      tabKey: headerActiveMainChatTabKey,
+      serial: (current?.serial ?? 0) + 1,
+    }));
+  };
+
+  const updateTraceAvailability = useCallback((tabKey: string, canOpenTrace: boolean): void => {
+    setTraceAvailability((current) => {
+      if (current[tabKey] === canOpenTrace) return current;
+      return { ...current, [tabKey]: canOpenTrace };
+    });
+  }, []);
 
   // The agent column belongs to the focused workspace. Model selection does
   // not: each visible chat owns a model and reasoning choice, so its composer
@@ -489,6 +506,10 @@ export function ChatPane({
           onSelectPane={onSelectMainChatTab}
           onCloseSplitPane={onCloseSplitPane}
           onLoadOlderHistory={onLoadOlderHistory}
+          openTraceRequestSerial={
+            traceRequest?.tabKey === node.tabKey ? traceRequest.serial : 0
+          }
+          onTraceAvailabilityChange={updateTraceAvailability}
           dockExtras={{
             agentColumn: isActivePane ? activeDockExtras.agentColumn : null,
             composerHeaderContext: paneComposerModelContext(node.tabKey, tab),
@@ -569,6 +590,8 @@ export function ChatPane({
             isBrowserMiddle={isBrowserMiddle}
             onToggleBrowserMiddle={onToggleBrowserMiddle}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            canOpenTrace={canOpenHeaderTrace}
+            onOpenTrace={requestHeaderTrace}
             title={title}
             threads={threads}
             activeThreadId={activeThreadId}
