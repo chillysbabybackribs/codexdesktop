@@ -538,16 +538,25 @@ export function Composer({
     }
   };
 
+  const turnActionLabel =
+    effectiveTurnAction === 'steer'
+      ? 'Steer'
+      : effectiveTurnAction === 'stop-send'
+        ? 'Stop & send'
+        : 'Queue';
+
   return (
-    <>
+    <div
+      className={`composer-shell ${isTurnActive ? 'is-working' : ''} ${queuedMessage ? 'has-queued-message' : ''}`}
+    >
       <form
+        id={composerFormId}
         className="composer"
         onSubmit={handleSubmit}
         onDragOver={(event) => {
-          if (!isTurnActive && event.dataTransfer.types.includes('Files')) event.preventDefault();
+          if (event.dataTransfer.types.includes('Files')) event.preventDefault();
         }}
         onDrop={(event) => {
-          if (isTurnActive) return;
           const files = Array.from(event.dataTransfer.files);
           if (!files.length) return;
           event.preventDefault();
