@@ -1,9 +1,9 @@
 ---
 name: artifact-first-web-research
-description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Default to browser_live_search with background=true so the visible tab verifies live while bounded background evidence gathers in parallel; inspect targeted artifact passages, and use a task-local script only when the available primitives cannot express the extraction.
+description: Use for current web research, comparisons, source-backed answers, public-page extraction, forums, reviews, and multi-page browser work. Default to browser_live_search with background=true so the visible tab verifies live while bounded background evidence gathers in parallel; use a task-local script only when the available primitives cannot express the extraction.
 ---
 
-# Artifact-First Web Research
+# Evidence-Bounded Web Research
 
 Treat research as a claim-coverage problem. Define the evidence needed for the requested conclusions, gather a bounded set of verified sources, and stop when every material claim has adequate support.
 
@@ -27,11 +27,11 @@ Never sacrifice source quality for recency alone. A fresh low-quality summary do
 1. Define two to five concrete evidence needs mentally. Do not create an intent file for an ordinary task.
 2. Author three to six genuinely different semantic query variations from the user's request and pass them through `queries`. Include recency signals for current-information tasks so discovery can find the latest trustworthy sources before falling back to older ones. The hidden discovery workers run those variations in bounded parallel and rank the combined URL pool.
 3. Pass the evidence needs through `focus`. Use `minSources: 1` for a simple official fact and two or three only for comparisons, conflicts, or independent field reports.
-4. Make one `browser_live_search` call with `background: true` — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab as soon as the first viable destination is found while background workers gather bounded artifact-first evidence in the same call. Give it a concrete `objective` for the visible page plus `focus` needs (and `minSources` only where independent corroboration matters); the evidence contract stops gathering early once coverage is complete. It saves substantially complete cleaned text and raw HTML while returning compact exact passages, artifact line locators, source metadata, timings, and explicit gaps.
-5. Answer from the live-verified page and the returned passages when coverage is adequate. Use one batched `rg -n -i -C` over the saved `.txt` artifacts only when a gap, conflict, or ambiguous passage requires more context; use narrow `sed -n` reads only after that.
+4. Make one `browser_live_search` call with `background: true` — this is the normal path for search-shaped, current-information, and post-cutoff questions. It navigates the existing visible tab as soon as the first viable destination is found while background workers gather bounded independent evidence in the same call. Give it a concrete `objective` for the visible page plus `focus` needs (and `minSources` only where independent corroboration matters); the evidence contract stops gathering early once coverage is complete and returns compact exact passages, source metadata, timings, and explicit gaps.
+5. Answer from the live-verified page and returned passages when coverage is adequate. If a gap or conflict remains, retrieve only the missing evidence from the relevant page or structured public source.
 6. Make at most one focused gap-fill call. Preserve unresolved uncertainty rather than searching for a higher source count.
 
-Use `research_web` alone only when the user explicitly asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget, not saved artifact completeness.
+Use `research_web` alone only when the user explicitly asks for background-only research or the visible tab must not change. Leave `maxAttempts` and `snippetChars` omitted unless the task genuinely needs different bounds. `maxAttempts` is only a runaway-research safety ceiling; `snippetChars` controls the compact returned-passage budget.
 
 ## Choose The Cheapest Reliable Lane
 
@@ -80,7 +80,7 @@ Stop when every requested field has adequate evidence and the strongest claims h
 
 For current-information tasks, do not stop with only older or unknown-age evidence unless a focused gap-fill failed to find newer trustworthy coverage. When falling back, state the newest source date or version found and say what could not be verified as current.
 
-Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state freshness limitations precisely. Do not expose internal artifact paths unless asked.
+Lead the final answer with the decision. Organize it around the requested conclusions, place clickable links next to supported claims, distinguish official guidance from developer reports, and state freshness limitations precisely.
 
 ## Reliability
 

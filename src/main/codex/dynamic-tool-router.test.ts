@@ -103,7 +103,7 @@ test('first-class live search hides parallel discovery and opens only a direct d
   assert.equal(result.destination.url, 'https://status.example.com/current')
 })
 
-test('live search background mode opens a direct destination while artifact-first evidence runs', async () => {
+test('live search background mode opens a direct destination while independent evidence runs', async () => {
   let liveStarted = false
   let backgroundStarted = false
   const browserAgent = withTurnRunner({

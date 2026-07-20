@@ -475,7 +475,7 @@ const researchWebSchema = {
         type: 'object',
         properties: {
           id: { type: 'string', description: 'Short stable identifier for this evidence need.' },
-          need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the saved sources.' },
+          need: { type: 'string', description: 'Concrete claim, field, or evidence to locate in the verified sources.' },
           minSources: { type: 'number', minimum: 1, maximum: 6, description: 'Distinct matching source target. Defaults to 1; use only the diversity needed for the claim. The model must still judge source independence.' }
         },
         required: ['id', 'need'],
@@ -484,7 +484,7 @@ const researchWebSchema = {
     },
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Optional SERP candidates per query, from 1 to 10.' },
     maxAttempts: { type: 'number', minimum: 1, maximum: 24, description: 'Optional candidate-attempt safety ceiling, from 1 to 24. Defaults from the model-authored evidence demand and stops immediately when that evidence is covered.' },
-    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Saved text uses a separate larger artifact bound.' }
+    snippetChars: { type: 'number', minimum: 1_000, maximum: 8_000, description: 'Optional total returned evidence-passage budget, from 1000 to 8000 characters. Page extraction uses a separate internal bound.' }
   },
   anyOf: [{ required: ['queries'] }, { required: ['urls'] }],
   additionalProperties: false
@@ -504,7 +504,7 @@ const browserLiveSearchSchema = {
     },
     objective: { type: 'string', description: 'Specific facts or fields to extract after the visible tab navigates directly to the highest-ranked destination page.' },
     tab: { type: 'string', description: 'Explicit existing visible tab id. Defaults to the active visible tab.' },
-    background: { type: 'boolean', description: 'Also gather bounded artifact-first evidence from independent public sources. Set true for quality-max current-information, comparison, conflict, or source-backed research; defaults to false for a quick visible lookup.' },
+    background: { type: 'boolean', description: 'Also gather bounded evidence from independent public sources. Set true for quality-max current-information, comparison, conflict, or source-backed research; defaults to false for a quick visible lookup.' },
     focus: researchWebSchema.properties.focus,
     maxResults: { type: 'number', minimum: 1, maximum: 10, description: 'Maximum SERP candidates per hidden query. Defaults to 5.' },
     maxItems: { type: 'number', minimum: 1, maximum: 50, description: 'Maximum structured items to return from the selected destination page. Defaults to 10.' },
@@ -521,7 +521,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'browser_live_search',
-    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded artifact-first evidence in parallel for quality-max research. Search result pages are never shown. Never creates a tab.',
+    description: 'Unified search-to-page path: search three to six model-authored semantic variations in parallel hidden Chromium workers, navigate the existing visible tab on the first viable direct destination, and return its objective-ranked snapshot. Set background=true to gather bounded independent evidence in parallel for quality-max research. Search result pages are never shown. Never creates a tab.',
     inputSchema: browserLiveSearchSchema
   },
   {
@@ -587,7 +587,7 @@ export const browserDynamicTools: DynamicToolSpec[] = [
   {
     type: 'function',
     name: 'research_web',
-    description: 'Verify direct public URLs or adaptively discover, rank, and save the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps alongside full-text artifact paths. Does not create or navigate a visible tab.',
+    description: 'Verify direct public URLs or adaptively discover and rank the sources needed to cover the model-authored evidence needs. It stops once coverage is complete; an attempt ceiling protects against runaway research. Uses a bounded inert static-HTML lane before Chromium fallback. With focus items, returns exact evidence passages and coverage gaps. Does not create or navigate a visible tab or persist page copies.',
     inputSchema: researchWebSchema
   }
 ]
